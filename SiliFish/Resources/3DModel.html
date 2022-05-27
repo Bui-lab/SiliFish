@@ -1,0 +1,74 @@
+<!--https://github.com/vasturiano/d3-force-3d-->
+<!--https://bl.ocks.org/vasturiano/f59675656258d3f490e9faa40828c0e7-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>__TITLE__</title>
+    <script src="https://unpkg.com/3d-force-graph@1"></script>
+    <script src="https://unpkg.com/d3-dsv"></script>
+    <script src="https://unpkg.com/three"></script>
+    <link rel="stylesheet" href="StyleSheet.css"/>
+</head>
+
+<body>
+        <div id="left-panel" style="width:50%; float:left">
+            <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
+            <div id="3d-graph-gap"></div>
+        </div>
+        <div id="seperator" class="vertical"></div>
+        <div id="right-panel" style="width:50%; float:right">
+            <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
+            <div id="3d-graph-chem"></div>
+        </div>
+        <script>
+            const gapGraph = ForceGraph3D()
+                (document.getElementById("3d-graph-gap"));
+            const chemGraph = ForceGraph3D()
+                (document.getElementById("3d-graph-chem"));
+
+            const gapData = {
+                "nodes": [__NODES__],
+                "links": [__GAP_LINKS__]
+            };
+            const chemData = {
+                "nodes": [__NODES__],
+                "links": [__CHEM_LINKS__]
+            };
+
+            const shapeSet = { __SHAPE_SET__ };
+            const colorSet = { __COLOR_SET__ };
+
+            const gapDataSet = gapGraph
+                .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+            .nodeLabel(n => `${n.id} ${n.crd}`)
+                .graphData(gapData)
+                .linkColor(() => '#999')
+            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+                .linkWidth(l => Math.max(l.value, 0.5))
+                .enableNodeDrag(false)
+                .backgroundColor("#000000");
+
+
+            const chemDataSet = chemGraph
+                .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+            .nodeLabel(n => `${n.id} ${n.crd}`)
+                .graphData(chemData)
+                .linkDirectionalArrowRelPos(1)
+                .linkDirectionalArrowLength(5)
+                .linkColor(() => '#999')
+                .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+                .linkWidth(l => Math.max(l.value, 0.5))
+                .enableNodeDrag(false)
+                .backgroundColor("#000000");
+        </script>
+
+    </body>
+
+</html>
+
+
+
+

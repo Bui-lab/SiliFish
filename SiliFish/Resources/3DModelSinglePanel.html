@@ -1,0 +1,61 @@
+<!--https://github.com/vasturiano/d3-force-3d-->
+<!--https://bl.ocks.org/vasturiano/f59675656258d3f490e9faa40828c0e7-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>__TITLE__</title>
+    <script src="https://unpkg.com/3d-force-graph@1"></script>
+    <script src="https://unpkg.com/d3-dsv"></script>
+    <script src="https://unpkg.com/three"></script>
+    <link rel="stylesheet" href="StyleSheet.css" />
+</head>
+
+<body>
+    <div id="left-panel" style="width:100%">
+        <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
+        <div id="3d-graph"></div>
+    </div>
+    <script>
+        const gapChemGraph = ForceGraph3D()
+            (document.getElementById("3d-graph"));
+
+        const gapChemData = {
+            "nodes": [__NODES__],
+            "links": [__GAP_CHEM_LINKS__]
+        };
+
+        const shapeSet = { __SHAPE_SET__ };
+        const colorSet = { __COLOR_SET__ };
+
+        const spineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+        const spinePoints = [];
+        spinePoints.push(new THREE.Vector3(__SPINE_X__, __SPINE_Y__, __SPINE_Z__));
+        spinePoints.push(new THREE.Vector3(__SPINE_LENGTH__, __SPINE_Y__, __SPINE_Z__));
+
+        const spineGeometry = new THREE.BufferGeometry().setFromPoints(spinePoints);
+        const spineLine = new THREE.Line(spineGeometry, spineMaterial);
+        gapChemGraph.scene().add(spineLine);
+
+        const gapChemDataSet = gapChemGraph
+            .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+            .nodeLabel(n => `${n.id} ${n.crd}`)
+            .graphData(gapChemData)
+            .linkColor(() => '#999')
+            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkWidth(l => Math.max(l.value, 0.5))
+            .enableNodeDrag(false)
+            .backgroundColor("#000000");
+
+
+    </script>
+
+</body>
+
+</html>
+
+
+
+

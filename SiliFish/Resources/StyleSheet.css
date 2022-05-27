@@ -1,0 +1,51 @@
+.vertical {
+    border-left: 1px solid #999;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    margin-left: -1px;
+    top: 0;
+}
+
+#titleDiv {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    font: 2em "Courier New";
+    color: #FFF;
+}
+
+
+#statusDiv {
+    display: flex;
+    align-items: center;
+    font: 1em "Courier New";
+    color: #999;
+}
+
+/* CSS Loader code sample from https://www.w3schools.com/howto/howto_css_loader.asp */
+.spinner {
+    margin: 0em 0.5em;
+    border: 0.1em solid #f3f3f3;
+    border-top: 0.1em solid #3498db;
+    border-radius: 50%;
+    width: 0.8em;
+    height: 0.8em;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#timer {
+    font-size: 2em;
+    color: #999;
+    font-family: "Courier New"
+}

@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Analysis_Tools.cs" />
+    <Compile Remove="Extensions\ImageExtensions.cs" />
+    <Compile Remove="Helpers\ImageHelper.cs" />
+    <Compile Remove="Izhikevich - Copy.cs" />
+    <Compile Remove="IzhikevichOld.cs" />
+    <Compile Remove="OldDoubleCoilBase.cs" />
+    <Compile Remove="OldSingleCoilBase.cs" />
+    <Compile Remove="OldUtil.cs" />
+    <Compile Remove="ParamAnalysis.cs" />
+    <Compile Remove="ProgramCompareToOld.cs" />
+    <Compile Remove="python2csharp.cs" />
+    <Compile Remove="SingleCoil.cs" />
+    <Compile Remove="SingleCoilBase.cs" />
+    <Compile Remove="TestBGModels\BG1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\2DModel.html" />
+    <None Remove="Resources\3DModel.html" />
+    <None Remove="Resources\3DModelSinglePanel.html" />
+    <None Remove="Resources\Animation.html" />
+    <None Remove="Resources\Animation.TimePoint.js" />
+    <None Remove="Resources\Animation.TimeSeries.js" />
+    <None Remove="Resources\LineChart.Chart.js" />
+    <None Remove="Resources\LineChart.html" />
+    <None Remove="Resources\LineChart.Series.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\2DModel.html" />
+    <EmbeddedResource Include="Resources\3DModelSinglePanel.html" />
+    <EmbeddedResource Include="Resources\3DModel.html" />
+    <EmbeddedResource Include="Resources\Animation.html" />
+    <EmbeddedResource Include="Resources\LineChart.Chart.js" />
+    <EmbeddedResource Include="Resources\LineChart.html" />
+    <EmbeddedResource Include="Resources\LineChart.Series.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestBGModels\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,531 @@
+﻿namespace SiliFish.UI.Controls
+{
+    partial class DynamicsTestControl
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.picV = new System.Windows.Forms.PictureBox();
+            this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
+            this.lRheobaseLimit = new System.Windows.Forms.Label();
+            this.btnRheobase = new System.Windows.Forms.Button();
+            this.eInstanceParams = new System.Windows.Forms.TextBox();
+            this.ldt = new System.Windows.Forms.Label();
+            this.edt = new System.Windows.Forms.NumericUpDown();
+            this.lInput = new System.Windows.Forms.Label();
+            this.eInput = new System.Windows.Forms.NumericUpDown();
+            this.ePlotEndTime = new System.Windows.Forms.NumericUpDown();
+            this.btnDynamicsRun = new System.Windows.Forms.Button();
+            this.eStepEndTime = new System.Windows.Forms.NumericUpDown();
+            this.lStepStartTime = new System.Windows.Forms.Label();
+            this.eStepStartTime = new System.Windows.Forms.NumericUpDown();
+            this.lStepEndTime = new System.Windows.Forms.Label();
+            this.lPlotEndTime = new System.Windows.Forms.Label();
+            this.picu = new System.Windows.Forms.PictureBox();
+            this.picI = new System.Windows.Forms.PictureBox();
+            this.dgDynamics = new System.Windows.Forms.DataGridView();
+            this.colField = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDist = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.grRheobase = new System.Windows.Forms.GroupBox();
+            this.eRheobase = new System.Windows.Forms.TextBox();
+            this.lRheobase = new System.Windows.Forms.Label();
+            this.grTest = new System.Windows.Forms.GroupBox();
+            this.grInstanceParameters = new System.Windows.Forms.GroupBox();
+            this.splitMain = new System.Windows.Forms.SplitContainer();
+            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
+            this.pUseUpdatedParams = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.picV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picu)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).BeginInit();
+            this.grRheobase.SuspendLayout();
+            this.grTest.SuspendLayout();
+            this.grInstanceParameters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
+            this.splitMain.Panel1.SuspendLayout();
+            this.splitMain.Panel2.SuspendLayout();
+            this.splitMain.SuspendLayout();
+            this.pUseUpdatedParams.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // picV
+            // 
+            this.picV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picV.Location = new System.Drawing.Point(0, 0);
+            this.picV.Name = "picV";
+            this.picV.Size = new System.Drawing.Size(518, 482);
+            this.picV.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picV.TabIndex = 11;
+            this.picV.TabStop = false;
+            // 
+            // eRheobaseLimit
+            // 
+            this.eRheobaseLimit.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.eRheobaseLimit.Location = new System.Drawing.Point(38, 23);
+            this.eRheobaseLimit.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.eRheobaseLimit.Name = "eRheobaseLimit";
+            this.eRheobaseLimit.Size = new System.Drawing.Size(54, 23);
+            this.eRheobaseLimit.TabIndex = 15;
+            this.eRheobaseLimit.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // lRheobaseLimit
+            // 
+            this.lRheobaseLimit.AutoSize = true;
+            this.lRheobaseLimit.Location = new System.Drawing.Point(6, 26);
+            this.lRheobaseLimit.Name = "lRheobaseLimit";
+            this.lRheobaseLimit.Size = new System.Drawing.Size(34, 15);
+            this.lRheobaseLimit.TabIndex = 14;
+            this.lRheobaseLimit.Text = "Limit";
+            // 
+            // btnRheobase
+            // 
+            this.btnRheobase.Location = new System.Drawing.Point(98, 22);
+            this.btnRheobase.Name = "btnRheobase";
+            this.btnRheobase.Size = new System.Drawing.Size(75, 23);
+            this.btnRheobase.TabIndex = 13;
+            this.btnRheobase.Text = "Calculate";
+            this.btnRheobase.UseVisualStyleBackColor = true;
+            this.btnRheobase.Click += new System.EventHandler(this.btnRheobase_Click);
+            // 
+            // eInstanceParams
+            // 
+            this.eInstanceParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eInstanceParams.Location = new System.Drawing.Point(3, 19);
+            this.eInstanceParams.Multiline = true;
+            this.eInstanceParams.Name = "eInstanceParams";
+            this.eInstanceParams.ReadOnly = true;
+            this.eInstanceParams.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.eInstanceParams.Size = new System.Drawing.Size(231, 266);
+            this.eInstanceParams.TabIndex = 12;
+            // 
+            // ldt
+            // 
+            this.ldt.AutoSize = true;
+            this.ldt.Location = new System.Drawing.Point(15, 121);
+            this.ldt.Name = "ldt";
+            this.ldt.Size = new System.Drawing.Size(18, 15);
+            this.ldt.TabIndex = 10;
+            this.ldt.Text = "dt";
+            // 
+            // edt
+            // 
+            this.edt.DecimalPlaces = 2;
+            this.edt.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.edt.Location = new System.Drawing.Point(107, 119);
+            this.edt.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.edt.Name = "edt";
+            this.edt.Size = new System.Drawing.Size(66, 23);
+            this.edt.TabIndex = 11;
+            this.edt.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // lInput
+            // 
+            this.lInput.AutoSize = true;
+            this.lInput.Location = new System.Drawing.Point(15, 23);
+            this.lInput.Name = "lInput";
+            this.lInput.Size = new System.Drawing.Size(35, 15);
+            this.lInput.TabIndex = 1;
+            this.lInput.Text = "Input";
+            // 
+            // eInput
+            // 
+            this.eInput.DecimalPlaces = 3;
+            this.eInput.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.eInput.Location = new System.Drawing.Point(107, 18);
+            this.eInput.Name = "eInput";
+            this.eInput.Size = new System.Drawing.Size(66, 23);
+            this.eInput.TabIndex = 2;
+            this.eInput.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // ePlotEndTime
+            // 
+            this.ePlotEndTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotEndTime.Location = new System.Drawing.Point(107, 94);
+            this.ePlotEndTime.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.ePlotEndTime.Name = "ePlotEndTime";
+            this.ePlotEndTime.Size = new System.Drawing.Size(66, 23);
+            this.ePlotEndTime.TabIndex = 9;
+            this.ePlotEndTime.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // btnDynamicsRun
+            // 
+            this.btnDynamicsRun.Location = new System.Drawing.Point(106, 148);
+            this.btnDynamicsRun.Name = "btnDynamicsRun";
+            this.btnDynamicsRun.Size = new System.Drawing.Size(67, 23);
+            this.btnDynamicsRun.TabIndex = 3;
+            this.btnDynamicsRun.Text = "Run";
+            this.btnDynamicsRun.UseVisualStyleBackColor = true;
+            this.btnDynamicsRun.Click += new System.EventHandler(this.btnDynamicsRun_Click);
+            // 
+            // eStepEndTime
+            // 
+            this.eStepEndTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.eStepEndTime.Location = new System.Drawing.Point(107, 70);
+            this.eStepEndTime.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.eStepEndTime.Name = "eStepEndTime";
+            this.eStepEndTime.Size = new System.Drawing.Size(66, 23);
+            this.eStepEndTime.TabIndex = 8;
+            this.eStepEndTime.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            // 
+            // lStepStartTime
+            // 
+            this.lStepStartTime.AutoSize = true;
+            this.lStepStartTime.Location = new System.Drawing.Point(15, 46);
+            this.lStepStartTime.Name = "lStepStartTime";
+            this.lStepStartTime.Size = new System.Drawing.Size(86, 15);
+            this.lStepStartTime.TabIndex = 4;
+            this.lStepStartTime.Text = "Step Start Time";
+            // 
+            // eStepStartTime
+            // 
+            this.eStepStartTime.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.eStepStartTime.Location = new System.Drawing.Point(107, 44);
+            this.eStepStartTime.Name = "eStepStartTime";
+            this.eStepStartTime.Size = new System.Drawing.Size(66, 23);
+            this.eStepStartTime.TabIndex = 7;
+            this.eStepStartTime.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // lStepEndTime
+            // 
+            this.lStepEndTime.AutoSize = true;
+            this.lStepEndTime.Location = new System.Drawing.Point(15, 70);
+            this.lStepEndTime.Name = "lStepEndTime";
+            this.lStepEndTime.Size = new System.Drawing.Size(82, 15);
+            this.lStepEndTime.TabIndex = 5;
+            this.lStepEndTime.Text = "Step End Time";
+            // 
+            // lPlotEndTime
+            // 
+            this.lPlotEndTime.AutoSize = true;
+            this.lPlotEndTime.Location = new System.Drawing.Point(15, 96);
+            this.lPlotEndTime.Name = "lPlotEndTime";
+            this.lPlotEndTime.Size = new System.Drawing.Size(80, 15);
+            this.lPlotEndTime.TabIndex = 6;
+            this.lPlotEndTime.Text = "Plot End Time";
+            // 
+            // picu
+            // 
+            this.picu.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.picu.Location = new System.Drawing.Point(0, 609);
+            this.picu.Name = "picu";
+            this.picu.Size = new System.Drawing.Size(518, 74);
+            this.picu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picu.TabIndex = 13;
+            this.picu.TabStop = false;
+            // 
+            // picI
+            // 
+            this.picI.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.picI.Location = new System.Drawing.Point(0, 482);
+            this.picI.Name = "picI";
+            this.picI.Size = new System.Drawing.Size(518, 127);
+            this.picI.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picI.TabIndex = 14;
+            this.picI.TabStop = false;
+            // 
+            // dgDynamics
+            // 
+            this.dgDynamics.AllowUserToAddRows = false;
+            this.dgDynamics.AllowUserToDeleteRows = false;
+            this.dgDynamics.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgDynamics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgDynamics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colField,
+            this.colValue,
+            this.colDist});
+            this.dgDynamics.Location = new System.Drawing.Point(3, 33);
+            this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.RowHeadersVisible = false;
+            this.dgDynamics.RowTemplate.Height = 25;
+            this.dgDynamics.Size = new System.Drawing.Size(443, 345);
+            this.dgDynamics.TabIndex = 15;
+            // 
+            // colField
+            // 
+            this.colField.HeaderText = "Field";
+            this.colField.Name = "colField";
+            this.colField.ReadOnly = true;
+            // 
+            // colValue
+            // 
+            this.colValue.HeaderText = "Value";
+            this.colValue.Name = "colValue";
+            // 
+            // colDist
+            // 
+            this.colDist.HeaderText = "Distr.";
+            this.colDist.Name = "colDist";
+            this.colDist.Width = 40;
+            // 
+            // grRheobase
+            // 
+            this.grRheobase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grRheobase.Controls.Add(this.eRheobase);
+            this.grRheobase.Controls.Add(this.lRheobase);
+            this.grRheobase.Controls.Add(this.btnRheobase);
+            this.grRheobase.Controls.Add(this.eRheobaseLimit);
+            this.grRheobase.Controls.Add(this.lRheobaseLimit);
+            this.grRheobase.Location = new System.Drawing.Point(6, 392);
+            this.grRheobase.Name = "grRheobase";
+            this.grRheobase.Size = new System.Drawing.Size(200, 100);
+            this.grRheobase.TabIndex = 16;
+            this.grRheobase.TabStop = false;
+            this.grRheobase.Text = "Calculate Rheobase";
+            // 
+            // eRheobase
+            // 
+            this.eRheobase.Location = new System.Drawing.Point(73, 59);
+            this.eRheobase.Name = "eRheobase";
+            this.eRheobase.ReadOnly = true;
+            this.eRheobase.Size = new System.Drawing.Size(100, 23);
+            this.eRheobase.TabIndex = 17;
+            // 
+            // lRheobase
+            // 
+            this.lRheobase.AutoSize = true;
+            this.lRheobase.Location = new System.Drawing.Point(9, 62);
+            this.lRheobase.Name = "lRheobase";
+            this.lRheobase.Size = new System.Drawing.Size(58, 15);
+            this.lRheobase.TabIndex = 16;
+            this.lRheobase.Text = "Rheobase";
+            // 
+            // grTest
+            // 
+            this.grTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grTest.Controls.Add(this.ldt);
+            this.grTest.Controls.Add(this.lInput);
+            this.grTest.Controls.Add(this.edt);
+            this.grTest.Controls.Add(this.lPlotEndTime);
+            this.grTest.Controls.Add(this.lStepEndTime);
+            this.grTest.Controls.Add(this.eInput);
+            this.grTest.Controls.Add(this.eStepStartTime);
+            this.grTest.Controls.Add(this.ePlotEndTime);
+            this.grTest.Controls.Add(this.lStepStartTime);
+            this.grTest.Controls.Add(this.btnDynamicsRun);
+            this.grTest.Controls.Add(this.eStepEndTime);
+            this.grTest.Location = new System.Drawing.Point(3, 498);
+            this.grTest.Name = "grTest";
+            this.grTest.Size = new System.Drawing.Size(200, 182);
+            this.grTest.TabIndex = 17;
+            this.grTest.TabStop = false;
+            this.grTest.Text = "Test";
+            // 
+            // grInstanceParameters
+            // 
+            this.grInstanceParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.grInstanceParameters.Controls.Add(this.eInstanceParams);
+            this.grInstanceParameters.Location = new System.Drawing.Point(212, 392);
+            this.grInstanceParameters.Name = "grInstanceParameters";
+            this.grInstanceParameters.Size = new System.Drawing.Size(237, 288);
+            this.grInstanceParameters.TabIndex = 18;
+            this.grInstanceParameters.TabStop = false;
+            this.grInstanceParameters.Text = "Instance Params";
+            // 
+            // splitMain
+            // 
+            this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitMain.Location = new System.Drawing.Point(0, 0);
+            this.splitMain.Name = "splitMain";
+            // 
+            // splitMain.Panel1
+            // 
+            this.splitMain.Panel1.Controls.Add(this.pUseUpdatedParams);
+            this.splitMain.Panel1.Controls.Add(this.grTest);
+            this.splitMain.Panel1.Controls.Add(this.grInstanceParameters);
+            this.splitMain.Panel1.Controls.Add(this.grRheobase);
+            this.splitMain.Panel1.Controls.Add(this.dgDynamics);
+            // 
+            // splitMain.Panel2
+            // 
+            this.splitMain.Panel2.Controls.Add(this.picV);
+            this.splitMain.Panel2.Controls.Add(this.picI);
+            this.splitMain.Panel2.Controls.Add(this.picu);
+            this.splitMain.Panel2.Resize += new System.EventHandler(this.splitMain_Panel2_Resize);
+            this.splitMain.Size = new System.Drawing.Size(974, 683);
+            this.splitMain.SplitterDistance = 452;
+            this.splitMain.TabIndex = 17;
+            // 
+            // linkUseUpdatedParams
+            // 
+            this.linkUseUpdatedParams.AutoSize = true;
+            this.linkUseUpdatedParams.Location = new System.Drawing.Point(3, 9);
+            this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
+            this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
+            this.linkUseUpdatedParams.TabIndex = 19;
+            this.linkUseUpdatedParams.TabStop = true;
+            this.linkUseUpdatedParams.Text = "Use Updated Parameters";
+            this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
+            // 
+            // pUseUpdatedParams
+            // 
+            this.pUseUpdatedParams.Controls.Add(this.linkUseUpdatedParams);
+            this.pUseUpdatedParams.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pUseUpdatedParams.Location = new System.Drawing.Point(0, 0);
+            this.pUseUpdatedParams.Name = "pUseUpdatedParams";
+            this.pUseUpdatedParams.Size = new System.Drawing.Size(452, 30);
+            this.pUseUpdatedParams.TabIndex = 20;
+            // 
+            // DynamicsTestControl
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.splitMain);
+            this.Name = "DynamicsTestControl";
+            this.Size = new System.Drawing.Size(974, 683);
+            ((System.ComponentModel.ISupportInitialize)(this.picV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picu)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).EndInit();
+            this.grRheobase.ResumeLayout(false);
+            this.grRheobase.PerformLayout();
+            this.grTest.ResumeLayout(false);
+            this.grTest.PerformLayout();
+            this.grInstanceParameters.ResumeLayout(false);
+            this.grInstanceParameters.PerformLayout();
+            this.splitMain.Panel1.ResumeLayout(false);
+            this.splitMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
+            this.splitMain.ResumeLayout(false);
+            this.pUseUpdatedParams.ResumeLayout(false);
+            this.pUseUpdatedParams.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private PictureBox picV;
+        private NumericUpDown eRheobaseLimit;
+        private Label lRheobaseLimit;
+        private Button btnRheobase;
+        private TextBox eInstanceParams;
+        private Label ldt;
+        private NumericUpDown edt;
+        private Label lInput;
+        private NumericUpDown eInput;
+        private NumericUpDown ePlotEndTime;
+        private Button btnDynamicsRun;
+        private NumericUpDown eStepEndTime;
+        private Label lStepStartTime;
+        private NumericUpDown eStepStartTime;
+        private Label lStepEndTime;
+        private Label lPlotEndTime;
+        private PictureBox picu;
+        private PictureBox picI;
+        private DataGridView dgDynamics;
+        private DataGridViewTextBoxColumn colField;
+        private DataGridViewTextBoxColumn colValue;
+        private DataGridViewButtonColumn colDist;
+        private GroupBox grRheobase;
+        private TextBox eRheobase;
+        private Label lRheobase;
+        private GroupBox grTest;
+        private GroupBox grInstanceParameters;
+        private SplitContainer splitMain;
+        private Panel pUseUpdatedParams;
+        private LinkLabel linkUseUpdatedParams;
+    }
+}

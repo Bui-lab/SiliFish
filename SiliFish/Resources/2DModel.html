@@ -1,0 +1,89 @@
+<!--https://github.com/vasturiano/d3-force-3d-->
+<!--https://bl.ocks.org/vasturiano/f59675656258d3f490e9faa40828c0e7-->
+<!--https://github.com/vasturiano/force-graph/blob/master/example/custom-node-shape/index.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>__TITLE__</title>
+    <script src="https://unpkg.com/force-graph"></script>
+    <script src="https://unpkg.com/three"></script>
+    <link rel="stylesheet" href="StyleSheet.css" />
+</head>
+
+<body>
+    <div id="left-panel" style="width:50%; float:left">
+        <div id="left-title" class="titleDiv" >__LEFT_HEADER__</div>
+        <div id="graph-gap"></div>
+    </div>
+    <div id="seperator" class="vertical"></div>
+    <div id="right-panel" style="width:50%; float:right">
+        <div id="right-title" class="titleDiv" >__RIGHT_HEADER__</div>
+        <div id="graph-chem"></div>
+    </div>
+
+    <script>
+        const gapGraph = ForceGraph()
+            (document.getElementById("graph-gap"));
+        const chemGraph = ForceGraph()
+            (document.getElementById("graph-chem"));
+
+        const shapeSet = { __SHAPE_SET__ };
+        const colorSet = { __COLOR_SET__ };
+
+
+        function nodePaint({ id, g, x, y }, color, ctx) {
+            ctx.fillStyle = color;
+            {
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, 2 * Math.PI, false); //circle
+                ctx.fill();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = 'lightgray';
+                ctx.textSize = 10;
+                ctx.fillText(id, x, y);
+            };
+        }
+        const gapData = {
+            "nodes": [__POOLS__],
+            "links": [__GAP_LINKS__]
+        };
+        const chemData = {
+            "nodes": [__POOLS__],
+            "links": [__CHEM_LINKS__]
+        };
+
+        const gapDataSet = gapGraph
+            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
+            .nodePointerAreaPaint(nodePaint)
+            .nodeLabel(`id`)
+            .graphData(gapData)
+            .enableNodeDrag(false)
+            .linkColor(()=>'#999')
+            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkWidth(l => Math.max(l.value, 0.5))
+            .backgroundColor('black')
+            .width(document.body.offsetWidth / 2);
+
+        const chemDataSet = chemGraph
+            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
+            .nodePointerAreaPaint(nodePaint)
+            .nodeLabel(`id`)
+            .graphData(chemData)
+            .linkDirectionalArrowRelPos(1)
+            .linkDirectionalArrowLength(5)
+            .enableNodeDrag(false)
+            .linkColor(()=>'#999')
+            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkWidth(l => Math.max(l.value, 0.5))
+            .backgroundColor('black')
+            .width(document.body.offsetWidth / 2);
+    </script>
+
+</body>
+
+</html>
+

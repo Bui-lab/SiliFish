@@ -1,0 +1,69 @@
+<!-- Code template from: https://www.amcharts.com/ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>__TITLE__</title>
+    <!-- Styles -->
+    <style>
+        #chartDiv {
+            width: 100%;
+            height: __HEIGHT_PX__px;
+            max-width: 100%
+        }
+    </style>
+    <link rel="stylesheet" href="StyleSheet.css" />
+</head>
+<body>
+
+    <div id="titleDiv">__TITLE__</div>
+    <div id="chartDiv">
+        <div id="statusDiv">
+            <div class="spinner"></div>Loading...
+        </div>
+    </div>
+
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/plugins/exporting.js"></script>
+
+    <!-- Chart code -->
+    <script>
+        am5.ready(function () {
+
+            // Create root element
+            // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+            var root = am5.Root.new("chartDiv");
+
+
+            // Set themes
+            // https://www.amcharts.com/docs/v5/concepts/themes/
+            root.setThemes([
+                am5themes_Animated.new(root)
+            ]);
+
+            // Create wrapper container
+            var container = root.container.children.push(am5.Container.new(root, {
+                width: am5.percent(__PERCENT_WIDTH__),
+                height: am5.percent(__PERCENT_HEIGHT__),
+                layout: root.gridLayout,
+                maxColumns: __COLUMNS__,
+                fixedWidthGrid: true
+            }));
+
+            __CHARTS__
+
+            // Add export menu
+            var exporting = am5plugins_exporting.Exporting.new(root, {
+                menu: am5plugins_exporting.ExportingMenu.new(root, {})
+            });
+
+            document.querySelector("#statusDiv").style.display = "none";
+        }); // end am5.ready()
+    </script>
+</body>
+
+</html>
