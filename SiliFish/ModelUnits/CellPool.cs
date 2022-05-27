@@ -12,7 +12,7 @@ namespace SiliFish.ModelUnits
         public string CellGroup { get; set; }
         public string Description { get; set; }
         public CellType CellType { get; set; }
-        public NeuronClass NTMode { get; set; }//valid if CellType==Neuron
+        public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
         public BodyLocation BodyLocation { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
@@ -72,7 +72,7 @@ namespace SiliFish.ModelUnits
         }
         public override string ToString()
         {
-            return CellGroup;
+            return CellGroup + (Active?"":" (inactive)");
         }
 
         
@@ -87,7 +87,8 @@ namespace SiliFish.ModelUnits
                 $"Position: {Position}\r\n" +
                 $"# of cells: {NumOfCells}\r\n" +
                 $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
-                $"TimeLine: {TimeLine}";
+                $"TimeLine: {TimeLine}\r\n" +
+                $"Active: {Active}";
         }
 
         public int CompareTo(CellPoolTemplate other)

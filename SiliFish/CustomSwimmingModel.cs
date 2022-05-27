@@ -32,6 +32,8 @@ namespace SiliFish
                 ip.PoolSource = newName;
             foreach (InterPoolTemplate ip in InterPools.Where(ip => ip.PoolTarget == oldName))
                 ip.PoolTarget = newName;
+            foreach (AppliedStimulus stim in Stimuli.Where(s => s.Target == oldName))
+                stim.Target = newName;
         }
 
         public string ModelName

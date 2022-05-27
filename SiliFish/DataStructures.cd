@@ -1,180 +1,146 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="SiliFish.GapJunction" Collapsed="true">
-    <Position X="6.25" Y="4.5" Width="2" />
-    <Compartments>
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <AssociationLine Name="Cell1" Type="SiliFish.Cell" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="6.5" Y="4.5" />
-        <Point X="6.5" Y="4.281" />
-        <Point X="6.5" Y="4.281" />
-        <Point X="6.5" Y="2.312" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.435" Y="0.795" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="Cell2" Type="SiliFish.Cell" FixedToPoint="true">
-      <Path>
-        <Point X="7.125" Y="4.5" />
-        <Point X="7.125" Y="2.312" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="-0.678" Y="1.057" Height="0.182" Width="0.672" />
-      </MemberNameLabel>
-    </AssociationLine>
+  <Class Name="SiliFish.ModelUnits.Cell" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAAACACAABSAAAAAAEgAAAAACAKAAAAAAAAgAAAAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>AQAAAgCAAAAigAIgAAUICAYABAAAAAAQCIBgIQEQgAA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="Cell1" />
-      <Field Name="Cell2" />
-    </ShowAsAssociation>
   </Class>
-  <Class Name="SiliFish.Synapse" Collapsed="true">
-    <Position X="1.25" Y="4.5" Width="2.25" />
-    <Compartments>
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <AssociationLine Name="PreNeuron" Type="SiliFish.Neuron" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="3.312" Y="4.5" />
-        <Point X="3.312" Y="3.563" />
-        <Point X="4.25" Y="3.563" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="-0.126" Y="0.098" Height="0.182" Width="1.253" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="PostCell" Type="SiliFish.Cell" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="2.631" Y="4.5" />
-        <Point X="2.631" Y="1.926" />
-        <Point X="5.75" Y="1.926" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="2.089" Y="0.112" />
-      </MemberNameLabel>
-    </AssociationLine>
+  <Class Name="SiliFish.ModelUnits.Neuron" Collapsed="true">
+    <Position X="9" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgABAAACAAACAAgAUAGgAAAIACAKAAAEAAIAAAAAAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>AAAAAhASAAIgDAAAAAAgCCAAAAAAAAAAAKIAAAAAgAA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="PreNeuron" />
-      <Field Name="PostCell" />
-    </ShowAsAssociation>
   </Class>
-  <Class Name="SiliFish.Cell" Collapsed="true">
-    <Position X="5.75" Y="1.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-    </Compartments>
-    <AssociationLine Name="Synapses" Type="SiliFish.Synapse" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="5.75" Y="2.123" />
-        <Point X="2.937" Y="2.123" />
-        <Point X="2.937" Y="4.5" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="3.86" Y="-2.211" />
-      </MemberNameLabel>
-    </AssociationLine>
+  <Class Name="SiliFish.ModelUnits.MuscleCell" Collapsed="true">
+    <Position X="6.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAADAAAAAAAIAAAAAAAYABAAAAAAACCBgAAEQAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>AAAAAgACAAAgCAAAAAAgCAAAAAAAAAAAAMAAAAAAgQA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="CellPool" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Field Name="Synapses" />
-    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="SiliFish.CellPool" Collapsed="true">
-    <Position X="5.75" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <AssociationLine Name="Cells" Type="SiliFish.Cell">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.617" Y="0.423" />
-      </MemberNameLabel>
-    </AssociationLine>
+  <Class Name="SiliFish.ModelUnits.CellPoolTemplate" Collapsed="true">
+    <Position X="3.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEEAAAgAAAAAAAIAgAIAAAAiAAAACAAAIAQIAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>AIAAAAAgAAAgIAQkAAEIAAIAIBAACBMwCIAAgAAAAAA=</HashCode>
+      <FileName>ModelUnits\CellPool.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="Cells" />
-    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SiliFish.Neuron" Collapsed="true">
-    <Position X="4.25" Y="3.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <InheritanceLine Type="SiliFish.Cell" ManuallyRouted="true" FixedFromPoint="true">
-      <Path>
-        <Point X="6" Y="2.312" />
-        <Point X="6" Y="3.281" />
-        <Point X="5" Y="3.281" />
-        <Point X="5" Y="3.5" />
-      </Path>
-    </InheritanceLine>
-    <AssociationLine Name="GapJunctions" Type="SiliFish.GapJunction" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="5.438" Y="4.191" />
-        <Point X="5.438" Y="4.813" />
-        <Point X="6.25" Y="4.813" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.008" Y="-0.307" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="Terminals" Type="SiliFish.Synapse" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="4.875" Y="4.191" />
-        <Point X="4.875" Y="4.875" />
-        <Point X="3.5" Y="4.875" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.281" Y="0.066" Height="0.182" Width="1.076" />
-      </MemberNameLabel>
-    </AssociationLine>
+  <Class Name="SiliFish.ModelUnits.CellPool" Collapsed="true">
+    <Position X="2" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAACAAIABAAAAAIgACAAAAAAAAAAAAIAQAAAAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>QIAAAFAgAAoAgAEgAAoVwAJAICAgCAIACAgAgQAAgAA=</HashCode>
+      <FileName>ModelUnits\CellPool.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="GapJunctions" />
-      <Field Name="Terminals" />
-    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="SiliFish.MuscleCell" Collapsed="true">
-    <Position X="8" Y="3.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <InheritanceLine Type="SiliFish.Cell" ManuallyRouted="true" FixedFromPoint="true">
-      <Path>
-        <Point X="7.25" Y="2" />
-        <Point X="8.75" Y="2" />
-        <Point X="8.75" Y="3.5" />
-      </Path>
-    </InheritanceLine>
+  <Class Name="SiliFish.ModelUnits.InterPoolTemplate" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAACAAAAAAAAAAIgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>AYAAAAAIAAAhAAQEEEAIMBQAAAJAAAAgAAAAAAEAAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.InterPool" Collapsed="true">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAEAAAAACAAAgAEAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.CellReach" Collapsed="true">
+    <Position X="4.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAgAAIAAABAAAABCAAAAAAAiAAAAAAQAAAAAAEAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.SynapseParameters" Collapsed="true">
+    <Position X="7.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAgAAAgAAAAgAAAAAAAAAAAAE=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.GapJunction" Collapsed="true">
+    <Position X="7.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAACAAASiAIBEAEgABAAAAgKQEAAAIAAgAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.ChemicalJunction" Collapsed="true">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgABAAACAAACiAgBUAGgABAIAAAKAAAEAAIAAAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stimulus" Collapsed="true">
+    <Position X="9.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAJAAASAEAAAAAAIBAAAAACAAAAAgCgQAACA=</HashCode>
+      <FileName>ModelUnits\Stimulus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.AppliedStimulus" Collapsed="true">
+    <Position X="7.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAQEAAIAACAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>ModelUnits\Stimulus.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.DataTypes.Distribution" Collapsed="true">
+    <Position X="3.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABogAAAAADgAEQAQAAAACAAIABAAEAAABACAAAgA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DataTypes.UniformDistribution" Collapsed="true">
+    <Position X="2.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DataTypes.Constant_NoDistribution" Collapsed="true">
+    <Position X="7.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DataTypes.SpacedDistribution" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAEAAAAAEAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DataTypes.GaussianDistribution" Collapsed="true">
+    <Position X="5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAoAAAAAAAAAEAAAAAAAAAAAAAAAEAAQAAAAAAgA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DataTypes.BimodalDistribution" Collapsed="true">
+    <Position X="5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAoAAAAAAAAAEAAAAEAAAAAAAAABAAAAAAAAAAgA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DataTypes.SpatialDistribution" Collapsed="true">
+    <Position X="1.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAgAAAAAAAAAAAAAAAAIAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataTypes\Distribution.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -84,6 +84,9 @@ namespace SiliFish.UI.Controls
                     case NeuronClass.Glycinergic:
                         numEReversal.Value = Parameters.Read("Dynamic.E_gly", numEReversal.Value);
                         break;
+                    case NeuronClass.GABAergic:
+                        numEReversal.Value = Parameters.Read("Dynamic.E_gaba", numEReversal.Value);
+                        break;
                     case NeuronClass.Glutamatergic:
                         numEReversal.Value = Parameters.Read("Dynamic.E_glu", numEReversal.Value);
                         break;

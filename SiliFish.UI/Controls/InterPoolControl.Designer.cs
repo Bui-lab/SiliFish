@@ -423,7 +423,6 @@
             this.cbActive.Size = new System.Drawing.Size(59, 19);
             this.cbActive.TabIndex = 16;
             this.cbActive.Text = "Active";
-            this.cbActive.ThreeState = true;
             this.cbActive.UseVisualStyleBackColor = true;
             this.cbActive.CheckedChanged += new System.EventHandler(this.cbActive_CheckedChanged);
             // 

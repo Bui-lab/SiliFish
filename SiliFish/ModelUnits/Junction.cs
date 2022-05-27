@@ -6,8 +6,27 @@ namespace SiliFish.ModelUnits
 {
     public class InterPoolTemplate: IComparable<InterPoolTemplate>
     {
-        public string PoolSource { get; set; }
-        public string PoolTarget { get; set; }
+        private string poolSource, poolTarget;
+        public string PoolSource
+        {
+            get { return poolSource; }
+            set
+            {
+                bool rename = GeneratedName() == Name;
+                poolSource = value;
+                if (rename) Name = GeneratedName();
+            }
+        }
+        public string PoolTarget
+        {
+            get { return poolTarget; }
+            set
+            {
+                bool rename = GeneratedName() == Name;
+                poolTarget = value;
+                if (rename) Name = GeneratedName();
+            }
+        }
         public CellReach CellReach { get; set; }
         public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;
         public JunctionType JunctionType { get; set; } = JunctionType.NotSet;
@@ -71,7 +90,8 @@ namespace SiliFish.ModelUnits
                 $"Mode: {AxonReachMode}\r\n" +
                 $"Type: {JunctionType}\r\n" +
                 $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +
-                $"TimeLine: {TimeLine}";
+                $"TimeLine: {TimeLine}\r\n" +
+                $"Active: {Active}";
         }
 
         public int CompareTo(InterPoolTemplate other)

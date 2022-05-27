@@ -1,9 +1,11 @@
-﻿using System;
+﻿using SiliFish.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -76,6 +78,17 @@ namespace SiliFish.UI.Controls
             sortItems?.Invoke(this, new EventArgs());
         }
 
+        private void miActivate_Click(object sender, EventArgs e)
+        {
+            listBox.SelectedItem.SetPropertyValue("Active", true);
+            listBox.Items[listBox.SelectedIndex] = listBox.Items[listBox.SelectedIndex];//to refresh text
+        }
+
+        private void miDeactivate_Click(object sender, EventArgs e)
+        {
+            listBox.SelectedItem.SetPropertyValue("Active", false);
+            listBox.Items[listBox.SelectedIndex] = listBox.Items[listBox.SelectedIndex];//to refresh text
+        }
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             var fnc = listBox.SelectedItem?.GetType().GetMethod("GetTooltip");
@@ -92,6 +105,21 @@ namespace SiliFish.UI.Controls
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
             miSortAlphabetically.Visible = sortItems != null;
+
+            miActivate.Visible = miDeactivate.Visible = false;
+            if (listBox.SelectedItem != null)
+            {
+                var (active, exists) = listBox.SelectedItem.GetPropertyValue("Active", true);
+                if (exists)
+                {
+                    miActivate.Visible = !active;
+                    miDeactivate.Visible = active;
+                }
+            }
+            
+
         }
+
+
     }
 }

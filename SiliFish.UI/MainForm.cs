@@ -51,7 +51,7 @@ namespace SiliFish.UI
                 webViewAnimation.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;//TODO this doesn't work
 
                 //TODO learn the best way to do it
-                listCellPool.AddSortMenu("type", listCellPool_SortByNTType);
+                listCellPool.AddSortMenu("Type", listCellPool_SortByNTType);
             }
             catch (Exception ex)
             {
@@ -1047,8 +1047,11 @@ namespace SiliFish.UI
 
         private void listCellPool_SortByNTType(object sender, EventArgs e)
         {
-            var v = ModelTemplate.Pools.OrderBy(p => p.CellType.ToString()).ThenBy(p => p.NTMode.ToString());
-            //TODO it crashes here ModelTemplate.Pools = (List<CellPoolTemplate>)(v.AsEnumerable());
+            ModelTemplate.Pools = ModelTemplate.Pools
+                .OrderBy(p => p.CellType.ToString())
+                .ThenBy(p => p.NTMode.ToString())
+                .ToList();
+            LoadModelTemplatePools();
         }
 
         #endregion

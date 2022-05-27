@@ -36,6 +36,9 @@
             this.miCreateCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.miSortAlphabetically = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.miActivate = new System.Windows.Forms.ToolStripMenuItem();
+            this.miDeactivate = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuListBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,9 +61,12 @@
             this.miAddItem,
             this.miDeleteItem,
             this.miCreateCopy,
+            this.miActivate,
+            this.miDeactivate,
+            this.toolStripSeparator1,
             this.miSortAlphabetically});
             this.contextMenuListBox.Name = "contextMenuListBox";
-            this.contextMenuListBox.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuListBox.Size = new System.Drawing.Size(181, 164);
             this.contextMenuListBox.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuListBox_Opening);
             // 
             // miAddItem
@@ -91,6 +97,25 @@
             this.miSortAlphabetically.Text = "Sort Alphabetically";
             this.miSortAlphabetically.Click += new System.EventHandler(this.miSortAlphabetically_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // miActivate
+            // 
+            this.miActivate.Name = "miActivate";
+            this.miActivate.Size = new System.Drawing.Size(180, 22);
+            this.miActivate.Text = "Activate";
+            this.miActivate.Click += new System.EventHandler(this.miActivate_Click);
+            // 
+            // miDeactivate
+            // 
+            this.miDeactivate.Name = "miDeactivate";
+            this.miDeactivate.Size = new System.Drawing.Size(180, 22);
+            this.miDeactivate.Text = "Deactivate";
+            this.miDeactivate.Click += new System.EventHandler(this.miDeactivate_Click);
+            // 
             // ListBoxControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -112,5 +137,8 @@
         private ToolStripMenuItem miCreateCopy;
         private ToolTip toolTip;
         private ToolStripMenuItem miSortAlphabetically;
+        private ToolStripMenuItem miActivate;
+        private ToolStripMenuItem miDeactivate;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }

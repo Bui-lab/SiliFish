@@ -22,6 +22,7 @@ namespace SiliFish
 
         protected double E_glu = 0; //the reversal potential of glutamate
         protected double E_gly = -70; //the reversal potential of glycine
+        protected double E_gaba = -70; //the reversal potential of GABA
         protected double E_ach = 120; //reversal potential for ACh receptors
 
         public static Random rand = new(0);
@@ -136,6 +137,7 @@ namespace SiliFish
             paramDict.Add("Dynamic.E_ach", E_ach);
             paramDict.Add("Dynamic.E_glu", E_glu);
             paramDict.Add("Dynamic.E_gly", E_gly);
+            paramDict.Add("Dynamic.E_gaba", E_gaba);
 
             paramDict.Add("General.Name", ModelName);
             paramDict.Add("General.Description", ModelDescription);
@@ -156,6 +158,7 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
+            paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
 
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
             paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
@@ -177,6 +180,7 @@ namespace SiliFish
             E_ach = paramExternal.Read("Dynamic.E_ach", E_ach);
             E_glu = paramExternal.Read("Dynamic.E_glu", E_glu);
             E_gly = paramExternal.Read("Dynamic.E_gly", E_gly);
+            E_gaba = paramExternal.Read("Dynamic.E_gaba", E_gaba);
 
             ModelName = paramExternal.Read("General.Name", ModelName);
             ModelDescription = paramExternal.Read("General.Description", ModelDescription);
