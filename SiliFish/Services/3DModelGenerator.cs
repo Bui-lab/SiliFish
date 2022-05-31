@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
@@ -87,6 +88,22 @@ namespace SiliFish.Services
         {
             StringBuilder html = singlePanel? new(ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")):
                     new(ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
+            
+            html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
+            if (Util.CheckOnlineStatus())
+            {
+                html.Replace("__OFFLINE_3D_SCRIPT__", "");
+                html.Replace("__ONLINE_3D_SCRIPT__", "<script src=\"https://unpkg.com/3d-force-graph@1\"></script>" +
+                    "<script src=\"https://unpkg.com/d3-dsv\"></script>" +
+                    "<script src=\"https://unpkg.com/three\"></script>");
+            }
+            else
+            {
+                html.Replace("__OFFLINE_3D_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.3d-force-graph.min.js") +
+                    ReadEmbeddedResource("SiliFish.Resources.d3-dsv.min.js") +
+                    ReadEmbeddedResource("SiliFish.Resources.three.js"));
+                html.Replace("__ONLINE_3D_SCRIPT__", "");
+            }
 
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             if (!singlePanel)
@@ -110,8 +127,9 @@ namespace SiliFish.Services
                 yRange = 2 * YRange1D;
             }
             double range = Math.Max(xRange, Math.Max(yRange, zRange));
-            XYZMult = 400 / range;
-            XOffset = 50;
+            int width = 400; 
+            XYZMult = width / range;
+            XOffset = singlePanel ? width/2 : width;
             YOffset = 0;
             ZOffset = 0;
 
@@ -150,6 +168,7 @@ namespace SiliFish.Services
             html.Replace("__SPINE_Z__", newZ.ToString());
             html.Replace("__SPINE_LENGTH__", newX2.ToString());
 
+            
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": new THREE.MeshBasicMaterial({{color:{pool.Color.ToHex()}}})"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));

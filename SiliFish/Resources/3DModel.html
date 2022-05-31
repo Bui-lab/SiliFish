@@ -7,65 +7,82 @@
 <head>
     <meta charset="UTF-8">
     <title>__TITLE__</title>
-    <script src="https://unpkg.com/3d-force-graph@1"></script>
-    <script src="https://unpkg.com/d3-dsv"></script>
-    <script src="https://unpkg.com/three"></script>
-    <link rel="stylesheet" href="StyleSheet.css"/>
+    <style>
+        __STYLE_SHEET__
+    </style>
+    __ONLINE_3D_SCRIPT__
 </head>
 
 <body>
-        <div id="left-panel" style="width:50%; float:left">
-            <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
-            <div id="3d-graph-gap"></div>
-        </div>
-        <div id="seperator" class="vertical"></div>
-        <div id="right-panel" style="width:50%; float:right">
-            <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
-            <div id="3d-graph-chem"></div>
-        </div>
-        <script>
-            const gapGraph = ForceGraph3D()
-                (document.getElementById("3d-graph-gap"));
-            const chemGraph = ForceGraph3D()
-                (document.getElementById("3d-graph-chem"));
+    <div id="left-panel" style="width:50%; float:left">
+        <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
+        <div id="3d-graph-gap"></div>
+    </div>
+    <div id="seperator" class="vertical"></div>
+    <div id="right-panel" style="width:50%; float:right">
+        <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
+        <div id="3d-graph-chem"></div>
+    </div>
+    <script>
+        __OFFLINE_3D_SCRIPT__
+    </script>
+    <script>
+        const gapGraph = ForceGraph3D()
+            (document.getElementById("3d-graph-gap"));
+        const chemGraph = ForceGraph3D()
+            (document.getElementById("3d-graph-chem"));
 
-            const gapData = {
-                "nodes": [__NODES__],
-                "links": [__GAP_LINKS__]
-            };
-            const chemData = {
-                "nodes": [__NODES__],
-                "links": [__CHEM_LINKS__]
-            };
+        const gapData = {
+            "nodes": [__NODES__],
+            "links": [__GAP_LINKS__]
+        };
+        const chemData = {
+            "nodes": [__NODES__],
+            "links": [__CHEM_LINKS__]
+        };
 
-            const shapeSet = { __SHAPE_SET__ };
-            const colorSet = { __COLOR_SET__ };
+        const shapeSet = { __SHAPE_SET__ };
+        const colorSet = { __COLOR_SET__ };
 
-            const gapDataSet = gapGraph
-                .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+        const spineMaterial = new THREE.LineBasicMaterial({ color: 0x000 });
+        const spinePoints = [];
+        spinePoints.push(new THREE.Vector3(__SPINE_X__, __SPINE_Y__, __SPINE_Z__));
+        spinePoints.push(new THREE.Vector3(__SPINE_LENGTH__, __SPINE_Y__, __SPINE_Z__));
+
+        const spineGeometry = new THREE.BufferGeometry().setFromPoints(spinePoints);
+        const spineLine = new THREE.Line(spineGeometry, spineMaterial);
+
+        gapGraph.scene().add(spineLine);
+        chemGraph.scene().add(spineLine);
+
+
+        const gapDataSet = gapGraph
+            .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
             .nodeLabel(n => `${n.id} ${n.crd}`)
-                .graphData(gapData)
-                .linkColor(() => '#999')
+            .graphData(gapData)
+            .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-                .linkWidth(l => Math.max(l.value, 0.5))
-                .enableNodeDrag(false)
-                .backgroundColor("#000000");
+            .linkWidth(l => Math.max(l.value, 0.5))
+            .enableNodeDrag(false)
+            .backgroundColor("#FFF")
+            .width(document.body.offsetWidth);
 
 
-            const chemDataSet = chemGraph
-                .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+        const chemDataSet = chemGraph
+            .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
             .nodeLabel(n => `${n.id} ${n.crd}`)
-                .graphData(chemData)
-                .linkDirectionalArrowRelPos(1)
-                .linkDirectionalArrowLength(5)
-                .linkColor(() => '#999')
-                .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-                .linkWidth(l => Math.max(l.value, 0.5))
-                .enableNodeDrag(false)
-                .backgroundColor("#000000");
-        </script>
+            .graphData(chemData)
+            .linkDirectionalArrowRelPos(1)
+            .linkDirectionalArrowLength(5)
+            .linkColor(() => '#333')
+            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkWidth(l => Math.max(l.value, 0.5))
+            .enableNodeDrag(false)
+            .backgroundColor("#FFF")
+            .width(document.body.offsetWidth);
+    </script>
 
-    </body>
+</body>
 
 </html>
 

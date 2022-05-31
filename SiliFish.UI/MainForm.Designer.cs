@@ -49,8 +49,8 @@ namespace SiliFish.UI
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.pBodyDiagrams = new System.Windows.Forms.Panel();
+            this.picRostroCaudal = new System.Windows.Forms.PictureBox();
             this.picCrossSection = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.grSpinalCord = new System.Windows.Forms.GroupBox();
             this.eSpinalBodyPosition = new System.Windows.Forms.NumericUpDown();
             this.lSpinalBodyPosition = new System.Windows.Forms.Label();
@@ -167,8 +167,8 @@ namespace SiliFish.UI
             this.tabStimuli.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.pBodyDiagrams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picRostroCaudal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picCrossSection)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grSpinalCord.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalBodyPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraoCaudal)).BeginInit();
@@ -250,6 +250,7 @@ namespace SiliFish.UI
             this.pTop.Name = "pTop";
             this.pTop.Size = new System.Drawing.Size(1071, 39);
             this.pTop.TabIndex = 3;
+            this.pTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pTop_MouseDoubleClick);
             // 
             // linkClearModel
             // 
@@ -421,37 +422,34 @@ namespace SiliFish.UI
             this.pBodyDiagrams.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pBodyDiagrams.AutoScroll = true;
+            this.pBodyDiagrams.Controls.Add(this.picRostroCaudal);
             this.pBodyDiagrams.Controls.Add(this.picCrossSection);
-            this.pBodyDiagrams.Controls.Add(this.pictureBox1);
             this.pBodyDiagrams.Location = new System.Drawing.Point(192, 77);
             this.pBodyDiagrams.Name = "pBodyDiagrams";
-            this.pBodyDiagrams.Size = new System.Drawing.Size(234, 338);
+            this.pBodyDiagrams.Size = new System.Drawing.Size(237, 316);
             this.pBodyDiagrams.TabIndex = 15;
+            this.pBodyDiagrams.SizeChanged += new System.EventHandler(this.pBodyDiagrams_SizeChanged);
+            // 
+            // picRostroCaudal
+            // 
+            this.picRostroCaudal.Image = ((System.Drawing.Image)(resources.GetObject("picRostroCaudal.Image")));
+            this.picRostroCaudal.Location = new System.Drawing.Point(3, 237);
+            this.picRostroCaudal.Name = "picRostroCaudal";
+            this.picRostroCaudal.Size = new System.Drawing.Size(231, 75);
+            this.picRostroCaudal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picRostroCaudal.TabIndex = 2;
+            this.picRostroCaudal.TabStop = false;
             // 
             // picCrossSection
             // 
-            this.picCrossSection.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.picCrossSection.Image = ((System.Drawing.Image)(resources.GetObject("picCrossSection.Image")));
             this.picCrossSection.Location = new System.Drawing.Point(3, 3);
             this.picCrossSection.Name = "picCrossSection";
-            this.picCrossSection.Size = new System.Drawing.Size(228, 251);
+            this.picCrossSection.Size = new System.Drawing.Size(231, 228);
             this.picCrossSection.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picCrossSection.TabIndex = 12;
             this.picCrossSection.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(3, 260);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(231, 78);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
             // 
             // grSpinalCord
             // 
@@ -1133,6 +1131,8 @@ namespace SiliFish.UI
             this.ddCellsPools.Name = "ddCellsPools";
             this.ddCellsPools.Size = new System.Drawing.Size(137, 23);
             this.ddCellsPools.TabIndex = 27;
+            this.ddCellsPools.SelectedIndexChanged += new System.EventHandler(this.ddCellsPools_SelectedIndexChanged);
+            this.ddCellsPools.Enter += new System.EventHandler(this.ddCellsPools_Enter);
             // 
             // lPlotStart
             // 
@@ -1210,6 +1210,7 @@ namespace SiliFish.UI
             this.ddGrouping.Size = new System.Drawing.Size(137, 23);
             this.ddGrouping.TabIndex = 26;
             this.ddGrouping.SelectedIndexChanged += new System.EventHandler(this.ddGrouping_SelectedIndexChanged);
+            this.ddGrouping.Enter += new System.EventHandler(this.ddGrouping_Enter);
             // 
             // lPlot
             // 
@@ -1239,11 +1240,14 @@ namespace SiliFish.UI
             "Memb. Potentials",
             "Gap Currents",
             "Syn Currents",
-            "Currents"});
+            "Currents",
+            "Stimuli"});
             this.ddPlot.Location = new System.Drawing.Point(303, 57);
             this.ddPlot.Name = "ddPlot";
             this.ddPlot.Size = new System.Drawing.Size(137, 23);
             this.ddPlot.TabIndex = 28;
+            this.ddPlot.SelectedIndexChanged += new System.EventHandler(this.ddPlot_SelectedIndexChanged);
+            this.ddPlot.Enter += new System.EventHandler(this.ddPlot_Enter);
             // 
             // tabAnimation
             // 
@@ -1543,6 +1547,7 @@ namespace SiliFish.UI
             this.Text = "SiliFish";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.pTop.ResumeLayout(false);
             this.pTop.PerformLayout();
             this.splitMain.Panel1.ResumeLayout(false);
@@ -1559,8 +1564,8 @@ namespace SiliFish.UI
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
             this.pBodyDiagrams.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picRostroCaudal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picCrossSection)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.grSpinalCord.ResumeLayout(false);
             this.grSpinalCord.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalBodyPosition)).EndInit();
@@ -1700,7 +1705,7 @@ namespace SiliFish.UI
         private ComboBox dd3DModelType;
         private LinkLabel linkClearModel;
         private TabPage tabGeneral;
-        private PictureBox pictureBox1;
+        private PictureBox picRostroCaudal;
         private Label lModelDescription;
         private Label lModelName;
         private TabPage tabTextOutput;

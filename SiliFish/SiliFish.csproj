@@ -25,24 +25,36 @@
 
   <ItemGroup>
     <None Remove="Resources\2DModel.html" />
+    <None Remove="Resources\3d-force-graph.min.js" />
     <None Remove="Resources\3DModel.html" />
     <None Remove="Resources\3DModelSinglePanel.html" />
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
+    <None Remove="Resources\d3-dsv.min.js" />
+    <None Remove="Resources\force-graph.min.js" />
     <None Remove="Resources\LineChart.Chart.js" />
     <None Remove="Resources\LineChart.html" />
     <None Remove="Resources\LineChart.Series.js" />
+    <None Remove="Resources\Logo.png" />
+    <None Remove="Resources\StyleSheet.css" />
+    <None Remove="Resources\three.js" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\2DModel.html" />
+    <EmbeddedResource Include="Resources\3d-force-graph.min.js" />
     <EmbeddedResource Include="Resources\3DModelSinglePanel.html" />
     <EmbeddedResource Include="Resources\3DModel.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
+    <EmbeddedResource Include="Resources\d3-dsv.min.js" />
+    <EmbeddedResource Include="Resources\force-graph.min.js" />
     <EmbeddedResource Include="Resources\LineChart.Chart.js" />
     <EmbeddedResource Include="Resources\LineChart.html" />
     <EmbeddedResource Include="Resources\LineChart.Series.js" />
+    <EmbeddedResource Include="Resources\Logo.png" />
+    <EmbeddedResource Include="Resources\StyleSheet.css" />
+    <EmbeddedResource Include="Resources\three.js" />
   </ItemGroup>
 
   <ItemGroup>

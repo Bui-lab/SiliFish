@@ -31,7 +31,15 @@ namespace SiliFish.ModelUnits
             this.Value1 = value1;
             this.Value2 = value2;
         }
-
+        public double this[int index]
+        {
+            get 
+            { 
+                if (values?.Length > index) 
+                    return values[index];
+                return 0;
+            }
+        }
         public override string ToString()
         {
             if (Mode== StimulusMode.Step)

@@ -37,7 +37,7 @@ namespace SiliFish.UI
                 Wait();
                 //(tab2DModel as Control).Enabled = false;
                 //(tab3DModel as Control).Enabled = false;
-                (tabHTMLPlot as Control).Enabled = false;
+                //(tabHTMLPlot as Control).Enabled = false;
                 rbCustom.Checked = true;
                 splitWindows.SplitterDistance = splitWindows.Width / 2;
                 tempFolder = Path.GetTempPath() + "\\SiliFish";
@@ -50,7 +50,6 @@ namespace SiliFish.UI
                 }
                 webViewAnimation.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;//TODO this doesn't work
 
-                //TODO learn the best way to do it
                 listCellPool.AddSortMenu("Type", listCellPool_SortByNTType);
             }
             catch (Exception ex)
@@ -151,6 +150,7 @@ namespace SiliFish.UI
         private void WriteParams(Dictionary<string, object> ParamDict)
         {
             if (ParamDict == null) return;
+            this.Text = $"Silifish {Model.ModelName}";
             Model?.FillMissingParameters(ParamDict);
             Model?.SetParameters(ParamDict);
 
@@ -348,7 +348,10 @@ namespace SiliFish.UI
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     if (rbCustom.Checked)
+                    {
                         Util.SaveToJSON(saveFileJson.FileName, ReadModelTemplate());
+                        this.Text = $"Silifish {ModelTemplate.ModelName}";
+                    }
                     else
                         Util.SaveToJSON(saveFileJson.FileName, ReadParams());
                     return true;
@@ -510,46 +513,6 @@ namespace SiliFish.UI
             webViewAnimation.Tag = true;
         }
         #endregion
-        private void CreatePlot()
-        {
-            if (Model == null) return;
-            PlotHTML = "";
-            int nSample = 0; //cbSample not on this form cbSample.Checked ? (int)enSample.Value: 0;
-            if (PlotType == "Memb. Potentials")
-            {
-                PlotHTML = Model.PlotMembranePotentials(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
-            }
-            else if (PlotType == "Gap Currents")
-            {
-                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: true, includeChem: false, nSample: nSample);
-            }
-            else if (PlotType == "Syn Currents")
-            {
-                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: false, includeChem: true, nSample: nSample);
-            }
-            else if (PlotType == "Currents")
-            {
-                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: true, includeChem: true, nSample: nSample);
-            }
-            Invoke(CompleteCreatePlot);
-        }
-        private void btnPlot_Click(object sender, EventArgs e)
-        {
-            if (Model == null || !Model.ModelRun) return;
-            if (!int.TryParse(ePlotStart.Text, out tPlotStart))
-                tPlotStart = 0;
-            if (!int.TryParse(ePlotEnd.Text, out tPlotEnd))
-                tPlotEnd = 1000;
-            if (tPlotEnd > tRunEnd)
-                tPlotEnd = tRunEnd;
-            PlotType = ddPlot.Text;
-            PlotSubset = ddCellsPools.Text;
-
-            tabOutputs.SelectedTab = tabHTMLPlot;
-            UseWaitCursor = true;
-            btnPlot.Enabled = false;
-            Task.Run(CreatePlot);
-        }
 
         private async void linkSaveHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -670,21 +633,13 @@ namespace SiliFish.UI
             Generate3DModel();
         }
 
+        #region HTML Plots
 
-        private void CompleteCreatePlot()
+        string prevGroup = "";
+        private void ddGrouping_Enter(object sender, EventArgs e)
         {
-            if (PlotHTML.Length > 1000000)
-            {
-                string filename = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
-                File.WriteAllText(filename, PlotHTML.ToString());
-                webViewPlot.CoreWebView2.Navigate(filename);
-            }
-            else
-                webViewPlot.CoreWebView2.NavigateToString(PlotHTML);//TODO override by an extension - save if error
-            UseWaitCursor = false;
-            btnPlot.Enabled = true;
+            prevGroup = ddGrouping.Text;
         }
-
 
         private void ddGrouping_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -706,7 +661,96 @@ namespace SiliFish.UI
                     plotExtend = PlotExtend.OppositePools;
                     break;
             }
+            if (ddGrouping.Text != prevGroup)
+                ClearPlot();
             PopulateCellTypes();
+        }
+
+        string prevPool = "";
+        private void ddCellsPools_Enter(object sender, EventArgs e)
+        {
+            prevPool = ddCellsPools.Text;
+        }
+
+        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddCellsPools.Text != prevPool)
+                ClearPlot();
+        }
+
+        string prevPlot = "";
+        private void ddPlot_Enter(object sender, EventArgs e)
+        {
+            prevPlot = ddPlot.Text;
+        }
+
+        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddPlot.Text != prevPlot)
+                ClearPlot();
+        }
+
+        private void CreatePlot()
+        {
+            if (Model == null) return;
+            PlotHTML = "";
+            int nSample = 0; //cbSample not on this form cbSample.Checked ? (int)enSample.Value: 0;
+            if (PlotType == "Memb. Potentials")
+            {
+                PlotHTML = Model.PlotMembranePotentials(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
+            }
+            else if (PlotType == "Gap Currents")
+            {
+                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: true, includeChem: false, nSample: nSample);
+            }
+            else if (PlotType == "Syn Currents")
+            {
+                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: false, includeChem: true, nSample: nSample);
+            }
+            else if (PlotType == "Currents")
+            {
+                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: true, includeChem: true, nSample: nSample);
+            }
+            else if (PlotType == "Stimuli")
+            {
+                PlotHTML = Model.PlotStimuli(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
+            }
+            Invoke(CompleteCreatePlot);
+        }
+        private void btnPlot_Click(object sender, EventArgs e)
+        {
+            if (Model == null || !Model.ModelRun) return;
+            if (!int.TryParse(ePlotStart.Text, out tPlotStart))
+                tPlotStart = 0;
+            if (!int.TryParse(ePlotEnd.Text, out tPlotEnd))
+                tPlotEnd = 1000;
+            if (tPlotEnd > tRunEnd)
+                tPlotEnd = tRunEnd;
+            PlotType = ddPlot.Text;
+            PlotSubset = ddCellsPools.Text;
+
+            tabOutputs.SelectedTab = tabHTMLPlot;
+            UseWaitCursor = true;
+            btnPlot.Enabled = false;
+            Task.Run(CreatePlot);
+        }
+
+        private void ClearPlot()
+        {
+            webViewPlot.CoreWebView2.Navigate("about:blank");
+        }
+        private void CompleteCreatePlot()
+        {
+            if (PlotHTML.Length > 1000000)
+            {
+                string filename = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
+                File.WriteAllText(filename, PlotHTML.ToString());
+                webViewPlot.CoreWebView2.Navigate(filename);
+            }
+            else
+                webViewPlot.CoreWebView2.NavigateToString(PlotHTML);//TODO override by an extension - save if error
+            UseWaitCursor = false;
+            btnPlot.Enabled = true;
         }
 
         private void PopulateCellTypes()
@@ -733,7 +777,10 @@ namespace SiliFish.UI
             ddCellsPools.Items.AddRange(itemList.Distinct().ToArray());
             ddCellsPools.SelectedIndex = 0;
         }
+        #endregion
 
+
+        #region Windows Plot
         private void Plot()
         {
             try
@@ -950,11 +997,12 @@ namespace SiliFish.UI
             }
             Plot();
         }
-
         private void cbSample_CheckedChanged(object sender, EventArgs e)
         {
             enSample.Visible = cbSample.Checked;
         }
+        #endregion
+
         #endregion
 
         #region Custom Model
@@ -1231,6 +1279,31 @@ namespace SiliFish.UI
             catch { }
         }
 
+        private void pTop_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            About about = new About();
+            about.ShowDialog();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            About about = new About();
+            about.SetTimer(2000);
+            about.ShowDialog();
+        }
+
+        bool skipSizeChanged = false;
+        private void pBodyDiagrams_SizeChanged(object sender, EventArgs e)
+        {
+            if (skipSizeChanged) return;
+            skipSizeChanged = true;
+            int prevWidth = picRostroCaudal.Width;
+            picCrossSection.Width = picCrossSection.Height = picRostroCaudal.Width = pBodyDiagrams.Width - 6;
+            picRostroCaudal.Height = picRostroCaudal.Width * picRostroCaudal.Height / prevWidth;
+            picRostroCaudal.Top = picCrossSection.Bottom + 6;
+            pBodyDiagrams.Height = picCrossSection.Height + picRostroCaudal.Height + 12;
+            skipSizeChanged = false;
+        }
 
     }
 }

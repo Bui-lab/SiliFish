@@ -17,6 +17,7 @@ namespace SiliFish.Services
 
         private static string CreateTimeDataPoints(Dictionary<string, Coordinate[]> somiteCoordinates, int timeIndex)
         {
+            if (somiteCoordinates == null) return "";
             List<string> timePoints = new();
             foreach (string somite in somiteCoordinates.Keys)
             {
@@ -28,6 +29,17 @@ namespace SiliFish.Services
 
         private static void SetChartDimensions(Dictionary<string, Coordinate[]> somiteCoordinates, StringBuilder html)
         {
+            if (somiteCoordinates == null)
+            {
+                html.Replace("__X_MIN__", "0");
+                html.Replace("__X_MAX__", "100");
+                html.Replace("__Y_MIN__", "0");
+                html.Replace("__Y_MAX__", "100");
+
+                html.Replace("__WIDTH__", "100");
+                html.Replace("__HEIGHT__", "100");
+                return;
+            }
             int minX = (int)Math.Floor(somiteCoordinates.Values.Min(v => v.Min(c => c.X))) - 1;
             int maxX = (int)Math.Ceiling(somiteCoordinates.Values.Max(v => v.Max(c => c.X))) + 1;
             if (minX <= 0 && maxX >= 0) //make symmetric

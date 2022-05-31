@@ -8,21 +8,25 @@
 <head>
     <meta charset="UTF-8">
     <title>__TITLE__</title>
-    <script src="https://unpkg.com/force-graph"></script>
-    <script src="https://unpkg.com/three"></script>
-    <link rel="stylesheet" href="StyleSheet.css" />
+    <style>
+        __STYLE_SHEET__
+    </style>
+    __ONLINE_2D_SCRIPT__
 </head>
 
 <body>
     <div id="left-panel" style="width:50%; float:left">
-        <div id="left-title" class="titleDiv" >__LEFT_HEADER__</div>
+        <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
         <div id="graph-gap"></div>
     </div>
     <div id="seperator" class="vertical"></div>
     <div id="right-panel" style="width:50%; float:right">
-        <div id="right-title" class="titleDiv" >__RIGHT_HEADER__</div>
+        <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
         <div id="graph-chem"></div>
     </div>
+    <script>
+        __OFFLINE_2D_SCRIPT__
+    </script>
 
     <script>
         const gapGraph = ForceGraph()
@@ -34,19 +38,21 @@
         const colorSet = { __COLOR_SET__ };
 
 
-        function nodePaint({ id, g, x, y }, color, ctx) {
-            ctx.fillStyle = color;
+        function nodePaint({ id, g, x, y }, ctx) {
+            ctx.fillStyle = colorSet[g];
             {
                 ctx.beginPath();
                 ctx.arc(x, y, 3, 0, 2 * Math.PI, false); //circle
+                ctx.fillStyle = colorSet[g];
                 ctx.fill();
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillStyle = 'lightgray';
                 ctx.textSize = 10;
+                ctx.fillStyle = 'black';
                 ctx.fillText(id, x, y);
-            };
+            }
         }
+
         const gapData = {
             "nodes": [__POOLS__],
             "links": [__GAP_LINKS__]
@@ -57,29 +63,29 @@
         };
 
         const gapDataSet = gapGraph
-            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
+            .nodeCanvasObject((node, ctx) => nodePaint(node, ctx))
             .nodePointerAreaPaint(nodePaint)
             .nodeLabel(`id`)
             .graphData(gapData)
             .enableNodeDrag(false)
-            .linkColor(()=>'#999')
+            .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
-            .backgroundColor('black')
+            .backgroundColor('white')
             .width(document.body.offsetWidth / 2);
 
         const chemDataSet = chemGraph
-            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
+            .nodeCanvasObject((node, ctx) => nodePaint(node, ctx))
             .nodePointerAreaPaint(nodePaint)
             .nodeLabel(`id`)
             .graphData(chemData)
             .linkDirectionalArrowRelPos(1)
             .linkDirectionalArrowLength(5)
             .enableNodeDrag(false)
-            .linkColor(()=>'#999')
+            .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
-            .backgroundColor('black')
+            .backgroundColor('white')
             .width(document.body.offsetWidth / 2);
     </script>
 

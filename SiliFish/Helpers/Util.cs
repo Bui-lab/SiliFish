@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -88,6 +89,13 @@ namespace SiliFish.Helpers
                     row += "," + Values[colname][t].ToString();
                 sw.WriteLine(row);
             }
+        }
+
+        public static bool CheckOnlineStatus()
+        {
+            using var httpClient = new HttpClient();
+            HttpResponseMessage response = httpClient.Send(new HttpRequestMessage(HttpMethod.Head, "https://unpkg.com/three"));
+            return response.IsSuccessStatusCode;
         }
 
     }

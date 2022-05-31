@@ -365,3 +365,7 @@ MigrationBackup/
 FodyWeavers.xsd
 .Rproj.user
 /OutputOld
+/SiliFish/Resources/3d-force-graph.min.js
+/SiliFish/Resources/d3-dsv.min.js
+/SiliFish/Resources/force-graph.min.js
+/SiliFish/Resources/three.js

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
@@ -44,6 +45,22 @@ namespace SiliFish.Services
         {
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.2DModel.html"));
 
+            html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
+
+            if (Util.CheckOnlineStatus())
+            {
+                html.Replace("__OFFLINE_2D_SCRIPT__", "");
+                html.Replace("__ONLINE_2D_SCRIPT__", "<script src=\"https://unpkg.com/force-graph\"></script>" +
+                    "<script src=\"https://unpkg.com/three\"></script>");
+            }
+            else
+            {
+                html.Replace("__OFFLINE_2D_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.force-graph.min.js") +
+                    ReadEmbeddedResource("SiliFish.Resources.three.js"));
+                html.Replace("__ONLINE_2D_SCRIPT__", "");
+            }
+
+
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
             html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chemical Jnc"));
@@ -74,7 +91,7 @@ namespace SiliFish.Services
             html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> colors = new();
-            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": new THREE.MeshBasicMaterial({{color:{pool.Color.ToHex()}}})"));
+            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": \'{pool.Color.ToRGB()}\'"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
             //TODO custom shapes

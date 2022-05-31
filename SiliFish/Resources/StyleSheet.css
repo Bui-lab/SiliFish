@@ -1,5 +1,5 @@
 .vertical {
-    border-left: 1px solid #999;
+    border-left: 1px solid #333;
     height: 100%;
     position: absolute;
     left: 50%;
@@ -12,7 +12,7 @@
     text-align: center;
     align-items: center;
     font: 2em "Courier New";
-    color: #FFF;
+    color: #000;
 }
 
 
@@ -20,8 +20,9 @@
     display: flex;
     align-items: center;
     font: 1em "Courier New";
-    color: #999;
+    color: #333;
 }
+
 
 /* CSS Loader code sample from https://www.w3schools.com/howto/howto_css_loader.asp */
 .spinner {
@@ -32,6 +33,15 @@
     width: 0.8em;
     height: 0.8em;
     animation: spin 2s linear infinite;
+}
+
+.scene-tooltip {
+    font-family: sans-serif;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 3px;
+    color: #eee;
+    background: rgba(0,0,0,0.65);
 }
 
 @keyframes spin {

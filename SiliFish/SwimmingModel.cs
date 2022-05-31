@@ -226,6 +226,8 @@ namespace SiliFish
         //if plotall is set to True, all cell membrane potentials are plotted
         //   otherwise, only motoneuron membrane potentials are plotted
         //if offset is given, it will be subtracted from Time array
+        
+        //TODO Plotting functions for membrane potentials, currents, and stimuli are very similar to each other. Simplify
         protected virtual string PlotMembranePotentials(int iStart = 0, int iEnd = -1, List<Cell> cells = null, List<CellPool> pools = null, int offset = 0, string filename = "", int nSample = 0)
         {
             if (iStart < 0 || iStart >= Time.Length)
@@ -264,7 +266,6 @@ namespace SiliFish
             if (pools != null)
                 return lc.CreateCurrentsMultiPlot(filename, "Currents", pools, TimeOffset, iStart, iEnd, numColumns: 2, includeGap: includeGap, includeChem: includeChem, nSample: nSample);
             return "";
-
         }
         public string PlotCurrents(PlotExtend plotMode, string subset, int tStart = 0, int tEnd = -1, bool includeGap = true, bool includeChem = true, int nSample = 0)
         {
@@ -274,6 +275,32 @@ namespace SiliFish
             (List<Cell> Cells, List<CellPool> Pools) = GetSubsetCellsAndPools(plotMode, subset);
 
             return PlotCurrents(iStart, iEnd, cells: Cells, pools: Pools, offset, includeGap, includeChem, nSample: nSample);
+        }
+
+        protected virtual string PlotStimuli(int iStart = 0, int iEnd = -1, List<Cell> cells = null, List<CellPool> pools = null, int offset = 0,
+            string filename = "", int nSample = 0)
+        {
+            if (iEnd < iStart || iEnd >= Time.Length)
+                iEnd = Time.Length - 1;
+
+            double[] TimeOffset = offset > 0 ? (Time.Select(t => t - offset).ToArray()) : Time;
+
+            LineChartGenerator lc = new();
+            if (cells != null)
+                return lc.CreateStimuliMultiPlot(filename, "Stimuli", cells, TimeOffset, iStart, iEnd, numColumns: 2);
+            if (pools != null)
+                return lc.CreateStimuliMultiPlot(filename, "Stimuli", pools, TimeOffset, iStart, iEnd, numColumns: 2,nSample: nSample);
+            return "";
+        }
+
+        public string PlotStimuli(PlotExtend plotMode, string subset, int tStart = 0, int tEnd = -1, int nSample = 0)
+        {
+            int iStart = (int)((tStart + tSkip) / dt);
+            int iEnd = (int)((tEnd + tSkip) / dt);
+            int offset = tSkip;
+            (List<Cell> Cells, List<CellPool> Pools) = GetSubsetCellsAndPools(plotMode, subset);
+
+            return PlotStimuli(iStart, iEnd, cells: Cells, pools: Pools, offset, nSample: nSample);
         }
 
         public virtual string SummarizeModel()
