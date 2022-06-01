@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.PredefinedModels;
 using SiliFish.UI.Controls;
+using SiliFish.DataTypes;
 
 namespace SiliFish.UI
 {
@@ -28,6 +29,9 @@ namespace SiliFish.UI
         int tRunSkip = 0;
         PlotExtend plotExtend = PlotExtend.FullModel;
         string tempFolder;
+        string lastSavedCustomModelJSON;
+        Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams;
+
         public MainForm()
         {
             try
@@ -35,9 +39,6 @@ namespace SiliFish.UI
                 InitializeComponent();
                 InitAsync();
                 Wait();
-                //(tab2DModel as Control).Enabled = false;
-                //(tab3DModel as Control).Enabled = false;
-                //(tabHTMLPlot as Control).Enabled = false;
                 rbCustom.Checked = true;
                 splitWindows.SplitterDistance = splitWindows.Width / 2;
                 tempFolder = Path.GetTempPath() + "\\SiliFish";
@@ -50,7 +51,10 @@ namespace SiliFish.UI
                 }
                 webViewAnimation.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;//TODO this doesn't work
 
-                listCellPool.AddSortMenu("Type", listCellPool_SortByNTType);
+                listCellPool.AddContextMenu("Sort by Type", listCellPool_SortByNTType);
+                listJunctions.AddContextMenu("Sort by Type", listJunctions_SortByType);
+                listJunctions.AddContextMenu("Sort by Source", listJunctions_SortBySource);
+                listJunctions.AddContextMenu("Sort by Target", listJunctions_SortByTarget);
             }
             catch (Exception ex)
             {
@@ -58,6 +62,7 @@ namespace SiliFish.UI
                 throw;
             }
         }
+
 
         #region Model selection
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -79,7 +84,10 @@ namespace SiliFish.UI
             if (scModel != null)
                 Model = scModel;
             else
+            {
                 Model = scModel = new SingleCoilModel();
+                lastSavedSCParams = Model.GetParameters();
+            }
             WriteParams(Model.GetParameters());
         }
 
@@ -89,7 +97,10 @@ namespace SiliFish.UI
             if (dcModel != null)
                 Model = dcModel;
             else
+            {
                 Model = dcModel = new DoubleCoilModel();
+                lastSavedDCParams = Model.GetParameters();
+            }
             WriteParams(Model.GetParameters());
         }
 
@@ -99,7 +110,10 @@ namespace SiliFish.UI
             if (bgModel != null)
                 Model = bgModel;
             else
+            {
                 Model = bgModel = new BeatAndGlideModel();
+                lastSavedBGParams = Model.GetParameters();
+            }
             WriteParams(Model.GetParameters());
         }
 
@@ -113,9 +127,13 @@ namespace SiliFish.UI
             if (customModel != null)
                 Model = customModel;
             else
+            {
                 Model = customModel = new CustomSwimmingModel(null);
+                lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
+            }
             WriteParams(Model.GetParameters());
             LoadModelTemplate();
+            
         }
         #endregion
 
@@ -123,9 +141,9 @@ namespace SiliFish.UI
 
         private void ClearCustomModelFields()
         {
-            listCellPool.Items.Clear();
-            listJunctions.Items.Clear();
-            listStimuli.Items.Clear();
+            listCellPool.ClearItems();
+            listJunctions.ClearItems();
+            listStimuli.ClearItems();
         }
 
         private void WriteGeneralParams(Dictionary<string, object> paramDict)
@@ -262,20 +280,30 @@ namespace SiliFish.UI
 
         private void LoadModelTemplatePools()
         {
-            if (ModelTemplate == null) return;
-            listCellPool.Items.Clear();
-            foreach (CellPoolTemplate cpt in ModelTemplate.Pools)
+            listCellPool.ClearItems();
+            if (ModelTemplate?.CellPoolTemplates == null) return;
+            foreach (CellPoolTemplate cpt in ModelTemplate.CellPoolTemplates)
             {
-                listCellPool.Items.Add(cpt);
+                listCellPool.AppendItem(cpt);
             }
         }
         private void LoadModelTemplateInterPools()
         {
-            if (ModelTemplate == null) return;
-            listJunctions.Items.Clear();
-            foreach (InterPoolTemplate interPoolTemplate in ModelTemplate.InterPools)
+            listJunctions.ClearItems();
+            if (ModelTemplate?.InterPoolTemplates == null) return;
+            foreach (InterPoolTemplate interPoolTemplate in ModelTemplate.InterPoolTemplates)
             {
-                listJunctions.Items.Add(interPoolTemplate);
+                listJunctions.AppendItem(interPoolTemplate);
+            }
+        }
+
+        private void LoadModelTemplateStimuli()
+        {
+            listStimuli.ClearItems();
+            if (ModelTemplate?.AppliedStimuli == null) return;
+            foreach (AppliedStimulus stim in ModelTemplate.AppliedStimuli)
+            {
+                listStimuli.AppendItem(stim);
             }
         }
         private void LoadModelTemplate()
@@ -286,40 +314,53 @@ namespace SiliFish.UI
 
             LoadModelTemplatePools();
             LoadModelTemplateInterPools();
-
-            listStimuli.Items.Clear();
-            foreach (AppliedStimulus stim in ModelTemplate.Stimuli)
-            {
-                listStimuli.Items.Add(stim);
-            }
+            LoadModelTemplateStimuli();
             this.Text = $"Silifish {ModelTemplate.ModelName}";
         }
-        private SwimmingModelTemplate ReadModelTemplate()
+        private void ReadModelTemplatePools(bool includeHidden)
+        {
+            ModelTemplate.CellPoolTemplates.Clear();
+            foreach (var v in listCellPool.GetItems(includeHidden))
+            {
+                if (v is CellPoolTemplate cpt)
+                    ModelTemplate.CellPoolTemplates.Add(cpt);
+            }
+        }
+        private void ReadModelTemplateInterPools(bool includeHidden)
+        {
+            ModelTemplate.InterPoolTemplates.Clear();
+            foreach (var jnc in listJunctions.GetItems(includeHidden))
+            {
+                if (jnc is InterPoolTemplate iptemp)
+                {
+                    ModelTemplate.InterPoolTemplates.Add(iptemp);
+                }
+            }
+        }
+
+        private void ReadModelTemplateStimuli(bool includeHidden)
+        {
+            ModelTemplate.AppliedStimuli.Clear();
+            foreach (var stim in listStimuli.GetItems(includeHidden))
+            {
+                if (stim is AppliedStimulus appstim)
+                {
+                    ModelTemplate.AppliedStimuli.Add(appstim);
+                }
+            }
+        }
+
+
+        private SwimmingModelTemplate ReadModelTemplate(bool includeHidden)
         {
             try
             {
                 ModelTemplate = new SwimmingModelTemplate();
-                
-                foreach (var v in listCellPool.Items) 
-                {
-                    if (v is CellPoolTemplate cpt)
-                        ModelTemplate.Pools.Add(cpt);
-                }
 
-                foreach (var jnc in listJunctions.Items)
-                {
-                    if (jnc is InterPoolTemplate iptemp)
-                    {
-                        ModelTemplate.InterPools.Add(iptemp);
-                    }
-                }
-                foreach (var stim in listStimuli.Items)
-                {
-                    if (stim is AppliedStimulus appstim)
-                    {
-                        ModelTemplate.Stimuli.Add(appstim);
-                    }
-                }
+                ReadModelTemplatePools(includeHidden);
+                ReadModelTemplateInterPools(includeHidden);
+                ReadModelTemplateStimuli(includeHidden);
+
                 ModelTemplate.Parameters = ReadParams();
                 string err = ModelTemplate.CheckTemplate();
                 if (!string.IsNullOrEmpty(err))
@@ -349,11 +390,22 @@ namespace SiliFish.UI
                 {
                     if (rbCustom.Checked)
                     {
-                        Util.SaveToJSON(saveFileJson.FileName, ReadModelTemplate());
+                        //To make sure deactivated items are saved, even though not displayed
+                        //Show all
+                        Util.SaveToJSON(saveFileJson.FileName, ReadModelTemplate(includeHidden: true));
                         this.Text = $"Silifish {ModelTemplate.ModelName}";
+                        lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
                     else
+                    {
                         Util.SaveToJSON(saveFileJson.FileName, ReadParams());
+                        if (rbSingleCoil.Checked)
+                            lastSavedSCParams = scModel.GetParameters();
+                        else if (rbDoubleCoil.Checked)
+                            lastSavedDCParams = dcModel.GetParameters();
+                        else if (rbBeatGlide.Checked)
+                            lastSavedBGParams = bgModel.GetParameters();
+                    }
                     return true;
                 }
                 return false;
@@ -381,12 +433,20 @@ namespace SiliFish.UI
                     {
                         string json = Util.ReadFromFile(openFileJson.FileName);
                         ModelTemplate = (SwimmingModelTemplate)Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), json);
+                        ModelTemplate.LinkObjects();
                         LoadModelTemplate();
+                        lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
                     else
                     {
                         Dictionary<string, object> ParamDict = Util.ReadDictionaryFromJSON(openFileJson.FileName);
                         WriteParams(ParamDict);
+                        if (rbSingleCoil.Checked)
+                            lastSavedSCParams = ParamDict;
+                        else if (rbDoubleCoil.Checked)
+                            lastSavedDCParams = ParamDict;
+                        else if (rbBeatGlide.Checked)
+                            lastSavedBGParams = ParamDict;
                     }
                 }
             }
@@ -450,7 +510,7 @@ namespace SiliFish.UI
             
 
             if (rbCustom.Checked)
-                Model = customModel = new CustomSwimmingModel(ReadModelTemplate());
+                Model = customModel = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
             else if (Model != null)
             {
                 Dictionary<string, object> ParamDict = ReadParams();
@@ -591,8 +651,15 @@ namespace SiliFish.UI
 
             if (!Model.ModelRun)
             {
-                Dictionary<string, object> ParamDict = ReadParams();
-                Model.SetParameters(ParamDict);
+                if (rbCustom.Checked)
+                {
+                    Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
+                }
+                else
+                {
+                    Dictionary<string, object> ParamDict = ReadParams();
+                    Model.SetParameters(ParamDict);
+                }
             }
             string html = Model.Plot2DModel(false);
             webView2DModel.CoreWebView2.NavigateToString(html);//TODO override by an extension - save if error
@@ -607,7 +674,7 @@ namespace SiliFish.UI
             {
                 if (rbCustom.Checked)
                 {
-                    Model = new CustomSwimmingModel(ReadModelTemplate());
+                    Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
                 }
                 else
                 {
@@ -661,6 +728,10 @@ namespace SiliFish.UI
                     plotExtend = PlotExtend.OppositePools;
                     break;
             }
+            if (plotExtend== PlotExtend.SingleCell && !ddPlot.Items.Contains("Full Dynamics"))
+                ddPlot.Items.Add("Full Dynamics");
+            else if (plotExtend != PlotExtend.SingleCell && ddPlot.Items.Contains("Full Dynamics"))
+                ddPlot.Items.Remove("Full Dynamics");
             if (ddGrouping.Text != prevGroup)
                 ClearPlot();
             PopulateCellTypes();
@@ -694,7 +765,7 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
             PlotHTML = "";
-            int nSample = 0; //cbSample not on this form cbSample.Checked ? (int)enSample.Value: 0;
+            int nSample = cbSampleHTML.Checked ? (int)nbSample.Value: 0;
             if (PlotType == "Memb. Potentials")
             {
                 PlotHTML = Model.PlotMembranePotentials(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
@@ -714,6 +785,10 @@ namespace SiliFish.UI
             else if (PlotType == "Stimuli")
             {
                 PlotHTML = Model.PlotStimuli(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
+            }
+            else if (PlotType == "Full Dynamics")
+            {
+                
             }
             Invoke(CompleteCreatePlot);
         }
@@ -778,7 +853,6 @@ namespace SiliFish.UI
             ddCellsPools.SelectedIndex = 0;
         }
         #endregion
-
 
         #region Windows Plot
         private void Plot()
@@ -1045,29 +1119,37 @@ namespace SiliFish.UI
             CellPoolTemplate newPool = OpenCellPoolDialog(null);
             if (newPool != null)
             {
-                ModelTemplate.Pools.Add(newPool);
-                listCellPool.Items.Add(newPool);
+                ModelTemplate.CellPoolTemplates.Add(newPool);
+                listCellPool.AppendItem(newPool);
             }
         }
         private void listCellPool_CopyItem(object sender, EventArgs e)
         {
             if (listCellPool.SelectedItem == null)
                 return;
-            CellPoolTemplate pool = new CellPoolTemplate(listCellPool.SelectedItem as CellPoolTemplate);
+            CellPoolTemplate pool = new(listCellPool.SelectedItem as CellPoolTemplate);
             pool = OpenCellPoolDialog(pool); 
             if (pool != null)
             {
-                ModelTemplate.Pools.Add(pool);
-                listCellPool.Items.Add(pool);
+                ModelTemplate.CellPoolTemplates.Add(pool);
+                listCellPool.AppendItem(pool);
             }
         }
         private void listCellPool_DeleteItem(object sender, EventArgs e)
         {
             if (listCellPool.SelectedIndex >= 0)
             {
-                CellPoolTemplate cpl = (CellPoolTemplate)listCellPool.SelectedItem;
-                ModelTemplate.Pools.Remove(cpl);
-                listCellPool.Items.RemoveAt(listCellPool.SelectedIndex);
+                string msg = "Deleting a cell pool will remove all of its junctions and applied stimuli as well. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    CellPoolTemplate cpl = (CellPoolTemplate)listCellPool.SelectedItem;
+                    ReadModelTemplateInterPools(includeHidden: true);
+                    ReadModelTemplateStimuli(includeHidden: true);
+                    ModelTemplate.RemoveCellPool(cpl);
+                    listCellPool.RemoveItemAt(listCellPool.SelectedIndex);
+                    LoadModelTemplateInterPools();
+                    LoadModelTemplateStimuli();
+                }
             }
         }
         private void listCellPool_ViewItem(object sender, EventArgs e)
@@ -1082,20 +1164,25 @@ namespace SiliFish.UI
                 if (oldName != pool.CellGroup)
                     ModelTemplate.RenameCellPool(oldName, pool.CellGroup);
                 int ind = listCellPool.SelectedIndex;
-                listCellPool.Items.RemoveAt(ind);
-                listCellPool.Items.Insert(ind, pool);
+                listCellPool.RefreshItem(ind, pool);
             }
+        }
+
+        private void listCellPool_ActivateItem(object sender, EventArgs e)
+        {
+            CellPoolTemplate pool = listCellPool.SelectedItem as CellPoolTemplate;
+            ModelTemplate.CellPoolTemplates.FirstOrDefault(p => p.CellGroup == pool.CellGroup).Active = pool.Active;
         }
 
         private void listCellPool_SortItems(object sender, EventArgs e)
         {
-            ModelTemplate.Pools.Sort();
+            ModelTemplate.CellPoolTemplates.Sort();
             LoadModelTemplatePools();
         }
 
         private void listCellPool_SortByNTType(object sender, EventArgs e)
         {
-            ModelTemplate.Pools = ModelTemplate.Pools
+            ModelTemplate.CellPoolTemplates = ModelTemplate.CellPoolTemplates
                 .OrderBy(p => p.CellType.ToString())
                 .ThenBy(p => p.NTMode.ToString())
                 .ToList();
@@ -1110,12 +1197,16 @@ namespace SiliFish.UI
             ControlContainer frmControl = new();
             InterPoolControl ipl = new InterPoolControl();
 
-            ipl.SetInterPoolTemplate(ModelTemplate.Pools, interpool, ModelTemplate);
+            ipl.SetInterPoolTemplate(ModelTemplate.CellPoolTemplates, interpool, ModelTemplate);
             frmControl.AddControl(ipl);
             frmControl.Text = interpool?.ToString() ?? "New Junction";
 
             if (frmControl.ShowDialog() == DialogResult.OK)
-                return ipl.GetInterPoolTemplate();
+            {
+                InterPoolTemplate interPoolTemplate = ipl.GetInterPoolTemplate();
+                ModelTemplate.LinkObjects(interPoolTemplate);
+                return interPoolTemplate;
+            }
             return null;
         }
 
@@ -1124,20 +1215,20 @@ namespace SiliFish.UI
             InterPoolTemplate newJnc = OpenJunctionDialog(null);
             if (newJnc != null)
             {
-                ModelTemplate.InterPools.Add(newJnc);
-                listJunctions.Items.Add(newJnc);
+                ModelTemplate.InterPoolTemplates.Add(newJnc);
+                listJunctions.AppendItem(newJnc);
             }
         }
         private void listJunctions_CopyItem(object sender, EventArgs e)
         {
             if (listJunctions.SelectedItem == null)
                 return;
-            InterPoolTemplate jnc = new InterPoolTemplate(listJunctions.SelectedItem as InterPoolTemplate);
+            InterPoolTemplate jnc = new(listJunctions.SelectedItem as InterPoolTemplate);
             jnc = OpenJunctionDialog(jnc); 
             if (jnc != null)
             {
-                ModelTemplate.InterPools.Add(jnc);
-                listJunctions.Items.Add(jnc);
+                ModelTemplate.InterPoolTemplates.Add(jnc);
+                listJunctions.AppendItem(jnc);
             }
         }
         private void listJunctions_DeleteItem(object sender, EventArgs e)
@@ -1145,8 +1236,8 @@ namespace SiliFish.UI
             if (listJunctions.SelectedIndex >= 0)
             {
                 InterPoolTemplate ipl = (InterPoolTemplate)listJunctions.SelectedItem;
-                ModelTemplate.InterPools.Remove(ipl);
-                listJunctions.Items.RemoveAt(listJunctions.SelectedIndex);
+                ModelTemplate.InterPoolTemplates.Remove(ipl);
+                listJunctions.RemoveItemAt(listJunctions.SelectedIndex);
             }
         }
         private void listJunctions_ViewItem(object sender, EventArgs e)
@@ -1158,14 +1249,42 @@ namespace SiliFish.UI
             if (interpool != null)
             {
                 int ind = listJunctions.SelectedIndex;
-                listJunctions.Items.RemoveAt(ind);
-                listJunctions.Items.Insert(ind, interpool);
+                listJunctions.RefreshItem(ind, interpool);
             }
+        }
+
+        private void listJunctions_ActivateItem(object sender, EventArgs e)
+        {
+            InterPoolTemplate jnc = sender as InterPoolTemplate;
+            ModelTemplate.InterPoolTemplates.FirstOrDefault(p => p.GeneratedName() == jnc.GeneratedName()).Active = jnc.Active;
         }
 
         private void listJunctions_SortItems(object sender, EventArgs e)
         {
-            ModelTemplate.InterPools.Sort();
+            ModelTemplate.InterPoolTemplates.Sort();
+            LoadModelTemplateInterPools();
+        }
+
+        private void listJunctions_SortByType(object sender, EventArgs e)
+        {
+            ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
+                .OrderBy(jnc => jnc.JunctionType.ToString())
+                .ToList();
+            LoadModelTemplateInterPools();
+        }
+        private void listJunctions_SortBySource(object sender, EventArgs e)
+        {
+            ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
+                .OrderBy(jnc => jnc.PoolSource)
+                .ToList();
+            LoadModelTemplateInterPools();
+        }
+
+        private void listJunctions_SortByTarget(object sender, EventArgs e)
+        {
+            ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
+                .OrderBy(jnc => jnc.PoolTarget)
+                .ToList();
             LoadModelTemplateInterPools();
         }
 
@@ -1178,7 +1297,7 @@ namespace SiliFish.UI
             ControlContainer frmControl = new();
             StimulusControl sc = new StimulusControl();
 
-            sc.SetStimulus(ModelTemplate.Pools, stim);
+            sc.SetStimulus(ModelTemplate.CellPoolTemplates, stim);
             frmControl.AddControl(sc);
             frmControl.Text = stim?.ToString() ?? "New Stimulus";
 
@@ -1191,8 +1310,8 @@ namespace SiliFish.UI
             AppliedStimulus stimulus = OpenStimulusDialog(null);
             if (stimulus != null)
             {
-                ModelTemplate.Stimuli.Add(stimulus);
-                listStimuli.Items.Add(stimulus);
+                ModelTemplate.AppliedStimuli.Add(stimulus);
+                listStimuli.AppendItem(stimulus);
             }
         }
         private void listStimuli_CopyItem(object sender, EventArgs e)
@@ -1203,8 +1322,8 @@ namespace SiliFish.UI
             stimulus = OpenStimulusDialog(stimulus);
             if (stimulus != null)
             {
-                ModelTemplate.Stimuli.Add(stimulus);
-                listStimuli.Items.Add(stimulus);
+                ModelTemplate.AppliedStimuli.Add(stimulus);
+                listStimuli.AppendItem(stimulus);
             }
         }
         private void listStimuli_DeleteItem(object sender, EventArgs e)
@@ -1212,8 +1331,8 @@ namespace SiliFish.UI
             if (listStimuli.SelectedIndex >= 0)
             {
                 AppliedStimulus stim = (AppliedStimulus)listStimuli.SelectedItem;
-                ModelTemplate.Stimuli.Remove(stim);
-                listStimuli.Items.RemoveAt(listStimuli.SelectedIndex);
+                ModelTemplate.AppliedStimuli.Remove(stim);
+                listStimuli.RemoveItemAt(listStimuli.SelectedIndex);
             }
         }
         private void listStimuli_ViewItem(object sender, EventArgs e)
@@ -1225,10 +1344,17 @@ namespace SiliFish.UI
             if (stimulus != null)
             {
                 int ind = listStimuli.SelectedIndex;
-                listStimuli.Items.RemoveAt(ind);
-                listStimuli.Items.Insert(ind, stimulus);
+                listStimuli.RefreshItem(ind, stimulus);
             }
         }
+
+        private void listStimuli_ActivateItem(object sender, EventArgs e)
+        {
+            AppliedStimulus stim = sender as AppliedStimulus;
+            ModelTemplate.AppliedStimuli.FirstOrDefault(p => p.ToString() == stim.ToString()).Active = stim.Active;
+        }
+
+
 
         #endregion
         #endregion
@@ -1256,21 +1382,82 @@ namespace SiliFish.UI
         {
             try
             {
-                if (rbCustom.Checked)
+                if (ModelTemplate != null)
                 {
-                    DialogResult res = MessageBox.Show("Do you want to save the model?", "Model Save", MessageBoxButtons.YesNoCancel);
-                    if (res == DialogResult.Yes)
+                    //check whether the custom model has changed
+                    string jsonstring = Util.CreateJSONFromObject(ModelTemplate);
+                    if (jsonstring != lastSavedCustomModelJSON)
                     {
-                        if (!SaveParamsOrModel())
+                        rbCustom.Checked = true;
+                        DialogResult res = MessageBox.Show("The custom model has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                        if (res == DialogResult.Yes)
+                        {
+                            if (!SaveParamsOrModel())
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                        else if (res == DialogResult.Cancel)
                         {
                             e.Cancel = true;
                             return;
                         }
                     }
-                    else if (res == DialogResult.Cancel)
+                    //check whether the predefined model parameters have changed
+                    if (lastSavedSCParams != null && lastSavedSCParams.Any() && !scModel.GetParameters().SameAs(lastSavedSCParams))
                     {
-                        e.Cancel = true;
-                        return;
+                        rbSingleCoil.Checked = true;
+                        DialogResult res = MessageBox.Show("The single coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                        if (res == DialogResult.Yes)
+                        {
+                            if (!SaveParamsOrModel())
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                        else if (res == DialogResult.Cancel)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+                    }
+                    if (lastSavedDCParams != null && lastSavedDCParams.Any() && !dcModel.GetParameters().SameAs(lastSavedDCParams))
+                    {
+                        rbDoubleCoil.Checked = true;
+                        DialogResult res = MessageBox.Show("The double coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                        if (res == DialogResult.Yes)
+                        {
+                            if (!SaveParamsOrModel())
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                        else if (res == DialogResult.Cancel)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+                    }
+                    if (lastSavedBGParams != null && lastSavedBGParams.Any() && !bgModel.GetParameters().SameAs(lastSavedBGParams))
+                    {
+                        rbBeatGlide.Checked = true;
+                        DialogResult res = MessageBox.Show("The beat and glide coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                        if (res == DialogResult.Yes)
+                        {
+                            if (!SaveParamsOrModel())
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                        else if (res == DialogResult.Cancel)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
                     }
                 }
                 foreach (string f in Directory.GetFiles(tempFolder))

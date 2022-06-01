@@ -1,17 +1,9 @@
 ﻿using SiliFish.Extensions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace SiliFish.UI.Controls
 {
+
     public partial class ListBoxControl : UserControl
     {
         private event EventHandler addItem;
@@ -26,10 +18,52 @@ namespace SiliFish.UI.Controls
         private event EventHandler viewItem;
         public event EventHandler ViewItem { add => viewItem += value; remove => viewItem -= value; }
 
+        private event EventHandler activateItem;
+        public event EventHandler ActivateItem { add => activateItem += value; remove => activateItem -= value; }
+
         private event EventHandler sortItems;
         public event EventHandler SortItems { add => sortItems += value; remove => sortItems -= value; }
 
-        public ListBox.ObjectCollection Items { get { return listBox.Items;  }}
+        private Dictionary<int, object> HiddenItems=new Dictionary<int, object>();
+        public List<object> GetItems(bool includeHidden) 
+        { 
+            if (!includeHidden || !HiddenItems.Any())
+                return listBox.Items.Cast<object>().ToList();
+            List<object> fullList = new();
+            fullList.AddRange(listBox.Items.Cast<object>().ToList());
+            foreach (int index in HiddenItems.Keys.OrderBy(k => k))
+            {
+                fullList.Insert(index, HiddenItems[index]);
+            }
+            return fullList;
+        }
+
+        public void ClearItems()
+        {
+            listBox.Items.Clear();
+            HiddenItems.Clear();
+        }
+
+        public void AppendItem(object obj)
+        {
+            listBox.Items.Add(obj);
+        }
+        public void InsertItem(int ind, object obj)
+        {
+            listBox.Items.Insert(ind, obj);
+        }
+
+        public void RemoveItemAt(int ind)
+        {
+            listBox.Items.RemoveAt(ind);
+        }
+
+        public void RefreshItem(int ind, object obj)
+        {
+            listBox.Items.RemoveAt(ind);
+            listBox.Items.Insert(ind, obj);
+        }
+
         public int SelectedIndex
         {
             get { return listBox.SelectedIndex; }
@@ -45,13 +79,30 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
         }
 
-        public void AddSortMenu(string sortBy, EventHandler sortFunc)
+        public void AddContextMenu(string label, EventHandler func)
         {
-            ToolStripItem mi = contextMenuListBox.Items.Add("Sort by " + sortBy);
-            mi.Click += miCustomSort_Click;
-            mi.Tag = sortFunc;
+            ToolStripItem mi = contextMenuListBox.Items[label];
+            if (mi != null)
+            {
+                mi.Visible = true;
+                mi.Enabled = true;
+            }
+            else
+            {
+                mi = contextMenuListBox.Items.Add(label);
+                mi.Click += miCustomSort_Click;
+                mi.Tag = func;
+            }
         }
-
+        public void ChangeContextMenuAccess(string label, bool visible, bool enabled = true)
+        {
+            ToolStripItem mi = contextMenuListBox.Items[label];
+            if (mi != null)
+            {
+                mi.Visible = visible;
+                mi.Enabled=enabled;
+            }
+        }
         private void miCustomSort_Click(object sender, EventArgs e)
         {
             if ((sender as ToolStripItem).Tag is EventHandler eh)
@@ -69,7 +120,7 @@ namespace SiliFish.UI.Controls
         }
 
         private void miCreateCopy_Click(object sender, EventArgs e)
-        {
+        { 
             copyItem?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
@@ -82,12 +133,14 @@ namespace SiliFish.UI.Controls
         {
             listBox.SelectedItem.SetPropertyValue("Active", true);
             listBox.Items[listBox.SelectedIndex] = listBox.Items[listBox.SelectedIndex];//to refresh text
+            activateItem?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
         private void miDeactivate_Click(object sender, EventArgs e)
         {
             listBox.SelectedItem.SetPropertyValue("Active", false);
             listBox.Items[listBox.SelectedIndex] = listBox.Items[listBox.SelectedIndex];//to refresh text
+            activateItem?.Invoke(listBox.SelectedItem, new EventArgs());
         }
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -98,7 +151,7 @@ namespace SiliFish.UI.Controls
 
         private void listBox_DoubleClick(object sender, EventArgs e)
         {
-            if (listBox.SelectedItem!=null)
+            if (listBox.SelectedItem != null)
                 viewItem?.Invoke(listBox.SelectedItem, null);
         }
 
@@ -107,19 +160,43 @@ namespace SiliFish.UI.Controls
             miSortAlphabetically.Visible = sortItems != null;
 
             miActivate.Visible = miDeactivate.Visible = false;
-            if (listBox.SelectedItem != null)
+            if (listBox.Items.Count == 0)
+                miShowAll.Visible = miHideInactive.Visible = false;
+            else
             {
-                var (active, exists) = listBox.SelectedItem.GetPropertyValue("Active", true);
-                if (exists)
+                var (_, exists) = listBox.Items[0].GetPropertyValue("Active", true);
+                miShowAll.Visible = miHideInactive.Visible = exists;
+                if (listBox.SelectedItem != null)
                 {
-                    miActivate.Visible = !active;
-                    miDeactivate.Visible = active;
+                    (var active, exists) = listBox.SelectedItem.GetPropertyValue("Active", true);
+                    if (exists)
+                    {
+                        miActivate.Visible = !active;
+                        miDeactivate.Visible = active;
+                    }
                 }
             }
-            
-
         }
 
+        private void miHideInactive_Click(object sender, EventArgs e)
+        {
+            for (int ind = listBox.Items.Count - 1; ind >= 0; ind--)
+            {
+                object obj = listBox.Items[ind];
+                var (active, exists) = obj.GetPropertyValue("Active", true);
+                if (exists && !active)
+                {
+                    listBox.Items.RemoveAt(ind);
+                    HiddenItems.Add(ind, obj);
+                }
+            }
+        }
 
+        private void miShowAll_Click(object sender, EventArgs e)
+        {
+            foreach (int ind in HiddenItems.Keys.OrderBy(k => k))
+                listBox.Items.Insert(ind, HiddenItems[ind]);
+            HiddenItems.Clear();
+        }
     }
 }

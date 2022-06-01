@@ -249,9 +249,9 @@ namespace SiliFish
         //Function to calculate the Euclidean distance between two neurons 
         static public double Distance(Cell cell1, Cell cell2, DistanceMode mode)
         {
-            double x = Math.Abs(cell1.x - cell2.x);
-            double y = Math.Abs(cell1.y - cell2.y);
-            double z = Math.Abs(cell1.z - cell2.z);
+            double x = Math.Abs(cell1.X - cell2.X);
+            double y = Math.Abs(cell1.Y - cell2.Y);
+            double z = Math.Abs(cell1.Z - cell2.Z);
             switch (mode)
             {
                 case DistanceMode.Chebyshev:

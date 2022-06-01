@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
@@ -30,7 +21,10 @@ namespace SiliFish.UI.Controls
 
         public override string ToString()
         {
-            return GetStimulus().ToString();
+            string activeStatus = !cbActive.Checked ? " (inactive)" :
+                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
+                "";
+            return GetStimulus().ToString() + activeStatus;
         }
         private void ddStimulusMode_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -59,8 +53,10 @@ namespace SiliFish.UI.Controls
         {
             ddTargetPool.Items.Clear();
 
-            if (pools == null || pools.Count == 0 || stim == null) return;
+            if (pools == null || pools.Count == 0) return;
 
+            if (stim == null)
+                stim = new();
             ddTargetPool.Items.AddRange(pools.ToArray());
 
             ddStimulusMode.Text = stim.Stimulus_ms?.Mode.ToString();
@@ -68,6 +64,8 @@ namespace SiliFish.UI.Controls
             eValue2.Text = stim.Stimulus_ms?.Value2.ToString();
             ddTargetPool.Text = stim.Target;
             ddSagittalPosition.Text = stim.LeftRight;
+            cbActive.Checked = stim.Active;
+
             if (stim.Stimulus_ms != null)
                 timeLineControl.SetTimeLine(stim.Stimulus_ms.TimeSpan_ms);
         }
@@ -87,7 +85,8 @@ namespace SiliFish.UI.Controls
                 value1 = 0;
             if (!double.TryParse(eValue2.Text, out double value2))
                 value2 = 0;
-            
+
+            stim.Active = cbActive.Checked;
             TimeLine tl = timeLineControl.GetTimeLine();
             int start = 0;
             int end = -1;

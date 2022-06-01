@@ -18,7 +18,7 @@ namespace SiliFish
         //TODO: dt can be run time dependent
         public static double dt = 0.1; //the step size of the model
         
-        public static double cv = -1; //the transmission speed
+        public double cv = -1; //the transmission speed
 
         protected double E_glu = 0; //the reversal potential of glutamate
         protected double E_gly = -70; //the reversal potential of glycine
@@ -45,8 +45,6 @@ namespace SiliFish
         protected bool initialized = false;
         protected double[] Time;
 
-
-        //TODO use these parameters as default values in junction control
         protected double taur, taud, vth; //synapse parameters
 
         protected List<CellPool> NeuronPools = new();
@@ -133,7 +131,7 @@ namespace SiliFish
             Dictionary<string, object> paramDict = new();
 
             paramDict.Add("Dynamic.dt", SwimmingModel.dt);
-            paramDict.Add("Dynamic.cv", SwimmingModel.cv);
+            paramDict.Add("Dynamic.cv", cv);
             paramDict.Add("Dynamic.E_ach", E_ach);
             paramDict.Add("Dynamic.E_glu", E_glu);
             paramDict.Add("Dynamic.E_gly", E_gly);
@@ -154,7 +152,7 @@ namespace SiliFish
         public void FillMissingParameters(Dictionary<string, object> paramDict)
         {
             paramDict.AddObject("Dynamic.dt", SwimmingModel.dt, skipIfExists: true);
-            paramDict.AddObject("Dynamic.cv", SwimmingModel.cv, skipIfExists: true);
+            paramDict.AddObject("Dynamic.cv", cv, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);

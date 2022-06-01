@@ -76,8 +76,8 @@ namespace SiliFish.UI
             this.tabOutputs = new System.Windows.Forms.TabControl();
             this.tabPlot = new System.Windows.Forms.TabPage();
             this.splitWindows = new System.Windows.Forms.SplitContainer();
-            this.pictureBoxLeft = new System.Windows.Forms.PictureBox();
-            this.pictureBoxRight = new System.Windows.Forms.PictureBox();
+            this.pictureBoxLeft = new SiliFish.UI.Controls.PictureBoxControl();
+            this.pictureBoxRight = new SiliFish.UI.Controls.PictureBoxControl();
             this.pPlotWindows = new System.Windows.Forms.Panel();
             this.lCellNumber = new System.Windows.Forms.Label();
             this.cbSample = new System.Windows.Forms.CheckBox();
@@ -107,6 +107,8 @@ namespace SiliFish.UI
             this.tabHTMLPlot = new System.Windows.Forms.TabPage();
             this.webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlot = new System.Windows.Forms.Panel();
+            this.cbSampleHTML = new System.Windows.Forms.CheckBox();
+            this.nbSample = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.lCellsPools = new System.Windows.Forms.Label();
             this.ddCellsPools = new System.Windows.Forms.ComboBox();
@@ -184,8 +186,6 @@ namespace SiliFish.UI
             this.splitWindows.Panel1.SuspendLayout();
             this.splitWindows.Panel2.SuspendLayout();
             this.splitWindows.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeft)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRight)).BeginInit();
             this.pPlotWindows.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.enSample)).BeginInit();
             this.tab2DModel.SuspendLayout();
@@ -197,6 +197,7 @@ namespace SiliFish.UI
             this.tabHTMLPlot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlot)).BeginInit();
             this.pPlot.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbSample)).BeginInit();
             this.tabAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewAnimation)).BeginInit();
             this.pAnimation.SuspendLayout();
@@ -360,6 +361,7 @@ namespace SiliFish.UI
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
             this.listCellPool.CopyItem += new System.EventHandler(this.listCellPool_CopyItem);
             this.listCellPool.ViewItem += new System.EventHandler(this.listCellPool_ViewItem);
+            this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
             this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
             // 
             // listJunctions
@@ -375,6 +377,7 @@ namespace SiliFish.UI
             this.listJunctions.DeleteItem += new System.EventHandler(this.listJunctions_DeleteItem);
             this.listJunctions.CopyItem += new System.EventHandler(this.listJunctions_CopyItem);
             this.listJunctions.ViewItem += new System.EventHandler(this.listJunctions_ViewItem);
+            this.listJunctions.ActivateItem += new System.EventHandler(this.listJunctions_ActivateItem);
             this.listJunctions.SortItems += new System.EventHandler(this.listJunctions_SortItems);
             // 
             // tabStimuli
@@ -400,6 +403,7 @@ namespace SiliFish.UI
             this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
             this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
             this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
+            this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
             // 
             // tabGeneral
             // 
@@ -744,22 +748,20 @@ namespace SiliFish.UI
             // pictureBoxLeft
             // 
             this.pictureBoxLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxLeft.Image = null;
             this.pictureBoxLeft.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxLeft.Name = "pictureBoxLeft";
             this.pictureBoxLeft.Size = new System.Drawing.Size(285, 457);
-            this.pictureBoxLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxLeft.TabIndex = 0;
-            this.pictureBoxLeft.TabStop = false;
             // 
             // pictureBoxRight
             // 
             this.pictureBoxRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxRight.Image = null;
             this.pictureBoxRight.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxRight.Name = "pictureBoxRight";
             this.pictureBoxRight.Size = new System.Drawing.Size(323, 457);
-            this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxRight.TabIndex = 0;
-            this.pictureBoxRight.TabStop = false;
             // 
             // pPlotWindows
             // 
@@ -1085,6 +1087,8 @@ namespace SiliFish.UI
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.SystemColors.Control;
+            this.pPlot.Controls.Add(this.cbSampleHTML);
+            this.pPlot.Controls.Add(this.nbSample);
             this.pPlot.Controls.Add(this.label13);
             this.pPlot.Controls.Add(this.lCellsPools);
             this.pPlot.Controls.Add(this.ddCellsPools);
@@ -1104,6 +1108,35 @@ namespace SiliFish.UI
             this.pPlot.Name = "pPlot";
             this.pPlot.Size = new System.Drawing.Size(616, 105);
             this.pPlot.TabIndex = 4;
+            // 
+            // cbSampleHTML
+            // 
+            this.cbSampleHTML.AutoSize = true;
+            this.cbSampleHTML.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbSampleHTML.Location = new System.Drawing.Point(455, 4);
+            this.cbSampleHTML.Name = "cbSampleHTML";
+            this.cbSampleHTML.Size = new System.Drawing.Size(65, 19);
+            this.cbSampleHTML.TabIndex = 35;
+            this.cbSampleHTML.Text = "Sample";
+            this.cbSampleHTML.UseVisualStyleBackColor = true;
+            // 
+            // nbSample
+            // 
+            this.nbSample.Location = new System.Drawing.Point(526, 3);
+            this.nbSample.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nbSample.Name = "nbSample";
+            this.nbSample.Size = new System.Drawing.Size(56, 23);
+            this.nbSample.TabIndex = 34;
+            this.nbSample.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nbSample.Visible = false;
             // 
             // label13
             // 
@@ -1224,7 +1257,7 @@ namespace SiliFish.UI
             // btnPlot
             // 
             this.btnPlot.Enabled = false;
-            this.btnPlot.Location = new System.Drawing.Point(456, 3);
+            this.btnPlot.Location = new System.Drawing.Point(507, 33);
             this.btnPlot.Name = "btnPlot";
             this.btnPlot.Size = new System.Drawing.Size(75, 23);
             this.btnPlot.TabIndex = 30;
@@ -1241,7 +1274,8 @@ namespace SiliFish.UI
             "Gap Currents",
             "Syn Currents",
             "Currents",
-            "Stimuli"});
+            "Stimuli",
+            "Full Dynamics"});
             this.ddPlot.Location = new System.Drawing.Point(303, 57);
             this.ddPlot.Name = "ddPlot";
             this.ddPlot.Size = new System.Drawing.Size(137, 23);
@@ -1584,8 +1618,6 @@ namespace SiliFish.UI
             this.splitWindows.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitWindows)).EndInit();
             this.splitWindows.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeft)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRight)).EndInit();
             this.pPlotWindows.ResumeLayout(false);
             this.pPlotWindows.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.enSample)).EndInit();
@@ -1601,6 +1633,7 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlot)).EndInit();
             this.pPlot.ResumeLayout(false);
             this.pPlot.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbSample)).EndInit();
             this.tabAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.webViewAnimation)).EndInit();
             this.pAnimation.ResumeLayout(false);
@@ -1676,8 +1709,6 @@ namespace SiliFish.UI
         private ComboBox ddCellsPools;
         private TabPage tabPlot;
         private SplitContainer splitWindows;
-        private PictureBox pictureBoxLeft;
-        private PictureBox pictureBoxRight;
         private Panel pPlotWindows;
         private Label lPlotWindowsPool;
         private ComboBox ddCellPoolsWindows;
@@ -1735,5 +1766,9 @@ namespace SiliFish.UI
         private ListBoxControl listStimuli;
         private Panel pBodyDiagrams;
         private LinkLabel linkSaveAnimation;
+        private Controls.PictureBoxControl pictureBoxLeft;
+        private Controls.PictureBoxControl pictureBoxRight;
+        private CheckBox cbSampleHTML;
+        private NumericUpDown nbSample;
     }
 }

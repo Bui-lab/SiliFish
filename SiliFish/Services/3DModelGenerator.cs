@@ -20,11 +20,21 @@ namespace SiliFish.Services
         double WeightMult;
         private string CreateLinkDataPoint(GapJunction jnc)
         {
-            return $"{{\"source\":\"{jnc.Cell1.ID}\",\"target\":\"{jnc.Cell2.ID}\",\"value\":{jnc.Conductance} }}";
+            string curvInfo = jnc.Cell1.ID == jnc.Cell2.ID ? ",curv: 0.3" : "";
+            return $"{{\"source\":\"{jnc.Cell1.ID}\"," +
+                $"\"target\":\"{jnc.Cell2.ID}\"," +
+                $"\"value\":{GetNewWeight(jnc.Conductance):0.##}," +
+                $"\"conductance\":{jnc.Conductance:0.######}" +
+                $"{curvInfo} }}";
         }
         private string CreateLinkDataPoint(ChemicalJunction jnc)
         {
-            return $"{{\"source\":\"{jnc.PreNeuron.ID}\",\"target\":\"{jnc.PostCell.ID}\",\"value\":{GetNewWeight(jnc.Conductance):0.##},\"conductance\":{jnc.Conductance:0.######} }}";
+            string curvInfo = jnc.PreNeuron.ID == jnc.PostCell.ID ? ",curv: 0.3" : "";
+            return $"{{\"source\":\"{jnc.PreNeuron.ID}\"," +
+                $"\"target\":\"{jnc.PostCell.ID}\"," +
+                $"\"value\":{GetNewWeight(jnc.Conductance):0.##}," +
+                $"\"conductance\":{jnc.Conductance:0.######}" +
+                $"{curvInfo} }}";
         }
         private (double, double, double) GetNewCoordinates(double x, double y, double z, int columnIndex2D)
         {
@@ -42,7 +52,7 @@ namespace SiliFish.Services
         }
         private string CreateNodeDataPoint(Cell cell)
         {
-            (double newX, double newY, double newZ) = GetNewCoordinates(cell.x, cell.y, cell.z, cell.CellPool.columnIndex2D);
+            (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.columnIndex2D);
             return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"crd\":\"{cell.coordinate.ToString()}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
         }
         private string CreateNodeDataPoints(CellPool pool)
@@ -160,8 +170,8 @@ namespace SiliFish.Services
             double spinalposY = model.SpinalBodyPosition + model.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;
             double spinallag = Math.Max(model.SpinalRostralCaudalDistance, xRange);
-            (double newX, double newY, double newZ) = GetNewCoordinates(-1, spinalposZ, spinalposY, 0);
-            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 2, spinalposZ, spinalposY, 0);
+            (double newX, double newY, double newZ) = GetNewCoordinates(-3, spinalposZ, spinalposY, 0);
+            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 5, spinalposZ, spinalposY, 0);
 
             html.Replace("__SPINE_X__", newX.ToString());
             html.Replace("__SPINE_Y__", newY.ToString());
@@ -173,7 +183,7 @@ namespace SiliFish.Services
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": new THREE.MeshBasicMaterial({{color:{pool.Color.ToHex()}}})"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
-            //TODO custom shapes
+            //FUTURE_IMPROVEMENT custom shapes
             List<string> shapes = new();
             pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
             html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !String.IsNullOrEmpty(s))));

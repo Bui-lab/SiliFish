@@ -22,9 +22,9 @@ namespace SiliFish.UI.Controls
         private Dictionary<string, object> Parameters;
         public override string ToString()
         {
-            string activeStatus = cbActive.CheckState == CheckState.Checked ? "" :
-                cbActive.CheckState == CheckState.Unchecked ? " (inactive)" :
-                " (timeline)";
+            string activeStatus = !cbActive.Checked ? " (inactive)" :
+                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
+                "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddJunctionType.Text, activeStatus);
         }
         public InterPoolControl()
@@ -143,7 +143,7 @@ namespace SiliFish.UI.Controls
                 ddAxonReachMode.Text = interPool.AxonReachMode.ToString();
                 interPool.JunctionType = jnc; //target pool change can initialize the junc type list and update incoming info
                 ddJunctionType.Text = interPool.JunctionType.ToString();
-                ddDistanceMode.Text=interPool.DistanceMode.ToString();
+                ddDistanceMode.Text = interPool.DistanceMode.ToString();
 
                 string name = interPool.GeneratedName();
                 autoGenerateName = name == interPool.Name;
@@ -163,21 +163,8 @@ namespace SiliFish.UI.Controls
                     numVthreshold.Value = (decimal)interPool.SynapseParameters.VTh;
                     numEReversal.Value = (decimal)interPool.SynapseParameters.E_rev;
                 }
-                if (!interPool.Active)
-                {
-                    cbActive.CheckState = CheckState.Unchecked;
-                    timeLineControl.SetTimeLine(null);
-                }
-                else if (interPool.TimeLine.IsBlank())
-                {
-                    cbActive.CheckState = CheckState.Checked;
-                    timeLineControl.SetTimeLine(null);
-                }
-                else
-                {
-                    cbActive.CheckState = CheckState.Indeterminate;
-                    timeLineControl.SetTimeLine(interPool.TimeLine);
-                }
+                cbActive.Checked = interPool.JncActive;
+                timeLineControl.SetTimeLine(interPool.TimeLine);
             }
             else
                 interPoolTemplate = new();
@@ -188,12 +175,6 @@ namespace SiliFish.UI.Controls
             interPoolTemplate.PoolSource = ddSourcePool.Text;
             interPoolTemplate.PoolTarget= ddTargetPool.Text;
             
-            interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
-            interPoolTemplate.JunctionType = ddJunctionType.SelectedItem != null ? (JunctionType)ddJunctionType.SelectedItem : JunctionType.NotSet;
-            interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
-            interPoolTemplate.Name = eName.Text;
-            interPoolTemplate.Description = eDescription.Text;
-
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;
@@ -207,6 +188,13 @@ namespace SiliFish.UI.Controls
                 Delay_ms = (double)numDelay.Value,
                 FixedDuration_ms = fixedDuration
             };
+
+            interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
+            interPoolTemplate.JunctionType = ddJunctionType.SelectedItem != null ? (JunctionType)ddJunctionType.SelectedItem : JunctionType.NotSet;
+            interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
+            interPoolTemplate.Name = eName.Text;
+            interPoolTemplate.Description = eDescription.Text;
+
             if (interPoolTemplate.JunctionType != JunctionType.Gap)
             {
                 interPoolTemplate.SynapseParameters = new SynapseParameters
@@ -217,11 +205,8 @@ namespace SiliFish.UI.Controls
                     E_rev = (double)numEReversal.Value,
                 };
             }
-            interPoolTemplate.Active = cbActive.CheckState != CheckState.Unchecked;
-            if (cbActive.CheckState == CheckState.Indeterminate)
-                interPoolTemplate.TimeLine = timeLineControl.GetTimeLine();
-            else
-                interPoolTemplate.TimeLine.Clear();
+            interPoolTemplate.JncActive = cbActive.Checked;
+            interPoolTemplate.TimeLine = timeLineControl.GetTimeLine();
             return interPoolTemplate;
         }
 

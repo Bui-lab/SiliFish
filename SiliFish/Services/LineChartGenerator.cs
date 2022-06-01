@@ -96,7 +96,7 @@ namespace SiliFish.Services
         #region Plot Membrane Potentials
         private string CreatePotentialDataPoint(Cell cell, double t, int timeInd)
         {
-            return $"{{t:{t:0.##},v:{cell.V[timeInd]:0.###} }}";
+            return $"{{t:{t:0.##},v:{cell.V[timeInd]:0.######} }}";
         }
 
         private string CreatePotentialSeries(int chartindex, Cell cell, double[] Time, int tstart, int tend, string color, ref byte opacity, byte dec)
@@ -166,9 +166,10 @@ namespace SiliFish.Services
         #endregion
 
         #region Plot Currents
-        private string CreateCurrentDataPoint(GapJunction jnc, double t, int timeInd)
+        private string CreateCurrentDataPoint(GapJunction jnc, double t, int timeInd, bool incoming)
         {
-            return $"{{t:{t:0.##},v:{jnc.InputCurrent[timeInd]:0.###} }}";
+            int multiplier = incoming ? 1 : -1;
+            return $"{{t:{t:0.##},v:{multiplier * jnc.InputCurrent[timeInd]:0.######} }}";
         }
 
         private string CreateCurrentDataPoint(ChemicalJunction jnc, double t, int timeInd)
@@ -176,7 +177,7 @@ namespace SiliFish.Services
             return $"{{t:{t:0.##},v:{jnc.InputCurrent[timeInd]:0.###} }}";
         }
 
-        private string CreateCurrentSeries(int chartindex, int seriesindex, GapJunction jnc, double[] Time, int tstart, int tend, string color, byte opacity)
+        private string CreateIOGapCurrentSeries(int chartindex, int seriesindex, GapJunction jnc, double[] Time, int tstart, int tend, string color, byte opacity, bool incoming)
         {
             StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
             series.Replace("__SERIES_NAME__", jnc.Cell1.Name.Replace("\"", "\\\""));
@@ -184,7 +185,7 @@ namespace SiliFish.Services
             series.Replace("__SERIES_COLOR__", color);
             series.Replace("__SERIES_OPACITY__", opacity.ToString());
 
-            string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreateCurrentDataPoint(jnc, Time[i], i)));
+            string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreateCurrentDataPoint(jnc, Time[i], i, incoming)));
             series.Replace("__SERIES_DATA__", "[" + dataPoints + "]");
             return series.ToString();
         }
@@ -222,7 +223,13 @@ namespace SiliFish.Services
                     {
                         a = (byte)((jnc.Conductance - minWeight) * mult + 200);
                         string color = jnc.Cell1.CellPool.Color.ToRGB();
-                        series += CreateCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a);
+                        series += CreateIOGapCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a, incoming: true);
+                    }
+                    foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
+                    {
+                        a = (byte)((jnc.Conductance - minWeight) * mult + 200);
+                        string color = jnc.Cell2.CellPool.Color.ToRGB();
+                        series += CreateIOGapCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a, incoming: false);
                     }
                 }
                 if (includeChem)

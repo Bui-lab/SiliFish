@@ -43,6 +43,7 @@ namespace SiliFish.Helpers
         {
             return File.ReadAllText(path);
         }
+
         public static void SaveToFile(string path, string content)
         {
             File.WriteAllText(path, content);

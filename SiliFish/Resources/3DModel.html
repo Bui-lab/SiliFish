@@ -50,10 +50,11 @@
         spinePoints.push(new THREE.Vector3(__SPINE_LENGTH__, __SPINE_Y__, __SPINE_Z__));
 
         const spineGeometry = new THREE.BufferGeometry().setFromPoints(spinePoints);
-        const spineLine = new THREE.Line(spineGeometry, spineMaterial);
+        const spineLineGap = new THREE.Line(spineGeometry, spineMaterial);
+        const spineLineChem = new THREE.Line(spineGeometry, spineMaterial);
 
-        gapGraph.scene().add(spineLine);
-        chemGraph.scene().add(spineLine);
+        gapGraph.scene().add(spineLineGap);
+        chemGraph.scene().add(spineLineChem);
 
 
         const gapDataSet = gapGraph
@@ -61,8 +62,9 @@
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .graphData(gapData)
             .linkColor(() => '#333')
-            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
+            .linkCurvature('curv')
             .enableNodeDrag(false)
             .backgroundColor("#FFF")
             .width(document.body.offsetWidth);
@@ -77,6 +79,7 @@
             .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
+            .linkCurvature('curv')
             .enableNodeDrag(false)
             .backgroundColor("#FFF")
             .width(document.body.offsetWidth);

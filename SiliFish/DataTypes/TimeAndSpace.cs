@@ -66,7 +66,7 @@ namespace SiliFish.DataTypes
         {
             if (timeLine.Count == 0)
                 return "no timeline";
-            return string.Join("; ", timeLine.Select(tr => $"{tr.start}-{tr.end}"));
+            return string.Join("; ", timeLine.Select(tr => $"{tr.start}-{((tr.end == -1) ? "end":tr.end)}"));
         }
     }
 

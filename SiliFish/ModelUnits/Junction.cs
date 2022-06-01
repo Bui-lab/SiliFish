@@ -1,11 +1,13 @@
 ﻿using System;
-
+using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
 
 namespace SiliFish.ModelUnits
 {
     public class InterPoolTemplate: IComparable<InterPoolTemplate>
     {
+        [JsonIgnore]
+        public CellPoolTemplate linkedSource, linkedTarget;
         private string poolSource, poolTarget;
         public string PoolSource
         {
@@ -49,7 +51,24 @@ namespace SiliFish.ModelUnits
         }
         public string Description { get; set; }
         public SynapseParameters SynapseParameters { get; set; }//valid if junctionType is Synapse or NMJ
-        public bool Active { get; set; } = true;
+        private bool _Active = true;
+        public bool JncActive //does not check the active flags of the cell pools
+        {
+            get { return _Active; }
+            set { _Active = value; }
+        }
+
+        public bool Active
+        {
+            get
+            {
+                if (linkedSource != null && !linkedSource.Active ||
+                    linkedTarget != null && !linkedTarget.Active)
+                    return false;
+                return _Active;
+            }
+            set { _Active = value; }
+        }
         public TimeLine TimeLine { get; set; } = new TimeLine();
 
         public InterPoolTemplate()
@@ -76,8 +95,8 @@ namespace SiliFish.ModelUnits
         }
         public override string ToString()
         {
-            string activeStatus = Active && TimeLine.IsBlank() ? "" :
-                Active ? " (timeline)" : " (inactive)";
+            string activeStatus = JncActive && TimeLine.IsBlank() ? "" :
+                JncActive ? " (timeline)" : " (inactive)";
             return String.Format("{0} [{1}]/{2}{3}", Name, JunctionType.ToString(), AxonReachMode.ToString(), activeStatus);
         }
 
@@ -165,7 +184,7 @@ namespace SiliFish.ModelUnits
         /// <returns></returns>
         public bool WithinReach(Cell cell1, Cell cell2, double noise)
         {
-            double diff_x = (cell1.x - cell2.x) * noise;//positive values mean cell1 is more caudal
+            double diff_x = (cell1.X - cell2.X) * noise;//positive values mean cell1 is more caudal
             if (diff_x > 0 && diff_x > AscendingReach) //Not enough ascending reach 
                 return false;
             else if (diff_x < 0 && Math.Abs(diff_x) > DescendingReach) //Not enough descending reach 
@@ -203,6 +222,7 @@ namespace SiliFish.ModelUnits
     }
     public class GapJunction
     {
+        //public bool Bidirectional = true;//TODO currently unidirectional or different conductance gap junctions are not handled
         public double Conductance = 0;
         public Cell Cell1;
         public Cell Cell2;

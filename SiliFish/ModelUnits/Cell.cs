@@ -17,11 +17,9 @@ namespace SiliFish.ModelUnits
         public SagittalPlane PositionLeftRight = SagittalPlane.NotSet;
 
         public Coordinate coordinate;
-        public double x { get { return coordinate.X; } set { } }
-        public double y { get { return coordinate.Y; } set { } }
-        public double z { get { return coordinate.Z; } set { } }
-
-        private double _ConductionVelocity;
+        public double X { get { return coordinate.X; } set { } }
+        public double Y { get { return coordinate.Y; } set { } }
+        public double Z { get { return coordinate.Z; } set { } }
 
         public double[] V; //Membrane potential vector
 
@@ -59,17 +57,7 @@ namespace SiliFish.ModelUnits
             }
         }
 
-        public double ConductionVelocity
-        {
-            get
-            {
-                if (_ConductionVelocity <= 0)
-                    _ConductionVelocity = SwimmingModel.cv;
-                return _ConductionVelocity;
-            }
-            set => _ConductionVelocity = value;
-        }
-
+        public double ConductionVelocity { get; set; }
         public Cell()
         {
         }
@@ -124,7 +112,7 @@ namespace SiliFish.ModelUnits
         /// neuron constructor called from predefined models
         /// </summary>
         public Neuron(string group, int seq, MembraneDynamics dyn, double init_v, double init_u,
-            Coordinate coor, Stimulus stim = null, TimeLine timeline = null)
+            Coordinate coor, double cv, Stimulus stim = null, TimeLine timeline = null)
         {
             CellGroup = group;
             Sequence = seq;
@@ -136,7 +124,7 @@ namespace SiliFish.ModelUnits
             Synapses = new List<ChemicalJunction>();
             Terminals = new List<ChemicalJunction>();
             TimeLine = timeline;
-            ConductionVelocity = SwimmingModel.cv;
+            ConductionVelocity = cv;
         }
 
         public override Dictionary<string, object> Parameters

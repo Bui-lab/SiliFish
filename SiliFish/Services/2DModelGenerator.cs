@@ -19,7 +19,14 @@ namespace SiliFish.Services
         double WeightMult;
         private string CreateLinkDataPoint(InterPool interPool)
         {
-            return $"{{\"source\":\"{interPool.poolSource.ID}\",\"target\":\"{interPool.poolTarget.ID}\",\"value\":{GetNewWeight(interPool.reach.Weight):0.######},\"conductance\":{interPool.reach.Weight:0.######} }}";
+            string curvInfo = interPool.poolSource.ID == interPool.poolTarget.ID ? ",curv: 0.7" : "";
+            string link = $"{{\"source\":\"{interPool.poolSource.ID}\"," +
+                $"\"target\":\"{interPool.poolTarget.ID}\"," +
+                $"\"value\":{GetNewWeight(interPool.reach.Weight):0.######}," +
+                $"\"conductance\":{interPool.reach.Weight:0.######} " +
+                $"{curvInfo} }}";
+            ;
+            return link;
         }
         private (double, double) GetNewCoordinates(CellPool pool)
         {
@@ -94,7 +101,7 @@ namespace SiliFish.Services
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": \'{pool.Color.ToRGB()}\'"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
-            //TODO custom shapes
+            //FUTURE_IMPROVEMENT custom shapes
             List<string> shapes = new();
             pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
             html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !String.IsNullOrEmpty(s))));

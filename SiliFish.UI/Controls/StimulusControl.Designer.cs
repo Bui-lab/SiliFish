@@ -34,11 +34,12 @@
             this.eValue1 = new System.Windows.Forms.TextBox();
             this.lValue1 = new System.Windows.Forms.Label();
             this.lValue2 = new System.Windows.Forms.Label();
-            this.timeLineControl = new global::SiliFish.UI.Controls.TimeLineControl();
+            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.ddTargetPool = new System.Windows.Forms.ComboBox();
             this.lTargetPool = new System.Windows.Forms.Label();
             this.lSagittalPosition = new System.Windows.Forms.Label();
             this.ddSagittalPosition = new System.Windows.Forms.ComboBox();
+            this.cbActive = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label14
@@ -60,7 +61,7 @@
             "Ramp"});
             this.ddStimulusMode.Location = new System.Drawing.Point(101, 12);
             this.ddStimulusMode.Name = "ddStimulusMode";
-            this.ddStimulusMode.Size = new System.Drawing.Size(110, 23);
+            this.ddStimulusMode.Size = new System.Drawing.Size(121, 23);
             this.ddStimulusMode.TabIndex = 32;
             this.ddStimulusMode.SelectedIndexChanged += new System.EventHandler(this.ddStimulusMode_SelectedIndexChanged);
             // 
@@ -101,9 +102,9 @@
             // timeLineControl
             // 
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.timeLineControl.Location = new System.Drawing.Point(0, 157);
+            this.timeLineControl.Location = new System.Drawing.Point(0, 170);
             this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(236, 185);
+            this.timeLineControl.Size = new System.Drawing.Size(236, 172);
             this.timeLineControl.TabIndex = 38;
             // 
             // ddTargetPool
@@ -148,10 +149,23 @@
             this.ddSagittalPosition.TabIndex = 42;
             this.ddSagittalPosition.SelectedIndexChanged += new System.EventHandler(this.ddSagittalPosition_SelectedIndexChanged);
             // 
+            // cbActive
+            // 
+            this.cbActive.AutoSize = true;
+            this.cbActive.Checked = true;
+            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbActive.Location = new System.Drawing.Point(163, 145);
+            this.cbActive.Name = "cbActive";
+            this.cbActive.Size = new System.Drawing.Size(59, 19);
+            this.cbActive.TabIndex = 43;
+            this.cbActive.Text = "Active";
+            this.cbActive.UseVisualStyleBackColor = true;
+            // 
             // StimulusControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cbActive);
             this.Controls.Add(this.eValue2);
             this.Controls.Add(this.lSagittalPosition);
             this.Controls.Add(this.eValue1);
@@ -183,5 +197,6 @@
         private Label lTargetPool;
         private Label lSagittalPosition;
         private ComboBox ddSagittalPosition;
+        private CheckBox cbActive;
     }
 }

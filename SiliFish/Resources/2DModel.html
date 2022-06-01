@@ -38,19 +38,17 @@
         const colorSet = { __COLOR_SET__ };
 
 
-        function nodePaint({ id, g, x, y }, ctx) {
-            ctx.fillStyle = colorSet[g];
-            {
-                ctx.beginPath();
-                ctx.arc(x, y, 3, 0, 2 * Math.PI, false); //circle
-                ctx.fillStyle = colorSet[g];
-                ctx.fill();
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.textSize = 10;
-                ctx.fillStyle = 'black';
-                ctx.fillText(id, x, y);
-            }
+        function nodePaint({ id, g, x, y }, color, ctx) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2 * Math.PI, false); //circle
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.textSize = 10;
+            ctx.fillStyle = 'black';
+            ctx.fillText(id, x, y);
         }
 
         const gapData = {
@@ -63,19 +61,20 @@
         };
 
         const gapDataSet = gapGraph
-            .nodeCanvasObject((node, ctx) => nodePaint(node, ctx))
+            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
             .nodePointerAreaPaint(nodePaint)
             .nodeLabel(`id`)
             .graphData(gapData)
             .enableNodeDrag(false)
             .linkColor(() => '#333')
-            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
+            .linkCurvature('curv')
             .backgroundColor('white')
             .width(document.body.offsetWidth / 2);
 
         const chemDataSet = chemGraph
-            .nodeCanvasObject((node, ctx) => nodePaint(node, ctx))
+            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
             .nodePointerAreaPaint(nodePaint)
             .nodeLabel(`id`)
             .graphData(chemData)
@@ -85,6 +84,7 @@
             .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
+            .linkCurvature('curv')
             .backgroundColor('white')
             .width(document.body.offsetWidth / 2);
     </script>

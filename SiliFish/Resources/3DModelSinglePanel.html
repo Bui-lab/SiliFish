@@ -52,6 +52,7 @@
                 .linkColor(() => '#333')
                 .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
                 .linkWidth(l => Math.max(l.value, 0.5))
+                .linkCurvature('curv')
                 .enableNodeDrag(false)
                 .backgroundColor("#FFF");
 

@@ -10,103 +10,12 @@ namespace SiliFish.UI
     {
         public static string OutputFolder = @"C:\Master\Bui\SiliFish.Studio\Output\";
 
-        public static void SaveToJSON(string path, object content)
+
+        public static void SaveImage(string path, Image img)
         {
-            string jsonstring = JsonSerializer.Serialize(content, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(path, jsonstring);
+            img.Save(path);
         }
-
-        public static void SaveCurrentsToCSV(string filename, double[] Time, Dictionary<string, List<double>> synapticCurrents, Dictionary<string, List<double>> gapCurrents)
-        {
-            using FileStream fsSyn = File.Open(OutputFolder + "Syn" + filename, FileMode.Create, FileAccess.Write);
-            using FileStream fsGap = File.Open(OutputFolder + "Gap" + filename, FileMode.Create, FileAccess.Write);
-            using StreamWriter swSyn = new(fsSyn);
-            using StreamWriter swGap = new(fsGap);
-
-            string headers = "Time," + string.Join(',', synapticCurrents.Keys);
-            swSyn.WriteLine(headers);
-
-            headers = "Time," + string.Join(',', gapCurrents.Keys);
-            swGap.WriteLine(headers);
-
-            List<double>[] synCurArr = synapticCurrents.Values.ToArray();
-            List<double>[] gapCurArr = gapCurrents.Values.ToArray();
-            for (int t = 1; t < Time.Length; t++)
-            {
-                string rowSyn = Time[t - 1].ToString();
-                string rowGap = Time[t - 1].ToString();
-                foreach (var listvalues in synCurArr)
-                    if (listvalues.Count == 0)
-                        rowSyn += ",0";
-                    else
-                        rowSyn += "," + listvalues[t - 1].ToString();
-                foreach (var listvalues in gapCurArr)
-                    if (listvalues.Count == 0)
-                        rowGap += ",0";
-                    else
-                        rowGap += "," + listvalues[t - 1].ToString();
-                swSyn.WriteLine(rowSyn);
-                swGap.WriteLine(rowGap);
-            }
-        }
-
-        public static void SaveToCSV(string filename, double[] Time, List<string> cell_names, List<double[,]> data_lists)
-
-        {
-            //check for input accuracy - a file name and Time array need to be provided
-            //the number of data_lists needs to be twice as the number of cell_names: for left and right
-            if (filename == null || Time == null || cell_names == null || cell_names.Count == 0 || data_lists == null || data_lists.Count != 2 * cell_names.Count)
-            {
-                return;
-            }
-
-            using FileStream fs = File.Open(UtilWindows.OutputFolder + filename, FileMode.Create, FileAccess.Write);
-            using StreamWriter sw = new(fs);
-            int numofcelltypes = cell_names.Count;
-            int[] num_cells = new int[numofcelltypes];
-
-            //For every cell type, there are two data lists: Left and Right.
-            foreach (var i in Enumerable.Range(0, numofcelltypes))
-            {
-                num_cells[i] = data_lists[2 * i].GetLength(0);
-            }
-
-            string headers = "Time";
-            foreach (var i in Enumerable.Range(0, cell_names.Count))
-            {
-                foreach (var j in Enumerable.Range(0, Convert.ToInt32(num_cells[i]) - 0))
-                {
-                    headers += ",Left_" + cell_names[i] + j.ToString();
-                }
-                foreach (var k in Enumerable.Range(0, Convert.ToInt32(num_cells[i]) - 0))
-                {
-                    headers += ",Right_" + cell_names[i] + k.ToString();
-                }
-            }
-
-            sw.WriteLine(headers);
-
-            for (int t = 0; t < Time.Length; t++)
-            {
-                string row = Time[t].ToString();
-                foreach (var i in Enumerable.Range(0, cell_names.Count))
-                {
-                    foreach (var j in Enumerable.Range(0, Convert.ToInt32(num_cells[i]) - 0))
-                    {
-                        var values = data_lists[i * 2];
-                        row += "," + values[j, t].ToString();// col_df = header_name + "," + string.Join(',', values.ConvertRowToList(j));
-                    }
-                    foreach (var k in Enumerable.Range(0, Convert.ToInt32(num_cells[i]) - 0))
-                    {
-                        var values = data_lists[i * 2 + 1];
-                        row += "," + values[k, t].ToString();
-                    }
-                }
-                sw.WriteLine(row);
-            }
-
-        }
-
+        
 
         /// <summary>
         /// 

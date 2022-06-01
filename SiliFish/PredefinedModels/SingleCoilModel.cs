@@ -71,8 +71,8 @@ namespace SiliFish.PredefinedModels
 
             for (int i = 0; i < nIC; i++)
             {
-                L_IC.AddCell(new Neuron("IC", seq: i, ic_dyn, init_v: -65, init_u: 0, new Coordinate(x: 1.0 * GetXNoise(), -1), stim: stim));
-                R_IC.AddCell(new Neuron("IC", seq: i, ic_dyn, init_v: -65, init_u: 0, new Coordinate(x: 1.0 * GetXNoise(), 1)));
+                L_IC.AddCell(new Neuron("IC", seq: i, ic_dyn, init_v: -65, init_u: 0, new Coordinate(x: 1.0 * GetXNoise(), -1), cv: cv, stim: stim));
+                R_IC.AddCell(new Neuron("IC", seq: i, ic_dyn, init_v: -65, init_u: 0, new Coordinate(x: 1.0 * GetXNoise(), 1), cv: cv));
             }
             NeuronPools.Add(L_IC);
             NeuronPools.Add(R_IC);
@@ -83,8 +83,8 @@ namespace SiliFish.PredefinedModels
             R_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0d", SagittalPlane.Right, 1, Color.Green);
             for (int i = 0; i < nV0d; i++)
             {
-                L_V0d.AddCell(new Neuron("V0d", seq: i, v0d_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1)));
-                R_V0d.AddCell(new Neuron("V0d", seq: i, v0d_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), 1)));
+                L_V0d.AddCell(new Neuron("V0d", seq: i, v0d_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
+                R_V0d.AddCell(new Neuron("V0d", seq: i, v0d_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), 1), cv: cv));
             }
             NeuronPools.Add(L_V0d);
             NeuronPools.Add(R_V0d);
@@ -94,8 +94,8 @@ namespace SiliFish.PredefinedModels
             MembraneDynamics mn_dyn = new() { a = 0.5, b = 0.1, c = -50, d = 0.2, vmax = 10, vr = -60, vt = -45, k = 0.05, Cm = 20 };
             for (int i = 0; i < nMN; i++)
             {
-                L_MN.AddCell(new Neuron("MN", seq: i, mn_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1)));
-                R_MN.AddCell(new Neuron("MN", seq: i, mn_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), 1)));
+                L_MN.AddCell(new Neuron("MN", seq: i, mn_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
+                R_MN.AddCell(new Neuron("MN", seq: i, mn_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), 1), cv: cv));
             }
             NeuronPools.Add(L_MN);
             NeuronPools.Add(R_MN);

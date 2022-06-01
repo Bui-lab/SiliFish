@@ -54,7 +54,7 @@ namespace SiliFish.UI.Controls
             Cell cell = null;
             double cv = poolTemplate.ConductionVelocity != null ?
                 ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, null)[0] :
-                SwimmingModel.cv;
+                0;
             if (cellType == CellType.Neuron)
                 cell= new Neuron("", 0, cv);
             else if (cellType == CellType.MuscleCell)

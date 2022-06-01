@@ -42,7 +42,7 @@ namespace SiliFish.ModelUnits
         }
         public override string ToString()
         {
-            if (Mode== StimulusMode.Step)
+            if (Mode == StimulusMode.Step)
                 return String.Format("{0} {1}", Mode.ToString(), Value1);
             return String.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
         }
@@ -125,6 +125,7 @@ namespace SiliFish.ModelUnits
         public Stimulus Stimulus_ms { get; set; }
 
         public string LeftRight { get; set; }
+        public bool Active { get; set; } = true;
 
         public int CompareTo(AppliedStimulus other)
         {

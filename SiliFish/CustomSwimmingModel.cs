@@ -9,49 +9,6 @@ using SiliFish.ModelUnits;
 namespace SiliFish
 {
 
-    public class SwimmingModelTemplate
-    {
-        public List<CellPoolTemplate> Pools { get; set; } = new();
-        public List<InterPoolTemplate> InterPools { get; set; } = new();
-        public Dictionary<string, object> Parameters { get; set; }
-        public List<AppliedStimulus> Stimuli { get; set; } = new();
-
-        public string CheckTemplate()
-        {
-            if (Pools.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
-                return "Cell pool names have to be unique";
-            return "";
-        }
-        public void RenameCellPool(string oldName, string newName)
-        {
-            if (oldName == null || newName == null || oldName == newName)
-                return;
-            if (Pools.Any(p => p.CellGroup == oldName))
-                return;
-            foreach (InterPoolTemplate ip in InterPools.Where(ip => ip.PoolSource == oldName))
-                ip.PoolSource = newName;
-            foreach (InterPoolTemplate ip in InterPools.Where(ip => ip.PoolTarget == oldName))
-                ip.PoolTarget = newName;
-            foreach (AppliedStimulus stim in Stimuli.Where(s => s.Target == oldName))
-                stim.Target = newName;
-        }
-
-        public string ModelName
-        {
-            get
-            {
-                return (string)Parameters?.Read("General.Name", "") ?? "";
-            }
-        }
-        public string ModelDescription
-        {
-            get
-            {
-                return (string)Parameters?.Read("General.Description", "") ?? "";
-            }
-        }
-
-    }
     public class CustomSwimmingModel: SwimmingModel
     {
         public CustomSwimmingModel(SwimmingModelTemplate swimmingModelTemplate)
@@ -67,7 +24,7 @@ namespace SiliFish
             SetParameters(swimmingModelTemplate.Parameters);
 
             #region Generate pools and cells
-            foreach (CellPoolTemplate pool in swimmingModelTemplate.Pools.Where(cp => cp.Active))
+            foreach (CellPoolTemplate pool in swimmingModelTemplate.CellPoolTemplates.Where(cp => cp.Active))
             {
                 if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Left)
                 {
@@ -87,7 +44,7 @@ namespace SiliFish
             #endregion
 
             #region Generate Junctions
-            foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPools.Where(ip => ip.Active))
+            foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
             {
                 CellPool leftSource = NeuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
                 CellPool rightSource = NeuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
@@ -125,9 +82,9 @@ namespace SiliFish
             #endregion
 
             #region Generate Stimuli
-            if (swimmingModelTemplate.Stimuli?.Count > 0)
+            if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
             {
-                foreach (AppliedStimulus stimulus in swimmingModelTemplate.Stimuli)
+                foreach (AppliedStimulus stimulus in swimmingModelTemplate.AppliedStimuli)
                 {
                     if (stimulus.LeftRight.Contains("Left"))
                     {

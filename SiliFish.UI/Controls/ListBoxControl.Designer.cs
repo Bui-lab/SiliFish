@@ -34,11 +34,14 @@
             this.miAddItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miDeleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miCreateCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.miSortAlphabetically = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.miActivate = new System.Windows.Forms.ToolStripMenuItem();
             this.miDeactivate = new System.Windows.Forms.ToolStripMenuItem();
+            this.sepSort = new System.Windows.Forms.ToolStripSeparator();
+            this.miSortAlphabetically = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.sepActive = new System.Windows.Forms.ToolStripSeparator();
+            this.miShowAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.miHideInactive = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuListBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,12 +64,15 @@
             this.miAddItem,
             this.miDeleteItem,
             this.miCreateCopy,
+            this.sepActive,
             this.miActivate,
             this.miDeactivate,
-            this.toolStripSeparator1,
+            this.miHideInactive,
+            this.miShowAll,
+            this.sepSort,
             this.miSortAlphabetically});
             this.contextMenuListBox.Name = "contextMenuListBox";
-            this.contextMenuListBox.Size = new System.Drawing.Size(181, 164);
+            this.contextMenuListBox.Size = new System.Drawing.Size(181, 214);
             this.contextMenuListBox.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuListBox_Opening);
             // 
             // miAddItem
@@ -90,18 +96,6 @@
             this.miCreateCopy.Text = "Create a Copy";
             this.miCreateCopy.Click += new System.EventHandler(this.miCreateCopy_Click);
             // 
-            // miSortAlphabetically
-            // 
-            this.miSortAlphabetically.Name = "miSortAlphabetically";
-            this.miSortAlphabetically.Size = new System.Drawing.Size(180, 22);
-            this.miSortAlphabetically.Text = "Sort Alphabetically";
-            this.miSortAlphabetically.Click += new System.EventHandler(this.miSortAlphabetically_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
             // miActivate
             // 
             this.miActivate.Name = "miActivate";
@@ -115,6 +109,37 @@
             this.miDeactivate.Size = new System.Drawing.Size(180, 22);
             this.miDeactivate.Text = "Deactivate";
             this.miDeactivate.Click += new System.EventHandler(this.miDeactivate_Click);
+            // 
+            // sepSort
+            // 
+            this.sepSort.Name = "sepSort";
+            this.sepSort.Size = new System.Drawing.Size(177, 6);
+            // 
+            // miSortAlphabetically
+            // 
+            this.miSortAlphabetically.Name = "miSortAlphabetically";
+            this.miSortAlphabetically.Size = new System.Drawing.Size(180, 22);
+            this.miSortAlphabetically.Text = "Sort Alphabetically";
+            this.miSortAlphabetically.Click += new System.EventHandler(this.miSortAlphabetically_Click);
+            // 
+            // sepActive
+            // 
+            this.sepActive.Name = "sepActive";
+            this.sepActive.Size = new System.Drawing.Size(177, 6);
+            // 
+            // miShowAll
+            // 
+            this.miShowAll.Name = "miShowAll";
+            this.miShowAll.Size = new System.Drawing.Size(180, 22);
+            this.miShowAll.Text = "Show All";
+            this.miShowAll.Click += new System.EventHandler(this.miShowAll_Click);
+            // 
+            // miHideInactive
+            // 
+            this.miHideInactive.Name = "miHideInactive";
+            this.miHideInactive.Size = new System.Drawing.Size(180, 22);
+            this.miHideInactive.Text = "Hide Inactive";
+            this.miHideInactive.Click += new System.EventHandler(this.miHideInactive_Click);
             // 
             // ListBoxControl
             // 
@@ -139,6 +164,9 @@
         private ToolStripMenuItem miSortAlphabetically;
         private ToolStripMenuItem miActivate;
         private ToolStripMenuItem miDeactivate;
-        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator sepSort;
+        private ToolStripSeparator sepActive;
+        private ToolStripMenuItem miHideInactive;
+        private ToolStripMenuItem miShowAll;
     }
 }

@@ -65,5 +65,20 @@ namespace SiliFish.Extensions
                 key += "'";
             dictionary.Add(key, value);
         }
+
+        public static bool SameAs(this Dictionary<string, object> dictionary, Dictionary<string, object> dic2)
+        {
+            if (dictionary?.Count != dic2?.Count) return false;
+            foreach (var key in dictionary.Keys)
+            {
+                if (!dic2.ContainsKey(key)) 
+                    return false;
+                string s1 = dictionary[key]?.ToString() ?? "";
+                string s2 = dic2[key]?.ToString() ?? "";
+                if (s1 != s2) 
+                    return false; 
+            }
+            return true;
+        }
     }
 }
