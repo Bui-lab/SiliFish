@@ -31,6 +31,7 @@ namespace SiliFish.UI
         string tempFolder;
         string lastSavedCustomModelJSON;
         Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams;
+        DateTime runStart;
 
         public MainForm()
         {
@@ -301,7 +302,7 @@ namespace SiliFish.UI
         {
             listStimuli.ClearItems();
             if (ModelTemplate?.AppliedStimuli == null) return;
-            foreach (AppliedStimulus stim in ModelTemplate.AppliedStimuli)
+            foreach (StimulusTemplate stim in ModelTemplate.AppliedStimuli)
             {
                 listStimuli.AppendItem(stim);
             }
@@ -343,7 +344,7 @@ namespace SiliFish.UI
             ModelTemplate.AppliedStimuli.Clear();
             foreach (var stim in listStimuli.GetItems(includeHidden))
             {
-                if (stim is AppliedStimulus appstim)
+                if (stim is StimulusTemplate appstim)
                 {
                     ModelTemplate.AppliedStimuli.Add(appstim);
                 }
@@ -493,10 +494,15 @@ namespace SiliFish.UI
 
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
+            TimeSpan ts = DateTime.Now - runStart;
+            
+            lRunTime.Text = $"Last run: {Util.TimeSpanToString(ts)}";
 
         }
         private void btnRun_Click(object sender, EventArgs e)
         {
+            runStart = DateTime.Now;
+            lRunTime.Text = "";
             UseWaitCursor = true;
             progressBarRun.Value = 0;
             progressBarRun.Visible = true;
@@ -670,18 +676,17 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
 
-            if (!Model.ModelRun)
+
+            if (rbCustom.Checked)
             {
-                if (rbCustom.Checked)
-                {
-                    Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
-                }
-                else
-                {
-                    Dictionary<string, object> ParamDict = ReadParams();
-                    Model.SetParameters(ParamDict);
-                }
+                Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
             }
+            else
+            {
+                Dictionary<string, object> ParamDict = ReadParams();
+                Model.SetParameters(ParamDict);
+            }
+
             string mode = dd3DModelType.Text;
             bool singlePanel = mode != "Gap/Chem";
             bool gap = mode.Contains("Gap");
@@ -880,9 +885,10 @@ namespace SiliFish.UI
                 {
                     foreach (CellPool pool in pools)
                     {
-                        double[,] voltageArray = new double[pool.GetCells().Count(), Model.MaxIndex];
+                        List<Cell> cells = pool.GetCells(nSample).ToList();
+                        double[,] voltageArray = new double[cells.Count, Model.MaxIndex];
                         int i = 0;
-                        foreach (Cell c in pool.GetCells(nSample))
+                        foreach (Cell c in cells)
                             voltageArray.UpdateRow(i++, c.V);
 
                         Color col = pool.Color;
@@ -1171,7 +1177,7 @@ namespace SiliFish.UI
         private void listCellPool_ActivateItem(object sender, EventArgs e)
         {
             CellPoolTemplate pool = listCellPool.SelectedItem as CellPoolTemplate;
-            ModelTemplate.CellPoolTemplates.FirstOrDefault(p => p.CellGroup == pool.CellGroup).Active = pool.Active;
+            ModelTemplate.CellPoolTemplates.FirstOrDefault(p => p.Distinguisher == pool.Distinguisher).Active = pool.Active;
         }
 
         private void listCellPool_SortItems(object sender, EventArgs e)
@@ -1256,7 +1262,7 @@ namespace SiliFish.UI
         private void listJunctions_ActivateItem(object sender, EventArgs e)
         {
             InterPoolTemplate jnc = sender as InterPoolTemplate;
-            ModelTemplate.InterPoolTemplates.FirstOrDefault(p => p.GeneratedName() == jnc.GeneratedName()).Active = jnc.Active;
+            ModelTemplate.InterPoolTemplates.FirstOrDefault(p => p.Distinguisher == jnc.Distinguisher).Active = jnc.Active;
         }
 
         private void listJunctions_SortItems(object sender, EventArgs e)
@@ -1292,7 +1298,7 @@ namespace SiliFish.UI
 
         #region Stimulus
 
-        private AppliedStimulus OpenStimulusDialog(AppliedStimulus stim)
+        private StimulusTemplate OpenStimulusDialog(StimulusTemplate stim)
         {
             ControlContainer frmControl = new();
             StimulusControl sc = new StimulusControl();
@@ -1307,7 +1313,7 @@ namespace SiliFish.UI
         }
         private void listStimuli_AddItem(object sender, EventArgs e)
         {
-            AppliedStimulus stimulus = OpenStimulusDialog(null);
+            StimulusTemplate stimulus = OpenStimulusDialog(null);
             if (stimulus != null)
             {
                 ModelTemplate.AppliedStimuli.Add(stimulus);
@@ -1318,7 +1324,7 @@ namespace SiliFish.UI
         {
             if (listStimuli.SelectedItem == null)
                 return;
-            AppliedStimulus stimulus = listStimuli.SelectedItem as AppliedStimulus;
+            StimulusTemplate stimulus = listStimuli.SelectedItem as StimulusTemplate;
             stimulus = OpenStimulusDialog(stimulus);
             if (stimulus != null)
             {
@@ -1330,7 +1336,7 @@ namespace SiliFish.UI
         {
             if (listStimuli.SelectedIndex >= 0)
             {
-                AppliedStimulus stim = (AppliedStimulus)listStimuli.SelectedItem;
+                StimulusTemplate stim = (StimulusTemplate)listStimuli.SelectedItem;
                 ModelTemplate.AppliedStimuli.Remove(stim);
                 listStimuli.RemoveItemAt(listStimuli.SelectedIndex);
             }
@@ -1339,7 +1345,7 @@ namespace SiliFish.UI
         {
             if (listStimuli.SelectedItem == null)
                 return;
-            AppliedStimulus stimulus = listStimuli.SelectedItem as AppliedStimulus;
+            StimulusTemplate stimulus = listStimuli.SelectedItem as StimulusTemplate;
             stimulus = OpenStimulusDialog(stimulus); //check modeltemplate's list
             if (stimulus != null)
             {
@@ -1350,8 +1356,8 @@ namespace SiliFish.UI
 
         private void listStimuli_ActivateItem(object sender, EventArgs e)
         {
-            AppliedStimulus stim = sender as AppliedStimulus;
-            ModelTemplate.AppliedStimuli.FirstOrDefault(p => p.ToString() == stim.ToString()).Active = stim.Active;
+            StimulusTemplate stim = sender as StimulusTemplate;
+            ModelTemplate.AppliedStimuli.FirstOrDefault(p => p.Distinguisher == stim.Distinguisher).Active = stim.Active;
         }
 
 

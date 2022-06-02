@@ -58,10 +58,6 @@ namespace SiliFish.UI.Controls
             this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.lSagittalPosition = new System.Windows.Forms.Label();
             this.ddSagittalPosition = new System.Windows.Forms.ComboBox();
-            this.dgDynamics = new System.Windows.Forms.DataGridView();
-            this.colField = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDist = new System.Windows.Forms.DataGridViewButtonColumn();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.distributionX = new SiliFish.UI.Controls.DistributionControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -84,13 +80,13 @@ namespace SiliFish.UI.Controls
             this.linkClearTimeline = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.dgDynamics = new Controls.DistributionDataGrid();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
             this.pXAxis.SuspendLayout();
             this.pMain.SuspendLayout();
             this.pMainTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -404,41 +400,6 @@ namespace SiliFish.UI.Controls
             this.ddSagittalPosition.Size = new System.Drawing.Size(121, 23);
             this.ddSagittalPosition.TabIndex = 2;
             // 
-            // dgDynamics
-            // 
-            this.dgDynamics.AllowUserToAddRows = false;
-            this.dgDynamics.AllowUserToDeleteRows = false;
-            this.dgDynamics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgDynamics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colField,
-            this.colValue,
-            this.colDist});
-            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgDynamics.Location = new System.Drawing.Point(3, 172);
-            this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.RowHeadersVisible = false;
-            this.dgDynamics.RowTemplate.Height = 25;
-            this.dgDynamics.Size = new System.Drawing.Size(321, 520);
-            this.dgDynamics.TabIndex = 9;
-            this.dgDynamics.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
-            // 
-            // colField
-            // 
-            this.colField.HeaderText = "Field";
-            this.colField.Name = "colField";
-            this.colField.ReadOnly = true;
-            // 
-            // colValue
-            // 
-            this.colValue.HeaderText = "Value";
-            this.colValue.Name = "colValue";
-            // 
-            // colDist
-            // 
-            this.colDist.HeaderText = "Distr.";
-            this.colDist.Name = "colDist";
-            this.colDist.Width = 40;
-            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.pXAxis);
@@ -685,6 +646,17 @@ namespace SiliFish.UI.Controls
             this.splitMain.SplitterDistance = 261;
             this.splitMain.TabIndex = 16;
             // 
+            // distributionDataGrid1
+            // 
+            this.dgDynamics.AutoSize = true;
+            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgDynamics.Location = new System.Drawing.Point(3, 172);
+            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
+            this.dgDynamics.Name = "distributionDataGrid1";
+            this.dgDynamics.Size = new System.Drawing.Size(321, 520);
+            this.dgDynamics.TabIndex = 3;
+            // 
             // CellPoolControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -703,7 +675,6 @@ namespace SiliFish.UI.Controls
             this.pMain.PerformLayout();
             this.pMainTop.ResumeLayout(false);
             this.pMainTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -745,7 +716,6 @@ namespace SiliFish.UI.Controls
         private Label lXAxis;
         private Panel pMain;
         private FlowLayoutPanel flowLayoutPanel1;
-        private DataGridView dgDynamics;
         private Panel pMainTop;
         private LinkLabel linkSavePool;
         private LinkLabel linkLoadPool;
@@ -754,9 +724,6 @@ namespace SiliFish.UI.Controls
         private Controls.DistributionControl distributionZ;
         private Label lSagittalPosition;
         private ComboBox ddSagittalPosition;
-        private DataGridViewTextBoxColumn colField;
-        private DataGridViewTextBoxColumn colValue;
-        private DataGridViewButtonColumn colDist;
         private ToolTip toolTip1;
         private TabControl tabCellPool;
         private TabPage tSpatialDist;
@@ -784,5 +751,6 @@ namespace SiliFish.UI.Controls
         private Label lNeuronClass;
         private Label lDescription;
         private TextBox eDescription;
+        private Controls.DistributionDataGrid dgDynamics;
     }
 }

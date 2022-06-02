@@ -84,7 +84,7 @@ namespace SiliFish
             #region Generate Stimuli
             if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
             {
-                foreach (AppliedStimulus stimulus in swimmingModelTemplate.AppliedStimuli)
+                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli)
                 {
                     if (stimulus.LeftRight.Contains("Left"))
                     {

@@ -99,5 +99,24 @@ namespace SiliFish.Helpers
             return response.IsSuccessStatusCode;
         }
 
+        public static string TimeSpanToString(TimeSpan ts)
+        {
+            string s = "";
+            if (ts.TotalDays >= 1)
+            {
+                int td = (int)Math.Floor(ts.TotalDays);
+                s = td.ToString() + " days; ";
+                ts.Subtract(new TimeSpan(td, 0, 0, 0));
+            }
+            int th = (int)Math.Floor(ts.TotalHours);
+            s += th.ToString("00") + ":";
+            ts.Subtract(new TimeSpan(th, 0, 0));
+            int tm = (int)Math.Floor(ts.TotalMinutes);
+            s += tm.ToString("00") + ":";
+            ts.Subtract(new TimeSpan(0, tm, 0));
+            s += ts.TotalSeconds.ToString("00");
+            return s;
+        }
+
     }
 }

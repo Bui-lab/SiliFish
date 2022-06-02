@@ -173,6 +173,8 @@ namespace SiliFish.DataTypes
 
         public override double[] GenerateNNumbers(int n, double? range)
         {
+            if (range != null)
+                Range = (double)range;
             if (Random == null)
                 Random = new Random();
             return Random.Spaced(LowerLimit, UpperLimit, NoiseStdDev, n);

@@ -1,55 +1,180 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="SiliFish.DoubleCoilModel" Collapsed="true">
-    <Position X="2.5" Y="3.75" Width="3" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AgiYdiRKABAQlAsAACICAJhAABASAGAIIV6BAJCQKCA=</HashCode>
-      <FileName>DoubleCoilModel.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="SiliFish.SwimmingModel" Collapsed="true">
-    <Position X="4" Y="2.5" Width="4.25" />
+    <Position X="7.5" Y="6.5" Width="4.25" />
     <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="NeuronPools" Type="SiliFish.CellPool">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.029" Y="0.589" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="MuscleCellPools" Type="SiliFish.CellPool">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.273" Y="0.714" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>BAAAEYkhQAAwAkkAChIGgAAABQAAAAAJMRSMKQAHQQg=</HashCode>
+      <HashCode>hQACAsgsEBKXRwAAQAMmwAQAQAAAAADZGAaMiSgCmXg=</HashCode>
       <FileName>SwimmingModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Field Name="NeuronPools" />
       <Field Name="MuscleCellPools" />
+      <Field Name="PoolConnections" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="SiliFish.SingleCoilModel" Collapsed="true">
-    <Position X="6.25" Y="3.75" Width="3.5" />
+  <Class Name="SiliFish.CustomSwimmingModel" Collapsed="true">
+    <Position X="12.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIGAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CustomSwimmingModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cell" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQAAAgCAAAAigAIgAAQICAYABAAAAAAQCIAAIAEQ4AE=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="CellPool" />
+      <Field Name="coordinate" />
+      <Field Name="Stimulus" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Neuron" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAhASAAIgDAAAAAAgCCAAAAAAAAAAAKIAAAAAgAA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Core" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="GapJunctions" />
+      <Field Name="Synapses" />
+      <Field Name="Terminals" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.MuscleCell" Collapsed="true">
+    <Position X="7.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgACAAAgCAAAAAAgCAAAAAAAAAAAAMAAAAAAgQA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Core" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="EndPlates" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.CellPool" Collapsed="true">
+    <Position X="10.5" Y="5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AgCQViBAAAAQlAoAACICAJgAABASAAAIIUYBAACQACA=</HashCode>
-      <FileName>SingleCoilModel.cs</FileName>
+      <HashCode>QIAAAFAgAAoAgAEgAAoVwAJAICAgCAIACAgAgQAAgAA=</HashCode>
+      <FileName>ModelUnits\CellPool.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="Cells" />
+    </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="SiliFish.CellPool" Collapsed="true">
-    <Position X="4.75" Y="0.5" Width="2.75" />
+  <Class Name="SiliFish.ModelUnits.GapJunction" Collapsed="true">
+    <Position X="4.25" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAEEAAAgAAAAAAAIAgAIAAAAiAAAACAAAIAQIAAA=</HashCode>
-      <FileName>ModelUnits.cs</FileName>
+      <HashCode>AgAAAAACAAASiAIBEAEgABAAAAgKQEAAAIAAgAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="SiliFish.ModelUnits.ChemicalJunction" Collapsed="true">
+    <Position X="5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgABAAACAAACiAgBUAGgABAIAAAKAAAEAAIAAAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Core" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stimulus" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAJAAASAECAAAAAIBAAAAACAAAAAgCgQAACA=</HashCode>
+      <FileName>ModelUnits\Stimulus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.TwoExp_syn" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIgBAAAAAAAAABAACAAAACAAA=</HashCode>
+      <FileName>Izhikevich.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Izhikevich_9P" Collapsed="true">
+    <Position X="2.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAhAABAAAAAAAAAAIAAAEAABAAAClgTIAgAAACBA=</HashCode>
+      <FileName>Izhikevich.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Leaky_Integrator" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAIAAAEAAAAAAAAABAAgAAACQA=</HashCode>
+      <FileName>Izhikevich.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.PredefinedModels.BeatAndGlideModel" Collapsed="true">
+    <Position X="7.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BjCiNEYaARiUNAsEEkYmAxcAAAIQRGiIJFiEmIAQKDA=</HashCode>
+      <FileName>PredefinedModels\BeatAndGlideModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.PredefinedModels.DoubleCoilModel" Collapsed="true">
+    <Position X="10" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgiYdiRKABAQlAsAACICAJxAAAASAGAIIF6BgJCQKCA=</HashCode>
+      <FileName>PredefinedModels\DoubleCoilModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.PredefinedModels.PredefinedModel" Collapsed="true">
+    <Position X="7.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEABQAAAgAgAAQAAQAAABAAAAAAAABAAgAAFCAg=</HashCode>
+      <FileName>PredefinedModels\PredefinedModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.PredefinedModels.SingleCoilModel" Collapsed="true">
+    <Position X="5.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgCQViBAAAAQlAoAACICAJwAAAASAAAIIEYBgACQCCA=</HashCode>
+      <FileName>PredefinedModels\SingleCoilModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.InterPool" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAEAAAAACAAAgAEAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>ModelUnits\InterPool.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poolSource" />
+      <Field Name="poolTarget" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="SiliFish.DataTypes.Coordinate" Collapsed="true">
+    <Position X="3.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAIAAAAAAAAAAAYAE=</HashCode>
+      <FileName>DataTypes\TimeAndSpace.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -15,7 +15,7 @@ namespace SiliFish.UI.Extensions
         /// <param name="dgParamGrid"></param>
         /// <param name="colField"></param>
         /// <param name="colValue"></param>
-        public static void FillToGrid(this Dictionary<string, object> paramDict, DataGridView dgParamGrid, int colField, int colValue)
+        public static void WriteToGrid(this Dictionary<string, object> paramDict, DataGridView dgParamGrid, int colField, int colValue)
         {
             try
             {

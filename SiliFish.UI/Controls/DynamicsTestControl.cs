@@ -14,7 +14,7 @@ namespace SiliFish.UI.Controls
             set
             {
                 cell = value;
-                cell?.Parameters.FillToGrid(dgDynamics, colField.Index, colValue.Index);
+                dgDynamics.WriteToGrid(cell?.Parameters);
             }
         }
         public DynamicsTestControl()
@@ -26,7 +26,7 @@ namespace SiliFish.UI.Controls
         {
             if (Cell == null) return;
 
-            cell.Parameters.ReadFromGrid(dgDynamics, colField.Index, colValue.Index);
+            cell.Parameters = dgDynamics.ReadFromGrid();
 
             decimal dt = edt.Value;
             SwimmingModel.dt = (double)dt;
@@ -54,7 +54,7 @@ namespace SiliFish.UI.Controls
         {
             if (Cell == null || Cell.GetType() != typeof(Neuron)) return;
 
-            cell.Parameters.ReadFromGrid(dgDynamics, colField.Index, colValue.Index);
+            cell.Parameters = dgDynamics.ReadFromGrid();
 
             //TODO muscle cell contraction - how to we handle it?
             Neuron neuron = Cell as Neuron;
@@ -64,7 +64,7 @@ namespace SiliFish.UI.Controls
                 eInput.Maximum = limit;
             decimal d = (decimal)neuron.CalculateRheoBase((double)limit, Math.Pow(0.1, eInput.DecimalPlaces));
             if (d <= eInput.Maximum && d >= eInput.Minimum)
-                eInput.Value = d;
+                eRheobase.Text = d.ToString("0.###");
             else
                 eInstanceParams.Text = "No rheobase below " + eInput.Maximum + ".\r\n" + eInstanceParams.Text;
 
@@ -78,7 +78,7 @@ namespace SiliFish.UI.Controls
 
         private void linkUseUpdatedParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            cell.Parameters = cell.Parameters.ReadFromGrid(dgDynamics, colField.Index, colValue.Index);
+            cell.Parameters = dgDynamics.ReadFromGrid();
             useUpdatedParams?.Invoke(this, EventArgs.Empty);
         }
     }

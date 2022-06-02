@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace SiliFish.ModelUnits
 {
-    public class CellPoolTemplate : IComparable<CellPoolTemplate>
+    public class CellPoolTemplate: ModelUnitBase
     {
         public string CellGroup { get; set; }
         public string Description { get; set; }
@@ -55,17 +55,15 @@ namespace SiliFish.ModelUnits
                 _ConductionVelocity = value is JsonElement element ? Distribution.GetOfDerivedType(element.GetRawText()) : (Distribution)value;
             }
         }
-        public bool Active { get; set; } = true;
-        public TimeLine TimeLine { get; set; } = new TimeLine();
         public string Position
         {
             get
             {
                 string FTS =
-                    //                    (PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
-                    //                    (PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
-                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "LR")
-                    ;
+                    //FUTURE_IMPROVEMENT
+                    //(PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
+                    //(PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
+                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "LR");
                 return FTS;
             }
         }
@@ -74,24 +72,29 @@ namespace SiliFish.ModelUnits
             return CellGroup + (Active ? "" : " (inactive)");
         }
 
-
-        public string GetTooltip()
+        public override string Distinguisher { get { return CellGroup; } }
+        
+        public override string Tooltip
         {
-            string ntmode = CellType == CellType.Neuron && NTMode != NeuronClass.NotSet ?
-                $"Neurotransmitter: {NTMode}\r\n" : "";
-            return $"{CellGroup}\r\n" +
-                $"{Description}\r\n" +
-                $"{ntmode}" +
-                $"Location: {BodyLocation}\r\n" +
-                $"Position: {Position}\r\n" +
-                $"# of cells: {NumOfCells}\r\n" +
-                $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
-                $"TimeLine: {TimeLine}\r\n" +
-                $"Active: {Active}";
+            get
+            {
+                string ntmode = CellType == CellType.Neuron && NTMode != NeuronClass.NotSet ?
+                    $"Neurotransmitter: {NTMode}\r\n" : "";
+                return $"{CellGroup}\r\n" +
+                    $"{Description}\r\n" +
+                    $"{ntmode}" +
+                    $"Location: {BodyLocation}\r\n" +
+                    $"Position: {Position}\r\n" +
+                    $"# of cells: {NumOfCells}\r\n" +
+                    $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
+                    $"TimeLine: {TimeLine}\r\n" +
+                    $"Active: {Active}";
+            }
         }
 
-        public int CompareTo(CellPoolTemplate other)
+        public override int CompareTo(ModelUnitBase otherbase)
         {
+            CellPoolTemplate other = otherbase as CellPoolTemplate; 
             return CellGroup.CompareTo(other.CellGroup);
         }
 

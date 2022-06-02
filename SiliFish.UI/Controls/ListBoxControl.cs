@@ -144,8 +144,7 @@ namespace SiliFish.UI.Controls
         }
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var fnc = listBox.SelectedItem?.GetType().GetMethod("GetTooltip");
-            string tt = fnc?.Invoke(listBox.SelectedItem, null).ToString() ?? listBox.SelectedItem?.ToString();
+            (string tt, bool _) = listBox.SelectedItem?.GetPropertyValue("Tooltip", listBox.SelectedItem?.ToString()) ?? ("", false);
             toolTip.SetToolTip(listBox, tt);
         }
 

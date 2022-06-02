@@ -9,7 +9,7 @@ namespace SiliFish.ModelUnits
         public List<CellPoolTemplate> CellPoolTemplates { get; set; } = new();
         public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
         public Dictionary<string, object> Parameters { get; set; }
-        public List<AppliedStimulus> AppliedStimuli { get; set; } = new();
+        public List<StimulusTemplate> AppliedStimuli { get; set; } = new();
 
         //Needs to be run after created from JSON
         public void LinkObjects()
@@ -44,7 +44,7 @@ namespace SiliFish.ModelUnits
                 ip.PoolSource = newName;
             foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolTarget == oldName))
                 ip.PoolTarget = newName;
-            foreach (AppliedStimulus stim in AppliedStimuli.Where(s => s.Target == oldName))
+            foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.Target == oldName))
                 stim.Target = newName;
         }
 

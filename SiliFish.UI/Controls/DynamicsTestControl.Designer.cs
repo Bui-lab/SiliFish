@@ -46,18 +46,15 @@
             this.lPlotEndTime = new System.Windows.Forms.Label();
             this.picu = new System.Windows.Forms.PictureBox();
             this.picI = new System.Windows.Forms.PictureBox();
-            this.dgDynamics = new System.Windows.Forms.DataGridView();
-            this.colField = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDist = new System.Windows.Forms.DataGridViewButtonColumn();
             this.grRheobase = new System.Windows.Forms.GroupBox();
             this.eRheobase = new System.Windows.Forms.TextBox();
             this.lRheobase = new System.Windows.Forms.Label();
             this.grTest = new System.Windows.Forms.GroupBox();
             this.grInstanceParameters = new System.Windows.Forms.GroupBox();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.pUseUpdatedParams = new System.Windows.Forms.Panel();
+            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
+            this.dgDynamics = new SiliFish.UI.Controls.DistributionDataGrid();
             ((System.ComponentModel.ISupportInitialize)(this.picV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
@@ -67,7 +64,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picu)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picI)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).BeginInit();
             this.grRheobase.SuspendLayout();
             this.grTest.SuspendLayout();
             this.grInstanceParameters.SuspendLayout();
@@ -317,42 +313,6 @@
             this.picI.TabIndex = 14;
             this.picI.TabStop = false;
             // 
-            // dgDynamics
-            // 
-            this.dgDynamics.AllowUserToAddRows = false;
-            this.dgDynamics.AllowUserToDeleteRows = false;
-            this.dgDynamics.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgDynamics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgDynamics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colField,
-            this.colValue,
-            this.colDist});
-            this.dgDynamics.Location = new System.Drawing.Point(3, 33);
-            this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.RowHeadersVisible = false;
-            this.dgDynamics.RowTemplate.Height = 25;
-            this.dgDynamics.Size = new System.Drawing.Size(443, 345);
-            this.dgDynamics.TabIndex = 15;
-            // 
-            // colField
-            // 
-            this.colField.HeaderText = "Field";
-            this.colField.Name = "colField";
-            this.colField.ReadOnly = true;
-            // 
-            // colValue
-            // 
-            this.colValue.HeaderText = "Value";
-            this.colValue.Name = "colValue";
-            // 
-            // colDist
-            // 
-            this.colDist.HeaderText = "Distr.";
-            this.colDist.Name = "colDist";
-            this.colDist.Width = 40;
-            // 
             // grRheobase
             // 
             this.grRheobase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -426,11 +386,11 @@
             // 
             // splitMain.Panel1
             // 
+            this.splitMain.Panel1.Controls.Add(this.dgDynamics);
             this.splitMain.Panel1.Controls.Add(this.pUseUpdatedParams);
             this.splitMain.Panel1.Controls.Add(this.grTest);
             this.splitMain.Panel1.Controls.Add(this.grInstanceParameters);
             this.splitMain.Panel1.Controls.Add(this.grRheobase);
-            this.splitMain.Panel1.Controls.Add(this.dgDynamics);
             // 
             // splitMain.Panel2
             // 
@@ -441,6 +401,15 @@
             this.splitMain.Size = new System.Drawing.Size(974, 683);
             this.splitMain.SplitterDistance = 452;
             this.splitMain.TabIndex = 17;
+            // 
+            // pUseUpdatedParams
+            // 
+            this.pUseUpdatedParams.Controls.Add(this.linkUseUpdatedParams);
+            this.pUseUpdatedParams.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pUseUpdatedParams.Location = new System.Drawing.Point(0, 0);
+            this.pUseUpdatedParams.Name = "pUseUpdatedParams";
+            this.pUseUpdatedParams.Size = new System.Drawing.Size(452, 30);
+            this.pUseUpdatedParams.TabIndex = 20;
             // 
             // linkUseUpdatedParams
             // 
@@ -453,14 +422,16 @@
             this.linkUseUpdatedParams.Text = "Use Updated Parameters";
             this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
-            // pUseUpdatedParams
+            // dgDynamics
             // 
-            this.pUseUpdatedParams.Controls.Add(this.linkUseUpdatedParams);
-            this.pUseUpdatedParams.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pUseUpdatedParams.Location = new System.Drawing.Point(0, 0);
-            this.pUseUpdatedParams.Name = "pUseUpdatedParams";
-            this.pUseUpdatedParams.Size = new System.Drawing.Size(452, 30);
-            this.pUseUpdatedParams.TabIndex = 20;
+            this.dgDynamics.AutoSize = true;
+            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgDynamics.Location = new System.Drawing.Point(0, 30);
+            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
+            this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.Size = new System.Drawing.Size(452, 653);
+            this.dgDynamics.TabIndex = 21;
             // 
             // DynamicsTestControl
             // 
@@ -478,7 +449,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picu)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picI)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).EndInit();
             this.grRheobase.ResumeLayout(false);
             this.grRheobase.PerformLayout();
             this.grTest.ResumeLayout(false);
@@ -486,6 +456,7 @@
             this.grInstanceParameters.ResumeLayout(false);
             this.grInstanceParameters.PerformLayout();
             this.splitMain.Panel1.ResumeLayout(false);
+            this.splitMain.Panel1.PerformLayout();
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
@@ -515,10 +486,6 @@
         private Label lPlotEndTime;
         private PictureBox picu;
         private PictureBox picI;
-        private DataGridView dgDynamics;
-        private DataGridViewTextBoxColumn colField;
-        private DataGridViewTextBoxColumn colValue;
-        private DataGridViewButtonColumn colDist;
         private GroupBox grRheobase;
         private TextBox eRheobase;
         private Label lRheobase;
@@ -527,5 +494,6 @@
         private SplitContainer splitMain;
         private Panel pUseUpdatedParams;
         private LinkLabel linkUseUpdatedParams;
+        private DistributionDataGrid dgDynamics;
     }
 }

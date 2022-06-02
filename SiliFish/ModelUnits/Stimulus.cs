@@ -118,27 +118,4 @@ namespace SiliFish.ModelUnits
         }
     }
 
-    public class AppliedStimulus : IComparable<AppliedStimulus>
-    {
-       public string Target { get; set; }
-        
-        public Stimulus Stimulus_ms { get; set; }
-
-        public string LeftRight { get; set; }
-        public bool Active { get; set; } = true;
-
-        public int CompareTo(AppliedStimulus other)
-        {
-            return Target.CompareTo(other.Target);
-        }
-        public override string ToString()
-        {
-            return string.Format("Target: {0} {1}; {2}", LeftRight, Target, Stimulus_ms?.ToString());
-        }
-
-        public string GetTooltip()
-        {
-            return $"{ToString()}\r\n{Stimulus_ms.GetTooltip()}";
-        }
-    }
 }

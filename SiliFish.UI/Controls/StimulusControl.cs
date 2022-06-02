@@ -49,7 +49,7 @@ namespace SiliFish.UI.Controls
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetStimulus(List<CellPoolTemplate> pools, AppliedStimulus stim)
+        public void SetStimulus(List<CellPoolTemplate> pools, StimulusTemplate stim)
         {
             ddTargetPool.Items.Clear();
 
@@ -70,9 +70,9 @@ namespace SiliFish.UI.Controls
                 timeLineControl.SetTimeLine(stim.Stimulus_ms.TimeSpan_ms);
         }
 
-        public AppliedStimulus GetStimulus()
+        public StimulusTemplate GetStimulus()
         {
-            AppliedStimulus stim = new AppliedStimulus();
+            StimulusTemplate stim = new StimulusTemplate();
             
             stim.Target = ddTargetPool.Text;
             stim.LeftRight = ddSagittalPosition.Text;

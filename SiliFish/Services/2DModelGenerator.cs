@@ -33,7 +33,7 @@ namespace SiliFish.Services
             (double r1, _) = pool.XRange();
             double newX = (r1 - XMin) * XMult - XOffset;
             r1 = pool.PositionLeftRight == SagittalPlane.Left ? -1 * pool.columnIndex2D : pool.columnIndex2D;
-            double newY = (r1 - YMin) * YMult - YOffset;
+            double newY = r1 * YMult - YOffset; // (r1 - YMin) * YMult - YOffset;
             return (newX, newY);
         }
         private double GetNewWeight(double d)
@@ -73,15 +73,14 @@ namespace SiliFish.Services
             html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chemical Jnc"));
             
             ((XMin, double maxX), (YMin, double maxY), (_,_), int YRange1D) = model.GetSpatialRange();
-            XMult = 200 / (maxX - XMin);
-            YMult = 100 / (maxY - YMin);
-            XOffset = 100;
-            YOffset = 50;
-            if (YMin == -1 && maxY == 1)
-            {
-                //TODO plots only cell pools, put back single cells in two D ? SingleDimension = true;
-                YMult = 100 / YRange1D;
-            }
+
+            double range = Math.Max((maxX - XMin), (maxY - YMin));
+            int width = 400;
+            XMult = 2 * width / range;
+            YMult = width / range;
+            XOffset = width;
+            YOffset = 0;
+
             (_, WeightMax) = model.GetConnectionRange();
             WeightMult = 5 / WeightMax;
 
