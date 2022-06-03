@@ -248,7 +248,7 @@ namespace SiliFish.ModelUnits
             }
         }
 
-        public void ReachToCellPoolViaChemJunction(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline)
+        public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline)
         {
             foreach (Neuron pre in this.GetCells())
             {
@@ -262,7 +262,7 @@ namespace SiliFish.ModelUnits
                         mult = 1;
                         if (CellPool.synWeightNoiseMultiplier != null)
                             mult = synWeightNoiseMultiplier();
-                        ChemicalJunction syn = pre.CreateChemicalJunction(post, param, reach.Weight * mult, reach.DistanceMode);
+                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, reach.Weight * mult, reach.DistanceMode);
                         syn.SetDelay(reach.Delay_ms);
                         if (reach.FixedDuration_ms != null)
                             syn.SetFixedDuration((double)reach.FixedDuration_ms);

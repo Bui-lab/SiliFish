@@ -43,7 +43,7 @@ namespace SiliFish
             }
             #endregion
 
-            #region Generate Junctions
+            #region Generate Gap Junctions and Chemical Synapses
             foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
             {
                 CellPool leftSource = NeuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
@@ -52,20 +52,20 @@ namespace SiliFish
                 CellPool leftTarget = NeuronPools.Union(MuscleCellPools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
                 CellPool rightTarget = NeuronPools.Union(MuscleCellPools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
 
-                if (jncTemp.JunctionType == JunctionType.Synapse || jncTemp.JunctionType == JunctionType.NMJ)
+                if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
                 {
                     if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
                     {
-                        PoolToPoolChemJunction(leftSource, leftTarget, jncTemp);
-                        PoolToPoolChemJunction(rightSource, rightTarget, jncTemp);
+                        PoolToPoolChemSynapse(leftSource, leftTarget, jncTemp);
+                        PoolToPoolChemSynapse(rightSource, rightTarget, jncTemp);
                     }
                     if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
                     {
-                        PoolToPoolChemJunction(leftSource, rightTarget, jncTemp);
-                        PoolToPoolChemJunction(rightSource, leftTarget, jncTemp);
+                        PoolToPoolChemSynapse(leftSource, rightTarget, jncTemp);
+                        PoolToPoolChemSynapse(rightSource, leftTarget, jncTemp);
                     }
                 }
-                else if (jncTemp.JunctionType == JunctionType.Gap)
+                else if (jncTemp.ConnectionType == ConnectionType.Gap)
                 {
                     if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
                     {

@@ -42,9 +42,9 @@ namespace SiliFish.UI
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.tabParams = new System.Windows.Forms.TabControl();
             this.tabCellPools = new System.Windows.Forms.TabPage();
-            this.splitCellPoolsAndJunctions = new System.Windows.Forms.SplitContainer();
+            this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
             this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
-            this.listJunctions = new SiliFish.UI.Controls.ListBoxControl();
+            this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
@@ -163,10 +163,10 @@ namespace SiliFish.UI
             this.splitMain.SuspendLayout();
             this.tabParams.SuspendLayout();
             this.tabCellPools.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndJunctions)).BeginInit();
-            this.splitCellPoolsAndJunctions.Panel1.SuspendLayout();
-            this.splitCellPoolsAndJunctions.Panel2.SuspendLayout();
-            this.splitCellPoolsAndJunctions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).BeginInit();
+            this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
+            this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
+            this.splitCellPoolsAndConnections.SuspendLayout();
             this.tabStimuli.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.pBodyDiagrams.SuspendLayout();
@@ -322,32 +322,32 @@ namespace SiliFish.UI
             // 
             // tabCellPools
             // 
-            this.tabCellPools.Controls.Add(this.splitCellPoolsAndJunctions);
+            this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
             this.tabCellPools.Location = new System.Drawing.Point(4, 24);
             this.tabCellPools.Name = "tabCellPools";
             this.tabCellPools.Size = new System.Drawing.Size(429, 610);
             this.tabCellPools.TabIndex = 1;
-            this.tabCellPools.Text = "Cell Pools & Junctions";
+            this.tabCellPools.Text = "Cell Pools & Connections";
             this.tabCellPools.UseVisualStyleBackColor = true;
             // 
-            // splitCellPoolsAndJunctions
+            // splitCellPoolsAndConnections
             // 
-            this.splitCellPoolsAndJunctions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitCellPoolsAndJunctions.Location = new System.Drawing.Point(0, 0);
-            this.splitCellPoolsAndJunctions.Name = "splitCellPoolsAndJunctions";
+            this.splitCellPoolsAndConnections.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitCellPoolsAndConnections.Location = new System.Drawing.Point(0, 0);
+            this.splitCellPoolsAndConnections.Name = "splitCellPoolsAndConnections";
             // 
-            // splitCellPoolsAndJunctions.Panel1
+            // splitCellPoolsAndConnections.Panel1
             // 
-            this.splitCellPoolsAndJunctions.Panel1.Controls.Add(this.listCellPool);
-            this.splitCellPoolsAndJunctions.Panel1MinSize = 200;
+            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.listCellPool);
+            this.splitCellPoolsAndConnections.Panel1MinSize = 200;
             // 
-            // splitCellPoolsAndJunctions.Panel2
+            // splitCellPoolsAndConnections.Panel2
             // 
-            this.splitCellPoolsAndJunctions.Panel2.Controls.Add(this.listJunctions);
-            this.splitCellPoolsAndJunctions.Panel2MinSize = 200;
-            this.splitCellPoolsAndJunctions.Size = new System.Drawing.Size(429, 610);
-            this.splitCellPoolsAndJunctions.SplitterDistance = 200;
-            this.splitCellPoolsAndJunctions.TabIndex = 5;
+            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
+            this.splitCellPoolsAndConnections.Panel2MinSize = 200;
+            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(429, 610);
+            this.splitCellPoolsAndConnections.SplitterDistance = 200;
+            this.splitCellPoolsAndConnections.TabIndex = 5;
             // 
             // listCellPool
             // 
@@ -365,21 +365,21 @@ namespace SiliFish.UI
             this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
             this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
             // 
-            // listJunctions
+            // listConnections
             // 
-            this.listJunctions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listJunctions.Location = new System.Drawing.Point(0, 0);
-            this.listJunctions.Name = "listJunctions";
-            this.listJunctions.SelectedIndex = -1;
-            this.listJunctions.SelectedItem = null;
-            this.listJunctions.Size = new System.Drawing.Size(225, 610);
-            this.listJunctions.TabIndex = 6;
-            this.listJunctions.AddItem += new System.EventHandler(this.listJunctions_AddItem);
-            this.listJunctions.DeleteItem += new System.EventHandler(this.listJunctions_DeleteItem);
-            this.listJunctions.CopyItem += new System.EventHandler(this.listJunctions_CopyItem);
-            this.listJunctions.ViewItem += new System.EventHandler(this.listJunctions_ViewItem);
-            this.listJunctions.ActivateItem += new System.EventHandler(this.listJunctions_ActivateItem);
-            this.listJunctions.SortItems += new System.EventHandler(this.listJunctions_SortItems);
+            this.listConnections.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listConnections.Location = new System.Drawing.Point(0, 0);
+            this.listConnections.Name = "listConnections";
+            this.listConnections.SelectedIndex = -1;
+            this.listConnections.SelectedItem = null;
+            this.listConnections.Size = new System.Drawing.Size(225, 610);
+            this.listConnections.TabIndex = 6;
+            this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
+            this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
+            this.listConnections.CopyItem += new System.EventHandler(this.listConnections_CopyItem);
+            this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
+            this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
+            this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
             // 
             // tabStimuli
             // 
@@ -1599,10 +1599,10 @@ namespace SiliFish.UI
             this.splitMain.ResumeLayout(false);
             this.tabParams.ResumeLayout(false);
             this.tabCellPools.ResumeLayout(false);
-            this.splitCellPoolsAndJunctions.Panel1.ResumeLayout(false);
-            this.splitCellPoolsAndJunctions.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndJunctions)).EndInit();
-            this.splitCellPoolsAndJunctions.ResumeLayout(false);
+            this.splitCellPoolsAndConnections.Panel1.ResumeLayout(false);
+            this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
+            this.splitCellPoolsAndConnections.ResumeLayout(false);
             this.tabStimuli.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
@@ -1768,10 +1768,10 @@ namespace SiliFish.UI
         private NumericUpDown eBodyDorsalVentral;
         private Label lBodyDorsalVentral;
         private PictureBox picCrossSection;
-        private SplitContainer splitCellPoolsAndJunctions;
+        private SplitContainer splitCellPoolsAndConnections;
         private Label lCellNumber;
         private ListBoxControl listCellPool;
-        private ListBoxControl listJunctions;
+        private ListBoxControl listConnections;
         private ListBoxControl listStimuli;
         private Panel pBodyDiagrams;
         private LinkLabel linkSaveAnimation;

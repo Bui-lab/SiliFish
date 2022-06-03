@@ -56,9 +56,9 @@ namespace SiliFish.UI
                 webViewAnimation.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;//TODO this doesn't work
 
                 listCellPool.AddContextMenu("Sort by Type", listCellPool_SortByNTType);
-                listJunctions.AddContextMenu("Sort by Type", listJunctions_SortByType);
-                listJunctions.AddContextMenu("Sort by Source", listJunctions_SortBySource);
-                listJunctions.AddContextMenu("Sort by Target", listJunctions_SortByTarget);
+                listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
+                listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
+                listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
             }
             catch (Exception ex)
             {
@@ -146,7 +146,7 @@ namespace SiliFish.UI
         private void ClearCustomModelFields()
         {
             listCellPool.ClearItems();
-            listJunctions.ClearItems();
+            listConnections.ClearItems();
             listStimuli.ClearItems();
         }
 
@@ -293,11 +293,11 @@ namespace SiliFish.UI
         }
         private void LoadModelTemplateInterPools()
         {
-            listJunctions.ClearItems();
+            listConnections.ClearItems();
             if (ModelTemplate?.InterPoolTemplates == null) return;
             foreach (InterPoolTemplate interPoolTemplate in ModelTemplate.InterPoolTemplates)
             {
-                listJunctions.AppendItem(interPoolTemplate);
+                listConnections.AppendItem(interPoolTemplate);
             }
         }
 
@@ -333,7 +333,7 @@ namespace SiliFish.UI
         private void ReadModelTemplateInterPools(bool includeHidden)
         {
             ModelTemplate.InterPoolTemplates.Clear();
-            foreach (var jnc in listJunctions.GetItems(includeHidden))
+            foreach (var jnc in listConnections.GetItems(includeHidden))
             {
                 if (jnc is InterPoolTemplate iptemp)
                 {
@@ -956,7 +956,7 @@ namespace SiliFish.UI
                             Dictionary<string, List<double>> AffarentCurrents = new();
                             if (c is Neuron neuron)
                             {
-                                foreach (ChemicalJunction jnc in neuron.Synapses)
+                                foreach (ChemicalSynapse jnc in neuron.Synapses)
                                 {
                                     colors.Add(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
                                     AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
@@ -964,7 +964,7 @@ namespace SiliFish.UI
                             }
                             else if (c is MuscleCell muscle)
                             {
-                                foreach (ChemicalJunction jnc in muscle.EndPlates)
+                                foreach (ChemicalSynapse jnc in muscle.EndPlates)
                                 {
                                     colors.Add(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
                                     AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
@@ -1015,7 +1015,7 @@ namespace SiliFish.UI
                         Dictionary<string, List<double>> AffarentCurrents = new();
                         if (c is Neuron neuron)
                         {
-                            foreach (ChemicalJunction jnc in neuron.Synapses)
+                            foreach (ChemicalSynapse jnc in neuron.Synapses)
                             {
                                 colors.AddObject(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color, skipIfExists: true);
                                 AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
@@ -1023,7 +1023,7 @@ namespace SiliFish.UI
                         }
                         else if (c is MuscleCell muscle)
                         {
-                            foreach (ChemicalJunction jnc in muscle.EndPlates)
+                            foreach (ChemicalSynapse jnc in muscle.EndPlates)
                             {
                                 colors.AddObject(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color, skipIfExists: true);
                                 AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
@@ -1169,7 +1169,7 @@ namespace SiliFish.UI
         {
             if (listCellPool.SelectedIndex >= 0)
             {
-                string msg = "Deleting a cell pool will remove all of its junctions and applied stimuli as well. Do you want to continue?";
+                string msg = "Deleting a cell pool will remove all of its conections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
                     CellPoolTemplate cpl = (CellPoolTemplate)listCellPool.SelectedItem;
@@ -1225,15 +1225,15 @@ namespace SiliFish.UI
 
         #endregion
 
-        #region Junction
-        private InterPoolTemplate OpenJunctionDialog(InterPoolTemplate interpool)
+        #region Connection
+        private InterPoolTemplate OpenConnectionDialog(InterPoolTemplate interpool)
         {
             ControlContainer frmControl = new();
             InterPoolControl ipl = new InterPoolControl();
 
             ipl.SetInterPoolTemplate(ModelTemplate.CellPoolTemplates, interpool, ModelTemplate);
             frmControl.AddControl(ipl);
-            frmControl.Text = interpool?.ToString() ?? "New Junction";
+            frmControl.Text = interpool?.ToString() ?? "New Connection";
 
             if (frmControl.ShowDialog() == DialogResult.OK)
             {
@@ -1244,74 +1244,74 @@ namespace SiliFish.UI
             return null;
         }
 
-        private void listJunctions_AddItem(object sender, EventArgs e)
+        private void listConnections_AddItem(object sender, EventArgs e)
         {
-            InterPoolTemplate newJnc = OpenJunctionDialog(null);
+            InterPoolTemplate newJnc = OpenConnectionDialog(null);
             if (newJnc != null)
             {
                 ModelTemplate.InterPoolTemplates.Add(newJnc);
-                listJunctions.AppendItem(newJnc);
+                listConnections.AppendItem(newJnc);
                 modifiedJncs = true;
             }
         }
-        private void listJunctions_CopyItem(object sender, EventArgs e)
+        private void listConnections_CopyItem(object sender, EventArgs e)
         {
-            if (listJunctions.SelectedItem == null)
+            if (listConnections.SelectedItem == null)
                 return;
-            InterPoolTemplate jnc = new(listJunctions.SelectedItem as InterPoolTemplate);
-            jnc = OpenJunctionDialog(jnc); 
+            InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
+            jnc = OpenConnectionDialog(jnc); 
             if (jnc != null)
             {
                 ModelTemplate.InterPoolTemplates.Add(jnc);
-                listJunctions.AppendItem(jnc);
+                listConnections.AppendItem(jnc);
                 modifiedJncs = true;
             }
         }
-        private void listJunctions_DeleteItem(object sender, EventArgs e)
+        private void listConnections_DeleteItem(object sender, EventArgs e)
         {
-            if (listJunctions.SelectedIndex >= 0)
+            if (listConnections.SelectedIndex >= 0)
             {
-                InterPoolTemplate ipl = (InterPoolTemplate)listJunctions.SelectedItem;
+                InterPoolTemplate ipl = (InterPoolTemplate)listConnections.SelectedItem;
                 ModelTemplate.InterPoolTemplates.Remove(ipl);
-                listJunctions.RemoveItemAt(listJunctions.SelectedIndex);
+                listConnections.RemoveItemAt(listConnections.SelectedIndex);
                 modifiedJncs = true;
             }
         }
-        private void listJunctions_ViewItem(object sender, EventArgs e)
+        private void listConnections_ViewItem(object sender, EventArgs e)
         {
-            if (listJunctions.SelectedItem == null)
+            if (listConnections.SelectedItem == null)
                 return;
-            InterPoolTemplate interpool = listJunctions.SelectedItem as InterPoolTemplate;
-            interpool = OpenJunctionDialog(interpool); //check modeltemplate's list
+            InterPoolTemplate interpool = listConnections.SelectedItem as InterPoolTemplate;
+            interpool = OpenConnectionDialog(interpool); //check modeltemplate's list
             if (interpool != null)
             {
-                int ind = listJunctions.SelectedIndex;
-                listJunctions.RefreshItem(ind, interpool);
+                int ind = listConnections.SelectedIndex;
+                listConnections.RefreshItem(ind, interpool);
                 modifiedJncs = true;
             }
         }
 
-        private void listJunctions_ActivateItem(object sender, EventArgs e)
+        private void listConnections_ActivateItem(object sender, EventArgs e)
         {
             InterPoolTemplate jnc = sender as InterPoolTemplate;
             ModelTemplate.InterPoolTemplates.FirstOrDefault(p => p.Distinguisher == jnc.Distinguisher).Active = jnc.Active;
             modifiedJncs = true;
         }
 
-        private void listJunctions_SortItems(object sender, EventArgs e)
+        private void listConnections_SortItems(object sender, EventArgs e)
         {
             ModelTemplate.InterPoolTemplates.Sort();
             LoadModelTemplateInterPools();
         }
 
-        private void listJunctions_SortByType(object sender, EventArgs e)
+        private void listConnections_SortByType(object sender, EventArgs e)
         {
             ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.JunctionType.ToString())
+                .OrderBy(jnc => jnc.ConnectionType.ToString())
                 .ToList();
             LoadModelTemplateInterPools();
         }
-        private void listJunctions_SortBySource(object sender, EventArgs e)
+        private void listConnections_SortBySource(object sender, EventArgs e)
         {
             ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
                 .OrderBy(jnc => jnc.PoolSource)
@@ -1319,7 +1319,7 @@ namespace SiliFish.UI
             LoadModelTemplateInterPools();
         }
 
-        private void listJunctions_SortByTarget(object sender, EventArgs e)
+        private void listConnections_SortByTarget(object sender, EventArgs e)
         {
             ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
                 .OrderBy(jnc => jnc.PoolTarget)

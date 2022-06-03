@@ -317,16 +317,16 @@ namespace SiliFish
                         foreach (GapJunction jnc in neuron.GapJunctions)
                             strBuilder.AppendLine(jnc.ID);
                         strBuilder.AppendLine("##Terminals##");
-                        foreach (ChemicalJunction jnc in neuron.Terminals)
+                        foreach (ChemicalSynapse jnc in neuron.Terminals)
                             strBuilder.AppendLine(jnc.ID);
                         strBuilder.AppendLine("##Synapses##");
-                        foreach (ChemicalJunction jnc in neuron.Synapses)
+                        foreach (ChemicalSynapse jnc in neuron.Synapses)
                             strBuilder.AppendLine(jnc.ID);
                     }
                     else if (cell is MuscleCell muscle)
                     {
                         strBuilder.AppendLine("##EndPlates##");
-                        foreach (ChemicalJunction jnc in muscle.EndPlates)
+                        foreach (ChemicalSynapse jnc in muscle.EndPlates)
                             strBuilder.AppendLine(jnc.ID);
                     }
                 }
@@ -524,28 +524,28 @@ namespace SiliFish
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline);
         }
 
-        protected void PoolToPoolChemJunction(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null)
+        protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null)
         {
             if (pool1 == null || pool2 == null) return;
             PoolConnections.Add(new InterPool { poolSource = pool1, poolTarget = pool2, reach = cr, timeLine = timeline, synapseParameters = synParam });
-            pool1.ReachToCellPoolViaChemJunction(pool2, cr, synParam, timeline);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline);
         }
 
-        protected void PoolToPoolChemJunction(CellPool pool1, CellPool pool2, InterPoolTemplate template)
+        protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine;
             PoolConnections.Add(new InterPool { poolSource = pool1, poolTarget = pool2, reach = cr, timeLine = timeline, synapseParameters = synParam });
-            pool1.ReachToCellPoolViaChemJunction(pool2, cr, synParam, timeline);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline);
         }
 
         private void CalculateNeuronalOutputs(Neuron n, int t)
         {
             try
             {
-                foreach (ChemicalJunction syn in n.Terminals)
+                foreach (ChemicalSynapse syn in n.Terminals)
                 {
                     syn.NextStep(t);
                 }
@@ -585,7 +585,7 @@ namespace SiliFish
                 double ISyn = 0, IGap = 0, stim = 0;
                 if (n.IsAlive(t))
                 {
-                    foreach (ChemicalJunction syn in n.Synapses)
+                    foreach (ChemicalSynapse syn in n.Synapses)
                     {
                         ISyn += syn.GetSynapticCurrent(t);
                     }
@@ -611,7 +611,7 @@ namespace SiliFish
             double ISyn = 0, stim = 0;
             if (n.IsAlive(t))
             {
-                foreach (ChemicalJunction syn in n.EndPlates)
+                foreach (ChemicalSynapse syn in n.EndPlates)
                 {
                     ISyn += syn.GetSynapticCurrent(t);
                 }

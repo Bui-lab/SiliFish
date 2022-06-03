@@ -63,7 +63,7 @@ namespace SiliFish.ModelUnits
         }
 
 
-        public virtual void AddChemicalJunction(ChemicalJunction jnc)
+        public virtual void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             throw (new NotImplementedException());
         }
@@ -85,8 +85,8 @@ namespace SiliFish.ModelUnits
         readonly Izhikevich_9P Core;
         public double u; //keeps the current u value
         public List<GapJunction> GapJunctions;
-        public List<ChemicalJunction> Terminals; //keeps the list of all synapses the current cells extends to
-        public List<ChemicalJunction> Synapses; //keeps the list of all synapses targeting the current cell
+        public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
+        public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
 
         /// <summary>
         /// Used as a template
@@ -97,8 +97,8 @@ namespace SiliFish.ModelUnits
             Sequence = seq;
             Core = new Izhikevich_9P(null, 0, 0);
             GapJunctions = new List<GapJunction>();
-            Synapses = new List<ChemicalJunction>();
-            Terminals = new List<ChemicalJunction>();
+            Synapses = new List<ChemicalSynapse>();
+            Terminals = new List<ChemicalSynapse>();
             TimeLine = timeline;
             ConductionVelocity = cv;
         }
@@ -121,8 +121,8 @@ namespace SiliFish.ModelUnits
             coordinate = coor;
             Stimulus = stim;
             GapJunctions = new List<GapJunction>();
-            Synapses = new List<ChemicalJunction>();
-            Terminals = new List<ChemicalJunction>();
+            Synapses = new List<ChemicalSynapse>();
+            Terminals = new List<ChemicalSynapse>();
             TimeLine = timeline;
             ConductionVelocity = cv;
         }
@@ -146,12 +146,12 @@ namespace SiliFish.ModelUnits
             return jnc;
         }
 
-        public ChemicalJunction CreateChemicalJunction(Cell postCell, SynapseParameters param, double conductance, DistanceMode distanceMode)
+        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, SynapseParameters param, double conductance, DistanceMode distanceMode)
         {
-            ChemicalJunction jnc = new(this, postCell, param, conductance, distanceMode);
+            ChemicalSynapse jnc = new(this, postCell, param, conductance, distanceMode);
             if (jnc == null) return null;
             Terminals.Add(jnc);
-            postCell.AddChemicalJunction(jnc);
+            postCell.AddChemicalSynapse(jnc);
             return jnc;
         }
 
@@ -165,7 +165,7 @@ namespace SiliFish.ModelUnits
             double minWeight = Math.Min(minWeight1 ?? 999, minWeight2 ?? 999);
             return (minWeight, maxWeight);
         }
-        public override void AddChemicalJunction(ChemicalJunction jnc)
+        public override void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             Synapses.Add(jnc);
         }
@@ -175,7 +175,7 @@ namespace SiliFish.ModelUnits
             V = new double[nmax];
             bool spike = false;
             V[0] = Core.GetNextVal(0, ref spike);
-            foreach (ChemicalJunction jnc in this.Synapses)
+            foreach (ChemicalSynapse jnc in this.Synapses)
                 jnc.InitVectors(nmax);
             foreach (GapJunction jnc in this.GapJunctions)
                 jnc.InitVectors(nmax);
@@ -211,7 +211,7 @@ namespace SiliFish.ModelUnits
 
         readonly Leaky_Integrator Core;
         public double R { get { return Core.R; } set { } }
-        public List<ChemicalJunction> EndPlates; //keeps the list of all synapses targeting the current cell
+        public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
 
         /// <summary>
         /// Used as a template
@@ -222,7 +222,7 @@ namespace SiliFish.ModelUnits
             CellGroup = group;
             Sequence = seq;
             Core = new Leaky_Integrator(0, 0, 0);
-            EndPlates = new List<ChemicalJunction>();
+            EndPlates = new List<ChemicalSynapse>();
             TimeLine = timeline;
         }
         public MuscleCell(CellPoolTemplate cellTemp, int seq)
@@ -236,7 +236,7 @@ namespace SiliFish.ModelUnits
             Sequence = seq;
             PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
             Core = new Leaky_Integrator(R, C, init_v);
-            EndPlates = new List<ChemicalJunction>();
+            EndPlates = new List<ChemicalSynapse>();
             coordinate = coor;
             TimeLine = timeline;
         }
@@ -252,7 +252,7 @@ namespace SiliFish.ModelUnits
             }
         }       
         
-        public override void AddChemicalJunction(ChemicalJunction jnc)
+        public override void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             EndPlates.Add(jnc);
         }
@@ -268,7 +268,7 @@ namespace SiliFish.ModelUnits
         {
             V = new double[nmax];
             V[0] = Core.GetNextVal(0);
-            foreach (ChemicalJunction jnc in this.EndPlates)
+            foreach (ChemicalSynapse jnc in this.EndPlates)
                 jnc.InitVectors(nmax);
         }
 

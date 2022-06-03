@@ -145,8 +145,8 @@ namespace SiliFish.PredefinedModels
             //Ipsilateral cholinergic projections from MN to Muscle cells
             SynapseParameters AChSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_ach };
             cr = new() { AscendingReach = rangeMN_Muscle, DescendingReach = rangeMN_Muscle, MinReach = -1, Weight = MN_Muscle_syn_weight, FixedDuration_ms = 10 };
-            PoolToPoolChemJunction(L_MN, L_Muscle, cr, AChSynapse);
-            PoolToPoolChemJunction(R_MN, R_Muscle, cr, AChSynapse);
+            PoolToPoolChemSynapse(L_MN, L_Muscle, cr, AChSynapse);
+            PoolToPoolChemSynapse(R_MN, R_Muscle, cr, AChSynapse);
 
             TimeLine span = new();
             span.AddTimeRange(this.tshutoff);
@@ -154,14 +154,14 @@ namespace SiliFish.PredefinedModels
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
             cr = new() { AscendingReach = rangeV0d_MN, DescendingReach = rangeV0d_MN, MinReach = -1, Weight = V0d_MN_syn_weight };
-            PoolToPoolChemJunction(L_V0d, R_MN, cr, GlySynapse, span);
-            PoolToPoolChemJunction(R_V0d, L_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d, R_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(R_V0d, L_MN, cr, GlySynapse, span);
 
 
             //Contralateral glycinergic projections from V0d to IC 
             cr = new() { AscendingReach = rangeV0d_IC, DescendingReach = rangeV0d_IC, MinReach = rangeMin, Weight = V0d_IC_syn_weight };
-            PoolToPoolChemJunction(L_V0d, R_IC, cr, GlySynapse, span);
-            PoolToPoolChemJunction(R_V0d, L_IC, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d, R_IC, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(R_V0d, L_IC, cr, GlySynapse, span);
 
         }
 

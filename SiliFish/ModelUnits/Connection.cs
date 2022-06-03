@@ -168,7 +168,7 @@ namespace SiliFish.ModelUnits
             }
         }
     }
-    public class ChemicalJunction
+    public class ChemicalSynapse
     {
         public TwoExp_syn Core;
         public Neuron PreNeuron;
@@ -188,7 +188,7 @@ namespace SiliFish.ModelUnits
             return timeLine?.IsActive((int)(timepoint * SwimmingModel.dt)) ?? true;
         }
 
-        public ChemicalJunction(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
+        public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
         {
             Core = new TwoExp_syn(param, conductance);
             PreNeuron = preN;

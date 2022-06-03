@@ -27,7 +27,7 @@ namespace SiliFish.Services
                 $"\"conductance\":{jnc.Conductance:0.######}" +
                 $"{curvInfo} }}";
         }
-        private string CreateLinkDataPoint(ChemicalJunction jnc)
+        private string CreateLinkDataPoint(ChemicalSynapse jnc)
         {
             string curvInfo = jnc.PreNeuron.ID == jnc.PostCell.ID ? ",curv: 0.3" : "";
             return $"{{\"source\":\"{jnc.PreNeuron.ID}\"," +
@@ -72,12 +72,12 @@ namespace SiliFish.Services
                     foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
                         links.Add(CreateLinkDataPoint(jnc));
                 if (chem)
-                    foreach (ChemicalJunction jnc in neuron.Synapses)
+                    foreach (ChemicalSynapse jnc in neuron.Synapses)
                         links.Add(CreateLinkDataPoint(jnc));
             }
             else if (chem && cell is MuscleCell muscle)
             {
-                foreach (ChemicalJunction jnc in muscle.EndPlates)
+                foreach (ChemicalSynapse jnc in muscle.EndPlates)
                     links.Add(CreateLinkDataPoint(jnc));
             }
             return string.Join(",", links);

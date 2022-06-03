@@ -11,7 +11,7 @@
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
     public enum DistanceMode { Euclidean, Manhattan, Chebyshev, Haversine }
-    public enum JunctionType { NotSet, Synapse, Gap, NMJ}
+    public enum ConnectionType { NotSet, Synapse, Gap, NMJ}
     public enum StimulusMode { None, Step, Gaussian, Ramp}
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed}
 

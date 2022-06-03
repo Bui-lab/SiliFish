@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SiliFish.Extensions;
+﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
@@ -25,44 +16,44 @@ namespace SiliFish.UI.Controls
             string activeStatus = !cbActive.Checked ? " (inactive)" :
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
-            return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddJunctionType.Text, activeStatus);
+            return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
         public InterPoolControl()
         {
             InitializeComponent();
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
-            //ddJunctionType is manually loaded as not all of them are displayed
-            ddJunctionType.Items.Clear();
-            ddJunctionType.Items.Add(JunctionType.Gap);
-            ddJunctionType.Items.Add(JunctionType.Synapse);
-            ddJunctionType.Items.Add(JunctionType.NMJ);
+            //ddConnectionType is manually loaded as not all of them are displayed
+            ddConnectionType.Items.Clear();
+            ddConnectionType.Items.Add(ConnectionType.Gap);
+            ddConnectionType.Items.Add(ConnectionType.Synapse);
+            ddConnectionType.Items.Add(ConnectionType.NMJ);
         }
 
-        private void FillJunctionTypes()
+        private void FillConnectionTypes()
         {
             if (ddSourcePool.SelectedItem is CellPoolTemplate source
                 && ddTargetPool.SelectedItem is CellPoolTemplate target)
             {
                 if (source.CellType == CellType.MuscleCell)
                 {
-                    ddJunctionType.Items.Clear();
-                    ddJunctionType.Items.Add(JunctionType.Gap);
-                    ddJunctionType.SelectedItem = JunctionType.Gap;
+                    ddConnectionType.Items.Clear();
+                    ddConnectionType.Items.Add(ConnectionType.Gap);
+                    ddConnectionType.SelectedItem = ConnectionType.Gap;
                 }
                 else //Neuron
                 {
-                    JunctionType prevType = JunctionType.NotSet;
-                    if (ddJunctionType.SelectedItem != null)
-                        prevType = (JunctionType)ddJunctionType.SelectedItem;
-                    ddJunctionType.Items.Clear();
-                    ddJunctionType.Items.Add(JunctionType.Gap);
+                    ConnectionType prevType = ConnectionType.NotSet;
+                    if (ddConnectionType.SelectedItem != null)
+                        prevType = (ConnectionType)ddConnectionType.SelectedItem;
+                    ddConnectionType.Items.Clear();
+                    ddConnectionType.Items.Add(ConnectionType.Gap);
                     if (target.CellType == CellType.MuscleCell)
-                        ddJunctionType.Items.Add(JunctionType.NMJ);
+                        ddConnectionType.Items.Add(ConnectionType.NMJ);
                     else
-                        ddJunctionType.Items.Add(JunctionType.Synapse);
-                    if (ddJunctionType.Items.Contains(prevType))
-                        ddJunctionType.SelectedItem = prevType;
+                        ddConnectionType.Items.Add(ConnectionType.Synapse);
+                    if (ddConnectionType.Items.Contains(prevType))
+                        ddConnectionType.SelectedItem = prevType;
                 }
             }
         }
@@ -74,7 +65,7 @@ namespace SiliFish.UI.Controls
         }
         private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillJunctionTypes();
+            FillConnectionTypes();
             if (!ddSourcePool.Focused)
                 return;
             if (Parameters != null && Parameters.Any() && ddSourcePool.SelectedItem is CellPoolTemplate pool)
@@ -104,17 +95,17 @@ namespace SiliFish.UI.Controls
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillJunctionTypes();
+            FillConnectionTypes();
             interPoolTemplate.PoolTarget = ddTargetPool.Text;
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ddJunctionType_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            gSynapse.Visible = ddJunctionType.Text != "Gap";
-            if (interPoolTemplate == null || !ddJunctionType.Focused) return;
-            interPoolTemplate.JunctionType = (JunctionType)Enum.Parse(typeof(JunctionType), ddJunctionType.Text);
+            gSynapse.Visible = ddConnectionType.Text != "Gap";
+            if (interPoolTemplate == null || !ddConnectionType.Focused) return;
+            interPoolTemplate.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -137,12 +128,12 @@ namespace SiliFish.UI.Controls
             if (interPool != null)
             {
                 interPoolTemplate = interPool;
-                JunctionType jnc = interPool.JunctionType;
+                ConnectionType jnc = interPool.ConnectionType;
                 ddSourcePool.Text = interPool.PoolSource;
                 ddTargetPool.Text = interPool.PoolTarget;
                 ddAxonReachMode.Text = interPool.AxonReachMode.ToString();
-                interPool.JunctionType = jnc; //target pool change can initialize the junc type list and update incoming info
-                ddJunctionType.Text = interPool.JunctionType.ToString();
+                interPool.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
+                ddConnectionType.Text = interPool.ConnectionType.ToString();
                 ddDistanceMode.Text = interPool.DistanceMode.ToString();
 
                 string name = interPool.GeneratedName();
@@ -190,12 +181,12 @@ namespace SiliFish.UI.Controls
             };
 
             interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
-            interPoolTemplate.JunctionType = ddJunctionType.SelectedItem != null ? (JunctionType)ddJunctionType.SelectedItem : JunctionType.NotSet;
+            interPoolTemplate.ConnectionType = ddConnectionType.SelectedItem != null ? (ConnectionType)ddConnectionType.SelectedItem : ConnectionType.NotSet;
             interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             interPoolTemplate.Name = eName.Text;
             interPoolTemplate.Description = eDescription.Text;
 
-            if (interPoolTemplate.JunctionType != JunctionType.Gap)
+            if (interPoolTemplate.ConnectionType != ConnectionType.Gap)
             {
                 interPoolTemplate.SynapseParameters = new SynapseParameters
                 {

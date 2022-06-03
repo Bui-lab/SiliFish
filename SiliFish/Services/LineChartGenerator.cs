@@ -172,7 +172,7 @@ namespace SiliFish.Services
             return $"{{t:{t:0.##},v:{multiplier * jnc.InputCurrent[timeInd]:0.######} }}";
         }
 
-        private string CreateCurrentDataPoint(ChemicalJunction jnc, double t, int timeInd)
+        private string CreateCurrentDataPoint(ChemicalSynapse jnc, double t, int timeInd)
         {
             return $"{{t:{t:0.##},v:{jnc.InputCurrent[timeInd]:0.###} }}";
         }
@@ -190,7 +190,7 @@ namespace SiliFish.Services
             return series.ToString();
         }
 
-        private string CreateCurrentSeries(int chartindex, int seriesindex, ChemicalJunction jnc, double[] Time, int tstart, int tend, string color, byte opacity)
+        private string CreateCurrentSeries(int chartindex, int seriesindex, ChemicalSynapse jnc, double[] Time, int tstart, int tend, string color, byte opacity)
         {
             StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
             series.Replace("__SERIES_NAME__", jnc.PreNeuron.Name.Replace("\"", "\\\""));
@@ -234,7 +234,7 @@ namespace SiliFish.Services
                 }
                 if (includeChem)
                 {
-                    foreach (ChemicalJunction jnc in neuron.Synapses)
+                    foreach (ChemicalSynapse jnc in neuron.Synapses)
                     {
                         a = (byte)((jnc.Conductance - minWeight) * mult + 200);
                         string color = jnc.PreNeuron.CellPool.Color.ToRGB();
@@ -246,7 +246,7 @@ namespace SiliFish.Services
             {
                 if (includeChem)
                 {
-                    foreach (ChemicalJunction jnc in muscle.EndPlates)
+                    foreach (ChemicalSynapse jnc in muscle.EndPlates)
                     {
                         a = (byte)((jnc.Conductance - minWeight) * mult + 200);
                         string color = jnc.PreNeuron.CellPool.Color.ToRGB();

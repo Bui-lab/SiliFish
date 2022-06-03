@@ -238,35 +238,35 @@ namespace SiliFish.PredefinedModels
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
             cr = new() { AscendingReach = rangeV0d_MN, DescendingReach = rangeV0d_MN, MinReach = rangeMin, Weight = V0d_MN_syn_weight };
-            PoolToPoolChemJunction(L_V0d ,R_MN, cr, GlySynapse, span);
-            PoolToPoolChemJunction(R_V0d ,L_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d ,R_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(R_V0d ,L_MN, cr, GlySynapse, span);
 
             //Contralateral glycinergic projections from V0d to IC 
             cr = new() { AscendingReach = rangeV0d_IC, DescendingReach = rangeV0d_IC, MinReach = rangeMin, Weight = V0d_IC_syn_weight };
-            PoolToPoolChemJunction(L_V0d ,R_IC, cr, GlySynapse, span);
-            PoolToPoolChemJunction(R_V0d ,L_IC, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d ,R_IC, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(R_V0d ,L_IC, cr, GlySynapse, span);
 
             //Contralateral glycinergic projections from V0d to V2a 
             cr = new() { AscendingReach = rangeV0d_V2a, DescendingReach = rangeV0d_V2a, MinReach = rangeMin, Weight = V0d_V2a_syn_weight };
-            PoolToPoolChemJunction(L_V0d ,R_V2a, cr, GlySynapse, span);
-            PoolToPoolChemJunction(R_V0d ,L_V2a, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d ,R_V2a, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(R_V0d ,L_V2a, cr, GlySynapse, span);
 
             //Contralateral glutamatergic projections from V0v to IC 
             SynapseParameters GluSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_glu };
             cr = new() { AscendingReach = rangeV0v_IC_max, DescendingReach = rangeV0v_IC_max, MinReach = rangeV0v_IC_min, Weight = V0v_IC_syn_weight };
-            PoolToPoolChemJunction(L_V0v ,R_IC, cr, GluSynapse, span);
-            PoolToPoolChemJunction(R_V0v ,L_IC, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V0v ,R_IC, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(R_V0v ,L_IC, cr, GluSynapse, span);
 
             //Pisilateral glutamatergic projections from V2a to V0v 
             cr = new() { AscendingReach = rangeV2a_V0v_asc, DescendingReach = rangeV2a_V0v_desc, MinReach = rangeMin, Weight = V2a_V0v_syn_weight };
-            PoolToPoolChemJunction(L_V2a,L_V0v, cr, GluSynapse, span);
-            PoolToPoolChemJunction(R_V2a,R_V0v, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V2a,L_V0v, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(R_V2a,R_V0v, cr, GluSynapse, span);
 
             //Ipsilateral cholinergic projections from MN to Muscle cells
             SynapseParameters AChSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_ach };
             cr = new() { AscendingReach = rangeMN_Muscle, DescendingReach = rangeMN_Muscle, MinReach = -1, Weight = MN_Muscle_syn_weight, FixedDuration_ms = 10 };
-            PoolToPoolChemJunction(L_MN,L_Muscle, cr, AChSynapse);
-            PoolToPoolChemJunction(R_MN,R_Muscle, cr, AChSynapse);
+            PoolToPoolChemSynapse(L_MN,L_Muscle, cr, AChSynapse);
+            PoolToPoolChemSynapse(R_MN,R_Muscle, cr, AChSynapse);
         }
 
         public override Dictionary<string, object> GetParameters()

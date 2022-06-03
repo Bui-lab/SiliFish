@@ -32,7 +32,7 @@
             this.lSourcePool = new System.Windows.Forms.Label();
             this.lTargetPool = new System.Windows.Forms.Label();
             this.lAxonReachMode = new System.Windows.Forms.Label();
-            this.lJunctionType = new System.Windows.Forms.Label();
+            this.lConnectionType = new System.Windows.Forms.Label();
             this.lMinReach = new System.Windows.Forms.Label();
             this.lAscReach = new System.Windows.Forms.Label();
             this.lDescReach = new System.Windows.Forms.Label();
@@ -42,7 +42,7 @@
             this.ddSourcePool = new System.Windows.Forms.ComboBox();
             this.ddTargetPool = new System.Windows.Forms.ComboBox();
             this.ddAxonReachMode = new System.Windows.Forms.ComboBox();
-            this.ddJunctionType = new System.Windows.Forms.ComboBox();
+            this.ddConnectionType = new System.Windows.Forms.ComboBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.numConductance = new System.Windows.Forms.NumericUpDown();
             this.numDelay = new System.Windows.Forms.NumericUpDown();
@@ -90,7 +90,7 @@
             // lSourcePool
             // 
             this.lSourcePool.AutoSize = true;
-            this.lSourcePool.Location = new System.Drawing.Point(17, 14);
+            this.lSourcePool.Location = new System.Drawing.Point(9, 14);
             this.lSourcePool.Name = "lSourcePool";
             this.lSourcePool.Size = new System.Drawing.Size(70, 15);
             this.lSourcePool.TabIndex = 0;
@@ -99,7 +99,7 @@
             // lTargetPool
             // 
             this.lTargetPool.AutoSize = true;
-            this.lTargetPool.Location = new System.Drawing.Point(17, 41);
+            this.lTargetPool.Location = new System.Drawing.Point(9, 41);
             this.lTargetPool.Name = "lTargetPool";
             this.lTargetPool.Size = new System.Drawing.Size(66, 15);
             this.lTargetPool.TabIndex = 1;
@@ -108,20 +108,20 @@
             // lAxonReachMode
             // 
             this.lAxonReachMode.AutoSize = true;
-            this.lAxonReachMode.Location = new System.Drawing.Point(17, 68);
+            this.lAxonReachMode.Location = new System.Drawing.Point(9, 68);
             this.lAxonReachMode.Name = "lAxonReachMode";
             this.lAxonReachMode.Size = new System.Drawing.Size(70, 15);
             this.lAxonReachMode.TabIndex = 2;
             this.lAxonReachMode.Text = "Axon Reach";
             // 
-            // lJunctionType
+            // lConnectionType
             // 
-            this.lJunctionType.AutoSize = true;
-            this.lJunctionType.Location = new System.Drawing.Point(17, 95);
-            this.lJunctionType.Name = "lJunctionType";
-            this.lJunctionType.Size = new System.Drawing.Size(79, 15);
-            this.lJunctionType.TabIndex = 3;
-            this.lJunctionType.Text = "Junction Type";
+            this.lConnectionType.AutoSize = true;
+            this.lConnectionType.Location = new System.Drawing.Point(9, 95);
+            this.lConnectionType.Name = "lConnectionType";
+            this.lConnectionType.Size = new System.Drawing.Size(96, 15);
+            this.lConnectionType.TabIndex = 3;
+            this.lConnectionType.Text = "Connection Type";
             // 
             // lMinReach
             // 
@@ -214,19 +214,19 @@
             this.ddAxonReachMode.TabIndex = 2;
             this.ddAxonReachMode.SelectedIndexChanged += new System.EventHandler(this.ddAxonReachMode_SelectedIndexChanged);
             // 
-            // ddJunctionType
+            // ddConnectionType
             // 
-            this.ddJunctionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddJunctionType.FormattingEnabled = true;
-            this.ddJunctionType.Items.AddRange(new object[] {
+            this.ddConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddConnectionType.FormattingEnabled = true;
+            this.ddConnectionType.Items.AddRange(new object[] {
             "Synapse",
             "Gap",
             "NMJ"});
-            this.ddJunctionType.Location = new System.Drawing.Point(105, 92);
-            this.ddJunctionType.Name = "ddJunctionType";
-            this.ddJunctionType.Size = new System.Drawing.Size(121, 23);
-            this.ddJunctionType.TabIndex = 3;
-            this.ddJunctionType.SelectedIndexChanged += new System.EventHandler(this.ddJunctionType_SelectedIndexChanged);
+            this.ddConnectionType.Location = new System.Drawing.Point(105, 92);
+            this.ddConnectionType.Name = "ddConnectionType";
+            this.ddConnectionType.Size = new System.Drawing.Size(121, 23);
+            this.ddConnectionType.TabIndex = 3;
+            this.ddConnectionType.SelectedIndexChanged += new System.EventHandler(this.ddConnectionType_SelectedIndexChanged);
             // 
             // numConductance
             // 
@@ -456,7 +456,7 @@
             // lName
             // 
             this.lName.AutoSize = true;
-            this.lName.Location = new System.Drawing.Point(18, 149);
+            this.lName.Location = new System.Drawing.Point(10, 149);
             this.lName.Name = "lName";
             this.lName.Size = new System.Drawing.Size(39, 15);
             this.lName.TabIndex = 29;
@@ -465,7 +465,7 @@
             // lDescription
             // 
             this.lDescription.AutoSize = true;
-            this.lDescription.Location = new System.Drawing.Point(18, 176);
+            this.lDescription.Location = new System.Drawing.Point(10, 176);
             this.lDescription.Name = "lDescription";
             this.lDescription.Size = new System.Drawing.Size(67, 15);
             this.lDescription.TabIndex = 30;
@@ -513,7 +513,7 @@
             // lDistanceMode
             // 
             this.lDistanceMode.AutoSize = true;
-            this.lDistanceMode.Location = new System.Drawing.Point(17, 122);
+            this.lDistanceMode.Location = new System.Drawing.Point(9, 122);
             this.lDistanceMode.Name = "lDistanceMode";
             this.lDistanceMode.Size = new System.Drawing.Size(86, 15);
             this.lDistanceMode.TabIndex = 37;
@@ -570,7 +570,7 @@
             this.Controls.Add(this.numDescReach);
             this.Controls.Add(this.numAscReach);
             this.Controls.Add(this.numMinReach);
-            this.Controls.Add(this.ddJunctionType);
+            this.Controls.Add(this.ddConnectionType);
             this.Controls.Add(this.ddAxonReachMode);
             this.Controls.Add(this.ddTargetPool);
             this.Controls.Add(this.ddSourcePool);
@@ -580,7 +580,7 @@
             this.Controls.Add(this.lDescReach);
             this.Controls.Add(this.lAscReach);
             this.Controls.Add(this.lMinReach);
-            this.Controls.Add(this.lJunctionType);
+            this.Controls.Add(this.lConnectionType);
             this.Controls.Add(this.lAxonReachMode);
             this.Controls.Add(this.lTargetPool);
             this.Controls.Add(this.lSourcePool);
@@ -610,7 +610,7 @@
         private Label lSourcePool;
         private Label lTargetPool;
         private Label lAxonReachMode;
-        private Label lJunctionType;
+        private Label lConnectionType;
         private Label lMinReach;
         private Label lAscReach;
         private Label lDescReach;
@@ -620,7 +620,7 @@
         private ComboBox ddSourcePool;
         private ComboBox ddTargetPool;
         private ComboBox ddAxonReachMode;
-        private ComboBox ddJunctionType;
+        private ComboBox ddConnectionType;
         private ToolTip toolTip1;
         private NumericUpDown numMinReach;
         private NumericUpDown numAscReach;

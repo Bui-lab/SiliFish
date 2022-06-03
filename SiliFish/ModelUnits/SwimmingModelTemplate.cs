@@ -30,7 +30,7 @@ namespace SiliFish.ModelUnits
             if (CellPoolTemplates.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
                 return "Cell pool names have to be unique";
             if (InterPoolTemplates.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
-                return "Junction names have to be unique";
+                return "Gap junction and synapse names have to be unique";
             return "";
         }
 

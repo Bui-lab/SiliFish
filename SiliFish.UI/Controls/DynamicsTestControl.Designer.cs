@@ -52,9 +52,10 @@
             this.grTest = new System.Windows.Forms.GroupBox();
             this.grInstanceParameters = new System.Windows.Forms.GroupBox();
             this.splitMain = new System.Windows.Forms.SplitContainer();
+            this.dgDynamics = new SiliFish.UI.Controls.DistributionDataGrid();
             this.pUseUpdatedParams = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
-            this.dgDynamics = new SiliFish.UI.Controls.DistributionDataGrid();
+            this.pBottom = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.picV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
@@ -72,6 +73,7 @@
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
             this.pUseUpdatedParams.SuspendLayout();
+            this.pBottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // picV
@@ -133,7 +135,7 @@
             this.eInstanceParams.Name = "eInstanceParams";
             this.eInstanceParams.ReadOnly = true;
             this.eInstanceParams.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.eInstanceParams.Size = new System.Drawing.Size(231, 266);
+            this.eInstanceParams.Size = new System.Drawing.Size(234, 269);
             this.eInstanceParams.TabIndex = 12;
             // 
             // ldt
@@ -315,13 +317,12 @@
             // 
             // grRheobase
             // 
-            this.grRheobase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grRheobase.Controls.Add(this.eRheobase);
             this.grRheobase.Controls.Add(this.lRheobase);
             this.grRheobase.Controls.Add(this.btnRheobase);
             this.grRheobase.Controls.Add(this.eRheobaseLimit);
             this.grRheobase.Controls.Add(this.lRheobaseLimit);
-            this.grRheobase.Location = new System.Drawing.Point(6, 392);
+            this.grRheobase.Location = new System.Drawing.Point(6, 19);
             this.grRheobase.Name = "grRheobase";
             this.grRheobase.Size = new System.Drawing.Size(200, 100);
             this.grRheobase.TabIndex = 16;
@@ -347,7 +348,6 @@
             // 
             // grTest
             // 
-            this.grTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grTest.Controls.Add(this.ldt);
             this.grTest.Controls.Add(this.lInput);
             this.grTest.Controls.Add(this.edt);
@@ -359,7 +359,7 @@
             this.grTest.Controls.Add(this.lStepStartTime);
             this.grTest.Controls.Add(this.btnDynamicsRun);
             this.grTest.Controls.Add(this.eStepEndTime);
-            this.grTest.Location = new System.Drawing.Point(3, 498);
+            this.grTest.Location = new System.Drawing.Point(6, 125);
             this.grTest.Name = "grTest";
             this.grTest.Size = new System.Drawing.Size(200, 182);
             this.grTest.TabIndex = 17;
@@ -368,12 +368,13 @@
             // 
             // grInstanceParameters
             // 
-            this.grInstanceParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.grInstanceParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grInstanceParameters.Controls.Add(this.eInstanceParams);
-            this.grInstanceParameters.Location = new System.Drawing.Point(212, 392);
+            this.grInstanceParameters.Location = new System.Drawing.Point(209, 19);
             this.grInstanceParameters.Name = "grInstanceParameters";
-            this.grInstanceParameters.Size = new System.Drawing.Size(237, 288);
+            this.grInstanceParameters.Size = new System.Drawing.Size(240, 291);
             this.grInstanceParameters.TabIndex = 18;
             this.grInstanceParameters.TabStop = false;
             this.grInstanceParameters.Text = "Instance Params";
@@ -387,10 +388,8 @@
             // splitMain.Panel1
             // 
             this.splitMain.Panel1.Controls.Add(this.dgDynamics);
+            this.splitMain.Panel1.Controls.Add(this.pBottom);
             this.splitMain.Panel1.Controls.Add(this.pUseUpdatedParams);
-            this.splitMain.Panel1.Controls.Add(this.grTest);
-            this.splitMain.Panel1.Controls.Add(this.grInstanceParameters);
-            this.splitMain.Panel1.Controls.Add(this.grRheobase);
             // 
             // splitMain.Panel2
             // 
@@ -401,6 +400,16 @@
             this.splitMain.Size = new System.Drawing.Size(974, 683);
             this.splitMain.SplitterDistance = 452;
             this.splitMain.TabIndex = 17;
+            // 
+            // dgDynamics
+            // 
+            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgDynamics.Location = new System.Drawing.Point(0, 30);
+            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
+            this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.Size = new System.Drawing.Size(452, 340);
+            this.dgDynamics.TabIndex = 21;
             // 
             // pUseUpdatedParams
             // 
@@ -422,16 +431,16 @@
             this.linkUseUpdatedParams.Text = "Use Updated Parameters";
             this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
-            // dgDynamics
+            // pBottom
             // 
-            this.dgDynamics.AutoSize = true;
-            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgDynamics.Location = new System.Drawing.Point(0, 30);
-            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
-            this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.Size = new System.Drawing.Size(452, 653);
-            this.dgDynamics.TabIndex = 21;
+            this.pBottom.Controls.Add(this.grRheobase);
+            this.pBottom.Controls.Add(this.grInstanceParameters);
+            this.pBottom.Controls.Add(this.grTest);
+            this.pBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pBottom.Location = new System.Drawing.Point(0, 370);
+            this.pBottom.Name = "pBottom";
+            this.pBottom.Size = new System.Drawing.Size(452, 313);
+            this.pBottom.TabIndex = 21;
             // 
             // DynamicsTestControl
             // 
@@ -456,12 +465,12 @@
             this.grInstanceParameters.ResumeLayout(false);
             this.grInstanceParameters.PerformLayout();
             this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel1.PerformLayout();
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
             this.pUseUpdatedParams.ResumeLayout(false);
             this.pUseUpdatedParams.PerformLayout();
+            this.pBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -495,5 +504,6 @@
         private Panel pUseUpdatedParams;
         private LinkLabel linkUseUpdatedParams;
         private DistributionDataGrid dgDynamics;
+        private Panel pBottom;
     }
 }
