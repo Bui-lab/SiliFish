@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestBGModels\**" />
+    <EmbeddedResource Remove="TestBGModels\**" />
+    <None Remove="TestBGModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Analysis_Tools.cs" />
     <Compile Remove="Extensions\ImageExtensions.cs" />
     <Compile Remove="Helpers\ImageHelper.cs" />
@@ -20,7 +26,6 @@
     <Compile Remove="python2csharp.cs" />
     <Compile Remove="SingleCoil.cs" />
     <Compile Remove="SingleCoilBase.cs" />
-    <Compile Remove="TestBGModels\BG1.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,10 +60,6 @@
     <EmbeddedResource Include="Resources\Logo.png" />
     <EmbeddedResource Include="Resources\StyleSheet.css" />
     <EmbeddedResource Include="Resources\three.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="TestBGModels\" />
   </ItemGroup>
 
   <ItemGroup>

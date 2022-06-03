@@ -12,6 +12,9 @@ namespace SiliFish.UI
     public partial class MainForm : Form
     {
         SwimmingModel Model;
+        bool modelRefreshMsgShown = false;
+        bool modifiedPools = false;
+        bool modifiedJncs = false;
 
         SingleCoilModel scModel;
         DoubleCoilModel dcModel;
@@ -482,6 +485,7 @@ namespace SiliFish.UI
             progressBarRun.Value = progressBarRun.Maximum;
             progressBarRun.Visible = false;
             btnRun.Enabled = true;
+            modifiedJncs = modifiedPools = false;
 
             if (ddPlot.SelectedIndex < 0)
                 ddPlot.SelectedIndex = 0;
@@ -513,17 +517,19 @@ namespace SiliFish.UI
                 tRunEnd = 10000;
             if (!int.TryParse(eSkip.Text, out tRunSkip))
                 tRunSkip = 0;
-            
+
 
             if (rbCustom.Checked)
+            {
                 Model = customModel = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
+            }
             else if (Model != null)
             {
                 Dictionary<string, object> ParamDict = ReadParams();
                 Model.SetParameters(ParamDict);
                 StimulusMode stimMode = ddStimulusMode.Text == "Gaussian" ? StimulusMode.Gaussian :
                     ddStimulusMode.Text == "Ramp" ? StimulusMode.Ramp :
-                    StimulusMode.Step; 
+                    StimulusMode.Step;
                 (Model as PredefinedModel).SetStimulusMode(stimMode);
             }
             if (Model == null) return;
@@ -651,7 +657,7 @@ namespace SiliFish.UI
             File.WriteAllText(saveFileHTML.Filter, AnimationHTML.ToString());
         }
 
-        private void btnGenerate2DModel_Click(object sender, EventArgs e)
+        private void Generate2DModel()
         {
             if (Model == null) return;
 
@@ -667,26 +673,41 @@ namespace SiliFish.UI
                     Model.SetParameters(ParamDict);
                 }
             }
+            else if (!modelRefreshMsgShown && (modifiedPools || modifiedJncs))
+            {
+                MessageBox.Show("The changes you make will not be visible until you rerun the model.");
+                modelRefreshMsgShown = true;
+            }
             string html = Model.Plot2DModel(false);
             webView2DModel.CoreWebView2.NavigateToString(html);//TODO override by an extension - save if error
 
+        }
+        private void btnGenerate2DModel_Click(object sender, EventArgs e)
+        {
+            Generate2DModel();
         }
 
         private void Generate3DModel()
         {
             if (Model == null) return;
 
-
-            if (rbCustom.Checked)
+            if (!Model.ModelRun)
             {
-                Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
+                if (rbCustom.Checked)
+                {
+                    Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
+                }
+                else
+                {
+                    Dictionary<string, object> ParamDict = ReadParams();
+                    Model.SetParameters(ParamDict);
+                }
             }
-            else
+            else if (!modelRefreshMsgShown && (modifiedPools || modifiedJncs))
             {
-                Dictionary<string, object> ParamDict = ReadParams();
-                Model.SetParameters(ParamDict);
+                MessageBox.Show("The changes you make will not be visible until you rerun the model.");
+                modelRefreshMsgShown = true;
             }
-
             string mode = dd3DModelType.Text;
             bool singlePanel = mode != "Gap/Chem";
             bool gap = mode.Contains("Gap");
@@ -1109,6 +1130,7 @@ namespace SiliFish.UI
             {
                 CellPoolControl cpl = (CellPoolControl)sender;
                 Util.SaveToFile(saveFileJson.FileName, cpl.JSONString);
+                modifiedPools = true;
             }
         }
         private void Cpl_LoadPool(object sender, EventArgs e)
@@ -1127,6 +1149,7 @@ namespace SiliFish.UI
             {
                 ModelTemplate.CellPoolTemplates.Add(newPool);
                 listCellPool.AppendItem(newPool);
+                modifiedPools = true;
             }
         }
         private void listCellPool_CopyItem(object sender, EventArgs e)
@@ -1139,6 +1162,7 @@ namespace SiliFish.UI
             {
                 ModelTemplate.CellPoolTemplates.Add(pool);
                 listCellPool.AppendItem(pool);
+                modifiedPools = true;
             }
         }
         private void listCellPool_DeleteItem(object sender, EventArgs e)
@@ -1155,6 +1179,8 @@ namespace SiliFish.UI
                     listCellPool.RemoveItemAt(listCellPool.SelectedIndex);
                     LoadModelTemplateInterPools();
                     LoadModelTemplateStimuli();
+                    modifiedPools = true;
+                    modifiedJncs = true;
                 }
             }
         }
@@ -1171,6 +1197,7 @@ namespace SiliFish.UI
                     ModelTemplate.RenameCellPool(oldName, pool.CellGroup);
                 int ind = listCellPool.SelectedIndex;
                 listCellPool.RefreshItem(ind, pool);
+                modifiedPools = true;
             }
         }
 
@@ -1178,6 +1205,7 @@ namespace SiliFish.UI
         {
             CellPoolTemplate pool = listCellPool.SelectedItem as CellPoolTemplate;
             ModelTemplate.CellPoolTemplates.FirstOrDefault(p => p.Distinguisher == pool.Distinguisher).Active = pool.Active;
+            modifiedPools = true;
         }
 
         private void listCellPool_SortItems(object sender, EventArgs e)
@@ -1223,6 +1251,7 @@ namespace SiliFish.UI
             {
                 ModelTemplate.InterPoolTemplates.Add(newJnc);
                 listJunctions.AppendItem(newJnc);
+                modifiedJncs = true;
             }
         }
         private void listJunctions_CopyItem(object sender, EventArgs e)
@@ -1235,6 +1264,7 @@ namespace SiliFish.UI
             {
                 ModelTemplate.InterPoolTemplates.Add(jnc);
                 listJunctions.AppendItem(jnc);
+                modifiedJncs = true;
             }
         }
         private void listJunctions_DeleteItem(object sender, EventArgs e)
@@ -1244,6 +1274,7 @@ namespace SiliFish.UI
                 InterPoolTemplate ipl = (InterPoolTemplate)listJunctions.SelectedItem;
                 ModelTemplate.InterPoolTemplates.Remove(ipl);
                 listJunctions.RemoveItemAt(listJunctions.SelectedIndex);
+                modifiedJncs = true;
             }
         }
         private void listJunctions_ViewItem(object sender, EventArgs e)
@@ -1256,6 +1287,7 @@ namespace SiliFish.UI
             {
                 int ind = listJunctions.SelectedIndex;
                 listJunctions.RefreshItem(ind, interpool);
+                modifiedJncs = true;
             }
         }
 
@@ -1263,6 +1295,7 @@ namespace SiliFish.UI
         {
             InterPoolTemplate jnc = sender as InterPoolTemplate;
             ModelTemplate.InterPoolTemplates.FirstOrDefault(p => p.Distinguisher == jnc.Distinguisher).Active = jnc.Active;
+            modifiedJncs = true;
         }
 
         private void listJunctions_SortItems(object sender, EventArgs e)
