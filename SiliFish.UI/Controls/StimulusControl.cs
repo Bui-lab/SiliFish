@@ -96,7 +96,7 @@ namespace SiliFish.UI.Controls
                 end = tl.GetTimeLine().First().end;
             }
 
-            stim.Stimulus_ms = new Stimulus(stimMode, start, end, value1, value2);
+            stim.Stimulus_ms = new Stimulus(stimMode, tl, value1, value2);
             return stim;
         }
 

@@ -8,8 +8,6 @@ namespace SiliFish.PredefinedModels
 {
     public class SingleCoilModel : PredefinedModel
     {
-        protected override string Name { get { return "SingleCoil"; } }
-
         int nIC = 5, nMN = 10, nV0d = 10, nMuscle = 10;
         CellPool L_IC, R_IC, L_MN, R_MN, L_V0d, R_V0d;
         CellPool L_Muscle, R_Muscle;
@@ -67,7 +65,9 @@ namespace SiliFish.PredefinedModels
             MembraneDynamics ic_dyn = new() { a = 0.0005, b = 0.5, c = -30, d = 5, vmax = 0, vr = -60, vt = -45, k = 0.05, Cm = 50 };
             L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
-            Stimulus stim = new(stim_mode, this.tshutoff, -1, stim_value1, stim_value2);
+            TimeLine tl = new();
+            tl.AddTimeRange(this.tshutoff);
+            Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
 
             for (int i = 0; i < nIC; i++)
             {

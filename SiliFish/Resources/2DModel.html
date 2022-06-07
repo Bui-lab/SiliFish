@@ -65,7 +65,7 @@
             .nodePointerAreaPaint(nodePaint)
             .nodeLabel(`id`)
             .graphData(gapData)
-            .enableNodeDrag(false)
+            .enableNodeDrag(true)
             .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
@@ -80,13 +80,16 @@
             .graphData(chemData)
             .linkDirectionalArrowRelPos(1)
             .linkDirectionalArrowLength(5)
-            .enableNodeDrag(false)
+            .enableNodeDrag(true)
             .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
             .backgroundColor('white')
             .width(document.body.offsetWidth / 2);
+
+        gapData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
+        chemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
     </script>
 
 </body>

@@ -100,10 +100,12 @@ namespace SiliFish.ModelUnits
                 JncActive ? " (timeline)" : " (inactive)";
             return String.Format("{0} [{1}]/{2}{3}", Name, ConnectionType.ToString(), AxonReachMode.ToString(), activeStatus);
         }
+        [JsonIgnore]
         public override string Distinguisher
         {
             get { return String.Format("{0} [{1}]/{2}", GeneratedName(), ConnectionType.ToString(), AxonReachMode.ToString()); }
         }
+        [JsonIgnore]
         public override string Tooltip
         {
             get

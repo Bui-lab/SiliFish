@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.DataTypes
 {
@@ -26,47 +27,70 @@ namespace SiliFish.DataTypes
 
     public class TimeLine
     {
-        private List<(int start, int end)> timeLine = new();
-        public int Start { get { return timeLine.Count > 0 ? timeLine.Min(tr => tr.start) : 0; }  }
-        public int End { get { return timeLine.Count > 0 ? timeLine.Max(tr => tr.end) : -1; } set { } }
+        private List<(int start, int end)> Periods = new();
+        
+        public string PeriodsJSON//Required for JSON
+        {
+            get
+            {
+                return string.Join('/', Periods.Select(i => i.start.ToString() + ":" + i.end.ToString()));
+            }
+            set
+            {
+                Periods.Clear();
+                foreach (string period in value.Split('/'))
+                {
+                    if (period.Contains(':'))
+                    {
+                        string[] searr = period.Split(':');
+                        (int s, int e) se = (int.Parse(searr[0]), int.Parse(searr[1]));
+                        Periods.Add(se);
+                    }
+                }
+            }
+        }
+        [JsonIgnore]
+        public int Start { get { return Periods.Count > 0 ? Periods.Min(tr => tr.start) : 0; }  }
+        [JsonIgnore]
+        public int End { get { return Periods.Count > 0 ? Periods.Max(tr => tr.end) : -1; } set { } }
 
         public TimeLine()
         { }
 
         public TimeLine(TimeLine tl)
         {
-            timeLine = new List<(int start, int end)>(tl.timeLine);
+            Periods = new List<(int start, int end)>(tl.Periods);
         }
         public void AddTimeRange(int start_ms, int? end_ms = null)
         {
-            timeLine.Add((start_ms, end_ms ?? -1));
+            Periods.Add((start_ms, end_ms ?? -1));
         }
 
         public bool IsBlank()
         {
-            return timeLine.Count == 0;
+            return Periods.Count == 0;
         }
         public bool IsActive(int time_ms)
         {
-            if (timeLine.Count == 0) return true;
-            return timeLine.Exists(timeRange => timeRange.start <= time_ms && (timeRange.end < 0 || timeRange.end >= time_ms));
+            if (Periods.Count == 0) return true;
+            return Periods.Exists(timeRange => timeRange.start <= time_ms && (timeRange.end < 0 || timeRange.end >= time_ms));
         }
 
         public List<(int start, int end)> GetTimeLine()
         {
-            return timeLine;
+            return Periods;
         }
 
         public void Clear()
         {
-            timeLine.Clear();
+            Periods.Clear();
         }
 
         public override string ToString()
         {
-            if (timeLine.Count == 0)
+            if (Periods.Count == 0)
                 return "no timeline";
-            return string.Join("; ", timeLine.Select(tr => $"{tr.start}-{((tr.end == -1) ? "end":tr.end)}"));
+            return string.Join("; ", Periods.Select(tr => $"{tr.start}-{((tr.end == -1) ? "end":tr.end)}"));
         }
     }
 

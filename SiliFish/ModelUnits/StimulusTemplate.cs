@@ -1,4 +1,6 @@
-﻿namespace SiliFish.ModelUnits
+﻿using System.Text.Json.Serialization;
+
+namespace SiliFish.ModelUnits
 {
     public class StimulusTemplate : ModelUnitBase
     {
@@ -17,7 +19,9 @@
         {
             return Distinguisher + (Active ? "" : " (inactive)");
         }
+        [JsonIgnore]
         public override string Distinguisher { get { return string.Format("Target: {0} {1}; {2}", LeftRight, Target, Stimulus_ms?.ToString()); } }
+        [JsonIgnore]
         public override string Tooltip { get { return $"{ToString()}\r\n{Stimulus_ms.GetTooltip()}"; } }
     }
 

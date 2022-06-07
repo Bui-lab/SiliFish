@@ -13,11 +13,18 @@ using SiliFish.Services;
 namespace SiliFish
 {
 
+    public struct RunParam
+    {
+        public int tSkip { get; set; } = 0;
+        public int tMax { get; set; } = 1000;
+        public static double dt { get; set; } = 0.1;//The step size
+        public RunParam() { }
+
+    }
+
     public class SwimmingModel
     {
-        //TODO: dt can be run time dependent
-        public static double dt = 0.1; //the step size of the model
-        
+        public RunParam runParam;
         public double cv = -1; //the transmission speed
 
         protected double E_glu = 0; //the reversal potential of glutamate
@@ -37,7 +44,6 @@ namespace SiliFish
         public double BodyMedialLateralDistance{ get; set; }
         public double BodyDorsalVentralDistance { get; set; }
 
-        private int tSkip = 0, tMax = 10000;
         private int iProgress = 0;
         private int iMax = 1;
 
@@ -57,13 +63,29 @@ namespace SiliFish
 
         public SwimmingModel()
         {
-            modelName = Name;
+            modelName = this.GetType().Name;
         }
 
-        protected virtual string Name { get { return "BaseModel"; } }
-        public List<CellPool> GetCellPools { get { return NeuronPools.Union(MuscleCellPools).ToList(); } }
-        public List<InterPool> GetChemPoolConnections { get { return PoolConnections.Where(con => con.IsChemical).ToList(); } }
-        public List<InterPool> GetGapPoolConnections { get { return PoolConnections.Where(con => !con.IsChemical).ToList(); } }
+        public List<CellPool> CellPools
+        {
+            get
+            {
+                if (!initialized) 
+                    InitStructures(1);
+                return NeuronPools.Union(MuscleCellPools).ToList();
+            }
+        }
+        public List<CellPool> MusclePools
+        {
+            get
+            {
+                if (!initialized)
+                    InitStructures(1);
+                return MuscleCellPools;
+            }
+        }
+        public List<InterPool> ChemPoolConnections { get { return PoolConnections.Where(con => con.IsChemical).ToList(); } }
+        public List<InterPool> GapPoolConnections { get { return PoolConnections.Where(con => !con.IsChemical).ToList(); } }
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {
             double minX = 999;
@@ -106,31 +128,13 @@ namespace SiliFish
             return (minWeight, maxWeight);
         }
 
-        public virtual string Plot2DModel(bool saveFile)
-        {
-            if (!initialized)
-                InitStructures(1);
-            TwoDModelGenerator twoDModelGenerator = new();
-            string filename = saveFile ? Util.OutputFolder + Name + "Model.html" : "";
-            return twoDModelGenerator.Create2DModel(filename, Name + " 2D Model", this, NeuronPools.Union(MuscleCellPools).ToList());
-        }
 
-        //gap and chem are obsolete if singlePanel = false
-        public virtual string Plot3DModel(bool saveFile, bool singlePanel, bool gap, bool chem)
-        {
-            if (!initialized)
-                InitStructures(1);
-            ThreeDModelGenerator threeDModelGenerator = new();
-            string filename = saveFile ? Util.OutputFolder + Name + "Model.html" : "";
-            return threeDModelGenerator.Create3DModel(filename, Name + " 3D Model", this, NeuronPools.Union(MuscleCellPools).ToList(), singlePanel, gap, chem);
-        }
 
 
         public virtual Dictionary<string, object> GetParameters()
         {
             Dictionary<string, object> paramDict = new();
 
-            paramDict.Add("Dynamic.dt", SwimmingModel.dt);
             paramDict.Add("Dynamic.cv", cv);
             paramDict.Add("Dynamic.E_ach", E_ach);
             paramDict.Add("Dynamic.E_glu", E_glu);
@@ -151,7 +155,6 @@ namespace SiliFish
 
         public void FillMissingParameters(Dictionary<string, object> paramDict)
         {
-            paramDict.AddObject("Dynamic.dt", SwimmingModel.dt, skipIfExists: true);
             paramDict.AddObject("Dynamic.cv", cv, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
@@ -173,7 +176,6 @@ namespace SiliFish
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             initialized = false;
-            dt = paramExternal.Read("Dynamic.dt", dt);
             cv = paramExternal.Read("Dynamic.cv", cv);
             E_ach = paramExternal.Read("Dynamic.E_ach", E_ach);
             E_glu = paramExternal.Read("Dynamic.E_glu", E_glu);
@@ -202,7 +204,7 @@ namespace SiliFish
             }
             else if (plotMode == PlotExtend.CellsInAPool)
             {
-                CellPool cellpool = GetCellPools.Where(p => p.ID == subset).FirstOrDefault(p => p != null);
+                CellPool cellpool = CellPools.Where(p => p.ID == subset).FirstOrDefault(p => p != null);
                 if (cellpool != null)
                     return (cellpool.GetCells().ToList(), null);
                 else
@@ -210,7 +212,7 @@ namespace SiliFish
             }
             else if (plotMode == PlotExtend.SingleCell)
             {
-                Cell cell = GetCellPools.Select(p => p.GetCell(subset)).FirstOrDefault(c => c != null);
+                Cell cell = CellPools.Select(p => p.GetCell(subset)).FirstOrDefault(c => c != null);
                 if (cell != null)
                     return (new List<Cell> { cell }, null);
                 else
@@ -226,6 +228,7 @@ namespace SiliFish
         //if offset is given, it will be subtracted from Time array
         
         //TODO Plotting functions for membrane potentials, currents, and stimuli are very similar to each other. Simplify
+        //TODO plotting functions should not be in SwimmingModel - reorganize
         protected virtual string PlotMembranePotentials(int iStart = 0, int iEnd = -1, List<Cell> cells = null, List<CellPool> pools = null, int offset = 0, string filename = "", int nSample = 0)
         {
             if (iStart < 0 || iStart >= Time.Length)
@@ -243,6 +246,8 @@ namespace SiliFish
 
         public string PlotMembranePotentials(PlotExtend plotMode, string subset, int tStart = 0, int tEnd = -1, int nSample = 0)
         {
+            int tSkip = runParam.tSkip;
+            double dt = RunParam.dt;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
             int offset = tSkip;
@@ -267,6 +272,8 @@ namespace SiliFish
         }
         public string PlotCurrents(PlotExtend plotMode, string subset, int tStart = 0, int tEnd = -1, bool includeGap = true, bool includeChem = true, int nSample = 0)
         {
+            int tSkip = runParam.tSkip;
+            double dt = RunParam.dt;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
             int offset = tSkip;
@@ -293,6 +300,8 @@ namespace SiliFish
 
         public string PlotStimuli(PlotExtend plotMode, string subset, int tStart = 0, int tEnd = -1, int nSample = 0)
         {
+            int tSkip = runParam.tSkip;
+            double dt = RunParam.dt;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
             int offset = tSkip;
@@ -339,13 +348,10 @@ namespace SiliFish
             {
                 return;
             }
-            string prefix = this.GetType().ToString();
-            if (!string.IsNullOrEmpty(filename))
-                prefix = Path.GetFileNameWithoutExtension(filename);
-            string Vfilename = prefix + "V.csv";
-            string Gapfilename = prefix + "Gap.csv";
-            string Synfilename = prefix + "Syn.csv";
-            string filenamejson = prefix + ".json";
+            string Vfilename = Path.ChangeExtension(filename, "V.csv");
+            string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
+            string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
+            string filenamejson = Path.ChangeExtension(filename, "json");
 
             List<string> cell_names = new();
             cell_names.AddRange(NeuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
@@ -375,109 +381,11 @@ namespace SiliFish
             Util.SaveToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
             Util.SaveToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
             Util.SaveToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
-            Util.SaveToJSON(Util.OutputFolder + filenamejson, GetParameters());
+            Util.SaveToJSON(filenamejson, GetParameters());
         }
 
-        private Dictionary<string, Coordinate[]> GenerateSomiteCoordinates(int startIndex, int endIndex)
-        {
-            List<Cell> LeftMuscleCells = MuscleCellPools.Where(mp => mp.PositionLeftRight == SagittalPlane.Left).SelectMany(mp => mp.GetCells()).ToList();
-            List<Cell> RightMuscleCells = MuscleCellPools.Where(mp => mp.PositionLeftRight == SagittalPlane.Right).SelectMany(mp => mp.GetCells()).ToList();
 
-            int nmax = endIndex - startIndex + 1;
-            //TODO: left and right muscle cell count can be different
-            int nMuscle = LeftMuscleCells.Count;
-            if (nMuscle == 0) return null;
-            // Allocating arrays for velocity and position
-            double[,] vel = new double[nMuscle, nmax];
-            double[,] angle = new double[nMuscle, nmax];
-            // Setting constants and initial values for vel. and pos.
-            double khi = 3.0; //#damping constant , high khi =0.5/ low = 0.1
-            double w0 = 2.5; //20Hz = 125.6
-            double vel0 = 0.0;
-            double angle0 = 0.0;
-            double dt = SwimmingModel.dt;
-            double alpha = 0.1;
-            //Wd = w0
-            int k = 0;
 
-            foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
-            {
-                MuscleCell rightMuscle = (MuscleCell)RightMuscleCells.FirstOrDefault(c => c.Sequence == leftMuscle.Sequence);
-                vel[k, 0] = vel0;
-                angle[k, 0] = angle0;
-                angle[nMuscle - 1, 0] = 0.0;
-                foreach (var i in Enumerable.Range(1, nmax - 1))
-                {
-                    double R = (leftMuscle.R + rightMuscle.R) / 2;
-                    double coef = alpha * (1 - 0.2 * R);//The formula in the paper
-                    //TODO test the coef in the paper
-                    coef = 0.1;
-                    double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
-                    vel[k, i] = vel[k, i - 1] + acc * dt;
-                    angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
-                }
-                k++;
-            }
-
-            //## DYNAMIC PLOTTING
-            double[,] x = new double[nMuscle, nmax + 1];
-            double[,] y = new double[nMuscle, nmax + 1];
-            foreach (var i in Enumerable.Range(0, nmax))
-            {
-                x[0, i] = 0;
-                y[0, i] = 0;
-                angle[0, i] = 0;
-                foreach (int l in Enumerable.Range(1, nMuscle - 1))
-                {
-                    angle[l, i] = angle[l - 1, i] + angle[l, i];
-                    x[l, i] = x[l - 1, i] + Math.Sin(angle[l, i]);
-                    y[l, i] = y[l - 1, i] - Math.Cos(angle[l, i]);
-                }
-            }
-
-            Dictionary<string, Coordinate[]> somiteCoordinates = new();
-            foreach (int somiteIndex in Enumerable.Range(0, nMuscle))
-            {
-                string somite = "Somite" + somiteIndex.ToString();
-                somiteCoordinates.Add(somite, new Coordinate[nmax + 1]);
-                somiteCoordinates[somite][0] = (0, 0);
-                foreach (var i in Enumerable.Range(0, nmax))
-                {
-                    somiteCoordinates[somite][i] = (x[somiteIndex, i], y[somiteIndex, i]);
-                }
-            }
-            return somiteCoordinates;
-            /*TODO save animation CSV
-                using FileStream fs = File.Open(Util.OutputFolder + "AnimationXY.csv", FileMode.Create, FileAccess.Write);
-            using StreamWriter sw = new(fs);
-            sw.WriteLine("Time,Somite,X,Y");
-
-            foreach (var i in Enumerable.Range(1, nmax))
-            {
-                string rowStart = (Time[startIndex + i - 1] - offset).ToString("0.##");
-                foreach (int l in Enumerable.Range(1, nMuscle - 1))
-                {
-                    string row = rowStart + ",Somite" + l.ToString() + "," + x[l, i].ToString() + "," + y[l, i].ToString();
-                    sw.WriteLine(row);
-                }
-            }*/
-        }
-
-        public virtual string GenerateAnimation(int tStart = 0, int tEnd = -1)
-        {
-            if (!this.model_run)
-            {
-                return null;
-            }
-            if (tEnd < tStart || tEnd >= tMax)
-                tEnd = tMax - 1;
-            int iStart = (int)((tStart + tSkip) / dt);
-            int iEnd = (int)((tEnd + tSkip) / dt);
-
-            AnimationGenerator animationGenerator = new();
-            return animationGenerator.CreateTimeSeries(title: Name + "Animation.html", GenerateSomiteCoordinates(iStart, iEnd), Time, iStart, iEnd, tSkip);
-        }
         protected virtual void InitNeurons()
         {
             throw (new NotImplementedException());
@@ -604,8 +512,6 @@ namespace SiliFish
             }
         }
 
-
-
         private void CalculateMembranePotentialOfMuscleCell(MuscleCell n, int t)
         {
             double ISyn = 0, stim = 0;
@@ -647,15 +553,14 @@ namespace SiliFish
         //   The file name will be the same as the class name.
         // saveAnim: if True, an animation of the muscle movements will be saved as an mp4 file.
         //   The file name will be the same as the class name.
-        public virtual void MainLoop(double seed, int tmax, int tskip)
+        public virtual void MainLoop(double seed, RunParam rp)
         {
             try
             {
                 model_run = false;
                 rand = new Random((int)seed);
-                tSkip = tskip;
-                tMax = tmax;
-                iMax = Convert.ToInt32((tmax + tskip) / SwimmingModel.dt);
+                runParam = rp;
+                iMax = Convert.ToInt32((rp.tMax + rp.tSkip) / RunParam.dt);
                 Stimulus.nMax = iMax;
                 
                 InitStructures(iMax);
@@ -663,7 +568,7 @@ namespace SiliFish
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;
-                    Time[index] = Math.Round(SwimmingModel.dt * index, 2);
+                    Time[index] = Math.Round(RunParam.dt * index, 2);
 
                     CalculateNeuronalOutputs(index);
                     CalculateMembranePotentialsFromCurrents(index);

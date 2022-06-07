@@ -76,7 +76,7 @@ namespace SiliFish.PredefinedModels
             this.sigma_chem = sigma_chem;
             this.E_glu = E_glu;
             this.E_gly = E_gly;
-            SwimmingModel.dt = dt;
+            RunParam.dt = dt;
             this.cv = cv;
             initialized = false;
         }

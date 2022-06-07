@@ -70,6 +70,7 @@
             // 
             this.ddDistribution.FormattingEnabled = true;
             this.ddDistribution.Items.AddRange(new object[] {
+            "None",
             "Constant",
             "Uniform",
             "Equally Spaced",

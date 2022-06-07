@@ -8,8 +8,6 @@ namespace SiliFish.PredefinedModels
 {
     public class DoubleCoilModel : PredefinedModel
     {
-        protected override string Name { get { return "DoubleCoil"; } }
-
         int nIC = 5, nMN = 10, nV0d = 10, nV0v = 10, nV2a = 10, nMuscle = 10;
         CellPool L_IC, R_IC, L_MN, R_MN, L_V0d, R_V0d, L_V0v, R_V0v, L_V2a, R_V2a;
         CellPool L_Muscle, R_Muscle;
@@ -104,8 +102,12 @@ namespace SiliFish.PredefinedModels
             MembraneDynamics ic_dyn = new() { a = 0.0002, b = 0.5, c = -40, d = 5, vmax = 0, vr = -60, vt = -45, k = 0.3, Cm = 50 };
             L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
-            Stimulus stimLeft = new(stim_mode, this.tshutoff, -1, stim_value1, stim_value2);
-            Stimulus stimRight = new(stim_mode, this.tasyncdelay, -1, stim_value1, stim_value2);
+            TimeLine tlLeft = new();
+            tlLeft.AddTimeRange(this.tshutoff);
+            Stimulus stimLeft = new(stim_mode, tlLeft, stim_value1, stim_value2);
+            TimeLine tlRight= new();
+            tlRight.AddTimeRange(this.tasyncdelay);
+            Stimulus stimRight = new(stim_mode, tlRight, stim_value1, stim_value2);
 
             for (int i = 0; i < nIC; i++)
             {

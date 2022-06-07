@@ -23,11 +23,10 @@ namespace SiliFish.ModelUnits
         private bool initialized = false;
 
         public Stimulus() { }
-        public Stimulus(StimulusMode mode, int start_ms, int end_ms, double value1, double value2 = 0)
+        public Stimulus(StimulusMode mode, TimeLine tl, double value1, double value2 = 0)
         {
             this.Mode = mode;
-            TimeSpan_ms = new();
-            TimeSpan_ms.AddTimeRange(start_ms, end_ms);
+            TimeSpan_ms = new(tl);
             this.Value1 = value1;
             this.Value2 = value2;
         }
@@ -56,10 +55,10 @@ namespace SiliFish.ModelUnits
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeSpan_ms.End / SwimmingModel.dt);
+            iEnd = (int)(TimeSpan_ms.End / RunParam.dt);
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeSpan_ms.Start / SwimmingModel.dt);
+            iStart = (int)(TimeSpan_ms.Start / RunParam.dt);
             if (Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (Value2 - Value1) / (iEnd - iStart);
@@ -78,7 +77,7 @@ namespace SiliFish.ModelUnits
         }
         public double getStimulus(int t, Random rand)
         {
-            int t_ms = (int)(t * SwimmingModel.dt);
+            int t_ms = (int)(t * RunParam.dt);
             if (!TimeSpan_ms.IsActive(t_ms))
                 return 0;
             if (!initialized)

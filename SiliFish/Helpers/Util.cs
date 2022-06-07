@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -11,8 +12,6 @@ namespace SiliFish.Helpers
 {
     public class Util
     {
-        public static string OutputFolder = @"C:\Master\Bui\SiliFish.Studio\Output\";
-
         //https://stackoverflow.com/questions/69664644/serialize-deserialize-system-drawing-color-with-system-text-json
         public class ColorJsonConverter : JsonConverter<Color>
         {
@@ -72,22 +71,17 @@ namespace SiliFish.Helpers
 
         public static void SaveToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
-            //check for input accuracy - a file name and Time array need to be provided
-            //the number of data_lists needs to be twice as the number of cell_names: for left and right
             if (filename == null || Time == null || Values == null)
-            {
                 return;
-            }
 
-            using FileStream fs = File.Open(Util.OutputFolder + filename, FileMode.Create, FileAccess.Write);
+            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
             using StreamWriter sw = new(fs);
             sw.WriteLine("Time," + string.Join(',', Values.Keys));
 
             for (int t = 0; t < Time.Length; t++)
             {
-                string row = Time[t].ToString();
-                foreach (string colname in Values.Keys)
-                    row += "," + Values[colname][t].ToString();
+                string row = Time[t].ToString() + ',' +
+                    string.Join(',', Values.Select(item => item.Value[t]));
                 sw.WriteLine(row);
             }
         }

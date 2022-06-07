@@ -10,7 +10,7 @@ using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
 {
-    internal class ThreeDModelGenerator : VisualsGenerator
+    public class ThreeDModelGenerator : VisualsGenerator
     {
         bool SingleDimension = false;
         double XYZMult;
@@ -94,11 +94,16 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string Create3DModel(string filename, string title, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem)
+
+        //gap and chem are obsolete if singlePanel = false
+        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem)
         {
             StringBuilder html = singlePanel? new(ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")):
                     new(ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
-            
+
+            string filename = saveFile ? model.ModelName + "Model.html" : "";
+            string title = model.ModelName + " 3D Model";
+
             html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
             if (Util.CheckOnlineStatus())
             {

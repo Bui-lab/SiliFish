@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace SiliFish.Services
 {
-    internal class VisualsGenerator
+    public class VisualsGenerator
     {
         public string ReadEmbeddedResource(string resource)
         {

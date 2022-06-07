@@ -29,7 +29,7 @@ namespace SiliFish.UI.Controls
             cell.Parameters = dgDynamics.ReadFromGrid();
 
             decimal dt = edt.Value;
-            SwimmingModel.dt = (double)dt;
+            RunParam.dt = (double)dt;
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
@@ -37,7 +37,7 @@ namespace SiliFish.UI.Controls
             double[] t = new double[plotEnd];
             double val = (double)eInput.Value;
             foreach (int i in Enumerable.Range(0, plotEnd))
-                t[i] = i * SwimmingModel.dt;
+                t[i] = i * RunParam.dt;
             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                 I[i] = val;
             eInstanceParams.Text = Cell.GetInstanceParams();

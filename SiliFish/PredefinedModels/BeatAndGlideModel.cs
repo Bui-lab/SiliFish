@@ -8,8 +8,6 @@ namespace SiliFish.PredefinedModels
 {
     public class BeatAndGlideModel : PredefinedModel
     {
-        protected override string Name { get { return "BeatGlide"; } }
-
         protected int nMN = 15, ndI6 = 15, nV0v = 15, nV2a = 15, nV1 = 15, nMuscle = 15;
         protected CellPool L_MN, R_MN, L_dI6, R_dI6, L_V0v, R_V0v, L_V2a, R_V2a, L_V1, R_V1;
         protected CellPool L_Muscle, R_Muscle;
@@ -147,7 +145,9 @@ namespace SiliFish.PredefinedModels
             L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
             R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
 
-            Stimulus stim = new(stim_mode, this.tshutoff, -1, stim_value1, stim_value2);
+            TimeLine tl = new();
+            tl.AddTimeRange(this.tshutoff);
+            Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
 
             for (int i = 0; i < nV2a; i++)
             {

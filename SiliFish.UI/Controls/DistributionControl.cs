@@ -33,7 +33,7 @@ namespace SiliFish.UI.Controls
         }
         private void ddDistribution_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddDistribution.Text == "Constant" || ddDistribution.Text == "Uniform" || ddDistribution.SelectedIndex <= -1)
+            if (ddDistribution.Text == "Constant" || ddDistribution.Text == "Uniform" || ddDistribution.Text == "None" || ddDistribution.SelectedIndex <= -1)
             {
                 pOptions.Visible = false;
             }
@@ -50,12 +50,21 @@ namespace SiliFish.UI.Controls
                 lRangeSeparator.Visible = false;
                 eRangeEnd.Visible = false;
                 lRange.Text = "Value";
+                lRange.Visible = true;
+                eRangeStart.Visible = true;
+            }
+            else if (ddDistribution.Text == "None")
+            {
+                lRangeSeparator.Visible = false;
+                eRangeStart.Visible = eRangeEnd.Visible = false;
+                lRange.Visible = false;
             }
             else
             {
                 lRangeSeparator.Visible = true;
-                eRangeEnd.Visible = true;
+                eRangeStart.Visible = eRangeEnd.Visible = true;
                 lRange.Text = "Range";
+                lRange.Visible = true;
             }
         }
 
@@ -98,6 +107,9 @@ namespace SiliFish.UI.Controls
 
         public Distribution GetDistribution()
         {
+            string mode = ddDistribution.Text;
+            if (mode == "None") 
+                return null;
             bool absolute = rbAbsolute.Checked;
             if (!double.TryParse(eRangeStart.Text, out double start))
                 start = 0;
@@ -107,7 +119,6 @@ namespace SiliFish.UI.Controls
             if (Angular && end > 180) end = 180;
             else if (!Angular && !absolute && end > 100) end = 100;
 
-            string mode = ddDistribution.Text;
             switch (mode)
             {
                 case "Constant":

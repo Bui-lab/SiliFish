@@ -20,6 +20,21 @@ namespace SiliFish.Services
             html.Replace("__PERCENT_HEIGHT__", (100 / numRows).ToString());
             html.Replace("__COLUMNS__", numColumns.ToString());
         }
+        private string PlotCharts(string filename, string title, List<string> charts, int numColumns)
+        {
+            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.html"));
+
+            if (numColumns <= 0) numColumns = 1;
+
+            html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
+
+            SetPlotDimensions(html, numColumns, charts.Count);
+            html.Replace("__CHARTS__", string.Join("\r\n", charts));
+
+            if (!string.IsNullOrEmpty(filename))
+                File.WriteAllText(filename, html.ToString());
+            return html.ToString();
+        }
 
         #region Plot Stimuli
         private string CreateStimulusDataPoint(Cell cell, double t, int timeInd)
@@ -30,7 +45,7 @@ namespace SiliFish.Services
         private string CreateStimuliSeries(int chartindex, Cell cell, double[] Time, int tstart, int tend, string color, ref byte opacity, byte dec)
         {
             StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", cell.Name.Replace("\"", "\\\""));
+            series.Replace("__SERIES_NAME__", cell.ID.Replace("\"", "\\\""));
             series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + cell.Sequence.ToString());
             series.Replace("__SERIES_COLOR__", color);
             series.Replace("__SERIES_OPACITY__", opacity.ToString());
@@ -59,36 +74,28 @@ namespace SiliFish.Services
         //One chart per pool
         public string CreateStimuliMultiPlot(string filename, string title, List<CellPool> cellPools, double[] Time, int tstart, int tend, int numColumns = 1, int nSample = 0)
         {
-            List<Cell> cells = new();
-
+            int chartindex = 0;
+            List<string> charts = new();
             foreach (CellPool pool in cellPools)
             {
-                cells.AddRange(pool.GetCells(nSample).ToList());
+                List<Cell> cells = pool.GetCells(nSample).ToList();
+                string color = pool.Color.ToRGB();
+                charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, color));
             }
-            return CreateStimuliMultiPlot(filename, title, cells, Time, tstart, tend, numColumns);
+            return PlotCharts(filename, title, charts, numColumns);
         }
 
         //One chart per cell
         public string CreateStimuliMultiPlot(string filename, string title, List<Cell> cells, double[] Time, int tstart, int tend, int numColumns = 1)
         {
-            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.html"));
-
-            if (numColumns <= 0) numColumns = 1;
-
-            html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             int chartindex = 0;
             List<string> charts = new();
             foreach (Cell cell in cells)
             {
                 string color = cell.CellPool.Color.ToRGB();
-                charts.Add(CreateStimuliSubPlot(chartindex++, cell.Name, new List<Cell>() { cell }, Time, tstart, tend, color));
+                charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, color));
             }
-            html.Replace("__CHARTS__", string.Join("\r\n", charts));
-            SetPlotDimensions(html, numColumns, cells.Count);
-
-            if (!string.IsNullOrEmpty(filename))
-                File.WriteAllText(filename, html.ToString());
-            return html.ToString();
+            return PlotCharts(filename, title, charts, numColumns);
         }
 
         #endregion
@@ -102,7 +109,7 @@ namespace SiliFish.Services
         private string CreatePotentialSeries(int chartindex, Cell cell, double[] Time, int tstart, int tend, string color, ref byte opacity, byte dec)
         {
             StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", cell.Name.Replace("\"", "\\\""));
+            series.Replace("__SERIES_NAME__", cell.ID.Replace("\"", "\\\""));
             series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + cell.Sequence.ToString());
             series.Replace("__SERIES_COLOR__", color);
             series.Replace("__SERIES_OPACITY__", opacity.ToString());
@@ -128,39 +135,34 @@ namespace SiliFish.Services
             return chart.ToString();
         }
 
+        
         //One chart per pool
-        public string CreatePotentialsMultiPlot(string filename, string title, List<CellPool> cellPools, double[] Time, int tstart, int tend, int numColumns = 1, int nSample = 0)
+        public string CreatePotentialsMultiPlot(string filename, string title, List<CellPool> cellPools, 
+            double[] Time, int tstart, int tend, int numColumns = 1, int nSample = 0)
         {
-            List<Cell> cells = new();
-
+            int chartindex = 0;
+            List<string> charts = new();
             foreach (CellPool pool in cellPools)
             {
-                cells.AddRange(pool.GetCells(nSample).ToList());
+                List<Cell> cells = pool.GetCells(nSample).ToList();
+                string color = pool.Color.ToRGB();
+                charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, color));
             }
-            return CreatePotentialsMultiPlot(filename, title, cells, Time, tstart, tend, numColumns);
+            return PlotCharts(filename, title, charts, numColumns);
         }
 
         //One chart per cell
-        public string CreatePotentialsMultiPlot(string filename, string title, List<Cell> cells, double[] Time, int tstart, int tend, int numColumns = 1)
+        public string CreatePotentialsMultiPlot(string filename, string title, List<Cell> cells, 
+            double[] Time, int tstart, int tend, int numColumns = 1)
         {
-            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.html"));
-
-            if (numColumns <= 0) numColumns = 1;
-
-            html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             int chartindex = 0;
             List<string> charts = new();
             foreach (Cell cell in cells)
             {
                 string color = cell.CellPool.Color.ToRGB();
-                charts.Add(CreatePotentialsSubPlot(chartindex++, cell.Name, new List<Cell>() { cell }, Time, tstart, tend, color));
+                charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, color));
             }
-            html.Replace("__CHARTS__", string.Join("\r\n", charts));
-            SetPlotDimensions(html, numColumns, cells.Count);
-
-            if (!string.IsNullOrEmpty(filename))
-                File.WriteAllText(filename, html.ToString());
-            return html.ToString();
+            return PlotCharts(filename, title, charts, numColumns);
         }
 
         #endregion
@@ -180,7 +182,7 @@ namespace SiliFish.Services
         private string CreateIOGapCurrentSeries(int chartindex, int seriesindex, GapJunction jnc, double[] Time, int tstart, int tend, string color, byte opacity, bool incoming)
         {
             StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", jnc.Cell1.Name.Replace("\"", "\\\""));
+            series.Replace("__SERIES_NAME__", jnc.Cell1.ID.Replace("\"", "\\\""));
             series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + seriesindex.ToString());
             series.Replace("__SERIES_COLOR__", color);
             series.Replace("__SERIES_OPACITY__", opacity.ToString());
@@ -193,7 +195,7 @@ namespace SiliFish.Services
         private string CreateCurrentSeries(int chartindex, int seriesindex, ChemicalSynapse jnc, double[] Time, int tstart, int tend, string color, byte opacity)
         {
             StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", jnc.PreNeuron.Name.Replace("\"", "\\\""));
+            series.Replace("__SERIES_NAME__", jnc.PreNeuron.ID.Replace("\"", "\\\""));
             series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + seriesindex.ToString());
             series.Replace("__SERIES_COLOR__", color);
             series.Replace("__SERIES_OPACITY__", opacity.ToString());
@@ -203,7 +205,7 @@ namespace SiliFish.Services
             return series.ToString();
         }
 
-        private string CreateCurrentsSubPlot(int chartindex, string chartTitle, Cell cell, double[] Time, int tstart, int tend, bool includeGap, bool includeChem)
+        private string CreateCurrentsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, bool includeGap, bool includeChem)
         {
             StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Chart.js"));
             chart.Replace("__CHART_INDEX__", chartindex.ToString());
@@ -211,46 +213,49 @@ namespace SiliFish.Services
             chart.Replace("__X_END__", Time[tend].ToString("0.##"));
             byte a = (byte)255;
 
-            (double minWeight, double maxWeight) = cell.GetConnectionRange();
+            (double minWeight, double maxWeight) = cells.Max(c => c.GetConnectionRange());
             double mult = (maxWeight - minWeight) / 55;
             string series = "";
             int seriesindex = 0;
-            if (cell is Neuron neuron)
+            foreach (Cell cell in cells)
             {
-                if (includeGap)
+                if (cell is Neuron neuron)
                 {
-                    foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
+                    if (includeGap)
                     {
-                        a = (byte)((jnc.Conductance - minWeight) * mult + 200);
-                        string color = jnc.Cell1.CellPool.Color.ToRGB();
-                        series += CreateIOGapCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a, incoming: true);
+                        foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
+                        {
+                            a = (byte)((jnc.Conductance - minWeight) * mult + 200);
+                            string color = jnc.Cell1.CellPool.Color.ToRGB();
+                            series += CreateIOGapCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a, incoming: true);
+                        }
+                        foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
+                        {
+                            a = (byte)((jnc.Conductance - minWeight) * mult + 200);
+                            string color = jnc.Cell2.CellPool.Color.ToRGB();
+                            series += CreateIOGapCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a, incoming: false);
+                        }
                     }
-                    foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
+                    if (includeChem)
                     {
-                        a = (byte)((jnc.Conductance - minWeight) * mult + 200);
-                        string color = jnc.Cell2.CellPool.Color.ToRGB();
-                        series += CreateIOGapCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a, incoming: false);
+                        foreach (ChemicalSynapse jnc in neuron.Synapses)
+                        {
+                            a = (byte)((jnc.Conductance - minWeight) * mult + 200);
+                            string color = jnc.PreNeuron.CellPool.Color.ToRGB();
+                            series += CreateCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a);
+                        }
                     }
                 }
-                if (includeChem)
+                else if (cell is MuscleCell muscle)
                 {
-                    foreach (ChemicalSynapse jnc in neuron.Synapses)
+                    if (includeChem)
                     {
-                        a = (byte)((jnc.Conductance - minWeight) * mult + 200);
-                        string color = jnc.PreNeuron.CellPool.Color.ToRGB();
-                        series += CreateCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a);
-                    }
-                }
-            }
-            else if (cell is MuscleCell muscle)
-            {
-                if (includeChem)
-                {
-                    foreach (ChemicalSynapse jnc in muscle.EndPlates)
-                    {
-                        a = (byte)((jnc.Conductance - minWeight) * mult + 200);
-                        string color = jnc.PreNeuron.CellPool.Color.ToRGB();
-                        series += CreateCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a);
+                        foreach (ChemicalSynapse jnc in muscle.EndPlates)
+                        {
+                            a = (byte)((jnc.Conductance - minWeight) * mult + 200);
+                            string color = jnc.PreNeuron.CellPool.Color.ToRGB();
+                            series += CreateCurrentSeries(chartindex, seriesindex++, jnc, Time, tstart, tend, color, a);
+                        }
                     }
                 }
             }
@@ -261,40 +266,30 @@ namespace SiliFish.Services
         }
 
 
-        //One chart per cell within each pool
+        //One chart per pool
         public string CreateCurrentsMultiPlot(string filename, string title, List<CellPool> cellPools, double[] Time, int tstart, int tend, 
             int numColumns = 1, bool includeGap = true, bool includeChem = true, int nSample = 0)
         {
-            List<Cell> cells = new();
-
+            int chartindex = 0;
+            List<string> charts = new();
             foreach (CellPool pool in cellPools)
             {
-                cells.AddRange(pool.GetCells(nSample).ToList());
+                List<Cell> cells = pool.GetCells(nSample).ToList();
+                charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, includeGap, includeChem));
             }
-            return CreateCurrentsMultiPlot(filename, title, cells, Time, tstart, tend, numColumns, includeGap, includeChem);
+            return PlotCharts(filename, title, charts, numColumns); 
         }
 
         //One chart per cell
         public string CreateCurrentsMultiPlot(string filename, string title, List<Cell> cells, double[] Time, int tstart, int tend, int numColumns = 1, bool includeGap = true, bool includeChem = true)
         {
-            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.html"));
-
-            if (numColumns <= 0) numColumns = 1;
-
-            html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             int chartindex = 0;
             List<string> charts = new();
-
             foreach (Cell cell in cells)
             {
-                charts.Add(CreateCurrentsSubPlot(chartindex++, cell.Name, cell, Time, tstart, tend, includeGap, includeChem));
+                charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, includeGap, includeChem));
             }
-            html.Replace("__CHARTS__", string.Join("\r\n", charts));
-            SetPlotDimensions(html, numColumns, cells.Count);
-
-            if (!string.IsNullOrEmpty(filename))
-                File.WriteAllText(filename, html.ToString());
-            return html.ToString();
+            return PlotCharts(filename, title, charts, numColumns);
         }
 
 

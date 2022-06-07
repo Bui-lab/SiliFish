@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
@@ -55,6 +56,7 @@ namespace SiliFish.ModelUnits
                 _ConductionVelocity = value is JsonElement element ? Distribution.GetOfDerivedType(element.GetRawText()) : (Distribution)value;
             }
         }
+        [JsonIgnore]
         public string Position
         {
             get
@@ -72,8 +74,10 @@ namespace SiliFish.ModelUnits
             return CellGroup + (Active ? "" : " (inactive)");
         }
 
+        [JsonIgnore]
         public override string Distinguisher { get { return CellGroup; } }
-        
+
+        [JsonIgnore]
         public override string Tooltip
         {
             get

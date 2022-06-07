@@ -10,7 +10,7 @@ using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
 {
-    internal class TwoDModelGenerator : VisualsGenerator
+    public class TwoDModelGenerator : VisualsGenerator
     {
         double XMult, YMult;
         double XMin, YMin;
@@ -28,11 +28,12 @@ namespace SiliFish.Services
             ;
             return link;
         }
+
         private (double, double) GetNewCoordinates(CellPool pool)
         {
             (double r1, _) = pool.XRange();
             double newX = (r1 - XMin) * XMult - XOffset;
-            r1 = pool.PositionLeftRight == SagittalPlane.Left ? -1 * pool.columnIndex2D : pool.columnIndex2D;
+            r1 = pool.PositionLeftRight == SagittalPlane.Left ? pool.columnIndex2D : -1 * pool.columnIndex2D;
             double newY = r1 * YMult - YOffset; // (r1 - YMin) * YMult - YOffset;
             return (newX, newY);
         }
@@ -47,9 +48,11 @@ namespace SiliFish.Services
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 
-
-        public string Create2DModel(string filename, string title, SwimmingModel model, List<CellPool> pools)
+        public string Create2DModel(bool saveFile, SwimmingModel model, List<CellPool> pools)
         {
+            string filename = saveFile ? model.ModelName + "Model.html" : "";
+            string title = model.ModelName + " 2D Model";
+
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.2DModel.html"));
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
@@ -78,7 +81,7 @@ namespace SiliFish.Services
             int width = 400;
             XMult = 2 * width / range;
             YMult = width / range;
-            XOffset = width;
+            XOffset = width / 4;
             YOffset = 0;
 
             (_, WeightMax) = model.GetConnectionRange();
@@ -89,11 +92,11 @@ namespace SiliFish.Services
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
 
             List<string> gapLinks = new();
-            model.GetGapPoolConnections.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
+            model.GapPoolConnections.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> chemLinks = new();
-            model.GetChemPoolConnections.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
+            model.ChemPoolConnections.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> colors = new();
@@ -109,6 +112,7 @@ namespace SiliFish.Services
                 File.WriteAllText(filename, html.ToString());
             return html.ToString();
         }
+
     }
 }
 
