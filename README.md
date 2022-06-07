@@ -9,7 +9,7 @@ Developed by Emine Topcu @ Bui Lab, University of Ottawa, 2022
 ## Custom Model Components
 The custom model allows you to define cell pools, connections between cell pools and stimuli.
 
-![](Notes\Snapshots\CustomComponents.png)
+![](Snapshots\CustomComponents.png)
 
 
 
@@ -17,7 +17,7 @@ The custom model allows you to define cell pools, connections between cell pools
 
 A cell pool consists of a specific number of cells. The cells can be spatially laid out in many ways by configuring the x, y, and z coordinates. Similarly, their intrinsic properties can be defined as distributions (Gaussian, uniform, etc.) rather than unique numbers. A timeline can also be defined to limit the active times of the cells in a cell pool.
 
-![](Notes\Snapshots\CellPool.png)![](Notes\Snapshots\CellpoolDynamic.png)
+![](Snapshots\CellPool.png)![](Notes\Snapshots\CellpoolDynamic.png)
 
 Within the current version of SiliFish, cells can be neurons or muscle cells. Neurons are modelled as Izhikevich Simple Cells (Dynamical Systems in Neuroscience, p. 272). Muscle cells follow a basic RC model.
 
