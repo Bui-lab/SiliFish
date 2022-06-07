@@ -44,6 +44,7 @@ namespace SiliFish.UI.Controls
             this.pXAxis = new System.Windows.Forms.Panel();
             this.lXAxis = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
+            this.ddSelection = new System.Windows.Forms.ComboBox();
             this.ddNeuronClass = new System.Windows.Forms.ComboBox();
             this.lNeuronClass = new System.Windows.Forms.Label();
             this.lDescription = new System.Windows.Forms.Label();
@@ -71,6 +72,7 @@ namespace SiliFish.UI.Controls
             this.tabCellPool = new System.Windows.Forms.TabControl();
             this.tSpatialDist = new System.Windows.Forms.TabPage();
             this.tDynamics = new System.Windows.Forms.TabPage();
+            this.dgDynamics = new SiliFish.UI.Controls.DistributionDataGrid();
             this.grConductionVelocity = new System.Windows.Forms.GroupBox();
             this.distConductionVelocity = new SiliFish.UI.Controls.DistributionControl();
             this.pDynamicsTops = new System.Windows.Forms.Panel();
@@ -80,7 +82,6 @@ namespace SiliFish.UI.Controls
             this.linkClearTimeline = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.dgDynamics = new Controls.DistributionDataGrid();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
@@ -193,7 +194,7 @@ namespace SiliFish.UI.Controls
             // 
             this.pZAxis.Controls.Add(this.lZAxis);
             this.pZAxis.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pZAxis.Location = new System.Drawing.Point(0, 392);
+            this.pZAxis.Location = new System.Drawing.Point(0, 340);
             this.pZAxis.Margin = new System.Windows.Forms.Padding(0);
             this.pZAxis.Name = "pZAxis";
             this.pZAxis.Size = new System.Drawing.Size(211, 30);
@@ -231,6 +232,7 @@ namespace SiliFish.UI.Controls
             // pMain
             // 
             this.pMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pMain.Controls.Add(this.ddSelection);
             this.pMain.Controls.Add(this.ddNeuronClass);
             this.pMain.Controls.Add(this.lNeuronClass);
             this.pMain.Controls.Add(this.lDescription);
@@ -255,6 +257,15 @@ namespace SiliFish.UI.Controls
             this.pMain.Name = "pMain";
             this.pMain.Size = new System.Drawing.Size(261, 723);
             this.pMain.TabIndex = 0;
+            // 
+            // ddSelection
+            // 
+            this.ddSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddSelection.FormattingEnabled = true;
+            this.ddSelection.Location = new System.Drawing.Point(183, 196);
+            this.ddSelection.Name = "ddSelection";
+            this.ddSelection.Size = new System.Drawing.Size(75, 23);
+            this.ddSelection.TabIndex = 29;
             // 
             // ddNeuronClass
             // 
@@ -427,7 +438,7 @@ namespace SiliFish.UI.Controls
             this.distributionX.Location = new System.Drawing.Point(3, 33);
             this.distributionX.MinimumSize = new System.Drawing.Size(204, 0);
             this.distributionX.Name = "distributionX";
-            this.distributionX.Size = new System.Drawing.Size(211, 117);
+            this.distributionX.Size = new System.Drawing.Size(211, 91);
             this.distributionX.TabIndex = 0;
             // 
             // groupBox1
@@ -437,7 +448,7 @@ namespace SiliFish.UI.Controls
             this.groupBox1.Controls.Add(this.ddSagittalPosition);
             this.groupBox1.Controls.Add(this.lSagittalPosition);
             this.flowLayoutPanel1.SetFlowBreak(this.groupBox1, true);
-            this.groupBox1.Location = new System.Drawing.Point(3, 156);
+            this.groupBox1.Location = new System.Drawing.Point(3, 130);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(211, 80);
             this.groupBox1.TabIndex = 22;
@@ -471,7 +482,7 @@ namespace SiliFish.UI.Controls
             // 
             this.panel1.Controls.Add(this.lYAxis);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 239);
+            this.panel1.Location = new System.Drawing.Point(0, 213);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(211, 30);
@@ -495,10 +506,10 @@ namespace SiliFish.UI.Controls
             this.distributionY.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.distributionY.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel1.SetFlowBreak(this.distributionY, true);
-            this.distributionY.Location = new System.Drawing.Point(3, 272);
+            this.distributionY.Location = new System.Drawing.Point(3, 246);
             this.distributionY.MinimumSize = new System.Drawing.Size(204, 0);
             this.distributionY.Name = "distributionY";
-            this.distributionY.Size = new System.Drawing.Size(211, 117);
+            this.distributionY.Size = new System.Drawing.Size(211, 91);
             this.distributionY.TabIndex = 1;
             // 
             // distributionZ
@@ -509,10 +520,10 @@ namespace SiliFish.UI.Controls
             this.distributionZ.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.distributionZ.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel1.SetFlowBreak(this.distributionZ, true);
-            this.distributionZ.Location = new System.Drawing.Point(3, 425);
+            this.distributionZ.Location = new System.Drawing.Point(3, 373);
             this.distributionZ.MinimumSize = new System.Drawing.Size(204, 0);
             this.distributionZ.Name = "distributionZ";
-            this.distributionZ.Size = new System.Drawing.Size(211, 117);
+            this.distributionZ.Size = new System.Drawing.Size(211, 91);
             this.distributionZ.TabIndex = 2;
             // 
             // tabCellPool
@@ -551,6 +562,17 @@ namespace SiliFish.UI.Controls
             this.tDynamics.Text = "Dynamics";
             this.tDynamics.UseVisualStyleBackColor = true;
             // 
+            // dgDynamics
+            // 
+            this.dgDynamics.AutoSize = true;
+            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgDynamics.Location = new System.Drawing.Point(3, 146);
+            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
+            this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.Size = new System.Drawing.Size(321, 546);
+            this.dgDynamics.TabIndex = 3;
+            // 
             // grConductionVelocity
             // 
             this.grConductionVelocity.AutoSize = true;
@@ -558,7 +580,7 @@ namespace SiliFish.UI.Controls
             this.grConductionVelocity.Dock = System.Windows.Forms.DockStyle.Top;
             this.grConductionVelocity.Location = new System.Drawing.Point(3, 33);
             this.grConductionVelocity.Name = "grConductionVelocity";
-            this.grConductionVelocity.Size = new System.Drawing.Size(321, 139);
+            this.grConductionVelocity.Size = new System.Drawing.Size(321, 113);
             this.grConductionVelocity.TabIndex = 2;
             this.grConductionVelocity.TabStop = false;
             this.grConductionVelocity.Text = "ConductionVelocity";
@@ -573,7 +595,7 @@ namespace SiliFish.UI.Controls
             this.distConductionVelocity.Location = new System.Drawing.Point(3, 19);
             this.distConductionVelocity.MinimumSize = new System.Drawing.Size(204, 0);
             this.distConductionVelocity.Name = "distConductionVelocity";
-            this.distConductionVelocity.Size = new System.Drawing.Size(315, 117);
+            this.distConductionVelocity.Size = new System.Drawing.Size(315, 91);
             this.distConductionVelocity.TabIndex = 0;
             // 
             // pDynamicsTops
@@ -645,17 +667,6 @@ namespace SiliFish.UI.Controls
             this.splitMain.Size = new System.Drawing.Size(600, 723);
             this.splitMain.SplitterDistance = 261;
             this.splitMain.TabIndex = 16;
-            // 
-            // distributionDataGrid1
-            // 
-            this.dgDynamics.AutoSize = true;
-            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgDynamics.Location = new System.Drawing.Point(3, 172);
-            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
-            this.dgDynamics.Name = "distributionDataGrid1";
-            this.dgDynamics.Size = new System.Drawing.Size(321, 520);
-            this.dgDynamics.TabIndex = 3;
             // 
             // CellPoolControl
             // 
@@ -752,5 +763,6 @@ namespace SiliFish.UI.Controls
         private Label lDescription;
         private TextBox eDescription;
         private Controls.DistributionDataGrid dgDynamics;
+        private ComboBox ddSelection;
     }
 }

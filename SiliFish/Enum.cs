@@ -3,6 +3,8 @@
     public enum CellType { Neuron, MuscleCell }
     public enum BodyLocation { SpinalCord, Body}
 
+    public enum CountingMode { PerSomite, Total }
+
     public enum FrontalPlane { NotSet, Dorsal, Ventral }
     public enum TransversePlane { NotSet, Anterior, Central, Posterior }
     public enum SagittalPlane { NotSet, Left, Right, Both }

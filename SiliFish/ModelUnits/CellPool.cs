@@ -106,14 +106,16 @@ namespace SiliFish.ModelUnits
             }
             return (minWeight, maxWeight);
         }
-        private Coordinate[] GetCoordinates(int n)
+        private Coordinate[] GetCoordinates(int n, int somite = -1)
         {
             if (n <= 0) return null;
             Coordinate[] coordinates = new Coordinate[n];
             Distribution.Random = SwimmingModel.rand;
 
-            //TODO use body location 
-            double dist = Model.SpinalRostralCaudalDistance;
+            double dist = somite <= 0 ? Model.SpinalRostralCaudalDistance :
+                Model.SpinalRostralCaudalDistance / Model.NumberOfSomites;
+            double x_offset = somite > 0 ?
+                (somite - 1) * Model.SpinalRostralCaudalDistance / Model.NumberOfSomites : 0;
             double[] x = XDistribution?.GenerateNNumbers(n, dist) ?? Distribution.GenerateNRandomNumbers(n, dist);
             double[] y = new double[n];
             double[] z = new double[n];
@@ -145,7 +147,7 @@ namespace SiliFish.ModelUnits
 
             foreach (int i in Enumerable.Range(0, n))
             {
-                coordinates[i].X = x[i];
+                coordinates[i].X = x[i] + x_offset;
                 coordinates[i].Y = y[i];
                 coordinates[i].Z = z[i] + z_offset;
             }
@@ -190,19 +192,28 @@ namespace SiliFish.ModelUnits
             Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution).CreateCopy();
             Y_AngleDistribution.ReviewYDistribution(leftright);
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
-            Coordinate[] coordinates = GetCoordinates(n);
 
-            double[] cv = template.ConductionVelocity != null ?
-                ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, null):
-                Enumerable.Repeat(Model.cv, n).ToArray();
-            
-            foreach (int i in Enumerable.Range(0, n))
+            List<int> somites;
+            if (template.PerSomiteOrTotal== CountingMode.PerSomite)
+                somites = Enumerable.Range(0, Model.NumberOfSomites).ToList();
+            else somites = new List<int>() { -1 };
+
+            foreach (int somite in somites)
             {
-                Cell cell = neuron ? new Neuron(template, i, cv[i]) :
-                    new MuscleCell(template, i);
-                cell.PositionLeftRight = leftright;
-                cell.coordinate = coordinates[i];
-                AddCell(cell);
+                Coordinate[] coordinates = GetCoordinates(n, somite);
+
+                double[] cv = template.ConductionVelocity != null ?
+                    ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, null) :
+                    Enumerable.Repeat(Model.cv, n).ToArray();
+
+                foreach (int i in Enumerable.Range(0, n))
+                {
+                    Cell cell = neuron ? new Neuron(template, somite, i, cv[i]) :
+                        new MuscleCell(template, somite, i);
+                    cell.PositionLeftRight = leftright;
+                    cell.coordinate = coordinates[i];
+                    AddCell(cell);
+                }
             }
         }
 

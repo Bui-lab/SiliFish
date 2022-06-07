@@ -27,10 +27,6 @@ namespace SiliFish.UI.Controls
             ddDistribution.SelectedIndex = 2;
             rbAbsolute.Checked = true;
         }
-
-        public void SetAbsoluteOnly() 
-        { 
-        }
         private void ddDistribution_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddDistribution.Text == "Constant" || ddDistribution.Text == "Uniform" || ddDistribution.Text == "None" || ddDistribution.SelectedIndex <= -1)

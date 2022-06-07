@@ -8,6 +8,15 @@ namespace SiliFish.Extensions
 {
     public static class DictionaryExtensions
     {
+        public static int ReadInteger(this Dictionary<string, object> dictionary, string key, int defaultValue = default)
+        {
+            try
+            {
+                return Convert.ToInt32(Read(dictionary, key, defaultValue));
+            }
+            catch { return defaultValue; }
+        }
+
         public static double ReadDouble(this Dictionary<string, object> dictionary, string key, double defaultValue = default)
         {
             try

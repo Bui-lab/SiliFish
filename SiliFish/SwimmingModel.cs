@@ -32,6 +32,11 @@ namespace SiliFish
         protected double E_gaba = -70; //the reversal potential of GABA
         protected double E_ach = 120; //reversal potential for ACh receptors
 
+        public double khi = 3.0; //#damping constant , high khi =0.5/ low = 0.1
+        public double w0 = 2.5; //20Hz = 125.6
+        public double alpha = 0.1;
+
+
         public static Random rand = new(0);
 
         private string modelName;
@@ -43,6 +48,8 @@ namespace SiliFish
         public double SpinalBodyPosition { get; set; }
         public double BodyMedialLateralDistance{ get; set; }
         public double BodyDorsalVentralDistance { get; set; }
+
+        public int NumberOfSomites { get; set; } = 15;
 
         private int iProgress = 0;
         private int iMax = 1;
@@ -140,9 +147,13 @@ namespace SiliFish
             paramDict.Add("Dynamic.E_glu", E_glu);
             paramDict.Add("Dynamic.E_gly", E_gly);
             paramDict.Add("Dynamic.E_gaba", E_gaba);
+            paramDict.Add("Dynamic.DampingCoef", khi);
+            paramDict.Add("Dynamic.w0", w0);
+            paramDict.Add("Dynamic.ConversionCoef", alpha);
 
             paramDict.Add("General.Name", ModelName);
             paramDict.Add("General.Description", ModelDescription);
+            paramDict.Add("General.NumberOfSomites", NumberOfSomites);
             paramDict.Add("General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance);
             paramDict.Add("General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance);
             paramDict.Add("General.SpinalMedialLateralDistance", SpinalMedialLateralDistance);
@@ -160,9 +171,13 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
+            paramDict.AddObject("Dynamic.DampingCoef", khi, skipIfExists: true);
+            paramDict.AddObject("Dynamic.w0", w0, skipIfExists: true);
+            paramDict.AddObject("Dynamic.ConversionCoef", alpha, skipIfExists: true);
 
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
             paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
+            paramDict.AddObject("General.NumberOfSomites", NumberOfSomites, skipIfExists: true);
             paramDict.AddObject("General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance, skipIfExists: true);
             paramDict.AddObject("General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance, skipIfExists: true);
             paramDict.AddObject("General.SpinalMedialLateralDistance", SpinalMedialLateralDistance, skipIfExists: true);
@@ -181,9 +196,13 @@ namespace SiliFish
             E_glu = paramExternal.Read("Dynamic.E_glu", E_glu);
             E_gly = paramExternal.Read("Dynamic.E_gly", E_gly);
             E_gaba = paramExternal.Read("Dynamic.E_gaba", E_gaba);
+            khi = paramExternal.Read("Dynamic.DampingCoef", khi);
+            w0 = paramExternal.Read("Dynamic.w0", w0);
+            alpha = paramExternal.Read("Dynamic.ConversionCoef", alpha);
 
             ModelName = paramExternal.Read("General.Name", ModelName);
             ModelDescription = paramExternal.Read("General.Description", ModelDescription);
+            NumberOfSomites = paramExternal.ReadInteger("General.NumberOfSomites");
             SpinalRostralCaudalDistance = paramExternal.ReadDouble("General.SpinalRostralCaudalDistance");
             SpinalDorsalVentralDistance = paramExternal.ReadDouble("General.SpinalDorsalVentralDistance");
             SpinalMedialLateralDistance = paramExternal.ReadDouble("General.SpinalMedialLateralDistance");

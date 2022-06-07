@@ -11,6 +11,7 @@ namespace SiliFish.ModelUnits
         public CellPool CellPool;
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
+        public int Somite { get; set; }
         public Stimulus Stimulus = null;
         public FrontalPlane PositionDorsalVentral = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior = TransversePlane.NotSet;
@@ -43,7 +44,15 @@ namespace SiliFish.ModelUnits
         }
 
         public string Name { get { return CellGroup + "_" + Sequence.ToString(); } set { } }
-        public string ID { get { return Position + "_" + CellGroup + "_" + Sequence.ToString(); } set { } }
+        public string ID
+        {
+            get
+            {
+                string s = Somite >= 0 ? "_" + Somite.ToString() : "";
+                return $"{Position}_{CellGroup}{s}_{Sequence}";
+            }
+            set { }
+        }
         public string Position
         {
             get
@@ -91,9 +100,10 @@ namespace SiliFish.ModelUnits
         /// <summary>
         /// Used as a template
         /// </summary>
-        public Neuron(string group, int seq, double cv, TimeLine timeline = null)
+        public Neuron(string group, int somite, int seq, double cv, TimeLine timeline = null)
         {
             CellGroup = group;
+            Somite = somite;
             Sequence = seq;
             Core = new Izhikevich_9P(null, 0, 0);
             GapJunctions = new List<GapJunction>();
@@ -102,8 +112,8 @@ namespace SiliFish.ModelUnits
             TimeLine = timeline;
             ConductionVelocity = cv;
         }
-        public Neuron(CellPoolTemplate cellTemp, int seq, double cv)
-            :this(cellTemp.CellGroup, seq, cv, cellTemp.TimeLine)
+        public Neuron(CellPoolTemplate cellTemp, int somite, int seq, double cv)
+            :this(cellTemp.CellGroup, somite, seq, cv, cellTemp.TimeLine)
         {
             Parameters = cellTemp.Parameters;            
         }
@@ -217,16 +227,17 @@ namespace SiliFish.ModelUnits
         /// Used as a template
         /// </summary>
 
-        public MuscleCell(string group, int seq, TimeLine timeline = null)
+        public MuscleCell(string group, int somite, int seq, TimeLine timeline = null)
         {
             CellGroup = group;
+            Somite = somite;
             Sequence = seq;
             Core = new Leaky_Integrator(0, 0, 0);
             EndPlates = new List<ChemicalSynapse>();
             TimeLine = timeline;
         }
-        public MuscleCell(CellPoolTemplate cellTemp, int seq)
-            : this(cellTemp.CellGroup, seq, cellTemp.TimeLine)
+        public MuscleCell(CellPoolTemplate cellTemp, int somite, int seq)
+            : this(cellTemp.CellGroup, somite, seq, cellTemp.TimeLine)
         {
             Parameters = cellTemp.Parameters;
         }

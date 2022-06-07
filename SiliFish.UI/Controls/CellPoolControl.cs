@@ -46,6 +46,7 @@ namespace SiliFish.UI.Controls
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddBodyLocation.DataSource = Enum.GetNames(typeof(BodyLocation));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
+            ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
         }
 
         private Cell GetCell()
@@ -56,9 +57,9 @@ namespace SiliFish.UI.Controls
                 ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, null)[0] :
                 0;
             if (cellType == CellType.Neuron)
-                cell= new Neuron("", 0, cv);
+                cell = new Neuron("", 0, 0, cv);
             else if (cellType == CellType.MuscleCell)
-                cell = new MuscleCell("", 0);
+                cell = new MuscleCell("", 0, 0);
             cell.Parameters = GridToParamDict();
             return cell;
         }
@@ -131,7 +132,8 @@ namespace SiliFish.UI.Controls
             poolTemplate.Description = eDescription.Text;
             poolTemplate.PositionLeftRight = sagPlane;
             poolTemplate.ColumnIndex2D = (int)e2DColumn.Value;
-            poolTemplate.NumOfCells = (int)eNumOfCells.Value;            
+            poolTemplate.NumOfCells = (int)eNumOfCells.Value;
+            poolTemplate.PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), ddSelection.Text);
             poolTemplate.XDistribution = distributionX.GetDistribution();
             poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
@@ -166,6 +168,7 @@ namespace SiliFish.UI.Controls
                 ddSagittalPosition.Text = "Right";
             e2DColumn.Value = poolTemplate.ColumnIndex2D;
             eNumOfCells.Value = poolTemplate.NumOfCells;
+            ddSelection.Text = poolTemplate.PerSomiteOrTotal.ToString();
             btnColor.BackColor = poolTemplate.Color;
 
             distributionX.SetDistribution((Distribution)poolTemplate.XDistribution);

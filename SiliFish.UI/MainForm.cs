@@ -158,14 +158,11 @@ namespace SiliFish.UI
             eModelName.Text = paramDict.Read("General.Name", "");
             eModelDescription.Text = paramDict.Read("General.Description", "");
 
-            decimal d = (decimal)paramDict.ReadDouble("General.SpinalRostralCaudalDistance");
-            eSpinalRostraoCaudal.Value = d;
+            eSpinalRostraoCaudal.Value = (decimal)paramDict.ReadDouble("General.SpinalRostralCaudalDistance");
+            eSpinalDorsalVentral.Value = (decimal)paramDict.ReadDouble("General.SpinalDorsalVentralDistance");
 
-            d = (decimal)paramDict.ReadDouble("General.SpinalDorsalVentralDistance");
-            eSpinalDorsalVentral.Value = d;
-
-            d = (decimal)paramDict.ReadDouble("General.SpinalMedialLateralDistance");
-            eSpinalMedialLateral.Value = d;
+            eSpinalMedialLateral.Value = (decimal)paramDict.ReadDouble("General.SpinalMedialLateralDistance");
+            eNumSomites.Value = (decimal)paramDict.ReadInteger("General.NumberOfSomites");
 
             eSpinalBodyPosition.Value = (decimal)paramDict.ReadDouble("General.SpinalBodyPosition");
 
@@ -242,6 +239,7 @@ namespace SiliFish.UI
         {
             paramDict.Add("General.Name", eModelName.Text);
             paramDict.Add("General.Description", eModelDescription.Text);
+            paramDict.Add("General.NumberOfSomites", eNumSomites.Value);
             paramDict.Add("General.SpinalRostralCaudalDistance", eSpinalRostraoCaudal.Value);
             paramDict.Add("General.SpinalDorsalVentralDistance", eSpinalDorsalVentral.Value);
             paramDict.Add("General.SpinalMedialLateralDistance", eSpinalMedialLateral.Value);
@@ -519,7 +517,7 @@ namespace SiliFish.UI
             timerRun.Enabled = true;
 
             tRunEnd = (int) eTimeEnd.Value;
-            tRunSkip = (int)eSkip.Value;
+            tRunSkip = (int) eSkip.Value;
 
             if (rbCustom.Checked)
             {
@@ -935,12 +933,12 @@ namespace SiliFish.UI
                     tPlotEnd = 1000;
                 if (tPlotEnd > tRunEnd)
                     tPlotEnd = tRunEnd;
-                tPlotStart *= 10;
-                tPlotEnd *= 10;
+                int iPlotStart = (int)((tPlotStart+ Model.runParam.tSkip)/ RunParam.dt);
+                int iPlotEnd = (int)((tPlotEnd + Model.runParam.tSkip) / RunParam.dt);
                 string plotType = ddPlotWindows.Text;
 
-                List<Image> leftImages = new List<Image>();
-                List<Image> rightImages = new List<Image>();
+                List<Image> leftImages = new();
+                List<Image> rightImages = new();
 
                 List<CellPool> pools = Model.CellPools.Where(cp => cp.CellGroup == ddCellPoolsWindows.Text).ToList();
                 if (plotType == "Memb. Potentials")
@@ -955,9 +953,9 @@ namespace SiliFish.UI
 
                         Color col = pool.Color;
                         if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreatePlotImage("Left" + pool.CellGroup, voltageArray, Model.TimeArray, tPlotStart, tPlotEnd, col));
+                            leftImages.Add(UtilWindows.CreatePlotImage("Left" + pool.CellGroup, voltageArray, Model.TimeArray, iPlotStart, iPlotEnd, col));
                         else
-                            rightImages.Add(UtilWindows.CreatePlotImage("Right" + pool.CellGroup, voltageArray, Model.TimeArray, tPlotStart, tPlotEnd, col));
+                            rightImages.Add(UtilWindows.CreatePlotImage("Right" + pool.CellGroup, voltageArray, Model.TimeArray, iPlotStart, iPlotEnd, col));
                     }
                 }
                 else if (plotType == "Gap Currents")
@@ -981,9 +979,9 @@ namespace SiliFish.UI
                                 AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
                             }
                             if (pool.PositionLeftRight == SagittalPlane.Left)
-                                leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                                leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                             else
-                                rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                                rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                         }
                     }
                 }
@@ -1012,9 +1010,9 @@ namespace SiliFish.UI
                                 }
                             }
                             if (pool.PositionLeftRight == SagittalPlane.Left)
-                                leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                                leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                             else
-                                rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                                rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                         }
                     }
                 }
@@ -1026,9 +1024,9 @@ namespace SiliFish.UI
                         foreach (Cell c in pool.GetCells(nSample))
                         {
                             if (pool.PositionLeftRight == SagittalPlane.Left)
-                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID, c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, tPlotStart, tPlotEnd, col));
+                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID, c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
                             else
-                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID, c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, tPlotStart, tPlotEnd, col));
+                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID, c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
                         }
                     }
                 }
@@ -1043,13 +1041,13 @@ namespace SiliFish.UI
                         {
                             if (pool.PositionLeftRight == SagittalPlane.Left)
                             {
-                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID + " Memb. Potential", c.V, Model.TimeArray, tPlotStart, tPlotEnd, col));
-                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID + " Stimulus", c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, tPlotStart, tPlotEnd, col));
+                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID + " Memb. Potential", c.V, Model.TimeArray, iPlotStart, iPlotEnd, col));
+                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID + " Stimulus", c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
                             }
                             else
                             {
-                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID + " Memb. Potential", c.V, Model.TimeArray, tPlotStart, tPlotEnd, col));
-                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID + " Stimulus", c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, tPlotStart, tPlotEnd, col));
+                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID + " Memb. Potential", c.V, Model.TimeArray, iPlotStart, iPlotEnd, col));
+                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID + " Stimulus", c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
                             }
                         }
                         Dictionary<string, Color> colors = new();
@@ -1071,9 +1069,9 @@ namespace SiliFish.UI
                             }
                         }
                         if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Syn. Currents", colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Syn. Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                         else
-                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Syn. Currents", colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Syn. Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
 
                         if (c is not Neuron neuron2) continue;
                         AffarentCurrents.Clear();
@@ -1089,9 +1087,9 @@ namespace SiliFish.UI
                             AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
                         }
                         if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Gap Currents", colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Gap Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                         else
-                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Gap Currents", colors, AffarentCurrents, tPlotStart, tPlotEnd, Model.TimeArray));
+                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Gap Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
                     }
                 }
                 leftImages.RemoveAll(img => img == null);

@@ -68,6 +68,7 @@
             // 
             // ddDistribution
             // 
+            this.ddDistribution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddDistribution.FormattingEnabled = true;
             this.ddDistribution.Items.AddRange(new object[] {
             "None",

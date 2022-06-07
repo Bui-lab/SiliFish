@@ -103,12 +103,12 @@ namespace SiliFish.Services
             double[,] vel = new double[nMuscle, nmax];
             double[,] angle = new double[nMuscle, nmax];
             // Setting constants and initial values for vel. and pos.
-            double khi = 3.0; //#damping constant , high khi =0.5/ low = 0.1
-            double w0 = 2.5; //20Hz = 125.6
+            double khi = model.khi;
+            double w0 = model.w0;
             double vel0 = 0.0;
             double angle0 = 0.0;
             double dt = RunParam.dt;
-            double alpha = 0.1;
+            double alpha = model.alpha;
             //Wd = w0
             int k = 0;
 

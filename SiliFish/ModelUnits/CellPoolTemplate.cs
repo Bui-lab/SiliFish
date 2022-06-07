@@ -19,6 +19,7 @@ namespace SiliFish.ModelUnits
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.NotSet;
         public int ColumnIndex2D { get; set; }
         public int NumOfCells { get; set; } = 1;
+        public CountingMode PerSomiteOrTotal { get; set; } = CountingMode.Total;
 
         private SpatialDistribution SpatialDistribution = new();
 
@@ -84,12 +85,13 @@ namespace SiliFish.ModelUnits
             {
                 string ntmode = CellType == CellType.Neuron && NTMode != NeuronClass.NotSet ?
                     $"Neurotransmitter: {NTMode}\r\n" : "";
+                string persomite = PerSomiteOrTotal == CountingMode.PerSomite ? "//somite" : "";
                 return $"{CellGroup}\r\n" +
                     $"{Description}\r\n" +
                     $"{ntmode}" +
                     $"Location: {BodyLocation}\r\n" +
                     $"Position: {Position}\r\n" +
-                    $"# of cells: {NumOfCells}\r\n" +
+                    $"# of cells: {NumOfCells}{persomite}\r\n" +
                     $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
                     $"TimeLine: {TimeLine}\r\n" +
                     $"Active: {Active}";
@@ -118,6 +120,7 @@ namespace SiliFish.ModelUnits
             PositionLeftRight = cpl.PositionLeftRight;
             ColumnIndex2D = cpl.ColumnIndex2D;
             NumOfCells = cpl.NumOfCells;
+            PerSomiteOrTotal = cpl.PerSomiteOrTotal;
             SpatialDistribution = new SpatialDistribution(cpl.SpatialDistribution);
             _ConductionVelocity = cpl._ConductionVelocity?.CreateCopy();
             TimeLine = new TimeLine(cpl.TimeLine);
