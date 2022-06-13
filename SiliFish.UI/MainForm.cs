@@ -9,6 +9,7 @@ using SiliFish.DataTypes;
 using SiliFish.Services;
 using SiliFish.UI.Extensions;
 using Services;
+using Microsoft.Web.WebView2.WinForms;
 
 namespace SiliFish.UI
 {
@@ -582,22 +583,42 @@ namespace SiliFish.UI
         {
             webViewPlot.Tag= true;
         }
-        private void webView2DModel_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        private void webView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
         {
-            webView2DModel.Tag = true;
+            (sender as Control).Tag = true;
         }
-        private void webView3DModel_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
-        {
-            webView3DModel.Tag = true;
-        }
-        private void webViewAnimation_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
-        {
-            webViewAnimation.Tag = true;
-        }
-
         private void WarningMessage(string s)
         {
             MessageBox.Show(s);
+        }
+
+        private void RegenerateWebview(WebView2 webView)
+        {
+            if (webView == null) return;
+            string name = webView.Name;
+            Control parent = webView.Parent;
+                parent.Controls.Remove(webView);
+                try { webView.Dispose(); }
+                catch { }
+            
+            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
+
+            ((System.ComponentModel.ISupportInitialize)(webView)).BeginInit();
+            webView.AllowExternalDrop = true;
+            webView.CreationProperties = null;
+            webView.DefaultBackgroundColor = System.Drawing.Color.White;
+            webView.Dock = System.Windows.Forms.DockStyle.Fill;
+            webView.Location = new System.Drawing.Point(0, 30);
+            webView.Name = name;
+            webView.Size = new System.Drawing.Size(622, 481);
+            webView.TabIndex = 1;
+            webView.ZoomFactor = 1D;
+            webView.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
+
+            ((System.ComponentModel.ISupportInitialize)(webView)).EndInit();
+            parent.Controls.Add(webView);
+            webView.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+
         }
         private void CoreWebView2_ProcessFailed(object sender, CoreWebView2ProcessFailedEventArgs e)
         {
@@ -614,8 +635,8 @@ namespace SiliFish.UI
                     while (File.Exists(target))
                         target = Path.Combine(tempFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
-                    Invoke(WarningMessage, new[] { "There was a problem with displaying the html file. It is saved as " + target + "."});
-                    //TODO: exits the program without any exception
+                    RegenerateWebview(sender as WebView2);
+                    Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
                 }
             }
             catch { }
@@ -667,10 +688,8 @@ namespace SiliFish.UI
         {
             if (Model == null || !Model.ModelRun) return;
 
-            if (!int.TryParse(eAnimationStart.Text, out int tAnimStart))
-                tAnimStart = 0;
-            if (!int.TryParse(eAnimationEnd.Text, out int tAnimEnd))
-                tAnimEnd = 1000;
+            int tAnimStart = (int)eAnimationStart.Value;
+            int tAnimEnd = (int)eAnimationEnd.Value;
             if (tAnimEnd > tRunEnd)
                 tAnimEnd = tRunEnd;
 
@@ -867,10 +886,8 @@ namespace SiliFish.UI
         private void btnPlot_Click(object sender, EventArgs e)
         {
             if (Model == null || !Model.ModelRun) return;
-            if (!int.TryParse(ePlotStart.Text, out tPlotStart))
-                tPlotStart = 0;
-            if (!int.TryParse(ePlotEnd.Text, out tPlotEnd))
-                tPlotEnd = 1000;
+            int tPlotStart = (int)ePlotStart.Value;
+            int tPlotEnd = (int)ePlotEnd.Value;
             if (tPlotEnd > tRunEnd)
                 tPlotEnd = tRunEnd;
             PlotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
@@ -902,10 +919,8 @@ namespace SiliFish.UI
             {
                 if (Model == null) return;
 
-                if (!int.TryParse(ePlotWindowsStart.Text, out tPlotStart))
-                    tPlotStart = 0;
-                if (!int.TryParse(ePlotWindowsEnd.Text, out tPlotEnd))
-                    tPlotEnd = 1000;
+                int tPlotStart = (int)ePlotWindowsStart.Value;
+                int tPlotEnd = (int)ePlotWindowsEnd.Value;
                 if (tPlotEnd > tRunEnd)
                     tPlotEnd = tRunEnd;
 
@@ -1386,7 +1401,25 @@ namespace SiliFish.UI
             about.ShowDialog();
         }
 
-
+        private void eTimeEnd_ValueChanged(object sender, EventArgs e)
+        {
+            if (lastEnteredTime != null)
+            {
+                int newValue = (int)eTimeEnd.Value;
+                if ((int)ePlotWindowsEnd.Value == lastEnteredTime)
+                    ePlotWindowsEnd.Value = newValue;
+                if ((int)ePlotEnd.Value == lastEnteredTime)
+                    ePlotEnd.Value = newValue;
+                if ((int)eAnimationEnd.Value == lastEnteredTime)
+                    eAnimationEnd.Value = newValue;
+                lastEnteredTime = newValue;
+            }
+        }
+        int? lastEnteredTime;
+        private void eTimeEnd_Enter(object sender, EventArgs e)
+        {
+            lastEnteredTime = (int)eTimeEnd.Value;
+        }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
