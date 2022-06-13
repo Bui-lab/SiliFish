@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Reflection;
 
 namespace SiliFish.UI
 {
     public partial class About : Form
     {
+        //TODO find last compile time
+        static DateTime dateUI = new(2022, 6, 13);
+        static DateTime dateEngine = new(2022, 6, 13);
         public About()
         {
             InitializeComponent();
-        }
 
-        public void SetTimer(int ms)
+            Version versionUI = Assembly.GetExecutingAssembly().GetName().Version;
+            lVersionWindows.Text = $"Version: {versionUI}";
+            lBuiltOn.Text = $"Built on {dateUI:d}";
+            //Version versionEngine = typeof(SwimmingModel).Assembly.GetName().Version;
+            //lVersionEngine.Text = string.Format("Engine version: {0}.{1}, built on {2}", versionEngine.Major, versionEngine.Minor, dateEngine.ToString("d"));
+        }
+            public void SetTimer(int ms)
         {
             timerAbout.Interval = ms;
             timerAbout.Enabled = true;

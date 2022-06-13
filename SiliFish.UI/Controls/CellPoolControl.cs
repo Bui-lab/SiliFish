@@ -9,9 +9,6 @@ namespace SiliFish.UI.Controls
 {
     public partial class CellPoolControl : UserControl
     {
-        private event EventHandler nameChanged;
-        public event EventHandler NameChanged { add => nameChanged += value; remove => nameChanged -= value; }
-
         private event EventHandler savePool;
         public event EventHandler SavePool{ add => savePool+= value; remove => savePool-= value; }
 
@@ -54,7 +51,7 @@ namespace SiliFish.UI.Controls
             CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
             Cell cell = null;
             double cv = poolTemplate.ConductionVelocity != null ?
-                ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, null)[0] :
+                ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, 0)[0] :
                 0;
             if (cellType == CellType.Neuron)
                 cell = new Neuron("", 0, 0, cv);
@@ -93,7 +90,6 @@ namespace SiliFish.UI.Controls
 
         private void eGroupName_TextChanged(object sender, EventArgs e)
         {
-            nameChanged?.Invoke(this, new EventArgs());
             if (poolTemplate != null)
                 poolTemplate.CellGroup = eGroupName.Text;
         }
@@ -113,7 +109,7 @@ namespace SiliFish.UI.Controls
             if (savePool == null) return;
             ReadDataFromControl();
             JSONString = Util.CreateJSONFromObject(poolTemplate);
-            savePool.Invoke(this, new EventArgs());
+            savePool.Invoke(this, new EventArgs()) ;
         }
 
         private void ReadDataFromControl()
@@ -137,9 +133,9 @@ namespace SiliFish.UI.Controls
             poolTemplate.XDistribution = distributionX.GetDistribution();
             poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
-            poolTemplate.CellType = (CellType) Enum.Parse(typeof(CellType), ddCellType.Text);
-            poolTemplate.NTMode=(NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
-            poolTemplate.BodyLocation = (BodyLocation) Enum.Parse(typeof(BodyLocation), ddBodyLocation.Text);
+            poolTemplate.CellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
+            poolTemplate.NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
+            poolTemplate.BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyLocation.Text);
             poolTemplate.Parameters = GridToParamDict();
             poolTemplate.Color = btnColor.BackColor;
             poolTemplate.Active = cbActive.Checked;

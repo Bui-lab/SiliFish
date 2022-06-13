@@ -7,6 +7,8 @@ using SiliFish.PredefinedModels;
 using SiliFish.UI.Controls;
 using SiliFish.DataTypes;
 using SiliFish.Services;
+using SiliFish.UI.Extensions;
+using Services;
 
 namespace SiliFish.UI
 {
@@ -25,13 +27,14 @@ namespace SiliFish.UI
         SwimmingModelTemplate ModelTemplate = new();
         string AnimationHTML = "";
         string PlotHTML = "";
-        string PlotType = "";
         string PlotSubset = "";
         int tPlotStart = 0;
         int tPlotEnd = 0;
         int tRunEnd = 0;
         int tRunSkip = 0;
-        PlotExtend plotExtend = PlotExtend.FullModel;
+        PlotType PlotType = PlotType.MembPotential;
+        PlotExtend plotExtendHTML = PlotExtend.FullModel;
+        PlotExtend plotExtendWindows = PlotExtend.FullModel;
         string tempFolder, tempFile;
         string lastSavedCustomModelJSON;
         Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams;
@@ -46,7 +49,7 @@ namespace SiliFish.UI
                 Wait();
                 rbCustom.Checked = true;
                 splitWindows.SplitterDistance = splitWindows.Width / 2;
-                tempFolder = Path.GetTempPath() + "\\SiliFish";
+                tempFolder = Path.GetTempPath() + "SiliFish";
                 if (!Directory.Exists(tempFolder))
                     Directory.CreateDirectory(tempFolder);
                 else
@@ -62,6 +65,8 @@ namespace SiliFish.UI
                 listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
                 listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
                 listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
+                ddPlotWindows.DataSource = Enum.GetNames(typeof(PlotType));
+                ddPlotHTML.DataSource = Enum.GetNames(typeof(PlotType));
             }
             catch (Exception ex)
             {
@@ -172,7 +177,7 @@ namespace SiliFish.UI
         private void WriteParams(Dictionary<string, object> ParamDict)
         {
             if (ParamDict == null) return;
-            this.Text = $"Silifish {Model.ModelName}";
+            this.Text = $"SiliFish {Model.ModelName}";
             Model?.FillMissingParameters(ParamDict);
             Model?.SetParameters(ParamDict);
 
@@ -320,7 +325,7 @@ namespace SiliFish.UI
             LoadModelTemplatePools();
             LoadModelTemplateInterPools();
             LoadModelTemplateStimuli();
-            this.Text = $"Silifish {ModelTemplate.ModelName}";
+            this.Text = $"SiliFish {ModelTemplate.ModelName}";
         }
         private void ReadModelTemplatePools(bool includeHidden)
         {
@@ -398,7 +403,7 @@ namespace SiliFish.UI
                         //To make sure deactivated items are saved, even though not displayed
                         //Show all
                         Util.SaveToJSON(saveFileJson.FileName, ReadModelTemplate(includeHidden: true));
-                        this.Text = $"Silifish {ModelTemplate.ModelName}";
+                        this.Text = $"SiliFish {ModelTemplate.ModelName}";
                         lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
                     else
@@ -455,7 +460,9 @@ namespace SiliFish.UI
                     }
                 }
             }
-            catch { }
+            catch {
+                throw (new Exception());
+            }
             finally {
                 tabParams.Visible = true;
             }
@@ -488,14 +495,14 @@ namespace SiliFish.UI
             btnRun.Enabled = true;
             modifiedJncs = modifiedPools = false;
 
-            if (ddPlot.SelectedIndex < 0)
-                ddPlot.SelectedIndex = 0;
+            if (ddPlotHTML.SelectedIndex < 0)
+                ddPlotHTML.SelectedIndex = 0;
             btnPlot.Enabled = true;
             btnAnimate.Enabled = true;
             linkSaveRun.Visible = true;
 
-            ddCellPoolsWindows.Items.Clear();
-            ddCellPoolsWindows.Items.AddRange(Model?.CellPools.Select(cp=>cp.CellGroup).Distinct().ToArray());
+            ddCellsPoolsWindows.Items.Clear();
+            ddCellsPoolsWindows.Items.AddRange(Model?.CellPools.Select(cp=>cp.CellGroup).Distinct().ToArray());
 
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
@@ -588,6 +595,10 @@ namespace SiliFish.UI
             webViewAnimation.Tag = true;
         }
 
+        private void WarningMessage(string s)
+        {
+            MessageBox.Show(s);
+        }
         private void CoreWebView2_ProcessFailed(object sender, CoreWebView2ProcessFailedEventArgs e)
         {
             try
@@ -603,8 +614,8 @@ namespace SiliFish.UI
                     while (File.Exists(target))
                         target = Path.Combine(tempFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
+                    Invoke(WarningMessage, new[] { "There was a problem with displaying the html file. It is saved as " + target + "."});
                     //TODO: exits the program without any exception
-                    //MessageBox.Show("There was a problem with displaying the html file. It is saved as " + target + ".");
                 }
             }
             catch { }
@@ -666,15 +677,7 @@ namespace SiliFish.UI
             AnimationGenerator animationGenerator = new();
             AnimationHTML = animationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
 
-            tempFile = "";
-            if (AnimationHTML.Length > 1000000)
-            {
-                tempFile = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
-                File.WriteAllText(tempFile, AnimationHTML.ToString());
-                webViewAnimation.CoreWebView2.Navigate(tempFile);
-            }
-            else
-                webViewAnimation.CoreWebView2.NavigateToString(AnimationHTML);
+            webViewAnimation.NavigateTo(AnimationHTML, tempFolder, ref tempFile);
             linkSaveAnimation.Enabled = true;
         }
 
@@ -711,7 +714,7 @@ namespace SiliFish.UI
             }
             TwoDModelGenerator modelGenerator = new();
             string html = modelGenerator.Create2DModel(false, Model, Model.CellPools);
-            webView2DModel.CoreWebView2.NavigateToString(html);
+            webView2DModel.NavigateTo(html, tempFolder, ref tempFile);
 
         }
         private void btnGenerate2DModel_Click(object sender, EventArgs e)
@@ -747,7 +750,7 @@ namespace SiliFish.UI
             ThreeDModelGenerator threeDModelGenerator = new();
             string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem);
 
-            webView3DModel.CoreWebView2.NavigateToString(html);
+            webView3DModel.NavigateTo(html, tempFolder, ref tempFile);
         }
 
         private void btnGenerate3DModel_Click(object sender, EventArgs e)
@@ -760,146 +763,18 @@ namespace SiliFish.UI
             Generate3DModel();
         }
 
-        #region HTML Plots
 
-        string prevGroup = "";
-        private void ddGrouping_Enter(object sender, EventArgs e)
+        private void PopulateCellTypes(ComboBox ddCellPools, PlotExtend plotExtend)
         {
-            prevGroup = ddGrouping.Text;
-        }
-
-        private void ddGrouping_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (ddGrouping.Text)
-            {
-                case "Full":
-                    plotExtend = PlotExtend.FullModel;
-                    break;
-                case "Individual Cell":
-                    plotExtend = PlotExtend.SingleCell;
-                    break;
-                case "Cells in a Pool":
-                    plotExtend = PlotExtend.CellsInAPool;
-                    break;
-                case "Individual Pool":
-                    plotExtend = PlotExtend.SinglePool;
-                    break;
-                case "Pools on Opposite Sides":
-                    plotExtend = PlotExtend.OppositePools;
-                    break;
-            }
-            if (plotExtend== PlotExtend.SingleCell && !ddPlot.Items.Contains("Full Dynamics"))
-                ddPlot.Items.Add("Full Dynamics");
-            else if (plotExtend != PlotExtend.SingleCell && ddPlot.Items.Contains("Full Dynamics"))
-                ddPlot.Items.Remove("Full Dynamics");
-            if (ddGrouping.Text != prevGroup)
-                ClearPlot();
-            PopulateCellTypes();
-        }
-
-        string prevPool = "";
-        private void ddCellsPools_Enter(object sender, EventArgs e)
-        {
-            prevPool = ddCellsPools.Text;
-        }
-
-        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddCellsPools.Text != prevPool)
-                ClearPlot();
-        }
-
-        string prevPlot = "";
-        private void ddPlot_Enter(object sender, EventArgs e)
-        {
-            prevPlot = ddPlot.Text;
-        }
-
-        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddPlot.Text != prevPlot)
-                ClearPlot();
-        }
-
-        private void CreatePlot()
-        {
-            if (Model == null) return;
-            PlotHTML = "";
-            int nSample = cbSampleHTML.Checked ? (int)nbSample.Value: 0;
-            if (PlotType == "Memb. Potentials")
-            {
-                PlotHTML = Model.PlotMembranePotentials(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
-            }
-            else if (PlotType == "Gap Currents")
-            {
-                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: true, includeChem: false, nSample: nSample);
-            }
-            else if (PlotType == "Syn Currents")
-            {
-                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: false, includeChem: true, nSample: nSample);
-            }
-            else if (PlotType == "Currents")
-            {
-                PlotHTML = Model.PlotCurrents(plotExtend, PlotSubset, tPlotStart, tPlotEnd, includeGap: true, includeChem: true, nSample: nSample);
-            }
-            else if (PlotType == "Stimuli")
-            {
-                PlotHTML = Model.PlotStimuli(plotExtend, PlotSubset, tPlotStart, tPlotEnd, nSample: nSample);
-            }
-            else if (PlotType == "Full Dynamics")//TODO full dynamics
-            {
-                
-            }
-            Invoke(CompleteCreatePlot);
-        }
-        private void btnPlot_Click(object sender, EventArgs e)
-        {
-            if (Model == null || !Model.ModelRun) return;
-            if (!int.TryParse(ePlotStart.Text, out tPlotStart))
-                tPlotStart = 0;
-            if (!int.TryParse(ePlotEnd.Text, out tPlotEnd))
-                tPlotEnd = 1000;
-            if (tPlotEnd > tRunEnd)
-                tPlotEnd = tRunEnd;
-            PlotType = ddPlot.Text;
-            PlotSubset = ddCellsPools.Text;
-
-            tabOutputs.SelectedTab = tabHTMLPlot;
-            UseWaitCursor = true;
-            btnPlot.Enabled = false;
-            Task.Run(CreatePlot);
-        }
-
-        private void ClearPlot()
-        {
-            webViewPlot.CoreWebView2.Navigate("about:blank");
-        }
-        private void CompleteCreatePlot()
-        {
-            tempFile = "";
-            if (PlotHTML.Length > 1000000)
-            {
-                tempFile = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
-                File.WriteAllText(tempFile, PlotHTML.ToString());
-                webViewPlot.CoreWebView2.Navigate(tempFile);
-            }
-            else
-                webViewPlot.CoreWebView2.NavigateToString(PlotHTML);
-            UseWaitCursor = false;
-            btnPlot.Enabled = true;
-        }
-
-        private void PopulateCellTypes()
-        {
-            ddCellsPools.Items.Clear();
-            ddCellsPools.Text = "";
+            ddCellPools.Items.Clear();
+            ddCellPools.Text = "";
             if (Model == null) return;
             if (plotExtend == PlotExtend.FullModel)
             {
-                ddCellsPools.Enabled = false;
+                ddCellPools.Enabled = false;
                 return;
             }
-            ddCellsPools.Enabled = true;
+            ddCellPools.Enabled = true;
             List<string> itemList = new();
             foreach (CellPool pool in Model.CellPools)
             {
@@ -914,232 +789,192 @@ namespace SiliFish.UI
                 }
             }
             itemList.Sort();
-            ddCellsPools.Items.AddRange(itemList.Distinct().ToArray());
-            ddCellsPools.SelectedIndex = 0;
+            ddCellPools.Items.AddRange(itemList.Distinct().ToArray());
+            ddCellPools.SelectedIndex = 0;
         }
+
+        #region HTML Plots
+
+        string prevGroup = "";
+        private void ddGrouping_Enter(object sender, EventArgs e)
+        {
+            prevGroup = ddGroupingHTML.Text;
+        }
+
+        private void ddGroupingHTML_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (ddGroupingHTML.Text)
+            {
+                case "Full":
+                    plotExtendHTML = PlotExtend.FullModel;
+                    break;
+                case "Individual Cell":
+                    plotExtendHTML = PlotExtend.SingleCell;
+                    break;
+                case "Cells in a Pool":
+                    plotExtendHTML = PlotExtend.CellsInAPool;
+                    break;
+                case "Individual Pool":
+                    plotExtendHTML = PlotExtend.SinglePool;
+                    break;
+                case "Pools on Opposite Sides":
+                    plotExtendHTML = PlotExtend.OppositePools;
+                    break;
+            }
+            if (ddGroupingHTML.Text != prevGroup)
+                ClearPlotHTML();
+            PopulateCellTypes(ddCellsPoolsHTML, plotExtendHTML);
+        }
+
+        string prevPool = "";
+        private void ddCellsPools_Enter(object sender, EventArgs e)
+        {
+            prevPool = ddCellsPoolsHTML.Text;
+        }
+
+        private void ddCellsPoolsHTML_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddCellsPoolsHTML.Text != prevPool)
+                ClearPlotHTML();
+            string pool = ddCellsPoolsHTML.Text;
+            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
+            eSampleHTML.Maximum = (decimal) ((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count()) ): 1);
+        }
+
+        PlotType prevPlot;
+        private void ddPlot_Enter(object sender, EventArgs e)
+        {
+            prevPlot = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
+        }
+
+        private void ddPlotHTML_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PlotType selPlot = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
+            if (selPlot!= prevPlot)
+                ClearPlotHTML();
+            toolTip.SetToolTip(ddPlotHTML, selPlot.GetDescription());
+        }
+
+        private void CreatePlotHTML()
+        {
+            if (Model == null) return;
+            PlotHTML = "";
+            int nSample = cbSampleHTML.Checked ? (int)eSampleHTML.Value : -1;
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendHTML, PlotSubset, nSample);
+            PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
+            Invoke(CompleteCreatePlot);
+        }
+        private void btnPlot_Click(object sender, EventArgs e)
+        {
+            if (Model == null || !Model.ModelRun) return;
+            if (!int.TryParse(ePlotStart.Text, out tPlotStart))
+                tPlotStart = 0;
+            if (!int.TryParse(ePlotEnd.Text, out tPlotEnd))
+                tPlotEnd = 1000;
+            if (tPlotEnd > tRunEnd)
+                tPlotEnd = tRunEnd;
+            PlotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
+            PlotSubset = ddCellsPoolsHTML.Text;
+
+            tabOutputs.SelectedTab = tabHTMLPlot;
+            UseWaitCursor = true;
+            btnPlot.Enabled = false;
+            Task.Run(CreatePlotHTML);
+        }
+
+        private void ClearPlotHTML()
+        {
+            webViewPlot.CoreWebView2.Navigate("about:blank");
+        }
+        private void CompleteCreatePlot()
+        {
+            webViewPlot.NavigateTo(PlotHTML, tempFolder, ref tempFile); 
+            UseWaitCursor = false;
+            btnPlot.Enabled = true;
+        }
+
         #endregion
 
         #region Windows Plot
-        private void Plot()
+        private void PlotWindows()
         {
             try
             {
-                if (Model == null)
-                    return;
-                int nSample = cbSample.Checked ? (int)enSample.Value : 0;
+                if (Model == null) return;
+
                 if (!int.TryParse(ePlotWindowsStart.Text, out tPlotStart))
                     tPlotStart = 0;
                 if (!int.TryParse(ePlotWindowsEnd.Text, out tPlotEnd))
                     tPlotEnd = 1000;
                 if (tPlotEnd > tRunEnd)
                     tPlotEnd = tRunEnd;
-                int iPlotStart = (int)((tPlotStart+ Model.runParam.tSkip)/ RunParam.dt);
-                int iPlotEnd = (int)((tPlotEnd + Model.runParam.tSkip) / RunParam.dt);
-                string plotType = ddPlotWindows.Text;
 
-                List<Image> leftImages = new();
-                List<Image> rightImages = new();
+                PlotType plotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotWindows.Text);
+                int nSample = cbSampleWindows.Checked ? (int)eSampleWindows.Value : -1;
+                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendWindows, ddCellsPoolsWindows.Text, nSample);
 
-                List<CellPool> pools = Model.CellPools.Where(cp => cp.CellGroup == ddCellPoolsWindows.Text).ToList();
-                if (plotType == "Memb. Potentials")
-                {
-                    foreach (CellPool pool in pools)
-                    {
-                        List<Cell> cells = pool.GetCells(nSample).ToList();
-                        double[,] voltageArray = new double[cells.Count, Model.MaxIndex];
-                        int i = 0;
-                        foreach (Cell c in cells)
-                            voltageArray.UpdateRow(i++, c.V);
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(plotType, Model.TimeArray, Cells, Pools, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
 
-                        Color col = pool.Color;
-                        if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreatePlotImage("Left" + pool.CellGroup, voltageArray, Model.TimeArray, iPlotStart, iPlotEnd, col));
-                        else
-                            rightImages.Add(UtilWindows.CreatePlotImage("Right" + pool.CellGroup, voltageArray, Model.TimeArray, iPlotStart, iPlotEnd, col));
-                    }
-                }
-                else if (plotType == "Gap Currents")
-                {
-                    foreach (CellPool pool in pools)
-                    {
-                        IEnumerable<Cell> sampleCells = pool.GetCells(nSample);
-                        foreach (Cell c in sampleCells)
-                        {
-                            if (c is not Neuron neuron) continue;
-                            Dictionary<string, Color> colors = new();
-                            Dictionary<string, List<double>> AffarentCurrents = new();
-                            foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == c))
-                            {
-                                colors.Add(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);
-                                AffarentCurrents.AddObject(jnc.Cell1.ID, jnc.InputCurrent.ToList());
-                            }
-                            foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == c))
-                            {
-                                colors.Add(jnc.Cell2.ID, jnc.Cell2.CellPool.Color);
-                                AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
-                            }
-                            if (pool.PositionLeftRight == SagittalPlane.Left)
-                                leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                            else
-                                rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                        }
-                    }
-                }
-                else if (plotType == "Syn Currents")
-                {
-                    foreach (CellPool pool in pools)
-                    {
-                        foreach (Cell c in pool.GetCells(nSample))
-                        {
-                            Dictionary<string, Color> colors = new();
-                            Dictionary<string, List<double>> AffarentCurrents = new();
-                            if (c is Neuron neuron)
-                            {
-                                foreach (ChemicalSynapse jnc in neuron.Synapses)
-                                {
-                                    colors.Add(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
-                                    AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                                }
-                            }
-                            else if (c is MuscleCell muscle)
-                            {
-                                foreach (ChemicalSynapse jnc in muscle.EndPlates)
-                                {
-                                    colors.Add(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
-                                    AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                                }
-                            }
-                            if (pool.PositionLeftRight == SagittalPlane.Left)
-                                leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                            else
-                                rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                        }
-                    }
-                }
-                else if (plotType == "Stimulus")
-                {
-                    foreach (CellPool pool in pools)
-                    {
-                        Color col = pool.Color;
-                        foreach (Cell c in pool.GetCells(nSample))
-                        {
-                            if (pool.PositionLeftRight == SagittalPlane.Left)
-                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID, c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
-                            else
-                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID, c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
-                        }
-                    }
-                }
-                else if (plotType == "Full Dynamics")
-                {
-                    foreach (CellPool pool in pools)
-                    {
-                        Color col = pool.Color; 
-                        nSample = (int)enSample.Value;
-                        Cell c = pool.GetNthCell(nSample);
-                        if (c != null)
-                        {
-                            if (pool.PositionLeftRight == SagittalPlane.Left)
-                            {
-                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID + " Memb. Potential", c.V, Model.TimeArray, iPlotStart, iPlotEnd, col));
-                                leftImages.Add(UtilWindows.CreatePlotImage(c.ID + " Stimulus", c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
-                            }
-                            else
-                            {
-                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID + " Memb. Potential", c.V, Model.TimeArray, iPlotStart, iPlotEnd, col));
-                                rightImages.Add(UtilWindows.CreatePlotImage(c.ID + " Stimulus", c.Stimulus?.getValues(Model.MaxIndex), Model.TimeArray, iPlotStart, iPlotEnd, col));
-                            }
-                        }
-                        Dictionary<string, Color> colors = new();
-                        Dictionary<string, List<double>> AffarentCurrents = new();
-                        if (c is Neuron neuron)
-                        {
-                            foreach (ChemicalSynapse jnc in neuron.Synapses)
-                            {
-                                colors.AddObject(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color, skipIfExists: true);
-                                AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                            }
-                        }
-                        else if (c is MuscleCell muscle)
-                        {
-                            foreach (ChemicalSynapse jnc in muscle.EndPlates)
-                            {
-                                colors.AddObject(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color, skipIfExists: true);
-                                AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                            }
-                        }
-                        if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Syn. Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                        else
-                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Syn. Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
+                leftImages?.RemoveAll(img => img == null);
+                rightImages?.RemoveAll(img => img == null);
 
-                        if (c is not Neuron neuron2) continue;
-                        AffarentCurrents.Clear();
-                        colors.Clear();
-                        foreach (GapJunction jnc in neuron2.GapJunctions.Where(j => j.Cell2 == c))
-                        {
-                            colors.AddObject(jnc.Cell1.ID, jnc.Cell1.CellPool.Color, skipIfExists: true);
-                            AffarentCurrents.AddObject(jnc.Cell1.ID, jnc.InputCurrent.ToList());
-                        }
-                        foreach (GapJunction jnc in neuron2.GapJunctions.Where(j => j.Cell1 == c))
-                        {
-                            colors.AddObject(jnc.Cell2.ID, jnc.Cell2.CellPool.Color, skipIfExists: true);
-                            AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
-                        }
-                        if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Gap Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                        else
-                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID + " Gap Currents", colors, AffarentCurrents, iPlotStart, iPlotEnd, Model.TimeArray));
-                    }
-                }
-                leftImages.RemoveAll(img => img == null);
-                rightImages.RemoveAll(img => img == null);
-
-                int nrow = (int)Math.Ceiling((decimal)leftImages.Count / 2);
-                int ncol = leftImages.Count > 1 ? 2 : 1;
+                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / 2);
+                int ncol = leftImages?.Count > 1 ? 2 : 1;
                 pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                nrow = (int)Math.Ceiling((decimal)rightImages.Count / 2);
-                ncol = rightImages.Count > 1 ? 2 : 1;
+                nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / 2);
+                ncol = rightImages?.Count > 1 ? 2 : 1;
                 pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
             }
             catch (Exception ex)
             {
                 ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
-
         }
         private void btnPlotWindows_Click(object sender, EventArgs e)
         {
-            Plot();
+            PlotWindows();
         }
 
-        private void ddCellPoolsWindows_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddCellsPoolsWindows_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<CellPool> pools = Model.CellPools.Where(cp => cp.CellGroup == ddCellPoolsWindows.Text).ToList();
-            enSample.Maximum = pools.Max(p => p.GetCells().Count());
-            Plot();
+            string pool = ddCellsPoolsWindows.Text;
+            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
+            eSampleWindows.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
+            PlotWindows();
         }
 
         private void ddPlotWindows_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string plotType = ddPlotWindows.Text;
-            if (plotType == "Full Dynamics")
-            {
-                lCellNumber.Visible = true;
-                cbSample.Visible = false;
-                enSample.Visible = true;
-            }
-            else
-            {
-                lCellNumber.Visible = false;
-                cbSample.Visible = true;
-                enSample.Visible = cbSample.Checked;
-            }
-            Plot();
+            PlotType plotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotWindows.Text);
+            toolTip.SetToolTip(ddPlotWindows, plotType.GetDescription());
+
+            PlotWindows();
         }
         private void cbSample_CheckedChanged(object sender, EventArgs e)
         {
-            enSample.Visible = cbSample.Checked;
+            eSampleWindows.Visible = cbSampleWindows.Checked;
+        }
+        private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (ddGroupingWindows.Text)
+            {
+                case "Full":
+                    plotExtendWindows = PlotExtend.FullModel;
+                    break;
+                case "Individual Cell":
+                    plotExtendWindows = PlotExtend.SingleCell;
+                    break;
+                case "Cells in a Pool":
+                    plotExtendWindows = PlotExtend.CellsInAPool;
+                    break;
+                case "Individual Pool":
+                    plotExtendWindows = PlotExtend.SinglePool;
+                    break;
+                case "Pools on Opposite Sides":
+                    plotExtendWindows = PlotExtend.OppositePools;
+                    break;
+            }
+            PopulateCellTypes(ddCellsPoolsWindows, plotExtendWindows);
         }
         #endregion
 
@@ -1236,6 +1071,7 @@ namespace SiliFish.UI
                     ModelTemplate.RenameCellPool(oldName, pool.CellGroup);
                 int ind = listCellPool.SelectedIndex;
                 listCellPool.RefreshItem(ind, pool);
+                LoadModelTemplateInterPools();
                 modifiedPools = true;
             }
         }
@@ -1549,6 +1385,8 @@ namespace SiliFish.UI
             About about = new About();
             about.ShowDialog();
         }
+
+
 
         private void MainForm_Load(object sender, EventArgs e)
         {

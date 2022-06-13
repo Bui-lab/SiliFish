@@ -20,22 +20,7 @@ namespace SiliFish.Services
             html.Replace("__PERCENT_HEIGHT__", (100 / numRows).ToString());
             html.Replace("__COLUMNS__", numColumns.ToString());
         }
-        private string PlotCharts(string filename, string title, List<string> charts, int numColumns)
-        {
-            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.html"));
-
-            if (numColumns <= 0) numColumns = 1;
-
-            html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
-
-            SetPlotDimensions(html, numColumns, charts.Count);
-            html.Replace("__CHARTS__", string.Join("\r\n", charts));
-
-            if (!string.IsNullOrEmpty(filename))
-                File.WriteAllText(filename, html.ToString());
-            return html.ToString();
-        }
-
+        
         #region Plot Stimuli
         private string CreateStimulusDataPoint(Cell cell, double t, int timeInd)
         {
@@ -72,7 +57,7 @@ namespace SiliFish.Services
         }
 
         //One chart per pool
-        public string CreateStimuliMultiPlot(string filename, string title, List<CellPool> cellPools, double[] Time, int tstart, int tend, int numColumns = 1, int nSample = 0)
+        public List<string> CreateStimuliMultiPlot(List<CellPool> cellPools, double[] Time, int tstart, int tend, int nSample = 0)
         {
             int chartindex = 0;
             List<string> charts = new();
@@ -82,11 +67,11 @@ namespace SiliFish.Services
                 string color = pool.Color.ToRGB();
                 charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, color));
             }
-            return PlotCharts(filename, title, charts, numColumns);
+            return charts;
         }
 
         //One chart per cell
-        public string CreateStimuliMultiPlot(string filename, string title, List<Cell> cells, double[] Time, int tstart, int tend, int numColumns = 1)
+        public List<string> CreateStimuliMultiPlot(List<Cell> cells, double[] Time, int tstart, int tend)
         {
             int chartindex = 0;
             List<string> charts = new();
@@ -95,7 +80,7 @@ namespace SiliFish.Services
                 string color = cell.CellPool.Color.ToRGB();
                 charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, color));
             }
-            return PlotCharts(filename, title, charts, numColumns);
+            return charts;
         }
 
         #endregion
@@ -137,8 +122,8 @@ namespace SiliFish.Services
 
         
         //One chart per pool
-        public string CreatePotentialsMultiPlot(string filename, string title, List<CellPool> cellPools, 
-            double[] Time, int tstart, int tend, int numColumns = 1, int nSample = 0)
+        public List<string> CreatePotentialsMultiPlot(List<CellPool> cellPools, 
+            double[] Time, int tstart, int tend, int nSample = 0)
         {
             int chartindex = 0;
             List<string> charts = new();
@@ -148,12 +133,12 @@ namespace SiliFish.Services
                 string color = pool.Color.ToRGB();
                 charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, color));
             }
-            return PlotCharts(filename, title, charts, numColumns);
+            return charts;
         }
 
         //One chart per cell
-        public string CreatePotentialsMultiPlot(string filename, string title, List<Cell> cells, 
-            double[] Time, int tstart, int tend, int numColumns = 1)
+        public List<string> CreatePotentialsMultiPlot(List<Cell> cells, 
+            double[] Time, int tstart, int tend)
         {
             int chartindex = 0;
             List<string> charts = new();
@@ -162,7 +147,7 @@ namespace SiliFish.Services
                 string color = cell.CellPool.Color.ToRGB();
                 charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, color));
             }
-            return PlotCharts(filename, title, charts, numColumns);
+            return charts;
         }
 
         #endregion
@@ -267,8 +252,8 @@ namespace SiliFish.Services
 
 
         //One chart per pool
-        public string CreateCurrentsMultiPlot(string filename, string title, List<CellPool> cellPools, double[] Time, int tstart, int tend, 
-            int numColumns = 1, bool includeGap = true, bool includeChem = true, int nSample = 0)
+        public List<string> CreateCurrentsMultiPlot(List<CellPool> cellPools, double[] Time, int tstart, int tend, 
+            bool includeGap = true, bool includeChem = true, int nSample = 0)
         {
             int chartindex = 0;
             List<string> charts = new();
@@ -277,11 +262,11 @@ namespace SiliFish.Services
                 List<Cell> cells = pool.GetCells(nSample).ToList();
                 charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, includeGap, includeChem));
             }
-            return PlotCharts(filename, title, charts, numColumns); 
+            return charts;
         }
 
         //One chart per cell
-        public string CreateCurrentsMultiPlot(string filename, string title, List<Cell> cells, double[] Time, int tstart, int tend, int numColumns = 1, bool includeGap = true, bool includeChem = true)
+        public List<string> CreateCurrentsMultiPlot(List<Cell> cells, double[] Time, int tstart, int tend, bool includeGap = true, bool includeChem = true)
         {
             int chartindex = 0;
             List<string> charts = new();
@@ -289,11 +274,35 @@ namespace SiliFish.Services
             {
                 charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, includeGap, includeChem));
             }
-            return PlotCharts(filename, title, charts, numColumns);
+            return charts;
         }
 
 
 
         #endregion
+
+        public string PlotCharts(string filename, string title, List<string> charts, int numColumns)
+        {
+            try
+            {
+                StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.html"));
+
+                if (numColumns <= 0) numColumns = 1;
+
+                html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
+
+                SetPlotDimensions(html, numColumns, charts.Count);
+                html.Replace("__CHARTS__", string.Join("\r\n", charts));
+
+                if (!string.IsNullOrEmpty(filename))
+                    File.WriteAllText(filename, html.ToString());
+                return html.ToString();
+            }
+            catch (Exception exc)
+            {
+                return exc.Message;
+            }
+        }
+
     }
 }

@@ -84,9 +84,9 @@ namespace SiliFish.DataTypes
                 Random = new Random();
             return Random.Uniform(0, range, n);
         }
-        public virtual double[] GenerateNNumbers(int n, double? range)
+        public virtual double[] GenerateNNumbers(int n, double range)
         {
-            Range = (double)range;
+            Range = range;
             if (Random == null)
                 Random = new Random();
             return Random.Uniform(LowerLimit, UpperLimit, n);
@@ -143,7 +143,7 @@ namespace SiliFish.DataTypes
             return new Constant_NoDistribution(RangeStart, Angular);
         }
 
-        public override double[] GenerateNNumbers(int n, double? range)
+        public override double[] GenerateNNumbers(int n, double range)
         {
             double[] result = new double[n];
             for (int i = 0; i < n; i++)
@@ -171,10 +171,9 @@ namespace SiliFish.DataTypes
             return new SpacedDistribution(RangeStart, RangeEnd, NoiseStdDev, Absolute, Angular);
         }
 
-        public override double[] GenerateNNumbers(int n, double? range)
+        public override double[] GenerateNNumbers(int n, double range)
         {
-            if (range != null)
-                Range = (double)range;
+            Range = range;
             if (Random == null)
                 Random = new Random();
             return Random.Spaced(LowerLimit, UpperLimit, NoiseStdDev, n);
@@ -214,9 +213,9 @@ namespace SiliFish.DataTypes
         {
             return new GaussianDistribution(RangeStart, RangeEnd, Mean, Stddev, Absolute, Angular);
         }
-        public override double[] GenerateNNumbers(int n, double? range)
+        public override double[] GenerateNNumbers(int n, double range)
         {
-            Range = Absolute ? 100 : double.Parse(range?.ToString() ?? "0");
+            Range = Absolute ? 100 : double.Parse(range.ToString());
             if (Random == null)
                 Random = new Random();
             return Random.Gauss(Mean * Range / 100, Stddev * Range / 100, n, LowerLimit, UpperLimit);
@@ -258,9 +257,9 @@ namespace SiliFish.DataTypes
         {
             return new BimodalDistribution(RangeStart, RangeEnd, Mean, Stddev, Mean2, Stddev2, Mode1Weight, Absolute, Angular);
         }
-        public override double[] GenerateNNumbers(int n, double? range)
+        public override double[] GenerateNNumbers(int n, double range)
         {
-            Range = Absolute ? 100 : double.Parse(range?.ToString() ?? "0");
+            Range = Absolute ? 100 : range;
             if (Random == null)
                 Random = new Random();
             return Random.Bimodal(Mean * Range / 100, Stddev * Range / 100, Mean2 * Range / 100, Stddev2 * Range / 100, Mode1Weight, n, LowerLimit, UpperLimit);

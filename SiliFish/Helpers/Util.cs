@@ -89,8 +89,12 @@ namespace SiliFish.Helpers
         public static bool CheckOnlineStatus()
         {
             using var httpClient = new HttpClient();
-            HttpResponseMessage response = httpClient.Send(new HttpRequestMessage(HttpMethod.Head, "https://unpkg.com/three"));
-            return response.IsSuccessStatusCode;
+            try
+            {
+                HttpResponseMessage response = httpClient.Send(new HttpRequestMessage(HttpMethod.Head, "https://unpkg.com/three"));
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
         }
 
         public static string TimeSpanToString(TimeSpan ts)

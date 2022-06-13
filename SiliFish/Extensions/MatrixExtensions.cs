@@ -81,7 +81,7 @@ namespace SiliFish.Extensions
         {
             if (row < 0 || row >= matrix.GetLength(0))
                 return;
-            if (values.Length != matrix.GetLength(1))
+            if (values?.Length != matrix.GetLength(1))
                 return;
             for (int i = 0; i < values.Length; i++)
                 matrix[row, i] = values[i];

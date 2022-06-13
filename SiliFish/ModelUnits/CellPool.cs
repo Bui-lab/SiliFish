@@ -164,9 +164,9 @@ namespace SiliFish.ModelUnits
             return Cells.FirstOrDefault(c => c.ID == id);
         }
 
-        public IEnumerable<Cell> GetCells(int nSample = 0)
+        public IEnumerable<Cell> GetCells(int nSample = -1)
         {
-            if (nSample <= 0 || Cells.Count <= nSample)
+            if (nSample < 0 || Cells.Count <= nSample)
                 return Cells.AsEnumerable<Cell>();
             List<int> seq = new();
             Random random = new();
@@ -203,7 +203,7 @@ namespace SiliFish.ModelUnits
                 Coordinate[] coordinates = GetCoordinates(n, somite);
 
                 double[] cv = template.ConductionVelocity != null ?
-                    ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, null) :
+                    ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
                     Enumerable.Repeat(Model.cv, n).ToArray();
 
                 foreach (int i in Enumerable.Range(0, n))
