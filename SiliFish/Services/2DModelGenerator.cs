@@ -31,8 +31,8 @@ namespace SiliFish.Services
 
         private (double, double) GetNewCoordinates(CellPool pool)
         {
-            (double r1, _) = pool.XRange();
-            double newX = (r1 - XMin) * XMult - XOffset;
+            double r1 = pool.XAvg();
+            double newX = r1 * XMult - XOffset;
             r1 = pool.PositionLeftRight == SagittalPlane.Left ? pool.columnIndex2D : -1 * pool.columnIndex2D;
             double newY = r1 * YMult - YOffset; // (r1 - YMin) * YMult - YOffset;
             return (newX, newY);
@@ -81,7 +81,7 @@ namespace SiliFish.Services
             int width = 400;
             XMult = 2 * width / range;
             YMult = width / range;
-            XOffset = width / 4;
+            XOffset = width;
             YOffset = 0;
 
             (_, WeightMax) = model.GetConnectionRange();

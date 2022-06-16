@@ -77,11 +77,17 @@ namespace SiliFish.ModelUnits
             Cells = new List<Cell>();
         }
 
+        public virtual double XAvg()
+        {
+            if (Cells == null || Cells.Count == 0) return 0;
+            return Cells.Average(c => c.X);
+        }
         public virtual (double, double) XRange()
         {
             if (Cells == null || Cells.Count == 0) return (999, -999);
             return (Cells.Min(c => c.X), Cells.Max(c => c.X));
         }
+
         public virtual (double, double) YRange()
         {
             if (Cells == null || Cells.Count == 0) return (999, -999);
