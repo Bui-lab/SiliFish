@@ -41,7 +41,6 @@
             "links": [__CHEM_LINKS__]
         };
 
-        const shapeSet = { __SHAPE_SET__ };
         const colorSet = { __COLOR_SET__ };
 
         const spineMaterial = new THREE.LineBasicMaterial({ color: 0x000 });
@@ -56,22 +55,39 @@
         gapGraph.scene().add(spineLineGap);
         chemGraph.scene().add(spineLineChem);
 
+        let hoverNodeGap = null;
 
         const gapDataSet = gapGraph
-            .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+            .nodeColor(n => (hoverNodeGap == null || hoverNodeGap.g == n.g ? colorSet[n.g] : '#EEE'))
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .graphData(gapData)
-            .linkColor(() => '#333')
+                .linkColor(l => hoverNodeGap == null ? '#444' : l.source == hoverNodeGap ? '#F00' : l.target == hoverNodeGap ? '#0F0' : '#FFF')
             .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
+                .onNodeClick(node => {
+                    hoverNodeGap = node;
+                    updateHighlightGap();
+                })
+                .onBackgroundClick(() => {
+                    hoverNodeGap = null;
+                    updateHighlightGap();
+                })
             .enableNodeDrag(false)
             .backgroundColor("#FFF")
             .width(document.body.offsetWidth);
 
+        function updateHighlightGap() {
+            // trigger update of highlighted objects in scene
+            gapGraph
+                .nodeColor(gapGraph.nodeColor())
+                .linkColor(gapGraph.linkColor())
+        }
+
+        let hoverNodeChem = null;
 
         const chemDataSet = chemGraph
-            .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+            .nodeColor(n => (hoverNodeChem == null || hoverNodeChem.g == n.g ? colorSet[n.g] : '#EEE'))
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .graphData(chemData)
             .linkDirectionalArrowRelPos(1)
@@ -80,9 +96,23 @@
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
+                .onNodeClick(node => {
+                    hoverNodeChem = node;
+                    updateHighlightChem();
+                })
+                .onBackgroundClick(() => {
+                    hoverNodeChem = null;
+                    updateHighlightChem();
+                })
             .enableNodeDrag(false)
             .backgroundColor("#FFF")
             .width(document.body.offsetWidth);
+        function updateHighlightChem() {
+            // trigger update of highlighted objects in scene
+            chemGraph
+                .nodeColor(chemGraph.nodeColor())
+                .linkColor(chemGraph.linkColor())
+        }
     </script>
 
 </body>

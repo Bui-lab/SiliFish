@@ -22,7 +22,6 @@
         __OFFLINE_3D_SCRIPT__
     </script>
     <script>
-            const imgs = ['Logo.png'];
             const gapChemGraph = ForceGraph3D()
                 (document.getElementById("3d-graph"));
 
@@ -31,7 +30,6 @@
                 "links": [__GAP_CHEM_LINKS__]
             };
 
-            const shapeSet = { __SHAPE_SET__ };
             const colorSet = { __COLOR_SET__ };
 
             const spineMaterial = new THREE.LineBasicMaterial({ color: 0x000 });
@@ -43,20 +41,34 @@
             const spineLine = new THREE.Line(spineGeometry, spineMaterial);
             gapChemGraph.scene().add(spineLine);
 
-            gapChemGraph.scene().add(imgs);
+
+            let hoverNode = null;
 
             const gapChemDataSet = gapChemGraph
-                .nodeThreeObject(({ g }) => new THREE.Mesh(shapeSet[g], colorSet[g]))
+                .nodeColor(n => (hoverNode == null || hoverNode.g == n.g ? colorSet[n.g] : '#EEE'))
                 .nodeLabel(n => `${n.id} ${n.crd}`)
                 .graphData(gapChemData)
-                .linkColor(() => '#333')
+                .linkColor(l => hoverNode == null ? '#444' : l.source == hoverNode ? '#F00' : l.target == hoverNode ? '#0F0' : '#FFF')
                 .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
                 .linkWidth(l => Math.max(l.value, 0.5))
                 .linkCurvature('curv')
+                .onNodeClick(node => {
+                    hoverNode = node;
+                    updateHighlight();
+                })
+                .onBackgroundClick(() => {
+                    hoverNode = null;
+                    updateHighlight();
+                })
                 .enableNodeDrag(false)
                 .backgroundColor("#FFF");
 
-
+        function updateHighlight() {
+            // trigger update of highlighted objects in scene
+            gapChemGraph
+                .nodeColor(gapChemGraph.nodeColor())
+                .linkColor(gapChemGraph.linkColor())
+        }
     </script>
 
 </body>

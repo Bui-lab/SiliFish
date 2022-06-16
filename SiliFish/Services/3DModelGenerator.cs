@@ -183,15 +183,9 @@ namespace SiliFish.Services
             html.Replace("__SPINE_Z__", newZ.ToString());
             html.Replace("__SPINE_LENGTH__", newX2.ToString());
 
-            
             List<string> colors = new();
-            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": new THREE.MeshBasicMaterial({{color:{pool.Color.ToHex()}}})"));
+            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": \"{pool.Color.ToRGB()}\""));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
-
-            //FUTURE_IMPROVEMENT custom shapes
-            List<string> shapes = new();
-            pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
-            html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
             if (!string.IsNullOrEmpty(filename))
                 File.WriteAllText(filename, html.ToString());

@@ -136,7 +136,11 @@ namespace SiliFish.UI
             linkLoadParam.Text = rbCustom.Checked ? "Load Model" : "Load Parameters";
             lStimulus.Visible = ddStimulusMode.Visible = !rbCustom.Checked;
             if (!rbCustom.Checked)
+            {
+                if (ddStimulusMode.SelectedIndex == -1)
+                    ddStimulusMode.SelectedIndex = 0;
                 return;
+            }
             if (customModel != null)
                 Model = customModel;
             else
