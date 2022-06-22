@@ -81,6 +81,7 @@ namespace SiliFish.PredefinedModels
             E_glu = 0;
             E_gly = -70;
             cv = 0.80;
+            tStimStart = 200;
             CellPool.rangeNoiseMultiplier = GetRangeNoiseMultiplier;
             CellPool.gapWeightNoiseMultiplier = GetGapWeightNoiseMultiplier;
             CellPool.synWeightNoiseMultiplier = GetSynWeightNoiseMultiplier;
@@ -94,6 +95,7 @@ namespace SiliFish.PredefinedModels
             nV2a = nv2a;
             nV1 = nv1;
             nMuscle = nmuscle;
+            initialized = false;
         }
 
         protected double GetXNoise()
@@ -146,7 +148,7 @@ namespace SiliFish.PredefinedModels
             R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
 
             TimeLine tl = new();
-            tl.AddTimeRange(this.tshutoff);
+            tl.AddTimeRange(this.tStimStart);
             Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
 
             for (int i = 0; i < nV2a; i++)
@@ -218,7 +220,7 @@ namespace SiliFish.PredefinedModels
             PoolToPoolGapJunction(R_MN, R_V0v, cr);
 
             TimeLine span = new();
-            span.AddTimeRange(this.tshutoff);
+            span.AddTimeRange(this.tSynStart);
 
             //Ipsilateral glutamatergic projections from V2a to V2a
             SynapseParameters GluSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_glu};
@@ -366,6 +368,7 @@ namespace SiliFish.PredefinedModels
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             base.SetParameters(paramExternal);
+            initialized = false;
 
             ndI6 = paramExternal.Read("CellNum.ndI6", ndI6);
             nV0v = paramExternal.Read("CellNum.nV0v", nV0v);

@@ -88,11 +88,28 @@ namespace SiliFish.ModelUnits
             return (Cells.Min(c => c.X), Cells.Max(c => c.X));
         }
 
+        public virtual double YAvg()
+        {
+            if (Cells == null || Cells.Count == 0) return 0;
+            int mult = 1;
+            if (PositionLeftRight == SagittalPlane.Left)
+                mult = -1;
+            if (columnIndex2D == 0)
+                return mult * Cells.Average(c => Math.Abs(c.Y));
+            return mult * columnIndex2D;
+        }
         public virtual (double, double) YRange()
         {
             if (Cells == null || Cells.Count == 0) return (999, -999);
             return (Cells.Min(c => c.Y), Cells.Max(c => c.Y));
         }
+
+        public virtual double ZAvg()
+        {
+            if (Cells == null || Cells.Count == 0) return 0;
+            return Cells.Average(c => c.Z);
+        }
+
         public virtual (double, double) ZRange()
         {
             if (Cells == null || Cells.Count == 0) return (999, -999);

@@ -12,7 +12,8 @@ namespace SiliFish.PredefinedModels
         protected StimulusMode stim_mode = StimulusMode.Step;
 
         //the currents are shut off to wait for the initial conditions to subside
-        protected int tshutoff = 50; //in ms;
+        protected int tSynStart = 50; //in ms;
+        protected int tStimStart = 0; //in ms;
 
         protected double stim_value1 = 8; //stimulus value if step current, mean value if gaussian, start value if ramp
         protected double stim_value2 = 8; //obselete if step current, SD value if gaussian, end value if ramp
@@ -45,7 +46,8 @@ namespace SiliFish.PredefinedModels
         {
             Dictionary<string, object> paramDict = base.GetParameters();
 
-            paramDict.Add("Dynamic.tshutoff", tshutoff);
+            paramDict.Add("Dynamic.tsynstart", tSynStart);
+            paramDict.Add("Dynamic.tstimstart", tStimStart);
             paramDict.Add("Dynamic.stim_value1", stim_value1);
             paramDict.Add("Dynamic.stim_value2", stim_value2);
             paramDict.Add("Dynamic.sigma_range", sigma_range);
@@ -60,8 +62,9 @@ namespace SiliFish.PredefinedModels
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             base.SetParameters(paramExternal);
-            tshutoff = paramExternal.Read("Dynamic.tshutoff", tshutoff);
-            stim_value1 = paramExternal.Read("Dynamic.stim_value1", stim_value1);
+            tSynStart = paramExternal.Read("Dynamic.tsynstart", tSynStart);
+            tStimStart = paramExternal.Read("Dynamic.tstimstart", tStimStart);
+            stim_value1 = paramExternal.Read("Dynamic.stim_vaue1", stim_value1);
             stim_value2 = paramExternal.Read("Dynamic.stim_value2", stim_value2);
             sigma_range = paramExternal.Read("Dynamic.sigma_range", sigma_range);
             sigma_gap = paramExternal.Read("Dynamic.sigma_gap", sigma_gap);
@@ -78,7 +81,6 @@ namespace SiliFish.PredefinedModels
             this.E_gly = E_gly;
             RunParam.dt = dt;
             this.cv = cv;
-            initialized = false;
         }
 
         public void SetStimulusMode(StimulusMode stimMode)

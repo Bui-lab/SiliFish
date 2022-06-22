@@ -55,6 +55,7 @@ namespace SiliFish.PredefinedModels
             nMN = nmn;
             nV0d = nv0d;
             nMuscle = nmuscle;
+            initialized = false;
         }
         private double GetXNoise()
         {
@@ -66,7 +67,7 @@ namespace SiliFish.PredefinedModels
             L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tl = new();
-            tl.AddTimeRange(this.tshutoff);
+            tl.AddTimeRange(this.tStimStart);
             Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
 
             for (int i = 0; i < nIC; i++)
@@ -149,7 +150,7 @@ namespace SiliFish.PredefinedModels
             PoolToPoolChemSynapse(R_MN, R_Muscle, cr, AChSynapse);
 
             TimeLine span = new();
-            span.AddTimeRange(this.tshutoff);
+            span.AddTimeRange(this.tSynStart);
 
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
@@ -199,6 +200,7 @@ namespace SiliFish.PredefinedModels
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             base.SetParameters(paramExternal);
+            initialized = false;
 
             nIC = paramExternal.Read("CellNum.nIC", nIC);
             nMN = paramExternal.Read("CellNum.nMN", nMN);

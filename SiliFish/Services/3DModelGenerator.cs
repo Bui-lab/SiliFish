@@ -53,7 +53,7 @@ namespace SiliFish.Services
         private string CreateNodeDataPoint(Cell cell)
         {
             (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.columnIndex2D);
-            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"crd\":\"{cell.coordinate.ToString()}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
+            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"crd\":\"{cell.coordinate}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
         }
         private string CreateNodeDataPoints(CellPool pool)
         {
