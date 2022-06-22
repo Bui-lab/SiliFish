@@ -230,7 +230,7 @@
             // 
             // numConductance
             // 
-            this.numConductance.DecimalPlaces = 4;
+            this.numConductance.DecimalPlaces = 6;
             this.numConductance.Increment = new decimal(new int[] {
             1,
             0,

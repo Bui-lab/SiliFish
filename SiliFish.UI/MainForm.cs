@@ -10,6 +10,7 @@ using SiliFish.Services;
 using SiliFish.UI.Extensions;
 using Services;
 using Microsoft.Web.WebView2.WinForms;
+using System.Diagnostics;
 
 namespace SiliFish.UI
 {
@@ -37,6 +38,7 @@ namespace SiliFish.UI
         PlotExtend plotExtendHTML = PlotExtend.FullModel;
         PlotExtend plotExtendWindows = PlotExtend.FullModel;
         string tempFolder, tempFile;
+        string tempOutputFolder;
         string lastSavedCustomModelJSON;
         Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams;
         DateTime runStart;
@@ -51,6 +53,7 @@ namespace SiliFish.UI
                 rbCustom.Checked = true;
                 splitWindows.SplitterDistance = splitWindows.Width / 2;
                 tempFolder = Path.GetTempPath() + "SiliFish";
+                tempOutputFolder = Path.GetTempPath() + "SiliFish\\Output";
                 if (!Directory.Exists(tempFolder))
                     Directory.CreateDirectory(tempFolder);
                 else
@@ -58,6 +61,8 @@ namespace SiliFish.UI
                     foreach (string f in Directory.GetFiles(tempFolder))
                         File.Delete(f);
                 }
+                if (!Directory.Exists(tempOutputFolder))
+                    Directory.CreateDirectory(tempOutputFolder);
                 webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webView3DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
@@ -258,37 +263,56 @@ namespace SiliFish.UI
             paramDict.Add("General.BodyMedialLateralDistance", eBodyMedialLateral.Value);
         }
 
+        private void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
+        {
+            if (page.Tag?.ToString() != "Param" || ParamDict == null)
+                return;
+
+            string key = "";
+            FlowLayoutPanel panel = page.Controls[0] as FlowLayoutPanel;
+            foreach (Control control in panel.Controls)
+            {
+                if (control is Label)
+                {
+                    key = control.Text;
+                    continue;
+                }
+                if (!string.IsNullOrEmpty(key) && control is TextBox)
+                {
+                    string value = control.Text;
+                    object origValue = control.Tag;
+                    if (origValue is double)
+                        ParamDict.Add(page.Text + "." + key, double.Parse(value));
+                    else if (origValue is int)
+                        ParamDict.Add(page.Text + "." + key, int.Parse(value));
+                    else //if (origValue is string)
+                        ParamDict.Add(page.Text + "." + key, value);
+                    key = "";
+                }
+            }
+        }
+        private Dictionary<string, object> ReadParams(string subGroup)
+        {
+            Dictionary<string, object> ParamDict = new();
+            foreach (TabPage page in tabParams.TabPages)
+            {
+                if (page.Tag?.ToString() == "Param" && page.Text == subGroup)
+                {
+                    ReadParamsFromTabPage(ParamDict, page);
+                    break;
+                }
+            }
+            return ParamDict;
+        }
         private Dictionary<string, object> ReadParams()
         {
-            
-            string key = "";
             Dictionary<string, object> ParamDict = new();
             ReadGeneralParams(ParamDict);
             foreach (TabPage page in tabParams.TabPages)
             {
                 if (page.Tag?.ToString() != "Param")
                     continue;
-                FlowLayoutPanel panel = page.Controls[0] as FlowLayoutPanel;
-                foreach (Control control in panel.Controls)
-                {
-                    if (control is Label)
-                    {
-                        key = control.Text;
-                        continue;
-                    }
-                    if (!string.IsNullOrEmpty(key) && control is TextBox)
-                    {
-                        string value = control.Text;
-                        object origValue = control.Tag;
-                        if (origValue is double)
-                            ParamDict.Add(page.Text + "." + key, double.Parse(value));
-                        else if (origValue is int)
-                            ParamDict.Add(page.Text + "." + key, int.Parse(value));
-                        else //if (origValue is string)
-                            ParamDict.Add(page.Text + "." + key, value);
-                        key = "";
-                    }
-                }
+                ReadParamsFromTabPage(ParamDict, page);
             }
             return ParamDict;
         }
@@ -634,10 +658,10 @@ namespace SiliFish.UI
                 {
                     string target = (sender as CoreWebView2).DocumentTitle;
                     string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(tempFolder, prefix + ".html");
+                    target = Path.Combine(tempOutputFolder, prefix + ".html");
                     int suffix = 0;
                     while (File.Exists(target))
-                        target = Path.Combine(tempFolder, prefix + (suffix++).ToString() + ".html");
+                        target = Path.Combine(tempOutputFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
                     RegenerateWebview(sender as WebView2);
                     Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
@@ -688,6 +712,9 @@ namespace SiliFish.UI
             }
         }
 
+        int lastAnimationStartIndex, lastAnimationSkip;
+        double[] lastAnimationTimeArray;
+        Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
         private void btnAnimate_Click(object sender, EventArgs e)
         {
             if (Model == null || !Model.ModelRun) return;
@@ -697,15 +724,24 @@ namespace SiliFish.UI
             if (tAnimEnd > tRunEnd)
                 tAnimEnd = tRunEnd;
 
+            lastAnimationStartIndex = (int)(tAnimStart / RunParam.dt);
+            int lastAnimationEndIndex = (int)(tAnimEnd / RunParam.dt);
+            lastAnimationSkip = tRunSkip;
+            lastAnimationTimeArray = Model.TimeArray;
+            //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
+            lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
+            
             AnimationGenerator animationGenerator = new();
+            Model.SetAnimationParameters(ReadParams("Animation"));
             AnimationHTML = animationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
 
             webViewAnimation.NavigateTo(AnimationHTML, tempFolder, ref tempFile);
-            linkSaveAnimation.Enabled = true;
+            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
+            lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
         }
 
 
-        private void linkSaveAnimation_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkSaveAnimationHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (string.IsNullOrEmpty(AnimationHTML))
                 return;
@@ -713,6 +749,18 @@ namespace SiliFish.UI
                 return;
             File.WriteAllText(saveFileHTML.FileName, AnimationHTML.ToString());
         }
+
+        private void linkSaveAnimationCSV_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(AnimationHTML))
+                return;
+            if (saveFileCSV.ShowDialog() != DialogResult.OK)
+                return;
+
+            Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex, lastAnimationSkip);
+        }
+
+
 
         private void Generate2DModel()
         {
@@ -736,7 +784,7 @@ namespace SiliFish.UI
                 modelRefreshMsgShown = true;
             }
             TwoDModelGenerator modelGenerator = new();
-            string html = modelGenerator.Create2DModel(false, Model, Model.CellPools);
+            string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width/2, webView2DModel.Height);
             webView2DModel.NavigateTo(html, tempFolder, ref tempFile);
 
         }
@@ -937,12 +985,22 @@ namespace SiliFish.UI
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 
-                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / 2);
-                int ncol = leftImages?.Count > 1 ? 2 : 1;
+                int ncol = plotExtendWindows!= PlotExtend.FullModel && leftImages?.Count > 1 ? 2 : 1;
+                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
                 pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / 2);
-                ncol = rightImages?.Count > 1 ? 2 : 1;
-                pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
+                if (rightImages!=null && rightImages.Any())
+                {
+                    ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
+                    nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
+                    pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
+                    splitWindows.Panel2Collapsed = false;
+                    splitWindows.SplitterDistance = splitWindows.Width / 2;
+                }
+                else
+                {
+                    pictureBoxRight.Image = null;
+                    splitWindows.Panel2Collapsed = true;
+                }
             }
             catch (Exception ex)
             {
@@ -1423,6 +1481,15 @@ namespace SiliFish.UI
         private void eTimeEnd_Enter(object sender, EventArgs e)
         {
             lastEnteredTime = (int)eTimeEnd.Value;
+        }
+
+        private void linkBrowseToTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(tempOutputFolder);
+            }
+            catch { }
         }
 
         private void MainForm_Load(object sender, EventArgs e)

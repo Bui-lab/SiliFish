@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -85,7 +86,20 @@ namespace SiliFish.Helpers
                 sw.WriteLine(row);
             }
         }
-
+        public static void SaveAnimation(string filename, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, int startIndex, int offset)
+        {
+            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+            using StreamWriter sw = new(fs);
+            string columnHeaders = string.Join(',', somiteCoordinates.Keys.Select(k => k + "-X," + k + "-Y'"));
+            sw.WriteLine(columnHeaders);
+            int nmax = Time.Length - 1;
+            foreach (var i in Enumerable.Range(1, nmax))
+            {
+                string rowStart = (Time[startIndex + i - 1] - offset).ToString("0.##");
+                string row = rowStart + string.Join(',', somiteCoordinates.Select(item => item.Value[i].X + "," + item.Value[i].X));
+                sw.WriteLine(row);
+            }
+        }
         public static bool CheckOnlineStatus()
         {
             using var httpClient = new HttpClient();

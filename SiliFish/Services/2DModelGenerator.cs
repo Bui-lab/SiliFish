@@ -17,6 +17,9 @@ namespace SiliFish.Services
         double XOffset, YOffset;
         double WeightMax;
         double WeightMult;
+        List<double> leftX = new(); //keeps a list of x values for the left and right halves
+        List<double> rightX = new(); //keeps a list of x values for the left and right halves
+
         private string CreateLinkDataPoint(InterPool interPool)
         {
             string curvInfo = interPool.poolSource.ID == interPool.poolTarget.ID ? ",curv: 0.7" : "";
@@ -31,10 +34,26 @@ namespace SiliFish.Services
 
         private (double, double) GetNewCoordinates(CellPool pool)
         {
-            double r1 = pool.XAvg();
-            double newX = r1 * XMult - XOffset;
-            r1 = pool.PositionLeftRight == SagittalPlane.Left ? pool.columnIndex2D : -1 * pool.columnIndex2D;
-            double newY = r1 * YMult - YOffset; // (r1 - YMin) * YMult - YOffset;
+            double x = pool.XAvg();
+            int y = (int)pool.YAvg();
+            if (y < 0)
+            {
+                while (leftX.Any(xi => Math.Abs(xi - x) < XMult))
+                {
+                    x += XMult/10;
+                }
+                leftX.Add(x);
+            }
+            else
+            {
+                while (rightX.Any(xi => Math.Abs(xi - x) < XMult))
+                {
+                    x += XMult/10;
+                }
+                rightX.Add(x);
+            }
+            double newX = x * XMult + XOffset;
+            double newY = (pool.YAvg() + pool.ZAvg())/2 * YMult + YOffset; 
             return (newX, newY);
         }
         private double GetNewWeight(double d)
@@ -48,7 +67,7 @@ namespace SiliFish.Services
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 
-        public string Create2DModel(bool saveFile, SwimmingModel model, List<CellPool> pools)
+        public string Create2DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, int width, int height)
         {
             string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 2D Model";
@@ -77,11 +96,9 @@ namespace SiliFish.Services
             
             ((XMin, double maxX), (YMin, double maxY), (_,_), int YRange1D) = model.GetSpatialRange();
 
-            double range = Math.Max((maxX - XMin), (maxY - YMin));
-            int width = 400;
-            XMult = 2 * width / range;
-            YMult = width / range;
-            XOffset = width;
+            XMult = width / (maxX - XMin) / 5;
+            YMult = height / Math.Max(2 * YRange1D, (maxY - YMin)) / 2;
+            XOffset = 0;
             YOffset = 0;
 
             (_, WeightMax) = model.GetConnectionRange();

@@ -57,7 +57,7 @@ namespace SiliFish.Services
             html.Replace("__Y_MIN__", minY.ToString());
             html.Replace("__Y_MAX__", maxY.ToString());
 
-            string swidth = "800";
+            string swidth = "4800";
             string sheight = "800";
             //Calculate ratio
             double ratio = (double)(maxX-minX)/(maxY-minY);
@@ -89,164 +89,8 @@ namespace SiliFish.Services
             
             return html.ToString();
         }
-        private Dictionary<string, Coordinate[]> GenerateSomiteCoordinatesNoSomite(SwimmingModel model, int startIndex, int endIndex)
-        {
-            List<Cell> LeftMuscleCells = model.MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Left).SelectMany(mp => mp.GetCells()).ToList();
-            List<Cell> RightMuscleCells = model.MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Right).SelectMany(mp => mp.GetCells()).ToList();
-
-            int nmax = endIndex - startIndex + 1;
-            //TODO: left and right muscle cell count can be different
-            int nMuscle = LeftMuscleCells.Count;
-            if (nMuscle == 0) return null;
-            // Allocating arrays for velocity and position
-            double[,] vel = new double[nMuscle, nmax];
-            double[,] angle = new double[nMuscle, nmax];
-            // Setting constants and initial values for vel. and pos.
-            double khi = model.khi;
-            double w0 = model.w0;
-            double vel0 = 0.0;
-            double angle0 = 0.0;
-            double dt = RunParam.dt;
-            double alpha = model.alpha;
-            //Wd = w0
-            int k = 0;
-
-            foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
-            {
-                MuscleCell rightMuscle = (MuscleCell)RightMuscleCells.FirstOrDefault(c => c.Sequence == leftMuscle.Sequence);
-                vel[k, 0] = vel0;
-                angle[k, 0] = angle0;
-                angle[nMuscle - 1, 0] = 0.0;
-                foreach (var i in Enumerable.Range(1, nmax - 1))
-                {
-                    double R = (leftMuscle.R + rightMuscle.R) / 2;
-                    double coef = alpha * (1 - 0.2 * R);//The formula in the paper
-                    //TODO test the coef in the paper
-                    coef = 0.1;
-                    double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
-                    vel[k, i] = vel[k, i - 1] + acc * dt;
-                    angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
-                }
-                k++;
-            }
-
-            //## DYNAMIC PLOTTING
-            double[,] x = new double[nMuscle, nmax + 1];
-            double[,] y = new double[nMuscle, nmax + 1];
-            foreach (var i in Enumerable.Range(0, nmax))
-            {
-                x[0, i] = 0;
-                y[0, i] = 0;
-                angle[0, i] = 0;
-                foreach (int l in Enumerable.Range(1, nMuscle - 1))
-                {
-                    angle[l, i] = angle[l - 1, i] + angle[l, i];
-                    x[l, i] = x[l - 1, i] + Math.Sin(angle[l, i]);
-                    y[l, i] = y[l - 1, i] - Math.Cos(angle[l, i]);
-                }
-            }
-
-            Dictionary<string, Coordinate[]> somiteCoordinates = new();
-            foreach (int somiteIndex in Enumerable.Range(0, nMuscle))
-            {
-                string somite = "Somite" + somiteIndex.ToString();
-                somiteCoordinates.Add(somite, new Coordinate[nmax + 1]);
-                somiteCoordinates[somite][0] = (0, 0);
-                foreach (var i in Enumerable.Range(0, nmax))
-                {
-                    somiteCoordinates[somite][i] = (x[somiteIndex, i], y[somiteIndex, i]);
-                }
-            }
-            return somiteCoordinates;
-        }
-
-        private Dictionary<string, Coordinate[]> GenerateSomiteCoordinates(SwimmingModel model, int startIndex, int endIndex)
-        {
-            if (model.NumberOfSomites <= 0) return GenerateSomiteCoordinatesNoSomite(model, startIndex, endIndex);
-
-            int nmax = endIndex - startIndex + 1;
-            int nSomite = model.NumberOfSomites;
-
-            // Allocating arrays for velocity and position
-            double[,] vel = new double[nSomite, nmax];
-            double[,] angle = new double[nSomite, nmax];
-            // Setting constants and initial values for vel. and pos.
-            double khi = model.khi;
-            double w0 = model.w0;
-            double vel0 = 0.0;
-            double angle0 = 0.0;
-            double dt = RunParam.dt;
-            double alpha = model.alpha;
-            int k = 0;
-
-            for (int somite = 0; somite < nSomite; somite++)
-            {
-                List<Cell> LeftMuscleCells = model.MusclePools
-                    .Where(mp => mp.PositionLeftRight == SagittalPlane.Left)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
-                List<Cell> RightMuscleCells = model.MusclePools
-                    .Where(mp => mp.PositionLeftRight == SagittalPlane.Right)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
-                double R = LeftMuscleCells.Sum(c => (c as MuscleCell).R) + RightMuscleCells.Sum(c => (c as MuscleCell).R);
-                R /= (LeftMuscleCells.Count + RightMuscleCells.Count);
-                double coef = alpha * (1 - 0.2 * R);//The formula in the paper
-                vel[k, 0] = vel0;
-                angle[k, 0] = angle0;
-                angle[nSomite - 1, 0] = 0.0;
-                foreach (var i in Enumerable.Range(1, nmax - 1))
-                {
-                    double voltDiff = RightMuscleCells.Sum(c=>c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c=>c.V[startIndex + i - 1]);
-                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
-                    vel[k, i] = vel[k, i - 1] + acc * dt;
-                    angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
-                }
-                k++;
-            }
-
-            //## DYNAMIC PLOTTING
-            double[,] x = new double[nSomite, nmax + 1];
-            double[,] y = new double[nSomite, nmax + 1];
-            foreach (var i in Enumerable.Range(0, nmax))
-            {
-                x[0, i] = 0;
-                y[0, i] = 0;
-                angle[0, i] = 0;
-                foreach (int l in Enumerable.Range(1, nSomite - 1))
-                {
-                    angle[l, i] = angle[l - 1, i] + angle[l, i];
-                    x[l, i] = x[l - 1, i] + Math.Sin(angle[l, i]);
-                    y[l, i] = y[l - 1, i] - Math.Cos(angle[l, i]);
-                }
-            }
-
-            Dictionary<string, Coordinate[]> somiteCoordinates = new();
-            foreach (int somiteIndex in Enumerable.Range(0, nSomite))
-            {
-                string somite = "Somite" + somiteIndex.ToString();
-                somiteCoordinates.Add(somite, new Coordinate[nmax + 1]);
-                somiteCoordinates[somite][0] = (0, 0);
-                foreach (var i in Enumerable.Range(0, nmax))
-                {
-                    somiteCoordinates[somite][i] = (x[somiteIndex, i], y[somiteIndex, i]);
-                }
-            }
-            return somiteCoordinates;
-        }
-        /*TODO
-        public virtual void SaveAnimation(string filename, Dictionary<string, Coordinate[]> somiteCoordinates)
-        {
-            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
-            using StreamWriter sw = new(fs);
-            string columnHeaders = string.Join(',', somiteCoordinates.Keys.Select(k => k + "-X," + k + "-Y'"));
-            sw.WriteLine(columnHeaders);
-            foreach (var i in Enumerable.Range(1, nmax))
-            {
-                string rowStart = (Time[startIndex + i - 1] - offset).ToString("0.##");
-                string row = rowStart + string.Join(',', somiteCoordinates.Select(item => item.Value[i].X + "," + item.Value[i].X));
-                sw.WriteLine(row);
-            }
-        }*/
+        
+        
 
         public virtual string GenerateAnimation(SwimmingModel model, int tStart = 0, int tEnd = -1)
         {
@@ -264,7 +108,7 @@ namespace SiliFish.Services
 
             AnimationGenerator animationGenerator = new();
             return animationGenerator.CreateTimeSeries(title: model.ModelName + "Animation.html", 
-                GenerateSomiteCoordinates(model, iStart, iEnd), model.TimeArray, iStart, iEnd, tSkip, dt);
+                model.GenerateSpineCoordinates(iStart, iEnd), model.TimeArray, iStart, iEnd, tSkip, dt);
         }
     }
 }
