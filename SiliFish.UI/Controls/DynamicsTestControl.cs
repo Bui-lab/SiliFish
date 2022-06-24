@@ -29,7 +29,6 @@ namespace SiliFish.UI.Controls
             cell.Parameters = dgDynamics.ReadFromGrid();
 
             decimal dt = edt.Value;
-            RunParam.dt = (double)dt;
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
@@ -37,16 +36,16 @@ namespace SiliFish.UI.Controls
             double[] t = new double[plotEnd];
             double val = (double)eInput.Value;
             foreach (int i in Enumerable.Range(0, plotEnd))
-                t[i] = i * RunParam.dt;
+                t[i] = i * (double)dt;
             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                 I[i] = val;
             eInstanceParams.Text = Cell.GetInstanceParams();
             (double[] vList, double[] uList) = Cell.DynamicsTest(I);
-            picV.Image = UtilWindows.CreatePlotImage("V", vList, t, 0, plotEnd, Color.Purple);
+            picV.Image = UtilWindows.CreateLinePlot("V", vList, t, 0, plotEnd, Color.Purple);
             if (uList == null)
                 picu.Visible = false;
-            else picu.Image = UtilWindows.CreatePlotImage("u", uList, t, 0, plotEnd, Color.Blue);
-            picI.Image = UtilWindows.CreatePlotImage("I", I, t, 0, plotEnd, Color.Red);
+            else picu.Image = UtilWindows.CreateLinePlot("u", uList, t, 0, plotEnd, Color.Blue);
+            picI.Image = UtilWindows.CreateLinePlot("I", I, t, 0, plotEnd, Color.Red);
 
         }
 
@@ -62,7 +61,7 @@ namespace SiliFish.UI.Controls
             decimal limit = eRheobaseLimit.Value;
             if (limit > eInput.Maximum)
                 eInput.Maximum = limit;
-            decimal d = (decimal)neuron.CalculateRheoBase((double)limit, Math.Pow(0.1, eInput.DecimalPlaces));
+            decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, eInput.DecimalPlaces));
             if (d <= eInput.Maximum && d >= eInput.Minimum)
                 eRheobase.Text = d.ToString("0.###");
             else

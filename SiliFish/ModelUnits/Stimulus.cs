@@ -55,10 +55,10 @@ namespace SiliFish.ModelUnits
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeSpan_ms.End / RunParam.dt);
+            iEnd = (int)(TimeSpan_ms.End / RunParam.static_dt );
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeSpan_ms.Start / RunParam.dt);
+            iStart = (int)(TimeSpan_ms.Start / RunParam.static_dt );
             if (Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (Value2 - Value1) / (iEnd - iStart);
@@ -77,7 +77,7 @@ namespace SiliFish.ModelUnits
         }
         public double getStimulus(int t, Random rand)
         {
-            int t_ms = (int)(t * RunParam.dt);
+            int t_ms = (int)(t * RunParam.static_dt );
             if (!TimeSpan_ms.IsActive(t_ms))
                 return 0;
             if (!initialized)

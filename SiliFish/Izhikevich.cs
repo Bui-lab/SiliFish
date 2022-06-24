@@ -108,9 +108,9 @@ namespace SiliFish
                 // ODE eqs
                 // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
                 double Cdv = k * (v - vr) * (v - vt) - u + I;
-                vNew = v + (Cdv) * RunParam.dt / Cm;
+                vNew = v + (Cdv) * RunParam.static_dt / Cm;
                 double du = a * (b * (v - vr) - u);
-                uNew = u + RunParam.dt * du;
+                uNew = u + RunParam.static_dt * du;
                 v = vNew;
                 u = uNew;
             }
@@ -157,10 +157,10 @@ namespace SiliFish
         }
 
 
-        public double CalculateRheoBase(double maxI, double sensitivity, int infinity, int warmup = 100)
+        public double CalculateRheoBase(double maxI, double sensitivity, int infinity, double dt, int warmup = 100)
         {
-            infinity = (int)(infinity / RunParam.dt);
-            warmup = (int) (warmup/ RunParam.dt);
+            infinity = (int)(infinity / dt);
+            warmup = (int) (warmup/ dt);
             int tmax = infinity + warmup +10;
             double[] I = new double[tmax];
             double curI = maxI;
@@ -225,7 +225,7 @@ namespace SiliFish
             double I = Stim;
             // ODE eqs
             double dv = (-1 / (R * C)) * v + I / C;
-            double vNew = v + (dv) * RunParam.dt;
+            double vNew = v + (dv) * RunParam.static_dt ;
             v = vNew;
 
             return v;
@@ -294,16 +294,16 @@ namespace SiliFish
                 IsynB += (E_rev - v2) * Conductance;
                 double dIsynA = (-1 / taud) * IsynA;
                 double dIsynB = (-1 / taur) * IsynB;
-                IsynANew = IsynA + RunParam.dt * (dIsynA);
-                IsynBNew = IsynB + RunParam.dt * (dIsynB);
+                IsynANew = IsynA + RunParam.static_dt * (dIsynA);
+                IsynBNew = IsynB + RunParam.static_dt  * (dIsynB);
             }
             else
             {
                 // no synaptic event
                 double dIsynA = (-1 / taud) * IsynA;
                 double dIsynB = (-1 / taur) * IsynB;
-                IsynANew = IsynA + RunParam.dt * (dIsynA);
-                IsynBNew = IsynB + RunParam.dt * (dIsynB);
+                IsynANew = IsynA + RunParam.static_dt  * (dIsynA);
+                IsynBNew = IsynB + RunParam.static_dt  * (dIsynB);
             }
 
             return (IsynANew, IsynBNew);

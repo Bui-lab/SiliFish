@@ -10,7 +10,7 @@ namespace SiliFish.UI
             return img;
         }
 
-        public static Image? MergeImages(List<Image> ImageList, int nRow, int nCol, bool rowsFirst = true)
+        public static Image MergeImages(List<Image> ImageList, int nRow, int nCol, bool rowsFirst = true)
         {
             if (ImageList == null || ImageList.Count == 0 || ImageList.Count(img => img != null) == 0)
                 return null;

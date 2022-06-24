@@ -17,7 +17,10 @@ namespace SiliFish
     {
         public int tSkip { get; set; } = 0;
         public int tMax { get; set; } = 1000;
-        public static double dt { get; set; } = 0.1;//The step size
+        public double dt { get; set; } = 0.1;//The step size
+
+        public int iMax { get { return Convert.ToInt32(((tMax + tSkip) / dt) + 1); } }
+        public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
         public RunParam() { }
     }
 
@@ -136,27 +139,28 @@ namespace SiliFish
 
         public virtual Dictionary<string, object> GetParameters()
         {
-            Dictionary<string, object> paramDict = new();
+            Dictionary<string, object> paramDict = new()
+            {
+                { "General.Name", ModelName },
+                { "General.Description", ModelDescription },
+                { "General.NumberOfSomites", NumberOfSomites },
+                { "General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance },
+                { "General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance },
+                { "General.SpinalMedialLateralDistance", SpinalMedialLateralDistance },
+                { "General.SpinalBodyPosition", SpinalBodyPosition },
+                { "General.BodyDorsalVentralDistance", BodyDorsalVentralDistance },
+                { "General.BodyMedialLateralDistance", BodyMedialLateralDistance },
 
-            paramDict.Add("General.Name", ModelName);
-            paramDict.Add("General.Description", ModelDescription);
-            paramDict.Add("General.NumberOfSomites", NumberOfSomites);
-            paramDict.Add("General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance);
-            paramDict.Add("General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance);
-            paramDict.Add("General.SpinalMedialLateralDistance", SpinalMedialLateralDistance);
-            paramDict.Add("General.SpinalBodyPosition", SpinalBodyPosition);
-            paramDict.Add("General.BodyDorsalVentralDistance", BodyDorsalVentralDistance);
-            paramDict.Add("General.BodyMedialLateralDistance", BodyMedialLateralDistance);
+                { "Dynamic.cv", cv },
+                { "Dynamic.E_ach", E_ach },
+                { "Dynamic.E_glu", E_glu },
+                { "Dynamic.E_gly", E_gly },
+                { "Dynamic.E_gaba", E_gaba },
 
-            paramDict.Add("Dynamic.cv", cv);
-            paramDict.Add("Dynamic.E_ach", E_ach);
-            paramDict.Add("Dynamic.E_glu", E_glu);
-            paramDict.Add("Dynamic.E_gly", E_gly);
-            paramDict.Add("Dynamic.E_gaba", E_gaba);
-
-            paramDict.Add("Animation.DampingCoef", khi);
-            paramDict.Add("Animation.w0", w0);
-            paramDict.Add("Animation.ConversionCoef", alpha);
+                { "Animation.DampingCoef", khi },
+                { "Animation.w0", w0 },
+                { "Animation.ConversionCoef", alpha }
+            };
 
             return paramDict;
         }
@@ -248,7 +252,7 @@ namespace SiliFish
 
         public virtual string SummarizeModel()
         {
-            StringBuilder strBuilder = new StringBuilder();
+            StringBuilder strBuilder = new();
             foreach (CellPool pool in NeuronPools.Union(MuscleCellPools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
             {
                 strBuilder.AppendLine("#Cell Pool#");
@@ -385,27 +389,6 @@ namespace SiliFish
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline);
         }
 
-        private void CalculateNeuronalOutputs(Neuron n, int t)
-        {
-            try
-            {
-                foreach (ChemicalSynapse syn in n.Terminals)
-                {
-                    syn.NextStep(t);
-                }
-
-                foreach (GapJunction jnc in n.GapJunctions.Where(j => j.Cell1 == n)) //to prevent double call
-                {
-                    jnc.NextStep(t);
-                }
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-            }
-
-        }
-
         private void CalculateNeuronalOutputs(int t)
         {
             try
@@ -413,7 +396,7 @@ namespace SiliFish
                 foreach (CellPool neurons in NeuronPools)
                 {
                     foreach (Neuron neuron in neurons.GetCells())
-                        CalculateNeuronalOutputs(neuron, t);
+                        neuron.CalculateNeuronalOutputs(t);
                 }
             }
             catch (Exception ex)
@@ -422,56 +405,19 @@ namespace SiliFish
             }
         }
 
-        private void CalculateMembranePotentialOfNeuron(Neuron n, int t)
-        {
-            try
-            {
-                double ISyn = 0, IGap = 0, stim = 0;
-                if (n.IsAlive(t))
-                {
-                    foreach (ChemicalSynapse syn in n.Synapses)
-                    {
-                        ISyn += syn.GetSynapticCurrent(t);
-                    }
-                    foreach (GapJunction jnc in n.GapJunctions)
-                    {
-                        IGap += jnc.GetGapCurrent(n, t);
-                    }
-                    stim = n.GetStimulus(t, rand);
-                }
+        
 
-                n.NextStep(t, stim + ISyn + IGap);
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
-
-        private void CalculateMembranePotentialOfMuscleCell(MuscleCell n, int t)
-        {
-            double ISyn = 0, stim = 0;
-            if (n.IsAlive(t))
-            {
-                foreach (ChemicalSynapse syn in n.EndPlates)
-                {
-                    ISyn += syn.GetSynapticCurrent(t);
-                }
-                stim = n.GetStimulus(t, rand);
-            }
-            n.NextStep(t, stim + ISyn);
-        }
         private void CalculateMembranePotentialsFromCurrents(int t)
         {
             foreach (CellPool neurons in NeuronPools)
             {
                 foreach (Neuron neuron in neurons.GetCells())
-                    CalculateMembranePotentialOfNeuron(neuron, t);
+                    neuron.CalculateMembranePotential(t);
             }
 
             foreach (CellPool muscleCells in MuscleCellPools)
                 foreach (MuscleCell mc in muscleCells.GetCells())
-                    CalculateMembranePotentialOfMuscleCell(mc, t);
+                    mc.CalculateMembranePotential(t);
         }
 
 
@@ -496,15 +442,17 @@ namespace SiliFish
                 model_run = false;
                 rand = new Random((int)seed);
                 runParam = rp;
-                iMax = Convert.ToInt32((rp.tMax + rp.tSkip) / RunParam.dt);
+                RunParam.static_dt = rp.dt;
+                iMax = rp.iMax;
                 Stimulus.nMax = iMax;
 
                 InitStructures(iMax);
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
+                Time[0] = Math.Round((double)-1 * runParam.tSkip, 2);
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;
-                    Time[index] = Math.Round(RunParam.dt * index, 2);
+                    Time[index] = Math.Round(runParam.dt * index - runParam.tSkip, 2);
 
                     CalculateNeuronalOutputs(index);
                     CalculateMembranePotentialsFromCurrents(index);
@@ -533,7 +481,7 @@ namespace SiliFish
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = RunParam.dt;
+            double dt = runParam.dt;
             int k = 0;
 
             foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
@@ -574,7 +522,7 @@ namespace SiliFish
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = RunParam.dt;
+            double dt = runParam.dt;
             int k = 0;
 
             for (int somite = 0; somite < nSomite; somite++)
@@ -642,7 +590,7 @@ namespace SiliFish
             return somiteCoordinates;
         }
 
-        public List<SwimmingEpisode> GetSwimmingEpisodes(int left_bound, int right_bound, int delay)
+        public List<SwimmingEpisode> GetSwimmingEpisodes(double left_bound, double right_bound, int delay)
         {
             /*Converted from the code written by Yann Roussel and Tuan Bui
             This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
@@ -665,7 +613,8 @@ namespace SiliFish
             const int LEFT = -1;
             const int RIGHT = 1;
             int nMax = TimeArray.Length;
-            double dt = RunParam.dt;
+            double dt = runParam.dt;
+            double offset = runParam.tSkip;
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
             for (int i = 0; i < tail_tip_coord.Length - 10; i++)
@@ -683,13 +632,13 @@ namespace SiliFish
                 {
                     if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
                     {
-                        lastEpisode = new SwimmingEpisode(i * dt);
+                        lastEpisode = new SwimmingEpisode(i * dt - offset);
                         episodes.Add(lastEpisode);
                         side = LEFT;
                     }
                     else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
                     {
-                        lastEpisode = new SwimmingEpisode(i * dt);
+                        lastEpisode = new SwimmingEpisode(i * dt - offset);
                         episodes.Add(lastEpisode);
                         side = RIGHT;
                     }
@@ -699,24 +648,31 @@ namespace SiliFish
                     if (tail_tip_coord[i].X < left_bound && side == RIGHT)
                     {
                         side = LEFT;
-                        lastEpisode.EndBeat(i * dt);
+                        lastEpisode.EndBeat(i * dt - offset);
                     }
 
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
-                        lastEpisode.EndBeat(i * dt);
+                        lastEpisode.EndBeat(i * dt - offset);
                     }
                 }
             }
 
             return episodes;
         }
+
+        public void DetectEvents(double threshold)
+        {
+            double[] V = new double[runParam.iMax];
+            MuscleCellPools.ForEach(cp => cp.GetCells().ToList().ForEach(c => V.AddArray(c.V)));
+            var x = V.Where(v => v > threshold);
+        }
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
-        private void ExceptionHandling(string name, Exception ex)
+        public static void ExceptionHandling(string name, Exception ex)
         {
-            Console.WriteLine(ex.ToString());
+            Console.WriteLine(name + ex.ToString());
         }
 
     }

@@ -107,7 +107,7 @@ namespace SiliFish.ModelUnits
         private TimeLine timeLine_ms;
         internal bool IsActive(int timepoint)
         {
-            return timeLine_ms?.IsActive((int)(timepoint * RunParam.dt)) ?? true;
+            return timeLine_ms?.IsActive((int)(timepoint * RunParam.static_dt )) ?? true;
         }
 
         public double[] InputCurrent; //Current vector
@@ -120,7 +120,7 @@ namespace SiliFish.ModelUnits
             Cell1 = c1;
             Cell2 = c2;
             double distance = Global.Distance(c1, c2, mode);
-            Duration = Math.Max((int)(distance / (c1.ConductionVelocity * RunParam.dt)), 1);
+            Duration = Math.Max((int)(distance / (c1.ConductionVelocity * RunParam.static_dt)), 1);
         }
         public void InitVectors(int nmax)
         {
@@ -134,7 +134,7 @@ namespace SiliFish.ModelUnits
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / RunParam.dt);
+            Delay = (int)(delay / RunParam.static_dt );
         }
         public void SetTimeSpan(TimeLine span)
         {
@@ -185,7 +185,7 @@ namespace SiliFish.ModelUnits
         public double Conductance {get{return Core.Conductance;} }
         internal bool IsActive(int timepoint)
         {
-            return timeLine?.IsActive((int)(timepoint * RunParam.dt)) ?? true;
+            return timeLine?.IsActive((int)(timepoint * RunParam.static_dt )) ?? true;
         }
 
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
@@ -194,7 +194,7 @@ namespace SiliFish.ModelUnits
             PreNeuron = preN;
             PostCell = postN;
             double distance = Global.Distance(PreNeuron, PostCell, distmode);
-            Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.dt)), 1);
+            Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt )), 1);
         }
         public void InitVectors(int nmax)
         {
@@ -204,11 +204,11 @@ namespace SiliFish.ModelUnits
 
         public void SetFixedDuration(double dur)
         {
-            Duration = (int)(dur / RunParam.dt);
+            Duration = (int)(dur / RunParam.static_dt );
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / RunParam.dt);
+            Delay = (int)(delay / RunParam.static_dt );
         }
         public void SetTimeLine(TimeLine span)
         {

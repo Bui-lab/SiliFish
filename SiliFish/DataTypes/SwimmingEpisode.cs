@@ -30,5 +30,8 @@ namespace SiliFish.DataTypes
 
         public int NumOfBeats { get { return beats.Count; } }
         public double EpisodeDuration { get { return episodeEnd - episodeStart; } }
+
+        public double Start { get { return episodeStart; } }
+        public double End{ get { return episodeEnd; } }
     }
 }

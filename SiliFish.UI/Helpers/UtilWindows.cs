@@ -24,11 +24,11 @@ namespace SiliFish.UI
         /// <param name="colors"></param>
         /// <param name="AffarentCurrents">A dictionary of currents with a unique name as key, which is used for color determination</param>
         /// <returns></returns>
-        public static Image CreateCurrentsPlot(string target, Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents, 
+        public static Image CreateCurrentsPlot(string target, string title, Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents, 
             int tstart, int tend, double[] Time, int width = 1024, int height = 480)
         {
             List<string> sources = AffarentCurrents.Keys.ToList();
-            OxyPlot.PlotModel model = new PlotModel() { Title = target };
+            OxyPlot.PlotModel model = new PlotModel() { Title = title };
             foreach (string source in sources)
             {
                 Color color = colors[source];
@@ -57,7 +57,30 @@ namespace SiliFish.UI
 
         }
 
-        public static Image? CreatePlotImage(string title, double[,] V, double[] Time, int tstart, int tend, Color color, int width = 1024, int height = 480)
+        public static Image CreateScatterPlot(string title, double[] data, double[] Time, double tstart, double tend, Color color, int width = 1024, int height = 480)
+        {
+            if (data == null || data.Count() != Time.Count())
+                return null;
+            PlotModel model = new() { Title = title };
+            model.DefaultXAxis.Minimum = tstart;
+            model.DefaultXAxis.Maximum = tend;
+            OxyColor col = color.ToOxyColor();
+            ScatterSeries ls = new ScatterSeries();
+            ls.Points.AddRange(Enumerable
+                .Range(0, Time.Count()-1)
+                .Select(i => new ScatterPoint(data[i], Time[i])));
+
+            model.Series.Add(ls);
+            
+            var stream = new MemoryStream();
+            var pngExporter = new PngExporter { Width = width, Height = height };
+            pngExporter.Export(model, stream);
+            Image image = Image.FromStream(stream);
+            image.Tag = title;
+            return image;
+        }
+
+        public static Image CreateLinePlot(string title, double[,] V, double[] Time, int tstart, int tend, Color color, int width = 1024, int height = 480)
         {
             if (V == null)
                 return null;
@@ -87,7 +110,7 @@ namespace SiliFish.UI
             return image;
         }
 
-        public static Image? CreatePlotImage(string title, double[] values, double[] Time, int tstart, int tend, Color color, int width = 1024, int height = 480)
+        public static Image CreateLinePlot(string title, double[] values, double[] Time, int tstart, int tend, Color color, int width = 1024, int height = 480)
         {
             if (values == null)
                 return null;
