@@ -86,6 +86,12 @@ namespace SiliFish.ModelUnits
         {
             throw new NotImplementedException();
         }
+
+        public virtual void CalculateMembranePotential(int t)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class Neuron : Cell
@@ -202,10 +208,10 @@ namespace SiliFish.ModelUnits
             return Core.SolveODE(I);
         }
 
-        public double CalculateRheoBase(double maxI = 100, double sensitivity = 0.001, int infinity = 300)//SOURCE: https://en.wikipedia.org/wiki/Rheobase
+        public double CalculateRheoBase(double dt, double maxI = 100, double sensitivity = 0.001, int infinity = 300)//SOURCE: https://en.wikipedia.org/wiki/Rheobase
         {
 
-            return Core.CalculateRheoBase(maxI, sensitivity, infinity);
+            return Core.CalculateRheoBase(maxI, sensitivity, infinity, dt);
         }
 
 
@@ -213,6 +219,54 @@ namespace SiliFish.ModelUnits
         {
             return Core.GetInstanceParams();
         }
+
+        public void CalculateNeuronalOutputs(int t)
+        {
+            try
+            {
+                foreach (ChemicalSynapse syn in Terminals)
+                {
+                    syn.NextStep(t);
+                }
+
+                foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this)) //to prevent double call
+                {
+                    jnc.NextStep(t);
+                }
+            }
+            catch (Exception ex)
+            {
+                SwimmingModel.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+
+        }
+
+        public override void CalculateMembranePotential(int t)
+        {
+            try
+            {
+                double ISyn = 0, IGap = 0, stim = 0;
+                if (IsAlive(t))
+                {
+                    foreach (ChemicalSynapse syn in Synapses)
+                    {
+                        ISyn += syn.GetSynapticCurrent(t);
+                    }
+                    foreach (GapJunction jnc in GapJunctions)
+                    {
+                        IGap += jnc.GetGapCurrent(this, t);
+                    }
+                    stim = GetStimulus(t, SwimmingModel.rand);
+                }
+
+                NextStep(t, stim + ISyn + IGap);
+            }
+            catch (Exception ex)
+            {
+                SwimmingModel.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
+
     }
 
     public class MuscleCell : Cell
@@ -291,6 +345,20 @@ namespace SiliFish.ModelUnits
         public override (double[], double[]) DynamicsTest(double[] I)
         {
             return (Core.SolveODE(I), null);
+        }
+
+        public override void CalculateMembranePotential(int t)
+        {
+            double ISyn = 0, stim = 0;
+            if (IsAlive(t))
+            {
+                foreach (ChemicalSynapse syn in EndPlates)
+                {
+                    ISyn += syn.GetSynapticCurrent(t);
+                }
+                stim = GetStimulus(t, SwimmingModel.rand);
+            }
+            NextStep(t, stim + ISyn);
         }
 
         public override string GetInstanceParams()

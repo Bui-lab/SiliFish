@@ -71,20 +71,20 @@ namespace SiliFish.Services
             html.Replace("__HEIGHT__", sheight);
         }
         public string CreateTimeSeries(string title, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, 
-            int timeStart, int timeEnd, int offset, double dt)
+            int iStart, int iEnd, double dt)
         {
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
 
             List<string> timeSeries = new();
-            foreach (int timeIndex in Enumerable.Range(0, timeEnd-timeStart+1))
+            foreach (int timeIndex in Enumerable.Range(0, iEnd-iStart+1))
                 timeSeries.Add(CreateTimeDataPoints(somiteCoordinates, timeIndex));
 
             SetChartDimensions(somiteCoordinates, html);
 
             html.Replace("__FULL_DATA__", string.Join("\r\n", timeSeries));
-            html.Replace("__TIME_START__", (Time[timeStart] - offset).ToString());
-            html.Replace("__TIME_END__", (Time[timeEnd] - offset).ToString());
+            html.Replace("__TIME_START__", (Time[iStart]).ToString());
+            html.Replace("__TIME_END__", (Time[iEnd]).ToString());
             html.Replace("__TIME_INCREMENT__", dt.ToString());
             
             return html.ToString();
@@ -99,16 +99,18 @@ namespace SiliFish.Services
 
             int tMax = model.runParam.tMax;
             int tSkip = model.runParam.tSkip;
-            double dt = RunParam.dt;
+            double dt = model.runParam.dt;
 
-            if (tEnd < tStart || tEnd >= tMax)
-                tEnd = tMax - 1;
+            if (tEnd < tStart || tEnd > tMax)
+                tEnd = tMax;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
+            if (iEnd >= model.TimeArray.Length)
+                iEnd = model.TimeArray.Length - 1;
 
             AnimationGenerator animationGenerator = new();
             return animationGenerator.CreateTimeSeries(title: model.ModelName + "Animation.html", 
-                model.GenerateSpineCoordinates(iStart, iEnd), model.TimeArray, iStart, iEnd, tSkip, dt);
+                model.GenerateSpineCoordinates(iStart, iEnd), model.TimeArray, iStart, iEnd, dt);
         }
     }
 }

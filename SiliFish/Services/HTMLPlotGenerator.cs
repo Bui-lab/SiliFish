@@ -68,41 +68,40 @@ namespace SiliFish.Services
         }
 
 
-        public static string Plot( PlotType PlotType, double[] TimeArray, List<Cell> Cells, List<CellPool> Pools, int tStart = 0, int tEnd = -1, int tSkip = 0, int nSample = 0)
+        public static string Plot( PlotType PlotType, double[] TimeArray, List<Cell> Cells, List<CellPool> Pools, 
+            double dt, int tStart = 0, int tEnd = -1, int tSkip = 0, int nSample = 0)
         {
             if ((Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return "";
-            double dt = RunParam.dt;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
             int offset = tSkip;
             if (iEnd < iStart || iEnd >= TimeArray.Length)
                 iEnd = TimeArray.Length - 1;
-
-            double[] TimeOffset = offset > 0 ? (TimeArray.Select(t => t - offset).ToArray()) : TimeArray;
-            
+  
             
             string PlotHTML = "";
+            //URGENT remaining PlotTypes
             switch (PlotType)
             {
                 case PlotType.MembPotential:
-                    PlotHTML = PlotMembranePotentials(TimeOffset, Cells, Pools, iStart, iEnd, nSample: nSample);
+                    PlotHTML = PlotMembranePotentials(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
                     break;
                 case PlotType.Current:
-                    PlotHTML = PlotCurrents(TimeOffset, Cells, Pools, iStart, iEnd, includeGap: true, includeChem: true, nSample: nSample);
+                    PlotHTML = PlotCurrents(TimeArray, Cells, Pools, iStart, iEnd, includeGap: true, includeChem: true, nSample: nSample);
                     break;
                 case PlotType.GapCurrent:
-                    PlotHTML = PlotCurrents(TimeOffset, Cells, Pools, iStart, iEnd, includeGap: true, includeChem: false, nSample: nSample);
+                    PlotHTML = PlotCurrents(TimeArray, Cells, Pools, iStart, iEnd, includeGap: true, includeChem: false, nSample: nSample);
                     break;
                 case PlotType.ChemCurrent:
-                    PlotHTML = PlotCurrents(TimeOffset, Cells, Pools, iStart, iEnd, includeGap: false, includeChem: true, nSample: nSample);
+                    PlotHTML = PlotCurrents(TimeArray, Cells, Pools, iStart, iEnd, includeGap: false, includeChem: true, nSample: nSample);
                     break;
                 case PlotType.Stimuli:
-                    PlotHTML = PlotStimuli(TimeOffset, Cells, Pools, iStart, iEnd, nSample: nSample);
+                    PlotHTML = PlotStimuli(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
                     break;
                 case PlotType.FullDyn:
-                    PlotHTML = PlotFullDynamics(TimeOffset, Cells, Pools, iStart, iEnd, nSample: nSample);
+                    PlotHTML = PlotFullDynamics(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
                     break;
             }
             return PlotHTML;

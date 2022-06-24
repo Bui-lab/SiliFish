@@ -18,15 +18,20 @@ namespace SiliFish
     public enum SagittalPlane { NotSet, Left, Right, Both }
 
     public enum PlotExtend { FullModel, SingleCell, CellsInAPool, SinglePool, OppositePools }
+    
     public enum PlotType {
-        [Display(Name = "Memb. Potential")] 
-        MembPotential, 
-        [Description("Gap and chemical currents")]
-        Current,
+        [Display(Name = "Memb. Potential")] MembPotential, 
+        [Description("Gap and chemical currents")] Current,
         [Display(Name = "Gap Current")] GapCurrent,
         [Display(Name = "Synaptic Current")] ChemCurrent,
-        Stimuli,
-        [Display(Name = "Full Dynamics")] FullDyn
+        [Display(Name = "Stimuli")] Stimuli,
+        [Display(Name = "Full Dynamics")] FullDyn,
+        [Display(Name = "Body Angle Heat Map")] BodyAngleHeatMap,
+        Episodes,
+        [Display(Name = "Episode Duration")] EpisodeDuration,
+        [Display(Name = "Inter Episode Intervals")] InterEpisodeInterval,
+        [Display(Name = "Instantaneous Frequency")] InstantaneousFrequency,
+
     }
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
@@ -34,5 +39,6 @@ namespace SiliFish
     public enum ConnectionType { NotSet, Synapse, Gap, NMJ}
     public enum StimulusMode { None, Step, Gaussian, Ramp}
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed}
+
 
 }

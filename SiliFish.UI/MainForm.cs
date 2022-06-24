@@ -71,7 +71,8 @@ namespace SiliFish.UI
                 listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
                 listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
                 listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
-                ddPlotWindows.DataSource = Enum.GetNames(typeof(PlotType));
+                ddPlotWindows.DataSource = Enum.GetValues(typeof(PlotType));
+                ddPlotWindows.DisplayMember = "DisplayNameValue";
                 ddPlotHTML.DataSource = Enum.GetNames(typeof(PlotType));
             }
             catch (Exception ex)
@@ -570,7 +571,7 @@ namespace SiliFish.UI
             }
             Model.runParam.tSkip = tRunSkip;
             Model.runParam.tMax = tRunEnd;
-            RunParam.dt = (double) edt.Value;
+            Model.runParam.dt = (double) edt.Value;
             if (Model == null) return;
             Task.Run(RunModel);
         }
@@ -712,7 +713,7 @@ namespace SiliFish.UI
             }
         }
 
-        int lastAnimationStartIndex, lastAnimationSkip;
+        int lastAnimationStartIndex;
         double[] lastAnimationTimeArray;
         Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
         private void btnAnimate_Click(object sender, EventArgs e)
@@ -724,9 +725,8 @@ namespace SiliFish.UI
             if (tAnimEnd > tRunEnd)
                 tAnimEnd = tRunEnd;
 
-            lastAnimationStartIndex = (int)(tAnimStart / RunParam.dt);
-            int lastAnimationEndIndex = (int)(tAnimEnd / RunParam.dt);
-            lastAnimationSkip = tRunSkip;
+            lastAnimationStartIndex = (int)(tAnimStart / Model.runParam.dt);
+            int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
             lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
@@ -757,7 +757,7 @@ namespace SiliFish.UI
             if (saveFileCSV.ShowDialog() != DialogResult.OK)
                 return;
 
-            Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex, lastAnimationSkip);
+            Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
         }
 
 
@@ -932,7 +932,7 @@ namespace SiliFish.UI
             PlotHTML = "";
             int nSample = cbSampleHTML.Checked ? (int)eSampleHTML.Value : -1;
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendHTML, PlotSubset, nSample);
-            PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
+            PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
             Invoke(CompleteCreatePlot);
         }
         private void btnPlot_Click(object sender, EventArgs e)
@@ -980,26 +980,35 @@ namespace SiliFish.UI
                 int nSample = cbSampleWindows.Checked ? (int)eSampleWindows.Value : -1;
                 (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendWindows, ddCellsPoolsWindows.Text, nSample);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(plotType, Model.TimeArray, Cells, Pools, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
-
-                leftImages?.RemoveAll(img => img == null);
-                rightImages?.RemoveAll(img => img == null);
-
-                int ncol = plotExtendWindows!= PlotExtend.FullModel && leftImages?.Count > 1 ? 2 : 1;
-                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
-                pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                if (rightImages!=null && rightImages.Any())
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(plotType, Model.TimeArray, Cells, Pools,
+                    Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
+                if (leftImages == null && rightImages == null)
                 {
-                    ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
-                    nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
-                    pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
-                    splitWindows.Panel2Collapsed = false;
-                    splitWindows.SplitterDistance = splitWindows.Width / 2;
+                    pictureBoxLeft.Image =  WindowsPlotGenerator.Plot(plotType, Model, tPlotStart, tPlotEnd, tRunSkip);
+                    pictureBoxRight.Image = null;
+                    splitWindows.Panel2Collapsed = true;
                 }
                 else
                 {
-                    pictureBoxRight.Image = null;
-                    splitWindows.Panel2Collapsed = true;
+                    leftImages?.RemoveAll(img => img == null);
+                    rightImages?.RemoveAll(img => img == null);
+
+                    int ncol = plotExtendWindows != PlotExtend.FullModel && leftImages?.Count > 1 ? 2 : 1;
+                    int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
+                    pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
+                    if (rightImages != null && rightImages.Any())
+                    {
+                        ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
+                        nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
+                        pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
+                        splitWindows.Panel2Collapsed = false;
+                        splitWindows.SplitterDistance = splitWindows.Width / 2;
+                    }
+                    else
+                    {
+                        pictureBoxRight.Image = null;
+                        splitWindows.Panel2Collapsed = true;
+                    }
                 }
             }
             catch (Exception ex)

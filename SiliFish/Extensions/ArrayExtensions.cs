@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SiliFish.Extensions
 {
-    public static class MatrixExtensions
+    public static class ArrayExtensions
     {
-        public static double RowSum(this double[,] matrix, int rowind)
+        public static void AddArray(this double[] array, double[] addTo)
         {
-            double sum = 0;
-            if (rowind < matrix.GetLength(0))
-            {
-                int numcol = matrix.GetLength(1);
-                for (int colind = 0; colind < numcol; colind++)
-                {
-                    sum += matrix[rowind, colind];
-                }
-            }
-            return sum;
+            array = array.Zip(addTo, (x, y) => x + y).ToArray();
         }
         public static double ColumnSum(this double[,] matrix, int colind)
         {
