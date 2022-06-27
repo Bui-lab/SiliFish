@@ -1,4 +1,5 @@
 ﻿using OxyPlot;
+using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using System.Text.Json;
@@ -62,13 +63,19 @@ namespace SiliFish.UI
             if (data == null || data.Count() != Time.Count())
                 return null;
             PlotModel model = new() { Title = title };
-            model.DefaultXAxis.Minimum = tstart;
-            model.DefaultXAxis.Maximum = tend;
+            model.Axes.Add(new LinearAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Time",
+                Minimum = tstart,
+                Maximum = tend
+            }); 
+
             OxyColor col = color.ToOxyColor();
             ScatterSeries ls = new ScatterSeries();
             ls.Points.AddRange(Enumerable
-                .Range(0, Time.Count()-1)
-                .Select(i => new ScatterPoint(data[i], Time[i])));
+                .Range(0, Time.Count())
+                .Select(i => new ScatterPoint(Time[i] < 0 ? 0 : Time[i], data[i])));
 
             model.Series.Add(ls);
             
@@ -80,26 +87,27 @@ namespace SiliFish.UI
             return image;
         }
 
-        public static Image CreateLinePlot(string title, double[,] V, double[] Time, int tstart, int tend, Color color, int width = 1024, int height = 480)
-        {
-            if (V == null)
+        public static Image CreateLinePlot(string title, double[,] values, double[] Time, int iStart, int iEnd, 
+            Color color, int width = 1024, int height = 480)
+        {//TODO different colors for different lines
+            if (values == null)
                 return null;
 
-            OxyPlot.PlotModel model = new PlotModel() { Title = title };
+            OxyPlot.PlotModel model = new() { Title = title };
 
             OxyColor col = color.ToOxyColor();
             byte a = (byte)255;
-            int numofcells = V.GetLength(0);
-            if (numofcells == 0) return null;
-            byte dec = (byte)(200 / numofcells);
-            for (int c = 0; c < numofcells; c++)
+            int numOfLines = values.GetLength(0);
+            if (numOfLines == 0) return null;
+            byte dec = (byte)(200 / numOfLines);
+            for (int c = 0; c < numOfLines; c++)
             {
                 LineSeries ls = new LineSeries();
                 ls.Color = OxyColor.FromAColor(a, OxyColor.FromRgb(col.R, col.G, col.B));
                 a -= dec;
                 ls.Points.AddRange(Enumerable
-                    .Range(tstart, tend - tstart)
-                    .Select(i => new DataPoint(Time[i], V[c, i])));
+                    .Range(iStart, iEnd - iStart)
+                    .Select(i => new DataPoint(Time[i], values[c, i])));
                 model.Series.Add(ls);
             }
             var stream = new MemoryStream();

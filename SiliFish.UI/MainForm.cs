@@ -980,36 +980,29 @@ namespace SiliFish.UI
                 int nSample = cbSampleWindows.Checked ? (int)eSampleWindows.Value : -1;
                 (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendWindows, ddCellsPoolsWindows.Text, nSample);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(plotType, Model.TimeArray, Cells, Pools,
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(plotType, Model, Cells, Pools,
                     Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
-                if (leftImages == null && rightImages == null)
+
+                leftImages?.RemoveAll(img => img == null);
+                rightImages?.RemoveAll(img => img == null);
+
+                int ncol = plotExtendWindows != PlotExtend.FullModel && leftImages?.Count > 1 ? 2 : 1;
+                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
+                pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
+                if (rightImages != null && rightImages.Any())
                 {
-                    pictureBoxLeft.Image =  WindowsPlotGenerator.Plot(plotType, Model, tPlotStart, tPlotEnd, tRunSkip);
-                    pictureBoxRight.Image = null;
-                    splitWindows.Panel2Collapsed = true;
+                    ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
+                    nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
+                    pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
+                    splitWindows.Panel2Collapsed = false;
+                    splitWindows.SplitterDistance = splitWindows.Width / 2;
                 }
                 else
                 {
-                    leftImages?.RemoveAll(img => img == null);
-                    rightImages?.RemoveAll(img => img == null);
-
-                    int ncol = plotExtendWindows != PlotExtend.FullModel && leftImages?.Count > 1 ? 2 : 1;
-                    int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
-                    pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                    if (rightImages != null && rightImages.Any())
-                    {
-                        ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
-                        nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
-                        pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
-                        splitWindows.Panel2Collapsed = false;
-                        splitWindows.SplitterDistance = splitWindows.Width / 2;
-                    }
-                    else
-                    {
-                        pictureBoxRight.Image = null;
-                        splitWindows.Panel2Collapsed = true;
-                    }
+                    pictureBoxRight.Image = null;
+                    splitWindows.Panel2Collapsed = true;
                 }
+
             }
             catch (Exception ex)
             {
@@ -1032,6 +1025,15 @@ namespace SiliFish.UI
         private void ddPlotWindows_SelectedIndexChanged(object sender, EventArgs e)
         {
             PlotType plotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotWindows.Text);
+            if (plotType == PlotType.Episodes)
+            {
+                ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = false;
+                ddGroupingWindows.SelectedIndex = ddCellsPoolsWindows.SelectedIndex = -1;
+            }
+            else
+            {
+                ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = true;
+            }
             toolTip.SetToolTip(ddPlotWindows, plotType.GetDescription());
 
             PlotWindows();
