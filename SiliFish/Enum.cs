@@ -28,9 +28,7 @@ namespace SiliFish
         [Display(Name = "Full Dynamics")] FullDyn,
         [Display(Name = "Body Angle Heat Map")] BodyAngleHeatMap,
         Episodes,
-        [Display(Name = "Episode Duration")] EpisodeDuration,
-        [Display(Name = "Inter Episode Intervals")] InterEpisodeInterval,
-        [Display(Name = "Instantaneous Frequency")] InstantaneousFrequency,
+        [Display(Name = "Tail Beat Frequency")] TailBeatFrequency,
 
     }
 

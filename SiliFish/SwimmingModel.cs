@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
@@ -19,6 +20,13 @@ namespace SiliFish
         public int tMax { get; set; } = 1000;
         public double dt { get; set; } = 0.1;//The step size
 
+        public int iIndex(double t)
+        {
+            int i = (int)((t+tSkip)/ dt);
+            if (i < 0) i = 0;
+            if (i >= iMax) i = iMax - 1;
+            return i;
+        }
         public int iMax { get { return Convert.ToInt32(((tMax + tSkip) / dt) + 1); } }
         public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
         public RunParam() { }
@@ -393,11 +401,19 @@ namespace SiliFish
         {
             try
             {
+                /*Simple multithreading as below makes it less efficient
+                Parallel.ForEach(NeuronPools, neurons =>
+                {
+                    foreach (Neuron neuron in neurons.GetCells())
+                        neuron.CalculateNeuronalOutputs(t);
+                });
+                /*/
                 foreach (CellPool neurons in NeuronPools)
                 {
                     foreach (Neuron neuron in neurons.GetCells())
                         neuron.CalculateNeuronalOutputs(t);
                 }
+                
             }
             catch (Exception ex)
             {
@@ -421,20 +437,6 @@ namespace SiliFish
         }
 
 
-        // This function sets up the connectome and runs a simulation.
-        // rand is a seed for a random function
-        // tmax: the time period the simulation will be run for
-        // tskip: the initial time period that is added to the simulation to cover the initial conditions to dissipate
-        // tplot_interval: the time period that a plot of membrane potential(s) will be displayed. These plots will include the tskip region.
-        // plotProgressOnly: a flag that shows whether at each tplot_interval, the plot will display the potential change from the zero point, or since the end of the previous plot.
-        //   Having this parameter True will make it easier to compare each period to each other. Caution: x-axis scales will be the same, but y-axis scales will not.
-        // plotAllPotentials: whether the plotting should plot only MN membrane potentials, or all cells (IC, V0a, etc)
-        // printParam: a flag that will display the parameters used in the run.
-        // plotResult: a flag to display the final plot from 0 to tmax (after the tskip region is removed)
-        // saveCSV: if True, the membrane potentials of all of the cells will be saved as a CSV file, and parameters will be saved as a JSON file.
-        //   The file name will be the same as the class name.
-        // saveAnim: if True, an animation of the muscle movements will be saved as an mp4 file.
-        //   The file name will be the same as the class name.
         public virtual void MainLoop(double seed, RunParam rp)
         {
             try
@@ -662,12 +664,23 @@ namespace SiliFish
             return episodes;
         }
 
-        public void DetectEvents(double threshold)
+        public (double[], List<SwimmingEpisode>) DetectEvents(double v_threshold)
         {
             double[] V = new double[runParam.iMax];
-            MuscleCellPools.ForEach(cp => cp.GetCells().ToList().ForEach(c => V.AddArray(c.V)));
-            var x = V.Where(v => v > threshold);
-        }
+            MuscleCellPools.ForEach(cp => cp.GetCells().ToList().ForEach(c => V = V.AddArray(c.V)));
+            //TODO the convolition (numpy.smooth func) is missing
+            double[] start = Enumerable.Range(0, Time.Length - 1)
+                .Where(i => V[i] < v_threshold && V[i + 1] > v_threshold).Select(i => Time[i]).ToArray();
+            double[] end = Enumerable.Range(0, Time.Length - 1)
+                .Where(i => V[i] > v_threshold && V[i + 1] < v_threshold).Select(i => Time[i]).ToArray();
+            if (start.Any() && end.Any() && end[0] < start[0])
+                end = end.Skip(1).ToArray();
+            List<SwimmingEpisode> events = new();
+            int numOfEvents = Math.Min(start.Length, end.Length);
+            foreach (int i in Enumerable.Range(0, numOfEvents))
+               events.Add(new SwimmingEpisode(start[i], end[i]));
+            return (V, events);
+          }
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         public static void ExceptionHandling(string name, Exception ex)

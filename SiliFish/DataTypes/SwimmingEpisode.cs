@@ -14,6 +14,13 @@ namespace SiliFish.DataTypes
             beats = new();
             lastBeatStart = s;
         }
+        public SwimmingEpisode(double s, double e)
+        {
+            episodeStart = s;
+            episodeEnd = e;
+            beats = new();
+            lastBeatStart = s;
+        }
 
         public void EndBeat(double e)
         {
@@ -28,7 +35,7 @@ namespace SiliFish.DataTypes
             episodeEnd = e;
         }
 
-        public int NumOfBeats { get { return beats.Count; } }
+        public int NumOfBeats { get { return beats?.Count ?? 0; } }
         public double EpisodeDuration { get { return episodeEnd - episodeStart; } }
 
         public double Start { get { return episodeStart; } }

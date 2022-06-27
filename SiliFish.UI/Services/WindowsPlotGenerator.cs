@@ -161,7 +161,7 @@ namespace Services
 
             return (leftImages, rightImages);
         }
-        public static (List<Image>, List<Image>) Plot(PlotType PlotType, double[] TimeArray, List<Cell> Cells, List<CellPool> Pools, 
+        public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools, 
             double dt , int tStart = 0, int tEnd = -1, int tSkip = 0, int nSample = 0)
         {
             if ((Cells == null || !Cells.Any()) && 
@@ -169,6 +169,7 @@ namespace Services
                 return (null, null);
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
+            double[] TimeArray = model.TimeArray;
             if (iEnd < iStart || iEnd >= TimeArray.Length)
                 iEnd = TimeArray.Length - 1;
            
@@ -186,6 +187,12 @@ namespace Services
                     return PlotStimuli(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
                 case PlotType.FullDyn:
                     return PlotFullDynamics(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
+                case PlotType.Episodes://TODO
+                    return PlotEpisodes(model, tStart, tEnd);
+                case PlotType.BodyAngleHeatMap://TODO
+                    break;
+                case PlotType.TailBeatFrequency://TODO
+                    break;
                 default:
                     break;
             }
@@ -196,59 +203,58 @@ namespace Services
         {
             return null; //TODO
         }
-        private static Image PlotEpisodes(List<SwimmingEpisode> episodes)
+
+        private static (List<Image>, List<Image>) PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
         {
-            return null; //TODO
+            List<Image> leftImages = new();
+            List<Image> rightImages = new();
+            double threshold = 1;
+            (double[] V, List<SwimmingEpisode> episodes) = model.DetectEvents(threshold);
+            double[,] V_threshold = new double[2, V.Length];
+            foreach (int i in Enumerable.Range(0, V.Length))
+            {
+                V_threshold[0, i] = V[i];
+                V_threshold[1, i] = threshold;
+            }
+
+            int iStart = model.runParam.iIndex(tStart); 
+            int iEnd = model.runParam.iIndex(tEnd);
+            //TODO color
+            leftImages.Add(UtilWindows.CreateLinePlot("Episodes", V_threshold, model.TimeArray, iStart, iEnd, 
+                Color.Red));
+            if (episodes.Any())
+            {
+                leftImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
+                    episodes.Select(e => e.EpisodeDuration).ToArray(),
+                    episodes.Select(e => e.Start).ToArray(),
+                    tStart, tEnd, Color.Red));
+                if (episodes.Count > 1)
+                    leftImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
+                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
+                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
+                        tStart, tEnd, Color.Red));
+            }
+
+            List<SwimmingEpisode> episodes2 = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
+            if (episodes2.Any())
+            {
+                rightImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
+                    episodes2.Select(e => e.EpisodeDuration).ToArray(),
+                    episodes2.Select(e => e.Start).ToArray(),
+                    tStart, tEnd, Color.Red));
+                if (episodes2.Count > 1)
+                    rightImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
+                        Enumerable.Range(0, episodes2.Count - 1).Select(i => episodes2[i + 1].Start - episodes[i].End).ToArray(),
+                        Enumerable.Range(0, episodes2.Count - 1).Select(i => episodes2[i].End).ToArray(),
+                        tStart, tEnd, Color.Red));
+            }
+
+            return (leftImages, rightImages);
         }
-        private static Image PlotEpisodeDurations(List<SwimmingEpisode> episodes, double tStart, double tEnd)
-        {
-            return UtilWindows.CreateScatterPlot("Episode Duration",
-                episodes.Select(e => e.EpisodeDuration).ToArray(),
-                episodes.Select(e => e.Start).ToArray(),
-                tStart, tEnd, Color.Red);
-        }
-        private static Image PlotInterEpisodeIntervals(List<SwimmingEpisode> episodes)
-        {
-            return null; //TODO
-        }
+
         private static Image PlotInstantaneousFrequency(List<SwimmingEpisode> episodes)
         {
             return null; //TODO
-        }
-
-        public static Image Plot(PlotType PlotType, SwimmingModel model, int tStart = 0, int tEnd = -1, int tSkip = 0)
-        {
-            if (model == null || !model.ModelRun) return null;
-
-            List<SwimmingEpisode> episodes =  model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
-            double dt = model.runParam.dt;
-            double[] TimeArray = model.TimeArray;
-
-            int iStart = (int)((tStart + tSkip) / dt);
-            int iEnd = (int)((tEnd + tSkip) / dt);
-            int offset = tSkip;
-            if (iEnd < iStart || iEnd >= TimeArray.Length)
-                iEnd = TimeArray.Length - 1;
-
-            double[] TimeOffset = offset > 0 ? (TimeArray.Select(t => t - offset).ToArray()) : TimeArray;
-
-
-            switch (PlotType)
-            {
-                case PlotType.BodyAngleHeatMap://TODO
-                    break;
-                case PlotType.Episodes://TODO
-                    break;
-                case PlotType.EpisodeDuration://TODO
-                    return PlotEpisodeDurations(episodes, tStart, tEnd);
-                case PlotType.InterEpisodeInterval://TODO
-                    break;
-                case PlotType.InstantaneousFrequency://TODO
-                    break;
-                default:
-                    break;
-            }
-            return null;
         }
 
 
