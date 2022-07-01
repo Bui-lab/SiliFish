@@ -592,7 +592,7 @@ namespace SiliFish
             return somiteCoordinates;
         }
 
-        public List<SwimmingEpisode> GetSwimmingEpisodes(double left_bound, double right_bound, int delay)
+        public (Coordinate[] , List<SwimmingEpisode>) GetSwimmingEpisodes(double left_bound, double right_bound, int delay)
         {
             /*Converted from the code written by Yann Roussel and Tuan Bui
             This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
@@ -619,15 +619,18 @@ namespace SiliFish
             double offset = runParam.tSkip;
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
-            for (int i = 0; i < tail_tip_coord.Length - 10; i++)
+            int i = 0;
+            while (i < nMax)
             {
-                int iMax = Math.Min(i + delay, nMax - 1);
+                int iMax = Math.Min(i + delay, nMax);
                 Coordinate[] window = tail_tip_coord[i..iMax];
                 if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
                 {
                     side = 0;
                     lastEpisode?.EndEpisode(i * dt);
                     lastEpisode = null;
+                    i = iMax;
+                    continue;
                 }
 
                 if (lastEpisode == null)
@@ -659,28 +662,13 @@ namespace SiliFish
                         lastEpisode.EndBeat(i * dt - offset);
                     }
                 }
+                i++;
             }
 
-            return episodes;
+            return (tail_tip_coord, episodes.Where(e => e.End > 0).ToList());
         }
 
-        public (double[], List<SwimmingEpisode>) DetectEvents(double v_threshold)
-        {
-            double[] V = new double[runParam.iMax];
-            MuscleCellPools.ForEach(cp => cp.GetCells().ToList().ForEach(c => V = V.AddArray(c.V)));
-            //TODO the convolition (numpy.smooth func) is missing
-            double[] start = Enumerable.Range(0, Time.Length - 1)
-                .Where(i => V[i] < v_threshold && V[i + 1] > v_threshold).Select(i => Time[i]).ToArray();
-            double[] end = Enumerable.Range(0, Time.Length - 1)
-                .Where(i => V[i] > v_threshold && V[i + 1] < v_threshold).Select(i => Time[i]).ToArray();
-            if (start.Any() && end.Any() && end[0] < start[0])
-                end = end.Skip(1).ToArray();
-            List<SwimmingEpisode> events = new();
-            int numOfEvents = Math.Min(start.Length, end.Length);
-            foreach (int i in Enumerable.Range(0, numOfEvents))
-               events.Add(new SwimmingEpisode(start[i], end[i]));
-            return (V, events);
-          }
+
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         public static void ExceptionHandling(string name, Exception ex)

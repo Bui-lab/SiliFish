@@ -36,6 +36,7 @@ namespace SiliFish.DataTypes
         }
 
         public int NumOfBeats { get { return beats?.Count ?? 0; } }
+        public double BeatFrequency { get { return EpisodeDuration > 0 ? NumOfBeats / EpisodeDuration : 0; } }
         public double EpisodeDuration { get { return episodeEnd - episodeStart; } }
 
         public double Start { get { return episodeStart; } }

@@ -21,15 +21,13 @@ namespace SiliFish
     
     public enum PlotType {
         [Display(Name = "Memb. Potential")] MembPotential, 
-        [Description("Gap and chemical currents")] Current,
+        [Display(Name = "Current"), Description("Gap and chemical currents")] Current,
         [Display(Name = "Gap Current")] GapCurrent,
         [Display(Name = "Synaptic Current")] ChemCurrent,
         [Display(Name = "Stimuli")] Stimuli,
         [Display(Name = "Full Dynamics")] FullDyn,
         [Display(Name = "Body Angle Heat Map")] BodyAngleHeatMap,
-        Episodes,
-        [Display(Name = "Tail Beat Frequency")] TailBeatFrequency,
-
+        [Display(Name = "Episodes")] Episodes
     }
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
