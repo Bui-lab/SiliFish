@@ -986,7 +986,7 @@ namespace SiliFish.UI
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 
-                int ncol = plotExtendWindows != PlotExtend.FullModel && leftImages?.Count > 1 ? 2 : 1;
+                int ncol = (!ddGroupingWindows.Enabled || plotExtendWindows != PlotExtend.FullModel) && leftImages?.Count > 1 ? 2 : 1;
                 int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
                 pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
                 if (rightImages != null && rightImages.Any())
@@ -1025,7 +1025,7 @@ namespace SiliFish.UI
         private void ddPlotWindows_SelectedIndexChanged(object sender, EventArgs e)
         {
             PlotType plotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotWindows.Text);
-            if (plotType == PlotType.Episodes)
+            if (plotType==PlotType.Episodes)
             {
                 ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = false;
                 ddGroupingWindows.SelectedIndex = ddCellsPoolsWindows.SelectedIndex = -1;
