@@ -455,7 +455,11 @@ namespace SiliFish
                 {
                     iProgress = index;
                     Time[index] = Math.Round(runParam.dt * index - runParam.tSkip, 2);
-
+                    if (CancelRun)
+                    {
+                        CancelRun = false;
+                        return;
+                    }
                     CalculateNeuronalOutputs(index);
                     CalculateMembranePotentialsFromCurrents(index);
                 }
@@ -668,7 +672,7 @@ namespace SiliFish
             return (tail_tip_coord, episodes.Where(e => e.End > 0).ToList());
         }
 
-
+        public bool CancelRun { get; set; } = false;
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         public static void ExceptionHandling(string name, Exception ex)

@@ -74,6 +74,9 @@ namespace SiliFish.UI
                 ddPlotWindows.DataSource = Enum.GetValues(typeof(PlotType));
                 ddPlotWindows.DisplayMember = "DisplayNameValue";
                 ddPlotHTML.DataSource = Enum.GetNames(typeof(PlotType));
+
+                pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
+                pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
             }
             catch (Exception ex)
             {
@@ -512,17 +515,41 @@ namespace SiliFish.UI
             }
             finally
             {
-                Invoke(CompleteRun);
+                if (Model.ModelRun)
+                    Invoke(CompleteRun);
+                else
+                    Invoke(CancelRun);
             }
         }
+        private void CancelRun()
+        {
+            UseWaitCursor = false;
+            timerRun.Enabled = false;
+            progressBarRun.Value = progressBarRun.Maximum;
+            progressBarRun.Visible = false;
+            btnRun.Text = "Run";
+            modifiedJncs = modifiedPools = false;
 
+            if (ddPlotHTML.SelectedIndex < 0)
+                ddPlotHTML.SelectedIndex = 0;
+            btnPlot.Enabled = false;
+            btnAnimate.Enabled = false;
+            linkSaveRun.Visible = false;
+
+            ddCellsPoolsWindows.Items.Clear();
+
+            if (tabOutputs.SelectedTab == tabTextOutput)
+                eModelSummary.Text = Model.SummarizeModel();
+            lRunTime.Text = $"Last run cancelled\r\n" +
+                $"Model: {Model.ModelName}";
+        }
         private void CompleteRun()
         {
             UseWaitCursor = false;
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
             progressBarRun.Visible = false;
-            btnRun.Enabled = true;
+            btnRun.Text = "Run";
             modifiedJncs = modifiedPools = false;
 
             if (ddPlotHTML.SelectedIndex < 0)
@@ -545,12 +572,17 @@ namespace SiliFish.UI
         }
         private void btnRun_Click(object sender, EventArgs e)
         {
+            if (btnRun.Text == "Stop Run")
+            {
+                Model.CancelRun = true;
+                return;
+            }
             runStart = DateTime.Now;
             lRunTime.Text = "";
             UseWaitCursor = true;
             progressBarRun.Value = 0;
             progressBarRun.Visible = true;
-            btnRun.Enabled = false;
+            //btnRun.Enabled = false;
             timerRun.Enabled = true;
 
             tRunEnd = (int) eTimeEnd.Value;
@@ -573,6 +605,7 @@ namespace SiliFish.UI
             Model.runParam.tMax = tRunEnd;
             Model.runParam.dt = (double) edt.Value;
             if (Model == null) return;
+            btnRun.Text = "Stop Run";
             Task.Run(RunModel);
         }
 
@@ -935,7 +968,7 @@ namespace SiliFish.UI
             PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
             Invoke(CompleteCreatePlot);
         }
-        private void btnPlot_Click(object sender, EventArgs e)
+        private void btnPlotHTML_Click(object sender, EventArgs e)
         {
             if (Model == null || !Model.ModelRun) return;
             int tPlotStart = (int)ePlotStart.Value;
@@ -960,11 +993,31 @@ namespace SiliFish.UI
             webViewPlot.NavigateTo(PlotHTML, tempFolder, ref tempFile); 
             UseWaitCursor = false;
             btnPlot.Enabled = true;
+            lPlotHTMLTime.Text = $"Last plot: {DateTime.Now:t}";
         }
 
         #endregion
 
         #region Windows Plot
+
+        private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            PictureBox pb = sender as PictureBox;
+            if (pb.Tag == null)
+            {
+                pb.InitialImage = pb.Image;
+                pb.Tag = 0;
+            }
+            if (e.Delta > 0)
+                pb.Tag = (int)pb.Tag+1;
+            else
+                pb.Tag = (int)pb.Tag - 1;
+            double mult = 1 + 0.1 * (int)pb.Tag;
+            if (mult < 0.1) return;
+            Size sz = new Size((int)(pb.InitialImage.Width * mult), (int)(pb.InitialImage.Height * mult));
+            pb.Image = new Bitmap(pb.InitialImage, sz);            
+        }
+
         private void PlotWindows()
         {
             try
@@ -1002,6 +1055,7 @@ namespace SiliFish.UI
                     pictureBoxRight.Image = null;
                     splitWindows.Panel2Collapsed = true;
                 }
+                lPlotWindowsTime.Text = $"Last plot: {DateTime.Now:t}";
 
             }
             catch (Exception ex)

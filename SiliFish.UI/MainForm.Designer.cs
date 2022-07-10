@@ -79,9 +79,11 @@ namespace SiliFish.UI
             this.tabOutputs = new System.Windows.Forms.TabControl();
             this.tabPlot = new System.Windows.Forms.TabPage();
             this.splitWindows = new System.Windows.Forms.SplitContainer();
+            this.pWindowsPlotLeft = new System.Windows.Forms.Panel();
             this.pictureBoxLeft = new System.Windows.Forms.PictureBox();
             this.pictureBoxRight = new System.Windows.Forms.PictureBox();
             this.pPlotWindows = new System.Windows.Forms.Panel();
+            this.lPlotWindowsTime = new System.Windows.Forms.Label();
             this.ePlotWindowsEnd = new System.Windows.Forms.NumericUpDown();
             this.ePlotWindowsStart = new System.Windows.Forms.NumericUpDown();
             this.lGroupingWindows = new System.Windows.Forms.Label();
@@ -109,6 +111,7 @@ namespace SiliFish.UI
             this.tabHTMLPlot = new System.Windows.Forms.TabPage();
             this.webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlot = new System.Windows.Forms.Panel();
+            this.lPlotHTMLTime = new System.Windows.Forms.Label();
             this.ePlotEnd = new System.Windows.Forms.NumericUpDown();
             this.ePlotStart = new System.Windows.Forms.NumericUpDown();
             this.cbSampleHTML = new System.Windows.Forms.CheckBox();
@@ -194,6 +197,7 @@ namespace SiliFish.UI
             this.splitWindows.Panel1.SuspendLayout();
             this.splitWindows.Panel2.SuspendLayout();
             this.splitWindows.SuspendLayout();
+            this.pWindowsPlotLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRight)).BeginInit();
             this.pPlotWindows.SuspendLayout();
@@ -269,7 +273,7 @@ namespace SiliFish.UI
             this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTop.Location = new System.Drawing.Point(0, 0);
             this.pTop.Name = "pTop";
-            this.pTop.Size = new System.Drawing.Size(1071, 39);
+            this.pTop.Size = new System.Drawing.Size(1348, 39);
             this.pTop.TabIndex = 3;
             this.pTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pTop_MouseDoubleClick);
             // 
@@ -311,7 +315,7 @@ namespace SiliFish.UI
             // 
             this.linkSaveHTML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkSaveHTML.AutoSize = true;
-            this.linkSaveHTML.Location = new System.Drawing.Point(999, 12);
+            this.linkSaveHTML.Location = new System.Drawing.Point(1276, 12);
             this.linkSaveHTML.Name = "linkSaveHTML";
             this.linkSaveHTML.Size = new System.Drawing.Size(66, 15);
             this.linkSaveHTML.TabIndex = 3;
@@ -334,8 +338,8 @@ namespace SiliFish.UI
             // 
             this.splitMain.Panel2.Controls.Add(this.tabOutputs);
             this.splitMain.Panel2.Controls.Add(this.pParamBottom);
-            this.splitMain.Size = new System.Drawing.Size(1071, 672);
-            this.splitMain.SplitterDistance = 437;
+            this.splitMain.Size = new System.Drawing.Size(1348, 672);
+            this.splitMain.SplitterDistance = 550;
             this.splitMain.TabIndex = 5;
             // 
             // tabParams
@@ -347,7 +351,7 @@ namespace SiliFish.UI
             this.tabParams.Location = new System.Drawing.Point(0, 34);
             this.tabParams.Name = "tabParams";
             this.tabParams.SelectedIndex = 0;
-            this.tabParams.Size = new System.Drawing.Size(437, 638);
+            this.tabParams.Size = new System.Drawing.Size(550, 638);
             this.tabParams.TabIndex = 2;
             this.tabParams.Tag = "";
             // 
@@ -356,7 +360,7 @@ namespace SiliFish.UI
             this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
             this.tabCellPools.Location = new System.Drawing.Point(4, 24);
             this.tabCellPools.Name = "tabCellPools";
-            this.tabCellPools.Size = new System.Drawing.Size(429, 610);
+            this.tabCellPools.Size = new System.Drawing.Size(542, 610);
             this.tabCellPools.TabIndex = 1;
             this.tabCellPools.Text = "Cell Pools & Connections";
             this.tabCellPools.UseVisualStyleBackColor = true;
@@ -376,8 +380,8 @@ namespace SiliFish.UI
             // 
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
             this.splitCellPoolsAndConnections.Panel2MinSize = 200;
-            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(429, 610);
-            this.splitCellPoolsAndConnections.SplitterDistance = 200;
+            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 610);
+            this.splitCellPoolsAndConnections.SplitterDistance = 252;
             this.splitCellPoolsAndConnections.TabIndex = 5;
             // 
             // listCellPool
@@ -387,7 +391,7 @@ namespace SiliFish.UI
             this.listCellPool.Name = "listCellPool";
             this.listCellPool.SelectedIndex = -1;
             this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(200, 610);
+            this.listCellPool.Size = new System.Drawing.Size(252, 610);
             this.listCellPool.TabIndex = 5;
             this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -403,7 +407,7 @@ namespace SiliFish.UI
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(225, 610);
+            this.listConnections.Size = new System.Drawing.Size(286, 610);
             this.listConnections.TabIndex = 6;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -417,7 +421,7 @@ namespace SiliFish.UI
             this.tabStimuli.Controls.Add(this.listStimuli);
             this.tabStimuli.Location = new System.Drawing.Point(4, 24);
             this.tabStimuli.Name = "tabStimuli";
-            this.tabStimuli.Size = new System.Drawing.Size(429, 610);
+            this.tabStimuli.Size = new System.Drawing.Size(542, 610);
             this.tabStimuli.TabIndex = 3;
             this.tabStimuli.Text = "Stimuli";
             this.tabStimuli.UseVisualStyleBackColor = true;
@@ -429,7 +433,7 @@ namespace SiliFish.UI
             this.listStimuli.Name = "listStimuli";
             this.listStimuli.SelectedIndex = -1;
             this.listStimuli.SelectedItem = null;
-            this.listStimuli.Size = new System.Drawing.Size(429, 610);
+            this.listStimuli.Size = new System.Drawing.Size(542, 610);
             this.listStimuli.TabIndex = 6;
             this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
             this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
@@ -448,7 +452,7 @@ namespace SiliFish.UI
             this.tabGeneral.Controls.Add(this.lModelName);
             this.tabGeneral.Location = new System.Drawing.Point(4, 24);
             this.tabGeneral.Name = "tabGeneral";
-            this.tabGeneral.Size = new System.Drawing.Size(429, 610);
+            this.tabGeneral.Size = new System.Drawing.Size(542, 610);
             this.tabGeneral.TabIndex = 4;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
@@ -463,7 +467,7 @@ namespace SiliFish.UI
             this.pBodyDiagrams.Controls.Add(this.picCrossSection);
             this.pBodyDiagrams.Location = new System.Drawing.Point(192, 77);
             this.pBodyDiagrams.Name = "pBodyDiagrams";
-            this.pBodyDiagrams.Size = new System.Drawing.Size(237, 316);
+            this.pBodyDiagrams.Size = new System.Drawing.Size(350, 316);
             this.pBodyDiagrams.TabIndex = 15;
             this.pBodyDiagrams.SizeChanged += new System.EventHandler(this.pBodyDiagrams_SizeChanged);
             // 
@@ -680,7 +684,7 @@ namespace SiliFish.UI
             this.eModelDescription.Multiline = true;
             this.eModelDescription.Name = "eModelDescription";
             this.eModelDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.eModelDescription.Size = new System.Drawing.Size(289, 41);
+            this.eModelDescription.Size = new System.Drawing.Size(402, 41);
             this.eModelDescription.TabIndex = 7;
             // 
             // eModelName
@@ -689,7 +693,7 @@ namespace SiliFish.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eModelName.Location = new System.Drawing.Point(131, 3);
             this.eModelName.Name = "eModelName";
-            this.eModelName.Size = new System.Drawing.Size(289, 23);
+            this.eModelName.Size = new System.Drawing.Size(402, 23);
             this.eModelName.TabIndex = 6;
             // 
             // lModelDescription
@@ -718,7 +722,7 @@ namespace SiliFish.UI
             this.pMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMain.Location = new System.Drawing.Point(0, 0);
             this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(437, 34);
+            this.pMain.Size = new System.Drawing.Size(550, 34);
             this.pMain.TabIndex = 4;
             // 
             // linkLoadParam
@@ -765,7 +769,7 @@ namespace SiliFish.UI
             this.tabOutputs.Location = new System.Drawing.Point(0, 133);
             this.tabOutputs.Name = "tabOutputs";
             this.tabOutputs.SelectedIndex = 0;
-            this.tabOutputs.Size = new System.Drawing.Size(630, 539);
+            this.tabOutputs.Size = new System.Drawing.Size(794, 539);
             this.tabOutputs.TabIndex = 1;
             this.tabOutputs.SelectedIndexChanged += new System.EventHandler(this.tabOutputs_SelectedIndexChanged);
             // 
@@ -776,7 +780,7 @@ namespace SiliFish.UI
             this.tabPlot.Location = new System.Drawing.Point(4, 24);
             this.tabPlot.Name = "tabPlot";
             this.tabPlot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPlot.Size = new System.Drawing.Size(622, 511);
+            this.tabPlot.Size = new System.Drawing.Size(786, 511);
             this.tabPlot.TabIndex = 4;
             this.tabPlot.Text = "Plots";
             this.tabPlot.UseVisualStyleBackColor = true;
@@ -790,39 +794,50 @@ namespace SiliFish.UI
             // 
             // splitWindows.Panel1
             // 
-            this.splitWindows.Panel1.Controls.Add(this.pictureBoxLeft);
+            this.splitWindows.Panel1.AutoScroll = true;
+            this.splitWindows.Panel1.Controls.Add(this.pWindowsPlotLeft);
             // 
             // splitWindows.Panel2
             // 
             this.splitWindows.Panel2.Controls.Add(this.pictureBoxRight);
-            this.splitWindows.Size = new System.Drawing.Size(616, 414);
-            this.splitWindows.SplitterDistance = 287;
+            this.splitWindows.Size = new System.Drawing.Size(780, 414);
+            this.splitWindows.SplitterDistance = 363;
             this.splitWindows.TabIndex = 0;
             this.splitWindows.DoubleClick += new System.EventHandler(this.splitWindows_DoubleClick);
+            // 
+            // pWindowsPlotLeft
+            // 
+            this.pWindowsPlotLeft.AutoScroll = true;
+            this.pWindowsPlotLeft.Controls.Add(this.pictureBoxLeft);
+            this.pWindowsPlotLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pWindowsPlotLeft.Location = new System.Drawing.Point(0, 0);
+            this.pWindowsPlotLeft.Name = "pWindowsPlotLeft";
+            this.pWindowsPlotLeft.Size = new System.Drawing.Size(361, 412);
+            this.pWindowsPlotLeft.TabIndex = 1;
             // 
             // pictureBoxLeft
             // 
             this.pictureBoxLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxLeft.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxLeft.Name = "pictureBoxLeft";
-            this.pictureBoxLeft.Size = new System.Drawing.Size(285, 412);
-            this.pictureBoxLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxLeft.Size = new System.Drawing.Size(361, 412);
+            this.pictureBoxLeft.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBoxLeft.TabIndex = 0;
             this.pictureBoxLeft.TabStop = false;
             // 
             // pictureBoxRight
             // 
-            this.pictureBoxRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxRight.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxRight.Name = "pictureBoxRight";
-            this.pictureBoxRight.Size = new System.Drawing.Size(323, 412);
-            this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxRight.Size = new System.Drawing.Size(411, 412);
+            this.pictureBoxRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBoxRight.TabIndex = 0;
             this.pictureBoxRight.TabStop = false;
             // 
             // pPlotWindows
             // 
             this.pPlotWindows.BackColor = System.Drawing.SystemColors.Control;
+            this.pPlotWindows.Controls.Add(this.lPlotWindowsTime);
             this.pPlotWindows.Controls.Add(this.ePlotWindowsEnd);
             this.pPlotWindows.Controls.Add(this.ePlotWindowsStart);
             this.pPlotWindows.Controls.Add(this.lGroupingWindows);
@@ -841,8 +856,15 @@ namespace SiliFish.UI
             this.pPlotWindows.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlotWindows.Location = new System.Drawing.Point(3, 3);
             this.pPlotWindows.Name = "pPlotWindows";
-            this.pPlotWindows.Size = new System.Drawing.Size(616, 91);
+            this.pPlotWindows.Size = new System.Drawing.Size(780, 91);
             this.pPlotWindows.TabIndex = 5;
+            // 
+            // lPlotWindowsTime
+            // 
+            this.lPlotWindowsTime.Location = new System.Drawing.Point(455, 54);
+            this.lPlotWindowsTime.Name = "lPlotWindowsTime";
+            this.lPlotWindowsTime.Size = new System.Drawing.Size(221, 23);
+            this.lPlotWindowsTime.TabIndex = 41;
             // 
             // ePlotWindowsEnd
             // 
@@ -1008,7 +1030,7 @@ namespace SiliFish.UI
             // 
             // btnPlotWindows
             // 
-            this.btnPlotWindows.Location = new System.Drawing.Point(498, 28);
+            this.btnPlotWindows.Location = new System.Drawing.Point(455, 27);
             this.btnPlotWindows.Name = "btnPlotWindows";
             this.btnPlotWindows.Size = new System.Drawing.Size(75, 23);
             this.btnPlotWindows.TabIndex = 40;
@@ -1038,7 +1060,7 @@ namespace SiliFish.UI
             this.tab2DModel.Controls.Add(this.p2DModel);
             this.tab2DModel.Location = new System.Drawing.Point(4, 24);
             this.tab2DModel.Name = "tab2DModel";
-            this.tab2DModel.Size = new System.Drawing.Size(622, 511);
+            this.tab2DModel.Size = new System.Drawing.Size(786, 511);
             this.tab2DModel.TabIndex = 2;
             this.tab2DModel.Text = "2D Model";
             this.tab2DModel.UseVisualStyleBackColor = true;
@@ -1051,7 +1073,7 @@ namespace SiliFish.UI
             this.webView2DModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView2DModel.Location = new System.Drawing.Point(0, 30);
             this.webView2DModel.Name = "webView2DModel";
-            this.webView2DModel.Size = new System.Drawing.Size(622, 481);
+            this.webView2DModel.Size = new System.Drawing.Size(786, 481);
             this.webView2DModel.TabIndex = 1;
             this.webView2DModel.ZoomFactor = 1D;
             this.webView2DModel.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
@@ -1063,7 +1085,7 @@ namespace SiliFish.UI
             this.p2DModel.Dock = System.Windows.Forms.DockStyle.Top;
             this.p2DModel.Location = new System.Drawing.Point(0, 0);
             this.p2DModel.Name = "p2DModel";
-            this.p2DModel.Size = new System.Drawing.Size(622, 30);
+            this.p2DModel.Size = new System.Drawing.Size(786, 30);
             this.p2DModel.TabIndex = 2;
             // 
             // btnGenerate2DModel
@@ -1084,7 +1106,7 @@ namespace SiliFish.UI
             this.tab3DModel.Location = new System.Drawing.Point(4, 24);
             this.tab3DModel.Name = "tab3DModel";
             this.tab3DModel.Padding = new System.Windows.Forms.Padding(3);
-            this.tab3DModel.Size = new System.Drawing.Size(622, 511);
+            this.tab3DModel.Size = new System.Drawing.Size(786, 511);
             this.tab3DModel.TabIndex = 0;
             this.tab3DModel.Text = "3D Model";
             this.tab3DModel.UseVisualStyleBackColor = true;
@@ -1097,7 +1119,7 @@ namespace SiliFish.UI
             this.webView3DModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView3DModel.Location = new System.Drawing.Point(3, 33);
             this.webView3DModel.Name = "webView3DModel";
-            this.webView3DModel.Size = new System.Drawing.Size(616, 475);
+            this.webView3DModel.Size = new System.Drawing.Size(780, 475);
             this.webView3DModel.TabIndex = 0;
             this.webView3DModel.ZoomFactor = 1D;
             this.webView3DModel.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
@@ -1110,7 +1132,7 @@ namespace SiliFish.UI
             this.p3DModel.Dock = System.Windows.Forms.DockStyle.Top;
             this.p3DModel.Location = new System.Drawing.Point(3, 3);
             this.p3DModel.Name = "p3DModel";
-            this.p3DModel.Size = new System.Drawing.Size(616, 30);
+            this.p3DModel.Size = new System.Drawing.Size(780, 30);
             this.p3DModel.TabIndex = 3;
             // 
             // dd3DModelType
@@ -1146,7 +1168,7 @@ namespace SiliFish.UI
             this.tabHTMLPlot.Location = new System.Drawing.Point(4, 24);
             this.tabHTMLPlot.Name = "tabHTMLPlot";
             this.tabHTMLPlot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabHTMLPlot.Size = new System.Drawing.Size(622, 511);
+            this.tabHTMLPlot.Size = new System.Drawing.Size(786, 511);
             this.tabHTMLPlot.TabIndex = 1;
             this.tabHTMLPlot.Text = "HTML Plots";
             this.tabHTMLPlot.UseVisualStyleBackColor = true;
@@ -1159,7 +1181,7 @@ namespace SiliFish.UI
             this.webViewPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlot.Location = new System.Drawing.Point(3, 108);
             this.webViewPlot.Name = "webViewPlot";
-            this.webViewPlot.Size = new System.Drawing.Size(616, 400);
+            this.webViewPlot.Size = new System.Drawing.Size(780, 400);
             this.webViewPlot.TabIndex = 1;
             this.webViewPlot.ZoomFactor = 1D;
             this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlot_CoreWebView2InitializationCompleted);
@@ -1167,6 +1189,7 @@ namespace SiliFish.UI
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.SystemColors.Control;
+            this.pPlot.Controls.Add(this.lPlotHTMLTime);
             this.pPlot.Controls.Add(this.ePlotEnd);
             this.pPlot.Controls.Add(this.ePlotStart);
             this.pPlot.Controls.Add(this.cbSampleHTML);
@@ -1186,8 +1209,15 @@ namespace SiliFish.UI
             this.pPlot.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlot.Location = new System.Drawing.Point(3, 3);
             this.pPlot.Name = "pPlot";
-            this.pPlot.Size = new System.Drawing.Size(616, 105);
+            this.pPlot.Size = new System.Drawing.Size(780, 105);
             this.pPlot.TabIndex = 4;
+            // 
+            // lPlotHTMLTime
+            // 
+            this.lPlotHTMLTime.Location = new System.Drawing.Point(446, 55);
+            this.lPlotHTMLTime.Name = "lPlotHTMLTime";
+            this.lPlotHTMLTime.Size = new System.Drawing.Size(221, 23);
+            this.lPlotHTMLTime.TabIndex = 42;
             // 
             // ePlotEnd
             // 
@@ -1370,7 +1400,7 @@ namespace SiliFish.UI
             this.btnPlot.TabIndex = 30;
             this.btnPlot.Text = "Plot";
             this.btnPlot.UseVisualStyleBackColor = true;
-            this.btnPlot.Click += new System.EventHandler(this.btnPlot_Click);
+            this.btnPlot.Click += new System.EventHandler(this.btnPlotHTML_Click);
             // 
             // ddPlotHTML
             // 
@@ -1389,7 +1419,7 @@ namespace SiliFish.UI
             this.tabAnimation.Controls.Add(this.pAnimation);
             this.tabAnimation.Location = new System.Drawing.Point(4, 24);
             this.tabAnimation.Name = "tabAnimation";
-            this.tabAnimation.Size = new System.Drawing.Size(622, 511);
+            this.tabAnimation.Size = new System.Drawing.Size(786, 511);
             this.tabAnimation.TabIndex = 3;
             this.tabAnimation.Text = "Animation";
             this.tabAnimation.UseVisualStyleBackColor = true;
@@ -1402,7 +1432,7 @@ namespace SiliFish.UI
             this.webViewAnimation.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewAnimation.Location = new System.Drawing.Point(0, 67);
             this.webViewAnimation.Name = "webViewAnimation";
-            this.webViewAnimation.Size = new System.Drawing.Size(622, 444);
+            this.webViewAnimation.Size = new System.Drawing.Size(786, 444);
             this.webViewAnimation.TabIndex = 2;
             this.webViewAnimation.ZoomFactor = 1D;
             this.webViewAnimation.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
@@ -1424,7 +1454,7 @@ namespace SiliFish.UI
             this.pAnimation.Dock = System.Windows.Forms.DockStyle.Top;
             this.pAnimation.Location = new System.Drawing.Point(0, 0);
             this.pAnimation.Name = "pAnimation";
-            this.pAnimation.Size = new System.Drawing.Size(622, 67);
+            this.pAnimation.Size = new System.Drawing.Size(786, 67);
             this.pAnimation.TabIndex = 5;
             // 
             // linkSaveAnimationCSV
@@ -1561,7 +1591,7 @@ namespace SiliFish.UI
             this.tabTextOutput.Location = new System.Drawing.Point(4, 24);
             this.tabTextOutput.Name = "tabTextOutput";
             this.tabTextOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTextOutput.Size = new System.Drawing.Size(622, 511);
+            this.tabTextOutput.Size = new System.Drawing.Size(786, 511);
             this.tabTextOutput.TabIndex = 5;
             this.tabTextOutput.Text = "Text Output";
             this.tabTextOutput.UseVisualStyleBackColor = true;
@@ -1572,7 +1602,7 @@ namespace SiliFish.UI
             this.eModelSummary.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eModelSummary.Location = new System.Drawing.Point(3, 3);
             this.eModelSummary.Name = "eModelSummary";
-            this.eModelSummary.Size = new System.Drawing.Size(616, 505);
+            this.eModelSummary.Size = new System.Drawing.Size(780, 505);
             this.eModelSummary.TabIndex = 0;
             this.eModelSummary.Text = "";
             // 
@@ -1594,7 +1624,7 @@ namespace SiliFish.UI
             this.pParamBottom.Dock = System.Windows.Forms.DockStyle.Top;
             this.pParamBottom.Location = new System.Drawing.Point(0, 0);
             this.pParamBottom.Name = "pParamBottom";
-            this.pParamBottom.Size = new System.Drawing.Size(630, 133);
+            this.pParamBottom.Size = new System.Drawing.Size(794, 133);
             this.pParamBottom.TabIndex = 1;
             // 
             // eSkip
@@ -1710,7 +1740,7 @@ namespace SiliFish.UI
             // linkSaveRun
             // 
             this.linkSaveRun.AutoSize = true;
-            this.linkSaveRun.Location = new System.Drawing.Point(248, 85);
+            this.linkSaveRun.Location = new System.Drawing.Point(249, 85);
             this.linkSaveRun.Name = "linkSaveRun";
             this.linkSaveRun.Size = new System.Drawing.Size(55, 15);
             this.linkSaveRun.TabIndex = 27;
@@ -1724,7 +1754,7 @@ namespace SiliFish.UI
             this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.progressBarRun.Location = new System.Drawing.Point(0, 110);
             this.progressBarRun.Name = "progressBarRun";
-            this.progressBarRun.Size = new System.Drawing.Size(630, 23);
+            this.progressBarRun.Size = new System.Drawing.Size(794, 23);
             this.progressBarRun.TabIndex = 26;
             this.progressBarRun.Visible = false;
             // 
@@ -1787,7 +1817,7 @@ namespace SiliFish.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1071, 711);
+            this.ClientSize = new System.Drawing.Size(1348, 711);
             this.Controls.Add(this.splitMain);
             this.Controls.Add(this.pTop);
             this.Name = "MainForm";
@@ -1830,8 +1860,11 @@ namespace SiliFish.UI
             this.tabPlot.ResumeLayout(false);
             this.splitWindows.Panel1.ResumeLayout(false);
             this.splitWindows.Panel2.ResumeLayout(false);
+            this.splitWindows.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitWindows)).EndInit();
             this.splitWindows.ResumeLayout(false);
+            this.pWindowsPlotLeft.ResumeLayout(false);
+            this.pWindowsPlotLeft.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRight)).EndInit();
             this.pPlotWindows.ResumeLayout(false);
@@ -2002,5 +2035,8 @@ namespace SiliFish.UI
         private LinkLabel linkBrowseToTempFolder;
         private Label lAnimationTime;
         private LinkLabel linkSaveAnimationCSV;
+        private Label lPlotWindowsTime;
+        private Label lPlotHTMLTime;
+        private Panel pWindowsPlotLeft;
     }
 }

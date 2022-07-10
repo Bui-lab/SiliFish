@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SiliFish.UI.Properties {
+namespace SiliFish.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SiliFish.UI.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SiliFish.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace SiliFish.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2022-07-10T09:16:55
+        ///   Looks up a localized string similar to 2022-07-10T08:55:15
         ///.
         /// </summary>
         public static string BuildDate {

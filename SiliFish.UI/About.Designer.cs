@@ -38,7 +38,7 @@
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.timerAbout = new System.Windows.Forms.Timer(this.components);
             this.lLogo = new System.Windows.Forms.Label();
-            this.lBuiltOn = new System.Windows.Forms.Label();
+            this.lVersionEngine = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -109,21 +109,21 @@
             this.lLogo.TabIndex = 15;
             this.lLogo.Text = "Logo design by Sibel Aydin";
             // 
-            // lBuiltOn
+            // lVersionEngine
             // 
-            this.lBuiltOn.AutoSize = true;
-            this.lBuiltOn.Location = new System.Drawing.Point(15, 308);
-            this.lBuiltOn.Name = "lBuiltOn";
-            this.lBuiltOn.Size = new System.Drawing.Size(109, 15);
-            this.lBuiltOn.TabIndex = 16;
-            this.lBuiltOn.Text = "Built on 2022-06-03";
+            this.lVersionEngine.AutoSize = true;
+            this.lVersionEngine.Location = new System.Drawing.Point(14, 308);
+            this.lVersionEngine.Name = "lVersionEngine";
+            this.lVersionEngine.Size = new System.Drawing.Size(72, 15);
+            this.lVersionEngine.TabIndex = 17;
+            this.lVersionEngine.Text = "Version 0.1.1";
             // 
             // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(326, 409);
-            this.Controls.Add(this.lBuiltOn);
+            this.Controls.Add(this.lVersionEngine);
             this.Controls.Add(this.lLogo);
             this.Controls.Add(this.pbLogo);
             this.Controls.Add(this.linkGitHub);
@@ -151,6 +151,6 @@
         private PictureBox pbLogo;
         private System.Windows.Forms.Timer timerAbout;
         private Label lLogo;
-        private Label lBuiltOn;
+        private Label lVersionEngine;
     }
 }
