@@ -226,6 +226,14 @@ namespace Services
                         Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
                         Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
                         tStart, tEnd, Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
+                    episodes.SelectMany(e => e.InstantFequency).ToArray(),
+                    episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray(),
+                    tStart, tEnd, Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
+                    episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
+                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray(),
+                    tStart, tEnd, Color.Red));
                 leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat Frequency",
                     episodes.Select(e => e.BeatFrequency).ToArray(),
                     episodes.Select(e => e.Start).ToArray(),
