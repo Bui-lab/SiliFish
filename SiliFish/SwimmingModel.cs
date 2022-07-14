@@ -499,10 +499,10 @@ namespace SiliFish
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double R = (leftMuscle.R + rightMuscle.R) / 2;
-                    double coef = alpha * (1 - 0.2 * R);//The formula in the paper
-                    //TODO test the coef in the paper
-                    coef = 0.1;
+                    //alpha is the conversion coefficient: "Animation.ConversionCoef"
+                    double coef = alpha * (1 - 0.2 * R);//The formula in the paper. 0.1 is used in the python code
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
+                    //khi is the damping coefficient: "Animation.DampingCoef"
                     double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
@@ -604,7 +604,7 @@ namespace SiliFish
             :param dt: float, time step
             :param lower_bound: int, bound used to discriminate swimming tail beats from noise
             :param upper_bound: int, bound used to discriminate swimming tail beats from noise
-            :param delay: float, defines the time window during wich we consider tail beats
+            :param delay: float, defines the time window during which we consider tail beats
             :return: Four 1-D numpy arrays for number of tail beats, interbeat time intervals, start times and beat times
             */
 
@@ -623,15 +623,16 @@ namespace SiliFish
             double offset = runParam.tSkip;
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
-            int i = 0;
+            int i = (int)(offset/dt);
             while (i < nMax)
             {
                 int iMax = Math.Min(i + delay, nMax);
                 Coordinate[] window = tail_tip_coord[i..iMax];
+                double t = TimeArray[i];
                 if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
                 {
                     side = 0;
-                    lastEpisode?.EndEpisode(i * dt);
+                    lastEpisode?.EndEpisode(t);
                     lastEpisode = null;
                     i = iMax;
                     continue;
@@ -641,13 +642,13 @@ namespace SiliFish
                 {
                     if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
                     {
-                        lastEpisode = new SwimmingEpisode(i * dt - offset);
+                        lastEpisode = new SwimmingEpisode(t);
                         episodes.Add(lastEpisode);
                         side = LEFT;
                     }
                     else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
                     {
-                        lastEpisode = new SwimmingEpisode(i * dt - offset);
+                        lastEpisode = new SwimmingEpisode(t);
                         episodes.Add(lastEpisode);
                         side = RIGHT;
                     }
@@ -657,13 +658,13 @@ namespace SiliFish
                     if (tail_tip_coord[i].X < left_bound && side == RIGHT)
                     {
                         side = LEFT;
-                        lastEpisode.EndBeat(i * dt - offset);
+                        lastEpisode.EndBeat(t);
                     }
 
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
-                        lastEpisode.EndBeat(i * dt - offset);
+                        lastEpisode.EndBeat(t);
                     }
                 }
                 i++;

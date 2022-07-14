@@ -79,7 +79,6 @@ namespace SiliFish.UI
             this.tabOutputs = new System.Windows.Forms.TabControl();
             this.tabPlot = new System.Windows.Forms.TabPage();
             this.splitWindows = new System.Windows.Forms.SplitContainer();
-            this.pWindowsPlotLeft = new System.Windows.Forms.Panel();
             this.pictureBoxLeft = new System.Windows.Forms.PictureBox();
             this.pictureBoxRight = new System.Windows.Forms.PictureBox();
             this.pPlotWindows = new System.Windows.Forms.Panel();
@@ -197,7 +196,6 @@ namespace SiliFish.UI
             this.splitWindows.Panel1.SuspendLayout();
             this.splitWindows.Panel2.SuspendLayout();
             this.splitWindows.SuspendLayout();
-            this.pWindowsPlotLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRight)).BeginInit();
             this.pPlotWindows.SuspendLayout();
@@ -286,7 +284,8 @@ namespace SiliFish.UI
             this.linkBrowseToTempFolder.TabIndex = 6;
             this.linkBrowseToTempFolder.TabStop = true;
             this.linkBrowseToTempFolder.Text = "Browse to Temp Folder";
-            this.linkBrowseToTempFolder.Visible = false;
+            this.toolTip.SetToolTip(this.linkBrowseToTempFolder, "Keeps te,porary html files created. If there is any issues with the plots, you ca" +
+        "n check the temp folder. The contents are cleared at exit.");
             this.linkBrowseToTempFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkBrowseToTempFolder_LinkClicked);
             // 
             // linkClearModel
@@ -795,29 +794,19 @@ namespace SiliFish.UI
             // splitWindows.Panel1
             // 
             this.splitWindows.Panel1.AutoScroll = true;
-            this.splitWindows.Panel1.Controls.Add(this.pWindowsPlotLeft);
+            this.splitWindows.Panel1.Controls.Add(this.pictureBoxLeft);
             // 
             // splitWindows.Panel2
             // 
+            this.splitWindows.Panel2.AutoScroll = true;
             this.splitWindows.Panel2.Controls.Add(this.pictureBoxRight);
             this.splitWindows.Size = new System.Drawing.Size(780, 414);
             this.splitWindows.SplitterDistance = 363;
             this.splitWindows.TabIndex = 0;
             this.splitWindows.DoubleClick += new System.EventHandler(this.splitWindows_DoubleClick);
             // 
-            // pWindowsPlotLeft
-            // 
-            this.pWindowsPlotLeft.AutoScroll = true;
-            this.pWindowsPlotLeft.Controls.Add(this.pictureBoxLeft);
-            this.pWindowsPlotLeft.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pWindowsPlotLeft.Location = new System.Drawing.Point(0, 0);
-            this.pWindowsPlotLeft.Name = "pWindowsPlotLeft";
-            this.pWindowsPlotLeft.Size = new System.Drawing.Size(361, 412);
-            this.pWindowsPlotLeft.TabIndex = 1;
-            // 
             // pictureBoxLeft
             // 
-            this.pictureBoxLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxLeft.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxLeft.Name = "pictureBoxLeft";
             this.pictureBoxLeft.Size = new System.Drawing.Size(361, 412);
@@ -1859,12 +1848,11 @@ namespace SiliFish.UI
             this.tabOutputs.ResumeLayout(false);
             this.tabPlot.ResumeLayout(false);
             this.splitWindows.Panel1.ResumeLayout(false);
+            this.splitWindows.Panel1.PerformLayout();
             this.splitWindows.Panel2.ResumeLayout(false);
             this.splitWindows.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitWindows)).EndInit();
             this.splitWindows.ResumeLayout(false);
-            this.pWindowsPlotLeft.ResumeLayout(false);
-            this.pWindowsPlotLeft.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRight)).EndInit();
             this.pPlotWindows.ResumeLayout(false);
@@ -2037,6 +2025,5 @@ namespace SiliFish.UI
         private LinkLabel linkSaveAnimationCSV;
         private Label lPlotWindowsTime;
         private Label lPlotHTMLTime;
-        private Panel pWindowsPlotLeft;
     }
 }

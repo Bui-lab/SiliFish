@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace SiliFish.PredefinedModels
 {
@@ -147,12 +147,12 @@ namespace SiliFish.PredefinedModels
             L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
             R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
 
-            TimeLine tl = new();
-            tl.AddTimeRange(this.tStimStart);
-            Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
 
             for (int i = 0; i < nV2a; i++)
             {
+                TimeLine tl = new();
+                tl.AddTimeRange(this.tStimStart + 32 * i);
+                Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
                 L_V2a.AddCell(new Neuron("V2a", seq: i, v2a_dyn, init_v: -64, init_u: -16, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), y: -1), cv: cv, stim: stim));
                 R_V2a.AddCell(new Neuron("V2a", seq: i, v2a_dyn, init_v: -64, init_u: -16, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), y: 1), cv: cv, stim: stim));
             }

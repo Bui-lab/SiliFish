@@ -1041,7 +1041,17 @@ namespace SiliFish.UI
 
                 int ncol = (!ddGroupingWindows.Enabled || plotExtendWindows != PlotExtend.FullModel) && leftImages?.Count > 1 ? 2 : 1;
                 int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
-                pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
+
+                if (leftImages != null && leftImages.Any())
+                {
+                    pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
+                    splitWindows.Panel1Collapsed = false;
+                }
+                else 
+                {
+                    pictureBoxLeft.Image = null;
+                    splitWindows.Panel1Collapsed = true;
+                }
                 if (rightImages != null && rightImages.Any())
                 {
                     ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
@@ -1055,6 +1065,8 @@ namespace SiliFish.UI
                     pictureBoxRight.Image = null;
                     splitWindows.Panel2Collapsed = true;
                 }
+                pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
+                pictureBoxRight.Tag = null;//for proper zooming it has to be reset
                 lPlotWindowsTime.Text = $"Last plot: {DateTime.Now:t}";
 
             }
@@ -1073,7 +1085,8 @@ namespace SiliFish.UI
             string pool = ddCellsPoolsWindows.Text;
             List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
             eSampleWindows.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
-            PlotWindows();
+            if (!string.IsNullOrEmpty(pool))
+                PlotWindows();
         }
 
         private void ddPlotWindows_SelectedIndexChanged(object sender, EventArgs e)
@@ -1082,15 +1095,14 @@ namespace SiliFish.UI
             if (plotType==PlotType.Episodes)
             {
                 ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = false;
-                ddGroupingWindows.SelectedIndex = ddCellsPoolsWindows.SelectedIndex = -1;
+                ddGroupingWindows.SelectedIndex = -1;
+                ddCellsPoolsWindows.SelectedIndex = -1;
             }
             else
             {
                 ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = true;
             }
             toolTip.SetToolTip(ddPlotWindows, plotType.GetDescription());
-
-            PlotWindows();
         }
         private void cbSample_CheckedChanged(object sender, EventArgs e)
         {

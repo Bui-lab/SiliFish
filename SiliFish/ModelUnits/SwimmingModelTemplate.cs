@@ -26,7 +26,6 @@ namespace SiliFish.ModelUnits
         }
         public string CheckTemplate()
         {
-            //TODO warning message says :Names' but these are not names. Fix it!
             if (CellPoolTemplates.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
                 return "Cell pool names have to be unique";
             if (InterPoolTemplates.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
