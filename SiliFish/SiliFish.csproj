@@ -87,4 +87,12 @@
     <Exec Command="powershell -Command &quot;((Get-Date).ToUniversalTime()).ToString(\&quot;s\&quot;) | Out-File '$(ProjectDir)Resources\BuildDate.txt'" />
   </Target>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
+  </ItemGroup>
+
 </Project>

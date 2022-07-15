@@ -70,11 +70,13 @@ namespace SiliFish.Services
             html.Replace("__WIDTH__", swidth);
             html.Replace("__HEIGHT__", sheight);
         }
-        public string CreateTimeSeries(string title, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, 
+        public string CreateTimeSeries(string title, string animParams,
+            Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, 
             int iStart, int iEnd, double dt)
         {
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
+            html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 
             List<string> timeSeries = new();
             foreach (int timeIndex in Enumerable.Range(0, iEnd-iStart+1))
@@ -109,7 +111,15 @@ namespace SiliFish.Services
                 iEnd = model.TimeArray.Length - 1;
 
             AnimationGenerator animationGenerator = new();
-            return animationGenerator.CreateTimeSeries(title: model.ModelName + "Animation.html", 
+            Dictionary<string, object> animParamDict = model.GetParameters().Where(p => p.Key.StartsWith("Animation")).ToDictionary(x => x.Key, x => x.Value);
+            string animParams = "";
+            foreach (var param in animParamDict)
+            {
+                animParams += $"{param.Key}: {param.Value}\n";
+            }
+
+            return animationGenerator.CreateTimeSeries(title: model.ModelName + "Animation.html",
+                animParams,
                 model.GenerateSpineCoordinates(iStart, iEnd), model.TimeArray, iStart, iEnd, dt);
         }
     }

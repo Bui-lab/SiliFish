@@ -996,12 +996,9 @@
     "Dynamic.E_glu": "0",
     "Dynamic.E_gly": "-70",
     "Dynamic.E_gaba": "-70",
-    "Dynamic.DampingCoef": "3",
-    "Dynamic.w0": "2.5",
-    "Dynamic.ConversionCoef": "0.1",
-    "Animation.DampingCoef": 3,
-    "Animation.w0": 2.5,
-    "Animation.ConversionCoef": 0.1
+    "Animation.DampingCoef": "2",
+    "Animation.w0": "2.5",
+    "Animation.ConversionCoef": "0.15"
   },
   "AppliedStimuli": [
     {

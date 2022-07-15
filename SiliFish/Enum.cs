@@ -30,6 +30,13 @@ namespace SiliFish
         [Display(Name = "Episodes")] Episodes
     }
 
+    public enum PlotSelection
+    {
+        [Display(Name = "All")] All,
+        [Display(Name = "First/Middle/Last")] FirstMiddleLast,
+        [Display(Name = "Random")] Random
+    }
+
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
     public enum DistanceMode { Euclidean, Manhattan, Chebyshev, Haversine }
     public enum ConnectionType { NotSet, Synapse, Gap, NMJ}
