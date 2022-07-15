@@ -4,6 +4,3 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 using System.Diagnostics.CodeAnalysis;
-
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~M:SiliFish.UI.MainForm.webViewPlot_CoreWebView2InitializationCompleted(System.Object,Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs)")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~M:SiliFish.UI.MainForm.timerRun_Tick(System.Object,System.EventArgs)")]

@@ -7,6 +7,16 @@ using SiliFish.DataTypes;
 
 namespace SiliFish.ModelUnits
 {
+    public struct CellSelectionStruct
+    {
+        public PlotSelection somiteSelection = PlotSelection.All;
+        public int nSomite = -1;
+        public PlotSelection cellSelection = PlotSelection.All;
+        public int nCell = -1;
+        public CellSelectionStruct()
+        {
+        }
+    }
     public class CellPool
     {
         public static Func<double> gapWeightNoiseMultiplier;
@@ -187,19 +197,57 @@ namespace SiliFish.ModelUnits
             return Cells.FirstOrDefault(c => c.ID == id);
         }
 
-        public IEnumerable<Cell> GetCells(int nSample = -1)
+        public IEnumerable<Cell> GetCells()
         {
-            if (nSample < 0 || Cells.Count <= nSample)
-                return Cells.AsEnumerable<Cell>();
-            List<int> seq = new();
-            Random random = new();
-            seq.Add(Cells.Select(c => c.Sequence).Min());
-            if (nSample > 1)
-                seq.Add(Cells.Select(c => c.Sequence).Max());
-            if (nSample > 2)
-                seq.AddRange(Cells.Where(c => !seq.Contains(c.Sequence)).OrderBy(c => random.Next()).Select(c => c.Sequence).Take(nSample - 2));
-            return Cells.Where(c => seq.Contains(c.Sequence)).OrderBy(c => c.Sequence).Distinct().AsEnumerable<Cell>();
+            return Cells.AsEnumerable<Cell>();
         }
+
+        public IEnumerable<Cell> GetCells(CellSelectionStruct cellSelection)
+        {
+            if (cellSelection.somiteSelection == PlotSelection.All && cellSelection.cellSelection == PlotSelection.All)
+                return Cells.AsEnumerable<Cell>();
+
+            Random random = new();
+            List<int> som = new();
+            List<int> seq = new();
+            if (cellSelection.somiteSelection == PlotSelection.FirstMiddleLast)
+            {
+                int minSom = Cells.Select(c => c.Somite).Min();
+                int maxSom = Cells.Select(c => c.Somite).Max();
+                som.Add(minSom);
+                som.Add(maxSom);
+                som.Add((int)((minSom + maxSom) / 2));
+            }
+            else if (cellSelection.somiteSelection == PlotSelection.Random)
+            {
+                IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
+                if (somites.Count() > cellSelection.nSomite)
+                    som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nSomite));
+            }
+
+            if (cellSelection.cellSelection == PlotSelection.FirstMiddleLast)
+            {
+                int minSeq = Cells.Select(c => c.Sequence).Min();
+                int maxSeq = Cells.Select(c => c.Sequence).Max();
+                seq.Add(minSeq);
+                seq.Add(maxSeq);
+                seq.Add((int)((minSeq + maxSeq) / 2));
+            }
+            else if (cellSelection.cellSelection == PlotSelection.Random)
+            {
+                IEnumerable<int> seqs = Cells.Select(c => c.Sequence).Distinct();
+                if (seqs.Count() > cellSelection.nCell)
+                    seq.AddRange(seqs.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nCell));
+            }
+            return Cells
+                .Where(c => (!som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
+                .OrderBy(c => c.Somite)
+                .ThenBy(c => c.Sequence)
+                .Distinct()
+                .AsEnumerable<Cell>();
+        }
+
+        
         public Cell GetNthCell(int nSeq)
         {
             if (nSeq < 1 || Cells.Count < nSeq)

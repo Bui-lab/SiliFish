@@ -228,7 +228,7 @@ namespace SiliFish
             alpha = paramExternal.Read("Animation.ConversionCoef", alpha);
         }
 
-        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(PlotExtend plotMode, string subset, int nSample)
+        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(PlotExtend plotMode, string subset, CellSelectionStruct cellSelection)
         {
             if (plotMode == PlotExtend.SinglePool)
             {
@@ -242,7 +242,7 @@ namespace SiliFish
             {
                 CellPool cellpool = CellPools.Where(p => p.ID == subset).FirstOrDefault(p => p != null);
                 if (cellpool != null)
-                    return (cellpool.GetCells(nSample).ToList(), null);
+                    return (cellpool.GetCells(cellSelection).ToList(), null);
                 else
                     return (null, null);
             }

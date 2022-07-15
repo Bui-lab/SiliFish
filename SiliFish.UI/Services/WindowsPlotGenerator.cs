@@ -11,7 +11,8 @@ namespace Services
 {
     public class WindowsPlotGenerator
     {
-        private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> pools, int iStart, int iEnd, int nSample)
+        private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> pools, 
+            CellSelectionStruct cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -20,14 +21,14 @@ namespace Services
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + c.CellGroup + " Potentials", c.V, timeArray, iStart, iEnd, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + c.CellGroup + " Potentials", c.V, timeArray, iStart, iEnd, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, col));
                 }
             if (pools != null)
                 foreach (CellPool pool in pools)
                 {
-                    List<Cell> poolcells = pool.GetCells(nSample).ToList();
+                    List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
                     double[,] voltageArray = new double[poolcells.Count, timeArray.Length];
 
                     int i = 0;
@@ -82,7 +83,9 @@ namespace Services
             }
             return (colors, AffarentCurrents);
         }
-        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, int iStart, int iEnd, int nSample, bool gap, bool chem)
+        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection, 
+            int iStart, int iEnd,
+            bool gap, bool chem)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -99,7 +102,7 @@ namespace Services
             if (pools != null)
                 foreach (CellPool pool in pools)
             {
-                IEnumerable<Cell> sampleCells = pool.GetCells(nSample);
+                IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
                 foreach (Cell c in sampleCells)
                 {
                     (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
@@ -112,7 +115,8 @@ namespace Services
             return (leftImages, rightImages);
         }
 
-        private static (List<Image>, List<Image>) PlotStimuli(double[] timeArray, List<Cell> cells, List<CellPool> pools, int iStart, int iEnd, int nSample)
+        private static (List<Image>, List<Image>) PlotStimuli(double[] timeArray, List<Cell> cells, List<CellPool> pools,
+            CellSelectionStruct cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -121,14 +125,14 @@ namespace Services
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + c.CellGroup + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + c.CellGroup + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, col));
                 }
             if (pools != null)
                 foreach (CellPool pool in pools)
                 {
-                    List<Cell> poolcells = pool.GetCells(nSample).ToList();
+                    List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
                     double[,] stimArray = new double[poolcells.Count, timeArray.Length];
 
                     int i = 0;
@@ -143,26 +147,27 @@ namespace Services
                 }
             return (leftImages, rightImages);
         }
-        private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools, int iStart, int iEnd, int nSample)
+        private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            (List<Image> leftImagesSub, List<Image> rightImagesSub) = PlotMembranePotentials(timeArray, cells, pools, iStart, iEnd, nSample);
+            (List<Image> leftImagesSub, List<Image> rightImagesSub) = PlotMembranePotentials(timeArray, cells, pools, cellSelection, iStart, iEnd);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
-            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, iStart, iEnd, gap: true, chem: true, nSample: nSample);
+            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection,iStart, iEnd,  gap: true, chem: true);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
-            (leftImagesSub, rightImagesSub) = PlotStimuli(timeArray, cells, pools, iStart, iEnd, nSample: nSample);
+            (leftImagesSub, rightImagesSub) = PlotStimuli(timeArray, cells, pools, cellSelection, iStart, iEnd);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
             return (leftImages, rightImages);
         }
-        public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools, 
-            double dt , int tStart = 0, int tEnd = -1, int tSkip = 0, int nSample = 0)
+        public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
+            CellSelectionStruct cellSelection, 
+            double dt , int tStart = 0, int tEnd = -1, int tSkip = 0)
         {
             if ((Cells == null || !Cells.Any()) && 
                 (Pools == null || !Pools.Any()))
@@ -176,17 +181,17 @@ namespace Services
             switch (PlotType)
             {
                 case PlotType.MembPotential:
-                    return PlotMembranePotentials(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
+                    return PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                 case PlotType.Current:
-                    return PlotCurrents(TimeArray, Cells, Pools, iStart, iEnd, gap: true, chem: true, nSample: nSample);
+                    return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: true);
                 case PlotType.GapCurrent:
-                    return PlotCurrents(TimeArray, Cells, Pools, iStart, iEnd, gap: true, chem: false, nSample: nSample);
+                    return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: false);
                 case PlotType.ChemCurrent:
-                    return PlotCurrents(TimeArray, Cells, Pools, iStart, iEnd, gap: false, chem: true, nSample: nSample);
+                    return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chem: true);
                 case PlotType.Stimuli:
-                    return PlotStimuli(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
+                    return PlotStimuli(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                 case PlotType.FullDyn:
-                    return PlotFullDynamics(TimeArray, Cells, Pools, iStart, iEnd, nSample: nSample);
+                    return PlotFullDynamics(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                 case PlotType.Episodes:
                     return PlotEpisodes(model, tStart, tEnd);
                 case PlotType.BodyAngleHeatMap://TODO

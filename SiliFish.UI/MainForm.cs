@@ -35,10 +35,11 @@ namespace SiliFish.UI
         int tRunEnd = 0;
         int tRunSkip = 0;
         PlotType PlotType = PlotType.MembPotential;
-        PlotExtend plotExtendHTML = PlotExtend.FullModel;
-        PlotExtend plotExtendWindows = PlotExtend.FullModel;
-        string tempFolder, tempFile;
-        string tempOutputFolder;
+        PlotExtend plotExtend = PlotExtend.FullModel;
+        CellSelectionStruct plotCellSelection;
+        private readonly string tempFolder;
+        private string tempFile;
+        readonly string outputFolder;
         string lastSavedCustomModelJSON;
         Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams;
         DateTime runStart;
@@ -51,9 +52,9 @@ namespace SiliFish.UI
                 InitAsync();
                 Wait();
                 rbCustom.Checked = true;
-                splitWindows.SplitterDistance = splitWindows.Width / 2;
+                splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
                 tempFolder = Path.GetTempPath() + "SiliFish";
-                tempOutputFolder = Path.GetTempPath() + "SiliFish\\Output";
+                outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
                 if (!Directory.Exists(tempFolder))
                     Directory.CreateDirectory(tempFolder);
                 else
@@ -61,8 +62,8 @@ namespace SiliFish.UI
                     foreach (string f in Directory.GetFiles(tempFolder))
                         File.Delete(f);
                 }
-                if (!Directory.Exists(tempOutputFolder))
-                    Directory.CreateDirectory(tempOutputFolder);
+                if (!Directory.Exists(outputFolder))
+                    Directory.CreateDirectory(outputFolder);
                 webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webView3DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
@@ -71,9 +72,19 @@ namespace SiliFish.UI
                 listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
                 listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
                 listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
-                ddPlotWindows.DataSource = Enum.GetValues(typeof(PlotType));
-                ddPlotWindows.DisplayMember = "DisplayNameValue";
-                ddPlotHTML.DataSource = Enum.GetNames(typeof(PlotType));
+
+                foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
+                {
+                    ddPlot.Items.Add(pt.GetDisplayName());
+                }
+
+                foreach (PlotSelection ps in Enum.GetValues(typeof(PlotSelection)))
+                {
+                    ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
+                    ddPlotCellSelection.Items.Add(ps.GetDisplayName());
+                }
+                ddPlotSomiteSelection.SelectedIndex = 0;
+                ddPlotCellSelection.SelectedIndex = 0;
 
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
@@ -205,11 +216,11 @@ namespace SiliFish.UI
             }
 
             //To fill in newly generated params that did not exist during the model creation
-            SwimmingModel swimmingModel = new SwimmingModel();
+            SwimmingModel swimmingModel = new();
             Dictionary<string, object> currentParams = swimmingModel.GetParameters();
-            List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k.Substring(0, k.IndexOf('.'))).Distinct().ToList();
+            List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList();
 
-            List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k.Substring(0, k.IndexOf('.'))).Distinct().ToList() ?? new List<string>();
+            List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
             foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
             {
                 Dictionary<string, object> SubDict = ParamDict.Where(x=>x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
@@ -220,9 +231,11 @@ namespace SiliFish.UI
                 }
                 if (SubDict == null || SubDict.Count == 0)
                     SubDict = currentParams.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
-                TabPage tabPage = new();
-                tabPage.Text = group;
-                tabPage.Tag = "Param";
+                TabPage tabPage = new()
+                {
+                    Text = group,
+                    Tag = "Param"
+                };
                 tabParams.TabPages.Add(tabPage);
                 int maxLen = SubDict.Keys.Select(k => k.Length).Max();
                 FlowLayoutPanel flowPanel = new();
@@ -233,7 +246,7 @@ namespace SiliFish.UI
                 foreach (KeyValuePair<string, object> kvp in SubDict)
                 {
                     Label lbl = new();
-                    lbl.Text = kvp.Key.Substring(group.Length + 1);
+                    lbl.Text = kvp.Key[(group.Length + 1)..];
                     lbl.Height = 23;
                     lbl.Width = 8 * maxLen;
                     lbl.TextAlign = ContentAlignment.BottomRight;
@@ -420,7 +433,7 @@ namespace SiliFish.UI
             }
         }
 
-        private void ExceptionHandling(string name, Exception ex)
+        private static void ExceptionHandling(string name, Exception ex)
         {
             //throw new NotImplementedException();
         }
@@ -530,13 +543,12 @@ namespace SiliFish.UI
             btnRun.Text = "Run";
             modifiedJncs = modifiedPools = false;
 
-            if (ddPlotHTML.SelectedIndex < 0)
-                ddPlotHTML.SelectedIndex = 0;
-            btnPlot.Enabled = false;
+            btnPlotWindows.Enabled = false;
+            btnPlotHTML.Enabled = false;
             btnAnimate.Enabled = false;
             linkSaveRun.Visible = false;
 
-            ddCellsPoolsWindows.Items.Clear();
+            ddCellsPools.Items.Clear();
 
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
@@ -552,14 +564,13 @@ namespace SiliFish.UI
             btnRun.Text = "Run";
             modifiedJncs = modifiedPools = false;
 
-            if (ddPlotHTML.SelectedIndex < 0)
-                ddPlotHTML.SelectedIndex = 0;
-            btnPlot.Enabled = true;
+            btnPlotWindows.Enabled = true;
+            btnPlotHTML.Enabled = true;
             btnAnimate.Enabled = true;
             linkSaveRun.Visible = true;
 
-            ddCellsPoolsWindows.Items.Clear();
-            ddCellsPoolsWindows.Items.AddRange(Model?.CellPools.Select(cp=>cp.CellGroup).Distinct().ToArray());
+            ddCellsPools.Items.Clear();
+            ddCellsPools.Items.AddRange(Model?.CellPools.Select(cp=>cp.CellGroup).Distinct().ToArray());
 
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
@@ -692,10 +703,10 @@ namespace SiliFish.UI
                 {
                     string target = (sender as CoreWebView2).DocumentTitle;
                     string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(tempOutputFolder, prefix + ".html");
+                    target = Path.Combine(outputFolder, prefix + ".html");
                     int suffix = 0;
                     while (File.Exists(target))
-                        target = Path.Combine(tempOutputFolder, prefix + (suffix++).ToString() + ".html");
+                        target = Path.Combine(outputFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
                     RegenerateWebview(sender as WebView2);
                     Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
@@ -732,7 +743,7 @@ namespace SiliFish.UI
                         string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
                         File.WriteAllText(saveFileHTML.FileName, html);
                     }
-                    else if (tabOutputs.SelectedTab == tabHTMLPlot)
+                    else if (tabOutputs.SelectedTab == tabPlot)
                         File.WriteAllText(saveFileHTML.FileName, PlotHTML.ToString());
                     else if (tabOutputs.SelectedTab == tabAnimation)
                     {
@@ -894,106 +905,54 @@ namespace SiliFish.UI
             }
             itemList.Sort();
             ddCellPools.Items.AddRange(itemList.Distinct().ToArray());
-            ddCellPools.SelectedIndex = 0;
+            if (ddCellPools.Items?.Count > 0)
+                ddCellPools.SelectedIndex = 0;
         }
 
         #region HTML Plots
-
-        string prevGroup = "";
-        private void ddGrouping_Enter(object sender, EventArgs e)
-        {
-            prevGroup = ddGroupingHTML.Text;
-        }
-
-        private void ddGroupingHTML_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (ddGroupingHTML.Text)
-            {
-                case "Full":
-                    plotExtendHTML = PlotExtend.FullModel;
-                    break;
-                case "Individual Cell":
-                    plotExtendHTML = PlotExtend.SingleCell;
-                    break;
-                case "Cells in a Pool":
-                    plotExtendHTML = PlotExtend.CellsInAPool;
-                    break;
-                case "Individual Pool":
-                    plotExtendHTML = PlotExtend.SinglePool;
-                    break;
-                case "Pools on Opposite Sides":
-                    plotExtendHTML = PlotExtend.OppositePools;
-                    break;
-            }
-            if (ddGroupingHTML.Text != prevGroup)
-                ClearPlotHTML();
-            PopulateCellTypes(ddCellsPoolsHTML, plotExtendHTML);
-        }
-
-        string prevPool = "";
-        private void ddCellsPools_Enter(object sender, EventArgs e)
-        {
-            prevPool = ddCellsPoolsHTML.Text;
-        }
-
-        private void ddCellsPoolsHTML_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddCellsPoolsHTML.Text != prevPool)
-                ClearPlotHTML();
-            string pool = ddCellsPoolsHTML.Text;
-            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
-            eSampleHTML.Maximum = (decimal) ((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count()) ): 1);
-        }
-
-        PlotType prevPlot;
-        private void ddPlot_Enter(object sender, EventArgs e)
-        {
-            prevPlot = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
-        }
-
-        private void ddPlotHTML_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            PlotType selPlot = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
-            if (selPlot!= prevPlot)
-                ClearPlotHTML();
-            toolTip.SetToolTip(ddPlotHTML, selPlot.GetDescription());
-        }
 
         private void CreatePlotHTML()
         {
             if (Model == null) return;
             PlotHTML = "";
-            int nSample = cbSampleHTML.Checked ? (int)eSampleHTML.Value : -1;
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendHTML, PlotSubset, nSample);
-            PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
+
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection) ;
+            PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, plotCellSelection, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
             Invoke(CompleteCreatePlot);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
         {
             if (Model == null || !Model.ModelRun) return;
-            int tPlotStart = (int)ePlotStart.Value;
-            int tPlotEnd = (int)ePlotEnd.Value;
+
+            PlotType = ddPlot.Text.GetValueFromName<PlotType>();
+            PlotSubset = ddCellsPools.Text;
+
+            tPlotStart = (int)ePlotStart.Value;
+            tPlotEnd = (int)ePlotEnd.Value;
             if (tPlotEnd > tRunEnd)
                 tPlotEnd = tRunEnd;
-            PlotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotHTML.Text);
-            PlotSubset = ddCellsPoolsHTML.Text;
 
-            tabOutputs.SelectedTab = tabHTMLPlot;
+            tabOutputs.SelectedTab = tabPlot;
+            tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
-            btnPlot.Enabled = false;
+            btnPlotWindows.Enabled = false;
+            btnPlotHTML.Enabled = false;
+            plotCellSelection = new CellSelectionStruct()
+            {
+                somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(),
+                nSomite = (int)ePlotSomiteSelection.Value,
+                cellSelection = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(),
+                nCell = (int)ePlotCellSelection.Value
+            };
             Task.Run(CreatePlotHTML);
-        }
-
-        private void ClearPlotHTML()
-        {
-            webViewPlot.CoreWebView2.Navigate("about:blank");
         }
         private void CompleteCreatePlot()
         {
             webViewPlot.NavigateTo(PlotHTML, tempFolder, ref tempFile); 
             UseWaitCursor = false;
-            btnPlot.Enabled = true;
-            lPlotHTMLTime.Text = $"Last plot: {DateTime.Now:t}";
+            btnPlotWindows.Enabled = true;
+            btnPlotHTML.Enabled = true;
+            lPlotTime.Text = $"Last HTML plot: {DateTime.Now:t}";
         }
 
         #endregion
@@ -1014,7 +973,7 @@ namespace SiliFish.UI
                 pb.Tag = (int)pb.Tag - 1;
             double mult = 1 + 0.1 * (int)pb.Tag;
             if (mult < 0.1) return;
-            Size sz = new Size((int)(pb.InitialImage.Width * mult), (int)(pb.InitialImage.Height * mult));
+            Size sz = new((int)(pb.InitialImage.Width * mult), (int)(pb.InitialImage.Height * mult));
             pb.Image = new Bitmap(pb.InitialImage, sz);            
         }
 
@@ -1022,53 +981,70 @@ namespace SiliFish.UI
         {
             try
             {
-                if (Model == null) return;
+                if (Model == null || !Model.ModelRun) return;
 
-                int tPlotStart = (int)ePlotWindowsStart.Value;
-                int tPlotEnd = (int)ePlotWindowsEnd.Value;
+                PlotType = ddPlot.Text.GetValueFromName<PlotType>();
+                PlotSubset = ddCellsPools.Text;
+
+                tabOutputs.SelectedTab = tabPlot;
+                tabPlotSub.SelectedTab = tPlotHTML;
+                UseWaitCursor = true;
+                btnPlotWindows.Enabled = false;
+                btnPlotHTML.Enabled = false;
+                plotCellSelection = new CellSelectionStruct()
+                {
+                    somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(),
+                    nSomite = (int)ePlotSomiteSelection.Value,
+                    cellSelection = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(),
+                    nCell = (int)ePlotCellSelection.Value
+                };
+
+                tPlotStart = (int)ePlotStart.Value;
+                tPlotEnd = (int)ePlotEnd.Value;
                 if (tPlotEnd > tRunEnd)
                     tPlotEnd = tRunEnd;
 
-                PlotType plotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotWindows.Text);
-                int nSample = cbSampleWindows.Checked ? (int)eSampleWindows.Value : -1;
-                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtendWindows, ddCellsPoolsWindows.Text, nSample);
+                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(plotType, Model, Cells, Pools,
-                    Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip, nSample: nSample);
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
+                    Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
 
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 
-                int ncol = (!ddGroupingWindows.Enabled || plotExtendWindows != PlotExtend.FullModel) && leftImages?.Count > 1 ? 2 : 1;
+                int ncol = (!ddGroupingWindows.Enabled || plotExtend != PlotExtend.FullModel) && leftImages?.Count > 1 ? 2 : 1;
                 int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
 
                 if (leftImages != null && leftImages.Any())
                 {
                     pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                    splitWindows.Panel1Collapsed = false;
+                    splitPlotWindows.Panel1Collapsed = false;
                 }
                 else 
                 {
                     pictureBoxLeft.Image = null;
-                    splitWindows.Panel1Collapsed = true;
+                    splitPlotWindows.Panel1Collapsed = true;
                 }
                 if (rightImages != null && rightImages.Any())
                 {
-                    ncol = plotExtendWindows != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
+                    ncol = plotExtend != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
                     nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
                     pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
-                    splitWindows.Panel2Collapsed = false;
-                    splitWindows.SplitterDistance = splitWindows.Width / 2;
+                    splitPlotWindows.Panel2Collapsed = false;
+                    splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
                 }
                 else
                 {
                     pictureBoxRight.Image = null;
-                    splitWindows.Panel2Collapsed = true;
+                    splitPlotWindows.Panel2Collapsed = true;
                 }
                 pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
                 pictureBoxRight.Tag = null;//for proper zooming it has to be reset
-                lPlotWindowsTime.Text = $"Last plot: {DateTime.Now:t}";
-
+                lPlotTime.Text = $"Last plot: {DateTime.Now:t}";
+                tabPlotSub.SelectedTab = tPlotWindows;
+                UseWaitCursor = false;
+                btnPlotWindows.Enabled = true;
+                btnPlotHTML.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -1080,55 +1056,51 @@ namespace SiliFish.UI
             PlotWindows();
         }
 
-        private void ddCellsPoolsWindows_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string pool = ddCellsPoolsWindows.Text;
+            string pool = ddCellsPools.Text;
             List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
-            eSampleWindows.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
+            ePlotSomiteSelection.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
             if (!string.IsNullOrEmpty(pool))
                 PlotWindows();
         }
 
-        private void ddPlotWindows_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotType plotType = (PlotType)Enum.Parse(typeof(PlotType), ddPlotWindows.Text);
+            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
             if (plotType==PlotType.Episodes)
             {
-                ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = false;
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
                 ddGroupingWindows.SelectedIndex = -1;
-                ddCellsPoolsWindows.SelectedIndex = -1;
+                ddCellsPools.SelectedIndex = -1;
             }
             else
             {
-                ddGroupingWindows.Enabled = ddCellsPoolsWindows.Enabled = true;
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = true;
             }
-            toolTip.SetToolTip(ddPlotWindows, plotType.GetDescription());
-        }
-        private void cbSample_CheckedChanged(object sender, EventArgs e)
-        {
-            eSampleWindows.Visible = cbSampleWindows.Checked;
+            toolTip.SetToolTip(ddPlot, plotType.GetDescription());
         }
         private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (ddGroupingWindows.Text)
             {
                 case "Full":
-                    plotExtendWindows = PlotExtend.FullModel;
+                    plotExtend = PlotExtend.FullModel;
                     break;
                 case "Individual Cell":
-                    plotExtendWindows = PlotExtend.SingleCell;
+                    plotExtend = PlotExtend.SingleCell;
                     break;
                 case "Cells in a Pool":
-                    plotExtendWindows = PlotExtend.CellsInAPool;
+                    plotExtend = PlotExtend.CellsInAPool;
                     break;
                 case "Individual Pool":
-                    plotExtendWindows = PlotExtend.SinglePool;
+                    plotExtend = PlotExtend.SinglePool;
                     break;
                 case "Pools on Opposite Sides":
-                    plotExtendWindows = PlotExtend.OppositePools;
+                    plotExtend = PlotExtend.OppositePools;
                     break;
             }
-            PopulateCellTypes(ddCellsPoolsWindows, plotExtendWindows);
+            PopulateCellTypes(ddCellsPools, plotExtend);
         }
         #endregion
 
@@ -1140,7 +1112,7 @@ namespace SiliFish.UI
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
             ControlContainer frmControl = new();
-            CellPoolControl cpl = new CellPoolControl();
+            CellPoolControl cpl = new();
             cpl.LoadPool += Cpl_LoadPool;
             cpl.SavePool += Cpl_SavePool;
 
@@ -1258,7 +1230,7 @@ namespace SiliFish.UI
         private InterPoolTemplate OpenConnectionDialog(InterPoolTemplate interpool)
         {
             ControlContainer frmControl = new();
-            InterPoolControl ipl = new InterPoolControl();
+            InterPoolControl ipl = new();
 
             ipl.SetInterPoolTemplate(ModelTemplate.CellPoolTemplates, interpool, ModelTemplate);
             frmControl.AddControl(ipl);
@@ -1430,7 +1402,7 @@ namespace SiliFish.UI
 
         private void splitWindows_DoubleClick(object sender, EventArgs e)
         {
-            splitWindows.SplitterDistance = splitWindows.Width / 2;
+            splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
         }
 
         private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
@@ -1536,7 +1508,7 @@ namespace SiliFish.UI
 
         private void pTop_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            About about = new About();
+            About about = new();
             about.ShowDialog();
         }
 
@@ -1545,8 +1517,6 @@ namespace SiliFish.UI
             if (lastEnteredTime != null)
             {
                 int newValue = (int)eTimeEnd.Value;
-                if ((int)ePlotWindowsEnd.Value == lastEnteredTime)
-                    ePlotWindowsEnd.Value = newValue;
                 if ((int)ePlotEnd.Value == lastEnteredTime)
                     ePlotEnd.Value = newValue;
                 if ((int)eAnimationEnd.Value == lastEnteredTime)
@@ -1564,9 +1534,21 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(tempOutputFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", outputFolder);
             }
             catch { }
+        }
+
+        private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>();
+            ePlotSomiteSelection.Enabled = sel == PlotSelection.Random;
+        }
+
+        private void ddPlotCellSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PlotSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>();
+            ePlotCellSelection.Enabled = sel == PlotSelection.Random;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
