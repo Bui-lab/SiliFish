@@ -32,7 +32,10 @@ namespace SiliFish.UI
             OxyPlot.PlotModel model = new PlotModel() { Title = title };
             foreach (string source in sources)
             {
-                Color color = colors[source];
+                string colSource = source;
+                while (colSource.EndsWith("'"))
+                    colSource = colSource[..^1];
+                Color color = colors[colSource];
                 OxyColor col = color.ToOxyColor();
                 byte a = (byte)255;
                 int numofcells = sources.Count;

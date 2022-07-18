@@ -548,8 +548,6 @@ namespace SiliFish.UI
             btnAnimate.Enabled = false;
             linkSaveRun.Visible = false;
 
-            ddCellsPools.Items.Clear();
-
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
             lRunTime.Text = $"Last run cancelled\r\n" +
@@ -568,9 +566,6 @@ namespace SiliFish.UI
             btnPlotHTML.Enabled = true;
             btnAnimate.Enabled = true;
             linkSaveRun.Visible = true;
-
-            ddCellsPools.Items.Clear();
-            ddCellsPools.Items.AddRange(Model?.CellPools.Select(cp=>cp.CellGroup).Distinct().ToArray());
 
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
@@ -879,17 +874,17 @@ namespace SiliFish.UI
         }
 
 
-        private void PopulateCellTypes(ComboBox ddCellPools, PlotExtend plotExtend)
+        private void PopulateCellTypes()
         {
-            ddCellPools.Items.Clear();
-            ddCellPools.Text = "";
+            ddCellsPools.Items.Clear();
+            ddCellsPools.Text = "";
             if (Model == null) return;
             if (plotExtend == PlotExtend.FullModel)
             {
-                ddCellPools.Enabled = false;
+                ddCellsPools.Enabled = false;
                 return;
             }
-            ddCellPools.Enabled = true;
+            ddCellsPools.Enabled = true;
             List<string> itemList = new();
             foreach (CellPool pool in Model.CellPools)
             {
@@ -904,11 +899,55 @@ namespace SiliFish.UI
                 }
             }
             itemList.Sort();
-            ddCellPools.Items.AddRange(itemList.Distinct().ToArray());
-            if (ddCellPools.Items?.Count > 0)
-                ddCellPools.SelectedIndex = 0;
+            ddCellsPools.Items.AddRange(itemList.Distinct().ToArray());
+            if (ddCellsPools.Items?.Count > 0)
+                ddCellsPools.SelectedIndex = 0;
+        }
+        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string pool = ddCellsPools.Text;
+            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
+            ePlotSomiteSelection.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
         }
 
+        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
+            if (plotType==PlotType.Episodes)
+            {
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
+                ddGroupingWindows.SelectedIndex = -1;
+                ddCellsPools.SelectedIndex = -1;
+            }
+            else
+            {
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = true;
+            }
+            toolTip.SetToolTip(ddPlot, plotType.GetDescription());
+        }
+        private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (ddGroupingWindows.Text)
+            {
+                case "Full":
+                    plotExtend = PlotExtend.FullModel;
+                    break;
+                case "Individual Cell":
+                    plotExtend = PlotExtend.SingleCell;
+                    break;
+                case "Cells in a Pool":
+                    plotExtend = PlotExtend.CellsInAPool;
+                    break;
+                case "Individual Pool":
+                    plotExtend = PlotExtend.SinglePool;
+                    break;
+                case "Pools on Opposite Sides":
+                    plotExtend = PlotExtend.OppositePools;
+                    break;
+            }
+            PopulateCellTypes();
+        }
+        
         #region HTML Plots
 
         private void CreatePlotHTML()
@@ -987,7 +1026,7 @@ namespace SiliFish.UI
                 PlotSubset = ddCellsPools.Text;
 
                 tabOutputs.SelectedTab = tabPlot;
-                tabPlotSub.SelectedTab = tPlotHTML;
+                tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
                 btnPlotWindows.Enabled = false;
                 btnPlotHTML.Enabled = false;
@@ -1056,52 +1095,8 @@ namespace SiliFish.UI
             PlotWindows();
         }
 
-        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string pool = ddCellsPools.Text;
-            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
-            ePlotSomiteSelection.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
-            if (!string.IsNullOrEmpty(pool))
-                PlotWindows();
-        }
 
-        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
-            if (plotType==PlotType.Episodes)
-            {
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
-                ddGroupingWindows.SelectedIndex = -1;
-                ddCellsPools.SelectedIndex = -1;
-            }
-            else
-            {
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = true;
-            }
-            toolTip.SetToolTip(ddPlot, plotType.GetDescription());
-        }
-        private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (ddGroupingWindows.Text)
-            {
-                case "Full":
-                    plotExtend = PlotExtend.FullModel;
-                    break;
-                case "Individual Cell":
-                    plotExtend = PlotExtend.SingleCell;
-                    break;
-                case "Cells in a Pool":
-                    plotExtend = PlotExtend.CellsInAPool;
-                    break;
-                case "Individual Pool":
-                    plotExtend = PlotExtend.SinglePool;
-                    break;
-                case "Pools on Opposite Sides":
-                    plotExtend = PlotExtend.OppositePools;
-                    break;
-            }
-            PopulateCellTypes(ddCellsPools, plotExtend);
-        }
+
         #endregion
 
         #endregion
@@ -1530,7 +1525,7 @@ namespace SiliFish.UI
             lastEnteredTime = (int)eTimeEnd.Value;
         }
 
-        private void linkBrowseToTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkBrowseToOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {

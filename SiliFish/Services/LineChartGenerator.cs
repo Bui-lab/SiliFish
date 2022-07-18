@@ -58,28 +58,28 @@ namespace SiliFish.Services
 
         //One chart per pool
         public List<string> CreateStimuliMultiPlot(List<CellPool> cellPools, double[] Time, int tstart, int tend,
-            CellSelectionStruct cellSelection)
+            CellSelectionStruct cellSelection,
+            ref int chartindex)
         {
-            int chartindex = 0;
             List<string> charts = new();
             foreach (CellPool pool in cellPools)
             {
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
                 string color = pool.Color.ToRGB();
-                charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, color));
+                charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID + " Stimuli", cells, Time, tstart, tend, color));
             }
             return charts;
         }
 
         //One chart per cell
-        public List<string> CreateStimuliMultiPlot(List<Cell> cells, double[] Time, int tstart, int tend)
+        public List<string> CreateStimuliMultiPlot(List<Cell> cells, double[] Time, int tstart, int tend,
+            ref int chartindex)
         {
-            int chartindex = 0;
             List<string> charts = new();
             foreach (Cell cell in cells)
             {
                 string color = cell.CellPool.Color.ToRGB();
-                charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, color));
+                charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID + " Stimuli", new List<Cell>() { cell }, Time, tstart, tend, color));
             }
             return charts;
         }
@@ -125,29 +125,29 @@ namespace SiliFish.Services
         //One chart per pool
         public List<string> CreatePotentialsMultiPlot(List<CellPool> cellPools,
             CellSelectionStruct cellSelection, 
-            double[] Time, int tstart, int tend)
+            double[] Time, int tstart, int tend,
+            ref int chartindex)
         {
-            int chartindex = 0;
             List<string> charts = new();
             foreach (CellPool pool in cellPools)
             {
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
                 string color = pool.Color.ToRGB();
-                charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, color));
+                charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID + " Potantials", cells, Time, tstart, tend, color));
             }
             return charts;
         }
 
         //One chart per cell
         public List<string> CreatePotentialsMultiPlot(List<Cell> cells, 
-            double[] Time, int tstart, int tend)
+            double[] Time, int tstart, int tend,
+            ref int chartindex)
         {
-            int chartindex = 0;
             List<string> charts = new();
             foreach (Cell cell in cells)
             {
                 string color = cell.CellPool.Color.ToRGB();
-                charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, color));
+                charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID + " Potantials", new List<Cell>() { cell }, Time, tstart, tend, color));
             }
             return charts;
         }
@@ -256,26 +256,27 @@ namespace SiliFish.Services
         //One chart per pool
         public List<string> CreateCurrentsMultiPlot(List<CellPool> cellPools, CellSelectionStruct cellSelection,
             double[] Time, int tstart, int tend, 
-            bool includeGap = true, bool includeChem = true, int nSample = 0)
+            bool includeGap, bool includeChem,
+            ref int chartindex)
         {
-            int chartindex = 0;
             List<string> charts = new();
             foreach (CellPool pool in cellPools)
             {
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
-                charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID, cells, Time, tstart, tend, includeGap, includeChem));
+                charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID + " Currents", cells, Time, tstart, tend, includeGap, includeChem));
             }
             return charts;
         }
 
         //One chart per cell
-        public List<string> CreateCurrentsMultiPlot(List<Cell> cells, double[] Time, int tstart, int tend, bool includeGap = true, bool includeChem = true)
+        public List<string> CreateCurrentsMultiPlot(List<Cell> cells, double[] Time, int tstart, int tend, 
+            bool includeGap, bool includeChem,
+            ref int chartindex)
         {
-            int chartindex = 0;
             List<string> charts = new();
             foreach (Cell cell in cells)
             {
-                charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID, new List<Cell>() { cell }, Time, tstart, tend, includeGap, includeChem));
+                charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID + " Currents", new List<Cell>() { cell }, Time, tstart, tend, includeGap, includeChem));
             }
             return charts;
         }

@@ -145,10 +145,10 @@ namespace SiliFish.ModelUnits
             Coordinate[] coordinates = new Coordinate[n];
             Distribution.Random = SwimmingModel.rand;
 
-            double dist = somite <= 0 ? Model.SpinalRostralCaudalDistance :
+            double dist = somite < 0 ? Model.SpinalRostralCaudalDistance :
                 Model.SpinalRostralCaudalDistance / Model.NumberOfSomites;
-            double x_offset = somite > 0 ?
-                (somite - 1) * Model.SpinalRostralCaudalDistance / Model.NumberOfSomites : 0;
+            double x_offset = somite >= 0 ?
+                somite * Model.SpinalRostralCaudalDistance / Model.NumberOfSomites : 0;
             double[] x = XDistribution?.GenerateNNumbers(n, dist) ?? Distribution.GenerateNRandomNumbers(n, dist);
             double[] y = new double[n];
             double[] z = new double[n];

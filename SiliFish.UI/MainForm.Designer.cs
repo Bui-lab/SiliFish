@@ -36,7 +36,7 @@ namespace SiliFish.UI
             this.rbDoubleCoil = new System.Windows.Forms.RadioButton();
             this.rbBeatGlide = new System.Windows.Forms.RadioButton();
             this.pTop = new System.Windows.Forms.Panel();
-            this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
+            this.linkBrowseToOutputFolder = new System.Windows.Forms.LinkLabel();
             this.linkClearModel = new System.Windows.Forms.LinkLabel();
             this.rbCustom = new System.Windows.Forms.RadioButton();
             this.linkSaveHTML = new System.Windows.Forms.LinkLabel();
@@ -249,7 +249,7 @@ namespace SiliFish.UI
             // 
             // pTop
             // 
-            this.pTop.Controls.Add(this.linkBrowseToTempFolder);
+            this.pTop.Controls.Add(this.linkBrowseToOutputFolder);
             this.pTop.Controls.Add(this.linkClearModel);
             this.pTop.Controls.Add(this.rbCustom);
             this.pTop.Controls.Add(this.linkSaveHTML);
@@ -263,18 +263,18 @@ namespace SiliFish.UI
             this.pTop.TabIndex = 3;
             this.pTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pTop_MouseDoubleClick);
             // 
-            // linkBrowseToTempFolder
+            // linkBrowseToOutputFolder
             // 
-            this.linkBrowseToTempFolder.AutoSize = true;
-            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(551, 14);
-            this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
-            this.linkBrowseToTempFolder.Size = new System.Drawing.Size(127, 15);
-            this.linkBrowseToTempFolder.TabIndex = 6;
-            this.linkBrowseToTempFolder.TabStop = true;
-            this.linkBrowseToTempFolder.Text = "Browse to Temp Folder";
-            this.toolTip.SetToolTip(this.linkBrowseToTempFolder, "Keeps temporary html files created. If there is any issues with the plots, you ca" +
-        "n check the temp folder. The contents are cleared at exit.");
-            this.linkBrowseToTempFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkBrowseToTempFolder_LinkClicked);
+            this.linkBrowseToOutputFolder.AutoSize = true;
+            this.linkBrowseToOutputFolder.Location = new System.Drawing.Point(551, 14);
+            this.linkBrowseToOutputFolder.Name = "linkBrowseToOutputFolder";
+            this.linkBrowseToOutputFolder.Size = new System.Drawing.Size(136, 15);
+            this.linkBrowseToOutputFolder.TabIndex = 6;
+            this.linkBrowseToOutputFolder.TabStop = true;
+            this.linkBrowseToOutputFolder.Text = "Browse to Output Folder";
+            this.toolTip.SetToolTip(this.linkBrowseToOutputFolder, "If there is a problem in creating html files, they will be saved in this folder.\r" +
+        "\n");
+            this.linkBrowseToOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkBrowseToOutputFolder_LinkClicked);
             // 
             // linkClearModel
             // 
@@ -1835,7 +1835,7 @@ namespace SiliFish.UI
         private NumericUpDown ePlotStart;
         private NumericUpDown eAnimationStart;
         private NumericUpDown eAnimationEnd;
-        private LinkLabel linkBrowseToTempFolder;
+        private LinkLabel linkBrowseToOutputFolder;
         private Label lAnimationTime;
         private LinkLabel linkSaveAnimationCSV;
         private Label lPlotTime;

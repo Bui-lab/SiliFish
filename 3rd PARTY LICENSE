@@ -22,3 +22,5 @@ https://www.amcharts.com/
 OxyPlot
 https://oxyplot.github.io/
 https://licenses.nuget.org/MIT
+
+There are also times that I had problems I managed to solve using generous StackOverflow community's help. The code snippets used in such cases are marked in the source code, linking to the original webpage.
