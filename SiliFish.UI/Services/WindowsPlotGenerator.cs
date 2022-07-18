@@ -52,12 +52,12 @@ namespace Services
             {
                 foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
                 {
-                    colors.Add(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);
+                    colors.TryAdd(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);
                     AffarentCurrents.AddObject(jnc.Cell1.ID, jnc.InputCurrent.ToList());
                 }
                 foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
                 {
-                    colors.Add(jnc.Cell2.ID, jnc.Cell2.CellPool.Color);
+                    colors.TryAdd(jnc.Cell2.ID, jnc.Cell2.CellPool.Color);
                     AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
                 }
             }
@@ -67,7 +67,7 @@ namespace Services
                 {
                     foreach (ChemicalSynapse jnc in neuron2.Synapses)
                     {
-                        colors.Add(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
+                        colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
                         AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
                     }
                 }
@@ -75,7 +75,7 @@ namespace Services
                 {
                     foreach (ChemicalSynapse jnc in muscle.EndPlates)
                     {
-                        colors.Add(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
+                        colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
                         AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
                     }
                 }

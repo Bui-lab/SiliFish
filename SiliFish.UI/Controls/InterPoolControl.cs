@@ -115,6 +115,24 @@ namespace SiliFish.UI.Controls
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        private void SetDropDownValue(ComboBox dd, string value)
+        {
+            if (dd.Items.Contains(value))
+                dd.Text = value;
+            else
+            {
+                string inactive = value + " (inactive)";
+                if (dd.Items.Contains(inactive))
+                    dd.Text = inactive;
+            }
+        }
+
+        private string GetDropDownValue(ComboBox dd)
+        {
+            return dd.Text.Replace(" (inactive)", "");
+        }
+
         public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPool, SwimmingModelTemplate modelTemplate)
         {
             Parameters = modelTemplate.Parameters;
@@ -129,8 +147,8 @@ namespace SiliFish.UI.Controls
             {
                 interPoolTemplate = interPool;
                 ConnectionType jnc = interPool.ConnectionType;
-                ddSourcePool.Text = interPool.PoolSource;
-                ddTargetPool.Text = interPool.PoolTarget;
+                SetDropDownValue(ddSourcePool, interPool.PoolSource);
+                SetDropDownValue(ddTargetPool, interPool.PoolTarget);
                 ddAxonReachMode.Text = interPool.AxonReachMode.ToString();
                 interPool.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
                 ddConnectionType.Text = interPool.ConnectionType.ToString();
@@ -163,9 +181,9 @@ namespace SiliFish.UI.Controls
 
         public InterPoolTemplate GetInterPoolTemplate()
         {
-            interPoolTemplate.PoolSource = ddSourcePool.Text;
-            interPoolTemplate.PoolTarget= ddTargetPool.Text;
-            
+            interPoolTemplate.PoolSource =GetDropDownValue(ddSourcePool);
+            interPoolTemplate.PoolTarget= GetDropDownValue(ddTargetPool);
+
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;

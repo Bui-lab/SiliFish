@@ -15,10 +15,11 @@ namespace SiliFish.Services
         {
             LineChartGenerator lc = new();
             List<string> charts = new();
+            int chartindex = 0;
             if (cells != null)
-                charts.AddRange(lc.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd));
+                charts.AddRange(lc.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
             if (pools != null)
-                charts.AddRange(lc.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd));
+                charts.AddRange(lc.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, ref chartindex));
 
             return lc.PlotCharts(filename, "Potentials", charts, numColumns: 2);
         }
@@ -28,10 +29,11 @@ namespace SiliFish.Services
         {
             LineChartGenerator lc = new();
             List<string> charts = new();
+            int chartindex = 0;
             if (cells != null)
-                charts.AddRange(lc.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: includeGap, includeChem: includeChem));
+                charts.AddRange(lc.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: includeGap, includeChem: includeChem, ref chartindex));
             if (pools != null)
-                charts.AddRange(lc.CreateCurrentsMultiPlot(pools, cellSelection,TimeOffset,  iStart, iEnd, includeGap: includeGap, includeChem: includeChem));
+                charts.AddRange(lc.CreateCurrentsMultiPlot(pools, cellSelection,TimeOffset,  iStart, iEnd, includeGap: includeGap, includeChem: includeChem, ref chartindex));
             return lc.PlotCharts(filename, "Currents", charts, numColumns: 2);
         }
 
@@ -41,10 +43,11 @@ namespace SiliFish.Services
         {            
             LineChartGenerator lc = new();
             List<string> charts = new();
+            int chartindex = 0;
             if (cells != null)
-                charts.AddRange(lc.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd));
+                charts.AddRange(lc.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
             if (pools != null)
-                charts.AddRange(lc.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection));
+                charts.AddRange(lc.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
             return lc.PlotCharts(filename, "Stimuli", charts, numColumns: 2);
         }
 
@@ -54,17 +57,18 @@ namespace SiliFish.Services
         {
             LineChartGenerator lc = new();
             List<string> charts = new();
+            int chartindex = 0;
             if (cells != null)
             {
-                charts.AddRange(lc.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd));
-                charts.AddRange(lc.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true));
-                charts.AddRange(lc.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd));
+                charts.AddRange(lc.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(lc.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
+                charts.AddRange(lc.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
             }
             if (pools != null)
             {
-                charts.AddRange(lc.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd));
-                charts.AddRange(lc.CreateCurrentsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true));
-                charts.AddRange(lc.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection));
+                charts.AddRange(lc.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(lc.CreateCurrentsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
+                charts.AddRange(lc.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
             }
             return lc.PlotCharts(filename, "Full Dynamics", charts, numColumns: 2);
         }
