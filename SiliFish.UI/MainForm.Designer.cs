@@ -92,7 +92,6 @@ namespace SiliFish.UI
             this.ePlotCellSelection = new System.Windows.Forms.NumericUpDown();
             this.ddPlotSomiteSelection = new System.Windows.Forms.ComboBox();
             this.lPlotSomites = new System.Windows.Forms.Label();
-            this.lPlotTime = new System.Windows.Forms.Label();
             this.ePlotEnd = new System.Windows.Forms.NumericUpDown();
             this.ePlotStart = new System.Windows.Forms.NumericUpDown();
             this.lGroupingWindows = new System.Windows.Forms.Label();
@@ -776,10 +775,10 @@ namespace SiliFish.UI
             this.tabPlotSub.Controls.Add(this.tPlotWindows);
             this.tabPlotSub.Controls.Add(this.tPlotHTML);
             this.tabPlotSub.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabPlotSub.Location = new System.Drawing.Point(3, 94);
+            this.tabPlotSub.Location = new System.Drawing.Point(3, 88);
             this.tabPlotSub.Name = "tabPlotSub";
             this.tabPlotSub.SelectedIndex = 0;
-            this.tabPlotSub.Size = new System.Drawing.Size(780, 414);
+            this.tabPlotSub.Size = new System.Drawing.Size(780, 420);
             this.tabPlotSub.TabIndex = 6;
             // 
             // tPlotWindows
@@ -788,7 +787,7 @@ namespace SiliFish.UI
             this.tPlotWindows.Location = new System.Drawing.Point(4, 24);
             this.tPlotWindows.Name = "tPlotWindows";
             this.tPlotWindows.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotWindows.Size = new System.Drawing.Size(772, 386);
+            this.tPlotWindows.Size = new System.Drawing.Size(772, 392);
             this.tPlotWindows.TabIndex = 0;
             this.tPlotWindows.Text = "Image Plots";
             // 
@@ -808,7 +807,7 @@ namespace SiliFish.UI
             // 
             this.splitPlotWindows.Panel2.AutoScroll = true;
             this.splitPlotWindows.Panel2.Controls.Add(this.pictureBoxRight);
-            this.splitPlotWindows.Size = new System.Drawing.Size(766, 380);
+            this.splitPlotWindows.Size = new System.Drawing.Size(766, 386);
             this.splitPlotWindows.SplitterDistance = 356;
             this.splitPlotWindows.TabIndex = 0;
             this.splitPlotWindows.DoubleClick += new System.EventHandler(this.splitWindows_DoubleClick);
@@ -864,7 +863,6 @@ namespace SiliFish.UI
             this.pPlot.Controls.Add(this.ePlotCellSelection);
             this.pPlot.Controls.Add(this.ddPlotSomiteSelection);
             this.pPlot.Controls.Add(this.lPlotSomites);
-            this.pPlot.Controls.Add(this.lPlotTime);
             this.pPlot.Controls.Add(this.ePlotEnd);
             this.pPlot.Controls.Add(this.ePlotStart);
             this.pPlot.Controls.Add(this.lGroupingWindows);
@@ -882,13 +880,13 @@ namespace SiliFish.UI
             this.pPlot.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlot.Location = new System.Drawing.Point(3, 3);
             this.pPlot.Name = "pPlot";
-            this.pPlot.Size = new System.Drawing.Size(780, 91);
+            this.pPlot.Size = new System.Drawing.Size(780, 85);
             this.pPlot.TabIndex = 5;
             // 
             // btnPlotHTML
             // 
             this.btnPlotHTML.Enabled = false;
-            this.btnPlotHTML.Location = new System.Drawing.Point(666, 29);
+            this.btnPlotHTML.Location = new System.Drawing.Point(698, 30);
             this.btnPlotHTML.Name = "btnPlotHTML";
             this.btnPlotHTML.Size = new System.Drawing.Size(75, 23);
             this.btnPlotHTML.TabIndex = 30;
@@ -903,7 +901,7 @@ namespace SiliFish.UI
             this.ddPlotCellSelection.FormattingEnabled = true;
             this.ddPlotCellSelection.Location = new System.Drawing.Point(505, 28);
             this.ddPlotCellSelection.Name = "ddPlotCellSelection";
-            this.ddPlotCellSelection.Size = new System.Drawing.Size(91, 23);
+            this.ddPlotCellSelection.Size = new System.Drawing.Size(123, 23);
             this.ddPlotCellSelection.TabIndex = 41;
             this.ddPlotCellSelection.SelectedIndexChanged += new System.EventHandler(this.ddPlotCellSelection_SelectedIndexChanged);
             // 
@@ -918,7 +916,7 @@ namespace SiliFish.UI
             // 
             // ePlotCellSelection
             // 
-            this.ePlotCellSelection.Location = new System.Drawing.Point(602, 28);
+            this.ePlotCellSelection.Location = new System.Drawing.Point(634, 29);
             this.ePlotCellSelection.Minimum = new decimal(new int[] {
             1,
             0,
@@ -939,7 +937,7 @@ namespace SiliFish.UI
             this.ddPlotSomiteSelection.FormattingEnabled = true;
             this.ddPlotSomiteSelection.Location = new System.Drawing.Point(505, 2);
             this.ddPlotSomiteSelection.Name = "ddPlotSomiteSelection";
-            this.ddPlotSomiteSelection.Size = new System.Drawing.Size(91, 23);
+            this.ddPlotSomiteSelection.Size = new System.Drawing.Size(123, 23);
             this.ddPlotSomiteSelection.TabIndex = 37;
             this.ddPlotSomiteSelection.SelectedIndexChanged += new System.EventHandler(this.ddPlotSomiteSelection_SelectedIndexChanged);
             // 
@@ -951,14 +949,6 @@ namespace SiliFish.UI
             this.lPlotSomites.Size = new System.Drawing.Size(49, 15);
             this.lPlotSomites.TabIndex = 42;
             this.lPlotSomites.Text = "Somites";
-            // 
-            // lPlotTime
-            // 
-            this.lPlotTime.Location = new System.Drawing.Point(450, 57);
-            this.lPlotTime.Name = "lPlotTime";
-            this.lPlotTime.Size = new System.Drawing.Size(221, 23);
-            this.lPlotTime.TabIndex = 41;
-            this.lPlotTime.Text = "Last plot time: N\\A";
             // 
             // ePlotEnd
             // 
@@ -1030,7 +1020,7 @@ namespace SiliFish.UI
             // 
             // ePlotSomiteSelection
             // 
-            this.ePlotSomiteSelection.Location = new System.Drawing.Point(602, 2);
+            this.ePlotSomiteSelection.Location = new System.Drawing.Point(634, 3);
             this.ePlotSomiteSelection.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1112,7 +1102,7 @@ namespace SiliFish.UI
             // btnPlotWindows
             // 
             this.btnPlotWindows.Enabled = false;
-            this.btnPlotWindows.Location = new System.Drawing.Point(666, 2);
+            this.btnPlotWindows.Location = new System.Drawing.Point(698, 3);
             this.btnPlotWindows.Name = "btnPlotWindows";
             this.btnPlotWindows.Size = new System.Drawing.Size(75, 23);
             this.btnPlotWindows.TabIndex = 50;
@@ -1220,7 +1210,7 @@ namespace SiliFish.UI
             "Chem Jnc",
             "Gap+Chem",
             "Gap/Chem"});
-            this.dd3DModelType.Location = new System.Drawing.Point(127, 4);
+            this.dd3DModelType.Location = new System.Drawing.Point(5, 3);
             this.dd3DModelType.Name = "dd3DModelType";
             this.dd3DModelType.Size = new System.Drawing.Size(121, 23);
             this.dd3DModelType.TabIndex = 25;
@@ -1229,10 +1219,10 @@ namespace SiliFish.UI
             // btnGenerate3DModel
             // 
             this.btnGenerate3DModel.AutoSize = true;
-            this.btnGenerate3DModel.Location = new System.Drawing.Point(3, 2);
+            this.btnGenerate3DModel.Location = new System.Drawing.Point(132, 2);
             this.btnGenerate3DModel.Name = "btnGenerate3DModel";
             this.btnGenerate3DModel.Size = new System.Drawing.Size(118, 25);
-            this.btnGenerate3DModel.TabIndex = 22;
+            this.btnGenerate3DModel.TabIndex = 26;
             this.btnGenerate3DModel.Text = "Generate 3D Model";
             this.btnGenerate3DModel.UseVisualStyleBackColor = true;
             this.btnGenerate3DModel.Click += new System.EventHandler(this.btnGenerate3DModel_Click);
@@ -1838,7 +1828,6 @@ namespace SiliFish.UI
         private LinkLabel linkBrowseToOutputFolder;
         private Label lAnimationTime;
         private LinkLabel linkSaveAnimationCSV;
-        private Label lPlotTime;
         private ComboBox ddPlotCellSelection;
         private Label lPlotCells;
         private NumericUpDown ePlotCellSelection;

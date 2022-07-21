@@ -24,6 +24,15 @@ namespace SiliFish.ModelUnits
 
         public double[] V; //Membrane potential vector
 
+        public double MinStimulusValue { get { return Stimulus?.MinValue ?? 0; } }
+        public double MaxStimulusValue { get { return Stimulus?.MaxValue ?? 0; } }
+        public double MinPotentialValue { get { return V?.Min() ?? 0; } }
+        public double MaxPotentialValue { get { return V?.Max() ?? 0; } }
+
+        public virtual double MinCurrentValue { get { throw (new NotImplementedException()); } }
+        public virtual double MaxCurrentValue { get { throw (new NotImplementedException()); } }
+
+
         protected TimeLine TimeLine = null;
         internal bool IsAlive(int time)
         {
@@ -102,6 +111,28 @@ namespace SiliFish.ModelUnits
         public List<GapJunction> GapJunctions;
         public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
+
+
+        public override double MinCurrentValue
+        {
+            get
+            {
+                double cur1 = GapJunctions?.Min(jnc => jnc.InputCurrent.Min()) ?? 0;
+                double cur2 = Terminals?.Min(jnc => jnc.InputCurrent.Min()) ?? 0;
+                double cur3 = Synapses?.Min(jnc => jnc.InputCurrent.Min()) ?? 0;
+                return Math.Min(cur1, Math.Min(cur2, cur3));
+            }
+        }
+        public override double MaxCurrentValue
+        {
+            get
+            {
+                double cur1 = GapJunctions?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
+                double cur2 = Terminals?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
+                double cur3 = Synapses?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
+                return Math.Max(cur1, Math.Max(cur2, cur3));
+            }
+        }
 
         /// <summary>
         /// Used as a template
@@ -277,6 +308,20 @@ namespace SiliFish.ModelUnits
         public double R { get { return Core.R; } set { } }
         public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
 
+        public override double MinCurrentValue
+        {
+            get
+            {
+                return EndPlates?.Min(jnc => jnc.InputCurrent.Min()) ?? 0;
+            }
+        }
+        public override double MaxCurrentValue
+        {
+            get
+            {
+                return EndPlates?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
+            }
+        }
         /// <summary>
         /// Used as a template
         /// </summary>

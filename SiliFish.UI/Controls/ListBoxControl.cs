@@ -129,19 +129,33 @@ namespace SiliFish.UI.Controls
             sortItems?.Invoke(this, new EventArgs());
         }
 
+        private void SetActive(object item, int index, bool active)
+        {
+            item.SetPropertyValue("Active", active);
+            listBox.Items[index] = item;//to refresh text
+            activateItem?.Invoke(item, new EventArgs());
+        }
         private void miActivate_Click(object sender, EventArgs e)
         {
-            listBox.SelectedItem.SetPropertyValue("Active", true);
-            listBox.Items[listBox.SelectedIndex] = listBox.Items[listBox.SelectedIndex];//to refresh text
-            activateItem?.Invoke(listBox.SelectedItem, new EventArgs());
+            SetActive(listBox.SelectedItem, listBox.SelectedIndex, true);
         }
 
         private void miDeactivate_Click(object sender, EventArgs e)
         {
-            listBox.SelectedItem.SetPropertyValue("Active", false);
-            listBox.Items[listBox.SelectedIndex] = listBox.Items[listBox.SelectedIndex];//to refresh text
-            activateItem?.Invoke(listBox.SelectedItem, new EventArgs());
+            SetActive(listBox.SelectedItem, listBox.SelectedIndex, false);
         }
+        private void miActivateAll_Click(object sender, EventArgs e)
+        {
+            foreach (int index in Enumerable.Range(0, listBox.Items.Count))
+                SetActive(listBox.Items[index], index, true);             
+        }
+
+        private void miDeactivateAll_Click(object sender, EventArgs e)
+        {
+            foreach (int index in Enumerable.Range(0, listBox.Items.Count))
+                SetActive(listBox.Items[index], index, false);
+        }
+
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             (string tt, bool _) = listBox.SelectedItem?.GetPropertyValue("Tooltip", listBox.SelectedItem?.ToString()) ?? ("", false);
@@ -197,5 +211,7 @@ namespace SiliFish.UI.Controls
                 listBox.Items.Insert(ind, HiddenItems[ind]);
             HiddenItems.Clear();
         }
+
+
     }
 }

@@ -26,6 +26,19 @@ namespace SiliFish.ModelUnits
         public double Delay_ms { get; set; } = 0;//in ms
         public double Weight { get; set; }
 
+        public bool WithinSomite { get; set; } = true;
+        public bool OtherSomite { get; set; } = true;
+        public bool Autapse { get; set; } = false; 
+
+        string SomiteReach
+        {
+            get {
+                return WithinSomite && OtherSomite ? "Same and other" :
+                    WithinSomite ? "Same somite" :
+                    OtherSomite ? "Other somite" :
+                    "";
+            }
+        }
         public CellReach() { }
         public CellReach(CellReach cr)
         {
@@ -36,6 +49,9 @@ namespace SiliFish.ModelUnits
             FixedDuration_ms = cr.FixedDuration_ms;
             Delay_ms = cr.Delay_ms;
             Weight = cr.Weight;
+            WithinSomite = cr.WithinSomite;
+            OtherSomite = cr.OtherSomite;
+            Autapse = cr.Autapse;
         }
         internal object GetTooltip()
         {
@@ -45,7 +61,8 @@ namespace SiliFish.ModelUnits
                 $"MaxReach: {MaxReach: 0.###}\r\n" +
                 $"Fixed Duration: {FixedDuration_ms: 0.###}\r\n" +
                 $"Delay: {Delay_ms: 0.###}\r\n" +
-                $"Weight: {Weight: 0.###}\r\n";
+                $"Weight: {Weight: 0.###}\r\n"+
+                $"Somite Reach: {SomiteReach}\r\n";
         }
 
         /// <summary>
@@ -56,6 +73,12 @@ namespace SiliFish.ModelUnits
         /// <returns></returns>
         public bool WithinReach(Cell cell1, Cell cell2, double noise)
         {
+            if (!WithinSomite && cell1.Somite == cell2.Somite)
+                return false;
+            if (!OtherSomite && cell1.Somite != cell2.Somite)
+                return false;
+            if (!Autapse && cell1 == cell2)
+                return false;
             double diff_x = (cell1.X - cell2.X) * noise;//positive values mean cell1 is more caudal
             if (diff_x > 0 && diff_x > AscendingReach) //Not enough ascending reach 
                 return false;

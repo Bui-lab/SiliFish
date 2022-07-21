@@ -552,7 +552,7 @@ namespace SiliFish
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
                 }
-                k++;
+          
             }
 
             return (vel, angle);
@@ -585,7 +585,7 @@ namespace SiliFish
             Dictionary<string, Coordinate[]> somiteCoordinates = new();
             foreach (int somiteIndex in Enumerable.Range(0, nSpineNode))
             {
-                string somite = "Somite" + somiteIndex.ToString("000"); //for proper sorting
+                string somite = "S" + somiteIndex.ToString("000"); //for proper sorting
                 somiteCoordinates.Add(somite, new Coordinate[nMax + 1]);
                 somiteCoordinates[somite][0] = (0, 0);
                 foreach (var i in Enumerable.Range(0, nMax))

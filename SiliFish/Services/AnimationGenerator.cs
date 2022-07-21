@@ -19,13 +19,13 @@ namespace SiliFish.Services
         private static string CreateTimeDataPoints(Dictionary<string, Coordinate[]> somiteCoordinates, int timeIndex)
         {
             if (somiteCoordinates == null) return "";
-            List<string> timePoints = new();
+            List<string> somites = new();
             foreach (string somite in somiteCoordinates.Keys)
             {
                 Coordinate coor = somiteCoordinates[somite][timeIndex];
-                timePoints.Add(CreateSomiteDataPoint(somite, coor.X, coor.Y));
+                somites.Add(CreateSomiteDataPoint(somite, coor.X, coor.Y));
             }
-            return $"fullData[{timeIndex}] = [{string.Join(',', timePoints)}];";
+            return $"[{string.Join(',', somites)}];";
         }
 
         private static void SetChartDimensions(Dictionary<string, Coordinate[]> somiteCoordinates, StringBuilder html)
@@ -79,8 +79,24 @@ namespace SiliFish.Services
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 
             List<string> timeSeries = new();
-            foreach (int timeIndex in Enumerable.Range(0, iEnd-iStart+1))
-                timeSeries.Add(CreateTimeDataPoints(somiteCoordinates, timeIndex));
+            string lasts = "";
+            foreach (int timeIndex in Enumerable.Range(0, iEnd - iStart + 1))
+            {
+                string s = CreateTimeDataPoints(somiteCoordinates, timeIndex);
+                //URGENT needs debugging - doesn't work as expected
+                if (lasts == s)
+                    s = "[]";
+                else
+                {
+                    if (lasts != "")
+                    {
+                        timeSeries.RemoveAt(timeSeries.Count - 1);
+                        timeSeries.Add($"FD[{timeIndex - 1}] ={lasts}");
+                    }
+                    lasts = s;
+                }
+                timeSeries.Add($"FD[{timeIndex}] ={s}");
+            }
 
             SetChartDimensions(somiteCoordinates, html);
 
@@ -94,7 +110,7 @@ namespace SiliFish.Services
         
         
 
-        public virtual string GenerateAnimation(SwimmingModel model, int tStart = 0, int tEnd = -1)
+        public static string GenerateAnimation(SwimmingModel model, int tStart = 0, int tEnd = -1)
         {
             if (model == null || !model.ModelRun)
                 return null;
