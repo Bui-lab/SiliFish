@@ -118,13 +118,14 @@ namespace SiliFish.UI.Controls
 
         private void SetDropDownValue(ComboBox dd, string value)
         {
-            if (dd.Items.Contains(value))
-                dd.Text = value;
-            else
+            string inactive = value + " (inactive)";
+            foreach (var v in dd.Items)
             {
-                string inactive = value + " (inactive)";
-                if (dd.Items.Contains(inactive))
-                    dd.Text = inactive;
+                if (v.ToString() == value || v.ToString() == inactive)
+                {
+                    dd.SelectedItem = v;
+                    return;
+                }
             }
         }
 
@@ -158,6 +159,8 @@ namespace SiliFish.UI.Controls
                 autoGenerateName = name == interPool.Name;
                 eName.Text = interPool.Name;
                 eDescription.Text = interPool.Description;
+                cbWithinSomite.Checked = interPool.CellReach.WithinSomite;
+                cbOtherSomite.Checked = interPool.CellReach.OtherSomite;
                 numMinReach.Value = (decimal)interPool.CellReach.MinReach;
                 numMaxReach.Value = (decimal)interPool.CellReach.MaxReach;
                 numAscReach.Value = (decimal)interPool.CellReach.AscendingReach;
@@ -182,13 +185,15 @@ namespace SiliFish.UI.Controls
         public InterPoolTemplate GetInterPoolTemplate()
         {
             interPoolTemplate.PoolSource =GetDropDownValue(ddSourcePool);
-            interPoolTemplate.PoolTarget= GetDropDownValue(ddTargetPool);
+            interPoolTemplate.PoolTarget = GetDropDownValue(ddTargetPool);
 
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;
             interPoolTemplate.CellReach = new CellReach
             {
+                WithinSomite = cbWithinSomite.Checked,
+                OtherSomite = cbOtherSomite.Checked,
                 MinReach = (double)numMinReach.Value,
                 MaxReach = (double)numMaxReach.Value,
                 AscendingReach = (double)numAscReach.Value,
@@ -227,6 +232,18 @@ namespace SiliFish.UI.Controls
         private void cbActive_CheckedChanged(object sender, EventArgs e)
         {
             interPoolChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void cbWithinSomite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbWithinSomite.Focused && !cbWithinSomite.Checked)
+                cbOtherSomite.Checked = true;
+        }
+
+        private void cbOtherSomite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbOtherSomite.Focused && !cbOtherSomite.Checked)
+                cbWithinSomite.Checked = true;
         }
     }
 }

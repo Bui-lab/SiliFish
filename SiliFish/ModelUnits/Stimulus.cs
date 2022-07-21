@@ -21,6 +21,8 @@ namespace SiliFish.ModelUnits
         private int iStart, iEnd;
         private double[] values = null;
         private bool initialized = false;
+        public double MinValue { get { return values?.Min() ?? 0; } }
+        public double MaxValue { get { return values?.Max() ?? 0; } }
 
         public Stimulus() { }
         public Stimulus(StimulusMode mode, TimeLine tl, double value1, double value2 = 0)

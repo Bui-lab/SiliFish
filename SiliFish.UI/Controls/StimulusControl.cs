@@ -62,7 +62,13 @@ namespace SiliFish.UI.Controls
             ddStimulusMode.Text = stim.Stimulus_ms?.Mode.ToString();
             eValue1.Text = stim.Stimulus_ms?.Value1.ToString();
             eValue2.Text = stim.Stimulus_ms?.Value2.ToString();
-            ddTargetPool.Text = stim.Target;
+            ddTargetPool.Text = stim.TargetPool;
+            if (!ddTargetSomites.Items.Contains(stim.TargetSomite))
+                ddTargetSomites.Items.Add(stim.TargetSomite);
+            ddTargetSomites.Text = stim.TargetSomite;
+            if (!ddTargetCells.Items.Contains(stim.TargetCell))
+                ddTargetCells.Items.Add(stim.TargetCell);
+            ddTargetCells.Text = stim.TargetCell;
             ddSagittalPosition.Text = stim.LeftRight;
             cbActive.Checked = stim.Active;
 
@@ -72,10 +78,13 @@ namespace SiliFish.UI.Controls
 
         public StimulusTemplate GetStimulus()
         {
-            StimulusTemplate stim = new StimulusTemplate();
-            
-            stim.Target = ddTargetPool.Text;
-            stim.LeftRight = ddSagittalPosition.Text;
+            StimulusTemplate stim = new()
+            {
+                TargetPool = ddTargetPool.Text,
+                TargetSomite = ddTargetSomites.Text,
+                TargetCell = ddTargetCells.Text,
+                LeftRight = ddSagittalPosition.Text
+            };
 
             StimulusMode stimMode = ddStimulusMode.Text == "Gaussian" ? StimulusMode.Gaussian :
                 ddStimulusMode.Text == "Ramp" ? StimulusMode.Ramp :
@@ -88,14 +97,6 @@ namespace SiliFish.UI.Controls
 
             stim.Active = cbActive.Checked;
             TimeLine tl = timeLineControl.GetTimeLine();
-            int start = 0;
-            int end = -1;
-            if (tl?.GetTimeLine()?.Count>0)
-            {
-                start = tl.GetTimeLine().First().start;
-                end = tl.GetTimeLine().First().end;
-            }
-
             stim.Stimulus_ms = new Stimulus(stimMode, tl, value1, value2);
             return stim;
         }
@@ -115,14 +116,32 @@ namespace SiliFish.UI.Controls
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddTargetPool.Focused)
+            {
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        private void ddTargetSomites_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddTargetSomites.Text == "All Somites")
+                ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            else 
+                ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
         }
 
+        private void ddTargetCell_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddTargetCells.Text == "All Cells")
+                ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            else
+                ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+        }
         private void ddSagittalPosition_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddSagittalPosition.Focused)
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
 
         }
+
+
     }
 }

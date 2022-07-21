@@ -47,6 +47,8 @@ namespace SiliFish.Services
             chart.Replace("__CHART_INDEX__", chartindex.ToString());
             chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
             chart.Replace("__X_END__", Time[tend].ToString("0.##"));
+            chart.Replace("__Y_START__", cells.Min(c => c.MinStimulusValue).ToString("0.##"));
+            chart.Replace("__Y_END__", cells.Max(c => c.MaxStimulusValue).ToString("0.##"));
             byte a = (byte)255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreateStimuliSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
@@ -112,6 +114,8 @@ namespace SiliFish.Services
             chart.Replace("__CHART_INDEX__", chartindex.ToString());
             chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
             chart.Replace("__X_END__", Time[tend].ToString("0.##"));
+            chart.Replace("__Y_START__", cells.Min(c => c.MinPotentialValue).ToString("0.##"));
+            chart.Replace("__Y_END__", cells.Max(c => c.MaxPotentialValue).ToString("0.##"));
             byte a = (byte)255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreatePotentialSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
@@ -198,6 +202,8 @@ namespace SiliFish.Services
             chart.Replace("__CHART_INDEX__", chartindex.ToString());
             chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
             chart.Replace("__X_END__", Time[tend].ToString("0.##"));
+            chart.Replace("__Y_START__", cells.Min(c => c.MinCurrentValue).ToString("0.##"));
+            chart.Replace("__Y_END__", cells.Max(c => c.MaxCurrentValue).ToString("0.##"));
             byte a = (byte)255;
 
             (double minWeight, double maxWeight) = cells.Max(c => c.GetConnectionRange());

@@ -4,7 +4,9 @@ namespace SiliFish.ModelUnits
 {
     public class StimulusTemplate : ModelUnitBase
     {
-        public string Target { get; set; }
+        public string TargetPool { get; set; }
+        public string TargetSomite { get; set; }
+        public string TargetCell { get; set; }
 
         public Stimulus Stimulus_ms { get; set; }
 
@@ -13,14 +15,21 @@ namespace SiliFish.ModelUnits
         public override int CompareTo(ModelUnitBase otherbase)
         {
             StimulusTemplate other = otherbase as StimulusTemplate;
-            return Target.CompareTo(other.Target);
+            return TargetPool.CompareTo(other.TargetPool);
         }
         public override string ToString()
         {
             return Distinguisher + (Active ? "" : " (inactive)");
         }
         [JsonIgnore]
-        public override string Distinguisher { get { return string.Format("Target: {0} {1}; {2}", LeftRight, Target, Stimulus_ms?.ToString()); } }
+        public override string Distinguisher
+        {
+            get
+            {
+                return string.Format("Target: {0} {1}-{2} {3}; {4}",
+                    LeftRight, TargetPool, TargetSomite, TargetCell, Stimulus_ms?.ToString());
+            }
+        }
         [JsonIgnore]
         public override string Tooltip { get { return $"{ToString()}\r\n{Stimulus_ms.GetTooltip()}"; } }
     }

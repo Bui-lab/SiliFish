@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using SiliFish.DataTypes;
+using SiliFish.Helpers;
 
 namespace SiliFish.ModelUnits
 {
@@ -207,6 +208,9 @@ namespace SiliFish.ModelUnits
             if (cellSelection.somiteSelection == PlotSelection.All && cellSelection.cellSelection == PlotSelection.All)
                 return Cells.AsEnumerable<Cell>();
 
+            if (!Cells.Any())
+                return Cells.AsEnumerable<Cell>();
+
             Random random = new();
             List<int> som = new();
             List<int> seq = new();
@@ -354,11 +358,21 @@ namespace SiliFish.ModelUnits
             }
         }
 
-        //FUTURE_IMPROVEMENT apply stimulus to a subset of cells
-        public void ApplyStimulus(Stimulus stimulus_ms)
+        public void ApplyStimulus(Stimulus stimulus_ms, string TargetSomite, string TargetCell)
         {
-            foreach (Cell cell in GetCells())
+            int minSom = -1;
+            int maxSom = int.MaxValue;
+            int minSeq = -1;
+            int maxSeq = int.MaxValue;
+            if (!TargetSomite.StartsWith("All"))
+                (minSom, maxSom) = Util.ParseRange(TargetSomite);
+            if (!TargetCell.StartsWith("All"))
+                (minSeq, maxSeq) = Util.ParseRange(TargetCell);
+
+            foreach (Cell cell in GetCells().Where(c => c.Somite >= minSom && c.Somite <= maxSom && c.Sequence >= minSeq && c.Sequence <= maxSeq))
+            {
                 cell.Stimulus = stimulus_ms;
+            }
         }
     }
 

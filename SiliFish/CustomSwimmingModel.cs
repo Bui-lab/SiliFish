@@ -88,13 +88,13 @@ namespace SiliFish
                 {
                     if (stimulus.LeftRight.Contains("Left"))
                     {
-                        CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.Target && np.PositionLeftRight == SagittalPlane.Left);
-                        target?.ApplyStimulus(stimulus.Stimulus_ms);
+                        CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
+                        target?.ApplyStimulus(stimulus.Stimulus_ms, stimulus.TargetSomite, stimulus.TargetCell);
                     }
                     if (stimulus.LeftRight.Contains("Right"))
                     {
-                        CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.Target && np.PositionLeftRight == SagittalPlane.Right);
-                        target?.ApplyStimulus(stimulus.Stimulus_ms);
+                        CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
+                        target?.ApplyStimulus(stimulus.Stimulus_ms, stimulus.TargetSomite, stimulus.TargetCell);
                     }
                 }
             }

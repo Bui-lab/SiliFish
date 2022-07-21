@@ -44,7 +44,7 @@
                 am5themes_Animated.new(root)
             ]);
 
-            var fullData = {};
+            var FD = {};
             var indexStart = 0;
             var timeStart = __TIME_START__;
             var timeEnd = __TIME_END__;
@@ -172,7 +172,7 @@
             function updateSeriesData(timepoint) {
                 if (currentIndex != timepoint) {
                     currentIndex = timepoint;
-                    var data = fullData[timepoint];
+                    var data = FD[timepoint];
 
                     var i = 0;
                     am5.array.each(data, function (item) {
@@ -186,7 +186,7 @@
                 document.querySelector("#statusDiv").innerText = currentTime.toFixed(2).toString() + " ms";
             }
 
-            bubbleSeries.data.setAll(fullData[currentIndex]);
+            bubbleSeries.data.setAll(FD[currentIndex]);
 
             // Make stuff animate on load
             // https://www.amcharts.com/docs/v5/concepts/animations/

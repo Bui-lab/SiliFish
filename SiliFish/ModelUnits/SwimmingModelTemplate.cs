@@ -43,15 +43,15 @@ namespace SiliFish.ModelUnits
                 ip.PoolSource = newName;
             foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolTarget == oldName))
                 ip.PoolTarget = newName;
-            foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.Target == oldName))
-                stim.Target = newName;
+            foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.TargetPool == oldName))
+                stim.TargetPool = newName;
         }
 
         public void RemoveCellPool(CellPoolTemplate cpt)
         {
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cpt.CellGroup);
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolTarget == cpt.CellGroup);
-            AppliedStimuli.RemoveAll(s=>s.Target == cpt.CellGroup);
+            AppliedStimuli.RemoveAll(s=>s.TargetPool == cpt.CellGroup);
             CellPoolTemplates.Remove(cpt);
         }
 

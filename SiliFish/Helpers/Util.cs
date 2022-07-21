@@ -130,5 +130,20 @@ namespace SiliFish.Helpers
             return s;
         }
 
+        public static (int, int) ParseRange(string s, int defMin = -1, int defMax = int.MaxValue)
+        {
+            int i1 = defMin;
+            int i2 = defMax;
+            int sep = s.IndexOfAny(new[] { '-', '_', '.' });
+            if (sep < 0)
+            {
+                if (int.TryParse(s, out i1))
+                    i2 = i1;
+                return (i1, i2);
+            }
+            int.TryParse(s[..sep], out i1);
+            int.TryParse(s[(sep + 1)..], out i2);
+            return (i1, i2);
+        }
     }
 }

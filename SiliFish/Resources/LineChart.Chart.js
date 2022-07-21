@@ -27,6 +27,8 @@ var xAxis__CHART_INDEX__ = chart__CHART_INDEX__.xAxes.push(am5xy.ValueAxis.new(r
 }));
 
 var yAxis__CHART_INDEX__ = chart__CHART_INDEX__.yAxes.push(am5xy.ValueAxis.new(root, {
+    min: __Y_START__,
+    max: __Y_END__,
     renderer: am5xy.AxisRendererY.new(root, {})
 }));
 

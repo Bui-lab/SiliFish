@@ -27,9 +27,11 @@ namespace SiliFish.UI
         CustomSwimmingModel customModel;
 
         SwimmingModelTemplate ModelTemplate = new();
-        string AnimationHTML = "";
-        string PlotHTML = "";
+        string htmlAnimation = "";
+        string htmlPlot = "";
         string PlotSubset = "";
+        int tAnimStart = 0;
+        int tAnimEnd = 0;
         int tPlotStart = 0;
         int tPlotEnd = 0;
         int tRunEnd = 0;
@@ -739,10 +741,10 @@ namespace SiliFish.UI
                         File.WriteAllText(saveFileHTML.FileName, html);
                     }
                     else if (tabOutputs.SelectedTab == tabPlot)
-                        File.WriteAllText(saveFileHTML.FileName, PlotHTML.ToString());
+                        File.WriteAllText(saveFileHTML.FileName, htmlPlot.ToString());
                     else if (tabOutputs.SelectedTab == tabAnimation)
                     {
-                        File.WriteAllText(saveFileHTML.FileName, AnimationHTML);
+                        File.WriteAllText(saveFileHTML.FileName, htmlAnimation);
                     }
                 }
             }
@@ -755,12 +757,41 @@ namespace SiliFish.UI
         int lastAnimationStartIndex;
         double[] lastAnimationTimeArray;
         Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
+
+        private void Animate()
+        {
+            try
+            {
+                htmlAnimation = AnimationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
+                Invoke(CompleteAnimation);
+            }
+            catch { Invoke(CancelAnimation); }
+        }
+
+        private void CompleteAnimation()
+        {
+            webViewAnimation.NavigateTo(htmlAnimation, tempFolder, ref tempFile);
+            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
+            lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
+            btnAnimate.Enabled = true;
+        }
+        private void CancelAnimation()
+        {
+            webViewAnimation.NavigateToString("about:blank");
+            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = false;
+            lAnimationTime.Text = $"Last animation aborted.";
+            btnAnimate.Enabled = true;
+        }
         private void btnAnimate_Click(object sender, EventArgs e)
         {
             if (Model == null || !Model.ModelRun) return;
 
-            int tAnimStart = (int)eAnimationStart.Value;
-            int tAnimEnd = (int)eAnimationEnd.Value;
+            btnAnimate.Enabled = false;
+
+            tAnimStart = (int)eAnimationStart.Value;
+            tAnimEnd = (int)eAnimationEnd.Value;
+            if (tAnimStart > tRunEnd || tAnimStart < 0)
+                tAnimStart = 0;
             if (tAnimEnd > tRunEnd)
                 tAnimEnd = tRunEnd;
 
@@ -769,29 +800,24 @@ namespace SiliFish.UI
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
             lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
-            
-            AnimationGenerator animationGenerator = new();
-            Model.SetAnimationParameters(ReadParams("Animation"));
-            AnimationHTML = animationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
 
-            webViewAnimation.NavigateTo(AnimationHTML, tempFolder, ref tempFile);
-            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
-            lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
+            Model.SetAnimationParameters(ReadParams("Animation"));
+            Invoke(Animate);
         }
 
 
         private void linkSaveAnimationHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (string.IsNullOrEmpty(AnimationHTML))
+            if (string.IsNullOrEmpty(htmlAnimation))
                 return;
             if (saveFileHTML.ShowDialog() != DialogResult.OK)
                 return;
-            File.WriteAllText(saveFileHTML.FileName, AnimationHTML.ToString());
+            File.WriteAllText(saveFileHTML.FileName, htmlAnimation.ToString());
         }
 
         private void linkSaveAnimationCSV_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (string.IsNullOrEmpty(AnimationHTML))
+            if (string.IsNullOrEmpty(htmlAnimation))
                 return;
             if (saveFileCSV.ShowDialog() != DialogResult.OK)
                 return;
@@ -950,14 +976,14 @@ namespace SiliFish.UI
         
         #region HTML Plots
 
-        private void CreatePlotHTML()
+        private void PlotHTML()
         {
             if (Model == null) return;
-            PlotHTML = "";
+            htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection) ;
-            PlotHTML = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, plotCellSelection, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
-            Invoke(CompleteCreatePlot);
+            htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, plotCellSelection, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+            Invoke(CompletePlotHTML);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
         {
@@ -983,15 +1009,15 @@ namespace SiliFish.UI
                 cellSelection = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(),
                 nCell = (int)ePlotCellSelection.Value
             };
-            Task.Run(CreatePlotHTML);
+            Task.Run(PlotHTML);
         }
-        private void CompleteCreatePlot()
+        private void CompletePlotHTML()
         {
-            webViewPlot.NavigateTo(PlotHTML, tempFolder, ref tempFile); 
+            webViewPlot.NavigateTo(htmlPlot, tempFolder, ref tempFile); 
             UseWaitCursor = false;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
-            lPlotTime.Text = $"Last HTML plot: {DateTime.Now:t}";
+            toolTip.SetToolTip(btnPlotHTML, $"Last HTML plot: {DateTime.Now:t}");
         }
 
         #endregion
@@ -1001,6 +1027,8 @@ namespace SiliFish.UI
         private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
         {
             PictureBox pb = sender as PictureBox;
+            if (pb.Image == null)
+                return;
             if (pb.Tag == null)
             {
                 pb.InitialImage = pb.Image;
@@ -1079,7 +1107,7 @@ namespace SiliFish.UI
                 }
                 pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
                 pictureBoxRight.Tag = null;//for proper zooming it has to be reset
-                lPlotTime.Text = $"Last plot: {DateTime.Now:t}";
+                toolTip.SetToolTip(btnPlotWindows, $"Last plot: {DateTime.Now:t}");
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = false;
                 btnPlotWindows.Enabled = true;
@@ -1149,9 +1177,7 @@ namespace SiliFish.UI
         }
         private void listCellPool_CopyItem(object sender, EventArgs e)
         {
-            if (listCellPool.SelectedItem == null)
-                return;
-            CellPoolTemplate pool = new(listCellPool.SelectedItem as CellPoolTemplate);
+            if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
             pool = OpenCellPoolDialog(pool); 
             if (pool != null)
             {
@@ -1181,9 +1207,7 @@ namespace SiliFish.UI
         }
         private void listCellPool_ViewItem(object sender, EventArgs e)
         {
-            if (listCellPool.SelectedItem == null)
-                return;
-            CellPoolTemplate pool = listCellPool.SelectedItem as CellPoolTemplate;
+            if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
             string oldName = pool.CellGroup;
             pool = OpenCellPoolDialog(pool); //check modeltemplate's list
             if (pool != null)
@@ -1199,7 +1223,7 @@ namespace SiliFish.UI
 
         private void listCellPool_ActivateItem(object sender, EventArgs e)
         {
-            CellPoolTemplate pool = listCellPool.SelectedItem as CellPoolTemplate;
+            if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
             ModelTemplate.CellPoolTemplates.FirstOrDefault(p => p.Distinguisher == pool.Distinguisher).Active = pool.Active;
             modifiedPools = true;
         }
