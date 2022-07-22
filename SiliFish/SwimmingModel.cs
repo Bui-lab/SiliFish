@@ -16,18 +16,18 @@ namespace SiliFish
 
     public struct RunParam
     {
-        public int tSkip { get; set; } = 0;
+        public int tSkip_ms { get; set; } = 0;
         public int tMax { get; set; } = 1000;
         public double dt { get; set; } = 0.1;//The step size
 
         public int iIndex(double t)
         {
-            int i = (int)((t+tSkip)/ dt);
+            int i = (int)((t+tSkip_ms)/ dt);
             if (i < 0) i = 0;
             if (i >= iMax) i = iMax - 1;
             return i;
         }
-        public int iMax { get { return Convert.ToInt32(((tMax + tSkip) / dt) + 1); } }
+        public int iMax { get { return Convert.ToInt32(((tMax + tSkip_ms) / dt) + 1); } }
         public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
         public RunParam() { }
     }
@@ -441,6 +441,7 @@ namespace SiliFish
         {
             try
             {
+                iProgress = 0;
                 model_run = false;
                 rand = new Random((int)seed);
                 runParam = rp;
@@ -450,11 +451,11 @@ namespace SiliFish
 
                 InitStructures(iMax);
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
-                Time[0] = Math.Round((double)-1 * runParam.tSkip, 2);
+                Time[0] = Math.Round((double)-1 * runParam.tSkip_ms, 2);
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;
-                    Time[index] = Math.Round(runParam.dt * index - runParam.tSkip, 2);
+                    Time[index] = Math.Round(runParam.dt * index - runParam.tSkip_ms, 2);
                     if (CancelRun)
                     {
                         CancelRun = false;
@@ -620,7 +621,7 @@ namespace SiliFish
             const int RIGHT = 1;
             int nMax = TimeArray.Length;
             double dt = runParam.dt;
-            double offset = runParam.tSkip;
+            double offset = runParam.tSkip_ms;
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset/dt);

@@ -75,6 +75,15 @@ namespace SiliFish.Extensions
             dictionary.Add(key, value);
         }
 
+        public static void AddObject<T>(this Dictionary<int, T> dictionary, int key, T value, bool skipIfExists = false)
+        {
+            if (skipIfExists && dictionary.ContainsKey(key))
+                return;
+            if (dictionary.ContainsKey(key))
+                dictionary[key] = value;
+            else
+                dictionary.Add(key, value);
+        }
         public static bool SameAs(this Dictionary<string, object> dictionary, Dictionary<string, object> dic2)
         {
             if (dictionary?.Count != dic2?.Count) return false;

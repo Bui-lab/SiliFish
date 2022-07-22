@@ -169,7 +169,8 @@ namespace Services
             CellSelectionStruct cellSelection, 
             double dt , int tStart = 0, int tEnd = -1, int tSkip = 0)
         {
-            if ((Cells == null || !Cells.Any()) && 
+            if (PlotType != PlotType .Episodes &&
+                (Cells == null || !Cells.Any()) && 
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             int iStart = (int)((tStart + tSkip) / dt);

@@ -522,7 +522,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Model.MainLoop(0, new RunParam { tMax = tRunEnd, tSkip = tRunSkip });
+                Model.MainLoop(0, new RunParam { tMax = tRunEnd, tSkip_ms = tRunSkip });
             }
             catch (Exception ex)
             {
@@ -609,7 +609,7 @@ namespace SiliFish.UI
                     StimulusMode.Step;
                 (Model as PredefinedModel).SetStimulusMode(stimMode);
             }
-            Model.runParam.tSkip = tRunSkip;
+            Model.runParam.tSkip_ms = tRunSkip;
             Model.runParam.tMax = tRunEnd;
             Model.runParam.dt = (double) edt.Value;
             if (Model == null) return;
@@ -941,9 +941,9 @@ namespace SiliFish.UI
             PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
             if (plotType==PlotType.Episodes)
             {
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
                 ddGroupingWindows.SelectedIndex = -1;
                 ddCellsPools.SelectedIndex = -1;
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
             }
             else
             {
@@ -982,7 +982,7 @@ namespace SiliFish.UI
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection) ;
-            htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model.TimeArray, Cells, Pools, plotCellSelection, Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+            htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
             Invoke(CompletePlotHTML);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
@@ -1558,6 +1558,14 @@ namespace SiliFish.UI
             catch { }
         }
 
+        private void linkBrowseToTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", tempFolder);
+            }
+            catch { }
+        }
         private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>();

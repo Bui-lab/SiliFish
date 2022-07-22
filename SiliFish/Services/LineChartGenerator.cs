@@ -20,7 +20,31 @@ namespace SiliFish.Services
             html.Replace("__PERCENT_HEIGHT__", (100 / numRows).ToString());
             html.Replace("__COLUMNS__", numColumns.ToString());
         }
-        
+
+        public string CreateLineChartSeries(string dataPoints, string name, string seriesIndex, string color, byte opacity)
+        {
+            StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
+            series.Replace("__SERIES_NAME__", name);
+            series.Replace("__SERIES_INDEX__", seriesIndex);
+            series.Replace("__SERIES_COLOR__", color);
+            series.Replace("__SERIES_OPACITY__", opacity.ToString());
+            series.Replace("__SERIES_DATA__", "[" + dataPoints + "]");
+            return series.ToString();
+        }
+
+        public string CreateSubPlot(int chartindex, string chartTitle, string series, double[] Time, int tstart, int tend, double yMin, double yMax)
+        {
+            StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Chart.js"));
+            chart.Replace("__CHART_INDEX__", chartindex.ToString());
+            chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
+            chart.Replace("__X_END__", Time[tend].ToString("0.##"));
+            chart.Replace("__Y_START__", yMin.ToString("0.##"));
+            chart.Replace("__Y_END__", yMax.ToString("0.##"));
+            series = series.Replace("__CHART_INDEX__", chartindex.ToString());
+            chart.Replace("__SERIES__", series);
+            chart.Replace("__CHART_TITLE__", chartTitle);
+            return chart.ToString();
+        }
         #region Plot Stimuli
         private string CreateStimulusDataPoint(Cell cell, double t, int timeInd)
         {
@@ -29,33 +53,20 @@ namespace SiliFish.Services
 
         private string CreateStimuliSeries(int chartindex, Cell cell, double[] Time, int tstart, int tend, string color, ref byte opacity, byte dec)
         {
-            StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", cell.ID.Replace("\"", "\\\""));
-            series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + cell.Sequence.ToString());
-            series.Replace("__SERIES_COLOR__", color);
-            series.Replace("__SERIES_OPACITY__", opacity.ToString());
-            opacity -= dec;
-
             string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreateStimulusDataPoint(cell, Time[i], i)));
-            series.Replace("__SERIES_DATA__", "[" + dataPoints + "]");
-            return series.ToString();
+            string seriesName = cell.ID.Replace("\"", "\\\"");
+            string seriesIndex = chartindex.ToString() + "_" + cell.Sequence.ToString();
+            string series = CreateLineChartSeries(dataPoints, seriesName, seriesIndex, color, opacity);
+            opacity -= dec;
+            return series;
         }
 
-        public string CreateStimuliSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, string color)
+        public string CreateStimuliSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, double yMin, double yMax, string color)
         {
-            StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Chart.js"));
-            chart.Replace("__CHART_INDEX__", chartindex.ToString());
-            chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
-            chart.Replace("__X_END__", Time[tend].ToString("0.##"));
-            chart.Replace("__Y_START__", cells.Min(c => c.MinStimulusValue).ToString("0.##"));
-            chart.Replace("__Y_END__", cells.Max(c => c.MaxStimulusValue).ToString("0.##"));
-            byte a = (byte)255;
+            byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreateStimuliSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
-            series = series.Replace("__CHART_INDEX__", chartindex.ToString());
-            chart.Replace("__SERIES__", series);
-            chart.Replace("__CHART_TITLE__", chartTitle);
-            return chart.ToString();
+            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax);
         }
 
         //One chart per pool
@@ -64,11 +75,13 @@ namespace SiliFish.Services
             ref int chartindex)
         {
             List<string> charts = new();
+            double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinStimulusValue));
+            double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxStimulusValue));
             foreach (CellPool pool in cellPools)
             {
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
                 string color = pool.Color.ToRGB();
-                charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID + " Stimuli", cells, Time, tstart, tend, color));
+                charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID + " Stimuli", cells, Time, tstart, tend, yMin, yMax, color));
             }
             return charts;
         }
@@ -78,10 +91,12 @@ namespace SiliFish.Services
             ref int chartindex)
         {
             List<string> charts = new();
+            double yMin = cells.Min(c => c.MinStimulusValue);
+            double yMax = cells.Max(c => c.MaxStimulusValue);
             foreach (Cell cell in cells)
             {
                 string color = cell.CellPool.Color.ToRGB();
-                charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID + " Stimuli", new List<Cell>() { cell }, Time, tstart, tend, color));
+                charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID + " Stimuli", new List<Cell>() { cell }, Time, tstart, tend, yMin, yMax, color));
             }
             return charts;
         }
@@ -96,33 +111,20 @@ namespace SiliFish.Services
 
         private string CreatePotentialSeries(int chartindex, Cell cell, double[] Time, int tstart, int tend, string color, ref byte opacity, byte dec)
         {
-            StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", cell.ID.Replace("\"", "\\\""));
-            series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + cell.Sequence.ToString());
-            series.Replace("__SERIES_COLOR__", color);
-            series.Replace("__SERIES_OPACITY__", opacity.ToString());
-            opacity -= dec;
-
             string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreatePotentialDataPoint(cell, Time[i], i)));
-            series.Replace("__SERIES_DATA__", "[" + dataPoints + "]");
-            return series.ToString();
+            string seriesName = cell.ID.Replace("\"", "\\\"");
+            string seriesIndex = chartindex.ToString() + "_" + cell.Sequence.ToString();
+            string series = CreateLineChartSeries(dataPoints, seriesName, seriesIndex, color, opacity);
+            opacity -= dec;
+            return series;
         }
 
-        public string CreatePotentialsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, string color)
+        public string CreatePotentialsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, double yMin, double yMax, string color)
         {
-            StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Chart.js"));
-            chart.Replace("__CHART_INDEX__", chartindex.ToString());
-            chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
-            chart.Replace("__X_END__", Time[tend].ToString("0.##"));
-            chart.Replace("__Y_START__", cells.Min(c => c.MinPotentialValue).ToString("0.##"));
-            chart.Replace("__Y_END__", cells.Max(c => c.MaxPotentialValue).ToString("0.##"));
-            byte a = (byte)255;
+            byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreatePotentialSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
-            series = series.Replace("__CHART_INDEX__", chartindex.ToString());
-            chart.Replace("__SERIES__", series);
-            chart.Replace("__CHART_TITLE__", chartTitle);
-            return chart.ToString();
+            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax);
         }
 
         
@@ -133,11 +135,14 @@ namespace SiliFish.Services
             ref int chartindex)
         {
             List<string> charts = new();
+            double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinPotentialValue));
+            double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue));
+
             foreach (CellPool pool in cellPools)
             {
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
                 string color = pool.Color.ToRGB();
-                charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID + " Potantials", cells, Time, tstart, tend, color));
+                charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID + " Potantials", cells, Time, tstart, tend, yMin, yMax, color));
             }
             return charts;
         }
@@ -148,10 +153,13 @@ namespace SiliFish.Services
             ref int chartindex)
         {
             List<string> charts = new();
+            double yMin = cells.Min(c => c.MinPotentialValue);
+            double yMax = cells.Max(c => c.MaxPotentialValue);
+
             foreach (Cell cell in cells)
             {
                 string color = cell.CellPool.Color.ToRGB();
-                charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID + " Potantials", new List<Cell>() { cell }, Time, tstart, tend, color));
+                charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID + " Potantials", new List<Cell>() { cell }, Time, tstart, tend, yMin, yMax, color));
             }
             return charts;
         }
@@ -172,44 +180,29 @@ namespace SiliFish.Services
 
         private string CreateIOGapCurrentSeries(int chartindex, int seriesindex, GapJunction jnc, double[] Time, int tstart, int tend, string color, byte opacity, bool incoming)
         {
-            StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", jnc.Cell1.ID.Replace("\"", "\\\""));
-            series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + seriesindex.ToString());
-            series.Replace("__SERIES_COLOR__", color);
-            series.Replace("__SERIES_OPACITY__", opacity.ToString());
-
             string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreateCurrentDataPoint(jnc, Time[i], i, incoming)));
-            series.Replace("__SERIES_DATA__", "[" + dataPoints + "]");
-            return series.ToString();
+            string seriesName = jnc.Cell1.ID.Replace("\"", "\\\"");
+            string seriesIndex = chartindex.ToString() + "_" + seriesindex.ToString();
+            return CreateLineChartSeries(dataPoints, seriesName, seriesIndex, color, opacity);
         }
 
         private string CreateCurrentSeries(int chartindex, int seriesindex, ChemicalSynapse jnc, double[] Time, int tstart, int tend, string color, byte opacity)
         {
-            StringBuilder series = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Series.js"));
-            series.Replace("__SERIES_NAME__", jnc.PreNeuron.ID.Replace("\"", "\\\""));
-            series.Replace("__SERIES_INDEX__", chartindex.ToString() + "_" + seriesindex.ToString());
-            series.Replace("__SERIES_COLOR__", color);
-            series.Replace("__SERIES_OPACITY__", opacity.ToString());
-
             string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreateCurrentDataPoint(jnc, Time[i], i)));
-            series.Replace("__SERIES_DATA__", "[" + dataPoints + "]");
-            return series.ToString();
+            string seriesName = jnc.PreNeuron.ID.Replace("\"", "\\\"");
+            string seriesIndex = chartindex.ToString() + "_" + seriesindex.ToString();
+            return CreateLineChartSeries(dataPoints, seriesName, seriesIndex, color, opacity);
         }
 
-        private string CreateCurrentsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, bool includeGap, bool includeChem)
+        private string CreateCurrentsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, double yMin, double yMax, bool includeGap, bool includeChem)
         {
-            StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Chart.js"));
-            chart.Replace("__CHART_INDEX__", chartindex.ToString());
-            chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
-            chart.Replace("__X_END__", Time[tend].ToString("0.##"));
-            chart.Replace("__Y_START__", cells.Min(c => c.MinCurrentValue).ToString("0.##"));
-            chart.Replace("__Y_END__", cells.Max(c => c.MaxCurrentValue).ToString("0.##"));
-            byte a = (byte)255;
-
-            (double minWeight, double maxWeight) = cells.Max(c => c.GetConnectionRange());
-            double mult = (maxWeight - minWeight) / 55;
+            byte a = 255;
+            byte dec = (byte)(200 / cells.Count);
             string series = "";
             int seriesindex = 0;
+            (double minWeight, double maxWeight) = cells.Max(c => c.GetConnectionRange());
+            double mult = (maxWeight - minWeight) / 55;
+
             foreach (Cell cell in cells)
             {
                 if (cell is Neuron neuron)
@@ -252,10 +245,7 @@ namespace SiliFish.Services
                     }
                 }
             }
-            series = series.Replace("__CHART_INDEX__", chartindex.ToString());
-            chart.Replace("__SERIES__", series);
-            chart.Replace("__CHART_TITLE__", chartTitle);
-            return chart.ToString();
+            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax);
         }
 
 
@@ -266,10 +256,12 @@ namespace SiliFish.Services
             ref int chartindex)
         {
             List<string> charts = new();
+            double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue));
+            double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue));
             foreach (CellPool pool in cellPools)
             {
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
-                charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID + " Currents", cells, Time, tstart, tend, includeGap, includeChem));
+                charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID + " Currents", cells, Time, tstart, tend, yMin, yMax, includeGap, includeChem));
             }
             return charts;
         }
@@ -280,9 +272,12 @@ namespace SiliFish.Services
             ref int chartindex)
         {
             List<string> charts = new();
+            double yMin = cells.Min(c => c.MinCurrentValue);
+            double yMax = cells.Max(c => c.MaxCurrentValue);
+
             foreach (Cell cell in cells)
             {
-                charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID + " Currents", new List<Cell>() { cell }, Time, tstart, tend, includeGap, includeChem));
+                charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID + " Currents", new List<Cell>() { cell }, Time, tstart, tend, yMin, yMax, includeGap, includeChem));
             }
             return charts;
         }
