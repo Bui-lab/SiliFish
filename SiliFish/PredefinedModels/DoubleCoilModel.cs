@@ -108,7 +108,7 @@ namespace SiliFish.PredefinedModels
             L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tlLeft = new();
-            tlLeft.AddTimeRange(this.tStimStart);
+            tlLeft.AddTimeRange(this.tStimStart_ms);
             Stimulus stimLeft = new(stim_mode, tlLeft, stim_value1, stim_value2);
             TimeLine tlRight= new();
             tlRight.AddTimeRange(this.tasyncdelay);
@@ -240,7 +240,7 @@ namespace SiliFish.PredefinedModels
 
 
             TimeLine span = new();
-            span.AddTimeRange(this.tSynStart);
+            span.AddTimeRange(this.tSynStart_ms);
 
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
@@ -264,7 +264,7 @@ namespace SiliFish.PredefinedModels
             PoolToPoolChemSynapse(L_V0v ,R_IC, cr, GluSynapse, span);
             PoolToPoolChemSynapse(R_V0v ,L_IC, cr, GluSynapse, span);
 
-            //Pisilateral glutamatergic projections from V2a to V0v 
+            //Ipsilateral glutamatergic projections from V2a to V0v 
             cr = new() { AscendingReach = rangeV2a_V0v_asc, DescendingReach = rangeV2a_V0v_desc, MinReach = rangeMin, Weight = V2a_V0v_syn_weight };
             PoolToPoolChemSynapse(L_V2a,L_V0v, cr, GluSynapse, span);
             PoolToPoolChemSynapse(R_V2a,R_V0v, cr, GluSynapse, span);

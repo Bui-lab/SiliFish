@@ -36,6 +36,7 @@ namespace SiliFish.UI
             this.rbDoubleCoil = new System.Windows.Forms.RadioButton();
             this.rbBeatGlide = new System.Windows.Forms.RadioButton();
             this.pTop = new System.Windows.Forms.Panel();
+            this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkBrowseToOutputFolder = new System.Windows.Forms.LinkLabel();
             this.linkClearModel = new System.Windows.Forms.LinkLabel();
             this.rbCustom = new System.Windows.Forms.RadioButton();
@@ -248,6 +249,7 @@ namespace SiliFish.UI
             // 
             // pTop
             // 
+            this.pTop.Controls.Add(this.linkBrowseToTempFolder);
             this.pTop.Controls.Add(this.linkBrowseToOutputFolder);
             this.pTop.Controls.Add(this.linkClearModel);
             this.pTop.Controls.Add(this.rbCustom);
@@ -261,6 +263,18 @@ namespace SiliFish.UI
             this.pTop.Size = new System.Drawing.Size(1348, 39);
             this.pTop.TabIndex = 3;
             this.pTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pTop_MouseDoubleClick);
+            // 
+            // linkBrowseToTempFolder
+            // 
+            this.linkBrowseToTempFolder.AutoSize = true;
+            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(693, 14);
+            this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
+            this.linkBrowseToTempFolder.Size = new System.Drawing.Size(127, 15);
+            this.linkBrowseToTempFolder.TabIndex = 7;
+            this.linkBrowseToTempFolder.TabStop = true;
+            this.linkBrowseToTempFolder.Text = "Browse to Temp Folder";
+            this.toolTip.SetToolTip(this.linkBrowseToTempFolder, "The contents of the temp folder is cleared at exit.");
+            this.linkBrowseToTempFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkBrowseToTempFolder_LinkClicked);
             // 
             // linkBrowseToOutputFolder
             // 
@@ -836,7 +850,7 @@ namespace SiliFish.UI
             this.tPlotHTML.Location = new System.Drawing.Point(4, 24);
             this.tPlotHTML.Name = "tPlotHTML";
             this.tPlotHTML.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotHTML.Size = new System.Drawing.Size(772, 386);
+            this.tPlotHTML.Size = new System.Drawing.Size(772, 392);
             this.tPlotHTML.TabIndex = 1;
             this.tPlotHTML.Text = "HTML Plots";
             this.tPlotHTML.UseVisualStyleBackColor = true;
@@ -849,7 +863,7 @@ namespace SiliFish.UI
             this.webViewPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlot.Location = new System.Drawing.Point(3, 3);
             this.webViewPlot.Name = "webViewPlot";
-            this.webViewPlot.Size = new System.Drawing.Size(766, 380);
+            this.webViewPlot.Size = new System.Drawing.Size(766, 386);
             this.webViewPlot.TabIndex = 1;
             this.webViewPlot.ZoomFactor = 1D;
             this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlot_CoreWebView2InitializationCompleted);
@@ -1836,5 +1850,6 @@ namespace SiliFish.UI
         private TabControl tabPlotSub;
         private TabPage tPlotWindows;
         private TabPage tPlotHTML;
+        private LinkLabel linkBrowseToTempFolder;
     }
 }

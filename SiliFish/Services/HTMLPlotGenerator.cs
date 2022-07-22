@@ -1,4 +1,5 @@
-﻿using SiliFish.ModelUnits;
+﻿using SiliFish.DataTypes;
+using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace SiliFish.Services
 {
     public class HTMLPlotGenerator
     {
-
         private static string PlotMembranePotentials(double[] TimeOffset, List<Cell> cells, List<CellPool> pools,CellSelectionStruct cellSelection,
             int iStart, int iEnd, string filename = "")
         {
@@ -73,41 +73,90 @@ namespace SiliFish.Services
             return lc.PlotCharts(filename, "Full Dynamics", charts, numColumns: 2);
         }
 
+        private static string PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
+        {/*
+            LineChartGenerator lc = new();
+            List<string> charts = new();
+            int chartindex = 0;
+            int iStart = model.runParam.iIndex(tStart);
+            int iEnd = model.runParam.iIndex(tEnd);
 
-        public static string Plot( PlotType PlotType, double[] TimeArray, List<Cell> Cells, List<CellPool> Pools,
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
+            lc.CreateStimuliSubPlot
+            leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
+                tail_tip_coord.Select(c => c.X).ToArray(),
+                model.TimeArray,
+                iStart, iEnd, Color.Red));
+            if (episodes.Any())
+            {
+                leftImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
+                    episodes.Select(e => e.EpisodeDuration).ToArray(),
+                    episodes.Select(e => e.Start).ToArray(),
+                    tStart, tEnd, Color.Red));
+                if (episodes.Count > 1)
+                    leftImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
+                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
+                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
+                        tStart, tEnd, Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
+                    episodes.SelectMany(e => e.InstantFequency).ToArray(),
+                    episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray(),
+                    tStart, tEnd, Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
+                    episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
+                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray(),
+                    tStart, tEnd, Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat Frequency",
+                    episodes.Select(e => e.BeatFrequency).ToArray(),
+                    episodes.Select(e => e.Start).ToArray(),
+                    tStart, tEnd, Color.Red));
+
+            }
+
+            return (leftImages, null);*/
+            return "";
+        }
+
+
+
+        public static string Plot( PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
             CellSelectionStruct cellSelection, 
-            double dt, int tStart = 0, int tEnd = -1, int tSkip = 0)
+            int tStart = 0, int tEnd = -1, int tSkip = 0)
         {
-            if ((Cells == null || !Cells.Any()) &&
+            if (PlotType != PlotType.Episodes &&
+                (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return "";
+            double dt = model.runParam.dt;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
-            if (iEnd < iStart || iEnd >= TimeArray.Length)
-                iEnd = TimeArray.Length - 1;
-  
+            if (iEnd < iStart || iEnd >= model.TimeArray.Length)
+                iEnd = model.TimeArray.Length - 1;  
             
             string PlotHTML = "";
             //URGENT remaining PlotTypes
             switch (PlotType)
             {
                 case PlotType.MembPotential:
-                    PlotHTML = PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
+                    PlotHTML = PlotMembranePotentials(model.TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                     break;
                 case PlotType.Current:
-                    PlotHTML = PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, includeGap: true, includeChem: true);
+                    PlotHTML = PlotCurrents(model.TimeArray, Cells, Pools, cellSelection, iStart, iEnd, includeGap: true, includeChem: true);
                     break;
                 case PlotType.GapCurrent:
-                    PlotHTML = PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, includeGap: true, includeChem: false);
+                    PlotHTML = PlotCurrents(model.TimeArray, Cells, Pools, cellSelection, iStart, iEnd, includeGap: true, includeChem: false);
                     break;
                 case PlotType.ChemCurrent:
-                    PlotHTML = PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, includeGap: false, includeChem: true);
+                    PlotHTML = PlotCurrents(model.TimeArray, Cells, Pools, cellSelection, iStart, iEnd, includeGap: false, includeChem: true);
                     break;
                 case PlotType.Stimuli:
-                    PlotHTML = PlotStimuli(TimeArray, Cells, Pools, iStart, iEnd, cellSelection);
+                    PlotHTML = PlotStimuli(model.TimeArray, Cells, Pools, iStart, iEnd, cellSelection);
                     break;
                 case PlotType.FullDyn:
-                    PlotHTML = PlotFullDynamics(TimeArray, Cells, Pools, iStart, iEnd, cellSelection);
+                    PlotHTML = PlotFullDynamics(model.TimeArray, Cells, Pools, iStart, iEnd, cellSelection);
+                    break;
+                case PlotType.Episodes:
+                    PlotHTML = PlotEpisodes(model, tStart, tEnd);
                     break;
             }
             return PlotHTML;

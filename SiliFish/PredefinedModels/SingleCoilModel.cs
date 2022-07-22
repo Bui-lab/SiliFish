@@ -70,7 +70,7 @@ namespace SiliFish.PredefinedModels
             L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tl = new();
-            tl.AddTimeRange(this.tStimStart);
+            tl.AddTimeRange(this.tStimStart_ms);
             Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
 
             for (int i = 0; i < nIC; i++)
@@ -153,7 +153,7 @@ namespace SiliFish.PredefinedModels
             PoolToPoolChemSynapse(R_MN, R_Muscle, cr, AChSynapse);
 
             TimeLine span = new();
-            span.AddTimeRange(this.tSynStart);
+            span.AddTimeRange(this.tSynStart_ms);
 
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };

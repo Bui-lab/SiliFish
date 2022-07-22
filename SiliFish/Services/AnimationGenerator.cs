@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using SiliFish.DataTypes;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
@@ -79,24 +80,26 @@ namespace SiliFish.Services
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 
             List<string> timeSeries = new();
-            string lasts = "";
+            Dictionary<int, string> somitePoints = new Dictionary<int, string>();
+            string lastPos = "";
+            string initialPos = "";
             foreach (int timeIndex in Enumerable.Range(0, iEnd - iStart + 1))
             {
-                string s = CreateTimeDataPoints(somiteCoordinates, timeIndex);
-                //URGENT needs debugging - doesn't work as expected
-                if (lasts == s)
-                    s = "[]";
+                string curPos = CreateTimeDataPoints(somiteCoordinates, timeIndex);
+                if (initialPos == "")
+                    initialPos = curPos;
+                if (lastPos == curPos && lastPos == initialPos)
+                    curPos = "[];";
                 else
                 {
-                    if (lasts != "")
-                    {
-                        timeSeries.RemoveAt(timeSeries.Count - 1);
-                        timeSeries.Add($"FD[{timeIndex - 1}] ={lasts}");
-                    }
-                    lasts = s;
+                    if (lastPos != "")
+                        somitePoints.AddObject(timeIndex - 1, lastPos);
+                    lastPos = curPos;
                 }
-                timeSeries.Add($"FD[{timeIndex}] ={s}");
+                somitePoints.Add(timeIndex, curPos);
             }
+            foreach (int timeIndex in somitePoints.Keys)
+                timeSeries.Add($"FD[{timeIndex}] ={somitePoints[timeIndex]}");
 
             SetChartDimensions(somiteCoordinates, html);
 
@@ -116,7 +119,7 @@ namespace SiliFish.Services
                 return null;
 
             int tMax = model.runParam.tMax;
-            int tSkip = model.runParam.tSkip;
+            int tSkip = model.runParam.tSkip_ms;
             double dt = model.runParam.dt;
 
             if (tEnd < tStart || tEnd > tMax)
