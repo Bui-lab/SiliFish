@@ -182,12 +182,12 @@
             this.ddTargetCells.FormattingEnabled = true;
             this.ddTargetCells.Items.AddRange(new object[] {
             "All Cells",
-            "Enter cell number",
-            "or range (0-5)"});
+            "Custom range"});
             this.ddTargetCells.Location = new System.Drawing.Point(101, 142);
             this.ddTargetCells.Name = "ddTargetCells";
             this.ddTargetCells.Size = new System.Drawing.Size(121, 23);
             this.ddTargetCells.TabIndex = 11;
+            this.toolTip.SetToolTip(this.ddTargetCells, "Enter a number or a range (eg. \"1\" or \"0-5\")");
             this.ddTargetCells.SelectedIndexChanged += new System.EventHandler(this.ddTargetCell_SelectedIndexChanged);
             // 
             // ddTargetSomites
@@ -196,12 +196,12 @@
             this.ddTargetSomites.FormattingEnabled = true;
             this.ddTargetSomites.Items.AddRange(new object[] {
             "All Somites",
-            "Enter somite number",
-            "or range (0-5)"});
+            "Custom range"});
             this.ddTargetSomites.Location = new System.Drawing.Point(101, 116);
             this.ddTargetSomites.Name = "ddTargetSomites";
             this.ddTargetSomites.Size = new System.Drawing.Size(121, 23);
             this.ddTargetSomites.TabIndex = 9;
+            this.toolTip.SetToolTip(this.ddTargetSomites, "Enter a number or a range (eg. \"1\" or \"0-5\")");
             this.ddTargetSomites.SelectedIndexChanged += new System.EventHandler(this.ddTargetSomites_SelectedIndexChanged);
             // 
             // lTargetSomites

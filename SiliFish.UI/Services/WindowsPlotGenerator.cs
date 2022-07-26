@@ -95,7 +95,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = "Current (mA)";
+            string yAxis = "Current (pA)";
             if (cells != null)
             {
                 double yMin = cells.Min(c => c.MinCurrentValue);
@@ -135,7 +135,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = "Stimulus (mA)";
+            string yAxis = "Stimulus (pA)";
 
             if (cells != null)
             {
@@ -237,7 +237,12 @@ namespace Services
                     tStart, tEnd,
                     "Freq.", 0, null,
                     Color.Red));
-
+                leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat/Episode",
+                    episodes.Select(e => (double)e.Beats.Count).ToArray(),
+                    episodes.Select(e => e.Start).ToArray(),
+                    tStart, tEnd,
+                    "Count", 0, null,
+                    Color.Red));
             }
 
             return (leftImages, null);

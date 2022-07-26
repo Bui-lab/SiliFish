@@ -220,6 +220,7 @@ namespace SiliFish.UI
             //To fill in newly generated params that did not exist during the model creation
             SwimmingModel swimmingModel = new();
             Dictionary<string, object> currentParams = swimmingModel.GetParameters();
+            Dictionary<string, object> paramDesc = swimmingModel.GetParameterDesc();
             List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList();
 
             List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
@@ -247,11 +248,14 @@ namespace SiliFish.UI
                 flowPanel.AutoScroll = true;
                 foreach (KeyValuePair<string, object> kvp in SubDict)
                 {
-                    Label lbl = new();
-                    lbl.Text = kvp.Key[(group.Length + 1)..];
-                    lbl.Height = 23;
-                    lbl.Width = 8 * maxLen;
-                    lbl.TextAlign = ContentAlignment.BottomRight;
+                    paramDesc.TryGetValue(kvp.Key, out object desc);
+                    Label lbl = new()
+                    {
+                        Text = kvp.Key[(group.Length + 1)..],
+                        Height = 23,
+                        Width = 8 * maxLen,
+                        TextAlign = ContentAlignment.BottomRight
+                    };
                     flowPanel.Controls.Add(lbl);
                     TextBox textBox = new();
                     if (group == "General")
@@ -265,6 +269,11 @@ namespace SiliFish.UI
                     textBox.Text = kvp.Value?.ToString();
                     flowPanel.Controls.Add(textBox);
                     flowPanel.SetFlowBreak(textBox, true);
+                    if (desc != null)
+                    {
+                        toolTip.SetToolTip(lbl, desc.ToString());
+                        toolTip.SetToolTip(textBox, desc.ToString());
+                    }
                 }
             }
         }

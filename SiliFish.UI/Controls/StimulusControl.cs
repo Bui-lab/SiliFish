@@ -63,10 +63,10 @@ namespace SiliFish.UI.Controls
             eValue1.Text = stim.Stimulus_ms?.Value1.ToString();
             eValue2.Text = stim.Stimulus_ms?.Value2.ToString();
             ddTargetPool.Text = stim.TargetPool;
-            if (!ddTargetSomites.Items.Contains(stim.TargetSomite))
+            if (!ddTargetSomites.Items.Contains(stim.TargetSomite) && stim.TargetSomite != null)
                 ddTargetSomites.Items.Add(stim.TargetSomite);
             ddTargetSomites.Text = stim.TargetSomite;
-            if (!ddTargetCells.Items.Contains(stim.TargetCell))
+            if (!ddTargetCells.Items.Contains(stim.TargetCell) && stim.TargetCell != null)
                 ddTargetCells.Items.Add(stim.TargetCell);
             ddTargetCells.Text = stim.TargetCell;
             ddSagittalPosition.Text = stim.LeftRight;

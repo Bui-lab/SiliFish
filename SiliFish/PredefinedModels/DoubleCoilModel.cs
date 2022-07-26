@@ -78,7 +78,7 @@ namespace SiliFish.PredefinedModels
             cv = 1;
             khi = 3.0;
             w0 = 2.5;
-            alpha = 0.0125;
+            convCoef = 0.1;
             CellPool.rangeNoiseMultiplier = GetRangeNoiseMultiplier;
             CellPool.gapWeightNoiseMultiplier = GetGapWeightNoiseMultiplier;
             CellPool.synWeightNoiseMultiplier = GetSynWeightNoiseMultiplier;

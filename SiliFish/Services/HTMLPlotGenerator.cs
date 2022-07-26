@@ -89,30 +89,35 @@ namespace SiliFish.Services
             {
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
-                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Duration", "Episode Duration", Color.Red.ToRGB());
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Duration (ms)", "Episode Duration", Color.Red.ToRGB());
                 charts.Add(chart);
 
                 if (episodes.Count > 1)
                 {
                     xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
                     yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
-                    chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Episode Intervals", "Episode Intervals", Color.Red.ToRGB());
+                    chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Interval (ms)", "Episode Intervals", Color.Red.ToRGB());
                     charts.Add(chart);
                 }
 
                 xValues = episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
-                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Instantenous Frequency", "Instantenous Frequency", Color.Red.ToRGB());
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Freq (Hz)", "Instantenous Frequency", Color.Red.ToRGB());
                 charts.Add(chart);
 
                 xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
-                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Instantenous Frequency", "Instantenous Frequency (Outliers Removed)", Color.Red.ToRGB());
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Freq (Hz)", "Instantenous Frequency (Outliers Removed)", Color.Red.ToRGB());
                 charts.Add(chart);
 
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.BeatFrequency).ToArray();
-                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Frequency", "Tail Beat Freq.", Color.Red.ToRGB());
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Freq (Hz)", "Tail Beat Freq.", Color.Red.ToRGB());
+                charts.Add(chart);
+
+                xValues = episodes.Select(e => e.Start).ToArray();
+                yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Count", "Tail Beat/Episode", Color.Red.ToRGB());
                 charts.Add(chart);
             }
 
