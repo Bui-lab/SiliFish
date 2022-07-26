@@ -44,7 +44,9 @@ namespace SiliFish
 
         public double khi = 3.0; //#damping constant , high khi =0.5/ low = 0.1
         public double w0 = 2.5; //20Hz = 125.6
-        public double alpha = 0.1;
+        public double alpha = 0;
+        public double beta = 0;
+        public double convCoef = 0.1;
 
 
         public static Random rand = new(0);
@@ -167,12 +169,33 @@ namespace SiliFish
 
                 { "Animation.DampingCoef", khi },
                 { "Animation.w0", w0 },
-                { "Animation.ConversionCoef", alpha }
+                { "Animation.ConversionCoef", convCoef },
+                { "Animation.Alpha", alpha },
+                { "Animation.Beta", beta }
             };
 
             return paramDict;
         }
 
+        public virtual Dictionary<string, object> GetParameterDesc()
+        {
+            Dictionary<string, object> paramDict = new()
+            {
+                { "Dynamic.cv", "Conduction velocity" },
+                { "Dynamic.E_ach", "Reversal potential of ACh" },
+                { "Dynamic.E_glu", "Reversal potential of glutamate" },
+                { "Dynamic.E_gly", "Reversal potential of glycine" },
+                { "Dynamic.E_gaba", "Reversal potential of GABA" },
+
+                { "Animation.DampingCoef", khi },
+                { "Animation.w0", "Natural oscillation frequency" },
+                { "Animation.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
+                { "Animation.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
+                { "Animation.ConversionCoef", "Coefficient to convert membrane potential to driving force for the oscillation" }
+            };
+
+            return paramDict;
+        }
         public void FillMissingParameters(Dictionary<string, object> paramDict)
         {
             paramDict.AddObject("Dynamic.cv", cv, skipIfExists: true);
@@ -182,7 +205,9 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
             paramDict.AddObject("Animation.DampingCoef", khi, skipIfExists: true);
             paramDict.AddObject("Animation.w0", w0, skipIfExists: true);
-            paramDict.AddObject("Animation.ConversionCoef", alpha, skipIfExists: true);
+            paramDict.AddObject("Animation.ConversionCoef", convCoef, skipIfExists: true);
+            paramDict.AddObject("Animation.Alpha", alpha, skipIfExists: true);
+            paramDict.AddObject("Animation.Beta", beta, skipIfExists: true);
 
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
             paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
@@ -201,7 +226,9 @@ namespace SiliFish
                 return;
             khi = paramExternal.Read("Animation.DampingCoef", khi);
             w0 = paramExternal.Read("Animation.w0", w0);
-            alpha = paramExternal.Read("Animation.ConversionCoef", alpha);
+            convCoef = paramExternal.Read("Animation.ConversionCoef", convCoef);
+            alpha = paramExternal.Read("Animation.Alpha", alpha);
+            beta = paramExternal.Read("Animation.Beta", beta);
         }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
@@ -223,9 +250,7 @@ namespace SiliFish
             E_gly = paramExternal.Read("Dynamic.E_gly", E_gly);
             E_gaba = paramExternal.Read("Dynamic.E_gaba", E_gaba);
 
-            khi = paramExternal.Read("Animation.DampingCoef", khi);
-            w0 = paramExternal.Read("Animation.w0", w0);
-            alpha = paramExternal.Read("Animation.ConversionCoef", alpha);
+            SetAnimationParameters(paramExternal);
         }
 
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(PlotExtend plotMode, string subset, CellSelectionStruct cellSelection)
@@ -494,14 +519,17 @@ namespace SiliFish
             foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
             {
                 MuscleCell rightMuscle = (MuscleCell)RightMuscleCells.FirstOrDefault(c => c.Sequence == leftMuscle.Sequence);
+                if (rightMuscle == null)
+                    continue;
                 vel[k, 0] = vel0;
                 angle[k, 0] = angle0;
                 angle[nMuscle - 1, 0] = 0.0;
+                double R = (leftMuscle.R + rightMuscle.R) / 2;
+                double coef = alpha + beta * R;
+                if (Math.Abs(coef) < 0.0001)
+                    coef = convCoef;
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
-                    double R = (leftMuscle.R + rightMuscle.R) / 2;
-                    //alpha is the conversion coefficient: "Animation.ConversionCoef"
-                    double coef = alpha * (1 - 0.2 * R);//The formula in the paper. 0.1 is used in the python code
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
                     //khi is the damping coefficient: "Animation.DampingCoef"
                     double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
@@ -530,8 +558,7 @@ namespace SiliFish
             double vel0 = 0.0;
             double angle0 = 0.0;
             double dt = runParam.dt;
-            int k = 0;
-
+            
             for (int somite = 0; somite < nSomite; somite++)
             {
                 List<Cell> LeftMuscleCells = MusclePools
@@ -542,18 +569,19 @@ namespace SiliFish
                     .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
                 double R = LeftMuscleCells.Sum(c => (c as MuscleCell).R) + RightMuscleCells.Sum(c => (c as MuscleCell).R);
                 R /= (LeftMuscleCells.Count + RightMuscleCells.Count);
-                double coef = alpha * (1 - 0.2 * R);//The formula in the paper
-                vel[k, 0] = vel0;
-                angle[k, 0] = angle0;
+                double coef = alpha + beta * R;
+                if (Math.Abs(coef) < 0.0001)
+                    coef = convCoef;
+                vel[somite, 0] = vel0;
+                angle[somite, 0] = angle0;
                 angle[nSomite - 1, 0] = 0.0;
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
-                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
-                    vel[k, i] = vel[k, i - 1] + acc * dt;
-                    angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
-                }
-          
+                    double acc = -Math.Pow(w0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * khi * w0 + coef * voltDiff;
+                    vel[somite, i] = vel[somite, i - 1] + acc * dt;
+                    angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;
+                }          
             }
 
             return (vel, angle);

@@ -377,7 +377,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.04
+        "Weight": 0.04,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -402,7 +405,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.0001
+        "Weight": 0.0001,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -427,7 +433,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.005
+        "Weight": 0.005,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -457,7 +466,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.005
+        "Weight": 0.005,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -482,7 +494,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.05
+        "Weight": 0.05,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -507,7 +522,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.005
+        "Weight": 0.005,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -537,7 +555,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.005
+        "Weight": 0.005,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -567,7 +588,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": 10,
         "Delay_ms": 0,
-        "Weight": 0.1
+        "Weight": 0.1,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 3,
@@ -597,7 +621,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.5
+        "Weight": 0.5,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -627,7 +654,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.5
+        "Weight": 0.5,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -657,7 +687,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.3
+        "Weight": 0.3,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -687,7 +720,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.5
+        "Weight": 0.5,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -717,7 +753,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.3
+        "Weight": 0.3,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -747,7 +786,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 1
+        "Weight": 1,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -777,7 +819,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.5
+        "Weight": 0.5,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -807,7 +852,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.1
+        "Weight": 0.1,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -837,7 +885,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.2
+        "Weight": 0.2,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
@@ -867,7 +918,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 1.5
+        "Weight": 1.5,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
@@ -897,7 +951,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 1.5
+        "Weight": 1.5,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
@@ -927,7 +984,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.25
+        "Weight": 0.25,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
@@ -957,7 +1017,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.4
+        "Weight": 0.4,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
@@ -998,18 +1061,24 @@
     "Dynamic.E_gaba": "-70",
     "Animation.DampingCoef": "2",
     "Animation.w0": "2.5",
-    "Animation.ConversionCoef": "0.15"
+    "Animation.ConversionCoef": "0.15",
+    "Animation.Alpha": "0",
+    "Animation.Beta": "0"
   },
   "AppliedStimuli": [
     {
-      "Target": "V2a",
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "0-5",
       "Stimulus_ms": {
         "TimeSpan_ms": {
           "PeriodsJSON": "50:-1"
         },
         "Mode": 1,
         "Value1": 2.89,
-        "Value2": 0
+        "Value2": 0,
+        "MinValue": 0,
+        "MaxValue": 2.89
       },
       "LeftRight": "Left",
       "Active": true,
@@ -1018,14 +1087,18 @@
       }
     },
     {
-      "Target": "V2a",
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "0-5",
       "Stimulus_ms": {
         "TimeSpan_ms": {
           "PeriodsJSON": "100:-1"
         },
         "Mode": 1,
         "Value1": 2.89,
-        "Value2": 0
+        "Value2": 0,
+        "MinValue": 0,
+        "MaxValue": 2.89
       },
       "LeftRight": "Right",
       "Active": true,

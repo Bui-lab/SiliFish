@@ -47,7 +47,7 @@ namespace SiliFish.PredefinedModels
             stim_value1 = 50;
             khi = 3.0; 
             w0 = 2.5; 
-            alpha = 0.025;
+            convCoef = 0.1;
             CellPool.rangeNoiseMultiplier = GetRangeNoiseMultiplier;
             CellPool.gapWeightNoiseMultiplier = GetGapWeightNoiseMultiplier;
             CellPool.synWeightNoiseMultiplier = GetSynWeightNoiseMultiplier;
