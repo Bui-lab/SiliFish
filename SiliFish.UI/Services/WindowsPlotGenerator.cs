@@ -3,30 +3,35 @@ using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Services
 {
     public class WindowsPlotGenerator
     {
-        private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> pools, 
+        private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> cellPools,
             CellSelectionStruct cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
+            string yAxis = "Memb. Potential (mV)";
             if (cells != null)
+            {
+                double yMin = cells.Min(c => c.MinPotentialValue);
+                double yMax = cells.Max(c => c.MaxPotentialValue);
                 foreach (Cell c in cells)
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
-            if (pools != null)
-                foreach (CellPool pool in pools)
+            }
+            if (cellPools != null)
+            {
+                double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinPotentialValue));
+                double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue));
+                foreach (CellPool pool in cellPools)
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
                     double[,] voltageArray = new double[poolcells.Count, timeArray.Length];
@@ -37,10 +42,11 @@ namespace Services
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
+            }
             return (leftImages, rightImages);
         }
 
@@ -89,27 +95,36 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
+            string yAxis = "Current (mA)";
             if (cells != null)
-                foreach (Cell c in cells)
             {
-                (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
-                if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID+ " Currents", colors, AffarentCurrents, iStart, iEnd, timeArray));
-                else
-                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, iStart, iEnd, timeArray));
+                double yMin = cells.Min(c => c.MinCurrentValue);
+                double yMax = cells.Max(c => c.MaxCurrentValue);
+                foreach (Cell c in cells)
+                {
+                    (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
+                    if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
+                        leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
+                    else
+                        rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
+                }
             }
 
             if (pools != null)
-                foreach (CellPool pool in pools)
             {
-                IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
-                foreach (Cell c in sampleCells)
+                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue));
+                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue));
+                foreach (CellPool pool in pools)
                 {
-                    (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
-                    if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, iStart, iEnd, timeArray));
-                    else
-                        rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, iStart, iEnd, timeArray));
+                    IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
+                    foreach (Cell c in sampleCells)
+                    {
+                        (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
+                        if (pool.PositionLeftRight == SagittalPlane.Left)
+                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
+                        else
+                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
+                    }
                 }
             }
             return (leftImages, rightImages);
@@ -120,16 +135,25 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
+            string yAxis = "Stimulus (mA)";
+
             if (cells != null)
+            {
+                double yMin = cells.Min(c => c.MinStimulusValue);
+                double yMax = cells.Max(c => c.MaxStimulusValue);
                 foreach (Cell c in cells)
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
+            }
             if (pools != null)
+            {
+                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinStimulusValue));
+                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxStimulusValue));
                 foreach (CellPool pool in pools)
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
@@ -141,10 +165,11 @@ namespace Services
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
+            }
             return (leftImages, rightImages);
         }
         private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection, int iStart, int iEnd)
@@ -165,6 +190,65 @@ namespace Services
 
             return (leftImages, rightImages);
         }
+
+        private static (List<Image>, List<Image>) PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
+        {
+            List<Image> leftImages = new();
+            int iStart = model.runParam.iIndex(tStart);
+            int iEnd = model.runParam.iIndex(tEnd);
+            //TODO color
+
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
+            leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
+                tail_tip_coord.Select(c => c.X).ToArray(),
+                model.TimeArray, iStart, iEnd, 
+                "X", null, null,
+                Color.Red));
+            if (episodes.Any())
+            {
+                leftImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
+                    episodes.Select(e => e.EpisodeDuration).ToArray(),
+                    episodes.Select(e => e.Start).ToArray(),
+                    tStart, tEnd,
+                    "Duration (ms)", 0, null,
+                    Color.Red));
+                if (episodes.Count > 1)
+                    leftImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
+                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
+                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
+                        tStart, tEnd,
+                        "Intervals (ms)", 0, null,
+                        Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
+                    episodes.SelectMany(e => e.InstantFequency).ToArray(),
+                    episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray(),
+                    tStart, tEnd,
+                    "Freq.", 0, null,
+                    Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
+                    episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
+                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray(),
+                    tStart, tEnd,
+                    "Freq.", 0, null,
+                    Color.Red));
+                leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat Frequency",
+                    episodes.Select(e => e.BeatFrequency).ToArray(),
+                    episodes.Select(e => e.Start).ToArray(),
+                    tStart, tEnd,
+                    "Freq.", 0, null,
+                    Color.Red));
+
+            }
+
+            return (leftImages, null);
+        }
+
+        private static Image PlotHeatMap(List<SwimmingEpisode> episodes)
+        {
+            return null; //TODO
+        }
+
+
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
             CellSelectionStruct cellSelection, 
             double dt , int tStart = 0, int tEnd = -1, int tSkip = 0)
@@ -203,58 +287,6 @@ namespace Services
             }
             return (null, null);
         }
-
-        private static Image PlotHeatMap(List<SwimmingEpisode> episodes)
-        {
-            return null; //TODO
-        }
-
-        private static (List<Image>, List<Image>) PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
-        {
-            List<Image> leftImages = new();
-            int iStart = model.runParam.iIndex(tStart);
-            int iEnd = model.runParam.iIndex(tEnd);
-            //TODO color
-
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
-            leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
-                tail_tip_coord.Select(c => c.X).ToArray(),
-                model.TimeArray,
-                iStart, iEnd, Color.Red));
-            if (episodes.Any())
-            {
-                leftImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
-                    episodes.Select(e => e.EpisodeDuration).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
-                    tStart, tEnd, Color.Red));
-                if (episodes.Count > 1)
-                    leftImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
-                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
-                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
-                        tStart, tEnd, Color.Red));
-                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
-                    episodes.SelectMany(e => e.InstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray(),
-                    tStart, tEnd, Color.Red));
-                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
-                    episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray(),
-                    tStart, tEnd, Color.Red));
-                leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat Frequency",
-                    episodes.Select(e => e.BeatFrequency).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
-                    tStart, tEnd, Color.Red));
-
-            }
-
-            return (leftImages, null);
-        }
-
-        private static Image PlotInstantaneousFrequency(List<SwimmingEpisode> episodes)
-        {
-            return null; //TODO
-        }
-
 
     }
 }

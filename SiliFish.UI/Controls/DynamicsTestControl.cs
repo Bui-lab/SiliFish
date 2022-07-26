@@ -41,11 +41,11 @@ namespace SiliFish.UI.Controls
                 I[i] = val;
             eInstanceParams.Text = Cell.GetInstanceParams();
             (double[] vList, double[] uList) = Cell.DynamicsTest(I);
-            picV.Image = UtilWindows.CreateLinePlot("V", vList, t, 0, plotEnd, Color.Purple);
+            picV.Image = UtilWindows.CreateLinePlot("V", vList, t, 0, plotEnd, "V", null, null, Color.Purple);
             if (uList == null)
                 picu.Visible = false;
-            else picu.Image = UtilWindows.CreateLinePlot("u", uList, t, 0, plotEnd, Color.Blue);
-            picI.Image = UtilWindows.CreateLinePlot("I", I, t, 0, plotEnd, Color.Red);
+            else picu.Image = UtilWindows.CreateLinePlot("u", uList, t, 0, plotEnd, "u", null, null, Color.Blue);
+            picI.Image = UtilWindows.CreateLinePlot("I", I, t, 0, plotEnd, "I", null, null, Color.Red);
 
         }
 

@@ -44,6 +44,7 @@
     <None Remove="Resources\LineChart.html" />
     <None Remove="Resources\LineChart.Series.js" />
     <None Remove="Resources\Logo.png" />
+    <None Remove="Resources\ScatterPlot.Series.js" />
     <None Remove="Resources\StyleSheet.css" />
     <None Remove="Resources\three.js" />
   </ItemGroup>
@@ -56,6 +57,7 @@
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
     <EmbeddedResource Include="Resources\force-graph.min.js" />
+    <EmbeddedResource Include="Resources\ScatterPlot.Series.js" />
     <EmbeddedResource Include="Resources\LineChart.Chart.js" />
     <EmbeddedResource Include="Resources\LineChart.html" />
     <EmbeddedResource Include="Resources\LineChart.Series.js" />
