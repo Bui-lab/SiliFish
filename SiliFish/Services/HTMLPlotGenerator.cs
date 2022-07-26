@@ -1,7 +1,9 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,108 +15,108 @@ namespace SiliFish.Services
         private static string PlotMembranePotentials(double[] TimeOffset, List<Cell> cells, List<CellPool> pools,CellSelectionStruct cellSelection,
             int iStart, int iEnd, string filename = "")
         {
-            LineChartGenerator lc = new();
             List<string> charts = new();
             int chartindex = 0;
             if (cells != null)
-                charts.AddRange(lc.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
             if (pools != null)
-                charts.AddRange(lc.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, ref chartindex));
 
-            return lc.PlotCharts(filename, "Potentials", charts, numColumns: 2);
+            return LineChartGenerator.PlotCharts(filename, "Potentials", charts, numColumns: 2);
         }
 
         private static string PlotCurrents(double[] TimeOffset, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true, string filename = "")
         {
-            LineChartGenerator lc = new();
             List<string> charts = new();
             int chartindex = 0;
             if (cells != null)
-                charts.AddRange(lc.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: includeGap, includeChem: includeChem, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: includeGap, includeChem: includeChem, ref chartindex));
             if (pools != null)
-                charts.AddRange(lc.CreateCurrentsMultiPlot(pools, cellSelection,TimeOffset,  iStart, iEnd, includeGap: includeGap, includeChem: includeChem, ref chartindex));
-            return lc.PlotCharts(filename, "Currents", charts, numColumns: 2);
+                charts.AddRange(LineChartGenerator.CreateCurrentsMultiPlot(pools, cellSelection,TimeOffset,  iStart, iEnd, includeGap: includeGap, includeChem: includeChem, ref chartindex));
+            return LineChartGenerator.PlotCharts(filename, "Currents", charts, numColumns: 2);
         }
 
         private static string PlotStimuli(double[] TimeOffset, List<Cell> cells, List<CellPool> pools,
             int iStart, int iEnd,
             CellSelectionStruct cellSelection, string filename = "")
         {            
-            LineChartGenerator lc = new();
             List<string> charts = new();
             int chartindex = 0;
             if (cells != null)
-                charts.AddRange(lc.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
             if (pools != null)
-                charts.AddRange(lc.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
-            return lc.PlotCharts(filename, "Stimuli", charts, numColumns: 2);
+                charts.AddRange(LineChartGenerator.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
+            return LineChartGenerator.PlotCharts(filename, "Stimuli", charts, numColumns: 2);
         }
 
         private static string PlotFullDynamics(double[] TimeOffset, List<Cell> cells, List<CellPool> pools,
             int iStart, int iEnd,
             CellSelectionStruct cellSelection, string filename = "")
         {
-            LineChartGenerator lc = new();
             List<string> charts = new();
             int chartindex = 0;
             if (cells != null)
             {
-                charts.AddRange(lc.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
-                charts.AddRange(lc.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
-                charts.AddRange(lc.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreatePotentialsMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreateCurrentsMultiPlot(cells, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreateStimuliMultiPlot(cells, TimeOffset, iStart, iEnd, ref chartindex));
             }
             if (pools != null)
             {
-                charts.AddRange(lc.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, ref chartindex));
-                charts.AddRange(lc.CreateCurrentsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
-                charts.AddRange(lc.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreatePotentialsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreateCurrentsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
+                charts.AddRange(LineChartGenerator.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
             }
-            return lc.PlotCharts(filename, "Full Dynamics", charts, numColumns: 2);
+            return LineChartGenerator.PlotCharts(filename, "Full Dynamics", charts, numColumns: 2);
         }
 
         private static string PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
-        {/*
-            LineChartGenerator lc = new();
+        {
             List<string> charts = new();
-            int chartindex = 0;
             int iStart = model.runParam.iIndex(tStart);
             int iEnd = model.runParam.iIndex(tEnd);
+            int chartIndex = 0;
 
             (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
-            lc.CreateStimuliSubPlot
-            leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
-                tail_tip_coord.Select(c => c.X).ToArray(),
-                model.TimeArray,
-                iStart, iEnd, Color.Red));
+
+            double[] Time = model.TimeArray[iStart..(iEnd - iStart + 1)];
+            double[] xValues = Time;
+            double[] yValues = tail_tip_coord[iStart..(iEnd - iStart + 1)].Select(c => c.X).ToArray();
+            string chart = LineChartGenerator.CreateLinePlot(xValues, yValues, chartIndex++, "Y-Coordinate", "Tail Movement", Color.Red.ToRGB());
+            charts.Add(chart);
             if (episodes.Any())
             {
-                leftImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
-                    episodes.Select(e => e.EpisodeDuration).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
-                    tStart, tEnd, Color.Red));
-                if (episodes.Count > 1)
-                    leftImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
-                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
-                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
-                        tStart, tEnd, Color.Red));
-                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
-                    episodes.SelectMany(e => e.InstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray(),
-                    tStart, tEnd, Color.Red));
-                leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
-                    episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray(),
-                    tStart, tEnd, Color.Red));
-                leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat Frequency",
-                    episodes.Select(e => e.BeatFrequency).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
-                    tStart, tEnd, Color.Red));
+                xValues = episodes.Select(e => e.Start).ToArray();
+                yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Duration", "Episode Duration", Color.Red.ToRGB());
+                charts.Add(chart);
 
+                if (episodes.Count > 1)
+                {
+                    xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
+                    yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
+                    chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Episode Intervals", "Episode Intervals", Color.Red.ToRGB());
+                    charts.Add(chart);
+                }
+
+                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray();
+                yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Instantenous Frequency", "Instantenous Frequency", Color.Red.ToRGB());
+                charts.Add(chart);
+
+                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
+                yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Instantenous Frequency", "Instantenous Frequency (Outliers Removed)", Color.Red.ToRGB());
+                charts.Add(chart);
+
+                xValues = episodes.Select(e => e.Start).ToArray();
+                yValues = episodes.Select(e => e.BeatFrequency).ToArray();
+                chart = LineChartGenerator.CreateScatterPlot(Time, xValues, yValues, chartIndex++, "Frequency", "Tail Beat Freq.", Color.Red.ToRGB());
+                charts.Add(chart);
             }
 
-            return (leftImages, null);*/
-            return "";
+            return LineChartGenerator.PlotCharts("", "Episodes", charts, 2);
         }
 
 
@@ -158,6 +160,9 @@ namespace SiliFish.Services
                 case PlotType.Episodes:
                     PlotHTML = PlotEpisodes(model, tStart, tEnd);
                     break;
+                case PlotType.BodyAngleHeatMap://TODO
+                    break;
+
             }
             return PlotHTML;
         }

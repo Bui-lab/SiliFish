@@ -98,8 +98,8 @@ namespace SiliFish.Services
         //gap and chem are obsolete if singlePanel = false
         public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem)
         {
-            StringBuilder html = singlePanel? new(ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")):
-                    new(ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
+            StringBuilder html = singlePanel? new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")):
+                    new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
 
             string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 3D Model";
