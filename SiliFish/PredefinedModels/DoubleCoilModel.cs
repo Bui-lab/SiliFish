@@ -266,14 +266,14 @@ namespace SiliFish.PredefinedModels
         {
             Dictionary<string, object> paramDict = base.GetParameters();
 
-            paramDict.Add("Dynamic.tasyncdelay", tasyncdelay);
+            paramDict.Add("Dynamic.Contr. Stim. Delay", tasyncdelay);
 
-            paramDict.Add("CellNum.nIC", nIC);
-            paramDict.Add("CellNum.nMN", nMN);
-            paramDict.Add("CellNum.nV0d", nV0d);
-            paramDict.Add("CellNum.nV0v", nV0v);
-            paramDict.Add("CellNum.nV2a", nV2a);
-            paramDict.Add("CellNum.nMuscle", nMuscle);
+            paramDict.Add("Cell Num.nIC", nIC);
+            paramDict.Add("Cell Num.nMN", nMN);
+            paramDict.Add("Cell Num.nV0d", nV0d);
+            paramDict.Add("Cell Num.nV0v", nV0v);
+            paramDict.Add("Cell Num.nV2a", nV2a);
+            paramDict.Add("Cell Num.nMuscle", nMuscle);
 
             paramDict.Add("Weight.IC_IC_gap_weight",IC_IC_gap_weight);
             paramDict.Add("Weight.IC_MN_gap_weight",IC_MN_gap_weight);
@@ -317,6 +317,12 @@ namespace SiliFish.PredefinedModels
             return paramDict;
         }
 
+        public override Dictionary<string, object> GetParameterDesc()
+        {
+            Dictionary<string, object> paramDescDict = base.GetParameterDesc();
+            paramDescDict.Add("Dynamic.Contr. Stim. Delay", "The delay in ms that the stimulus would be applied to the contralateral side");
+            return paramDescDict;
+        }
         public override void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
@@ -324,14 +330,14 @@ namespace SiliFish.PredefinedModels
             base.SetParameters(paramExternal);
             initialized = false;
 
-            tasyncdelay = paramExternal.Read("Dynamic.tasyncdelay", tasyncdelay);
+            tasyncdelay = paramExternal.Read("Dynamic.Contr. Stim. Delay", tasyncdelay);
 
-            nIC = paramExternal.Read("CellNum.nIC", nIC);
-            nMN = paramExternal.Read("CellNum.nMN", nMN);
-            nV0d = paramExternal.Read("CellNum.nV0d", nV0d);
-            nV0v = paramExternal.Read("CellNum.nV0v", nV0v);
-            nV2a = paramExternal.Read("CellNum.nV2a", nV2a);
-            nMuscle = paramExternal.Read("CellNum.nMuscle", nMuscle);
+            nIC = paramExternal.Read("Cell Num.nIC", nIC);
+            nMN = paramExternal.Read("Cell Num.nMN", nMN);
+            nV0d = paramExternal.Read("Cell Num.nV0d", nV0d);
+            nV0v = paramExternal.Read("Cell Num.nV0v", nV0v);
+            nV2a = paramExternal.Read("Cell Num.nV2a", nV2a);
+            nMuscle = paramExternal.Read("Cell Num.nMuscle", nMuscle);
 
             IC_IC_gap_weight = paramExternal.Read("Weight.IC_IC_gap_weight", IC_IC_gap_weight);
             IC_MN_gap_weight = paramExternal.Read("Weight.IC_MN_gap_weight", IC_MN_gap_weight);

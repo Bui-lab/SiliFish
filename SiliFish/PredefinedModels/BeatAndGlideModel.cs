@@ -288,12 +288,12 @@ namespace SiliFish.PredefinedModels
         {
             Dictionary<string, object> paramDict = base.GetParameters();
 
-            paramDict.Add("CellNum.ndI6", ndI6);
-            paramDict.Add("CellNum.nV0v", nV0v);
-            paramDict.Add("CellNum.nV1", nV1);
-            paramDict.Add("CellNum.nV2a", nV2a);
-            paramDict.Add("CellNum.nMN", nMN);
-            paramDict.Add("CellNum.nMuscle", nMuscle);
+            paramDict.Add("Cell Num.ndI6", ndI6);
+            paramDict.Add("Cell Num.nV0v", nV0v);
+            paramDict.Add("Cell Num.nV1", nV1);
+            paramDict.Add("Cell Num.nV2a", nV2a);
+            paramDict.Add("Cell Num.nMN", nMN);
+            paramDict.Add("Cell Num.nMuscle", nMuscle);
 
             paramDict.Add("Weight.MN_MN_gap_weight", MN_MN_gap_weight);
             paramDict.Add("Weight.dI6_dI6_gap_weight", dI6_dI6_gap_weight);
@@ -356,12 +356,12 @@ namespace SiliFish.PredefinedModels
             base.SetParameters(paramExternal);
             initialized = false;
 
-            ndI6 = paramExternal.Read("CellNum.ndI6", ndI6);
-            nV0v = paramExternal.Read("CellNum.nV0v", nV0v);
-            nV1 = paramExternal.Read("CellNum.nV1", nV1);
-            nV2a = paramExternal.Read("CellNum.nV2a", nV2a);
-            nMN = paramExternal.Read("CellNum.nMN", nMN);
-            nMuscle = paramExternal.Read("CellNum.nMuscle", nMuscle);
+            ndI6 = paramExternal.Read("Cell Num.ndI6", ndI6);
+            nV0v = paramExternal.Read("Cell Num.nV0v", nV0v);
+            nV1 = paramExternal.Read("Cell Num.nV1", nV1);
+            nV2a = paramExternal.Read("Cell Num.nV2a", nV2a);
+            nMN = paramExternal.Read("Cell Num.nMN", nMN);
+            nMuscle = paramExternal.Read("Cell Num.nMuscle", nMuscle);
 
             MN_MN_gap_weight = paramExternal.Read("Weight.MN_MN_gap_weight", MN_MN_gap_weight);
             dI6_dI6_gap_weight = paramExternal.Read("Weight.dI6_dI6_gap_weight", dI6_dI6_gap_weight);

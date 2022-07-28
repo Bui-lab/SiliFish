@@ -32,7 +32,7 @@ namespace SiliFish
     public class SwimmingModel
     {
         public RunParam runParam;
-        public double cv = -1; //the transmission speed
+        public double cv = 1; //the transmission speed
 
         protected double E_glu = 0; //the reversal potential of glutamate
         protected double E_gly = -70; //the reversal potential of glycine
