@@ -32,10 +32,10 @@ namespace SiliFish.UI.Controls
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
-            double[] I = new double[plotEnd];
-            double[] t = new double[plotEnd];
+            double[] I = new double[plotEnd + 1];
+            double[] t = new double[plotEnd + 1];
             double val = (double)eInput.Value;
-            foreach (int i in Enumerable.Range(0, plotEnd))
+            foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 t[i] = i * (double)dt;
             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                 I[i] = val;

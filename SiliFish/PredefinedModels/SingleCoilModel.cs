@@ -163,10 +163,10 @@ namespace SiliFish.PredefinedModels
         {
             Dictionary<string, object> paramDict = base.GetParameters();
 
-            paramDict.Add("CellNum.nIC", nIC);
-            paramDict.Add("CellNum.nMN", nMN);
-            paramDict.Add("CellNum.nV0d", nV0d);
-            paramDict.Add("CellNum.nMuscle", nMuscle);
+            paramDict.Add("Cell Num.nIC", nIC);
+            paramDict.Add("Cell Num.nMN", nMN);
+            paramDict.Add("Cell Num.nV0d", nV0d);
+            paramDict.Add("Cell Num.nMuscle", nMuscle);
 
             paramDict.Add("Weight.IC_IC_gap_weight", IC_IC_gap_weight);
             paramDict.Add("Weight.IC_MN_gap_weight", IC_MN_gap_weight);
@@ -195,10 +195,10 @@ namespace SiliFish.PredefinedModels
             base.SetParameters(paramExternal);
             initialized = false;
 
-            nIC = paramExternal.Read("CellNum.nIC", nIC);
-            nMN = paramExternal.Read("CellNum.nMN", nMN);
-            nV0d = paramExternal.Read("CellNum.nV0d", nV0d);
-            nMuscle = paramExternal.Read("CellNum.nMuscle", nMuscle);
+            nIC = paramExternal.Read("Cell Num.nIC", nIC);
+            nMN = paramExternal.Read("Cell Num.nMN", nMN);
+            nV0d = paramExternal.Read("Cell Num.nV0d", nV0d);
+            nMuscle = paramExternal.Read("Cell Num.nMuscle", nMuscle);
 
             IC_IC_gap_weight = paramExternal.Read("Weight.IC_IC_gap_weight", IC_IC_gap_weight);
             IC_MN_gap_weight = paramExternal.Read("Weight.IC_MN_gap_weight", IC_MN_gap_weight);
