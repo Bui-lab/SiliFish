@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.DataTypes;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
@@ -56,8 +56,12 @@ namespace SiliFish.Services
             return series.ToString();
         }
 
-        public static string CreateSubPlot(int chartindex, string chartTitle, string series, double[] Time, int tstart, int tend, double yMin, double yMax)
+        public static string CreateSubPlot(int chartindex, string chartTitle, string series, double[] Time, int tstart, int tend, 
+            double yMin, double yMax, bool absoluteYRange)
         {
+            if (!absoluteYRange)
+                Util.SetYRange(ref yMin, ref yMax);
+
             StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.LineChart.Chart.js"));
             chart.Replace("__CHART_INDEX__", chartindex.ToString());
             chart.Replace("__X_START__", Time[tstart].ToString("0.##"));
@@ -70,33 +74,27 @@ namespace SiliFish.Services
             return chart.ToString();
         }
 
-        public static string CreateLinePlot(double[] xValues, double[] yValues, int chartIndex, string seriesName, string chartName, string color)
+        public static string CreateLinePlot(double[] xValues, double[] yValues, int chartIndex, string seriesName, string chartName, string color, 
+            bool absoluteYRange = false)
         {
             double yMin = yValues.Min();
             double yMax = yValues.Max();
-            double padding = (yMax - yMin) / 10;
-            yMin -= padding;
-            yMax += padding;
-            if (yMin > 0) yMin = 0;
 
             string dataPoints = CreateDataPoints(xValues, yValues, 0, xValues.Length - 1);
             string series = CreateLineChartSeries(dataPoints, chartIndex, seriesName, chartIndex.ToString(), color, 0);
-            string chart = CreateSubPlot(chartIndex, chartName, series, xValues, 0, xValues.Length - 1, yMin, yMax);
+            string chart = CreateSubPlot(chartIndex, chartName, series, xValues, 0, xValues.Length - 1, yMin, yMax, absoluteYRange);
             return chart;
         }
 
-        public static string CreateScatterPlot(double[] Time, double[] xValues, double[] yValues, int chartIndex, string seriesName, string chartName, string color)
+        public static string CreateScatterPlot(double[] Time, double[] xValues, double[] yValues, int chartIndex, string seriesName, string chartName, string color,
+            bool absoluteYRange = false)
         {
             double yMin = yValues.Min();
             double yMax = yValues.Max();
-            double padding = (yMax - yMin) / 10;
-            yMin -= padding;
-            yMax += padding;
-            if (yMin > 0) yMin = 0;
 
             string dataPoints = CreateDataPoints(xValues, yValues, 0, xValues.Length - 1);
             string series = CreateScatterPlotSeries(dataPoints, chartIndex, seriesName, chartIndex.ToString(), color, 0);
-            string chart = CreateSubPlot(chartIndex, chartName, series, Time, 0, Time.Length - 1, yMin, yMax);
+            string chart = CreateSubPlot(chartIndex, chartName, series, Time, 0, Time.Length - 1, yMin, yMax, absoluteYRange);
             return chart;
         }
 
@@ -116,12 +114,13 @@ namespace SiliFish.Services
             return series;
         }
 
-        public static string CreateStimuliSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, double yMin, double yMax, string color)
+        public static string CreateStimuliSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, 
+            double yMin, double yMax, string color)
         {
             byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreateStimuliSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
-            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax);
+            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax, absoluteYRange: false);
         }
 
         //One chart per pool
@@ -174,12 +173,13 @@ namespace SiliFish.Services
             return series;
         }
 
-        public static string CreatePotentialsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, double yMin, double yMax, string color)
+        public static string CreatePotentialsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, 
+            double yMin, double yMax, string color)
         {
             byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreatePotentialSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
-            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax);
+            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax, absoluteYRange: false);
         }
 
         
@@ -300,7 +300,7 @@ namespace SiliFish.Services
                     }
                 }
             }
-            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax);
+            return CreateSubPlot(chartindex, chartTitle, series, Time, tstart, tend, yMin, yMax, absoluteYRange: false);
         }
 
 

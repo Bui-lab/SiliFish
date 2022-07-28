@@ -205,16 +205,15 @@ namespace SiliFish.UI
         {
             if (ParamDict == null) return;
             this.Text = $"SiliFish {Model.ModelName}";
-            Model?.FillMissingParameters(ParamDict);
-            Model?.SetParameters(ParamDict);
+            Model?.SetAndFillMissingParameters(ParamDict);
 
             tabParams.TabPages.Clear();
             if (rbCustom.Checked)
             {
                 ClearCustomModelFields();
+                tabParams.TabPages.Add(tabGeneral);
                 tabParams.TabPages.Add(tabCellPools);
                 tabParams.TabPages.Add(tabStimuli);
-                tabParams.TabPages.Add(tabGeneral);
             }
 
             //To fill in newly generated params that did not exist during the model creation
@@ -224,6 +223,8 @@ namespace SiliFish.UI
             List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList();
 
             List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
+            int tabIndex = rbCustom.Checked ? 1 : 0;
+            var _ = tabParams.Handle;//requires for the insert command to work
             foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
             {
                 Dictionary<string, object> SubDict = ParamDict.Where(x=>x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
@@ -239,7 +240,11 @@ namespace SiliFish.UI
                     Text = group,
                     Tag = "Param"
                 };
-                tabParams.TabPages.Add(tabPage);
+                //insert after the general tab, keep Animation at the end
+                if (group=="Animation")
+                    tabParams.TabPages.Add(tabPage);
+                else
+                    tabParams.TabPages.Insert(tabIndex++, tabPage);
                 int maxLen = SubDict.Keys.Select(k => k.Length).Max();
                 FlowLayoutPanel flowPanel = new();
                 tabPage.Controls.Add(flowPanel);
@@ -453,6 +458,10 @@ namespace SiliFish.UI
         {
             try
             {
+                SwimmingModelTemplate mt = rbCustom.Checked ? ReadModelTemplate(includeHidden: true) : null;
+
+                if (string.IsNullOrEmpty(saveFileJson.FileName))
+                    saveFileJson.FileName = mt?.ModelName ?? Model?.ModelName;
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     if (rbCustom.Checked)

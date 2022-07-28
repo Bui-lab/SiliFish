@@ -52,14 +52,7 @@ namespace SiliFish.PredefinedModels
             CellPool.gapWeightNoiseMultiplier = GetGapWeightNoiseMultiplier;
             CellPool.synWeightNoiseMultiplier = GetSynWeightNoiseMultiplier;
         }
-        public void SetNumberOfCells(int nic, int nmn, int nv0d, int nmuscle)
-        {
-            nIC = nic;
-            nMN = nmn;
-            nV0d = nv0d;
-            nMuscle = nmuscle;
-            initialized = false;
-        }
+
         private double GetXNoise()
         {
             return rand.Gauss(1, 0.01, 0.9, 1.1);
@@ -152,20 +145,17 @@ namespace SiliFish.PredefinedModels
             PoolToPoolChemSynapse(L_MN, L_Muscle, cr, AChSynapse);
             PoolToPoolChemSynapse(R_MN, R_Muscle, cr, AChSynapse);
 
-            TimeLine span = new();
-            span.AddTimeRange(this.tSynStart_ms);
-
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
             cr = new() { AscendingReach = rangeV0d_MN, DescendingReach = rangeV0d_MN, MinReach = -1, Weight = V0d_MN_syn_weight };
-            PoolToPoolChemSynapse(L_V0d, R_MN, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_V0d, L_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d, R_MN, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V0d, L_MN, cr, GlySynapse);
 
 
             //Contralateral glycinergic projections from V0d to IC 
             cr = new() { AscendingReach = rangeV0d_IC, DescendingReach = rangeV0d_IC, MinReach = rangeMin, Weight = V0d_IC_syn_weight };
-            PoolToPoolChemSynapse(L_V0d, R_IC, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_V0d, L_IC, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V0d, R_IC, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V0d, L_IC, cr, GlySynapse);
 
         }
 
@@ -223,8 +213,10 @@ namespace SiliFish.PredefinedModels
             rangeIC_MN = paramExternal.Read("Range.rangeIC_MN", rangeIC_MN);
             rangeIC_V0d = paramExternal.Read("Range.rangeIC_V0d", rangeIC_V0d);
             rangeMN_MN = paramExternal.Read("Range.rangeMN_MN", rangeMN_MN);
+            rangeV0d_V0d = paramExternal.Read("Range.rangeV0d_V0d", rangeV0d_V0d);
             rangeMN_V0d = paramExternal.Read("Range.rangeMN_V0d", rangeMN_V0d);
             rangeV0d_MN = paramExternal.Read("Range.rangeV0d_MN", rangeV0d_MN);
+            rangeV0d_IC = paramExternal.Read("Range.rangeV0d_IC", rangeV0d_IC);
             rangeMN_Muscle = paramExternal.Read("Range.rangeMN_Muscle", rangeMN_Muscle);
         }
     }

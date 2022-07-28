@@ -11,7 +11,6 @@ namespace SiliFish.PredefinedModels
     {
         protected StimulusMode stim_mode = StimulusMode.Step;
 
-        protected int tSynStart_ms = 50; //in ms;
         protected int tStimStart_ms = 0; //in ms;
 
         protected double stim_value1 = 8; //stimulus value if step current, mean value if gaussian, start value if ramp
@@ -45,29 +44,45 @@ namespace SiliFish.PredefinedModels
         {
             Dictionary<string, object> paramDict = base.GetParameters();
 
-            paramDict.Add("Dynamic.tsynstart", tSynStart_ms);
-            paramDict.Add("Dynamic.stim_start_ms", tStimStart_ms);
-            paramDict.Add("Dynamic.stim_value1", stim_value1);
-            paramDict.Add("Dynamic.stim_value2", stim_value2);
-            paramDict.Add("Dynamic.sigma_range", sigma_range);
-            paramDict.Add("Dynamic.sigma_gap", sigma_gap);
-            paramDict.Add("Dynamic.sigma_chem", sigma_chem);
+            paramDict.Add("Dynamic.Stimulus Start (ms)", tStimStart_ms);
+            paramDict.Add("Dynamic.Stimulus Value 1", stim_value1);
+            paramDict.Add("Dynamic.Stimulus Value 2", stim_value2);
+            paramDict.Add("Variability.Sigma Range", sigma_range);
+            paramDict.Add("Variability.Sigma Gap", sigma_gap);
+            paramDict.Add("Variability.Sigma Chem", sigma_chem);
 
             return paramDict;
         }
 
+        public override Dictionary<string, object> GetParameterDesc()
+        {
+            Dictionary<string, object> paramDescDict = base.GetParameterDesc();
+            paramDescDict.Add("Dynamic.Stimulus Value 1",
+                "Stimulus value in case of 'step' stimulus is applied\r\n" +
+                "Initial value for 'ramp' stimulus\r\n" +
+                "Mean value for 'Gaussian' stimulus");
+            paramDescDict.Add("Dynamic.Stimulus Value 2",
+                "Obsolete in case of 'step' stimulus is applied\r\n" +
+                "Final value for 'ramp' stimulus\r\n" +
+                "Standard deviation for 'Gaussian' stimulus");
+
+            paramDescDict.Add("Variability.Sigma Range", "Standard deviation noise that will be added to range parameters.");
+            paramDescDict.Add("Variability.Sigma Gap", "Standard deviation noise that will be added to gap junction parameters.");
+            paramDescDict.Add("Variability.Sigma Chem", "Standard deviation noise that will be added to synapse parameters.");
+
+            return paramDescDict;
+        }
         public override void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             base.SetParameters(paramExternal);
-            tSynStart_ms = paramExternal.Read("Dynamic.tsynstart", tSynStart_ms);
-            tStimStart_ms = paramExternal.Read("Dynamic.stim_start_ms", tStimStart_ms);
-            stim_value1 = paramExternal.Read("Dynamic.stim_value1", stim_value1);
-            stim_value2 = paramExternal.Read("Dynamic.stim_value2", stim_value2);
-            sigma_range = paramExternal.Read("Dynamic.sigma_range", sigma_range);
-            sigma_gap = paramExternal.Read("Dynamic.sigma_gap", sigma_gap);
-            sigma_chem = paramExternal.Read("Dynamic.sigma_chem", sigma_chem);
+            tStimStart_ms = paramExternal.Read("Dynamic.Stimulus Start (ms)", tStimStart_ms);
+            stim_value1 = paramExternal.Read("Dynamic.Stimulus Value 1", stim_value1);
+            stim_value2 = paramExternal.Read("Dynamic.Stimulus Value 2", stim_value2);
+            sigma_range = paramExternal.Read("Variability.Sigma Range", sigma_range);
+            sigma_gap = paramExternal.Read("Variability.Sigma Gap", sigma_gap);
+            sigma_chem = paramExternal.Read("Variability.Sigma Chem", sigma_chem);
         }
 
         public void SetConstants(double stim0 = 8, double sigma_range = 0, double sigma_chem = 0, double sigma_gap = 0, double E_glu = 0, double E_gly = -70, double dt = 0.1, double cv = 0.55)

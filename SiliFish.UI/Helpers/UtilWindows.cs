@@ -2,8 +2,7 @@
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
-using System.Text.Json;
-using System.Text.RegularExpressions;
+using SiliFish.Helpers;
 
 namespace SiliFish.UI
 {
@@ -11,14 +10,18 @@ namespace SiliFish.UI
     {
         public static string OutputFolder = @"C:\Master\Bui\SiliFish.Studio\Output\";
 
+
         public static void SaveImage(string path, Image img)
         {
             img.Save(path);
         }
 
-        public static PlotModel CreateModel(string title, double tStart, double tEnd, string yAxis, double yMin, double yMax)
+        public static PlotModel CreateModel(string title, double tStart, double tEnd, string yAxis, double yMin, double yMax, bool absoluteYRange)
         {
             PlotModel model = new() { Title = title };
+            if (!absoluteYRange)
+                Util.SetYRange(ref yMin, ref yMax);
+
             model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
@@ -44,12 +47,13 @@ namespace SiliFish.UI
         /// <returns></returns>
         public static Image CreateCurrentsPlot(string target, string title, 
             Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents, 
-            double[] Time, int tStart, int tEnd,
+            double[] Time, int iStart, int iEnd,
             string yAxis, double yMin, double yMax,
-            int width = 1024, int height = 480)
+            int width = 1024, int height = 480,
+            bool absoluteYRange = false)
         {
             List<string> sources = AffarentCurrents.Keys.ToList();
-            PlotModel model = CreateModel(title, tStart, tEnd, yAxis, yMin, yMax);
+            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, yMin, yMax, absoluteYRange);
             foreach (string source in sources)
             {
                 string colSource = source;
@@ -66,10 +70,10 @@ namespace SiliFish.UI
                     Color = OxyColor.FromAColor(a, OxyColor.FromRgb(col.R, col.G, col.B))
                 };
                 a -= dec;
-                if (tEnd >= values.Length)
-                    tEnd = values.Length - 1;
+                if (iEnd >= values.Length)
+                    iEnd = values.Length - 1;
                 ls.Points.AddRange(Enumerable
-                    .Range(tStart, tEnd - tStart)
+                    .Range(iStart, iEnd - iStart)
                     .Select(i => new DataPoint(Time[i], values[i])));
                 model.Series.Add(ls);
             }
@@ -84,19 +88,21 @@ namespace SiliFish.UI
         public static Image CreateScatterPlot(string title, double[] data, 
             double[] Time, double tStart, double tEnd, 
             string yAxis, double? yMin, double? yMax, 
-            Color color, int width = 1024, int height = 480)
+            Color color, int width = 1024, int height = 480,
+            bool absoluteYRange = false)
         {
-            if (data == null || data.Count() != Time.Count())
+            if (data == null || data.Length != Time.Length)
                 return null;
-            double padding = ((yMax ?? data.Max()) - (yMin ?? data.Min())) / 10;
-            yMin ??= data.Min() - padding;
-            yMax ??= data.Max() + padding;
-            PlotModel model = CreateModel(title, tStart, tEnd, yAxis, (double)yMin, (double)yMax);
+
+            yMin ??= data.Min();
+            yMax ??= data.Max();
+
+            PlotModel model = CreateModel(title, tStart, tEnd, yAxis, (double)yMin, (double)yMax, absoluteYRange);
 
             OxyColor col = color.ToOxyColor();
-            ScatterSeries ls = new ScatterSeries();
+            ScatterSeries ls = new();
             ls.Points.AddRange(Enumerable
-                .Range(0, Time.Count())
+                .Range(0, Time.Length)
                 .Select(i => new ScatterPoint(Time[i] < 0 ? 0 : Time[i], data[i])));
 
             model.Series.Add(ls);
@@ -111,12 +117,13 @@ namespace SiliFish.UI
 
         public static Image CreateLinePlot(string title, double[,] values, double[] Time, int iStart, int iEnd,
             string yAxis, double yMin, double yMax,
-            Color color, int width = 1024, int height = 480)
+            Color color, int width = 1024, int height = 480,
+            bool absoluteYRange = false)
         {//TODO different colors for different lines
             if (values == null)
                 return null;
 
-            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, yMin, yMax);
+            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, yMin, yMax, absoluteYRange);
 
             OxyColor col = color.ToOxyColor();
             byte a = (byte)255;
@@ -146,15 +153,14 @@ namespace SiliFish.UI
         public static Image CreateLinePlot(string title, double[] data, 
             double[] Time, int iStart, int iEnd, 
             string yAxis, double? yMin, double? yMax, 
-            Color color, int width = 1024, int height = 480)
+            Color color, int width = 1024, int height = 480, bool absoluteYRange = false)
         {
             if (data == null)
                 return null;
 
-            double padding = ((yMax ?? data.Max()) - (yMin ?? data.Min())) / 10;
-            yMin ??= data.Min() - padding;
-            yMax ??= data.Max() + padding;
-            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, (double)yMin, (double)yMax);
+            yMin ??= data.Min(); 
+            yMax ??= data.Max(); 
+            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, (double)yMin, (double)yMax, absoluteYRange);
 
 
             OxyColor col = color.ToOxyColor();

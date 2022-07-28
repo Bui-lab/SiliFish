@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
-using SiliFish.Services;
-//using SixLabors.ImageSharp.Drawing.Processing;
 
 namespace SiliFish
 {
@@ -161,15 +158,15 @@ namespace SiliFish
                 { "General.BodyDorsalVentralDistance", BodyDorsalVentralDistance },
                 { "General.BodyMedialLateralDistance", BodyMedialLateralDistance },
 
-                { "Dynamic.cv", cv },
+                { "Dynamic.ConductionVelocity", cv },
                 { "Dynamic.E_ach", E_ach },
                 { "Dynamic.E_glu", E_glu },
                 { "Dynamic.E_gly", E_gly },
                 { "Dynamic.E_gaba", E_gaba },
 
-                { "Animation.DampingCoef", khi },
+                { "Animation.Damping Coef", khi },
                 { "Animation.w0", w0 },
-                { "Animation.ConversionCoef", convCoef },
+                { "Animation.Conversion Coef", convCoef },
                 { "Animation.Alpha", alpha },
                 { "Animation.Beta", beta }
             };
@@ -179,36 +176,24 @@ namespace SiliFish
 
         public virtual Dictionary<string, object> GetParameterDesc()
         {
-            Dictionary<string, object> paramDict = new()
+            Dictionary<string, object> paramDescDict = new()
             {
-                { "Dynamic.cv", "Conduction velocity" },
                 { "Dynamic.E_ach", "Reversal potential of ACh" },
                 { "Dynamic.E_glu", "Reversal potential of glutamate" },
                 { "Dynamic.E_gly", "Reversal potential of glycine" },
                 { "Dynamic.E_gaba", "Reversal potential of GABA" },
 
-                { "Animation.DampingCoef", khi },
+                { "Animation.Damping Coef", khi },
                 { "Animation.w0", "Natural oscillation frequency" },
                 { "Animation.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
                 { "Animation.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
-                { "Animation.ConversionCoef", "Coefficient to convert membrane potential to driving force for the oscillation" }
+                { "Animation.Conversion Coef", "Coefficient to convert membrane potential to driving force for the oscillation" }
             };
 
-            return paramDict;
+            return paramDescDict;
         }
-        public void FillMissingParameters(Dictionary<string, object> paramDict)
+        public void SetAndFillMissingParameters(Dictionary<string, object> paramDict)
         {
-            paramDict.AddObject("Dynamic.cv", cv, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
-            paramDict.AddObject("Animation.DampingCoef", khi, skipIfExists: true);
-            paramDict.AddObject("Animation.w0", w0, skipIfExists: true);
-            paramDict.AddObject("Animation.ConversionCoef", convCoef, skipIfExists: true);
-            paramDict.AddObject("Animation.Alpha", alpha, skipIfExists: true);
-            paramDict.AddObject("Animation.Beta", beta, skipIfExists: true);
-
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
             paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
             paramDict.AddObject("General.NumberOfSomites", NumberOfSomites, skipIfExists: true);
@@ -218,15 +203,28 @@ namespace SiliFish
             paramDict.AddObject("General.SpinalBodyPosition", SpinalBodyPosition, skipIfExists: true);
             paramDict.AddObject("General.BodyDorsalVentralDistance", BodyDorsalVentralDistance, skipIfExists: true);
             paramDict.AddObject("General.BodyMedialLateralDistance", BodyMedialLateralDistance, skipIfExists: true);
+
+            paramDict.AddObject("Dynamic.ConductionVelocity", cv, skipIfExists: true);
+            paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
+            paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
+            paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
+            paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
+
+            paramDict.AddObject("Animation.Damping Coef", khi, skipIfExists: true);
+            paramDict.AddObject("Animation.w0", w0, skipIfExists: true);
+            paramDict.AddObject("Animation.Conversion Coef", convCoef, skipIfExists: true);
+            paramDict.AddObject("Animation.Alpha", alpha, skipIfExists: true);
+            paramDict.AddObject("Animation.Beta", beta, skipIfExists: true);
+            SetParameters(paramDict);
         }
 
         public virtual void SetAnimationParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            khi = paramExternal.Read("Animation.DampingCoef", khi);
+            khi = paramExternal.Read("Animation.Damping Coef", khi);
             w0 = paramExternal.Read("Animation.w0", w0);
-            convCoef = paramExternal.Read("Animation.ConversionCoef", convCoef);
+            convCoef = paramExternal.Read("Animation.Conversion Coef", convCoef);
             alpha = paramExternal.Read("Animation.Alpha", alpha);
             beta = paramExternal.Read("Animation.Beta", beta);
         }
@@ -244,7 +242,7 @@ namespace SiliFish
             BodyDorsalVentralDistance = paramExternal.ReadDouble("General.BodyDorsalVentralDistance");
             BodyMedialLateralDistance = paramExternal.ReadDouble("General.BodyMedialLateralDistance");
 
-            cv = paramExternal.Read("Dynamic.cv", cv);
+            cv = paramExternal.Read("Dynamic.ConductionVelocity", cv);
             E_ach = paramExternal.Read("Dynamic.E_ach", E_ach);
             E_glu = paramExternal.Read("Dynamic.E_glu", E_glu);
             E_gly = paramExternal.Read("Dynamic.E_gly", E_gly);
@@ -531,7 +529,7 @@ namespace SiliFish
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    //khi is the damping coefficient: "Animation.DampingCoef"
+                    //khi is the damping coefficient: "Animation.Damping Coef"
                     double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;

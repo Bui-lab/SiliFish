@@ -24,7 +24,7 @@ namespace SiliFish.ModelUnits
         public static Func<double> synWeightNoiseMultiplier;
         public static Func<double> rangeNoiseMultiplier;
 
-        private SwimmingModel Model;
+        private readonly SwimmingModel Model;
         public string CellGroup { get; }
         public CellType CellType { get; }
         public Color Color { get; }

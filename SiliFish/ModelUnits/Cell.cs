@@ -127,9 +127,9 @@ namespace SiliFish.ModelUnits
         {
             get
             {
-                double cur1 = GapJunctions?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
-                double cur2 = Terminals?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
-                double cur3 = Synapses?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
+                double cur1 = GapJunctions!=null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.Max()) : 0;
+                double cur2 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.Max()) : 0;
+                double cur3 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.Max()) : 0;
                 return Math.Max(cur1, Math.Max(cur2, cur3));
             }
         }

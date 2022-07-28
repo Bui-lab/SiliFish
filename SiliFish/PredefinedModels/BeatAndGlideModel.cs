@@ -87,18 +87,7 @@ namespace SiliFish.PredefinedModels
             CellPool.synWeightNoiseMultiplier = GetSynWeightNoiseMultiplier;
         }
 
-        public void SetNumberOfCells(int nmn, int ndi6, int nv0v, int nv2a, int nv1, int nmuscle)
-        {
-            nMN = nmn;
-            ndI6 = ndi6;
-            nV0v = nv0v;
-            nV2a = nv2a;
-            nV1 = nv1;
-            nMuscle = nmuscle;
-            initialized = false;
-        }
-
-        protected double GetXNoise()
+        protected static double GetXNoise()
         {
             return rand.Gauss(1, 0.01, 0.9, 1.1);
         }
@@ -219,76 +208,73 @@ namespace SiliFish.PredefinedModels
             PoolToPoolGapJunction(L_MN, L_V0v, cr);
             PoolToPoolGapJunction(R_MN, R_V0v, cr);
 
-            TimeLine span = new();
-            span.AddTimeRange(this.tSynStart_ms);
-
             //Ipsilateral glutamatergic projections from V2a to V2a
             SynapseParameters GluSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_glu};
             cr = new() { AscendingReach = 0, DescendingReach = rangeV2a_V2a_syn, MinReach = rangeMin, Weight = V2a_V2a_syn_weight };
-            PoolToPoolChemSynapse(L_V2a, L_V2a, cr, GluSynapse, span);
-            PoolToPoolChemSynapse(R_V2a, R_V2a, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V2a, L_V2a, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V2a, R_V2a, cr, GluSynapse);
 
             //Ipsilateral glutamatergic projections from V2a to MN
             cr = new() { AscendingReach = rangeV2a_MN_asc, DescendingReach = rangeV2a_MN_desc, MinReach = rangeMin, Weight = V2a_MN_syn_weight };
-            PoolToPoolChemSynapse(L_V2a, L_MN, cr, GluSynapse, span);
-            PoolToPoolChemSynapse(R_V2a, R_MN, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V2a, L_MN, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V2a, R_MN, cr, GluSynapse);
 
             //Ipsilateral glutamatergic projections from V2a to dI6
             cr = new() { AscendingReach = 0, DescendingReach = rangeV2a_dI6, MinReach = -1, Weight = V2a_dI6_syn_weight };
-            PoolToPoolChemSynapse(L_V2a, L_dI6, cr, GluSynapse, span);
-            PoolToPoolChemSynapse(R_V2a, R_dI6, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V2a, L_dI6, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V2a, R_dI6, cr, GluSynapse);
 
             //Ipsilateral glutamatergic projections from V2a to V1
             cr = new() { AscendingReach = 0, DescendingReach = rangeV2a_V1, MinReach = -1, Weight = V2a_V1_syn_weight };
-            PoolToPoolChemSynapse(L_V2a, L_V1, cr, GluSynapse, span);
-            PoolToPoolChemSynapse(R_V2a, R_V1, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V2a, L_V1, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V2a, R_V1, cr, GluSynapse);
 
             //Ipsilateral glutamatergic projections from V2a to V0v 
             cr = new() { AscendingReach = rangeV2a_V0v_asc, DescendingReach = rangeV2a_V0v_desc, MinReach = rangeMin, Weight = V2a_V0v_syn_weight };
-            PoolToPoolChemSynapse(L_V2a, L_V0v, cr, GluSynapse, span);
-            PoolToPoolChemSynapse(R_V2a, R_V0v, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V2a, L_V0v, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V2a, R_V0v, cr, GluSynapse);
 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly};
 
             //Ipsilateral glycinergic projections from V1 to MN 
             cr = new() { AscendingReach = rangeV1_MN, DescendingReach = 0, MinReach = -1, Weight = V1_MN_syn_weight };
-            PoolToPoolChemSynapse(L_V1, L_MN, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_V1, R_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V1, L_MN, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V1, R_MN, cr, GlySynapse);
 
             //Ipsilateral glycinergic projections from V1 to V2a
             cr = new() { AscendingReach = rangeV1_V2a, DescendingReach = 0, MinReach = -1, Weight = V1_V2a_syn_weight };
-            PoolToPoolChemSynapse(L_V1, L_V2a, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_V1, R_V2a, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V1, L_V2a, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V1, R_V2a, cr, GlySynapse);
 
             //Ipsilateral glycinergic projections from V1 to V0v
             cr = new() { AscendingReach = rangeV1_V0v, DescendingReach = 0, MinReach = -1, Weight = V1_V0v_syn_weight };
-            PoolToPoolChemSynapse(L_V1, L_V0v, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_V1, R_V0v, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V1, L_V0v, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V1, R_V0v, cr, GlySynapse);
 
             //Ipsilateral glycinergic projections from V1 to dI6
             cr = new() { AscendingReach = rangeV1_dI6, DescendingReach = 0, MinReach = -1, Weight = V1_dI6_syn_weight };
-            PoolToPoolChemSynapse(L_V1, L_dI6, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_V1, R_dI6, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_V1, L_dI6, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V1, R_dI6, cr, GlySynapse);
 
             //Contralateral glycinergic projections from dI6 to MN 
             cr = new() { AscendingReach = rangedI6_MN_asc, DescendingReach = rangedI6_MN_desc, MinReach = rangeMin, Weight = dI6_MN_syn_weight };
-            PoolToPoolChemSynapse(L_dI6, R_MN, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_dI6, L_MN, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_dI6, R_MN, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_dI6, L_MN, cr, GlySynapse);
 
             //Contralateral glycinergic projections from dI6 to V2a 
             cr = new() { AscendingReach = rangedI6_V2a_asc, DescendingReach = rangedI6_V2a_desc, MinReach = rangeMin, Weight = dI6_V2a_syn_weight };
-            PoolToPoolChemSynapse(L_dI6, R_V2a, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_dI6, L_V2a, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_dI6, R_V2a, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_dI6, L_V2a, cr, GlySynapse);
 
             //Contralateral glycinergic projections from dI6 to dI6 
             cr = new() { AscendingReach = rangedI6_dI6_asc, DescendingReach = rangedI6_dI6_desc, MinReach = rangeMin, Weight = dI6_dI6_syn_weight };
-            PoolToPoolChemSynapse(L_dI6, R_dI6, cr, GlySynapse, span);
-            PoolToPoolChemSynapse(R_dI6, L_dI6, cr, GlySynapse, span);
+            PoolToPoolChemSynapse(L_dI6, R_dI6, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_dI6, L_dI6, cr, GlySynapse);
 
             //Contralateral glutamatergic projections from V0v to V2a 
             cr = new() { AscendingReach = rangeV0v_V2a_asc, DescendingReach = rangeV0v_V2a_desc, MinReach = rangeMin, Weight = V0v_V2a_syn_weight };
-            PoolToPoolChemSynapse(L_V0v, R_V2a, cr, GluSynapse, span);
-            PoolToPoolChemSynapse(R_V0v, L_V2a, cr, GluSynapse, span);
+            PoolToPoolChemSynapse(L_V0v, R_V2a, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V0v, L_V2a, cr, GluSynapse);
 
 
             //Ipsilateral cholinergic projections from MN to Muscle cells
