@@ -141,9 +141,18 @@ namespace SiliFish.Helpers
                     i2 = i1;
                 return (i1, i2);
             }
-            int.TryParse(s[..sep], out i1);
-            int.TryParse(s[(sep + 1)..], out i2);
+            _ = int.TryParse(s[..sep], out i1);
+            _ = int.TryParse(s[(sep + 1)..], out i2);
             return (i1, i2);
+        }
+
+        public static void SetYRange(ref double yMin, ref double yMax)
+        {
+            double padding = (yMax - yMin) / 10;
+            yMin -= padding;
+            if (yMin > 0)
+                yMin = 0;
+            yMax += padding;
         }
     }
 }

@@ -344,9 +344,9 @@ namespace SiliFish.UI
             // 
             // tabParams
             // 
+            this.tabParams.Controls.Add(this.tabGeneral);
             this.tabParams.Controls.Add(this.tabCellPools);
             this.tabParams.Controls.Add(this.tabStimuli);
-            this.tabParams.Controls.Add(this.tabGeneral);
             this.tabParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabParams.Location = new System.Drawing.Point(0, 34);
             this.tabParams.Name = "tabParams";
