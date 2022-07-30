@@ -54,9 +54,9 @@ namespace SiliFish.UI.Controls
                 ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, 0)[0] :
                 0;
             if (cellType == CellType.Neuron)
-                cell = new Neuron("", 0, 0, cv);
+                cell = new Neuron("", 1, 1, cv);
             else if (cellType == CellType.MuscleCell)
-                cell = new MuscleCell("", 0, 0);
+                cell = new MuscleCell("", 1, 1);
             cell.Parameters = GridToParamDict();
             return cell;
         }

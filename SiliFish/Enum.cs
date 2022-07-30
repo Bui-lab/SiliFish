@@ -38,7 +38,7 @@ namespace SiliFish
     }
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
-    public enum DistanceMode { Euclidean, Manhattan, Chebyshev, Haversine }
+    public enum DistanceMode { Euclidean, Manhattan } //FUTURE_IMPROVEMENT, Chebyshev, Haversine }
     public enum ConnectionType { NotSet, Synapse, Gap, NMJ}
     public enum StimulusMode { None, Step, Gaussian, Ramp}
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed}

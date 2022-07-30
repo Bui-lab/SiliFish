@@ -61,19 +61,20 @@ namespace SiliFish
 
         public virtual Dictionary<string, object> GetParameters()
         {
-            Dictionary<string, object> paramDict = new();
-
-            paramDict.Add("Izhikevich_9P.a", a);
-            paramDict.Add("Izhikevich_9P.b", b);
-            paramDict.Add("Izhikevich_9P.c", c);
-            paramDict.Add("Izhikevich_9P.d", d);
-            paramDict.Add("Izhikevich_9P.vmax", vmax);
-            paramDict.Add("Izhikevich_9P.vr", vr);
-            paramDict.Add("Izhikevich_9P.vt", vt);
-            paramDict.Add("Izhikevich_9P.k", k);
-            paramDict.Add("Izhikevich_9P.Cm", Cm);
-            paramDict.Add("Izhikevich_9P.v", v);
-            paramDict.Add("Izhikevich_9P.u", u);
+            Dictionary<string, object> paramDict = new()
+            {
+                { "Izhikevich_9P.a", a },
+                { "Izhikevich_9P.b", b },
+                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.d", d },
+                { "Izhikevich_9P.V_max", vmax },
+                { "Izhikevich_9P.V_r", vr },
+                { "Izhikevich_9P.V_t", vt },
+                { "Izhikevich_9P.k", k },
+                { "Izhikevich_9P.Cm", Cm },
+                { "Izhikevich_9P.V", v },
+                { "Izhikevich_9P.u", u }
+            };
             return paramDict;
         }
 
@@ -85,12 +86,12 @@ namespace SiliFish
             b = paramExternal.Read("Izhikevich_9P.b", b);
             c = paramExternal.Read("Izhikevich_9P.c", c);
             d = paramExternal.Read("Izhikevich_9P.d", d);
-            vmax = paramExternal.Read("Izhikevich_9P.vmax", vmax);
-            vr = paramExternal.Read("Izhikevich_9P.vr", vr);
-            vt = paramExternal.Read("Izhikevich_9P.vt", vt);
+            vmax = paramExternal.Read("Izhikevich_9P.V_max", vmax);
+            vr = paramExternal.Read("Izhikevich_9P.V_r", vr);
+            vt = paramExternal.Read("Izhikevich_9P.V_t", vt);
             k = paramExternal.Read("Izhikevich_9P.k", k);
             Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
-            init_v = v = paramExternal.Read("Izhikevich_9P.v", v);
+            init_v = v = paramExternal.Read("Izhikevich_9P.V", v);
             init_u = u = paramExternal.Read("Izhikevich_9P.u", u);
         }
 
@@ -198,11 +199,12 @@ namespace SiliFish
         }
                 public virtual Dictionary<string, object> GetParameters()
         {
-            Dictionary<string, object> paramDict = new();
-
-            paramDict.Add("Leaky_Integrator.R", R);
-            paramDict.Add("Leaky_Integrator.C", C);
-            paramDict.Add("Leaky_Integrator.v", v);
+            Dictionary<string, object> paramDict = new()
+            {
+                { "Leaky_Integrator.R", R },
+                { "Leaky_Integrator.C", C },
+                { "Leaky_Integrator.v", v }
+            };
             return paramDict;
         }
 
@@ -252,17 +254,17 @@ namespace SiliFish
             double x = Math.Abs(cell1.X - cell2.X);
             double y = Math.Abs(cell1.Y - cell2.Y);
             double z = Math.Abs(cell1.Z - cell2.Z);
-            switch (mode)
+            return mode switch
             {
-                case DistanceMode.Chebyshev:
-                    return Math.Max(x, Math.Max(y, z));
-                case DistanceMode.Manhattan:
-                    return x + y + z;
+                DistanceMode.Manhattan => x + y + z,
+                DistanceMode.Euclidean => Math.Sqrt(x * x + y * y + z * z),
                 //FUTURE_IMPROVEMENT
+                //case DistanceMode.Chebyshev:
+                //    return Math.Max(x, Math.Max(y, z));
                 //case DistanceMode.Haversine:
-                default: //Euclidean
-                    return Math.Sqrt(x * x + y * y + z * z);
-            }
+                //Euclidean
+                _ => Math.Sqrt(x * x + y * y + z * z),
+            };
         }
 
     }

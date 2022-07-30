@@ -40,15 +40,9 @@ namespace SiliFish.UI
             this.linkBrowseToOutputFolder = new System.Windows.Forms.LinkLabel();
             this.linkClearModel = new System.Windows.Forms.LinkLabel();
             this.rbCustom = new System.Windows.Forms.RadioButton();
-            this.linkSaveHTML = new System.Windows.Forms.LinkLabel();
+            this.linkSaveHTMLPlots = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.tabParams = new System.Windows.Forms.TabControl();
-            this.tabCellPools = new System.Windows.Forms.TabPage();
-            this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
-            this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
-            this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
-            this.tabStimuli = new System.Windows.Forms.TabPage();
-            this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.pBodyDiagrams = new System.Windows.Forms.Panel();
             this.picRostroCaudal = new System.Windows.Forms.PictureBox();
@@ -73,6 +67,12 @@ namespace SiliFish.UI
             this.eModelName = new System.Windows.Forms.TextBox();
             this.lModelDescription = new System.Windows.Forms.Label();
             this.lModelName = new System.Windows.Forms.Label();
+            this.tabCellPools = new System.Windows.Forms.TabPage();
+            this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
+            this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
+            this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
+            this.tabStimuli = new System.Windows.Forms.TabPage();
+            this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.pMain = new System.Windows.Forms.Panel();
             this.linkLoadParam = new System.Windows.Forms.LinkLabel();
             this.lParameters = new System.Windows.Forms.Label();
@@ -87,6 +87,7 @@ namespace SiliFish.UI
             this.tPlotHTML = new System.Windows.Forms.TabPage();
             this.webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlot = new System.Windows.Forms.Panel();
+            this.linkSavePlots = new System.Windows.Forms.LinkLabel();
             this.btnPlotHTML = new System.Windows.Forms.Button();
             this.ddPlotCellSelection = new System.Windows.Forms.ComboBox();
             this.lPlotCells = new System.Windows.Forms.Label();
@@ -110,10 +111,12 @@ namespace SiliFish.UI
             this.tab2DModel = new System.Windows.Forms.TabPage();
             this.webView2DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.p2DModel = new System.Windows.Forms.Panel();
+            this.linkSaveHTML2D = new System.Windows.Forms.LinkLabel();
             this.btnGenerate2DModel = new System.Windows.Forms.Button();
             this.tab3DModel = new System.Windows.Forms.TabPage();
             this.webView3DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.p3DModel = new System.Windows.Forms.Panel();
+            this.linkSaveHTML3D = new System.Windows.Forms.LinkLabel();
             this.dd3DModelType = new System.Windows.Forms.ComboBox();
             this.btnGenerate3DModel = new System.Windows.Forms.Button();
             this.tabAnimation = new System.Windows.Forms.TabPage();
@@ -132,6 +135,9 @@ namespace SiliFish.UI
             this.lms6 = new System.Windows.Forms.Label();
             this.tabTextOutput = new System.Windows.Forms.TabPage();
             this.eModelSummary = new System.Windows.Forms.RichTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.linkSaveOutput = new System.Windows.Forms.LinkLabel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.pParamBottom = new System.Windows.Forms.Panel();
             this.eSkip = new System.Windows.Forms.NumericUpDown();
             this.lSkip = new System.Windows.Forms.Label();
@@ -153,18 +159,13 @@ namespace SiliFish.UI
             this.saveFileCSV = new System.Windows.Forms.SaveFileDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
+            this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
             this.tabParams.SuspendLayout();
-            this.tabCellPools.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).BeginInit();
-            this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
-            this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
-            this.splitCellPoolsAndConnections.SuspendLayout();
-            this.tabStimuli.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.pBodyDiagrams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picRostroCaudal)).BeginInit();
@@ -178,6 +179,12 @@ namespace SiliFish.UI
             this.grBody.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eBodyMedialLateral)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eBodyDorsalVentral)).BeginInit();
+            this.tabCellPools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).BeginInit();
+            this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
+            this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
+            this.splitCellPoolsAndConnections.SuspendLayout();
+            this.tabStimuli.SuspendLayout();
             this.pMain.SuspendLayout();
             this.tabOutputs.SuspendLayout();
             this.tabPlot.SuspendLayout();
@@ -208,6 +215,7 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).BeginInit();
             this.tabTextOutput.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.pParamBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
@@ -253,7 +261,6 @@ namespace SiliFish.UI
             this.pTop.Controls.Add(this.linkBrowseToOutputFolder);
             this.pTop.Controls.Add(this.linkClearModel);
             this.pTop.Controls.Add(this.rbCustom);
-            this.pTop.Controls.Add(this.linkSaveHTML);
             this.pTop.Controls.Add(this.rbSingleCoil);
             this.pTop.Controls.Add(this.rbBeatGlide);
             this.pTop.Controls.Add(this.rbDoubleCoil);
@@ -311,17 +318,17 @@ namespace SiliFish.UI
             this.rbCustom.UseVisualStyleBackColor = true;
             this.rbCustom.CheckedChanged += new System.EventHandler(this.rbCustom_CheckedChanged);
             // 
-            // linkSaveHTML
+            // linkSaveHTMLPlots
             // 
-            this.linkSaveHTML.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkSaveHTML.AutoSize = true;
-            this.linkSaveHTML.Location = new System.Drawing.Point(1276, 12);
-            this.linkSaveHTML.Name = "linkSaveHTML";
-            this.linkSaveHTML.Size = new System.Drawing.Size(66, 15);
-            this.linkSaveHTML.TabIndex = 3;
-            this.linkSaveHTML.TabStop = true;
-            this.linkSaveHTML.Text = "Save HTML";
-            this.linkSaveHTML.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveHTML_LinkClicked);
+            this.linkSaveHTMLPlots.AutoSize = true;
+            this.linkSaveHTMLPlots.Enabled = false;
+            this.linkSaveHTMLPlots.Location = new System.Drawing.Point(586, 82);
+            this.linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
+            this.linkSaveHTMLPlots.Size = new System.Drawing.Size(66, 15);
+            this.linkSaveHTMLPlots.TabIndex = 3;
+            this.linkSaveHTMLPlots.TabStop = true;
+            this.linkSaveHTMLPlots.Text = "Save HTML";
+            this.linkSaveHTMLPlots.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveHTMLPlots_LinkClicked);
             // 
             // splitMain
             // 
@@ -354,92 +361,6 @@ namespace SiliFish.UI
             this.tabParams.Size = new System.Drawing.Size(550, 638);
             this.tabParams.TabIndex = 2;
             this.tabParams.Tag = "";
-            // 
-            // tabCellPools
-            // 
-            this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
-            this.tabCellPools.Location = new System.Drawing.Point(4, 24);
-            this.tabCellPools.Name = "tabCellPools";
-            this.tabCellPools.Size = new System.Drawing.Size(542, 610);
-            this.tabCellPools.TabIndex = 1;
-            this.tabCellPools.Text = "Cell Pools & Connections";
-            this.tabCellPools.UseVisualStyleBackColor = true;
-            // 
-            // splitCellPoolsAndConnections
-            // 
-            this.splitCellPoolsAndConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitCellPoolsAndConnections.Location = new System.Drawing.Point(0, 0);
-            this.splitCellPoolsAndConnections.Name = "splitCellPoolsAndConnections";
-            // 
-            // splitCellPoolsAndConnections.Panel1
-            // 
-            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.listCellPool);
-            this.splitCellPoolsAndConnections.Panel1MinSize = 200;
-            // 
-            // splitCellPoolsAndConnections.Panel2
-            // 
-            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
-            this.splitCellPoolsAndConnections.Panel2MinSize = 200;
-            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 610);
-            this.splitCellPoolsAndConnections.SplitterDistance = 252;
-            this.splitCellPoolsAndConnections.TabIndex = 5;
-            // 
-            // listCellPool
-            // 
-            this.listCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listCellPool.Location = new System.Drawing.Point(0, 0);
-            this.listCellPool.Name = "listCellPool";
-            this.listCellPool.SelectedIndex = -1;
-            this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(252, 610);
-            this.listCellPool.TabIndex = 5;
-            this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
-            this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
-            this.listCellPool.CopyItem += new System.EventHandler(this.listCellPool_CopyItem);
-            this.listCellPool.ViewItem += new System.EventHandler(this.listCellPool_ViewItem);
-            this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
-            this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
-            // 
-            // listConnections
-            // 
-            this.listConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listConnections.Location = new System.Drawing.Point(0, 0);
-            this.listConnections.Name = "listConnections";
-            this.listConnections.SelectedIndex = -1;
-            this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(286, 610);
-            this.listConnections.TabIndex = 6;
-            this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
-            this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
-            this.listConnections.CopyItem += new System.EventHandler(this.listConnections_CopyItem);
-            this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
-            this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
-            this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
-            // 
-            // tabStimuli
-            // 
-            this.tabStimuli.Controls.Add(this.listStimuli);
-            this.tabStimuli.Location = new System.Drawing.Point(4, 24);
-            this.tabStimuli.Name = "tabStimuli";
-            this.tabStimuli.Size = new System.Drawing.Size(542, 610);
-            this.tabStimuli.TabIndex = 3;
-            this.tabStimuli.Text = "Stimuli";
-            this.tabStimuli.UseVisualStyleBackColor = true;
-            // 
-            // listStimuli
-            // 
-            this.listStimuli.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listStimuli.Location = new System.Drawing.Point(0, 0);
-            this.listStimuli.Name = "listStimuli";
-            this.listStimuli.SelectedIndex = -1;
-            this.listStimuli.SelectedItem = null;
-            this.listStimuli.Size = new System.Drawing.Size(542, 610);
-            this.listStimuli.TabIndex = 6;
-            this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
-            this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
-            this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
-            this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
-            this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
             // 
             // tabGeneral
             // 
@@ -714,6 +635,92 @@ namespace SiliFish.UI
             this.lModelName.TabIndex = 0;
             this.lModelName.Text = "Model Name";
             // 
+            // tabCellPools
+            // 
+            this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
+            this.tabCellPools.Location = new System.Drawing.Point(4, 24);
+            this.tabCellPools.Name = "tabCellPools";
+            this.tabCellPools.Size = new System.Drawing.Size(542, 610);
+            this.tabCellPools.TabIndex = 1;
+            this.tabCellPools.Text = "Cell Pools & Connections";
+            this.tabCellPools.UseVisualStyleBackColor = true;
+            // 
+            // splitCellPoolsAndConnections
+            // 
+            this.splitCellPoolsAndConnections.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitCellPoolsAndConnections.Location = new System.Drawing.Point(0, 0);
+            this.splitCellPoolsAndConnections.Name = "splitCellPoolsAndConnections";
+            // 
+            // splitCellPoolsAndConnections.Panel1
+            // 
+            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.listCellPool);
+            this.splitCellPoolsAndConnections.Panel1MinSize = 200;
+            // 
+            // splitCellPoolsAndConnections.Panel2
+            // 
+            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
+            this.splitCellPoolsAndConnections.Panel2MinSize = 200;
+            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 610);
+            this.splitCellPoolsAndConnections.SplitterDistance = 252;
+            this.splitCellPoolsAndConnections.TabIndex = 5;
+            // 
+            // listCellPool
+            // 
+            this.listCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listCellPool.Location = new System.Drawing.Point(0, 0);
+            this.listCellPool.Name = "listCellPool";
+            this.listCellPool.SelectedIndex = -1;
+            this.listCellPool.SelectedItem = null;
+            this.listCellPool.Size = new System.Drawing.Size(252, 610);
+            this.listCellPool.TabIndex = 5;
+            this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
+            this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
+            this.listCellPool.CopyItem += new System.EventHandler(this.listCellPool_CopyItem);
+            this.listCellPool.ViewItem += new System.EventHandler(this.listCellPool_ViewItem);
+            this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
+            this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
+            // 
+            // listConnections
+            // 
+            this.listConnections.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listConnections.Location = new System.Drawing.Point(0, 0);
+            this.listConnections.Name = "listConnections";
+            this.listConnections.SelectedIndex = -1;
+            this.listConnections.SelectedItem = null;
+            this.listConnections.Size = new System.Drawing.Size(286, 610);
+            this.listConnections.TabIndex = 6;
+            this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
+            this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
+            this.listConnections.CopyItem += new System.EventHandler(this.listConnections_CopyItem);
+            this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
+            this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
+            this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
+            // 
+            // tabStimuli
+            // 
+            this.tabStimuli.Controls.Add(this.listStimuli);
+            this.tabStimuli.Location = new System.Drawing.Point(4, 24);
+            this.tabStimuli.Name = "tabStimuli";
+            this.tabStimuli.Size = new System.Drawing.Size(542, 610);
+            this.tabStimuli.TabIndex = 3;
+            this.tabStimuli.Text = "Stimuli";
+            this.tabStimuli.UseVisualStyleBackColor = true;
+            // 
+            // listStimuli
+            // 
+            this.listStimuli.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listStimuli.Location = new System.Drawing.Point(0, 0);
+            this.listStimuli.Name = "listStimuli";
+            this.listStimuli.SelectedIndex = -1;
+            this.listStimuli.SelectedItem = null;
+            this.listStimuli.Size = new System.Drawing.Size(542, 610);
+            this.listStimuli.TabIndex = 6;
+            this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
+            this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
+            this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
+            this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
+            this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
+            // 
             // pMain
             // 
             this.pMain.Controls.Add(this.linkLoadParam);
@@ -789,10 +796,10 @@ namespace SiliFish.UI
             this.tabPlotSub.Controls.Add(this.tPlotWindows);
             this.tabPlotSub.Controls.Add(this.tPlotHTML);
             this.tabPlotSub.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabPlotSub.Location = new System.Drawing.Point(3, 88);
+            this.tabPlotSub.Location = new System.Drawing.Point(3, 110);
             this.tabPlotSub.Name = "tabPlotSub";
             this.tabPlotSub.SelectedIndex = 0;
-            this.tabPlotSub.Size = new System.Drawing.Size(780, 420);
+            this.tabPlotSub.Size = new System.Drawing.Size(780, 398);
             this.tabPlotSub.TabIndex = 6;
             // 
             // tPlotWindows
@@ -801,7 +808,7 @@ namespace SiliFish.UI
             this.tPlotWindows.Location = new System.Drawing.Point(4, 24);
             this.tPlotWindows.Name = "tPlotWindows";
             this.tPlotWindows.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotWindows.Size = new System.Drawing.Size(772, 392);
+            this.tPlotWindows.Size = new System.Drawing.Size(772, 370);
             this.tPlotWindows.TabIndex = 0;
             this.tPlotWindows.Text = "Image Plots";
             // 
@@ -821,7 +828,7 @@ namespace SiliFish.UI
             // 
             this.splitPlotWindows.Panel2.AutoScroll = true;
             this.splitPlotWindows.Panel2.Controls.Add(this.pictureBoxRight);
-            this.splitPlotWindows.Size = new System.Drawing.Size(766, 386);
+            this.splitPlotWindows.Size = new System.Drawing.Size(766, 364);
             this.splitPlotWindows.SplitterDistance = 356;
             this.splitPlotWindows.TabIndex = 0;
             this.splitPlotWindows.DoubleClick += new System.EventHandler(this.splitWindows_DoubleClick);
@@ -850,7 +857,7 @@ namespace SiliFish.UI
             this.tPlotHTML.Location = new System.Drawing.Point(4, 24);
             this.tPlotHTML.Name = "tPlotHTML";
             this.tPlotHTML.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotHTML.Size = new System.Drawing.Size(772, 392);
+            this.tPlotHTML.Size = new System.Drawing.Size(772, 370);
             this.tPlotHTML.TabIndex = 1;
             this.tPlotHTML.Text = "HTML Plots";
             this.tPlotHTML.UseVisualStyleBackColor = true;
@@ -863,7 +870,7 @@ namespace SiliFish.UI
             this.webViewPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlot.Location = new System.Drawing.Point(3, 3);
             this.webViewPlot.Name = "webViewPlot";
-            this.webViewPlot.Size = new System.Drawing.Size(766, 386);
+            this.webViewPlot.Size = new System.Drawing.Size(766, 364);
             this.webViewPlot.TabIndex = 1;
             this.webViewPlot.ZoomFactor = 1D;
             this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlot_CoreWebView2InitializationCompleted);
@@ -871,10 +878,12 @@ namespace SiliFish.UI
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.SystemColors.Control;
+            this.pPlot.Controls.Add(this.linkSavePlots);
             this.pPlot.Controls.Add(this.btnPlotHTML);
             this.pPlot.Controls.Add(this.ddPlotCellSelection);
             this.pPlot.Controls.Add(this.lPlotCells);
             this.pPlot.Controls.Add(this.ePlotCellSelection);
+            this.pPlot.Controls.Add(this.linkSaveHTMLPlots);
             this.pPlot.Controls.Add(this.ddPlotSomiteSelection);
             this.pPlot.Controls.Add(this.lPlotSomites);
             this.pPlot.Controls.Add(this.ePlotEnd);
@@ -894,13 +903,25 @@ namespace SiliFish.UI
             this.pPlot.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlot.Location = new System.Drawing.Point(3, 3);
             this.pPlot.Name = "pPlot";
-            this.pPlot.Size = new System.Drawing.Size(780, 85);
+            this.pPlot.Size = new System.Drawing.Size(780, 107);
             this.pPlot.TabIndex = 5;
+            // 
+            // linkSavePlots
+            // 
+            this.linkSavePlots.AutoSize = true;
+            this.linkSavePlots.Enabled = false;
+            this.linkSavePlots.Location = new System.Drawing.Point(586, 57);
+            this.linkSavePlots.Name = "linkSavePlots";
+            this.linkSavePlots.Size = new System.Drawing.Size(96, 15);
+            this.linkSavePlots.TabIndex = 51;
+            this.linkSavePlots.TabStop = true;
+            this.linkSavePlots.Text = "Save Plot Images";
+            this.linkSavePlots.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSavePlots_LinkClicked);
             // 
             // btnPlotHTML
             // 
             this.btnPlotHTML.Enabled = false;
-            this.btnPlotHTML.Location = new System.Drawing.Point(698, 30);
+            this.btnPlotHTML.Location = new System.Drawing.Point(505, 78);
             this.btnPlotHTML.Name = "btnPlotHTML";
             this.btnPlotHTML.Size = new System.Drawing.Size(75, 23);
             this.btnPlotHTML.TabIndex = 30;
@@ -1116,7 +1137,7 @@ namespace SiliFish.UI
             // btnPlotWindows
             // 
             this.btnPlotWindows.Enabled = false;
-            this.btnPlotWindows.Location = new System.Drawing.Point(698, 3);
+            this.btnPlotWindows.Location = new System.Drawing.Point(505, 53);
             this.btnPlotWindows.Name = "btnPlotWindows";
             this.btnPlotWindows.Size = new System.Drawing.Size(75, 23);
             this.btnPlotWindows.TabIndex = 50;
@@ -1161,12 +1182,25 @@ namespace SiliFish.UI
             // p2DModel
             // 
             this.p2DModel.BackColor = System.Drawing.SystemColors.Control;
+            this.p2DModel.Controls.Add(this.linkSaveHTML2D);
             this.p2DModel.Controls.Add(this.btnGenerate2DModel);
             this.p2DModel.Dock = System.Windows.Forms.DockStyle.Top;
             this.p2DModel.Location = new System.Drawing.Point(0, 0);
             this.p2DModel.Name = "p2DModel";
             this.p2DModel.Size = new System.Drawing.Size(786, 30);
             this.p2DModel.TabIndex = 2;
+            // 
+            // linkSaveHTML2D
+            // 
+            this.linkSaveHTML2D.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkSaveHTML2D.AutoSize = true;
+            this.linkSaveHTML2D.Location = new System.Drawing.Point(712, 7);
+            this.linkSaveHTML2D.Name = "linkSaveHTML2D";
+            this.linkSaveHTML2D.Size = new System.Drawing.Size(66, 15);
+            this.linkSaveHTML2D.TabIndex = 23;
+            this.linkSaveHTML2D.TabStop = true;
+            this.linkSaveHTML2D.Text = "Save HTML";
+            this.linkSaveHTML2D.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveHTML2D_LinkClicked);
             // 
             // btnGenerate2DModel
             // 
@@ -1207,6 +1241,7 @@ namespace SiliFish.UI
             // p3DModel
             // 
             this.p3DModel.BackColor = System.Drawing.SystemColors.Control;
+            this.p3DModel.Controls.Add(this.linkSaveHTML3D);
             this.p3DModel.Controls.Add(this.dd3DModelType);
             this.p3DModel.Controls.Add(this.btnGenerate3DModel);
             this.p3DModel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1214,6 +1249,18 @@ namespace SiliFish.UI
             this.p3DModel.Name = "p3DModel";
             this.p3DModel.Size = new System.Drawing.Size(780, 30);
             this.p3DModel.TabIndex = 3;
+            // 
+            // linkSaveHTML3D
+            // 
+            this.linkSaveHTML3D.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkSaveHTML3D.AutoSize = true;
+            this.linkSaveHTML3D.Location = new System.Drawing.Point(712, 7);
+            this.linkSaveHTML3D.Name = "linkSaveHTML3D";
+            this.linkSaveHTML3D.Size = new System.Drawing.Size(66, 15);
+            this.linkSaveHTML3D.TabIndex = 27;
+            this.linkSaveHTML3D.TabStop = true;
+            this.linkSaveHTML3D.Text = "Save HTML";
+            this.linkSaveHTML3D.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveHTML3D_LinkClicked);
             // 
             // dd3DModelType
             // 
@@ -1416,6 +1463,7 @@ namespace SiliFish.UI
             // tabTextOutput
             // 
             this.tabTextOutput.Controls.Add(this.eModelSummary);
+            this.tabTextOutput.Controls.Add(this.panel1);
             this.tabTextOutput.Location = new System.Drawing.Point(4, 24);
             this.tabTextOutput.Name = "tabTextOutput";
             this.tabTextOutput.Padding = new System.Windows.Forms.Padding(3);
@@ -1428,11 +1476,45 @@ namespace SiliFish.UI
             // 
             this.eModelSummary.AutoWordSelection = true;
             this.eModelSummary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eModelSummary.Location = new System.Drawing.Point(3, 3);
+            this.eModelSummary.Location = new System.Drawing.Point(3, 33);
             this.eModelSummary.Name = "eModelSummary";
-            this.eModelSummary.Size = new System.Drawing.Size(780, 505);
+            this.eModelSummary.Size = new System.Drawing.Size(780, 475);
             this.eModelSummary.TabIndex = 0;
             this.eModelSummary.Text = "";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.linkSaveOutput);
+            this.panel1.Controls.Add(this.linkLabel1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(780, 30);
+            this.panel1.TabIndex = 3;
+            // 
+            // linkSaveOutput
+            // 
+            this.linkSaveOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkSaveOutput.AutoSize = true;
+            this.linkSaveOutput.Location = new System.Drawing.Point(703, 7);
+            this.linkSaveOutput.Name = "linkSaveOutput";
+            this.linkSaveOutput.Size = new System.Drawing.Size(72, 15);
+            this.linkSaveOutput.TabIndex = 24;
+            this.linkSaveOutput.TabStop = true;
+            this.linkSaveOutput.Text = "Save Output";
+            this.linkSaveOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveOutput_LinkClicked);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(1292, 7);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(66, 15);
+            this.linkLabel1.TabIndex = 23;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Save HTML";
             // 
             // pParamBottom
             // 
@@ -1532,9 +1614,9 @@ namespace SiliFish.UI
             this.ldt.AutoSize = true;
             this.ldt.Location = new System.Drawing.Point(16, 84);
             this.ldt.Name = "ldt";
-            this.ldt.Size = new System.Drawing.Size(18, 15);
+            this.ldt.Size = new System.Drawing.Size(19, 15);
             this.ldt.TabIndex = 32;
-            this.ldt.Text = "dt";
+            this.ldt.Text = "Δt";
             // 
             // lRunTime
             // 
@@ -1641,6 +1723,10 @@ namespace SiliFish.UI
             // 
             this.saveFileText.Filter = "Text files(*.txt)|*.txt";
             // 
+            // saveFileImage
+            // 
+            this.saveFileImage.Filter = "Image files(*.png)|*.png";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1660,12 +1746,6 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
             this.tabParams.ResumeLayout(false);
-            this.tabCellPools.ResumeLayout(false);
-            this.splitCellPoolsAndConnections.Panel1.ResumeLayout(false);
-            this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
-            this.splitCellPoolsAndConnections.ResumeLayout(false);
-            this.tabStimuli.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
             this.pBodyDiagrams.ResumeLayout(false);
@@ -1682,6 +1762,12 @@ namespace SiliFish.UI
             this.grBody.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eBodyMedialLateral)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eBodyDorsalVentral)).EndInit();
+            this.tabCellPools.ResumeLayout(false);
+            this.splitCellPoolsAndConnections.Panel1.ResumeLayout(false);
+            this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
+            this.splitCellPoolsAndConnections.ResumeLayout(false);
+            this.tabStimuli.ResumeLayout(false);
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
             this.tabOutputs.ResumeLayout(false);
@@ -1719,6 +1805,8 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
             this.tabTextOutput.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
@@ -1747,7 +1835,7 @@ namespace SiliFish.UI
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlot;
         private ProgressBar progressBarRun;
         private System.Windows.Forms.Timer timerRun;
-        private LinkLabel linkSaveHTML;
+        private LinkLabel linkSaveHTMLPlots;
         private SaveFileDialog saveFileHTML;
         private TabPage tab2DModel;
         private Button btnGenerate2DModel;
@@ -1851,5 +1939,12 @@ namespace SiliFish.UI
         private TabPage tPlotWindows;
         private TabPage tPlotHTML;
         private LinkLabel linkBrowseToTempFolder;
+        private LinkLabel linkSaveHTML2D;
+        private LinkLabel linkSaveHTML3D;
+        private Panel panel1;
+        private LinkLabel linkSaveOutput;
+        private LinkLabel linkLabel1;
+        private LinkLabel linkSavePlots;
+        private SaveFileDialog saveFileImage;
     }
 }

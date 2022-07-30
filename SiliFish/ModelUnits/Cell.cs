@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SiliFish.DataTypes;
-using SiliFish.Extensions;
 
 namespace SiliFish.ModelUnits
 {
