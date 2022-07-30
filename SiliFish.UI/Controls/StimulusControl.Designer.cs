@@ -53,9 +53,9 @@
             this.lStimulus.AutoSize = true;
             this.lStimulus.Location = new System.Drawing.Point(3, 15);
             this.lStimulus.Name = "lStimulus";
-            this.lStimulus.Size = new System.Drawing.Size(53, 15);
+            this.lStimulus.Size = new System.Drawing.Size(87, 15);
             this.lStimulus.TabIndex = 0;
-            this.lStimulus.Text = "Stimulus";
+            this.lStimulus.Text = "Stimulus Mode";
             // 
             // ddStimulusMode
             // 

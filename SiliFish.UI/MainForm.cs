@@ -11,6 +11,7 @@ using SiliFish.UI.Extensions;
 using Services;
 using Microsoft.Web.WebView2.WinForms;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 
 namespace SiliFish.UI
 {
@@ -98,6 +99,83 @@ namespace SiliFish.UI
             }
         }
 
+        #region webViewPlot
+        private async void InitAsync()
+        {
+            await webViewPlot.EnsureCoreWebView2Async();
+            await webView2DModel.EnsureCoreWebView2Async();
+            await webView3DModel.EnsureCoreWebView2Async();
+            await webViewAnimation.EnsureCoreWebView2Async();
+        }
+
+        private void Wait()
+        {
+            while (webViewPlot.Tag == null || webView2DModel.Tag == null || webView3DModel.Tag == null || webViewAnimation.Tag == null)
+                Application.DoEvents();
+        }
+        private void webViewPlot_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        {
+            webViewPlot.Tag = true;
+        }
+        private void webView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        {
+            (sender as Control).Tag = true;
+        }
+        private void WarningMessage(string s)
+        {
+            MessageBox.Show(s);
+        }
+
+        private void RegenerateWebview(WebView2 webView)
+        {
+            if (webView == null) return;
+            string name = webView.Name;
+            Control parent = webView.Parent;
+            parent.Controls.Remove(webView);
+            try { webView.Dispose(); }
+            catch { }
+
+            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
+
+            ((System.ComponentModel.ISupportInitialize)(webView)).BeginInit();
+            webView.AllowExternalDrop = true;
+            webView.CreationProperties = null;
+            webView.DefaultBackgroundColor = System.Drawing.Color.White;
+            webView.Dock = System.Windows.Forms.DockStyle.Fill;
+            webView.Location = new System.Drawing.Point(0, 30);
+            webView.Name = name;
+            webView.Size = new System.Drawing.Size(622, 481);
+            webView.TabIndex = 1;
+            webView.ZoomFactor = 1D;
+            webView.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
+
+            ((System.ComponentModel.ISupportInitialize)(webView)).EndInit();
+            parent.Controls.Add(webView);
+            webView.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+
+        }
+        private void CoreWebView2_ProcessFailed(object sender, CoreWebView2ProcessFailedEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(tempFile))
+                { }
+                else
+                {
+                    string target = (sender as CoreWebView2).DocumentTitle;
+                    string prefix = Path.GetFileNameWithoutExtension(target);
+                    target = Path.Combine(outputFolder, prefix + ".html");
+                    int suffix = 0;
+                    while (File.Exists(target))
+                        target = Path.Combine(outputFolder, prefix + (suffix++).ToString() + ".html");
+                    File.Copy(tempFile, target);
+                    RegenerateWebview(sender as WebView2);
+                    Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
+                }
+            }
+            catch { }
+        }
+        #endregion
 
         #region Model selection
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -172,7 +250,7 @@ namespace SiliFish.UI
             }
             WriteParams(Model.GetParameters());
             LoadModelTemplate();
-            
+
         }
         #endregion
 
@@ -227,7 +305,7 @@ namespace SiliFish.UI
             var _ = tabParams.Handle;//requires for the insert command to work
             foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
             {
-                Dictionary<string, object> SubDict = ParamDict.Where(x=>x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
+                Dictionary<string, object> SubDict = ParamDict.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
                 if (group == "General")
                 {
                     WriteGeneralParams(SubDict);
@@ -241,7 +319,7 @@ namespace SiliFish.UI
                     Tag = "Param"
                 };
                 //insert after the general tab, keep Animation at the end
-                if (group=="Animation")
+                if (group == "Animation")
                     tabParams.TabPages.Add(tabPage);
                 else
                     tabParams.TabPages.Insert(tabIndex++, tabPage);
@@ -526,10 +604,12 @@ namespace SiliFish.UI
                     }
                 }
             }
-            catch {
+            catch
+            {
                 throw (new Exception());
             }
-            finally {
+            finally
+            {
                 tabParams.Visible = true;
             }
         }
@@ -590,7 +670,7 @@ namespace SiliFish.UI
             if (tabOutputs.SelectedTab == tabTextOutput)
                 eModelSummary.Text = Model.SummarizeModel();
             TimeSpan ts = DateTime.Now - runStart;
-            
+
             lRunTime.Text = $"Last run: {runStart:t}\r\n" +
                 $"Duration: {Util.TimeSpanToString(ts)}\r\n" +
                 $"Model: {Model.ModelName}";
@@ -611,8 +691,8 @@ namespace SiliFish.UI
             //btnRun.Enabled = false;
             timerRun.Enabled = true;
 
-            tRunEnd = (int) eTimeEnd.Value;
-            tRunSkip = (int) eSkip.Value;
+            tRunEnd = (int)eTimeEnd.Value;
+            tRunSkip = (int)eSkip.Value;
 
             if (rbCustom.Checked)
             {
@@ -629,7 +709,7 @@ namespace SiliFish.UI
             }
             Model.runParam.tSkip_ms = tRunSkip;
             Model.runParam.tMax = tRunEnd;
-            Model.runParam.dt = (double) edt.Value;
+            Model.runParam.dt = (double)edt.Value;
             if (Model == null) return;
             btnRun.Text = "Stop Run";
             Task.Run(RunModel);
@@ -652,199 +732,84 @@ namespace SiliFish.UI
 
         #endregion
 
-        #region Plotting
-        #region webViewPlot
-        private async void InitAsync()
+        #region Outputs
+        private void PopulateCellTypes()
         {
-            await webViewPlot.EnsureCoreWebView2Async();
-            await webView2DModel.EnsureCoreWebView2Async();
-            await webView3DModel.EnsureCoreWebView2Async();
-            await webViewAnimation.EnsureCoreWebView2Async();
-        }
-
-        private void Wait()
-        {
-            while (webViewPlot.Tag == null || webView2DModel.Tag == null || webView3DModel.Tag == null || webViewAnimation.Tag == null)
-                Application.DoEvents();
-        }
-        private void webViewPlot_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
-        {
-            webViewPlot.Tag= true;
-        }
-        private void webView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
-        {
-            (sender as Control).Tag = true;
-        }
-        private void WarningMessage(string s)
-        {
-            MessageBox.Show(s);
-        }
-
-        private void RegenerateWebview(WebView2 webView)
-        {
-            if (webView == null) return;
-            string name = webView.Name;
-            Control parent = webView.Parent;
-                parent.Controls.Remove(webView);
-                try { webView.Dispose(); }
-                catch { }
-            
-            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
-
-            ((System.ComponentModel.ISupportInitialize)(webView)).BeginInit();
-            webView.AllowExternalDrop = true;
-            webView.CreationProperties = null;
-            webView.DefaultBackgroundColor = System.Drawing.Color.White;
-            webView.Dock = System.Windows.Forms.DockStyle.Fill;
-            webView.Location = new System.Drawing.Point(0, 30);
-            webView.Name = name;
-            webView.Size = new System.Drawing.Size(622, 481);
-            webView.TabIndex = 1;
-            webView.ZoomFactor = 1D;
-            webView.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
-
-            ((System.ComponentModel.ISupportInitialize)(webView)).EndInit();
-            parent.Controls.Add(webView);
-            webView.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-
-        }
-        private void CoreWebView2_ProcessFailed(object sender, CoreWebView2ProcessFailedEventArgs e)
-        {
-            try
+            ddCellsPools.Items.Clear();
+            ddCellsPools.Text = "";
+            if (Model == null) return;
+            if (plotExtend == PlotExtend.FullModel)
             {
-                if (string.IsNullOrEmpty(tempFile))
-                { }
-                else
+                ddCellsPools.Enabled = false;
+                return;
+            }
+            ddCellsPools.Enabled = true;
+            List<string> itemList = new();
+            foreach (CellPool pool in Model.CellPools)
+            {
+                if (plotExtend == PlotExtend.CellsInAPool || plotExtend == PlotExtend.SinglePool)
+                    itemList.Add(pool.ID);
+                else if (plotExtend == PlotExtend.OppositePools)
+                    itemList.Add(pool.CellGroup);
+                else if (plotExtend == PlotExtend.SingleCell)
                 {
-                    string target = (sender as CoreWebView2).DocumentTitle;
-                    string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(outputFolder, prefix + ".html");
-                    int suffix = 0;
-                    while (File.Exists(target))
-                        target = Path.Combine(outputFolder, prefix + (suffix++).ToString() + ".html");
-                    File.Copy(tempFile, target);
-                    RegenerateWebview(sender as WebView2);
-                    Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
+                    foreach (Cell cell in pool.GetCells())
+                        itemList.Add(cell.ID);
                 }
             }
-            catch { }
+            itemList.Sort();
+            ddCellsPools.Items.AddRange(itemList.Distinct().ToArray());
+            if (ddCellsPools.Items?.Count > 0)
+                ddCellsPools.SelectedIndex = 0;
         }
-        #endregion
-
-        private async void linkSaveHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            string pool = ddCellsPools.Text;
+            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
+            ePlotSomiteSelection.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
+        }
+
+        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
+            if (plotType == PlotType.Episodes)
             {
-                if (tabOutputs.SelectedTab == tabTextOutput)
-                {
-                    if (saveFileText.ShowDialog() == DialogResult.OK)
-                    {
-                        File.WriteAllText(saveFileText.FileName, eModelSummary.Text);
-                    }
-                }
-                else if (saveFileHTML.ShowDialog() == DialogResult.OK)
-                {
-                    if (tabOutputs.SelectedTab == tab2DModel)
-                    {
-                        string htmlHead = JsonSerializer.Deserialize<string>(await webView2DModel.ExecuteScriptAsync("document.head.outerHTML"));
-                        string htmlBody = JsonSerializer.Deserialize<string>(await webView2DModel.ExecuteScriptAsync("document.body.outerHTML"));
-                        string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
-                        File.WriteAllText(saveFileHTML.FileName, html);
-                    }
-                    else if (tabOutputs.SelectedTab == tab3DModel)
-                    {
-                        string htmlHead = JsonSerializer.Deserialize<string>(await webView3DModel.ExecuteScriptAsync("document.head.outerHTML"));
-                        string htmlBody = JsonSerializer.Deserialize<string>(await webView3DModel.ExecuteScriptAsync("document.body.outerHTML"));
-                        string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
-                        File.WriteAllText(saveFileHTML.FileName, html);
-                    }
-                    else if (tabOutputs.SelectedTab == tabPlot)
-                        File.WriteAllText(saveFileHTML.FileName, htmlPlot.ToString());
-                    else if (tabOutputs.SelectedTab == tabAnimation)
-                    {
-                        File.WriteAllText(saveFileHTML.FileName, htmlAnimation);
-                    }
-                }
+                ddGroupingWindows.SelectedIndex = -1;
+                ddCellsPools.SelectedIndex = -1;
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
             }
-            catch (Exception exc)
+            else
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                ddGroupingWindows.Enabled = ddCellsPools.Enabled = true;
             }
+            toolTip.SetToolTip(ddPlot, plotType.GetDescription());
         }
-
-        int lastAnimationStartIndex;
-        double[] lastAnimationTimeArray;
-        Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
-
-        private void Animate()
+        private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            switch (ddGroupingWindows.Text)
             {
-                htmlAnimation = AnimationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
-                Invoke(CompleteAnimation);
+                case "Full":
+                    plotExtend = PlotExtend.FullModel;
+                    break;
+                case "Individual Cell":
+                    plotExtend = PlotExtend.SingleCell;
+                    break;
+                case "Cells in a Pool":
+                    plotExtend = PlotExtend.CellsInAPool;
+                    break;
+                case "Individual Pool":
+                    plotExtend = PlotExtend.SinglePool;
+                    break;
+                case "Pools on Opposite Sides":
+                    plotExtend = PlotExtend.OppositePools;
+                    break;
             }
-            catch { Invoke(CancelAnimation); }
-        }
-
-        private void CompleteAnimation()
-        {
-            webViewAnimation.NavigateTo(htmlAnimation, tempFolder, ref tempFile);
-            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
-            lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
-            btnAnimate.Enabled = true;
-        }
-        private void CancelAnimation()
-        {
-            webViewAnimation.NavigateToString("about:blank");
-            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = false;
-            lAnimationTime.Text = $"Last animation aborted.";
-            btnAnimate.Enabled = true;
-        }
-        private void btnAnimate_Click(object sender, EventArgs e)
-        {
-            if (Model == null || !Model.ModelRun) return;
-
-            btnAnimate.Enabled = false;
-
-            tAnimStart = (int)eAnimationStart.Value;
-            tAnimEnd = (int)eAnimationEnd.Value;
-            if (tAnimStart > tRunEnd || tAnimStart < 0)
-                tAnimStart = 0;
-            if (tAnimEnd > tRunEnd)
-                tAnimEnd = tRunEnd;
-
-            lastAnimationStartIndex = (int)(tAnimStart / Model.runParam.dt);
-            int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
-            lastAnimationTimeArray = Model.TimeArray;
-            //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
-            lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
-
-            Model.SetAnimationParameters(ReadParams("Animation"));
-            Invoke(Animate);
-        }
-
-
-        private void linkSaveAnimationHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(htmlAnimation))
-                return;
-            if (saveFileHTML.ShowDialog() != DialogResult.OK)
-                return;
-            File.WriteAllText(saveFileHTML.FileName, htmlAnimation.ToString());
-        }
-
-        private void linkSaveAnimationCSV_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(htmlAnimation))
-                return;
-            if (saveFileCSV.ShowDialog() != DialogResult.OK)
-                return;
-
-            Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
+            PopulateCellTypes();
         }
 
 
 
+        #region 2D Model
         private void Generate2DModel()
         {
             if (Model == null) return;
@@ -867,7 +832,7 @@ namespace SiliFish.UI
                 modelRefreshMsgShown = true;
             }
             TwoDModelGenerator modelGenerator = new();
-            string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width/2, webView2DModel.Height);
+            string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
             webView2DModel.NavigateTo(html, tempFolder, ref tempFile);
 
         }
@@ -875,6 +840,27 @@ namespace SiliFish.UI
         {
             Generate2DModel();
         }
+
+        private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileHTML.ShowDialog() == DialogResult.OK)
+                {
+                    string htmlHead = JsonSerializer.Deserialize<string>(await webView2DModel.ExecuteScriptAsync("document.head.outerHTML"));
+                    string htmlBody = JsonSerializer.Deserialize<string>(await webView2DModel.ExecuteScriptAsync("document.body.outerHTML"));
+                    string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
+                    File.WriteAllText(saveFileHTML.FileName, html);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
+        }
+        #endregion
+
+        #region 3D Model
 
         private void Generate3DModel()
         {
@@ -916,90 +902,103 @@ namespace SiliFish.UI
         {
             Generate3DModel();
         }
-
-
-        private void PopulateCellTypes()
+        private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ddCellsPools.Items.Clear();
-            ddCellsPools.Text = "";
-            if (Model == null) return;
-            if (plotExtend == PlotExtend.FullModel)
+            try
             {
-                ddCellsPools.Enabled = false;
-                return;
-            }
-            ddCellsPools.Enabled = true;
-            List<string> itemList = new();
-            foreach (CellPool pool in Model.CellPools)
-            {
-                if (plotExtend == PlotExtend.CellsInAPool || plotExtend == PlotExtend.SinglePool)
-                    itemList.Add(pool.ID);
-                else if (plotExtend == PlotExtend.OppositePools)
-                    itemList.Add(pool.CellGroup);
-                else if (plotExtend == PlotExtend.SingleCell)
+                if (saveFileHTML.ShowDialog() == DialogResult.OK)
                 {
-                    foreach (Cell cell in pool.GetCells())
-                        itemList.Add(cell.ID);
+                    string htmlHead = JsonSerializer.Deserialize<string>(await webView3DModel.ExecuteScriptAsync("document.head.outerHTML"));
+                    string htmlBody = JsonSerializer.Deserialize<string>(await webView3DModel.ExecuteScriptAsync("document.body.outerHTML"));
+                    string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
+                    File.WriteAllText(saveFileHTML.FileName, html);
                 }
             }
-            itemList.Sort();
-            ddCellsPools.Items.AddRange(itemList.Distinct().ToArray());
-            if (ddCellsPools.Items?.Count > 0)
-                ddCellsPools.SelectedIndex = 0;
-        }
-        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string pool = ddCellsPools.Text;
-            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
-            ePlotSomiteSelection.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
         }
 
-        private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
+        #endregion
+
+        #region Animation
+        int lastAnimationStartIndex;
+        double[] lastAnimationTimeArray;
+        Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
+
+        private void Animate()
         {
-            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
-            if (plotType==PlotType.Episodes)
+            try
             {
-                ddGroupingWindows.SelectedIndex = -1;
-                ddCellsPools.SelectedIndex = -1;
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
+                htmlAnimation = AnimationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
+                Invoke(CompleteAnimation);
             }
-            else
-            {
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = true;
-            }
-            toolTip.SetToolTip(ddPlot, plotType.GetDescription());
+            catch { Invoke(CancelAnimation); }
         }
-        private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
+        private void CompleteAnimation()
         {
-            switch (ddGroupingWindows.Text)
-            {
-                case "Full":
-                    plotExtend = PlotExtend.FullModel;
-                    break;
-                case "Individual Cell":
-                    plotExtend = PlotExtend.SingleCell;
-                    break;
-                case "Cells in a Pool":
-                    plotExtend = PlotExtend.CellsInAPool;
-                    break;
-                case "Individual Pool":
-                    plotExtend = PlotExtend.SinglePool;
-                    break;
-                case "Pools on Opposite Sides":
-                    plotExtend = PlotExtend.OppositePools;
-                    break;
-            }
-            PopulateCellTypes();
+            webViewAnimation.NavigateTo(htmlAnimation, tempFolder, ref tempFile);
+            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
+            lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
+            btnAnimate.Enabled = true;
         }
-        
+        private void CancelAnimation()
+        {
+            webViewAnimation.NavigateToString("about:blank");
+            linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = false;
+            lAnimationTime.Text = $"Last animation aborted.";
+            btnAnimate.Enabled = true;
+        }
+        private void btnAnimate_Click(object sender, EventArgs e)
+        {
+            if (Model == null || !Model.ModelRun) return;
+
+            btnAnimate.Enabled = false;
+
+            tAnimStart = (int)eAnimationStart.Value;
+            tAnimEnd = (int)eAnimationEnd.Value;
+            if (tAnimStart > tRunEnd || tAnimStart < 0)
+                tAnimStart = 0;
+            if (tAnimEnd > tRunEnd)
+                tAnimEnd = tRunEnd;
+
+            lastAnimationStartIndex = (int)(tAnimStart / Model.runParam.dt);
+            int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
+            lastAnimationTimeArray = Model.TimeArray;
+            //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
+            lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
+
+            Model.SetAnimationParameters(ReadParams("Animation"));
+            Invoke(Animate);
+        }
+        private void linkSaveAnimationHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(htmlAnimation))
+                return;
+            if (saveFileHTML.ShowDialog() != DialogResult.OK)
+                return;
+            File.WriteAllText(saveFileHTML.FileName, htmlAnimation.ToString());
+        }
+        private void linkSaveAnimationCSV_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(htmlAnimation))
+                return;
+            if (saveFileCSV.ShowDialog() != DialogResult.OK)
+                return;
+
+            Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
+        }
+
+        #endregion
+
         #region HTML Plots
-
         private void PlotHTML()
         {
             if (Model == null) return;
             htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection) ;
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection);
             htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
             Invoke(CompletePlotHTML);
         }
@@ -1031,13 +1030,27 @@ namespace SiliFish.UI
         }
         private void CompletePlotHTML()
         {
-            webViewPlot.NavigateTo(htmlPlot, tempFolder, ref tempFile); 
+            webViewPlot.NavigateTo(htmlPlot, tempFolder, ref tempFile);
             UseWaitCursor = false;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
+            linkSaveHTMLPlots.Enabled = true;
             toolTip.SetToolTip(btnPlotHTML, $"Last HTML plot: {DateTime.Now:t}");
         }
-
+        private void linkSaveHTMLPlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileHTML.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(saveFileHTML.FileName, htmlPlot.ToString());
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
+        }
         #endregion
 
         #region Windows Plot
@@ -1053,13 +1066,13 @@ namespace SiliFish.UI
                 pb.Tag = 0;
             }
             if (e.Delta > 0)
-                pb.Tag = (int)pb.Tag+1;
+                pb.Tag = (int)pb.Tag + 1;
             else
                 pb.Tag = (int)pb.Tag - 1;
             double mult = 1 + 0.1 * (int)pb.Tag;
             if (mult < 0.1) return;
             Size sz = new((int)(pb.InitialImage.Width * mult), (int)(pb.InitialImage.Height * mult));
-            pb.Image = new Bitmap(pb.InitialImage, sz);            
+            pb.Image = new Bitmap(pb.InitialImage, sz);
         }
 
         private void PlotWindows()
@@ -1105,7 +1118,7 @@ namespace SiliFish.UI
                     pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
                     splitPlotWindows.Panel1Collapsed = false;
                 }
-                else 
+                else
                 {
                     pictureBoxLeft.Image = null;
                     splitPlotWindows.Panel1Collapsed = true;
@@ -1130,6 +1143,7 @@ namespace SiliFish.UI
                 UseWaitCursor = false;
                 btnPlotWindows.Enabled = true;
                 btnPlotHTML.Enabled = true;
+                linkSavePlots.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -1141,10 +1155,50 @@ namespace SiliFish.UI
             PlotWindows();
         }
 
+        private void linkSavePlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileImage.ShowDialog() == DialogResult.OK)
+                {
+                    string ext = Path.GetExtension(saveFileImage.FileName);
+                    ImageFormat imgFormat = ImageFormat.Png;
+                    string leftFile = saveFileImage.FileName;
+                    string rightFile = saveFileImage.FileName;
 
+                    if (pictureBoxLeft.Image != null && pictureBoxRight.Image != null)
+                    {
+                        string s = Path.GetFileNameWithoutExtension(leftFile);
+                        string path = Path.GetDirectoryName(leftFile);
+                        leftFile = $"{path}\\{s}_Left{ext}";
+                        rightFile = $"{path}\\{s}_Right{ext}";
+                    }
+                    pictureBoxLeft.Image?.Save(leftFile, imgFormat);
+                    pictureBoxRight.Image?.Save(rightFile, imgFormat);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
+        }
 
         #endregion
 
+        private void linkSaveOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileText.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(saveFileText.FileName, eModelSummary.Text);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
+        }
         #endregion
 
         #region Custom Model
@@ -1179,7 +1233,7 @@ namespace SiliFish.UI
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
                 CellPoolControl cpl = (CellPoolControl)sender;
-                cpl.JSONString= Util.ReadFromFile(openFileJson.FileName);
+                cpl.JSONString = Util.ReadFromFile(openFileJson.FileName);
             }
         }
 
@@ -1196,7 +1250,7 @@ namespace SiliFish.UI
         private void listCellPool_CopyItem(object sender, EventArgs e)
         {
             if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
-            pool = OpenCellPoolDialog(pool); 
+            pool = OpenCellPoolDialog(pool);
             if (pool != null)
             {
                 ModelTemplate.CellPoolTemplates.Add(pool);
@@ -1297,7 +1351,7 @@ namespace SiliFish.UI
             if (listConnections.SelectedItem == null)
                 return;
             InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
-            jnc = OpenConnectionDialog(jnc); 
+            jnc = OpenConnectionDialog(jnc);
             if (jnc != null)
             {
                 ModelTemplate.InterPoolTemplates.Add(jnc);
@@ -1447,11 +1501,11 @@ namespace SiliFish.UI
             if (tabOutputs.SelectedTab == tabTextOutput)
             {
                 eModelSummary.Text = Model.SummarizeModel();
-                linkSaveHTML.Text = "Save Text";
+                linkSaveHTMLPlots.Text = "Save Text";
             }
             else
             {
-                linkSaveHTML.Text = "Save HTML";
+                linkSaveHTMLPlots.Text = "Save HTML";
             }
         }
 
@@ -1602,6 +1656,7 @@ namespace SiliFish.UI
             about.SetTimer(2000);
             about.ShowDialog();
         }
+
 
 
         bool skipSizeChanged = false;

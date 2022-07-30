@@ -16,7 +16,7 @@ namespace SiliFish.PredefinedModels
 
         #region Weight parameters
         double IC_IC_gap_weight = 0.0001;
-        double IC_MN_gap_weight = 0.03;
+        double IC_MN_gap_weight = 0.05;
         double IC_V0d_gap_weight = 0.05;
         double IC_V0v_gap_weight = 0.00005;
         double IC_V2a_gap_weight = 0.15;
@@ -24,20 +24,20 @@ namespace SiliFish.PredefinedModels
         double MN_MN_gap_weight = 0.07;
         double MN_V0d_gap_weight=0.0001 ;
         double MN_V0v_gap_weight= 0.0001;
-        
-        double V0d_V0d_gap_weight = 0.04;
-        
-        double V0v_V0v_gap_weight= 0.05;
+        double MN_Muscle_syn_weight = 0.02;
+
+        double V0d_MN_syn_weight = 8.0;
+        double V0d_IC_syn_weight = 8.0;
+        double V0d_V2a_syn_weight = 8.0;
+        double V0d_V0d_gap_weight = 0.05;
+
+        double V0v_IC_syn_weight = 0.24;
+        double V0v_V0v_gap_weight = 0.044;
         
         double V2a_MN_gap_weight = 0.005;
         double V2a_V2a_gap_weight = 0.005;
+        double V2a_V0v_syn_weight = 0.0375;
 
-        double MN_Muscle_syn_weight = 0.02;
-        double V0d_MN_syn_weight = 2.0;
-        double V0d_IC_syn_weight = 2.0;
-        double V0d_V2a_syn_weight = 2.0 ;
-        double V0v_IC_syn_weight= 0.175;
-        double V2a_V0v_syn_weight= 0.04;
         
         #endregion
 
@@ -76,7 +76,7 @@ namespace SiliFish.PredefinedModels
             E_glu = 0;
             E_gly = -58;
             cv = 1;
-            khi = 3.0;
+            zeta = 3.0;
             w0 = 2.5;
             convCoef = 0.1;
             CellPool.rangeNoiseMultiplier = GetRangeNoiseMultiplier;

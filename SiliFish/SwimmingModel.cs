@@ -39,7 +39,7 @@ namespace SiliFish
         protected double E_gaba = -70; //the reversal potential of GABA
         protected double E_ach = 120; //reversal potential for ACh receptors
 
-        public double khi = 3.0; //#damping constant , high khi =0.5/ low = 0.1
+        public double zeta = 3.0; //#damping constant , high zeta =0.5/ low = 0.1
         public double w0 = 2.5; //20Hz = 125.6
         public double alpha = 0;
         public double beta = 0;
@@ -164,7 +164,7 @@ namespace SiliFish
                 { "Dynamic.E_gly", E_gly },
                 { "Dynamic.E_gaba", E_gaba },
 
-                { "Animation.Damping Coef", khi },
+                { "Animation.Damping Coef", zeta },
                 { "Animation.w0", w0 },
                 { "Animation.Conversion Coef", convCoef },
                 { "Animation.Alpha", alpha },
@@ -183,7 +183,7 @@ namespace SiliFish
                 { "Dynamic.E_gly", "Reversal potential of glycine" },
                 { "Dynamic.E_gaba", "Reversal potential of GABA" },
 
-                { "Animation.Damping Coef", khi },
+                { "Animation.Damping Coef", zeta },
                 { "Animation.w0", "Natural oscillation frequency" },
                 { "Animation.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
                 { "Animation.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
@@ -210,7 +210,7 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
 
-            paramDict.AddObject("Animation.Damping Coef", khi, skipIfExists: true);
+            paramDict.AddObject("Animation.Damping Coef", zeta, skipIfExists: true);
             paramDict.AddObject("Animation.w0", w0, skipIfExists: true);
             paramDict.AddObject("Animation.Conversion Coef", convCoef, skipIfExists: true);
             paramDict.AddObject("Animation.Alpha", alpha, skipIfExists: true);
@@ -222,7 +222,7 @@ namespace SiliFish
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            khi = paramExternal.Read("Animation.Damping Coef", khi);
+            zeta = paramExternal.Read("Animation.Damping Coef", zeta);
             w0 = paramExternal.Read("Animation.w0", w0);
             convCoef = paramExternal.Read("Animation.Conversion Coef", convCoef);
             alpha = paramExternal.Read("Animation.Alpha", alpha);
@@ -530,7 +530,7 @@ namespace SiliFish
                 {
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
                     //khi is the damping coefficient: "Animation.Damping Coef"
-                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * khi * w0 + coef * voltDiff;
+                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * zeta * w0 + coef * voltDiff;
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
                 }
@@ -576,7 +576,7 @@ namespace SiliFish
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
-                    double acc = -Math.Pow(w0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * khi * w0 + coef * voltDiff;
+                    double acc = -Math.Pow(w0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * zeta * w0 + coef * voltDiff;
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;
                     angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;
                 }          
