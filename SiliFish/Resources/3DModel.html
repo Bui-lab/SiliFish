@@ -10,7 +10,9 @@
     <style>
         __STYLE_SHEET__
     </style>
-    __ONLINE_3D_SCRIPT__
+    <script src="https://unpkg.com/3d-force-graph@1"></script>
+    <script src="https://unpkg.com/d3-dsv"></script>
+    <script src="https://unpkg.com/three"></script>
 </head>
 
 <body>
@@ -23,9 +25,6 @@
         <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
         <div id="3d-graph-chem"></div>
     </div>
-    <script>
-        __OFFLINE_3D_SCRIPT__
-    </script>
     <script>
         const gapGraph = ForceGraph3D()
             (document.getElementById("3d-graph-gap"));

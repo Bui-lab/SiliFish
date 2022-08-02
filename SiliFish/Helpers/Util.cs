@@ -148,11 +148,19 @@ namespace SiliFish.Helpers
 
         public static void SetYRange(ref double yMin, ref double yMax)
         {
-            double padding = (yMax - yMin) / 10;
-            yMin -= padding;
-            if (yMin > 0)
-                yMin = 0;
-            yMax += padding;
+            if (yMax > 0 && yMin < 0)
+            {
+                yMax *= 1.1;
+                yMin *= 1.1;
+            }
+            else
+            {
+                double padding = (yMax - yMin) / 10;
+                yMin -= padding;
+                if (yMin > 0)
+                    yMin = 0;
+                yMax += padding;
+            }
         }
     }
 }

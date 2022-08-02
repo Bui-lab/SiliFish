@@ -203,7 +203,7 @@ namespace SiliFish
             {
                 { "Leaky_Integrator.R", R },
                 { "Leaky_Integrator.C", C },
-                { "Leaky_Integrator.v", v }
+                { "Leaky_Integrator.V", v }
             };
             return paramDict;
         }
@@ -214,7 +214,7 @@ namespace SiliFish
                 return;
             R = paramExternal.Read("Leaky_Integrator.R", R);
             C = paramExternal.Read("Leaky_Integrator.C", C);
-            v = paramExternal.Read("Leaky_Integrator.v", v);
+            v = paramExternal.Read("Leaky_Integrator.V", v);
         }
 
         public virtual string GetInstanceParams()

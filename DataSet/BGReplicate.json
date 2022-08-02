@@ -12,13 +12,13 @@
         "Izhikevich_9P.b": "0.002",
         "Izhikevich_9P.c": "-55",
         "Izhikevich_9P.d": "4",
-        "Izhikevich_9P.vmax": "10",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-54",
+        "Izhikevich_9P.V_max": "10",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-54",
         "Izhikevich_9P.k": "0.3",
         "Izhikevich_9P.Cm": "10",
-        "Izhikevich_9P.v": "-70",
-        "Izhikevich_9P.u": "-14"
+        "Izhikevich_9P.V": "-70",
+        "Izhikevich_9P.U": "-14"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 1,
@@ -72,7 +72,7 @@
       "Parameters": {
         "Leaky_Integrator.R": "1",
         "Leaky_Integrator.C": "3",
-        "Leaky_Integrator.v": "0"
+        "Leaky_Integrator.V": "0"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 6,
@@ -128,13 +128,13 @@
         "Izhikevich_9P.b": "0.01",
         "Izhikevich_9P.c": "-55",
         "Izhikevich_9P.d": "100",
-        "Izhikevich_9P.vmax": "10",
-        "Izhikevich_9P.vr": "-65",
-        "Izhikevich_9P.vt": "-58",
+        "Izhikevich_9P.V_max": "10",
+        "Izhikevich_9P.V_r": "-65",
+        "Izhikevich_9P.V_t": "-58",
         "Izhikevich_9P.k": "0.5",
         "Izhikevich_9P.Cm": "20",
-        "Izhikevich_9P.v": "-70",
-        "Izhikevich_9P.u": "-14"
+        "Izhikevich_9P.V": "-70",
+        "Izhikevich_9P.U": "-14"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 5,
@@ -190,13 +190,13 @@
         "Izhikevich_9P.b": "0.002",
         "Izhikevich_9P.c": "-55",
         "Izhikevich_9P.d": "2",
-        "Izhikevich_9P.vmax": "8",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-54",
+        "Izhikevich_9P.V_max": "8",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-54",
         "Izhikevich_9P.k": "0.3",
         "Izhikevich_9P.Cm": "10",
-        "Izhikevich_9P.v": "-70",
-        "Izhikevich_9P.u": "-14"
+        "Izhikevich_9P.V": "-70",
+        "Izhikevich_9P.U": "-14"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 2,
@@ -252,13 +252,13 @@
         "Izhikevich_9P.b": "0.002",
         "Izhikevich_9P.c": "-55",
         "Izhikevich_9P.d": "4",
-        "Izhikevich_9P.vmax": "10",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-54",
+        "Izhikevich_9P.V_max": "10",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-54",
         "Izhikevich_9P.k": "0.3",
         "Izhikevich_9P.Cm": "10",
-        "Izhikevich_9P.v": "-64",
-        "Izhikevich_9P.u": "-16"
+        "Izhikevich_9P.V": "-64",
+        "Izhikevich_9P.U": "-16"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 4,
@@ -314,13 +314,13 @@
         "Izhikevich_9P.b": "0.002",
         "Izhikevich_9P.c": "-55",
         "Izhikevich_9P.d": "4",
-        "Izhikevich_9P.vmax": "10",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-54",
+        "Izhikevich_9P.V_max": "10",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-54",
         "Izhikevich_9P.k": "0.3",
         "Izhikevich_9P.Cm": "10",
-        "Izhikevich_9P.v": "-64",
-        "Izhikevich_9P.u": "-16"
+        "Izhikevich_9P.V": "-64",
+        "Izhikevich_9P.U": "-16"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 3,
@@ -1058,11 +1058,11 @@
     "Dynamic.sigma_range": "0",
     "Dynamic.sigma_gap": "0",
     "Dynamic.sigma_chem": "0",
-    "Animation.DampingCoef": "2",
     "Animation.w0": "2.5",
-    "Animation.ConversionCoef": "0.15",
     "Animation.Alpha": "0",
-    "Animation.Beta": "0"
+    "Animation.Beta": "0",
+    "Animation.Damping Coef": 3,
+    "Animation.Conversion Coef": 0.1
   },
   "AppliedStimuli": [
     {
