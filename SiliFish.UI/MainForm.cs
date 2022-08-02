@@ -606,6 +606,7 @@ namespace SiliFish.UI
             }
             catch
             {
+                MessageBox.Show("There is a problem in reading the JSON file. Please make sure it is formatted properly.");
                 throw (new Exception());
             }
             finally

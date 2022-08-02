@@ -105,20 +105,6 @@ namespace SiliFish.Services
             string title = model.ModelName + " 3D Model";
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
-            if (Util.CheckOnlineStatus())
-            {
-                html.Replace("__OFFLINE_3D_SCRIPT__", "");
-                html.Replace("__ONLINE_3D_SCRIPT__", "<script src=\"https://unpkg.com/3d-force-graph@1\"></script>" +
-                    "<script src=\"https://unpkg.com/d3-dsv\"></script>" +
-                    "<script src=\"https://unpkg.com/three\"></script>");
-            }
-            else
-            {
-                html.Replace("__OFFLINE_3D_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.3d-force-graph.min.js") +
-                    ReadEmbeddedResource("SiliFish.Resources.d3-dsv.min.js") +
-                    ReadEmbeddedResource("SiliFish.Resources.three.js"));
-                html.Replace("__ONLINE_3D_SCRIPT__", "");
-            }
 
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             if (!singlePanel)

@@ -116,7 +116,7 @@ namespace SiliFish.ModelUnits
         {
             get
             {
-                double cur1 = GapJunctions!=null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.Min()) : 0;
+                double cur1 = GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.Min()) : 0;
                 double cur2 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.Min()) : 0;
                 double cur3 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.Min()) : 0;
                 return Math.Min(cur1, Math.Min(cur2, cur3));

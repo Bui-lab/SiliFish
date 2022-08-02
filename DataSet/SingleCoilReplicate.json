@@ -12,12 +12,12 @@
         "Izhikevich_9P.b": "0.5",
         "Izhikevich_9P.c": "-30",
         "Izhikevich_9P.d": "5",
-        "Izhikevich_9P.vmax": "0",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-45",
+        "Izhikevich_9P.V_max": "0",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-45",
         "Izhikevich_9P.k": "0.05",
         "Izhikevich_9P.Cm": "50",
-        "Izhikevich_9P.v": "-65",
+        "Izhikevich_9P.V": "-65",
         "Izhikevich_9P.u": "0"
       },
       "PositionLeftRight": 3,
@@ -73,7 +73,7 @@
       "Parameters": {
         "Leaky_Integrator.R": "25",
         "Leaky_Integrator.C": "10",
-        "Leaky_Integrator.v": "0"
+        "Leaky_Integrator.V": "0"
       },
       "PositionLeftRight": 3,
       "ColumnIndex2D": 3,
@@ -122,12 +122,12 @@
         "Izhikevich_9P.b": "0.1",
         "Izhikevich_9P.c": "-50",
         "Izhikevich_9P.d": "0.2",
-        "Izhikevich_9P.vmax": "10",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-45",
+        "Izhikevich_9P.V_max": "10",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-45",
         "Izhikevich_9P.k": "0.05",
         "Izhikevich_9P.Cm": "20",
-        "Izhikevich_9P.v": "-65",
+        "Izhikevich_9P.V": "-65",
         "Izhikevich_9P.u": "0"
       },
       "PositionLeftRight": 3,
@@ -184,12 +184,12 @@
         "Izhikevich_9P.b": "0.01",
         "Izhikevich_9P.c": "-50",
         "Izhikevich_9P.d": "0.2",
-        "Izhikevich_9P.vmax": "10",
-        "Izhikevich_9P.vr": "-60",
-        "Izhikevich_9P.vt": "-45",
+        "Izhikevich_9P.V_max": "10",
+        "Izhikevich_9P.V_r": "-60",
+        "Izhikevich_9P.V_t": "-45",
         "Izhikevich_9P.k": "0.05",
         "Izhikevich_9P.Cm": "20",
-        "Izhikevich_9P.v": "-65",
+        "Izhikevich_9P.V": "-65",
         "Izhikevich_9P.u": "0"
       },
       "PositionLeftRight": 3,
@@ -247,7 +247,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.001
+        "Weight": 0.001,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -272,7 +275,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.04
+        "Weight": 0.04,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -297,7 +303,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.05
+        "Weight": 0.05,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -327,7 +336,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.1
+        "Weight": 0.1,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -357,7 +369,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": 10,
         "Delay_ms": 0,
-        "Weight": 0.015
+        "Weight": 0.015,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 3,
@@ -387,7 +402,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.01
+        "Weight": 0.01,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -412,7 +430,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 2
+        "Weight": 2,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
@@ -442,7 +463,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 2
+        "Weight": 2,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
@@ -472,7 +496,10 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.04
+        "Weight": 0.04,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
@@ -497,32 +524,32 @@
     "General.SpinalBodyPosition": 0,
     "General.BodyDorsalVentralDistance": 5,
     "General.BodyMedialLateralDistance": 7,
-    "Dynamic.dt": "0.1",
-    "Dynamic.sigma_range": "0",
-    "Dynamic.sigma_gap": "0",
-    "Dynamic.sigma_chem": "0",
-    "Dynamic.cv": "4",
     "Dynamic.E_ach": "120",
     "Dynamic.E_glu": "0",
     "Dynamic.E_gly": "-45",
     "Dynamic.E_gaba": "-70",
-    "Dynamic.DampingCoef": "3",
-    "Dynamic.w0": "2.5",
-    "Dynamic.ConversionCoef": "0.1",
-    "Animation.DampingCoef": 3,
-    "Animation.w0": 2.5,
-    "Animation.ConversionCoef": 0.1
+    "Dynamic.ConductionVelocity": "1",
+    "Animation.w0": "2.5",
+    "Animation.ConversionCoef": "0.1",
+    "Animation.Damping Coef": "3",
+    "Animation.Conversion Coef": "0.1",
+    "Animation.Alpha": "0",
+    "Animation.Beta": "0"
   },
   "AppliedStimuli": [
     {
-      "Target": "IC",
+      "TargetPool": "IC",
+      "TargetSomite": "All Somites",
+      "TargetCell": "All Cells",
       "Stimulus_ms": {
         "TimeSpan_ms": {
           "PeriodsJSON": "50:-1"
         },
         "Mode": 1,
         "Value1": 50,
-        "Value2": 0
+        "Value2": 0,
+        "MinValue": 0,
+        "MaxValue": 50
       },
       "LeftRight": "Left",
       "Active": true,
