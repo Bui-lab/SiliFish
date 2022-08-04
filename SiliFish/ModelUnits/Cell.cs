@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using SiliFish.DataTypes;
+using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
 
 namespace SiliFish.ModelUnits
 {
@@ -157,12 +159,15 @@ namespace SiliFish.ModelUnits
         /// <summary>
         /// neuron constructor called from predefined models
         /// </summary>
-        public Neuron(string group, int seq, MembraneDynamics dyn, double init_v, double init_u,
+        public Neuron(string group, int seq, MembraneDynamics dyn, double sigma_dyn, double init_v, double init_u,
             Coordinate coor, double cv, Stimulus stim = null, TimeLine timeline = null)
         {
             CellGroup = group;
             Sequence = seq;
             PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
+            if (sigma_dyn > 0)
+                dyn = dyn.RandomizedDynamics(sigma_dyn);
+
             Core = new Izhikevich_9P(dyn, init_v, init_u);
             coordinate = coor;
             Stimulus = stim;
@@ -339,11 +344,17 @@ namespace SiliFish.ModelUnits
         {
             Parameters = cellTemp.Parameters;
         }
-        public MuscleCell(string group, int seq, double R, double C, double init_v, Coordinate coor, TimeLine timeline = null)
+        public MuscleCell(string group, int seq, double R, double C, double init_v, double sigma_dyn, Coordinate coor, TimeLine timeline = null)
         {
             CellGroup = group;
             Sequence = seq;
             PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
+            if (sigma_dyn > 0)
+            {
+                R *= SwimmingModel.rand.Gauss(1, sigma_dyn);
+                C *= SwimmingModel.rand.Gauss(1, sigma_dyn);
+                init_v *= SwimmingModel.rand.Gauss(1, sigma_dyn);
+            }
             Core = new Leaky_Integrator(R, C, init_v);
             EndPlates = new List<ChemicalSynapse>();
             coordinate = coor;

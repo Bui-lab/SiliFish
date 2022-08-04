@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -82,6 +83,31 @@ namespace SiliFish
             modelName = this.GetType().Name;
         }
 
+        //Constructor to create a dummy model with external data - internal
+        public SwimmingModel(Dictionary<string, double[]> data)
+        {
+            CellPool L_Muscle = new(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Left, 3, Color.Purple);
+            CellPool R_Muscle = new(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Right, 3, Color.Purple);
+
+            int nMuscle = (int)((data.Keys.Count(k => k.Contains("Muscle"))) / 2);
+            for (int i = 0; i < nMuscle; i++)
+            {
+                MuscleCell lm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn:0, new Coordinate(x: 5.0 + 1.6 * i, -1));
+                lm.V = data["Left_Muscle" + i.ToString()];
+                L_Muscle.AddCell(lm);
+
+                MuscleCell rm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn:0, new Coordinate(x: 5.0 + 1.6 * i, 1));
+                rm.V = data["Right_Muscle" + i.ToString()];
+                R_Muscle.AddCell(rm);
+            }
+            MuscleCellPools.Add(L_Muscle);
+            MuscleCellPools.Add(R_Muscle);
+            Time = data["Time"];
+            runParam = new RunParam() { tMax = (int)Time.Last(), dt = 0.1, tSkip_ms = 0 };
+            initialized = true;
+            model_run = true;
+
+        }
         public List<CellPool> CellPools
         {
             get
@@ -349,13 +375,11 @@ namespace SiliFish
                 }
 
             }
-            Util.SaveToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
-            Util.SaveToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
-            Util.SaveToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
+            Util.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
+            Util.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
+            Util.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
             Util.SaveToJSON(filenamejson, GetParameters());
         }
-
-
 
         protected virtual void InitNeurons()
         {
@@ -444,8 +468,6 @@ namespace SiliFish
             }
         }
 
-        
-
         private void CalculateMembranePotentialsFromCurrents(int t)
         {
             foreach (CellPool neurons in NeuronPools)
@@ -460,7 +482,7 @@ namespace SiliFish
         }
 
 
-        public virtual void MainLoop(double seed, RunParam rp)
+        public virtual void RunModel(double seed, RunParam rp)
         {
             try
             {
@@ -495,6 +517,16 @@ namespace SiliFish
             }
         }
 
+        public void RunModel(double seed, RunParam rp, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                RunModel(seed, rp);
+                (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes(-0.5, 0.5, 1000);
+                string filename = $"{modelName}_Run{i}{DateTime.Now.ToShortTimeString()}";
+                Util.SaveEpisodesToCSV(filename, Time, tail_tip_coord, episodes);
+            }
+        }
         private (double[,] vel, double[,] angle) GenerateSpineVelAndAngleNoSomite(int startIndex, int endIndex)
         {
             if (!model_run) return (null, null);

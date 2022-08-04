@@ -70,8 +70,8 @@ namespace SiliFish.Helpers
             return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
         }
 
-        public static void SaveToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
-        {
+        public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
+        { 
             if (filename == null || Time == null || Values == null)
                 return;
 
@@ -85,6 +85,88 @@ namespace SiliFish.Helpers
                     string.Join(',', Values.Select(item => item.Value[t]));
                 sw.WriteLine(row);
             }
+        }
+
+        public static void SaveEpisodesToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes)
+        {
+            if (filename == null || tail_tip_coord == null)
+                return;
+
+            string tailFilename = Path.ChangeExtension(filename, "_TailTip.csv");
+            string episodeFilename = Path.ChangeExtension(filename, "_Episodes.csv");
+            string beatsFilename = Path.ChangeExtension(filename, "_Beats.csv");
+            using FileStream fsTail = File.Open(tailFilename, FileMode.Create, FileAccess.Write);
+            using StreamWriter swTail = new(fsTail);
+            swTail.WriteLine("Time,X,Y,Z");
+            for (int t = 0; t < Time.Length; t++)
+            {
+                if (t >= tail_tip_coord.Length)
+                    break;
+                string row = $"{Time[t]:0.##},{tail_tip_coord[t].X:0.000},{tail_tip_coord[t].Y:0.000},{tail_tip_coord[t].Z:0.000}";
+                swTail.WriteLine(row);
+            }
+            if (episodes == null) return;
+            using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Create, FileAccess.Write);
+            using FileStream fsBeats = File.Open(beatsFilename, FileMode.Create, FileAccess.Write);
+            using StreamWriter swEpisode = new(fsEpisode);
+            using StreamWriter swBeats = new(fsBeats);
+            swEpisode.WriteLine("Episode,Start,Finish,Duration,Time to Next,Tail Beat Freq.,# of Tail Beats");
+            swBeats.WriteLine("Episode,Beat,Start,Finish,Instan.Freq.");
+            int epiCounter = 0;
+            foreach (SwimmingEpisode episode in episodes)
+            {
+                double? timeToNext = null;
+                if (epiCounter < episodes.Count - 1)
+                {
+                    SwimmingEpisode nextEpisode = episodes[epiCounter + 1];
+                    timeToNext = nextEpisode.Start - episode.End;
+                }
+                string epiRow = $"{epiCounter}," +
+                    $"{episode.Start:0.####}," +
+                    $"{episode.End:0.####}," +
+                    $"{episode.EpisodeDuration:0.####}," +
+                    $"{timeToNext?.ToString() ?? ""}," +
+                    $"{episode.BeatFrequency}," +
+                    $"{episode.Beats.Count}";
+                swEpisode.WriteLine(epiRow);
+                int beatCounter = 0;
+                foreach ((double beatStart, double beatEnd) in episode.Beats)
+                {
+                    string beatRow = $"{epiCounter}," +
+                        $"{beatCounter++}," +
+                        $"{beatStart:0.####}," +
+                        $"{beatEnd:0.####}," +
+                        $"{1000 / (beatEnd - beatStart):0.####}";
+                    swBeats.WriteLine(beatRow);
+                }
+                epiCounter++;
+            }
+        }
+        public static Dictionary<string, double[]> ReadFromCSV(string filename)
+        {
+            if (filename == null)
+                return null;
+            Dictionary<string, double[]> data = new();
+            Dictionary<string, List<double>> tempdata = new();
+            using StreamReader sr = new(filename);
+            string line = sr.ReadLine();
+            if (line == null) return null;
+            string[] columns = line.Split(",");
+            foreach (string column in columns)
+                tempdata.Add(column, new List<double>());
+            int counter = 0;
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] values = line.Split(",");
+                for (int i = 0; i < values.Length; i++)
+                    tempdata[columns[i]].Add(double.Parse(values[i]));
+                counter++;
+                //if (counter > 10000) break;
+            }
+            foreach (string column in columns)
+                data.Add(column, tempdata[column].ToArray());
+
+            return data;
         }
         public static void SaveAnimation(string filename, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, int startIndex)
         {
@@ -132,17 +214,20 @@ namespace SiliFish.Helpers
 
         public static (int, int) ParseRange(string s, int defMin = -1, int defMax = int.MaxValue)
         {
-            int i1 = defMin;
+            int i1;
             int i2 = defMax;
             int sep = s.IndexOfAny(new[] { '-', '_', '.' });
             if (sep < 0)
             {
                 if (int.TryParse(s, out i1))
                     i2 = i1;
+                else i1 = defMin;
                 return (i1, i2);
             }
-            _ = int.TryParse(s[..sep], out i1);
-            _ = int.TryParse(s[(sep + 1)..], out i2);
+            if (!int.TryParse(s[..sep], out i1))
+                i1 = defMin;
+            if (!int.TryParse(s[(sep + 1)..], out i2))
+                i2 = defMax;
             return (i1, i2);
         }
 
@@ -161,6 +246,24 @@ namespace SiliFish.Helpers
                     yMin = 0;
                 yMax += padding;
             }
+        }
+
+        static public double Distance(Coordinate point1, Coordinate point2, DistanceMode mode)
+        {
+            double x = Math.Abs(point1.X - point2.X);
+            double y = Math.Abs(point1.Y - point2.Y);
+            double z = Math.Abs(point1.Z - point2.Z);
+            return mode switch
+            {
+                DistanceMode.Manhattan => x + y + z,
+                DistanceMode.Euclidean => Math.Sqrt(x * x + y * y + z * z),
+                //FUTURE_IMPROVEMENT
+                //case DistanceMode.Chebyshev:
+                //    return Math.Max(x, Math.Max(y, z));
+                //case DistanceMode.Haversine:
+                //Euclidean
+                _ => Math.Sqrt(x * x + y * y + z * z),
+            };
         }
     }
 }

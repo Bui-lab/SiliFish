@@ -1,5 +1,7 @@
 ﻿using System;
 using SiliFish.DataTypes;
+using SiliFish.DynamicUnits;
+using SiliFish.Helpers;
 
 namespace SiliFish.ModelUnits
 {
@@ -84,7 +86,7 @@ namespace SiliFish.ModelUnits
                 return false;
             else if (diff_x < 0 && Math.Abs(diff_x) > DescendingReach) //Not enough descending reach 
                 return false;
-            double dist = Global.Distance(cell1, cell2, DistanceMode) *  noise;
+            double dist = Util.Distance(cell1.coordinate, cell2.coordinate, DistanceMode) *  noise;
             return dist >= MinReach && dist <= MaxReach;
         }
 
@@ -142,7 +144,7 @@ namespace SiliFish.ModelUnits
             Conductance = conductance;
             Cell1 = c1;
             Cell2 = c2;
-            double distance = Global.Distance(c1, c2, mode);
+            double distance = Util.Distance(c1.coordinate, c2.coordinate, mode);
             Duration = Math.Max((int)(distance / (c1.ConductionVelocity * RunParam.static_dt)), 1);
         }
         public void InitVectors(int nmax)
@@ -216,7 +218,7 @@ namespace SiliFish.ModelUnits
             Core = new TwoExp_syn(param, conductance);
             PreNeuron = preN;
             PostCell = postN;
-            double distance = Global.Distance(PreNeuron, PostCell, distmode);
+            double distance = Util.Distance(PreNeuron.coordinate, PostCell.coordinate, distmode);
             Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt )), 1);
         }
         public void InitVectors(int nmax)
