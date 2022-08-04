@@ -6,7 +6,7 @@ namespace SiliFish.Extensions
     public static class RandomExtensions
     {
         //https://stackoverflow.com/questions/218060/random-gaussian-variables
-        public static double Gauss(this Random rand, double mean, double stdDev, double minValue, double maxValue)
+        public static double Gauss(this Random rand, double mean, double stdDev, double? minValue = null, double? maxValue = null)
         {
             double u1 = 1.0 - rand.NextDouble(); //uniform(0,1] random doubles
             double u2 = 1.0 - rand.NextDouble();
@@ -14,10 +14,14 @@ namespace SiliFish.Extensions
                          Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
             double randNormal =
                          mean + stdDev * randStdNormal; //random normal(mean,stdDev^2)
+            minValue ??= 0;
+            maxValue ??= mean * (1 + 10 * stdDev);
+            if (minValue > maxValue)
+                (minValue, maxValue) = (maxValue, minValue);
             if (randNormal < minValue)
-                randNormal = minValue;
+                randNormal = (double)minValue;
             else if (randNormal > maxValue)
-                randNormal = maxValue;
+                randNormal = (double)maxValue;
             return randNormal;
         }
         /// <summary>

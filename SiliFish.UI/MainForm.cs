@@ -135,21 +135,21 @@ namespace SiliFish.UI
             try { webView.Dispose(); }
             catch { }
 
-            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView = new WebView2();
 
-            ((System.ComponentModel.ISupportInitialize)(webView)).BeginInit();
+            (webView as System.ComponentModel.ISupportInitialize).BeginInit();
             webView.AllowExternalDrop = true;
             webView.CreationProperties = null;
-            webView.DefaultBackgroundColor = System.Drawing.Color.White;
-            webView.Dock = System.Windows.Forms.DockStyle.Fill;
-            webView.Location = new System.Drawing.Point(0, 30);
+            webView.DefaultBackgroundColor = Color.White;
+            webView.Dock = DockStyle.Fill;
+            webView.Location = new Point(0, 30);
             webView.Name = name;
-            webView.Size = new System.Drawing.Size(622, 481);
+            webView.Size = new Size(622, 481);
             webView.TabIndex = 1;
             webView.ZoomFactor = 1D;
-            webView.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
+            webView.CoreWebView2InitializationCompleted += new EventHandler<CoreWebView2InitializationCompletedEventArgs>(webView_CoreWebView2InitializationCompleted);
 
-            ((System.ComponentModel.ISupportInitialize)(webView)).EndInit();
+            (webView as System.ComponentModel.ISupportInitialize).EndInit();
             parent.Controls.Add(webView);
             webView.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
@@ -621,7 +621,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Model.MainLoop(0, new RunParam { tMax = tRunEnd, tSkip_ms = tRunSkip });
+                Model.RunModel(0, new RunParam { tMax = tRunEnd, tSkip_ms = tRunSkip });
             }
             catch (Exception ex)
             {
@@ -1658,7 +1658,18 @@ namespace SiliFish.UI
             about.ShowDialog();
         }
 
+        private void tabPlotSub_TabIndexChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void tabPlotSub_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabPlotSub.SelectedTab == tPlotHTML)
+            {
+                Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as C:\\Users\\[User]\\SiliFish\\[PlotName].html"));
+            }
+        }
 
         bool skipSizeChanged = false;
         private void pBodyDiagrams_SizeChanged(object sender, EventArgs e)

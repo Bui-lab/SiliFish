@@ -5,21 +5,8 @@ using System.Text;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 
-namespace SiliFish
+namespace SiliFish.DynamicUnits
 {
-    public class MembraneDynamics
-    {
-        public double a, b, c, d;
-
-        // vmax is the peak membrane potential of single action potentials
-        public double vmax;
-        // vr, vt are the resting and threshold membrane potential 
-        public double vr, vt;
-        // k is a coefficient of the quadratic polynomial 
-        public double k;
-        public double Cm; //the membrane capacitance
-
-    }
     class Izhikevich_9P
     {
         //a, b, c, d, are the parameters for the membrane potential dynamics
@@ -44,17 +31,17 @@ namespace SiliFish
 
         public Izhikevich_9P(MembraneDynamics dyn, double init_v, double init_u)
         {
-            this.a = dyn?.a ?? 0;
-            this.b = dyn?.b ?? 0;
-            this.c = dyn?.c ?? 0;
-            this.d = dyn?.d ?? 0;
-            this.vmax = dyn?.vmax ?? 0;
-            this.vr = dyn?.vr ?? 0;
-            this.vt = dyn?.vt ?? 0;
-            this.k = dyn?.k ?? 0;
-            this.Cm = dyn?.Cm ?? 0;
-            this.v = init_v;
-            this.u = init_u;
+            a = dyn?.a ?? 0;
+            b = dyn?.b ?? 0;
+            c = dyn?.c ?? 0;
+            d = dyn?.d ?? 0;
+            vmax = dyn?.Vmax ?? 0;
+            vr = dyn?.Vr ?? 0;
+            vt = dyn?.Vt ?? 0;
+            k = dyn?.k ?? 0;
+            Cm = dyn?.Cm ?? 0;
+            v = init_v;
+            u = init_u;
             this.init_v = init_v;
             this.init_u = init_u;
         }
@@ -109,7 +96,7 @@ namespace SiliFish
                 // ODE eqs
                 // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
                 double Cdv = k * (v - vr) * (v - vt) - u + I;
-                vNew = v + (Cdv) * RunParam.static_dt / Cm;
+                vNew = v + Cdv * RunParam.static_dt / Cm;
                 double du = a * (b * (v - vr) - u);
                 uNew = u + RunParam.static_dt * du;
                 v = vNew;
@@ -136,8 +123,8 @@ namespace SiliFish
             for (int t = 0; t < tmax; t++)
             {
                 GetNextVal(I[t], ref spike);
-                Vlist[t] = this.v;
-                ulist[t] = this.u;
+                Vlist[t] = v;
+                ulist[t] = u;
             }
             return (Vlist, ulist);
         }
@@ -161,13 +148,13 @@ namespace SiliFish
         public double CalculateRheoBase(double maxI, double sensitivity, int infinity, double dt, int warmup = 100)
         {
             infinity = (int)(infinity / dt);
-            warmup = (int) (warmup/ dt);
-            int tmax = infinity + warmup +10;
+            warmup = (int)(warmup / dt);
+            int tmax = infinity + warmup + 10;
             double[] I = new double[tmax];
             double curI = maxI;
             double minI = 0;
             double rheobase = -1;
-            
+
             while (curI >= minI + sensitivity)
             {
                 foreach (int i in Enumerable.Range(warmup, infinity))
@@ -184,131 +171,6 @@ namespace SiliFish
                 }
             }
             return rheobase;
-        }
-    }
-    class Leaky_Integrator
-    {
-        public double R, C;
-        double v; //keeps the current v value 
-        public Leaky_Integrator(double R, double C, double init_v)
-        {
-            //Set Neuron constants.
-            this.R = R;
-            this.C = C;
-            this.v = init_v;
-        }
-                public virtual Dictionary<string, object> GetParameters()
-        {
-            Dictionary<string, object> paramDict = new()
-            {
-                { "Leaky_Integrator.R", R },
-                { "Leaky_Integrator.C", C },
-                { "Leaky_Integrator.V", v }
-            };
-            return paramDict;
-        }
-
-        public virtual void SetParameters(Dictionary<string, object> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            R = paramExternal.Read("Leaky_Integrator.R", R);
-            C = paramExternal.Read("Leaky_Integrator.C", C);
-            v = paramExternal.Read("Leaky_Integrator.V", v);
-        }
-
-        public virtual string GetInstanceParams()
-        {
-            return string.Join("\r\n", GetParameters().Select(kv => kv.Key + ": " + kv.Value.ToString()));
-        }
-
-        public double GetNextVal(double Stim)
-        {
-            double I = Stim;
-            // ODE eqs
-            double dv = (-1 / (R * C)) * v + I / C;
-            double vNew = v + (dv) * RunParam.static_dt ;
-            v = vNew;
-
-            return v;
-        }
-        public double[] SolveODE(double[] I)
-        {
-            int tmax = I.Length;
-            double[] Vlist = new double[tmax];
-
-            for (int t = 0; t < tmax; t++)
-            {
-                GetNextVal(I[t]);
-                Vlist[t] = this.v;
-            }
-            return Vlist;
-        }
-    }
-
-    class Global
-    {
-        //Function to calculate the Euclidean distance between two neurons 
-        static public double Distance(Cell cell1, Cell cell2, DistanceMode mode)
-        {
-            double x = Math.Abs(cell1.X - cell2.X);
-            double y = Math.Abs(cell1.Y - cell2.Y);
-            double z = Math.Abs(cell1.Z - cell2.Z);
-            return mode switch
-            {
-                DistanceMode.Manhattan => x + y + z,
-                DistanceMode.Euclidean => Math.Sqrt(x * x + y * y + z * z),
-                //FUTURE_IMPROVEMENT
-                //case DistanceMode.Chebyshev:
-                //    return Math.Max(x, Math.Max(y, z));
-                //case DistanceMode.Haversine:
-                //Euclidean
-                _ => Math.Sqrt(x * x + y * y + z * z),
-            };
-        }
-
-    }
-
-    public class TwoExp_syn
-    {
-        readonly double taur;
-        readonly double taud;
-        readonly double vth;
-        readonly double E_rev;
-        public readonly double Conductance;
-        public TwoExp_syn(SynapseParameters param, double conductance)
-        {
-            //Set synapse constants.
-            this.taud = param.TauD;
-            this.taur = param.TauR;
-            this.vth = param.VTh;
-            this.E_rev = param.E_rev;
-            this.Conductance = conductance; //unitary conductance
-        }
-
-        public (double, double) GetNextVal(double v1, double v2, double IsynA, double IsynB)
-        {
-            double IsynANew, IsynBNew;
-            if (v1 > vth)//pre-synaptic neuron spikes
-            {
-                // mEPSC
-                IsynA += (E_rev - v2) * Conductance;
-                IsynB += (E_rev - v2) * Conductance;
-                double dIsynA = (-1 / taud) * IsynA;
-                double dIsynB = (-1 / taur) * IsynB;
-                IsynANew = IsynA + RunParam.static_dt * (dIsynA);
-                IsynBNew = IsynB + RunParam.static_dt  * (dIsynB);
-            }
-            else
-            {
-                // no synaptic event
-                double dIsynA = (-1 / taud) * IsynA;
-                double dIsynB = (-1 / taur) * IsynB;
-                IsynANew = IsynA + RunParam.static_dt  * (dIsynA);
-                IsynBNew = IsynB + RunParam.static_dt  * (dIsynB);
-            }
-
-            return (IsynANew, IsynBNew);
         }
     }
 

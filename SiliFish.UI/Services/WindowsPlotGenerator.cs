@@ -1,6 +1,7 @@
 ﻿using SiliFish;
 using SiliFish.DataTypes;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.UI;
 
@@ -245,6 +246,9 @@ namespace Services
                     Color.Red));
             }
 
+            string summary = "";
+            Util.SaveToFile("Episodes"+DateTime.Now.ToShortTimeString(), summary);
+
             return (leftImages, null);
         }
 
@@ -263,6 +267,8 @@ namespace Services
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             int iStart = (int)((tStart + tSkip) / dt);
+            if (tEnd < 0)
+                tEnd = (int)model.TimeArray.Last();
             int iEnd = (int)((tEnd + tSkip) / dt);
             double[] TimeArray = model.TimeArray;
             if (iEnd < iStart || iEnd >= TimeArray.Length)

@@ -18,7 +18,6 @@
     <Compile Remove="Analysis_Tools.cs" />
     <Compile Remove="Extensions\ImageExtensions.cs" />
     <Compile Remove="Helpers\ImageHelper.cs" />
-    <Compile Remove="Izhikevich - Copy.cs" />
     <Compile Remove="IzhikevichOld.cs" />
     <Compile Remove="OldDoubleCoilBase.cs" />
     <Compile Remove="OldSingleCoilBase.cs" />

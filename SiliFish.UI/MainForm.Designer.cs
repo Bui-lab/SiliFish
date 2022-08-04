@@ -801,6 +801,7 @@ namespace SiliFish.UI
             this.tabPlotSub.SelectedIndex = 0;
             this.tabPlotSub.Size = new System.Drawing.Size(780, 398);
             this.tabPlotSub.TabIndex = 6;
+            this.tabPlotSub.SelectedIndexChanged += new System.EventHandler(this.tabPlotSub_SelectedIndexChanged);
             // 
             // tPlotWindows
             // 
