@@ -161,6 +161,7 @@ namespace SiliFish.UI.Controls
                 eDescription.Text = interPool.Description;
                 cbWithinSomite.Checked = interPool.CellReach.WithinSomite;
                 cbOtherSomite.Checked = interPool.CellReach.OtherSomite;
+                numProbability.Value = (decimal)interPool.Probability;
                 numMinReach.Value = (decimal)interPool.CellReach.MinReach;
                 numMaxReach.Value = (decimal)interPool.CellReach.MaxReach;
                 numAscReach.Value = (decimal)interPool.CellReach.AscendingReach;
@@ -208,6 +209,7 @@ namespace SiliFish.UI.Controls
             interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             interPoolTemplate.Name = eName.Text;
             interPoolTemplate.Description = eDescription.Text;
+            interPoolTemplate.Probability = (double)numProbability.Value;
 
             if (interPoolTemplate.ConnectionType != ConnectionType.Gap)
             {

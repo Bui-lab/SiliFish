@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json.Serialization;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits;
 
 namespace SiliFish.DynamicUnits
 {
@@ -16,14 +14,16 @@ namespace SiliFish.DynamicUnits
         private double d;
 
         // vmax is the peak membrane potential of single action potentials
-        double vmax;
+        double Vmax;
         // vr, vt are the resting and threshold membrane potential 
-        double vr, vt;
+        double Vr, Vt;
         // k is a coefficient of the quadratic polynomial 
         double k;
         double Cm; //the membrane capacitance
 
-        double v = -65;//Keeps the current value of V 
+        [JsonIgnore]
+        double V = -65;//Keeps the current value of V 
+        [JsonIgnore]
         double u = 0;//Keeps the current value of u
 
         double init_v;
@@ -35,12 +35,12 @@ namespace SiliFish.DynamicUnits
             b = dyn?.b ?? 0;
             c = dyn?.c ?? 0;
             d = dyn?.d ?? 0;
-            vmax = dyn?.Vmax ?? 0;
-            vr = dyn?.Vr ?? 0;
-            vt = dyn?.Vt ?? 0;
+            Vmax = dyn?.Vmax ?? 0;
+            Vr = dyn?.Vr ?? 0;
+            Vt = dyn?.Vt ?? 0;
             k = dyn?.k ?? 0;
             Cm = dyn?.Cm ?? 0;
-            v = init_v;
+            V = init_v;
             u = init_u;
             this.init_v = init_v;
             this.init_u = init_u;
@@ -54,12 +54,12 @@ namespace SiliFish.DynamicUnits
                 { "Izhikevich_9P.b", b },
                 { "Izhikevich_9P.c", c },
                 { "Izhikevich_9P.d", d },
-                { "Izhikevich_9P.V_max", vmax },
-                { "Izhikevich_9P.V_r", vr },
-                { "Izhikevich_9P.V_t", vt },
+                { "Izhikevich_9P.V_max", Vmax },
+                { "Izhikevich_9P.V_r", Vr },
+                { "Izhikevich_9P.V_t", Vt },
                 { "Izhikevich_9P.k", k },
                 { "Izhikevich_9P.Cm", Cm },
-                { "Izhikevich_9P.V", v },
+                { "Izhikevich_9P.V", V },
                 { "Izhikevich_9P.u", u }
             };
             return paramDict;
@@ -73,12 +73,12 @@ namespace SiliFish.DynamicUnits
             b = paramExternal.Read("Izhikevich_9P.b", b);
             c = paramExternal.Read("Izhikevich_9P.c", c);
             d = paramExternal.Read("Izhikevich_9P.d", d);
-            vmax = paramExternal.Read("Izhikevich_9P.V_max", vmax);
-            vr = paramExternal.Read("Izhikevich_9P.V_r", vr);
-            vt = paramExternal.Read("Izhikevich_9P.V_t", vt);
+            Vmax = paramExternal.Read("Izhikevich_9P.V_max", Vmax);
+            Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);
+            Vt = paramExternal.Read("Izhikevich_9P.V_t", Vt);
             k = paramExternal.Read("Izhikevich_9P.k", k);
             Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
-            init_v = v = paramExternal.Read("Izhikevich_9P.V", v);
+            init_v = V = paramExternal.Read("Izhikevich_9P.V", V);
             init_u = u = paramExternal.Read("Izhikevich_9P.u", u);
         }
 
@@ -91,15 +91,15 @@ namespace SiliFish.DynamicUnits
             double I = Stim;
             double vNew, uNew;
             spike = false;
-            if (v < vmax)
+            if (V < Vmax)
             {
                 // ODE eqs
                 // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
-                double Cdv = k * (v - vr) * (v - vt) - u + I;
-                vNew = v + Cdv * RunParam.static_dt / Cm;
-                double du = a * (b * (v - vr) - u);
+                double Cdv = k * (V - Vr) * (V - Vt) - u + I;
+                vNew = V + Cdv * RunParam.static_dt / Cm;
+                double du = a * (b * (V - Vr) - u);
                 uNew = u + RunParam.static_dt * du;
-                v = vNew;
+                V = vNew;
                 u = uNew;
             }
             else
@@ -108,10 +108,10 @@ namespace SiliFish.DynamicUnits
                 spike = true;
                 vNew = c;
                 uNew = u + d;
-                v = vNew;
+                V = vNew;
                 u = uNew;
             }
-            return v;
+            return V;
         }
 
         public (double[], double[]) SolveODE(double[] I)
@@ -123,7 +123,7 @@ namespace SiliFish.DynamicUnits
             for (int t = 0; t < tmax; t++)
             {
                 GetNextVal(I[t], ref spike);
-                Vlist[t] = v;
+                Vlist[t] = V;
                 ulist[t] = u;
             }
             return (Vlist, ulist);
@@ -133,7 +133,7 @@ namespace SiliFish.DynamicUnits
         {
             bool spike = false;
             int tmax = I.Length;
-            v = init_v;
+            V = init_v;
             u = init_u;
             for (int t = 0; t < tmax; t++)
             {

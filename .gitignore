@@ -11,6 +11,7 @@
 *.sln.docstates
 Notes/
 Output/
+Workspace/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

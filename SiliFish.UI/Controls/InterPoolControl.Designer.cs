@@ -92,7 +92,7 @@
             // lSourcePool
             // 
             this.lSourcePool.AutoSize = true;
-            this.lSourcePool.Location = new System.Drawing.Point(9, 14);
+            this.lSourcePool.Location = new System.Drawing.Point(9, 17);
             this.lSourcePool.Name = "lSourcePool";
             this.lSourcePool.Size = new System.Drawing.Size(70, 15);
             this.lSourcePool.TabIndex = 0;
@@ -101,7 +101,7 @@
             // lTargetPool
             // 
             this.lTargetPool.AutoSize = true;
-            this.lTargetPool.Location = new System.Drawing.Point(9, 41);
+            this.lTargetPool.Location = new System.Drawing.Point(9, 43);
             this.lTargetPool.Name = "lTargetPool";
             this.lTargetPool.Size = new System.Drawing.Size(66, 15);
             this.lTargetPool.TabIndex = 2;
@@ -110,7 +110,7 @@
             // lAxonReachMode
             // 
             this.lAxonReachMode.AutoSize = true;
-            this.lAxonReachMode.Location = new System.Drawing.Point(9, 68);
+            this.lAxonReachMode.Location = new System.Drawing.Point(9, 69);
             this.lAxonReachMode.Name = "lAxonReachMode";
             this.lAxonReachMode.Size = new System.Drawing.Size(70, 15);
             this.lAxonReachMode.TabIndex = 4;
@@ -155,7 +155,7 @@
             // lWeight
             // 
             this.lWeight.AutoSize = true;
-            this.lWeight.Location = new System.Drawing.Point(11, 170);
+            this.lWeight.Location = new System.Drawing.Point(9, 173);
             this.lWeight.Name = "lWeight";
             this.lWeight.Size = new System.Drawing.Size(45, 15);
             this.lWeight.TabIndex = 27;
@@ -196,7 +196,7 @@
             // 
             this.ddTargetPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddTargetPool.FormattingEnabled = true;
-            this.ddTargetPool.Location = new System.Drawing.Point(105, 38);
+            this.ddTargetPool.Location = new System.Drawing.Point(105, 37);
             this.ddTargetPool.Name = "ddTargetPool";
             this.ddTargetPool.Size = new System.Drawing.Size(121, 23);
             this.ddTargetPool.TabIndex = 3;
@@ -206,7 +206,7 @@
             // 
             this.ddAxonReachMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddAxonReachMode.FormattingEnabled = true;
-            this.ddAxonReachMode.Location = new System.Drawing.Point(105, 65);
+            this.ddAxonReachMode.Location = new System.Drawing.Point(105, 63);
             this.ddAxonReachMode.Name = "ddAxonReachMode";
             this.ddAxonReachMode.Size = new System.Drawing.Size(121, 23);
             this.ddAxonReachMode.TabIndex = 5;
@@ -220,7 +220,7 @@
             "Synapse",
             "Gap",
             "NMJ"});
-            this.ddConnectionType.Location = new System.Drawing.Point(105, 92);
+            this.ddConnectionType.Location = new System.Drawing.Point(105, 89);
             this.ddConnectionType.Name = "ddConnectionType";
             this.ddConnectionType.Size = new System.Drawing.Size(121, 23);
             this.ddConnectionType.TabIndex = 7;
@@ -234,7 +234,7 @@
             0,
             0,
             131072});
-            this.numConductance.Location = new System.Drawing.Point(105, 170);
+            this.numConductance.Location = new System.Drawing.Point(105, 169);
             this.numConductance.Name = "numConductance";
             this.numConductance.Size = new System.Drawing.Size(122, 23);
             this.numConductance.TabIndex = 28;
@@ -478,7 +478,7 @@
             // numProbability
             // 
             this.numProbability.DecimalPlaces = 2;
-            this.numProbability.Location = new System.Drawing.Point(105, 144);
+            this.numProbability.Location = new System.Drawing.Point(105, 142);
             this.numProbability.Maximum = new decimal(new int[] {
             1,
             0,
@@ -496,7 +496,7 @@
             // lProbability
             // 
             this.lProbability.AutoSize = true;
-            this.lProbability.Location = new System.Drawing.Point(11, 151);
+            this.lProbability.Location = new System.Drawing.Point(9, 147);
             this.lProbability.Name = "lProbability";
             this.lProbability.Size = new System.Drawing.Size(64, 15);
             this.lProbability.TabIndex = 25;
@@ -505,7 +505,7 @@
             // lName
             // 
             this.lName.AutoSize = true;
-            this.lName.Location = new System.Drawing.Point(11, 195);
+            this.lName.Location = new System.Drawing.Point(9, 199);
             this.lName.Name = "lName";
             this.lName.Size = new System.Drawing.Size(39, 15);
             this.lName.TabIndex = 10;
@@ -514,7 +514,7 @@
             // lDescription
             // 
             this.lDescription.AutoSize = true;
-            this.lDescription.Location = new System.Drawing.Point(9, 224);
+            this.lDescription.Location = new System.Drawing.Point(9, 225);
             this.lDescription.Name = "lDescription";
             this.lDescription.Size = new System.Drawing.Size(67, 15);
             this.lDescription.TabIndex = 12;
@@ -550,7 +550,7 @@
             // 
             this.ddDistanceMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddDistanceMode.FormattingEnabled = true;
-            this.ddDistanceMode.Location = new System.Drawing.Point(105, 119);
+            this.ddDistanceMode.Location = new System.Drawing.Point(105, 115);
             this.ddDistanceMode.Name = "ddDistanceMode";
             this.ddDistanceMode.Size = new System.Drawing.Size(121, 23);
             this.ddDistanceMode.TabIndex = 9;
@@ -558,7 +558,7 @@
             // lDistanceMode
             // 
             this.lDistanceMode.AutoSize = true;
-            this.lDistanceMode.Location = new System.Drawing.Point(9, 122);
+            this.lDistanceMode.Location = new System.Drawing.Point(9, 121);
             this.lDistanceMode.Name = "lDistanceMode";
             this.lDistanceMode.Size = new System.Drawing.Size(86, 15);
             this.lDistanceMode.TabIndex = 8;

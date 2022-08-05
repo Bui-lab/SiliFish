@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SiliFish.DataTypes;
 using SiliFish.Extensions;
+using SiliFish.ModelUnits;
 
 namespace SiliFish.PredefinedModels
 {
@@ -60,6 +62,8 @@ namespace SiliFish.PredefinedModels
             paramDict.Add("Variability.Sigma Range", sigma_range);
             paramDict.Add("Variability.Sigma Gap", sigma_gap);
             paramDict.Add("Variability.Sigma Chem", sigma_chem);
+            paramDict.Add("Variability.Sigma Dynamics", sigma_dyn);
+            paramDict.Add("Variability.Sigma Stimulus", sigma_stim);
 
             return paramDict;
         }
@@ -79,8 +83,8 @@ namespace SiliFish.PredefinedModels
             paramDescDict.Add("Variability.Sigma Range", "Standard deviation noise that will be added to the distance calculations.");
             paramDescDict.Add("Variability.Sigma Gap", "Standard deviation noise that will be added to the gap junction weights.");
             paramDescDict.Add("Variability.Sigma Chem", "Standard deviation noise that will be added to the synapse parameters.");
-            paramDescDict.Add("Variability.Sigma Stim", "Standard deviation noise that will be added to the stimulus.");
-            paramDescDict.Add("Variability.Sigma Dyn", "Standard deviation noise that will be added to intrinsic parameters of the cells.");
+            paramDescDict.Add("Variability.Sigma Stimulus", "Standard deviation noise that will be added to the stimulus.");
+            paramDescDict.Add("Variability.Sigma Dynamics", "Standard deviation noise that will be added to intrinsic parameters of the cells.");
 
             return paramDescDict;
         }
@@ -95,13 +99,14 @@ namespace SiliFish.PredefinedModels
             sigma_range = paramExternal.Read("Variability.Sigma Range", sigma_range);
             sigma_gap = paramExternal.Read("Variability.Sigma Gap", sigma_gap);
             sigma_chem = paramExternal.Read("Variability.Sigma Chem", sigma_chem);
-            sigma_stim = paramExternal.Read("Variability.Sigma Stim", sigma_stim);
-            sigma_dyn = paramExternal.Read("Variability.Sigma Dyn", sigma_dyn);
+            sigma_stim = paramExternal.Read("Variability.Sigma Stimulus", sigma_stim);
+            sigma_dyn = paramExternal.Read("Variability.Sigma Dynamics", sigma_dyn);
         }
 
         public void SetStimulusMode(StimulusMode stimMode)
         {
             stim_mode = stimMode;
         }
-}
+
+    }
 }

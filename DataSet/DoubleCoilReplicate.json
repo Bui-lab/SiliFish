@@ -910,9 +910,11 @@
     "Dynamic.DampingCoef": "3",
     "Dynamic.w0": "2.5",
     "Dynamic.ConversionCoef": "0.1",
-    "Animation.DampingCoef": "3",
-    "Animation.w0": "2.5",
-    "Animation.ConversionCoef": "0.1"
+    "Kinematics.w0": "2.5",
+    "Kinematics.Alpha": "0",
+    "Kinematics.Beta": "0",
+    "Kinematics.Damping Coef": 3,
+    "Kinematics.Conversion Coef": 0.1
   },
   "AppliedStimuli": [
     {

@@ -121,7 +121,7 @@ namespace SiliFish.UI
         {
             (sender as Control).Tag = true;
         }
-        private void WarningMessage(string s)
+        private static void WarningMessage(string s)
         {
             MessageBox.Show(s);
         }
@@ -621,7 +621,11 @@ namespace SiliFish.UI
         {
             try
             {
-                Model.RunModel(0, new RunParam { tMax = tRunEnd, tSkip_ms = tRunSkip });
+                RunParam rp = new() { tMax = tRunEnd, tSkip_ms = tRunSkip };
+                if (eRunNumber.Value > 1)
+                    Model.RunModel(0, rp, (int)eRunNumber.Value);
+                else
+                    Model.RunModel(0, rp);
             }
             catch (Exception ex)
             {
@@ -649,8 +653,6 @@ namespace SiliFish.UI
             btnAnimate.Enabled = false;
             linkSaveRun.Visible = false;
 
-            if (tabOutputs.SelectedTab == tabTextOutput)
-                eModelSummary.Text = Model.SummarizeModel();
             lRunTime.Text = $"Last run cancelled\r\n" +
                 $"Model: {Model.ModelName}";
         }
@@ -668,8 +670,6 @@ namespace SiliFish.UI
             btnAnimate.Enabled = true;
             linkSaveRun.Visible = true;
 
-            if (tabOutputs.SelectedTab == tabTextOutput)
-                eModelSummary.Text = Model.SummarizeModel();
             TimeSpan ts = DateTime.Now - runStart;
 
             lRunTime.Text = $"Last run: {runStart:t}\r\n" +
@@ -719,6 +719,12 @@ namespace SiliFish.UI
         private void timerRun_Tick(object sender, EventArgs e)
         {
             progressBarRun.Value = (int)((Model?.GetProgress() ?? 0) * progressBarRun.Maximum);
+            if (cbMultiple.Checked)
+            {
+                int? i = Model?.GetRunCounter();
+                if (i != null)
+                    lRunTime.Text = $"Run number: {i}";
+            }
         }
         private void linkSaveRun_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -1186,20 +1192,6 @@ namespace SiliFish.UI
 
         #endregion
 
-        private void linkSaveOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                if (saveFileText.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllText(saveFileText.FileName, eModelSummary.Text);
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
-            }
-        }
         #endregion
 
         #region Custom Model
@@ -1427,7 +1419,7 @@ namespace SiliFish.UI
         private StimulusTemplate OpenStimulusDialog(StimulusTemplate stim)
         {
             ControlContainer frmControl = new();
-            StimulusControl sc = new StimulusControl();
+            StimulusControl sc = new();
 
             sc.SetStimulus(ModelTemplate.CellPoolTemplates, stim);
             frmControl.AddControl(sc);
@@ -1496,20 +1488,6 @@ namespace SiliFish.UI
         {
             splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
         }
-
-        private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabOutputs.SelectedTab == tabTextOutput)
-            {
-                eModelSummary.Text = Model.SummarizeModel();
-                linkSaveHTMLPlots.Text = "Save Text";
-            }
-            else
-            {
-                linkSaveHTMLPlots.Text = "Save HTML";
-            }
-        }
-
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
@@ -1653,21 +1631,115 @@ namespace SiliFish.UI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            About about = new About();
+            About about = new();
             about.SetTimer(2000);
             about.ShowDialog();
         }
 
-        private void tabPlotSub_TabIndexChanged(object sender, EventArgs e)
+        private void cbMultiple_CheckedChanged(object sender, EventArgs e)
         {
-
+            eRunNumber.Visible = cbMultiple.Checked;
         }
 
-        private void tabPlotSub_SelectedIndexChanged(object sender, EventArgs e)
+        #region Body Size
+
+        private decimal? prevBodyDorsalVentral = null;
+        private void eBodyDorsalVentral_Enter(object sender, EventArgs e)
         {
-            if (tabPlotSub.SelectedTab == tPlotHTML)
+            prevBodyDorsalVentral = eBodyDorsalVentral.Value;
+        }
+
+        private void eBodyDorsalVentral_ValueChanged(object sender, EventArgs e)
+        {
+            if (eBodyDorsalVentral.Focused)
             {
-                Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as C:\\Users\\[User]\\SiliFish\\[PlotName].html"));
+                decimal bodyPos = eSpinalBodyPosition.Value;
+                decimal bodyDV = eBodyDorsalVentral.Value;
+                decimal spinalDV = eSpinalDorsalVentral.Value;
+                if (bodyDV <= bodyPos + spinalDV)
+                {
+                    WarningMessage("Body's dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position");
+                    eBodyDorsalVentral.Value = prevBodyDorsalVentral ?? bodyPos + spinalDV + eBodyDorsalVentral.Increment;
+                }
+            }
+        }
+
+        private decimal? prevBodyMedialLateral = null;
+        private void eBodyMedialLateral_Enter(object sender, EventArgs e)
+        {
+            prevBodyMedialLateral = eBodyMedialLateral.Value;
+        }
+        private void eBodyMedialLateral_ValueChanged(object sender, EventArgs e)
+        {
+            if (eBodyMedialLateral.Focused)
+            {
+                decimal bodyML = eBodyMedialLateral.Value;
+                decimal spinalML = eSpinalMedialLateral.Value;
+                if (bodyML <= spinalML)
+                {
+                    WarningMessage("Body's medial-lateral width has to be greater than spinal medial-lateral width");
+                    eBodyMedialLateral.Value = prevBodyMedialLateral ?? spinalML + eBodyMedialLateral.Increment;
+                }
+            }
+        }
+
+        private decimal? prevSpinalDorsalVentral = null;
+        private void eSpinalDorsalVentral_Enter(object sender, EventArgs e)
+        {
+            prevSpinalDorsalVentral = eSpinalDorsalVentral.Value;
+        }
+
+        private void eSpinalDorsalVentral_ValueChanged(object sender, EventArgs e)
+        {
+            if (eSpinalDorsalVentral.Focused)
+            {
+                decimal bodyPos = eSpinalBodyPosition.Value;
+                decimal bodyDV = eBodyDorsalVentral.Value;
+                decimal spinalDV = eSpinalDorsalVentral.Value;
+                if (bodyDV <= bodyPos + spinalDV)
+                {
+                    WarningMessage("Body's dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position");
+                    eSpinalDorsalVentral.Value = prevSpinalDorsalVentral ?? bodyDV - bodyPos - eSpinalDorsalVentral.Increment;
+                }
+            }
+        }
+        private decimal? prevSpinalMedialLateral = null;
+        private void eSpinalMedialLateral_Enter(object sender, EventArgs e)
+        {
+            prevSpinalMedialLateral = eSpinalMedialLateral.Value;
+        }
+
+        private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
+        {
+            if (eSpinalMedialLateral.Focused)
+            {
+                decimal bodyML = eBodyMedialLateral.Value;
+                decimal spinalML = eSpinalMedialLateral.Value;
+                if (bodyML <= spinalML)
+                {
+                    WarningMessage("Body's medial-lateral width has to be greater than spinal medial-lateral width");
+                    eSpinalMedialLateral.Value = prevSpinalMedialLateral ?? bodyML - eSpinalMedialLateral.Increment;
+                }
+            }
+        }
+        private decimal? prevSpinalBodyPos = null;
+        private void eSpinalBodyPosition_Enter(object sender, EventArgs e)
+        {
+            prevSpinalBodyPos = eSpinalBodyPosition.Value;
+        }
+
+        private void eSpinalBodyPosition_ValueChanged(object sender, EventArgs e)
+        {
+            if (eSpinalBodyPosition.Focused)
+            {
+                decimal bodyPos = eSpinalBodyPosition.Value;
+                decimal bodyDV = eBodyDorsalVentral.Value;
+                decimal spinalDV = eSpinalDorsalVentral.Value;
+                if (bodyDV <= bodyPos + spinalDV)
+                {
+                    WarningMessage("Body's dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position");
+                    eSpinalBodyPosition.Value = prevSpinalBodyPos ?? bodyDV - spinalDV - eSpinalBodyPosition.Increment;
+                }
             }
         }
 
@@ -1683,6 +1755,7 @@ namespace SiliFish.UI
             pBodyDiagrams.Height = picCrossSection.Height + picRostroCaudal.Height + 12;
             skipSizeChanged = false;
         }
+        #endregion
 
     }
 }

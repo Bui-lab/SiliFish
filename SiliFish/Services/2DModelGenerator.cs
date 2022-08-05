@@ -22,11 +22,11 @@ namespace SiliFish.Services
 
         private string CreateLinkDataPoint(InterPool interPool)
         {
-            string curvInfo = interPool.poolSource.ID == interPool.poolTarget.ID ? ",curv: 0.7" : "";
-            string link = $"{{\"source\":\"{interPool.poolSource.ID}\"," +
-                $"\"target\":\"{interPool.poolTarget.ID}\"," +
-                $"\"value\":{GetNewWeight(interPool.reach.Weight):0.######}," +
-                $"\"conductance\":{interPool.reach.Weight:0.######} " +
+            string curvInfo = interPool.SourcePool.ID == interPool.TargetPool.ID ? ",curv: 0.7" : "";
+            string link = $"{{\"source\":\"{interPool.SourcePool.ID}\"," +
+                $"\"target\":\"{interPool.TargetPool.ID}\"," +
+                $"\"value\":{GetNewWeight(interPool.Reach.Weight):0.######}," +
+                $"\"conductance\":{interPool.Reach.Weight:0.######} " +
                 $"{curvInfo} }}";
             ;
             return link;

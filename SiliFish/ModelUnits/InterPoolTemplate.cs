@@ -54,6 +54,8 @@ namespace SiliFish.ModelUnits
             set { _Name = value; }
         }
         public string Description { get; set; }
+
+        public double Probability { get; set; } = 1;
         public SynapseParameters SynapseParameters { get; set; }//valid if connectionType is Synapse or NMJ
         public bool JncActive //does not check the active flags of the cell pools
         {
@@ -82,6 +84,7 @@ namespace SiliFish.ModelUnits
             PoolSource = ipt.PoolSource;
             PoolTarget = ipt.PoolTarget;
             CellReach = new CellReach(ipt.CellReach);
+            Probability = ipt.Probability;
             AxonReachMode = ipt.AxonReachMode;
             ConnectionType = ipt.ConnectionType;
             SynapseParameters = new SynapseParameters(ipt.SynapseParameters);
@@ -114,6 +117,7 @@ namespace SiliFish.ModelUnits
                     $"{Description}\r\n" +
                     $"From {PoolSource} to {PoolTarget}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
+                    $"Probability: {Probability}\r\n" +
                     $"Mode: {AxonReachMode}\r\n" +
                     $"Type: {ConnectionType}\r\n" +
                     $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using SiliFish.Extensions;
 
 namespace SiliFish.DynamicUnits
@@ -7,13 +8,15 @@ namespace SiliFish.DynamicUnits
     class Leaky_Integrator
     {
         public double R, C;
-        double v; //keeps the current v value 
+
+        [JsonIgnore]
+        double V; //keeps the current v value 
         public Leaky_Integrator(double R, double C, double init_v)
         {
             //Set Neuron constants.
             this.R = R;
             this.C = C;
-            v = init_v;
+            V = init_v;
         }
         public virtual Dictionary<string, object> GetParameters()
         {
@@ -21,7 +24,7 @@ namespace SiliFish.DynamicUnits
             {
                 { "Leaky_Integrator.R", R },
                 { "Leaky_Integrator.C", C },
-                { "Leaky_Integrator.V", v }
+                { "Leaky_Integrator.V", V }
             };
             return paramDict;
         }
@@ -32,7 +35,7 @@ namespace SiliFish.DynamicUnits
                 return;
             R = paramExternal.Read("Leaky_Integrator.R", R);
             C = paramExternal.Read("Leaky_Integrator.C", C);
-            v = paramExternal.Read("Leaky_Integrator.V", v);
+            V = paramExternal.Read("Leaky_Integrator.V", V);
         }
 
         public virtual string GetInstanceParams()
@@ -44,11 +47,11 @@ namespace SiliFish.DynamicUnits
         {
             double I = Stim;
             // ODE eqs
-            double dv = -1 / (R * C) * v + I / C;
-            double vNew = v + dv * RunParam.static_dt;
-            v = vNew;
+            double dv = -1 / (R * C) * V + I / C;
+            double vNew = V + dv * RunParam.static_dt;
+            V = vNew;
 
-            return v;
+            return V;
         }
         public double[] SolveODE(double[] I)
         {
@@ -58,7 +61,7 @@ namespace SiliFish.DynamicUnits
             for (int t = 0; t < tmax; t++)
             {
                 GetNextVal(I[t]);
-                Vlist[t] = this.v;
+                Vlist[t] = this.V;
             }
             return Vlist;
         }

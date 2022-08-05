@@ -80,8 +80,6 @@ namespace SiliFish.ModelUnits
         public Cell()
         {
         }
-
-
         public virtual void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             throw (new NotImplementedException());

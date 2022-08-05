@@ -65,12 +65,8 @@ namespace SiliFish.PredefinedModels
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tl = new();
             tl.AddTimeRange(this.tStimStart_ms);
-            if (sigma_stim > 0)
-            {
-                stim_value1 *= SwimmingModel.rand.Gauss(1, sigma_stim);
-                stim_value2 *= SwimmingModel.rand.Gauss(1, sigma_stim);
-            }
-            Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
+            double multiplier = GetStimulusNoiseMultiplier();
+            Stimulus stim = new(stim_mode, tl, stim_value1 * multiplier, stim_value2 * multiplier);
 
             for (int i = 0; i < nIC; i++)
             {

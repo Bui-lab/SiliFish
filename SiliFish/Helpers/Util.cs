@@ -87,14 +87,12 @@ namespace SiliFish.Helpers
             }
         }
 
-        public static void SaveEpisodesToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes)
+        public static void SaveTailMovementToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord)
         {
             if (filename == null || tail_tip_coord == null)
                 return;
 
-            string tailFilename = Path.ChangeExtension(filename, "_TailTip.csv");
-            string episodeFilename = Path.ChangeExtension(filename, "_Episodes.csv");
-            string beatsFilename = Path.ChangeExtension(filename, "_Beats.csv");
+            string tailFilename = Path.ChangeExtension(filename, "TailTip.csv");
             using FileStream fsTail = File.Open(tailFilename, FileMode.Create, FileAccess.Write);
             using StreamWriter swTail = new(fsTail);
             swTail.WriteLine("Time,X,Y,Z");
@@ -105,7 +103,15 @@ namespace SiliFish.Helpers
                 string row = $"{Time[t]:0.##},{tail_tip_coord[t].X:0.000},{tail_tip_coord[t].Y:0.000},{tail_tip_coord[t].Z:0.000}";
                 swTail.WriteLine(row);
             }
-            if (episodes == null) return;
+        }
+
+        public static void SaveEpisodesToCSV(string filename, List<SwimmingEpisode> episodes)
+        {
+            if (filename == null || episodes == null)
+                return;
+
+            string episodeFilename = Path.ChangeExtension(filename, "Episodes.csv");
+            string beatsFilename = Path.ChangeExtension(filename, "Beats.csv");
             using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Create, FileAccess.Write);
             using FileStream fsBeats = File.Open(beatsFilename, FileMode.Create, FileAccess.Write);
             using StreamWriter swEpisode = new(fsEpisode);

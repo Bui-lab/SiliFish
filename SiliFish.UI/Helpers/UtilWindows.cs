@@ -8,9 +8,6 @@ namespace SiliFish.UI
 {
     public class UtilWindows
     {
-        public static string OutputFolder = @"C:\Master\Bui\SiliFish.Studio\Output\";
-
-
         public static void SaveImage(string path, Image img)
         {
             img.Save(path);

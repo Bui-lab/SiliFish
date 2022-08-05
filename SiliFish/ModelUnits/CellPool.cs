@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text.Json;
+using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
 using SiliFish.Helpers;
 
@@ -27,13 +27,15 @@ namespace SiliFish.ModelUnits
         private readonly SwimmingModel Model;
         public string CellGroup { get; }
         public CellType CellType { get; }
+
+        [JsonIgnore]
         public Color Color { get; }
         public BodyLocation BodyPosition { get; }
 
         public SagittalPlane PositionLeftRight = SagittalPlane.NotSet;
 
         public readonly int columnIndex2D = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
-        readonly List<Cell> Cells;
+        public List<Cell> Cells { get; }
         private SpatialDistribution SpatialDistribution = new();
         public Distribution XDistribution { 
             get { return SpatialDistribution.XDistribution; } 
@@ -70,7 +72,7 @@ namespace SiliFish.ModelUnits
             CellGroup = template.CellGroup;
             CellType = template.CellType;
             Color = template.Color;
-            BodyPosition = template.BodyLocation;
+            BodyPosition = CellType == CellType.Neuron ? BodyLocation.SpinalCord : BodyLocation.Body;
             PositionLeftRight = leftright;
             columnIndex2D = template.ColumnIndex2D;
             Cells = new List<Cell>();
@@ -251,7 +253,7 @@ namespace SiliFish.ModelUnits
                 .AsEnumerable<Cell>();
         }
 
-        
+    
         public Cell GetNthCell(int nSeq)
         {
             if (nSeq < 1 || Cells.Count < nSeq)
@@ -307,15 +309,16 @@ namespace SiliFish.ModelUnits
                 }
             }
         }
-        public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline)
+        public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probabibility)
         {
-
             foreach (Neuron pre in this.GetCells())
             {
                 //To prevent recursive gap junctions in self projecting pools
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Sequence > pre.Sequence) : target.GetCells();
                 foreach (Neuron post in targetcells)
                 {
+                    if (probabibility < SwimmingModel.rand.Next(1))
+                        continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)
                         mult = rangeNoiseMultiplier();
@@ -334,12 +337,14 @@ namespace SiliFish.ModelUnits
             }
         }
 
-        public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline)
+        public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline, double probability)
         {
             foreach (Neuron pre in this.GetCells())
             {
                 foreach (Cell post in target.GetCells())
                 {
+                    if (probability < SwimmingModel.rand.Next(1))
+                        continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)
                         mult = rangeNoiseMultiplier();

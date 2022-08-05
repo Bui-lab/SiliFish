@@ -41,7 +41,6 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
             distConductionVelocity.AbsoluteEnforced = true;
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
-            ddBodyLocation.DataSource = Enum.GetNames(typeof(BodyLocation));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
         }
@@ -135,7 +134,6 @@ namespace SiliFish.UI.Controls
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
             poolTemplate.CellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
             poolTemplate.NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
-            poolTemplate.BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyLocation.Text);
             poolTemplate.Parameters = GridToParamDict();
             poolTemplate.Color = btnColor.BackColor;
             poolTemplate.Active = cbActive.Checked;
@@ -155,7 +153,6 @@ namespace SiliFish.UI.Controls
             skipCellTypeChange = false;
             lNeuronClass.Visible = ddNeuronClass.Visible = poolTemplate.CellType == CellType.Neuron;
             ddNeuronClass.Text = poolTemplate.NTMode.ToString();
-            ddBodyLocation.Text = poolTemplate.BodyLocation.ToString();
             if (poolTemplate.PositionLeftRight == SagittalPlane.Both)
                 ddSagittalPosition.Text = "Left/Right";
             else if (poolTemplate.PositionLeftRight == SagittalPlane.Left)

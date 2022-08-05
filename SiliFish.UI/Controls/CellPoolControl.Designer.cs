@@ -54,8 +54,6 @@ namespace SiliFish.UI.Controls
             this.linkSavePool = new System.Windows.Forms.LinkLabel();
             this.linkLoadPool = new System.Windows.Forms.LinkLabel();
             this.cbActive = new System.Windows.Forms.CheckBox();
-            this.lBodyPosition = new System.Windows.Forms.Label();
-            this.ddBodyLocation = new System.Windows.Forms.ComboBox();
             this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.lSagittalPosition = new System.Windows.Forms.Label();
             this.ddSagittalPosition = new System.Windows.Forms.ComboBox();
@@ -241,9 +239,7 @@ namespace SiliFish.UI.Controls
             this.pMain.Controls.Add(this.pMainTop);
             this.pMain.Controls.Add(this.cbActive);
             this.pMain.Controls.Add(this.lGroupName);
-            this.pMain.Controls.Add(this.lBodyPosition);
             this.pMain.Controls.Add(this.lNumOfCells);
-            this.pMain.Controls.Add(this.ddBodyLocation);
             this.pMain.Controls.Add(this.ddCellType);
             this.pMain.Controls.Add(this.lCellType);
             this.pMain.Controls.Add(this.eNumOfCells);
@@ -306,7 +302,7 @@ namespace SiliFish.UI.Controls
             // 
             // btnColor
             // 
-            this.btnColor.Location = new System.Drawing.Point(183, 284);
+            this.btnColor.Location = new System.Drawing.Point(183, 226);
             this.btnColor.Name = "btnColor";
             this.btnColor.Size = new System.Drawing.Size(75, 23);
             this.btnColor.TabIndex = 8;
@@ -351,34 +347,12 @@ namespace SiliFish.UI.Controls
             this.cbActive.AutoSize = true;
             this.cbActive.Checked = true;
             this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(199, 313);
+            this.cbActive.Location = new System.Drawing.Point(199, 255);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(59, 19);
             this.cbActive.TabIndex = 9;
             this.cbActive.Text = "Active";
             this.cbActive.UseVisualStyleBackColor = true;
-            // 
-            // lBodyPosition
-            // 
-            this.lBodyPosition.AutoSize = true;
-            this.lBodyPosition.Location = new System.Drawing.Point(7, 258);
-            this.lBodyPosition.Name = "lBodyPosition";
-            this.lBodyPosition.Size = new System.Drawing.Size(80, 15);
-            this.lBodyPosition.TabIndex = 12;
-            this.lBodyPosition.Text = "Body Position";
-            // 
-            // ddBodyLocation
-            // 
-            this.ddBodyLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddBodyLocation.FormattingEnabled = true;
-            this.ddBodyLocation.Items.AddRange(new object[] {
-            "Left/Right",
-            "Left",
-            "Right"});
-            this.ddBodyLocation.Location = new System.Drawing.Point(113, 255);
-            this.ddBodyLocation.Name = "ddBodyLocation";
-            this.ddBodyLocation.Size = new System.Drawing.Size(145, 23);
-            this.ddBodyLocation.TabIndex = 7;
             // 
             // timeLineControl
             // 
@@ -740,8 +714,6 @@ namespace SiliFish.UI.Controls
         private TabPage tSpatialDist;
         private TabPage tDynamics;
         private SplitContainer splitMain;
-        private Label lBodyPosition;
-        private ComboBox ddBodyLocation;
         private GroupBox groupBox1;
         private RadioButton rbYZLinear;
         private RadioButton rbYZAngular;

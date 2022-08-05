@@ -133,12 +133,9 @@ namespace SiliFish.UI
             this.lms5 = new System.Windows.Forms.Label();
             this.lAnimationEnd = new System.Windows.Forms.Label();
             this.lms6 = new System.Windows.Forms.Label();
-            this.tabTextOutput = new System.Windows.Forms.TabPage();
-            this.eModelSummary = new System.Windows.Forms.RichTextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.linkSaveOutput = new System.Windows.Forms.LinkLabel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.pParamBottom = new System.Windows.Forms.Panel();
+            this.cbMultiple = new System.Windows.Forms.CheckBox();
+            this.eRunNumber = new System.Windows.Forms.NumericUpDown();
             this.eSkip = new System.Windows.Forms.NumericUpDown();
             this.lSkip = new System.Windows.Forms.Label();
             this.edt = new System.Windows.Forms.NumericUpDown();
@@ -214,9 +211,8 @@ namespace SiliFish.UI
             this.pAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).BeginInit();
-            this.tabTextOutput.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.pParamBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
@@ -464,11 +460,13 @@ namespace SiliFish.UI
             0,
             0,
             0});
+            this.eSpinalBodyPosition.ValueChanged += new System.EventHandler(this.eSpinalBodyPosition_ValueChanged);
+            this.eSpinalBodyPosition.Enter += new System.EventHandler(this.eSpinalBodyPosition_Enter);
             // 
             // lSpinalBodyPosition
             // 
             this.lSpinalBodyPosition.AutoSize = true;
-            this.lSpinalBodyPosition.Location = new System.Drawing.Point(6, 128);
+            this.lSpinalBodyPosition.Location = new System.Drawing.Point(6, 130);
             this.lSpinalBodyPosition.Name = "lSpinalBodyPosition";
             this.lSpinalBodyPosition.Size = new System.Drawing.Size(80, 15);
             this.lSpinalBodyPosition.TabIndex = 17;
@@ -499,7 +497,7 @@ namespace SiliFish.UI
             // eSpinalMedialLateral
             // 
             this.eSpinalMedialLateral.DecimalPlaces = 1;
-            this.eSpinalMedialLateral.Location = new System.Drawing.Point(98, 73);
+            this.eSpinalMedialLateral.Location = new System.Drawing.Point(98, 72);
             this.eSpinalMedialLateral.Name = "eSpinalMedialLateral";
             this.eSpinalMedialLateral.Size = new System.Drawing.Size(63, 23);
             this.eSpinalMedialLateral.TabIndex = 14;
@@ -508,11 +506,13 @@ namespace SiliFish.UI
             0,
             0,
             0});
+            this.eSpinalMedialLateral.ValueChanged += new System.EventHandler(this.eSpinalMedialLateral_ValueChanged);
+            this.eSpinalMedialLateral.Enter += new System.EventHandler(this.eSpinalMedialLateral_Enter);
             // 
             // lSpinalMedialLateral
             // 
             this.lSpinalMedialLateral.AutoSize = true;
-            this.lSpinalMedialLateral.Location = new System.Drawing.Point(6, 73);
+            this.lSpinalMedialLateral.Location = new System.Drawing.Point(6, 74);
             this.lSpinalMedialLateral.Name = "lSpinalMedialLateral";
             this.lSpinalMedialLateral.Size = new System.Drawing.Size(83, 15);
             this.lSpinalMedialLateral.TabIndex = 13;
@@ -521,7 +521,7 @@ namespace SiliFish.UI
             // eSpinalDorsalVentral
             // 
             this.eSpinalDorsalVentral.DecimalPlaces = 1;
-            this.eSpinalDorsalVentral.Location = new System.Drawing.Point(98, 45);
+            this.eSpinalDorsalVentral.Location = new System.Drawing.Point(98, 44);
             this.eSpinalDorsalVentral.Name = "eSpinalDorsalVentral";
             this.eSpinalDorsalVentral.Size = new System.Drawing.Size(63, 23);
             this.eSpinalDorsalVentral.TabIndex = 12;
@@ -530,11 +530,13 @@ namespace SiliFish.UI
             0,
             0,
             0});
+            this.eSpinalDorsalVentral.ValueChanged += new System.EventHandler(this.eSpinalDorsalVentral_ValueChanged);
+            this.eSpinalDorsalVentral.Enter += new System.EventHandler(this.eSpinalDorsalVentral_Enter);
             // 
             // lSpinalDorsalVentral
             // 
             this.lSpinalDorsalVentral.AutoSize = true;
-            this.lSpinalDorsalVentral.Location = new System.Drawing.Point(6, 47);
+            this.lSpinalDorsalVentral.Location = new System.Drawing.Point(6, 46);
             this.lSpinalDorsalVentral.Name = "lSpinalDorsalVentral";
             this.lSpinalDorsalVentral.Size = new System.Drawing.Size(81, 15);
             this.lSpinalDorsalVentral.TabIndex = 11;
@@ -561,15 +563,17 @@ namespace SiliFish.UI
             this.eBodyMedialLateral.Size = new System.Drawing.Size(63, 23);
             this.eBodyMedialLateral.TabIndex = 14;
             this.eBodyMedialLateral.Value = new decimal(new int[] {
-            5,
+            10,
             0,
             0,
             0});
+            this.eBodyMedialLateral.ValueChanged += new System.EventHandler(this.eBodyMedialLateral_ValueChanged);
+            this.eBodyMedialLateral.Enter += new System.EventHandler(this.eBodyMedialLateral_Enter);
             // 
             // lBodyMedialLateral
             // 
             this.lBodyMedialLateral.AutoSize = true;
-            this.lBodyMedialLateral.Location = new System.Drawing.Point(6, 55);
+            this.lBodyMedialLateral.Location = new System.Drawing.Point(6, 57);
             this.lBodyMedialLateral.Name = "lBodyMedialLateral";
             this.lBodyMedialLateral.Size = new System.Drawing.Size(83, 15);
             this.lBodyMedialLateral.TabIndex = 13;
@@ -583,10 +587,12 @@ namespace SiliFish.UI
             this.eBodyDorsalVentral.Size = new System.Drawing.Size(63, 23);
             this.eBodyDorsalVentral.TabIndex = 12;
             this.eBodyDorsalVentral.Value = new decimal(new int[] {
-            5,
+            15,
             0,
             0,
             0});
+            this.eBodyDorsalVentral.ValueChanged += new System.EventHandler(this.eBodyDorsalVentral_ValueChanged);
+            this.eBodyDorsalVentral.Enter += new System.EventHandler(this.eBodyDorsalVentral_Enter);
             // 
             // lBodyDorsalVentral
             // 
@@ -770,14 +776,12 @@ namespace SiliFish.UI
             this.tabOutputs.Controls.Add(this.tab2DModel);
             this.tabOutputs.Controls.Add(this.tab3DModel);
             this.tabOutputs.Controls.Add(this.tabAnimation);
-            this.tabOutputs.Controls.Add(this.tabTextOutput);
             this.tabOutputs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabOutputs.Location = new System.Drawing.Point(0, 133);
             this.tabOutputs.Name = "tabOutputs";
             this.tabOutputs.SelectedIndex = 0;
             this.tabOutputs.Size = new System.Drawing.Size(794, 539);
             this.tabOutputs.TabIndex = 1;
-            this.tabOutputs.SelectedIndexChanged += new System.EventHandler(this.tabOutputs_SelectedIndexChanged);
             // 
             // tabPlot
             // 
@@ -801,7 +805,6 @@ namespace SiliFish.UI
             this.tabPlotSub.SelectedIndex = 0;
             this.tabPlotSub.Size = new System.Drawing.Size(780, 398);
             this.tabPlotSub.TabIndex = 6;
-            this.tabPlotSub.SelectedIndexChanged += new System.EventHandler(this.tabPlotSub_SelectedIndexChanged);
             // 
             // tPlotWindows
             // 
@@ -1461,64 +1464,10 @@ namespace SiliFish.UI
             this.lms6.TabIndex = 16;
             this.lms6.Text = "(ms)";
             // 
-            // tabTextOutput
-            // 
-            this.tabTextOutput.Controls.Add(this.eModelSummary);
-            this.tabTextOutput.Controls.Add(this.panel1);
-            this.tabTextOutput.Location = new System.Drawing.Point(4, 24);
-            this.tabTextOutput.Name = "tabTextOutput";
-            this.tabTextOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTextOutput.Size = new System.Drawing.Size(786, 511);
-            this.tabTextOutput.TabIndex = 5;
-            this.tabTextOutput.Text = "Text Output";
-            this.tabTextOutput.UseVisualStyleBackColor = true;
-            // 
-            // eModelSummary
-            // 
-            this.eModelSummary.AutoWordSelection = true;
-            this.eModelSummary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eModelSummary.Location = new System.Drawing.Point(3, 33);
-            this.eModelSummary.Name = "eModelSummary";
-            this.eModelSummary.Size = new System.Drawing.Size(780, 475);
-            this.eModelSummary.TabIndex = 0;
-            this.eModelSummary.Text = "";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Controls.Add(this.linkSaveOutput);
-            this.panel1.Controls.Add(this.linkLabel1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(780, 30);
-            this.panel1.TabIndex = 3;
-            // 
-            // linkSaveOutput
-            // 
-            this.linkSaveOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkSaveOutput.AutoSize = true;
-            this.linkSaveOutput.Location = new System.Drawing.Point(703, 7);
-            this.linkSaveOutput.Name = "linkSaveOutput";
-            this.linkSaveOutput.Size = new System.Drawing.Size(72, 15);
-            this.linkSaveOutput.TabIndex = 24;
-            this.linkSaveOutput.TabStop = true;
-            this.linkSaveOutput.Text = "Save Output";
-            this.linkSaveOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveOutput_LinkClicked);
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(1292, 7);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(66, 15);
-            this.linkLabel1.TabIndex = 23;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Save HTML";
-            // 
             // pParamBottom
             // 
+            this.pParamBottom.Controls.Add(this.cbMultiple);
+            this.pParamBottom.Controls.Add(this.eRunNumber);
             this.pParamBottom.Controls.Add(this.eSkip);
             this.pParamBottom.Controls.Add(this.lSkip);
             this.pParamBottom.Controls.Add(this.edt);
@@ -1537,6 +1486,38 @@ namespace SiliFish.UI
             this.pParamBottom.Name = "pParamBottom";
             this.pParamBottom.Size = new System.Drawing.Size(794, 133);
             this.pParamBottom.TabIndex = 1;
+            // 
+            // cbMultiple
+            // 
+            this.cbMultiple.AutoSize = true;
+            this.cbMultiple.Location = new System.Drawing.Point(169, 58);
+            this.cbMultiple.Name = "cbMultiple";
+            this.cbMultiple.Size = new System.Drawing.Size(70, 19);
+            this.cbMultiple.TabIndex = 37;
+            this.cbMultiple.Text = "Multiple";
+            this.toolTip.SetToolTip(this.cbMultiple, "Runs the model multiple times saving the model details and episodes.");
+            this.cbMultiple.UseVisualStyleBackColor = true;
+            this.cbMultiple.CheckedChanged += new System.EventHandler(this.cbMultiple_CheckedChanged);
+            // 
+            // eRunNumber
+            // 
+            this.eRunNumber.Location = new System.Drawing.Point(240, 56);
+            this.eRunNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.eRunNumber.Name = "eRunNumber";
+            this.eRunNumber.Size = new System.Drawing.Size(63, 23);
+            this.eRunNumber.TabIndex = 36;
+            this.toolTip.SetToolTip(this.eRunNumber, "Warning: depending on the complexity of the model, multiple runs can take a long " +
+        "time.");
+            this.eRunNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.eRunNumber.Visible = false;
             // 
             // eSkip
             // 
@@ -1695,9 +1676,9 @@ namespace SiliFish.UI
             this.lRunParameters.Location = new System.Drawing.Point(0, 0);
             this.lRunParameters.Name = "lRunParameters";
             this.lRunParameters.Padding = new System.Windows.Forms.Padding(10);
-            this.lRunParameters.Size = new System.Drawing.Size(116, 35);
+            this.lRunParameters.Size = new System.Drawing.Size(153, 35);
             this.lRunParameters.TabIndex = 1;
-            this.lRunParameters.Text = "Run Parameters";
+            this.lRunParameters.Text = "Simulation Parameters";
             // 
             // timerRun
             // 
@@ -1805,11 +1786,9 @@ namespace SiliFish.UI
             this.pAnimation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
-            this.tabTextOutput.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
@@ -1885,8 +1864,6 @@ namespace SiliFish.UI
         private PictureBox picRostroCaudal;
         private Label lModelDescription;
         private Label lModelName;
-        private TabPage tabTextOutput;
-        private RichTextBox eModelSummary;
         private SaveFileDialog saveFileText;
         private TextBox eModelDescription;
         private TextBox eModelName;
@@ -1942,10 +1919,9 @@ namespace SiliFish.UI
         private LinkLabel linkBrowseToTempFolder;
         private LinkLabel linkSaveHTML2D;
         private LinkLabel linkSaveHTML3D;
-        private Panel panel1;
-        private LinkLabel linkSaveOutput;
-        private LinkLabel linkLabel1;
         private LinkLabel linkSavePlots;
         private SaveFileDialog saveFileImage;
+        private NumericUpDown eRunNumber;
+        private CheckBox cbMultiple;
     }
 }

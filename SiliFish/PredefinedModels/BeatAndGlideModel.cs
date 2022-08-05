@@ -138,17 +138,13 @@ namespace SiliFish.PredefinedModels
             R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
 
 
-            if (sigma_stim > 0)
-            {
-                stim_value1 *= SwimmingModel.rand.Gauss(1, sigma_stim);
-                stim_value2 *= SwimmingModel.rand.Gauss(1, sigma_stim);
-            }
+            double multiplier = GetStimulusNoiseMultiplier();
 
             for (int i = 0; i < nV2a; i++)
             {
                 TimeLine tl = new();
                 tl.AddTimeRange(this.tStimStart_ms + 32 * i);
-                Stimulus stim = new(stim_mode, tl, stim_value1, stim_value2);
+                Stimulus stim = new(stim_mode, tl, stim_value1 * multiplier, stim_value2 * multiplier);
                 L_V2a.AddCell(new Neuron("V2a", seq: i, v2a_dyn, sigma_dyn, init_v: -64, init_u: -16, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), y: -1), cv: cv, stim: stim));
                 R_V2a.AddCell(new Neuron("V2a", seq: i, v2a_dyn, sigma_dyn, init_v: -64, init_u: -16, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), y: 1), cv: cv, stim: stim));
             }

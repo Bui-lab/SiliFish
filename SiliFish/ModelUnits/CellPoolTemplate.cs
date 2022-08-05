@@ -14,7 +14,6 @@ namespace SiliFish.ModelUnits
         public CellType CellType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
-        public BodyLocation BodyLocation { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.NotSet;
         public int ColumnIndex2D { get; set; }
@@ -89,7 +88,6 @@ namespace SiliFish.ModelUnits
                 return $"{CellGroup}\r\n" +
                     $"{Description}\r\n" +
                     $"{ntmode}" +
-                    $"Location: {BodyLocation}\r\n" +
                     $"Position: {Position}\r\n" +
                     $"# of cells: {NumOfCells}{persomite}\r\n" +
                     $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
@@ -115,7 +113,6 @@ namespace SiliFish.ModelUnits
             CellType = cpl.CellType;
             NTMode = cpl.NTMode;
             Color = cpl.Color;
-            BodyLocation = cpl.BodyLocation;
             Parameters = new Dictionary<string, object>(cpl.Parameters);
             PositionLeftRight = cpl.PositionLeftRight;
             ColumnIndex2D = cpl.ColumnIndex2D;

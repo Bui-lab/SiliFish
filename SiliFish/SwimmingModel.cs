@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
@@ -61,6 +62,7 @@ namespace SiliFish
 
         public int NumberOfSomites { get; set; } = 0;
 
+        private int iRunCounter = 0;
         private int iProgress = 0;
         private int iMax = 1;
 
@@ -74,9 +76,18 @@ namespace SiliFish
         protected List<CellPool> MuscleCellPools = new();
         protected List<InterPool> PoolConnections = new();
 
+        [JsonIgnore]
+        public double[] TimeArray { get { return Time; } }
+
+        [JsonIgnore]
         public bool ModelRun { get { return model_run; } }
         public int MaxIndex { get { return iMax; } }
-        public double[] TimeArray { get { return Time; } }
+
+        [JsonIgnore]
+        public bool CancelRun { get; set; } = false;
+        public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
+        public int GetRunCounter() => iRunCounter;
+
 
         public SwimmingModel()
         {
@@ -92,12 +103,16 @@ namespace SiliFish
             int nMuscle = (int)((data.Keys.Count(k => k.Contains("Muscle"))) / 2);
             for (int i = 0; i < nMuscle; i++)
             {
-                MuscleCell lm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn:0, new Coordinate(x: 5.0 + 1.6 * i, -1));
-                lm.V = data["Left_Muscle" + i.ToString()];
+                MuscleCell lm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn: 0, new Coordinate(x: 5.0 + 1.6 * i, -1))
+                {
+                    V = data["Left_Muscle" + i.ToString()]
+                };
                 L_Muscle.AddCell(lm);
 
-                MuscleCell rm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn:0, new Coordinate(x: 5.0 + 1.6 * i, 1));
-                rm.V = data["Right_Muscle" + i.ToString()];
+                MuscleCell rm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn: 0, new Coordinate(x: 5.0 + 1.6 * i, 1))
+                {
+                    V = data["Right_Muscle" + i.ToString()]
+                };
                 R_Muscle.AddCell(rm);
             }
             MuscleCellPools.Add(L_Muscle);
@@ -117,6 +132,7 @@ namespace SiliFish
                 return NeuronPools.Union(MuscleCellPools).ToList();
             }
         }
+        [JsonIgnore]
         public List<CellPool> MusclePools
         {
             get
@@ -190,11 +206,11 @@ namespace SiliFish
                 { "Dynamic.E_gly", E_gly },
                 { "Dynamic.E_gaba", E_gaba },
 
-                { "Animation.Damping Coef", zeta },
-                { "Animation.w0", w0 },
-                { "Animation.Conversion Coef", convCoef },
-                { "Animation.Alpha", alpha },
-                { "Animation.Beta", beta }
+                { "Kinematics.Damping Coef", zeta },
+                { "Kinematics.w0", w0 },
+                { "Kinematics.Conversion Coef", convCoef },
+                { "Kinematics.Alpha", alpha },
+                { "Kinematics.Beta", beta }
             };
 
             return paramDict;
@@ -209,11 +225,11 @@ namespace SiliFish
                 { "Dynamic.E_gly", "Reversal potential of glycine" },
                 { "Dynamic.E_gaba", "Reversal potential of GABA" },
 
-                { "Animation.Damping Coef", zeta },
-                { "Animation.w0", "Natural oscillation frequency" },
-                { "Animation.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
-                { "Animation.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
-                { "Animation.Conversion Coef", "Coefficient to convert membrane potential to driving force for the oscillation" }
+                { "Kinematics.Damping Coef", zeta },
+                { "Kinematics.w0", "Natural oscillation frequency" },
+                { "Kinematics.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
+                { "Kinematics.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
+                { "Kinematics.Conversion Coef", "Coefficient to convert membrane potential to driving force for the oscillation" }
             };
 
             return paramDescDict;
@@ -236,11 +252,11 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
 
-            paramDict.AddObject("Animation.Damping Coef", zeta, skipIfExists: true);
-            paramDict.AddObject("Animation.w0", w0, skipIfExists: true);
-            paramDict.AddObject("Animation.Conversion Coef", convCoef, skipIfExists: true);
-            paramDict.AddObject("Animation.Alpha", alpha, skipIfExists: true);
-            paramDict.AddObject("Animation.Beta", beta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Damping Coef", zeta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.w0", w0, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Conversion Coef", convCoef, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Alpha", alpha, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Beta", beta, skipIfExists: true);
             SetParameters(paramDict);
         }
 
@@ -248,11 +264,11 @@ namespace SiliFish
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            zeta = paramExternal.Read("Animation.Damping Coef", zeta);
-            w0 = paramExternal.Read("Animation.w0", w0);
-            convCoef = paramExternal.Read("Animation.Conversion Coef", convCoef);
-            alpha = paramExternal.Read("Animation.Alpha", alpha);
-            beta = paramExternal.Read("Animation.Beta", beta);
+            zeta = paramExternal.Read("Kinematics.Damping Coef", zeta);
+            w0 = paramExternal.Read("Kinematics.w0", w0);
+            convCoef = paramExternal.Read("Kinematics.Conversion Coef", convCoef);
+            alpha = paramExternal.Read("Kinematics.Alpha", alpha);
+            beta = paramExternal.Read("Kinematics.Beta", beta);
         }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
@@ -339,7 +355,7 @@ namespace SiliFish
             }
             return strBuilder.ToString();
         }
-        public virtual void SaveToFile(string filename = null)
+        public virtual void SaveToFile(string filename)
         {
             if (!this.model_run)
             {
@@ -412,26 +428,27 @@ namespace SiliFish
             this.InitMembranePotentials(nmax);
             initialized = true;
         }
-        protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null)
+
+        protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            PoolConnections.Add(new InterPool { poolSource = pool1, poolTarget = pool2, reach = cr, timeLine = timeline });
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline);
+            PoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
+            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, probability);
         }
+        protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null, double probability = 1)
+        {
+            if (pool1 == null || pool2 == null) return;
+            PoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, probability);
+        }
+
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, InterPoolTemplate template)
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
             TimeLine timeline = template.TimeLine;
-            PoolConnections.Add(new InterPool { poolSource = pool1, poolTarget = pool2, reach = cr, timeLine = timeline });
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline);
-        }
-
-        protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null)
-        {
-            if (pool1 == null || pool2 == null) return;
-            PoolConnections.Add(new InterPool { poolSource = pool1, poolTarget = pool2, reach = cr, timeLine = timeline, synapseParameters = synParam });
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline);
+            PoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
+            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability);
         }
 
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
@@ -440,8 +457,8 @@ namespace SiliFish
             CellReach cr = template.CellReach;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine;
-            PoolConnections.Add(new InterPool { poolSource = pool1, poolTarget = pool2, reach = cr, timeLine = timeline, synapseParameters = synParam });
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline);
+            PoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability);
         }
 
         private void CalculateNeuronalOutputs(int t)
@@ -480,21 +497,22 @@ namespace SiliFish
                 foreach (MuscleCell mc in muscleCells.GetCells())
                     mc.CalculateMembranePotential(t);
         }
-
-
-        public virtual void RunModel(double seed, RunParam rp)
+        protected virtual void RunModelLoop(int? seed, RunParam rp)
         {
             try
             {
                 iProgress = 0;
                 model_run = false;
-                rand = new Random((int)seed);
+                if (seed != null || rand == null)
+                    rand = new Random(seed != null ? (int)seed : 0);
                 runParam = rp;
                 RunParam.static_dt = rp.dt;
                 iMax = rp.iMax;
                 Stimulus.nMax = iMax;
 
                 InitStructures(iMax);
+                if (!initialized) 
+                    return;
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
                 Time[0] = Math.Round((double)-1 * runParam.tSkip_ms, 2);
                 foreach (var index in Enumerable.Range(1, iMax - 1))
@@ -517,14 +535,23 @@ namespace SiliFish
             }
         }
 
-        public void RunModel(double seed, RunParam rp, int count)
+        public void RunModel(int? seed, RunParam rp, int count = 1)
         {
             for (int i = 0; i < count; i++)
             {
-                RunModel(seed, rp);
-                (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes(-0.5, 0.5, 1000);
-                string filename = $"{modelName}_Run{i}{DateTime.Now.ToShortTimeString()}";
-                Util.SaveEpisodesToCSV(filename, Time, tail_tip_coord, episodes);
+                iRunCounter = i + 1;
+                RunModelLoop(seed, rp);
+                if (count > 1 && ModelRun)
+                {
+                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes(-0.5, 0.5, 1000);
+                    string filename = $"{modelName}_Run{i}_{DateTime.Now:yyMMdd-HHmm}";
+                    string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+                    filename = Path.Combine(outputFolder, filename);
+                    //Util.SaveTailMovementToCSV(filename + ".csv", Time, tail_tip_coord);
+                    Util.SaveEpisodesToCSV(filename + ".csv", episodes);
+                    Util.SaveToJSON(filename + ".json", this);
+                    seed = null;
+                }
             }
         }
         private (double[,] vel, double[,] angle) GenerateSpineVelAndAngleNoSomite(int startIndex, int endIndex)
@@ -561,7 +588,7 @@ namespace SiliFish
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    //khi is the damping coefficient: "Animation.Damping Coef"
+                    //khi is the damping coefficient: "Kinematics.Damping Coef"
                     double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * zeta * w0 + coef * voltDiff;
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
@@ -731,9 +758,6 @@ namespace SiliFish
 
             return (tail_tip_coord, episodes.Where(e => e.End > 0).ToList());
         }
-
-        public bool CancelRun { get; set; } = false;
-        public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         public static void ExceptionHandling(string name, Exception ex)
         {
