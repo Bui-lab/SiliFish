@@ -68,6 +68,18 @@ namespace SiliFish.PredefinedModels
             return paramDict;
         }
 
+        protected override void FillMissingParameters(Dictionary<string, object> paramDict)
+        {
+            paramDict.AddObject("Dynamic.Stimulus Start (ms)", tStimStart_ms, skipIfExists: true);
+            paramDict.AddObject("Dynamic.Stimulus Value 1", stim_value1, skipIfExists: true);
+            paramDict.AddObject("Dynamic.Stimulus Value 2", stim_value2, skipIfExists: true);
+            paramDict.AddObject("Variability.Sigma Range", sigma_range, skipIfExists: true);
+            paramDict.AddObject("Variability.Sigma Gap", sigma_gap, skipIfExists: true);
+            paramDict.AddObject("Variability.Sigma Chem", sigma_chem, skipIfExists: true);
+            paramDict.AddObject("Variability.Sigma Dynamics", sigma_dyn, skipIfExists: true);
+            paramDict.AddObject("Variability.Sigma Stimulus", sigma_stim, skipIfExists: true);
+            base.FillMissingParameters(paramDict);
+        }
         public override Dictionary<string, object> GetParameterDesc()
         {
             Dictionary<string, object> paramDescDict = base.GetParameterDesc();

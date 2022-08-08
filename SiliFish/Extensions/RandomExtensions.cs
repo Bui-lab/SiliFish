@@ -67,14 +67,14 @@ namespace SiliFish.Extensions
             double[] result = new double[n];
             if (n == 1)
             {
-                double noise = noiseStdDev > 0 ? rand.Gauss(1, noiseStdDev, start, end) : 1;
+                double noise = noiseStdDev > 0 ? rand.Gauss(1, noiseStdDev) : 1;
                 result[0] = noise * (end + start) / 2;
                 return result;
             }
             double inc = (end - start) / (n - 1);
             foreach (int i in Enumerable.Range(0, n))
             {
-                double noise = noiseStdDev > 0 ? rand.Gauss(1, noiseStdDev, start, end) : 1;
+                double noise = noiseStdDev > 0 ? rand.Gauss(1, noiseStdDev) : 1;
                 result[i] = start + i * inc * noise;
                 if (result[i] < start) result[i] = start;
                 if (result[i] > end) result[i] = end;

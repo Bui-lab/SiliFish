@@ -246,8 +246,7 @@ namespace Services
                     Color.Red));
             }
 
-            string summary = "";
-            Util.SaveToFile("Episodes"+DateTime.Now.ToShortTimeString(), summary);
+            Util.SaveEpisodesToCSV("Episodes.csv", 1, episodes);
 
             return (leftImages, null);
         }

@@ -27,9 +27,9 @@ namespace SiliFish.PredefinedModels
         double MN_V0v_gap_weight= 0.0001;
         double MN_Muscle_syn_weight = 0.02;
 
-        double V0d_MN_syn_weight = 8.0;
-        double V0d_IC_syn_weight = 8.0;
-        double V0d_V2a_syn_weight = 8.0;
+        double V0d_MN_syn_weight = 2.0;
+        double V0d_IC_syn_weight = 2.0;
+        double V0d_V2a_syn_weight = 2.0;
         double V0d_V0d_gap_weight = 0.05;
 
         double V0v_IC_syn_weight = 0.24;
@@ -71,10 +71,10 @@ namespace SiliFish.PredefinedModels
             taud = 1;
             vth = -15;
             stim_value1 = 35;
-            sigma_gap = 0.05;
-            sigma_chem = 0.05;
-            sigma_stim = 0.5;
-            sigma_dyn = 0.01;
+            sigma_gap = 0;
+            sigma_chem = 0;
+            sigma_stim = 0;
+            sigma_dyn = 0;
             E_ach = 120;
             E_glu = 0;
             E_gly = -58;

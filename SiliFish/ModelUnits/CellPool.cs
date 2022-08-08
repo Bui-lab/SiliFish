@@ -10,6 +10,8 @@ namespace SiliFish.ModelUnits
 {
     public struct CellSelectionStruct
     {
+        public string Pools = "All";
+        public SagittalPlane SagittalPlane = SagittalPlane.NotSet;
         public PlotSelection somiteSelection = PlotSelection.All;
         public int nSomite = -1;
         public PlotSelection cellSelection = PlotSelection.All;
@@ -90,6 +92,15 @@ namespace SiliFish.ModelUnits
             Cells = new List<Cell>();
         }
 
+        public bool OnSide(SagittalPlane sagittal)
+        {
+            if (sagittal == SagittalPlane.Both)
+                return true;
+            if (sagittal == SagittalPlane.Left && PositionLeftRight == SagittalPlane.Left ||
+                sagittal == SagittalPlane.Right && PositionLeftRight == SagittalPlane.Right)
+                return true;
+            return false;
+        }
         public virtual double XAvg()
         {
             if (Cells == null || Cells.Count == 0) return 0;
@@ -216,7 +227,11 @@ namespace SiliFish.ModelUnits
             Random random = new();
             List<int> som = new();
             List<int> seq = new();
-            if (cellSelection.somiteSelection == PlotSelection.FirstMiddleLast)
+            if (cellSelection.somiteSelection == PlotSelection.Single)
+            {
+                som.Add(cellSelection.nSomite);
+            }
+            else if (cellSelection.somiteSelection == PlotSelection.FirstMiddleLast)
             {
                 int minSom = Cells.Select(c => c.Somite).Min();
                 int maxSom = Cells.Select(c => c.Somite).Max();
@@ -231,7 +246,11 @@ namespace SiliFish.ModelUnits
                     som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nSomite));
             }
 
-            if (cellSelection.cellSelection == PlotSelection.FirstMiddleLast)
+            if (cellSelection.cellSelection == PlotSelection.Single)
+            {
+                seq.Add(cellSelection.nCell);
+            }
+            else if (cellSelection.cellSelection == PlotSelection.FirstMiddleLast)
             {
                 int minSeq = Cells.Select(c => c.Sequence).Min();
                 int maxSeq = Cells.Select(c => c.Sequence).Max();
@@ -253,13 +272,6 @@ namespace SiliFish.ModelUnits
                 .AsEnumerable<Cell>();
         }
 
-    
-        public Cell GetNthCell(int nSeq)
-        {
-            if (nSeq < 1 || Cells.Count < nSeq)
-                return null;
-            return Cells.ToArray()[nSeq - 1];
-        }
 
         public void GenerateCells(CellPoolTemplate template, SagittalPlane leftright)
         {

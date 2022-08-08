@@ -38,13 +38,13 @@ namespace SiliFish.UI
         int tRunEnd = 0;
         int tRunSkip = 0;
         PlotType PlotType = PlotType.MembPotential;
-        PlotExtend plotExtend = PlotExtend.FullModel;
         CellSelectionStruct plotCellSelection;
         private readonly string tempFolder;
         private string tempFile;
         readonly string outputFolder;
         string lastSavedCustomModelJSON;
-        Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams;
+        Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams, lastSavedCustomParams;
+        Dictionary<string, object> lastRunSCParams, lastRunDCParams, lastRunBGParams, lastRunCustomParams;
         DateTime runStart;
 
         public MainForm()
@@ -83,9 +83,16 @@ namespace SiliFish.UI
 
                 foreach (PlotSelection ps in Enum.GetValues(typeof(PlotSelection)))
                 {
-                    ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
+                    if (ps!= PlotSelection.Summary)
+                        ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
                     ddPlotCellSelection.Items.Add(ps.GetDisplayName());
                 }
+                foreach (SagittalPlane sp in Enum.GetValues(typeof(SagittalPlane)))
+                {
+                    if (sp != SagittalPlane.NotSet)
+                        ddPlotSagittal.Items.Add(sp.GetDisplayName());
+                }
+                ddPlotSagittal.SelectedIndex = ddPlotSagittal.Items.Count - 1;
                 ddPlotSomiteSelection.SelectedIndex = 0;
                 ddPlotCellSelection.SelectedIndex = 0;
 
@@ -188,7 +195,7 @@ namespace SiliFish.UI
                 Model = bgModel = new BeatAndGlideModel();
             else if (rbCustom.Checked)
                 Model = customModel = new CustomSwimmingModel(null);
-            WriteParams(Model.GetParameters());
+            LoadParams(Model.GetParameters());
         }
 
         private void rbSingleCoil_CheckedChanged(object sender, EventArgs e)
@@ -201,7 +208,7 @@ namespace SiliFish.UI
                 Model = scModel = new SingleCoilModel();
                 lastSavedSCParams = Model.GetParameters();
             }
-            WriteParams(Model.GetParameters());
+            LoadParams(Model.ModelRun ? lastRunSCParams : lastSavedSCParams);
         }
 
         private void rbDoubleCoil_CheckedChanged(object sender, EventArgs e)
@@ -214,20 +221,22 @@ namespace SiliFish.UI
                 Model = dcModel = new DoubleCoilModel();
                 lastSavedDCParams = Model.GetParameters();
             }
-            WriteParams(Model.GetParameters());
+            LoadParams(Model.ModelRun ? lastRunDCParams : lastSavedDCParams);
         }
 
         private void rbBeatGlide_CheckedChanged(object sender, EventArgs e)
         {
             if (!rbBeatGlide.Checked) return;
             if (bgModel != null)
+            {
                 Model = bgModel;
+            }
             else
             {
                 Model = bgModel = new BeatAndGlideModel();
                 lastSavedBGParams = Model.GetParameters();
             }
-            WriteParams(Model.GetParameters());
+            LoadParams(Model.ModelRun ? lastRunBGParams : lastSavedBGParams);
         }
 
         private void rbCustom_CheckedChanged(object sender, EventArgs e)
@@ -246,11 +255,11 @@ namespace SiliFish.UI
             else
             {
                 Model = customModel = new CustomSwimmingModel(null);
+                lastSavedCustomParams = Model.GetParameters();
                 lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
             }
-            WriteParams(Model.GetParameters());
+            LoadParams(Model.ModelRun ? lastRunCustomParams : lastSavedCustomParams);
             LoadModelTemplate();
-
         }
         #endregion
 
@@ -263,7 +272,7 @@ namespace SiliFish.UI
             listStimuli.ClearItems();
         }
 
-        private void WriteGeneralParams(Dictionary<string, object> paramDict)
+        private void LoadGeneralParams(Dictionary<string, object> paramDict)
         {
             eModelName.Text = paramDict.Read("General.Name", "");
             eModelDescription.Text = paramDict.Read("General.Description", "");
@@ -279,11 +288,10 @@ namespace SiliFish.UI
             eBodyDorsalVentral.Value = (decimal)paramDict.ReadDouble("General.BodyDorsalVentralDistance");
             eBodyMedialLateral.Value = (decimal)paramDict.ReadDouble("General.BodyMedialLateralDistance");
         }
-        private void WriteParams(Dictionary<string, object> ParamDict)
+        private void LoadParams(Dictionary<string, object> ParamDict)
         {
             if (ParamDict == null) return;
             this.Text = $"SiliFish {Model.ModelName}";
-            Model?.SetAndFillMissingParameters(ParamDict);
 
             tabParams.TabPages.Clear();
             if (rbCustom.Checked)
@@ -308,7 +316,7 @@ namespace SiliFish.UI
                 Dictionary<string, object> SubDict = ParamDict.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
                 if (group == "General")
                 {
-                    WriteGeneralParams(SubDict);
+                    LoadGeneralParams(SubDict);
                     continue;
                 }
                 if (SubDict == null || SubDict.Count == 0)
@@ -459,8 +467,6 @@ namespace SiliFish.UI
         private void LoadModelTemplate()
         {
             if (ModelTemplate == null) return;
-            Model = customModel = new CustomSwimmingModel(ModelTemplate);
-            WriteParams(ModelTemplate.Parameters);
 
             LoadModelTemplatePools();
             LoadModelTemplateInterPools();
@@ -588,13 +594,17 @@ namespace SiliFish.UI
                         string json = Util.ReadFromFile(openFileJson.FileName);
                         ModelTemplate = (SwimmingModelTemplate)Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), json);
                         ModelTemplate.LinkObjects();
+                        Model = customModel = new CustomSwimmingModel(ModelTemplate);
+                        Model.SetParameters(ModelTemplate.Parameters);
+                        LoadParams(ModelTemplate.Parameters); 
                         LoadModelTemplate();
                         lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
                     else
                     {
                         Dictionary<string, object> ParamDict = Util.ReadDictionaryFromJSON(openFileJson.FileName);
-                        WriteParams(ParamDict);
+                        Model?.SetParameters(ParamDict);
+                        LoadParams(ParamDict);
                         if (rbSingleCoil.Checked)
                             lastSavedSCParams = ParamDict;
                         else if (rbDoubleCoil.Checked)
@@ -622,10 +632,18 @@ namespace SiliFish.UI
             try
             {
                 RunParam rp = new() { tMax = tRunEnd, tSkip_ms = tRunSkip };
-                if (eRunNumber.Value > 1)
+                if (cbMultiple.Checked)
                     Model.RunModel(0, rp, (int)eRunNumber.Value);
                 else
                     Model.RunModel(0, rp);
+                if (Model is SingleCoilModel)
+                    lastRunSCParams = Model.GetParameters();
+                else if (Model is DoubleCoilModel)
+                    lastRunDCParams = Model.GetParameters();
+                else if (Model is BeatAndGlideModel)
+                    lastRunBGParams = Model.GetParameters();
+                else lastRunCustomParams = Model.GetParameters();
+
             }
             catch (Exception ex)
             {
@@ -665,6 +683,8 @@ namespace SiliFish.UI
             btnRun.Text = "Run";
             modifiedJncs = modifiedPools = false;
 
+            PopulatePlotPools();
+            lPlotSomites.Visible = ddPlotSomiteSelection.Visible = ePlotSomiteSelection.Visible = Model.NumberOfSomites > 0;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
             btnAnimate.Enabled = true;
@@ -740,80 +760,81 @@ namespace SiliFish.UI
         #endregion
 
         #region Outputs
-        private void PopulateCellTypes()
+        private void PopulatePlotPools()
         {
-            ddCellsPools.Items.Clear();
-            ddCellsPools.Text = "";
+            ddPlotPools.Items.Clear();
+            ddPlotPools.Text = "";
             if (Model == null) return;
-            if (plotExtend == PlotExtend.FullModel)
-            {
-                ddCellsPools.Enabled = false;
-                return;
-            }
-            ddCellsPools.Enabled = true;
             List<string> itemList = new();
-            foreach (CellPool pool in Model.CellPools)
-            {
-                if (plotExtend == PlotExtend.CellsInAPool || plotExtend == PlotExtend.SinglePool)
-                    itemList.Add(pool.ID);
-                else if (plotExtend == PlotExtend.OppositePools)
-                    itemList.Add(pool.CellGroup);
-                else if (plotExtend == PlotExtend.SingleCell)
-                {
-                    foreach (Cell cell in pool.GetCells())
-                        itemList.Add(cell.ID);
-                }
-            }
-            itemList.Sort();
-            ddCellsPools.Items.AddRange(itemList.Distinct().ToArray());
-            if (ddCellsPools.Items?.Count > 0)
-                ddCellsPools.SelectedIndex = 0;
+            itemList.AddRange(Model.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
+            itemList.Insert(0, "All");
+
+            ddPlotPools.Items.AddRange(itemList.Distinct().ToArray());
+            if (ddPlotPools.Items?.Count > 0)
+                ddPlotPools.SelectedIndex = 0;
         }
-        private void ddCellsPools_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddPlotPools_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string pool = ddCellsPools.Text;
-            List<CellPool> pools = Model.CellPools.Where(cp => cp.ID == pool || cp.CellGroup == pool).ToList();
-            ePlotSomiteSelection.Maximum = (decimal)((bool)(pools?.Any()) ? (pools?.Max(p => p.GetCells().Count())) : 1);
+            if (ddPlotPools.SelectedIndex < 0 || ddPlotSagittal.SelectedIndex < 0)
+                return;
+            string pool = ddPlotPools.Text;
+            SagittalPlane sagittal = ddPlotSagittal.Text.GetValueFromName<SagittalPlane>(SagittalPlane.NotSet);
+            List<CellPool> pools = Model.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
+            ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Somite)) ?? 0);
+            ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Sequence)) ?? 0);
         }
 
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>();
+            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
             if (plotType == PlotType.Episodes)
             {
-                ddGroupingWindows.SelectedIndex = -1;
-                ddCellsPools.SelectedIndex = -1;
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = false;
+                ddPlotSomiteSelection.SelectedIndex = 
+                    ddPlotCellSelection.SelectedIndex =
+                    ddPlotSagittal.SelectedIndex =
+                    ddPlotPools.SelectedIndex = -1;
+                ddPlotSomiteSelection.Enabled = 
+                    ddPlotCellSelection.Enabled =
+                    ddPlotSagittal.Enabled = 
+                    ddPlotPools.Enabled = false;
             }
             else
             {
-                ddGroupingWindows.Enabled = ddCellsPools.Enabled = true;
+                ddPlotSomiteSelection.Enabled =
+                    ddPlotCellSelection.Enabled =
+                    ddPlotSagittal.Enabled =
+                    ddPlotPools.Enabled = true;
             }
             toolTip.SetToolTip(ddPlot, plotType.GetDescription());
         }
-        private void ddGroupingWindows_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (ddGroupingWindows.Text)
-            {
-                case "Full":
-                    plotExtend = PlotExtend.FullModel;
-                    break;
-                case "Individual Cell":
-                    plotExtend = PlotExtend.SingleCell;
-                    break;
-                case "Cells in a Pool":
-                    plotExtend = PlotExtend.CellsInAPool;
-                    break;
-                case "Individual Pool":
-                    plotExtend = PlotExtend.SinglePool;
-                    break;
-                case "Pools on Opposite Sides":
-                    plotExtend = PlotExtend.OppositePools;
-                    break;
-            }
-            PopulateCellTypes();
-        }
 
+        private void GetPlotSubset()
+        {
+            PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
+            PlotSubset = ddPlotPools.Text;
+
+            tabOutputs.SelectedTab = tabPlot;
+            tabPlotSub.SelectedTab = tPlotWindows;
+            UseWaitCursor = true;
+            btnPlotWindows.Enabled = false;
+            btnPlotHTML.Enabled = false;
+            if (PlotType != PlotType.Episodes)
+            {
+                plotCellSelection = new CellSelectionStruct()
+                {
+                    SagittalPlane = ddPlotSagittal.Text.GetValueFromName(SagittalPlane.NotSet),
+                    somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSelection.All),
+                    nSomite = (int)ePlotSomiteSelection.Value,
+                    cellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotSelection.All),
+                    nCell = (int)ePlotCellSelection.Value
+                };
+            }
+
+            tPlotStart = (int)ePlotStart.Value;
+            tPlotEnd = (int)ePlotEnd.Value;
+            if (tPlotEnd > tRunEnd)
+                tPlotEnd = tRunEnd;
+        }
 
 
         #region 2D Model
@@ -1005,7 +1026,7 @@ namespace SiliFish.UI
             if (Model == null) return;
             htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
             htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
             Invoke(CompletePlotHTML);
         }
@@ -1013,26 +1034,17 @@ namespace SiliFish.UI
         {
             if (Model == null || !Model.ModelRun) return;
 
-            PlotType = ddPlot.Text.GetValueFromName<PlotType>();
-            PlotSubset = ddCellsPools.Text;
+            PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
+            PlotSubset = ddPlotPools.Text;
 
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
             if (tPlotEnd > tRunEnd)
                 tPlotEnd = tRunEnd;
 
-            tabOutputs.SelectedTab = tabPlot;
+            GetPlotSubset();
             tabPlotSub.SelectedTab = tPlotHTML;
-            UseWaitCursor = true;
-            btnPlotWindows.Enabled = false;
-            btnPlotHTML.Enabled = false;
-            plotCellSelection = new CellSelectionStruct()
-            {
-                somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(),
-                nSomite = (int)ePlotSomiteSelection.Value,
-                cellSelection = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(),
-                nCell = (int)ePlotCellSelection.Value
-            };
+
             Task.Run(PlotHTML);
         }
         private void CompletePlotHTML()
@@ -1088,28 +1100,10 @@ namespace SiliFish.UI
             {
                 if (Model == null || !Model.ModelRun) return;
 
-                PlotType = ddPlot.Text.GetValueFromName<PlotType>();
-                PlotSubset = ddCellsPools.Text;
-
-                tabOutputs.SelectedTab = tabPlot;
+                GetPlotSubset();
                 tabPlotSub.SelectedTab = tPlotWindows;
-                UseWaitCursor = true;
-                btnPlotWindows.Enabled = false;
-                btnPlotHTML.Enabled = false;
-                plotCellSelection = new CellSelectionStruct()
-                {
-                    somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(),
-                    nSomite = (int)ePlotSomiteSelection.Value,
-                    cellSelection = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(),
-                    nCell = (int)ePlotCellSelection.Value
-                };
 
-                tPlotStart = (int)ePlotStart.Value;
-                tPlotEnd = (int)ePlotEnd.Value;
-                if (tPlotEnd > tRunEnd)
-                    tPlotEnd = tRunEnd;
-
-                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(plotExtend, PlotSubset, plotCellSelection);
+                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
 
                 (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
                     Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
@@ -1117,7 +1111,7 @@ namespace SiliFish.UI
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 
-                int ncol = (!ddGroupingWindows.Enabled || plotExtend != PlotExtend.FullModel) && leftImages?.Count > 1 ? 2 : 1;
+                int ncol = leftImages?.Count > 5 ? 2 : 1;
                 int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
 
                 if (leftImages != null && leftImages.Any())
@@ -1132,7 +1126,7 @@ namespace SiliFish.UI
                 }
                 if (rightImages != null && rightImages.Any())
                 {
-                    ncol = plotExtend != PlotExtend.FullModel && rightImages?.Count > 1 ? 2 : 1;
+                    ncol = rightImages?.Count > 5 ? 2 : 1;
                     nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
                     pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
                     splitPlotWindows.Panel2Collapsed = false;
@@ -1619,14 +1613,16 @@ namespace SiliFish.UI
         }
         private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>();
-            ePlotSomiteSelection.Enabled = sel == PlotSelection.Random;
+            if (ddPlotSomiteSelection.SelectedIndex < 0) return;
+            PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
+            ePlotSomiteSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
         }
 
         private void ddPlotCellSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>();
-            ePlotCellSelection.Enabled = sel == PlotSelection.Random;
+            if (ddPlotCellSelection.SelectedIndex < 0) return;
+            PlotSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
+            ePlotCellSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
         }
 
         private void MainForm_Load(object sender, EventArgs e)

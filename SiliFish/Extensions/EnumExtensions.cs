@@ -31,7 +31,7 @@ namespace SiliFish.Extensions
         }
 
         //https://stackoverflow.com/questions/33225729/enum-value-from-display-name
-        public static T GetValueFromName<T>(this string name) where T : Enum
+        public static T GetValueFromName<T>(this string name, T defaultValue) where T : Enum
         {
             var type = typeof(T);
 
@@ -51,7 +51,7 @@ namespace SiliFish.Extensions
                 }
             }
 
-            throw new ArgumentOutOfRangeException(nameof(name));
+            return defaultValue;
         }
 
     }

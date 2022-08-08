@@ -27,7 +27,11 @@ namespace SiliFish
             return i;
         }
         public int iMax { get { return Convert.ToInt32(((tMax + tSkip_ms) / dt) + 1); } }
+        public static double static_Skip { get; set; } = 0;//Used from data structures that don't have direct access to the model
         public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
+
+        public static double GetTimeOfIndex(int index)
+        { return Math.Round(static_dt * index - static_Skip, 2); }
         public RunParam() { }
     }
 
@@ -85,6 +89,7 @@ namespace SiliFish
 
         [JsonIgnore]
         public bool CancelRun { get; set; } = false;
+        private bool CancelLoop { get; set; } = false;
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
         public int GetRunCounter() => iRunCounter;
 
@@ -234,7 +239,7 @@ namespace SiliFish
 
             return paramDescDict;
         }
-        public void SetAndFillMissingParameters(Dictionary<string, object> paramDict)
+        protected virtual void FillMissingParameters(Dictionary<string, object> paramDict)
         {
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
             paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
@@ -257,7 +262,6 @@ namespace SiliFish
             paramDict.AddObject("Kinematics.Conversion Coef", convCoef, skipIfExists: true);
             paramDict.AddObject("Kinematics.Alpha", alpha, skipIfExists: true);
             paramDict.AddObject("Kinematics.Beta", beta, skipIfExists: true);
-            SetParameters(paramDict);
         }
 
         public virtual void SetAnimationParameters(Dictionary<string, object> paramExternal)
@@ -274,6 +278,7 @@ namespace SiliFish
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
+            FillMissingParameters(paramExternal);
             ModelName = paramExternal.Read("General.Name", ModelName);
             ModelDescription = paramExternal.Read("General.Description", ModelDescription);
             NumberOfSomites = paramExternal.ReadInteger("General.NumberOfSomites");
@@ -293,34 +298,15 @@ namespace SiliFish
             SetAnimationParameters(paramExternal);
         }
 
-        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(PlotExtend plotMode, string subset, CellSelectionStruct cellSelection)
+        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, CellSelectionStruct cellSelection)
         {
-            if (plotMode == PlotExtend.SinglePool)
+            List<CellPool> pools = NeuronPools.Union(MuscleCellPools).Where(p => poolIdentifier == "All" ||
+                            (p.CellGroup == poolIdentifier && p.OnSide(cellSelection.SagittalPlane))).ToList();
+            if (cellSelection.cellSelection== PlotSelection.Summary)
             {
-                return (null, NeuronPools.Union(MuscleCellPools).Where(p => p.ID == subset).ToList());
+               return (null, pools);
             }
-            else if (plotMode == PlotExtend.OppositePools)
-            {
-                return (null, NeuronPools.Union(MuscleCellPools).Where(p => p.CellGroup == subset).ToList());
-            }
-            else if (plotMode == PlotExtend.CellsInAPool)
-            {
-                CellPool cellpool = CellPools.Where(p => p.ID == subset).FirstOrDefault(p => p != null);
-                if (cellpool != null)
-                    return (cellpool.GetCells(cellSelection).ToList(), null);
-                else
-                    return (null, null);
-            }
-            else if (plotMode == PlotExtend.SingleCell)
-            {
-                Cell cell = CellPools.Select(p => p.GetCell(subset)).FirstOrDefault(c => c != null);
-                if (cell != null)
-                    return (new List<Cell> { cell }, null);
-                else
-                    return (null, null);
-            }
-            else //FullModel
-                return (null, NeuronPools.Union(MuscleCellPools).ToList());
+            return (pools.SelectMany(p=>p.GetCells(cellSelection)).ToList(), pools);
         }
 
         public virtual string SummarizeModel()
@@ -507,6 +493,7 @@ namespace SiliFish
                     rand = new Random(seed != null ? (int)seed : 0);
                 runParam = rp;
                 RunParam.static_dt = rp.dt;
+                RunParam.static_Skip = rp.tSkip_ms;
                 iMax = rp.iMax;
                 Stimulus.nMax = iMax;
 
@@ -518,10 +505,11 @@ namespace SiliFish
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;
-                    Time[index] = Math.Round(runParam.dt * index - runParam.tSkip_ms, 2);
+                    Time[index] = RunParam.GetTimeOfIndex(index);
                     if (CancelRun)
                     {
                         CancelRun = false;
+                        CancelLoop = true;
                         return;
                     }
                     CalculateNeuronalOutputs(index);
@@ -537,20 +525,32 @@ namespace SiliFish
 
         public void RunModel(int? seed, RunParam rp, int count = 1)
         {
+            string filename = $"{modelName}_{DateTime.Now:yyMMdd-HHmm}";
+            string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+            filename = Path.Combine(outputFolder, filename);
             for (int i = 0; i < count; i++)
             {
                 iRunCounter = i + 1;
+                if (CancelLoop)
+                {
+                    CancelLoop = false;
+                    return;
+                }
                 RunModelLoop(seed, rp);
                 if (count > 1 && ModelRun)
                 {
                     (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes(-0.5, 0.5, 1000);
-                    string filename = $"{modelName}_Run{i}_{DateTime.Now:yyMMdd-HHmm}";
-                    string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
-                    filename = Path.Combine(outputFolder, filename);
-                    //Util.SaveTailMovementToCSV(filename + ".csv", Time, tail_tip_coord);
-                    Util.SaveEpisodesToCSV(filename + ".csv", episodes);
-                    Util.SaveToJSON(filename + ".json", this);
+                    string runfilename = $"{filename}_Run{iRunCounter}";
+                    runfilename = Path.Combine(outputFolder, runfilename);
+                    //Util.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
+                    Util.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
+                    Util.SaveToJSON(runfilename + ".json", this);
                     seed = null;
+                }
+                if (CancelLoop)
+                {
+                    CancelLoop = false;
+                    return;
                 }
             }
         }

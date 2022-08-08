@@ -70,7 +70,7 @@ namespace SiliFish.DataTypes
         {
             return Periods.Count == 0;
         }
-        public bool IsActive(int time_ms)
+        public bool IsActive(double time_ms)
         {
             if (Periods.Count == 0) return true;
             return Periods.Exists(timeRange => timeRange.start <= time_ms && (timeRange.end < 0 || timeRange.end >= time_ms));

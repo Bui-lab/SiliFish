@@ -77,14 +77,14 @@ namespace SiliFish.ModelUnits
                 values = new double[iEnd];
             initialized = true;
         }
-        public double getStimulus(int t, Random rand)
+        public double getStimulus(int tIndex, Random rand)
         {
-            int t_ms = (int)(t * RunParam.static_dt );
+            double t_ms = RunParam.GetTimeOfIndex(tIndex);
             if (!TimeSpan_ms.IsActive(t_ms))
                 return 0;
             if (!initialized)
                 Initialize();
-            if (values.Length <= t)
+            if (values.Length <= tIndex)
             {
                 double[] copyArr = new double[nMax];  
                 values.CopyTo(copyArr, 0);
@@ -97,13 +97,13 @@ namespace SiliFish.ModelUnits
                     value = Value1;
                     break;
                 case StimulusMode.Ramp:
-                    value = Value1 + (t - iStart) * tangent;
+                    value = Value1 + (tIndex - iStart) * tangent;
                     break;
                 case StimulusMode.Gaussian:
                     value = rand.Gauss(Value1, Value2, Value1 - 3 * Value2, Value1 + 3 * Value2); // µ ± 3SD range
                     break;
             }
-            values[t] = value;
+            values[tIndex] = value;
             return value;
         }
 

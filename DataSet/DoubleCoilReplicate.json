@@ -6,7 +6,6 @@
       "CellType": 0,
       "NTMode": 0,
       "Color": "#00FF00",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.0002",
         "Izhikevich_9P.b": "0.5",
@@ -69,7 +68,6 @@
       "CellType": 1,
       "NTMode": 0,
       "Color": "#FF00ff",
-      "BodyLocation": 0,
       "Parameters": {
         "Leaky_Integrator.R": "50",
         "Leaky_Integrator.C": "5",
@@ -123,7 +121,6 @@
       "CellType": 0,
       "NTMode": 4,
       "Color": "#FF0000",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.5",
         "Izhikevich_9P.b": "0.1",
@@ -185,7 +182,6 @@
       "CellType": 0,
       "NTMode": 1,
       "Color": "#00FFff",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.02",
         "Izhikevich_9P.b": "0.1",
@@ -247,7 +243,6 @@
       "CellType": 0,
       "NTMode": 3,
       "Color": "#804040",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.02",
         "Izhikevich_9P.b": "0.1",
@@ -309,7 +304,6 @@
       "CellType": 0,
       "NTMode": 3,
       "Color": "#FF0080",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.5",
         "Izhikevich_9P.b": "0.1",
@@ -378,13 +372,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.0001
+        "Weight": 0.0001,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "IC--\u003EIC",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -403,13 +401,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.03
+        "Weight": 0.03,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "IC--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -428,13 +430,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.05
+        "Weight": 0.05,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "IC--\u003EV0d",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -458,13 +464,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 5E-05
+        "Weight": 5E-05,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "IC--\u003EV0v",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -488,13 +498,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.15
+        "Weight": 0.15,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "IC--\u003EV2a",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -518,13 +532,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.07
+        "Weight": 0.07,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "MN--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0,
@@ -548,13 +566,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": 10,
         "Delay_ms": 0,
-        "Weight": 0.02
+        "Weight": 0.02,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 3,
       "DistanceMode": 0,
       "Name": "MN--\u003EMuscle",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -578,13 +600,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.0001
+        "Weight": 0.0001,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "MN--\u003EV0d",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -603,13 +629,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.0001
+        "Weight": 0.0001,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "MN--\u003EV0v",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 0,
         "TauR": 0,
@@ -633,13 +663,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 2
+        "Weight": 2,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
       "DistanceMode": 0,
       "Name": "V0d--\u003EIC",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -663,13 +697,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 2
+        "Weight": 2,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
       "DistanceMode": 0,
       "Name": "V0d--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -693,13 +731,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.04
+        "Weight": 0.04,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "V0d--\u003EV0d",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -718,13 +760,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 2
+        "Weight": 2,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
       "DistanceMode": 0,
       "Name": "V0d--\u003EV2a",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -748,13 +794,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.175
+        "Weight": 0.175,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 2,
       "ConnectionType": 1,
       "DistanceMode": 0,
       "Name": "V0v--\u003EIC",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -778,13 +828,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.05
+        "Weight": 0.05,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "V0v--\u003EV0v",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 0,
         "TauR": 0,
@@ -808,13 +862,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.005
+        "Weight": 0.005,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "V2a--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0,
@@ -838,13 +896,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0
+        "Weight": 0,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 1,
       "DistanceMode": 0,
       "Name": "V2a--\u003EV0v",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -868,13 +930,17 @@
         "DistanceMode": 0,
         "FixedDuration_ms": null,
         "Delay_ms": 0,
-        "Weight": 0.005
+        "Weight": 0.005,
+        "WithinSomite": true,
+        "OtherSomite": true,
+        "Autapse": false
       },
       "AxonReachMode": 1,
       "ConnectionType": 2,
       "DistanceMode": 0,
       "Name": "V2a--\u003EV2a",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0,
@@ -898,34 +964,31 @@
     "General.SpinalBodyPosition": 0,
     "General.BodyDorsalVentralDistance": 5,
     "General.BodyMedialLateralDistance": 7,
-    "Dynamic.dt": "0.1",
-    "Dynamic.sigma_range": "0",
-    "Dynamic.sigma_gap": "0",
-    "Dynamic.sigma_chem": "0",
-    "Dynamic.cv": "1",
+    "Dynamic.ConductionVelocity": "1",
     "Dynamic.E_ach": "120",
     "Dynamic.E_glu": "0",
     "Dynamic.E_gly": "-58",
     "Dynamic.E_gaba": "-70",
-    "Dynamic.DampingCoef": "3",
-    "Dynamic.w0": "2.5",
-    "Dynamic.ConversionCoef": "0.1",
     "Kinematics.w0": "2.5",
     "Kinematics.Alpha": "0",
     "Kinematics.Beta": "0",
-    "Kinematics.Damping Coef": 3,
-    "Kinematics.Conversion Coef": 0.1
+    "Kinematics.Damping Coef": "3",
+    "Kinematics.Conversion Coef": "0.1"
   },
   "AppliedStimuli": [
     {
-      "Target": "IC",
+      "TargetPool": "IC",
+      "TargetSomite": "All Somites",
+      "TargetCell": "All Cells",
       "Stimulus_ms": {
         "TimeSpan_ms": {
           "PeriodsJSON": "50:-1"
         },
         "Mode": 1,
         "Value1": 35,
-        "Value2": 0
+        "Value2": 0,
+        "MinValue": 0,
+        "MaxValue": 35
       },
       "LeftRight": "Left",
       "Active": true,
@@ -934,14 +997,18 @@
       }
     },
     {
-      "Target": "IC",
+      "TargetPool": "IC",
+      "TargetSomite": "All Somites",
+      "TargetCell": "All Cells",
       "Stimulus_ms": {
         "TimeSpan_ms": {
           "PeriodsJSON": "150:-1"
         },
         "Mode": 1,
         "Value1": 35,
-        "Value2": 0
+        "Value2": 0,
+        "MinValue": 0,
+        "MaxValue": 35
       },
       "LeftRight": "Right",
       "Active": true,

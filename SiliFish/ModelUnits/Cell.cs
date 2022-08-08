@@ -12,7 +12,7 @@ namespace SiliFish.ModelUnits
         public CellPool CellPool;
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
-        public int Somite { get; set; }
+        public int Somite { get; set; } = -1;
         public Stimulus Stimulus = null;
         public FrontalPlane PositionDorsalVentral = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior = TransversePlane.NotSet;
@@ -34,10 +34,11 @@ namespace SiliFish.ModelUnits
         public virtual double MaxCurrentValue { get { throw (new NotImplementedException()); } }
 
 
-        protected TimeLine TimeLine = null;
-        internal bool IsAlive(int time)
+        protected TimeLine TimeLine_ms = null;
+        internal bool IsAlive(int timepoint)
         {
-            return TimeLine?.IsActive(time) ?? true;
+            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
         public double GetStimulus(int t, Random rand)
         {
@@ -145,7 +146,7 @@ namespace SiliFish.ModelUnits
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
-            TimeLine = timeline;
+            TimeLine_ms = timeline;
             ConductionVelocity = cv;
         }
         public Neuron(CellPoolTemplate cellTemp, int somite, int seq, double cv)
@@ -172,7 +173,7 @@ namespace SiliFish.ModelUnits
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
-            TimeLine = timeline;
+            TimeLine_ms = timeline;
             ConductionVelocity = cv;
         }
 
@@ -335,7 +336,7 @@ namespace SiliFish.ModelUnits
             Sequence = seq;
             Core = new Leaky_Integrator(0, 0, 0);
             EndPlates = new List<ChemicalSynapse>();
-            TimeLine = timeline;
+            TimeLine_ms = timeline;
         }
         public MuscleCell(CellPoolTemplate cellTemp, int somite, int seq)
             : this(cellTemp.CellGroup, somite, seq, cellTemp.TimeLine)
@@ -356,7 +357,7 @@ namespace SiliFish.ModelUnits
             Core = new Leaky_Integrator(R, C, init_v);
             EndPlates = new List<ChemicalSynapse>();
             coordinate = coor;
-            TimeLine = timeline;
+            TimeLine_ms = timeline;
         }
 
          public override Dictionary<string, object> Parameters

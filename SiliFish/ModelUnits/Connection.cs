@@ -132,7 +132,8 @@ namespace SiliFish.ModelUnits
         private TimeLine timeLine_ms;
         internal bool IsActive(int timepoint)
         {
-            return timeLine_ms?.IsActive((int)(timepoint * RunParam.static_dt )) ?? true;
+            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            return timeLine_ms?.IsActive(t_ms) ?? true;
         }
 
         public double[] InputCurrent; //Current vector
@@ -166,22 +167,22 @@ namespace SiliFish.ModelUnits
             timeLine_ms = span;
         }
 
-        public void NextStep(int t)
+        public void NextStep(int tIndex)
         {
-            if (t <= 0) return;
-            t_current = t;
+            if (tIndex <= 0) return;
+            t_current = tIndex;
             int tt = Duration + Delay;
-            double v1 = tt <= t ? Cell1.V[t - tt] : 0;
-            double v2 = Cell2.V[t - 1];
+            double v1 = tt <= tIndex ? Cell1.V[tIndex - tt] : 0;
+            double v2 = Cell2.V[tIndex - 1];
             VoltageDiff1To2 = v1 - v2;
-            v1 = tt <= t ? Cell2.V[t - tt] : 0;
-            v2 = Cell1.V[t - 1];
+            v1 = tt <= tIndex ? Cell2.V[tIndex - tt] : 0;
+            v2 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v1 - v2;
         }
 
-        public double GetGapCurrent(Neuron n, int t)
+        public double GetGapCurrent(Neuron n, int tIndex)
         {
-            double current = IsActive(t) ? Conductance * VoltageDiff : 0;
+            double current = IsActive(tIndex) ? Conductance * VoltageDiff : 0;
 
             if (n == Cell1)
                 return current;
@@ -205,12 +206,13 @@ namespace SiliFish.ModelUnits
         int t_current = 0; //the time point  where the momentary values are kept for
         public double ISyn { get { return ISynA - ISynB; } }
         public double[] InputCurrent; //Current vector 
-        private TimeLine timeLine;
+        private TimeLine timeLine_ms;
         public string ID { get { return string.Format("Syn: {0} -> {1}; Conductance: {2:0.#####}", PreNeuron.ID, PostCell.ID, Conductance); } }
         public double Conductance {get{return Core.Conductance;} }
         internal bool IsActive(int timepoint)
         {
-            return timeLine?.IsActive((int)(timepoint * RunParam.static_dt )) ?? true;
+            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            return timeLine_ms?.IsActive(t_ms) ?? true;
         }
 
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
@@ -237,20 +239,20 @@ namespace SiliFish.ModelUnits
         }
         public void SetTimeLine(TimeLine span)
         {
-            timeLine = span;
+            timeLine_ms = span;
         }
-        public void NextStep(int t)
+        public void NextStep(int tIndex)
         {
-            t_current = t;
+            t_current = tIndex;
             int tt = Duration + Delay;
-            double vPre = tt <= t ? PreNeuron.V[t - tt] : 0;
-            double vPost = t > 0 ? PostCell.V[t - 1] : 0;
+            double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : 0;
+            double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : 0;
             (ISynA, ISynB) = Core.GetNextVal(vPre, vPost, ISynA, ISynB);
         }
-        public double GetSynapticCurrent(int t)
+        public double GetSynapticCurrent(int tIndex)
         {
-            double current = IsActive(t) ? ISyn : 0;
-            InputCurrent[t] = current;
+            double current = IsActive(tIndex) ? ISyn : 0;
+            InputCurrent[tIndex] = current;
             return current;
         }
     }

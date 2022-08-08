@@ -105,29 +105,33 @@ namespace SiliFish.Helpers
             }
         }
 
-        public static void SaveEpisodesToCSV(string filename, List<SwimmingEpisode> episodes)
+        public static void SaveEpisodesToCSV(string filename, int run, List<SwimmingEpisode> episodes)
         {
             if (filename == null || episodes == null)
                 return;
 
             string episodeFilename = Path.ChangeExtension(filename, "Episodes.csv");
             string beatsFilename = Path.ChangeExtension(filename, "Beats.csv");
-            using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Create, FileAccess.Write);
-            using FileStream fsBeats = File.Open(beatsFilename, FileMode.Create, FileAccess.Write);
+            using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Append, FileAccess.Write);
+            using FileStream fsBeats = File.Open(beatsFilename, FileMode.Append, FileAccess.Write);
             using StreamWriter swEpisode = new(fsEpisode);
             using StreamWriter swBeats = new(fsBeats);
-            swEpisode.WriteLine("Episode,Start,Finish,Duration,Time to Next,Tail Beat Freq.,# of Tail Beats");
-            swBeats.WriteLine("Episode,Beat,Start,Finish,Instan.Freq.");
-            int epiCounter = 0;
+            if (run == 1)
+            {
+                swEpisode.WriteLine("Run,Episode,Start,Finish,Duration,Time to Next,Tail Beat Freq.,# of Tail Beats");
+                swBeats.WriteLine("Run,Episode,Beat,Start,Finish,Instan.Freq.");
+            }
+            int epiCounter = 1;
             foreach (SwimmingEpisode episode in episodes)
             {
                 double? timeToNext = null;
-                if (epiCounter < episodes.Count - 1)
+                if (epiCounter < episodes.Count - 2)
                 {
-                    SwimmingEpisode nextEpisode = episodes[epiCounter + 1];
+                    SwimmingEpisode nextEpisode = episodes[epiCounter];//1-based index is used
                     timeToNext = nextEpisode.Start - episode.End;
                 }
-                string epiRow = $"{epiCounter}," +
+                string epiRow = $"{run}," +
+                    $"{epiCounter}," +
                     $"{episode.Start:0.####}," +
                     $"{episode.End:0.####}," +
                     $"{episode.EpisodeDuration:0.####}," +
@@ -135,10 +139,11 @@ namespace SiliFish.Helpers
                     $"{episode.BeatFrequency}," +
                     $"{episode.Beats.Count}";
                 swEpisode.WriteLine(epiRow);
-                int beatCounter = 0;
+                int beatCounter = 1;
                 foreach ((double beatStart, double beatEnd) in episode.Beats)
                 {
-                    string beatRow = $"{epiCounter}," +
+                    string beatRow = $"{run}," + 
+                        $"{epiCounter}," +
                         $"{beatCounter++}," +
                         $"{beatStart:0.####}," +
                         $"{beatEnd:0.####}," +
