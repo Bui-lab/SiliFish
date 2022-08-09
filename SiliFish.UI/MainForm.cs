@@ -185,6 +185,23 @@ namespace SiliFish.UI
         #endregion
 
         #region Model selection
+
+        private void SwitchToModel()
+        {
+            if (Model == null) return;
+            lPlotSomites.Visible = ddPlotSomiteSelection.Visible = ePlotSomiteSelection.Visible = Model.NumberOfSomites > 0;
+            if (rbSingleCoil.Checked)
+                LoadParams(Model.ModelRun ? lastRunSCParams : lastSavedSCParams);
+            else if (rbDoubleCoil.Checked)
+                LoadParams(Model.ModelRun ? lastRunDCParams : lastSavedDCParams);
+            else if (rbBeatGlide.Checked)
+                LoadParams(Model.ModelRun ? lastRunBGParams : lastSavedBGParams);
+            else //custom
+            {
+                LoadParams(Model.ModelRun ? lastRunCustomParams : lastSavedCustomParams);
+                LoadModelTemplate();
+            }
+        }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (rbSingleCoil.Checked)
@@ -208,7 +225,7 @@ namespace SiliFish.UI
                 Model = scModel = new SingleCoilModel();
                 lastSavedSCParams = Model.GetParameters();
             }
-            LoadParams(Model.ModelRun ? lastRunSCParams : lastSavedSCParams);
+            SwitchToModel();
         }
 
         private void rbDoubleCoil_CheckedChanged(object sender, EventArgs e)
@@ -221,7 +238,7 @@ namespace SiliFish.UI
                 Model = dcModel = new DoubleCoilModel();
                 lastSavedDCParams = Model.GetParameters();
             }
-            LoadParams(Model.ModelRun ? lastRunDCParams : lastSavedDCParams);
+            SwitchToModel();
         }
 
         private void rbBeatGlide_CheckedChanged(object sender, EventArgs e)
@@ -236,7 +253,7 @@ namespace SiliFish.UI
                 Model = bgModel = new BeatAndGlideModel();
                 lastSavedBGParams = Model.GetParameters();
             }
-            LoadParams(Model.ModelRun ? lastRunBGParams : lastSavedBGParams);
+            SwitchToModel();
         }
 
         private void rbCustom_CheckedChanged(object sender, EventArgs e)
@@ -258,8 +275,7 @@ namespace SiliFish.UI
                 lastSavedCustomParams = Model.GetParameters();
                 lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
             }
-            LoadParams(Model.ModelRun ? lastRunCustomParams : lastSavedCustomParams);
-            LoadModelTemplate();
+            SwitchToModel();
         }
         #endregion
 
@@ -290,6 +306,8 @@ namespace SiliFish.UI
         }
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
+            lPlotSomites.Visible = ddPlotSomiteSelection.Visible = ePlotSomiteSelection.Visible = Model.NumberOfSomites > 0;
+
             if (ParamDict == null) return;
             this.Text = $"SiliFish {Model.ModelName}";
 
@@ -595,22 +613,22 @@ namespace SiliFish.UI
                         ModelTemplate = (SwimmingModelTemplate)Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), json);
                         ModelTemplate.LinkObjects();
                         Model = customModel = new CustomSwimmingModel(ModelTemplate);
+                        lastSavedCustomParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
                         Model.SetParameters(ModelTemplate.Parameters);
-                        LoadParams(ModelTemplate.Parameters); 
-                        LoadModelTemplate();
+                        SwitchToModel();
                         lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
                     else
                     {
                         Dictionary<string, object> ParamDict = Util.ReadDictionaryFromJSON(openFileJson.FileName);
                         Model?.SetParameters(ParamDict);
-                        LoadParams(ParamDict);
                         if (rbSingleCoil.Checked)
                             lastSavedSCParams = ParamDict;
                         else if (rbDoubleCoil.Checked)
                             lastSavedDCParams = ParamDict;
                         else if (rbBeatGlide.Checked)
                             lastSavedBGParams = ParamDict;
+                        SwitchToModel();
                     }
                 }
             }
@@ -760,18 +778,22 @@ namespace SiliFish.UI
         #endregion
 
         #region Outputs
-        private void PopulatePlotPools()
-        {
-            ddPlotPools.Items.Clear();
-            ddPlotPools.Text = "";
-            if (Model == null) return;
-            List<string> itemList = new();
-            itemList.AddRange(Model.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
-            itemList.Insert(0, "All");
 
-            ddPlotPools.Items.AddRange(itemList.Distinct().ToArray());
-            if (ddPlotPools.Items?.Count > 0)
-                ddPlotPools.SelectedIndex = 0;
+        private void DisplayNumberOfPlots()
+        {
+            GetPlotSubset();
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+            int count = Cells?.Count ?? 0 + Pools?.Count ?? 0;
+            if (count > 0)
+            {
+                if (PlotType == PlotType.FullDyn)
+                    count *= 3;
+                lNumberOfPlots.Text = lNumberOfPlots.Tag + count.ToString();
+                lNumberOfPlots.Visible = true;
+            }
+            else
+                lNumberOfPlots.Visible = false;
+
         }
         private void ddPlotPools_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -782,6 +804,8 @@ namespace SiliFish.UI
             List<CellPool> pools = Model.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
             ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Somite)) ?? 0);
             ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Sequence)) ?? 0);
+            if (ddPlotPools.Focused)
+                DisplayNumberOfPlots();
         }
 
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
@@ -806,18 +830,68 @@ namespace SiliFish.UI
                     ddPlotPools.Enabled = true;
             }
             toolTip.SetToolTip(ddPlot, plotType.GetDescription());
+            if (ddPlot.Focused)
+                DisplayNumberOfPlots();
         }
 
-        private void GetPlotSubset()
+        private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddPlotSomiteSelection.SelectedIndex < 0) return;
+            PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
+            ePlotSomiteSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
+            if (ddPlotSomiteSelection.Focused)
+                DisplayNumberOfPlots();
+        }
+
+        private void ddPlotCellSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddPlotCellSelection.SelectedIndex < 0) return;
+            PlotSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
+            ePlotCellSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
+            if (ddPlotCellSelection.Focused)
+                DisplayNumberOfPlots();
+        }
+
+        private void ddPlotSagittal_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddPlotSagittal.Focused)
+                DisplayNumberOfPlots();
+        }
+
+        private void ePlotCellSelection_ValueChanged(object sender, EventArgs e)
+        {
+            if (ePlotCellSelection.Focused)
+                DisplayNumberOfPlots();
+        }
+
+        private void ePlotSomiteSelection_ValueChanged(object sender, EventArgs e)
+        {
+            if (ePlotSomiteSelection.Focused)
+                DisplayNumberOfPlots();
+        }
+         private void PopulatePlotPools()
+        {
+            string prevSelection = ddPlotPools.Text;
+            ddPlotPools.Items.Clear();
+            ddPlotPools.Text = "";
+            if (Model == null) return;
+            List<string> itemList = new();
+            itemList.AddRange(Model.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
+            itemList.Insert(0, "All");
+
+            ddPlotPools.Items.AddRange(itemList.Distinct().ToArray());
+            if (ddPlotPools.Items?.Count > 0)
+            {
+                ddPlotPools.Text = prevSelection;
+                if (ddPlotPools.SelectedIndex < 0)
+                    ddPlotPools.SelectedIndex = 0;
+            }
+        }
+       private void GetPlotSubset()
         {
             PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
             PlotSubset = ddPlotPools.Text;
 
-            tabOutputs.SelectedTab = tabPlot;
-            tabPlotSub.SelectedTab = tPlotWindows;
-            UseWaitCursor = true;
-            btnPlotWindows.Enabled = false;
-            btnPlotHTML.Enabled = false;
             if (PlotType != PlotType.Episodes)
             {
                 plotCellSelection = new CellSelectionStruct()
@@ -836,7 +910,171 @@ namespace SiliFish.UI
                 tPlotEnd = tRunEnd;
         }
 
+        #region HTML Plots
+        private void PlotHTML()
+        {
+            if (Model == null) return;
+            htmlPlot = "";
 
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+            htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
+            Invoke(CompletePlotHTML);
+        }
+        private void btnPlotHTML_Click(object sender, EventArgs e)
+        {
+            if (Model == null || !Model.ModelRun) return;
+
+            GetPlotSubset();
+            tabOutputs.SelectedTab = tabPlot;
+            tabPlotSub.SelectedTab = tPlotHTML;
+            UseWaitCursor = true;
+            btnPlotWindows.Enabled = false;
+            btnPlotHTML.Enabled = false;
+
+            Task.Run(PlotHTML);
+        }
+        private void CompletePlotHTML()
+        {
+            webViewPlot.NavigateTo(htmlPlot, tempFolder, ref tempFile);
+            UseWaitCursor = false;
+            btnPlotWindows.Enabled = true;
+            btnPlotHTML.Enabled = true;
+            linkSaveHTMLPlots.Enabled = true;
+            toolTip.SetToolTip(btnPlotHTML, $"Last HTML plot: {DateTime.Now:t}");
+        }
+        private void linkSaveHTMLPlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileHTML.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllText(saveFileHTML.FileName, htmlPlot.ToString());
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
+        }
+        #endregion
+
+        #region Windows Plot
+
+        private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            PictureBox pb = sender as PictureBox;
+            if (pb.Image == null)
+                return;
+            if (pb.Tag == null)
+            {
+                pb.InitialImage = pb.Image;
+                pb.Tag = 0;
+            }
+            if (e.Delta > 0)
+                pb.Tag = (int)pb.Tag + 1;
+            else
+                pb.Tag = (int)pb.Tag - 1;
+            double mult = 1 + 0.1 * (int)pb.Tag;
+            if (mult < 0.1) return;
+            Size sz = new((int)(pb.InitialImage.Width * mult), (int)(pb.InitialImage.Height * mult));
+            pb.Image = new Bitmap(pb.InitialImage, sz);
+        }
+
+        private void PlotWindows()
+        {
+            try
+            {
+                if (Model == null || !Model.ModelRun) return;
+
+                GetPlotSubset();
+                tabOutputs.SelectedTab = tabPlot;
+                tabPlotSub.SelectedTab = tPlotWindows;
+                UseWaitCursor = true;
+                btnPlotWindows.Enabled = false;
+                btnPlotHTML.Enabled = false;
+
+                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
+                    Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+
+                leftImages?.RemoveAll(img => img == null);
+                rightImages?.RemoveAll(img => img == null);
+
+                int ncol = leftImages?.Count > 5 ? 2 : 1;
+                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
+
+                if (leftImages != null && leftImages.Any())
+                {
+                    pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
+                    splitPlotWindows.Panel1Collapsed = false;
+                }
+                else
+                {
+                    pictureBoxLeft.Image = null;
+                    splitPlotWindows.Panel1Collapsed = true;
+                }
+                if (rightImages != null && rightImages.Any())
+                {
+                    ncol = rightImages?.Count > 5 ? 2 : 1;
+                    nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
+                    pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
+                    splitPlotWindows.Panel2Collapsed = false;
+                    splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
+                }
+                else
+                {
+                    pictureBoxRight.Image = null;
+                    splitPlotWindows.Panel2Collapsed = true;
+                }
+                pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
+                pictureBoxRight.Tag = null;//for proper zooming it has to be reset
+                toolTip.SetToolTip(btnPlotWindows, $"Last plot: {DateTime.Now:t}");
+                tabPlotSub.SelectedTab = tPlotWindows;
+                UseWaitCursor = false;
+                btnPlotWindows.Enabled = true;
+                btnPlotHTML.Enabled = true;
+                linkSavePlots.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
+        private void btnPlotWindows_Click(object sender, EventArgs e)
+        {
+            PlotWindows();
+        }
+
+        private void linkSavePlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileImage.ShowDialog() == DialogResult.OK)
+                {
+                    string ext = Path.GetExtension(saveFileImage.FileName);
+                    ImageFormat imgFormat = ImageFormat.Png;
+                    string leftFile = saveFileImage.FileName;
+                    string rightFile = saveFileImage.FileName;
+
+                    if (pictureBoxLeft.Image != null && pictureBoxRight.Image != null)
+                    {
+                        string s = Path.GetFileNameWithoutExtension(leftFile);
+                        string path = Path.GetDirectoryName(leftFile);
+                        leftFile = $"{path}\\{s}_Left{ext}";
+                        rightFile = $"{path}\\{s}_Right{ext}";
+                    }
+                    pictureBoxLeft.Image?.Save(leftFile, imgFormat);
+                    pictureBoxRight.Image?.Save(rightFile, imgFormat);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+            }
+        }
+
+        #endregion
         #region 2D Model
         private void Generate2DModel()
         {
@@ -1020,171 +1258,7 @@ namespace SiliFish.UI
 
         #endregion
 
-        #region HTML Plots
-        private void PlotHTML()
-        {
-            if (Model == null) return;
-            htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-            htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
-            Invoke(CompletePlotHTML);
-        }
-        private void btnPlotHTML_Click(object sender, EventArgs e)
-        {
-            if (Model == null || !Model.ModelRun) return;
-
-            PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
-            PlotSubset = ddPlotPools.Text;
-
-            tPlotStart = (int)ePlotStart.Value;
-            tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > tRunEnd)
-                tPlotEnd = tRunEnd;
-
-            GetPlotSubset();
-            tabPlotSub.SelectedTab = tPlotHTML;
-
-            Task.Run(PlotHTML);
-        }
-        private void CompletePlotHTML()
-        {
-            webViewPlot.NavigateTo(htmlPlot, tempFolder, ref tempFile);
-            UseWaitCursor = false;
-            btnPlotWindows.Enabled = true;
-            btnPlotHTML.Enabled = true;
-            linkSaveHTMLPlots.Enabled = true;
-            toolTip.SetToolTip(btnPlotHTML, $"Last HTML plot: {DateTime.Now:t}");
-        }
-        private void linkSaveHTMLPlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                if (saveFileHTML.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllText(saveFileHTML.FileName, htmlPlot.ToString());
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
-            }
-        }
-        #endregion
-
-        #region Windows Plot
-
-        private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
-        {
-            PictureBox pb = sender as PictureBox;
-            if (pb.Image == null)
-                return;
-            if (pb.Tag == null)
-            {
-                pb.InitialImage = pb.Image;
-                pb.Tag = 0;
-            }
-            if (e.Delta > 0)
-                pb.Tag = (int)pb.Tag + 1;
-            else
-                pb.Tag = (int)pb.Tag - 1;
-            double mult = 1 + 0.1 * (int)pb.Tag;
-            if (mult < 0.1) return;
-            Size sz = new((int)(pb.InitialImage.Width * mult), (int)(pb.InitialImage.Height * mult));
-            pb.Image = new Bitmap(pb.InitialImage, sz);
-        }
-
-        private void PlotWindows()
-        {
-            try
-            {
-                if (Model == null || !Model.ModelRun) return;
-
-                GetPlotSubset();
-                tabPlotSub.SelectedTab = tPlotWindows;
-
-                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
-                    Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
-
-                leftImages?.RemoveAll(img => img == null);
-                rightImages?.RemoveAll(img => img == null);
-
-                int ncol = leftImages?.Count > 5 ? 2 : 1;
-                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
-
-                if (leftImages != null && leftImages.Any())
-                {
-                    pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                    splitPlotWindows.Panel1Collapsed = false;
-                }
-                else
-                {
-                    pictureBoxLeft.Image = null;
-                    splitPlotWindows.Panel1Collapsed = true;
-                }
-                if (rightImages != null && rightImages.Any())
-                {
-                    ncol = rightImages?.Count > 5 ? 2 : 1;
-                    nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
-                    pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
-                    splitPlotWindows.Panel2Collapsed = false;
-                    splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
-                }
-                else
-                {
-                    pictureBoxRight.Image = null;
-                    splitPlotWindows.Panel2Collapsed = true;
-                }
-                pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
-                pictureBoxRight.Tag = null;//for proper zooming it has to be reset
-                toolTip.SetToolTip(btnPlotWindows, $"Last plot: {DateTime.Now:t}");
-                tabPlotSub.SelectedTab = tPlotWindows;
-                UseWaitCursor = false;
-                btnPlotWindows.Enabled = true;
-                btnPlotHTML.Enabled = true;
-                linkSavePlots.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
-        private void btnPlotWindows_Click(object sender, EventArgs e)
-        {
-            PlotWindows();
-        }
-
-        private void linkSavePlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                if (saveFileImage.ShowDialog() == DialogResult.OK)
-                {
-                    string ext = Path.GetExtension(saveFileImage.FileName);
-                    ImageFormat imgFormat = ImageFormat.Png;
-                    string leftFile = saveFileImage.FileName;
-                    string rightFile = saveFileImage.FileName;
-
-                    if (pictureBoxLeft.Image != null && pictureBoxRight.Image != null)
-                    {
-                        string s = Path.GetFileNameWithoutExtension(leftFile);
-                        string path = Path.GetDirectoryName(leftFile);
-                        leftFile = $"{path}\\{s}_Left{ext}";
-                        rightFile = $"{path}\\{s}_Right{ext}";
-                    }
-                    pictureBoxLeft.Image?.Save(leftFile, imgFormat);
-                    pictureBoxRight.Image?.Save(rightFile, imgFormat);
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
-            }
-        }
-
-        #endregion
 
         #endregion
 
@@ -1237,11 +1311,19 @@ namespace SiliFish.UI
         private void listCellPool_CopyItem(object sender, EventArgs e)
         {
             if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
-            pool = OpenCellPoolDialog(pool);
-            if (pool != null)
+            CellPoolTemplate poolDuplicate = new(pool);
+            poolDuplicate = OpenCellPoolDialog(poolDuplicate);
+            while (ModelTemplate.CellPoolTemplates.Any(p => p.CellGroup == poolDuplicate?.CellGroup))
             {
-                ModelTemplate.CellPoolTemplates.Add(pool);
-                listCellPool.AppendItem(pool);
+                WarningMessage("Cell pool group names have to be unique. Please enter a different name.");
+                poolDuplicate = OpenCellPoolDialog(poolDuplicate);
+            }
+            if (poolDuplicate != null)
+            {
+                ModelTemplate.CellPoolTemplates.Add(poolDuplicate);
+                ModelTemplate.CopyConnectionsOfCellPool(pool, poolDuplicate);
+                listCellPool.AppendItem(poolDuplicate);
+                LoadModelTemplateInterPools();
                 modifiedPools = true;
             }
         }
@@ -1611,19 +1693,7 @@ namespace SiliFish.UI
             }
             catch { }
         }
-        private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddPlotSomiteSelection.SelectedIndex < 0) return;
-            PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
-            ePlotSomiteSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
-        }
 
-        private void ddPlotCellSelection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddPlotCellSelection.SelectedIndex < 0) return;
-            PlotSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
-            ePlotCellSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
-        }
 
         private void MainForm_Load(object sender, EventArgs e)
         {

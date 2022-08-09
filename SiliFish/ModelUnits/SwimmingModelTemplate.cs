@@ -32,7 +32,23 @@ namespace SiliFish.ModelUnits
                 return "Gap junction and synapse names have to be unique";
             return "";
         }
-
+        public void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolTarget)
+        {
+            List<InterPoolTemplate> iptNewList = new();
+            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolSource == poolSource.CellGroup))
+            {
+                InterPoolTemplate iptCopy = new(ipt);
+                iptCopy.PoolSource = poolTarget.CellGroup;
+                iptNewList.Add(iptCopy);
+            }
+            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolTarget == poolSource.CellGroup))
+            {
+                InterPoolTemplate iptCopy = new(ipt);
+                iptCopy.PoolTarget= poolTarget.CellGroup;
+                iptNewList.Add(iptCopy);
+            }
+            InterPoolTemplates.AddRange(iptNewList);
+        }
         public void RenameCellPool(string oldName, string newName)
         {
             if (oldName == null || newName == null || oldName == newName)

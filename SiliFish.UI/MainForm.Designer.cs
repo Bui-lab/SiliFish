@@ -87,6 +87,7 @@ namespace SiliFish.UI
             this.tPlotHTML = new System.Windows.Forms.TabPage();
             this.webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlot = new System.Windows.Forms.Panel();
+            this.lNumberOfPlots = new System.Windows.Forms.Label();
             this.ddPlotSagittal = new System.Windows.Forms.ComboBox();
             this.linkSavePlots = new System.Windows.Forms.LinkLabel();
             this.btnPlotHTML = new System.Windows.Forms.Button();
@@ -882,6 +883,7 @@ namespace SiliFish.UI
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.SystemColors.Control;
+            this.pPlot.Controls.Add(this.lNumberOfPlots);
             this.pPlot.Controls.Add(this.ddPlotSagittal);
             this.pPlot.Controls.Add(this.linkSavePlots);
             this.pPlot.Controls.Add(this.btnPlotHTML);
@@ -910,6 +912,17 @@ namespace SiliFish.UI
             this.pPlot.Size = new System.Drawing.Size(780, 107);
             this.pPlot.TabIndex = 5;
             // 
+            // lNumberOfPlots
+            // 
+            this.lNumberOfPlots.AutoSize = true;
+            this.lNumberOfPlots.Location = new System.Drawing.Point(450, 32);
+            this.lNumberOfPlots.Name = "lNumberOfPlots";
+            this.lNumberOfPlots.Size = new System.Drawing.Size(63, 15);
+            this.lNumberOfPlots.TabIndex = 53;
+            this.lNumberOfPlots.Tag = "# of plots: ";
+            this.lNumberOfPlots.Text = "# of plots: ";
+            this.lNumberOfPlots.Visible = false;
+            // 
             // ddPlotSagittal
             // 
             this.ddPlotSagittal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -918,6 +931,7 @@ namespace SiliFish.UI
             this.ddPlotSagittal.Name = "ddPlotSagittal";
             this.ddPlotSagittal.Size = new System.Drawing.Size(160, 23);
             this.ddPlotSagittal.TabIndex = 52;
+            this.ddPlotSagittal.SelectedIndexChanged += new System.EventHandler(this.ddPlotSagittal_SelectedIndexChanged);
             // 
             // linkSavePlots
             // 
@@ -978,6 +992,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
+            this.ePlotCellSelection.ValueChanged += new System.EventHandler(this.ePlotCellSelection_ValueChanged);
             // 
             // ddPlotSomiteSelection
             // 
@@ -1066,6 +1081,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
+            this.ePlotSomiteSelection.ValueChanged += new System.EventHandler(this.ePlotSomiteSelection_ValueChanged);
             // 
             // lPlotPool
             // 
@@ -1916,5 +1932,6 @@ namespace SiliFish.UI
         private NumericUpDown eRunNumber;
         private CheckBox cbMultiple;
         private ComboBox ddPlotSagittal;
+        private Label lNumberOfPlots;
     }
 }

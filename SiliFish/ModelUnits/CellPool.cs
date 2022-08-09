@@ -181,7 +181,7 @@ namespace SiliFish.ModelUnits
                 {
                     double radian = angles[i] * Math.PI / 180;
                     y[i] = Math.Sin(radian) * radii[i];
-                    z[i] = centerZ - Math.Cos(radian) * radii[i];
+                    z[i] = centerZ + Math.Cos(radian) * radii[i];
                 }
             }
             else
@@ -284,7 +284,7 @@ namespace SiliFish.ModelUnits
 
             List<int> somites;
             if (template.PerSomiteOrTotal== CountingMode.PerSomite)
-                somites = Enumerable.Range(0, Model.NumberOfSomites).ToList();
+                somites = Enumerable.Range(1, Model.NumberOfSomites).ToList();
             else somites = new List<int>() { -1 };
 
             foreach (int somite in somites)
@@ -297,8 +297,8 @@ namespace SiliFish.ModelUnits
 
                 foreach (int i in Enumerable.Range(0, n))
                 {
-                    Cell cell = neuron ? new Neuron(template, somite, i, cv[i]) :
-                        new MuscleCell(template, somite, i);
+                    Cell cell = neuron ? new Neuron(template, somite, i + 1, cv[i]) :
+                        new MuscleCell(template, somite, i + 1);
                     cell.PositionLeftRight = leftright;
                     cell.coordinate = coordinates[i];
                     AddCell(cell);
@@ -326,7 +326,7 @@ namespace SiliFish.ModelUnits
             foreach (Neuron pre in this.GetCells())
             {
                 //To prevent recursive gap junctions in self projecting pools
-                IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Sequence > pre.Sequence) : target.GetCells();
+                IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
                 foreach (Neuron post in targetcells)
                 {
                     if (probabibility < SwimmingModel.rand.Next(1))

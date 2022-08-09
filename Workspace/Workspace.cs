@@ -1,15 +1,15 @@
 using Services;
 using SiliFish;
-using SiliFish.DataTypes;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.UI;
+using WorkSpace;
 
 namespace Workspace
 {
     public partial class Workspace : Form
     {
-        SwimmingModel model = null;
+        WorkspaceSwimmingModel model = null;
         public Workspace()
         {
             InitializeComponent();

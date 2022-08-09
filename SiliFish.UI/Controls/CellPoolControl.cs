@@ -34,7 +34,8 @@ namespace SiliFish.UI.Controls
         }
         public string JSONString;
 
-        public string CellName { get { return eGroupName.Text; }}
+        public string CellName { get { return eGroupName.Text; }set { eGroupName.Text = value; } }
+
         private bool skipCellTypeChange = false;
         public CellPoolControl()
         {

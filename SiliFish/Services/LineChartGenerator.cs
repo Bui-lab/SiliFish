@@ -117,6 +117,8 @@ namespace SiliFish.Services
         public static string CreateStimuliSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, 
             double yMin, double yMax, string color)
         {
+            if (!cells.Any())
+                return null;
             byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreateStimuliSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
@@ -137,6 +139,7 @@ namespace SiliFish.Services
                 string color = pool.Color.ToRGB();
                 charts.Add(CreateStimuliSubPlot(chartindex++, pool.ID + " Stimuli", cells, Time, tstart, tend, yMin, yMax, color));
             }
+            charts.RemoveAll(c => c == null);
             return charts;
         }
 
@@ -152,6 +155,7 @@ namespace SiliFish.Services
                 string color = cell.CellPool.Color.ToRGB();
                 charts.Add(CreateStimuliSubPlot(chartindex++, cell.ID + " Stimuli", new List<Cell>() { cell }, Time, tstart, tend, yMin, yMax, color));
             }
+            charts.RemoveAll(c => c == null);
             return charts;
         }
 
@@ -176,6 +180,8 @@ namespace SiliFish.Services
         public static string CreatePotentialsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, 
             double yMin, double yMax, string color)
         {
+            if (!cells.Any())
+                return null;
             byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = string.Join("\r\n", cells.Select(cell => CreatePotentialSeries(chartindex, cell, Time, tstart, tend, color, ref a, dec)));
@@ -199,6 +205,7 @@ namespace SiliFish.Services
                 string color = pool.Color.ToRGB();
                 charts.Add(CreatePotentialsSubPlot(chartindex++, pool.ID + " Potantials", cells, Time, tstart, tend, yMin, yMax, color));
             }
+            charts.RemoveAll(c => c == null);
             return charts;
         }
 
@@ -216,6 +223,7 @@ namespace SiliFish.Services
                 string color = cell.CellPool.Color.ToRGB();
                 charts.Add(CreatePotentialsSubPlot(chartindex++, cell.ID + " Potantials", new List<Cell>() { cell }, Time, tstart, tend, yMin, yMax, color));
             }
+            charts.RemoveAll(c => c == null);
             return charts;
         }
 
@@ -236,7 +244,7 @@ namespace SiliFish.Services
         private static string CreateIOGapCurrentSeries(int chartIndex, int seriesindex, GapJunction jnc, double[] Time, int tstart, int tend, string color, byte opacity, bool incoming)
         {
             string dataPoints = string.Join(",", Enumerable.Range(tstart, tend - tstart + 1).Select(i => CreateCurrentDataPoint(jnc, Time[i], i, incoming)));
-            string seriesName = jnc.Cell1.ID.Replace("\"", "\\\"");
+            string seriesName = "Gap: " +(incoming ? jnc.Cell1 : jnc.Cell2).ID.Replace("\"", "\\\"");
             string seriesIndex = chartIndex.ToString() + "_" + seriesindex.ToString();
             return CreateLineChartSeries(dataPoints, chartIndex, seriesName, seriesIndex, color, opacity);
         }
@@ -251,6 +259,8 @@ namespace SiliFish.Services
 
         private static string CreateCurrentsSubPlot(int chartindex, string chartTitle, List<Cell> cells, double[] Time, int tstart, int tend, double yMin, double yMax, bool includeGap, bool includeChem)
         {
+            if (!cells.Any())
+                return null;
             byte a = 255;
             byte dec = (byte)(200 / cells.Count);
             string series = "";
@@ -318,6 +328,7 @@ namespace SiliFish.Services
                 List<Cell> cells = pool.GetCells(cellSelection).ToList();
                 charts.Add(CreateCurrentsSubPlot(chartindex++, pool.ID + " Currents", cells, Time, tstart, tend, yMin, yMax, includeGap, includeChem));
             }
+            charts.RemoveAll(c => c == null);
             return charts;
         }
 
@@ -334,6 +345,7 @@ namespace SiliFish.Services
             {
                 charts.Add(CreateCurrentsSubPlot(chartindex++, cell.ID + " Currents", new List<Cell>() { cell }, Time, tstart, tend, yMin, yMax, includeGap, includeChem));
             }
+            charts.RemoveAll(c => c == null);
             return charts;
         }
 

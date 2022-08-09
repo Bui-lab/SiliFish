@@ -341,7 +341,7 @@
             this.numAscReach.Name = "numAscReach";
             this.numAscReach.Size = new System.Drawing.Size(82, 23);
             this.numAscReach.TabIndex = 22;
-            this.toolTip1.SetToolTip(this.numAscReach, "If body contains, represent somite number.. Otherwise, it represents the distance" +
+            this.toolTip1.SetToolTip(this.numAscReach, "If body is composed of somites, this number represents the number of somites it can pass through. Otherwise, it represents the distance" +
         " in the x-axis.");
             // 
             // numDescReach
@@ -351,7 +351,7 @@
             this.numDescReach.Name = "numDescReach";
             this.numDescReach.Size = new System.Drawing.Size(82, 23);
             this.numDescReach.TabIndex = 24;
-            this.toolTip1.SetToolTip(this.numDescReach, "If body contains, represent somite number.. Otherwise, it represents the distance" +
+            this.toolTip1.SetToolTip(this.numDescReach, "If body is composed of somites, this number represents the number of somites it can pass through. Otherwise, it represents the distance" +
         " in the x-axis.");
             // 
             // numMaxReach

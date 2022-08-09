@@ -25,6 +25,37 @@ namespace SiliFish.Services
         private static string PlotCurrents(double[] TimeOffset, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true, string filename = "")
         {
+            /*for dychart 
+             * if (cells != null && cells.Any())
+            {
+                Cell cell = cells[0];
+                List<string> test = new(TimeOffset.Select(t => t.ToString("#.##") + ","));
+                if (cell is Neuron neuron)
+                {
+                    int len = TimeOffset.Count();
+                    foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
+                    {
+                        foreach (int i in Enumerable.Range(0, len))
+                            test[i] += jnc.InputCurrent[i].ToString("#.#########") + ";";
+                    }
+                    foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
+                    {
+                        foreach (int i in Enumerable.Range(0, len))
+                            test[i] += jnc.InputCurrent[i].ToString("#.#########") + ";";
+                    }
+                    foreach (ChemicalSynapse jnc in neuron.Synapses)
+                    {
+                        foreach (int i in Enumerable.Range(0, len))
+                            test[i] += jnc.InputCurrent[i].ToString("#.#########") + ";";
+                    }
+                    foreach (int i in Enumerable.Range(0, len))
+                        test[i] = "\"" + test[i].Substring(0, test[i].Length - 1) + "\"+";
+                    string testHtml = string.Join("\n", test.ToArray());
+                }
+            }
+            
+            */
+
             List<string> charts = new();
             int chartindex = 0;
             if (cells != null)
@@ -65,7 +96,7 @@ namespace SiliFish.Services
                 charts.AddRange(LineChartGenerator.CreateCurrentsMultiPlot(pools, cellSelection, TimeOffset, iStart, iEnd, includeGap: true, includeChem: true, ref chartindex));
                 charts.AddRange(LineChartGenerator.CreateStimuliMultiPlot(pools, TimeOffset, iStart, iEnd, cellSelection, ref chartindex));
             }
-            return LineChartGenerator.PlotCharts(filename, "Full Dynamics", charts, numColumns: 2);
+            return LineChartGenerator.PlotCharts(filename, "Full Dynamics", charts, numColumns: 1);
         }
 
         private static string PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
@@ -118,7 +149,7 @@ namespace SiliFish.Services
                 charts.Add(chart);
             }
 
-            return LineChartGenerator.PlotCharts("", "Episodes", charts, 2);
+            return LineChartGenerator.PlotCharts("", "Episodes", charts, numColumns: 1);
         }
 
 

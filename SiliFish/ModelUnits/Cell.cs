@@ -59,7 +59,7 @@ namespace SiliFish.ModelUnits
         {
             get
             {
-                string s = Somite >= 0 ? "_" + Somite.ToString() : "";
+                string s = Somite > 0 ? "_" + Somite.ToString() : "";
                 return $"{Position}_{CellGroup}{s}_{Sequence}";
             }
             set { }

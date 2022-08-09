@@ -81,7 +81,7 @@ namespace SiliFish
         protected List<InterPool> PoolConnections = new();
 
         [JsonIgnore]
-        public double[] TimeArray { get { return Time; } }
+        public double[] TimeArray{ get { return Time; } }
 
         [JsonIgnore]
         public bool ModelRun { get { return model_run; } }
@@ -97,36 +97,6 @@ namespace SiliFish
         public SwimmingModel()
         {
             modelName = this.GetType().Name;
-        }
-
-        //Constructor to create a dummy model with external data - internal
-        public SwimmingModel(Dictionary<string, double[]> data)
-        {
-            CellPool L_Muscle = new(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Left, 3, Color.Purple);
-            CellPool R_Muscle = new(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Right, 3, Color.Purple);
-
-            int nMuscle = (int)((data.Keys.Count(k => k.Contains("Muscle"))) / 2);
-            for (int i = 0; i < nMuscle; i++)
-            {
-                MuscleCell lm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn: 0, new Coordinate(x: 5.0 + 1.6 * i, -1))
-                {
-                    V = data["Left_Muscle" + i.ToString()]
-                };
-                L_Muscle.AddCell(lm);
-
-                MuscleCell rm = new("Muscle", i, R: 50, C: 5.0, init_v: 0, sigma_dyn: 0, new Coordinate(x: 5.0 + 1.6 * i, 1))
-                {
-                    V = data["Right_Muscle" + i.ToString()]
-                };
-                R_Muscle.AddCell(rm);
-            }
-            MuscleCellPools.Add(L_Muscle);
-            MuscleCellPools.Add(R_Muscle);
-            Time = data["Time"];
-            runParam = new RunParam() { tMax = (int)Time.Last(), dt = 0.1, tSkip_ms = 0 };
-            initialized = true;
-            model_run = true;
-
         }
         public List<CellPool> CellPools
         {
@@ -300,13 +270,14 @@ namespace SiliFish
 
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, CellSelectionStruct cellSelection)
         {
-            List<CellPool> pools = NeuronPools.Union(MuscleCellPools).Where(p => poolIdentifier == "All" ||
-                            (p.CellGroup == poolIdentifier && p.OnSide(cellSelection.SagittalPlane))).ToList();
-            if (cellSelection.cellSelection== PlotSelection.Summary)
-            {
+            List<CellPool> pools = NeuronPools.Union(MuscleCellPools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
+                            && p.OnSide(cellSelection.SagittalPlane)).ToList();
+            if (cellSelection.cellSelection == PlotSelection.Summary)
                return (null, pools);
-            }
-            return (pools.SelectMany(p=>p.GetCells(cellSelection)).ToList(), pools);
+            List<Cell> cells = pools.SelectMany(p => p.GetCells(cellSelection)).ToList();
+            if (cells.Any())
+                return (cells, null);
+            return (null, pools);
         }
 
         public virtual string SummarizeModel()
@@ -694,7 +665,7 @@ namespace SiliFish
             :return: Four 1-D numpy arrays for number of tail beats, interbeat time intervals, start times and beat times
             */
 
-            Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(0, TimeArray.Length - 1);
+            Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(0, Time.Length - 1);
 
             //We will only use the tip of the tail to determine tail beats (if the x coordinate of the tip is smaller (or more negative)
             //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
@@ -704,7 +675,7 @@ namespace SiliFish
             int side = 0;
             const int LEFT = -1;
             const int RIGHT = 1;
-            int nMax = TimeArray.Length;
+            int nMax = Time.Length;
             double dt = runParam.dt;
             double offset = runParam.tSkip_ms;
             List<SwimmingEpisode> episodes = new();
@@ -714,7 +685,7 @@ namespace SiliFish
             {
                 int iMax = Math.Min(i + delay, nMax);
                 Coordinate[] window = tail_tip_coord[i..iMax];
-                double t = TimeArray[i];
+                double t = Time[i];
                 if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
                 {
                     side = 0;
