@@ -25,36 +25,41 @@ namespace SiliFish.Services
         private static string PlotCurrents(double[] TimeOffset, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true, string filename = "")
         {
-            /*for dychart 
-             * if (cells != null && cells.Any())
+            //for dychart 
+             if (cells != null && cells.Any())
             {
                 Cell cell = cells[0];
-                List<string> test = new(TimeOffset.Select(t => t.ToString("#.##") + ","));
+                List<string> test = new(TimeOffset.Select(t => t.ToString("0.0#") + ","));
+                string title = "Time,";
                 if (cell is Neuron neuron)
                 {
                     int len = TimeOffset.Count();
                     foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
                     {
+                    title+=jnc.Cell1.ID+",";
                         foreach (int i in Enumerable.Range(0, len))
-                            test[i] += jnc.InputCurrent[i].ToString("#.#########") + ";";
+                            test[i] += jnc.InputCurrent[i].ToString("0.#########") + ",";
                     }
                     foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
                     {
+                    title+=jnc.Cell2.ID+",";
                         foreach (int i in Enumerable.Range(0, len))
-                            test[i] += jnc.InputCurrent[i].ToString("#.#########") + ";";
+                            test[i] += jnc.InputCurrent[i].ToString("0.#########") + ",";
                     }
                     foreach (ChemicalSynapse jnc in neuron.Synapses)
                     {
+                        title += jnc.PreNeuron.ID+",";
                         foreach (int i in Enumerable.Range(0, len))
-                            test[i] += jnc.InputCurrent[i].ToString("#.#########") + ";";
+                            test[i] += jnc.InputCurrent[i].ToString("0.#########") + ",";
                     }
                     foreach (int i in Enumerable.Range(0, len))
-                        test[i] = "\"" + test[i].Substring(0, test[i].Length - 1) + "\"+";
-                    string testHtml = string.Join("\n", test.ToArray());
+                        test[i] = "\"" + test[i][..^1] + "\\n\" +";
+                    title = "\"" + title[..^1] + "\\n\" +";
+                    string testHtml = title +"\n"+ string.Join("\n", test.ToArray());
                 }
             }
             
-            */
+            
 
             List<string> charts = new();
             int chartindex = 0;
