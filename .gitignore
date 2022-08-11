@@ -12,6 +12,8 @@
 Notes/
 Output/
 Workspace/
+OfflineResources/
+DataFiles/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -371,3 +373,4 @@ FodyWeavers.xsd
 /SiliFish/Resources/force-graph.min.js
 /SiliFish/Resources/three.js
 /.obsidian
+/dygraph.js

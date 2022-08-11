@@ -1,0 +1,54 @@
+<!-- Code template from: https://www.dycharts.com/ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>__TITLE__</title>
+    <!-- Styles -->
+    <style>
+        .chart-container {
+            width: __WIDTH_PX__px;
+            height: __HEIGHT_PX__px;
+            display: flex;
+            flex-flow: row nowrap;
+        }
+
+        .chart {
+            flex-grow: 1;
+        }
+
+        .legend {
+            width: 20%;
+            min-width: 120px;
+            max-width: 300px;
+            font: normal 10px sans-serif;
+        }
+
+    </style>
+    <link rel="stylesheet" href="DyStyleSheet.css" />
+</head>
+<body>
+
+    <div id="titleDiv">__TITLE__</div>
+    <div style="display:flex;flex-flow:row wrap;">
+        __CHART_DIVS__
+    </div>
+    <!-- Resources -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"></script>
+    <script>
+        __DY_SYNCHRONIZER__
+    
+        window.addEventListener('DOMContentLoaded', () => {
+            var gs = [];
+
+            __CHARTS__
+
+            Dygraph.synchronize(gs, { zoom: true, selection: true, range: false });
+
+
+        });
+
+    </script>
+</body>
+</html>

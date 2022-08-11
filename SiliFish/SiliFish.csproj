@@ -36,6 +36,11 @@
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
+    <None Remove="Resources\DyChart.html" />
+    <None Remove="Resources\DyChart.js" />
+    <None Remove="Resources\DyChartDiv.html" />
+    <None Remove="Resources\DyStyleSheet.css" />
+    <None Remove="Resources\DySynchronizer.js" />
     <None Remove="Resources\LineChart.Chart.js" />
     <None Remove="Resources\LineChart.html" />
     <None Remove="Resources\LineChart.Series.js" />
@@ -49,11 +54,15 @@
     <EmbeddedResource Include="Resources\3DModelSinglePanel.html" />
     <EmbeddedResource Include="Resources\3DModel.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
+    <EmbeddedResource Include="Resources\DyChart.js" />
+    <EmbeddedResource Include="Resources\DyChart.html" />
+    <EmbeddedResource Include="Resources\DyChartDiv.html" />
     <EmbeddedResource Include="Resources\ScatterPlot.Series.js" />
     <EmbeddedResource Include="Resources\LineChart.Chart.js" />
     <EmbeddedResource Include="Resources\LineChart.html" />
     <EmbeddedResource Include="Resources\LineChart.Series.js" />
     <EmbeddedResource Include="Resources\Logo.png" />
+    <EmbeddedResource Include="Resources\DyStyleSheet.css" />
     <EmbeddedResource Include="Resources\StyleSheet.css" />
   </ItemGroup>
 
@@ -82,6 +91,10 @@
 
   <ItemGroup>
     <EditorConfigFiles Remove="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DySynchronizer.js" />
   </ItemGroup>
 
   <ItemGroup>

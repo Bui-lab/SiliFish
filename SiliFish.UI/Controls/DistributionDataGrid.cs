@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Helpers;
 using SiliFish.UI;
 using SiliFish.UI.Extensions;
 
@@ -27,13 +28,13 @@ namespace SiliFish.UI.Controls
                 else
                 {
                     double val = double.Parse(dgDynamics[colValue.Index, e.RowIndex].Tag?.ToString() ?? dgDynamics[colValue.Index, e.RowIndex].Value?.ToString());
-                    dist = new Constant_NoDistribution(val, false);
+                    dist = new Constant_NoDistribution(val, false, 0);
                     distControl.SetDistribution(dist);
                 }
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     dist = distControl.GetDistribution();
-                    if (dist.DistType == typeof(Constant_NoDistribution).ToString())
+                    if (dist.DistType == typeof(Constant_NoDistribution).ToString() && (dist as Constant_NoDistribution).NoiseStdDev < Const.epsilon)
                     {
                         dgDynamics[colValue.Index, rowind].Value = dist.RangeStart;
                         dgDynamics[colValue.Index, rowind].Tag = null;
@@ -45,7 +46,6 @@ namespace SiliFish.UI.Controls
                     }
                 }
             }
-
         }
 
         public void WriteToGrid(Dictionary<string, object> parameters)

@@ -131,23 +131,29 @@ namespace SiliFish.DataTypes
 
     public class Constant_NoDistribution : Distribution
     {
+        public double NoiseStdDev { get; set; } = 0;
         public Constant_NoDistribution()
         { }
-        public Constant_NoDistribution(double val, bool angular)
-            : base(val, val, true, angular)
+        public Constant_NoDistribution(double val, bool angular, double noiseStdDev)
+            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, true, angular)
         {
+            NoiseStdDev = noiseStdDev;
         }
 
         public override Distribution CreateCopy()
         {
-            return new Constant_NoDistribution(RangeStart, Angular);
+            return new Constant_NoDistribution(RangeStart, Angular, NoiseStdDev);
         }
 
         public override double[] GenerateNNumbers(int n, double range)
         {
-            double[] result = new double[n];
+            if (Random == null)
+                Random = new Random(); double[] result = new double[n];
             for (int i = 0; i < n; i++)
-                result[i] = LowerLimit;
+            {
+                double noise = NoiseStdDev > 0 ? Random.Gauss(1, NoiseStdDev) : 1;
+                result[i] = LowerLimit * noise;
+            }
             return result;
         }
     }
@@ -156,7 +162,7 @@ namespace SiliFish.DataTypes
         public double NoiseStdDev { get; set; } = 0;
         public override string ToString()
         {
-            return String.Format("{0}\r\nNoise: µ:1; SD:{1:0.#####}", base.ToString(), NoiseStdDev);
+            return string.Format("{0}\r\nNoise: µ:1; SD:{1:0.#####}", base.ToString(), NoiseStdDev);
         }
         public SpacedDistribution()
         { }

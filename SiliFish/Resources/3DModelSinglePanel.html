@@ -10,9 +10,7 @@
     <style>
         __STYLE_SHEET__
     </style>
-    <script src="https://unpkg.com/3d-force-graph@1"></script>
-    <script src="https://unpkg.com/d3-dsv"></script>
-    <script src="https://unpkg.com/three"></script>
+    __ONLINE_3D_SCRIPT__
 </head>
 
 <body>
@@ -21,46 +19,49 @@
         <div id="3d-graph"></div>
     </div>
     <script>
-            const gapChemGraph = ForceGraph3D()
-                (document.getElementById("3d-graph"));
+        __OFFLINE_3D_SCRIPT__
+    </script>
+    <script>
+        const gapChemGraph = ForceGraph3D()
+            (document.getElementById("3d-graph"));
 
-            const gapChemData = {
-                "nodes": [__NODES__],
-                "links": [__GAP_CHEM_LINKS__]
-            };
+        const gapChemData = {
+            "nodes": [__NODES__],
+            "links": [__GAP_CHEM_LINKS__]
+        };
 
-            const colorSet = { __COLOR_SET__ };
+        const colorSet = { __COLOR_SET__ };
 
-            const spineMaterial = new THREE.LineBasicMaterial({ color: 0x000 });
-            const spinePoints = [];
-            spinePoints.push(new THREE.Vector3(__SPINE_X__, __SPINE_Y__, __SPINE_Z__));
-            spinePoints.push(new THREE.Vector3(__SPINE_LENGTH__, __SPINE_Y__, __SPINE_Z__));
+        const spineMaterial = new THREE.LineBasicMaterial({ color: 0x000 });
+        const spinePoints = [];
+        spinePoints.push(new THREE.Vector3(__SPINE_X__, __SPINE_Y__, __SPINE_Z__));
+        spinePoints.push(new THREE.Vector3(__SPINE_LENGTH__, __SPINE_Y__, __SPINE_Z__));
 
-            const spineGeometry = new THREE.BufferGeometry().setFromPoints(spinePoints);
-            const spineLine = new THREE.Line(spineGeometry, spineMaterial);
-            gapChemGraph.scene().add(spineLine);
+        const spineGeometry = new THREE.BufferGeometry().setFromPoints(spinePoints);
+        const spineLine = new THREE.Line(spineGeometry, spineMaterial);
+        gapChemGraph.scene().add(spineLine);
 
 
-            let hoverNode = null;
+        let hoverNode = null;
 
-            const gapChemDataSet = gapChemGraph
-                .nodeColor(n => (hoverNode == null || hoverNode.g == n.g ? colorSet[n.g] : '#EEE'))
-                .nodeLabel(n => `${n.id} ${n.crd}`)
-                .graphData(gapChemData)
-                .linkColor(l => hoverNode == null ? '#444' : l.source == hoverNode ? '#F00' : l.target == hoverNode ? '#0F0' : '#FFF')
-                .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-                .linkWidth(l => Math.max(l.value, 0.5))
-                .linkCurvature('curv')
-                .onNodeClick(node => {
-                    hoverNode = node;
-                    updateHighlight();
-                })
-                .onBackgroundClick(() => {
-                    hoverNode = null;
-                    updateHighlight();
-                })
-                .enableNodeDrag(false)
-                .backgroundColor("#FFF");
+        const gapChemDataSet = gapChemGraph
+            .nodeColor(n => (hoverNode == null || hoverNode.g == n.g ? colorSet[n.g] : '#EEE'))
+            .nodeLabel(n => `${n.id} ${n.crd}`)
+            .graphData(gapChemData)
+            .linkColor(l => hoverNode == null ? '#444' : l.source == hoverNode ? '#F00' : l.target == hoverNode ? '#0F0' : '#FFF')
+            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkWidth(l => Math.max(l.value, 0.5))
+            .linkCurvature('curv')
+            .onNodeClick(node => {
+                hoverNode = node;
+                updateHighlight();
+            })
+            .onBackgroundClick(() => {
+                hoverNode = null;
+                updateHighlight();
+            })
+            .enableNodeDrag(false)
+            .backgroundColor("#FFF");
 
         function updateHighlight() {
             // trigger update of highlighted objects in scene

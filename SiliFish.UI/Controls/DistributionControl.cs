@@ -29,7 +29,7 @@ namespace SiliFish.UI.Controls
         }
         private void ddDistribution_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddDistribution.Text == "Constant" || ddDistribution.Text == "Uniform" || ddDistribution.Text == "None" || ddDistribution.SelectedIndex <= -1)
+            if (ddDistribution.Text == "Uniform" || ddDistribution.Text == "None" || ddDistribution.SelectedIndex <= -1)
             {
                 pOptions.Visible = false;
             }
@@ -37,8 +37,8 @@ namespace SiliFish.UI.Controls
             {
                 pOptions.Visible = true;
                 string mode = ddDistribution.Text;
-                pEquallySpaced.Visible = mode == "Equally Spaced";
-                pGaussian.Visible = mode == "Gaussian" || mode == "Bimodal";
+                pNoise.Visible = mode is "Constant" or "Equally Spaced";
+                pGaussian.Visible = mode is "Gaussian" or "Bimodal";
                 pBimodal.Visible = mode == "Bimodal";
             }
             if (ddDistribution.Text == "Constant")
@@ -97,8 +97,11 @@ namespace SiliFish.UI.Controls
             }
             else if (dist is UniformDistribution)
                 ddDistribution.Text = "Uniform";
-            else //connstant_NoDistributioon
+            else //connstant_NoDistribution
+            {
                 ddDistribution.Text = "Constant";
+                eNoise.Text = (dist as Constant_NoDistribution).NoiseStdDev.ToString("0.###");
+            }
         }
 
         public Distribution GetDistribution()
@@ -115,15 +118,15 @@ namespace SiliFish.UI.Controls
             if (Angular && end > 180) end = 180;
             else if (!Angular && !absolute && end > 100) end = 100;
 
+            if (!double.TryParse(eNoise.Text, out double noise))
+                noise = 0;
             switch (mode)
             {
                 case "Constant":
-                    return new Constant_NoDistribution(start, Angular);
+                    return new Constant_NoDistribution(start, Angular, noise);
                 case "Uniform":
                     return new UniformDistribution(start, end, absolute, Angular);
                 case "Equally Spaced":
-                    if (!double.TryParse(eNoise.Text, out double noise))
-                        noise = 0;
                     return new SpacedDistribution(start, end, noise, absolute, Angular);
                 case "Gaussian":
                     if (!double.TryParse(eMean1.Text, out double mean))

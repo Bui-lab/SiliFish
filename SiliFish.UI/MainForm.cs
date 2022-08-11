@@ -917,7 +917,8 @@ namespace SiliFish.UI
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-            htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
+            //htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
+            htmlPlot = DyChartGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
             Invoke(CompletePlotHTML);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)

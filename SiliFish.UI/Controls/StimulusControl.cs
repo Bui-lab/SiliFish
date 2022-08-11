@@ -33,16 +33,14 @@ namespace SiliFish.UI.Controls
                 case "Gaussian":
                     lValue1.Text = "Mean";
                     lValue2.Text = "StdDev";
-                    lValue2.Visible = eValue2.Visible = true;
                     break;
                 case "Ramp":
                     lValue1.Text = "Start Value";
                     lValue2.Text = "End Value";
-                    lValue2.Visible = eValue2.Visible = true;
                     break;
                 case "Step":
                     lValue1.Text = "Value";
-                    lValue2.Visible = eValue2.Visible = false;
+                    lValue2.Text = "Noise";
                     break;
             }
             if (ddStimulusMode.Focused)

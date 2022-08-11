@@ -43,9 +43,18 @@ namespace SiliFish.ModelUnits
         }
         public override string ToString()
         {
-            if (Mode == StimulusMode.Step)
-                return String.Format("{0} {1}", Mode.ToString(), Value1);
-            return String.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
+            switch (Mode)
+            {
+                case StimulusMode.None:
+                    return string.Format("{0}", Mode.ToString());
+                case StimulusMode.Step:
+                    return string.Format("{0} {1}, Noise: {2}", Mode.ToString(), Value1, Value2);
+                case StimulusMode.Gaussian:
+                    return string.Format("{0} µ: {1}, SD: {2}", Mode.ToString(), Value1, Value2);
+                case StimulusMode.Ramp:
+                    return string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
+            }
+            return "";
         }
 
         public string GetTooltip()
@@ -94,7 +103,8 @@ namespace SiliFish.ModelUnits
             switch (Mode)
             {
                 case StimulusMode.Step:
-                    value = Value1;
+                    double noise = Value2 > 0 ? rand.Gauss(1, Value2) : 1;
+                    value = Value1 * noise;
                     break;
                 case StimulusMode.Ramp:
                     value = Value1 + (tIndex - iStart) * tangent;

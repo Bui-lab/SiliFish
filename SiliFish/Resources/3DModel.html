@@ -10,9 +10,7 @@
     <style>
         __STYLE_SHEET__
     </style>
-    <script src="https://unpkg.com/3d-force-graph@1"></script>
-    <script src="https://unpkg.com/d3-dsv"></script>
-    <script src="https://unpkg.com/three"></script>
+    __ONLINE_3D_SCRIPT__
 </head>
 
 <body>
@@ -25,6 +23,9 @@
         <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
         <div id="3d-graph-chem"></div>
     </div>
+    <script>
+        __OFFLINE_3D_SCRIPT__
+    </script>
     <script>
         const gapGraph = ForceGraph3D()
             (document.getElementById("3d-graph-gap"));
@@ -60,18 +61,18 @@
             .nodeColor(n => (hoverNodeGap == null || hoverNodeGap.g == n.g ? colorSet[n.g] : '#EEE'))
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .graphData(gapData)
-                .linkColor(l => hoverNodeGap == null ? '#444' : l.source == hoverNodeGap ? '#F00' : l.target == hoverNodeGap ? '#0F0' : '#FFF')
+            .linkColor(l => hoverNodeGap == null ? '#444' : l.source == hoverNodeGap ? '#F00' : l.target == hoverNodeGap ? '#0F0' : '#FFF')
             .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
-                .onNodeClick(node => {
-                    hoverNodeGap = node;
-                    updateHighlightGap();
-                })
-                .onBackgroundClick(() => {
-                    hoverNodeGap = null;
-                    updateHighlightGap();
-                })
+            .onNodeClick(node => {
+                hoverNodeGap = node;
+                updateHighlightGap();
+            })
+            .onBackgroundClick(() => {
+                hoverNodeGap = null;
+                updateHighlightGap();
+            })
             .enableNodeDrag(false)
             .backgroundColor("#FFF")
             .width(document.body.offsetWidth);
@@ -95,14 +96,14 @@
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
-                .onNodeClick(node => {
-                    hoverNodeChem = node;
-                    updateHighlightChem();
-                })
-                .onBackgroundClick(() => {
-                    hoverNodeChem = null;
-                    updateHighlightChem();
-                })
+            .onNodeClick(node => {
+                hoverNodeChem = node;
+                updateHighlightChem();
+            })
+            .onBackgroundClick(() => {
+                hoverNodeChem = null;
+                updateHighlightChem();
+            })
             .enableNodeDrag(false)
             .backgroundColor("#FFF")
             .width(document.body.offsetWidth);

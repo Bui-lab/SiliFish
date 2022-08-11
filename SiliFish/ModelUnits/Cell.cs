@@ -118,9 +118,9 @@ namespace SiliFish.ModelUnits
             get
             {
                 double cur1 = GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                double cur2 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                double cur3 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                return Math.Min(cur1, Math.Min(cur2, cur3));
+                //double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.Min()) : 0;
+                double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.Min()) : 0;
+                return Math.Min(cur1, cur2);
             }
         }
         public override double MaxCurrentValue
@@ -128,9 +128,9 @@ namespace SiliFish.ModelUnits
             get
             {
                 double cur1 = GapJunctions!=null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                double cur2 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                double cur3 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                return Math.Max(cur1, Math.Max(cur2, cur3));
+                //double cur2 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.Max()) : 0;
+                double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.Max()) : 0;
+                return Math.Max(cur1, cur2);
             }
         }
 

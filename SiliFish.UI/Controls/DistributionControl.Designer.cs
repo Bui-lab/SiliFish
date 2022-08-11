@@ -46,7 +46,7 @@
             this.pGaussian = new System.Windows.Forms.Panel();
             this.eStdDev1 = new System.Windows.Forms.TextBox();
             this.eMean1 = new System.Windows.Forms.TextBox();
-            this.pEquallySpaced = new System.Windows.Forms.Panel();
+            this.pNoise = new System.Windows.Forms.Panel();
             this.eNoise = new System.Windows.Forms.TextBox();
             this.pTop = new System.Windows.Forms.Panel();
             this.pTopIn = new System.Windows.Forms.Panel();
@@ -59,7 +59,7 @@
             this.pOptions = new System.Windows.Forms.FlowLayoutPanel();
             this.pBimodal.SuspendLayout();
             this.pGaussian.SuspendLayout();
-            this.pEquallySpaced.SuspendLayout();
+            this.pNoise.SuspendLayout();
             this.pTop.SuspendLayout();
             this.pTopIn.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -226,15 +226,15 @@
             this.eMean1.Size = new System.Drawing.Size(52, 23);
             this.eMean1.TabIndex = 1;
             // 
-            // pEquallySpaced
+            // pNoise
             // 
-            this.pEquallySpaced.Controls.Add(this.eNoise);
-            this.pEquallySpaced.Controls.Add(this.lNoise);
-            this.pEquallySpaced.Location = new System.Drawing.Point(0, 0);
-            this.pEquallySpaced.Margin = new System.Windows.Forms.Padding(0);
-            this.pEquallySpaced.Name = "pEquallySpaced";
-            this.pEquallySpaced.Size = new System.Drawing.Size(204, 26);
-            this.pEquallySpaced.TabIndex = 20;
+            this.pNoise.Controls.Add(this.eNoise);
+            this.pNoise.Controls.Add(this.lNoise);
+            this.pNoise.Location = new System.Drawing.Point(0, 0);
+            this.pNoise.Margin = new System.Windows.Forms.Padding(0);
+            this.pNoise.Name = "pNoise";
+            this.pNoise.Size = new System.Drawing.Size(204, 26);
+            this.pNoise.TabIndex = 20;
             // 
             // eNoise
             // 
@@ -322,7 +322,7 @@
             // 
             this.pOptions.AutoSize = true;
             this.pOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pOptions.Controls.Add(this.pEquallySpaced);
+            this.pOptions.Controls.Add(this.pNoise);
             this.pOptions.Controls.Add(this.pGaussian);
             this.pOptions.Controls.Add(this.pBimodal);
             this.pOptions.Location = new System.Drawing.Point(0, 84);
@@ -346,8 +346,8 @@
             this.pBimodal.PerformLayout();
             this.pGaussian.ResumeLayout(false);
             this.pGaussian.PerformLayout();
-            this.pEquallySpaced.ResumeLayout(false);
-            this.pEquallySpaced.PerformLayout();
+            this.pNoise.ResumeLayout(false);
+            this.pNoise.PerformLayout();
             this.pTop.ResumeLayout(false);
             this.pTopIn.ResumeLayout(false);
             this.pTopIn.PerformLayout();
@@ -368,7 +368,7 @@
         private Label lNoise;
         private Label lMean;
         private Label lStdDev;
-        private Panel pEquallySpaced;
+        private Panel pNoise;
         private TextBox eNoise;
         private Panel pTop;
         private ToolTip toolTip;

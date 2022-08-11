@@ -114,7 +114,7 @@ namespace SiliFish
         {
             this.Time = new double[nmax];
             InitMembranePotentials(nmax);
-            if (!NeuronPools.Any(p => p.GetCells().Any()) ||
+            if (!NeuronPools.Any(p => p.GetCells().Any()) &&
                 !MuscleCellPools.Any(p => p.GetCells().Any()))
                 return;
             initialized = true;
