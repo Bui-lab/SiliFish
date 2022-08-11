@@ -199,7 +199,7 @@ namespace Services
             int iEnd = model.runParam.iIndex(tEnd);
             //TODO color
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes();
             leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
                 tail_tip_coord.Select(c => c.X).ToArray(),
                 model.TimeArray, iStart, iEnd, 

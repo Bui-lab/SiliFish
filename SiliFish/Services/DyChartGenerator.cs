@@ -15,7 +15,7 @@ namespace SiliFish.Services
         public struct ChartStruct
         {
             public string csvData = "";
-            public string Title = "", xLabel = "`Time (ms)`", yLabel = "", Color = "";
+            public string Title = "", xLabel = "`Time (ms)`", yLabel = "", Color = "'red'";
             public string yMin = "null";
             public string yMax = "null";
             public bool ScatterPlot = false;
@@ -33,7 +33,7 @@ namespace SiliFish.Services
                 string chartDiv = ReadEmbeddedResource("SiliFish.Resources.DyChartDiv.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
-                html.Replace("__WIDTH_PX__", "720");
+                html.Replace("__WIDTH_PX__", "800");
                 html.Replace("__HEIGHT_PX__", "480");
                 string chartDivs = "";
                 List<string> chartHTML = new();
@@ -226,7 +226,7 @@ namespace SiliFish.Services
         {
             List<ChartStruct> charts = new();
             
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes(-0.5, 0.5, 1000);
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes();
 
             double[] Time = model.TimeArray[iStart..iEnd];
             double[] xValues = Time;
@@ -250,6 +250,7 @@ namespace SiliFish.Services
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
                 title = "Time,Episode Duration";
+                data = new string[iEnd - iStart + 2];
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -267,6 +268,7 @@ namespace SiliFish.Services
                     xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
                     yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
                     title = "Time,Episode Intervals";
+                    data = new string[iEnd - iStart + 2];
                     foreach (int i in Enumerable.Range(0, episodes.Count))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -282,6 +284,7 @@ namespace SiliFish.Services
                 xValues = episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
                 title = "Time,Instant. Freq.";
+                data = new string[iEnd - iStart + 2];
                 foreach (int i in Enumerable.Range(0, xValues.Length))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -296,6 +299,7 @@ namespace SiliFish.Services
                 xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
                 title = "Time,Instant. Freq.";
+                data = new string[iEnd - iStart + 2];
                 foreach (int i in Enumerable.Range(0, xValues.Length))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -310,6 +314,7 @@ namespace SiliFish.Services
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.BeatFrequency).ToArray();
                 title = "Time,Tail Beat Freq.";
+                data = new string[iEnd - iStart + 2];
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -324,6 +329,7 @@ namespace SiliFish.Services
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
                 title = "Time,Tail Beat/Episode";
+                data = new string[iEnd - iStart + 2];
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";

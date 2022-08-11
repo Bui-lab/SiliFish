@@ -152,7 +152,10 @@ namespace SiliFish.DataTypes
             for (int i = 0; i < n; i++)
             {
                 double noise = NoiseStdDev > 0 ? Random.Gauss(1, NoiseStdDev) : 1;
-                result[i] = LowerLimit * noise;
+                if (LowerLimit < Helpers.Const.epsilon) //noise will have no effect
+                    result[i] = 1 - noise;
+                else
+                    result[i] = LowerLimit * noise;
             }
             return result;
         }

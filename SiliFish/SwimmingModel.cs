@@ -45,11 +45,13 @@ namespace SiliFish
         protected double E_gaba = -70; //the reversal potential of GABA
         protected double E_ach = 120; //reversal potential for ACh receptors
 
-        public double zeta = 3.0; //#damping constant , high zeta =0.5/ low = 0.1
-        public double w0 = 2.5; //20Hz = 125.6
-        public double alpha = 0;
-        public double beta = 0;
-        public double convCoef = 0.1;
+        public double kinemZeta = 3.0; //#damping constant , high zeta =0.5/ low = 0.1
+        public double kinemW0 = 2.5; //20Hz = 125.6
+        public double kinemAlpha = 0;
+        public double kinemBeta = 0;
+        public double kinemConvCoef = 0.1;
+        public double kinemBound = 0.5;
+        public int kinemDelay = 1000;
 
 
         public static Random rand = new(0);
@@ -181,11 +183,13 @@ namespace SiliFish
                 { "Dynamic.E_gly", E_gly },
                 { "Dynamic.E_gaba", E_gaba },
 
-                { "Kinematics.Damping Coef", zeta },
-                { "Kinematics.w0", w0 },
-                { "Kinematics.Conversion Coef", convCoef },
-                { "Kinematics.Alpha", alpha },
-                { "Kinematics.Beta", beta }
+                { "Kinematics.Damping Coef", kinemZeta },
+                { "Kinematics.w0", kinemW0 },
+                { "Kinematics.Conversion Coef", kinemConvCoef },
+                { "Kinematics.Alpha", kinemAlpha },
+                { "Kinematics.Beta", kinemBeta },
+                { "Kinematics.Boundary", kinemBound },
+                { "Kinematics.Delay", kinemDelay }
             };
 
             return paramDict;
@@ -200,11 +204,13 @@ namespace SiliFish
                 { "Dynamic.E_gly", "Reversal potential of glycine" },
                 { "Dynamic.E_gaba", "Reversal potential of GABA" },
 
-                { "Kinematics.Damping Coef", zeta },
+                { "Kinematics.Damping Coef", kinemZeta },
                 { "Kinematics.w0", "Natural oscillation frequency" },
                 { "Kinematics.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
                 { "Kinematics.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
-                { "Kinematics.Conversion Coef", "Coefficient to convert membrane potential to driving force for the oscillation" }
+                { "Kinematics.Conversion Coef", "Coefficient to convert membrane potential to driving force for the oscillation" },
+                { "Kinematics.Boundary", "The distance considered as a move from the center line." },
+                { "Kinematics.Delay", "The time range that will be looked ahead to detect motion." }
             };
 
             return paramDescDict;
@@ -227,22 +233,26 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
 
-            paramDict.AddObject("Kinematics.Damping Coef", zeta, skipIfExists: true);
-            paramDict.AddObject("Kinematics.w0", w0, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Conversion Coef", convCoef, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Alpha", alpha, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Beta", beta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Damping Coef", kinemZeta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.w0", kinemW0, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Conversion Coef", kinemConvCoef, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Alpha", kinemAlpha, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Beta", kinemBeta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Boundary", kinemBound, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Delay", kinemDelay, skipIfExists: true);
         }
 
         public virtual void SetAnimationParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            zeta = paramExternal.Read("Kinematics.Damping Coef", zeta);
-            w0 = paramExternal.Read("Kinematics.w0", w0);
-            convCoef = paramExternal.Read("Kinematics.Conversion Coef", convCoef);
-            alpha = paramExternal.Read("Kinematics.Alpha", alpha);
-            beta = paramExternal.Read("Kinematics.Beta", beta);
+            kinemZeta = paramExternal.Read("Kinematics.Damping Coef", kinemZeta);
+            kinemW0 = paramExternal.Read("Kinematics.w0", kinemW0);
+            kinemConvCoef = paramExternal.Read("Kinematics.Conversion Coef", kinemConvCoef);
+            kinemAlpha = paramExternal.Read("Kinematics.Alpha", kinemAlpha);
+            kinemBeta = paramExternal.Read("Kinematics.Beta", kinemBeta);
+            kinemBound = paramExternal.Read("Kinematics.Boundary", kinemBound);
+            kinemDelay = paramExternal.Read("Kinematics.Delay", kinemDelay);
         }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
@@ -510,7 +520,7 @@ namespace SiliFish
                 RunModelLoop(seed, rp);
                 if (count > 1 && ModelRun)
                 {
-                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes(-0.5, 0.5, 1000);
+                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes();
                     string runfilename = $"{filename}_Run{iRunCounter}";
                     runfilename = Path.Combine(outputFolder, runfilename);
                     //Util.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
@@ -553,14 +563,14 @@ namespace SiliFish
                 angle[k, 0] = angle0;
                 angle[nMuscle - 1, 0] = 0.0;
                 double R = (leftMuscle.R + rightMuscle.R) / 2;
-                double coef = alpha + beta * R;
+                double coef = kinemAlpha + kinemBeta * R;
                 if (Math.Abs(coef) < 0.0001)
-                    coef = convCoef;
+                    coef = kinemConvCoef;
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
                     //khi is the damping coefficient: "Kinematics.Damping Coef"
-                    double acc = -Math.Pow(w0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * zeta * w0 + coef * voltDiff;
+                    double acc = -Math.Pow(kinemW0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
                 }
@@ -597,16 +607,16 @@ namespace SiliFish
                     .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
                 double R = LeftMuscleCells.Sum(c => (c as MuscleCell).R) + RightMuscleCells.Sum(c => (c as MuscleCell).R);
                 R /= (LeftMuscleCells.Count + RightMuscleCells.Count);
-                double coef = alpha + beta * R;
+                double coef = kinemAlpha + kinemBeta * R;
                 if (Math.Abs(coef) < 0.0001)
-                    coef = convCoef;
+                    coef = kinemConvCoef;
                 vel[somite, 0] = vel0;
                 angle[somite, 0] = angle0;
                 angle[nSomite - 1, 0] = 0.0;
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
-                    double acc = -Math.Pow(w0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * zeta * w0 + coef * voltDiff;
+                    double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;
                     angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;
                 }          
@@ -653,7 +663,7 @@ namespace SiliFish
             return somiteCoordinates;
         }
 
-        public (Coordinate[] , List<SwimmingEpisode>) GetSwimmingEpisodes(double left_bound, double right_bound, int delay)
+        public (Coordinate[] , List<SwimmingEpisode>) GetSwimmingEpisodes()
         {
             /*Converted from the code written by Yann Roussel and Tuan Bui
             This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
@@ -671,7 +681,8 @@ namespace SiliFish
             //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
 
             Coordinate[] tail_tip_coord = spineCoordinates.Last().Value;
-
+            double left_bound = -kinemBound;
+            double right_bound = kinemBound;
             int side = 0;
             const int LEFT = -1;
             const int RIGHT = 1;
@@ -683,7 +694,7 @@ namespace SiliFish
             int i = (int)(offset/dt);
             while (i < nMax)
             {
-                int iMax = Math.Min(i + delay, nMax);
+                int iMax = Math.Min(i + kinemDelay, nMax);
                 Coordinate[] window = tail_tip_coord[i..iMax];
                 double t = Time[i];
                 if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
