@@ -103,9 +103,9 @@ namespace SiliFish.UI
             this.lPlotPool = new System.Windows.Forms.Label();
             this.ddPlotPools = new System.Windows.Forms.ComboBox();
             this.lPlotStart = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.lms1 = new System.Windows.Forms.Label();
             this.lPlotEnd = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.lms2 = new System.Windows.Forms.Label();
             this.lPlotPlot = new System.Windows.Forms.Label();
             this.btnPlotWindows = new System.Windows.Forms.Button();
             this.ddPlot = new System.Windows.Forms.ComboBox();
@@ -131,9 +131,17 @@ namespace SiliFish.UI
             this.linkSaveAnimationHTML = new System.Windows.Forms.LinkLabel();
             this.btnAnimate = new System.Windows.Forms.Button();
             this.lAnimationStart = new System.Windows.Forms.Label();
-            this.lms5 = new System.Windows.Forms.Label();
+            this.lms3 = new System.Windows.Forms.Label();
             this.lAnimationEnd = new System.Windows.Forms.Label();
-            this.lms6 = new System.Windows.Forms.Label();
+            this.lms4 = new System.Windows.Forms.Label();
+            this.tabTemplateJSON = new System.Windows.Forms.TabPage();
+            this.pTemplateJSONTop = new System.Windows.Forms.Panel();
+            this.btnLoadTemplateJSON = new System.Windows.Forms.Button();
+            this.btnDisplayTemplateJSON = new System.Windows.Forms.Button();
+            this.tabModelJSON = new System.Windows.Forms.TabPage();
+            this.pModelJSONTop = new System.Windows.Forms.Panel();
+            this.btnLoadModelJSON = new System.Windows.Forms.Button();
+            this.btnDisplayModelJSON = new System.Windows.Forms.Button();
             this.pParamBottom = new System.Windows.Forms.Panel();
             this.cbMultiple = new System.Windows.Forms.CheckBox();
             this.eRunNumber = new System.Windows.Forms.NumericUpDown();
@@ -158,6 +166,8 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.eTemplateJSON = new System.Windows.Forms.RichTextBox();
+            this.eModelJSON = new System.Windows.Forms.RichTextBox();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -212,6 +222,10 @@ namespace SiliFish.UI
             this.pAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).BeginInit();
+            this.tabTemplateJSON.SuspendLayout();
+            this.pTemplateJSONTop.SuspendLayout();
+            this.tabModelJSON.SuspendLayout();
+            this.pModelJSONTop.SuspendLayout();
             this.pParamBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
@@ -777,6 +791,8 @@ namespace SiliFish.UI
             this.tabOutputs.Controls.Add(this.tab2DModel);
             this.tabOutputs.Controls.Add(this.tab3DModel);
             this.tabOutputs.Controls.Add(this.tabAnimation);
+            this.tabOutputs.Controls.Add(this.tabTemplateJSON);
+            this.tabOutputs.Controls.Add(this.tabModelJSON);
             this.tabOutputs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabOutputs.Location = new System.Drawing.Point(0, 133);
             this.tabOutputs.Name = "tabOutputs";
@@ -900,9 +916,9 @@ namespace SiliFish.UI
             this.pPlot.Controls.Add(this.lPlotPool);
             this.pPlot.Controls.Add(this.ddPlotPools);
             this.pPlot.Controls.Add(this.lPlotStart);
-            this.pPlot.Controls.Add(this.label7);
+            this.pPlot.Controls.Add(this.lms1);
             this.pPlot.Controls.Add(this.lPlotEnd);
-            this.pPlot.Controls.Add(this.label9);
+            this.pPlot.Controls.Add(this.lms2);
             this.pPlot.Controls.Add(this.lPlotPlot);
             this.pPlot.Controls.Add(this.btnPlotWindows);
             this.pPlot.Controls.Add(this.ddPlot);
@@ -1111,14 +1127,14 @@ namespace SiliFish.UI
             this.lPlotStart.TabIndex = 11;
             this.lPlotStart.Text = "Plot Start";
             // 
-            // label7
+            // lms1
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(180, 8);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(31, 15);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "(ms)";
+            this.lms1.AutoSize = true;
+            this.lms1.Location = new System.Drawing.Point(180, 8);
+            this.lms1.Name = "lms1";
+            this.lms1.Size = new System.Drawing.Size(31, 15);
+            this.lms1.TabIndex = 13;
+            this.lms1.Text = "(ms)";
             // 
             // lPlotEnd
             // 
@@ -1129,14 +1145,14 @@ namespace SiliFish.UI
             this.lPlotEnd.TabIndex = 14;
             this.lPlotEnd.Text = "Plot End";
             // 
-            // label9
+            // lms2
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(180, 37);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(31, 15);
-            this.label9.TabIndex = 16;
-            this.label9.Text = "(ms)";
+            this.lms2.AutoSize = true;
+            this.lms2.Location = new System.Drawing.Point(180, 37);
+            this.lms2.Name = "lms2";
+            this.lms2.Size = new System.Drawing.Size(31, 15);
+            this.lms2.TabIndex = 16;
+            this.lms2.Text = "(ms)";
             // 
             // lPlotPlot
             // 
@@ -1288,7 +1304,6 @@ namespace SiliFish.UI
             this.dd3DModelType.Name = "dd3DModelType";
             this.dd3DModelType.Size = new System.Drawing.Size(121, 23);
             this.dd3DModelType.TabIndex = 25;
-            this.dd3DModelType.SelectedIndexChanged += new System.EventHandler(this.dd3DModelType_SelectedIndexChanged);
             // 
             // btnGenerate3DModel
             // 
@@ -1336,9 +1351,9 @@ namespace SiliFish.UI
             this.pAnimation.Controls.Add(this.linkSaveAnimationHTML);
             this.pAnimation.Controls.Add(this.btnAnimate);
             this.pAnimation.Controls.Add(this.lAnimationStart);
-            this.pAnimation.Controls.Add(this.lms5);
+            this.pAnimation.Controls.Add(this.lms3);
             this.pAnimation.Controls.Add(this.lAnimationEnd);
-            this.pAnimation.Controls.Add(this.lms6);
+            this.pAnimation.Controls.Add(this.lms4);
             this.pAnimation.Dock = System.Windows.Forms.DockStyle.Top;
             this.pAnimation.Location = new System.Drawing.Point(0, 0);
             this.pAnimation.Name = "pAnimation";
@@ -1446,14 +1461,14 @@ namespace SiliFish.UI
             this.lAnimationStart.TabIndex = 11;
             this.lAnimationStart.Text = "Animation Start";
             // 
-            // lms5
+            // lms3
             // 
-            this.lms5.AutoSize = true;
-            this.lms5.Location = new System.Drawing.Point(214, 8);
-            this.lms5.Name = "lms5";
-            this.lms5.Size = new System.Drawing.Size(31, 15);
-            this.lms5.TabIndex = 13;
-            this.lms5.Text = "(ms)";
+            this.lms3.AutoSize = true;
+            this.lms3.Location = new System.Drawing.Point(214, 8);
+            this.lms3.Name = "lms3";
+            this.lms3.Size = new System.Drawing.Size(31, 15);
+            this.lms3.TabIndex = 13;
+            this.lms3.Text = "(ms)";
             // 
             // lAnimationEnd
             // 
@@ -1464,14 +1479,100 @@ namespace SiliFish.UI
             this.lAnimationEnd.TabIndex = 14;
             this.lAnimationEnd.Text = "Animation End";
             // 
-            // lms6
+            // lms4
             // 
-            this.lms6.AutoSize = true;
-            this.lms6.Location = new System.Drawing.Point(214, 37);
-            this.lms6.Name = "lms6";
-            this.lms6.Size = new System.Drawing.Size(31, 15);
-            this.lms6.TabIndex = 16;
-            this.lms6.Text = "(ms)";
+            this.lms4.AutoSize = true;
+            this.lms4.Location = new System.Drawing.Point(214, 37);
+            this.lms4.Name = "lms4";
+            this.lms4.Size = new System.Drawing.Size(31, 15);
+            this.lms4.TabIndex = 16;
+            this.lms4.Text = "(ms)";
+            // 
+            // tabTemplateJSON
+            // 
+            this.tabTemplateJSON.Controls.Add(this.eTemplateJSON);
+            this.tabTemplateJSON.Controls.Add(this.pTemplateJSONTop);
+            this.tabTemplateJSON.Location = new System.Drawing.Point(4, 24);
+            this.tabTemplateJSON.Name = "tabTemplateJSON";
+            this.tabTemplateJSON.Size = new System.Drawing.Size(786, 511);
+            this.tabTemplateJSON.TabIndex = 5;
+            this.tabTemplateJSON.Text = "Template JSON";
+            this.tabTemplateJSON.UseVisualStyleBackColor = true;
+            // 
+            // pTemplateJSONTop
+            // 
+            this.pTemplateJSONTop.BackColor = System.Drawing.SystemColors.Control;
+            this.pTemplateJSONTop.Controls.Add(this.btnLoadTemplateJSON);
+            this.pTemplateJSONTop.Controls.Add(this.btnDisplayTemplateJSON);
+            this.pTemplateJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pTemplateJSONTop.Location = new System.Drawing.Point(0, 0);
+            this.pTemplateJSONTop.Name = "pTemplateJSONTop";
+            this.pTemplateJSONTop.Size = new System.Drawing.Size(786, 35);
+            this.pTemplateJSONTop.TabIndex = 1;
+            // 
+            // btnLoadTemplateJSON
+            // 
+            this.btnLoadTemplateJSON.Enabled = false;
+            this.btnLoadTemplateJSON.Location = new System.Drawing.Point(93, 7);
+            this.btnLoadTemplateJSON.Name = "btnLoadTemplateJSON";
+            this.btnLoadTemplateJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadTemplateJSON.TabIndex = 1;
+            this.btnLoadTemplateJSON.Text = "Load";
+            this.btnLoadTemplateJSON.UseVisualStyleBackColor = true;
+            this.btnLoadTemplateJSON.Click += new System.EventHandler(this.btnLoadTemplateJSON_Click);
+            // 
+            // btnDisplayTemplateJSON
+            // 
+            this.btnDisplayTemplateJSON.Location = new System.Drawing.Point(12, 7);
+            this.btnDisplayTemplateJSON.Name = "btnDisplayTemplateJSON";
+            this.btnDisplayTemplateJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnDisplayTemplateJSON.TabIndex = 0;
+            this.btnDisplayTemplateJSON.Text = "Display";
+            this.btnDisplayTemplateJSON.UseVisualStyleBackColor = true;
+            this.btnDisplayTemplateJSON.Click += new System.EventHandler(this.btnDisplayTemplateJSON_Click);
+            // 
+            // tabModelJSON
+            // 
+            this.tabModelJSON.Controls.Add(this.eModelJSON);
+            this.tabModelJSON.Controls.Add(this.pModelJSONTop);
+            this.tabModelJSON.Location = new System.Drawing.Point(4, 24);
+            this.tabModelJSON.Name = "tabModelJSON";
+            this.tabModelJSON.Size = new System.Drawing.Size(786, 511);
+            this.tabModelJSON.TabIndex = 6;
+            this.tabModelJSON.Text = "Model JSON";
+            this.tabModelJSON.UseVisualStyleBackColor = true;
+            // 
+            // pModelJSONTop
+            // 
+            this.pModelJSONTop.BackColor = System.Drawing.SystemColors.Control;
+            this.pModelJSONTop.Controls.Add(this.btnLoadModelJSON);
+            this.pModelJSONTop.Controls.Add(this.btnDisplayModelJSON);
+            this.pModelJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pModelJSONTop.Location = new System.Drawing.Point(0, 0);
+            this.pModelJSONTop.Name = "pModelJSONTop";
+            this.pModelJSONTop.Size = new System.Drawing.Size(786, 35);
+            this.pModelJSONTop.TabIndex = 3;
+            // 
+            // btnLoadModelJSON
+            // 
+            this.btnLoadModelJSON.Enabled = false;
+            this.btnLoadModelJSON.Location = new System.Drawing.Point(93, 7);
+            this.btnLoadModelJSON.Name = "btnLoadModelJSON";
+            this.btnLoadModelJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadModelJSON.TabIndex = 1;
+            this.btnLoadModelJSON.Text = "Load";
+            this.btnLoadModelJSON.UseVisualStyleBackColor = true;
+            this.btnLoadModelJSON.Click += new System.EventHandler(this.btnLoadModelJSON_Click);
+            // 
+            // btnDisplayModelJSON
+            // 
+            this.btnDisplayModelJSON.Location = new System.Drawing.Point(12, 7);
+            this.btnDisplayModelJSON.Name = "btnDisplayModelJSON";
+            this.btnDisplayModelJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnDisplayModelJSON.TabIndex = 0;
+            this.btnDisplayModelJSON.Text = "Display";
+            this.btnDisplayModelJSON.UseVisualStyleBackColor = true;
+            this.btnDisplayModelJSON.Click += new System.EventHandler(this.btnDisplayModelJSON_Click);
             // 
             // pParamBottom
             // 
@@ -1718,6 +1819,26 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // eTemplateJSON
+            // 
+            this.eTemplateJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eTemplateJSON.Location = new System.Drawing.Point(0, 35);
+            this.eTemplateJSON.Name = "eTemplateJSON";
+            this.eTemplateJSON.Size = new System.Drawing.Size(786, 476);
+            this.eTemplateJSON.TabIndex = 2;
+            this.eTemplateJSON.Text = "";
+            this.eTemplateJSON.TextChanged += new System.EventHandler(this.eTemplateJSON_TextChanged);
+            // 
+            // eModelJSON
+            // 
+            this.eModelJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eModelJSON.Location = new System.Drawing.Point(0, 35);
+            this.eModelJSON.Name = "eModelJSON";
+            this.eModelJSON.Size = new System.Drawing.Size(786, 476);
+            this.eModelJSON.TabIndex = 4;
+            this.eModelJSON.Text = "";
+            this.eModelJSON.TextChanged += new System.EventHandler(this.eModelJSON_TextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1795,6 +1916,10 @@ namespace SiliFish.UI
             this.pAnimation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
+            this.tabTemplateJSON.ResumeLayout(false);
+            this.pTemplateJSONTop.ResumeLayout(false);
+            this.tabModelJSON.ResumeLayout(false);
+            this.pModelJSONTop.ResumeLayout(false);
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
@@ -1837,9 +1962,9 @@ namespace SiliFish.UI
         private Button btnGenerate3DModel;
         private Panel pAnimation;
         private Label lAnimationStart;
-        private Label lms5;
+        private Label lms3;
         private Label lAnimationEnd;
-        private Label lms6;
+        private Label lms4;
         private TabControl tabParams;
         private LinkLabel linkSaveParam;
         private Panel pMain;
@@ -1855,9 +1980,9 @@ namespace SiliFish.UI
         private Label lPlotPool;
         private ComboBox ddPlotPools;
         private Label lPlotStart;
-        private Label label7;
+        private Label lms1;
         private Label lPlotEnd;
-        private Label label9;
+        private Label lms2;
         private Label lPlotPlot;
         private Button btnPlotWindows;
         private ComboBox ddPlot;
@@ -1933,5 +2058,15 @@ namespace SiliFish.UI
         private CheckBox cbMultiple;
         private ComboBox ddPlotSagittal;
         private Label lNumberOfPlots;
+        private TabPage tabTemplateJSON;
+        private Panel pTemplateJSONTop;
+        private Button btnDisplayTemplateJSON;
+        private Button btnLoadTemplateJSON;
+        private TabPage tabModelJSON;
+        private Panel pModelJSONTop;
+        private Button btnLoadModelJSON;
+        private Button btnDisplayModelJSON;
+        private RichTextBox eTemplateJSON;
+        private RichTextBox eModelJSON;
     }
 }

@@ -19,6 +19,7 @@ namespace SiliFish.UI
     {
         SwimmingModel Model;
         bool modelRefreshMsgShown = false;
+        bool jsonRefreshMsgShown = false;
         bool modifiedPools = false;
         bool modifiedJncs = false;
 
@@ -83,7 +84,7 @@ namespace SiliFish.UI
 
                 foreach (PlotSelection ps in Enum.GetValues(typeof(PlotSelection)))
                 {
-                    if (ps!= PlotSelection.Summary)
+                    if (ps != PlotSelection.Summary)
                         ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
                     ddPlotCellSelection.Items.Add(ps.GetDisplayName());
                 }
@@ -186,6 +187,24 @@ namespace SiliFish.UI
 
         #region Model selection
 
+        private void RefreshModel()
+        {
+            if (rbCustom.Checked)
+            {
+                Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
+            }
+            else
+            {
+                Model?.SetParameters(ReadParams());
+            }
+        }
+
+        private void RefreshModelFromTemplate()
+        {
+            Model = customModel = new CustomSwimmingModel(ModelTemplate);
+            lastSavedCustomParams = ModelTemplate.Parameters;
+            Model.SetParameters(ModelTemplate.Parameters);
+        }
         private void SwitchToModel()
         {
             if (Model == null) return;
@@ -542,6 +561,8 @@ namespace SiliFish.UI
                     MessageBox.Show(err);
                     return null;
                 }
+
+                RefreshModelFromTemplate();
                 return ModelTemplate;
             }
             catch (Exception ex)
@@ -733,19 +754,15 @@ namespace SiliFish.UI
             tRunEnd = (int)eTimeEnd.Value;
             tRunSkip = (int)eSkip.Value;
 
-            if (rbCustom.Checked)
+            RefreshModel();
+            if (Model is PredefinedModel pdModel)
             {
-                Model = customModel = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
-            }
-            else if (Model != null)
-            {
-                Dictionary<string, object> ParamDict = ReadParams();
-                Model.SetParameters(ParamDict);
                 StimulusMode stimMode = ddStimulusMode.Text == "Gaussian" ? StimulusMode.Gaussian :
-                    ddStimulusMode.Text == "Ramp" ? StimulusMode.Ramp :
-                    StimulusMode.Step;
-                (Model as PredefinedModel).SetStimulusMode(stimMode);
+                  ddStimulusMode.Text == "Ramp" ? StimulusMode.Ramp :
+                  StimulusMode.Step;
+                pdModel.SetStimulusMode(stimMode);
             }
+
             Model.runParam.tSkip_ms = tRunSkip;
             Model.runParam.tMax = tRunEnd;
             Model.runParam.dt = (double)edt.Value;
@@ -813,13 +830,13 @@ namespace SiliFish.UI
             PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
             if (plotType == PlotType.Episodes)
             {
-                ddPlotSomiteSelection.SelectedIndex = 
+                ddPlotSomiteSelection.SelectedIndex =
                     ddPlotCellSelection.SelectedIndex =
                     ddPlotSagittal.SelectedIndex =
                     ddPlotPools.SelectedIndex = -1;
-                ddPlotSomiteSelection.Enabled = 
+                ddPlotSomiteSelection.Enabled =
                     ddPlotCellSelection.Enabled =
-                    ddPlotSagittal.Enabled = 
+                    ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = false;
             }
             else
@@ -869,7 +886,7 @@ namespace SiliFish.UI
             if (ePlotSomiteSelection.Focused)
                 DisplayNumberOfPlots();
         }
-         private void PopulatePlotPools()
+        private void PopulatePlotPools()
         {
             string prevSelection = ddPlotPools.Text;
             ddPlotPools.Items.Clear();
@@ -887,7 +904,7 @@ namespace SiliFish.UI
                     ddPlotPools.SelectedIndex = 0;
             }
         }
-       private void GetPlotSubset()
+        private void GetPlotSubset()
         {
             PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
             PlotSubset = ddPlotPools.Text;
@@ -1083,19 +1100,11 @@ namespace SiliFish.UI
 
             if (!Model.ModelRun)
             {
-                if (rbCustom.Checked)
-                {
-                    Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
-                }
-                else
-                {
-                    Dictionary<string, object> ParamDict = ReadParams();
-                    Model.SetParameters(ParamDict);
-                }
+                RefreshModel();
             }
             else if (!modelRefreshMsgShown && (modifiedPools || modifiedJncs))
             {
-                MessageBox.Show("The changes you make will not be visible until you rerun the model.");
+                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
                 modelRefreshMsgShown = true;
             }
             TwoDModelGenerator modelGenerator = new();
@@ -1135,19 +1144,11 @@ namespace SiliFish.UI
 
             if (!Model.ModelRun)
             {
-                if (rbCustom.Checked)
-                {
-                    Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
-                }
-                else
-                {
-                    Dictionary<string, object> ParamDict = ReadParams();
-                    Model.SetParameters(ParamDict);
-                }
+                RefreshModel();
             }
             else if (!modelRefreshMsgShown && (modifiedPools || modifiedJncs))
             {
-                MessageBox.Show("The changes you make will not be visible until you rerun the model.");
+                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
                 modelRefreshMsgShown = true;
             }
             string mode = dd3DModelType.Text;
@@ -1165,10 +1166,6 @@ namespace SiliFish.UI
             Generate3DModel();
         }
 
-        private void dd3DModelType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Generate3DModel();
-        }
         private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -1259,7 +1256,103 @@ namespace SiliFish.UI
 
         #endregion
 
+        #region JSON
+        private void eTemplateJSON_TextChanged(object sender, EventArgs e)
+        {
+            if (eTemplateJSON.Focused)
+                btnLoadTemplateJSON.Enabled = rbCustom.Checked;
+        }
 
+        private void btnDisplayTemplateJSON_Click(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+
+            if (!Model.ModelRun)
+            {
+                RefreshModel();
+            }
+            else if (!jsonRefreshMsgShown && (modifiedPools || modifiedJncs))
+            {
+                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
+                jsonRefreshMsgShown = true;
+            }
+            eTemplateJSON.Text = Util.CreateJSONFromObject(ModelTemplate);
+            btnLoadTemplateJSON.Enabled = false;
+        }
+
+        private void btnLoadTemplateJSON_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), eTemplateJSON.Text) is SwimmingModelTemplate temp)
+                {
+
+                    ModelTemplate = temp;
+                    ModelTemplate.LinkObjects();
+                    LoadModelTemplate();
+                    RefreshModelFromTemplate();
+                }
+            }
+            catch (JsonException exc)
+            {
+                WarningMessage($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}");
+            }
+            catch (Exception exc)
+            {
+                ExceptionHandling("Read template from JSON", exc);
+            }
+        }
+
+        private void eModelJSON_TextChanged(object sender, EventArgs e)
+        {
+            if (eModelJSON.Focused)
+                btnLoadModelJSON.Enabled = true;
+        }
+
+        private void btnDisplayModelJSON_Click(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+
+            if (!Model.ModelRun)
+            {
+                RefreshModel();
+            }
+            else if (!jsonRefreshMsgShown && (modifiedPools || modifiedJncs))
+            {
+                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
+                jsonRefreshMsgShown = true;
+            }
+            eModelJSON.Text = Util.CreateJSONFromObject(Model);
+            btnLoadModelJSON.Enabled = false;
+        }
+
+        private void btnLoadModelJSON_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Util.CreateObjectFromJSON(typeof(SwimmingModel), eModelJSON.Text) is SwimmingModel model)
+                {
+                    Model = model;
+                    if (Model is SingleCoilModel sc)
+                        scModel = sc;
+                    else if (Model is DoubleCoilModel dc)
+                        dcModel = dc;
+                    else if (Model is BeatAndGlideModel bg)
+                        bgModel = bg;
+                    else
+                        customModel = model as CustomSwimmingModel;
+                }
+            }
+            catch (JsonException exc)
+            {
+                WarningMessage($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}");
+            }
+            catch (Exception exc)
+            {
+                ExceptionHandling("Read template from JSON", exc);
+            }
+        }
+        #endregion
 
         #endregion
 
@@ -1775,6 +1868,7 @@ namespace SiliFish.UI
         {
             prevSpinalMedialLateral = eSpinalMedialLateral.Value;
         }
+
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {

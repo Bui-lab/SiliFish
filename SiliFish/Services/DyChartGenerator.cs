@@ -269,7 +269,7 @@ namespace SiliFish.Services
                     yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
                     title = "Time,Episode Intervals";
                     data = new string[iEnd - iStart + 2];
-                    foreach (int i in Enumerable.Range(0, episodes.Count))
+                    foreach (int i in Enumerable.Range(0, episodes.Count - 1))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
                     charts.Add(new ChartStruct
