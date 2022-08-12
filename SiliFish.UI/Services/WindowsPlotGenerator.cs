@@ -289,9 +289,6 @@ namespace Services
                     return PlotFullDynamics(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                 case PlotType.Episodes:
                     return PlotEpisodes(model, tStart, tEnd);
-                case PlotType.BodyAngleHeatMap://TODO
-                    break;
-
                 default:
                     break;
             }
