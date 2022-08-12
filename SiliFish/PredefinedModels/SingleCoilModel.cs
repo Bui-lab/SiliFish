@@ -46,6 +46,7 @@ namespace SiliFish.PredefinedModels
             E_gly = -45;
             cv = 4;
             stim_value1 = 50;
+            stim_value2 = 0;
             kinemZeta = 3.0;
             kinemW0 = 2.5; 
             kinemConvCoef = 0.1;
@@ -66,7 +67,8 @@ namespace SiliFish.PredefinedModels
             TimeLine tl = new();
             tl.AddTimeRange(this.tStimStart_ms);
             double multiplier = GetStimulusNoiseMultiplier();
-            Stimulus stim = new(stim_mode, tl, stim_value1 * multiplier, stim_value2 * multiplier);
+            double multiplier2 = stim_mode == StimulusMode.Step? 0 : multiplier; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
+            Stimulus stim = new(stim_mode, tl, stim_value1 * multiplier, stim_value2 * multiplier2);
 
             for (int i = 0; i < nIC; i++)
             {

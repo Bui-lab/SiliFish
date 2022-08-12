@@ -86,7 +86,7 @@
             // lDistributionType
             // 
             this.lDistributionType.AutoSize = true;
-            this.lDistributionType.Location = new System.Drawing.Point(5, 9);
+            this.lDistributionType.Location = new System.Drawing.Point(5, 8);
             this.lDistributionType.Name = "lDistributionType";
             this.lDistributionType.Size = new System.Drawing.Size(69, 15);
             this.lDistributionType.TabIndex = 8;
@@ -113,7 +113,7 @@
             // lNoise
             // 
             this.lNoise.AutoSize = true;
-            this.lNoise.Location = new System.Drawing.Point(5, 8);
+            this.lNoise.Location = new System.Drawing.Point(5, 6);
             this.lNoise.Name = "lNoise";
             this.lNoise.Size = new System.Drawing.Size(37, 15);
             this.lNoise.TabIndex = 0;
@@ -123,7 +123,7 @@
             // lMean
             // 
             this.lMean.AutoSize = true;
-            this.lMean.Location = new System.Drawing.Point(5, 10);
+            this.lMean.Location = new System.Drawing.Point(5, 6);
             this.lMean.Name = "lMean";
             this.lMean.Size = new System.Drawing.Size(37, 15);
             this.lMean.TabIndex = 0;
@@ -132,7 +132,7 @@
             // lStdDev
             // 
             this.lStdDev.AutoSize = true;
-            this.lStdDev.Location = new System.Drawing.Point(5, 33);
+            this.lStdDev.Location = new System.Drawing.Point(5, 32);
             this.lStdDev.Name = "lStdDev";
             this.lStdDev.Size = new System.Drawing.Size(47, 15);
             this.lStdDev.TabIndex = 2;
@@ -185,7 +185,7 @@
             // lMean2
             // 
             this.lMean2.AutoSize = true;
-            this.lMean2.Location = new System.Drawing.Point(5, 10);
+            this.lMean2.Location = new System.Drawing.Point(5, 6);
             this.lMean2.Name = "lMean2";
             this.lMean2.Size = new System.Drawing.Size(46, 15);
             this.lMean2.TabIndex = 0;
@@ -194,7 +194,7 @@
             // lStdDev2
             // 
             this.lStdDev2.AutoSize = true;
-            this.lStdDev2.Location = new System.Drawing.Point(5, 34);
+            this.lStdDev2.Location = new System.Drawing.Point(5, 32);
             this.lStdDev2.Name = "lStdDev2";
             this.lStdDev2.Size = new System.Drawing.Size(56, 15);
             this.lStdDev2.TabIndex = 2;

@@ -71,33 +71,29 @@ namespace SiliFish.Services
             html.Replace("__WIDTH__", swidth);
             html.Replace("__HEIGHT__", sheight);
         }
-        public string CreateTimeSeries(string title, string animParams,
+        public static string CreateTimeSeries(string title, string animParams,
             Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, 
-            int iStart, int iEnd, double dt)
+            int iStart, int iEnd, double dt, double animdt)
         {
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 
+            int jump = (int)(animdt / dt);
+            if (jump < 1) jump = 1;
             List<string> timeSeries = new();
-            Dictionary<int, string> somitePoints = new Dictionary<int, string>();
-            string lastPos = "";
-            string initialPos = "";
-            foreach (int timeIndex in Enumerable.Range(0, iEnd - iStart + 1))
+            Dictionary<int, string> somitePoints = new();
+            foreach (int timeIndex in Enumerable.Range(0, (iEnd - iStart + 1) / jump))
             {
-                string curPos = CreateTimeDataPoints(somiteCoordinates, timeIndex);
-                if (initialPos == "")
-                    initialPos = curPos;
-                if (lastPos == curPos && lastPos == initialPos)
-                    curPos = "[];";
-                else
-                {
-                    if (lastPos != "")
-                        somitePoints.AddObject(timeIndex - 1, lastPos);
-                    lastPos = curPos;
-                }
-                somitePoints.Add(timeIndex, curPos);
+                string curPos = CreateTimeDataPoints(somiteCoordinates, timeIndex * jump);
+                somitePoints.Add(timeIndex * jump, curPos);
             }
+            if (jump > 1)//add the final ppoint
+            {
+                string lastPos = CreateTimeDataPoints(somiteCoordinates, iEnd - iStart);
+                somitePoints.AddObject(iEnd - iStart, lastPos);
+            }
+
             foreach (int timeIndex in somitePoints.Keys)
                 timeSeries.Add($"FD[{timeIndex}] ={somitePoints[timeIndex]}");
 
@@ -113,7 +109,7 @@ namespace SiliFish.Services
         
         
 
-        public static string GenerateAnimation(SwimmingModel model, int tStart = 0, int tEnd = -1)
+        public static string GenerateAnimation(SwimmingModel model, int tStart, int tEnd, double animdt)
         {
             if (model == null || !model.ModelRun)
                 return null;
@@ -137,9 +133,14 @@ namespace SiliFish.Services
                 animParams += $"{param.Key}: {param.Value}\n";
             }
 
-            return animationGenerator.CreateTimeSeries(title: model.ModelName + "Animation.html",
+            return CreateTimeSeries(title: model.ModelName + "Animation.html",
                 animParams,
-                model.GenerateSpineCoordinates(iStart, iEnd), model.TimeArray, iStart, iEnd, dt);
+                model.GenerateSpineCoordinates(iStart, iEnd), 
+                model.TimeArray, 
+                iStart, 
+                iEnd, 
+                dt,
+                animdt);
         }
     }
 }

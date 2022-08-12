@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Web;
 
 namespace SiliFish.Services
 {
-    public class DyChartGenerator: VisualsGenerator
+    public class DyChartGenerator : VisualsGenerator
     {
         public struct ChartStruct
         {
@@ -18,12 +19,14 @@ namespace SiliFish.Services
             public string Title = "", xLabel = "`Time (ms)`", yLabel = "", Color = "'red'";
             public string yMin = "null";
             public string yMax = "null";
+            public string xMin = "";
+            public string xMax = "";
             public bool ScatterPlot = false;
             public ChartStruct()
             {
             }
         }
-        public static string PlotCharts(string title, List<ChartStruct> charts)
+        public static string PlotCharts(string title, List<ChartStruct> charts, int width, int height)
         {
             try
             {
@@ -33,8 +36,11 @@ namespace SiliFish.Services
                 string chartDiv = ReadEmbeddedResource("SiliFish.Resources.DyChartDiv.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
-                html.Replace("__WIDTH_PX__", "800");
-                html.Replace("__HEIGHT_PX__", "480");
+                if (width < 200) width = 200;
+                if (height < 100) height = 100;
+
+                html.Replace("__WIDTH_PX__", width.ToString());
+                html.Replace("__HEIGHT_PX__", height.ToString());
                 string chartDivs = "";
                 List<string> chartHTML = new();
                 foreach (int chartIndex in Enumerable.Range(0, charts.Count))
@@ -45,6 +51,8 @@ namespace SiliFish.Services
                     chart.Replace("__CHART_DATA__", charts[chartIndex].csvData);
                     chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
                     chart.Replace("__CHART_TITLE__", charts[chartIndex].Title);
+                    chart.Replace("__X_MIN__", charts[chartIndex].xMin);
+                    chart.Replace("__X_MAX__", charts[chartIndex].xMax);
                     chart.Replace("__Y_MIN__", charts[chartIndex].yMin);
                     chart.Replace("__Y_MAX__", charts[chartIndex].yMax);
                     chart.Replace("__Y_LABEL__", charts[chartIndex].yLabel);
@@ -64,7 +72,7 @@ namespace SiliFish.Services
             }
         }
 
-        
+
         private static List<ChartStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
@@ -96,11 +104,13 @@ namespace SiliFish.Services
                     yLabel = "`Memb. Potential (mV)`",
                     yMin = yMin.ToString("0.0"),
                     yMax = yMax.ToString("0.0"),
+                    xMin = TimeArray[iStart].ToString(),
+                    xMax = (TimeArray[iEnd] + 1).ToString()
                 });
             }
             return charts;
         }
-        
+
 
         private static List<ChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true)
@@ -171,11 +181,13 @@ namespace SiliFish.Services
                     yLabel = "`Current (pA)`",
                     yMin = yMin.ToString("0.0"),
                     yMax = yMax.ToString("0.0"),
+                    xMin = TimeArray[iStart].ToString(),
+                    xMax = (TimeArray[iEnd] + 1).ToString()
                 });
             }
             return charts;
         }
-        
+
         private static List<ChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
@@ -207,6 +219,8 @@ namespace SiliFish.Services
                     yLabel = "`Stimulus (pA)`",
                     yMin = yMin.ToString("0.0"),
                     yMax = yMax.ToString("0.0"),
+                    xMin = TimeArray[iStart].ToString(),
+                    xMax = (TimeArray[iEnd] + 1).ToString()
                 });
             }
             return charts;
@@ -221,28 +235,30 @@ namespace SiliFish.Services
             charts.AddRange(CreateStimuliCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
             return charts;
         }
-        
+
         private static List<ChartStruct> CreateEpisodeCharts(SwimmingModel model, int iStart, int iEnd)
         {
             List<ChartStruct> charts = new();
-            
+
             (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes();
 
-            double[] Time = model.TimeArray[iStart..iEnd];
+            double[] Time = model.TimeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;
-            double[] yValues = tail_tip_coord[iStart..iEnd].Select(c => c.X).ToArray();
+            double[] yValues = tail_tip_coord[iStart..(iEnd + 1)].Select(c => c.X).ToArray();
 
             //Tail Movement
             string title = "Time,Y-Axis";
             string[] data = new string[iEnd - iStart + 2];
-            foreach (int i in Enumerable.Range(0, iEnd - iStart))
+            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                 data[i] = xValues[i] + "," + yValues[i];
             string csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
             charts.Add(new ChartStruct
             {
                 csvData = csvData,
                 Title = $"`Tail Movement`",
-                yLabel = "`Y-Coordinate`"
+                yLabel = "`Y-Coordinate`",
+                xMin = Time[0].ToString(),
+                xMax = (Time[^1] + 1).ToString()
             });
 
             if (episodes.Any())
@@ -259,7 +275,9 @@ namespace SiliFish.Services
                     csvData = csvData,
                     Title = $"`Episode Duration`",
                     yLabel = "`Duration (ms)`",
-                    ScatterPlot = true
+                    ScatterPlot = true,
+                    xMin = Time[0].ToString(),
+                    xMax = (Time[^1] + 1).ToString()
                 });
 
 
@@ -277,7 +295,9 @@ namespace SiliFish.Services
                         csvData = csvData,
                         Title = $"`Episode Intervals`",
                         yLabel = "`Interval (ms)`",
-                        ScatterPlot = true
+                        ScatterPlot = true,
+                        xMin = Time[0].ToString(),
+                        xMax = (Time[^1] + 1).ToString()
                     });
                 }
 
@@ -293,7 +313,9 @@ namespace SiliFish.Services
                     csvData = csvData,
                     Title = $"`Instantenous Frequency`",
                     yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true
+                    ScatterPlot = true,
+                    xMin = Time[0].ToString(),
+                    xMax = (Time[^1] + 1).ToString()
                 });
 
                 xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
@@ -308,7 +330,9 @@ namespace SiliFish.Services
                     csvData = csvData,
                     Title = $"`Instantenous Frequency (Outliers Removed)`",
                     yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true
+                    ScatterPlot = true,
+                    xMin = Time[0].ToString(),
+                    xMax = (Time[^1] + 1).ToString()
                 });
 
                 xValues = episodes.Select(e => e.Start).ToArray();
@@ -323,7 +347,9 @@ namespace SiliFish.Services
                     csvData = csvData,
                     Title = $"`Tail Beat Frequency`",
                     yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true
+                    ScatterPlot = true,
+                    xMin = Time[0].ToString(),
+                    xMax = (Time[^1] + 1).ToString()
                 });
 
                 xValues = episodes.Select(e => e.Start).ToArray();
@@ -338,7 +364,9 @@ namespace SiliFish.Services
                     csvData = csvData,
                     Title = $"`Tail Beat/Episode`",
                     yLabel = "`Count`",
-                    ScatterPlot = true
+                    ScatterPlot = true,
+                    xMin = Time[0].ToString(),
+                    xMax = (Time[^1] + 1).ToString()
                 });
             }
 
@@ -346,8 +374,7 @@ namespace SiliFish.Services
         }
 
         public static string Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection, 
-            int tStart = 0, int tEnd = -1, int tSkip = 0)
+            CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1, int tSkip = 0, int width = 480, int height = 240)
         {
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
@@ -375,7 +402,7 @@ namespace SiliFish.Services
                     break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
-                    charts= CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: true);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: true);
                     break;
                 case PlotType.GapCurrent:
                     Title = "Incoming Gap Currents";
@@ -397,11 +424,8 @@ namespace SiliFish.Services
                     Title = "Tail Beat Episodes";
                     charts = CreateEpisodeCharts(model, iStart, iEnd);
                     break;
-                case PlotType.BodyAngleHeatMap://TODO
-                    break;
-
             }
-            string PlotHTML = PlotCharts(Title, charts);
+            string PlotHTML = PlotCharts(Title, charts, width, height);
             return PlotHTML;
         }
 

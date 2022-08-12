@@ -32,6 +32,7 @@ namespace SiliFish.UI
         string htmlAnimation = "";
         string htmlPlot = "";
         string PlotSubset = "";
+        decimal tAnimdt;
         int tAnimStart = 0;
         int tAnimEnd = 0;
         int tPlotStart = 0;
@@ -208,7 +209,7 @@ namespace SiliFish.UI
         private void SwitchToModel()
         {
             if (Model == null) return;
-            lPlotSomites.Visible = ddPlotSomiteSelection.Visible = ePlotSomiteSelection.Visible = Model.NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
             if (rbSingleCoil.Checked)
                 LoadParams(Model.ModelRun ? lastRunSCParams : lastSavedSCParams);
             else if (rbDoubleCoil.Checked)
@@ -325,7 +326,7 @@ namespace SiliFish.UI
         }
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
-            lPlotSomites.Visible = ddPlotSomiteSelection.Visible = ePlotSomiteSelection.Visible = Model.NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
 
             if (ParamDict == null) return;
             this.Text = $"SiliFish {Model.ModelName}";
@@ -723,7 +724,7 @@ namespace SiliFish.UI
             modifiedJncs = modifiedPools = false;
 
             PopulatePlotPools();
-            lPlotSomites.Visible = ddPlotSomiteSelection.Visible = ePlotSomiteSelection.Visible = Model.NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
             btnAnimate.Enabled = true;
@@ -841,8 +842,8 @@ namespace SiliFish.UI
             }
             else
             {
-                ddPlotSomiteSelection.Enabled =
-                    ddPlotCellSelection.Enabled =
+                ddPlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+                ddPlotCellSelection.Enabled =
                     ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = true;
             }
@@ -934,8 +935,10 @@ namespace SiliFish.UI
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-            //htmlPlot = HTMLPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
-            htmlPlot = DyChartGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
+            htmlPlot = DyChartGenerator.Plot(PlotType, 
+                Model, Cells, Pools, plotCellSelection, 
+                tPlotStart, tPlotEnd, tRunSkip, 
+                (int)ePlotWidth.Value, (int)ePlotHeight.Value);
             Invoke(CompletePlotHTML);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
@@ -1195,7 +1198,7 @@ namespace SiliFish.UI
         {
             try
             {
-                htmlAnimation = AnimationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd);
+                htmlAnimation = AnimationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd, (double)tAnimdt);
                 Invoke(CompleteAnimation);
             }
             catch { Invoke(CancelAnimation); }
@@ -1234,6 +1237,7 @@ namespace SiliFish.UI
             lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
 
             Model.SetAnimationParameters(ReadParams("Animation"));
+            tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
         }
         private void linkSaveAnimationHTML_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1869,6 +1873,12 @@ namespace SiliFish.UI
             prevSpinalMedialLateral = eSpinalMedialLateral.Value;
         }
 
+        private void edt_ValueChanged(object sender, EventArgs e)
+        {
+            eAnimationdt.Minimum = edt.Value;
+            eAnimationdt.Increment = edt.Value;
+            eAnimationdt.Value = 10 * edt.Value;
+        }
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {

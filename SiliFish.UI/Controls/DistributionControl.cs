@@ -17,7 +17,7 @@ namespace SiliFish.UI.Controls
                 {
                     lRange.Top = eRangeStart.Top = eRangeEnd.Top = lRangeSeparator.Top =
                         rbAbsolute.Top;
-                    pTopIn.Height = lRange.Bottom + lRange.Margin.Bottom;
+                    pTop.Height = lRange.Bottom + lRange.Margin.Bottom + 12;
                 }
             } 
         } 

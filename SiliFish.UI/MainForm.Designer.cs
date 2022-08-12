@@ -87,6 +87,12 @@ namespace SiliFish.UI
             this.tPlotHTML = new System.Windows.Forms.TabPage();
             this.webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlot = new System.Windows.Forms.Panel();
+            this.ePlotHeight = new System.Windows.Forms.NumericUpDown();
+            this.ePlotWidth = new System.Windows.Forms.NumericUpDown();
+            this.lPlotWidth = new System.Windows.Forms.Label();
+            this.lpx1 = new System.Windows.Forms.Label();
+            this.lPlotHeight = new System.Windows.Forms.Label();
+            this.lpx2 = new System.Windows.Forms.Label();
             this.lNumberOfPlots = new System.Windows.Forms.Label();
             this.ddPlotSagittal = new System.Windows.Forms.ComboBox();
             this.linkSavePlots = new System.Windows.Forms.LinkLabel();
@@ -123,11 +129,12 @@ namespace SiliFish.UI
             this.tabAnimation = new System.Windows.Forms.TabPage();
             this.webViewAnimation = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pAnimation = new System.Windows.Forms.Panel();
+            this.eAnimationdt = new System.Windows.Forms.NumericUpDown();
+            this.lAnimationdt = new System.Windows.Forms.Label();
             this.linkSaveAnimationCSV = new System.Windows.Forms.LinkLabel();
             this.lAnimationTime = new System.Windows.Forms.Label();
             this.eAnimationEnd = new System.Windows.Forms.NumericUpDown();
             this.eAnimationStart = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
             this.linkSaveAnimationHTML = new System.Windows.Forms.LinkLabel();
             this.btnAnimate = new System.Windows.Forms.Button();
             this.lAnimationStart = new System.Windows.Forms.Label();
@@ -135,10 +142,12 @@ namespace SiliFish.UI
             this.lAnimationEnd = new System.Windows.Forms.Label();
             this.lms4 = new System.Windows.Forms.Label();
             this.tabTemplateJSON = new System.Windows.Forms.TabPage();
+            this.eTemplateJSON = new System.Windows.Forms.RichTextBox();
             this.pTemplateJSONTop = new System.Windows.Forms.Panel();
             this.btnLoadTemplateJSON = new System.Windows.Forms.Button();
             this.btnDisplayTemplateJSON = new System.Windows.Forms.Button();
             this.tabModelJSON = new System.Windows.Forms.TabPage();
+            this.eModelJSON = new System.Windows.Forms.RichTextBox();
             this.pModelJSONTop = new System.Windows.Forms.Panel();
             this.btnLoadModelJSON = new System.Windows.Forms.Button();
             this.btnDisplayModelJSON = new System.Windows.Forms.Button();
@@ -166,8 +175,6 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.eTemplateJSON = new System.Windows.Forms.RichTextBox();
-            this.eModelJSON = new System.Windows.Forms.RichTextBox();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -207,6 +214,8 @@ namespace SiliFish.UI
             this.tPlotHTML.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlot)).BeginInit();
             this.pPlot.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotCellSelection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotStart)).BeginInit();
@@ -220,6 +229,7 @@ namespace SiliFish.UI
             this.tabAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewAnimation)).BeginInit();
             this.pAnimation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eAnimationdt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).BeginInit();
             this.tabTemplateJSON.SuspendLayout();
@@ -333,10 +343,10 @@ namespace SiliFish.UI
             // 
             this.linkSaveHTMLPlots.AutoSize = true;
             this.linkSaveHTMLPlots.Enabled = false;
-            this.linkSaveHTMLPlots.Location = new System.Drawing.Point(531, 83);
+            this.linkSaveHTMLPlots.Location = new System.Drawing.Point(527, 114);
             this.linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
             this.linkSaveHTMLPlots.Size = new System.Drawing.Size(66, 15);
-            this.linkSaveHTMLPlots.TabIndex = 3;
+            this.linkSaveHTMLPlots.TabIndex = 53;
             this.linkSaveHTMLPlots.TabStop = true;
             this.linkSaveHTMLPlots.Text = "Save HTML";
             this.linkSaveHTMLPlots.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveHTMLPlots_LinkClicked);
@@ -817,10 +827,10 @@ namespace SiliFish.UI
             this.tabPlotSub.Controls.Add(this.tPlotWindows);
             this.tabPlotSub.Controls.Add(this.tPlotHTML);
             this.tabPlotSub.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabPlotSub.Location = new System.Drawing.Point(3, 110);
+            this.tabPlotSub.Location = new System.Drawing.Point(3, 145);
             this.tabPlotSub.Name = "tabPlotSub";
             this.tabPlotSub.SelectedIndex = 0;
-            this.tabPlotSub.Size = new System.Drawing.Size(780, 398);
+            this.tabPlotSub.Size = new System.Drawing.Size(780, 363);
             this.tabPlotSub.TabIndex = 6;
             // 
             // tPlotWindows
@@ -829,7 +839,7 @@ namespace SiliFish.UI
             this.tPlotWindows.Location = new System.Drawing.Point(4, 24);
             this.tPlotWindows.Name = "tPlotWindows";
             this.tPlotWindows.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotWindows.Size = new System.Drawing.Size(772, 370);
+            this.tPlotWindows.Size = new System.Drawing.Size(772, 335);
             this.tPlotWindows.TabIndex = 0;
             this.tPlotWindows.Text = "Image Plots";
             // 
@@ -849,7 +859,7 @@ namespace SiliFish.UI
             // 
             this.splitPlotWindows.Panel2.AutoScroll = true;
             this.splitPlotWindows.Panel2.Controls.Add(this.pictureBoxRight);
-            this.splitPlotWindows.Size = new System.Drawing.Size(766, 364);
+            this.splitPlotWindows.Size = new System.Drawing.Size(766, 329);
             this.splitPlotWindows.SplitterDistance = 356;
             this.splitPlotWindows.TabIndex = 0;
             this.splitPlotWindows.DoubleClick += new System.EventHandler(this.splitWindows_DoubleClick);
@@ -878,7 +888,7 @@ namespace SiliFish.UI
             this.tPlotHTML.Location = new System.Drawing.Point(4, 24);
             this.tPlotHTML.Name = "tPlotHTML";
             this.tPlotHTML.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotHTML.Size = new System.Drawing.Size(772, 370);
+            this.tPlotHTML.Size = new System.Drawing.Size(772, 335);
             this.tPlotHTML.TabIndex = 1;
             this.tPlotHTML.Text = "HTML Plots";
             this.tPlotHTML.UseVisualStyleBackColor = true;
@@ -891,7 +901,7 @@ namespace SiliFish.UI
             this.webViewPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlot.Location = new System.Drawing.Point(3, 3);
             this.webViewPlot.Name = "webViewPlot";
-            this.webViewPlot.Size = new System.Drawing.Size(766, 364);
+            this.webViewPlot.Size = new System.Drawing.Size(766, 329);
             this.webViewPlot.TabIndex = 1;
             this.webViewPlot.ZoomFactor = 1D;
             this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlot_CoreWebView2InitializationCompleted);
@@ -899,6 +909,12 @@ namespace SiliFish.UI
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.SystemColors.Control;
+            this.pPlot.Controls.Add(this.ePlotHeight);
+            this.pPlot.Controls.Add(this.ePlotWidth);
+            this.pPlot.Controls.Add(this.lPlotWidth);
+            this.pPlot.Controls.Add(this.lpx1);
+            this.pPlot.Controls.Add(this.lPlotHeight);
+            this.pPlot.Controls.Add(this.lpx2);
             this.pPlot.Controls.Add(this.lNumberOfPlots);
             this.pPlot.Controls.Add(this.ddPlotSagittal);
             this.pPlot.Controls.Add(this.linkSavePlots);
@@ -925,13 +941,109 @@ namespace SiliFish.UI
             this.pPlot.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlot.Location = new System.Drawing.Point(3, 3);
             this.pPlot.Name = "pPlot";
-            this.pPlot.Size = new System.Drawing.Size(780, 107);
+            this.pPlot.Size = new System.Drawing.Size(780, 142);
             this.pPlot.TabIndex = 5;
+            // 
+            // ePlotHeight
+            // 
+            this.ePlotHeight.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotHeight.Location = new System.Drawing.Point(494, 28);
+            this.ePlotHeight.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.ePlotHeight.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotHeight.Name = "ePlotHeight";
+            this.ePlotHeight.Size = new System.Drawing.Size(48, 23);
+            this.ePlotHeight.TabIndex = 46;
+            this.ePlotHeight.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.ePlotHeight, "for each plot");
+            this.ePlotHeight.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
+            // ePlotWidth
+            // 
+            this.ePlotWidth.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotWidth.Location = new System.Drawing.Point(494, 3);
+            this.ePlotWidth.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.ePlotWidth.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.ePlotWidth.Name = "ePlotWidth";
+            this.ePlotWidth.Size = new System.Drawing.Size(48, 23);
+            this.ePlotWidth.TabIndex = 45;
+            this.ePlotWidth.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.ePlotWidth, "for each plot - 15% of it will be used for legend");
+            this.ePlotWidth.Value = new decimal(new int[] {
+            800,
+            0,
+            0,
+            0});
+            // 
+            // lPlotWidth
+            // 
+            this.lPlotWidth.AutoSize = true;
+            this.lPlotWidth.Location = new System.Drawing.Point(449, 8);
+            this.lPlotWidth.Name = "lPlotWidth";
+            this.lPlotWidth.Size = new System.Drawing.Size(39, 15);
+            this.lPlotWidth.TabIndex = 54;
+            this.lPlotWidth.Text = "Width";
+            this.toolTip.SetToolTip(this.lPlotWidth, "for each plot - 15% of it will be used for legend");
+            // 
+            // lpx1
+            // 
+            this.lpx1.AutoSize = true;
+            this.lpx1.Location = new System.Drawing.Point(548, 5);
+            this.lpx1.Name = "lpx1";
+            this.lpx1.Size = new System.Drawing.Size(28, 15);
+            this.lpx1.TabIndex = 55;
+            this.lpx1.Text = "(px)";
+            // 
+            // lPlotHeight
+            // 
+            this.lPlotHeight.AutoSize = true;
+            this.lPlotHeight.Location = new System.Drawing.Point(449, 31);
+            this.lPlotHeight.Name = "lPlotHeight";
+            this.lPlotHeight.Size = new System.Drawing.Size(43, 15);
+            this.lPlotHeight.TabIndex = 56;
+            this.lPlotHeight.Text = "Height";
+            this.toolTip.SetToolTip(this.lPlotHeight, "for each plot");
+            // 
+            // lpx2
+            // 
+            this.lpx2.AutoSize = true;
+            this.lpx2.Location = new System.Drawing.Point(548, 31);
+            this.lpx2.Name = "lpx2";
+            this.lpx2.Size = new System.Drawing.Size(28, 15);
+            this.lpx2.TabIndex = 57;
+            this.lpx2.Text = "(px)";
             // 
             // lNumberOfPlots
             // 
             this.lNumberOfPlots.AutoSize = true;
-            this.lNumberOfPlots.Location = new System.Drawing.Point(450, 32);
+            this.lNumberOfPlots.Location = new System.Drawing.Point(449, 62);
             this.lNumberOfPlots.Name = "lNumberOfPlots";
             this.lNumberOfPlots.Size = new System.Drawing.Size(63, 15);
             this.lNumberOfPlots.TabIndex = 53;
@@ -943,17 +1055,17 @@ namespace SiliFish.UI
             // 
             this.ddPlotSagittal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotSagittal.FormattingEnabled = true;
-            this.ddPlotSagittal.Location = new System.Drawing.Point(280, 28);
+            this.ddPlotSagittal.Location = new System.Drawing.Point(280, 32);
             this.ddPlotSagittal.Name = "ddPlotSagittal";
             this.ddPlotSagittal.Size = new System.Drawing.Size(160, 23);
-            this.ddPlotSagittal.TabIndex = 52;
+            this.ddPlotSagittal.TabIndex = 35;
             this.ddPlotSagittal.SelectedIndexChanged += new System.EventHandler(this.ddPlotSagittal_SelectedIndexChanged);
             // 
             // linkSavePlots
             // 
             this.linkSavePlots.AutoSize = true;
             this.linkSavePlots.Enabled = false;
-            this.linkSavePlots.Location = new System.Drawing.Point(531, 58);
+            this.linkSavePlots.Location = new System.Drawing.Point(527, 88);
             this.linkSavePlots.Name = "linkSavePlots";
             this.linkSavePlots.Size = new System.Drawing.Size(96, 15);
             this.linkSavePlots.TabIndex = 51;
@@ -964,10 +1076,10 @@ namespace SiliFish.UI
             // btnPlotHTML
             // 
             this.btnPlotHTML.Enabled = false;
-            this.btnPlotHTML.Location = new System.Drawing.Point(450, 79);
+            this.btnPlotHTML.Location = new System.Drawing.Point(449, 110);
             this.btnPlotHTML.Name = "btnPlotHTML";
             this.btnPlotHTML.Size = new System.Drawing.Size(75, 23);
-            this.btnPlotHTML.TabIndex = 30;
+            this.btnPlotHTML.TabIndex = 52;
             this.btnPlotHTML.Text = "Plot HTML";
             this.toolTip.SetToolTip(this.btnPlotHTML, "Creates interactive plots - Needs Optimization");
             this.btnPlotHTML.UseVisualStyleBackColor = true;
@@ -977,7 +1089,7 @@ namespace SiliFish.UI
             // 
             this.ddPlotCellSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotCellSelection.FormattingEnabled = true;
-            this.ddPlotCellSelection.Location = new System.Drawing.Point(280, 81);
+            this.ddPlotCellSelection.Location = new System.Drawing.Point(280, 110);
             this.ddPlotCellSelection.Name = "ddPlotCellSelection";
             this.ddPlotCellSelection.Size = new System.Drawing.Size(113, 23);
             this.ddPlotCellSelection.TabIndex = 41;
@@ -986,7 +1098,7 @@ namespace SiliFish.UI
             // lPlotCells
             // 
             this.lPlotCells.AutoSize = true;
-            this.lPlotCells.Location = new System.Drawing.Point(217, 84);
+            this.lPlotCells.Location = new System.Drawing.Point(217, 112);
             this.lPlotCells.Name = "lPlotCells";
             this.lPlotCells.Size = new System.Drawing.Size(32, 15);
             this.lPlotCells.TabIndex = 45;
@@ -994,14 +1106,14 @@ namespace SiliFish.UI
             // 
             // ePlotCellSelection
             // 
-            this.ePlotCellSelection.Location = new System.Drawing.Point(399, 81);
+            this.ePlotCellSelection.Location = new System.Drawing.Point(397, 110);
             this.ePlotCellSelection.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.ePlotCellSelection.Name = "ePlotCellSelection";
-            this.ePlotCellSelection.Size = new System.Drawing.Size(41, 23);
+            this.ePlotCellSelection.Size = new System.Drawing.Size(43, 23);
             this.ePlotCellSelection.TabIndex = 44;
             this.ePlotCellSelection.Value = new decimal(new int[] {
             1,
@@ -1014,16 +1126,16 @@ namespace SiliFish.UI
             // 
             this.ddPlotSomiteSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotSomiteSelection.FormattingEnabled = true;
-            this.ddPlotSomiteSelection.Location = new System.Drawing.Point(505, 2);
+            this.ddPlotSomiteSelection.Location = new System.Drawing.Point(280, 84);
             this.ddPlotSomiteSelection.Name = "ddPlotSomiteSelection";
-            this.ddPlotSomiteSelection.Size = new System.Drawing.Size(123, 23);
+            this.ddPlotSomiteSelection.Size = new System.Drawing.Size(113, 23);
             this.ddPlotSomiteSelection.TabIndex = 37;
             this.ddPlotSomiteSelection.SelectedIndexChanged += new System.EventHandler(this.ddPlotSomiteSelection_SelectedIndexChanged);
             // 
             // lPlotSomites
             // 
             this.lPlotSomites.AutoSize = true;
-            this.lPlotSomites.Location = new System.Drawing.Point(450, 6);
+            this.lPlotSomites.Location = new System.Drawing.Point(217, 86);
             this.lPlotSomites.Name = "lPlotSomites";
             this.lPlotSomites.Size = new System.Drawing.Size(49, 15);
             this.lPlotSomites.TabIndex = 42;
@@ -1036,7 +1148,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.ePlotEnd.Location = new System.Drawing.Point(74, 30);
+            this.ePlotEnd.Location = new System.Drawing.Point(74, 32);
             this.ePlotEnd.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -1060,7 +1172,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.ePlotStart.Location = new System.Drawing.Point(74, 3);
+            this.ePlotStart.Location = new System.Drawing.Point(74, 6);
             this.ePlotStart.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -1075,7 +1187,7 @@ namespace SiliFish.UI
             // lSagittal
             // 
             this.lSagittal.AutoSize = true;
-            this.lSagittal.Location = new System.Drawing.Point(217, 32);
+            this.lSagittal.Location = new System.Drawing.Point(217, 34);
             this.lSagittal.Name = "lSagittal";
             this.lSagittal.Size = new System.Drawing.Size(46, 15);
             this.lSagittal.TabIndex = 34;
@@ -1083,14 +1195,14 @@ namespace SiliFish.UI
             // 
             // ePlotSomiteSelection
             // 
-            this.ePlotSomiteSelection.Location = new System.Drawing.Point(634, 3);
+            this.ePlotSomiteSelection.Location = new System.Drawing.Point(397, 84);
             this.ePlotSomiteSelection.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.ePlotSomiteSelection.Name = "ePlotSomiteSelection";
-            this.ePlotSomiteSelection.Size = new System.Drawing.Size(47, 23);
+            this.ePlotSomiteSelection.Size = new System.Drawing.Size(43, 23);
             this.ePlotSomiteSelection.TabIndex = 39;
             this.ePlotSomiteSelection.Value = new decimal(new int[] {
             1,
@@ -1102,7 +1214,7 @@ namespace SiliFish.UI
             // lPlotPool
             // 
             this.lPlotPool.AutoSize = true;
-            this.lPlotPool.Location = new System.Drawing.Point(217, 58);
+            this.lPlotPool.Location = new System.Drawing.Point(217, 60);
             this.lPlotPool.Name = "lPlotPool";
             this.lPlotPool.Size = new System.Drawing.Size(31, 15);
             this.lPlotPool.TabIndex = 26;
@@ -1112,7 +1224,7 @@ namespace SiliFish.UI
             // 
             this.ddPlotPools.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotPools.FormattingEnabled = true;
-            this.ddPlotPools.Location = new System.Drawing.Point(280, 54);
+            this.ddPlotPools.Location = new System.Drawing.Point(280, 58);
             this.ddPlotPools.Name = "ddPlotPools";
             this.ddPlotPools.Size = new System.Drawing.Size(160, 23);
             this.ddPlotPools.TabIndex = 36;
@@ -1139,7 +1251,7 @@ namespace SiliFish.UI
             // lPlotEnd
             // 
             this.lPlotEnd.AutoSize = true;
-            this.lPlotEnd.Location = new System.Drawing.Point(12, 31);
+            this.lPlotEnd.Location = new System.Drawing.Point(12, 34);
             this.lPlotEnd.Name = "lPlotEnd";
             this.lPlotEnd.Size = new System.Drawing.Size(51, 15);
             this.lPlotEnd.TabIndex = 14;
@@ -1157,7 +1269,7 @@ namespace SiliFish.UI
             // lPlotPlot
             // 
             this.lPlotPlot.AutoSize = true;
-            this.lPlotPlot.Location = new System.Drawing.Point(217, 6);
+            this.lPlotPlot.Location = new System.Drawing.Point(217, 8);
             this.lPlotPlot.Name = "lPlotPlot";
             this.lPlotPlot.Size = new System.Drawing.Size(28, 15);
             this.lPlotPlot.TabIndex = 19;
@@ -1166,7 +1278,7 @@ namespace SiliFish.UI
             // btnPlotWindows
             // 
             this.btnPlotWindows.Enabled = false;
-            this.btnPlotWindows.Location = new System.Drawing.Point(450, 54);
+            this.btnPlotWindows.Location = new System.Drawing.Point(449, 84);
             this.btnPlotWindows.Name = "btnPlotWindows";
             this.btnPlotWindows.Size = new System.Drawing.Size(75, 23);
             this.btnPlotWindows.TabIndex = 50;
@@ -1178,7 +1290,7 @@ namespace SiliFish.UI
             // 
             this.ddPlot.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlot.FormattingEnabled = true;
-            this.ddPlot.Location = new System.Drawing.Point(280, 2);
+            this.ddPlot.Location = new System.Drawing.Point(280, 6);
             this.ddPlot.Name = "ddPlot";
             this.ddPlot.Size = new System.Drawing.Size(160, 23);
             this.ddPlot.TabIndex = 34;
@@ -1343,11 +1455,12 @@ namespace SiliFish.UI
             // pAnimation
             // 
             this.pAnimation.BackColor = System.Drawing.SystemColors.Control;
+            this.pAnimation.Controls.Add(this.eAnimationdt);
+            this.pAnimation.Controls.Add(this.lAnimationdt);
             this.pAnimation.Controls.Add(this.linkSaveAnimationCSV);
             this.pAnimation.Controls.Add(this.lAnimationTime);
             this.pAnimation.Controls.Add(this.eAnimationEnd);
             this.pAnimation.Controls.Add(this.eAnimationStart);
-            this.pAnimation.Controls.Add(this.label12);
             this.pAnimation.Controls.Add(this.linkSaveAnimationHTML);
             this.pAnimation.Controls.Add(this.btnAnimate);
             this.pAnimation.Controls.Add(this.lAnimationStart);
@@ -1360,10 +1473,38 @@ namespace SiliFish.UI
             this.pAnimation.Size = new System.Drawing.Size(786, 67);
             this.pAnimation.TabIndex = 5;
             // 
+            // eAnimationdt
+            // 
+            this.eAnimationdt.DecimalPlaces = 2;
+            this.eAnimationdt.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.eAnimationdt.Location = new System.Drawing.Point(286, 6);
+            this.eAnimationdt.Name = "eAnimationdt";
+            this.eAnimationdt.Size = new System.Drawing.Size(53, 23);
+            this.eAnimationdt.TabIndex = 37;
+            this.toolTip.SetToolTip(this.eAnimationdt, "(in milliseconds)");
+            this.eAnimationdt.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lAnimationdt
+            // 
+            this.lAnimationdt.AutoSize = true;
+            this.lAnimationdt.Location = new System.Drawing.Point(261, 8);
+            this.lAnimationdt.Name = "lAnimationdt";
+            this.lAnimationdt.Size = new System.Drawing.Size(19, 15);
+            this.lAnimationdt.TabIndex = 36;
+            this.lAnimationdt.Text = "Δt";
+            // 
             // linkSaveAnimationCSV
             // 
             this.linkSaveAnimationCSV.Enabled = false;
-            this.linkSaveAnimationCSV.Location = new System.Drawing.Point(475, 8);
+            this.linkSaveAnimationCSV.Location = new System.Drawing.Point(355, 36);
             this.linkSaveAnimationCSV.Name = "linkSaveAnimationCSV";
             this.linkSaveAnimationCSV.Size = new System.Drawing.Size(124, 15);
             this.linkSaveAnimationCSV.TabIndex = 34;
@@ -1373,10 +1514,11 @@ namespace SiliFish.UI
             // 
             // lAnimationTime
             // 
-            this.lAnimationTime.Location = new System.Drawing.Point(264, 27);
+            this.lAnimationTime.Location = new System.Drawing.Point(499, 7);
             this.lAnimationTime.Name = "lAnimationTime";
             this.lAnimationTime.Size = new System.Drawing.Size(294, 19);
             this.lAnimationTime.TabIndex = 33;
+            this.lAnimationTime.Text = "Last animation:";
             // 
             // eAnimationEnd
             // 
@@ -1385,7 +1527,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.eAnimationEnd.Location = new System.Drawing.Point(108, 34);
+            this.eAnimationEnd.Location = new System.Drawing.Point(108, 32);
             this.eAnimationEnd.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -1421,19 +1563,10 @@ namespace SiliFish.UI
             this.eAnimationStart.ThousandsSeparator = true;
             this.toolTip.SetToolTip(this.eAnimationStart, "(in milliseconds)");
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(264, 44);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(294, 15);
-            this.label12.TabIndex = 32;
-            this.label12.Text = "Generated for proof of concept - requires optimization";
-            // 
             // linkSaveAnimationHTML
             // 
             this.linkSaveAnimationHTML.Enabled = false;
-            this.linkSaveAnimationHTML.Location = new System.Drawing.Point(345, 8);
+            this.linkSaveAnimationHTML.Location = new System.Drawing.Point(355, 10);
             this.linkSaveAnimationHTML.Name = "linkSaveAnimationHTML";
             this.linkSaveAnimationHTML.Size = new System.Drawing.Size(138, 15);
             this.linkSaveAnimationHTML.TabIndex = 31;
@@ -1444,7 +1577,7 @@ namespace SiliFish.UI
             // btnAnimate
             // 
             this.btnAnimate.Enabled = false;
-            this.btnAnimate.Location = new System.Drawing.Point(264, 4);
+            this.btnAnimate.Location = new System.Drawing.Point(264, 32);
             this.btnAnimate.Name = "btnAnimate";
             this.btnAnimate.Size = new System.Drawing.Size(75, 23);
             this.btnAnimate.TabIndex = 29;
@@ -1473,7 +1606,7 @@ namespace SiliFish.UI
             // lAnimationEnd
             // 
             this.lAnimationEnd.AutoSize = true;
-            this.lAnimationEnd.Location = new System.Drawing.Point(12, 37);
+            this.lAnimationEnd.Location = new System.Drawing.Point(12, 34);
             this.lAnimationEnd.Name = "lAnimationEnd";
             this.lAnimationEnd.Size = new System.Drawing.Size(86, 15);
             this.lAnimationEnd.TabIndex = 14;
@@ -1482,7 +1615,7 @@ namespace SiliFish.UI
             // lms4
             // 
             this.lms4.AutoSize = true;
-            this.lms4.Location = new System.Drawing.Point(214, 37);
+            this.lms4.Location = new System.Drawing.Point(214, 34);
             this.lms4.Name = "lms4";
             this.lms4.Size = new System.Drawing.Size(31, 15);
             this.lms4.TabIndex = 16;
@@ -1498,6 +1631,16 @@ namespace SiliFish.UI
             this.tabTemplateJSON.TabIndex = 5;
             this.tabTemplateJSON.Text = "Template JSON";
             this.tabTemplateJSON.UseVisualStyleBackColor = true;
+            // 
+            // eTemplateJSON
+            // 
+            this.eTemplateJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eTemplateJSON.Location = new System.Drawing.Point(0, 35);
+            this.eTemplateJSON.Name = "eTemplateJSON";
+            this.eTemplateJSON.Size = new System.Drawing.Size(786, 476);
+            this.eTemplateJSON.TabIndex = 2;
+            this.eTemplateJSON.Text = "";
+            this.eTemplateJSON.TextChanged += new System.EventHandler(this.eTemplateJSON_TextChanged);
             // 
             // pTemplateJSONTop
             // 
@@ -1541,6 +1684,16 @@ namespace SiliFish.UI
             this.tabModelJSON.TabIndex = 6;
             this.tabModelJSON.Text = "Model JSON";
             this.tabModelJSON.UseVisualStyleBackColor = true;
+            // 
+            // eModelJSON
+            // 
+            this.eModelJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eModelJSON.Location = new System.Drawing.Point(0, 35);
+            this.eModelJSON.Name = "eModelJSON";
+            this.eModelJSON.Size = new System.Drawing.Size(786, 476);
+            this.eModelJSON.TabIndex = 4;
+            this.eModelJSON.Text = "";
+            this.eModelJSON.TextChanged += new System.EventHandler(this.eModelJSON_TextChanged);
             // 
             // pModelJSONTop
             // 
@@ -1674,6 +1827,7 @@ namespace SiliFish.UI
             0,
             0,
             65536});
+            this.edt.ValueChanged += new System.EventHandler(this.edt_ValueChanged);
             // 
             // eTimeEnd
             // 
@@ -1819,26 +1973,6 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // eTemplateJSON
-            // 
-            this.eTemplateJSON.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eTemplateJSON.Location = new System.Drawing.Point(0, 35);
-            this.eTemplateJSON.Name = "eTemplateJSON";
-            this.eTemplateJSON.Size = new System.Drawing.Size(786, 476);
-            this.eTemplateJSON.TabIndex = 2;
-            this.eTemplateJSON.Text = "";
-            this.eTemplateJSON.TextChanged += new System.EventHandler(this.eTemplateJSON_TextChanged);
-            // 
-            // eModelJSON
-            // 
-            this.eModelJSON.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eModelJSON.Location = new System.Drawing.Point(0, 35);
-            this.eModelJSON.Name = "eModelJSON";
-            this.eModelJSON.Size = new System.Drawing.Size(786, 476);
-            this.eModelJSON.TabIndex = 4;
-            this.eModelJSON.Text = "";
-            this.eModelJSON.TextChanged += new System.EventHandler(this.eModelJSON_TextChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1898,6 +2032,8 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlot)).EndInit();
             this.pPlot.ResumeLayout(false);
             this.pPlot.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotCellSelection)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotStart)).EndInit();
@@ -1914,6 +2050,7 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.webViewAnimation)).EndInit();
             this.pAnimation.ResumeLayout(false);
             this.pAnimation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eAnimationdt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
             this.tabTemplateJSON.ResumeLayout(false);
@@ -2023,7 +2160,6 @@ namespace SiliFish.UI
         private Panel pBodyDiagrams;
         private LinkLabel linkSaveAnimationHTML;
         private Label lRunTime;
-        private Label label12;
         private NumericUpDown edt;
         private NumericUpDown eTimeEnd;
         private Label ldt;
@@ -2068,5 +2204,13 @@ namespace SiliFish.UI
         private Button btnDisplayModelJSON;
         private RichTextBox eTemplateJSON;
         private RichTextBox eModelJSON;
+        private NumericUpDown ePlotHeight;
+        private NumericUpDown ePlotWidth;
+        private Label lPlotWidth;
+        private Label lpx1;
+        private Label lPlotHeight;
+        private Label lpx2;
+        private NumericUpDown eAnimationdt;
+        private Label lAnimationdt;
     }
 }

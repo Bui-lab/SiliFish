@@ -16,7 +16,7 @@ namespace SiliFish.PredefinedModels
         protected int tStimStart_ms = 0; //in ms;
 
         protected double stim_value1 = 8; //stimulus value if step current, mean value if gaussian, start value if ramp
-        protected double stim_value2 = 8; //obselete if step current, SD value if gaussian, end value if ramp
+        protected double stim_value2 = 8; //obsolete if step current, SD value if gaussian, end value if ramp
 
         //noise sigmas
         protected double sigma_range = 0; 

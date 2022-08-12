@@ -10,7 +10,9 @@
                 title: __CHART_TITLE__,
                 ylabel: __Y_LABEL__,
                 xlabel: __X_LABEL__,
-                valueRange: [__Y_MIN__,__Y_MAX__]
+                valueRange: [__Y_MIN__, __Y_MAX__],
+                dateWindow: [__X_MIN__, __X_MAX__],
+                yRangePad: 3
             }
         )
     );

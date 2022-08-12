@@ -71,6 +71,7 @@ namespace SiliFish.PredefinedModels
             taud = 1;
             vth = -15;
             stim_value1 = 35;
+            stim_value2 = 0;
             sigma_gap = 0;
             sigma_chem = 0;
             sigma_stim = 0;
@@ -101,13 +102,16 @@ namespace SiliFish.PredefinedModels
             R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tlLeft = new();
             tlLeft.AddTimeRange(this.tStimStart_ms);
-            double multiplier1 = GetStimulusNoiseMultiplier();
-            double multiplier2 = GetStimulusNoiseMultiplier();
+            double multiplierleft = GetStimulusNoiseMultiplier();
+            double multiplierright = GetStimulusNoiseMultiplier();
 
-            Stimulus stimLeft = new(stim_mode, tlLeft, stim_value1 * multiplier1, stim_value2 * multiplier1);
+            double multiplierleft2 = stim_mode == StimulusMode.Step ? 0 : multiplierleft; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
+            double multiplierright2 = stim_mode == StimulusMode.Step ? 0 : multiplierright; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
+
+            Stimulus stimLeft = new(stim_mode, tlLeft, stim_value1 * multiplierleft, stim_value2 * multiplierleft2);
             TimeLine tlRight= new();
             tlRight.AddTimeRange(this.tasyncdelay);
-            Stimulus stimRight = new(stim_mode, tlRight, stim_value1 * multiplier2, stim_value2 * multiplier2);
+            Stimulus stimRight = new(stim_mode, tlRight, stim_value1 * multiplierright, stim_value2 * multiplierright2);
 
             for (int i = 0; i < nIC; i++)
             {

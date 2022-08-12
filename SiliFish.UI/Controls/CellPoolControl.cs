@@ -209,8 +209,10 @@ namespace SiliFish.UI.Controls
 
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            dyncontrol = new();
-            dyncontrol.Cell = GetCell();
+            dyncontrol = new()
+            {
+                Cell = GetCell()
+            };
             dyncontrol.UseupdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
