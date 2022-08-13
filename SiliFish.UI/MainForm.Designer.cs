@@ -70,11 +70,7 @@ namespace SiliFish.UI
             this.tabCellPools = new System.Windows.Forms.TabPage();
             this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
             this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
-            this.pCellPoolTop = new System.Windows.Forms.Panel();
-            this.lCellPools = new System.Windows.Forms.Label();
             this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
-            this.pConnectionTop = new System.Windows.Forms.Panel();
-            this.lConnections = new System.Windows.Forms.Label();
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.pMain = new System.Windows.Forms.Panel();
@@ -145,6 +141,16 @@ namespace SiliFish.UI
             this.lms3 = new System.Windows.Forms.Label();
             this.lAnimationEnd = new System.Windows.Forms.Label();
             this.lms4 = new System.Windows.Forms.Label();
+            this.tabTemplateJSON = new System.Windows.Forms.TabPage();
+            this.eTemplateJSON = new System.Windows.Forms.RichTextBox();
+            this.pTemplateJSONTop = new System.Windows.Forms.Panel();
+            this.btnLoadTemplateJSON = new System.Windows.Forms.Button();
+            this.btnDisplayTemplateJSON = new System.Windows.Forms.Button();
+            this.tabModelJSON = new System.Windows.Forms.TabPage();
+            this.eModelJSON = new System.Windows.Forms.RichTextBox();
+            this.pModelJSONTop = new System.Windows.Forms.Panel();
+            this.btnLoadModelJSON = new System.Windows.Forms.Button();
+            this.btnDisplayModelJSON = new System.Windows.Forms.Button();
             this.pParamBottom = new System.Windows.Forms.Panel();
             this.cbMultiple = new System.Windows.Forms.CheckBox();
             this.eRunNumber = new System.Windows.Forms.NumericUpDown();
@@ -193,8 +199,6 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
             this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
             this.splitCellPoolsAndConnections.SuspendLayout();
-            this.pCellPoolTop.SuspendLayout();
-            this.pConnectionTop.SuspendLayout();
             this.tabStimuli.SuspendLayout();
             this.pMain.SuspendLayout();
             this.tabOutputs.SuspendLayout();
@@ -228,6 +232,10 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationdt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).BeginInit();
+            this.tabTemplateJSON.SuspendLayout();
+            this.pTemplateJSONTop.SuspendLayout();
+            this.tabModelJSON.SuspendLayout();
+            this.pModelJSONTop.SuspendLayout();
             this.pParamBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
@@ -467,7 +475,7 @@ namespace SiliFish.UI
             // 
             // eSpinalBodyPosition
             // 
-            this.eSpinalBodyPosition.DecimalPlaces = 3;
+            this.eSpinalBodyPosition.DecimalPlaces = 1;
             this.eSpinalBodyPosition.Location = new System.Drawing.Point(98, 128);
             this.eSpinalBodyPosition.Name = "eSpinalBodyPosition";
             this.eSpinalBodyPosition.Size = new System.Drawing.Size(63, 23);
@@ -491,7 +499,7 @@ namespace SiliFish.UI
             // 
             // eSpinalRostraoCaudal
             // 
-            this.eSpinalRostraoCaudal.DecimalPlaces = 3;
+            this.eSpinalRostraoCaudal.DecimalPlaces = 1;
             this.eSpinalRostraoCaudal.Location = new System.Drawing.Point(98, 100);
             this.eSpinalRostraoCaudal.Name = "eSpinalRostraoCaudal";
             this.eSpinalRostraoCaudal.Size = new System.Drawing.Size(63, 23);
@@ -513,7 +521,7 @@ namespace SiliFish.UI
             // 
             // eSpinalMedialLateral
             // 
-            this.eSpinalMedialLateral.DecimalPlaces = 3;
+            this.eSpinalMedialLateral.DecimalPlaces = 1;
             this.eSpinalMedialLateral.Location = new System.Drawing.Point(98, 72);
             this.eSpinalMedialLateral.Name = "eSpinalMedialLateral";
             this.eSpinalMedialLateral.Size = new System.Drawing.Size(63, 23);
@@ -537,7 +545,7 @@ namespace SiliFish.UI
             // 
             // eSpinalDorsalVentral
             // 
-            this.eSpinalDorsalVentral.DecimalPlaces = 3;
+            this.eSpinalDorsalVentral.DecimalPlaces = 1;
             this.eSpinalDorsalVentral.Location = new System.Drawing.Point(98, 44);
             this.eSpinalDorsalVentral.Name = "eSpinalDorsalVentral";
             this.eSpinalDorsalVentral.Size = new System.Drawing.Size(63, 23);
@@ -574,7 +582,7 @@ namespace SiliFish.UI
             // 
             // eBodyMedialLateral
             // 
-            this.eBodyMedialLateral.DecimalPlaces = 3;
+            this.eBodyMedialLateral.DecimalPlaces = 1;
             this.eBodyMedialLateral.Location = new System.Drawing.Point(98, 55);
             this.eBodyMedialLateral.Name = "eBodyMedialLateral";
             this.eBodyMedialLateral.Size = new System.Drawing.Size(63, 23);
@@ -598,7 +606,7 @@ namespace SiliFish.UI
             // 
             // eBodyDorsalVentral
             // 
-            this.eBodyDorsalVentral.DecimalPlaces = 3;
+            this.eBodyDorsalVentral.DecimalPlaces = 1;
             this.eBodyDorsalVentral.Location = new System.Drawing.Point(98, 27);
             this.eBodyDorsalVentral.Name = "eBodyDorsalVentral";
             this.eBodyDorsalVentral.Size = new System.Drawing.Size(63, 23);
@@ -677,13 +685,11 @@ namespace SiliFish.UI
             // splitCellPoolsAndConnections.Panel1
             // 
             this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.listCellPool);
-            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.pCellPoolTop);
             this.splitCellPoolsAndConnections.Panel1MinSize = 200;
             // 
             // splitCellPoolsAndConnections.Panel2
             // 
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
-            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.pConnectionTop);
             this.splitCellPoolsAndConnections.Panel2MinSize = 200;
             this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 610);
             this.splitCellPoolsAndConnections.SplitterDistance = 252;
@@ -692,11 +698,11 @@ namespace SiliFish.UI
             // listCellPool
             // 
             this.listCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listCellPool.Location = new System.Drawing.Point(0, 32);
+            this.listCellPool.Location = new System.Drawing.Point(0, 0);
             this.listCellPool.Name = "listCellPool";
             this.listCellPool.SelectedIndex = -1;
             this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(252, 578);
+            this.listCellPool.Size = new System.Drawing.Size(252, 610);
             this.listCellPool.TabIndex = 5;
             this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -705,34 +711,14 @@ namespace SiliFish.UI
             this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
             this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
             // 
-            // pCellPoolTop
-            // 
-            this.pCellPoolTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pCellPoolTop.Controls.Add(this.lCellPools);
-            this.pCellPoolTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pCellPoolTop.Location = new System.Drawing.Point(0, 0);
-            this.pCellPoolTop.Name = "pCellPoolTop";
-            this.pCellPoolTop.Size = new System.Drawing.Size(252, 32);
-            this.pCellPoolTop.TabIndex = 6;
-            // 
-            // lCellPools
-            // 
-            this.lCellPools.AutoSize = true;
-            this.lCellPools.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lCellPools.Location = new System.Drawing.Point(8, 6);
-            this.lCellPools.Name = "lCellPools";
-            this.lCellPools.Size = new System.Drawing.Size(59, 15);
-            this.lCellPools.TabIndex = 0;
-            this.lCellPools.Text = "Cell Pools";
-            // 
             // listConnections
             // 
             this.listConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listConnections.Location = new System.Drawing.Point(0, 32);
+            this.listConnections.Location = new System.Drawing.Point(0, 0);
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(286, 578);
+            this.listConnections.Size = new System.Drawing.Size(286, 610);
             this.listConnections.TabIndex = 6;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -740,26 +726,6 @@ namespace SiliFish.UI
             this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
             this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
             this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
-            // 
-            // pConnectionTop
-            // 
-            this.pConnectionTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pConnectionTop.Controls.Add(this.lConnections);
-            this.pConnectionTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pConnectionTop.Location = new System.Drawing.Point(0, 0);
-            this.pConnectionTop.Name = "pConnectionTop";
-            this.pConnectionTop.Size = new System.Drawing.Size(286, 32);
-            this.pConnectionTop.TabIndex = 7;
-            // 
-            // lConnections
-            // 
-            this.lConnections.AutoSize = true;
-            this.lConnections.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lConnections.Location = new System.Drawing.Point(8, 6);
-            this.lConnections.Name = "lConnections";
-            this.lConnections.Size = new System.Drawing.Size(75, 15);
-            this.lConnections.TabIndex = 0;
-            this.lConnections.Text = "Connections";
             // 
             // tabStimuli
             // 
@@ -835,6 +801,8 @@ namespace SiliFish.UI
             this.tabOutputs.Controls.Add(this.tab2DModel);
             this.tabOutputs.Controls.Add(this.tab3DModel);
             this.tabOutputs.Controls.Add(this.tabAnimation);
+            this.tabOutputs.Controls.Add(this.tabTemplateJSON);
+            this.tabOutputs.Controls.Add(this.tabModelJSON);
             this.tabOutputs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabOutputs.Location = new System.Drawing.Point(0, 133);
             this.tabOutputs.Name = "tabOutputs";
@@ -1347,7 +1315,6 @@ namespace SiliFish.UI
             this.webView2DModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView2DModel.Location = new System.Drawing.Point(0, 30);
             this.webView2DModel.Name = "webView2DModel";
-            this.webView2DModel.Padding = new System.Windows.Forms.Padding(10);
             this.webView2DModel.Size = new System.Drawing.Size(786, 481);
             this.webView2DModel.TabIndex = 1;
             this.webView2DModel.ZoomFactor = 1D;
@@ -1407,7 +1374,6 @@ namespace SiliFish.UI
             this.webView3DModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView3DModel.Location = new System.Drawing.Point(3, 33);
             this.webView3DModel.Name = "webView3DModel";
-            this.webView3DModel.Padding = new System.Windows.Forms.Padding(10);
             this.webView3DModel.Size = new System.Drawing.Size(780, 475);
             this.webView3DModel.TabIndex = 0;
             this.webView3DModel.ZoomFactor = 1D;
@@ -1654,6 +1620,113 @@ namespace SiliFish.UI
             this.lms4.Size = new System.Drawing.Size(31, 15);
             this.lms4.TabIndex = 16;
             this.lms4.Text = "(ms)";
+            // 
+            // tabTemplateJSON
+            // 
+            this.tabTemplateJSON.Controls.Add(this.eTemplateJSON);
+            this.tabTemplateJSON.Controls.Add(this.pTemplateJSONTop);
+            this.tabTemplateJSON.Location = new System.Drawing.Point(4, 24);
+            this.tabTemplateJSON.Name = "tabTemplateJSON";
+            this.tabTemplateJSON.Size = new System.Drawing.Size(786, 511);
+            this.tabTemplateJSON.TabIndex = 5;
+            this.tabTemplateJSON.Text = "Template JSON";
+            this.tabTemplateJSON.UseVisualStyleBackColor = true;
+            // 
+            // eTemplateJSON
+            // 
+            this.eTemplateJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eTemplateJSON.Location = new System.Drawing.Point(0, 35);
+            this.eTemplateJSON.Name = "eTemplateJSON";
+            this.eTemplateJSON.Size = new System.Drawing.Size(786, 476);
+            this.eTemplateJSON.TabIndex = 2;
+            this.eTemplateJSON.Text = "";
+            this.eTemplateJSON.TextChanged += new System.EventHandler(this.eTemplateJSON_TextChanged);
+            // 
+            // pTemplateJSONTop
+            // 
+            this.pTemplateJSONTop.BackColor = System.Drawing.SystemColors.Control;
+            this.pTemplateJSONTop.Controls.Add(this.btnLoadTemplateJSON);
+            this.pTemplateJSONTop.Controls.Add(this.btnDisplayTemplateJSON);
+            this.pTemplateJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pTemplateJSONTop.Location = new System.Drawing.Point(0, 0);
+            this.pTemplateJSONTop.Name = "pTemplateJSONTop";
+            this.pTemplateJSONTop.Size = new System.Drawing.Size(786, 35);
+            this.pTemplateJSONTop.TabIndex = 1;
+            // 
+            // btnLoadTemplateJSON
+            // 
+            this.btnLoadTemplateJSON.Enabled = false;
+            this.btnLoadTemplateJSON.Location = new System.Drawing.Point(93, 7);
+            this.btnLoadTemplateJSON.Name = "btnLoadTemplateJSON";
+            this.btnLoadTemplateJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadTemplateJSON.TabIndex = 1;
+            this.btnLoadTemplateJSON.Text = "Load";
+            this.btnLoadTemplateJSON.UseVisualStyleBackColor = true;
+            this.btnLoadTemplateJSON.Click += new System.EventHandler(this.btnLoadTemplateJSON_Click);
+            // 
+            // btnDisplayTemplateJSON
+            // 
+            this.btnDisplayTemplateJSON.Location = new System.Drawing.Point(12, 7);
+            this.btnDisplayTemplateJSON.Name = "btnDisplayTemplateJSON";
+            this.btnDisplayTemplateJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnDisplayTemplateJSON.TabIndex = 0;
+            this.btnDisplayTemplateJSON.Text = "Display";
+            this.btnDisplayTemplateJSON.UseVisualStyleBackColor = true;
+            this.btnDisplayTemplateJSON.Click += new System.EventHandler(this.btnDisplayTemplateJSON_Click);
+            // 
+            // tabModelJSON
+            // 
+            this.tabModelJSON.Controls.Add(this.eModelJSON);
+            this.tabModelJSON.Controls.Add(this.pModelJSONTop);
+            this.tabModelJSON.Location = new System.Drawing.Point(4, 24);
+            this.tabModelJSON.Name = "tabModelJSON";
+            this.tabModelJSON.Size = new System.Drawing.Size(786, 511);
+            this.tabModelJSON.TabIndex = 6;
+            this.tabModelJSON.Text = "Model JSON";
+            this.tabModelJSON.UseVisualStyleBackColor = true;
+            // 
+            // eModelJSON
+            // 
+            this.eModelJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eModelJSON.Location = new System.Drawing.Point(0, 35);
+            this.eModelJSON.Name = "eModelJSON";
+            this.eModelJSON.Size = new System.Drawing.Size(786, 476);
+            this.eModelJSON.TabIndex = 4;
+            this.eModelJSON.Text = "";
+            this.eModelJSON.TextChanged += new System.EventHandler(this.eModelJSON_TextChanged);
+            // 
+            // pModelJSONTop
+            // 
+            this.pModelJSONTop.BackColor = System.Drawing.SystemColors.Control;
+            this.pModelJSONTop.Controls.Add(this.btnLoadModelJSON);
+            this.pModelJSONTop.Controls.Add(this.btnDisplayModelJSON);
+            this.pModelJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pModelJSONTop.Location = new System.Drawing.Point(0, 0);
+            this.pModelJSONTop.Name = "pModelJSONTop";
+            this.pModelJSONTop.Size = new System.Drawing.Size(786, 35);
+            this.pModelJSONTop.TabIndex = 3;
+            // 
+            // btnLoadModelJSON
+            // 
+            this.btnLoadModelJSON.Enabled = false;
+            this.btnLoadModelJSON.Location = new System.Drawing.Point(93, 7);
+            this.btnLoadModelJSON.Name = "btnLoadModelJSON";
+            this.btnLoadModelJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadModelJSON.TabIndex = 1;
+            this.btnLoadModelJSON.Text = "Load";
+            this.btnLoadModelJSON.UseVisualStyleBackColor = true;
+            this.btnLoadModelJSON.Visible = false;
+            this.btnLoadModelJSON.Click += new System.EventHandler(this.btnLoadModelJSON_Click);
+            // 
+            // btnDisplayModelJSON
+            // 
+            this.btnDisplayModelJSON.Location = new System.Drawing.Point(12, 7);
+            this.btnDisplayModelJSON.Name = "btnDisplayModelJSON";
+            this.btnDisplayModelJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnDisplayModelJSON.TabIndex = 0;
+            this.btnDisplayModelJSON.Text = "Display";
+            this.btnDisplayModelJSON.UseVisualStyleBackColor = true;
+            this.btnDisplayModelJSON.Click += new System.EventHandler(this.btnDisplayModelJSON_Click);
             // 
             // pParamBottom
             // 
@@ -1908,7 +1981,6 @@ namespace SiliFish.UI
             this.ClientSize = new System.Drawing.Size(1348, 711);
             this.Controls.Add(this.splitMain);
             this.Controls.Add(this.pTop);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "SiliFish";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -1942,10 +2014,6 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
             this.splitCellPoolsAndConnections.ResumeLayout(false);
-            this.pCellPoolTop.ResumeLayout(false);
-            this.pCellPoolTop.PerformLayout();
-            this.pConnectionTop.ResumeLayout(false);
-            this.pConnectionTop.PerformLayout();
             this.tabStimuli.ResumeLayout(false);
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
@@ -1986,6 +2054,10 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationdt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
+            this.tabTemplateJSON.ResumeLayout(false);
+            this.pTemplateJSONTop.ResumeLayout(false);
+            this.tabModelJSON.ResumeLayout(false);
+            this.pModelJSONTop.ResumeLayout(false);
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
@@ -2123,6 +2195,16 @@ namespace SiliFish.UI
         private CheckBox cbMultiple;
         private ComboBox ddPlotSagittal;
         private Label lNumberOfPlots;
+        private TabPage tabTemplateJSON;
+        private Panel pTemplateJSONTop;
+        private Button btnDisplayTemplateJSON;
+        private Button btnLoadTemplateJSON;
+        private TabPage tabModelJSON;
+        private Panel pModelJSONTop;
+        private Button btnLoadModelJSON;
+        private Button btnDisplayModelJSON;
+        private RichTextBox eTemplateJSON;
+        private RichTextBox eModelJSON;
         private NumericUpDown ePlotHeight;
         private NumericUpDown ePlotWidth;
         private Label lPlotWidth;
@@ -2131,10 +2213,5 @@ namespace SiliFish.UI
         private Label lpx2;
         private NumericUpDown eAnimationdt;
         private Label lAnimationdt;
-        private Panel panel1;
-        private Panel pCellPoolTop;
-        private Label lCellPools;
-        private Panel pConnectionTop;
-        private Label lConnections;
     }
 }
