@@ -1715,6 +1715,7 @@ namespace SiliFish.UI
             this.btnLoadModelJSON.TabIndex = 1;
             this.btnLoadModelJSON.Text = "Load";
             this.btnLoadModelJSON.UseVisualStyleBackColor = true;
+            this.btnLoadModelJSON.Visible = false;
             this.btnLoadModelJSON.Click += new System.EventHandler(this.btnLoadModelJSON_Click);
             // 
             // btnDisplayModelJSON
