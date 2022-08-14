@@ -31,27 +31,21 @@
 
   <ItemGroup>
     <None Remove="Resources\2DModel.html" />
-    <None Remove="Resources\3d-force-graph.min.js" />
     <None Remove="Resources\3DModel.html" />
     <None Remove="Resources\3DModelSinglePanel.html" />
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
-    <None Remove="Resources\d3-dsv.min.js" />
     <None Remove="Resources\DyChart.html" />
     <None Remove="Resources\DyChart.js" />
     <None Remove="Resources\DyChartDiv.html" />
     <None Remove="Resources\dygraph.js" />
     <None Remove="Resources\DyStyleSheet.css" />
-    <None Remove="Resources\DySynchronizer.js" />
-    <None Remove="Resources\force-graph.min.js" />
     <None Remove="Resources\LineChart.Chart.js" />
     <None Remove="Resources\LineChart.html" />
     <None Remove="Resources\LineChart.Series.js" />
-    <None Remove="Resources\Logo.png" />
     <None Remove="Resources\ScatterPlot.Series.js" />
     <None Remove="Resources\StyleSheet.css" />
-    <None Remove="Resources\three.js" />
   </ItemGroup>
 
   <ItemGroup>
