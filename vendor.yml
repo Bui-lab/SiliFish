@@ -6,13 +6,13 @@
 # pathname.
 
 # D3.js
-- .*d3.*\.js$
+.*d3.*\.js$
 
 # force-graph.js
-- .*force-graph.*\.js$
+- .*force-graph.*\.js
 
 # three.js
-- .*three.*\.js$
+.*three.*\.js
 
 # dychart synchronizer.js
 - .*synchronizer.*\.js$
