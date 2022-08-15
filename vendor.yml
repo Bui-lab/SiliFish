@@ -12,7 +12,7 @@
 - (^|\/)force-graph(\.v\d+)?([^.]*)\.js$
 
 # three.js
-- (^|\/)three(\.v\d+)?([^.]*)\.js$
+(^|\/)three(\.v\d+)?([^.]*)\.js$
 
 # dychart synchronizer.js
 - (^|\/)synchronizer(\.v\d+)?([^.]*)\.js$
