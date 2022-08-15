@@ -41,6 +41,8 @@
     <None Remove="Resources\DyChartDiv.html" />
     <None Remove="Resources\dygraph.js" />
     <None Remove="Resources\DyStyleSheet.css" />
+    <None Remove="Resources\fishbone.ico" />
+    <None Remove="Resources\fishbone2.ico" />
     <None Remove="Resources\LineChart.Chart.js" />
     <None Remove="Resources\LineChart.html" />
     <None Remove="Resources\LineChart.Series.js" />

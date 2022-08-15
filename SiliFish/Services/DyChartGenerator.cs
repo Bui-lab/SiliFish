@@ -115,7 +115,8 @@ namespace SiliFish.Services
         private static List<ChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true)
         {
-            List<ChartStruct> charts = new();
+            List<ChartStruct> gapCharts = new();
+            List<ChartStruct> synCharts = new();
             double yMin = cells.Min(c => c.MinCurrentValue);
             double yMax = cells.Max(c => c.MaxCurrentValue);
             Helpers.Util.SetYRange(ref yMin, ref yMax);
@@ -123,38 +124,39 @@ namespace SiliFish.Services
             IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
-                string title = "Time,";
-                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> colorPerChart = new();
+                string gapTitle = "Time,";
+                string synTitle = "Time,";
+                List<string> gapData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> synData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> colorPerGapChart = new();
+                List<string> colorPerSynChart = new();
+                bool gapExists = false;
+                bool synExists = false;
                 foreach (Cell cell in cellGroup)
                 {
                     if (cell is Neuron neuron)
                     {
                         if (includeGap)
                         {
-                            foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
+                            foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell))
                             {
-                                title += "Gap: " + jnc.Cell1.ID + ",";
-                                colorPerChart.Add("'" + jnc.Cell1.CellPool.Color.ToRGB() + "'");
+                                gapExists = true;
+                                Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
+                                gapTitle += "Gap: " + otherCell.ID + ",";
+                                colorPerGapChart.Add("'" + otherCell.CellPool.Color.ToRGB() + "'");
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    data[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
-                            }
-                            foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
-                            {
-                                title += "Gap: " + jnc.Cell2.ID + ",";
-                                colorPerChart.Add("'" + jnc.Cell2.CellPool.Color.ToRGB() + "'");
-                                foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    data[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
+                                    gapData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
                             }
                         }
                         if (includeChem)
                         {
                             foreach (ChemicalSynapse jnc in neuron.Synapses)
                             {
-                                title += jnc.PreNeuron.ID + ",";
-                                colorPerChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
+                                synExists = true;
+                                synTitle += jnc.PreNeuron.ID + ",";
+                                colorPerSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    data[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
+                                    synData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
                             }
                         }
                     }
@@ -164,28 +166,47 @@ namespace SiliFish.Services
                         {
                             foreach (ChemicalSynapse jnc in muscleCell.EndPlates)
                             {
-                                title += jnc.PreNeuron.ID + ",";
-                                colorPerChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
+                                synExists = true;
+                                synTitle += jnc.PreNeuron.ID + ",";
+                                colorPerSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart))
-                                    data[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
+                                    synData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
                             }
                         }
                     }
                 }
-                string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                charts.Add(new ChartStruct
+                if (gapExists)
                 {
-                    csvData = csvData,
-                    Color = string.Join(',', colorPerChart),
-                    Title = $"`{cellGroup.Key} Incoming Currents`",
-                    yLabel = "`Current (pA)`",
-                    yMin = yMin.ToString("0.0"),
-                    yMax = yMax.ToString("0.0"),
-                    xMin = TimeArray[iStart].ToString(),
-                    xMax = (TimeArray[iEnd] + 1).ToString()
-                });
+                    string csvData = "`" + gapTitle[..^1] + "\n" + string.Join("\n", gapData.Select(line => line[..^1]).ToArray()) + "`";
+                    gapCharts.Add(new ChartStruct
+                    {
+                        csvData = csvData,
+                        Color = string.Join(',', colorPerGapChart),
+                        Title = $"`{cellGroup.Key} Incoming Gap Currents`",
+                        yLabel = "`Current (pA)`",
+                        yMin = yMin.ToString("0.0"),
+                        yMax = yMax.ToString("0.0"),
+                        xMin = TimeArray[iStart].ToString(),
+                        xMax = (TimeArray[iEnd] + 1).ToString()
+                    });
+                }
+                if (synExists)
+                {
+                    string csvData = "`" + synTitle[..^1] + "\n" + string.Join("\n", synData.Select(line => line[..^1]).ToArray()) + "`";
+                    synCharts.Add(new ChartStruct
+                    {
+                        csvData = csvData,
+                        Color = string.Join(',', colorPerSynChart),
+                        Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
+                        yLabel = "`Current (pA)`",
+                        yMin = yMin.ToString("0.0"),
+                        yMax = yMax.ToString("0.0"),
+                        xMin = TimeArray[iStart].ToString(),
+                        xMax = (TimeArray[iEnd] + 1).ToString()
+                    });
+                }
             }
-            return charts;
+            return gapCharts.Union(synCharts).ToList();
         }
 
         private static List<ChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
