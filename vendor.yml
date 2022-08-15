@@ -1,0 +1,18 @@
+# https://github.com/github/linguist/blob/master/lib/linguist/vendor.yml
+# Vendored files and directories are excluded from language
+# statistics.
+#
+# Lines in this file are Regexps that are matched against the file
+# pathname.
+
+# D3.js
+- (^|\/)d3(\.v\d+)?([^.]*)\.js$
+
+# force-graph.js
+- (^|\/)force-graph(\.v\d+)?([^.]*)\.js$
+
+# three.js
+- (^|\/)three(\.v\d+)?([^.]*)\.js$
+
+# dychart synchronizer.js
+- (^|\/)synchronizer(\.v\d+)?([^.]*)\.js$

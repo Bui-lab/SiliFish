@@ -127,6 +127,11 @@ namespace SiliFish.ModelUnits
             }
             return values;
         }
+
+        public void InitDataVectors(int nmax)
+        {
+            values = new double[nmax];
+        }
     }
 
 }

@@ -373,15 +373,15 @@ namespace SiliFish
             throw (new NotImplementedException());
         }
 
-        protected virtual void InitMembranePotentials(int nmax)
+        protected virtual void InitDataVectors(int nmax)
         {
             foreach (CellPool neurons in NeuronPools)
                 foreach (Neuron neuron in neurons.GetCells())
-                    neuron.InitVectors(nmax);
+                    neuron.InitDataVectors(nmax);
 
             foreach (CellPool muscleCells in MuscleCellPools)
                 foreach (MuscleCell mc in muscleCells.GetCells())
-                    mc.InitVectors(nmax);
+                    mc.InitDataVectors(nmax);
         }
 
         protected virtual void InitStructures(int nmax)
@@ -392,7 +392,7 @@ namespace SiliFish
             PoolConnections.Clear();
             this.InitNeurons();
             this.InitSynapsesAndGapJunctions();
-            this.InitMembranePotentials(nmax);
+            this.InitDataVectors(nmax);
             initialized = true;
         }
 
@@ -452,17 +452,17 @@ namespace SiliFish
             }
         }
 
-        private void CalculateMembranePotentialsFromCurrents(int t)
+        private void CalculateMembranePotentialsFromCurrents(int timeIndex)
         {
             foreach (CellPool neurons in NeuronPools)
             {
                 foreach (Neuron neuron in neurons.GetCells())
-                    neuron.CalculateMembranePotential(t);
+                    neuron.CalculateMembranePotential(timeIndex);
             }
 
             foreach (CellPool muscleCells in MuscleCellPools)
                 foreach (MuscleCell mc in muscleCells.GetCells())
-                    mc.CalculateMembranePotential(t);
+                    mc.CalculateMembranePotential(timeIndex);
         }
         protected virtual void RunModelLoop(int? seed, RunParam rp)
         {

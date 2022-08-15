@@ -40,9 +40,9 @@ namespace SiliFish.ModelUnits
             double t_ms = RunParam.GetTimeOfIndex(timepoint);
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
-        public double GetStimulus(int t, Random rand)
+        public double GetStimulus(int timdeIndex, Random rand)
         {
-            return Stimulus?.getStimulus(t, rand) ?? 0;
+            return Stimulus?.getStimulus(timdeIndex, rand) ?? 0;
         }
         public virtual Dictionary<string, object> Parameters
         {
@@ -81,6 +81,13 @@ namespace SiliFish.ModelUnits
         public Cell()
         {
         }
+
+        public virtual void InitDataVectors(int nmax)
+        {
+            V = new double[nmax];
+            Stimulus?.InitDataVectors(nmax);
+        }
+
         public virtual void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             throw (new NotImplementedException());
@@ -220,15 +227,15 @@ namespace SiliFish.ModelUnits
             Synapses.Add(jnc);
         }
 
-        public void InitVectors(int nmax)
+        public override void InitDataVectors(int nmax)
         {
-            V = new double[nmax];
+            base.InitDataVectors(nmax);
             bool spike = false;
             V[0] = Core.GetNextVal(0, ref spike);
             foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitVectors(nmax);
+                jnc.InitDataVectors(nmax);
             foreach (GapJunction jnc in this.GapJunctions)
-                jnc.InitVectors(nmax);
+                jnc.InitDataVectors(nmax);
         }
 
         public void NextStep(int t, double stim)
@@ -275,25 +282,25 @@ namespace SiliFish.ModelUnits
 
         }
 
-        public override void CalculateMembranePotential(int t)
+        public override void CalculateMembranePotential(int timeIndex)
         {
             try
             {
                 double ISyn = 0, IGap = 0, stim = 0;
-                if (IsAlive(t))
+                if (IsAlive(timeIndex))
                 {
                     foreach (ChemicalSynapse syn in Synapses)
                     {
-                        ISyn += syn.GetSynapticCurrent(t);
+                        ISyn += syn.GetSynapticCurrent(timeIndex);
                     }
                     foreach (GapJunction jnc in GapJunctions)
                     {
-                        IGap += jnc.GetGapCurrent(this, t);
+                        IGap += jnc.GetGapCurrent(this, timeIndex);
                     }
-                    stim = GetStimulus(t, SwimmingModel.rand);
+                    stim = GetStimulus(timeIndex, SwimmingModel.rand);
                 }
 
-                NextStep(t, stim + ISyn + IGap);
+                NextStep(timeIndex, stim + ISyn + IGap);
             }
             catch (Exception ex)
             {
@@ -383,12 +390,12 @@ namespace SiliFish.ModelUnits
             return (minWeight, maxWeight);
         }
 
-        public void InitVectors(int nmax)
+        public override void InitDataVectors(int nmax)
         {
-            V = new double[nmax];
+            base.InitDataVectors(nmax);
             V[0] = Core.GetNextVal(0);
             foreach (ChemicalSynapse jnc in this.EndPlates)
-                jnc.InitVectors(nmax);
+                jnc.InitDataVectors(nmax);
         }
 
         public void NextStep(int t, double stim)
@@ -401,18 +408,18 @@ namespace SiliFish.ModelUnits
             return (Core.SolveODE(I), null);
         }
 
-        public override void CalculateMembranePotential(int t)
+        public override void CalculateMembranePotential(int timdeIndex)
         {
             double ISyn = 0, stim = 0;
-            if (IsAlive(t))
+            if (IsAlive(timdeIndex))
             {
                 foreach (ChemicalSynapse syn in EndPlates)
                 {
-                    ISyn += syn.GetSynapticCurrent(t);
+                    ISyn += syn.GetSynapticCurrent(timdeIndex);
                 }
-                stim = GetStimulus(t, SwimmingModel.rand);
+                stim = GetStimulus(timdeIndex, SwimmingModel.rand);
             }
-            NextStep(t, stim + ISyn);
+            NextStep(timdeIndex, stim + ISyn);
         }
 
         public override string GetInstanceParams()

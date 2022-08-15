@@ -148,7 +148,7 @@ namespace SiliFish.ModelUnits
             double distance = Util.Distance(c1.coordinate, c2.coordinate, mode);
             Duration = Math.Max((int)(distance / (c1.ConductionVelocity * RunParam.static_dt)), 1);
         }
-        public void InitVectors(int nmax)
+        public void InitDataVectors(int nmax)
         {
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;
@@ -223,7 +223,7 @@ namespace SiliFish.ModelUnits
             double distance = Util.Distance(PreNeuron.coordinate, PostCell.coordinate, distmode);
             Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt )), 1);
         }
-        public void InitVectors(int nmax)
+        public void InitDataVectors(int nmax)
         {
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;

@@ -1315,6 +1315,7 @@ namespace SiliFish.UI
             this.webView2DModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView2DModel.Location = new System.Drawing.Point(0, 30);
             this.webView2DModel.Name = "webView2DModel";
+            this.webView2DModel.Padding = new System.Windows.Forms.Padding(10);
             this.webView2DModel.Size = new System.Drawing.Size(786, 481);
             this.webView2DModel.TabIndex = 1;
             this.webView2DModel.ZoomFactor = 1D;
@@ -1374,6 +1375,7 @@ namespace SiliFish.UI
             this.webView3DModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView3DModel.Location = new System.Drawing.Point(3, 33);
             this.webView3DModel.Name = "webView3DModel";
+            this.webView3DModel.Padding = new System.Windows.Forms.Padding(10);
             this.webView3DModel.Size = new System.Drawing.Size(780, 475);
             this.webView3DModel.TabIndex = 0;
             this.webView3DModel.ZoomFactor = 1D;
@@ -1981,6 +1983,7 @@ namespace SiliFish.UI
             this.ClientSize = new System.Drawing.Size(1348, 711);
             this.Controls.Add(this.splitMain);
             this.Controls.Add(this.pTop);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "SiliFish";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

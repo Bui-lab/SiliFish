@@ -1,4 +1,4 @@
-SiliFish uses some 3rd part tools. Corresponding licences are below:
+SiliFish uses some 3rd party tools. Corresponding licences are below:
 
 3d-force-graph
 https://github.com/vasturiano/3d-force-graph
@@ -16,11 +16,17 @@ d3
 https://d3js.org/
 https://github.com/d3/d3/blob/main/LICENSE
 
+dygraph
+https://dygraphs.com/
+
 am Charts 5
 https://www.amcharts.com/
 
 OxyPlot
 https://oxyplot.github.io/
 https://licenses.nuget.org/MIT
+
+The SiliFish icon
+https://www.flaticon.com/free-icons/fish-bone Fish bone icons created by Freepik - Flaticon
 
 There are also times that I had problems I managed to solve using generous StackOverflow community's help. The code snippets used in such cases are marked in the source code, linking to the original webpage.

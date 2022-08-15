@@ -113,7 +113,7 @@ namespace SiliFish
         protected override void InitStructures(int nmax)
         {
             this.Time = new double[nmax];
-            InitMembranePotentials(nmax);
+            InitDataVectors(nmax);
             if (!NeuronPools.Any(p => p.GetCells().Any()) &&
                 !MuscleCellPools.Any(p => p.GetCells().Any()))
                 return;
