@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.UI.Extensions;
@@ -138,8 +140,14 @@ namespace SiliFish.UI.Controls
             poolTemplate.Parameters = GridToParamDict();
             poolTemplate.Color = btnColor.BackColor;
             poolTemplate.Active = cbActive.Checked;
-            poolTemplate.TimeLine = timeLineControl.GetTimeLine();
+            poolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
             poolTemplate.ConductionVelocity = distConductionVelocity.GetDistribution();
+            
+            poolTemplate.Attachments.Clear();
+            foreach (var att in listAttachments.Items)
+            {
+                poolTemplate.Attachments.Add(att.ToString());
+            }
         }
 
 
@@ -171,14 +179,14 @@ namespace SiliFish.UI.Controls
             rbYZAngular.Checked = distributionY.GetDistribution().Angular;
 
             cbActive.Checked = poolTemplate.Active;
-            timeLineControl.SetTimeLine(poolTemplate.TimeLine);
+            timeLineControl.SetTimeLine(poolTemplate.TimeLine_ms);
             distConductionVelocity.SetDistribution(poolTemplate.ConductionVelocity as Distribution);
             ParamDictToGrid();
+
+            listAttachments.Items.Clear();
+            listAttachments.Items.AddRange(poolTemplate.Attachments?.ToArray());
         }
 
-        private void dgDynamics_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-        }
         private void rbYZAngular_CheckedChanged(object sender, EventArgs e)
         {
             if (rbYZAngular.Checked)
@@ -217,6 +225,7 @@ namespace SiliFish.UI.Controls
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
             frmControl.Text = eGroupName.Text;
+            frmControl.SaveVisible = false;
             frmControl.ShowDialog(); 
         }
 
@@ -226,6 +235,34 @@ namespace SiliFish.UI.Controls
                 return;
             poolTemplate.Parameters = dyncontrol.Cell.Parameters;
             ParamDictToGrid();
+        }
+
+        private void cmAttachments_Opening(object sender, CancelEventArgs e)
+        {
+            cmiViewFile.Enabled = cmiRemoveAttachment.Enabled = listAttachments.SelectedItems.Count > 0;
+        }
+        private void cmiViewFile_Click(object sender, EventArgs e)
+        {
+            Process p = new()
+            {
+                StartInfo = new ProcessStartInfo(listAttachments.SelectedItem.ToString())
+                {
+                    UseShellExecute = true
+                }
+            };
+            p.Start();
+        }
+
+        private void cmiAddAttachment_Click(object sender, EventArgs e)
+        {
+            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+                listAttachments.Items.Add(dlgOpenFile.FileName);
+        }
+
+        private void cmiRemoveAttachment_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to remove the selected attachment?", "SiliFish", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                listAttachments.Items.RemoveAt(listAttachments.SelectedIndex);
         }
 
     }

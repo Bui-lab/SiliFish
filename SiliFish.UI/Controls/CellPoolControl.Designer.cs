@@ -44,6 +44,12 @@ namespace SiliFish.UI.Controls
             this.pXAxis = new System.Windows.Forms.Panel();
             this.lXAxis = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
+            this.lAttachments = new System.Windows.Forms.Label();
+            this.listAttachments = new System.Windows.Forms.ListBox();
+            this.cmAttachments = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiViewFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiAddAttachment = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiRemoveAttachment = new System.Windows.Forms.ToolStripMenuItem();
             this.ddSelection = new System.Windows.Forms.ComboBox();
             this.ddNeuronClass = new System.Windows.Forms.ComboBox();
             this.lNeuronClass = new System.Windows.Forms.Label();
@@ -80,11 +86,13 @@ namespace SiliFish.UI.Controls
             this.linkClearTimeline = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
             this.pXAxis.SuspendLayout();
             this.pMain.SuspendLayout();
+            this.cmAttachments.SuspendLayout();
             this.pMainTop.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -230,6 +238,8 @@ namespace SiliFish.UI.Controls
             // pMain
             // 
             this.pMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pMain.Controls.Add(this.lAttachments);
+            this.pMain.Controls.Add(this.listAttachments);
             this.pMain.Controls.Add(this.ddSelection);
             this.pMain.Controls.Add(this.ddNeuronClass);
             this.pMain.Controls.Add(this.lNeuronClass);
@@ -253,6 +263,57 @@ namespace SiliFish.UI.Controls
             this.pMain.Name = "pMain";
             this.pMain.Size = new System.Drawing.Size(261, 723);
             this.pMain.TabIndex = 0;
+            // 
+            // lAttachments
+            // 
+            this.lAttachments.AutoSize = true;
+            this.lAttachments.Location = new System.Drawing.Point(7, 273);
+            this.lAttachments.Name = "lAttachments";
+            this.lAttachments.Size = new System.Drawing.Size(75, 15);
+            this.lAttachments.TabIndex = 31;
+            this.lAttachments.Text = "Attachments";
+            // 
+            // listAttachments
+            // 
+            this.listAttachments.ContextMenuStrip = this.cmAttachments;
+            this.listAttachments.FormattingEnabled = true;
+            this.listAttachments.ItemHeight = 15;
+            this.listAttachments.Location = new System.Drawing.Point(6, 288);
+            this.listAttachments.Name = "listAttachments";
+            this.listAttachments.Size = new System.Drawing.Size(252, 424);
+            this.listAttachments.TabIndex = 30;
+            // 
+            // cmAttachments
+            // 
+            this.cmAttachments.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiViewFile,
+            this.cmiAddAttachment,
+            this.cmiRemoveAttachment});
+            this.cmAttachments.Name = "cmAttachments";
+            this.cmAttachments.Size = new System.Drawing.Size(184, 70);
+            this.cmAttachments.Opening += new System.ComponentModel.CancelEventHandler(this.cmAttachments_Opening);
+            // 
+            // cmiViewFile
+            // 
+            this.cmiViewFile.Name = "cmiViewFile";
+            this.cmiViewFile.Size = new System.Drawing.Size(183, 22);
+            this.cmiViewFile.Text = "View File";
+            this.cmiViewFile.Click += new System.EventHandler(this.cmiViewFile_Click);
+            // 
+            // cmiAddAttachment
+            // 
+            this.cmiAddAttachment.Name = "cmiAddAttachment";
+            this.cmiAddAttachment.Size = new System.Drawing.Size(183, 22);
+            this.cmiAddAttachment.Text = "Add Attachment";
+            this.cmiAddAttachment.Click += new System.EventHandler(this.cmiAddAttachment_Click);
+            // 
+            // cmiRemoveAttachment
+            // 
+            this.cmiRemoveAttachment.MergeAction = System.Windows.Forms.MergeAction.Replace;
+            this.cmiRemoveAttachment.Name = "cmiRemoveAttachment";
+            this.cmiRemoveAttachment.Size = new System.Drawing.Size(183, 22);
+            this.cmiRemoveAttachment.Text = "Remove Attachment";
+            this.cmiRemoveAttachment.Click += new System.EventHandler(this.cmiRemoveAttachment_Click);
             // 
             // ddSelection
             // 
@@ -394,11 +455,11 @@ namespace SiliFish.UI.Controls
             this.flowLayoutPanel1.Controls.Add(this.distributionY);
             this.flowLayoutPanel1.Controls.Add(this.pZAxis);
             this.flowLayoutPanel1.Controls.Add(this.distributionZ);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(321, 689);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 689);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // distributionX
@@ -658,6 +719,7 @@ namespace SiliFish.UI.Controls
             this.pXAxis.ResumeLayout(false);
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
+            this.cmAttachments.ResumeLayout(false);
             this.pMainTop.ResumeLayout(false);
             this.pMainTop.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -733,8 +795,15 @@ namespace SiliFish.UI.Controls
         private ComboBox ddNeuronClass;
         private Label lNeuronClass;
         private Label lDescription;
-        private TextBox eDescription;
         private Controls.DistributionDataGrid dgDynamics;
         private ComboBox ddSelection;
+        private Label lAttachments;
+        private ListBox listAttachments;
+        private TextBox eDescription;
+        private ContextMenuStrip cmAttachments;
+        private ToolStripMenuItem cmiViewFile;
+        private ToolStripMenuItem cmiAddAttachment;
+        private ToolStripMenuItem cmiRemoveAttachment;
+        private OpenFileDialog dlgOpenFile;
     }
 }

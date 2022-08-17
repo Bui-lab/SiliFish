@@ -149,12 +149,18 @@ namespace SiliFish.Services
             YOffset = 0;
             ZOffset = 0;
 
+            double jncsize = range / model.GetNumberOfConnections();
             (_, WeightMax) = model.GetConnectionRange();
-            WeightMult = 3 / WeightMax;
+            WeightMult = jncsize * 3 / WeightMax;
+
+            double nodesize = Math.Sqrt(xRange * yRange * zRange / (10 * model.GetNumberOfCells()));
+            if (nodesize < 1) 
+                nodesize = 1;
 
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool)));
             html.Replace("__NODES__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
+            html.Replace("__NODE_SIZE__", nodesize.ToString("0.##"));
 
             if (!singlePanel)
             {

@@ -1,4 +1,5 @@
-﻿using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
@@ -177,7 +178,7 @@ namespace SiliFish.UI.Controls
                     numEReversal.Value = (decimal)interPool.SynapseParameters.E_rev;
                 }
                 cbActive.Checked = interPool.JncActive;
-                timeLineControl.SetTimeLine(interPool.TimeLine);
+                timeLineControl.SetTimeLine(interPool.TimeLine_ms);
             }
             else
                 interPoolTemplate = new();
@@ -222,7 +223,7 @@ namespace SiliFish.UI.Controls
                 };
             }
             interPoolTemplate.JncActive = cbActive.Checked;
-            interPoolTemplate.TimeLine = timeLineControl.GetTimeLine();
+            interPoolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
             return interPoolTemplate;
         }
 

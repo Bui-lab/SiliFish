@@ -175,6 +175,8 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.linkSaveTemplateJSON = new System.Windows.Forms.LinkLabel();
+            this.linkSaveModelJSON = new System.Windows.Forms.LinkLabel();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -477,6 +479,11 @@ namespace SiliFish.UI
             // 
             this.eSpinalBodyPosition.DecimalPlaces = 1;
             this.eSpinalBodyPosition.Location = new System.Drawing.Point(98, 128);
+            this.eSpinalBodyPosition.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eSpinalBodyPosition.Name = "eSpinalBodyPosition";
             this.eSpinalBodyPosition.Size = new System.Drawing.Size(63, 23);
             this.eSpinalBodyPosition.TabIndex = 18;
@@ -501,6 +508,11 @@ namespace SiliFish.UI
             // 
             this.eSpinalRostraoCaudal.DecimalPlaces = 1;
             this.eSpinalRostraoCaudal.Location = new System.Drawing.Point(98, 100);
+            this.eSpinalRostraoCaudal.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eSpinalRostraoCaudal.Name = "eSpinalRostraoCaudal";
             this.eSpinalRostraoCaudal.Size = new System.Drawing.Size(63, 23);
             this.eSpinalRostraoCaudal.TabIndex = 16;
@@ -523,6 +535,11 @@ namespace SiliFish.UI
             // 
             this.eSpinalMedialLateral.DecimalPlaces = 1;
             this.eSpinalMedialLateral.Location = new System.Drawing.Point(98, 72);
+            this.eSpinalMedialLateral.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eSpinalMedialLateral.Name = "eSpinalMedialLateral";
             this.eSpinalMedialLateral.Size = new System.Drawing.Size(63, 23);
             this.eSpinalMedialLateral.TabIndex = 14;
@@ -547,6 +564,11 @@ namespace SiliFish.UI
             // 
             this.eSpinalDorsalVentral.DecimalPlaces = 1;
             this.eSpinalDorsalVentral.Location = new System.Drawing.Point(98, 44);
+            this.eSpinalDorsalVentral.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eSpinalDorsalVentral.Name = "eSpinalDorsalVentral";
             this.eSpinalDorsalVentral.Size = new System.Drawing.Size(63, 23);
             this.eSpinalDorsalVentral.TabIndex = 12;
@@ -584,6 +606,11 @@ namespace SiliFish.UI
             // 
             this.eBodyMedialLateral.DecimalPlaces = 1;
             this.eBodyMedialLateral.Location = new System.Drawing.Point(98, 55);
+            this.eBodyMedialLateral.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eBodyMedialLateral.Name = "eBodyMedialLateral";
             this.eBodyMedialLateral.Size = new System.Drawing.Size(63, 23);
             this.eBodyMedialLateral.TabIndex = 14;
@@ -608,6 +635,11 @@ namespace SiliFish.UI
             // 
             this.eBodyDorsalVentral.DecimalPlaces = 1;
             this.eBodyDorsalVentral.Location = new System.Drawing.Point(98, 27);
+            this.eBodyDorsalVentral.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eBodyDorsalVentral.Name = "eBodyDorsalVentral";
             this.eBodyDorsalVentral.Size = new System.Drawing.Size(63, 23);
             this.eBodyDorsalVentral.TabIndex = 12;
@@ -1647,6 +1679,7 @@ namespace SiliFish.UI
             // pTemplateJSONTop
             // 
             this.pTemplateJSONTop.BackColor = System.Drawing.SystemColors.Control;
+            this.pTemplateJSONTop.Controls.Add(this.linkSaveTemplateJSON);
             this.pTemplateJSONTop.Controls.Add(this.btnLoadTemplateJSON);
             this.pTemplateJSONTop.Controls.Add(this.btnDisplayTemplateJSON);
             this.pTemplateJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1700,6 +1733,7 @@ namespace SiliFish.UI
             // pModelJSONTop
             // 
             this.pModelJSONTop.BackColor = System.Drawing.SystemColors.Control;
+            this.pModelJSONTop.Controls.Add(this.linkSaveModelJSON);
             this.pModelJSONTop.Controls.Add(this.btnLoadModelJSON);
             this.pModelJSONTop.Controls.Add(this.btnDisplayModelJSON);
             this.pModelJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1717,7 +1751,6 @@ namespace SiliFish.UI
             this.btnLoadModelJSON.TabIndex = 1;
             this.btnLoadModelJSON.Text = "Load";
             this.btnLoadModelJSON.UseVisualStyleBackColor = true;
-            this.btnLoadModelJSON.Visible = false;
             this.btnLoadModelJSON.Click += new System.EventHandler(this.btnLoadModelJSON_Click);
             // 
             // btnDisplayModelJSON
@@ -1976,6 +2009,28 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // linkSaveTemplateJSON
+            // 
+            this.linkSaveTemplateJSON.AutoSize = true;
+            this.linkSaveTemplateJSON.Location = new System.Drawing.Point(174, 11);
+            this.linkSaveTemplateJSON.Name = "linkSaveTemplateJSON";
+            this.linkSaveTemplateJSON.Size = new System.Drawing.Size(82, 15);
+            this.linkSaveTemplateJSON.TabIndex = 4;
+            this.linkSaveTemplateJSON.TabStop = true;
+            this.linkSaveTemplateJSON.Text = "Save Template";
+            this.linkSaveTemplateJSON.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveTemplateJSON_LinkClicked);
+            // 
+            // linkSaveModelJSON
+            // 
+            this.linkSaveModelJSON.AutoSize = true;
+            this.linkSaveModelJSON.Location = new System.Drawing.Point(180, 11);
+            this.linkSaveModelJSON.Name = "linkSaveModelJSON";
+            this.linkSaveModelJSON.Size = new System.Drawing.Size(68, 15);
+            this.linkSaveModelJSON.TabIndex = 5;
+            this.linkSaveModelJSON.TabStop = true;
+            this.linkSaveModelJSON.Text = "Save Model";
+            this.linkSaveModelJSON.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModelJSON_LinkClicked);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2059,8 +2114,10 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
             this.tabTemplateJSON.ResumeLayout(false);
             this.pTemplateJSONTop.ResumeLayout(false);
+            this.pTemplateJSONTop.PerformLayout();
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
+            this.pModelJSONTop.PerformLayout();
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
@@ -2216,5 +2273,7 @@ namespace SiliFish.UI
         private Label lpx2;
         private NumericUpDown eAnimationdt;
         private Label lAnimationdt;
+        private LinkLabel linkSaveTemplateJSON;
+        private LinkLabel linkSaveModelJSON;
     }
 }

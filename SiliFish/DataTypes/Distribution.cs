@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 
 namespace SiliFish.DataTypes
 {
 
-    //Base class for uniform distribution
-    public abstract class Distribution
+    //Base class for all distributions
+    public class Distribution
     {
         public static Random Random = null;
         public bool Angular { get; set; } = false;
@@ -65,7 +66,7 @@ namespace SiliFish.DataTypes
 
         public static Distribution GetOfDerivedType(string json)
         {
-            Distribution dist = JsonSerializer.Deserialize<UniformDistribution>(json);
+            Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
             if (dist.DistType == typeof(Constant_NoDistribution).ToString())
                 return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
             if (dist.DistType == typeof(UniformDistribution).ToString())
@@ -152,7 +153,7 @@ namespace SiliFish.DataTypes
             for (int i = 0; i < n; i++)
             {
                 double noise = NoiseStdDev > 0 ? Random.Gauss(1, NoiseStdDev) : 1;
-                if (LowerLimit < Helpers.Const.epsilon) //noise will have no effect
+                if (LowerLimit < Const.epsilon) //noise will have no effect
                     result[i] = 1 - noise;
                 else
                     result[i] = LowerLimit * noise;

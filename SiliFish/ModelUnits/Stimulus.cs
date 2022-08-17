@@ -2,21 +2,67 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 
 namespace SiliFish.ModelUnits
 {
-    public class Stimulus
+    public class StimulusSettings
     {
-        public static int nMax; //in time increments
-
-        public TimeLine TimeSpan_ms { get; set; } //in  milliseconds
         public StimulusMode Mode { get; set; }
         //mode = Gaussian: value1 and value2 are mean and SD 
         //mode = Step: Value1 is the stimulus value, Value2 is obsolete
         //mode = Ramp: Value1: stimulus at time start, Value2: stimulus at time end
         public double Value1 { get; set; }
         public double Value2 { get; set; }
+
+        public StimulusSettings()
+        {
+        }
+        public StimulusSettings(StimulusMode mode, double value1, double value2)
+        {
+            Mode = mode;
+            Value1 = value1;
+            Value2 = value2;
+        }
+        public override string ToString()
+        {
+            switch (Mode)
+            {
+                case StimulusMode.Step:
+                    return string.Format("{0} {1}, Noise: {2}", Mode.ToString(), Value1, Value2);
+                case StimulusMode.Gaussian:
+                    return string.Format("{0} µ: {1}, SD: {2}", Mode.ToString(), Value1, Value2);
+                case StimulusMode.Ramp:
+                    return string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
+                case StimulusMode.Sinusoidal:
+                    return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
+            }
+            return "";
+        }
+    }
+    public class Stimulus
+    {
+        public static int nMax; //in time increments
+
+        public StimulusSettings StimulusSettings { get; set; }
+        public StimulusMode Mode 
+        { 
+            get { return StimulusSettings.Mode; }
+            set { StimulusSettings.Mode = value; } 
+        }
+        public double Value1
+        {
+            get { return StimulusSettings.Value1; }
+            set { StimulusSettings.Value1 = value; }
+        }
+        public double Value2
+        {
+            get { return StimulusSettings.Value2; }
+            set { StimulusSettings.Value2 = value; }
+        }
+
+        public TimeLine TimeSpan_ms { get; set; } //in  milliseconds
         private double tangent; //valid only if mode==Ramp
         private int iStart, iEnd;
         private double[] values = null;
@@ -25,12 +71,10 @@ namespace SiliFish.ModelUnits
         public double MaxValue { get { return values?.Max() ?? 0; } }
 
         public Stimulus() { }
-        public Stimulus(StimulusMode mode, TimeLine tl, double value1, double value2 = 0)
+        public Stimulus(StimulusSettings settings, TimeLine tl)
         {
-            this.Mode = mode;
+            StimulusSettings = settings;
             TimeSpan_ms = new(tl);
-            this.Value1 = value1;
-            this.Value2 = value2;
         }
         public double this[int index]
         {
@@ -43,18 +87,7 @@ namespace SiliFish.ModelUnits
         }
         public override string ToString()
         {
-            switch (Mode)
-            {
-                case StimulusMode.None:
-                    return string.Format("{0}", Mode.ToString());
-                case StimulusMode.Step:
-                    return string.Format("{0} {1}, Noise: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.Gaussian:
-                    return string.Format("{0} µ: {1}, SD: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.Ramp:
-                    return string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
-            }
-            return "";
+            return StimulusSettings.ToString();
         }
 
         public string GetTooltip()
@@ -70,9 +103,9 @@ namespace SiliFish.ModelUnits
             if (iEnd < 0)
                 iEnd = nMax;
             iStart = (int)(TimeSpan_ms.Start / RunParam.static_dt );
-            if (Mode == StimulusMode.Ramp)
+            if (StimulusSettings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
-                    tangent = (Value2 - Value1) / (iEnd - iStart);
+                    tangent = (StimulusSettings.Value2 - StimulusSettings.Value1) / (iEnd - iStart);
                 else tangent = 0;
 
             if (values != null)
@@ -99,6 +132,7 @@ namespace SiliFish.ModelUnits
                 values.CopyTo(copyArr, 0);
                 values = copyArr;
             }
+            double ramp = (tIndex - iStart) * tangent;
             double value = 0;
             switch (Mode)
             {
@@ -107,12 +141,16 @@ namespace SiliFish.ModelUnits
                     value = Value1 * noise;
                     break;
                 case StimulusMode.Ramp:
-                    value = Value1 + (tIndex - iStart) * tangent;
+                    value = Value1 + ramp;
                     break;
                 case StimulusMode.Gaussian:
                     value = rand.Gauss(Value1, Value2, Value1 - 3 * Value2, Value1 + 3 * Value2); // µ ± 3SD range
                     break;
+                case StimulusMode.Sinusoidal:
+                    value = Value1 * Math.Sin(2 * Math.PI * Value2 * t_ms);
+                    break;
             }
+
             values[tIndex] = value;
             return value;
         }

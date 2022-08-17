@@ -1,5 +1,6 @@
-﻿using SiliFish.ModelUnits;
-using SiliFish.UI.Extensions;
+﻿using SiliFish.DataTypes;
+using SiliFish.DynamicUnits;
+using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
 {
@@ -29,22 +30,34 @@ namespace SiliFish.UI.Controls
             cell.Parameters = dgDynamics.ReadFromGrid();
 
             decimal dt = edt.Value;
+            RunParam.static_Skip = 0;
+            RunParam.static_dt = (double)dt;
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
             double[] I = new double[plotEnd + 1];
             double[] t = new double[plotEnd + 1];
-            double val = (double)eInput.Value;
+            TimeLine tl = new ();
+            tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
+            Stimulus stim = new()
+            {
+                StimulusSettings = stimulusControl1.GetStimulus(),
+                TimeSpan_ms = tl
+            };
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 t[i] = i * (double)dt;
             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                I[i] = val;
+                I[i] = stim.getStimulus(i, SwimmingModel.rand);
             eInstanceParams.Text = Cell.GetInstanceParams();
-            (double[] vList, double[] uList) = Cell.DynamicsTest(I);
-            picV.Image = UtilWindows.CreateLinePlot("V", vList, t, 0, plotEnd, "V", null, null, Color.Purple);
-            if (uList == null)
+            Dynamics dyn = Cell.DynamicsTest(I);
+            if (dyn.tauRise.Any())
+                eInstanceParams.Text += "\r\nτ rise: " + string.Join(',', dyn.tauRise.Select(d => d.ToString()).ToArray());
+            if (dyn.tauDecay.Any())
+                eInstanceParams.Text += "\r\nτ decay: " + string.Join(',', dyn.tauDecay.Select(d => d.ToString()).ToArray());
+            picV.Image = UtilWindows.CreateLinePlot("V", dyn.Vlist, t, 0, plotEnd, "V", null, null, Color.Purple);
+            if (dyn.ulist == null)
                 picu.Visible = false;
-            else picu.Image = UtilWindows.CreateLinePlot("u", uList, t, 0, plotEnd, "u", null, null, Color.Blue);
+            else picu.Image = UtilWindows.CreateLinePlot("u", dyn.ulist, t, 0, plotEnd, "u", null, null, Color.Blue);
             picI.Image = UtilWindows.CreateLinePlot("I", I, t, 0, plotEnd, "I", null, null, Color.Red);
 
         }
@@ -59,13 +72,11 @@ namespace SiliFish.UI.Controls
             Neuron neuron = Cell as Neuron;
             eInstanceParams.Text = neuron.GetInstanceParams();
             decimal limit = eRheobaseLimit.Value;
-            if (limit > eInput.Maximum)
-                eInput.Maximum = limit;
-            decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, eInput.DecimalPlaces));
-            if (d <= eInput.Maximum && d >= eInput.Minimum)
+            decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, 3));
+            if (d>0)
                 eRheobase.Text = d.ToString("0.###");
             else
-                eInstanceParams.Text = "No rheobase below " + eInput.Maximum + ".\r\n" + eInstanceParams.Text;
+                eInstanceParams.Text = "No rheobase below " + eRheobaseLimit.Value + ".\r\n" + eInstanceParams.Text;
 
         }
 

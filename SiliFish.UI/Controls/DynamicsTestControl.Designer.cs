@@ -35,8 +35,6 @@
             this.eInstanceParams = new System.Windows.Forms.TextBox();
             this.ldt = new System.Windows.Forms.Label();
             this.edt = new System.Windows.Forms.NumericUpDown();
-            this.lInput = new System.Windows.Forms.Label();
-            this.eInput = new System.Windows.Forms.NumericUpDown();
             this.ePlotEndTime = new System.Windows.Forms.NumericUpDown();
             this.btnDynamicsRun = new System.Windows.Forms.Button();
             this.eStepEndTime = new System.Windows.Forms.NumericUpDown();
@@ -50,16 +48,16 @@
             this.eRheobase = new System.Windows.Forms.TextBox();
             this.lRheobase = new System.Windows.Forms.Label();
             this.grTest = new System.Windows.Forms.GroupBox();
+            this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
             this.grInstanceParameters = new System.Windows.Forms.GroupBox();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.dgDynamics = new SiliFish.UI.Controls.DistributionDataGrid();
+            this.pBottom = new System.Windows.Forms.Panel();
             this.pUseUpdatedParams = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
-            this.pBottom = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.picV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).BeginInit();
@@ -72,8 +70,8 @@
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.pUseUpdatedParams.SuspendLayout();
             this.pBottom.SuspendLayout();
+            this.pUseUpdatedParams.SuspendLayout();
             this.SuspendLayout();
             // 
             // picV
@@ -135,13 +133,13 @@
             this.eInstanceParams.Name = "eInstanceParams";
             this.eInstanceParams.ReadOnly = true;
             this.eInstanceParams.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.eInstanceParams.Size = new System.Drawing.Size(234, 269);
+            this.eInstanceParams.Size = new System.Drawing.Size(234, 324);
             this.eInstanceParams.TabIndex = 12;
             // 
             // ldt
             // 
             this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(15, 121);
+            this.ldt.Location = new System.Drawing.Point(6, 183);
             this.ldt.Name = "ldt";
             this.ldt.Size = new System.Drawing.Size(18, 15);
             this.ldt.TabIndex = 10;
@@ -155,7 +153,7 @@
             0,
             0,
             65536});
-            this.edt.Location = new System.Drawing.Point(107, 119);
+            this.edt.Location = new System.Drawing.Point(103, 181);
             this.edt.Minimum = new decimal(new int[] {
             1,
             0,
@@ -170,33 +168,6 @@
             0,
             65536});
             // 
-            // lInput
-            // 
-            this.lInput.AutoSize = true;
-            this.lInput.Location = new System.Drawing.Point(15, 23);
-            this.lInput.Name = "lInput";
-            this.lInput.Size = new System.Drawing.Size(35, 15);
-            this.lInput.TabIndex = 1;
-            this.lInput.Text = "Input";
-            // 
-            // eInput
-            // 
-            this.eInput.DecimalPlaces = 3;
-            this.eInput.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.eInput.Location = new System.Drawing.Point(107, 18);
-            this.eInput.Name = "eInput";
-            this.eInput.Size = new System.Drawing.Size(66, 23);
-            this.eInput.TabIndex = 2;
-            this.eInput.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // ePlotEndTime
             // 
             this.ePlotEndTime.Increment = new decimal(new int[] {
@@ -204,7 +175,7 @@
             0,
             0,
             0});
-            this.ePlotEndTime.Location = new System.Drawing.Point(107, 94);
+            this.ePlotEndTime.Location = new System.Drawing.Point(103, 156);
             this.ePlotEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -221,7 +192,7 @@
             // 
             // btnDynamicsRun
             // 
-            this.btnDynamicsRun.Location = new System.Drawing.Point(106, 148);
+            this.btnDynamicsRun.Location = new System.Drawing.Point(102, 210);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(67, 23);
             this.btnDynamicsRun.TabIndex = 3;
@@ -236,7 +207,7 @@
             0,
             0,
             0});
-            this.eStepEndTime.Location = new System.Drawing.Point(107, 70);
+            this.eStepEndTime.Location = new System.Drawing.Point(103, 132);
             this.eStepEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -254,11 +225,11 @@
             // lStepStartTime
             // 
             this.lStepStartTime.AutoSize = true;
-            this.lStepStartTime.Location = new System.Drawing.Point(15, 46);
+            this.lStepStartTime.Location = new System.Drawing.Point(6, 110);
             this.lStepStartTime.Name = "lStepStartTime";
-            this.lStepStartTime.Size = new System.Drawing.Size(86, 15);
+            this.lStepStartTime.Size = new System.Drawing.Size(60, 15);
             this.lStepStartTime.TabIndex = 4;
-            this.lStepStartTime.Text = "Step Start Time";
+            this.lStepStartTime.Text = "Start Time";
             // 
             // eStepStartTime
             // 
@@ -267,7 +238,7 @@
             0,
             0,
             0});
-            this.eStepStartTime.Location = new System.Drawing.Point(107, 44);
+            this.eStepStartTime.Location = new System.Drawing.Point(103, 106);
             this.eStepStartTime.Name = "eStepStartTime";
             this.eStepStartTime.Size = new System.Drawing.Size(66, 23);
             this.eStepStartTime.TabIndex = 7;
@@ -280,16 +251,16 @@
             // lStepEndTime
             // 
             this.lStepEndTime.AutoSize = true;
-            this.lStepEndTime.Location = new System.Drawing.Point(15, 70);
+            this.lStepEndTime.Location = new System.Drawing.Point(6, 134);
             this.lStepEndTime.Name = "lStepEndTime";
-            this.lStepEndTime.Size = new System.Drawing.Size(82, 15);
+            this.lStepEndTime.Size = new System.Drawing.Size(56, 15);
             this.lStepEndTime.TabIndex = 5;
-            this.lStepEndTime.Text = "Step End Time";
+            this.lStepEndTime.Text = "End Time";
             // 
             // lPlotEndTime
             // 
             this.lPlotEndTime.AutoSize = true;
-            this.lPlotEndTime.Location = new System.Drawing.Point(15, 96);
+            this.lPlotEndTime.Location = new System.Drawing.Point(6, 160);
             this.lPlotEndTime.Name = "lPlotEndTime";
             this.lPlotEndTime.Size = new System.Drawing.Size(80, 15);
             this.lPlotEndTime.TabIndex = 6;
@@ -348,23 +319,30 @@
             // 
             // grTest
             // 
-            this.grTest.Controls.Add(this.ldt);
-            this.grTest.Controls.Add(this.lInput);
             this.grTest.Controls.Add(this.edt);
             this.grTest.Controls.Add(this.lPlotEndTime);
             this.grTest.Controls.Add(this.lStepEndTime);
-            this.grTest.Controls.Add(this.eInput);
             this.grTest.Controls.Add(this.eStepStartTime);
             this.grTest.Controls.Add(this.ePlotEndTime);
             this.grTest.Controls.Add(this.lStepStartTime);
             this.grTest.Controls.Add(this.btnDynamicsRun);
             this.grTest.Controls.Add(this.eStepEndTime);
+            this.grTest.Controls.Add(this.stimulusControl1);
+            this.grTest.Controls.Add(this.ldt);
             this.grTest.Location = new System.Drawing.Point(6, 125);
             this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(200, 182);
+            this.grTest.Size = new System.Drawing.Size(200, 236);
             this.grTest.TabIndex = 17;
             this.grTest.TabStop = false;
             this.grTest.Text = "Test";
+            // 
+            // stimulusControl1
+            // 
+            this.stimulusControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.stimulusControl1.Location = new System.Drawing.Point(3, 19);
+            this.stimulusControl1.Name = "stimulusControl1";
+            this.stimulusControl1.Size = new System.Drawing.Size(194, 93);
+            this.stimulusControl1.TabIndex = 19;
             // 
             // grInstanceParameters
             // 
@@ -374,7 +352,7 @@
             this.grInstanceParameters.Controls.Add(this.eInstanceParams);
             this.grInstanceParameters.Location = new System.Drawing.Point(209, 19);
             this.grInstanceParameters.Name = "grInstanceParameters";
-            this.grInstanceParameters.Size = new System.Drawing.Size(240, 291);
+            this.grInstanceParameters.Size = new System.Drawing.Size(240, 346);
             this.grInstanceParameters.TabIndex = 18;
             this.grInstanceParameters.TabStop = false;
             this.grInstanceParameters.Text = "Instance Params";
@@ -403,13 +381,25 @@
             // 
             // dgDynamics
             // 
+            this.dgDynamics.AutoSize = true;
             this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgDynamics.Location = new System.Drawing.Point(0, 30);
             this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
             this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.Size = new System.Drawing.Size(452, 340);
+            this.dgDynamics.Size = new System.Drawing.Size(452, 285);
             this.dgDynamics.TabIndex = 21;
+            // 
+            // pBottom
+            // 
+            this.pBottom.Controls.Add(this.grRheobase);
+            this.pBottom.Controls.Add(this.grInstanceParameters);
+            this.pBottom.Controls.Add(this.grTest);
+            this.pBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pBottom.Location = new System.Drawing.Point(0, 315);
+            this.pBottom.Name = "pBottom";
+            this.pBottom.Size = new System.Drawing.Size(452, 368);
+            this.pBottom.TabIndex = 21;
             // 
             // pUseUpdatedParams
             // 
@@ -431,17 +421,6 @@
             this.linkUseUpdatedParams.Text = "Use Updated Parameters";
             this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
-            // pBottom
-            // 
-            this.pBottom.Controls.Add(this.grRheobase);
-            this.pBottom.Controls.Add(this.grInstanceParameters);
-            this.pBottom.Controls.Add(this.grTest);
-            this.pBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottom.Location = new System.Drawing.Point(0, 370);
-            this.pBottom.Name = "pBottom";
-            this.pBottom.Size = new System.Drawing.Size(452, 313);
-            this.pBottom.TabIndex = 21;
-            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -452,7 +431,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).EndInit();
@@ -465,12 +443,13 @@
             this.grInstanceParameters.ResumeLayout(false);
             this.grInstanceParameters.PerformLayout();
             this.splitMain.Panel1.ResumeLayout(false);
+            this.splitMain.Panel1.PerformLayout();
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
+            this.pBottom.ResumeLayout(false);
             this.pUseUpdatedParams.ResumeLayout(false);
             this.pUseUpdatedParams.PerformLayout();
-            this.pBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -484,8 +463,6 @@
         private TextBox eInstanceParams;
         private Label ldt;
         private NumericUpDown edt;
-        private Label lInput;
-        private NumericUpDown eInput;
         private NumericUpDown ePlotEndTime;
         private Button btnDynamicsRun;
         private NumericUpDown eStepEndTime;
@@ -505,5 +482,6 @@
         private LinkLabel linkUseUpdatedParams;
         private DistributionDataGrid dgDynamics;
         private Panel pBottom;
+        private StimulusControl stimulusControl1;
     }
 }

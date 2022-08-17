@@ -61,5 +61,21 @@ namespace SiliFish.UI.Controls
             if (dgTimeLine.Focused)
                 timeLineChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        private void cmiClearAll_Click(object sender, EventArgs e)
+        {
+            dgTimeLine.Rows.Clear();
+            dgTimeLine.RowCount = 1;
+        }
+
+        private void cmiSort_Click(object sender, EventArgs e)
+        {
+            dgTimeLine.Sort(dgTimeLine.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
+        }
+
+        private void cmTimeLine_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cmiSort.Enabled = dgTimeLine.RowCount > 2;
+        }
     }
 }

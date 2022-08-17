@@ -12,6 +12,7 @@ using Services;
 using Microsoft.Web.WebView2.WinForms;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using SiliFish.Definitions;
 
 namespace SiliFish.UI
 {
@@ -1295,6 +1296,7 @@ namespace SiliFish.UI
                     ModelTemplate.LinkObjects();
                     LoadModelTemplate();
                     RefreshModelFromTemplate();
+                    MessageBox.Show("Updated template is loaded.");
                 }
             }
             catch (JsonException exc)
@@ -1304,6 +1306,18 @@ namespace SiliFish.UI
             catch (Exception exc)
             {
                 ExceptionHandling("Read template from JSON", exc);
+            }
+        }
+        private void linkSaveTemplateJSON_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileJson.ShowDialog() == DialogResult.OK)
+                    eTemplateJSON.SaveFile(saveFileJson.FileName, RichTextBoxStreamType.PlainText);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -1356,6 +1370,22 @@ namespace SiliFish.UI
                 ExceptionHandling("Read template from JSON", exc);
             }
         }
+
+        private void linkSaveModelJSON_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+
+                if (saveFileJson.ShowDialog() == DialogResult.OK)
+                    eModelJSON.SaveFile(saveFileJson.FileName, RichTextBoxStreamType.PlainText);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
+
+
         #endregion
 
         #endregion
@@ -1593,14 +1623,14 @@ namespace SiliFish.UI
         private StimulusTemplate OpenStimulusDialog(StimulusTemplate stim)
         {
             ControlContainer frmControl = new();
-            StimulusControl sc = new();
+            AppliedStimulusControl sc = new();
 
             sc.SetStimulus(ModelTemplate.CellPoolTemplates, stim);
             frmControl.AddControl(sc);
             frmControl.Text = stim?.ToString() ?? "New Stimulus";
 
             if (frmControl.ShowDialog() == DialogResult.OK)
-                return sc.GetStimulus();
+                return sc.GetStimulusTemplate();
             return null;
         }
         private void listStimuli_AddItem(object sender, EventArgs e)
@@ -1879,6 +1909,8 @@ namespace SiliFish.UI
             eAnimationdt.Increment = edt.Value;
             eAnimationdt.Value = 10 * edt.Value;
         }
+
+
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {

@@ -4,8 +4,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -26,8 +28,11 @@ namespace SiliFish
             if (i >= iMax) i = iMax - 1;
             return i;
         }
+        [JsonIgnore]
         public int iMax { get { return Convert.ToInt32(((tMax + tSkip_ms) / dt) + 1); } }
+        [JsonIgnore]
         public static double static_Skip { get; set; } = 0;//Used from data structures that don't have direct access to the model
+        [JsonIgnore]
         public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
 
         public static double GetTimeOfIndex(int index)
@@ -78,16 +83,15 @@ namespace SiliFish
 
         protected double taur, taud, vth; //synapse parameters
 
-        protected List<CellPool> NeuronPools = new();
-        protected List<CellPool> MuscleCellPools = new();
-        protected List<InterPool> PoolConnections = new();
+        protected List<CellPool> neuronPools = new();
+        protected List<CellPool> musclePools = new();
+        protected List<InterPool> poolConnections = new();
 
         [JsonIgnore]
         public double[] TimeArray{ get { return Time; } }
 
         [JsonIgnore]
         public bool ModelRun { get { return model_run; } }
-        public int MaxIndex { get { return iMax; } }
 
         [JsonIgnore]
         public bool CancelRun { get; set; } = false;
@@ -100,27 +104,47 @@ namespace SiliFish
         {
             modelName = this.GetType().Name;
         }
+
+        [JsonIgnore]
         public List<CellPool> CellPools
         {
             get
             {
                 if (!initialized)
                     InitStructures(1);
-                return NeuronPools.Union(MuscleCellPools).ToList();
+                return neuronPools.Union(musclePools).ToList();
             }
         }
-        [JsonIgnore]
+        public List<CellPool> NeuronPools
+        {
+            get
+            {
+                if (!initialized)
+                    InitStructures(1);
+                return neuronPools;
+            }
+            set
+            {
+                //called by JSON
+                neuronPools = value;
+            }
+        }
         public List<CellPool> MusclePools
         {
             get
             {
                 if (!initialized)
                     InitStructures(1);
-                return MuscleCellPools;
+                return musclePools;
+            }
+            set
+            {
+                //called by JSON
+                musclePools = value;
             }
         }
-        public List<InterPool> ChemPoolConnections { get { return PoolConnections.Where(con => con.IsChemical).ToList(); } }
-        public List<InterPool> GapPoolConnections { get { return PoolConnections.Where(con => !con.IsChemical).ToList(); } }
+        public List<InterPool> ChemPoolConnections { get { return poolConnections.Where(con => con.IsChemical).ToList(); } }
+        public List<InterPool> GapPoolConnections { get { return poolConnections.Where(con => !con.IsChemical).ToList(); } }
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {
             double minX = 999;
@@ -131,7 +155,7 @@ namespace SiliFish
             double maxZ = -999;
             int rangeY1D = 0;
 
-            foreach (CellPool pool in NeuronPools.Union(MuscleCellPools))
+            foreach (CellPool pool in neuronPools.Union(musclePools))
             {
                 if (pool.columnIndex2D > rangeY1D)
                     rangeY1D = pool.columnIndex2D;
@@ -152,7 +176,7 @@ namespace SiliFish
         {
             double maxWeight = 0;
             double minWeight = 999;
-            foreach (CellPool pool in NeuronPools.Union(MuscleCellPools))
+            foreach (CellPool pool in neuronPools.Union(musclePools))
             {
                 (double localMin, double localMax) = pool.GetConnectionRange();
                 if (localMin < minWeight)
@@ -161,6 +185,14 @@ namespace SiliFish
                     maxWeight = localMax;
             }
             return (minWeight, maxWeight);
+        }
+        public virtual int GetNumberOfCells()
+        {
+            return CellPools.Sum(p => p.Cells.Count);
+        }
+        public virtual int GetNumberOfConnections()
+        {
+            return CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count + ((c as Neuron)?.Synapses.Count ?? 0)));
         }
 
         public virtual Dictionary<string, object> GetParameters()
@@ -280,7 +312,7 @@ namespace SiliFish
 
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, CellSelectionStruct cellSelection)
         {
-            List<CellPool> pools = NeuronPools.Union(MuscleCellPools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
+            List<CellPool> pools = neuronPools.Union(musclePools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
                             && p.OnSide(cellSelection.SagittalPlane)).ToList();
             if (cellSelection.cellSelection == PlotSelection.Summary)
                return (null, pools);
@@ -293,18 +325,18 @@ namespace SiliFish
         public virtual string SummarizeModel()
         {
             StringBuilder strBuilder = new();
-            foreach (CellPool pool in NeuronPools.Union(MuscleCellPools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
+            foreach (CellPool pool in neuronPools.Union(musclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
             {
                 strBuilder.AppendLine("#Cell Pool#");
                 strBuilder.AppendLine(pool.ID);
                 foreach (Cell cell in pool.GetCells())
                 {
                     strBuilder.AppendLine(cell.ID);
+                    strBuilder.AppendLine("##Gap Junctions##");
+                    foreach (GapJunction jnc in cell.GapJunctions)
+                        strBuilder.AppendLine(jnc.ID);
                     if (cell is Neuron neuron)
                     {
-                        strBuilder.AppendLine("##Gap Junctions##");
-                        foreach (GapJunction jnc in neuron.GapJunctions)
-                            strBuilder.AppendLine(jnc.ID);
                         strBuilder.AppendLine("##Terminals##");
                         foreach (ChemicalSynapse jnc in neuron.Terminals)
                             strBuilder.AppendLine(jnc.ID);
@@ -334,18 +366,19 @@ namespace SiliFish
             string filenamejson = Path.ChangeExtension(filename, "json");
 
             List<string> cell_names = new();
-            cell_names.AddRange(NeuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
-            cell_names.AddRange(MuscleCellPools.Select(k => k.CellGroup).Distinct());
+            cell_names.AddRange(neuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
+            cell_names.AddRange(musclePools.Select(k => k.CellGroup).Distinct());
 
             Dictionary<string, double[]> Vdata_list = new();
             Dictionary<string, double[]> Gapdata_list = new();
             Dictionary<string, double[]> Syndata_list = new();
-            foreach (CellPool pool in NeuronPools.Union(MuscleCellPools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
+            foreach (CellPool pool in neuronPools.Union(musclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
             {
                 //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
                 foreach (Cell c in pool.GetCells())
                 {
                     Vdata_list.Add(c.ID, c.V);
+                    c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
                     if (c is MuscleCell)
                     {
                         (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
@@ -353,7 +386,6 @@ namespace SiliFish
                     else if (c is Neuron)
                     {
                         (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                        (c as Neuron).GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
                     }
                 }
 
@@ -375,11 +407,11 @@ namespace SiliFish
 
         protected virtual void InitDataVectors(int nmax)
         {
-            foreach (CellPool neurons in NeuronPools)
+            foreach (CellPool neurons in neuronPools)
                 foreach (Neuron neuron in neurons.GetCells())
                     neuron.InitDataVectors(nmax);
 
-            foreach (CellPool muscleCells in MuscleCellPools)
+            foreach (CellPool muscleCells in musclePools)
                 foreach (MuscleCell mc in muscleCells.GetCells())
                     mc.InitDataVectors(nmax);
         }
@@ -387,9 +419,9 @@ namespace SiliFish
         protected virtual void InitStructures(int nmax)
         {
             this.Time = new double[nmax];
-            NeuronPools.Clear();
-            MuscleCellPools.Clear();
-            PoolConnections.Clear();
+            neuronPools.Clear();
+            musclePools.Clear();
+            poolConnections.Clear();
             this.InitNeurons();
             this.InitSynapsesAndGapJunctions();
             this.InitDataVectors(nmax);
@@ -399,13 +431,13 @@ namespace SiliFish
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            PoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
+            poolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, probability);
         }
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            PoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
+            poolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, probability);
         }
 
@@ -413,8 +445,9 @@ namespace SiliFish
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
-            TimeLine timeline = template.TimeLine;
-            PoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
+            cr.SomiteBased = NumberOfSomites > 0;
+            TimeLine timeline = template.TimeLine_ms;
+            poolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability);
         }
 
@@ -422,27 +455,21 @@ namespace SiliFish
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
+            cr.SomiteBased = NumberOfSomites > 0;
             SynapseParameters synParam = template.SynapseParameters;
-            TimeLine timeline = template.TimeLine;
-            PoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
+            TimeLine timeline = template.TimeLine_ms;
+            poolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability);
         }
 
-        private void CalculateNeuronalOutputs(int t)
+        private void CalculateCellularOutputs(int t)
         {
             try
             {
-                /*Simple multithreading as below makes it less efficient
-                Parallel.ForEach(NeuronPools, neurons =>
+                foreach (CellPool pools in CellPools)
                 {
-                    foreach (Neuron neuron in neurons.GetCells())
-                        neuron.CalculateNeuronalOutputs(t);
-                });
-                /*/
-                foreach (CellPool neurons in NeuronPools)
-                {
-                    foreach (Neuron neuron in neurons.GetCells())
-                        neuron.CalculateNeuronalOutputs(t);
+                    foreach (Cell cell in pools.GetCells())
+                        cell.CalculateCellularOutputs(t);
                 }
                 
             }
@@ -454,15 +481,11 @@ namespace SiliFish
 
         private void CalculateMembranePotentialsFromCurrents(int timeIndex)
         {
-            foreach (CellPool neurons in NeuronPools)
+            foreach (CellPool pool in CellPools)
             {
-                foreach (Neuron neuron in neurons.GetCells())
-                    neuron.CalculateMembranePotential(timeIndex);
+                foreach (Cell cell in pool.GetCells())
+                    cell.CalculateMembranePotential(timeIndex);
             }
-
-            foreach (CellPool muscleCells in MuscleCellPools)
-                foreach (MuscleCell mc in muscleCells.GetCells())
-                    mc.CalculateMembranePotential(timeIndex);
         }
         protected virtual void RunModelLoop(int? seed, RunParam rp)
         {
@@ -493,7 +516,7 @@ namespace SiliFish
                         CancelLoop = true;
                         return;
                     }
-                    CalculateNeuronalOutputs(index);
+                    CalculateCellularOutputs(index);
                     CalculateMembranePotentialsFromCurrents(index);
                 }
                 model_run = true;

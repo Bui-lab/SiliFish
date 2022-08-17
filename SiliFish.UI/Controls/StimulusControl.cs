@@ -1,4 +1,4 @@
-﻿using SiliFish.DataTypes;
+﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
@@ -7,101 +7,77 @@ namespace SiliFish.UI.Controls
     {
         private event EventHandler stimulusChanged;
         public event EventHandler StimulusChanged { add => stimulusChanged += value; remove => stimulusChanged -= value; }
-
+        
         public StimulusControl()
         {
             InitializeComponent();
-            timeLineControl.TimeLineChanged += TimeLineControl_TimeLineChanged;
+            ddStimulusMode.DataSource = Enum.GetNames(typeof(StimulusMode));
         }
-
-        private void TimeLineControl_TimeLineChanged(object sender, EventArgs e)
-        {
-            stimulusChanged?.Invoke(this, EventArgs.Empty);
-        }
-
         public override string ToString()
         {
-            string activeStatus = !cbActive.Checked ? " (inactive)" :
-                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
-                "";
-            return GetStimulus().ToString() + activeStatus;
+            if (DesignMode)
+                return base.ToString();
+            return GetStimulus().ToString();
         }
         private void ddStimulusMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (ddStimulusMode.Text)
+            StimulusMode mode = (StimulusMode)Enum.Parse(typeof(StimulusMode), ddStimulusMode.Text);
+            switch (mode)
             {
-                case "Gaussian":
+                case StimulusMode.Gaussian:
                     lValue1.Text = "Mean";
                     lValue2.Text = "StdDev";
                     break;
-                case "Ramp":
+                case StimulusMode.Ramp:
                     lValue1.Text = "Start Value";
                     lValue2.Text = "End Value";
                     break;
-                case "Step":
+                case StimulusMode.Step:
                     lValue1.Text = "Value";
                     lValue2.Text = "Noise";
                     break;
+                case StimulusMode.Sinusoidal:
+                    lValue1.Text = "Amplitude";
+                    lValue2.Text = "Frequency";
+                    break;
+                default:
+                    break;
             }
-            if (ddStimulusMode.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
+            //if (ddStimulusMode.Focused)
+            //    stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetStimulus(List<CellPoolTemplate> pools, StimulusTemplate stim)
+        public void SetStimulus(StimulusSettings stim)
         {
-            ddTargetPool.Items.Clear();
-
-            if (pools == null || pools.Count == 0) return;
-
             if (stim == null)
                 stim = new();
-            ddTargetPool.Items.AddRange(pools.ToArray());
 
-            ddStimulusMode.Text = stim.Stimulus_ms?.Mode.ToString();
-            eValue1.Text = stim.Stimulus_ms?.Value1.ToString();
-            eValue2.Text = stim.Stimulus_ms?.Value2.ToString();
-            ddTargetPool.Text = stim.TargetPool;
-            if (!ddTargetSomites.Items.Contains(stim.TargetSomite) && stim.TargetSomite != null)
-                ddTargetSomites.Items.Add(stim.TargetSomite);
-            ddTargetSomites.Text = stim.TargetSomite;
-            if (!ddTargetCells.Items.Contains(stim.TargetCell) && stim.TargetCell != null)
-                ddTargetCells.Items.Add(stim.TargetCell);
-            ddTargetCells.Text = stim.TargetCell;
-            ddSagittalPosition.Text = stim.LeftRight;
-            cbActive.Checked = stim.Active;
-
-            if (stim.Stimulus_ms != null)
-                timeLineControl.SetTimeLine(stim.Stimulus_ms.TimeSpan_ms);
+            ddStimulusMode.Text = stim.Mode.ToString();
+            eValue1.Text = stim.Value1.ToString();
+            eValue2.Text = stim.Value2.ToString();
         }
 
-        public StimulusTemplate GetStimulus()
+        public StimulusSettings GetStimulus()
         {
-            StimulusTemplate stim = new()
-            {
-                TargetPool = ddTargetPool.Text,
-                TargetSomite = ddTargetSomites.Text,
-                TargetCell = ddTargetCells.Text,
-                LeftRight = ddSagittalPosition.Text
-            };
-
-            StimulusMode stimMode = ddStimulusMode.Text == "Gaussian" ? StimulusMode.Gaussian :
-                ddStimulusMode.Text == "Ramp" ? StimulusMode.Ramp :
-                StimulusMode.Step;
+            StimulusMode stimMode = (StimulusMode)Enum.Parse(typeof(StimulusMode), ddStimulusMode.Text);
 
             if (!double.TryParse(eValue1.Text, out double value1))
                 value1 = 0;
             if (!double.TryParse(eValue2.Text, out double value2))
                 value2 = 0;
 
-            stim.Active = cbActive.Checked;
-            TimeLine tl = timeLineControl.GetTimeLine();
-            stim.Stimulus_ms = new Stimulus(stimMode, tl, value1, value2);
+            StimulusSettings stim = new()
+            {
+                Mode = stimMode,
+                Value1 = value1,
+                Value2 = value2
+            };
             return stim;
         }
 
         private void eValue1_TextChanged(object sender, EventArgs e)
         {
-             if (eValue1.Focused)
+            if (eValue1.Focused)
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -110,36 +86,6 @@ namespace SiliFish.UI.Controls
             if (eValue2.Focused)
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
-
-        private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddTargetPool.Focused)
-            {
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-        private void ddTargetSomites_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddTargetSomites.Text == "All Somites")
-                ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            else 
-                ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-        }
-
-        private void ddTargetCell_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddTargetCells.Text == "All Cells")
-                ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            else
-                ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-        }
-        private void ddSagittalPosition_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddSagittalPosition.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
-
-        }
-
 
     }
 }
