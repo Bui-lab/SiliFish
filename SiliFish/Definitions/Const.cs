@@ -1,6 +1,4 @@
-﻿
-
-namespace SiliFish.Helpers
+﻿namespace SiliFish.Definitions
 {
     public class Const
     {

@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,6 +12,7 @@ namespace SiliFish.ModelUnits
     {
         public string CellGroup { get; set; }
         public string Description { get; set; }
+        public List<string> Attachments { get; set; } = new();
         public CellType CellType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
@@ -91,7 +93,7 @@ namespace SiliFish.ModelUnits
                     $"Position: {Position}\r\n" +
                     $"# of cells: {NumOfCells}{persomite}\r\n" +
                     $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
-                    $"TimeLine: {TimeLine}\r\n" +
+                    $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
             }
         }
@@ -120,7 +122,7 @@ namespace SiliFish.ModelUnits
             PerSomiteOrTotal = cpl.PerSomiteOrTotal;
             SpatialDistribution = new SpatialDistribution(cpl.SpatialDistribution);
             _ConductionVelocity = cpl._ConductionVelocity?.CreateCopy();
-            TimeLine = new TimeLine(cpl.TimeLine);
+            TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
 
     }

@@ -1,5 +1,5 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Helpers;
+using SiliFish.Definitions;
 using SiliFish.UI;
 using SiliFish.UI.Extensions;
 

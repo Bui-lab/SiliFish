@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
@@ -108,18 +109,18 @@ namespace SiliFish.PredefinedModels
             double multiplierleft2 = stim_mode == StimulusMode.Step ? 0 : multiplierleft; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
             double multiplierright2 = stim_mode == StimulusMode.Step ? 0 : multiplierright; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
 
-            Stimulus stimLeft = new(stim_mode, tlLeft, stim_value1 * multiplierleft, stim_value2 * multiplierleft2);
+            Stimulus stimLeft = new(new StimulusSettings( stim_mode, stim_value1 * multiplierleft, stim_value2 * multiplierleft2), tlLeft);
             TimeLine tlRight= new();
             tlRight.AddTimeRange(this.tasyncdelay);
-            Stimulus stimRight = new(stim_mode, tlRight, stim_value1 * multiplierright, stim_value2 * multiplierright2);
+            Stimulus stimRight = new(new StimulusSettings(stim_mode, stim_value1 * multiplierright, stim_value2 * multiplierright2), tlRight);
 
             for (int i = 0; i < nIC; i++)
             {
                 L_IC.AddCell(new Neuron("IC", seq: i + 1, ic_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 1.0 * GetXNoise(), -1), cv: cv, stim: stimLeft));
                 R_IC.AddCell(new Neuron("IC", seq: i + 1, ic_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 1.0 * GetXNoise(), 1), cv: cv, stim: stimRight));
             }
-            NeuronPools.Add(L_IC);
-            NeuronPools.Add(R_IC);
+            neuronPools.Add(L_IC);
+            neuronPools.Add(R_IC);
 
             MembraneDynamics mn_dyn = new() { a = 0.5, b = 0.1, c = -50, d = 100, Vmax = 10, Vr = -60, Vt = -50, k = 0.05, Cm = 20 };
             L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Left, 4, Color.Red);
@@ -129,8 +130,8 @@ namespace SiliFish.PredefinedModels
                 L_MN.AddCell(new Neuron("MN", seq: i + 1, mn_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
                 R_MN.AddCell(new Neuron("MN", seq: i + 1, mn_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), 1), cv: cv));
             }
-            NeuronPools.Add(L_MN);
-            NeuronPools.Add(R_MN);
+            neuronPools.Add(L_MN);
+            neuronPools.Add(R_MN);
 
             MembraneDynamics v0d_dyn = new() { a = 0.02, b = 0.1, c = -30, d = 3.75, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
             L_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0d", SagittalPlane.Left, 1, Color.Green);
@@ -140,8 +141,8 @@ namespace SiliFish.PredefinedModels
                 L_V0d.AddCell(new Neuron("V0d", seq: i + 1, v0d_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
                 R_V0d.AddCell(new Neuron("V0d", seq: i + 1, v0d_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), 1), cv: cv));
             }
-            NeuronPools.Add(L_V0d);
-            NeuronPools.Add(R_V0d);
+            neuronPools.Add(L_V0d);
+            neuronPools.Add(R_V0d);
 
             MembraneDynamics v0v_dyn = new() { a = 0.02, b = 0.1, c = -30, d = 11.6, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
             L_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0v", SagittalPlane.Left, 2, Color.Blue);
@@ -151,8 +152,8 @@ namespace SiliFish.PredefinedModels
                 L_V0v.AddCell(new Neuron("V0v", seq: i + 1, v0v_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), -1), cv: cv));
                 R_V0v.AddCell(new Neuron("V0v", seq: i + 1, v0v_dyn, sigma_dyn, init_v: -65, init_u: 0, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), 1), cv: cv));
             }
-            NeuronPools.Add(L_V0v);
-            NeuronPools.Add(R_V0v);
+            neuronPools.Add(L_V0v);
+            neuronPools.Add(R_V0v);
 
             MembraneDynamics v2a_dyn = new() { a = 0.5, b = 0.1, c = -50, d = 100, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
             L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
@@ -162,8 +163,8 @@ namespace SiliFish.PredefinedModels
                 L_V2a.AddCell(new Neuron("V2a", seq: i + 1, v2a_dyn, sigma_dyn, init_v: -64, init_u: -16, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), -1), cv: cv));
                 R_V2a.AddCell(new Neuron("V2a", seq: i + 1, v2a_dyn, sigma_dyn, init_v: -64, init_u: -16, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), 1), cv: cv));
             }
-            NeuronPools.Add(L_V2a);
-            NeuronPools.Add(R_V2a);
+            neuronPools.Add(L_V2a);
+            neuronPools.Add(R_V2a);
 
             L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Left, 5, Color.Purple);
             R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Right, 5, Color.Purple);
@@ -172,8 +173,8 @@ namespace SiliFish.PredefinedModels
                 L_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, init_v: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, -1)));
                 R_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, init_v: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, 1)));
             }
-            MuscleCellPools.Add(L_Muscle);
-            MuscleCellPools.Add(R_Muscle);
+            musclePools.Add(L_Muscle);
+            musclePools.Add(R_Muscle);
         }
 
 

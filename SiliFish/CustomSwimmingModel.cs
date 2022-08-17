@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 
@@ -13,9 +14,9 @@ namespace SiliFish
     {
         public CustomSwimmingModel(SwimmingModelTemplate swimmingModelTemplate)
         {
-            NeuronPools.Clear();
-            MuscleCellPools.Clear();
-            PoolConnections.Clear();
+            neuronPools.Clear();
+            musclePools.Clear();
+            poolConnections.Clear();
 
             initialized = false;
 
@@ -29,16 +30,16 @@ namespace SiliFish
                 if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Left)
                 {
                     if (pool.CellType == CellType.Neuron)
-                        NeuronPools.Add(new CellPool(this, pool, SagittalPlane.Left));
+                        neuronPools.Add(new CellPool(this, pool, SagittalPlane.Left));
                     else if (pool.CellType == CellType.MuscleCell)
-                        MuscleCellPools.Add(new CellPool(this, pool, SagittalPlane.Left));
+                        musclePools.Add(new CellPool(this, pool, SagittalPlane.Left));
                 }
                 if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Right)
                 {
                     if (pool.CellType == CellType.Neuron)
-                        NeuronPools.Add(new CellPool(this, pool, SagittalPlane.Right));
+                        neuronPools.Add(new CellPool(this, pool, SagittalPlane.Right));
                     else if (pool.CellType == CellType.MuscleCell)
-                        MuscleCellPools.Add(new CellPool(this, pool, SagittalPlane.Right));
+                        musclePools.Add(new CellPool(this, pool, SagittalPlane.Right));
                 }
             }
             #endregion
@@ -46,11 +47,11 @@ namespace SiliFish
             #region Generate Gap Junctions and Chemical Synapses
             foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
             {
-                CellPool leftSource = NeuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightSource = NeuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
+                CellPool leftSource = neuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightSource = neuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
 
-                CellPool leftTarget = NeuronPools.Union(MuscleCellPools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightTarget = NeuronPools.Union(MuscleCellPools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
+                CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
 
                 if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
                 {
@@ -86,17 +87,16 @@ namespace SiliFish
             {
                 foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli)
                 {
-                    if (stimulus.LeftRight == "")
-                        stimulus.LeftRight = "Left/Right";
+                    Stimulus stim = new(stimulus.StimulusSettings, stimulus.TimeLine_ms);
                     if (stimulus.LeftRight.Contains("Left"))
                     {
-                        CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
-                        target?.ApplyStimulus(stimulus.Stimulus_ms, stimulus.TargetSomite, stimulus.TargetCell);
+                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
+                        target?.ApplyStimulus(stim, stimulus.TargetSomite, stimulus.TargetCell);
                     }
                     if (stimulus.LeftRight.Contains("Right"))
                     {
-                        CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
-                        target?.ApplyStimulus(stimulus.Stimulus_ms, stimulus.TargetSomite, stimulus.TargetCell);
+                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
+                        target?.ApplyStimulus(stim, stimulus.TargetSomite, stimulus.TargetCell);
                     }
                 }
             }
@@ -116,16 +116,10 @@ namespace SiliFish
         {
             this.Time = new double[nmax];
             InitDataVectors(nmax);
-            if (!NeuronPools.Any(p => p.GetCells().Any()) &&
-                !MuscleCellPools.Any(p => p.GetCells().Any()))
+            if (!neuronPools.Any(p => p.GetCells().Any()) &&
+                !musclePools.Any(p => p.GetCells().Any()))
                 return;
             initialized = true;
-        }
-
-        public override List<string> CheckModel()
-        {
-            //if (NeuronPools.Any(p=>p.PositionLeftRight))
-            return null;
         }
     }
 }

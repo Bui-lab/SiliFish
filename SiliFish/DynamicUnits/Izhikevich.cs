@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 
 namespace SiliFish.DynamicUnits
 {
-    class Izhikevich_9P
+       class Izhikevich_9P
     {
         //a, b, c, d, are the parameters for the membrane potential dynamics
         private double a;
@@ -114,19 +116,42 @@ namespace SiliFish.DynamicUnits
             return V;
         }
 
-        public (double[], double[]) SolveODE(double[] I)
+        public Dynamics SolveODE(double[] I)
         {
-            int tmax = I.Length;
-            double[] Vlist = new double[tmax];
-            double[] ulist = new double[tmax];
+            bool onRise = false, onDecay = false;
+            double decayStart = 0, riseStart = 0;
+            int iMax = I.Length;
+            Dynamics dyn = new(iMax);
             bool spike = false;
-            for (int t = 0; t < tmax; t++)
+            for (int t = 0; t < iMax; t++)
             {
                 GetNextVal(I[t], ref spike);
-                Vlist[t] = V;
-                ulist[t] = u;
+                dyn.Vlist[t] = V;
+                dyn.ulist[t] = u;
+                if (onDecay && V <= 0.37 * Vmax)
+                {
+                    onDecay = false;
+                    dyn.tauDecay.Add(t - decayStart);
+                }
+                else if (onRise && riseStart > 0 && V >= 0.63 * Vmax)
+                {
+                    onRise = false;
+                    dyn.tauRise.Add(t - riseStart);
+                    riseStart = 0;
+                }
+                else if (!onRise && (V - Vt > 0))
+                {
+                    onRise = true;
+                    riseStart = t;
+                }
+                if (spike)
+                {
+                    onRise = false;
+                    onDecay = true;
+                    decayStart = t;
+                }
             }
-            return (Vlist, ulist);
+            return dyn;
         }
 
         public bool DoesSpike(double[] I, double init_v, double init_u, int warmup)
@@ -172,6 +197,7 @@ namespace SiliFish.DynamicUnits
             }
             return rheobase;
         }
+
     }
 
 

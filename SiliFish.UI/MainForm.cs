@@ -12,6 +12,7 @@ using Services;
 using Microsoft.Web.WebView2.WinForms;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+using SiliFish.Definitions;
 
 namespace SiliFish.UI
 {
@@ -19,6 +20,7 @@ namespace SiliFish.UI
     {
         SwimmingModel Model;
         bool modelRefreshMsgShown = false;
+        bool jsonRefreshMsgShown = false;
         bool modifiedPools = false;
         bool modifiedJncs = false;
 
@@ -26,7 +28,6 @@ namespace SiliFish.UI
         DoubleCoilModel dcModel;
         BeatAndGlideModel bgModel;
         CustomSwimmingModel customModel;
-        bool modelUpdated = false;
 
         SwimmingModelTemplate ModelTemplate = new();
         string htmlAnimation = "";
@@ -91,6 +92,7 @@ namespace SiliFish.UI
                 }
                 foreach (SagittalPlane sp in Enum.GetValues(typeof(SagittalPlane)))
                 {
+                    if (sp != SagittalPlane.NotSet)
                         ddPlotSagittal.Items.Add(sp.GetDisplayName());
                 }
                 ddPlotSagittal.SelectedIndex = ddPlotSagittal.Items.Count - 1;
@@ -189,9 +191,6 @@ namespace SiliFish.UI
 
         private void RefreshModel()
         {
-            if (modelUpdated && Model != null)
-                return;
-            modelUpdated = false;
             if (rbCustom.Checked)
             {
                 Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
@@ -367,7 +366,7 @@ namespace SiliFish.UI
                     Tag = "Param"
                 };
                 //insert after the general tab, keep Animation at the end
-                if (group == "Kinematics")
+                if (group == "Animation")
                     tabParams.TabPages.Add(tabPage);
                 else
                     tabParams.TabPages.Insert(tabIndex++, tabPage);
@@ -384,7 +383,7 @@ namespace SiliFish.UI
                     {
                         Text = kvp.Key[(group.Length + 1)..],
                         Height = 23,
-                        Width = 5 * maxLen,
+                        Width = 8 * maxLen,
                         TextAlign = ContentAlignment.BottomRight
                     };
                     flowPanel.Controls.Add(lbl);
@@ -808,10 +807,7 @@ namespace SiliFish.UI
             {
                 if (PlotType == PlotType.FullDyn)
                     count *= 3;
-                if (PlotType == PlotType.Stimuli)
-                    lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + count.ToString();
-                else
-                    lNumberOfPlots.Text = lNumberOfPlots.Tag + count.ToString();
+                lNumberOfPlots.Text = lNumberOfPlots.Tag + count.ToString();
                 lNumberOfPlots.Visible = true;
             }
             else
@@ -823,7 +819,7 @@ namespace SiliFish.UI
             if (ddPlotPools.SelectedIndex < 0 || ddPlotSagittal.SelectedIndex < 0)
                 return;
             string pool = ddPlotPools.Text;
-            SagittalPlane sagittal = ddPlotSagittal.Text.GetValueFromName<SagittalPlane>(SagittalPlane.Both);
+            SagittalPlane sagittal = ddPlotSagittal.Text.GetValueFromName<SagittalPlane>(SagittalPlane.NotSet);
             List<CellPool> pools = Model.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
             ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Somite)) ?? 0);
             ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Sequence)) ?? 0);
@@ -841,18 +837,14 @@ namespace SiliFish.UI
                     ddPlotSagittal.SelectedIndex =
                     ddPlotPools.SelectedIndex = -1;
                 ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled =
                     ddPlotCellSelection.Enabled =
-                    ePlotCellSelection.Enabled = 
                     ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = false;
             }
             else
             {
-                ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+                ddPlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
                 ddPlotCellSelection.Enabled =
-                    ePlotCellSelection.Enabled =
                     ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = true;
             }
@@ -923,7 +915,7 @@ namespace SiliFish.UI
             {
                 plotCellSelection = new CellSelectionStruct()
                 {
-                    SagittalPlane = ddPlotSagittal.Text.GetValueFromName(SagittalPlane.Both),
+                    SagittalPlane = ddPlotSagittal.Text.GetValueFromName(SagittalPlane.NotSet),
                     somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSelection.All),
                     nSomite = (int)ePlotSomiteSelection.Value,
                     cellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotSelection.All),
@@ -955,8 +947,6 @@ namespace SiliFish.UI
             if (Model == null || !Model.ModelRun) return;
 
             GetPlotSubset();
-            if (PlotType == PlotType.Episodes)
-                Model.SetAnimationParameters(ReadParams("Kinematics"));
             tabOutputs.SelectedTab = tabPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
@@ -1019,8 +1009,6 @@ namespace SiliFish.UI
                 if (Model == null || !Model.ModelRun) return;
 
                 GetPlotSubset();
-                if (PlotType == PlotType.Episodes)
-                    Model.SetAnimationParameters(ReadParams("Kinematics"));
                 tabOutputs.SelectedTab = tabPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
@@ -1247,9 +1235,9 @@ namespace SiliFish.UI
             int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
-            Model.SetAnimationParameters(ReadParams("Kinematics"));
             lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
 
+            Model.SetAnimationParameters(ReadParams("Animation"));
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
         }
@@ -1270,6 +1258,133 @@ namespace SiliFish.UI
 
             Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
         }
+
+        #endregion
+
+        #region JSON
+        private void eTemplateJSON_TextChanged(object sender, EventArgs e)
+        {
+            if (eTemplateJSON.Focused)
+                btnLoadTemplateJSON.Enabled = rbCustom.Checked;
+        }
+
+        private void btnDisplayTemplateJSON_Click(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+
+            if (!Model.ModelRun)
+            {
+                RefreshModel();
+            }
+            else if (!jsonRefreshMsgShown && (modifiedPools || modifiedJncs))
+            {
+                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
+                jsonRefreshMsgShown = true;
+            }
+            eTemplateJSON.Text = Util.CreateJSONFromObject(ModelTemplate);
+            btnLoadTemplateJSON.Enabled = false;
+        }
+
+        private void btnLoadTemplateJSON_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), eTemplateJSON.Text) is SwimmingModelTemplate temp)
+                {
+
+                    ModelTemplate = temp;
+                    ModelTemplate.LinkObjects();
+                    LoadModelTemplate();
+                    RefreshModelFromTemplate();
+                    MessageBox.Show("Updated template is loaded.");
+                }
+            }
+            catch (JsonException exc)
+            {
+                WarningMessage($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}");
+            }
+            catch (Exception exc)
+            {
+                ExceptionHandling("Read template from JSON", exc);
+            }
+        }
+        private void linkSaveTemplateJSON_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileJson.ShowDialog() == DialogResult.OK)
+                    eTemplateJSON.SaveFile(saveFileJson.FileName, RichTextBoxStreamType.PlainText);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
+
+        private void eModelJSON_TextChanged(object sender, EventArgs e)
+        {
+            if (eModelJSON.Focused)
+                btnLoadModelJSON.Enabled = true;
+        }
+
+        private void btnDisplayModelJSON_Click(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+
+            if (!Model.ModelRun)
+            {
+                RefreshModel();
+            }
+            else if (!jsonRefreshMsgShown && (modifiedPools || modifiedJncs))
+            {
+                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
+                jsonRefreshMsgShown = true;
+            }
+            eModelJSON.Text = Util.CreateJSONFromObject(Model);
+            btnLoadModelJSON.Enabled = false;
+        }
+
+        private void btnLoadModelJSON_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Util.CreateObjectFromJSON(typeof(SwimmingModel), eModelJSON.Text) is SwimmingModel model)
+                {
+                    Model = model;
+                    if (Model is SingleCoilModel sc)
+                        scModel = sc;
+                    else if (Model is DoubleCoilModel dc)
+                        dcModel = dc;
+                    else if (Model is BeatAndGlideModel bg)
+                        bgModel = bg;
+                    else
+                        customModel = model as CustomSwimmingModel;
+                }
+            }
+            catch (JsonException exc)
+            {
+                WarningMessage($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}");
+            }
+            catch (Exception exc)
+            {
+                ExceptionHandling("Read template from JSON", exc);
+            }
+        }
+
+        private void linkSaveModelJSON_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+
+                if (saveFileJson.ShowDialog() == DialogResult.OK)
+                    eModelJSON.SaveFile(saveFileJson.FileName, RichTextBoxStreamType.PlainText);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
+
 
         #endregion
 
@@ -1508,14 +1623,14 @@ namespace SiliFish.UI
         private StimulusTemplate OpenStimulusDialog(StimulusTemplate stim)
         {
             ControlContainer frmControl = new();
-            StimulusControl sc = new();
+            AppliedStimulusControl sc = new();
 
             sc.SetStimulus(ModelTemplate.CellPoolTemplates, stim);
             frmControl.AddControl(sc);
             frmControl.Text = stim?.ToString() ?? "New Stimulus";
 
             if (frmControl.ShowDialog() == DialogResult.OK)
-                return sc.GetStimulus();
+                return sc.GetStimulusTemplate();
             return null;
         }
         private void listStimuli_AddItem(object sender, EventArgs e)
@@ -1794,6 +1909,8 @@ namespace SiliFish.UI
             eAnimationdt.Increment = edt.Value;
             eAnimationdt.Value = 10 * edt.Value;
         }
+
+
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {

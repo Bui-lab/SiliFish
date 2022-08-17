@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace SiliFish.ModelUnits
             ConnectionType = ipt.ConnectionType;
             SynapseParameters = new SynapseParameters(ipt.SynapseParameters);
             Active = ipt.Active;
-            TimeLine = new TimeLine(ipt.TimeLine);
+            TimeLine_ms = new TimeLine(ipt.TimeLine_ms);
         }
 
         public string GeneratedName()
@@ -99,7 +100,7 @@ namespace SiliFish.ModelUnits
         }
         public override string ToString()
         {
-            string activeStatus = JncActive && TimeLine.IsBlank() ? "" :
+            string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
                 JncActive ? " (timeline)" : " (inactive)";
             return String.Format("{0} [{1}]/{2}{3}", Name, ConnectionType.ToString(), AxonReachMode.ToString(), activeStatus);
         }
@@ -121,7 +122,7 @@ namespace SiliFish.ModelUnits
                     $"Mode: {AxonReachMode}\r\n" +
                     $"Type: {ConnectionType}\r\n" +
                     $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +
-                    $"TimeLine: {TimeLine}\r\n" +
+                    $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
             }
         }

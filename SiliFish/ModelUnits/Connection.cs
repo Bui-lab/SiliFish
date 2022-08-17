@@ -1,5 +1,6 @@
 ﻿using System;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 
@@ -30,7 +31,8 @@ namespace SiliFish.ModelUnits
 
         public bool WithinSomite { get; set; } = true;
         public bool OtherSomite { get; set; } = true;
-        public bool Autapse { get; set; } = false; 
+        public bool Autapse { get; set; } = false;
+        public bool SomiteBased { get; set; } = false;
 
         string SomiteReach
         {
@@ -54,6 +56,7 @@ namespace SiliFish.ModelUnits
             WithinSomite = cr.WithinSomite;
             OtherSomite = cr.OtherSomite;
             Autapse = cr.Autapse;
+            SomiteBased = cr.SomiteBased;
         }
         internal object GetTooltip()
         {
@@ -81,7 +84,8 @@ namespace SiliFish.ModelUnits
                 return false;
             if (!Autapse && cell1 == cell2)
                 return false;
-            double diff_x = (cell1.X - cell2.X) * noise;//positive values mean cell1 is more caudal
+            double diff_x = SomiteBased ? cell1.Somite - cell2.Somite :
+                (cell1.X - cell2.X) * noise;//positive values mean cell1 is more caudal
             if (diff_x > 0 && diff_x > AscendingReach) //Not enough ascending reach 
                 return false;
             else if (diff_x < 0 && Math.Abs(diff_x) > DescendingReach) //Not enough descending reach 
@@ -180,7 +184,7 @@ namespace SiliFish.ModelUnits
             VoltageDiffFrom2To1 = v1 - v2;
         }
 
-        public double GetGapCurrent(Neuron n, int tIndex)
+        public double GetGapCurrent(Cell n, int tIndex)
         {
             double current = IsActive(tIndex) ? Conductance * VoltageDiff : 0;
 

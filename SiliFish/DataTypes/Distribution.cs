@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 
 namespace SiliFish.DataTypes
@@ -66,8 +67,6 @@ namespace SiliFish.DataTypes
         public static Distribution GetOfDerivedType(string json)
         {
             Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
-            if (dist != null)
-            {
             if (dist.DistType == typeof(Constant_NoDistribution).ToString())
                 return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
             if (dist.DistType == typeof(UniformDistribution).ToString())
@@ -78,7 +77,6 @@ namespace SiliFish.DataTypes
                 return JsonSerializer.Deserialize<GaussianDistribution>(json);
             if (dist.DistType == typeof(BimodalDistribution).ToString())
                 return JsonSerializer.Deserialize<BimodalDistribution>(json);
-            }
             return dist;
         }
         public static double[] GenerateNRandomNumbers(int n, double range)
@@ -137,26 +135,28 @@ namespace SiliFish.DataTypes
         public double NoiseStdDev { get; set; } = 0;
         public Constant_NoDistribution()
         { }
-        public Constant_NoDistribution(double val, bool absolute, bool angular, double noiseStdDev)
-            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, absolute, angular)
+        public Constant_NoDistribution(double val, bool angular, double noiseStdDev)
+            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, true, angular)
         {
             NoiseStdDev = noiseStdDev;
         }
 
         public override Distribution CreateCopy()
         {
-            return new Constant_NoDistribution(RangeStart, Absolute, Angular, NoiseStdDev);
+            return new Constant_NoDistribution(RangeStart, Angular, NoiseStdDev);
         }
 
         public override double[] GenerateNNumbers(int n, double range)
         {
             if (Random == null)
-                Random = new Random(); 
-            double[] result = new double[n];
+                Random = new Random(); double[] result = new double[n];
             for (int i = 0; i < n; i++)
             {
-                double noise = NoiseStdDev > 0 ? Random.Gauss(0, NoiseStdDev) : 0;
-                result[i] = LowerLimit + noise;
+                double noise = NoiseStdDev > 0 ? Random.Gauss(1, NoiseStdDev) : 1;
+                if (LowerLimit < Const.epsilon) //noise will have no effect
+                    result[i] = 1 - noise;
+                else
+                    result[i] = LowerLimit * noise;
             }
             return result;
         }
@@ -195,7 +195,7 @@ namespace SiliFish.DataTypes
         public double Stddev { get; set; } = 0;
         public override string ToString()
         {
-            return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
+            return String.Format("{0}\r\nµ:{1:0.#####}; SD:{2:0.#####}", base.ToString(), Mean, Stddev);
         }
 
         protected override void FlipOnYAxis()

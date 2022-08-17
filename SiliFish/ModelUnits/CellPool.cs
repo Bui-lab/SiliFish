@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.Helpers;
 
 namespace SiliFish.ModelUnits
@@ -67,7 +68,10 @@ namespace SiliFish.ModelUnits
                 return FTS;
             }
         }
-
+        public CellPool()
+        {
+            Cells = new List<Cell>();
+        }
         public CellPool(SwimmingModel model, CellPoolTemplate template, SagittalPlane leftright)
         {
             Model = model;

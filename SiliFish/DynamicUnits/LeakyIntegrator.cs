@@ -10,6 +10,9 @@ namespace SiliFish.DynamicUnits
         public double R, C;
 
         [JsonIgnore]
+        public double TimeConstant { get { return R * C; } }
+
+        [JsonIgnore]
         double V; //keeps the current v value 
         public Leaky_Integrator(double R, double C, double init_v)
         {
@@ -47,23 +50,23 @@ namespace SiliFish.DynamicUnits
         {
             double I = Stim;
             // ODE eqs
-            double dv = -1 / (R * C) * V + I / C;
+            double dv = (-1 / (R * C)) * V + I / C;
             double vNew = V + dv * RunParam.static_dt;
             V = vNew;
 
             return V;
         }
-        public double[] SolveODE(double[] I)
+        public Dynamics SolveODE(double[] I)
         {
-            int tmax = I.Length;
-            double[] Vlist = new double[tmax];
+            int iMax = I.Length;
+            Dynamics dyn = new(iMax);
 
-            for (int t = 0; t < tmax; t++)
+            for (int t = 0; t < iMax; t++)
             {
                 GetNextVal(I[t]);
-                Vlist[t] = this.V;
+                dyn.Vlist[t] = this.V;
             }
-            return Vlist;
+            return dyn;
         }
     }
 
