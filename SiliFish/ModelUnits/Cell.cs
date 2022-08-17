@@ -194,7 +194,7 @@ namespace SiliFish.ModelUnits
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = new Izhikevich_9P(null, 0, 0);
+            Core = new Izhikevich_9P(null);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
@@ -210,7 +210,7 @@ namespace SiliFish.ModelUnits
         /// <summary>
         /// neuron constructor called from predefined models
         /// </summary>
-        public Neuron(string group, int seq, MembraneDynamics dyn, double sigma_dyn, double init_v, double init_u,
+        public Neuron(string group, int seq, MembraneDynamics dyn, double sigma_dyn,
             Coordinate coor, double cv, Stimulus stim = null, TimeLine timeline = null)
         {
             CellGroup = group;
@@ -219,7 +219,7 @@ namespace SiliFish.ModelUnits
             if (sigma_dyn > 0)
                 dyn = dyn.RandomizedDynamics(sigma_dyn);
 
-            Core = new Izhikevich_9P(dyn, init_v, init_u);
+            Core = new Izhikevich_9P(dyn);
             coordinate = coor;
             Stimulus = stim;
             GapJunctions = new List<GapJunction>();
@@ -386,7 +386,7 @@ namespace SiliFish.ModelUnits
         {
             Parameters = cellTemp.Parameters;
         }
-        public MuscleCell(string group, int seq, double R, double C, double init_v, double sigma_dyn, Coordinate coor, TimeLine timeline = null)
+        public MuscleCell(string group, int seq, double R, double C, double Vr, double sigma_dyn, Coordinate coor, TimeLine timeline = null)
         {
             CellGroup = group;
             Sequence = seq;
@@ -395,9 +395,8 @@ namespace SiliFish.ModelUnits
             {
                 R *= SwimmingModel.rand.Gauss(1, sigma_dyn);
                 C *= SwimmingModel.rand.Gauss(1, sigma_dyn);
-                init_v *= SwimmingModel.rand.Gauss(1, sigma_dyn);
             }
-            Core = new Leaky_Integrator(R, C, init_v);
+            Core = new Leaky_Integrator(R, C, Vr);
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
             coordinate = coor;

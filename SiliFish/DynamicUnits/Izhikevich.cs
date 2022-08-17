@@ -28,10 +28,8 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
 
-        double init_v;
-        double init_u;
 
-        public Izhikevich_9P(MembraneDynamics dyn, double init_v, double init_u)
+        public Izhikevich_9P(MembraneDynamics dyn)
         {
             a = dyn?.a ?? 0;
             b = dyn?.b ?? 0;
@@ -42,10 +40,8 @@ namespace SiliFish.DynamicUnits
             Vt = dyn?.Vt ?? 0;
             k = dyn?.k ?? 0;
             Cm = dyn?.Cm ?? 0;
-            V = init_v;
-            u = init_u;
-            this.init_v = init_v;
-            this.init_u = init_u;
+            V = Vr;
+            u = 0;
         }
 
         public virtual Dictionary<string, object> GetParameters()
@@ -60,9 +56,7 @@ namespace SiliFish.DynamicUnits
                 { "Izhikevich_9P.V_r", Vr },
                 { "Izhikevich_9P.V_t", Vt },
                 { "Izhikevich_9P.k", k },
-                { "Izhikevich_9P.Cm", Cm },
-                { "Izhikevich_9P.V", V },
-                { "Izhikevich_9P.u", u }
+                { "Izhikevich_9P.Cm", Cm }
             };
             return paramDict;
         }
@@ -80,8 +74,6 @@ namespace SiliFish.DynamicUnits
             Vt = paramExternal.Read("Izhikevich_9P.V_t", Vt);
             k = paramExternal.Read("Izhikevich_9P.k", k);
             Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
-            init_v = V = paramExternal.Read("Izhikevich_9P.V", V);
-            init_u = u = paramExternal.Read("Izhikevich_9P.u", u);
         }
 
         public virtual string GetInstanceParams()
@@ -154,12 +146,12 @@ namespace SiliFish.DynamicUnits
             return dyn;
         }
 
-        public bool DoesSpike(double[] I, double init_v, double init_u, int warmup)
+        public bool DoesSpike(double[] I, int warmup)
         {
             bool spike = false;
             int tmax = I.Length;
-            V = init_v;
-            u = init_u;
+            V = Vr;
+            u = 0;
             for (int t = 0; t < tmax; t++)
             {
                 GetNextVal(I[t], ref spike);
@@ -184,7 +176,7 @@ namespace SiliFish.DynamicUnits
             {
                 foreach (int i in Enumerable.Range(warmup, infinity))
                     I[i] = curI;
-                if (DoesSpike(I, init_v, init_u, warmup))
+                if (DoesSpike(I, warmup))
                 {
                     rheobase = curI;
                     curI = (curI + minI) / 2;

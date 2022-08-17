@@ -85,7 +85,8 @@ namespace SiliFish
 
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
-        protected List<InterPool> poolConnections = new();
+        protected List<InterPool> gapPoolConnections = new();
+        protected List<InterPool> chemPoolConnections = new();
 
         [JsonIgnore]
         public double[] TimeArray { get { return Time; } }
@@ -143,8 +144,31 @@ namespace SiliFish
                 musclePools = value;
             }
         }
-        public List<InterPool> ChemPoolConnections { get { return poolConnections.Where(con => con.IsChemical).ToList(); } }
-        public List<InterPool> GapPoolConnections { get { return poolConnections.Where(con => !con.IsChemical).ToList(); } }
+        public List<InterPool> ChemPoolConnections 
+        { 
+            get 
+            { 
+                return chemPoolConnections; 
+            }
+            set
+            {
+                //called by JSON
+                chemPoolConnections = value;
+            }
+        }
+
+        public List<InterPool> GapPoolConnections
+        {
+            get
+            {
+                return gapPoolConnections;
+            }
+            set
+            {
+                //called by JSON
+                gapPoolConnections = value;
+            }
+        }
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {
             double minX = 999;
@@ -422,26 +446,27 @@ namespace SiliFish
 
         protected virtual void InitStructures(int nmax)
         {
-            this.Time = new double[nmax];
+            Time = new double[nmax];
             neuronPools.Clear();
             musclePools.Clear();
-            poolConnections.Clear();
-            this.InitNeurons();
-            this.InitSynapsesAndGapJunctions();
-            this.InitDataVectors(nmax);
+            gapPoolConnections.Clear();
+            chemPoolConnections.Clear(); 
+            InitNeurons();
+            InitSynapsesAndGapJunctions();
+            InitDataVectors(nmax);
             initialized = true;
         }
 
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            poolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
+            gapPoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, probability);
         }
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            poolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
+            chemPoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, probability);
         }
 
@@ -451,7 +476,7 @@ namespace SiliFish
             CellReach cr = template.CellReach;
             cr.SomiteBased = NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            poolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
+            gapPoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability);
         }
 
@@ -462,7 +487,7 @@ namespace SiliFish
             cr.SomiteBased = NumberOfSomites > 0;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine_ms;
-            poolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
+            chemPoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability);
         }
 

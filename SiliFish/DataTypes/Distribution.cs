@@ -67,16 +67,19 @@ namespace SiliFish.DataTypes
         public static Distribution GetOfDerivedType(string json)
         {
             Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
-            if (dist.DistType == typeof(Constant_NoDistribution).ToString())
-                return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
-            if (dist.DistType == typeof(UniformDistribution).ToString())
-                return JsonSerializer.Deserialize<UniformDistribution>(json);
-            if (dist.DistType == typeof(SpacedDistribution).ToString())
-                return JsonSerializer.Deserialize<SpacedDistribution>(json); 
-            if (dist.DistType == typeof(GaussianDistribution).ToString())
-                return JsonSerializer.Deserialize<GaussianDistribution>(json);
-            if (dist.DistType == typeof(BimodalDistribution).ToString())
-                return JsonSerializer.Deserialize<BimodalDistribution>(json);
+            if (dist != null)
+            {
+                if (dist.DistType == typeof(Constant_NoDistribution).ToString())
+                    return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
+                if (dist.DistType == typeof(UniformDistribution).ToString())
+                    return JsonSerializer.Deserialize<UniformDistribution>(json);
+                if (dist.DistType == typeof(SpacedDistribution).ToString())
+                    return JsonSerializer.Deserialize<SpacedDistribution>(json);
+                if (dist.DistType == typeof(GaussianDistribution).ToString())
+                    return JsonSerializer.Deserialize<GaussianDistribution>(json);
+                if (dist.DistType == typeof(BimodalDistribution).ToString())
+                    return JsonSerializer.Deserialize<BimodalDistribution>(json);
+            }
             return dist;
         }
         public static double[] GenerateNRandomNumbers(int n, double range)
@@ -195,7 +198,7 @@ namespace SiliFish.DataTypes
         public double Stddev { get; set; } = 0;
         public override string ToString()
         {
-            return String.Format("{0}\r\nµ:{1:0.#####}; SD:{2:0.#####}", base.ToString(), Mean, Stddev);
+            return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
         }
 
         protected override void FlipOnYAxis()

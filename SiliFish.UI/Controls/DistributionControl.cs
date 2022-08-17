@@ -114,7 +114,6 @@ namespace SiliFish.UI.Controls
                 start = 0;
             if (!double.TryParse(eRangeEnd.Text, out double end))
                 end = 100;
-            if (start < 0) start = 0;
             if (Angular && end > 180) end = 180;
             else if (!Angular && !absolute && end > 100) end = 100;
 

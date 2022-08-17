@@ -28,6 +28,7 @@ namespace SiliFish.UI
         DoubleCoilModel dcModel;
         BeatAndGlideModel bgModel;
         CustomSwimmingModel customModel;
+        bool modelUpdated = false;
 
         SwimmingModelTemplate ModelTemplate = new();
         string htmlAnimation = "";
@@ -191,6 +192,9 @@ namespace SiliFish.UI
 
         private void RefreshModel()
         {
+            if (modelUpdated && Model != null)
+                return;
+            modelUpdated = false;
             if (rbCustom.Checked)
             {
                 Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
@@ -1348,17 +1352,10 @@ namespace SiliFish.UI
         {
             try
             {
-                if (Util.CreateObjectFromJSON(typeof(SwimmingModel), eModelJSON.Text) is SwimmingModel model)
+                if (Util.CreateObjectFromJSON(typeof(CustomSwimmingModel), eModelJSON.Text) is CustomSwimmingModel model)
                 {
-                    Model = model;
-                    if (Model is SingleCoilModel sc)
-                        scModel = sc;
-                    else if (Model is DoubleCoilModel dc)
-                        dcModel = dc;
-                    else if (Model is BeatAndGlideModel bg)
-                        bgModel = bg;
-                    else
-                        customModel = model as CustomSwimmingModel;
+                    Model = customModel = model;
+                    modelUpdated = true;
                 }
             }
             catch (JsonException exc)
