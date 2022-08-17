@@ -52,7 +52,7 @@ namespace SiliFish.UI.Controls
         {
             CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
             Cell cell = null;
-            double cv = poolTemplate.ConductionVelocity != null ?
+            double cv = poolTemplate?.ConductionVelocity != null ?
                 ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, 0)[0] :
                 0;
             if (cellType == CellType.Neuron)

@@ -44,6 +44,7 @@ namespace SiliFish.Extensions
                             var str = JsonSerializer.Deserialize<string>(json);
                             return (T)Convert.ChangeType(str, typeof(T));
                         }
+                        //Distribution dist = Distribution.GetOfDerivedType(json);
                         return JsonSerializer.Deserialize<T>(json);
                     }
                     return (T)Convert.ChangeType(val, typeof(T));

@@ -69,24 +69,31 @@ namespace SiliFish.UI.Controls
             FillConnectionTypes();
             if (!ddSourcePool.Focused)
                 return;
-            if (Parameters != null && Parameters.Any() && ddSourcePool.SelectedItem is CellPoolTemplate pool)
+            if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
-                switch (pool.NTMode)
+                if (pool.Parameters != null && pool.Parameters.Any())
                 {
-                    case NeuronClass.Glycinergic:
-                        numEReversal.Value = Parameters.Read("Dynamic.E_gly", numEReversal.Value);
-                        break;
-                    case NeuronClass.GABAergic:
-                        numEReversal.Value = Parameters.Read("Dynamic.E_gaba", numEReversal.Value);
-                        break;
-                    case NeuronClass.Glutamatergic:
-                        numEReversal.Value = Parameters.Read("Dynamic.E_glu", numEReversal.Value);
-                        break;
-                    case NeuronClass.Cholinergic:
-                        numEReversal.Value = Parameters.Read("Dynamic.E_ach", numEReversal.Value);
-                        break;
-                    default:
-                        break;
+                    numVthreshold.Value = pool.Parameters.Read("Izhikevich_9P.V_t", numVthreshold.Value);
+                }
+                if (Parameters != null && Parameters.Any())
+                {
+                    switch (pool.NTMode)
+                    {
+                        case NeuronClass.Glycinergic:
+                            numEReversal.Value = Parameters.Read("Dynamic.E_gly", numEReversal.Value);
+                            break;
+                        case NeuronClass.GABAergic:
+                            numEReversal.Value = Parameters.Read("Dynamic.E_gaba", numEReversal.Value);
+                            break;
+                        case NeuronClass.Glutamatergic:
+                            numEReversal.Value = Parameters.Read("Dynamic.E_glu", numEReversal.Value);
+                            break;
+                        case NeuronClass.Cholinergic:
+                            numEReversal.Value = Parameters.Read("Dynamic.E_ach", numEReversal.Value);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             interPoolTemplate.PoolSource = ddSourcePool.Text;
@@ -97,6 +104,15 @@ namespace SiliFish.UI.Controls
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillConnectionTypes();
+            if (!ddTargetPool.Focused)
+                return;
+            if (ddTargetPool.SelectedItem is CellPoolTemplate pool)
+            {
+                if (pool.Parameters != null && pool.Parameters.Any())
+                {
+                    numEReversal.Value = pool.Parameters.Read("Izhikevich_9P.V_r", numEReversal.Value);
+                }
+            }
             interPoolTemplate.PoolTarget = ddTargetPool.Text;
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);

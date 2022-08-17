@@ -12,11 +12,15 @@ namespace SiliFish
 
     public class CustomSwimmingModel: SwimmingModel
     {
+        public CustomSwimmingModel()
+        {
+        }
         public CustomSwimmingModel(SwimmingModelTemplate swimmingModelTemplate)
         {
             neuronPools.Clear();
             musclePools.Clear();
-            poolConnections.Clear();
+            gapPoolConnections.Clear();
+            chemPoolConnections.Clear();
 
             initialized = false;
 
