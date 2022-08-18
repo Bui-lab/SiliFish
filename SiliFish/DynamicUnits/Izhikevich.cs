@@ -18,7 +18,8 @@ namespace SiliFish.DynamicUnits
         // vmax is the peak membrane potential of single action potentials
         double Vmax;
         // vr, vt are the resting and threshold membrane potential 
-        double Vr, Vt;
+        [JsonIgnore]
+        public double Vr, Vt;
         // k is a coefficient of the quadratic polynomial 
         double k;
         double Cm; //the membrane capacitance
@@ -118,8 +119,8 @@ namespace SiliFish.DynamicUnits
             for (int t = 0; t < iMax; t++)
             {
                 GetNextVal(I[t], ref spike);
-                dyn.Vlist[t] = V;
-                dyn.ulist[t] = u;
+                dyn.VList[t] = V;
+                dyn.secList[t] = u;
                 if (onDecay && V <= 0.37 * Vmax)
                 {
                     onDecay = false;

@@ -686,12 +686,12 @@ namespace SiliFish
                 return null;
             int nSpineNode = vel.GetLength(0);
             int nMax = vel.GetLength(1);
-            double[,] y = new double[nSpineNode, nMax + 1];
             double[,] x = new double[nSpineNode, nMax + 1];
+            double[,] y = new double[nSpineNode, nMax + 1];
             foreach (var i in Enumerable.Range(0, nMax))
             {
-                y[0, i] = 0;
                 x[0, i] = 0;
+                y[0, i] = 0;
                 angle[0, i] = 0;
                 foreach (int l in Enumerable.Range(1, nSpineNode - 1))
                 {

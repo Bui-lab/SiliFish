@@ -131,7 +131,7 @@ namespace SiliFish.Services
                 iEnd = model.TimeArray.Length - 1;
 
             AnimationGenerator animationGenerator = new();
-            Dictionary<string, object> animParamDict = model.GetParameters().Where(p => p.Key.StartsWith("Animation")).ToDictionary(x => x.Key, x => x.Value);
+            Dictionary<string, object> animParamDict = model.GetParameters().Where(p => p.Key.StartsWith("Kinematics")).ToDictionary(x => x.Key, x => x.Value);
             string animParams = "";
             foreach (var param in animParamDict)
             {

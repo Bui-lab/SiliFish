@@ -51,6 +51,8 @@ namespace SiliFish.UI.Controls
             stimControl.SetStimulus(stim.StimulusSettings);
             ddTargetPool.Items.AddRange(pools.ToArray());
             ddTargetPool.Text = stim.TargetPool;
+            if (ddTargetPool.Text == "")
+                ddTargetPool.Text = stim.TargetPool + " (inactive)";
             if (!ddTargetSomites.Items.Contains(stim.TargetSomite) && stim.TargetSomite != null)
                 ddTargetSomites.Items.Add(stim.TargetSomite);
             ddTargetSomites.Text = stim.TargetSomite;

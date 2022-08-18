@@ -370,7 +370,7 @@ namespace SiliFish.UI
                     Tag = "Param"
                 };
                 //insert after the general tab, keep Animation at the end
-                if (group == "Animation")
+                if (group == "Kinematics")
                     tabParams.TabPages.Add(tabPage);
                 else
                     tabParams.TabPages.Insert(tabIndex++, tabPage);
@@ -1239,9 +1239,9 @@ namespace SiliFish.UI
             int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
+            Model.SetAnimationParameters(ReadParams("Kinematics"));
             lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
 
-            Model.SetAnimationParameters(ReadParams("Animation"));
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
         }

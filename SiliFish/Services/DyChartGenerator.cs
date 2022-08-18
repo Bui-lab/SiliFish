@@ -85,7 +85,6 @@ namespace SiliFish.Services
             }
         }
 
-
         private static List<ChartStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
@@ -138,7 +137,8 @@ namespace SiliFish.Services
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string gapTitle = "Time,";
-                string synTitle = "Time,";
+                string synInTitle = "Time,";
+                string synOutTitle = "Time,";
                 List<string> gapData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
                 List<string> synInData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
                 List<string> synOutData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
@@ -170,7 +170,7 @@ namespace SiliFish.Services
                         foreach (ChemicalSynapse jnc in synapses)
                         {
                             synInExists = true;
-                            synTitle += jnc.PreNeuron.ID + ",";
+                            synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 synInData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
@@ -180,7 +180,7 @@ namespace SiliFish.Services
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
                             {
                                 synOutExists = true;
-                                synTitle += jnc.PostCell.ID + ",";
+                                synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add("'" + jnc.PostCell.CellPool.Color.ToRGB() + "'");
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                     synOutData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
@@ -205,7 +205,7 @@ namespace SiliFish.Services
                 }
                 if (synInExists)
                 {
-                    string csvData = "`" + synTitle[..^1] + "\n" + string.Join("\n", synInData.Select(line => line[..^1]).ToArray()) + "`";
+                    string csvData = "`" + synInTitle[..^1] + "\n" + string.Join("\n", synInData.Select(line => line[..^1]).ToArray()) + "`";
                     synCharts.Add(new ChartStruct
                     {
                         csvData = csvData,
@@ -220,7 +220,7 @@ namespace SiliFish.Services
                 }
                 if (synOutExists)
                 { 
-                    string csvData = "`" + synTitle[..^1] + "\n" + string.Join("\n", synOutData.Select(line => line[..^1]).ToArray()) + "`";
+                    string csvData = "`" + synOutTitle[..^1] + "\n" + string.Join("\n", synOutData.Select(line => line[..^1]).ToArray()) + "`";
                     synCharts.Add(new ChartStruct
                     {
                         csvData = csvData,
@@ -275,6 +275,45 @@ namespace SiliFish.Services
             return charts;
         }
 
+        private static List<ChartStruct> CreateTensionCharts(double[] TimeArray, List<MuscleCell> cells, bool groupByPool,
+            int iStart, int iEnd)
+        {
+            List<ChartStruct> charts = new();
+
+            double yMin = 0;
+            double yMax = 1.2;
+            Helpers.Util.SetYRange(ref yMin, ref yMax);
+
+            IEnumerable<IGrouping<string, MuscleCell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
+            foreach (IGrouping<string, MuscleCell> cellGroup in cellGroups)
+            {
+                string title = "Time,";
+                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> colorPerChart = new();
+                foreach (MuscleCell cell in cellGroup)
+                {
+                    double[] Tension = cell.RelativeTension;
+                    title += cell.ID + ",";
+                    colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
+                    foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                        data[i] += Tension[iStart + i].ToString("0.0####") + ",";
+                }
+                string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                charts.Add(new ChartStruct
+                {
+                    csvData = csvData,
+                    Color = string.Join(',', colorPerChart),
+                    Title = $"`{cellGroup.Key} Relative Tension`",
+                    yLabel = "`Relative Tension`",
+                    yMin = yMin.ToString("0.0"),
+                    yMax = yMax.ToString("0.0"),
+                    xMin = TimeArray[iStart].ToString(),
+                    xMax = (TimeArray[iEnd] + 1).ToString()
+                });
+            }
+            return charts;
+        }
+
         private static List<ChartStruct> CreateFullDynamicsCharts(double[] TimeOffset, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
@@ -282,6 +321,9 @@ namespace SiliFish.Services
             charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
             charts.AddRange(CreateCurrentCharts(TimeOffset, cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: true));
             charts.AddRange(CreateStimuliCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
+            List<MuscleCell> muscleCells = cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
+            if (muscleCells.Any())
+                charts.AddRange(CreateTensionCharts(TimeOffset, muscleCells, groupByPool, iStart, iEnd));
             return charts;
         }
 

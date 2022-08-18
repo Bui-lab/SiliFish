@@ -44,6 +44,7 @@ namespace SiliFish.UI.Controls
             this.pXAxis = new System.Windows.Forms.Panel();
             this.lXAxis = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
+            this.eDescription = new System.Windows.Forms.RichTextBox();
             this.lAttachments = new System.Windows.Forms.Label();
             this.listAttachments = new System.Windows.Forms.ListBox();
             this.cmAttachments = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -54,7 +55,6 @@ namespace SiliFish.UI.Controls
             this.ddNeuronClass = new System.Windows.Forms.ComboBox();
             this.lNeuronClass = new System.Windows.Forms.Label();
             this.lDescription = new System.Windows.Forms.Label();
-            this.eDescription = new System.Windows.Forms.TextBox();
             this.btnColor = new System.Windows.Forms.Button();
             this.pMainTop = new System.Windows.Forms.Panel();
             this.linkSavePool = new System.Windows.Forms.LinkLabel();
@@ -238,13 +238,13 @@ namespace SiliFish.UI.Controls
             // pMain
             // 
             this.pMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pMain.Controls.Add(this.eDescription);
             this.pMain.Controls.Add(this.lAttachments);
             this.pMain.Controls.Add(this.listAttachments);
             this.pMain.Controls.Add(this.ddSelection);
             this.pMain.Controls.Add(this.ddNeuronClass);
             this.pMain.Controls.Add(this.lNeuronClass);
             this.pMain.Controls.Add(this.lDescription);
-            this.pMain.Controls.Add(this.eDescription);
             this.pMain.Controls.Add(this.btnColor);
             this.pMain.Controls.Add(this.pMainTop);
             this.pMain.Controls.Add(this.cbActive);
@@ -264,6 +264,16 @@ namespace SiliFish.UI.Controls
             this.pMain.Size = new System.Drawing.Size(261, 723);
             this.pMain.TabIndex = 0;
             // 
+            // eDescription
+            // 
+            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eDescription.Location = new System.Drawing.Point(112, 66);
+            this.eDescription.Name = "eDescription";
+            this.eDescription.Size = new System.Drawing.Size(146, 67);
+            this.eDescription.TabIndex = 1;
+            this.eDescription.Text = "";
+            // 
             // lAttachments
             // 
             this.lAttachments.AutoSize = true;
@@ -275,10 +285,13 @@ namespace SiliFish.UI.Controls
             // 
             // listAttachments
             // 
+            this.listAttachments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listAttachments.ContextMenuStrip = this.cmAttachments;
             this.listAttachments.FormattingEnabled = true;
             this.listAttachments.ItemHeight = 15;
-            this.listAttachments.Location = new System.Drawing.Point(6, 288);
+            this.listAttachments.Location = new System.Drawing.Point(5, 293);
             this.listAttachments.Name = "listAttachments";
             this.listAttachments.Size = new System.Drawing.Size(252, 424);
             this.listAttachments.TabIndex = 30;
@@ -350,16 +363,6 @@ namespace SiliFish.UI.Controls
             this.lDescription.Size = new System.Drawing.Size(67, 15);
             this.lDescription.TabIndex = 26;
             this.lDescription.Text = "Description";
-            // 
-            // eDescription
-            // 
-            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eDescription.Location = new System.Drawing.Point(112, 65);
-            this.eDescription.Multiline = true;
-            this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(146, 68);
-            this.eDescription.TabIndex = 1;
             // 
             // btnColor
             // 
@@ -800,11 +803,11 @@ namespace SiliFish.UI.Controls
         private ComboBox ddSelection;
         private Label lAttachments;
         private ListBox listAttachments;
-        private TextBox eDescription;
         private ContextMenuStrip cmAttachments;
         private ToolStripMenuItem cmiViewFile;
         private ToolStripMenuItem cmiAddAttachment;
         private ToolStripMenuItem cmiRemoveAttachment;
         private OpenFileDialog dlgOpenFile;
+        private RichTextBox eDescription;
     }
 }

@@ -49,9 +49,9 @@
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
             .graphData(gapChemData)
-            .linkColor(l => hoverNode == null ? '#444' : l.source == hoverNode ? '#F00' : l.target == hoverNode ? '#0F0' : '#FFF')
+            .linkColor(l => hoverNode == null ? '#DDD' : l.source == hoverNode ? '#F00' : l.target == hoverNode ? '#0F0' : '#FFF')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.5))
+            .linkWidth(l => Math.max(l.value, 0.01))
             .linkCurvature('curv')
             .onNodeClick(node => {
                 hoverNode = node;

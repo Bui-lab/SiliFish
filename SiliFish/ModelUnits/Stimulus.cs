@@ -37,6 +37,8 @@ namespace SiliFish.ModelUnits
                     return string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
                 case StimulusMode.Sinusoidal:
                     return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
+                case StimulusMode.AbsoluteSinusoidal:
+                    return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
             }
             return "";
         }
@@ -99,23 +101,23 @@ namespace SiliFish.ModelUnits
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeSpan_ms.End / RunParam.static_dt );
+            iEnd = (int)(TimeSpan_ms.End / RunParam.static_dt);
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeSpan_ms.Start / RunParam.static_dt );
+            iStart = (int)(TimeSpan_ms.Start / RunParam.static_dt);
             if (StimulusSettings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (StimulusSettings.Value2 - StimulusSettings.Value1) / (iEnd - iStart);
                 else tangent = 0;
 
-            if (values != null)
+            if (values != null && values.Length < iEnd)
             {
                 double[] copyArr = new double[values.Length];
                 values.CopyTo(copyArr, 0);
                 values = new double[iEnd];
                 copyArr.CopyTo(values, 0);
             }
-            else
+            else if (values == null)
                 values = new double[iEnd];
             initialized = true;
         }
@@ -147,7 +149,10 @@ namespace SiliFish.ModelUnits
                     value = rand.Gauss(Value1, Value2, Value1 - 3 * Value2, Value1 + 3 * Value2); // µ ± 3SD range
                     break;
                 case StimulusMode.Sinusoidal:
-                    value = Value1 * Math.Sin(2 * Math.PI * Value2 * t_ms);
+                    value = Value1 * Math.Sin(2 * Math.PI * Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
+                    break;
+                case StimulusMode.AbsoluteSinusoidal:
+                    value = Value1 * Math.Abs(Math.Sin(2 * Math.PI * Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms))));
                     break;
             }
 
