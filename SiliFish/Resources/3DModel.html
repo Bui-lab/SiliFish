@@ -62,9 +62,9 @@
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
             .graphData(gapData)
-            .linkColor(l => hoverNodeGap == null ? '#444' : l.source == hoverNodeGap ? '#F00' : l.target == hoverNodeGap ? '#0F0' : '#FFF')
+            .linkColor(l => hoverNodeGap == null ? '#DDD' : l.source == hoverNodeGap ? '#F00' : l.target == hoverNodeGap ? '#0F0' : '#FFF')
             .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.5))
+            .linkWidth(l => Math.max(l.value, 0.01))
             .linkCurvature('curv')
             .onNodeClick(node => {
                 hoverNodeGap = node;
@@ -94,9 +94,9 @@
             .graphData(chemData)
             .linkDirectionalArrowRelPos(1)
             .linkDirectionalArrowLength(5)
-            .linkColor(() => '#333')
+            .linkColor(l => hoverNodeChem == null ? '#DDD' : l.source == hoverNodeChem ? '#F00' : l.target == hoverNodeChem ? '#0F0' : '#FFF')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.5))
+            .linkWidth(l => Math.max(l.value, 0.01))
             .linkCurvature('curv')
             .onNodeClick(node => {
                 hoverNodeChem = node;

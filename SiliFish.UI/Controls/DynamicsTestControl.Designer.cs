@@ -79,7 +79,7 @@
             this.picV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picV.Location = new System.Drawing.Point(0, 0);
             this.picV.Name = "picV";
-            this.picV.Size = new System.Drawing.Size(518, 482);
+            this.picV.Size = new System.Drawing.Size(518, 330);
             this.picV.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picV.TabIndex = 11;
             this.picV.TabStop = false;
@@ -269,9 +269,9 @@
             // picu
             // 
             this.picu.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.picu.Location = new System.Drawing.Point(0, 609);
+            this.picu.Location = new System.Drawing.Point(0, 330);
             this.picu.Name = "picu";
-            this.picu.Size = new System.Drawing.Size(518, 74);
+            this.picu.Size = new System.Drawing.Size(518, 137);
             this.picu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picu.TabIndex = 13;
             this.picu.TabStop = false;
@@ -279,9 +279,9 @@
             // picI
             // 
             this.picI.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.picI.Location = new System.Drawing.Point(0, 482);
+            this.picI.Location = new System.Drawing.Point(0, 467);
             this.picI.Name = "picI";
-            this.picI.Size = new System.Drawing.Size(518, 127);
+            this.picI.Size = new System.Drawing.Size(518, 216);
             this.picI.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picI.TabIndex = 14;
             this.picI.TabStop = false;
@@ -372,8 +372,8 @@
             // splitMain.Panel2
             // 
             this.splitMain.Panel2.Controls.Add(this.picV);
-            this.splitMain.Panel2.Controls.Add(this.picI);
             this.splitMain.Panel2.Controls.Add(this.picu);
+            this.splitMain.Panel2.Controls.Add(this.picI);
             this.splitMain.Panel2.Resize += new System.EventHandler(this.splitMain_Panel2_Resize);
             this.splitMain.Size = new System.Drawing.Size(974, 683);
             this.splitMain.SplitterDistance = 452;
@@ -387,6 +387,7 @@
             this.dgDynamics.Location = new System.Drawing.Point(0, 30);
             this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
             this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.PauseDistributionFeature = false;
             this.dgDynamics.Size = new System.Drawing.Size(452, 285);
             this.dgDynamics.TabIndex = 21;
             // 

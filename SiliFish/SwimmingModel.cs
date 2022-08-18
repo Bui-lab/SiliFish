@@ -682,18 +682,18 @@ namespace SiliFish
                 return null;
             int nSpineNode = vel.GetLength(0);
             int nMax = vel.GetLength(1);
-            double[,] y = new double[nSpineNode, nMax + 1];
             double[,] x = new double[nSpineNode, nMax + 1];
+            double[,] y = new double[nSpineNode, nMax + 1];
             foreach (var i in Enumerable.Range(0, nMax))
             {
-                y[0, i] = 0;
                 x[0, i] = 0;
+                y[0, i] = 0;
                 angle[0, i] = 0;
                 foreach (int l in Enumerable.Range(1, nSpineNode - 1))
                 {
                     angle[l, i] = angle[l - 1, i] + angle[l, i];
-                    y[l, i] = y[l - 1, i] + Math.Sin(angle[l, i]);
-                    x[l, i] = x[l - 1, i] - Math.Cos(angle[l, i]);
+                    x[l, i] = x[l - 1, i] + Math.Sin(angle[l, i]);
+                    y[l, i] = y[l - 1, i] - Math.Cos(angle[l, i]);
                 }
             }
 
@@ -705,7 +705,7 @@ namespace SiliFish
                 somiteCoordinates[somite][0] = (0, 0);
                 foreach (var i in Enumerable.Range(0, nMax))
                 {
-                    somiteCoordinates[somite][i] = (y[somiteIndex, i], x[somiteIndex, i]);
+                    somiteCoordinates[somite][i] = (x[somiteIndex, i], y[somiteIndex, i]);
                 }
             }
             return somiteCoordinates;
@@ -746,7 +746,7 @@ namespace SiliFish
                 int iMax = Math.Min(i + delay, nMax);
                 Coordinate[] window = tail_tip_coord[i..iMax];
                 double t = Time[i];
-                if (!window.Any(coor => coor.Y < left_bound || coor.Y > right_bound))
+                if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
                 {
                     side = 0;
                     lastEpisode?.EndEpisode(t);
@@ -757,13 +757,13 @@ namespace SiliFish
 
                 if (lastEpisode == null)
                 {
-                    if (tail_tip_coord[i].Y < left_bound)//beginning an episode on the left
+                    if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
                     {
                         lastEpisode = new SwimmingEpisode(t);
                         episodes.Add(lastEpisode);
                         side = LEFT;
                     }
-                    else if (tail_tip_coord[i].Y > right_bound) //beginning an episode on the right
+                    else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
                     {
                         lastEpisode = new SwimmingEpisode(t);
                         episodes.Add(lastEpisode);
@@ -772,13 +772,13 @@ namespace SiliFish
                 }
                 else // During an episode
                 {
-                    if (tail_tip_coord[i].Y < left_bound && side == RIGHT)
+                    if (tail_tip_coord[i].X < left_bound && side == RIGHT)
                     {
                         side = LEFT;
                         lastEpisode.EndBeat(t);
                     }
 
-                    else if (tail_tip_coord[i].Y > right_bound && side == LEFT)
+                    else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
                         lastEpisode.EndBeat(t);

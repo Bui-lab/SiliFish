@@ -37,6 +37,7 @@ namespace SiliFish.UI.Controls
                     lValue2.Text = "Noise";
                     break;
                 case StimulusMode.Sinusoidal:
+                case StimulusMode.AbsoluteSinusoidal:
                     lValue1.Text = "Amplitude";
                     lValue2.Text = "Frequency";
                     break;

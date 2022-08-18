@@ -170,8 +170,8 @@ namespace SiliFish.PredefinedModels
             R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Right, 5, Color.Purple);
             for (int i = 0; i < nMuscle; i++)
             {
-                L_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, Vr: -60, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, -1)));
-                R_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, Vr: -60, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, 1)));
+                L_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, Vr: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, -1)));
+                R_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, Vr: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, 1)));
             }
             musclePools.Add(L_Muscle);
             musclePools.Add(R_Muscle);

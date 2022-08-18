@@ -173,7 +173,8 @@ namespace SiliFish.ModelUnits
             {
                 double cur1 = base.MinCurrentValue;
                 double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                return Math.Min(cur1, cur2);
+                double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.Min()) : 0;
+                return Math.Min(Math.Min(cur1, cur2), cur3);
             }
         }
         public override double MaxCurrentValue
@@ -182,7 +183,8 @@ namespace SiliFish.ModelUnits
             {
                 double cur1 = base.MaxCurrentValue;
                 double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                return Math.Max(cur1, cur2);
+                double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.Max()) : 0;
+                return Math.Max(Math.Max(cur1, cur2), cur3);
             }
         }
 
@@ -266,8 +268,7 @@ namespace SiliFish.ModelUnits
         public override void InitDataVectors(int nmax)
         {
             base.InitDataVectors(nmax);
-            bool spike = false;
-            V[0] = Core.GetNextVal(0, ref spike);
+            V[0] = Core.Vr;
             foreach (ChemicalSynapse jnc in this.Synapses)
                 jnc.InitDataVectors(nmax);
 
@@ -343,10 +344,12 @@ namespace SiliFish.ModelUnits
 
     public class MuscleCell : Cell
     {
-
-
         readonly Leaky_Integrator Core;
         public double R { get { return Core.R; } set { } }
+        [JsonIgnore]
+        public double[] RelativeTension { get { return Core.CalculateRelativeTension(V); } }
+        [JsonIgnore]
+        public double[] Tension { get { return Core.CalculateTension(V); } }
         public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
 
         public override double MinCurrentValue
@@ -354,7 +357,7 @@ namespace SiliFish.ModelUnits
             get
             {
                 double cur1 = base.MinCurrentValue;
-                double cur2 = EndPlates?.Min(jnc => jnc.InputCurrent.Min()) ?? 0;
+                double cur2 = EndPlates?.Count > 0 ? EndPlates.Min(jnc => jnc.InputCurrent.Min()) : 0;
                 return Math.Min(cur1, cur2);
             }
         }
@@ -363,14 +366,13 @@ namespace SiliFish.ModelUnits
             get
             {
                 double cur1 = base.MaxCurrentValue;
-                double cur2 = EndPlates?.Max(jnc => jnc.InputCurrent.Max()) ?? 0;
+                double cur2 = EndPlates?.Count > 0 ? EndPlates.Max(jnc => jnc.InputCurrent.Max()) : 0;
                 return Math.Max(cur1, cur2);
             }
         }
         /// <summary>
         /// Used as a template
         /// </summary>
-
         public MuscleCell(string group, int somite, int seq, TimeLine timeline = null)
         {
             CellGroup = group;
@@ -433,7 +435,7 @@ namespace SiliFish.ModelUnits
         public override void InitDataVectors(int nmax)
         {
             base.InitDataVectors(nmax);
-            V[0] = Core.GetNextVal(0);
+            V[0] = Core.Vr;
             foreach (ChemicalSynapse jnc in this.EndPlates)
                 jnc.InitDataVectors(nmax);
         }

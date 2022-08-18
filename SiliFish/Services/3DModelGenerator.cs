@@ -149,13 +149,14 @@ namespace SiliFish.Services
             YOffset = 0;
             ZOffset = 0;
 
-            double jncsize = range / model.GetNumberOfConnections();
+            double jncsize = XYZMult * range / (20 * model.GetNumberOfConnections());
             (_, WeightMax) = model.GetConnectionRange();
-            WeightMult = jncsize * 3 / WeightMax;
+            WeightMult = jncsize / WeightMax;
 
-            double nodesize = Math.Sqrt(xRange * yRange * zRange / (10 * model.GetNumberOfCells()));
-            if (nodesize < 1) 
-                nodesize = 1;
+            double nodesize = zRange < 0.1 ?//No z axis
+                Math.Sqrt(xRange * yRange / (30 * model.GetNumberOfCells())) :
+                Math.Pow(xRange * yRange * zRange / (40 * model.GetNumberOfCells()), 0.33); //~10 times the nodes to fit in the space
+            nodesize *= XYZMult;
 
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool)));

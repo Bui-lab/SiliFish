@@ -69,11 +69,11 @@
             this.lName = new System.Windows.Forms.Label();
             this.lDescription = new System.Windows.Forms.Label();
             this.eName = new System.Windows.Forms.TextBox();
-            this.eDescription = new System.Windows.Forms.TextBox();
             this.grTimeline = new System.Windows.Forms.GroupBox();
             this.ddDistanceMode = new System.Windows.Forms.ComboBox();
             this.lDistanceMode = new System.Windows.Forms.Label();
             this.lMaxReach = new System.Windows.Forms.Label();
+            this.eDescription = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTauD)).BeginInit();
@@ -341,8 +341,8 @@
             this.numAscReach.Name = "numAscReach";
             this.numAscReach.Size = new System.Drawing.Size(82, 23);
             this.numAscReach.TabIndex = 22;
-            this.toolTip1.SetToolTip(this.numAscReach, "If body is composed of somites, this number represents the number of somites it can pass through. Otherwise, it represents the distance" +
-        " in the x-axis.");
+            this.toolTip1.SetToolTip(this.numAscReach, "If body is composed of somites, this number represents the number of somites it c" +
+        "an pass through. Otherwise, it represents the distance in the x-axis.");
             // 
             // numDescReach
             // 
@@ -351,8 +351,8 @@
             this.numDescReach.Name = "numDescReach";
             this.numDescReach.Size = new System.Drawing.Size(82, 23);
             this.numDescReach.TabIndex = 24;
-            this.toolTip1.SetToolTip(this.numDescReach, "If body is composed of somites, this number represents the number of somites it can pass through. Otherwise, it represents the distance" +
-        " in the x-axis.");
+            this.toolTip1.SetToolTip(this.numDescReach, "If body is composed of somites, this number represents the number of somites it c" +
+        "an pass through. Otherwise, it represents the distance in the x-axis.");
             // 
             // numMaxReach
             // 
@@ -411,6 +411,7 @@
             // 
             // gSynapse
             // 
+            this.gSynapse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.gSynapse.Controls.Add(this.numEReversal);
             this.gSynapse.Controls.Add(this.numVthreshold);
             this.gSynapse.Controls.Add(this.numTauR);
@@ -464,6 +465,7 @@
             // 
             // cbActive
             // 
+            this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbActive.AutoSize = true;
             this.cbActive.Checked = true;
             this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -528,16 +530,9 @@
             this.eName.TabIndex = 11;
             this.eName.Leave += new System.EventHandler(this.eName_Leave);
             // 
-            // eDescription
-            // 
-            this.eDescription.Location = new System.Drawing.Point(105, 224);
-            this.eDescription.Multiline = true;
-            this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(306, 47);
-            this.eDescription.TabIndex = 13;
-            // 
             // grTimeline
             // 
+            this.grTimeline.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grTimeline.Controls.Add(this.timeLineControl);
             this.grTimeline.Location = new System.Drawing.Point(250, 275);
             this.grTimeline.Name = "grTimeline";
@@ -573,11 +568,23 @@
             this.lMaxReach.TabIndex = 19;
             this.lMaxReach.Text = "Max Reach";
             // 
+            // eDescription
+            // 
+            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eDescription.Location = new System.Drawing.Point(105, 222);
+            this.eDescription.Name = "eDescription";
+            this.eDescription.Size = new System.Drawing.Size(306, 47);
+            this.eDescription.TabIndex = 13;
+            this.eDescription.Text = "";
+            // 
             // InterPoolControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.eDescription);
             this.Controls.Add(this.cbOtherSomite);
             this.Controls.Add(this.cbWithinSomite);
             this.Controls.Add(this.numMaxReach);
@@ -585,7 +592,6 @@
             this.Controls.Add(this.lDistanceMode);
             this.Controls.Add(this.ddDistanceMode);
             this.Controls.Add(this.grTimeline);
-            this.Controls.Add(this.eDescription);
             this.Controls.Add(this.eName);
             this.Controls.Add(this.lDescription);
             this.Controls.Add(this.lName);
@@ -673,7 +679,6 @@
         private Label lName;
         private Label lDescription;
         private TextBox eName;
-        private TextBox eDescription;
         private GroupBox grTimeline;
         private ComboBox ddDistanceMode;
         private Label lDistanceMode;
@@ -681,5 +686,6 @@
         private Label lMaxReach;
         private CheckBox cbWithinSomite;
         private CheckBox cbOtherSomite;
+        private RichTextBox eDescription;
     }
 }

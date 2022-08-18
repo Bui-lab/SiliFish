@@ -54,10 +54,9 @@ namespace SiliFish.UI.Controls
                 eInstanceParams.Text += "\r\nτ rise: " + string.Join(',', dyn.tauRise.Select(d => d.ToString()).ToArray());
             if (dyn.tauDecay.Any())
                 eInstanceParams.Text += "\r\nτ decay: " + string.Join(',', dyn.tauDecay.Select(d => d.ToString()).ToArray());
-            picV.Image = UtilWindows.CreateLinePlot("V", dyn.Vlist, t, 0, plotEnd, "V", null, null, Color.Purple);
-            if (dyn.ulist == null)
-                picu.Visible = false;
-            else picu.Image = UtilWindows.CreateLinePlot("u", dyn.ulist, t, 0, plotEnd, "u", null, null, Color.Blue);
+            picV.Image = UtilWindows.CreateLinePlot("V", dyn.VList, t, 0, plotEnd, "V", null, null, Color.Purple);
+            string secPlot = cell is MuscleCell ? "Rel. Tension" : "u";
+            picu.Image = UtilWindows.CreateLinePlot(secPlot, dyn.secList, t, 0, plotEnd, secPlot, null, null, Color.Blue);
             picI.Image = UtilWindows.CreateLinePlot("I", I, t, 0, plotEnd, "I", null, null, Color.Red);
 
         }

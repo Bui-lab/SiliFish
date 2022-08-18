@@ -76,7 +76,12 @@ namespace SiliFish.DataTypes
             if (Periods.Count == 0) return true;
             return Periods.Exists(timeRange => timeRange.start <= time_ms && (timeRange.end < 0 || timeRange.end >= time_ms));
         }
-
+        public int StartOf(double time_ms)
+        {
+            if (Periods.Count == 0) return 0;
+            var (start, end) = Periods.FirstOrDefault(timeRange => timeRange.start <= time_ms && (timeRange.end < 0 || timeRange.end >= time_ms));
+            return start;
+        }
         public List<(int start, int end)> GetTimeLine()
         {
             return Periods;
