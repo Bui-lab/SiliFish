@@ -16,7 +16,7 @@ namespace SiliFish.ModelUnits
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
         public int Somite { get; set; } = -1;
-        public Stimulus Stimulus = null;
+        public Stimuli Stimuli = new();
         public FrontalPlane PositionDorsalVentral = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior = TransversePlane.NotSet;
         public SagittalPlane PositionLeftRight = SagittalPlane.Both;
@@ -32,25 +32,25 @@ namespace SiliFish.ModelUnits
 
         public double[] V; //Membrane potential vector
         [JsonIgnore]
-        public double MinStimulusValue { get { return Stimulus?.MinValue ?? 0; } }
+        public double MinStimulusValue { get { return Stimuli.MinValue; } }
         [JsonIgnore]
-        public double MaxStimulusValue { get { return Stimulus?.MaxValue ?? 0; } }
-        [JsonIgnore]
-        public double MinPotentialValue { get { return V?.Min() ?? 0; } }
-        [JsonIgnore]
-        public double MaxPotentialValue { get { return V?.Max() ?? 0; } }
-        [JsonIgnore]
-        public virtual double MinCurrentValue
+        public double MaxStimulusValue { get { return Stimuli.MaxValue; } }
+
+        public double MinPotentialValue(int iStart = 0, int iEnd = -1)
         {
-            get { return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.Min()) : 0; }
+            return V?.MinValue(iStart, iEnd) ?? 0;
         }
-        [JsonIgnore]
-        public virtual double MaxCurrentValue
+        public double MaxPotentialValue(int iStart = 0, int iEnd = -1)
         {
-            get
-            {
-                return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.Max()) : 0;
-            }
+            return V?.MaxValue(iStart, iEnd) ?? 0;
+        }
+        public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+        }
+        public virtual double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
         }
 
 
@@ -60,9 +60,9 @@ namespace SiliFish.ModelUnits
             double t_ms = RunParam.GetTimeOfIndex(timepoint);
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
-        public double GetStimulus(int timdeIndex, Random rand)
+        public double GetStimulus(int timeIndex, Random rand)
         {
-            return Stimulus?.getStimulus(timdeIndex, rand) ?? 0;
+            return Stimuli.GenerateStimulus(timeIndex, rand);
         }
         public virtual Dictionary<string, object> Parameters
         {
@@ -105,7 +105,7 @@ namespace SiliFish.ModelUnits
         public virtual void InitDataVectors(int nmax)
         {
             V = new double[nmax];
-            Stimulus?.InitDataVectors(nmax);
+            Stimuli.InitDataVectors(nmax);
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitDataVectors(nmax);
         }
@@ -167,25 +167,19 @@ namespace SiliFish.ModelUnits
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
 
 
-        public override double MinCurrentValue
+        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            get
-            {
-                double cur1 = base.MinCurrentValue;
-                double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                return Math.Min(Math.Min(cur1, cur2), cur3);
-            }
+            double cur1 = base.MinCurrentValue(iStart, iEnd);
+            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Math.Min(Math.Min(cur1, cur2), cur3);
         }
-        public override double MaxCurrentValue
+        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            get
-            {
-                double cur1 = base.MaxCurrentValue;
-                double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                return Math.Max(Math.Max(cur1, cur2), cur3);
-            }
+            double cur1 = base.MaxCurrentValue(iStart, iEnd);
+            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Math.Max(Math.Max(cur1, cur2), cur3);
         }
 
         /// <summary>
@@ -223,7 +217,8 @@ namespace SiliFish.ModelUnits
 
             Core = new Izhikevich_9P(dyn);
             coordinate = coor;
-            Stimulus = stim;
+            if (stim != null)
+                Stimuli.Add(stim);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
@@ -318,7 +313,7 @@ namespace SiliFish.ModelUnits
         {
             try
             {
-                double ISyn = 0, IGap = 0, stim = 0;
+                double ISyn = 0, IGapPos = 0, IGapNeg = 0, stim = 0;
                 if (IsAlive(timeIndex))
                 {
                     foreach (ChemicalSynapse syn in Synapses)
@@ -327,12 +322,14 @@ namespace SiliFish.ModelUnits
                     }
                     foreach (GapJunction jnc in GapJunctions)
                     {
-                        IGap += jnc.GetGapCurrent(this, timeIndex);
+                        double igap = jnc.GetGapCurrent(this, timeIndex);
+                        IGapPos = Math.Max(IGapPos, igap);
+                        IGapNeg = Math.Min(IGapNeg, igap);
                     }
                     stim = GetStimulus(timeIndex, SwimmingModel.rand);
                 }
 
-                NextStep(timeIndex, stim + ISyn + IGap);
+                NextStep(timeIndex, stim + ISyn + IGapPos + IGapNeg);
             }
             catch (Exception ex)
             {
@@ -352,23 +349,17 @@ namespace SiliFish.ModelUnits
         public double[] Tension { get { return Core.CalculateTension(V); } }
         public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
 
-        public override double MinCurrentValue
+        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            get
-            {
-                double cur1 = base.MinCurrentValue;
-                double cur2 = EndPlates?.Count > 0 ? EndPlates.Min(jnc => jnc.InputCurrent.Min()) : 0;
-                return Math.Min(cur1, cur2);
-            }
+            double cur1 = base.MinCurrentValue(iStart, iEnd);
+            double cur2 = EndPlates?.Count > 0 ? EndPlates.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Math.Min(cur1, cur2);
         }
-        public override double MaxCurrentValue
+        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            get
-            {
-                double cur1 = base.MaxCurrentValue;
-                double cur2 = EndPlates?.Count > 0 ? EndPlates.Max(jnc => jnc.InputCurrent.Max()) : 0;
-                return Math.Max(cur1, cur2);
-            }
+            double cur1 = base.MaxCurrentValue(iStart, iEnd);
+            double cur2 = EndPlates?.Count > 0 ? EndPlates.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Math.Max(cur1, cur2);
         }
         /// <summary>
         /// Used as a template
@@ -452,7 +443,7 @@ namespace SiliFish.ModelUnits
 
         public override void CalculateMembranePotential(int timeIndex)
         {
-            double ISyn = 0, IGap = 0, stim = 0;
+            double ISyn = 0, IGapPos = 0, IGapNeg = 0, stim = 0;
             if (IsAlive(timeIndex))
             {
                 foreach (ChemicalSynapse syn in EndPlates)
@@ -461,11 +452,13 @@ namespace SiliFish.ModelUnits
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {
-                    IGap += jnc.GetGapCurrent(this, timeIndex);
+                    double igap = jnc.GetGapCurrent(this, timeIndex);
+                    IGapPos = Math.Max(IGapPos, igap);
+                    IGapNeg = Math.Min(IGapNeg, igap);
                 }
                 stim = GetStimulus(timeIndex, SwimmingModel.rand);
             }
-            NextStep(timeIndex, stim + ISyn + IGap);
+            NextStep(timeIndex, stim + ISyn + IGapPos + IGapNeg);
         }
 
         public override string GetInstanceParams()

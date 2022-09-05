@@ -81,6 +81,8 @@
             // 
             // ddStimulusMode
             // 
+            this.ddStimulusMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddStimulusMode.FormattingEnabled = true;
             this.ddStimulusMode.Location = new System.Drawing.Point(100, 10);

@@ -21,7 +21,7 @@ namespace SiliFish.DynamicUnits
 
         double V; //keeps the current v value 
 
-        private double Vmax; //the maximum membrane potential that would give 0.99 relative tension
+        //private double Vmax; //the possible maximum membrane potential 
         public Leaky_Integrator(double R, double C, double Vr)
         {
             //Set Neuron constants.
@@ -29,7 +29,7 @@ namespace SiliFish.DynamicUnits
             this.C = C;
             this.Vr = Vr;
             V = Vr;
-            Vmax = 99999;
+            //Vmax = 99999;
         }
         public Leaky_Integrator(double R, double C, double Vr, double Va, double Tmax, double ka)
         {
@@ -41,7 +41,6 @@ namespace SiliFish.DynamicUnits
             this.Tmax = Tmax;
             this.ka = ka;
             V = Vr;
-            CalculateVMax();
         }
 
         public virtual Dictionary<string, object> GetParameters()
@@ -79,24 +78,11 @@ namespace SiliFish.DynamicUnits
             Tmax = paramExternal.Read("Leaky_Integrator.Tmax", Tmax);
             ka = paramExternal.Read("Leaky_Integrator.ka", ka);
             V = Vr;
-            CalculateVMax();
         }
 
         public virtual string GetInstanceParams()
         {
             return string.Join("\r\n", GetParameters().Select(kv => kv.Key + ": " + kv.Value.ToString()));
-        }
-
-        private void CalculateVMax()
-        {
-            if (ka < Const.epsilon)
-                Vmax = 99999;
-            else
-            {
-                //Vmax is the Vm when the relative tension is 0.99
-                double sens = 1 / (double)99;
-                Vmax = Va - ka * Math.Log(sens);
-            }
         }
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]
@@ -129,8 +115,7 @@ namespace SiliFish.DynamicUnits
             double dv = (-1 / (R * C)) * (V - Vr) + I / C;
             double vNew = V + dv * RunParam.static_dt;
             V = vNew;
-            if (V >= Vmax)
-                V = Vmax;
+            //if (V >= Vmax) V = Vmax;
 
             return V;
         }

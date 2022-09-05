@@ -327,11 +327,11 @@ namespace SiliFish.ModelUnits
         }
         public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probabibility)
         {
-            foreach (Neuron pre in this.GetCells())
+            foreach (Cell pre in this.GetCells())
             {
                 //To prevent recursive gap junctions in self projecting pools
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
-                foreach (Neuron post in targetcells)
+                foreach (Cell post in targetcells)
                 {
                     if (probabibility < SwimmingModel.rand.Next(1))
                         continue;
@@ -381,6 +381,8 @@ namespace SiliFish.ModelUnits
 
         public void ApplyStimulus(Stimulus stimulus_ms, string TargetSomite, string TargetCell)
         {
+            if (stimulus_ms == null)
+                return;
             int minSom = -1;
             int maxSom = int.MaxValue;
             int minSeq = -1;
@@ -392,7 +394,7 @@ namespace SiliFish.ModelUnits
 
             foreach (Cell cell in GetCells().Where(c => c.Somite >= minSom && c.Somite <= maxSom && c.Sequence >= minSeq && c.Sequence <= maxSeq))
             {
-                cell.Stimulus = stimulus_ms;
+                cell.Stimuli.Add(stimulus_ms);
             }
         }
     }

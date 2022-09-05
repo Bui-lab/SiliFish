@@ -39,13 +39,13 @@ namespace SiliFish.UI.Controls
                 case StimulusMode.Sinusoidal:
                 case StimulusMode.AbsoluteSinusoidal:
                     lValue1.Text = "Amplitude";
-                    lValue2.Text = "Frequency";
+                    lValue2.Text = "Freq. (kHz)";
                     break;
                 default:
                     break;
             }
-            //if (ddStimulusMode.Focused)
-            //    stimulusChanged?.Invoke(this, EventArgs.Empty);
+            if (ddStimulusMode.Focused)
+                stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetStimulus(StimulusSettings stim)

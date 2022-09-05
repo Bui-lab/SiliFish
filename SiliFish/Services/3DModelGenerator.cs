@@ -155,7 +155,7 @@ namespace SiliFish.Services
 
             double nodesize = zRange < 0.1 ?//No z axis
                 Math.Sqrt(xRange * yRange / (30 * model.GetNumberOfCells())) :
-                Math.Pow(xRange * yRange * zRange / (40 * model.GetNumberOfCells()), 0.33); //~10 times the nodes to fit in the space
+                Math.Pow(xRange * yRange * zRange / (160 * model.GetNumberOfCells()), 0.33); //~40 times the nodes to fit in the space
             nodesize *= XYZMult;
 
             List<string> nodes = new();

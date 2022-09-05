@@ -47,7 +47,7 @@ namespace SiliFish.UI.Controls
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 t[i] = i * (double)dt;
             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                I[i] = stim.getStimulus(i, SwimmingModel.rand);
+                I[i] = stim.generateStimulus(i, SwimmingModel.rand);
             eInstanceParams.Text = Cell.GetInstanceParams();
             Dynamics dyn = Cell.DynamicsTest(I);
             if (dyn.tauRise.Any())
