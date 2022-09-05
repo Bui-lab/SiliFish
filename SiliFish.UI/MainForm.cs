@@ -811,7 +811,10 @@ namespace SiliFish.UI
             {
                 if (PlotType == PlotType.FullDyn)
                     count *= 3;
-                lNumberOfPlots.Text = lNumberOfPlots.Tag + count.ToString();
+                if (PlotType == PlotType.Stimuli)
+                    lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + count.ToString();
+                else
+                    lNumberOfPlots.Text = lNumberOfPlots.Tag + count.ToString();
                 lNumberOfPlots.Visible = true;
             }
             else
@@ -951,6 +954,8 @@ namespace SiliFish.UI
             if (Model == null || !Model.ModelRun) return;
 
             GetPlotSubset();
+            if (PlotType == PlotType.Episodes)
+                Model.SetAnimationParameters(ReadParams("Kinematics"));
             tabOutputs.SelectedTab = tabPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
@@ -1013,6 +1018,8 @@ namespace SiliFish.UI
                 if (Model == null || !Model.ModelRun) return;
 
                 GetPlotSubset();
+                if (PlotType == PlotType.Episodes)
+                    Model.SetAnimationParameters(ReadParams("Kinematics"));
                 tabOutputs.SelectedTab = tabPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;

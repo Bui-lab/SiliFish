@@ -78,8 +78,8 @@ namespace SiliFish.Services
         {
             List<ChartStruct> charts = new();
 
-            double yMin = cells.Min(c => c.MinPotentialValue);
-            double yMax = cells.Max(c => c.MaxPotentialValue);
+            double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));
+            double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
             IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
@@ -117,8 +117,8 @@ namespace SiliFish.Services
         {
             List<ChartStruct> gapCharts = new();
             List<ChartStruct> synCharts = new();
-            double yMin = cells.Min(c => c.MinCurrentValue);
-            double yMax = cells.Max(c => c.MaxCurrentValue);
+            double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
+            double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
             IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
@@ -240,25 +240,30 @@ namespace SiliFish.Services
                 string title = "Time,";
                 List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
                 List<string> colorPerChart = new();
-                foreach (Cell cell in cellGroup)
+                bool stimExists = false;
+                foreach (Cell cell in cellGroup.Where(c => c.Stimuli.HasStimulus))
                 {
+                    stimExists = true;
                     title += cell.ID + ",";
                     colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimulus?[iStart + i].ToString("0.0####") + ",";
+                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString("0.0####") + ",";
                 }
-                string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                charts.Add(new ChartStruct
+                if (stimExists)
                 {
-                    csvData = csvData,
-                    Color = string.Join(',', colorPerChart),
-                    Title = $"`{cellGroup.Key} Applied Stimuli`",
-                    yLabel = "`Stimulus (pA)`",
-                    yMin = yMin.ToString("0.0"),
-                    yMax = yMax.ToString("0.0"),
-                    xMin = TimeArray[iStart].ToString(),
-                    xMax = (TimeArray[iEnd] + 1).ToString()
-                });
+                    string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                    charts.Add(new ChartStruct
+                    {
+                        csvData = csvData,
+                        Color = string.Join(',', colorPerChart),
+                        Title = $"`{cellGroup.Key} Applied Stimuli`",
+                        yLabel = "`Stimulus (pA)`",
+                        yMin = yMin.ToString("0.0"),
+                        yMax = yMax.ToString("0.0"),
+                        xMin = TimeArray[iStart].ToString(),
+                        xMax = (TimeArray[iEnd] + 1).ToString()
+                    });
+                }
             }
             return charts;
         }

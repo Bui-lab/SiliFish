@@ -51,8 +51,8 @@ namespace SiliFish
             #region Generate Gap Junctions and Chemical Synapses
             foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
             {
-                CellPool leftSource = neuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightSource = neuronPools.FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
+                CellPool leftSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
 
                 CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
                 CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
@@ -89,7 +89,7 @@ namespace SiliFish
             #region Generate Stimuli
             if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
             {
-                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli)
+                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
                 {
                     Stimulus stim = new(stimulus.StimulusSettings, stimulus.TimeLine_ms);
                     if (stimulus.LeftRight.Contains("Left"))

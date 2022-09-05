@@ -18,8 +18,8 @@ namespace Services
             string yAxis = "Memb. Potential (mV)";
             if (cells != null)
             {
-                double yMin = cells.Min(c => c.MinPotentialValue);
-                double yMax = cells.Max(c => c.MaxPotentialValue);
+                double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));
+                double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
                 foreach (Cell c in cells)
                 {
                     Color col = c.CellPool.Color;
@@ -31,8 +31,8 @@ namespace Services
             }
             if (cellPools != null)
             {
-                double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinPotentialValue));
-                double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue));
+                double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinPotentialValue(iStart, iEnd)));
+                double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue(iStart, iEnd)));
                 foreach (CellPool pool in cellPools)
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
@@ -100,8 +100,8 @@ namespace Services
             string yAxis = "Current (pA)";
             if (cells != null)
             {
-                double yMin = cells.Min(c => c.MinCurrentValue);
-                double yMax = cells.Max(c => c.MaxCurrentValue);
+                double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
+                double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
                 foreach (Cell c in cells)
                 {
                     (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
@@ -114,8 +114,8 @@ namespace Services
 
             if (pools != null)
             {
-                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue));
-                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue));
+                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue(iStart, iEnd)));
+                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue(iStart, iEnd)));
                 foreach (CellPool pool in pools)
                 {
                     IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
@@ -147,9 +147,9 @@ namespace Services
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             if (pools != null)
@@ -163,7 +163,7 @@ namespace Services
 
                     int i = 0;
                     foreach (Cell c in poolcells)
-                        stimArray.UpdateRow(i++, c.Stimulus?.getValues(timeArray.Length));
+                        stimArray.UpdateRow(i++, c.Stimuli.GetStimulusArray(timeArray.Length));
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
