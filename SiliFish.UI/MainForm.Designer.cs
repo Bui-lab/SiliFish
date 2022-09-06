@@ -144,11 +144,13 @@ namespace SiliFish.UI
             this.tabTemplateJSON = new System.Windows.Forms.TabPage();
             this.eTemplateJSON = new System.Windows.Forms.RichTextBox();
             this.pTemplateJSONTop = new System.Windows.Forms.Panel();
+            this.linkSaveTemplateJSON = new System.Windows.Forms.LinkLabel();
             this.btnLoadTemplateJSON = new System.Windows.Forms.Button();
             this.btnDisplayTemplateJSON = new System.Windows.Forms.Button();
             this.tabModelJSON = new System.Windows.Forms.TabPage();
             this.eModelJSON = new System.Windows.Forms.RichTextBox();
             this.pModelJSONTop = new System.Windows.Forms.Panel();
+            this.linkSaveModelJSON = new System.Windows.Forms.LinkLabel();
             this.btnLoadModelJSON = new System.Windows.Forms.Button();
             this.btnDisplayModelJSON = new System.Windows.Forms.Button();
             this.pParamBottom = new System.Windows.Forms.Panel();
@@ -175,8 +177,27 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.linkSaveTemplateJSON = new System.Windows.Forms.LinkLabel();
-            this.linkSaveModelJSON = new System.Windows.Forms.LinkLabel();
+            this.tabMNKinematics = new System.Windows.Forms.TabPage();
+            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.lKinematicsTimes = new System.Windows.Forms.Label();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.btnGenerateEpisodes = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.eKinematicsBurstBreak = new System.Windows.Forms.NumericUpDown();
+            this.lBurstBreak = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.eKinematicsEpisodeBreak = new System.Windows.Forms.NumericUpDown();
+            this.eKinematicsSomite = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -243,6 +264,15 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
+            this.tabMNKinematics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsBurstBreak)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsEpisodeBreak)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsSomite)).BeginInit();
             this.SuspendLayout();
             // 
             // rbSingleCoil
@@ -832,6 +862,7 @@ namespace SiliFish.UI
             this.tabOutputs.Controls.Add(this.tabPlot);
             this.tabOutputs.Controls.Add(this.tab2DModel);
             this.tabOutputs.Controls.Add(this.tab3DModel);
+            this.tabOutputs.Controls.Add(this.tabMNKinematics);
             this.tabOutputs.Controls.Add(this.tabAnimation);
             this.tabOutputs.Controls.Add(this.tabTemplateJSON);
             this.tabOutputs.Controls.Add(this.tabModelJSON);
@@ -1688,6 +1719,17 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.Size = new System.Drawing.Size(786, 35);
             this.pTemplateJSONTop.TabIndex = 1;
             // 
+            // linkSaveTemplateJSON
+            // 
+            this.linkSaveTemplateJSON.AutoSize = true;
+            this.linkSaveTemplateJSON.Location = new System.Drawing.Point(174, 11);
+            this.linkSaveTemplateJSON.Name = "linkSaveTemplateJSON";
+            this.linkSaveTemplateJSON.Size = new System.Drawing.Size(82, 15);
+            this.linkSaveTemplateJSON.TabIndex = 4;
+            this.linkSaveTemplateJSON.TabStop = true;
+            this.linkSaveTemplateJSON.Text = "Save Template";
+            this.linkSaveTemplateJSON.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveTemplateJSON_LinkClicked);
+            // 
             // btnLoadTemplateJSON
             // 
             this.btnLoadTemplateJSON.Enabled = false;
@@ -1741,6 +1783,17 @@ namespace SiliFish.UI
             this.pModelJSONTop.Name = "pModelJSONTop";
             this.pModelJSONTop.Size = new System.Drawing.Size(786, 35);
             this.pModelJSONTop.TabIndex = 3;
+            // 
+            // linkSaveModelJSON
+            // 
+            this.linkSaveModelJSON.AutoSize = true;
+            this.linkSaveModelJSON.Location = new System.Drawing.Point(180, 11);
+            this.linkSaveModelJSON.Name = "linkSaveModelJSON";
+            this.linkSaveModelJSON.Size = new System.Drawing.Size(68, 15);
+            this.linkSaveModelJSON.TabIndex = 5;
+            this.linkSaveModelJSON.TabStop = true;
+            this.linkSaveModelJSON.Text = "Save Model";
+            this.linkSaveModelJSON.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModelJSON_LinkClicked);
             // 
             // btnLoadModelJSON
             // 
@@ -2009,27 +2062,281 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // linkSaveTemplateJSON
+            // tabMNKinematics
             // 
-            this.linkSaveTemplateJSON.AutoSize = true;
-            this.linkSaveTemplateJSON.Location = new System.Drawing.Point(174, 11);
-            this.linkSaveTemplateJSON.Name = "linkSaveTemplateJSON";
-            this.linkSaveTemplateJSON.Size = new System.Drawing.Size(82, 15);
-            this.linkSaveTemplateJSON.TabIndex = 4;
-            this.linkSaveTemplateJSON.TabStop = true;
-            this.linkSaveTemplateJSON.Text = "Save Template";
-            this.linkSaveTemplateJSON.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveTemplateJSON_LinkClicked);
+            this.tabMNKinematics.Controls.Add(this.webView21);
+            this.tabMNKinematics.Controls.Add(this.panel1);
+            this.tabMNKinematics.Location = new System.Drawing.Point(4, 24);
+            this.tabMNKinematics.Name = "tabMNKinematics";
+            this.tabMNKinematics.Size = new System.Drawing.Size(786, 511);
+            this.tabMNKinematics.TabIndex = 7;
+            this.tabMNKinematics.Text = "MN Based Kinematics";
+            this.tabMNKinematics.UseVisualStyleBackColor = true;
             // 
-            // linkSaveModelJSON
+            // webView21
             // 
-            this.linkSaveModelJSON.AutoSize = true;
-            this.linkSaveModelJSON.Location = new System.Drawing.Point(180, 11);
-            this.linkSaveModelJSON.Name = "linkSaveModelJSON";
-            this.linkSaveModelJSON.Size = new System.Drawing.Size(68, 15);
-            this.linkSaveModelJSON.TabIndex = 5;
-            this.linkSaveModelJSON.TabStop = true;
-            this.linkSaveModelJSON.Text = "Save Model";
-            this.linkSaveModelJSON.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModelJSON_LinkClicked);
+            this.webView21.AllowExternalDrop = true;
+            this.webView21.CreationProperties = null;
+            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webView21.Location = new System.Drawing.Point(0, 117);
+            this.webView21.Name = "webView21";
+            this.webView21.Size = new System.Drawing.Size(786, 394);
+            this.webView21.TabIndex = 6;
+            this.webView21.ZoomFactor = 1D;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.eKinematicsSomite);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.eKinematicsEpisodeBreak);
+            this.panel1.Controls.Add(this.lBurstBreak);
+            this.panel1.Controls.Add(this.eKinematicsBurstBreak);
+            this.panel1.Controls.Add(this.numericUpDown1);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.linkLabel1);
+            this.panel1.Controls.Add(this.lKinematicsTimes);
+            this.panel1.Controls.Add(this.numericUpDown2);
+            this.panel1.Controls.Add(this.numericUpDown3);
+            this.panel1.Controls.Add(this.linkLabel2);
+            this.panel1.Controls.Add(this.btnGenerateEpisodes);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(786, 117);
+            this.panel1.TabIndex = 7;
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.DecimalPlaces = 2;
+            this.numericUpDown1.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDown1.Location = new System.Drawing.Point(286, 6);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(53, 23);
+            this.numericUpDown1.TabIndex = 37;
+            this.toolTip.SetToolTip(this.numericUpDown1, "(in milliseconds)");
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(261, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(19, 15);
+            this.label1.TabIndex = 36;
+            this.label1.Text = "Δt";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Enabled = false;
+            this.linkLabel1.Location = new System.Drawing.Point(355, 36);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(124, 15);
+            this.linkLabel1.TabIndex = 34;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Save Animation CSV";
+            // 
+            // lKinematicsTimes
+            // 
+            this.lKinematicsTimes.Location = new System.Drawing.Point(499, 7);
+            this.lKinematicsTimes.Name = "lKinematicsTimes";
+            this.lKinematicsTimes.Size = new System.Drawing.Size(294, 19);
+            this.lKinematicsTimes.TabIndex = 33;
+            this.lKinematicsTimes.Text = "Last kinematics:";
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Location = new System.Drawing.Point(108, 32);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(100, 23);
+            this.numericUpDown2.TabIndex = 27;
+            this.numericUpDown2.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.numericUpDown2, "(in milliseconds)");
+            this.numericUpDown2.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Location = new System.Drawing.Point(108, 6);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(100, 23);
+            this.numericUpDown3.TabIndex = 25;
+            this.numericUpDown3.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.numericUpDown3, "(in milliseconds)");
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.Enabled = false;
+            this.linkLabel2.Location = new System.Drawing.Point(355, 10);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(138, 15);
+            this.linkLabel2.TabIndex = 31;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Save Animation HTML";
+            // 
+            // btnGenerateEpisodes
+            // 
+            this.btnGenerateEpisodes.Enabled = false;
+            this.btnGenerateEpisodes.Location = new System.Drawing.Point(482, 72);
+            this.btnGenerateEpisodes.Name = "btnGenerateEpisodes";
+            this.btnGenerateEpisodes.Size = new System.Drawing.Size(115, 23);
+            this.btnGenerateEpisodes.TabIndex = 29;
+            this.btnGenerateEpisodes.Text = "Episode from MNs";
+            this.btnGenerateEpisodes.UseVisualStyleBackColor = true;
+            this.btnGenerateEpisodes.Click += new System.EventHandler(this.btnGenerateEpisodes_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 8);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 15);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Animation Start";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(214, 8);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(31, 15);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "(ms)";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 34);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(86, 15);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Animation End";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(214, 34);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 15);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "(ms)";
+            // 
+            // eKinematicsBurstBreak
+            // 
+            this.eKinematicsBurstBreak.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.eKinematicsBurstBreak.Location = new System.Drawing.Point(90, 76);
+            this.eKinematicsBurstBreak.Name = "eKinematicsBurstBreak";
+            this.eKinematicsBurstBreak.Size = new System.Drawing.Size(53, 23);
+            this.eKinematicsBurstBreak.TabIndex = 38;
+            this.toolTip.SetToolTip(this.eKinematicsBurstBreak, "(in milliseconds)");
+            this.eKinematicsBurstBreak.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // lBurstBreak
+            // 
+            this.lBurstBreak.AutoSize = true;
+            this.lBurstBreak.Location = new System.Drawing.Point(18, 78);
+            this.lBurstBreak.Name = "lBurstBreak";
+            this.lBurstBreak.Size = new System.Drawing.Size(66, 15);
+            this.lBurstBreak.TabIndex = 39;
+            this.lBurstBreak.Text = "Burst Break";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(179, 76);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 15);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "Episode Break";
+            // 
+            // eKinematicsEpisodeBreak
+            // 
+            this.eKinematicsEpisodeBreak.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.eKinematicsEpisodeBreak.Location = new System.Drawing.Point(261, 74);
+            this.eKinematicsEpisodeBreak.Name = "eKinematicsEpisodeBreak";
+            this.eKinematicsEpisodeBreak.Size = new System.Drawing.Size(53, 23);
+            this.eKinematicsEpisodeBreak.TabIndex = 40;
+            this.toolTip.SetToolTip(this.eKinematicsEpisodeBreak, "(in milliseconds)");
+            this.eKinematicsEpisodeBreak.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // eKinematicsSomite
+            // 
+            this.eKinematicsSomite.Location = new System.Drawing.Point(418, 74);
+            this.eKinematicsSomite.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.eKinematicsSomite.Name = "eKinematicsSomite";
+            this.eKinematicsSomite.Size = new System.Drawing.Size(43, 23);
+            this.eKinematicsSomite.TabIndex = 42;
+            this.eKinematicsSomite.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(339, 78);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(73, 15);
+            this.label7.TabIndex = 43;
+            this.label7.Text = "# of Somites";
             // 
             // MainForm
             // 
@@ -2124,6 +2431,16 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
+            this.tabMNKinematics.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsBurstBreak)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsEpisodeBreak)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsSomite)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2275,5 +2592,26 @@ namespace SiliFish.UI
         private Label lAnimationdt;
         private LinkLabel linkSaveTemplateJSON;
         private LinkLabel linkSaveModelJSON;
+        private TabPage tabMNKinematics;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private Panel panel1;
+        private Label label7;
+        private NumericUpDown eKinematicsSomite;
+        private Label label2;
+        private NumericUpDown eKinematicsEpisodeBreak;
+        private Label lBurstBreak;
+        private NumericUpDown eKinematicsBurstBreak;
+        private NumericUpDown numericUpDown1;
+        private Label label1;
+        private LinkLabel linkLabel1;
+        private Label lKinematicsTimes;
+        private NumericUpDown numericUpDown2;
+        private NumericUpDown numericUpDown3;
+        private LinkLabel linkLabel2;
+        private Button btnGenerateEpisodes;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label6;
     }
 }

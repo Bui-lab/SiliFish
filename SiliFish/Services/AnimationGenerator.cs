@@ -135,7 +135,7 @@ namespace SiliFish.Services
 
             return CreateTimeSeries(title: model.ModelName + "Animation.html",
                 animParams,
-                model.GenerateSpineCoordinates(iStart, iEnd), 
+                SwimmingModelKinematics.GenerateSpineCoordinates(model, iStart, iEnd), 
                 model.TimeArray, 
                 iStart, 
                 iEnd, 

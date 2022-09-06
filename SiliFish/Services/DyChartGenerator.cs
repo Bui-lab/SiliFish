@@ -82,7 +82,7 @@ namespace SiliFish.Services
             double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string title = "Time,";
@@ -121,7 +121,7 @@ namespace SiliFish.Services
             double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string gapTitle = "Time,";
@@ -234,7 +234,7 @@ namespace SiliFish.Services
             double yMax = cells.Max(c => c.MaxStimulusValue);
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string title = "Time,";
@@ -277,7 +277,7 @@ namespace SiliFish.Services
             double yMax = 1.2;
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, MuscleCell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
+            IEnumerable<IGrouping<string, MuscleCell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
             foreach (IGrouping<string, MuscleCell> cellGroup in cellGroups)
             {
                 string title = "Time,";
@@ -324,7 +324,7 @@ namespace SiliFish.Services
         {
             List<ChartStruct> charts = new();
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes();
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
 
             double[] Time = model.TimeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;

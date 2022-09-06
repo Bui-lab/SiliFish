@@ -43,21 +43,13 @@ namespace SiliFish
     public class SwimmingModel
     {
         public RunParam runParam;
+        public KinemParam kinemParam;
         public double cv = 1; //the transmission speed
 
         protected double E_glu = 0; //the reversal potential of glutamate
         protected double E_gly = -70; //the reversal potential of glycine
         protected double E_gaba = -70; //the reversal potential of GABA
         protected double E_ach = 120; //reversal potential for ACh receptors
-
-        public double kinemZeta = 3.0; //#damping constant , high zeta =0.5/ low = 0.1
-        public double kinemW0 = 2.5; //20Hz = 125.6
-        public double kinemAlpha = 0;
-        public double kinemBeta = 0;
-        public double kinemConvCoef = 0.1;
-        public double kinemBound = 0.5;
-        public int kinemDelay = 1000;
-
 
         public static Random rand = new(0);
 
@@ -104,6 +96,7 @@ namespace SiliFish
         public SwimmingModel()
         {
             modelName = this.GetType().Name;
+            kinemParam = new();
         }
 
         [JsonIgnore]
@@ -144,6 +137,22 @@ namespace SiliFish
                 musclePools = value;
             }
         }
+        [JsonIgnore]
+        public List<CellPool> MotoNeuronPools //MotoNeurons are the neurons projecting to the muscle cells
+        {
+            get
+            {
+                if (!initialized)
+                    InitStructures(1);
+                return chemPoolConnections
+                    .Where(conn => conn.TargetPool.CellType == CellType.MuscleCell)
+                    .Select(conn => conn.SourcePool)
+                    .Distinct()
+                    .ToList();
+            }
+        }
+
+
         public List<InterPool> ChemPoolConnections 
         { 
             get 
@@ -239,13 +248,13 @@ namespace SiliFish
                 { "Dynamic.E_gly", E_gly },
                 { "Dynamic.E_gaba", E_gaba },
 
-                { "Kinematics.Damping Coef", kinemZeta },
-                { "Kinematics.w0", kinemW0 },
-                { "Kinematics.Conversion Coef", kinemConvCoef },
-                { "Kinematics.Alpha", kinemAlpha },
-                { "Kinematics.Beta", kinemBeta },
-                { "Kinematics.Boundary", kinemBound },
-                { "Kinematics.Delay", kinemDelay }
+                { "Kinematics.Damping Coef", kinemParam.kinemZeta },
+                { "Kinematics.w0", kinemParam.kinemW0 },
+                { "Kinematics.Conversion Coef", kinemParam.kinemConvCoef },
+                { "Kinematics.Alpha", kinemParam.kinemAlpha },
+                { "Kinematics.Beta", kinemParam.kinemBeta },
+                { "Kinematics.Boundary", kinemParam.kinemBound },
+                { "Kinematics.Delay", kinemParam.kinemDelay }
             };
 
             return paramDict;
@@ -260,7 +269,6 @@ namespace SiliFish
                 { "Dynamic.E_gly", "Reversal potential of glycine" },
                 { "Dynamic.E_gaba", "Reversal potential of GABA" },
 
-                { "Kinematics.Damping Coef", kinemZeta },
                 { "Kinematics.w0", "Natural oscillation frequency" },
                 { "Kinematics.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
                 { "Kinematics.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
@@ -289,26 +297,26 @@ namespace SiliFish
             paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
 
-            paramDict.AddObject("Kinematics.Damping Coef", kinemZeta, skipIfExists: true);
-            paramDict.AddObject("Kinematics.w0", kinemW0, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Conversion Coef", kinemConvCoef, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Alpha", kinemAlpha, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Beta", kinemBeta, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Boundary", kinemBound, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Delay", kinemDelay, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Damping Coef", kinemParam.kinemZeta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.w0", kinemParam.kinemW0, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Conversion Coef", kinemParam.kinemConvCoef, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Alpha", kinemParam.kinemAlpha, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Beta", kinemParam.kinemBeta, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Boundary", kinemParam.kinemBound, skipIfExists: true);
+            paramDict.AddObject("Kinematics.Delay", kinemParam.kinemDelay, skipIfExists: true);
         }
 
         public virtual void SetAnimationParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            kinemZeta = paramExternal.Read("Kinematics.Damping Coef", kinemZeta);
-            kinemW0 = paramExternal.Read("Kinematics.w0", kinemW0);
-            kinemConvCoef = paramExternal.Read("Kinematics.Conversion Coef", kinemConvCoef);
-            kinemAlpha = paramExternal.Read("Kinematics.Alpha", kinemAlpha);
-            kinemBeta = paramExternal.Read("Kinematics.Beta", kinemBeta);
-            kinemBound = paramExternal.Read("Kinematics.Boundary", kinemBound);
-            kinemDelay = paramExternal.Read("Kinematics.Delay", kinemDelay);
+            kinemParam.kinemZeta = paramExternal.Read("Kinematics.Damping Coef", kinemParam.kinemZeta);
+            kinemParam.kinemW0 = paramExternal.Read("Kinematics.w0", kinemParam.kinemW0);
+            kinemParam.kinemConvCoef = paramExternal.Read("Kinematics.Conversion Coef", kinemParam.kinemConvCoef);
+            kinemParam.kinemAlpha = paramExternal.Read("Kinematics.Alpha", kinemParam.kinemAlpha);
+            kinemParam.kinemBeta = paramExternal.Read("Kinematics.Beta", kinemParam.kinemBeta);
+            kinemParam.kinemBound = paramExternal.Read("Kinematics.Boundary", kinemParam.kinemBound);
+            kinemParam.kinemDelay = paramExternal.Read("Kinematics.Delay", kinemParam.kinemDelay);
         }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
@@ -568,7 +576,7 @@ namespace SiliFish
                 RunModelLoop(seed, rp);
                 if (count > 1 && ModelRun)
                 {
-                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = GetSwimmingEpisodes();
+                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(this);
                     string runfilename = $"{filename}_Run{iRunCounter}";
                     runfilename = Path.Combine(outputFolder, runfilename);
                     //Util.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
@@ -582,212 +590,6 @@ namespace SiliFish
                     return;
                 }
             }
-        }
-        private (double[,] vel, double[,] angle) GenerateSpineVelAndAngleNoSomite(int startIndex, int endIndex)
-        {
-            if (!model_run) return (null, null);
-            List<Cell> LeftMuscleCells = MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Left).SelectMany(mp => mp.GetCells()).ToList();
-            List<Cell> RightMuscleCells = MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Right).SelectMany(mp => mp.GetCells()).ToList();
-
-            int nmax = endIndex - startIndex + 1;
-            //TODO: left and right muscle cell count can be different
-            int nMuscle = LeftMuscleCells.Count;
-            if (nMuscle == 0) return (null, null);
-            // Allocating arrays for velocity and position
-            double[,] vel = new double[nMuscle, nmax];
-            double[,] angle = new double[nMuscle, nmax];
-            // Setting constants and initial values for vel. and pos.
-            double vel0 = 0.0;
-            double angle0 = 0.0;
-            double dt = runParam.dt;
-            int k = 0;
-
-            foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
-            {
-                MuscleCell rightMuscle = (MuscleCell)RightMuscleCells.FirstOrDefault(c => c.Sequence == leftMuscle.Sequence);
-                if (rightMuscle == null)
-                    continue;
-                vel[k, 0] = vel0;
-                angle[k, 0] = angle0;
-                angle[nMuscle - 1, 0] = 0.0;
-                double R = (leftMuscle.R + rightMuscle.R) / 2;
-                double coef = kinemAlpha + kinemBeta * R;
-                if (Math.Abs(coef) < 0.0001)
-                    coef = kinemConvCoef;
-                foreach (var i in Enumerable.Range(1, nmax - 1))
-                {
-                    double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    //khi is the damping coefficient: "Kinematics.Damping Coef"
-                    double acc = -Math.Pow(kinemW0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
-                    vel[k, i] = vel[k, i - 1] + acc * dt;
-                    angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
-                }
-                k++;
-            }
-
-            return (vel, angle);
-        }
-
-        private (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(int startIndex, int endIndex)
-        {
-            if (!model_run) return (null, null);
-            if (NumberOfSomites <= 0)
-                return GenerateSpineVelAndAngleNoSomite(startIndex, endIndex);
-
-            int nmax = endIndex - startIndex + 1;
-            int nSomite = NumberOfSomites;
-
-            // Allocating arrays for velocity and position
-            double[,] vel = new double[nSomite, nmax];
-            double[,] angle = new double[nSomite, nmax];
-            // Setting constants and initial values for vel. and pos.
-            double vel0 = 0.0;
-            double angle0 = 0.0;
-            double dt = runParam.dt;
-            
-            for (int somite = 0; somite < nSomite; somite++)
-            {
-                List<Cell> LeftMuscleCells = MusclePools
-                    .Where(mp => mp.PositionLeftRight == SagittalPlane.Left)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
-                List<Cell> RightMuscleCells = MusclePools
-                    .Where(mp => mp.PositionLeftRight == SagittalPlane.Right)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
-                double R = LeftMuscleCells.Sum(c => (c as MuscleCell).R) + RightMuscleCells.Sum(c => (c as MuscleCell).R);
-                R /= (LeftMuscleCells.Count + RightMuscleCells.Count);
-                double coef = kinemAlpha + kinemBeta * R;
-                if (Math.Abs(coef) < 0.0001)
-                    coef = kinemConvCoef;
-                vel[somite, 0] = vel0;
-                angle[somite, 0] = angle0;
-                angle[nSomite - 1, 0] = 0.0;
-                foreach (var i in Enumerable.Range(1, nmax - 1))
-                {
-                    double voltDiff = RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
-                    double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
-                    vel[somite, i] = vel[somite, i - 1] + acc * dt;
-                    angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;
-                }          
-            }
-
-            return (vel, angle);
-        }
-
-        public Dictionary<string, Coordinate[]> GenerateSpineCoordinates(int startIndex, int endIndex)
-        {
-            (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(startIndex, endIndex);
-
-            if (vel?.GetLength(0) != angle?.GetLength(0) ||
-                vel?.GetLength(1) != angle?.GetLength(1))
-                return null;
-            int nSpineNode = vel.GetLength(0);
-            int nMax = vel.GetLength(1);
-            double[,] x = new double[nSpineNode, nMax + 1];
-            double[,] y = new double[nSpineNode, nMax + 1];
-            foreach (var i in Enumerable.Range(0, nMax))
-            {
-                x[0, i] = 0;
-                y[0, i] = 0;
-                angle[0, i] = 0;
-                foreach (int l in Enumerable.Range(1, nSpineNode - 1))
-                {
-                    angle[l, i] = angle[l - 1, i] + angle[l, i];
-                    x[l, i] = x[l - 1, i] + Math.Sin(angle[l, i]);
-                    y[l, i] = y[l - 1, i] - Math.Cos(angle[l, i]);
-                }
-            }
-
-            Dictionary<string, Coordinate[]> somiteCoordinates = new();
-            foreach (int somiteIndex in Enumerable.Range(0, nSpineNode))
-            {
-                string somite = "S" + somiteIndex.ToString("000"); //for proper sorting
-                somiteCoordinates.Add(somite, new Coordinate[nMax + 1]);
-                somiteCoordinates[somite][0] = (0, 0);
-                foreach (var i in Enumerable.Range(0, nMax))
-                {
-                    somiteCoordinates[somite][i] = (x[somiteIndex, i], y[somiteIndex, i]);
-                }
-            }
-            return somiteCoordinates;
-        }
-
-        public (Coordinate[] , List<SwimmingEpisode>) GetSwimmingEpisodes()
-        {
-            /*Converted from the code written by Yann Roussel and Tuan Bui
-            This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
-            by VRMuscle and VLMuscle
-            :param dt: float, time step
-            :param lower_bound: int, bound used to discriminate swimming tail beats from noise
-            :param upper_bound: int, bound used to discriminate swimming tail beats from noise
-            :param delay: float, defines the time window during which we consider tail beats
-            :return: Four 1-D numpy arrays for number of tail beats, interbeat time intervals, start times and beat times
-            */
-
-            Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(0, Time.Length - 1);
-
-            //We will only use the tip of the tail to determine tail beats (if the x coordinate of the tip is smaller (or more negative)
-            //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
-
-            Coordinate[] tail_tip_coord = spineCoordinates.Last().Value;
-            double left_bound = -kinemBound;
-            double right_bound = kinemBound;
-            int side = 0;
-            const int LEFT = -1;
-            const int RIGHT = 1;
-            int nMax = Time.Length;
-            double dt = runParam.dt;
-            double offset = runParam.tSkip_ms;
-            int delay = (int)(kinemDelay / dt);
-            List<SwimmingEpisode> episodes = new();
-            SwimmingEpisode lastEpisode = null;
-            int i = (int)(offset/dt);
-            while (i < nMax)
-            {
-                int iMax = Math.Min(i + delay, nMax);
-                Coordinate[] window = tail_tip_coord[i..iMax];
-                double t = Time[i];
-                if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
-                {
-                    side = 0;
-                    lastEpisode?.EndEpisode(t);
-                    lastEpisode = null;
-                    i = iMax;
-                    continue;
-                }
-
-                if (lastEpisode == null)
-                {
-                    if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
-                    {
-                        lastEpisode = new SwimmingEpisode(t);
-                        episodes.Add(lastEpisode);
-                        side = LEFT;
-                    }
-                    else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
-                    {
-                        lastEpisode = new SwimmingEpisode(t);
-                        episodes.Add(lastEpisode);
-                        side = RIGHT;
-                    }
-                }
-                else // During an episode
-                {
-                    if (tail_tip_coord[i].X < left_bound && side == RIGHT)
-                    {
-                        side = LEFT;
-                        lastEpisode.EndBeat(t);
-                    }
-
-                    else if (tail_tip_coord[i].X > right_bound && side == LEFT)
-                    {
-                        side = RIGHT;
-                        lastEpisode.EndBeat(t);
-                    }
-                }
-                i++;
-            }
-
-            return (tail_tip_coord, episodes.Where(e => e.End > 0).ToList());
         }
 
         public static void ExceptionHandling(string name, Exception ex)

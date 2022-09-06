@@ -9,6 +9,7 @@ namespace SiliFish.DataTypes
         private readonly double episodeStart;
         private double episodeEnd;
         double lastBeatStart = -1;
+        public bool InBeat { get { return lastBeatStart >= 0; } }
         List<(double beatStart, double beatEnd)> beats;
         public List<(double beatStart, double beatEnd)> Beats { get => beats; }
         public List<(double beatStart, double beatEnd)> InlierBeats
@@ -30,20 +31,24 @@ namespace SiliFish.DataTypes
             }
         }
 
-        public SwimmingEpisode(double s)
+        public SwimmingEpisode(double start)
         {
-            episodeStart = s;
+            episodeStart = start;
             beats = new();
-            lastBeatStart = s;
+            lastBeatStart = start;
         }
-        public SwimmingEpisode(double s, double e)
+        public SwimmingEpisode(double start, double end)
         {
-            episodeStart = s;
-            episodeEnd = e;
+            episodeStart = start;
+            episodeEnd = end;
             beats = new();
-            lastBeatStart = s;
+            lastBeatStart = start;
         }
 
+        public void StartBeat(double start)
+        {
+            lastBeatStart = start;
+        }
         public void EndBeat(double e)
         {
             if (lastBeatStart < 0) return;
@@ -67,5 +72,40 @@ namespace SiliFish.DataTypes
         public double Start { get { return episodeStart; } }
         public double End { get { return episodeEnd; } }
 
+        public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> indices, double burstBreak, double episodeBreak)
+        {
+            List<SwimmingEpisode> episodes = new();
+            int ind = 0;
+            bool inEpisode = false;
+            SwimmingEpisode episode = null;
+            double last_t = -1;
+            while (ind < indices.Count)
+            {
+                double t = TimeArray[indices[ind]];
+                if (!inEpisode)
+                {
+                    inEpisode = true;
+                    episode = new(t);
+                    episodes.Add(episode);
+                }
+                else if (last_t > 0)
+                {
+                    if ((t - last_t) > episodeBreak)
+                    {
+                        episode.EndEpisode(last_t);
+                        inEpisode = false;
+                        episode = null;
+                    }
+                    else if (episode.InBeat && (t - last_t) > burstBreak)
+                    {
+                        episode.EndBeat(t);
+                    }
+                    else if (!episode.InBeat)
+                        episode.StartBeat(t);
+                }
+                last_t = t;
+            }
+            return episodes;
+        }
     }
 }

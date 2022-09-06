@@ -1247,7 +1247,7 @@ namespace SiliFish.UI
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
             Model.SetAnimationParameters(ReadParams("Kinematics"));
-            lastAnimationSpineCoordinates = Model.GenerateSpineCoordinates(lastAnimationStartIndex, lastAnimationEndIndex);
+            lastAnimationSpineCoordinates = SwimmingModelKinematics.GenerateSpineCoordinates(Model, lastAnimationStartIndex, lastAnimationEndIndex);
 
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
@@ -1914,7 +1914,10 @@ namespace SiliFish.UI
             eAnimationdt.Value = 10 * edt.Value;
         }
 
-
+        private void btnGenerateEpisodes_Click(object sender, EventArgs e)
+        {
+            SwimmingModelKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, (int)eKinematicsSomite.Value);
+        }
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {
