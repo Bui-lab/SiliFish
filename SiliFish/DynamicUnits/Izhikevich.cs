@@ -16,7 +16,8 @@ namespace SiliFish.DynamicUnits
         private double d;
 
         // vmax is the peak membrane potential of single action potentials
-        double Vmax;
+        [JsonIgnore]
+        public double Vmax;
         // vr, vt are the resting and threshold membrane potential 
         [JsonIgnore]
         public double Vr, Vt;

@@ -44,6 +44,11 @@ namespace SiliFish.ModelUnits
         {
             return V?.MaxValue(iStart, iEnd) ?? 0;
         }
+
+        public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        {
+            throw new NotImplementedException();
+        }
         public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
             return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
@@ -167,21 +172,6 @@ namespace SiliFish.ModelUnits
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
 
 
-        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
-        {
-            double cur1 = base.MinCurrentValue(iStart, iEnd);
-            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            return Math.Min(Math.Min(cur1, cur2), cur3);
-        }
-        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
-        {
-            double cur1 = base.MaxCurrentValue(iStart, iEnd);
-            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            return Math.Max(Math.Max(cur1, cur2), cur3);
-        }
-
         /// <summary>
         /// Used as a template
         /// </summary>
@@ -224,6 +214,26 @@ namespace SiliFish.ModelUnits
             Terminals = new List<ChemicalSynapse>();
             TimeLine_ms = timeline;
             ConductionVelocity = cv;
+        }
+
+        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            double cur1 = base.MinCurrentValue(iStart, iEnd);
+            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Math.Min(Math.Min(cur1, cur2), cur3);
+        }
+        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            double cur1 = base.MaxCurrentValue(iStart, iEnd);
+            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Math.Max(Math.Max(cur1, cur2), cur3);
+        }
+
+        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        {
+            return V.GetPeakIndices(Core.Vmax, iStart, iEnd);
         }
 
         public override Dictionary<string, object> Parameters
@@ -349,18 +359,6 @@ namespace SiliFish.ModelUnits
         public double[] Tension { get { return Core.CalculateTension(V); } }
         public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
 
-        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
-        {
-            double cur1 = base.MinCurrentValue(iStart, iEnd);
-            double cur2 = EndPlates?.Count > 0 ? EndPlates.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            return Math.Min(cur1, cur2);
-        }
-        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
-        {
-            double cur1 = base.MaxCurrentValue(iStart, iEnd);
-            double cur2 = EndPlates?.Count > 0 ? EndPlates.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            return Math.Max(cur1, cur2);
-        }
         /// <summary>
         /// Used as a template
         /// </summary>
@@ -394,6 +392,24 @@ namespace SiliFish.ModelUnits
             GapJunctions = new List<GapJunction>();
             coordinate = coor;
             TimeLine_ms = timeline;
+        }
+
+        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            double cur1 = base.MinCurrentValue(iStart, iEnd);
+            double cur2 = EndPlates?.Count > 0 ? EndPlates.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Math.Min(cur1, cur2);
+        }
+        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            double cur1 = base.MaxCurrentValue(iStart, iEnd);
+            double cur2 = EndPlates?.Count > 0 ? EndPlates.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Math.Max(cur1, cur2);
+        }
+
+        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        {
+            return V.GetPeakIndices(Core.Vr * 1.1, iStart, iEnd);//URGENT this is a random multiplier 
         }
 
         public override Dictionary<string, object> Parameters

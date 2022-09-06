@@ -48,9 +48,9 @@ namespace SiliFish.PredefinedModels
             cv = 4;
             stim_value1 = 50;
             stim_value2 = 0;
-            kinemZeta = 3.0;
-            kinemW0 = 2.5; 
-            kinemConvCoef = 0.1;
+            kinemParam.kinemZeta = 3.0;
+            kinemParam.kinemW0 = 2.5;
+            kinemParam.kinemConvCoef = 0.1;
             CellPool.rangeNoiseMultiplier = GetRangeNoiseMultiplier;
             CellPool.gapWeightNoiseMultiplier = GetGapWeightNoiseMultiplier;
             CellPool.synWeightNoiseMultiplier = GetSynWeightNoiseMultiplier;

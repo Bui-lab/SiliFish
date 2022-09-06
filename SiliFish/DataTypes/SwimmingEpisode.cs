@@ -45,15 +45,6 @@ namespace SiliFish.DataTypes
             lastBeatStart = start;
         }
 
-        public override string ToString()
-        {
-            string ret = $"Episode Start - End {episodeStart:0.##}-{episodeEnd:0.##}";
-            foreach (var (beatStart, beatEnd) in beats)
-            {
-                ret += $"\r\nBeat:{beatStart:0.##}-{beatEnd:0.##}";
-            }
-            return ret;
-        }
         public void StartBeat(double start)
         {
             lastBeatStart = start;
@@ -62,7 +53,7 @@ namespace SiliFish.DataTypes
         {
             if (lastBeatStart < 0) return;
             beats.Add((lastBeatStart, e));
-            lastBeatStart = -1;
+            lastBeatStart = e;
         }
 
         public void EndEpisode(double e)
@@ -81,5 +72,40 @@ namespace SiliFish.DataTypes
         public double Start { get { return episodeStart; } }
         public double End { get { return episodeEnd; } }
 
+        public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> indices, double burstBreak, double episodeBreak)
+        {
+            List<SwimmingEpisode> episodes = new();
+            int ind = 0;
+            bool inEpisode = false;
+            SwimmingEpisode episode = null;
+            double last_t = -1;
+            while (ind < indices.Count)
+            {
+                double t = TimeArray[indices[ind]];
+                if (!inEpisode)
+                {
+                    inEpisode = true;
+                    episode = new(t);
+                    episodes.Add(episode);
+                }
+                else if (last_t > 0)
+                {
+                    if ((t - last_t) > episodeBreak)
+                    {
+                        episode.EndEpisode(last_t);
+                        inEpisode = false;
+                        episode = null;
+                    }
+                    else if (episode.InBeat && (t - last_t) > burstBreak)
+                    {
+                        episode.EndBeat(t);
+                    }
+                    else if (!episode.InBeat)
+                        episode.StartBeat(t);
+                }
+                last_t = t;
+            }
+            return episodes;
+        }
     }
 }
