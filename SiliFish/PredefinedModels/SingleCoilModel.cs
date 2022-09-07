@@ -16,12 +16,14 @@ namespace SiliFish.PredefinedModels
 
 
         #region Weight parameters
+        //New version of SiliFish uses the max gap current, rather than summation.
+        //Therefore gap weights for the predefined models are modified to reflect that
         double IC_IC_gap_weight = 0.001;
-        double IC_MN_gap_weight = 0.04;
-        double IC_V0d_gap_weight = 0.05;
+        double IC_MN_gap_weight = 0.15; //previous value: 0.04;
+        double IC_V0d_gap_weight = 0.25; //previous value: 0.05;
         double MN_MN_gap_weight = 0.1;
-        double V0d_V0d_gap_weight = 0.04;
-        double MN_V0d_gap_weight = 0.01;
+        double V0d_V0d_gap_weight = 0.12; //previous value: 0.04;
+        double MN_V0d_gap_weight = 0.03; //previous value: 0.01;
         double V0d_MN_syn_weight = 2;
         double V0d_IC_syn_weight = 2;
         double MN_Muscle_syn_weight = 0.015;

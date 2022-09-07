@@ -513,5 +513,18 @@ namespace SiliFish.Services
             return PlotHTML;
         }
 
+        public static string PlotSummaryMembranePotentials(SwimmingModel model, List<Cell> Cells, 
+            int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
+        {
+            double dt = model.runParam.dt;
+            int iStart = (int)((tStart + model.runParam.tSkip_ms) / dt);
+            int iEnd = (int)((tEnd + model.runParam.tSkip_ms) / dt);
+            if (iEnd < iStart || iEnd >= model.TimeArray.Length)
+                iEnd = model.TimeArray.Length - 1;
+
+            List<ChartStruct> charts = CreateMembranePotentialCharts(model.TimeArray, Cells, groupByPool: true, iStart, iEnd);
+            string PlotHTML = PlotCharts(title: "Summary Membrane Potentials", charts, width, height);
+            return PlotHTML;
+        }
     }
 }

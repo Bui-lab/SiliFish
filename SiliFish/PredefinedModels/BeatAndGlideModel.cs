@@ -15,13 +15,15 @@ namespace SiliFish.PredefinedModels
         protected CellPool L_Muscle, R_Muscle;
 
         #region Weight parameters
-        protected double MN_MN_gap_weight = 0.005;
-        protected double dI6_dI6_gap_weight = 0.04;
-        protected double V0v_V0v_gap_weight = 0.05;
+        //New version of SiliFish uses the max gap current, rather than summation.
+        //Therefore gap weights for the predefined models are modified to reflect that
+        protected double MN_MN_gap_weight = 0.01; //previous value: 0.005;
+        protected double dI6_dI6_gap_weight = 0.08; //previous value: 0.04;
+        protected double V0v_V0v_gap_weight = 0.01; //previous value: 0.05;
         protected double V2a_V2a_gap_weight = 0.005;
-        protected double V2a_MN_gap_weight = 0.005;
-        protected double MN_dI6_gap_weight = 0.0001;
-        protected double MN_V0v_gap_weight = 0.005;
+        protected double V2a_MN_gap_weight = 0.01; //previous value: 0.005;
+        protected double MN_dI6_gap_weight = 0.0002; //previous value: 0.0001;
+        protected double MN_V0v_gap_weight = 0.01; //previous value: 0.005;
 
         protected double V2a_V2a_syn_weight = 0.3;
         protected double V2a_MN_syn_weight = 0.5;

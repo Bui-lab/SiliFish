@@ -17,15 +17,17 @@ namespace SiliFish.PredefinedModels
         protected int tasyncdelay = 0;
 
         #region Weight parameters
+        //New version of SiliFish uses the max gap current, rather than summation.
+        //Therefore gap weights for the predefined models are modified to reflect that
         double IC_IC_gap_weight = 0.0001;
-        double IC_MN_gap_weight = 0.05;
-        double IC_V0d_gap_weight = 0.05;
-        double IC_V0v_gap_weight = 0.00005;
-        double IC_V2a_gap_weight = 0.15;
-        
-        double MN_MN_gap_weight = 0.07;
-        double MN_V0d_gap_weight=0.0001 ;
-        double MN_V0v_gap_weight= 0.0001;
+        double IC_MN_gap_weight = 0.15; //previous value: 0.05;
+        double IC_V0d_gap_weight = 0.15; //previous value: 0.05;
+        double IC_V0v_gap_weight = 0.00015; //previous value: 0.00005;
+        double IC_V2a_gap_weight = 0.30; //previous value: 0.15;
+
+        double MN_MN_gap_weight = 0.21; //previous value: 0.07;
+        double MN_V0d_gap_weight = 0.0003; //previous value: 0.0001 ;
+        double MN_V0v_gap_weight = 0.0003; //previous value: 0.0001;
         double MN_Muscle_syn_weight = 0.02;
 
         double V0d_MN_syn_weight = 2.0;
@@ -34,10 +36,10 @@ namespace SiliFish.PredefinedModels
         double V0d_V0d_gap_weight = 0.05;
 
         double V0v_IC_syn_weight = 0.24;
-        double V0v_V0v_gap_weight = 0.044;
-        
-        double V2a_MN_gap_weight = 0.005;
-        double V2a_V2a_gap_weight = 0.005;
+        double V0v_V0v_gap_weight = 0.132; //previous value: 0.044;
+
+        double V2a_MN_gap_weight = 0.015; //previous value: 0.005;
+        double V2a_V2a_gap_weight = 0.01; //previous value: 0.005;
         double V2a_V0v_syn_weight = 0.0375;
 
         

@@ -152,6 +152,26 @@ namespace SiliFish
             }
         }
 
+        public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
+        {
+            List<CellPool> motoNeurons = MotoNeuronPools;
+            int maxSeq = NumberOfSomites - numSomites;
+            if (NumberOfSomites <= 0)
+                maxSeq = CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
+            List<Cell> leftMNs = motoNeurons
+                                .Where(pool => pool.PositionLeftRight == SagittalPlane.Left)
+                                .SelectMany(pool => pool.Cells)
+                                .Where(c => NumberOfSomites > 0 && c.Somite > maxSeq
+                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq)
+                                .ToList();
+            List<Cell> rightMNs = motoNeurons
+                                .Where(pool => pool.PositionLeftRight == SagittalPlane.Right)
+                                .SelectMany(pool => pool.Cells)
+                                .Where(c => NumberOfSomites > 0 && c.Somite > maxSeq
+                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq)
+                                .ToList();
+            return (leftMNs, rightMNs);
+        }
 
         public List<InterPool> ChemPoolConnections 
         { 
