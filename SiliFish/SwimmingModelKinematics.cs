@@ -249,25 +249,9 @@ namespace SiliFish
         }
 
 
-        public static List<SwimmingEpisode> GetSwimmingEpisodesUsingMotoNeurons(SwimmingModel model, int numSomites)
+        public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(SwimmingModel model, List<Cell> leftMNs, List<Cell> rightMNs, 
+            double burstBreak,  double episodeBreak)
         {
-            List<CellPool> motoNeurons = model.MotoNeuronPools;
-            int maxSeq = model.NumberOfSomites - numSomites;
-            if (model.NumberOfSomites <= 0)
-                maxSeq = model.CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
-            List<Cell> leftMNs = motoNeurons
-                                .Where(pool => pool.PositionLeftRight == SagittalPlane.Left)
-                                .SelectMany(pool => pool.Cells)
-                                .Where(c => model.NumberOfSomites> 0 && c.Somite > maxSeq 
-                                                || model.NumberOfSomites <= 0 && c.Sequence > maxSeq)
-                                .ToList();
-            List<Cell> rightMNs = motoNeurons
-                                .Where(pool => pool.PositionLeftRight == SagittalPlane.Right)
-                                .SelectMany(pool => pool.Cells)
-                                .Where(c => model.NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || model.NumberOfSomites <= 0 && c.Sequence > maxSeq)
-                                .ToList();
-
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();
             int iSkip = (int)(model.runParam.tSkip_ms / model.runParam.dt);
@@ -277,12 +261,11 @@ namespace SiliFish
                 rightSpikes.AddRange(c.GetSpikeIndices(iSkip));
             leftSpikes.Sort();
             rightSpikes.Sort();
-            double burstBreak = 10;//in ms URGENT
-            double episodeBreak = 100; //in ms URGENT
+
             List<SwimmingEpisode> leftEpisodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, burstBreak, episodeBreak);
             List<SwimmingEpisode> rightEpisodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, rightSpikes, burstBreak, episodeBreak);
 
-            return null;// episodes.Where(e => e.End > 0).ToList();
+            return (leftEpisodes, rightEpisodes);
         }
 
     }

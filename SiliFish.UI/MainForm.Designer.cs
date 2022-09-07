@@ -126,6 +126,27 @@ namespace SiliFish.UI
             this.linkSaveHTML3D = new System.Windows.Forms.LinkLabel();
             this.dd3DModelType = new System.Windows.Forms.ComboBox();
             this.btnGenerate3DModel = new System.Windows.Forms.Button();
+            this.tabMNKinematics = new System.Windows.Forms.TabPage();
+            this.splitKinematics = new System.Windows.Forms.SplitContainer();
+            this.webViewSummaryV = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.eEpisodesLeft = new System.Windows.Forms.RichTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.ePlotKinematicsHeight = new System.Windows.Forms.NumericUpDown();
+            this.ePlotKinematicsWidth = new System.Windows.Forms.NumericUpDown();
+            this.lPlotKinematicsWidth = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lPlotKinematicsHeight = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.eKinematicsSomite = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.eKinematicsEpisodeBreak = new System.Windows.Forms.NumericUpDown();
+            this.lBurstBreak = new System.Windows.Forms.Label();
+            this.eKinematicsBurstBreak = new System.Windows.Forms.NumericUpDown();
+            this.lKinematicsTimes = new System.Windows.Forms.Label();
+            this.btnGenerateEpisodes = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabAnimation = new System.Windows.Forms.TabPage();
             this.webViewAnimation = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pAnimation = new System.Windows.Forms.Panel();
@@ -177,27 +198,7 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.tabMNKinematics = new System.Windows.Forms.TabPage();
-            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.lKinematicsTimes = new System.Windows.Forms.Label();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.btnGenerateEpisodes = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.eKinematicsBurstBreak = new System.Windows.Forms.NumericUpDown();
-            this.lBurstBreak = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.eKinematicsEpisodeBreak = new System.Windows.Forms.NumericUpDown();
-            this.eKinematicsSomite = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
+            this.eEpisodesRight = new System.Windows.Forms.RichTextBox();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -249,6 +250,18 @@ namespace SiliFish.UI
             this.tab3DModel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webView3DModel)).BeginInit();
             this.p3DModel.SuspendLayout();
+            this.tabMNKinematics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitKinematics)).BeginInit();
+            this.splitKinematics.Panel1.SuspendLayout();
+            this.splitKinematics.Panel2.SuspendLayout();
+            this.splitKinematics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webViewSummaryV)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotKinematicsHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotKinematicsWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsSomite)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsEpisodeBreak)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsBurstBreak)).BeginInit();
             this.tabAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewAnimation)).BeginInit();
             this.pAnimation.SuspendLayout();
@@ -264,15 +277,6 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
-            this.tabMNKinematics.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsBurstBreak)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsEpisodeBreak)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsSomite)).BeginInit();
             this.SuspendLayout();
             // 
             // rbSingleCoil
@@ -967,7 +971,7 @@ namespace SiliFish.UI
             this.webViewPlot.Size = new System.Drawing.Size(766, 329);
             this.webViewPlot.TabIndex = 1;
             this.webViewPlot.ZoomFactor = 1D;
-            this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlot_CoreWebView2InitializationCompleted);
+            this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
             // 
             // pPlot
             // 
@@ -1490,6 +1494,296 @@ namespace SiliFish.UI
             this.btnGenerate3DModel.Text = "Generate 3D Model";
             this.btnGenerate3DModel.UseVisualStyleBackColor = true;
             this.btnGenerate3DModel.Click += new System.EventHandler(this.btnGenerate3DModel_Click);
+            // 
+            // tabMNKinematics
+            // 
+            this.tabMNKinematics.Controls.Add(this.splitKinematics);
+            this.tabMNKinematics.Controls.Add(this.panel1);
+            this.tabMNKinematics.Location = new System.Drawing.Point(4, 24);
+            this.tabMNKinematics.Name = "tabMNKinematics";
+            this.tabMNKinematics.Size = new System.Drawing.Size(786, 511);
+            this.tabMNKinematics.TabIndex = 7;
+            this.tabMNKinematics.Text = "MN Based Kinematics";
+            this.tabMNKinematics.UseVisualStyleBackColor = true;
+            // 
+            // splitKinematics
+            // 
+            this.splitKinematics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitKinematics.Location = new System.Drawing.Point(0, 78);
+            this.splitKinematics.Name = "splitKinematics";
+            // 
+            // splitKinematics.Panel1
+            // 
+            this.splitKinematics.Panel1.Controls.Add(this.webViewSummaryV);
+            // 
+            // splitKinematics.Panel2
+            // 
+            this.splitKinematics.Panel2.Controls.Add(this.eEpisodesRight);
+            this.splitKinematics.Panel2.Controls.Add(this.eEpisodesLeft);
+            this.splitKinematics.Panel2.SizeChanged += new System.EventHandler(this.splitContainer1_Panel2_SizeChanged);
+            this.splitKinematics.Size = new System.Drawing.Size(786, 433);
+            this.splitKinematics.SplitterDistance = 535;
+            this.splitKinematics.TabIndex = 8;
+            // 
+            // webViewSummaryV
+            // 
+            this.webViewSummaryV.AllowExternalDrop = true;
+            this.webViewSummaryV.CreationProperties = null;
+            this.webViewSummaryV.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webViewSummaryV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webViewSummaryV.Location = new System.Drawing.Point(0, 0);
+            this.webViewSummaryV.Name = "webViewSummaryV";
+            this.webViewSummaryV.Size = new System.Drawing.Size(535, 433);
+            this.webViewSummaryV.TabIndex = 6;
+            this.webViewSummaryV.ZoomFactor = 1D;
+            this.webViewSummaryV.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
+            // 
+            // eEpisodesLeft
+            // 
+            this.eEpisodesLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.eEpisodesLeft.Location = new System.Drawing.Point(0, 0);
+            this.eEpisodesLeft.Name = "eEpisodesLeft";
+            this.eEpisodesLeft.Size = new System.Drawing.Size(115, 433);
+            this.eEpisodesLeft.TabIndex = 0;
+            this.eEpisodesLeft.Text = "";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.ePlotKinematicsHeight);
+            this.panel1.Controls.Add(this.ePlotKinematicsWidth);
+            this.panel1.Controls.Add(this.lPlotKinematicsWidth);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lPlotKinematicsHeight);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.eKinematicsSomite);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.eKinematicsEpisodeBreak);
+            this.panel1.Controls.Add(this.lBurstBreak);
+            this.panel1.Controls.Add(this.eKinematicsBurstBreak);
+            this.panel1.Controls.Add(this.lKinematicsTimes);
+            this.panel1.Controls.Add(this.btnGenerateEpisodes);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(786, 78);
+            this.panel1.TabIndex = 7;
+            // 
+            // ePlotKinematicsHeight
+            // 
+            this.ePlotKinematicsHeight.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotKinematicsHeight.Location = new System.Drawing.Point(244, 27);
+            this.ePlotKinematicsHeight.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.ePlotKinematicsHeight.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotKinematicsHeight.Name = "ePlotKinematicsHeight";
+            this.ePlotKinematicsHeight.Size = new System.Drawing.Size(48, 23);
+            this.ePlotKinematicsHeight.TabIndex = 59;
+            this.ePlotKinematicsHeight.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.ePlotKinematicsHeight, "for each plot");
+            this.ePlotKinematicsHeight.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
+            // ePlotKinematicsWidth
+            // 
+            this.ePlotKinematicsWidth.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ePlotKinematicsWidth.Location = new System.Drawing.Point(244, 2);
+            this.ePlotKinematicsWidth.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.ePlotKinematicsWidth.Minimum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.ePlotKinematicsWidth.Name = "ePlotKinematicsWidth";
+            this.ePlotKinematicsWidth.Size = new System.Drawing.Size(48, 23);
+            this.ePlotKinematicsWidth.TabIndex = 58;
+            this.ePlotKinematicsWidth.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.ePlotKinematicsWidth, "for each plot - 15% of it will be used for legend");
+            this.ePlotKinematicsWidth.Value = new decimal(new int[] {
+            800,
+            0,
+            0,
+            0});
+            // 
+            // lPlotKinematicsWidth
+            // 
+            this.lPlotKinematicsWidth.AutoSize = true;
+            this.lPlotKinematicsWidth.Location = new System.Drawing.Point(199, 7);
+            this.lPlotKinematicsWidth.Name = "lPlotKinematicsWidth";
+            this.lPlotKinematicsWidth.Size = new System.Drawing.Size(39, 15);
+            this.lPlotKinematicsWidth.TabIndex = 60;
+            this.lPlotKinematicsWidth.Text = "Width";
+            this.toolTip.SetToolTip(this.lPlotKinematicsWidth, "for each plot - 15% of it will be used for legend");
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(298, 4);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(28, 15);
+            this.label3.TabIndex = 61;
+            this.label3.Text = "(px)";
+            // 
+            // lPlotKinematicsHeight
+            // 
+            this.lPlotKinematicsHeight.AutoSize = true;
+            this.lPlotKinematicsHeight.Location = new System.Drawing.Point(199, 30);
+            this.lPlotKinematicsHeight.Name = "lPlotKinematicsHeight";
+            this.lPlotKinematicsHeight.Size = new System.Drawing.Size(43, 15);
+            this.lPlotKinematicsHeight.TabIndex = 62;
+            this.lPlotKinematicsHeight.Text = "Height";
+            this.toolTip.SetToolTip(this.lPlotKinematicsHeight, "for each plot");
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(298, 30);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(28, 15);
+            this.label8.TabIndex = 63;
+            this.label8.Text = "(px)";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(4, 57);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(73, 15);
+            this.label7.TabIndex = 43;
+            this.label7.Text = "# of Somites";
+            // 
+            // eKinematicsSomite
+            // 
+            this.eKinematicsSomite.Location = new System.Drawing.Point(90, 53);
+            this.eKinematicsSomite.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.eKinematicsSomite.Name = "eKinematicsSomite";
+            this.eKinematicsSomite.Size = new System.Drawing.Size(53, 23);
+            this.eKinematicsSomite.TabIndex = 42;
+            this.eKinematicsSomite.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 31);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 15);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "Episode Break";
+            // 
+            // eKinematicsEpisodeBreak
+            // 
+            this.eKinematicsEpisodeBreak.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.eKinematicsEpisodeBreak.Location = new System.Drawing.Point(90, 28);
+            this.eKinematicsEpisodeBreak.Name = "eKinematicsEpisodeBreak";
+            this.eKinematicsEpisodeBreak.Size = new System.Drawing.Size(53, 23);
+            this.eKinematicsEpisodeBreak.TabIndex = 40;
+            this.toolTip.SetToolTip(this.eKinematicsEpisodeBreak, "(in milliseconds)");
+            this.eKinematicsEpisodeBreak.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // lBurstBreak
+            // 
+            this.lBurstBreak.AutoSize = true;
+            this.lBurstBreak.Location = new System.Drawing.Point(4, 5);
+            this.lBurstBreak.Name = "lBurstBreak";
+            this.lBurstBreak.Size = new System.Drawing.Size(66, 15);
+            this.lBurstBreak.TabIndex = 39;
+            this.lBurstBreak.Text = "Burst Break";
+            // 
+            // eKinematicsBurstBreak
+            // 
+            this.eKinematicsBurstBreak.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.eKinematicsBurstBreak.Location = new System.Drawing.Point(90, 3);
+            this.eKinematicsBurstBreak.Name = "eKinematicsBurstBreak";
+            this.eKinematicsBurstBreak.Size = new System.Drawing.Size(53, 23);
+            this.eKinematicsBurstBreak.TabIndex = 38;
+            this.toolTip.SetToolTip(this.eKinematicsBurstBreak, "(in milliseconds)");
+            this.eKinematicsBurstBreak.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // lKinematicsTimes
+            // 
+            this.lKinematicsTimes.Location = new System.Drawing.Point(367, 57);
+            this.lKinematicsTimes.Name = "lKinematicsTimes";
+            this.lKinematicsTimes.Size = new System.Drawing.Size(294, 19);
+            this.lKinematicsTimes.TabIndex = 33;
+            this.lKinematicsTimes.Text = "Last kinematics:";
+            // 
+            // btnGenerateEpisodes
+            // 
+            this.btnGenerateEpisodes.Enabled = false;
+            this.btnGenerateEpisodes.Location = new System.Drawing.Point(199, 53);
+            this.btnGenerateEpisodes.Name = "btnGenerateEpisodes";
+            this.btnGenerateEpisodes.Size = new System.Drawing.Size(115, 23);
+            this.btnGenerateEpisodes.TabIndex = 29;
+            this.btnGenerateEpisodes.Text = "Episode from MNs";
+            this.btnGenerateEpisodes.UseVisualStyleBackColor = true;
+            this.btnGenerateEpisodes.Click += new System.EventHandler(this.btnGenerateEpisodes_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(149, 7);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(31, 15);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "(ms)";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(149, 31);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 15);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "(ms)";
             // 
             // tabAnimation
             // 
@@ -2060,281 +2354,14 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // tabMNKinematics
+            // eEpisodesRight
             // 
-            this.tabMNKinematics.Controls.Add(this.webView21);
-            this.tabMNKinematics.Controls.Add(this.panel1);
-            this.tabMNKinematics.Location = new System.Drawing.Point(4, 24);
-            this.tabMNKinematics.Name = "tabMNKinematics";
-            this.tabMNKinematics.Size = new System.Drawing.Size(786, 511);
-            this.tabMNKinematics.TabIndex = 7;
-            this.tabMNKinematics.Text = "MN Based Kinematics";
-            this.tabMNKinematics.UseVisualStyleBackColor = true;
-            // 
-            // webView21
-            // 
-            this.webView21.AllowExternalDrop = true;
-            this.webView21.CreationProperties = null;
-            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webView21.Location = new System.Drawing.Point(0, 117);
-            this.webView21.Name = "webView21";
-            this.webView21.Size = new System.Drawing.Size(786, 394);
-            this.webView21.TabIndex = 6;
-            this.webView21.ZoomFactor = 1D;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.eKinematicsSomite);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.eKinematicsEpisodeBreak);
-            this.panel1.Controls.Add(this.lBurstBreak);
-            this.panel1.Controls.Add(this.eKinematicsBurstBreak);
-            this.panel1.Controls.Add(this.numericUpDown1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.linkLabel1);
-            this.panel1.Controls.Add(this.lKinematicsTimes);
-            this.panel1.Controls.Add(this.numericUpDown2);
-            this.panel1.Controls.Add(this.numericUpDown3);
-            this.panel1.Controls.Add(this.linkLabel2);
-            this.panel1.Controls.Add(this.btnGenerateEpisodes);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(786, 117);
-            this.panel1.TabIndex = 7;
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.DecimalPlaces = 2;
-            this.numericUpDown1.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDown1.Location = new System.Drawing.Point(286, 6);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(53, 23);
-            this.numericUpDown1.TabIndex = 37;
-            this.toolTip.SetToolTip(this.numericUpDown1, "(in milliseconds)");
-            this.numericUpDown1.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(261, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(19, 15);
-            this.label1.TabIndex = 36;
-            this.label1.Text = "Δt";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.Enabled = false;
-            this.linkLabel1.Location = new System.Drawing.Point(355, 36);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(124, 15);
-            this.linkLabel1.TabIndex = 34;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Save Animation CSV";
-            // 
-            // lKinematicsTimes
-            // 
-            this.lKinematicsTimes.Location = new System.Drawing.Point(499, 7);
-            this.lKinematicsTimes.Name = "lKinematicsTimes";
-            this.lKinematicsTimes.Size = new System.Drawing.Size(294, 19);
-            this.lKinematicsTimes.TabIndex = 33;
-            this.lKinematicsTimes.Text = "Last kinematics:";
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Increment = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Location = new System.Drawing.Point(108, 32);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(100, 23);
-            this.numericUpDown2.TabIndex = 27;
-            this.numericUpDown2.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.numericUpDown2, "(in milliseconds)");
-            this.numericUpDown2.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDown3
-            // 
-            this.numericUpDown3.Increment = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Location = new System.Drawing.Point(108, 6);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(100, 23);
-            this.numericUpDown3.TabIndex = 25;
-            this.numericUpDown3.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.numericUpDown3, "(in milliseconds)");
-            // 
-            // linkLabel2
-            // 
-            this.linkLabel2.Enabled = false;
-            this.linkLabel2.Location = new System.Drawing.Point(355, 10);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(138, 15);
-            this.linkLabel2.TabIndex = 31;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Save Animation HTML";
-            // 
-            // btnGenerateEpisodes
-            // 
-            this.btnGenerateEpisodes.Enabled = false;
-            this.btnGenerateEpisodes.Location = new System.Drawing.Point(482, 72);
-            this.btnGenerateEpisodes.Name = "btnGenerateEpisodes";
-            this.btnGenerateEpisodes.Size = new System.Drawing.Size(115, 23);
-            this.btnGenerateEpisodes.TabIndex = 29;
-            this.btnGenerateEpisodes.Text = "Episode from MNs";
-            this.btnGenerateEpisodes.UseVisualStyleBackColor = true;
-            this.btnGenerateEpisodes.Click += new System.EventHandler(this.btnGenerateEpisodes_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 8);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 15);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Animation Start";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(214, 8);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 15);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "(ms)";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 34);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 15);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Animation End";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(214, 34);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 15);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "(ms)";
-            // 
-            // eKinematicsBurstBreak
-            // 
-            this.eKinematicsBurstBreak.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.eKinematicsBurstBreak.Location = new System.Drawing.Point(90, 76);
-            this.eKinematicsBurstBreak.Name = "eKinematicsBurstBreak";
-            this.eKinematicsBurstBreak.Size = new System.Drawing.Size(53, 23);
-            this.eKinematicsBurstBreak.TabIndex = 38;
-            this.toolTip.SetToolTip(this.eKinematicsBurstBreak, "(in milliseconds)");
-            this.eKinematicsBurstBreak.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // lBurstBreak
-            // 
-            this.lBurstBreak.AutoSize = true;
-            this.lBurstBreak.Location = new System.Drawing.Point(18, 78);
-            this.lBurstBreak.Name = "lBurstBreak";
-            this.lBurstBreak.Size = new System.Drawing.Size(66, 15);
-            this.lBurstBreak.TabIndex = 39;
-            this.lBurstBreak.Text = "Burst Break";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(179, 76);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 15);
-            this.label2.TabIndex = 41;
-            this.label2.Text = "Episode Break";
-            // 
-            // eKinematicsEpisodeBreak
-            // 
-            this.eKinematicsEpisodeBreak.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.eKinematicsEpisodeBreak.Location = new System.Drawing.Point(261, 74);
-            this.eKinematicsEpisodeBreak.Name = "eKinematicsEpisodeBreak";
-            this.eKinematicsEpisodeBreak.Size = new System.Drawing.Size(53, 23);
-            this.eKinematicsEpisodeBreak.TabIndex = 40;
-            this.toolTip.SetToolTip(this.eKinematicsEpisodeBreak, "(in milliseconds)");
-            this.eKinematicsEpisodeBreak.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            // 
-            // eKinematicsSomite
-            // 
-            this.eKinematicsSomite.Location = new System.Drawing.Point(418, 74);
-            this.eKinematicsSomite.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.eKinematicsSomite.Name = "eKinematicsSomite";
-            this.eKinematicsSomite.Size = new System.Drawing.Size(43, 23);
-            this.eKinematicsSomite.TabIndex = 42;
-            this.eKinematicsSomite.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(339, 78);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 15);
-            this.label7.TabIndex = 43;
-            this.label7.Text = "# of Somites";
+            this.eEpisodesRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eEpisodesRight.Location = new System.Drawing.Point(115, 0);
+            this.eEpisodesRight.Name = "eEpisodesRight";
+            this.eEpisodesRight.Size = new System.Drawing.Size(132, 433);
+            this.eEpisodesRight.TabIndex = 1;
+            this.eEpisodesRight.Text = "";
             // 
             // MainForm
             // 
@@ -2409,6 +2436,19 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.webView3DModel)).EndInit();
             this.p3DModel.ResumeLayout(false);
             this.p3DModel.PerformLayout();
+            this.tabMNKinematics.ResumeLayout(false);
+            this.splitKinematics.Panel1.ResumeLayout(false);
+            this.splitKinematics.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitKinematics)).EndInit();
+            this.splitKinematics.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.webViewSummaryV)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotKinematicsHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ePlotKinematicsWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsSomite)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsEpisodeBreak)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsBurstBreak)).EndInit();
             this.tabAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.webViewAnimation)).EndInit();
             this.pAnimation.ResumeLayout(false);
@@ -2428,16 +2468,6 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
-            this.tabMNKinematics.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsBurstBreak)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsEpisodeBreak)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eKinematicsSomite)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2590,7 +2620,7 @@ namespace SiliFish.UI
         private LinkLabel linkSaveTemplateJSON;
         private LinkLabel linkSaveModelJSON;
         private TabPage tabMNKinematics;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webViewSummaryV;
         private Panel panel1;
         private Label label7;
         private NumericUpDown eKinematicsSomite;
@@ -2598,17 +2628,18 @@ namespace SiliFish.UI
         private NumericUpDown eKinematicsEpisodeBreak;
         private Label lBurstBreak;
         private NumericUpDown eKinematicsBurstBreak;
-        private NumericUpDown numericUpDown1;
-        private Label label1;
-        private LinkLabel linkLabel1;
         private Label lKinematicsTimes;
-        private NumericUpDown numericUpDown2;
-        private NumericUpDown numericUpDown3;
-        private LinkLabel linkLabel2;
         private Button btnGenerateEpisodes;
-        private Label label3;
         private Label label4;
-        private Label label5;
         private Label label6;
+        private SplitContainer splitKinematics;
+        private RichTextBox eEpisodesLeft;
+        private NumericUpDown ePlotKinematicsHeight;
+        private NumericUpDown ePlotKinematicsWidth;
+        private Label lPlotKinematicsWidth;
+        private Label label3;
+        private Label lPlotKinematicsHeight;
+        private Label label8;
+        private RichTextBox eEpisodesRight;
     }
 }

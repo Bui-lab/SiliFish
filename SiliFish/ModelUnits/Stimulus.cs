@@ -74,7 +74,7 @@ namespace SiliFish.ModelUnits
         {
             double[] ret = new double[nmax];
             foreach (Stimulus s in stimuli)
-                ret.AddArray(s.getValues(nmax));
+                ret = ret.AddArray(s.getValues(nmax));
             return ret;
         }
         public virtual void InitDataVectors(int nmax)

@@ -74,6 +74,8 @@ namespace SiliFish.UI
                 webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webView3DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+                webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+                webViewSummaryV.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
                 listCellPool.AddContextMenu("Sort by Type", listCellPool_SortByNTType);
                 listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
@@ -117,21 +119,22 @@ namespace SiliFish.UI
             await webView2DModel.EnsureCoreWebView2Async();
             await webView3DModel.EnsureCoreWebView2Async();
             await webViewAnimation.EnsureCoreWebView2Async();
+            await webViewSummaryV.EnsureCoreWebView2Async();
         }
 
         private void Wait()
         {
-            while (webViewPlot.Tag == null || webView2DModel.Tag == null || webView3DModel.Tag == null || webViewAnimation.Tag == null)
+            while (webViewPlot.Tag == null || 
+                webView2DModel.Tag == null || webView3DModel.Tag == null || 
+                webViewAnimation.Tag == null || webViewSummaryV.Tag == null)
                 Application.DoEvents();
         }
-        private void webViewPlot_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
-        {
-            webViewPlot.Tag = true;
-        }
+
         private void webView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
         {
             (sender as Control).Tag = true;
         }
+
         private static void WarningMessage(string s)
         {
             MessageBox.Show(s);
@@ -387,7 +390,7 @@ namespace SiliFish.UI
                     {
                         Text = kvp.Key[(group.Length + 1)..],
                         Height = 23,
-                        Width = 8 * maxLen,
+                        Width = 5 * maxLen,
                         TextAlign = ContentAlignment.BottomRight
                     };
                     flowPanel.Controls.Add(lbl);
@@ -730,10 +733,13 @@ namespace SiliFish.UI
 
             PopulatePlotPools();
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+            eKinematicsSomite.Maximum = Model.NumberOfSomites > 0 ? Model.NumberOfSomites : Model.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
+                    
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
             btnAnimate.Enabled = true;
             linkSaveRun.Visible = true;
+            btnGenerateEpisodes.Enabled = true;
 
             TimeSpan ts = DateTime.Now - runStart;
 
@@ -844,14 +850,18 @@ namespace SiliFish.UI
                     ddPlotSagittal.SelectedIndex =
                     ddPlotPools.SelectedIndex = -1;
                 ddPlotSomiteSelection.Enabled =
+                    ePlotSomiteSelection.Enabled =
                     ddPlotCellSelection.Enabled =
+                    ePlotCellSelection.Enabled = 
                     ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = false;
             }
             else
             {
-                ddPlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+                ddPlotSomiteSelection.Enabled =
+                    ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
                 ddPlotCellSelection.Enabled =
+                    ePlotCellSelection.Enabled =
                     ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = true;
             }
@@ -1916,7 +1926,24 @@ namespace SiliFish.UI
 
         private void btnGenerateEpisodes_Click(object sender, EventArgs e)
         {
-            SwimmingModelKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, (int)eKinematicsSomite.Value);
+            (List<Cell> LeftMNs, List<Cell>RightMNs) = Model.GetMotoNeurons((int)eKinematicsSomite.Value);
+            (List<SwimmingEpisode> episodesLeft, List < SwimmingEpisode > episodesRight) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs, 
+                (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
+            string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
+                width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
+            webViewSummaryV.NavigateTo(html, tempFolder, ref tempFile);
+            eEpisodesLeft.Text = "";
+            eEpisodesRight.Text = "";
+            foreach (SwimmingEpisode episode in episodesLeft)
+                eEpisodesLeft.Text += episode.ToString() + "\r\n\r\n";
+            foreach (SwimmingEpisode episode in episodesRight)
+                eEpisodesRight.Text += episode.ToString() + "\r\n\r\n";
+            lKinematicsTimes.Text = $"Last kinematics:{DateTime.Now:t}";
+        }
+
+        private void splitContainer1_Panel2_SizeChanged(object sender, EventArgs e)
+        {
+            eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
         }
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)

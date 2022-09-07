@@ -45,6 +45,15 @@ namespace SiliFish.DataTypes
             lastBeatStart = start;
         }
 
+        public override string ToString()
+        {
+            string ret = $"Episode Start - End {episodeStart:0.##}-{episodeEnd:0.##}";
+            foreach (var (beatStart, beatEnd) in beats)
+            {
+                ret += $"\r\nBeat:{beatStart:0.##}-{beatEnd:0.##}";
+            }
+            return ret;
+        }
         public void StartBeat(double start)
         {
             lastBeatStart = start;
@@ -53,7 +62,7 @@ namespace SiliFish.DataTypes
         {
             if (lastBeatStart < 0) return;
             beats.Add((lastBeatStart, e));
-            lastBeatStart = e;
+            lastBeatStart = -1;
         }
 
         public void EndEpisode(double e)
@@ -81,7 +90,7 @@ namespace SiliFish.DataTypes
             double last_t = -1;
             while (ind < indices.Count)
             {
-                double t = TimeArray[indices[ind]];
+                double t = TimeArray[indices[ind++]];
                 if (!inEpisode)
                 {
                     inEpisode = true;
@@ -98,7 +107,8 @@ namespace SiliFish.DataTypes
                     }
                     else if (episode.InBeat && (t - last_t) > burstBreak)
                     {
-                        episode.EndBeat(t);
+                        episode.EndBeat(last_t);
+                        episode.StartBeat(t);
                     }
                     else if (!episode.InBeat)
                         episode.StartBeat(t);
