@@ -116,7 +116,7 @@ namespace SiliFish.UI.Controls
 
         private void ReadDataFromControl()
         {
-            SagittalPlane sagPlane = SagittalPlane.NotSet;
+            SagittalPlane sagPlane = SagittalPlane.Both;
             if (ddSagittalPosition.Text == "Left")
                 sagPlane = SagittalPlane.Left;
             else if (ddSagittalPosition.Text == "Right")

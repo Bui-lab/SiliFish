@@ -17,7 +17,7 @@ namespace SiliFish.ModelUnits
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
         public Dictionary<string, object> Parameters { get; set; }
-        public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.NotSet;
+        public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
         public int ColumnIndex2D { get; set; }
         public int NumOfCells { get; set; } = 1;
         public CountingMode PerSomiteOrTotal { get; set; } = CountingMode.Total;

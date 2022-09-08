@@ -17,7 +17,7 @@ namespace SiliFish.Definitions
     public enum TransversePlane { NotSet, Anterior, Central, Posterior }
     public enum SagittalPlane
     {
-        NotSet, Left, Right,
+        Left, Right,
         [Display(Name = "Left/Right")] Both
     }
 

@@ -12,7 +12,7 @@ namespace SiliFish.ModelUnits
     public struct CellSelectionStruct
     {
         public string Pools = "All";
-        public SagittalPlane SagittalPlane = SagittalPlane.NotSet;
+        public SagittalPlane SagittalPlane = SagittalPlane.Both;
         public PlotSelection somiteSelection = PlotSelection.All;
         public int nSomite = -1;
         public PlotSelection cellSelection = PlotSelection.All;
@@ -35,7 +35,7 @@ namespace SiliFish.ModelUnits
         public Color Color { get; }
         public BodyLocation BodyPosition { get; }
 
-        public SagittalPlane PositionLeftRight = SagittalPlane.NotSet;
+        public SagittalPlane PositionLeftRight = SagittalPlane.Both;
 
         public readonly int columnIndex2D = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
         public List<Cell> Cells { get; }
