@@ -96,6 +96,15 @@ namespace SiliFish.UI.Controls
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillConnectionTypes();
+            if (!ddTargetPool.Focused)
+                return;
+            if (ddTargetPool.SelectedItem is CellPoolTemplate pool)
+            {
+                if (pool.Parameters != null && pool.Parameters.Any())
+                {
+                    numEReversal.Value = pool.Parameters.Read("Izhikevich_9P.V_r", numEReversal.Value);
+                }
+            }
             interPoolTemplate.PoolTarget = ddTargetPool.Text;
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);

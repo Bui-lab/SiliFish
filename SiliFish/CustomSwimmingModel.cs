@@ -86,6 +86,8 @@ namespace SiliFish
             {
                 foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli)
                 {
+                    if (stimulus.LeftRight == "")
+                        stimulus.LeftRight = "Left/Right";
                     if (stimulus.LeftRight.Contains("Left"))
                     {
                         CellPool target = NeuronPools.Union(MuscleCellPools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
@@ -118,6 +120,12 @@ namespace SiliFish
                 !MuscleCellPools.Any(p => p.GetCells().Any()))
                 return;
             initialized = true;
+        }
+
+        public override List<string> CheckModel()
+        {
+            //if (NeuronPools.Any(p=>p.PositionLeftRight))
+            return null;
         }
     }
 }

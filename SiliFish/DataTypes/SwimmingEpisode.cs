@@ -9,6 +9,7 @@ namespace SiliFish.DataTypes
         private readonly double episodeStart;
         private double episodeEnd;
         double lastBeatStart = -1;
+        public bool InBeat { get { return lastBeatStart >= 0; } }
         List<(double beatStart, double beatEnd)> beats;
         public List<(double beatStart, double beatEnd)> Beats { get => beats; }
         public List<(double beatStart, double beatEnd)> InlierBeats
@@ -30,25 +31,38 @@ namespace SiliFish.DataTypes
             }
         }
 
-        public SwimmingEpisode(double s)
+        public SwimmingEpisode(double start)
         {
-            episodeStart = s;
+            episodeStart = start;
             beats = new();
-            lastBeatStart = s;
+            lastBeatStart = start;
         }
-        public SwimmingEpisode(double s, double e)
+        public SwimmingEpisode(double start, double end)
         {
-            episodeStart = s;
-            episodeEnd = e;
+            episodeStart = start;
+            episodeEnd = end;
             beats = new();
-            lastBeatStart = s;
+            lastBeatStart = start;
         }
 
+        public override string ToString()
+        {
+            string ret = $"Episode Start - End {episodeStart:0.##}-{episodeEnd:0.##}";
+            foreach (var (beatStart, beatEnd) in beats)
+            {
+                ret += $"\r\nBeat:{beatStart:0.##}-{beatEnd:0.##}";
+            }
+            return ret;
+        }
+        public void StartBeat(double start)
+        {
+            lastBeatStart = start;
+        }
         public void EndBeat(double e)
         {
             if (lastBeatStart < 0) return;
             beats.Add((lastBeatStart, e));
-            lastBeatStart = e;
+            lastBeatStart = -1;
         }
 
         public void EndEpisode(double e)

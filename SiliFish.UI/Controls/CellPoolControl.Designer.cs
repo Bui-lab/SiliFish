@@ -544,6 +544,7 @@ namespace SiliFish.UI.Controls
             this.dgDynamics.Location = new System.Drawing.Point(3, 146);
             this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
             this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.PauseDistributionFeature = true;
             this.dgDynamics.Size = new System.Drawing.Size(321, 546);
             this.dgDynamics.TabIndex = 3;
             // 

@@ -7,6 +7,10 @@ namespace SiliFish.UI.Controls
 {
     public partial class DistributionDataGrid : UserControl
     {
+        public bool PauseDistributionFeature { 
+            get { return !colDist.Visible; }
+            set { colDist.Visible = !value; } 
+        }
         public DistributionDataGrid()
         {
             InitializeComponent();

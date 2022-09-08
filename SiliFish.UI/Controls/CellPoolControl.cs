@@ -50,7 +50,7 @@ namespace SiliFish.UI.Controls
         {
             CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
             Cell cell = null;
-            double cv = poolTemplate.ConductionVelocity != null ?
+            double cv = poolTemplate?.ConductionVelocity != null ?
                 ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, 0)[0] :
                 0;
             if (cellType == CellType.Neuron)
@@ -114,13 +114,13 @@ namespace SiliFish.UI.Controls
 
         private void ReadDataFromControl()
         {
-            SagittalPlane sagPlane = SagittalPlane.NotSet;
+            SagittalPlane sagPlane = SagittalPlane.Both;
             if (ddSagittalPosition.Text == "Left")
                 sagPlane = SagittalPlane.Left;
             else if (ddSagittalPosition.Text == "Right")
                 sagPlane = SagittalPlane.Right;
-            else if (ddSagittalPosition.Text == "Left/Right")
-                sagPlane = SagittalPlane.Both;
+            //else if (ddSagittalPosition.Text == "Left/Right")
+            //    sagPlane = SagittalPlane.Both;
             string groupName = eGroupName.Text;
             if (poolTemplate == null)
                 poolTemplate = new CellPoolTemplate();
@@ -217,6 +217,7 @@ namespace SiliFish.UI.Controls
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
             frmControl.Text = eGroupName.Text;
+            frmControl.SaveVisible = false;
             frmControl.ShowDialog(); 
         }
 

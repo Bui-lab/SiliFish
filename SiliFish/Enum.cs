@@ -15,7 +15,7 @@ namespace SiliFish
         Ventral
     }
     public enum TransversePlane { NotSet, Anterior, Central, Posterior }
-    public enum SagittalPlane { NotSet, Left, Right,
+    public enum SagittalPlane { Left, Right,
         [Display(Name = "Left/Right")] Both }
  
     public enum PlotType {

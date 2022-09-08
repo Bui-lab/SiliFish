@@ -408,6 +408,7 @@
             this.dgDynamics.Location = new System.Drawing.Point(0, 30);
             this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
             this.dgDynamics.Name = "dgDynamics";
+            this.dgDynamics.PauseDistributionFeature = false;
             this.dgDynamics.Size = new System.Drawing.Size(452, 340);
             this.dgDynamics.TabIndex = 21;
             // 

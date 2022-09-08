@@ -59,7 +59,8 @@ namespace SiliFish.DataTypes
 
         public TimeLine(TimeLine tl)
         {
-            Periods = new List<(int start, int end)>(tl.Periods);
+            if (tl != null && tl.Periods.Any())
+                Periods = new List<(int start, int end)>(tl.Periods);
         }
         public void AddTimeRange(int start_ms, int? end_ms = null)
         {

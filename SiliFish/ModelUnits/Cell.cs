@@ -16,7 +16,7 @@ namespace SiliFish.ModelUnits
         public Stimulus Stimulus = null;
         public FrontalPlane PositionDorsalVentral = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior = TransversePlane.NotSet;
-        public SagittalPlane PositionLeftRight = SagittalPlane.NotSet;
+        public SagittalPlane PositionLeftRight = SagittalPlane.Both;
 
         public Coordinate coordinate;
         public double X { get { return coordinate.X; } set { } }
