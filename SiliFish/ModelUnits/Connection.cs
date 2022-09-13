@@ -30,9 +30,9 @@ namespace SiliFish.ModelUnits
         public double MaxReach { get; set; } = 1000;
 
         // MaxOutgoing shows how many junctions the source cell can have
-        public double MaxOutgoing { get; set; } = 0;
+        public int MaxOutgoing { get; set; } = 0;
         // MaxIncoming shows how many junctions the target cell can have
-        public double MaxIncoming { get; set; } = 0;
+        public int MaxIncoming { get; set; } = 0;
 
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms

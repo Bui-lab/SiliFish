@@ -355,35 +355,37 @@ namespace SiliFish.ModelUnits
 
         public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline, double probability)
         {
-            if (reach.MaxIncoming > 0 && reach.MaxOutgoing == 0)
+            int maxIncoming = reach.MaxIncoming;
+            int maxOutgoing = reach.MaxOutgoing;
+            if (maxIncoming > 0 && maxOutgoing == 0)
             {//if target pool has a limit, prevent the scenario where one source cell fulfills that limit
                 int numSource = this.GetCells().Count();
                 int numTarget = target.GetCells().Count();
-                reach.MaxOutgoing = Math.Ceiling(reach.MaxIncoming * numTarget/numSource);
+                maxOutgoing = (int)Math.Ceiling((double)maxIncoming * numTarget/numSource);
             }
-            else if (reach.MaxIncoming == 0 && reach.MaxOutgoing > 0)
+            else if (maxIncoming == 0 && maxOutgoing > 0)
             {//if the source pool has a limit, prevent the scenario where one target cell fulfills that limit
                 int numSource = this.GetCells().Count();
                 int numTarget = target.GetCells().Count();
-                reach.MaxIncoming = Math.Ceiling(reach.MaxOutgoing * numSource / numTarget);
+                maxIncoming = (int)Math.Ceiling((double)maxOutgoing * numSource / numTarget);
             }
             foreach (Neuron pre in this.GetCells())
             {
                 int counter = 0;
                 foreach (Cell post in target.GetCells())
                 {
-                    if (reach.MaxIncoming > 0) //check whether the target cell already has connections from the same pool
+                    if (maxIncoming > 0) //check whether the target cell already has connections from the same pool
                     {
                         if (post is MuscleCell muscleCell)
                         {
                             int existing = muscleCell.EndPlates.Count(ep => ep.PreNeuron.CellPool == this);
-                            if (existing >= reach.MaxIncoming)
+                            if (existing >= maxIncoming)
                                 continue;
                         }
                         else if (post is Neuron neuron)
                         {
                             int existing = neuron.Synapses.Count(syn => syn.PreNeuron.CellPool == this);
-                            if (existing >= reach.MaxIncoming)
+                            if (existing >= maxIncoming)
                                 continue;
                         }
                     }
@@ -403,7 +405,7 @@ namespace SiliFish.ModelUnits
                             syn.SetFixedDuration((double)reach.FixedDuration_ms);
                         syn.SetTimeLine(timeline);
                         counter++;
-                        if (reach.MaxOutgoing > 0 && counter >= reach.MaxOutgoing)
+                        if (maxOutgoing > 0 && counter >= maxOutgoing)
                             break;
                     }
                 }

@@ -1191,7 +1191,7 @@ namespace SiliFish.UI
             bool gap = mode.Contains("Gap");
             bool chem = mode.Contains("Chem");
             ThreeDModelGenerator threeDModelGenerator = new();
-            string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem);
+            string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem, ddSomites.Text);
 
             webView3DModel.NavigateTo(html, tempFolder, ref tempFile);
         }
@@ -1954,6 +1954,14 @@ namespace SiliFish.UI
         private void splitContainer1_Panel2_SizeChanged(object sender, EventArgs e)
         {
             eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
+        }
+
+        private void ddSomites_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddSomites.Text == "All Somites")
+                ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            else
+                ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
         }
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)

@@ -243,6 +243,10 @@ namespace SiliFish
         {
             return CellPools.Sum(p => p.Cells.Count);
         }
+        public virtual int GetNumberOfCells(int startSomite, int endSomite)
+        {
+            return CellPools.Sum(p => p.Cells.Count(c => c.Somite >= startSomite && c.Somite <= endSomite));
+        }
         public virtual int GetNumberOfConnections()
         {
             return CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count + ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));

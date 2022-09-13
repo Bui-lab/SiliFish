@@ -151,7 +151,7 @@ namespace SiliFish.UI.Controls
             return dd.Text.Replace(" (inactive)", "");
         }
 
-        public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPool, SwimmingModelTemplate modelTemplate)
+        public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, SwimmingModelTemplate modelTemplate)
         {
             Parameters = modelTemplate.Parameters;
             ddSourcePool.Items.Clear();
@@ -161,50 +161,50 @@ namespace SiliFish.UI.Controls
                 return;
             ddSourcePool.Items.AddRange(pools.ToArray());
             ddTargetPool.Items.AddRange(pools.ToArray());
-            if (interPool != null)
+            if (interPoolTemplate != null)
             {
-                interPoolTemplate = interPool;
-                ConnectionType jnc = interPool.ConnectionType;
-                SetDropDownValue(ddSourcePool, interPool.PoolSource);
-                SetDropDownValue(ddTargetPool, interPool.PoolTarget);
-                ddAxonReachMode.Text = interPool.AxonReachMode.ToString();
-                interPool.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
-                ddConnectionType.Text = interPool.ConnectionType.ToString();
-                ddDistanceMode.Text = interPool.DistanceMode.ToString();
+                this.interPoolTemplate = interPoolTemplate;
+                ConnectionType jnc = interPoolTemplate.ConnectionType;
+                SetDropDownValue(ddSourcePool, interPoolTemplate.PoolSource);
+                SetDropDownValue(ddTargetPool, interPoolTemplate.PoolTarget);
+                ddAxonReachMode.Text = interPoolTemplate.AxonReachMode.ToString();
+                interPoolTemplate.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
+                ddConnectionType.Text = interPoolTemplate.ConnectionType.ToString();
+                ddDistanceMode.Text = interPoolTemplate.DistanceMode.ToString();
 
-                string name = interPool.GeneratedName();
-                autoGenerateName = name == interPool.Name;
-                eName.Text = interPool.Name;
-                eDescription.Text = interPool.Description;
-                cbWithinSomite.Checked = interPool.CellReach.WithinSomite;
-                cbOtherSomite.Checked = interPool.CellReach.OtherSomite;
-                numProbability.Value = (decimal)interPool.Probability;
-                numMinReach.Value = (decimal)interPool.CellReach.MinReach;
-                numMaxReach.Value = (decimal)interPool.CellReach.MaxReach;
-                numAscReach.Value = (decimal)interPool.CellReach.AscendingReach;
-                numDescReach.Value = (decimal)interPool.CellReach.DescendingReach;
-                numLateralReach.Value = (decimal)interPool.CellReach.LateralReach;
-                numMedialReach.Value = (decimal)interPool.CellReach.MedialReach;
-                numDorsalReach.Value = (decimal)interPool.CellReach.DorsalReach;
-                numVentralReach.Value = (decimal)interPool.CellReach.VentralReach;
-                numMaxIncoming.Value = (decimal)interPool.CellReach.MaxIncoming;
-                numMaxOutgoing.Value = (decimal)interPool.CellReach.MaxOutgoing;
+                string name = interPoolTemplate.GeneratedName();
+                autoGenerateName = name == interPoolTemplate.Name;
+                eName.Text = interPoolTemplate.Name;
+                eDescription.Text = interPoolTemplate.Description;
+                cbWithinSomite.Checked = interPoolTemplate.CellReach.WithinSomite;
+                cbOtherSomite.Checked = interPoolTemplate.CellReach.OtherSomite;
+                numProbability.Value = (decimal)interPoolTemplate.Probability;
+                numMinReach.Value = (decimal)interPoolTemplate.CellReach.MinReach;
+                numMaxReach.Value = (decimal)interPoolTemplate.CellReach.MaxReach;
+                numAscReach.Value = (decimal)interPoolTemplate.CellReach.AscendingReach;
+                numDescReach.Value = (decimal)interPoolTemplate.CellReach.DescendingReach;
+                numLateralReach.Value = (decimal)interPoolTemplate.CellReach.LateralReach;
+                numMedialReach.Value = (decimal)interPoolTemplate.CellReach.MedialReach;
+                numDorsalReach.Value = (decimal)interPoolTemplate.CellReach.DorsalReach;
+                numVentralReach.Value = (decimal)interPoolTemplate.CellReach.VentralReach;
+                numMaxIncoming.Value = (decimal)interPoolTemplate.CellReach.MaxIncoming;
+                numMaxOutgoing.Value = (decimal)interPoolTemplate.CellReach.MaxOutgoing;
 
-                numConductance.Value = (decimal)interPool.CellReach.Weight;
-                numDelay.Value = (decimal)interPool.CellReach.Delay_ms;
-                eFixedDuration.Text = interPool.CellReach.FixedDuration_ms?.ToString() ?? "";
-                if (interPool.SynapseParameters != null)
+                numConductance.Value = (decimal)interPoolTemplate.CellReach.Weight;
+                numDelay.Value = (decimal)interPoolTemplate.CellReach.Delay_ms;
+                eFixedDuration.Text = interPoolTemplate.CellReach.FixedDuration_ms?.ToString() ?? "";
+                if (interPoolTemplate.SynapseParameters != null)
                 {
-                    numTauD.Value = (decimal)interPool.SynapseParameters.TauD;
-                    numTauR.Value = (decimal)interPool.SynapseParameters.TauR;
-                    numVthreshold.Value = (decimal)interPool.SynapseParameters.VTh;
-                    numEReversal.Value = (decimal)interPool.SynapseParameters.E_rev;
+                    numTauD.Value = (decimal)interPoolTemplate.SynapseParameters.TauD;
+                    numTauR.Value = (decimal)interPoolTemplate.SynapseParameters.TauR;
+                    numVthreshold.Value = (decimal)interPoolTemplate.SynapseParameters.VTh;
+                    numEReversal.Value = (decimal)interPoolTemplate.SynapseParameters.E_rev;
                 }
-                cbActive.Checked = interPool.JncActive;
-                timeLineControl.SetTimeLine(interPool.TimeLine_ms);
+                cbActive.Checked = interPoolTemplate.JncActive;
+                timeLineControl.SetTimeLine(interPoolTemplate.TimeLine_ms);
             }
             else
-                interPoolTemplate = new();
+                this.interPoolTemplate = new();
         }
 
         public InterPoolTemplate GetInterPoolTemplate()

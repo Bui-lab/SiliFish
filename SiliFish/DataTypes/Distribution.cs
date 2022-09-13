@@ -152,14 +152,12 @@ namespace SiliFish.DataTypes
         public override double[] GenerateNNumbers(int n, double range)
         {
             if (Random == null)
-                Random = new Random(); double[] result = new double[n];
+                Random = new Random(); 
+            double[] result = new double[n];
             for (int i = 0; i < n; i++)
             {
-                double noise = NoiseStdDev > 0 ? Random.Gauss(1, NoiseStdDev) : 1;
-                if (LowerLimit < Const.epsilon) //noise will have no effect
-                    result[i] = 1 - noise;
-                else
-                    result[i] = LowerLimit * noise;
+                double noise = NoiseStdDev > 0 ? Random.Gauss(0, NoiseStdDev) : 0;
+                result[i] = LowerLimit + noise;
             }
             return result;
         }
