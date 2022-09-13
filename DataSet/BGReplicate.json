@@ -19,7 +19,7 @@
         "Izhikevich_9P.V": "-70",
         "Izhikevich_9P.U": "-14"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 1,
       "NumOfCells": 15,
       "PerSomiteOrTotal": 1,
@@ -33,6 +33,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -41,6 +42,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -49,6 +51,7 @@
         "Range": 0
       },
       "ConductionVelocity": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -72,7 +75,7 @@
         "Leaky_Integrator.C": "3",
         "Leaky_Integrator.V": "0"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 6,
       "NumOfCells": 15,
       "PerSomiteOrTotal": 1,
@@ -86,6 +89,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -94,6 +98,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -102,6 +107,7 @@
         "Range": 0
       },
       "ConductionVelocity": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -133,7 +139,7 @@
         "Izhikevich_9P.V": "-70",
         "Izhikevich_9P.U": "-14"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 5,
       "NumOfCells": 15,
       "PerSomiteOrTotal": 1,
@@ -147,6 +153,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -155,6 +162,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -163,6 +171,7 @@
         "Range": 0
       },
       "ConductionVelocity": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -194,7 +203,7 @@
         "Izhikevich_9P.V": "-70",
         "Izhikevich_9P.U": "-14"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 2,
       "NumOfCells": 15,
       "PerSomiteOrTotal": 1,
@@ -208,6 +217,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -216,6 +226,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -224,6 +235,7 @@
         "Range": 0
       },
       "ConductionVelocity": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -255,7 +267,7 @@
         "Izhikevich_9P.V": "-64",
         "Izhikevich_9P.U": "-16"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 4,
       "NumOfCells": 15,
       "PerSomiteOrTotal": 1,
@@ -269,6 +281,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -277,6 +290,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -285,6 +299,7 @@
         "Range": 0
       },
       "ConductionVelocity": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -316,7 +331,7 @@
         "Izhikevich_9P.V": "-64",
         "Izhikevich_9P.U": "-16"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 3,
       "NumOfCells": 15,
       "PerSomiteOrTotal": 1,
@@ -330,6 +345,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -338,6 +354,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -346,6 +363,7 @@
         "Range": 0
       },
       "ConductionVelocity": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -1077,7 +1095,9 @@
     "Kinematics.Alpha": "0",
     "Kinematics.Beta": "0",
     "Kinematics.Damping Coef": "3",
-    "Kinematics.Conversion Coef": "0.1"
+    "Kinematics.Conversion Coef": "0.1",
+    "Kinematics.Boundary": 0.5,
+    "Kinematics.Delay": 1000
   },
   "AppliedStimuli": [
     {
@@ -1092,7 +1112,7 @@
         "Value1": 2.89,
         "Value2": 0,
         "MinValue": 0,
-        "MaxValue": 2.89
+        "MaxValue": 0
       },
       "LeftRight": "Left/Right",
       "Active": true,

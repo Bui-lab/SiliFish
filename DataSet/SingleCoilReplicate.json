@@ -6,7 +6,6 @@
       "CellType": 0,
       "NTMode": 0,
       "Color": "#00FF00",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.0005",
         "Izhikevich_9P.b": "0.5",
@@ -20,7 +19,7 @@
         "Izhikevich_9P.V": "-65",
         "Izhikevich_9P.u": "0"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 1,
       "NumOfCells": 5,
       "PerSomiteOrTotal": 1,
@@ -35,6 +34,7 @@
         "Range": 100
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -43,6 +43,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -69,13 +70,12 @@
       "CellType": 1,
       "NTMode": 0,
       "Color": "#FF00ff",
-      "BodyLocation": 0,
       "Parameters": {
         "Leaky_Integrator.R": "25",
         "Leaky_Integrator.C": "10",
         "Leaky_Integrator.V": "0"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 3,
       "NumOfCells": 10,
       "PerSomiteOrTotal": 1,
@@ -89,6 +89,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -97,6 +98,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -104,7 +106,14 @@
         "RangeEnd": 0,
         "Range": 0
       },
-      "ConductionVelocity": null,
+      "ConductionVelocity": {
+        "Angular": false,
+        "DistType": "SiliFish.DataTypes.UniformDistribution",
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 100,
+        "Range": 0
+      },
       "Active": true,
       "TimeLine": {
         "PeriodsJSON": ""
@@ -116,7 +125,6 @@
       "CellType": 0,
       "NTMode": 4,
       "Color": "#FF0000",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.5",
         "Izhikevich_9P.b": "0.1",
@@ -130,7 +138,7 @@
         "Izhikevich_9P.V": "-65",
         "Izhikevich_9P.u": "0"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 2,
       "NumOfCells": 10,
       "PerSomiteOrTotal": 1,
@@ -144,6 +152,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -152,6 +161,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -178,7 +188,6 @@
       "CellType": 0,
       "NTMode": 1,
       "Color": "#00FFff",
-      "BodyLocation": 0,
       "Parameters": {
         "Izhikevich_9P.a": "0.5",
         "Izhikevich_9P.b": "0.01",
@@ -192,7 +201,7 @@
         "Izhikevich_9P.V": "-65",
         "Izhikevich_9P.u": "0"
       },
-      "PositionLeftRight": 3,
+      "PositionLeftRight": 2,
       "ColumnIndex2D": 1,
       "NumOfCells": 10,
       "PerSomiteOrTotal": 1,
@@ -206,6 +215,7 @@
         "Range": 30
       },
       "Y_AngleDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -214,6 +224,7 @@
         "Range": 0
       },
       "Z_RadiusDistribution": {
+        "NoiseStdDev": 0,
         "Angular": false,
         "DistType": "SiliFish.DataTypes.Constant_NoDistribution",
         "Absolute": true,
@@ -257,6 +268,7 @@
       "DistanceMode": 0,
       "Name": "IC--\u003EIC",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -285,6 +297,7 @@
       "DistanceMode": 0,
       "Name": "IC--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -313,6 +326,7 @@
       "DistanceMode": 0,
       "Name": "IC--\u003EV0d",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -346,6 +360,7 @@
       "DistanceMode": 0,
       "Name": "MN--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0,
@@ -379,6 +394,7 @@
       "DistanceMode": 0,
       "Name": "MN--\u003EMuscle",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -412,6 +428,7 @@
       "DistanceMode": 0,
       "Name": "MN--\u003EV0d",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -440,6 +457,7 @@
       "DistanceMode": 0,
       "Name": "V0d--\u003EIC",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -473,6 +491,7 @@
       "DistanceMode": 0,
       "Name": "V0d--\u003EMN",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": {
         "TauD": 1,
         "TauR": 0.5,
@@ -506,6 +525,7 @@
       "DistanceMode": 0,
       "Name": "V0d--\u003EV0d",
       "Description": "",
+      "Probability": 1,
       "SynapseParameters": null,
       "JncActive": true,
       "Active": true,
@@ -533,7 +553,9 @@
     "Kinematics.Damping Coef": "3",
     "Kinematics.Conversion Coef": "0.1",
     "Kinematics.Alpha": "0",
-    "Kinematics.Beta": "0"
+    "Kinematics.Beta": "0",
+    "Kinematics.Boundary": 0.5,
+    "Kinematics.Delay": 1000
   },
   "AppliedStimuli": [
     {
