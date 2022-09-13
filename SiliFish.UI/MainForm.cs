@@ -199,7 +199,8 @@ namespace SiliFish.UI
             modelUpdated = false;
             if (rbCustom.Checked)
             {
-                Model = new CustomSwimmingModel(ReadModelTemplate(includeHidden: false));
+                ReadModelTemplate(includeHidden: false);
+                RefreshModelFromTemplate();
             }
             else
             {
@@ -211,7 +212,6 @@ namespace SiliFish.UI
         {
             Model = customModel = new CustomSwimmingModel(ModelTemplate);
             lastSavedCustomParams = ModelTemplate.Parameters;
-            Model.SetParameters(ModelTemplate.Parameters);
         }
         private void SwitchToModel()
         {
@@ -570,7 +570,6 @@ namespace SiliFish.UI
                     return null;
                 }
 
-                RefreshModelFromTemplate();
                 return ModelTemplate;
             }
             catch (Exception ex)
@@ -597,7 +596,7 @@ namespace SiliFish.UI
             }
             return json;
         }
-        private bool SaveParamsOrModel()
+        private bool SaveParamsOrModelTemplate()
         {
             try
             {
@@ -611,7 +610,7 @@ namespace SiliFish.UI
                     {
                         //To make sure deactivated items are saved, even though not displayed
                         //Show all
-                        Util.SaveToJSON(saveFileJson.FileName, ReadModelTemplate(includeHidden: true));
+                        Util.SaveToJSON(saveFileJson.FileName, ModelTemplate);
                         this.Text = $"SiliFish {ModelTemplate.ModelName}";
                         lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
@@ -637,7 +636,7 @@ namespace SiliFish.UI
         }
         private void linkSaveParam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SaveParamsOrModel();
+            SaveParamsOrModelTemplate();
         }
 
         private void linkLoadParam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -656,7 +655,6 @@ namespace SiliFish.UI
                         ModelTemplate.LinkObjects();
                         Model = customModel = new CustomSwimmingModel(ModelTemplate);
                         lastSavedCustomParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
-                        Model.SetParameters(ModelTemplate.Parameters);
                         SwitchToModel();
                         lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
                     }
@@ -1732,7 +1730,7 @@ namespace SiliFish.UI
                         DialogResult res = MessageBox.Show("The custom model has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
-                            if (!SaveParamsOrModel())
+                            if (!SaveParamsOrModelTemplate())
                             {
                                 e.Cancel = true;
                                 return;
@@ -1751,7 +1749,7 @@ namespace SiliFish.UI
                         DialogResult res = MessageBox.Show("The single coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
-                            if (!SaveParamsOrModel())
+                            if (!SaveParamsOrModelTemplate())
                             {
                                 e.Cancel = true;
                                 return;
@@ -1769,7 +1767,7 @@ namespace SiliFish.UI
                         DialogResult res = MessageBox.Show("The double coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
-                            if (!SaveParamsOrModel())
+                            if (!SaveParamsOrModelTemplate())
                             {
                                 e.Cancel = true;
                                 return;
@@ -1787,7 +1785,7 @@ namespace SiliFish.UI
                         DialogResult res = MessageBox.Show("The beat and glide coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
-                            if (!SaveParamsOrModel())
+                            if (!SaveParamsOrModelTemplate())
                             {
                                 e.Cancel = true;
                                 return;

@@ -30,7 +30,7 @@ namespace SiliFish.UI.Controls
             }
             set
             {
-                poolTemplate = value;
+                poolTemplate = value ?? new ();
                 WriteDataToControl();
             }
         }
@@ -168,7 +168,7 @@ namespace SiliFish.UI.Controls
                 ddSagittalPosition.Text = "Left";
             else if (poolTemplate.PositionLeftRight == SagittalPlane.Right)
                 ddSagittalPosition.Text = "Right";
-            e2DColumn.Value = poolTemplate.ColumnIndex2D;
+            e2DColumn.Value = Math.Max(poolTemplate.ColumnIndex2D, e2DColumn.Minimum);
             eNumOfCells.Value = poolTemplate.NumOfCells;
             ddSelection.Text = poolTemplate.PerSomiteOrTotal.ToString();
             btnColor.BackColor = poolTemplate.Color;
@@ -243,13 +243,19 @@ namespace SiliFish.UI.Controls
         }
         private void cmiViewFile_Click(object sender, EventArgs e)
         {
+            string filename = listAttachments.SelectedItem.ToString();
             Process p = new()
             {
-                StartInfo = new ProcessStartInfo(listAttachments.SelectedItem.ToString())
+                StartInfo = new ProcessStartInfo(filename)
                 {
                     UseShellExecute = true
                 }
             };
+            if (!File.Exists(filename))
+            {
+                MessageBox.Show($"Path or file {filename} does not exist.");
+                return;
+            }
             p.Start();
         }
 

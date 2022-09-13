@@ -16,7 +16,7 @@ namespace SiliFish.Services
         double XYZMult;
         double XMin, YMin, ZMin;
         double XOffset, YOffset, ZOffset;
-        double WeightMax;
+        double WeightMin, WeightMax;
         double WeightMult;
         private string CreateLinkDataPoint(GapJunction jnc)
         {
@@ -149,13 +149,17 @@ namespace SiliFish.Services
             YOffset = 0;
             ZOffset = 0;
 
-            double jncsize = XYZMult * range / (20 * model.GetNumberOfConnections());
-            (_, WeightMax) = model.GetConnectionRange();
-            WeightMult = jncsize / WeightMax;
+            int numOfConnections = model.GetNumberOfConnections();
+            double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
+            (WeightMin, WeightMax) = model.GetConnectionRange();
+            WeightMult = maxjncsize / WeightMax;
 
-            double nodesize = zRange < 0.1 ?//No z axis
-                Math.Sqrt(xRange * yRange / (30 * model.GetNumberOfCells())) :
-                Math.Pow(xRange * yRange * zRange / (160 * model.GetNumberOfCells()), 0.33); //~40 times the nodes to fit in the space
+            int numOfCells = model.GetNumberOfCells();
+            double nodesize = numOfCells > 0?
+                (zRange < 0.1 ?//No z axis
+                Math.Sqrt(xRange * yRange / (30 * numOfCells)) :
+                Math.Pow(xRange * yRange * zRange / (160 * numOfCells), 0.33))
+                : 0; //~40 times the nodes to fit in the space
             nodesize *= XYZMult;
 
             List<string> nodes = new();

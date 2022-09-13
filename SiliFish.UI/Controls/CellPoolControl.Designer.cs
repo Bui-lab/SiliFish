@@ -290,6 +290,7 @@ namespace SiliFish.UI.Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listAttachments.ContextMenuStrip = this.cmAttachments;
             this.listAttachments.FormattingEnabled = true;
+            this.listAttachments.HorizontalScrollbar = true;
             this.listAttachments.ItemHeight = 15;
             this.listAttachments.Location = new System.Drawing.Point(5, 293);
             this.listAttachments.Name = "listAttachments";

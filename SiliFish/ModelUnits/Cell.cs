@@ -45,6 +45,9 @@ namespace SiliFish.ModelUnits
             return V?.MaxValue(iStart, iEnd) ?? 0;
         }
 
+        [JsonIgnore]
+        public virtual double RestingMembranePotential { get { throw new NotImplementedException(); } }
+
         public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
         {
             throw new NotImplementedException();
@@ -171,7 +174,7 @@ namespace SiliFish.ModelUnits
         public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
 
-
+        public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
         /// <summary>
         /// Used as a template
         /// </summary>
@@ -357,6 +360,8 @@ namespace SiliFish.ModelUnits
         public double[] RelativeTension { get { return Core.CalculateRelativeTension(V); } }
         [JsonIgnore]
         public double[] Tension { get { return Core.CalculateTension(V); } }
+        public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
+
         public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
 
         /// <summary>

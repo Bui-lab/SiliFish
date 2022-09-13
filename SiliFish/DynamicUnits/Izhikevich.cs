@@ -72,7 +72,7 @@ namespace SiliFish.DynamicUnits
             c = paramExternal.Read("Izhikevich_9P.c", c);
             d = paramExternal.Read("Izhikevich_9P.d", d);
             Vmax = paramExternal.Read("Izhikevich_9P.V_max", Vmax);
-            Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);
+            V = Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);
             Vt = paramExternal.Read("Izhikevich_9P.V_t", Vt);
             k = paramExternal.Read("Izhikevich_9P.k", k);
             Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
@@ -82,9 +82,8 @@ namespace SiliFish.DynamicUnits
         {
             return string.Join("\r\n", GetParameters().Select(kv => kv.Key + ": " + kv.Value.ToString()));
         }
-        public double GetNextVal(double Stim, ref bool spike)
+        public double GetNextVal(double I, ref bool spike)
         {
-            double I = Stim;
             double vNew, uNew;
             spike = false;
             if (V < Vmax)

@@ -1,7 +1,6 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
-using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
@@ -179,13 +178,20 @@ namespace SiliFish.UI.Controls
                 eDescription.Text = interPool.Description;
                 cbWithinSomite.Checked = interPool.CellReach.WithinSomite;
                 cbOtherSomite.Checked = interPool.CellReach.OtherSomite;
-                numProbability.SetValue(interPool.Probability);
-                numMinReach.SetValue(interPool.CellReach.MinReach);
-                numMaxReach.SetValue(interPool.CellReach.MaxReach);
-                numAscReach.SetValue(interPool.CellReach.AscendingReach);
-                numDescReach.SetValue(interPool.CellReach.DescendingReach);
-                numConductance.SetValue(interPool.CellReach.Weight);
-                numDelay.SetValue(interPool.CellReach.Delay_ms);
+                numProbability.Value = (decimal)interPool.Probability;
+                numMinReach.Value = (decimal)interPool.CellReach.MinReach;
+                numMaxReach.Value = (decimal)interPool.CellReach.MaxReach;
+                numAscReach.Value = (decimal)interPool.CellReach.AscendingReach;
+                numDescReach.Value = (decimal)interPool.CellReach.DescendingReach;
+                numLateralReach.Value = (decimal)interPool.CellReach.LateralReach;
+                numMedialReach.Value = (decimal)interPool.CellReach.MedialReach;
+                numDorsalReach.Value = (decimal)interPool.CellReach.DorsalReach;
+                numVentralReach.Value = (decimal)interPool.CellReach.VentralReach;
+                numMaxIncoming.Value = (decimal)interPool.CellReach.MaxIncoming;
+                numMaxOutgoing.Value = (decimal)interPool.CellReach.MaxOutgoing;
+
+                numConductance.Value = (decimal)interPool.CellReach.Weight;
+                numDelay.Value = (decimal)interPool.CellReach.Delay_ms;
                 eFixedDuration.Text = interPool.CellReach.FixedDuration_ms?.ToString() ?? "";
                 if (interPool.SynapseParameters != null)
                 {
@@ -217,6 +223,12 @@ namespace SiliFish.UI.Controls
                 MaxReach = (double)numMaxReach.Value,
                 AscendingReach = (double)numAscReach.Value,
                 DescendingReach = (double)numDescReach.Value,
+                LateralReach = (double)numLateralReach.Value,
+                MedialReach = (double)numMedialReach.Value,
+                DorsalReach = (double)numDorsalReach.Value,
+                VentralReach = (double)numVentralReach.Value,
+                MaxIncoming = (int)numMaxIncoming.Value,
+                MaxOutgoing = (int)numMaxOutgoing.Value,
                 Weight = (double)numConductance.Value,
                 Delay_ms = (double)numDelay.Value,
                 FixedDuration_ms = fixedDuration
