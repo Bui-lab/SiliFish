@@ -70,7 +70,11 @@ namespace SiliFish.UI
             this.tabCellPools = new System.Windows.Forms.TabPage();
             this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
             this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
+            this.pCellPoolTop = new System.Windows.Forms.Panel();
+            this.lCellPools = new System.Windows.Forms.Label();
             this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
+            this.pConnectionTop = new System.Windows.Forms.Panel();
+            this.lConnections = new System.Windows.Forms.Label();
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.pMain = new System.Windows.Forms.Panel();
@@ -129,6 +133,7 @@ namespace SiliFish.UI
             this.tabMNKinematics = new System.Windows.Forms.TabPage();
             this.splitKinematics = new System.Windows.Forms.SplitContainer();
             this.webViewSummaryV = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.eEpisodesRight = new System.Windows.Forms.RichTextBox();
             this.eEpisodesLeft = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ePlotKinematicsHeight = new System.Windows.Forms.NumericUpDown();
@@ -198,7 +203,6 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.eEpisodesRight = new System.Windows.Forms.RichTextBox();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -223,6 +227,8 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
             this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
             this.splitCellPoolsAndConnections.SuspendLayout();
+            this.pCellPoolTop.SuspendLayout();
+            this.pConnectionTop.SuspendLayout();
             this.tabStimuli.SuspendLayout();
             this.pMain.SuspendLayout();
             this.tabOutputs.SuspendLayout();
@@ -751,11 +757,13 @@ namespace SiliFish.UI
             // splitCellPoolsAndConnections.Panel1
             // 
             this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.listCellPool);
+            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.pCellPoolTop);
             this.splitCellPoolsAndConnections.Panel1MinSize = 200;
             // 
             // splitCellPoolsAndConnections.Panel2
             // 
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
+            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.pConnectionTop);
             this.splitCellPoolsAndConnections.Panel2MinSize = 200;
             this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 610);
             this.splitCellPoolsAndConnections.SplitterDistance = 252;
@@ -764,11 +772,11 @@ namespace SiliFish.UI
             // listCellPool
             // 
             this.listCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listCellPool.Location = new System.Drawing.Point(0, 0);
+            this.listCellPool.Location = new System.Drawing.Point(0, 32);
             this.listCellPool.Name = "listCellPool";
             this.listCellPool.SelectedIndex = -1;
             this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(252, 610);
+            this.listCellPool.Size = new System.Drawing.Size(252, 578);
             this.listCellPool.TabIndex = 5;
             this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -777,14 +785,34 @@ namespace SiliFish.UI
             this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
             this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
             // 
+            // pCellPoolTop
+            // 
+            this.pCellPoolTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pCellPoolTop.Controls.Add(this.lCellPools);
+            this.pCellPoolTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pCellPoolTop.Location = new System.Drawing.Point(0, 0);
+            this.pCellPoolTop.Name = "pCellPoolTop";
+            this.pCellPoolTop.Size = new System.Drawing.Size(252, 32);
+            this.pCellPoolTop.TabIndex = 6;
+            // 
+            // lCellPools
+            // 
+            this.lCellPools.AutoSize = true;
+            this.lCellPools.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lCellPools.Location = new System.Drawing.Point(8, 6);
+            this.lCellPools.Name = "lCellPools";
+            this.lCellPools.Size = new System.Drawing.Size(59, 15);
+            this.lCellPools.TabIndex = 0;
+            this.lCellPools.Text = "Cell Pools";
+            // 
             // listConnections
             // 
             this.listConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listConnections.Location = new System.Drawing.Point(0, 0);
+            this.listConnections.Location = new System.Drawing.Point(0, 32);
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(286, 610);
+            this.listConnections.Size = new System.Drawing.Size(286, 578);
             this.listConnections.TabIndex = 6;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -792,6 +820,26 @@ namespace SiliFish.UI
             this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
             this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
             this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
+            // 
+            // pConnectionTop
+            // 
+            this.pConnectionTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pConnectionTop.Controls.Add(this.lConnections);
+            this.pConnectionTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pConnectionTop.Location = new System.Drawing.Point(0, 0);
+            this.pConnectionTop.Name = "pConnectionTop";
+            this.pConnectionTop.Size = new System.Drawing.Size(286, 32);
+            this.pConnectionTop.TabIndex = 7;
+            // 
+            // lConnections
+            // 
+            this.lConnections.AutoSize = true;
+            this.lConnections.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lConnections.Location = new System.Drawing.Point(8, 6);
+            this.lConnections.Name = "lConnections";
+            this.lConnections.Size = new System.Drawing.Size(75, 15);
+            this.lConnections.TabIndex = 0;
+            this.lConnections.Text = "Connections";
             // 
             // tabStimuli
             // 
@@ -1539,6 +1587,15 @@ namespace SiliFish.UI
             this.webViewSummaryV.TabIndex = 6;
             this.webViewSummaryV.ZoomFactor = 1D;
             this.webViewSummaryV.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
+            // 
+            // eEpisodesRight
+            // 
+            this.eEpisodesRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eEpisodesRight.Location = new System.Drawing.Point(115, 0);
+            this.eEpisodesRight.Name = "eEpisodesRight";
+            this.eEpisodesRight.Size = new System.Drawing.Size(132, 433);
+            this.eEpisodesRight.TabIndex = 1;
+            this.eEpisodesRight.Text = "";
             // 
             // eEpisodesLeft
             // 
@@ -2356,15 +2413,6 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // eEpisodesRight
-            // 
-            this.eEpisodesRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eEpisodesRight.Location = new System.Drawing.Point(115, 0);
-            this.eEpisodesRight.Name = "eEpisodesRight";
-            this.eEpisodesRight.Size = new System.Drawing.Size(132, 433);
-            this.eEpisodesRight.TabIndex = 1;
-            this.eEpisodesRight.Text = "";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2406,6 +2454,10 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
             this.splitCellPoolsAndConnections.ResumeLayout(false);
+            this.pCellPoolTop.ResumeLayout(false);
+            this.pCellPoolTop.PerformLayout();
+            this.pConnectionTop.ResumeLayout(false);
+            this.pConnectionTop.PerformLayout();
             this.tabStimuli.ResumeLayout(false);
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
@@ -2644,5 +2696,9 @@ namespace SiliFish.UI
         private Label lPlotKinematicsHeight;
         private Label label8;
         private RichTextBox eEpisodesRight;
+        private Panel pCellPoolTop;
+        private Label lCellPools;
+        private Panel pConnectionTop;
+        private Label lConnections;
     }
 }

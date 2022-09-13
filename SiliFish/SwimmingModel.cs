@@ -245,7 +245,7 @@ namespace SiliFish
         }
         public virtual int GetNumberOfConnections()
         {
-            return CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count + ((c as Neuron)?.Synapses.Count ?? 0)));
+            return CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count + ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));
         }
 
         public virtual Dictionary<string, object> GetParameters()

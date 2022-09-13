@@ -8,22 +8,32 @@ namespace SiliFish.ModelUnits
 {
     public class CellReach
     {
-        /// <summary>
-        /// Ascending reach checks only at the x axis
-        /// </summary>
+        #region Member Properties
+        // Ascending reach checks only at the x axis, or the somite
         public double AscendingReach { get; set; }
-        /// <summary>
-        /// Descending reach checks only the x axis
-        /// </summary>
+        // Descending reach checks only the x axis, or the somite
         public double DescendingReach { get; set; }
-        /// <summary>
-        /// Min reach checks the calculated distance (Euclidean or else)
-        /// </summary>
+
+        // Medial reach checks the y axis, towards to center
+        public double MedialReach { get; set; } = 1000;
+        // Lateral reach checks the y axis, outwards
+        public double LateralReach { get; set; } = 1000;
+
+        // Dorsal reach checks the z axis
+        public double DorsalReach { get; set; } = 1000;
+        // Ventral reach checks the z axis
+        public double VentralReach { get; set; } = 1000;
+
+        // Min reach checks the calculated distance (Euclidean or else)
         public double MinReach { get; set; } = 0.2;
-        /// <summary>
-        /// Max reach checks the calculated distance (Euclidean or else)
-        /// </summary>
+        // Max reach checks the calculated distance (Euclidean or else)
         public double MaxReach { get; set; } = 1000;
+
+        // MaxOutgoing shows how many junctions the source cell can have
+        public double MaxOutgoing { get; set; } = 0;
+        // MaxIncoming shows how many junctions the target cell can have
+        public double MaxIncoming { get; set; } = 0;
+
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms
         public double Delay_ms { get; set; } = 0;//in ms
@@ -43,13 +53,20 @@ namespace SiliFish.ModelUnits
                     "";
             }
         }
+        #endregion
         public CellReach() { }
         public CellReach(CellReach cr)
         {
             AscendingReach = cr.AscendingReach;
             DescendingReach = cr.DescendingReach;
+            LateralReach = cr.LateralReach;
+            MedialReach = cr.MedialReach;
+            DorsalReach = cr.DorsalReach;
+            VentralReach = cr.VentralReach;
             MinReach = cr.MinReach;
             MaxReach = cr.MaxReach;
+            MaxIncoming = cr.MaxIncoming;
+            MaxOutgoing = cr.MaxOutgoing;
             FixedDuration_ms = cr.FixedDuration_ms;
             Delay_ms = cr.Delay_ms;
             Weight = cr.Weight;
@@ -60,10 +77,18 @@ namespace SiliFish.ModelUnits
         }
         internal object GetTooltip()
         {
-            return $"Ascending: {AscendingReach:0.###}\r\n" +
-                $"Descending: {DescendingReach:0.###}\r\n" +
-                $"MinReach: {MinReach: 0.###}\r\n" +
-                $"MaxReach: {MaxReach: 0.###}\r\n" +
+            string reach =
+                (AscendingReach > 0 ? $"Ascending: {AscendingReach:0.###}\r\n" : "") +
+                (DescendingReach > 0 ? $"Descending: {DescendingReach:0.###}\r\n" : "") +
+                (LateralReach > 0 ? $"Lateral: {LateralReach:0.###}\r\n" : "") +
+                (MedialReach > 0 ? $"Medial: {MedialReach:0.###}\r\n" : "") +
+                (DorsalReach > 0 ? $"Dorsal: {DorsalReach:0.###}\r\n" : "") +
+                (VentralReach > 0 ? $"Ventral: {VentralReach:0.###}\r\n" : "") +
+                (MinReach > 0 ? $"Min reach: {MinReach:0.###}\r\n" : "") +
+                (MaxReach > 0 ? $"Max reach: {MaxReach:0.###}\r\n" : "");
+            return reach +
+                (MaxIncoming > 0 ? $"Max in: {MaxIncoming:0}\r\n" : "") +
+                (MaxOutgoing > 0 ? $"Max out: {MaxOutgoing:0}\r\n" : "") +
                 $"Fixed Duration: {FixedDuration_ms: 0.###}\r\n" +
                 $"Delay: {Delay_ms: 0.###}\r\n" +
                 $"Weight: {Weight: 0.###}\r\n"+
@@ -80,16 +105,33 @@ namespace SiliFish.ModelUnits
         {
             if (!WithinSomite && cell1.Somite == cell2.Somite)
                 return false;
+            
             if (!OtherSomite && cell1.Somite != cell2.Somite)
                 return false;
+            
             if (!Autapse && cell1 == cell2)
                 return false;
-            double diff_x = SomiteBased ? cell1.Somite - cell2.Somite :
-                (cell1.X - cell2.X) * noise;//positive values mean cell1 is more caudal
-            if (diff_x > 0 && diff_x > AscendingReach) //Not enough ascending reach 
+            
+            double diff_x = SomiteBased ? cell2.Somite - cell1.Somite :
+                (cell2.X - cell1.X) * noise;//positive values mean cell2 is more caudal
+            if (diff_x > 0 && diff_x > DescendingReach) //Not enough descending reach 
                 return false;
-            else if (diff_x < 0 && Math.Abs(diff_x) > DescendingReach) //Not enough descending reach 
+            else if (diff_x < 0 && Math.Abs(diff_x) > AscendingReach) //Not enough ascending reach 
                 return false;
+            
+            double diff_y = cell2.Y - cell1.Y; //positive values mean cell2 is more lateral
+            if (diff_y > 0 && diff_y > LateralReach)
+                return false;
+            else if (diff_y < 0 && Math.Abs(diff_y) > MedialReach)
+                return false;
+
+
+            double diff_z = cell2.Y - cell1.Y; //positive values mean cell2 is more ventral
+            if (diff_z > 0 && diff_z > VentralReach)
+                return false;
+            else if (diff_z < 0 && Math.Abs(diff_z) > DorsalReach)
+                return false;
+
             double dist = Util.Distance(cell1.coordinate, cell2.coordinate, DistanceMode) *  noise;
             return dist >= MinReach && dist <= MaxReach;
         }
@@ -129,9 +171,11 @@ namespace SiliFish.ModelUnits
         public int Duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
         public int Delay = 0; //Extra number of time units (dt) to add to Duration
 
-        private double VoltageDiff1To2 = 0; //momentary outgoing current value
-        private double VoltageDiffFrom2To1 = 0; //momentary incoming current value
-        private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiff1To2; } } //momentary current value
+        private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
+        private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
+                                                //
+        //Voltage Diff * 1/2 * conductance will give the momentary current value
+        private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } } 
         int t_current = 0; //the time point  where the momentary values are kept for
         private TimeLine timeLine_ms;
         internal bool IsActive(int timepoint)
@@ -176,17 +220,17 @@ namespace SiliFish.ModelUnits
             if (tIndex <= 0) return;
             t_current = tIndex;
             int tt = Duration + Delay;
-            double v1 = tt <= tIndex ? Cell1.V[tIndex - tt] : 0;
+            double v1 = tt <= tIndex ? Cell1.V[tIndex - tt] : Cell1.RestingMembranePotential;
             double v2 = Cell2.V[tIndex - 1];
-            VoltageDiff1To2 = v1 - v2;
-            v1 = tt <= tIndex ? Cell2.V[tIndex - tt] : 0;
+            VoltageDiffFrom1To2 = v1 - v2;
+            v1 = tt <= tIndex ? Cell2.V[tIndex - tt] : Cell2.RestingMembranePotential;
             v2 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v1 - v2;
         }
 
         public double GetGapCurrent(Cell n, int tIndex)
         {
-            double current = IsActive(tIndex) ? Conductance * VoltageDiff : 0;
+            double current = IsActive(tIndex) ? Conductance * VoltageDiff * 0.5 : 0; //0.5 multiplier added to minimize fluctuation
 
             if (n == Cell1)
                 return current;
@@ -249,7 +293,7 @@ namespace SiliFish.ModelUnits
         {
             t_current = tIndex;
             int tt = Duration + Delay;
-            double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : 0;
+            double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : 0;
             (ISynA, ISynB) = Core.GetNextVal(vPre, vPost, ISynA, ISynB);
         }

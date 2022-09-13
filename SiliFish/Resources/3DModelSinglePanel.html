@@ -46,10 +46,12 @@
 
         const gapChemDataSet = gapChemGraph
             .nodeColor(n => (hoverNode == null || hoverNode.g == n.g ? colorSet[n.g] : '#EEE'))
+            .nodeOpacity(0.9)
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
             .graphData(gapChemData)
-            .linkColor(l => hoverNode == null ? '#DDD' : l.source == hoverNode ? '#F00' : l.target == hoverNode ? '#0F0' : '#FFF')
+            .linkColor(l => hoverNode == null ? '#808080' : l.source == hoverNode ? '#C00' : l.target == hoverNode ? '#0C0' : '#DDD')
+            .linkOpacity(l => hoverNode == null ? 0.4 : l.source == hoverNode || l.target == hoverNode ? 0.9 : 0.1)
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.01))
             .linkCurvature('curv')

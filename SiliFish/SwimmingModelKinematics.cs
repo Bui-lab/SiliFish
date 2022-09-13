@@ -168,7 +168,6 @@ namespace SiliFish
             }
             return somiteCoordinates;
         }
-
         public static (Coordinate[], List<SwimmingEpisode>) GetSwimmingEpisodesUsingMuscleCells(SwimmingModel model)
         {
             /*Converted from the code written by Yann Roussel and Tuan Bui
@@ -234,12 +233,14 @@ namespace SiliFish
                     {
                         side = LEFT;
                         lastEpisode.EndBeat(t);
+                        lastEpisode.StartBeat(t);
                     }
 
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
                         lastEpisode.EndBeat(t);
+                        lastEpisode.StartBeat(t);
                     }
                 }
                 i++;

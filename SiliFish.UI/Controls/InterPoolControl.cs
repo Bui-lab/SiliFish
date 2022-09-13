@@ -183,6 +183,13 @@ namespace SiliFish.UI.Controls
                 numMaxReach.Value = (decimal)interPool.CellReach.MaxReach;
                 numAscReach.Value = (decimal)interPool.CellReach.AscendingReach;
                 numDescReach.Value = (decimal)interPool.CellReach.DescendingReach;
+                numLateralReach.Value = (decimal)interPool.CellReach.LateralReach;
+                numMedialReach.Value = (decimal)interPool.CellReach.MedialReach;
+                numDorsalReach.Value = (decimal)interPool.CellReach.DorsalReach;
+                numVentralReach.Value = (decimal)interPool.CellReach.VentralReach;
+                numMaxIncoming.Value = (decimal)interPool.CellReach.MaxIncoming;
+                numMaxOutgoing.Value = (decimal)interPool.CellReach.MaxOutgoing;
+
                 numConductance.Value = (decimal)interPool.CellReach.Weight;
                 numDelay.Value = (decimal)interPool.CellReach.Delay_ms;
                 eFixedDuration.Text = interPool.CellReach.FixedDuration_ms?.ToString() ?? "";
@@ -216,6 +223,12 @@ namespace SiliFish.UI.Controls
                 MaxReach = (double)numMaxReach.Value,
                 AscendingReach = (double)numAscReach.Value,
                 DescendingReach = (double)numDescReach.Value,
+                LateralReach = (double)numLateralReach.Value,
+                MedialReach = (double)numMedialReach.Value,
+                DorsalReach = (double)numDorsalReach.Value,
+                VentralReach = (double)numVentralReach.Value,
+                MaxIncoming = (int)numMaxIncoming.Value,
+                MaxOutgoing = (int)numMaxOutgoing.Value,
                 Weight = (double)numConductance.Value,
                 Delay_ms = (double)numDelay.Value,
                 FixedDuration_ms = fixedDuration
