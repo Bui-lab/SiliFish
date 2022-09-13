@@ -203,6 +203,8 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.ddSomites = new System.Windows.Forms.ComboBox();
+            this.lSomites = new System.Windows.Forms.Label();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -1499,6 +1501,8 @@ namespace SiliFish.UI
             // p3DModel
             // 
             this.p3DModel.BackColor = System.Drawing.SystemColors.Control;
+            this.p3DModel.Controls.Add(this.ddSomites);
+            this.p3DModel.Controls.Add(this.lSomites);
             this.p3DModel.Controls.Add(this.linkSaveHTML3D);
             this.p3DModel.Controls.Add(this.dd3DModelType);
             this.p3DModel.Controls.Add(this.btnGenerate3DModel);
@@ -1537,7 +1541,7 @@ namespace SiliFish.UI
             // btnGenerate3DModel
             // 
             this.btnGenerate3DModel.AutoSize = true;
-            this.btnGenerate3DModel.Location = new System.Drawing.Point(132, 2);
+            this.btnGenerate3DModel.Location = new System.Drawing.Point(346, 3);
             this.btnGenerate3DModel.Name = "btnGenerate3DModel";
             this.btnGenerate3DModel.Size = new System.Drawing.Size(118, 25);
             this.btnGenerate3DModel.TabIndex = 26;
@@ -2413,6 +2417,29 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // ddSomites
+            // 
+            this.ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddSomites.FormattingEnabled = true;
+            this.ddSomites.Items.AddRange(new object[] {
+            "All Somites",
+            "Custom range"});
+            this.ddSomites.Location = new System.Drawing.Point(220, 3);
+            this.ddSomites.Name = "ddSomites";
+            this.ddSomites.Size = new System.Drawing.Size(121, 23);
+            this.ddSomites.TabIndex = 29;
+            this.toolTip.SetToolTip(this.ddSomites, "Enter a number or a range (eg. \"1\" or \"0-5\")");
+            this.ddSomites.SelectedIndexChanged += new System.EventHandler(this.ddSomites_SelectedIndexChanged);
+            // 
+            // lSomites
+            // 
+            this.lSomites.AutoSize = true;
+            this.lSomites.Location = new System.Drawing.Point(165, 8);
+            this.lSomites.Name = "lSomites";
+            this.lSomites.Size = new System.Drawing.Size(49, 15);
+            this.lSomites.TabIndex = 28;
+            this.lSomites.Text = "Somites";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2700,5 +2727,7 @@ namespace SiliFish.UI
         private Label lCellPools;
         private Panel pConnectionTop;
         private Label lConnections;
+        private ComboBox ddSomites;
+        private Label lSomites;
     }
 }
