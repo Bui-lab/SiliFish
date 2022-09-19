@@ -251,7 +251,6 @@ namespace SiliFish.ModelUnits
         public int Delay = 0; //Extra number of time units (dt) to add to Duration
         public double ISynA = 0; //the momentary current value
         public double ISynB = 0; //the momentary current value
-        int t_current = 0; //the time point  where the momentary values are kept for
         public double ISyn { get { return ISynA - ISynB; } }
         public double[] InputCurrent; //Current vector 
         private TimeLine timeLine_ms;
@@ -291,7 +290,6 @@ namespace SiliFish.ModelUnits
         }
         public void NextStep(int tIndex)
         {
-            t_current = tIndex;
             int tt = Duration + Delay;
             double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : 0;
