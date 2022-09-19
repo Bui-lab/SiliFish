@@ -38,9 +38,7 @@ namespace SiliFish.ModelUnits
                     return string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
                 case StimulusMode.Sinusoidal:
                     return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.AbsoluteSinusoidal:
-                    return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.PositiveSinusoidal:
+                case StimulusMode.Pulse:
                     return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
             }
             return "";
@@ -183,7 +181,6 @@ namespace SiliFish.ModelUnits
                 values.CopyTo(copyArr, 0);
                 values = copyArr;
             }
-            double ramp = (tIndex - iStart) * tangent;
             double value = 0;
             switch (Mode)
             {
@@ -192,6 +189,7 @@ namespace SiliFish.ModelUnits
                     value = Value1 * noise;
                     break;
                 case StimulusMode.Ramp:
+                    double ramp = (tIndex - iStart) * tangent;
                     value = Value1 + ramp;
                     break;
                 case StimulusMode.Gaussian:
@@ -201,13 +199,17 @@ namespace SiliFish.ModelUnits
                     double sinValue = Math.Sin(2 * Math.PI * Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
                     value = Value1 * sinValue;
                     break;
-                case StimulusMode.AbsoluteSinusoidal:
-                    sinValue = Math.Sin(2 * Math.PI * Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
-                    value = Value1 * Math.Abs(sinValue);
-                    break;
-                case StimulusMode.PositiveSinusoidal:
-                    sinValue = Math.Sin(2 * Math.PI * Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
-                    value = Value1 * Math.Max(0, sinValue);
+                case StimulusMode.Pulse:
+                    value = 0;
+                    if (Value2 > 0)
+                    {
+                        double t = t_ms - TimeSpan_ms.StartOf(t_ms);
+                        double period = 1 / Value2;
+                        while (t > period) 
+                            t -= period;
+                        if (t <= period / 2)
+                            value = Value1;
+                    }
                     break;
             }
 

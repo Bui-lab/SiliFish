@@ -124,12 +124,12 @@ namespace SiliFish.DynamicUnits
                 if (onDecay && V <= 0.37 * Vmax)
                 {
                     onDecay = false;
-                    dyn.tauDecay.Add(t - decayStart);
+                    dyn.tauDecay.Add(t, t - decayStart);
                 }
                 else if (onRise && riseStart > 0 && V >= 0.63 * Vmax)
                 {
                     onRise = false;
-                    dyn.tauRise.Add(t - riseStart);
+                    dyn.tauRise.Add(t, t - riseStart);
                     riseStart = 0;
                 }
                 else if (!onRise && (V - Vt > 0))

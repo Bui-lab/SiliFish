@@ -173,6 +173,7 @@ namespace SiliFish.ModelUnits
         public double u; //keeps the current u value
         public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
+        private double logmaxMultiplier;
 
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
         /// <summary>
@@ -293,12 +294,46 @@ namespace SiliFish.ModelUnits
             return Core.SolveODE(I);
         }
 
-        public double CalculateRheoBase(double dt, double maxI = 100, double sensitivity = 0.001, int infinity = 300)//SOURCE: https://en.wikipedia.org/wiki/Rheobase
+        public double CalculateRheoBase(double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)//SOURCE: https://en.wikipedia.org/wiki/Rheobase
         {
 
-            return Core.CalculateRheoBase(maxI, sensitivity, infinity, dt);
+            return Core.CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
         }
 
+        public (double[], double[]) RheobaseSensitivityAnalysis(string param, bool logScale, double minMultiplier, double maxMultiplier, int numOfPoints,
+            double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)
+        {
+            if (maxMultiplier < minMultiplier)
+                (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
+            Dictionary<string, object> parameters = Parameters;
+            double origValue = (double)parameters[param];
+            double[] values = new double[numOfPoints];
+            if (!logScale)
+            {
+                double incMultiplier = (maxMultiplier - minMultiplier) / (numOfPoints - 1);
+                foreach (int i in Enumerable.Range(0, numOfPoints))
+                    values[i] = (incMultiplier * i + minMultiplier) * origValue;
+            }
+            else
+            {
+                double logMinMultiplier = Math.Log10(minMultiplier);
+                double logMaxMultiplier = Math.Log10(maxMultiplier);
+                double incMultiplier = (logMaxMultiplier - logMinMultiplier) / (numOfPoints - 1);
+                foreach (int i in Enumerable.Range(0, numOfPoints))
+                    values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
+            }
+            double[] rheos = new double[numOfPoints];
+            int counter = 0;
+            foreach (double value in values)
+            {
+                parameters[param] = value;
+                Parameters = parameters;
+                rheos[counter++] = CalculateRheoBase(dt, maxRheobase, sensitivity, infinity);
+            }
+            parameters[param] = origValue;
+            Parameters = parameters;
+            return (values, rheos);
+        }
 
         public override string GetInstanceParams()
         {

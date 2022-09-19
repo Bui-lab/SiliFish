@@ -8,7 +8,7 @@ namespace SiliFish.DynamicUnits
 {
     public class Dynamics
     {
-        public List<double> tauDecay, tauRise;
+        public Dictionary<double, double> tauDecay, tauRise;
         public double[] VList;
         public double[] secList; //u for neurons and rel. tension for muscle cells
         public Dynamics(int iMax)

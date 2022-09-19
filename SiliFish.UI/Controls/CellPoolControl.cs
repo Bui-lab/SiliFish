@@ -221,7 +221,7 @@ namespace SiliFish.UI.Controls
             {
                 Cell = GetCell()
             };
-            dyncontrol.UseupdatedParams += Dyncontrol_UseupdatedParams;
+            dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
             frmControl.Text = eGroupName.Text;
