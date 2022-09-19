@@ -36,9 +36,10 @@
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
-    <None Remove="Resources\DyChart.html" />
     <None Remove="Resources\DyChart.js" />
     <None Remove="Resources\DyChartDiv.html" />
+    <None Remove="Resources\DyChartSync.html" />
+    <None Remove="Resources\DyChartUnsync.html" />
     <None Remove="Resources\dygraph.js" />
     <None Remove="Resources\DyStyleSheet.css" />
     <None Remove="Resources\fishbone.ico" />
@@ -57,8 +58,9 @@
     <EmbeddedResource Include="Resources\3DModel.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
+    <EmbeddedResource Include="Resources\DyChartUnsync.html" />
     <EmbeddedResource Include="Resources\DyChart.js" />
-    <EmbeddedResource Include="Resources\DyChart.html" />
+    <EmbeddedResource Include="Resources\DyChartSync.html" />
     <EmbeddedResource Include="Resources\DyChartDiv.html" />
     <EmbeddedResource Include="Resources\force-graph.min.js" />
     <EmbeddedResource Include="Resources\Logo.png" />

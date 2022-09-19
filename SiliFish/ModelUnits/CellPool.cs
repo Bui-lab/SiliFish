@@ -105,10 +105,28 @@ namespace SiliFish.ModelUnits
                 return true;
             return false;
         }
-        public virtual double XAvg()
+        public virtual (double, double, double) XYZMiddle()
         {
-            if (Cells == null || Cells.Count == 0) return 0;
-            return Cells.Average(c => c.X);
+            if (Cells == null || Cells.Count == 0) return (0, 0, 0);
+            int minSomite = Cells.Min(c => c.Somite);
+            int maxSomite = Cells.Max(c => c.Somite);
+            Cell midCell;
+            if (minSomite == maxSomite) //check the cell with middle sequence
+            {
+                List<Cell> cells = Cells.OrderBy(c => c.Sequence).ToList();
+                midCell = cells[Cells.Count / 2];
+            }
+            else
+            {
+                double avgSomite = (minSomite + maxSomite) / 2;
+                double minDistance = Cells.Min(c => Math.Abs(c.Somite - avgSomite));
+                List<Cell> midSomiteCells = Cells.Where(c => c.Somite - avgSomite == minDistance).OrderBy(c => c.Sequence).ToList();
+                midCell = midSomiteCells[midSomiteCells.Count / 2];
+            }
+            int mult = 1;
+            if (columnIndex2D > 0)
+                mult = columnIndex2D;
+            return (midCell.X, mult * midCell.Y, midCell.Z);
         }
         public virtual (double, double) XRange()
         {
@@ -116,26 +134,10 @@ namespace SiliFish.ModelUnits
             return (Cells.Min(c => c.X), Cells.Max(c => c.X));
         }
 
-        public virtual double YAvg()
-        {
-            if (Cells == null || Cells.Count == 0) return 0;
-            int mult = 1;
-            if (PositionLeftRight == SagittalPlane.Left)
-                mult = -1;
-            if (columnIndex2D == 0)
-                return mult * Cells.Average(c => Math.Abs(c.Y));
-            return mult * columnIndex2D;
-        }
         public virtual (double, double) YRange()
         {
             if (Cells == null || Cells.Count == 0) return (999, -999);
             return (Cells.Min(c => c.Y), Cells.Max(c => c.Y));
-        }
-
-        public virtual double ZAvg()
-        {
-            if (Cells == null || Cells.Count == 0) return 0;
-            return Cells.Average(c => c.Z);
         }
 
         public virtual (double, double) ZRange()

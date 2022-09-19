@@ -13,13 +13,12 @@ namespace SiliFish.Services
     public class TwoDModelGenerator : VisualsGenerator
     {
         double XMult, YMult;
-        double XMin, YMin;
+        double XMin = double.MaxValue, YMin = double.MaxValue;
+        double XMax = double.MinValue, YMax = double.MinValue;
         double XOffset, YOffset;
         double WeightMax;
         double WeightMult;
-        List<double> leftX = new(); //keeps a list of x values for the left and right halves
-        List<double> rightX = new(); //keeps a list of x values for the left and right halves
-
+        Dictionary<string, (double, double)> PoolCoordinates;
         private string CreateLinkDataPoint(InterPool interPool)
         {
             string curvInfo = interPool.SourcePool.ID == interPool.TargetPool.ID ? ",curv: 0.7" : "";
@@ -32,29 +31,14 @@ namespace SiliFish.Services
             return link;
         }
 
-        private (double, double) GetNewCoordinates(CellPool pool)
+        private void GetNewCoordinates(CellPool pool)
         {
-            double x = pool.XAvg();
-            int y = (int)pool.YAvg();
-            if (y < 0)
-            {
-                while (leftX.Any(xi => Math.Abs(xi - x) < XMult))
-                {
-                    x += XMult/10;
-                }
-                leftX.Add(x);
-            }
-            else
-            {
-                while (rightX.Any(xi => Math.Abs(xi - x) < XMult))
-                {
-                    x += XMult/10;
-                }
-                rightX.Add(x);
-            }
-            double newX = x * XMult + XOffset;
-            double newY = (pool.YAvg() + pool.ZAvg())/2 * YMult + YOffset; 
-            return (newX, newY);
+            (double x, double y, double _) = pool.XYZMiddle();
+            if (x < XMin) XMin = x;
+            if (y < YMin) YMin = y;
+            if (x > XMax) XMax = x;
+            if (y > YMax) YMax = y;
+            PoolCoordinates.Add(pool.ID, (x, y));
         }
         private double GetNewWeight(double d)
         {
@@ -63,7 +47,8 @@ namespace SiliFish.Services
         }
         private string CreateNodeDataPoint(CellPool pool)
         {
-            (double newX, double newY) = GetNewCoordinates(pool);
+            (double origX, double origY) = PoolCoordinates[pool.ID];
+            (double newX, double newY) = (origX * XMult + XOffset, origY * YMult + YOffset);
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 
@@ -92,19 +77,30 @@ namespace SiliFish.Services
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
             html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chemical Jnc"));
-            
-            ((XMin, double maxX), (YMin, double maxY), (_,_), int YRange1D) = model.GetSpatialRange();
 
-            XMult = width / (maxX - XMin) / 5;
-            YMult = height / Math.Max(2 * YRange1D, (maxY - YMin)) / 2;
+            PoolCoordinates = new();
+            XMult = 1;
+            YMult = 1;
             XOffset = 0;
             YOffset = 0;
 
             (_, WeightMax) = model.GetConnectionRange();
             WeightMult = 5 / WeightMax;
 
+            pools.ForEach(pool => GetNewCoordinates(pool));
+            //XMin, YMax etc set during node creation
+            if (XMax > XMin)
+            {
+                XMult = width / (XMax - XMin) / 5;
+                XOffset = -XMin * XMult + 10;
+            }
+            if (YMax > YMin)
+            {
+                YMult = height / (YMax - YMin) / 2;
+            }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
+
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
 
             List<string> gapLinks = new();
