@@ -95,20 +95,30 @@ namespace SiliFish.Services
         private static DyChartStruct CreateLineChart(ChartDataStruct chartData)
         {
             DyChartStruct chart = new();
-            if (chartData.xData?.Length != chartData.yData?.Length)
+            if (chartData.xData?.Length != chartData.yData?.Length && chartData.xData?.Length != chartData.yMultiData?.GetLength(0))
                 return chart;
 
-            double yMin = chartData.yData.Min();
-            double yMax = chartData.yData.Max();
+            double yMin = chartData.yMin;
+            double yMax = chartData.yMax;
             double xMin = chartData.xData.Min();
             double xMax = chartData.xData.Max();
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
             string columnTitles = $"{chartData.xLabel},{chartData.yLabel}";
-            List<string> data = new(chartData.xData.Select(t => t.ToString(Const.decimalPointFormat) + ","));
-            foreach (int i in Enumerable.Range(0, chartData.yData.Length))
-                data[i] += chartData.yData[i].ToString(Const.decimalPointFormat) + ",";
-
+            List<string> data = new(chartData.xData.Select(t => t.ToString(Const.DecimalPointFormat) + ","));
+            if (chartData.yData != null)
+            {
+                foreach (int i in Enumerable.Range(0, chartData.yData.Length))
+                    data[i] += chartData.yData[i].ToString(Const.DecimalPointFormat) + ",";
+            }
+            else
+            {
+                for (int colIndex = 0; colIndex < chartData.yMultiData.GetLength(1); colIndex++)
+                {
+                    foreach (int i in Enumerable.Range(0, chartData.yMultiData.GetLength(0)))
+                        data[i] += chartData.yMultiData[i, colIndex].ToString(Const.DecimalPointFormat) + ",";
+                }
+            }
             string csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
             chart = new DyChartStruct
             {
@@ -117,10 +127,10 @@ namespace SiliFish.Services
                 Title = $"`{chartData.Title}`",
                 xLabel = $"`{chartData.xLabel}`",
                 yLabel = $"`{chartData.yLabel}`",
-                xMin = xMin.ToString(Const.decimalPointFormat),
-                xMax = xMax.ToString(Const.decimalPointFormat),
-                yMin = yMin.ToString(Const.decimalPointFormat),
-                yMax = yMax.ToString(Const.decimalPointFormat), //TODO add number of decimal points somewhere
+                xMin = xMin.ToString(Const.DecimalPointFormat),
+                xMax = xMax.ToString(Const.DecimalPointFormat),
+                yMin = yMin.ToString(Const.DecimalPointFormat),
+                yMax = yMax.ToString(Const.DecimalPointFormat), 
                 drawPoints = chartData.drawPoints,
                 logScale = chartData.logScale
             };
@@ -149,7 +159,7 @@ namespace SiliFish.Services
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.V?[iStart + i].ToString(Const.decimalPointFormat) + ",";
+                        data[i] += cell.V?[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                 }
                 string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new DyChartStruct
@@ -168,7 +178,7 @@ namespace SiliFish.Services
         }
 
 
-        private static List<DyChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
+        private static List<DyChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool, 
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true)
         {
             List<DyChartStruct> gapCharts = new();
@@ -203,7 +213,7 @@ namespace SiliFish.Services
                             gapTitle += "Gap: " + otherCell.ID + ",";
                             colorPerGapChart.Add("'" + otherCell.CellPool.Color.ToRGB() + "'");
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(Const.decimalPointFormat) + ",";
+                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                         }
                     }
                     if (includeChem)
@@ -217,7 +227,7 @@ namespace SiliFish.Services
                             synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(Const.decimalPointFormat) + ",";
+                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                         }
                         if (cell is Neuron neuron2)
                         {
@@ -227,7 +237,7 @@ namespace SiliFish.Services
                                 synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add("'" + jnc.PostCell.CellPool.Color.ToRGB() + "'");
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(Const.decimalPointFormat) + ",";
+                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                             }
                         }
                     }
@@ -240,7 +250,7 @@ namespace SiliFish.Services
                         csvData = csvData,
                         Color = string.Join(',', colorPerGapChart),
                         Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = "`Current (pA)`",
+                        yLabel = $"`Current ({Util.GetUoM(Const.UoM, Measure.Current)})`",
                         yMin = yMin.ToString("0.0"),
                         yMax = yMax.ToString("0.0"),
                         xMin = TimeArray[iStart].ToString(),
@@ -255,7 +265,7 @@ namespace SiliFish.Services
                         csvData = csvData,
                         Color = string.Join(',', colorPerInSynChart),
                         Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
-                        yLabel = "`Current (pA)`",
+                        yLabel = $"`Current ({Util.GetUoM(Const.UoM, Measure.Current)})`",
                         yMin = yMin.ToString("0.0"),
                         yMax = yMax.ToString("0.0"),
                         xMin = TimeArray[iStart].ToString(),
@@ -270,7 +280,7 @@ namespace SiliFish.Services
                         csvData = csvData,
                         Color = string.Join(',', colorPerOutSynChart),
                         Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",
-                        yLabel = "`Current (pA)`",
+                        yLabel = $"`Current ({Util.GetUoM(Const.UoM, Measure.Current)})`",
                         yMin = yMin.ToString("0.0"),
                         yMax = yMax.ToString("0.0"),
                         xMin = TimeArray[iStart].ToString(),
@@ -281,7 +291,7 @@ namespace SiliFish.Services
             return gapCharts.Union(synCharts).ToList();
         }
 
-        private static List<DyChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
+        private static List<DyChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool, 
             int iStart, int iEnd)
         {
             List<DyChartStruct> charts = new();
@@ -305,7 +315,7 @@ namespace SiliFish.Services
                     title += cell.ID + ",";
                     colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(Const.decimalPointFormat) + ",";
+                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(Const.DecimalPointFormat) + ",";
                 }
                 if (stimExists)
                 {
@@ -315,7 +325,7 @@ namespace SiliFish.Services
                         csvData = csvData,
                         Color = string.Join(',', colorPerChart),
                         Title = $"`{cellGroup.Key} Applied Stimuli`",
-                        yLabel = "`Stimulus (pA)`",
+                        yLabel = $"`Stimulus ({Util.GetUoM(Const.UoM, Measure.Current)})`",
                         yMin = yMin.ToString("0.0"),
                         yMax = yMax.ToString("0.0"),
                         xMin = TimeArray[iStart].ToString(),
@@ -347,7 +357,7 @@ namespace SiliFish.Services
                     title += cell.ID + ",";
                     colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += Tension[iStart + i].ToString(Const.decimalPointFormat) + ",";
+                        data[i] += Tension[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                 }
                 string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new DyChartStruct

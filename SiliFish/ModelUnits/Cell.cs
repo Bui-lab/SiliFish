@@ -173,7 +173,6 @@ namespace SiliFish.ModelUnits
         public double u; //keeps the current u value
         public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
-        private double logmaxMultiplier;
 
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
         /// <summary>
@@ -361,7 +360,7 @@ namespace SiliFish.ModelUnits
         {
             try
             {
-                double ISyn = 0, IGapPos = 0, IGapNeg = 0, stim = 0;
+                double ISyn = 0, IGap = 0, stim = 0;
                 if (IsAlive(timeIndex))
                 {
                     foreach (ChemicalSynapse syn in Synapses)
@@ -370,14 +369,12 @@ namespace SiliFish.ModelUnits
                     }
                     foreach (GapJunction jnc in GapJunctions)
                     {
-                        double igap = jnc.GetGapCurrent(this, timeIndex);
-                        IGapPos = Math.Max(IGapPos, igap);
-                        IGapNeg = Math.Min(IGapNeg, igap);
+                        IGap += jnc.GetGapCurrent(this, timeIndex);
                     }
                     stim = GetStimulus(timeIndex, SwimmingModel.rand);
                 }
 
-                NextStep(timeIndex, stim + ISyn + IGapPos + IGapNeg);
+                NextStep(timeIndex, stim + ISyn + IGap);
             }
             catch (Exception ex)
             {
@@ -499,7 +496,7 @@ namespace SiliFish.ModelUnits
 
         public override void CalculateMembranePotential(int timeIndex)
         {
-            double ISyn = 0, IGapPos = 0, IGapNeg = 0, stim = 0;
+            double ISyn = 0, IGap = 0, stim = 0;
             if (IsAlive(timeIndex))
             {
                 foreach (ChemicalSynapse syn in EndPlates)
@@ -508,13 +505,11 @@ namespace SiliFish.ModelUnits
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {
-                    double igap = jnc.GetGapCurrent(this, timeIndex);
-                    IGapPos = Math.Max(IGapPos, igap);
-                    IGapNeg = Math.Min(IGapNeg, igap);
+                    IGap += jnc.GetGapCurrent(this, timeIndex);
                 }
                 stim = GetStimulus(timeIndex, SwimmingModel.rand);
             }
-            NextStep(timeIndex, stim + ISyn + IGapPos + IGapNeg);
+            NextStep(timeIndex, stim + ISyn + IGap);
         }
 
         public override string GetInstanceParams()

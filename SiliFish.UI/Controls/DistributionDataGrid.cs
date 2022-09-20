@@ -38,7 +38,7 @@ namespace SiliFish.UI.Controls
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     dist = distControl.GetDistribution();
-                    if (dist.DistType == typeof(Constant_NoDistribution).ToString() && (dist as Constant_NoDistribution).NoiseStdDev < Const.epsilon)
+                    if (dist.DistType == typeof(Constant_NoDistribution).ToString() && (dist as Constant_NoDistribution).NoiseStdDev < Const.Epsilon)
                     {
                         dgDynamics[colValue.Index, rowind].Value = dist.RangeStart;
                         dgDynamics[colValue.Index, rowind].Tag = null;

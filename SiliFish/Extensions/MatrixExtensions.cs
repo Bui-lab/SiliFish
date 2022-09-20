@@ -5,6 +5,36 @@ namespace SiliFish.Extensions
 {
     public static class MatrixExtensions
     {
+        public static double Min(this double[,] matrix)
+        {
+            double minValue = double.MaxValue;
+            int numrow = matrix.GetLength(0);
+            int numcol = matrix.GetLength(1);
+            for (int rowind = 0; rowind<numrow; rowind++)
+            {
+                for (int colind = 0; colind < numcol; colind++)
+                {
+                    minValue = Math.Min(minValue, matrix[rowind, colind]);
+                }
+            }
+            return minValue;
+        }
+
+        public static double Max(this double[,] matrix)
+        {
+            double maxValue = double.MinValue;
+            int numrow = matrix.GetLength(0);
+            int numcol = matrix.GetLength(1);
+            for (int rowind = 0; rowind < numrow; rowind++)
+            {
+                for (int colind = 0; colind < numcol; colind++)
+                {
+                    maxValue = Math.Max(maxValue, matrix[rowind, colind]);
+                }
+            }
+            return maxValue;
+        }
+
         public static double RowSum(this double[,] matrix, int rowind)
         {
             double sum = 0;

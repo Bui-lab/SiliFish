@@ -97,7 +97,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = "Current (pA)";
+            string yAxis = $"Current ({Util.GetUoM(Const.UoM, Measure.Current)})";
             if (cells != null)
             {
                 double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
@@ -137,7 +137,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = "Stimulus (pA)";
+            string yAxis = $"Stimulus ({Util.GetUoM(Const.UoM, Measure.Current)})";
 
             if (cells != null)
             {

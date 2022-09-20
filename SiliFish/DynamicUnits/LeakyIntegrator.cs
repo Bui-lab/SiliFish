@@ -24,7 +24,6 @@ namespace SiliFish.DynamicUnits
         //private double Vmax; //the possible maximum membrane potential 
         public Leaky_Integrator(double R, double C, double Vr)
         {
-            //Set Neuron constants.
             this.R = R;
             this.C = C;
             this.Vr = Vr;
@@ -33,7 +32,6 @@ namespace SiliFish.DynamicUnits
         }
         public Leaky_Integrator(double R, double C, double Vr, double Va, double Tmax, double ka)
         {
-            //Set Neuron constants.
             this.R = R;
             this.C = C;
             this.Vr = Vr;

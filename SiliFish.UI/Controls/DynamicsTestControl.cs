@@ -1,6 +1,9 @@
 ﻿using Extensions;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.Services;
 using System.Linq;
@@ -14,7 +17,7 @@ namespace SiliFish.UI.Controls
 
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
-
+         
         public Cell Cell { get => cell;
             set
             {
@@ -38,6 +41,7 @@ namespace SiliFish.UI.Controls
                     ddParameter.Items.Add("All Parameters");
                     foreach(var p in cell.Parameters)
                         ddParameter.Items.Add(p.Key);
+                    ddParameter.SelectedIndex = 0;
                     FirstRun();
                 }
             }
@@ -121,47 +125,90 @@ namespace SiliFish.UI.Controls
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
-            double[] I = new double[plotEnd + 1];
             double[] time = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
-            Stimulus stim = new()
-            {
-                StimulusSettings = stimulusControl1.GetStimulus(),
-                TimeSpan_ms = tl
-            };
+            List<ChartDataStruct> charts = new();
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 time[i] = i * (double)dt;
-            foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                I[i] = stim.generateStimulus(i, SwimmingModel.rand);
-            Dynamics dyn = Cell.DynamicsTest(I);
-            List<ChartDataStruct> charts = new()
+            if (rbManualEntryStimulus.Checked)
             {
-                new ChartDataStruct
+                double[] I = new double[plotEnd + 1];
+                Stimulus stim = new()
+                {
+                    StimulusSettings = stimulusControl1.GetStimulus(),
+                    TimeSpan_ms = tl
+                };
+                foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
+                    I[i] = stim.generateStimulus(i, SwimmingModel.rand);
+                Dynamics dyn = Cell.DynamicsTest(I);
+                charts.Add(new ChartDataStruct
                 {
                     Title = "V",
                     Color = Color.Purple,
                     xData = time,
                     yData = dyn.VList,
                     yLabel = "V (mV)"
-                },
-                new ChartDataStruct
+                });
+                charts.Add(new ChartDataStruct
                 {
                     Title = cell is MuscleCell ? "Rel. Tension" : "u",
                     Color = Color.Blue,
                     xData = time,
                     yData = dyn.secList,
                     yLabel = cell is MuscleCell ? "Rel. Tension" : "u"
-                },
-                new ChartDataStruct
+                });
+                charts.Add(new ChartDataStruct
                 {
-                    Title = "I",
+                    Title = "Stimulus",
                     Color = Color.Red,
                     xData = time,
                     yData = I,
-                    yLabel = "I (pA)" //add UoM selection
+                    yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
+                });
+            }
+            else
+            {
+                if (double.TryParse(eRheobase.Text, out double rheobase))
+                {
+                    double[,] I = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
+                    int iter = 0;
+                    List<string> columnNames = new();
+                    foreach (double multiplier in Const.RheobaseTestMultipliers)
+                    {
+                        Stimulus stim = new()
+                        {
+                            StimulusSettings = new()
+                            {
+                                Mode = StimulusMode.Step,
+                                Value1 = rheobase * multiplier,
+                                Value2 = 0
+                            },
+                            TimeSpan_ms = tl
+                        };
+                        foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
+                            I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
+                        Dynamics dyn = Cell.DynamicsTest(I.GetColumn(iter++));
+                        columnNames.Add($"x {multiplier:0.##}");
+                        charts.Add(new ChartDataStruct
+                        {
+                            Title = $"V - Rheobase x {multiplier:0.##}",
+                            Color = Color.Purple,
+                            xData = time,
+                            yData = dyn.VList,
+                            yLabel = "V (mV)"
+                        });
+                    }
+                    charts.Add(new ChartDataStruct
+                    {
+                        Title = $"Stimulus",
+                        Color = Color.Red,
+                        xData = time,
+                        yMultiData = I,
+                        yLabel = string.Join(',', columnNames)
+                    });
                 }
-            };
+            }
             string html = DyChartGenerator.PlotLineCharts(charts, 
                 "Dynamics Test Results", synchronized: true,
                 webViewPlots.ClientSize.Width, 
@@ -184,7 +231,7 @@ namespace SiliFish.UI.Controls
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value);
             if (d > 0)
-                eRheobase.Text = d.ToString("0.###");
+                eRheobase.Text = d.ToString(Const.DecimalPointFormat);
             else
                 eRheobase.Text = "N/A";
             return Convert.ToDouble(d);
@@ -238,6 +285,11 @@ namespace SiliFish.UI.Controls
         {
             cell.Parameters = pParams.CreateDoubleDictionaryFromControls();
             useUpdatedParams?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
+        {
+            stimulusControl1.Enabled = rbManualEntryStimulus.Checked;
         }
     }
 }
