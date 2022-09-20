@@ -75,6 +75,13 @@ namespace SiliFish
 
         protected double taur, taud, vth; //synapse parameters
 
+        private UnitOfMeasure uom= UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;
+        public UnitOfMeasure UoM
+        {
+            get { return uom; }
+            set { Const.UoM = uom = value; }
+        }
+
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
         protected List<InterPool> gapPoolConnections = new();

@@ -230,7 +230,7 @@ namespace SiliFish.ModelUnits
 
         public double GetGapCurrent(Cell n, int tIndex)
         {
-            double current = IsActive(tIndex) ? Conductance * VoltageDiff * 0.5 : 0; //0.5 multiplier added to minimize fluctuation
+            double current = IsActive(tIndex) ? Conductance * VoltageDiff: 0; 
 
             if (n == Cell1)
                 return current;

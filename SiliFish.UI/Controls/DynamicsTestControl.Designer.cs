@@ -47,9 +47,14 @@
             this.lRheobase = new System.Windows.Forms.Label();
             this.btnSensitivityAnalysis = new System.Windows.Forms.Button();
             this.grTest = new System.Windows.Forms.GroupBox();
+            this.rbManualEntryStimulus = new System.Windows.Forms.RadioButton();
             this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
+            this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
+            this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.pParams = new System.Windows.Forms.FlowLayoutPanel();
+            this.pUseUpdatedParams = new System.Windows.Forms.Panel();
+            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.pBottom = new System.Windows.Forms.Panel();
             this.grSensitivity = new System.Windows.Forms.GroupBox();
             this.cbLogScale = new System.Windows.Forms.CheckBox();
@@ -59,8 +64,6 @@
             this.lMultiplierRange = new System.Windows.Forms.Label();
             this.ddParameter = new System.Windows.Forms.ComboBox();
             this.lParameter = new System.Windows.Forms.Label();
-            this.pUseUpdatedParams = new System.Windows.Forms.Panel();
-            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
@@ -74,9 +77,13 @@
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
+            this.splitLeft.Panel1.SuspendLayout();
+            this.splitLeft.Panel2.SuspendLayout();
+            this.splitLeft.SuspendLayout();
+            this.pUseUpdatedParams.SuspendLayout();
             this.pBottom.SuspendLayout();
             this.grSensitivity.SuspendLayout();
-            this.pUseUpdatedParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,7 +104,7 @@
             this.eRheobaseLimit.Size = new System.Drawing.Size(54, 23);
             this.eRheobaseLimit.TabIndex = 15;
             this.eRheobaseLimit.Value = new decimal(new int[] {
-            100,
+            500,
             0,
             0,
             0});
@@ -124,7 +131,7 @@
             // ldt
             // 
             this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(6, 183);
+            this.ldt.Location = new System.Drawing.Point(9, 239);
             this.ldt.Name = "ldt";
             this.ldt.Size = new System.Drawing.Size(18, 15);
             this.ldt.TabIndex = 10;
@@ -138,7 +145,7 @@
             0,
             0,
             65536});
-            this.edt.Location = new System.Drawing.Point(103, 181);
+            this.edt.Location = new System.Drawing.Point(106, 237);
             this.edt.Minimum = new decimal(new int[] {
             1,
             0,
@@ -160,7 +167,7 @@
             0,
             0,
             0});
-            this.ePlotEndTime.Location = new System.Drawing.Point(103, 156);
+            this.ePlotEndTime.Location = new System.Drawing.Point(106, 212);
             this.ePlotEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -177,7 +184,7 @@
             // 
             // btnDynamicsRun
             // 
-            this.btnDynamicsRun.Location = new System.Drawing.Point(102, 210);
+            this.btnDynamicsRun.Location = new System.Drawing.Point(105, 266);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(67, 23);
             this.btnDynamicsRun.TabIndex = 3;
@@ -192,7 +199,7 @@
             0,
             0,
             0});
-            this.eStepEndTime.Location = new System.Drawing.Point(103, 132);
+            this.eStepEndTime.Location = new System.Drawing.Point(106, 188);
             this.eStepEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -210,7 +217,7 @@
             // lStepStartTime
             // 
             this.lStepStartTime.AutoSize = true;
-            this.lStepStartTime.Location = new System.Drawing.Point(6, 110);
+            this.lStepStartTime.Location = new System.Drawing.Point(9, 166);
             this.lStepStartTime.Name = "lStepStartTime";
             this.lStepStartTime.Size = new System.Drawing.Size(60, 15);
             this.lStepStartTime.TabIndex = 4;
@@ -223,7 +230,7 @@
             0,
             0,
             0});
-            this.eStepStartTime.Location = new System.Drawing.Point(103, 106);
+            this.eStepStartTime.Location = new System.Drawing.Point(106, 162);
             this.eStepStartTime.Name = "eStepStartTime";
             this.eStepStartTime.Size = new System.Drawing.Size(66, 23);
             this.eStepStartTime.TabIndex = 7;
@@ -236,7 +243,7 @@
             // lStepEndTime
             // 
             this.lStepEndTime.AutoSize = true;
-            this.lStepEndTime.Location = new System.Drawing.Point(6, 134);
+            this.lStepEndTime.Location = new System.Drawing.Point(9, 190);
             this.lStepEndTime.Name = "lStepEndTime";
             this.lStepEndTime.Size = new System.Drawing.Size(56, 15);
             this.lStepEndTime.TabIndex = 5;
@@ -245,7 +252,7 @@
             // lPlotEndTime
             // 
             this.lPlotEndTime.AutoSize = true;
-            this.lPlotEndTime.Location = new System.Drawing.Point(6, 160);
+            this.lPlotEndTime.Location = new System.Drawing.Point(9, 216);
             this.lPlotEndTime.Name = "lPlotEndTime";
             this.lPlotEndTime.Size = new System.Drawing.Size(80, 15);
             this.lPlotEndTime.TabIndex = 6;
@@ -286,7 +293,7 @@
             this.eRheobaseDuration.Size = new System.Drawing.Size(54, 23);
             this.eRheobaseDuration.TabIndex = 19;
             this.eRheobaseDuration.Value = new decimal(new int[] {
-            300,
+            400,
             0,
             0,
             0});
@@ -332,6 +339,9 @@
             // 
             this.grTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grTest.Controls.Add(this.rbManualEntryStimulus);
+            this.grTest.Controls.Add(this.stimulusControl1);
+            this.grTest.Controls.Add(this.rbRheobaseBasedStimulus);
             this.grTest.Controls.Add(this.edt);
             this.grTest.Controls.Add(this.lPlotEndTime);
             this.grTest.Controls.Add(this.lStepEndTime);
@@ -340,22 +350,43 @@
             this.grTest.Controls.Add(this.lStepStartTime);
             this.grTest.Controls.Add(this.btnDynamicsRun);
             this.grTest.Controls.Add(this.eStepEndTime);
-            this.grTest.Controls.Add(this.stimulusControl1);
             this.grTest.Controls.Add(this.ldt);
             this.grTest.Location = new System.Drawing.Point(4, 221);
             this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(216, 236);
+            this.grTest.Size = new System.Drawing.Size(218, 294);
             this.grTest.TabIndex = 17;
             this.grTest.TabStop = false;
             this.grTest.Text = "Test";
             // 
+            // rbManualEntryStimulus
+            // 
+            this.rbManualEntryStimulus.AutoSize = true;
+            this.rbManualEntryStimulus.Location = new System.Drawing.Point(6, 22);
+            this.rbManualEntryStimulus.Name = "rbManualEntryStimulus";
+            this.rbManualEntryStimulus.Size = new System.Drawing.Size(117, 19);
+            this.rbManualEntryStimulus.TabIndex = 12;
+            this.rbManualEntryStimulus.TabStop = true;
+            this.rbManualEntryStimulus.Text = "Use Manual Entry";
+            this.rbManualEntryStimulus.UseVisualStyleBackColor = true;
+            this.rbManualEntryStimulus.CheckedChanged += new System.EventHandler(this.rbManualEntryStimulus_CheckedChanged);
+            // 
             // stimulusControl1
             // 
-            this.stimulusControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.stimulusControl1.Location = new System.Drawing.Point(3, 19);
+            this.stimulusControl1.Location = new System.Drawing.Point(4, 38);
             this.stimulusControl1.Name = "stimulusControl1";
-            this.stimulusControl1.Size = new System.Drawing.Size(210, 93);
-            this.stimulusControl1.TabIndex = 19;
+            this.stimulusControl1.Size = new System.Drawing.Size(212, 93);
+            this.stimulusControl1.TabIndex = 20;
+            // 
+            // rbRheobaseBasedStimulus
+            // 
+            this.rbRheobaseBasedStimulus.AutoSize = true;
+            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(9, 137);
+            this.rbRheobaseBasedStimulus.Name = "rbRheobaseBasedStimulus";
+            this.rbRheobaseBasedStimulus.Size = new System.Drawing.Size(175, 19);
+            this.rbRheobaseBasedStimulus.TabIndex = 13;
+            this.rbRheobaseBasedStimulus.TabStop = true;
+            this.rbRheobaseBasedStimulus.Text = "Use Rheobase (x1, x1.1, x1.5)";
+            this.rbRheobaseBasedStimulus.UseVisualStyleBackColor = true;
             // 
             // splitMain
             // 
@@ -365,9 +396,7 @@
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.pParams);
-            this.splitMain.Panel1.Controls.Add(this.pBottom);
-            this.splitMain.Panel1.Controls.Add(this.pUseUpdatedParams);
+            this.splitMain.Panel1.Controls.Add(this.splitLeft);
             // 
             // splitMain.Panel2
             // 
@@ -376,24 +405,62 @@
             this.splitMain.SplitterDistance = 222;
             this.splitMain.TabIndex = 17;
             // 
+            // splitLeft
+            // 
+            this.splitLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitLeft.Location = new System.Drawing.Point(0, 0);
+            this.splitLeft.Name = "splitLeft";
+            this.splitLeft.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitLeft.Panel1
+            // 
+            this.splitLeft.Panel1.Controls.Add(this.pParams);
+            this.splitLeft.Panel1.Controls.Add(this.pUseUpdatedParams);
+            // 
+            // splitLeft.Panel2
+            // 
+            this.splitLeft.Panel2.Controls.Add(this.pBottom);
+            this.splitLeft.Size = new System.Drawing.Size(222, 683);
+            this.splitLeft.SplitterDistance = 161;
+            this.splitLeft.TabIndex = 23;
+            // 
             // pParams
             // 
             this.pParams.AutoScroll = true;
             this.pParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pParams.Location = new System.Drawing.Point(0, 30);
             this.pParams.Name = "pParams";
-            this.pParams.Size = new System.Drawing.Size(222, 188);
-            this.pParams.TabIndex = 22;
+            this.pParams.Size = new System.Drawing.Size(222, 131);
+            this.pParams.TabIndex = 23;
+            // 
+            // pUseUpdatedParams
+            // 
+            this.pUseUpdatedParams.Controls.Add(this.linkUseUpdatedParams);
+            this.pUseUpdatedParams.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pUseUpdatedParams.Location = new System.Drawing.Point(0, 0);
+            this.pUseUpdatedParams.Name = "pUseUpdatedParams";
+            this.pUseUpdatedParams.Size = new System.Drawing.Size(222, 30);
+            this.pUseUpdatedParams.TabIndex = 21;
+            // 
+            // linkUseUpdatedParams
+            // 
+            this.linkUseUpdatedParams.AutoSize = true;
+            this.linkUseUpdatedParams.Location = new System.Drawing.Point(3, 9);
+            this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
+            this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
+            this.linkUseUpdatedParams.TabIndex = 19;
+            this.linkUseUpdatedParams.TabStop = true;
+            this.linkUseUpdatedParams.Text = "Use Updated Parameters";
             // 
             // pBottom
             // 
             this.pBottom.Controls.Add(this.grSensitivity);
             this.pBottom.Controls.Add(this.grRheobase);
             this.pBottom.Controls.Add(this.grTest);
-            this.pBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottom.Location = new System.Drawing.Point(0, 218);
+            this.pBottom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pBottom.Location = new System.Drawing.Point(0, 0);
             this.pBottom.Name = "pBottom";
-            this.pBottom.Size = new System.Drawing.Size(222, 465);
+            this.pBottom.Size = new System.Drawing.Size(222, 518);
             this.pBottom.TabIndex = 21;
             // 
             // grSensitivity
@@ -431,6 +498,7 @@
             this.eMaxMultiplier.Name = "eMaxMultiplier";
             this.eMaxMultiplier.Size = new System.Drawing.Size(41, 23);
             this.eMaxMultiplier.TabIndex = 26;
+            this.eMaxMultiplier.Text = "10";
             // 
             // lDash
             // 
@@ -447,6 +515,7 @@
             this.eMinMultiplier.Name = "eMinMultiplier";
             this.eMinMultiplier.Size = new System.Drawing.Size(41, 23);
             this.eMinMultiplier.TabIndex = 24;
+            this.eMinMultiplier.Text = "0.1";
             // 
             // lMultiplierRange
             // 
@@ -473,26 +542,6 @@
             this.lParameter.Size = new System.Drawing.Size(61, 15);
             this.lParameter.TabIndex = 21;
             this.lParameter.Text = "Parameter";
-            // 
-            // pUseUpdatedParams
-            // 
-            this.pUseUpdatedParams.Controls.Add(this.linkUseUpdatedParams);
-            this.pUseUpdatedParams.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pUseUpdatedParams.Location = new System.Drawing.Point(0, 0);
-            this.pUseUpdatedParams.Name = "pUseUpdatedParams";
-            this.pUseUpdatedParams.Size = new System.Drawing.Size(222, 30);
-            this.pUseUpdatedParams.TabIndex = 20;
-            // 
-            // linkUseUpdatedParams
-            // 
-            this.linkUseUpdatedParams.AutoSize = true;
-            this.linkUseUpdatedParams.Location = new System.Drawing.Point(3, 9);
-            this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
-            this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
-            this.linkUseUpdatedParams.TabIndex = 19;
-            this.linkUseUpdatedParams.TabStop = true;
-            this.linkUseUpdatedParams.Text = "Use Updated Parameters";
-            this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
             // webViewPlots
             // 
@@ -529,11 +578,15 @@
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
+            this.splitLeft.Panel1.ResumeLayout(false);
+            this.splitLeft.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
+            this.splitLeft.ResumeLayout(false);
+            this.pUseUpdatedParams.ResumeLayout(false);
+            this.pUseUpdatedParams.PerformLayout();
             this.pBottom.ResumeLayout(false);
             this.grSensitivity.ResumeLayout(false);
             this.grSensitivity.PerformLayout();
-            this.pUseUpdatedParams.ResumeLayout(false);
-            this.pUseUpdatedParams.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
             this.ResumeLayout(false);
 
@@ -557,12 +610,8 @@
         private Label lRheobase;
         private GroupBox grTest;
         private SplitContainer splitMain;
-        private Panel pUseUpdatedParams;
-        private LinkLabel linkUseUpdatedParams;
         private Panel pBottom;
-        private StimulusControl stimulusControl1;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlots;
-        private FlowLayoutPanel pParams;
         private NumericUpDown eRheobaseDuration;
         private Label label1;
         private Button btnSensitivityAnalysis;
@@ -574,5 +623,12 @@
         private ComboBox ddParameter;
         private Label lParameter;
         private CheckBox cbLogScale;
+        private RadioButton rbManualEntryStimulus;
+        private StimulusControl stimulusControl1;
+        private RadioButton rbRheobaseBasedStimulus;
+        private SplitContainer splitLeft;
+        private FlowLayoutPanel pParams;
+        private Panel pUseUpdatedParams;
+        private LinkLabel linkUseUpdatedParams;
     }
 }

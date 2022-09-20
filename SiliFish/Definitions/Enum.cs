@@ -49,5 +49,17 @@ namespace SiliFish.Definitions
     public enum StimulusMode { Step, Gaussian, Ramp, Sinusoidal, Pulse }
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed }
 
+    public enum UnitOfMeasure
+    {
+        [Display(Name = "mV/pA/GΩ/pF"), Description("Voltage: mV; Current: pA; Resistance: GΩ; Capacitance: pF")] milliVolt_picoAmpere_GigaOhm_picoFarad,
+        [Display(Name = "mV/nA/MΩ/nF"), Description("Voltage: mV; Current: nA; Resistance: MΩ; Capacitance: nF")] milliVolt_nanoAmpere_MegaOhm_nanoFarad
+    }
 
+    public enum Measure
+    {
+        Voltage,
+        Current,
+        Resistance,
+        Capacitance
+    }
 }
