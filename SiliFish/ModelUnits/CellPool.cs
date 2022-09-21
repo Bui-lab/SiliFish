@@ -84,6 +84,11 @@ namespace SiliFish.ModelUnits
             Cells = new List<Cell>();
             GenerateCells(template, leftright);
         }
+
+        /// <summary>
+        /// Called from predefined models
+        /// </summary>
+        /// <param name="placement">columnIndex2D</param>
         public CellPool(SwimmingModel model, CellType cellType, BodyLocation position, string group, SagittalPlane pos, int placement, Color color)
         {
             Model = model;
@@ -296,6 +301,7 @@ namespace SiliFish.ModelUnits
             foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GetCoordinates(n, somite);
+                //TODO DISTRIBUTION similar to getcoordinates, the cell parameters need to be pregenerated if distributions are used
 
                 double[] cv = template.ConductionVelocity != null ?
                     ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
