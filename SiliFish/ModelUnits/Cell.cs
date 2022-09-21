@@ -196,6 +196,11 @@ namespace SiliFish.ModelUnits
             Parameters = cellTemp.Parameters;
         }
 
+        public Neuron(Dictionary<string, double> parameters)
+            : this("Neuron", -1, 0, 0)
+        {
+            Parameters = parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
+        }
         /// <summary>
         /// neuron constructor called from predefined models
         /// </summary>
@@ -293,7 +298,7 @@ namespace SiliFish.ModelUnits
             return Core.SolveODE(I);
         }
 
-        public double CalculateRheoBase(double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)//SOURCE: https://en.wikipedia.org/wiki/Rheobase
+        public double CalculateRheoBase(double dt, double maxRheobase = 500, double sensitivity = 0.001, int infinity = 400)
         {
 
             return Core.CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
@@ -431,6 +436,11 @@ namespace SiliFish.ModelUnits
             TimeLine_ms = timeline;
         }
 
+        public MuscleCell(Dictionary<string, double> parameters)
+            : this("Muscle", -1, 0)
+        {
+            Parameters = parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
+        }
         public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
             double cur1 = base.MinCurrentValue(iStart, iEnd);

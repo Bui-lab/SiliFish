@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -35,29 +36,31 @@ namespace Extensions
             }
         }
 
-        public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel, Dictionary<string, object> ParamDict)
+        public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel, Dictionary<string, double> ParamDict)
         {
             int maxLen = ParamDict.Keys.Select(k => k.Length).Max();
             int tabIndex = 1;
+            flowPanel.Controls.Clear();
             flowPanel.FlowDirection = FlowDirection.LeftToRight;
-            foreach (KeyValuePair<string, object> kvp in ParamDict)
+            foreach (string key in ParamDict.Keys)
             {
+
                 Label lbl = new()
                 {
-                    Text = kvp.Key,
+                    Text = key,
                     Height = 23,
                     Width = 6 * maxLen + 5,
                     TextAlign = ContentAlignment.MiddleLeft,
                     TabIndex = tabIndex++
                 };
                 flowPanel.Controls.Add(lbl);
-                decimal val = Convert.ToDecimal(kvp.Value);
+                decimal val = Convert.ToDecimal(ParamDict[key]);
                 int[] bits = Decimal.GetBits(val);
                 int decPoints = (bits[3] >> 16) & 0x7F;//https://docs.microsoft.com/en-us/dotnet/api/system.decimal.getbits?view=net-6.0
                 decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10,decPoints)));
                 NumericUpDown numBox = new()
                 {
-                    Tag = kvp.Value,
+                    Tag = val,
                     Height = 23,
                     Width = 60,
                     Minimum = decimal.MinValue,
@@ -72,9 +75,9 @@ namespace Extensions
             }
         }
 
-        public static Dictionary<string, object> CreateDoubleDictionaryFromControls(this FlowLayoutPanel flowPanel)
+        public static Dictionary<string, double> CreateDoubleDictionaryFromControls(this FlowLayoutPanel flowPanel)
         {
-            Dictionary<string, object> ParamDict = new();
+            Dictionary<string, double> ParamDict = new();
             string lastKey = "";
             foreach (Control control in flowPanel.Controls)
             {

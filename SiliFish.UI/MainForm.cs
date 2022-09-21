@@ -13,6 +13,7 @@ using Microsoft.Web.WebView2.WinForms;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 
 namespace SiliFish.UI
 {
@@ -1959,9 +1960,20 @@ namespace SiliFish.UI
         private void ddSomites_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddSomites.Text == "All Somites")
-                ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+                ddSomites.DropDownStyle = ComboBoxStyle.DropDownList;
             else
                 ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+        }
+
+        private void linkNeuronalCellDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Izhikevich_9P izhi = new(null);
+            DynamicsTestControl dynControl = new(CellType.Neuron, izhi.GetParametersDouble(), testMode: true);
+            ControlContainer frmControl = new();
+            frmControl.AddControl(dynControl);
+            frmControl.Text = "Neuronal Dynamics Test";
+            frmControl.SaveVisible = false;
+            frmControl.ShowDialog();
         }
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)

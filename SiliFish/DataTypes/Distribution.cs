@@ -31,6 +31,8 @@ namespace SiliFish.DataTypes
         protected double LowerLimit { get { return Absolute ? RangeStart : Range * RangeStart / 100; } }
 
         protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd/ 100; } }
+
+        public virtual double UniqueValue { get { throw new NotImplementedException(); } }
         public override string ToString()
         {
             int dot = DistType.LastIndexOf('.');
@@ -120,6 +122,11 @@ namespace SiliFish.DataTypes
 
     public class UniformDistribution: Distribution
     {
+        public override double UniqueValue 
+        { 
+            get { return (RangeStart + RangeEnd) / 2; } 
+        }
+
         public UniformDistribution()
         { }
         public UniformDistribution(double rangeStart, double rangeEnd, bool absolute, bool angular)
@@ -135,6 +142,10 @@ namespace SiliFish.DataTypes
 
     public class Constant_NoDistribution : Distribution
     {
+        public override double UniqueValue
+        {
+            get { return (RangeStart + RangeEnd) / 2; }
+        }
         public double NoiseStdDev { get; set; } = 0;
         public Constant_NoDistribution()
         { }
@@ -165,6 +176,10 @@ namespace SiliFish.DataTypes
     public class SpacedDistribution : Distribution
     {
         public double NoiseStdDev { get; set; } = 0;
+        public override double UniqueValue
+        {
+            get { return (RangeStart + RangeEnd) / 2; }
+        }
         public override string ToString()
         {
             return string.Format("{0}\r\nNoise: µ:1; SD:{1:0.#####}", base.ToString(), NoiseStdDev);
@@ -194,6 +209,10 @@ namespace SiliFish.DataTypes
     {
         public double Mean { get; set; } = 0;
         public double Stddev { get; set; } = 0;
+        public override double UniqueValue
+        {
+            get { return Mean; }
+        }
         public override string ToString()
         {
             return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
@@ -234,6 +253,10 @@ namespace SiliFish.DataTypes
     }
     public class BimodalDistribution : GaussianDistribution
     {
+        public override double UniqueValue
+        {
+            get { return (Mean + Mean2) / 2; }
+        }
         public double Mean2 { get; set; } = 1;
         public double Stddev2 { get; set; } = 0;
         public double Mode1Weight { get; set; } = 1;

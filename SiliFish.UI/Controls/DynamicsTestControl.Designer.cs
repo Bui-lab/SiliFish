@@ -54,6 +54,8 @@
             this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.pParams = new System.Windows.Forms.FlowLayoutPanel();
             this.pUseUpdatedParams = new System.Windows.Forms.Panel();
+            this.linkSaveParams = new System.Windows.Forms.LinkLabel();
+            this.linkLoadParams = new System.Windows.Forms.LinkLabel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.pBottom = new System.Windows.Forms.Panel();
             this.grSensitivity = new System.Windows.Forms.GroupBox();
@@ -65,6 +67,9 @@
             this.ddParameter = new System.Windows.Forms.ComboBox();
             this.lParameter = new System.Windows.Forms.Label();
             this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
+            this.openFileJson = new System.Windows.Forms.OpenFileDialog();
+            this.pBottomBottom = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -85,6 +90,7 @@
             this.pBottom.SuspendLayout();
             this.grSensitivity.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
+            this.pBottomBottom.SuspendLayout();
             this.SuspendLayout();
             // 
             // eRheobaseLimit
@@ -260,8 +266,6 @@
             // 
             // grRheobase
             // 
-            this.grRheobase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.grRheobase.Controls.Add(this.eRheobaseDuration);
             this.grRheobase.Controls.Add(this.label1);
             this.grRheobase.Controls.Add(this.eRheobase);
@@ -269,9 +273,10 @@
             this.grRheobase.Controls.Add(this.btnRheobase);
             this.grRheobase.Controls.Add(this.eRheobaseLimit);
             this.grRheobase.Controls.Add(this.lRheobaseLimit);
-            this.grRheobase.Location = new System.Drawing.Point(6, 6);
+            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.grRheobase.Location = new System.Drawing.Point(0, -2);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(213, 103);
+            this.grRheobase.Size = new System.Drawing.Size(222, 103);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
@@ -337,8 +342,6 @@
             // 
             // grTest
             // 
-            this.grTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.grTest.Controls.Add(this.rbManualEntryStimulus);
             this.grTest.Controls.Add(this.stimulusControl1);
             this.grTest.Controls.Add(this.rbRheobaseBasedStimulus);
@@ -351,9 +354,10 @@
             this.grTest.Controls.Add(this.btnDynamicsRun);
             this.grTest.Controls.Add(this.eStepEndTime);
             this.grTest.Controls.Add(this.ldt);
-            this.grTest.Location = new System.Drawing.Point(4, 221);
+            this.grTest.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.grTest.Location = new System.Drawing.Point(0, 201);
             this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(218, 294);
+            this.grTest.Size = new System.Drawing.Size(222, 294);
             this.grTest.TabIndex = 17;
             this.grTest.TabStop = false;
             this.grTest.Text = "Test";
@@ -361,6 +365,7 @@
             // rbManualEntryStimulus
             // 
             this.rbManualEntryStimulus.AutoSize = true;
+            this.rbManualEntryStimulus.Checked = true;
             this.rbManualEntryStimulus.Location = new System.Drawing.Point(6, 22);
             this.rbManualEntryStimulus.Name = "rbManualEntryStimulus";
             this.rbManualEntryStimulus.Size = new System.Drawing.Size(117, 19);
@@ -384,7 +389,6 @@
             this.rbRheobaseBasedStimulus.Name = "rbRheobaseBasedStimulus";
             this.rbRheobaseBasedStimulus.Size = new System.Drawing.Size(175, 19);
             this.rbRheobaseBasedStimulus.TabIndex = 13;
-            this.rbRheobaseBasedStimulus.TabStop = true;
             this.rbRheobaseBasedStimulus.Text = "Use Rheobase (x1, x1.1, x1.5)";
             this.rbRheobaseBasedStimulus.UseVisualStyleBackColor = true;
             // 
@@ -435,28 +439,53 @@
             // 
             // pUseUpdatedParams
             // 
-            this.pUseUpdatedParams.Controls.Add(this.linkUseUpdatedParams);
+            this.pUseUpdatedParams.Controls.Add(this.linkSaveParams);
+            this.pUseUpdatedParams.Controls.Add(this.linkLoadParams);
             this.pUseUpdatedParams.Dock = System.Windows.Forms.DockStyle.Top;
             this.pUseUpdatedParams.Location = new System.Drawing.Point(0, 0);
             this.pUseUpdatedParams.Name = "pUseUpdatedParams";
             this.pUseUpdatedParams.Size = new System.Drawing.Size(222, 30);
             this.pUseUpdatedParams.TabIndex = 21;
             // 
+            // linkSaveParams
+            // 
+            this.linkSaveParams.AutoSize = true;
+            this.linkSaveParams.Location = new System.Drawing.Point(87, 9);
+            this.linkSaveParams.Name = "linkSaveParams";
+            this.linkSaveParams.Size = new System.Drawing.Size(73, 15);
+            this.linkSaveParams.TabIndex = 21;
+            this.linkSaveParams.TabStop = true;
+            this.linkSaveParams.Text = "Save Params";
+            this.linkSaveParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCell_LinkClicked);
+            // 
+            // linkLoadParams
+            // 
+            this.linkLoadParams.AutoSize = true;
+            this.linkLoadParams.Location = new System.Drawing.Point(6, 9);
+            this.linkLoadParams.Name = "linkLoadParams";
+            this.linkLoadParams.Size = new System.Drawing.Size(75, 15);
+            this.linkLoadParams.TabIndex = 20;
+            this.linkLoadParams.TabStop = true;
+            this.linkLoadParams.Text = "Load Params";
+            this.linkLoadParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCell_LinkClicked);
+            // 
             // linkUseUpdatedParams
             // 
             this.linkUseUpdatedParams.AutoSize = true;
-            this.linkUseUpdatedParams.Location = new System.Drawing.Point(3, 9);
+            this.linkUseUpdatedParams.Location = new System.Drawing.Point(6, 5);
             this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
             this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
             this.linkUseUpdatedParams.TabIndex = 19;
             this.linkUseUpdatedParams.TabStop = true;
             this.linkUseUpdatedParams.Text = "Use Updated Parameters";
+            this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
             // pBottom
             // 
-            this.pBottom.Controls.Add(this.grSensitivity);
             this.pBottom.Controls.Add(this.grRheobase);
+            this.pBottom.Controls.Add(this.grSensitivity);
             this.pBottom.Controls.Add(this.grTest);
+            this.pBottom.Controls.Add(this.pBottomBottom);
             this.pBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pBottom.Location = new System.Drawing.Point(0, 0);
             this.pBottom.Name = "pBottom";
@@ -465,8 +494,6 @@
             // 
             // grSensitivity
             // 
-            this.grSensitivity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.grSensitivity.Controls.Add(this.cbLogScale);
             this.grSensitivity.Controls.Add(this.eMaxMultiplier);
             this.grSensitivity.Controls.Add(this.lDash);
@@ -475,9 +502,10 @@
             this.grSensitivity.Controls.Add(this.ddParameter);
             this.grSensitivity.Controls.Add(this.lParameter);
             this.grSensitivity.Controls.Add(this.btnSensitivityAnalysis);
-            this.grSensitivity.Location = new System.Drawing.Point(7, 115);
+            this.grSensitivity.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.grSensitivity.Location = new System.Drawing.Point(0, 101);
             this.grSensitivity.Name = "grSensitivity";
-            this.grSensitivity.Size = new System.Drawing.Size(213, 100);
+            this.grSensitivity.Size = new System.Drawing.Size(222, 100);
             this.grSensitivity.TabIndex = 18;
             this.grSensitivity.TabStop = false;
             this.grSensitivity.Text = "Sensitivity Analysis";
@@ -556,6 +584,24 @@
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
             // 
+            // saveFileJson
+            // 
+            this.saveFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // openFileJson
+            // 
+            this.openFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // pBottomBottom
+            // 
+            this.pBottomBottom.Controls.Add(this.linkUseUpdatedParams);
+            this.pBottomBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pBottomBottom.Location = new System.Drawing.Point(0, 495);
+            this.pBottomBottom.Name = "pBottomBottom";
+            this.pBottomBottom.Size = new System.Drawing.Size(222, 23);
+            this.pBottomBottom.TabIndex = 20;
+            this.pBottomBottom.Visible = false;
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -588,6 +634,8 @@
             this.grSensitivity.ResumeLayout(false);
             this.grSensitivity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
+            this.pBottomBottom.ResumeLayout(false);
+            this.pBottomBottom.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -630,5 +678,10 @@
         private FlowLayoutPanel pParams;
         private Panel pUseUpdatedParams;
         private LinkLabel linkUseUpdatedParams;
+        private LinkLabel linkSaveParams;
+        private LinkLabel linkLoadParams;
+        private SaveFileDialog saveFileJson;
+        private OpenFileDialog openFileJson;
+        private Panel pBottomBottom;
     }
 }
