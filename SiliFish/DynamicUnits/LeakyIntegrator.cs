@@ -117,16 +117,16 @@ namespace SiliFish.DynamicUnits
 
             return V;
         }
-        public Dynamics SolveODE(double[] I)
+        public DynamicsStats SolveODE(double[] I)
         {
             int iMax = I.Length;
-            Dynamics dyn = new(iMax);
+            DynamicsStats dyn = new(I);
 
             for (int t = 0; t < iMax; t++)
             {
                 GetNextVal(I[t]);
                 dyn.VList[t] = V;
-                dyn.secList[t] = CalculateRelativeTension(V);
+                dyn.SecList[t] = CalculateRelativeTension(V);
             }
             return dyn;
         }

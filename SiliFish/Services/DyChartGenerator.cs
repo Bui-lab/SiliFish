@@ -100,8 +100,8 @@ namespace SiliFish.Services
 
             double yMin = chartData.yMin;
             double yMax = chartData.yMax;
-            double xMin = chartData.xData.Min();
-            double xMax = chartData.xData.Max();
+            double xMin = chartData.xMin;
+            double xMax = chartData.xMax;
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
             string columnTitles = $"{chartData.xLabel},{chartData.yLabel}";

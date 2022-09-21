@@ -14,7 +14,9 @@ namespace SiliFish.UI.Controls
     {
         private CellType cellType;
         private bool initialRun = false;
-
+        DynamicsStats dynamics;
+        private double[] TimeArray;
+        
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
@@ -76,6 +78,7 @@ namespace SiliFish.UI.Controls
             this.cellType = cellType;
             Parameters = parameters;
             pBottomBottom.Visible = !testMode;
+            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
         }
 
         private void FirstRun()
@@ -99,7 +102,6 @@ namespace SiliFish.UI.Controls
             FirstRun();            
         }
 
-
         private async void InitAsync()
         {
             await webViewPlots.EnsureCoreWebView2Async();
@@ -120,6 +122,139 @@ namespace SiliFish.UI.Controls
         {
             parameters = pParams.CreateDoubleDictionaryFromControls();
         }
+
+        private void CreatePlots()
+        {
+            if (dynamics == null)
+                return;
+            List<ChartDataStruct> charts = new();
+            if (cbV.Checked)
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = "V",
+                    Color = Color.Purple,
+                    xData = TimeArray,
+                    yData = dynamics.VList,
+                    yLabel = "V (mV)"
+                });
+            }
+            if (cbURelTension.Checked)
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = cellType == CellType.MuscleCell ? "Rel. Tension" : "u",
+                    Color = Color.Blue,
+                    xData = TimeArray,
+                    yData = dynamics.SecList,
+                    yLabel = cellType == CellType.MuscleCell ? "Rel. Tension" : "u"
+                });
+            }
+
+            if (cbTauRise.Checked && dynamics.TauRise.Any())
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = "Tau rise",
+                    Color = Color.Green,
+                    xData = dynamics.TauRise.Keys.ToArray(),
+                    xMin = 0,
+                    xMax = TimeArray[^1],
+                    yData = dynamics.TauRise.Values.ToArray(),
+                    yLabel = "Tau (ms)",
+                    drawPoints = true
+                });
+            }
+            if (cbTauDecay.Checked && dynamics.TauDecay.Any())
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = "Tau decay",
+                    Color = Color.Green,
+                    xData = dynamics.TauDecay.Keys.ToArray(),
+                    xMin = 0,
+                    xMax = TimeArray[^1],
+                    yData = dynamics.TauDecay.Values.ToArray(),
+                    yLabel = "Tau (ms)",
+                    drawPoints = true
+                });
+            }
+            if (cbInterval.Checked && dynamics.Intervals != null && dynamics.Intervals.Any())
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = "Intervals",
+                    Color = Color.Blue,
+                    xData = dynamics.Intervals.Keys.ToArray(),
+                    xMin = 0,
+                    xMax = TimeArray[^1],
+                    yData = dynamics.Intervals.Values.ToArray(),
+                    yLabel = "Interval (ms)",
+                    drawPoints = true
+                });
+            }
+            if (cbSpikingFrequency.Checked && dynamics.FiringFrequency != null && dynamics.FiringFrequency.Any())
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = "Spiking Freq.",
+                    Color = Color.Blue,
+                    xData = dynamics.FiringFrequency.Keys.ToArray(),
+                    xMin = 0,
+                    xMax = TimeArray[^1],
+                    yData = dynamics.FiringFrequency.Values.ToArray(),
+                    yLabel = "Freq (Hz)",
+                    drawPoints = true
+                });
+            }
+            if (cbStimulus.Checked)
+            {
+                charts.Add(new ChartDataStruct
+                {
+                    Title = "Stimulus",
+                    Color = Color.Red,
+                    xData = TimeArray,
+                    yData = dynamics.IList,
+                    yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
+                });
+            }
+            int numCharts = charts.Any() ? charts.Count : 1;
+            string html = DyChartGenerator.PlotLineCharts(charts,
+                "Dynamics Test Results", synchronized: true,
+                webViewPlots.ClientSize.Width,
+                (webViewPlots.ClientSize.Height - 150) / numCharts);
+            webViewPlots.NavigateToString(html);
+        }
+        private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, double[,] I)
+        {
+            List<ChartDataStruct> charts = new();
+            foreach (string key in dynamicsList.Keys)
+            {
+                DynamicsStats dynamics = dynamicsList[key];
+                charts.Add(new ChartDataStruct
+                {
+                    Title = key,
+                    Color = Color.Purple,
+                    xData = TimeArray,
+                    yData = dynamics.VList,
+                    yLabel = "V (mV)"
+                });
+            }
+            charts.Add(new ChartDataStruct
+            {
+                Title = $"Stimulus",
+                Color = Color.Red,
+                xData = TimeArray,
+                yMultiData = I,
+                yLabel = string.Join(',', columnNames)
+            });
+            int numCharts = charts.Any() ? charts.Count : 1;
+            string html = DyChartGenerator.PlotLineCharts(charts,
+                "Dynamics Test Results", synchronized: true,
+                webViewPlots.ClientSize.Width,
+                (webViewPlots.ClientSize.Height - 150) / numCharts);
+            webViewPlots.NavigateToString(html);
+        }
         private void DynamicsRun()
         {
             ReadParameters();
@@ -130,12 +265,11 @@ namespace SiliFish.UI.Controls
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
-            double[] time = new double[plotEnd + 1];
+            TimeArray = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
-            List<ChartDataStruct> charts = new();
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
-                time[i] = i * (double)dt;
+                TimeArray[i] = i * (double)dt;
             Cell cell = null;
             if (cellType == CellType.Neuron)
                 cell = new Neuron(parameters);
@@ -153,39 +287,18 @@ namespace SiliFish.UI.Controls
                     };
                     foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                         I[i] = stim.generateStimulus(i, SwimmingModel.rand);
-                    Dynamics dyn = cell.DynamicsTest(I);
-                    charts.Add(new ChartDataStruct
-                    {
-                        Title = "V",
-                        Color = Color.Purple,
-                        xData = time,
-                        yData = dyn.VList,
-                        yLabel = "V (mV)"
-                    });
-                    charts.Add(new ChartDataStruct
-                    {
-                        Title = cellType == CellType.MuscleCell ? "Rel. Tension" : "u",
-                        Color = Color.Blue,
-                        xData = time,
-                        yData = dyn.secList,
-                        yLabel = cellType == CellType.MuscleCell ? "Rel. Tension" : "u"
-                    });
-                    charts.Add(new ChartDataStruct
-                    {
-                        Title = "Stimulus",
-                        Color = Color.Red,
-                        xData = time,
-                        yData = I,
-                        yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
-                    });
+                    dynamics = cell.DynamicsTest(I);
+                    CreatePlots();
                 }
                 else
                 {
+                    dynamics = null;
+                    Dictionary<string, DynamicsStats> dynamicsList = new();
+                    List<string> columnNames = new();
                     if (double.TryParse(eRheobase.Text, out double rheobase))
                     {
                         double[,] I = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
                         int iter = 0;
-                        List<string> columnNames = new();
                         foreach (double multiplier in Const.RheobaseTestMultipliers)
                         {
                             Stimulus stim = new()
@@ -200,33 +313,15 @@ namespace SiliFish.UI.Controls
                             };
                             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                                 I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
-                            Dynamics dyn = cell.DynamicsTest(I.GetColumn(iter++));
+                            dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", cell.DynamicsTest(I.GetColumn(iter++)));
                             columnNames.Add($"x {multiplier:0.##}");
-                            charts.Add(new ChartDataStruct
-                            {
-                                Title = $"V - Rheobase x {multiplier:0.##}",
-                                Color = Color.Purple,
-                                xData = time,
-                                yData = dyn.VList,
-                                yLabel = "V (mV)"
-                            });
                         }
-                        charts.Add(new ChartDataStruct
-                        {
-                            Title = $"Stimulus",
-                            Color = Color.Red,
-                            xData = time,
-                            yMultiData = I,
-                            yLabel = string.Join(',', columnNames)
-                        });
+                        CreatePlots(dynamicsList, columnNames, I);
                     }
+                    else
+                        MessageBox.Show("Invalid rheobase. Check the upper limit of rheobase and try again.");
                 }
             }
-            string html = DyChartGenerator.PlotLineCharts(charts, 
-                "Dynamics Test Results", synchronized: true,
-                webViewPlots.ClientSize.Width, 
-                (webViewPlots.ClientSize.Height - 150) / charts.Count);
-            webViewPlots.NavigateToString(html);
         }
         private void btnDynamicsRun_Click(object sender, EventArgs e)
         {
@@ -309,6 +404,7 @@ namespace SiliFish.UI.Controls
         private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
             stimulusControl1.Enabled = rbManualEntryStimulus.Checked;
+            pPlots.Enabled = rbManualEntryStimulus.Checked;
             DynamicsRun();
         }
 
@@ -321,6 +417,12 @@ namespace SiliFish.UI.Controls
                     return;
                 Parameters = (Dictionary<string, double>)Util.CreateObjectFromJSON(typeof(Dictionary<string, double>), JSONString);
                 CalculateRheobase();
+                StimulusSettings stim = stimulusControl1.GetStimulus();
+                if (double.TryParse(eRheobase.Text, out double d))
+                {
+                    stim.Value1 = d;
+                    stimulusControl1.SetStimulus(stim);
+                }
                 DynamicsRun();
             }
         }
@@ -335,5 +437,9 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
+        {
+            CreatePlots();
+        }
     }
 }

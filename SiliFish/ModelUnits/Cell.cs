@@ -77,7 +77,7 @@ namespace SiliFish.ModelUnits
             get { throw (new NotImplementedException()); }
             set { throw (new NotImplementedException()); }
         }
-        public virtual Dynamics DynamicsTest(double[] I)
+        public virtual DynamicsStats DynamicsTest(double[] I)
         {
             throw new NotImplementedException();
         }
@@ -293,7 +293,7 @@ namespace SiliFish.ModelUnits
             V[t] = Core.GetNextVal(stim, ref spike);
         }
 
-        public override Dynamics DynamicsTest(double[] I)
+        public override DynamicsStats DynamicsTest(double[] I)
         {
             return Core.SolveODE(I);
         }
@@ -499,7 +499,7 @@ namespace SiliFish.ModelUnits
             V[t] = Core.GetNextVal(stim);
         }
 
-        public override Dynamics DynamicsTest(double[] I)
+        public override DynamicsStats DynamicsTest(double[] I)
         {
             return Core.SolveODE(I);
         }

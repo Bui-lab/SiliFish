@@ -126,38 +126,53 @@ namespace SiliFish.DynamicUnits
             return V;
         }
 
-        public Dynamics SolveODE(double[] I)
+        public DynamicsStats SolveODE(double[] I)
         {
-            bool onRise = false, onDecay = false;
+            bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
             double decayStart = 0, riseStart = 0;
             int iMax = I.Length;
-            Dynamics dyn = new(iMax);
+            DynamicsStats dyn = new(I);
             bool spike = false;
+            double dt = RunParam.static_dt;
             for (int t = 0; t < iMax; t++)
             {
                 GetNextVal(I[t], ref spike);
                 dyn.VList[t] = V;
-                dyn.secList[t] = u;
-                if (onDecay && V <= 0.37 * Vmax)
+                dyn.SecList[t] = u;
+                //if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
+                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
+                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * c)
                 {
-                    onDecay = false;
-                    dyn.tauDecay.Add(t, t - decayStart);
+                    dyn.TauDecay.Add(dt * t, dt * (t - decayStart));
+                    tauDecaySet = true;
                 }
-                else if (onRise && riseStart > 0 && V >= 0.63 * Vmax)
+                //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
+                //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
+                else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * Vmax + 0.37 * Vr)
                 {
-                    onRise = false;
-                    dyn.tauRise.Add(t, t - riseStart);
+                    dyn.TauRise.Add(dt * t, dt * (t - riseStart));
+                    tauRiseSet = true;
                     riseStart = 0;
                 }
                 else if (!onRise && (V - Vt > 0))
                 {
                     onRise = true;
+                    tauRiseSet = false;
                     riseStart = t;
+                }
+                else if (onDecay && t > 0 && V > dyn.VList[t - 1])
+                {
+                    onDecay = false;
+                    tauDecaySet = false;
                 }
                 if (spike)
                 {
+                    if (t > 0)
+                        dyn.SpikeList.Add(t - 1);
                     onRise = false;
+                    tauRiseSet = false;
                     onDecay = true;
+                    tauDecaySet = false;
                     decayStart = t;
                 }
             }
