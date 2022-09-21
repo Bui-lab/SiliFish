@@ -7,7 +7,7 @@ using SiliFish.Helpers;
 
 namespace SiliFish.DynamicUnits
 {
-       class Izhikevich_9P
+       public class Izhikevich_9P
     {
         //a, b, c, d, are the parameters for the membrane potential dynamics
         private double a;
@@ -46,6 +46,23 @@ namespace SiliFish.DynamicUnits
             u = 0;
         }
 
+        public virtual Dictionary<string, double> GetParametersDouble()
+        {
+            Dictionary<string, double> paramDict = new()
+            {
+                { "Izhikevich_9P.a", a },
+                { "Izhikevich_9P.b", b },
+                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.d", d },
+                { "Izhikevich_9P.V_max", Vmax },
+                { "Izhikevich_9P.V_r", Vr },
+                { "Izhikevich_9P.V_t", Vt },
+                { "Izhikevich_9P.k", k },
+                { "Izhikevich_9P.Cm", Cm }
+            };
+            return paramDict;
+        }
+        
         public virtual Dictionary<string, object> GetParameters()
         {
             Dictionary<string, object> paramDict = new()

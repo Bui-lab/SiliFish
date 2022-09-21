@@ -12,24 +12,24 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
-        private Cell cell;
+        private CellType cellType;
         private bool initialRun = false;
 
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
-         
-        public Cell Cell { get => cell;
+        private Dictionary<string, double> parameters;
+        public Dictionary<string, double> Parameters { get => parameters;
             set
             {
-                cell = value;
-                if (cell == null)
+                parameters = value;
+                if (parameters == null)
                 {
                     pParams.Controls.Clear();
                     ddParameter.Items.Clear();
                 }
                 else
                 {
-                    pParams.CreateNumericUpDownControlsForDictionary(cell?.Parameters);
+                    pParams.CreateNumericUpDownControlsForDictionary(parameters);
                     foreach (Control control in pParams.Controls)
                     {
                         if (control is TextBox textBox)
@@ -39,7 +39,7 @@ namespace SiliFish.UI.Controls
                     }
                     ddParameter.Items.Clear();
                     ddParameter.Items.Add("All Parameters");
-                    foreach(var p in cell.Parameters)
+                    foreach(var p in parameters)
                         ddParameter.Items.Add(p.Key);
                     ddParameter.SelectedIndex = 0;
                     FirstRun();
@@ -68,17 +68,20 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        public DynamicsTestControl()
+        public DynamicsTestControl(CellType cellType, Dictionary<string, double> parameters, bool testMode)
         {
             InitializeComponent();
             InitAsync();
             Wait();
+            this.cellType = cellType;
+            Parameters = parameters;
+            pBottomBottom.Visible = !testMode;
         }
 
         private void FirstRun()
         {
             if (initialRun) return;
-            if (Cell != null)
+            if (parameters != null)
             {
                 initialRun = true;
                 CalculateRheobase();
@@ -113,11 +116,13 @@ namespace SiliFish.UI.Controls
             (sender as Control).Tag = true;
         }
 
+        private void ReadParameters()
+        {
+            parameters = pParams.CreateDoubleDictionaryFromControls();
+        }
         private void DynamicsRun()
         {
-            if (Cell == null) return;
-
-            cell.Parameters = pParams.CreateDoubleDictionaryFromControls();
+            ReadParameters();
 
             decimal dt = edt.Value;
             RunParam.static_Skip = 0;
@@ -131,82 +136,90 @@ namespace SiliFish.UI.Controls
             List<ChartDataStruct> charts = new();
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 time[i] = i * (double)dt;
-            if (rbManualEntryStimulus.Checked)
+            Cell cell = null;
+            if (cellType == CellType.Neuron)
+                cell = new Neuron(parameters);
+            else if (cellType == CellType.MuscleCell)
+                cell = new MuscleCell(parameters);
+            if (cell != null)
             {
-                double[] I = new double[plotEnd + 1];
-                Stimulus stim = new()
+                if (rbManualEntryStimulus.Checked)
                 {
-                    StimulusSettings = stimulusControl1.GetStimulus(),
-                    TimeSpan_ms = tl
-                };
-                foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                    I[i] = stim.generateStimulus(i, SwimmingModel.rand);
-                Dynamics dyn = Cell.DynamicsTest(I);
-                charts.Add(new ChartDataStruct
-                {
-                    Title = "V",
-                    Color = Color.Purple,
-                    xData = time,
-                    yData = dyn.VList,
-                    yLabel = "V (mV)"
-                });
-                charts.Add(new ChartDataStruct
-                {
-                    Title = cell is MuscleCell ? "Rel. Tension" : "u",
-                    Color = Color.Blue,
-                    xData = time,
-                    yData = dyn.secList,
-                    yLabel = cell is MuscleCell ? "Rel. Tension" : "u"
-                });
-                charts.Add(new ChartDataStruct
-                {
-                    Title = "Stimulus",
-                    Color = Color.Red,
-                    xData = time,
-                    yData = I,
-                    yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
-                });
-            }
-            else
-            {
-                if (double.TryParse(eRheobase.Text, out double rheobase))
-                {
-                    double[,] I = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
-                    int iter = 0;
-                    List<string> columnNames = new();
-                    foreach (double multiplier in Const.RheobaseTestMultipliers)
+                    double[] I = new double[plotEnd + 1];
+                    Stimulus stim = new()
                     {
-                        Stimulus stim = new()
-                        {
-                            StimulusSettings = new()
-                            {
-                                Mode = StimulusMode.Step,
-                                Value1 = rheobase * multiplier,
-                                Value2 = 0
-                            },
-                            TimeSpan_ms = tl
-                        };
-                        foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                            I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
-                        Dynamics dyn = Cell.DynamicsTest(I.GetColumn(iter++));
-                        columnNames.Add($"x {multiplier:0.##}");
-                        charts.Add(new ChartDataStruct
-                        {
-                            Title = $"V - Rheobase x {multiplier:0.##}",
-                            Color = Color.Purple,
-                            xData = time,
-                            yData = dyn.VList,
-                            yLabel = "V (mV)"
-                        });
-                    }
+                        StimulusSettings = stimulusControl1.GetStimulus(),
+                        TimeSpan_ms = tl
+                    };
+                    foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
+                        I[i] = stim.generateStimulus(i, SwimmingModel.rand);
+                    Dynamics dyn = cell.DynamicsTest(I);
                     charts.Add(new ChartDataStruct
                     {
-                        Title = $"Stimulus",
+                        Title = "V",
+                        Color = Color.Purple,
+                        xData = time,
+                        yData = dyn.VList,
+                        yLabel = "V (mV)"
+                    });
+                    charts.Add(new ChartDataStruct
+                    {
+                        Title = cellType == CellType.MuscleCell ? "Rel. Tension" : "u",
+                        Color = Color.Blue,
+                        xData = time,
+                        yData = dyn.secList,
+                        yLabel = cellType == CellType.MuscleCell ? "Rel. Tension" : "u"
+                    });
+                    charts.Add(new ChartDataStruct
+                    {
+                        Title = "Stimulus",
                         Color = Color.Red,
                         xData = time,
-                        yMultiData = I,
-                        yLabel = string.Join(',', columnNames)
+                        yData = I,
+                        yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
                     });
+                }
+                else
+                {
+                    if (double.TryParse(eRheobase.Text, out double rheobase))
+                    {
+                        double[,] I = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
+                        int iter = 0;
+                        List<string> columnNames = new();
+                        foreach (double multiplier in Const.RheobaseTestMultipliers)
+                        {
+                            Stimulus stim = new()
+                            {
+                                StimulusSettings = new()
+                                {
+                                    Mode = StimulusMode.Step,
+                                    Value1 = rheobase * multiplier,
+                                    Value2 = 0
+                                },
+                                TimeSpan_ms = tl
+                            };
+                            foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
+                                I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
+                            Dynamics dyn = cell.DynamicsTest(I.GetColumn(iter++));
+                            columnNames.Add($"x {multiplier:0.##}");
+                            charts.Add(new ChartDataStruct
+                            {
+                                Title = $"V - Rheobase x {multiplier:0.##}",
+                                Color = Color.Purple,
+                                xData = time,
+                                yData = dyn.VList,
+                                yLabel = "V (mV)"
+                            });
+                        }
+                        charts.Add(new ChartDataStruct
+                        {
+                            Title = $"Stimulus",
+                            Color = Color.Red,
+                            xData = time,
+                            yMultiData = I,
+                            yLabel = string.Join(',', columnNames)
+                        });
+                    }
                 }
             }
             string html = DyChartGenerator.PlotLineCharts(charts, 
@@ -220,21 +233,21 @@ namespace SiliFish.UI.Controls
             DynamicsRun();
         }
 
-        private double CalculateRheobase()
+        private void CalculateRheobase()
         {
-            if (Cell == null || Cell.GetType() != typeof(Neuron)) return 0;
-
-            cell.Parameters = pParams.CreateDoubleDictionaryFromControls();
+            ReadParameters();
 
             //TODO muscle cell contraction - how to we handle it?
-            Neuron neuron = Cell as Neuron;
-            decimal limit = eRheobaseLimit.Value;
-            decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value);
-            if (d > 0)
-                eRheobase.Text = d.ToString(Const.DecimalPointFormat);
-            else
-                eRheobase.Text = "N/A";
-            return Convert.ToDouble(d);
+            if (cellType == CellType.Neuron)
+            {
+                Neuron neuron = new(parameters);
+                decimal limit = eRheobaseLimit.Value;
+                decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value);
+                if (d > 0)
+                    eRheobase.Text = d.ToString(Const.DecimalPointFormat);
+                else
+                    eRheobase.Text = "N/A";
+            }
         }
         private void btnRheobase_Click(object sender, EventArgs e)
         {
@@ -247,32 +260,38 @@ namespace SiliFish.UI.Controls
             double limit = (double) eRheobaseLimit.Value;
             List<ChartDataStruct> charts = new();
             double dt = (double)edt.Value;
-            Neuron neuron = Cell as Neuron;
-            Dictionary<string, object> parameters =
-                pParams.CreateDoubleDictionaryFromControls();
+            ReadParameters();
+            Dictionary<string, double> paramToTest = parameters;
             if (ddParameter.SelectedIndex > 0)
             {
                 string param = ddParameter.SelectedItem.ToString();
-                parameters = parameters.Where(kvp => kvp.Key.ToString() == param).ToDictionary(kvp => kvp.Key, kvp => kvp.Value); 
+                paramToTest = parameters.Where(kvp => kvp.Key.ToString() == param).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
-            foreach (string param in parameters.Keys)//change one parameter at a time
+            if (cellType == CellType.Neuron)
             {
-                (double[] values, double[] rheos) = neuron.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
-                    double.Parse(eMinMultiplier.Text), double.Parse(eMaxMultiplier.Text),
-                    20/*num of points*/, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
-                charts.Add(new ChartDataStruct
+                Neuron neuron = new(parameters);
+                foreach (string param in paramToTest.Keys)//change one parameter at a time
                 {
-                    Title = param,
-                    Color = Color.Purple,
-                    xData = values,
-                    yData = rheos,
-                    xLabel = param,
-                    yLabel = "Rheobase",
-                    drawPoints = true,
-                    logScale = cbLogScale.Checked
-                });
+                    (double[] values, double[] rheos) = neuron.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
+                        double.Parse(eMinMultiplier.Text), double.Parse(eMaxMultiplier.Text),
+                        20/*num of points*/, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
+                    charts.Add(new ChartDataStruct
+                    {
+                        Title = param,
+                        Color = Color.Purple,
+                        xData = values,
+                        yData = rheos,
+                        xLabel = param,
+                        yLabel = "Rheobase",
+                        drawPoints = true,
+                        logScale = cbLogScale.Checked
+                    });
+                }
             }
-
+            else if (cellType == CellType.MuscleCell)
+            {
+                //TODO muscle cell rheobase 
+            }
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts, 
@@ -283,13 +302,38 @@ namespace SiliFish.UI.Controls
         }
         private void linkUseUpdatedParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            cell.Parameters = pParams.CreateDoubleDictionaryFromControls();
+            ReadParameters();
             useUpdatedParams?.Invoke(this, EventArgs.Empty);
         }
 
         private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
             stimulusControl1.Enabled = rbManualEntryStimulus.Checked;
+            DynamicsRun();
         }
+
+        private void linkLoadCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (openFileJson.ShowDialog() == DialogResult.OK)
+            {
+                string JSONString = Util.ReadFromFile(openFileJson.FileName);
+                if (string.IsNullOrEmpty(JSONString))
+                    return;
+                Parameters = (Dictionary<string, double>)Util.CreateObjectFromJSON(typeof(Dictionary<string, double>), JSONString);
+                CalculateRheobase();
+                DynamicsRun();
+            }
+        }
+
+        private void linkSaveCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ReadParameters();
+            string JSONString = Util.CreateJSONFromObject(parameters);
+            if (saveFileJson.ShowDialog() == DialogResult.OK)
+            {
+                Util.SaveToFile(saveFileJson.FileName, JSONString);
+            }
+        }
+
     }
 }

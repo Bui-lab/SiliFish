@@ -217,10 +217,8 @@ namespace SiliFish.UI.Controls
 
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            dyncontrol = new()
-            {
-                Cell = GetCell()
-            };
+            Dictionary<string, double> dparams = GetCell().Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
+            dyncontrol = new(poolTemplate.CellType, dparams, testMode: false);
             dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
@@ -231,9 +229,9 @@ namespace SiliFish.UI.Controls
 
         private void Dyncontrol_UseupdatedParams(object sender, EventArgs e)
         {
-            if (dyncontrol?.Cell == null)
+            if (dyncontrol?.Parameters == null)
                 return;
-            poolTemplate.Parameters = dyncontrol.Cell.Parameters;
+            poolTemplate.Parameters = dyncontrol.Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
             ParamDictToGrid();
         }
 
