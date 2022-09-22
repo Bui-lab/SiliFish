@@ -67,6 +67,7 @@
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlots = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.cbStimulus = new System.Windows.Forms.CheckBox();
             this.cbSpikingFrequency = new System.Windows.Forms.CheckBox();
             this.cbInterval = new System.Windows.Forms.CheckBox();
@@ -76,6 +77,7 @@
             this.cbV = new System.Windows.Forms.CheckBox();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -413,6 +415,7 @@
             // 
             // splitMain.Panel2
             // 
+            this.splitMain.Panel2.Controls.Add(this.richTextBox1);
             this.splitMain.Panel2.Controls.Add(this.webViewPlots);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
             this.splitMain.Size = new System.Drawing.Size(974, 683);
@@ -566,16 +569,16 @@
             this.webViewPlots.AllowExternalDrop = true;
             this.webViewPlots.CreationProperties = null;
             this.webViewPlots.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webViewPlots.Location = new System.Drawing.Point(0, 54);
+            this.webViewPlots.Location = new System.Drawing.Point(0, 398);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(748, 629);
+            this.webViewPlots.Size = new System.Drawing.Size(748, 285);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
             // 
             // pPlots
             // 
+            this.pPlots.Controls.Add(this.button1);
             this.pPlots.Controls.Add(this.cbStimulus);
             this.pPlots.Controls.Add(this.cbSpikingFrequency);
             this.pPlots.Controls.Add(this.cbInterval);
@@ -588,6 +591,16 @@
             this.pPlots.Name = "pPlots";
             this.pPlots.Size = new System.Drawing.Size(748, 54);
             this.pPlots.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(616, 13);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // cbStimulus
             // 
@@ -678,6 +691,17 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.Location = new System.Drawing.Point(-1, 54);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(749, 338);
+            this.richTextBox1.TabIndex = 2;
+            this.richTextBox1.Text = "";
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -764,5 +788,7 @@
         private CheckBox cbV;
         private Panel pBottomBottom;
         private LinkLabel linkUseUpdatedParams;
+        private Button button1;
+        private RichTextBox richTextBox1;
     }
 }
