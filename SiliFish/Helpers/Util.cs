@@ -14,6 +14,28 @@ namespace SiliFish.Helpers
 {
     public class Util
     {
+        public static int NumOfDigits(double val)
+        {
+            int digits = 0;
+            val = Math.Abs(val);
+            while (val >= 1)
+            {
+                digits++;
+                val /= 10;
+            }
+            return digits;
+        }
+        public static int NumOfDecimalDigits(double val)
+        {
+            return NumOfDecimalDigits((decimal)val);
+        }
+        public static int NumOfDecimalDigits(decimal val)
+        {
+            int[] bits = Decimal.GetBits(val);
+            int decPoints = (bits[3] >> 16) & 0x7F;//https://docs.microsoft.com/en-us/dotnet/api/system.decimal.getbits?view=net-6.0
+            //decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10, decPoints)));
+            return decPoints;
+        }
         //https://stackoverflow.com/questions/69664644/serialize-deserialize-system-drawing-color-with-system-text-json
         public class ColorJsonConverter : JsonConverter<Color>
         {

@@ -6,6 +6,7 @@ using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.Services;
+using SiliFish.Services.Optimization;
 using System.Linq;
 
 namespace SiliFish.UI.Controls
@@ -440,6 +441,12 @@ namespace SiliFish.UI.Controls
         private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
         {
             CreatePlots();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ReadParameters();
+            richTextBox1.Text =  GeneticAlgorithmTest.Dun(Parameters, new Dictionary<string, double>(), new Dictionary<string, double>(), 60);
         }
     }
 }
