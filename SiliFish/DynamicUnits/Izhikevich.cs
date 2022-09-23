@@ -30,7 +30,11 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
 
-
+        private void Initialize()
+        {
+            V = Vr;
+            u = 0;
+        }
         public Izhikevich_9P(MembraneDynamics dyn)
         {
             a = dyn?.a ?? 0;
@@ -42,8 +46,7 @@ namespace SiliFish.DynamicUnits
             Vt = dyn?.Vt ?? 0;
             k = dyn?.k ?? 0;
             Cm = dyn?.Cm ?? 0;
-            V = Vr;
-            u = 0;
+            Initialize();
         }
 
         public virtual Dictionary<string, double> GetParametersDouble()
@@ -128,6 +131,7 @@ namespace SiliFish.DynamicUnits
 
         public DynamicsStats SolveODE(double[] I)
         {
+            Initialize();
             bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
             double decayStart = 0, riseStart = 0;
             int iMax = I.Length;
@@ -197,6 +201,7 @@ namespace SiliFish.DynamicUnits
 
         public double CalculateRheoBase(double maxI, double sensitivity, int infinity, double dt, int warmup = 100)
         {
+            Initialize();
             infinity = (int)(infinity / dt);
             warmup = (int)(warmup / dt);
             int tmax = infinity + warmup + 10;
