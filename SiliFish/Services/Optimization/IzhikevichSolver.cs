@@ -1,13 +1,10 @@
 ﻿using GeneticSharp;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 //https://diegogiacomelli.com.br/function-optimization-with-geneticsharp/
 namespace SiliFish.Services.Optimization
 {
@@ -73,19 +70,22 @@ namespace SiliFish.Services.Optimization
                 DecimalDigits[iter++] = numOfDecimalDigit;
             }
         }
-        public (Dictionary<string, double> BestValues, string) Optimize()
+        public (Dictionary<string, double> BestValues, string) Optimize(Type selectionType,
+            Type crossOverType, 
+            Type mutationType, 
+            Type terminationType)
         {
             ChromosomeBase chromosome = new FloatingPointChromosome(
                 MinValues,
                 MaxValues,
                 NumBits,
                 DecimalDigits);
-            Population population = new Population(50, 100, chromosome); //min 50, max 100
+            Population population = new(50, 100, chromosome); //min 50, max 100
             var fitness = new IzhikevichFitness(this);
-            SelectionBase selection = new StochasticUniversalSamplingSelection(); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
-            CrossoverBase crossover = new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
-            MutationBase mutation = new FlipBitMutation(); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
-            TerminationBase termination = new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
+            SelectionBase selection = (SelectionBase)Activator.CreateInstance(selectionType); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
+            CrossoverBase crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
+            MutationBase mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
+            TerminationBase termination = (TerminationBase)Activator.CreateInstance(terminationType); //new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
             GeneticAlgorithm ga = new(
                 population,
                 fitness,

@@ -21,6 +21,17 @@ namespace SiliFish.UI.Controls
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
+        
+        private bool OptimizationMode
+        {
+            get { return !linkSwitchToOptimization.Visible; }
+            set
+            {
+                grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !value;
+                splitOptimize.Visible = value;
+                linkSwitchToOptimization.Visible = !value;
+            }
+        }
         public Dictionary<string, double> Parameters { get => parameters;
             set
             {
@@ -63,7 +74,7 @@ namespace SiliFish.UI.Controls
 
         private void NumBox_ValueChanged(object sender, EventArgs e)
         {
-            if (sender is NumericUpDown numBox)
+            if (sender is NumericUpDown)
             {
                 CalculateRheobase();
                 DynamicsRun();
@@ -91,6 +102,10 @@ namespace SiliFish.UI.Controls
             Parameters = parameters;
             pBottomBottom.Visible = !testMode;
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
+            cbGASelection.Items.AddRange(GeneticAlgorithmExtension.GetSelectionBases().ToArray());
+            cbGACrossOver.Items.AddRange(GeneticAlgorithmExtension.GetCrossoverBases().ToArray());
+            cbGAMutation.Items.AddRange(GeneticAlgorithmExtension.GetMutationBases().ToArray());
+            cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
         }
 
         private void FirstRun()
@@ -321,6 +336,7 @@ namespace SiliFish.UI.Controls
                                 },
                                 TimeSpan_ms = tl
                             };
+                            //cell.InitDataVectors(plotEnd + 1);
                             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                                 I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
                             dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", cell.DynamicsTest(I.GetColumn(iter++)));
@@ -335,6 +351,7 @@ namespace SiliFish.UI.Controls
         }
         private void btnDynamicsRun_Click(object sender, EventArgs e)
         {
+            OptimizationMode = false;
             DynamicsRun();
         }
 
@@ -356,12 +373,14 @@ namespace SiliFish.UI.Controls
         }
         private void btnRheobase_Click(object sender, EventArgs e)
         {
+            OptimizationMode = false;
             CalculateRheobase();
         }
 
         //update each parameter sequentially within the range [/10, *2]
         private void btnSensitivityAnalysis_Click(object sender, EventArgs e)
         {
+            OptimizationMode = false;
             double limit = (double) eRheobaseLimit.Value;
             List<ChartDataStruct> charts = new();
             double dt = (double)edt.Value;
@@ -414,7 +433,7 @@ namespace SiliFish.UI.Controls
         private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
             stimulusControl1.Enabled = rbManualEntryStimulus.Checked;
-            pPlots.Enabled = rbManualEntryStimulus.Checked;
+            grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !OptimizationMode;
             DynamicsRun();
         }
 
@@ -469,8 +488,12 @@ namespace SiliFish.UI.Controls
                 else MaxValues.Add(param, value);
             }
 
-            IzhikevichSolver solver = new IzhikevichSolver(parameters, targetRheobase, MinValues, MaxValues);
-            (Dictionary<string, double> BestValues, string OutputText) = solver.Optimize();
+            IzhikevichSolver solver = new(parameters, targetRheobase, MinValues, MaxValues);
+            (Dictionary<string, double> BestValues, string OutputText) = solver.Optimize(
+                (Type)cbGASelection.SelectedItem,
+                (Type)cbGACrossOver.SelectedItem,
+                (Type)cbGAMutation.SelectedItem,
+                (Type)cbGATermination.SelectedItem);
             eOptimizationOutput.Text = OutputText;
             updateParamNames = false;
             Parameters = BestValues;
@@ -498,6 +521,11 @@ namespace SiliFish.UI.Controls
                 }
 
             }
+        }
+
+        private void linkSwitchToOptimization_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OptimizationMode = true;
         }
     }
 }
