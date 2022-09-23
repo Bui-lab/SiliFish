@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
@@ -51,10 +52,22 @@
             this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
             this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
+            this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.pParams = new System.Windows.Forms.FlowLayoutPanel();
-            this.pLoadSaveParams = new System.Windows.Forms.Panel();
-            this.linkSaveParams = new System.Windows.Forms.LinkLabel();
-            this.linkLoadParams = new System.Windows.Forms.LinkLabel();
+            this.tabLeft = new System.Windows.Forms.TabControl();
+            this.tTest = new System.Windows.Forms.TabPage();
+            this.tOptimize = new System.Windows.Forms.TabPage();
+            this.pOptimization = new System.Windows.Forms.Panel();
+            this.dgMinMaxValues = new System.Windows.Forms.DataGridView();
+            this.colParameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pMinMax = new System.Windows.Forms.Panel();
+            this.pOptimize = new System.Windows.Forms.Panel();
+            this.eTargetRheobase = new System.Windows.Forms.TextBox();
+            this.lTargetRheobase = new System.Windows.Forms.Label();
+            this.linkOptimize = new System.Windows.Forms.LinkLabel();
+            this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
             this.grSensitivity = new System.Windows.Forms.GroupBox();
             this.cbLogScale = new System.Windows.Forms.CheckBox();
             this.eMaxMultiplier = new System.Windows.Forms.TextBox();
@@ -63,11 +76,13 @@
             this.lMultiplierRange = new System.Windows.Forms.Label();
             this.ddParameter = new System.Windows.Forms.ComboBox();
             this.lParameter = new System.Windows.Forms.Label();
+            this.pLoadSaveParams = new System.Windows.Forms.Panel();
+            this.linkSaveParams = new System.Windows.Forms.LinkLabel();
+            this.linkLoadParams = new System.Windows.Forms.LinkLabel();
             this.pBottomBottom = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlots = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.cbStimulus = new System.Windows.Forms.CheckBox();
             this.cbSpikingFrequency = new System.Windows.Forms.CheckBox();
             this.cbInterval = new System.Windows.Forms.CheckBox();
@@ -77,7 +92,8 @@
             this.cbV = new System.Windows.Forms.CheckBox();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -90,8 +106,19 @@
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.pLoadSaveParams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
+            this.splitLeft.Panel1.SuspendLayout();
+            this.splitLeft.Panel2.SuspendLayout();
+            this.splitLeft.SuspendLayout();
+            this.tabLeft.SuspendLayout();
+            this.tTest.SuspendLayout();
+            this.tOptimize.SuspendLayout();
+            this.pOptimization.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).BeginInit();
+            this.pMinMax.SuspendLayout();
+            this.pOptimize.SuspendLayout();
             this.grSensitivity.SuspendLayout();
+            this.pLoadSaveParams.SuspendLayout();
             this.pBottomBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
@@ -277,10 +304,10 @@
             this.grRheobase.Controls.Add(this.btnRheobase);
             this.grRheobase.Controls.Add(this.eRheobaseLimit);
             this.grRheobase.Controls.Add(this.lRheobaseLimit);
-            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grRheobase.Location = new System.Drawing.Point(3, 118);
+            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grRheobase.Location = new System.Drawing.Point(3, 3);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(216, 114);
+            this.grRheobase.Size = new System.Drawing.Size(202, 114);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
@@ -358,11 +385,11 @@
             this.grTest.Controls.Add(this.btnDynamicsRun);
             this.grTest.Controls.Add(this.eStepEndTime);
             this.grTest.Controls.Add(this.ldt);
-            this.grTest.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grTest.Location = new System.Drawing.Point(3, 341);
+            this.grTest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grTest.Location = new System.Drawing.Point(3, 117);
             this.grTest.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
             this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(216, 316);
+            this.grTest.Size = new System.Drawing.Size(202, 36);
             this.grTest.TabIndex = 17;
             this.grTest.TabStop = false;
             this.grTest.Text = "Test";
@@ -405,64 +432,184 @@
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.pParams);
+            this.splitMain.Panel1.Controls.Add(this.splitLeft);
             this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
-            this.splitMain.Panel1.Controls.Add(this.grRheobase);
-            this.splitMain.Panel1.Controls.Add(this.grSensitivity);
-            this.splitMain.Panel1.Controls.Add(this.grTest);
             this.splitMain.Panel1.Controls.Add(this.pBottomBottom);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.richTextBox1);
             this.splitMain.Panel2.Controls.Add(this.webViewPlots);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
             this.splitMain.Size = new System.Drawing.Size(974, 683);
             this.splitMain.SplitterDistance = 222;
             this.splitMain.TabIndex = 17;
             // 
+            // splitLeft
+            // 
+            this.splitLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitLeft.Location = new System.Drawing.Point(3, 34);
+            this.splitLeft.Name = "splitLeft";
+            this.splitLeft.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitLeft.Panel1
+            // 
+            this.splitLeft.Panel1.Controls.Add(this.pParams);
+            // 
+            // splitLeft.Panel2
+            // 
+            this.splitLeft.Panel2.Controls.Add(this.tabLeft);
+            this.splitLeft.Size = new System.Drawing.Size(216, 623);
+            this.splitLeft.SplitterDistance = 158;
+            this.splitLeft.TabIndex = 25;
+            // 
             // pParams
             // 
             this.pParams.AutoScroll = true;
             this.pParams.AutoSize = true;
             this.pParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pParams.Location = new System.Drawing.Point(3, 34);
+            this.pParams.Location = new System.Drawing.Point(0, 0);
             this.pParams.Name = "pParams";
-            this.pParams.Size = new System.Drawing.Size(216, 84);
+            this.pParams.Size = new System.Drawing.Size(216, 158);
             this.pParams.TabIndex = 23;
             // 
-            // pLoadSaveParams
+            // tabLeft
             // 
-            this.pLoadSaveParams.Controls.Add(this.linkSaveParams);
-            this.pLoadSaveParams.Controls.Add(this.linkLoadParams);
-            this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 3);
-            this.pLoadSaveParams.Name = "pLoadSaveParams";
-            this.pLoadSaveParams.Size = new System.Drawing.Size(216, 31);
-            this.pLoadSaveParams.TabIndex = 21;
+            this.tabLeft.Controls.Add(this.tTest);
+            this.tabLeft.Controls.Add(this.tOptimize);
+            this.tabLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabLeft.Location = new System.Drawing.Point(0, 0);
+            this.tabLeft.Name = "tabLeft";
+            this.tabLeft.SelectedIndex = 0;
+            this.tabLeft.Size = new System.Drawing.Size(216, 461);
+            this.tabLeft.TabIndex = 3;
             // 
-            // linkSaveParams
+            // tTest
             // 
-            this.linkSaveParams.AutoSize = true;
-            this.linkSaveParams.Location = new System.Drawing.Point(87, 9);
-            this.linkSaveParams.Name = "linkSaveParams";
-            this.linkSaveParams.Size = new System.Drawing.Size(73, 15);
-            this.linkSaveParams.TabIndex = 21;
-            this.linkSaveParams.TabStop = true;
-            this.linkSaveParams.Text = "Save Params";
-            this.linkSaveParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCell_LinkClicked);
+            this.tTest.Controls.Add(this.grTest);
+            this.tTest.Controls.Add(this.grRheobase);
+            this.tTest.Location = new System.Drawing.Point(4, 24);
+            this.tTest.Name = "tTest";
+            this.tTest.Padding = new System.Windows.Forms.Padding(3);
+            this.tTest.Size = new System.Drawing.Size(208, 156);
+            this.tTest.TabIndex = 0;
+            this.tTest.Text = "Test";
+            this.tTest.UseVisualStyleBackColor = true;
             // 
-            // linkLoadParams
+            // tOptimize
             // 
-            this.linkLoadParams.AutoSize = true;
-            this.linkLoadParams.Location = new System.Drawing.Point(6, 9);
-            this.linkLoadParams.Name = "linkLoadParams";
-            this.linkLoadParams.Size = new System.Drawing.Size(75, 15);
-            this.linkLoadParams.TabIndex = 20;
-            this.linkLoadParams.TabStop = true;
-            this.linkLoadParams.Text = "Load Params";
-            this.linkLoadParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCell_LinkClicked);
+            this.tOptimize.Controls.Add(this.pOptimization);
+            this.tOptimize.Controls.Add(this.grSensitivity);
+            this.tOptimize.Location = new System.Drawing.Point(4, 24);
+            this.tOptimize.Name = "tOptimize";
+            this.tOptimize.Padding = new System.Windows.Forms.Padding(3);
+            this.tOptimize.Size = new System.Drawing.Size(208, 433);
+            this.tOptimize.TabIndex = 1;
+            this.tOptimize.Text = "Optimize";
+            this.tOptimize.UseVisualStyleBackColor = true;
+            // 
+            // pOptimization
+            // 
+            this.pOptimization.Controls.Add(this.dgMinMaxValues);
+            this.pOptimization.Controls.Add(this.pMinMax);
+            this.pOptimization.Controls.Add(this.pOptimize);
+            this.pOptimization.Controls.Add(this.eOptimizationOutput);
+            this.pOptimization.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pOptimization.Location = new System.Drawing.Point(3, 112);
+            this.pOptimization.Name = "pOptimization";
+            this.pOptimization.Size = new System.Drawing.Size(202, 318);
+            this.pOptimization.TabIndex = 28;
+            // 
+            // dgMinMaxValues
+            // 
+            this.dgMinMaxValues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgMinMaxValues.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colParameter,
+            this.colMinValue,
+            this.colMaxValue});
+            this.dgMinMaxValues.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgMinMaxValues.Location = new System.Drawing.Point(0, 30);
+            this.dgMinMaxValues.Name = "dgMinMaxValues";
+            this.dgMinMaxValues.RowHeadersVisible = false;
+            this.dgMinMaxValues.RowTemplate.Height = 25;
+            this.dgMinMaxValues.Size = new System.Drawing.Size(202, 120);
+            this.dgMinMaxValues.TabIndex = 27;
+            // 
+            // colParameter
+            // 
+            this.colParameter.Frozen = true;
+            this.colParameter.HeaderText = "Parameter";
+            this.colParameter.MinimumWidth = 100;
+            this.colParameter.Name = "colParameter";
+            this.colParameter.ReadOnly = true;
+            this.colParameter.Width = 200;
+            // 
+            // colMinValue
+            // 
+            this.colMinValue.HeaderText = "Min Value";
+            this.colMinValue.Name = "colMinValue";
+            // 
+            // colMaxValue
+            // 
+            this.colMaxValue.HeaderText = "Max Value";
+            this.colMaxValue.Name = "colMaxValue";
+            // 
+            // pMinMax
+            // 
+            this.pMinMax.Controls.Add(this.linkSuggestMinMax);
+            this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pMinMax.Location = new System.Drawing.Point(0, 0);
+            this.pMinMax.Name = "pMinMax";
+            this.pMinMax.Size = new System.Drawing.Size(202, 30);
+            this.pMinMax.TabIndex = 28;
+            // 
+            // pOptimize
+            // 
+            this.pOptimize.Controls.Add(this.eTargetRheobase);
+            this.pOptimize.Controls.Add(this.linkOptimize);
+            this.pOptimize.Controls.Add(this.lTargetRheobase);
+            this.pOptimize.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pOptimize.Location = new System.Drawing.Point(0, 150);
+            this.pOptimize.Name = "pOptimize";
+            this.pOptimize.Size = new System.Drawing.Size(202, 39);
+            this.pOptimize.TabIndex = 26;
+            // 
+            // eTargetRheobase
+            // 
+            this.eTargetRheobase.Location = new System.Drawing.Point(100, 12);
+            this.eTargetRheobase.Name = "eTargetRheobase";
+            this.eTargetRheobase.Size = new System.Drawing.Size(35, 23);
+            this.eTargetRheobase.TabIndex = 2;
+            // 
+            // lTargetRheobase
+            // 
+            this.lTargetRheobase.AutoSize = true;
+            this.lTargetRheobase.Location = new System.Drawing.Point(3, 15);
+            this.lTargetRheobase.Name = "lTargetRheobase";
+            this.lTargetRheobase.Size = new System.Drawing.Size(93, 15);
+            this.lTargetRheobase.TabIndex = 1;
+            this.lTargetRheobase.Text = "Target Rheobase";
+            // 
+            // linkOptimize
+            // 
+            this.linkOptimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkOptimize.AutoSize = true;
+            this.linkOptimize.Location = new System.Drawing.Point(141, 15);
+            this.linkOptimize.Name = "linkOptimize";
+            this.linkOptimize.Size = new System.Drawing.Size(55, 15);
+            this.linkOptimize.TabIndex = 0;
+            this.linkOptimize.TabStop = true;
+            this.linkOptimize.Text = "Optimize";
+            this.linkOptimize.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOptimize_LinkClicked);
+            // 
+            // eOptimizationOutput
+            // 
+            this.eOptimizationOutput.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.eOptimizationOutput.Location = new System.Drawing.Point(0, 189);
+            this.eOptimizationOutput.Name = "eOptimizationOutput";
+            this.eOptimizationOutput.Size = new System.Drawing.Size(202, 129);
+            this.eOptimizationOutput.TabIndex = 25;
+            this.eOptimizationOutput.Text = "";
             // 
             // grSensitivity
             // 
@@ -474,10 +621,10 @@
             this.grSensitivity.Controls.Add(this.ddParameter);
             this.grSensitivity.Controls.Add(this.lParameter);
             this.grSensitivity.Controls.Add(this.btnSensitivityAnalysis);
-            this.grSensitivity.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grSensitivity.Location = new System.Drawing.Point(3, 232);
+            this.grSensitivity.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grSensitivity.Location = new System.Drawing.Point(3, 3);
             this.grSensitivity.Name = "grSensitivity";
-            this.grSensitivity.Size = new System.Drawing.Size(216, 109);
+            this.grSensitivity.Size = new System.Drawing.Size(202, 109);
             this.grSensitivity.TabIndex = 18;
             this.grSensitivity.TabStop = false;
             this.grSensitivity.Text = "Sensitivity Analysis";
@@ -543,6 +690,38 @@
             this.lParameter.TabIndex = 21;
             this.lParameter.Text = "Parameter";
             // 
+            // pLoadSaveParams
+            // 
+            this.pLoadSaveParams.Controls.Add(this.linkSaveParams);
+            this.pLoadSaveParams.Controls.Add(this.linkLoadParams);
+            this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 3);
+            this.pLoadSaveParams.Name = "pLoadSaveParams";
+            this.pLoadSaveParams.Size = new System.Drawing.Size(216, 31);
+            this.pLoadSaveParams.TabIndex = 21;
+            // 
+            // linkSaveParams
+            // 
+            this.linkSaveParams.AutoSize = true;
+            this.linkSaveParams.Location = new System.Drawing.Point(87, 9);
+            this.linkSaveParams.Name = "linkSaveParams";
+            this.linkSaveParams.Size = new System.Drawing.Size(73, 15);
+            this.linkSaveParams.TabIndex = 21;
+            this.linkSaveParams.TabStop = true;
+            this.linkSaveParams.Text = "Save Params";
+            this.linkSaveParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCell_LinkClicked);
+            // 
+            // linkLoadParams
+            // 
+            this.linkLoadParams.AutoSize = true;
+            this.linkLoadParams.Location = new System.Drawing.Point(6, 9);
+            this.linkLoadParams.Name = "linkLoadParams";
+            this.linkLoadParams.Size = new System.Drawing.Size(75, 15);
+            this.linkLoadParams.TabIndex = 20;
+            this.linkLoadParams.TabStop = true;
+            this.linkLoadParams.Text = "Load Params";
+            this.linkLoadParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCell_LinkClicked);
+            // 
             // pBottomBottom
             // 
             this.pBottomBottom.Controls.Add(this.linkUseUpdatedParams);
@@ -569,16 +748,16 @@
             this.webViewPlots.AllowExternalDrop = true;
             this.webViewPlots.CreationProperties = null;
             this.webViewPlots.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webViewPlots.Location = new System.Drawing.Point(0, 398);
+            this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webViewPlots.Location = new System.Drawing.Point(0, 54);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(748, 285);
+            this.webViewPlots.Size = new System.Drawing.Size(748, 629);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
             // 
             // pPlots
             // 
-            this.pPlots.Controls.Add(this.button1);
             this.pPlots.Controls.Add(this.cbStimulus);
             this.pPlots.Controls.Add(this.cbSpikingFrequency);
             this.pPlots.Controls.Add(this.cbInterval);
@@ -591,16 +770,6 @@
             this.pPlots.Name = "pPlots";
             this.pPlots.Size = new System.Drawing.Size(748, 54);
             this.pPlots.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(616, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // cbStimulus
             // 
@@ -691,16 +860,17 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
-            // richTextBox1
+            // linkSuggestMinMax
             // 
-            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(-1, 54);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(749, 338);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
+            this.linkSuggestMinMax.AutoSize = true;
+            this.linkSuggestMinMax.Location = new System.Drawing.Point(6, 9);
+            this.linkSuggestMinMax.Name = "linkSuggestMinMax";
+            this.linkSuggestMinMax.Size = new System.Drawing.Size(137, 15);
+            this.linkSuggestMinMax.TabIndex = 0;
+            this.linkSuggestMinMax.TabStop = true;
+            this.linkSuggestMinMax.Text = "Suggest Min/Max Values";
+            this.toolTip1.SetToolTip(this.linkSuggestMinMax, "If not entered, current values will be used as min/max.");
+            this.linkSuggestMinMax.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSuggestMinMax_LinkClicked);
             // 
             // DynamicsTestControl
             // 
@@ -721,14 +891,27 @@
             this.grTest.ResumeLayout(false);
             this.grTest.PerformLayout();
             this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel1.PerformLayout();
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
-            this.pLoadSaveParams.ResumeLayout(false);
-            this.pLoadSaveParams.PerformLayout();
+            this.splitLeft.Panel1.ResumeLayout(false);
+            this.splitLeft.Panel1.PerformLayout();
+            this.splitLeft.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
+            this.splitLeft.ResumeLayout(false);
+            this.tabLeft.ResumeLayout(false);
+            this.tTest.ResumeLayout(false);
+            this.tOptimize.ResumeLayout(false);
+            this.pOptimization.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).EndInit();
+            this.pMinMax.ResumeLayout(false);
+            this.pMinMax.PerformLayout();
+            this.pOptimize.ResumeLayout(false);
+            this.pOptimize.PerformLayout();
             this.grSensitivity.ResumeLayout(false);
             this.grSensitivity.PerformLayout();
+            this.pLoadSaveParams.ResumeLayout(false);
+            this.pLoadSaveParams.PerformLayout();
             this.pBottomBottom.ResumeLayout(false);
             this.pBottomBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
@@ -777,7 +960,6 @@
         private LinkLabel linkLoadParams;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
-        private GroupBox grPlots;
         private Panel pPlots;
         private CheckBox cbStimulus;
         private CheckBox cbSpikingFrequency;
@@ -788,7 +970,22 @@
         private CheckBox cbV;
         private Panel pBottomBottom;
         private LinkLabel linkUseUpdatedParams;
-        private Button button1;
-        private RichTextBox richTextBox1;
+        private TabControl tabLeft;
+        private TabPage tTest;
+        private TabPage tOptimize;
+        private Panel pOptimize;
+        private LinkLabel linkOptimize;
+        private RichTextBox eOptimizationOutput;
+        private DataGridView dgMinMaxValues;
+        private Panel pOptimization;
+        private TextBox eTargetRheobase;
+        private Label lTargetRheobase;
+        private DataGridViewTextBoxColumn colParameter;
+        private DataGridViewTextBoxColumn colMinValue;
+        private DataGridViewTextBoxColumn colMaxValue;
+        private Panel pMinMax;
+        private SplitContainer splitLeft;
+        private LinkLabel linkSuggestMinMax;
+        private ToolTip toolTip1;
     }
 }

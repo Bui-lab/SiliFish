@@ -14,7 +14,7 @@ namespace SiliFish.UI.Controls
     public partial class DynamicsTestControl : UserControl
     {
         private CellType cellType;
-        private bool initialRun = false;
+        private bool updateParamNames = true;
         DynamicsStats dynamics;
         private double[] TimeArray;
         
@@ -40,11 +40,22 @@ namespace SiliFish.UI.Controls
                         else if (control is NumericUpDown numBox)
                             numBox.ValueChanged += NumBox_ValueChanged;
                     }
-                    ddParameter.Items.Clear();
-                    ddParameter.Items.Add("All Parameters");
-                    foreach(var p in parameters)
-                        ddParameter.Items.Add(p.Key);
-                    ddParameter.SelectedIndex = 0;
+                    if (updateParamNames)
+                    {
+                        ddParameter.Items.Clear();
+                        ddParameter.Items.Add("All Parameters");
+                        foreach (var p in parameters)
+                            ddParameter.Items.Add(p.Key);
+                        ddParameter.SelectedIndex = 0;
+
+                        dgMinMaxValues.Rows.Clear();
+                        dgMinMaxValues.RowCount = parameters.Count;
+                        int rowIndex = 0;
+                        foreach (string key in parameters.Keys)
+                        {
+                            dgMinMaxValues[colParameter.Index, rowIndex++].Value = key;
+                        }
+                    }
                     FirstRun();
                 }
             }
@@ -84,10 +95,8 @@ namespace SiliFish.UI.Controls
 
         private void FirstRun()
         {
-            if (initialRun) return;
             if (parameters != null)
             {
-                initialRun = true;
                 CalculateRheobase();
                 StimulusSettings stim = stimulusControl1.GetStimulus();
                 if (double.TryParse(eRheobase.Text, out double d))
@@ -417,14 +426,6 @@ namespace SiliFish.UI.Controls
                 if (string.IsNullOrEmpty(JSONString))
                     return;
                 Parameters = (Dictionary<string, double>)Util.CreateObjectFromJSON(typeof(Dictionary<string, double>), JSONString);
-                CalculateRheobase();
-                StimulusSettings stim = stimulusControl1.GetStimulus();
-                if (double.TryParse(eRheobase.Text, out double d))
-                {
-                    stim.Value1 = d;
-                    stimulusControl1.SetStimulus(stim);
-                }
-                DynamicsRun();
             }
         }
 
@@ -443,10 +444,60 @@ namespace SiliFish.UI.Controls
             CreatePlots();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void linkOptimize_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (!double.TryParse(eTargetRheobase.Text, out double targetRheobase))
+            {
+                eTargetRheobase.Focus();
+                MessageBox.Show("Please enter a valid target rheobase value.");
+                return;
+            }
             ReadParameters();
-            richTextBox1.Text =  GeneticAlgorithmTest.Dun(Parameters, new Dictionary<string, double>(), new Dictionary<string, double>(), 60);
+            Dictionary<string, double> MinValues = new();
+            Dictionary<string, double> MaxValues = new();
+            foreach (DataGridViewRow row in dgMinMaxValues.Rows)
+            {
+                string param = row.Cells[colParameter.Index].Value?.ToString();
+                double value = parameters[param];
+                if (!string.IsNullOrEmpty(row.Cells[colMinValue.Index].Value?.ToString())
+                    && double.TryParse(row.Cells[colMinValue.Index].Value.ToString(), out double dmin))
+                    MinValues.Add(param, dmin);
+                else MinValues.Add(param, value);
+                if (!string.IsNullOrEmpty(row.Cells[colMaxValue.Index].Value?.ToString())
+                    && double.TryParse(row.Cells[colMaxValue.Index].Value.ToString(), out double dmax))
+                    MaxValues.Add(param, dmax);
+                else MaxValues.Add(param, value);
+            }
+
+            IzhikevichSolver solver = new IzhikevichSolver(parameters, targetRheobase, MinValues, MaxValues);
+            (Dictionary<string, double> BestValues, string OutputText) = solver.Optimize();
+            eOptimizationOutput.Text = OutputText;
+            updateParamNames = false;
+            Parameters = BestValues;
+            updateParamNames = true;
+        }
+
+        private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (DataGridViewRow row in dgMinMaxValues.Rows)
+            {
+                string param = row.Cells[colParameter.Index].Value?.ToString();
+                double value = parameters[param];
+                if (param.Contains(".V"))
+                {
+                    row.Cells[colMinValue.Index].Value = value - 2;
+                    row.Cells[colMaxValue.Index].Value = value + 2;
+                }
+                else
+                {
+                    int numDigit = Util.NumOfDigits(value);
+                    if (numDigit == 0)
+                        numDigit = 1;
+                    row.Cells[colMinValue.Index].Value = value - 10 * numDigit;
+                    row.Cells[colMaxValue.Index].Value = value + 10 * numDigit;
+                }
+
+            }
         }
     }
 }
