@@ -1,5 +1,8 @@
 SiliFish uses some 3rd party tools. Corresponding licences are below:
 
+GeneticSharp
+https://github.com/giacomelli/GeneticSharp
+
 3d-force-graph
 https://github.com/vasturiano/3d-force-graph
 https://github.com/vasturiano/3d-force-graph/blob/fe9a833bc659303d21c8ffa18f2afd01587443ba/LICENSE
