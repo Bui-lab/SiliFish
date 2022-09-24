@@ -11,11 +11,9 @@ namespace SiliFish.Services.Optimization
     public class IzhikevichFitness : IFitness
     {
         IzhikevichSolver IzhikevichSolver;
-        //private readonly Func<IChromosome, double> m_func;
         public IzhikevichFitness(IzhikevichSolver izhikevichSolver)
         {
             IzhikevichSolver = izhikevichSolver;
-//            m_func = func;
         }
         public double Evaluate(IChromosome chromosome)
         {
@@ -42,13 +40,22 @@ namespace SiliFish.Services.Optimization
     public class IzhikevichSolver
     {
         Dictionary<string, double> ParamValues;
-        double[] MinValues, MaxValues;
-        int[] NumBits, DecimalDigits;
         internal double TargetRheobase;
         internal List<string> OutputText = new();
         internal List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
+        private GeneticAlgorithm Algorithm;
+        private double latestFitness = 0.0;
 
-        public IzhikevichSolver(Dictionary<string, double> paramValues,
+        public string GetOutput() => string.Join("\r\n", OutputText);
+        public string GetProgress() => $"Generation: {Algorithm.GenerationsNumber}; Target rheobase ± {(latestFitness != 0 ? (1 / latestFitness) : "N/A")}";
+
+        public IzhikevichSolver(Type selectionType,
+            Type crossOverType,
+            Type mutationType,
+            Type terminationType,
+            int minPopulationSize,
+            int maxPopulationSize,
+            Dictionary<string, double> paramValues,
             double targetRheobase,
             Dictionary<string, double> minValues = null,
             Dictionary<string, double> maxValues = null)
@@ -56,10 +63,10 @@ namespace SiliFish.Services.Optimization
             ParamValues = paramValues;
             TargetRheobase = targetRheobase;
             int nCount = paramValues.Count;
-            MinValues = new double[nCount];
-            MaxValues = new double[nCount];
-            NumBits = new int[nCount];
-            DecimalDigits = new int[nCount];
+            double[] MinValues = new double[nCount];
+            double[] MaxValues = new double[nCount];
+            int[] NumBits = new int[nCount];
+            int[] DecimalDigits = new int[nCount];
             int iter = 0;
             foreach (string key in SortedKeys)
             {
@@ -69,24 +76,20 @@ namespace SiliFish.Services.Optimization
                 MaxValues[iter] = maxValues?.GetValueOrDefault(key, Const.GeneticAlgorithmMaxValue) ?? Const.GeneticAlgorithmMaxValue;
                 DecimalDigits[iter++] = numOfDecimalDigit;
             }
-        }
-        public (Dictionary<string, double> BestValues, string) Optimize(Type selectionType,
-            Type crossOverType, 
-            Type mutationType, 
-            Type terminationType)
-        {
+
             ChromosomeBase chromosome = new FloatingPointChromosome(
                 MinValues,
                 MaxValues,
                 NumBits,
                 DecimalDigits);
-            Population population = new(50, 100, chromosome); //min 50, max 100
+            Population population = new(minPopulationSize, maxPopulationSize, chromosome); //min 50, max 100
+
             var fitness = new IzhikevichFitness(this);
             SelectionBase selection = (SelectionBase)Activator.CreateInstance(selectionType); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
             CrossoverBase crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
             MutationBase mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
             TerminationBase termination = (TerminationBase)Activator.CreateInstance(terminationType); //new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
-            GeneticAlgorithm ga = new(
+            Algorithm = new(
                 population,
                 fitness,
                 selection,
@@ -96,10 +99,13 @@ namespace SiliFish.Services.Optimization
                 Termination = termination
             };
 
-            var latestFitness = 0.0;
-            ga.GenerationRan += (sender, e) =>
+        }
+        public Dictionary<string, double> Optimize()
+        {
+            latestFitness = 0.0;
+            Algorithm.GenerationRan += (sender, e) =>
             {
-                var bestChromosome = ga.BestChromosome as FloatingPointChromosome;
+                var bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
                 var bestFitness = bestChromosome.Fitness.Value;
                 if (bestFitness != latestFitness)
                 {
@@ -109,19 +115,24 @@ namespace SiliFish.Services.Optimization
                     string valueStr = "";
                     foreach (string key in SortedKeys)
                         valueStr += $"{key}: {phenotype[iter++]}; ";
-                    OutputText.Add($"Generation {ga.GenerationsNumber}: {valueStr} Fitness = {bestFitness}\r\n");
+                    OutputText.Add($"Generation {Algorithm.GenerationsNumber}: {valueStr} Fitness = {bestFitness}");
                 }
             };
-            ga.Start();
+            Algorithm.Start();
+            
             Dictionary<string, double> BestValues = new();
             int iter = 0;
             foreach (string key in SortedKeys)
             {
-                var phenotype = (ga.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
+                var phenotype = (Algorithm.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
                 BestValues.Add(key, phenotype[iter++]);
             }
 
-            return (BestValues, string.Join("\r\n", OutputText));
+            return BestValues;
+        }
+        public void CancelOptimization()
+        {
+            Algorithm?.Stop();
         }
     }
 }

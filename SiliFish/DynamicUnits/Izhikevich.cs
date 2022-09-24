@@ -55,7 +55,7 @@ namespace SiliFish.DynamicUnits
             {
                 { "Izhikevich_9P.a", a },
                 { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.V_reset", c },
                 { "Izhikevich_9P.d", d },
                 { "Izhikevich_9P.V_max", Vmax },
                 { "Izhikevich_9P.V_r", Vr },
@@ -72,7 +72,7 @@ namespace SiliFish.DynamicUnits
             {
                 { "Izhikevich_9P.a", a },
                 { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.V_reset", c },
                 { "Izhikevich_9P.d", d },
                 { "Izhikevich_9P.V_max", Vmax },
                 { "Izhikevich_9P.V_r", Vr },
@@ -89,7 +89,7 @@ namespace SiliFish.DynamicUnits
                 return;
             a = paramExternal.Read("Izhikevich_9P.a", a);
             b = paramExternal.Read("Izhikevich_9P.b", b);
-            c = paramExternal.Read("Izhikevich_9P.c", c);
+            c = paramExternal.Read("Izhikevich_9P.V_reset", c);
             d = paramExternal.Read("Izhikevich_9P.d", d);
             Vmax = paramExternal.Read("Izhikevich_9P.V_max", Vmax);
             V = Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);

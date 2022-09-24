@@ -21,15 +21,16 @@ namespace SiliFish.UI.Controls
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
-        
+        private IzhikevichSolver Solver;
+        Dictionary<string, double> SolverBestValues;
         private bool OptimizationMode
         {
-            get { return !linkSwitchToOptimization.Visible; }
+            get { return linkSwitchToOptimization.Text != "Optimization Mode"; }
             set
             {
                 grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !value;
                 splitOptimize.Visible = value;
-                linkSwitchToOptimization.Visible = !value;
+                linkSwitchToOptimization.Text = value ? "Quit Optimization Mode" : "Optimization Mode";
             }
         }
         public Dictionary<string, double> Parameters { get => parameters;
@@ -351,7 +352,6 @@ namespace SiliFish.UI.Controls
         }
         private void btnDynamicsRun_Click(object sender, EventArgs e)
         {
-            OptimizationMode = false;
             DynamicsRun();
         }
 
@@ -373,14 +373,12 @@ namespace SiliFish.UI.Controls
         }
         private void btnRheobase_Click(object sender, EventArgs e)
         {
-            OptimizationMode = false;
             CalculateRheobase();
         }
 
         //update each parameter sequentially within the range [/10, *2]
         private void btnSensitivityAnalysis_Click(object sender, EventArgs e)
         {
-            OptimizationMode = false;
             double limit = (double) eRheobaseLimit.Value;
             List<ChartDataStruct> charts = new();
             double dt = (double)edt.Value;
@@ -463,8 +461,9 @@ namespace SiliFish.UI.Controls
             CreatePlots();
         }
 
-        private void linkOptimize_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void CreateSolver()
         {
+            Solver = null;
             if (!double.TryParse(eTargetRheobase.Text, out double targetRheobase))
             {
                 eTargetRheobase.Focus();
@@ -488,16 +487,53 @@ namespace SiliFish.UI.Controls
                 else MaxValues.Add(param, value);
             }
 
-            IzhikevichSolver solver = new(parameters, targetRheobase, MinValues, MaxValues);
-            (Dictionary<string, double> BestValues, string OutputText) = solver.Optimize(
-                (Type)cbGASelection.SelectedItem,
+            if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
+                minPopulation = 50;
+            if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
+                maxPopulation = 50;
+            Solver = new((Type)cbGASelection.SelectedItem,
                 (Type)cbGACrossOver.SelectedItem,
                 (Type)cbGAMutation.SelectedItem,
-                (Type)cbGATermination.SelectedItem);
-            eOptimizationOutput.Text = OutputText;
+                (Type)cbGATermination.SelectedItem,
+                minPopulation,
+                maxPopulation,
+                parameters,
+                targetRheobase,
+                MinValues,
+                MaxValues);
+
+        }
+        private void RunOptimize()
+        {
+            if (Solver == null) return;
+            SolverBestValues = Solver.Optimize();
+            Invoke(CompleteOptimization);
+        }
+
+        private void CompleteOptimization()
+        {
+            timerOptimization.Enabled = false;
+            linkOptimize.Visible = true;
+            linkStopOptimization.Visible = false;
             updateParamNames = false;
-            Parameters = BestValues;
+            Parameters = SolverBestValues;
             updateParamNames = true;
+        }
+        private void linkOptimize_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            CreateSolver();
+            timerOptimization.Enabled = true;
+            linkOptimize.Visible = false;
+            linkStopOptimization.Visible = true;
+            eOptimizationOutput.Text = "";
+            Task.Run(RunOptimize);
+        }
+        private void linkStopOptimization_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            timerOptimization.Enabled = false;
+            Solver?.CancelOptimization();
+            linkOptimize.Visible = true;
+            linkStopOptimization.Visible = false;
         }
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -525,7 +561,13 @@ namespace SiliFish.UI.Controls
 
         private void linkSwitchToOptimization_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OptimizationMode = true;
+            OptimizationMode = !OptimizationMode;
+        }
+
+        private void timerOptimization_Tick(object sender, EventArgs e)
+        {
+            if (Solver == null) return;
+            eOptimizationOutput.Text += Solver.GetProgress() + "\r\n";
         }
     }
 }

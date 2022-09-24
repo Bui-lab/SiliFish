@@ -74,6 +74,7 @@
             this.colMaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pMinMax = new System.Windows.Forms.Panel();
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
+            this.linkStopOptimization = new System.Windows.Forms.LinkLabel();
             this.lMinMaxSeperator = new System.Windows.Forms.Label();
             this.eMaxChromosome = new System.Windows.Forms.TextBox();
             this.eMinChromosome = new System.Windows.Forms.TextBox();
@@ -103,6 +104,7 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.timerOptimization = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -622,6 +624,7 @@
             // 
             // splitOptimize.Panel2
             // 
+            this.splitOptimize.Panel2.Controls.Add(this.linkStopOptimization);
             this.splitOptimize.Panel2.Controls.Add(this.lMinMaxSeperator);
             this.splitOptimize.Panel2.Controls.Add(this.eMaxChromosome);
             this.splitOptimize.Panel2.Controls.Add(this.eMinChromosome);
@@ -699,6 +702,18 @@
             this.linkSuggestMinMax.Text = "Suggest Min/Max Values";
             this.toolTip1.SetToolTip(this.linkSuggestMinMax, "If not entered, current values will be used as min/max.");
             this.linkSuggestMinMax.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSuggestMinMax_LinkClicked);
+            // 
+            // linkStopOptimization
+            // 
+            this.linkStopOptimization.AutoSize = true;
+            this.linkStopOptimization.Location = new System.Drawing.Point(219, 194);
+            this.linkStopOptimization.Name = "linkStopOptimization";
+            this.linkStopOptimization.Size = new System.Drawing.Size(31, 15);
+            this.linkStopOptimization.TabIndex = 38;
+            this.linkStopOptimization.TabStop = true;
+            this.linkStopOptimization.Text = "Stop";
+            this.linkStopOptimization.Visible = false;
+            this.linkStopOptimization.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStopOptimization_LinkClicked);
             // 
             // lMinMaxSeperator
             // 
@@ -966,6 +981,10 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // timerOptimization
+            // 
+            this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1087,5 +1106,7 @@
         private Label lGAMinMaxChromosome;
         private LinkLabel linkSwitchToOptimization;
         private GroupBox grPlotSelection;
+        private LinkLabel linkStopOptimization;
+        private System.Windows.Forms.Timer timerOptimization;
     }
 }
