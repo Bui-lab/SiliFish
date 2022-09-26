@@ -29,7 +29,7 @@ namespace SiliFish.UI.Controls
             set
             {
                 grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !value;
-                splitOptimize.Visible = value;
+                splitRight.Panel1Collapsed = !value;
                 linkSwitchToOptimization.Text = value ? "Quit Optimization Mode" : "Optimization Mode";
             }
         }
@@ -108,7 +108,7 @@ namespace SiliFish.UI.Controls
             cbGACrossOver.Items.AddRange(GeneticAlgorithmExtension.GetCrossoverBases().ToArray());
             cbGACrossOver.SelectedIndex = 0;
             cbGAMutation.Items.AddRange(GeneticAlgorithmExtension.GetMutationBases().ToArray());
-            cbGACrossOver.SelectedIndex = 0;
+            cbGAMutation.SelectedIndex = 0;
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             cbGATermination.SelectedIndex = 0;
         }
@@ -318,6 +318,7 @@ namespace SiliFish.UI.Controls
                     foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                         I[i] = stim.generateStimulus(i, SwimmingModel.rand);
                     dynamics = core.DynamicsTest(I);
+                    dynamics.Cluster();
                     CreatePlots();
                 }
                 else
@@ -465,16 +466,8 @@ namespace SiliFish.UI.Controls
             CreatePlots();
         }
 
-        private void CreateSolver()
+        private (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) ReadMinMaxParamValues()
         {
-            Solver = null;
-            if (!double.TryParse(eTargetRheobase.Text, out double targetRheobase))
-            {
-                eTargetRheobase.Focus();
-                MessageBox.Show("Please enter a valid target rheobase value.");
-                return;
-            }
-            ReadParameters();
             Dictionary<string, double> MinValues = new();
             Dictionary<string, double> MaxValues = new();
             foreach (DataGridViewRow row in dgMinMaxValues.Rows)
@@ -490,7 +483,38 @@ namespace SiliFish.UI.Controls
                     MaxValues.Add(param, dmax);
                 else MaxValues.Add(param, value);
             }
+            return (MinValues, MaxValues);
+        }
 
+        private Dictionary<double, (int, int)> ReadFitnessValues()
+        {
+            Dictionary<double, (int, int)> FitnessValues = new();
+            foreach (DataGridViewRow row in dgFitnessParams.Rows)
+            {
+                if (double.TryParse(row.Cells[colFitnessRheobaseMultiplier.Index].Value?.ToString(), out double mult))
+                {
+                    int minNum = -1, maxNum = -1;
+                    if (!string.IsNullOrEmpty(row.Cells[colFitnessMinNumOfSpikes.Index].Value?.ToString()))
+                        _ = int.TryParse(row.Cells[colFitnessMinNumOfSpikes.Index].Value.ToString(), out minNum);
+                    if (!string.IsNullOrEmpty(row.Cells[colFitnessMaxNumOfSpikes.Index].Value?.ToString()))
+                        _ = int.TryParse(row.Cells[colFitnessMaxNumOfSpikes.Index].Value.ToString(), out maxNum);
+                    FitnessValues.Add(mult, (minNum, maxNum));
+                }
+            }
+            return FitnessValues;
+        }
+        private void CreateSolver()
+        {
+            Solver = null;
+            if (!double.TryParse(eTargetRheobase.Text, out double targetRheobase))
+            {
+                eTargetRheobase.Focus();
+                MessageBox.Show("Please enter a valid target rheobase value.");
+                return;
+            }
+            ReadParameters();
+            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = ReadMinMaxParamValues();
+            Dictionary<double, (int, int)> FitnessValues =ReadFitnessValues();
             if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
                 minPopulation = 50;
             if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
@@ -498,13 +522,11 @@ namespace SiliFish.UI.Controls
             Solver = new((Type)cbGASelection.SelectedItem,
                 (Type)cbGACrossOver.SelectedItem,
                 (Type)cbGAMutation.SelectedItem,
-                (Type)cbGATermination.SelectedItem,
-                minPopulation,
-                maxPopulation,
+                (Type)cbGATermination.SelectedItem);
+            Solver.SetOptimizationSettings(minPopulation, maxPopulation,
                 parameters,
-                targetRheobase,
-                MinValues,
-                MaxValues);
+                targetRheobase, FitnessValues,
+                MinValues, MaxValues);
 
         }
         private void RunOptimize()
@@ -542,7 +564,7 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DynamicUnit core = null;
+            DynamicUnit core;
             if (coreType == CoreType.Izhikevich_9P)
                 core = new Izhikevich_9P(parameters);
             else if (coreType == CoreType.Leaky_Integrator)

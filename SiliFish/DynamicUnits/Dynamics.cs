@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using HdbscanSharp.Distance;
+using HdbscanSharp.Hdbscanstar;
+using HdbscanSharp.Runner;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SiliFish.DynamicUnits
@@ -56,6 +59,19 @@ namespace SiliFish.DynamicUnits
             }
         }
 
+        public void Cluster()
+        {
+            double[][] dataset = new double[Intervals.Count][];
+            for (int i = 0; i < dataset.Length; i++)
+                dataset[i] = new double[] { Intervals.Values.ToArray()[i] };
+            var result = HdbscanRunner.Run(new HdbscanParameters<double[]>
+            {
+                DataSet = dataset, // double[][] for normal matrix or Dictionary<int, int>[] for sparse matrix
+                MinPoints = 2,
+                MinClusterSize = 10,
+                DistanceFunction = new EuclideanDistance() // See HdbscanSharp/Distance folder for more distance function
+            });
+        }
         public DynamicsStats(double[] stimulus)
         {
             int iMax = stimulus.Length;
