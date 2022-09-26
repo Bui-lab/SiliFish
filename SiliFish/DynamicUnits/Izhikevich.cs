@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 
 namespace SiliFish.DynamicUnits
 {
-       public class Izhikevich_9P
+    public class Izhikevich_9P : DynamicUnit
     {
         //a, b, c, d, are the parameters for the membrane potential dynamics
         private double a;
@@ -49,30 +50,18 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
+        public Izhikevich_9P(Dictionary<string, double> paramExternal)
+        {
+            SetParameters(paramExternal?.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value as object));
+            Initialize();
+        }
         public virtual Dictionary<string, double> GetParametersDouble()
         {
             Dictionary<string, double> paramDict = new()
             {
                 { "Izhikevich_9P.a", a },
                 { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.V_reset", c },
-                { "Izhikevich_9P.d", d },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
-                { "Izhikevich_9P.k", k },
-                { "Izhikevich_9P.Cm", Cm }
-            };
-            return paramDict;
-        }
-        
-        public virtual Dictionary<string, object> GetParameters()
-        {
-            Dictionary<string, object> paramDict = new()
-            {
-                { "Izhikevich_9P.a", a },
-                { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.V_reset", c },
+                { "Izhikevich_9P.c", c },
                 { "Izhikevich_9P.d", d },
                 { "Izhikevich_9P.V_max", Vmax },
                 { "Izhikevich_9P.V_r", Vr },
@@ -83,13 +72,78 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
+        public virtual Dictionary<string, object> GetParameters()
+        {
+            Dictionary<string, object> paramDict = new()
+            {
+                { "Izhikevich_9P.a", a },
+                { "Izhikevich_9P.b", b },
+                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.d", d },
+                { "Izhikevich_9P.V_max", Vmax },
+                { "Izhikevich_9P.V_r", Vr },
+                { "Izhikevich_9P.V_t", Vt },
+                { "Izhikevich_9P.k", k },
+                { "Izhikevich_9P.Cm", Cm }
+            };
+            return paramDict;
+        }
+
+        private (double, double) CalculateRange(double value)
+        {
+            if (value == 0)
+                return (-10, +10);
+            int numDigit = Util.NumOfDigits(value);
+            int numDecimal = Util.NumOfDecimalDigits((decimal)value);
+            if (numDigit == 0)
+                numDigit = 1;
+
+            double minValue = value - 10 * numDigit;
+            if (value > 0 && minValue <= 0)
+                minValue = Math.Pow(10, -numDecimal);
+
+            double maxValue = value + 10 * numDigit;
+            if (value < 0 && maxValue >= 0)
+                maxValue = -Math.Pow(10, -numDecimal);
+
+            return (minValue, maxValue);
+        }
+        public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
+        {
+            Dictionary<string, double> MinValues = new() {
+                { "Izhikevich_9P.c", c - Const.MembranePotentialRange },
+                { "Izhikevich_9P.V_max", Vmax - Const.MembranePotentialRange },
+                { "Izhikevich_9P.V_r", Vr - Const.MembranePotentialRange },
+                { "Izhikevich_9P.V_t", Vt - Const.MembranePotentialRange },
+            };
+            Dictionary<string, double> MaxValues = new() {
+                { "Izhikevich_9P.c", c + Const.MembranePotentialRange },
+                { "Izhikevich_9P.V_max", Vmax + Const.MembranePotentialRange },
+                { "Izhikevich_9P.V_r", Vr + Const.MembranePotentialRange },
+                { "Izhikevich_9P.V_t", Vt + Const.MembranePotentialRange },
+            };
+            List<string> nonVoltageParams = new()
+                { "Izhikevich_9P.a",
+                "Izhikevich_9P.b",
+                "Izhikevich_9P.d",
+                "Izhikevich_9P.k",
+                "Izhikevich_9P.Cm" };
+            foreach (string par in nonVoltageParams)
+            {
+                (double minValue, double maxValue) = CalculateRange(GetParametersDouble()[par]);
+                MinValues.Add(par, minValue);
+                MaxValues.Add(par, maxValue);
+            }
+
+            return (MinValues, MaxValues);
+        }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             a = paramExternal.Read("Izhikevich_9P.a", a);
             b = paramExternal.Read("Izhikevich_9P.b", b);
-            c = paramExternal.Read("Izhikevich_9P.V_reset", c);
+            c = paramExternal.Read("Izhikevich_9P.c", c);
             d = paramExternal.Read("Izhikevich_9P.d", d);
             Vmax = paramExternal.Read("Izhikevich_9P.V_max", Vmax);
             V = Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);
@@ -129,7 +183,7 @@ namespace SiliFish.DynamicUnits
             return V;
         }
 
-        public DynamicsStats SolveODE(double[] I)
+        public override DynamicsStats SolveODE(double[] I)
         {
             Initialize();
             bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
@@ -198,15 +252,23 @@ namespace SiliFish.DynamicUnits
             return spike;
         }
 
-
-        public double CalculateRheoBase(double maxI, double sensitivity, int infinity, double dt, int warmup = 100)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxRheobase">The maximum stimulus that will be applied (to prevent deadlocks)</param>
+        /// <param name="sensitivity">of the stimulus current</param>
+        /// <param name="infinity">The duration the stimulus will be applied for</param>
+        /// <param name="dt">delta t</param>
+        /// <param name="warmup">add a warmup region to the beginning with no stimulus and spiking is ignored</param>
+        /// <returns></returns>
+        public override double CalculateRheoBase(double maxRheobase, double sensitivity, int infinity, double dt, int warmup = 100)
         {
             Initialize();
             infinity = (int)(infinity / dt);
             warmup = (int)(warmup / dt);
             int tmax = infinity + warmup + 10;
             double[] I = new double[tmax];
-            double curI = maxI;
+            double curI = maxRheobase;
             double minI = 0;
             double rheobase = -1;
 
@@ -222,13 +284,61 @@ namespace SiliFish.DynamicUnits
                 else //increment
                 {
                     minI = curI;
-                    curI = (curI + (rheobase > 0 ? rheobase : maxI)) / 2;
+                    curI = (curI + (rheobase > 0 ? rheobase : maxRheobase)) / 2;
                 }
             }
             return rheobase;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param">the parameter that is updated to see the effect on rheobase</param>
+        /// <param name="logScale">if true, values are set as multiplies rather than increments</param>
+        /// <param name="minMultiplier"></param>
+        /// <param name="maxMultiplier"></param>
+        /// <param name="numOfPoints"></param>
+        /// <param name="dt">delta t</param>
+        /// <param name="maxRheobase">The maximum stimulus that will be applied (to prevent deadlocks)</param>
+        /// <param name="sensitivity">of the stimulus current</param>
+        /// <param name="infinity">the duration the stimulus will be applied</param>
+        /// <returns></returns>
+        public override (double[], double[]) RheobaseSensitivityAnalysis(string param, bool logScale, double minMultiplier, double maxMultiplier, int numOfPoints,
+                double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)
+        {
+            if (maxMultiplier < minMultiplier)
+                (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
+            Dictionary<string, object> parameters = GetParameters();
+            double origValue = (double)parameters[param];
+            double[] values = new double[numOfPoints];
+            if (!logScale)
+            {
+                double incMultiplier = (maxMultiplier - minMultiplier) / (numOfPoints - 1);
+                foreach (int i in Enumerable.Range(0, numOfPoints))
+                    values[i] = (incMultiplier * i + minMultiplier) * origValue;
+            }
+            else
+            {
+                double logMinMultiplier = Math.Log10(minMultiplier);
+                double logMaxMultiplier = Math.Log10(maxMultiplier);
+                double incMultiplier = (logMaxMultiplier - logMinMultiplier) / (numOfPoints - 1);
+                foreach (int i in Enumerable.Range(0, numOfPoints))
+                    values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
+            }
+            double[] rheos = new double[numOfPoints];
+            int counter = 0;
+            foreach (double value in values)
+            {
+                parameters[param] = value;
+                SetParameters(parameters);
+                rheos[counter++] = CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
+            }
+            parameters[param] = origValue;
+            SetParameters(parameters);
+            return (values, rheos);
+        }
+
+
+
     }
-
-
 }

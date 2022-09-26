@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SiliFish.Definitions
 {
     public enum CellType { Neuron, MuscleCell }
+    public enum CoreType {Izhikevich_9P, Leaky_Integrator }
     public enum BodyLocation { SpinalCord, Body }
 
     public enum CountingMode { PerSomite, Total }

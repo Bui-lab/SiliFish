@@ -24,7 +24,7 @@ namespace SiliFish.Extensions
             List<Type> crossoverBases = new()
             {
                 typeof(UniformCrossover),
-                typeof(CutAndSpliceCrossover),
+                //TODO giving an error message - test whether there needs to be a parameter typeof(CutAndSpliceCrossover),
                 typeof(CycleCrossover),
                 typeof(OnePointCrossover),
                 typeof(OrderBasedCrossover),
