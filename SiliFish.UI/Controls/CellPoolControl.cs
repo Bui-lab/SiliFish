@@ -218,7 +218,7 @@ namespace SiliFish.UI.Controls
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Dictionary<string, double> dparams = GetCell().Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            dyncontrol = new(poolTemplate.CellType, dparams, testMode: false);
+            dyncontrol = new(poolTemplate.CoreType, dparams, testMode: false);
             dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);

@@ -730,6 +730,7 @@
             this.eMaxChromosome.Name = "eMaxChromosome";
             this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMaxChromosome.TabIndex = 36;
+            this.eMaxChromosome.Text = "100";
             // 
             // eMinChromosome
             // 
@@ -737,6 +738,7 @@
             this.eMinChromosome.Name = "eMinChromosome";
             this.eMinChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMinChromosome.TabIndex = 35;
+            this.eMinChromosome.Text = "50";
             // 
             // lGAMinMaxChromosome
             // 

@@ -77,10 +77,6 @@ namespace SiliFish.ModelUnits
             get { throw (new NotImplementedException()); }
             set { throw (new NotImplementedException()); }
         }
-        public virtual DynamicsStats DynamicsTest(double[] I)
-        {
-            throw new NotImplementedException();
-        }
 
         public string Name { get { return CellGroup + "_" + Sequence.ToString(); } set { } }
         public string ID
@@ -183,7 +179,7 @@ namespace SiliFish.ModelUnits
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = new Izhikevich_9P(null);
+            Core = new Izhikevich_9P(dyn: null);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
@@ -291,52 +287,6 @@ namespace SiliFish.ModelUnits
         {
             bool spike = false;
             V[t] = Core.GetNextVal(stim, ref spike);
-        }
-
-        public override DynamicsStats DynamicsTest(double[] I)
-        {
-            return Core.SolveODE(I);
-        }
-
-        public double CalculateRheoBase(double dt, double maxRheobase = 500, double sensitivity = 0.001, int infinity = 400)
-        {
-
-            return Core.CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
-        }
-
-        public (double[], double[]) RheobaseSensitivityAnalysis(string param, bool logScale, double minMultiplier, double maxMultiplier, int numOfPoints,
-            double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)
-        {
-            if (maxMultiplier < minMultiplier)
-                (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
-            Dictionary<string, object> parameters = Parameters;
-            double origValue = (double)parameters[param];
-            double[] values = new double[numOfPoints];
-            if (!logScale)
-            {
-                double incMultiplier = (maxMultiplier - minMultiplier) / (numOfPoints - 1);
-                foreach (int i in Enumerable.Range(0, numOfPoints))
-                    values[i] = (incMultiplier * i + minMultiplier) * origValue;
-            }
-            else
-            {
-                double logMinMultiplier = Math.Log10(minMultiplier);
-                double logMaxMultiplier = Math.Log10(maxMultiplier);
-                double incMultiplier = (logMaxMultiplier - logMinMultiplier) / (numOfPoints - 1);
-                foreach (int i in Enumerable.Range(0, numOfPoints))
-                    values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
-            }
-            double[] rheos = new double[numOfPoints];
-            int counter = 0;
-            foreach (double value in values)
-            {
-                parameters[param] = value;
-                Parameters = parameters;
-                rheos[counter++] = CalculateRheoBase(dt, maxRheobase, sensitivity, infinity);
-            }
-            parameters[param] = origValue;
-            Parameters = parameters;
-            return (values, rheos);
         }
 
         public override string GetInstanceParams()
@@ -497,11 +447,6 @@ namespace SiliFish.ModelUnits
         public void NextStep(int t, double stim)
         {
             V[t] = Core.GetNextVal(stim);
-        }
-
-        public override DynamicsStats DynamicsTest(double[] I)
-        {
-            return Core.SolveODE(I);
         }
 
         public override void CalculateMembranePotential(int timeIndex)

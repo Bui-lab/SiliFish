@@ -1,5 +1,6 @@
 ﻿using GeneticSharp;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System;
@@ -15,7 +16,7 @@ namespace SiliFish.Services.Optimization
         {
             IzhikevichSolver = izhikevichSolver;
         }
-        public double Evaluate(IChromosome chromosome)
+        public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
         {
             var fc = chromosome as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();
@@ -27,13 +28,18 @@ namespace SiliFish.Services.Optimization
                 valueStr += $"{key}: {values[iter]}; ";
                 instanceValues.Add(key, values[iter++]);
             }
-            Neuron neuron = new(instanceValues);
-            double d = neuron.CalculateRheoBase(dt: 0.1, maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity: 400);
+            Izhikevich_9P core = new(instanceValues);
+            double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity: 400, dt: 0.1);
             //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
             if (d < 0)//no rheobase
                 return 0;
-            if (IzhikevichSolver.TargetRheobase == d)
-                return double.MaxValue;
+            if (IzhikevichSolver.NumOfSpikesAtRheobase > 0)
+            {
+                DynamicsStats stat = core.DynamicsTest(d, infinity: 400, dt: 0.1);
+                if (IzhikevichSolver.TargetRheobase == d && stat.SpikeList.Count == IzhikevichSolver.NumOfSpikesAtRheobase)
+                    return double.MaxValue;
+                return 1 / Math.Abs(IzhikevichSolver.TargetRheobase - d) / stat.SpikeList.Count / IzhikevichSolver.NumOfSpikesAtRheobase;
+            }
             return 1 / Math.Abs(IzhikevichSolver.TargetRheobase - d);
         }
     }
@@ -41,6 +47,7 @@ namespace SiliFish.Services.Optimization
     {
         Dictionary<string, double> ParamValues;
         internal double TargetRheobase;
+        internal int NumOfSpikesAtRheobase = 1;
         internal List<string> OutputText = new();
         internal List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
         private GeneticAlgorithm Algorithm;

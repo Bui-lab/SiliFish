@@ -13,7 +13,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
-        private CellType cellType;
+        private readonly CoreType coreType;
         private bool updateParamNames = true;
         DynamicsStats dynamics;
         private double[] TimeArray;
@@ -94,19 +94,23 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        public DynamicsTestControl(CellType cellType, Dictionary<string, double> parameters, bool testMode)
+        public DynamicsTestControl(CoreType coreType, Dictionary<string, double> parameters, bool testMode)
         {
             InitializeComponent();
             InitAsync();
             Wait();
-            this.cellType = cellType;
+            this.coreType = coreType;
             Parameters = parameters;
             pBottomBottom.Visible = !testMode;
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
             cbGASelection.Items.AddRange(GeneticAlgorithmExtension.GetSelectionBases().ToArray());
+            cbGASelection.SelectedIndex = 0;
             cbGACrossOver.Items.AddRange(GeneticAlgorithmExtension.GetCrossoverBases().ToArray());
+            cbGACrossOver.SelectedIndex = 0;
             cbGAMutation.Items.AddRange(GeneticAlgorithmExtension.GetMutationBases().ToArray());
+            cbGACrossOver.SelectedIndex = 0;
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
+            cbGATermination.SelectedIndex = 0;
         }
 
         private void FirstRun()
@@ -169,11 +173,11 @@ namespace SiliFish.UI.Controls
             {
                 charts.Add(new ChartDataStruct
                 {
-                    Title = cellType == CellType.MuscleCell ? "Rel. Tension" : "u",
+                    Title = coreType == CoreType.Leaky_Integrator ? "Rel. Tension" : "u",
                     Color = Color.Blue,
                     xData = TimeArray,
                     yData = dynamics.SecList,
-                    yLabel = cellType == CellType.MuscleCell ? "Rel. Tension" : "u"
+                    yLabel = coreType == CoreType.Leaky_Integrator ? "Rel. Tension" : "u"
                 });
             }
 
@@ -296,12 +300,12 @@ namespace SiliFish.UI.Controls
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 TimeArray[i] = i * (double)dt;
-            Cell cell = null;
-            if (cellType == CellType.Neuron)
-                cell = new Neuron(parameters);
-            else if (cellType == CellType.MuscleCell)
-                cell = new MuscleCell(parameters);
-            if (cell != null)
+            DynamicUnit core = null;
+            if (coreType == CoreType.Izhikevich_9P)
+                core = new Izhikevich_9P(parameters);
+            else if (coreType == CoreType.Leaky_Integrator)
+                core = new Leaky_Integrator(parameters);
+            if (core != null)
             {
                 if (rbManualEntryStimulus.Checked)
                 {
@@ -313,7 +317,7 @@ namespace SiliFish.UI.Controls
                     };
                     foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                         I[i] = stim.generateStimulus(i, SwimmingModel.rand);
-                    dynamics = cell.DynamicsTest(I);
+                    dynamics = core.DynamicsTest(I);
                     CreatePlots();
                 }
                 else
@@ -340,7 +344,7 @@ namespace SiliFish.UI.Controls
                             //cell.InitDataVectors(plotEnd + 1);
                             foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                                 I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
-                            dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", cell.DynamicsTest(I.GetColumn(iter++)));
+                            dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", core.DynamicsTest(I.GetColumn(iter++)));
                             columnNames.Add($"x {multiplier:0.##}");
                         }
                         CreatePlots(dynamicsList, columnNames, I);
@@ -360,11 +364,11 @@ namespace SiliFish.UI.Controls
             ReadParameters();
 
             //TODO muscle cell contraction - how to we handle it?
-            if (cellType == CellType.Neuron)
+            if (coreType == CoreType.Izhikevich_9P)
             {
-                Neuron neuron = new(parameters);
+                DynamicUnit core = new Izhikevich_9P(parameters);
                 decimal limit = eRheobaseLimit.Value;
-                decimal d = (decimal)neuron.CalculateRheoBase((double)edt.Value, (double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value);
+                decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
                 if (d > 0)
                     eRheobase.Text = d.ToString(Const.DecimalPointFormat);
                 else
@@ -389,12 +393,12 @@ namespace SiliFish.UI.Controls
                 string param = ddParameter.SelectedItem.ToString();
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == param).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
-            if (cellType == CellType.Neuron)
+            if (coreType == CoreType.Izhikevich_9P)
             {
-                Neuron neuron = new(parameters);
+                DynamicUnit core = new Izhikevich_9P(parameters);
                 foreach (string param in paramToTest.Keys)//change one parameter at a time
                 {
-                    (double[] values, double[] rheos) = neuron.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
+                    (double[] values, double[] rheos) = core.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
                         double.Parse(eMinMultiplier.Text), double.Parse(eMaxMultiplier.Text),
                         20/*num of points*/, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
                     charts.Add(new ChartDataStruct
@@ -410,7 +414,7 @@ namespace SiliFish.UI.Controls
                     });
                 }
             }
-            else if (cellType == CellType.MuscleCell)
+            else if (coreType == CoreType.Leaky_Integrator)
             {
                 //TODO muscle cell rheobase 
             }
@@ -538,24 +542,23 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            foreach (DataGridViewRow row in dgMinMaxValues.Rows)
-            {
-                string param = row.Cells[colParameter.Index].Value?.ToString();
-                double value = parameters[param];
-                if (param.Contains(".V"))
-                {
-                    row.Cells[colMinValue.Index].Value = value - 2;
-                    row.Cells[colMaxValue.Index].Value = value + 2;
-                }
-                else
-                {
-                    int numDigit = Util.NumOfDigits(value);
-                    if (numDigit == 0)
-                        numDigit = 1;
-                    row.Cells[colMinValue.Index].Value = value - 10 * numDigit;
-                    row.Cells[colMaxValue.Index].Value = value + 10 * numDigit;
-                }
+            DynamicUnit core = null;
+            if (coreType == CoreType.Izhikevich_9P)
+                core = new Izhikevich_9P(parameters);
+            else if (coreType == CoreType.Leaky_Integrator)
+                core = new Leaky_Integrator(parameters);
+            else return;
+            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues)  = core.GetSuggestedMinMaxValues();
 
+            dgMinMaxValues.Rows.Clear();
+            dgMinMaxValues.RowCount = parameters.Count;
+            int rowIndex = 0;
+            foreach (string key in parameters.Keys)
+            {
+                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
+                dgMinMaxValues[colMinValue.Index, rowIndex].Value = MinValues[key];
+                dgMinMaxValues[colMaxValue.Index, rowIndex].Value = MaxValues[key];
+                rowIndex++;
             }
         }
 

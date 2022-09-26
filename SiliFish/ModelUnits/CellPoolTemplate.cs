@@ -13,7 +13,19 @@ namespace SiliFish.ModelUnits
         public string CellGroup { get; set; }
         public string Description { get; set; }
         public List<string> Attachments { get; set; } = new();
-        public CellType CellType { get; set; }
+
+        private CellType cellType;
+        public CellType CellType
+        {
+            get { return cellType; }
+            set
+            {
+                cellType = value;
+                CoreType = value == CellType.Neuron ? CoreType.Izhikevich_9P : CoreType.Leaky_Integrator;
+            }
+        }
+
+        public CoreType CoreType { get; set; }//Currently set by CellType -- Future: handle mutliple core types, add it to the UI
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
         public Dictionary<string, object> Parameters { get; set; }

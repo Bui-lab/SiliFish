@@ -7,7 +7,7 @@ using SiliFish.Extensions;
 
 namespace SiliFish.DynamicUnits
 {
-    class Leaky_Integrator
+    public class Leaky_Integrator: DynamicUnit
     {
         public double R; //resustance
         public double C;//capacitance
@@ -20,7 +20,10 @@ namespace SiliFish.DynamicUnits
         public double TimeConstant { get { return R * C; } }
 
         double V; //keeps the current v value 
-
+        private void Initialize()
+        {
+            V = Vr;
+        }
         //private double Vmax; //the possible maximum membrane potential 
         public Leaky_Integrator(double R, double C, double Vr)
         {
@@ -41,6 +44,11 @@ namespace SiliFish.DynamicUnits
             V = Vr;
         }
 
+        public Leaky_Integrator(Dictionary<string, double> paramExternal)
+        {
+            SetParameters(paramExternal.ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object));
+            Initialize();
+        }
         public virtual Dictionary<string, object> GetParameters()
         {
             Dictionary<string, object> paramDict = new()
@@ -117,7 +125,7 @@ namespace SiliFish.DynamicUnits
 
             return V;
         }
-        public DynamicsStats SolveODE(double[] I)
+        public override DynamicsStats SolveODE(double[] I)
         {
             int iMax = I.Length;
             DynamicsStats dyn = new(I);
