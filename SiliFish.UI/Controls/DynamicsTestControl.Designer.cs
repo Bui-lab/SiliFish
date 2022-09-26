@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
@@ -66,31 +69,41 @@
             this.lParameter = new System.Windows.Forms.Label();
             this.pBottomBottom = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
-            this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.splitOptimize = new System.Windows.Forms.SplitContainer();
+            this.splitRight = new System.Windows.Forms.SplitContainer();
+            this.pOptimize = new System.Windows.Forms.Panel();
+            this.lGASelection = new System.Windows.Forms.Label();
+            this.tabOptimization = new System.Windows.Forms.TabControl();
+            this.tMinMax = new System.Windows.Forms.TabPage();
             this.dgMinMaxValues = new System.Windows.Forms.DataGridView();
             this.colParameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pMinMax = new System.Windows.Forms.Panel();
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
+            this.tFitness = new System.Windows.Forms.TabPage();
+            this.dgFitnessParams = new System.Windows.Forms.DataGridView();
+            this.colFitnessRheobaseMultiplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFitnessMinNumOfSpikes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFitnessMaxNumOfSpikes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFitnessFiringMode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pFitnessTop = new System.Windows.Forms.Panel();
+            this.lTargetRheobase = new System.Windows.Forms.Label();
+            this.eTargetRheobase = new System.Windows.Forms.TextBox();
             this.linkStopOptimization = new System.Windows.Forms.LinkLabel();
-            this.lMinMaxSeperator = new System.Windows.Forms.Label();
-            this.eMaxChromosome = new System.Windows.Forms.TextBox();
-            this.eMinChromosome = new System.Windows.Forms.TextBox();
+            this.lGAMutation = new System.Windows.Forms.Label();
             this.lGAMinMaxChromosome = new System.Windows.Forms.Label();
+            this.cbGASelection = new System.Windows.Forms.ComboBox();
+            this.eMinChromosome = new System.Windows.Forms.TextBox();
+            this.lMinMaxSeperator = new System.Windows.Forms.Label();
+            this.lGATermination = new System.Windows.Forms.Label();
+            this.lGACrossOver = new System.Windows.Forms.Label();
+            this.linkOptimize = new System.Windows.Forms.LinkLabel();
             this.cbGATermination = new System.Windows.Forms.ComboBox();
             this.cbGAMutation = new System.Windows.Forms.ComboBox();
+            this.eMaxChromosome = new System.Windows.Forms.TextBox();
             this.cbGACrossOver = new System.Windows.Forms.ComboBox();
-            this.cbGASelection = new System.Windows.Forms.ComboBox();
-            this.lGATermination = new System.Windows.Forms.Label();
-            this.lGAMutation = new System.Windows.Forms.Label();
-            this.lGACrossOver = new System.Windows.Forms.Label();
-            this.lGASelection = new System.Windows.Forms.Label();
-            this.eTargetRheobase = new System.Windows.Forms.TextBox();
             this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
-            this.linkOptimize = new System.Windows.Forms.LinkLabel();
-            this.lTargetRheobase = new System.Windows.Forms.Label();
+            this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlots = new System.Windows.Forms.Panel();
             this.grPlotSelection = new System.Windows.Forms.GroupBox();
             this.cbV = new System.Windows.Forms.CheckBox();
@@ -120,13 +133,19 @@
             this.pLoadSaveParams.SuspendLayout();
             this.grSensitivity.SuspendLayout();
             this.pBottomBottom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitOptimize)).BeginInit();
-            this.splitOptimize.Panel1.SuspendLayout();
-            this.splitOptimize.Panel2.SuspendLayout();
-            this.splitOptimize.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
+            this.splitRight.Panel1.SuspendLayout();
+            this.splitRight.Panel2.SuspendLayout();
+            this.splitRight.SuspendLayout();
+            this.pOptimize.SuspendLayout();
+            this.tabOptimization.SuspendLayout();
+            this.tMinMax.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).BeginInit();
             this.pMinMax.SuspendLayout();
+            this.tFitness.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgFitnessParams)).BeginInit();
+            this.pFitnessTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
             this.SuspendLayout();
@@ -449,8 +468,7 @@
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.webViewPlots);
-            this.splitMain.Panel2.Controls.Add(this.splitOptimize);
+            this.splitMain.Panel2.Controls.Add(this.splitRight);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
             this.splitMain.Size = new System.Drawing.Size(974, 683);
             this.splitMain.SplitterDistance = 222;
@@ -598,53 +616,81 @@
             this.linkUseUpdatedParams.Text = "Use Updated Parameters";
             this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
-            // webViewPlots
+            // splitRight
             // 
-            this.webViewPlots.AllowExternalDrop = true;
-            this.webViewPlots.CreationProperties = null;
-            this.webViewPlots.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webViewPlots.Location = new System.Drawing.Point(0, 405);
-            this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(748, 278);
-            this.webViewPlots.TabIndex = 0;
-            this.webViewPlots.ZoomFactor = 1D;
-            this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
+            this.splitRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitRight.Location = new System.Drawing.Point(0, 61);
+            this.splitRight.Name = "splitRight";
+            this.splitRight.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitOptimize
+            // splitRight.Panel1
             // 
-            this.splitOptimize.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitOptimize.Location = new System.Drawing.Point(0, 61);
-            this.splitOptimize.Name = "splitOptimize";
+            this.splitRight.Panel1.Controls.Add(this.pOptimize);
             // 
-            // splitOptimize.Panel1
+            // splitRight.Panel2
             // 
-            this.splitOptimize.Panel1.Controls.Add(this.dgMinMaxValues);
-            this.splitOptimize.Panel1.Controls.Add(this.pMinMax);
+            this.splitRight.Panel2.Controls.Add(this.webViewPlots);
+            this.splitRight.Size = new System.Drawing.Size(748, 622);
+            this.splitRight.SplitterDistance = 311;
+            this.splitRight.TabIndex = 2;
             // 
-            // splitOptimize.Panel2
+            // pOptimize
             // 
-            this.splitOptimize.Panel2.Controls.Add(this.linkStopOptimization);
-            this.splitOptimize.Panel2.Controls.Add(this.lMinMaxSeperator);
-            this.splitOptimize.Panel2.Controls.Add(this.eMaxChromosome);
-            this.splitOptimize.Panel2.Controls.Add(this.eMinChromosome);
-            this.splitOptimize.Panel2.Controls.Add(this.lGAMinMaxChromosome);
-            this.splitOptimize.Panel2.Controls.Add(this.cbGATermination);
-            this.splitOptimize.Panel2.Controls.Add(this.cbGAMutation);
-            this.splitOptimize.Panel2.Controls.Add(this.cbGACrossOver);
-            this.splitOptimize.Panel2.Controls.Add(this.cbGASelection);
-            this.splitOptimize.Panel2.Controls.Add(this.lGATermination);
-            this.splitOptimize.Panel2.Controls.Add(this.lGAMutation);
-            this.splitOptimize.Panel2.Controls.Add(this.lGACrossOver);
-            this.splitOptimize.Panel2.Controls.Add(this.lGASelection);
-            this.splitOptimize.Panel2.Controls.Add(this.eTargetRheobase);
-            this.splitOptimize.Panel2.Controls.Add(this.eOptimizationOutput);
-            this.splitOptimize.Panel2.Controls.Add(this.linkOptimize);
-            this.splitOptimize.Panel2.Controls.Add(this.lTargetRheobase);
-            this.splitOptimize.Size = new System.Drawing.Size(748, 344);
-            this.splitOptimize.SplitterDistance = 458;
-            this.splitOptimize.TabIndex = 29;
-            this.splitOptimize.Visible = false;
+            this.pOptimize.Controls.Add(this.eOptimizationOutput);
+            this.pOptimize.Controls.Add(this.lGASelection);
+            this.pOptimize.Controls.Add(this.tabOptimization);
+            this.pOptimize.Controls.Add(this.linkStopOptimization);
+            this.pOptimize.Controls.Add(this.lGAMutation);
+            this.pOptimize.Controls.Add(this.lGAMinMaxChromosome);
+            this.pOptimize.Controls.Add(this.cbGASelection);
+            this.pOptimize.Controls.Add(this.eMinChromosome);
+            this.pOptimize.Controls.Add(this.lMinMaxSeperator);
+            this.pOptimize.Controls.Add(this.lGATermination);
+            this.pOptimize.Controls.Add(this.lGACrossOver);
+            this.pOptimize.Controls.Add(this.linkOptimize);
+            this.pOptimize.Controls.Add(this.cbGATermination);
+            this.pOptimize.Controls.Add(this.cbGAMutation);
+            this.pOptimize.Controls.Add(this.eMaxChromosome);
+            this.pOptimize.Controls.Add(this.cbGACrossOver);
+            this.pOptimize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pOptimize.Location = new System.Drawing.Point(0, 0);
+            this.pOptimize.Name = "pOptimize";
+            this.pOptimize.Size = new System.Drawing.Size(748, 311);
+            this.pOptimize.TabIndex = 39;
+            // 
+            // lGASelection
+            // 
+            this.lGASelection.AutoSize = true;
+            this.lGASelection.Location = new System.Drawing.Point(12, 10);
+            this.lGASelection.Name = "lGASelection";
+            this.lGASelection.Size = new System.Drawing.Size(55, 15);
+            this.lGASelection.TabIndex = 26;
+            this.lGASelection.Text = "Selection";
+            // 
+            // tabOptimization
+            // 
+            this.tabOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabOptimization.Controls.Add(this.tMinMax);
+            this.tabOptimization.Controls.Add(this.tFitness);
+            this.tabOptimization.Location = new System.Drawing.Point(310, 3);
+            this.tabOptimization.Name = "tabOptimization";
+            this.tabOptimization.SelectedIndex = 0;
+            this.tabOptimization.Size = new System.Drawing.Size(438, 309);
+            this.tabOptimization.TabIndex = 30;
+            // 
+            // tMinMax
+            // 
+            this.tMinMax.Controls.Add(this.dgMinMaxValues);
+            this.tMinMax.Controls.Add(this.pMinMax);
+            this.tMinMax.Location = new System.Drawing.Point(4, 24);
+            this.tMinMax.Name = "tMinMax";
+            this.tMinMax.Padding = new System.Windows.Forms.Padding(3);
+            this.tMinMax.Size = new System.Drawing.Size(430, 179);
+            this.tMinMax.TabIndex = 0;
+            this.tMinMax.Text = "Parameter Ranges";
+            this.tMinMax.UseVisualStyleBackColor = true;
             // 
             // dgMinMaxValues
             // 
@@ -656,11 +702,11 @@
             this.colMinValue,
             this.colMaxValue});
             this.dgMinMaxValues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgMinMaxValues.Location = new System.Drawing.Point(0, 30);
+            this.dgMinMaxValues.Location = new System.Drawing.Point(3, 37);
             this.dgMinMaxValues.Name = "dgMinMaxValues";
             this.dgMinMaxValues.RowHeadersVisible = false;
             this.dgMinMaxValues.RowTemplate.Height = 25;
-            this.dgMinMaxValues.Size = new System.Drawing.Size(458, 314);
+            this.dgMinMaxValues.Size = new System.Drawing.Size(424, 139);
             this.dgMinMaxValues.TabIndex = 27;
             // 
             // colParameter
@@ -686,9 +732,9 @@
             // 
             this.pMinMax.Controls.Add(this.linkSuggestMinMax);
             this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMinMax.Location = new System.Drawing.Point(0, 0);
+            this.pMinMax.Location = new System.Drawing.Point(3, 3);
             this.pMinMax.Name = "pMinMax";
-            this.pMinMax.Size = new System.Drawing.Size(458, 30);
+            this.pMinMax.Size = new System.Drawing.Size(424, 34);
             this.pMinMax.TabIndex = 28;
             // 
             // linkSuggestMinMax
@@ -703,10 +749,91 @@
             this.toolTip1.SetToolTip(this.linkSuggestMinMax, "If not entered, current values will be used as min/max.");
             this.linkSuggestMinMax.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSuggestMinMax_LinkClicked);
             // 
+            // tFitness
+            // 
+            this.tFitness.Controls.Add(this.dgFitnessParams);
+            this.tFitness.Controls.Add(this.pFitnessTop);
+            this.tFitness.Location = new System.Drawing.Point(4, 24);
+            this.tFitness.Name = "tFitness";
+            this.tFitness.Size = new System.Drawing.Size(430, 281);
+            this.tFitness.TabIndex = 2;
+            this.tFitness.Text = "Fitness Parameters";
+            this.tFitness.UseVisualStyleBackColor = true;
+            // 
+            // dgFitnessParams
+            // 
+            this.dgFitnessParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgFitnessParams.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colFitnessRheobaseMultiplier,
+            this.colFitnessMinNumOfSpikes,
+            this.colFitnessMaxNumOfSpikes,
+            this.colFitnessFiringMode});
+            this.dgFitnessParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgFitnessParams.Location = new System.Drawing.Point(0, 32);
+            this.dgFitnessParams.Name = "dgFitnessParams";
+            this.dgFitnessParams.RowTemplate.Height = 25;
+            this.dgFitnessParams.Size = new System.Drawing.Size(430, 249);
+            this.dgFitnessParams.TabIndex = 4;
+            // 
+            // colFitnessRheobaseMultiplier
+            // 
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
+            this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
+            // 
+            // colFitnessMinNumOfSpikes
+            // 
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            this.colFitnessMinNumOfSpikes.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colFitnessMinNumOfSpikes.HeaderText = "Min # of Spikes";
+            this.colFitnessMinNumOfSpikes.Name = "colFitnessMinNumOfSpikes";
+            // 
+            // colFitnessMaxNumOfSpikes
+            // 
+            dataGridViewCellStyle3.Format = "N0";
+            this.colFitnessMaxNumOfSpikes.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colFitnessMaxNumOfSpikes.HeaderText = "Max # of Spikes";
+            this.colFitnessMaxNumOfSpikes.Name = "colFitnessMaxNumOfSpikes";
+            // 
+            // colFitnessFiringMode
+            // 
+            this.colFitnessFiringMode.HeaderText = "Firing Mode";
+            this.colFitnessFiringMode.Name = "colFitnessFiringMode";
+            this.colFitnessFiringMode.ReadOnly = true;
+            // 
+            // pFitnessTop
+            // 
+            this.pFitnessTop.Controls.Add(this.lTargetRheobase);
+            this.pFitnessTop.Controls.Add(this.eTargetRheobase);
+            this.pFitnessTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pFitnessTop.Location = new System.Drawing.Point(0, 0);
+            this.pFitnessTop.Name = "pFitnessTop";
+            this.pFitnessTop.Size = new System.Drawing.Size(430, 32);
+            this.pFitnessTop.TabIndex = 3;
+            // 
+            // lTargetRheobase
+            // 
+            this.lTargetRheobase.AutoSize = true;
+            this.lTargetRheobase.Location = new System.Drawing.Point(6, 9);
+            this.lTargetRheobase.Name = "lTargetRheobase";
+            this.lTargetRheobase.Size = new System.Drawing.Size(93, 15);
+            this.lTargetRheobase.TabIndex = 1;
+            this.lTargetRheobase.Text = "Target Rheobase";
+            // 
+            // eTargetRheobase
+            // 
+            this.eTargetRheobase.Location = new System.Drawing.Point(105, 4);
+            this.eTargetRheobase.Name = "eTargetRheobase";
+            this.eTargetRheobase.Size = new System.Drawing.Size(35, 23);
+            this.eTargetRheobase.TabIndex = 2;
+            // 
             // linkStopOptimization
             // 
             this.linkStopOptimization.AutoSize = true;
-            this.linkStopOptimization.Location = new System.Drawing.Point(219, 194);
+            this.linkStopOptimization.Location = new System.Drawing.Point(233, 153);
             this.linkStopOptimization.Name = "linkStopOptimization";
             this.linkStopOptimization.Size = new System.Drawing.Size(31, 15);
             this.linkStopOptimization.TabIndex = 38;
@@ -715,45 +842,84 @@
             this.linkStopOptimization.Visible = false;
             this.linkStopOptimization.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStopOptimization_LinkClicked);
             // 
-            // lMinMaxSeperator
+            // lGAMutation
             // 
-            this.lMinMaxSeperator.AutoSize = true;
-            this.lMinMaxSeperator.Location = new System.Drawing.Point(189, 159);
-            this.lMinMaxSeperator.Name = "lMinMaxSeperator";
-            this.lMinMaxSeperator.Size = new System.Drawing.Size(12, 15);
-            this.lMinMaxSeperator.TabIndex = 37;
-            this.lMinMaxSeperator.Text = "/";
-            // 
-            // eMaxChromosome
-            // 
-            this.eMaxChromosome.Location = new System.Drawing.Point(202, 153);
-            this.eMaxChromosome.Name = "eMaxChromosome";
-            this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
-            this.eMaxChromosome.TabIndex = 36;
-            this.eMaxChromosome.Text = "100";
-            // 
-            // eMinChromosome
-            // 
-            this.eMinChromosome.Location = new System.Drawing.Point(148, 153);
-            this.eMinChromosome.Name = "eMinChromosome";
-            this.eMinChromosome.Size = new System.Drawing.Size(35, 23);
-            this.eMinChromosome.TabIndex = 35;
-            this.eMinChromosome.Text = "50";
+            this.lGAMutation.AutoSize = true;
+            this.lGAMutation.Location = new System.Drawing.Point(12, 68);
+            this.lGAMutation.Name = "lGAMutation";
+            this.lGAMutation.Size = new System.Drawing.Size(56, 15);
+            this.lGAMutation.TabIndex = 28;
+            this.lGAMutation.Text = "Mutation";
             // 
             // lGAMinMaxChromosome
             // 
             this.lGAMinMaxChromosome.AutoSize = true;
-            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(5, 158);
+            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(12, 125);
             this.lGAMinMaxChromosome.Name = "lGAMinMaxChromosome";
             this.lGAMinMaxChromosome.Size = new System.Drawing.Size(142, 15);
             this.lGAMinMaxChromosome.TabIndex = 34;
             this.lGAMinMaxChromosome.Text = "Min/Max Chromosome #";
             // 
+            // cbGASelection
+            // 
+            this.cbGASelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGASelection.FormattingEnabled = true;
+            this.cbGASelection.Location = new System.Drawing.Point(88, 7);
+            this.cbGASelection.Name = "cbGASelection";
+            this.cbGASelection.Size = new System.Drawing.Size(193, 23);
+            this.cbGASelection.TabIndex = 30;
+            // 
+            // eMinChromosome
+            // 
+            this.eMinChromosome.Location = new System.Drawing.Point(155, 120);
+            this.eMinChromosome.Name = "eMinChromosome";
+            this.eMinChromosome.Size = new System.Drawing.Size(35, 23);
+            this.eMinChromosome.TabIndex = 35;
+            this.eMinChromosome.Text = "50";
+            // 
+            // lMinMaxSeperator
+            // 
+            this.lMinMaxSeperator.AutoSize = true;
+            this.lMinMaxSeperator.Location = new System.Drawing.Point(196, 126);
+            this.lMinMaxSeperator.Name = "lMinMaxSeperator";
+            this.lMinMaxSeperator.Size = new System.Drawing.Size(12, 15);
+            this.lMinMaxSeperator.TabIndex = 37;
+            this.lMinMaxSeperator.Text = "/";
+            // 
+            // lGATermination
+            // 
+            this.lGATermination.AutoSize = true;
+            this.lGATermination.Location = new System.Drawing.Point(12, 97);
+            this.lGATermination.Name = "lGATermination";
+            this.lGATermination.Size = new System.Drawing.Size(70, 15);
+            this.lGATermination.TabIndex = 29;
+            this.lGATermination.Text = "Termination";
+            // 
+            // lGACrossOver
+            // 
+            this.lGACrossOver.AutoSize = true;
+            this.lGACrossOver.Location = new System.Drawing.Point(12, 39);
+            this.lGACrossOver.Name = "lGACrossOver";
+            this.lGACrossOver.Size = new System.Drawing.Size(61, 15);
+            this.lGACrossOver.TabIndex = 27;
+            this.lGACrossOver.Text = "CrossOver";
+            // 
+            // linkOptimize
+            // 
+            this.linkOptimize.AutoSize = true;
+            this.linkOptimize.Location = new System.Drawing.Point(233, 153);
+            this.linkOptimize.Name = "linkOptimize";
+            this.linkOptimize.Size = new System.Drawing.Size(55, 15);
+            this.linkOptimize.TabIndex = 0;
+            this.linkOptimize.TabStop = true;
+            this.linkOptimize.Text = "Optimize";
+            this.linkOptimize.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOptimize_LinkClicked);
+            // 
             // cbGATermination
             // 
             this.cbGATermination.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGATermination.FormattingEnabled = true;
-            this.cbGATermination.Location = new System.Drawing.Point(81, 126);
+            this.cbGATermination.Location = new System.Drawing.Point(88, 93);
             this.cbGATermination.Name = "cbGATermination";
             this.cbGATermination.Size = new System.Drawing.Size(193, 23);
             this.cbGATermination.TabIndex = 33;
@@ -762,100 +928,50 @@
             // 
             this.cbGAMutation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGAMutation.FormattingEnabled = true;
-            this.cbGAMutation.Location = new System.Drawing.Point(81, 98);
+            this.cbGAMutation.Location = new System.Drawing.Point(88, 65);
             this.cbGAMutation.Name = "cbGAMutation";
             this.cbGAMutation.Size = new System.Drawing.Size(193, 23);
             this.cbGAMutation.TabIndex = 32;
+            // 
+            // eMaxChromosome
+            // 
+            this.eMaxChromosome.Location = new System.Drawing.Point(209, 120);
+            this.eMaxChromosome.Name = "eMaxChromosome";
+            this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
+            this.eMaxChromosome.TabIndex = 36;
+            this.eMaxChromosome.Text = "100";
             // 
             // cbGACrossOver
             // 
             this.cbGACrossOver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGACrossOver.FormattingEnabled = true;
-            this.cbGACrossOver.Location = new System.Drawing.Point(81, 69);
+            this.cbGACrossOver.Location = new System.Drawing.Point(88, 36);
             this.cbGACrossOver.Name = "cbGACrossOver";
             this.cbGACrossOver.Size = new System.Drawing.Size(193, 23);
             this.cbGACrossOver.TabIndex = 31;
             // 
-            // cbGASelection
-            // 
-            this.cbGASelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGASelection.FormattingEnabled = true;
-            this.cbGASelection.Location = new System.Drawing.Point(81, 40);
-            this.cbGASelection.Name = "cbGASelection";
-            this.cbGASelection.Size = new System.Drawing.Size(193, 23);
-            this.cbGASelection.TabIndex = 30;
-            // 
-            // lGATermination
-            // 
-            this.lGATermination.AutoSize = true;
-            this.lGATermination.Location = new System.Drawing.Point(5, 130);
-            this.lGATermination.Name = "lGATermination";
-            this.lGATermination.Size = new System.Drawing.Size(70, 15);
-            this.lGATermination.TabIndex = 29;
-            this.lGATermination.Text = "Termination";
-            // 
-            // lGAMutation
-            // 
-            this.lGAMutation.AutoSize = true;
-            this.lGAMutation.Location = new System.Drawing.Point(5, 101);
-            this.lGAMutation.Name = "lGAMutation";
-            this.lGAMutation.Size = new System.Drawing.Size(56, 15);
-            this.lGAMutation.TabIndex = 28;
-            this.lGAMutation.Text = "Mutation";
-            // 
-            // lGACrossOver
-            // 
-            this.lGACrossOver.AutoSize = true;
-            this.lGACrossOver.Location = new System.Drawing.Point(5, 72);
-            this.lGACrossOver.Name = "lGACrossOver";
-            this.lGACrossOver.Size = new System.Drawing.Size(61, 15);
-            this.lGACrossOver.TabIndex = 27;
-            this.lGACrossOver.Text = "CrossOver";
-            // 
-            // lGASelection
-            // 
-            this.lGASelection.AutoSize = true;
-            this.lGASelection.Location = new System.Drawing.Point(5, 43);
-            this.lGASelection.Name = "lGASelection";
-            this.lGASelection.Size = new System.Drawing.Size(55, 15);
-            this.lGASelection.TabIndex = 26;
-            this.lGASelection.Text = "Selection";
-            // 
-            // eTargetRheobase
-            // 
-            this.eTargetRheobase.Location = new System.Drawing.Point(104, 11);
-            this.eTargetRheobase.Name = "eTargetRheobase";
-            this.eTargetRheobase.Size = new System.Drawing.Size(35, 23);
-            this.eTargetRheobase.TabIndex = 2;
-            // 
             // eOptimizationOutput
             // 
-            this.eOptimizationOutput.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.eOptimizationOutput.Location = new System.Drawing.Point(0, 222);
+            this.eOptimizationOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.eOptimizationOutput.Location = new System.Drawing.Point(3, 171);
             this.eOptimizationOutput.Name = "eOptimizationOutput";
-            this.eOptimizationOutput.Size = new System.Drawing.Size(286, 122);
+            this.eOptimizationOutput.Size = new System.Drawing.Size(305, 137);
             this.eOptimizationOutput.TabIndex = 25;
             this.eOptimizationOutput.Text = "";
             // 
-            // linkOptimize
+            // webViewPlots
             // 
-            this.linkOptimize.AutoSize = true;
-            this.linkOptimize.Location = new System.Drawing.Point(219, 194);
-            this.linkOptimize.Name = "linkOptimize";
-            this.linkOptimize.Size = new System.Drawing.Size(55, 15);
-            this.linkOptimize.TabIndex = 0;
-            this.linkOptimize.TabStop = true;
-            this.linkOptimize.Text = "Optimize";
-            this.linkOptimize.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOptimize_LinkClicked);
-            // 
-            // lTargetRheobase
-            // 
-            this.lTargetRheobase.AutoSize = true;
-            this.lTargetRheobase.Location = new System.Drawing.Point(5, 14);
-            this.lTargetRheobase.Name = "lTargetRheobase";
-            this.lTargetRheobase.Size = new System.Drawing.Size(93, 15);
-            this.lTargetRheobase.TabIndex = 1;
-            this.lTargetRheobase.Text = "Target Rheobase";
+            this.webViewPlots.AllowExternalDrop = true;
+            this.webViewPlots.CreationProperties = null;
+            this.webViewPlots.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webViewPlots.Location = new System.Drawing.Point(0, 0);
+            this.webViewPlots.Name = "webViewPlots";
+            this.webViewPlots.Size = new System.Drawing.Size(748, 307);
+            this.webViewPlots.TabIndex = 0;
+            this.webViewPlots.ZoomFactor = 1D;
+            this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
             // 
             // pPlots
             // 
@@ -1016,15 +1132,22 @@
             this.grSensitivity.PerformLayout();
             this.pBottomBottom.ResumeLayout(false);
             this.pBottomBottom.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
-            this.splitOptimize.Panel1.ResumeLayout(false);
-            this.splitOptimize.Panel2.ResumeLayout(false);
-            this.splitOptimize.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitOptimize)).EndInit();
-            this.splitOptimize.ResumeLayout(false);
+            this.splitRight.Panel1.ResumeLayout(false);
+            this.splitRight.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitRight)).EndInit();
+            this.splitRight.ResumeLayout(false);
+            this.pOptimize.ResumeLayout(false);
+            this.pOptimize.PerformLayout();
+            this.tabOptimization.ResumeLayout(false);
+            this.tMinMax.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).EndInit();
             this.pMinMax.ResumeLayout(false);
             this.pMinMax.PerformLayout();
+            this.tFitness.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgFitnessParams)).EndInit();
+            this.pFitnessTop.ResumeLayout(false);
+            this.pFitnessTop.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
             this.pPlots.ResumeLayout(false);
             this.pPlots.PerformLayout();
             this.grPlotSelection.ResumeLayout(false);
@@ -1093,7 +1216,6 @@
         private Panel pMinMax;
         private LinkLabel linkSuggestMinMax;
         private ToolTip toolTip1;
-        private SplitContainer splitOptimize;
         private Label lGASelection;
         private ComboBox cbGATermination;
         private ComboBox cbGAMutation;
@@ -1110,5 +1232,16 @@
         private GroupBox grPlotSelection;
         private LinkLabel linkStopOptimization;
         private System.Windows.Forms.Timer timerOptimization;
+        private SplitContainer splitRight;
+        private Panel pOptimize;
+        private TabControl tabOptimization;
+        private TabPage tMinMax;
+        private TabPage tFitness;
+        private DataGridView dgFitnessParams;
+        private DataGridViewTextBoxColumn colFitnessRheobaseMultiplier;
+        private DataGridViewTextBoxColumn colFitnessMinNumOfSpikes;
+        private DataGridViewTextBoxColumn colFitnessMaxNumOfSpikes;
+        private DataGridViewTextBoxColumn colFitnessFiringMode;
+        private Panel pFitnessTop;
     }
 }

@@ -11,10 +11,14 @@ namespace SiliFish.Services.Optimization
 {
     public class IzhikevichFitness : IFitness
     {
-        IzhikevichSolver IzhikevichSolver;
-        public IzhikevichFitness(IzhikevichSolver izhikevichSolver)
+        readonly IzhikevichSolver IzhikevichSolver;
+        internal double TargetRheobase;
+        internal Dictionary<double, (int minNumOfSpikes, int maxNumOfSpikes)> SpikeNumberRange;
+        public IzhikevichFitness(IzhikevichSolver izhikevichSolver, double targetRheobase, Dictionary<double, (int min, int max)> spikeNumberRange)
         {
             IzhikevichSolver = izhikevichSolver;
+            TargetRheobase = targetRheobase;
+            SpikeNumberRange = spikeNumberRange;
         }
         public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
         {
@@ -33,23 +37,32 @@ namespace SiliFish.Services.Optimization
             //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
             if (d < 0)//no rheobase
                 return 0;
-            if (IzhikevichSolver.NumOfSpikesAtRheobase > 0)
+            if (SpikeNumberRange.Any())
             {
-                DynamicsStats stat = core.DynamicsTest(d, infinity: 400, dt: 0.1);
-                if (IzhikevichSolver.TargetRheobase == d && stat.SpikeList.Count == IzhikevichSolver.NumOfSpikesAtRheobase)
-                    return double.MaxValue;
-                return 1 / Math.Abs(IzhikevichSolver.TargetRheobase - d) / stat.SpikeList.Count / IzhikevichSolver.NumOfSpikesAtRheobase;
+                foreach (double multiplier in SpikeNumberRange.Keys)
+                {
+                    int minSpike = SpikeNumberRange[multiplier].minNumOfSpikes;
+                    int maxSpike = SpikeNumberRange[multiplier].maxNumOfSpikes;
+
+                    DynamicsStats stat = core.DynamicsTest(d *  multiplier, infinity: 400, dt: 0.1);
+                    if (stat.SpikeList.Count < minSpike || (maxSpike > 0 && stat.SpikeList.Count > maxSpike))
+                        return 0;
+                }
             }
-            return 1 / Math.Abs(IzhikevichSolver.TargetRheobase - d);
+            if (TargetRheobase == d)
+                return double.MaxValue;
+            return 1 / Math.Abs(TargetRheobase - d);
         }
     }
     public class IzhikevichSolver
     {
         Dictionary<string, double> ParamValues;
-        internal double TargetRheobase;
-        internal int NumOfSpikesAtRheobase = 1;
         internal List<string> OutputText = new();
         internal List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
+        private readonly SelectionBase Selection;
+        private readonly CrossoverBase Crossover;
+        private readonly MutationBase Mutation;
+        private readonly TerminationBase Termination;
         private GeneticAlgorithm Algorithm;
         private double latestFitness = 0.0;
 
@@ -59,16 +72,26 @@ namespace SiliFish.Services.Optimization
         public IzhikevichSolver(Type selectionType,
             Type crossOverType,
             Type mutationType,
-            Type terminationType,
-            int minPopulationSize,
+            Type terminationType)
+
+        {
+            Selection = (SelectionBase)Activator.CreateInstance(selectionType); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
+            Crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
+            Mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
+            Termination = (TerminationBase)Activator.CreateInstance(terminationType); //new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
+        }
+
+        public void SetOptimizationSettings(int minPopulationSize,
             int maxPopulationSize,
             Dictionary<string, double> paramValues,
             double targetRheobase,
+            Dictionary<double, (int, int)> spikeNumbers = null,
             Dictionary<string, double> minValues = null,
             Dictionary<string, double> maxValues = null)
         {
+            IFitness fitness = new IzhikevichFitness(this, targetRheobase, spikeNumbers);
+
             ParamValues = paramValues;
-            TargetRheobase = targetRheobase;
             int nCount = paramValues.Count;
             double[] MinValues = new double[nCount];
             double[] MaxValues = new double[nCount];
@@ -90,22 +113,15 @@ namespace SiliFish.Services.Optimization
                 NumBits,
                 DecimalDigits);
             Population population = new(minPopulationSize, maxPopulationSize, chromosome); //min 50, max 100
-
-            var fitness = new IzhikevichFitness(this);
-            SelectionBase selection = (SelectionBase)Activator.CreateInstance(selectionType); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
-            CrossoverBase crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
-            MutationBase mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
-            TerminationBase termination = (TerminationBase)Activator.CreateInstance(terminationType); //new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
             Algorithm = new(
                 population,
                 fitness,
-                selection,
-                crossover,
-                mutation)
+                Selection,
+                Crossover,
+                Mutation)
             {
-                Termination = termination
+                Termination = Termination
             };
-
         }
         public Dictionary<string, double> Optimize()
         {
@@ -134,7 +150,6 @@ namespace SiliFish.Services.Optimization
                 var phenotype = (Algorithm.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
                 BestValues.Add(key, phenotype[iter++]);
             }
-
             return BestValues;
         }
         public void CancelOptimization()
