@@ -66,7 +66,7 @@ namespace Extensions
                     Minimum = decimal.MinValue,
                     Maximum = decimal.MaxValue,
                     Value = val,
-                    DecimalPlaces = decPoints + 1,
+                    DecimalPlaces = decPoints + 2,
                     Increment = inc,
                     TabIndex = tabIndex++
                 };

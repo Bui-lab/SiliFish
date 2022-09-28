@@ -11,20 +11,21 @@ namespace SiliFish.DynamicUnits
     public class Izhikevich_9P : DynamicUnit
     {
         //a, b, c, d, are the parameters for the membrane potential dynamics
-        private double a;
-        private double b;
-        private double c;
-        private double d;
+        //Default values are taken from Izhikevich 2003 (IEEE)
+        private double a = 0.02;
+        private double b = 0.2;
+        private double c = -65;
+        private double d = 2;
 
         // vmax is the peak membrane potential of single action potentials
         [JsonIgnore]
         public double Vmax;
         // vr, vt are the resting and threshold membrane potential 
         [JsonIgnore]
-        public double Vr, Vt;
+        public double Vr = -60, Vt = -57;
         // k is a coefficient of the quadratic polynomial 
-        double k;
-        double Cm; //the membrane capacitance
+        double k = 1;
+        double Cm = 10; //the membrane capacitance
 
         [JsonIgnore]
         double V = -65;//Keeps the current value of V 
@@ -92,7 +93,7 @@ namespace SiliFish.DynamicUnits
         private (double, double) CalculateRange(double value)
         {
             if (value == 0)
-                return (-10, +10);
+                return (Const.GeneticAlgorithmMinValue, Const.GeneticAlgorithmMaxValue);
             int numDigit = Util.NumOfDigits(value);
             int numDecimal = Util.NumOfDecimalDigits((decimal)value);
             if (numDigit == 0)
@@ -111,16 +112,16 @@ namespace SiliFish.DynamicUnits
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {
-                { "Izhikevich_9P.c", c - Const.MembranePotentialRange },
-                { "Izhikevich_9P.V_max", Vmax - Const.MembranePotentialRange },
-                { "Izhikevich_9P.V_r", Vr - Const.MembranePotentialRange },
-                { "Izhikevich_9P.V_t", Vt - Const.MembranePotentialRange },
+                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.V_max", Vmax },
+                { "Izhikevich_9P.V_r", Vr },
+                { "Izhikevich_9P.V_t", Vt },
             };
             Dictionary<string, double> MaxValues = new() {
-                { "Izhikevich_9P.c", c + Const.MembranePotentialRange },
-                { "Izhikevich_9P.V_max", Vmax + Const.MembranePotentialRange },
-                { "Izhikevich_9P.V_r", Vr + Const.MembranePotentialRange },
-                { "Izhikevich_9P.V_t", Vt + Const.MembranePotentialRange },
+                { "Izhikevich_9P.c", c },
+                { "Izhikevich_9P.V_max", Vmax },
+                { "Izhikevich_9P.V_r", Vr },
+                { "Izhikevich_9P.V_t", Vt },
             };
             List<string> nonVoltageParams = new()
                 { "Izhikevich_9P.a",
@@ -261,12 +262,13 @@ namespace SiliFish.DynamicUnits
         /// <param name="dt">delta t</param>
         /// <param name="warmup">add a warmup region to the beginning with no stimulus and spiking is ignored</param>
         /// <returns></returns>
-        public override double CalculateRheoBase(double maxRheobase, double sensitivity, int infinity, double dt, int warmup = 100)
+        public override double CalculateRheoBase(double maxRheobase, double sensitivity, int infinity, double dt, int warmup = 100, int cooldown = 100)
         {
             Initialize();
             infinity = (int)(infinity / dt);
             warmup = (int)(warmup / dt);
-            int tmax = infinity + warmup + 10;
+            cooldown = (int)(cooldown / dt);
+            int tmax = infinity + warmup + cooldown;
             double[] I = new double[tmax];
             double curI = maxRheobase;
             double minI = 0;
