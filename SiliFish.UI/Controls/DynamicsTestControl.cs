@@ -111,6 +111,7 @@ namespace SiliFish.UI.Controls
             cbGAMutation.SelectedIndex = 0;
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             cbGATermination.SelectedIndex = 0;
+            splitRight.Panel1Collapsed = true;
         }
 
         private void FirstRun()
@@ -129,7 +130,7 @@ namespace SiliFish.UI.Controls
         }
         private void DynamicsTestControl_Load(object sender, EventArgs e)
         {
-            FirstRun();            
+            //FirstRun();            
         }
 
         private async void InitAsync()
@@ -318,7 +319,7 @@ namespace SiliFish.UI.Controls
                     foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                         I[i] = stim.generateStimulus(i, SwimmingModel.rand);
                     dynamics = core.DynamicsTest(I);
-                    dynamics.Cluster();
+                    dynamics.CreateClusters();
                     CreatePlots();
                 }
                 else

@@ -8,7 +8,7 @@ namespace SiliFish.DynamicUnits
 {
     public class DynamicUnit
     {
-        public virtual double CalculateRheoBase(double maxRheobase, double sensitivity, int infinity, double dt, int warmup = 100)
+        public virtual double CalculateRheoBase(double maxRheobase, double sensitivity, int infinity, double dt, int warmup = 100, int cooldown = 100)
         {
             throw new NotImplementedException();
         }

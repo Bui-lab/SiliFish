@@ -1,7 +1,4 @@
-﻿using HdbscanSharp.Distance;
-using HdbscanSharp.Hdbscanstar;
-using HdbscanSharp.Runner;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SiliFish.DynamicUnits
@@ -59,18 +56,87 @@ namespace SiliFish.DynamicUnits
             }
         }
 
-        public void Cluster()
+        internal class Cluster
         {
-            double[][] dataset = new double[Intervals.Count][];
-            for (int i = 0; i < dataset.Length; i++)
-                dataset[i] = new double[] { Intervals.Values.ToArray()[i] };
-            var result = HdbscanRunner.Run(new HdbscanParameters<double[]>
+            public double clusterMin, clusterMax, centroid;
+            public int numMember = 0;
+            public Cluster(double center)
             {
-                DataSet = dataset, // double[][] for normal matrix or Dictionary<int, int>[] for sparse matrix
-                MinPoints = 2,
-                MinClusterSize = 10,
-                DistanceFunction = new EuclideanDistance() // See HdbscanSharp/Distance folder for more distance function
-            });
+                clusterMin = clusterMax = centroid = center;
+                numMember++;
+            }
+            public Cluster(List<double> intervals)
+            {
+                clusterMin = intervals.Min();
+                clusterMax = intervals.Max();
+                centroid = intervals.Average();
+                numMember = intervals.Count;
+            }
+            public void AddMember(double d)
+            {
+                centroid = (d + centroid * numMember) / ++numMember;
+                if (clusterMin > d)
+                    clusterMin = d;
+                if (clusterMax < d)
+                    clusterMax = d;
+            }
+        }
+        private (Cluster, Cluster) DoubleCluster(List<double> intervals)
+        {
+            if (intervals == null || intervals.Count() <= 1)
+                return (null, null);
+            
+            double centroid1 = intervals.Min();
+            double centroid2 = intervals.Max();
+            if (centroid2 - centroid1 < centroid1 * 0.1)//single cluster
+                return (new Cluster(intervals), null);
+            intervals.Remove(centroid1);
+            intervals.Remove(centroid2);
+            Cluster cluster1 = new(centroid1);
+            Cluster cluster2 = new(centroid2);
+            double center = (centroid1 + centroid2) / 2;
+            foreach (double d in intervals)
+            {
+                if (d < center) //add to cluster 1
+                    cluster1.AddMember(d);
+                else //add to cluster 2
+                    cluster2.AddMember(d);
+                center = (cluster1.centroid + cluster2.centroid) / 2;
+            }
+            return (cluster1, cluster2);
+        }
+
+        public void CreateClusters()
+        {
+            if (Intervals == null || Intervals.Count() <= 1) return;
+            List<double> intervals = Intervals.Select(kvp => kvp.Value).ToList();
+            (Cluster cluster1, Cluster cluster2) = DoubleCluster(intervals);
+            if (cluster2 == null) return;
+            intervals = Intervals.Select(kvp => kvp.Value).ToList(); //reset as min and max are removed during cluster generation
+            bool[] home = new bool[intervals.Count];
+            int ind = 0;
+            foreach (double d in intervals)
+            {
+                home[ind++] = d <= cluster1.clusterMax;
+            }
+            List<List<double>> Bursts = new();
+            bool newBurst = true;
+            ind = 0;
+            foreach (bool b in home)
+            {
+                if (b)
+                {
+                    if (newBurst)
+                    {
+                        Bursts.Add(new List<double>());
+                        newBurst = false;
+                    }
+                    Bursts.Last().Add(ind);
+                }
+                else
+                    newBurst = true;
+                ind++;
+            }
         }
         public DynamicsStats(double[] stimulus)
         {
