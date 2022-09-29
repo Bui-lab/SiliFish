@@ -45,7 +45,7 @@ namespace SiliFish.Services.Optimization
                     int maxSpike = SpikeNumberRange[multiplier].maxNumOfSpikes;
 
                     DynamicsStats stat = core.DynamicsTest(d *  multiplier, infinity: 400, dt: 0.1);
-                    if (stat.SpikeList.Count < minSpike || (maxSpike > 0 && stat.SpikeList.Count > maxSpike))
+                    if (stat.SpikeTimeList.Count < minSpike || (maxSpike > 0 && stat.SpikeTimeList.Count > maxSpike))
                         return 0;
                 }
             }

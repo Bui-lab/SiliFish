@@ -5,6 +5,8 @@ namespace SiliFish.Definitions
 {
     public enum CellType { Neuron, MuscleCell }
     public enum CoreType {Izhikevich_9P, Leaky_Integrator }
+
+    public enum FiringPattern { Phasic, Tonic, PhasicBursting, TonicBursting, Chattering, Unknown}
     public enum BodyLocation { SpinalCord, Body }
 
     public enum CountingMode { PerSomite, Total }
