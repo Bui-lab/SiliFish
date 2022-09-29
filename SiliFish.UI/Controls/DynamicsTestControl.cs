@@ -159,11 +159,12 @@ namespace SiliFish.UI.Controls
             if (dynamics == null)
                 return;
             List<ChartDataStruct> charts = new();
+            string firingPattern = dynamics.FiringPattern.ToString();
             if (cbV.Checked)
             {
                 charts.Add(new ChartDataStruct
                 {
-                    Title = "V",
+                    Title = $"V ({firingPattern})",
                     Color = Color.Purple,
                     xData = TimeArray,
                     yData = dynamics.VList,
@@ -319,7 +320,7 @@ namespace SiliFish.UI.Controls
                     foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                         I[i] = stim.generateStimulus(i, SwimmingModel.rand);
                     dynamics = core.DynamicsTest(I);
-                    dynamics.CreateClusters();
+                    dynamics.SpikingPattern();
                     CreatePlots();
                 }
                 else

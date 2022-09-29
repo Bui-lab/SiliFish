@@ -227,7 +227,7 @@ namespace SiliFish.DynamicUnits
                 if (spike)
                 {
                     if (t > 0)
-                        dyn.SpikeList.Add(t - 1);
+                        dyn.SpikeTimeList.Add(t - 1);
                     onRise = false;
                     tauRiseSet = false;
                     onDecay = true;
