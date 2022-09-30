@@ -112,6 +112,7 @@ namespace SiliFish.UI.Controls
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             cbGATermination.SelectedIndex = 0;
             splitRight.Panel1Collapsed = true;
+            colFitnessFiringMode.DataSource = Enum.GetValues(typeof(FiringPattern));
         }
 
         private void FirstRun()
@@ -211,16 +212,16 @@ namespace SiliFish.UI.Controls
                     drawPoints = true
                 });
             }
-            if (cbInterval.Checked && dynamics.Intervals != null && dynamics.Intervals.Any())
+            if (cbInterval.Checked && dynamics.Intervals_ms != null && dynamics.Intervals_ms.Any())
             {
                 charts.Add(new ChartDataStruct
                 {
                     Title = "Intervals",
                     Color = Color.Blue,
-                    xData = dynamics.Intervals.Keys.ToArray(),
+                    xData = dynamics.Intervals_ms.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
-                    yData = dynamics.Intervals.Values.ToArray(),
+                    yData = dynamics.Intervals_ms.Values.ToArray(),
                     yLabel = "Interval (ms)",
                     drawPoints = true
                 });
@@ -263,9 +264,11 @@ namespace SiliFish.UI.Controls
             foreach (string key in dynamicsList.Keys)
             {
                 DynamicsStats dynamics = dynamicsList[key];
+                string firingPattern = dynamics.FiringPattern.ToString();
+
                 charts.Add(new ChartDataStruct
                 {
-                    Title = key,
+                    Title = $"{key} ({firingPattern})",
                     Color = Color.Purple,
                     xData = TimeArray,
                     yData = dynamics.VList,
@@ -320,7 +323,6 @@ namespace SiliFish.UI.Controls
                     foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
                         I[i] = stim.generateStimulus(i, SwimmingModel.rand);
                     dynamics = core.DynamicsTest(I);
-                    dynamics.SpikingPattern();
                     CreatePlots();
                 }
                 else
@@ -488,19 +490,15 @@ namespace SiliFish.UI.Controls
             return (MinValues, MaxValues);
         }
 
-        private Dictionary<double, (int, int)> ReadFitnessValues()
+        private Dictionary<double, FiringPattern> ReadFitnessValues()
         {
-            Dictionary<double, (int, int)> FitnessValues = new();
+            Dictionary<double, FiringPattern> FitnessValues = new();
             foreach (DataGridViewRow row in dgFitnessParams.Rows)
             {
                 if (double.TryParse(row.Cells[colFitnessRheobaseMultiplier.Index].Value?.ToString(), out double mult))
                 {
-                    int minNum = -1, maxNum = -1;
-                    if (!string.IsNullOrEmpty(row.Cells[colFitnessMinNumOfSpikes.Index].Value?.ToString()))
-                        _ = int.TryParse(row.Cells[colFitnessMinNumOfSpikes.Index].Value.ToString(), out minNum);
-                    if (!string.IsNullOrEmpty(row.Cells[colFitnessMaxNumOfSpikes.Index].Value?.ToString()))
-                        _ = int.TryParse(row.Cells[colFitnessMaxNumOfSpikes.Index].Value.ToString(), out maxNum);
-                    FitnessValues.Add(mult, (minNum, maxNum));
+                    if (Enum.TryParse(row.Cells[colFitnessFiringMode.Index].Value?.ToString(), out FiringPattern pattern))
+                        FitnessValues.Add(mult, pattern);
                 }
             }
             return FitnessValues;
@@ -508,15 +506,26 @@ namespace SiliFish.UI.Controls
         private void CreateSolver()
         {
             Solver = null;
-            if (!double.TryParse(eTargetRheobase.Text, out double targetRheobase))
+            if (string.IsNullOrEmpty(eMinTargetRheobase.Text) && !string.IsNullOrEmpty(eMaxTargetRheobase.Text))
+                eMinTargetRheobase.Text = eMaxTargetRheobase.Text;
+            else if (!string.IsNullOrEmpty(eMinTargetRheobase.Text) && string.IsNullOrEmpty(eMaxTargetRheobase.Text))
+                eMaxTargetRheobase.Text = eMinTargetRheobase.Text;
+
+            if (!double.TryParse(eMinTargetRheobase.Text, out double targetRheobaseMin))
             {
-                eTargetRheobase.Focus();
+                eMinTargetRheobase.Focus();
+                MessageBox.Show("Please enter a valid target rheobase value.");
+                return;
+            }
+            if (!double.TryParse(eMaxTargetRheobase.Text, out double targetRheobaseMax))
+            {
+                eMaxTargetRheobase.Focus();
                 MessageBox.Show("Please enter a valid target rheobase value.");
                 return;
             }
             ReadParameters();
             (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = ReadMinMaxParamValues();
-            Dictionary<double, (int, int)> FitnessValues =ReadFitnessValues();
+            Dictionary<double, FiringPattern> FitnessValues = ReadFitnessValues();
             if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
                 minPopulation = 50;
             if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
@@ -527,7 +536,7 @@ namespace SiliFish.UI.Controls
                 (Type)cbGATermination.SelectedItem);
             Solver.SetOptimizationSettings(minPopulation, maxPopulation,
                 parameters,
-                targetRheobase, FitnessValues,
+                targetRheobaseMin, targetRheobaseMax, FitnessValues,
                 MinValues, MaxValues);
 
         }
@@ -595,6 +604,26 @@ namespace SiliFish.UI.Controls
         {
             if (Solver == null) return;
             eOptimizationOutput.Text += Solver.GetProgress() + "\r\n";
+        }
+
+        private void dgFitnessParams_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
+        }
+
+        //https://stackoverflow.com/questions/19406042/databinding-datagridviewcomboboxcolumn-with-enum
+        private void dgFitnessParams_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == colFitnessFiringMode.Index)
+                dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value.ToString());
+        }
+
+        private void dgFitnessParams_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
+        {
+            if (e.Row.DataBoundItem != null)
+            {
+                e.Row.Cells[colFitnessFiringMode.Index].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), e.Row.Cells[colFitnessFiringMode.Index].Value.ToString());
+            }
         }
     }
 }
