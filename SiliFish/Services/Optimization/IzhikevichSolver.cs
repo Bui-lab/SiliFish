@@ -12,13 +12,16 @@ namespace SiliFish.Services.Optimization
     public class IzhikevichFitness : IFitness
     {
         readonly IzhikevichSolver IzhikevichSolver;
-        internal double TargetRheobase;
-        internal Dictionary<double, (int minNumOfSpikes, int maxNumOfSpikes)> SpikeNumberRange;
-        public IzhikevichFitness(IzhikevichSolver izhikevichSolver, double targetRheobase, Dictionary<double, (int min, int max)> spikeNumberRange)
+        internal double TargetRheobaseMin, TargetRheobaseMax;
+        internal Dictionary<double, FiringPattern> FiringPatterns;
+        public IzhikevichFitness(IzhikevichSolver izhikevichSolver, double targetRheobaseMin, double targetRheobaseMax, Dictionary<double, FiringPattern> firingPatterns)
         {
             IzhikevichSolver = izhikevichSolver;
-            TargetRheobase = targetRheobase;
-            SpikeNumberRange = spikeNumberRange;
+            TargetRheobaseMin = targetRheobaseMin;
+            TargetRheobaseMax = targetRheobaseMax;
+            if (TargetRheobaseMax<TargetRheobaseMin)
+                (TargetRheobaseMin, TargetRheobaseMax) = (TargetRheobaseMax, TargetRheobaseMin);
+            FiringPatterns = firingPatterns;
         }
         public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
         {
@@ -37,21 +40,19 @@ namespace SiliFish.Services.Optimization
             //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
             if (d < 0)//no rheobase
                 return 0;
-            if (SpikeNumberRange.Any())
+            if (FiringPatterns.Any())
             {
-                foreach (double multiplier in SpikeNumberRange.Keys)
+                foreach (double multiplier in FiringPatterns.Keys)
                 {
-                    int minSpike = SpikeNumberRange[multiplier].minNumOfSpikes;
-                    int maxSpike = SpikeNumberRange[multiplier].maxNumOfSpikes;
-
-                    DynamicsStats stat = core.DynamicsTest(d *  multiplier, infinity: 400, dt: 0.1);
-                    if (stat.SpikeTimeList.Count < minSpike || (maxSpike > 0 && stat.SpikeTimeList.Count > maxSpike))
+                    DynamicsStats stat = core.DynamicsTest(d * multiplier, infinity: 400, dt: 0.1);
+                    if (stat.FiringPattern != FiringPatterns[multiplier])
                         return 0;
                 }
             }
-            if (TargetRheobase == d)
+            if (TargetRheobaseMin <= d && TargetRheobaseMax >= d)
                 return double.MaxValue;
-            return 1 / Math.Abs(TargetRheobase - d);
+            double distance = d > TargetRheobaseMax ? d - TargetRheobaseMax : TargetRheobaseMin - d;
+            return 1 / distance;
         }
     }
     public class IzhikevichSolver
@@ -84,12 +85,12 @@ namespace SiliFish.Services.Optimization
         public void SetOptimizationSettings(int minPopulationSize,
             int maxPopulationSize,
             Dictionary<string, double> paramValues,
-            double targetRheobase,
-            Dictionary<double, (int, int)> spikeNumbers = null,
+            double minTargetRheobase, double maxTargetRheobase,
+            Dictionary<double, FiringPattern> firingPatterns = null,
             Dictionary<string, double> minValues = null,
             Dictionary<string, double> maxValues = null)
         {
-            IFitness fitness = new IzhikevichFitness(this, targetRheobase, spikeNumbers);
+            IFitness fitness = new IzhikevichFitness(this, minTargetRheobase, maxTargetRheobase, firingPatterns);
 
             ParamValues = paramValues;
             int nCount = paramValues.Count;
