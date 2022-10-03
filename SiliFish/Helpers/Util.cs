@@ -36,6 +36,31 @@ namespace SiliFish.Helpers
             //decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10, decPoints)));
             return decPoints;
         }
+
+        /// <summary>
+        /// Currently not used
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private (double, double) CalculateRange(double value)
+        {
+            if (value == 0)
+                return (Const.GeneticAlgorithmMinValue, Const.GeneticAlgorithmMaxValue);
+            int numDigit = Util.NumOfDigits(value);
+            int numDecimal = Util.NumOfDecimalDigits((decimal)value);
+            if (numDigit == 0)
+                numDigit = 1;
+
+            double minValue = value - 10 * numDigit;
+            if (value > 0 && minValue <= 0)
+                minValue = Math.Pow(10, -numDecimal);
+
+            double maxValue = value + 10 * numDigit;
+            if (value < 0 && maxValue >= 0)
+                maxValue = -Math.Pow(10, -numDecimal);
+
+            return (minValue, maxValue);
+        }
         //https://stackoverflow.com/questions/69664644/serialize-deserialize-system-drawing-color-with-system-text-json
         public class ColorJsonConverter : JsonConverter<Color>
         {

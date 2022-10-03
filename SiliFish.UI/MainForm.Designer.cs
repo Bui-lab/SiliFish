@@ -36,6 +36,7 @@ namespace SiliFish.UI
             this.rbDoubleCoil = new System.Windows.Forms.RadioButton();
             this.rbBeatGlide = new System.Windows.Forms.RadioButton();
             this.pTop = new System.Windows.Forms.Panel();
+            this.linkNeuronalCellDynamics = new System.Windows.Forms.LinkLabel();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkBrowseToOutputFolder = new System.Windows.Forms.LinkLabel();
             this.linkClearModel = new System.Windows.Forms.LinkLabel();
@@ -77,6 +78,22 @@ namespace SiliFish.UI
             this.lConnections = new System.Windows.Forms.Label();
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
+            this.pParamBottom = new System.Windows.Forms.Panel();
+            this.cbMultiple = new System.Windows.Forms.CheckBox();
+            this.eRunNumber = new System.Windows.Forms.NumericUpDown();
+            this.eSkip = new System.Windows.Forms.NumericUpDown();
+            this.lSkip = new System.Windows.Forms.Label();
+            this.edt = new System.Windows.Forms.NumericUpDown();
+            this.eTimeEnd = new System.Windows.Forms.NumericUpDown();
+            this.ldt = new System.Windows.Forms.Label();
+            this.lRunTime = new System.Windows.Forms.Label();
+            this.lStimulus = new System.Windows.Forms.Label();
+            this.ddStimulusMode = new System.Windows.Forms.ComboBox();
+            this.linkSaveRun = new System.Windows.Forms.LinkLabel();
+            this.progressBarRun = new System.Windows.Forms.ProgressBar();
+            this.btnRun = new System.Windows.Forms.Button();
+            this.lTimeEnd = new System.Windows.Forms.Label();
+            this.lRunParameters = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
             this.linkLoadParam = new System.Windows.Forms.LinkLabel();
             this.lParameters = new System.Windows.Forms.Label();
@@ -181,22 +198,6 @@ namespace SiliFish.UI
             this.linkSaveModelJSON = new System.Windows.Forms.LinkLabel();
             this.btnLoadModelJSON = new System.Windows.Forms.Button();
             this.btnDisplayModelJSON = new System.Windows.Forms.Button();
-            this.pParamBottom = new System.Windows.Forms.Panel();
-            this.cbMultiple = new System.Windows.Forms.CheckBox();
-            this.eRunNumber = new System.Windows.Forms.NumericUpDown();
-            this.eSkip = new System.Windows.Forms.NumericUpDown();
-            this.lSkip = new System.Windows.Forms.Label();
-            this.edt = new System.Windows.Forms.NumericUpDown();
-            this.eTimeEnd = new System.Windows.Forms.NumericUpDown();
-            this.ldt = new System.Windows.Forms.Label();
-            this.lRunTime = new System.Windows.Forms.Label();
-            this.lStimulus = new System.Windows.Forms.Label();
-            this.ddStimulusMode = new System.Windows.Forms.ComboBox();
-            this.linkSaveRun = new System.Windows.Forms.LinkLabel();
-            this.progressBarRun = new System.Windows.Forms.ProgressBar();
-            this.btnRun = new System.Windows.Forms.Button();
-            this.lTimeEnd = new System.Windows.Forms.Label();
-            this.lRunParameters = new System.Windows.Forms.Label();
             this.timerRun = new System.Windows.Forms.Timer(this.components);
             this.saveFileHTML = new System.Windows.Forms.SaveFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
@@ -205,8 +206,9 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.linkNeuronalCellDynamics = new System.Windows.Forms.LinkLabel();
-            this.linkMuscleCellDynamics = new System.Windows.Forms.LinkLabel();
+            this.cmNeuronalDynamics = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiIzhikevich_9P = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiIzhikevich5P = new System.Windows.Forms.ToolStripMenuItem();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -234,6 +236,11 @@ namespace SiliFish.UI
             this.pCellPoolTop.SuspendLayout();
             this.pConnectionTop.SuspendLayout();
             this.tabStimuli.SuspendLayout();
+            this.pParamBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
             this.pMain.SuspendLayout();
             this.tabOutputs.SuspendLayout();
             this.tabPlot.SuspendLayout();
@@ -282,11 +289,7 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
-            this.pParamBottom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
+            this.cmNeuronalDynamics.SuspendLayout();
             this.SuspendLayout();
             // 
             // rbSingleCoil
@@ -324,7 +327,6 @@ namespace SiliFish.UI
             // 
             // pTop
             // 
-            this.pTop.Controls.Add(this.linkMuscleCellDynamics);
             this.pTop.Controls.Add(this.linkNeuronalCellDynamics);
             this.pTop.Controls.Add(this.linkBrowseToTempFolder);
             this.pTop.Controls.Add(this.linkBrowseToOutputFolder);
@@ -339,6 +341,19 @@ namespace SiliFish.UI
             this.pTop.Size = new System.Drawing.Size(1348, 39);
             this.pTop.TabIndex = 3;
             this.pTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pTop_MouseDoubleClick);
+            // 
+            // linkNeuronalCellDynamics
+            // 
+            this.linkNeuronalCellDynamics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkNeuronalCellDynamics.AutoSize = true;
+            this.linkNeuronalCellDynamics.ContextMenuStrip = this.cmNeuronalDynamics;
+            this.linkNeuronalCellDynamics.Location = new System.Drawing.Point(1223, 16);
+            this.linkNeuronalCellDynamics.Name = "linkNeuronalCellDynamics";
+            this.linkNeuronalCellDynamics.Size = new System.Drawing.Size(111, 15);
+            this.linkNeuronalCellDynamics.TabIndex = 8;
+            this.linkNeuronalCellDynamics.TabStop = true;
+            this.linkNeuronalCellDynamics.Text = "Neuronal Dynamics";
+            this.linkNeuronalCellDynamics.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkNeuronalCellDynamics_LinkClicked);
             // 
             // linkBrowseToTempFolder
             // 
@@ -749,7 +764,7 @@ namespace SiliFish.UI
             this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
             this.tabCellPools.Location = new System.Drawing.Point(4, 24);
             this.tabCellPools.Name = "tabCellPools";
-            this.tabCellPools.Size = new System.Drawing.Size(542, 610);
+            this.tabCellPools.Size = new System.Drawing.Size(542, 459);
             this.tabCellPools.TabIndex = 1;
             this.tabCellPools.Text = "Cell Pools & Connections";
             this.tabCellPools.UseVisualStyleBackColor = true;
@@ -771,7 +786,7 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.pConnectionTop);
             this.splitCellPoolsAndConnections.Panel2MinSize = 200;
-            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 610);
+            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 459);
             this.splitCellPoolsAndConnections.SplitterDistance = 252;
             this.splitCellPoolsAndConnections.TabIndex = 5;
             // 
@@ -782,7 +797,7 @@ namespace SiliFish.UI
             this.listCellPool.Name = "listCellPool";
             this.listCellPool.SelectedIndex = -1;
             this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(252, 578);
+            this.listCellPool.Size = new System.Drawing.Size(252, 427);
             this.listCellPool.TabIndex = 5;
             this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -818,7 +833,7 @@ namespace SiliFish.UI
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(286, 578);
+            this.listConnections.Size = new System.Drawing.Size(286, 427);
             this.listConnections.TabIndex = 6;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -852,7 +867,7 @@ namespace SiliFish.UI
             this.tabStimuli.Controls.Add(this.listStimuli);
             this.tabStimuli.Location = new System.Drawing.Point(4, 24);
             this.tabStimuli.Name = "tabStimuli";
-            this.tabStimuli.Size = new System.Drawing.Size(542, 610);
+            this.tabStimuli.Size = new System.Drawing.Size(542, 459);
             this.tabStimuli.TabIndex = 3;
             this.tabStimuli.Text = "Stimuli";
             this.tabStimuli.UseVisualStyleBackColor = true;
@@ -864,13 +879,230 @@ namespace SiliFish.UI
             this.listStimuli.Name = "listStimuli";
             this.listStimuli.SelectedIndex = -1;
             this.listStimuli.SelectedItem = null;
-            this.listStimuli.Size = new System.Drawing.Size(542, 610);
+            this.listStimuli.Size = new System.Drawing.Size(542, 459);
             this.listStimuli.TabIndex = 6;
             this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
             this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
             this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
             this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
             this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
+            // 
+            // pParamBottom
+            // 
+            this.pParamBottom.Controls.Add(this.cbMultiple);
+            this.pParamBottom.Controls.Add(this.eRunNumber);
+            this.pParamBottom.Controls.Add(this.eSkip);
+            this.pParamBottom.Controls.Add(this.lSkip);
+            this.pParamBottom.Controls.Add(this.edt);
+            this.pParamBottom.Controls.Add(this.eTimeEnd);
+            this.pParamBottom.Controls.Add(this.ldt);
+            this.pParamBottom.Controls.Add(this.lRunTime);
+            this.pParamBottom.Controls.Add(this.lStimulus);
+            this.pParamBottom.Controls.Add(this.ddStimulusMode);
+            this.pParamBottom.Controls.Add(this.linkSaveRun);
+            this.pParamBottom.Controls.Add(this.progressBarRun);
+            this.pParamBottom.Controls.Add(this.btnRun);
+            this.pParamBottom.Controls.Add(this.lTimeEnd);
+            this.pParamBottom.Controls.Add(this.lRunParameters);
+            this.pParamBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pParamBottom.Location = new System.Drawing.Point(0, 521);
+            this.pParamBottom.Name = "pParamBottom";
+            this.pParamBottom.Size = new System.Drawing.Size(550, 151);
+            this.pParamBottom.TabIndex = 1;
+            // 
+            // cbMultiple
+            // 
+            this.cbMultiple.AutoSize = true;
+            this.cbMultiple.Location = new System.Drawing.Point(169, 58);
+            this.cbMultiple.Name = "cbMultiple";
+            this.cbMultiple.Size = new System.Drawing.Size(70, 19);
+            this.cbMultiple.TabIndex = 37;
+            this.cbMultiple.Text = "Multiple";
+            this.toolTip.SetToolTip(this.cbMultiple, "Runs the model multiple times saving the model details and episodes.");
+            this.cbMultiple.UseVisualStyleBackColor = true;
+            this.cbMultiple.CheckedChanged += new System.EventHandler(this.cbMultiple_CheckedChanged);
+            // 
+            // eRunNumber
+            // 
+            this.eRunNumber.Location = new System.Drawing.Point(240, 56);
+            this.eRunNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.eRunNumber.Name = "eRunNumber";
+            this.eRunNumber.Size = new System.Drawing.Size(63, 23);
+            this.eRunNumber.TabIndex = 36;
+            this.toolTip.SetToolTip(this.eRunNumber, "Warning: depending on the complexity of the model, multiple runs can take a long " +
+        "time.");
+            this.eRunNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.eRunNumber.Visible = false;
+            // 
+            // eSkip
+            // 
+            this.eSkip.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.eSkip.Location = new System.Drawing.Point(74, 56);
+            this.eSkip.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.eSkip.Name = "eSkip";
+            this.eSkip.Size = new System.Drawing.Size(76, 23);
+            this.eSkip.TabIndex = 34;
+            this.toolTip.SetToolTip(this.eSkip, "(in milliseconds)");
+            // 
+            // lSkip
+            // 
+            this.lSkip.AutoSize = true;
+            this.lSkip.Location = new System.Drawing.Point(16, 60);
+            this.lSkip.Name = "lSkip";
+            this.lSkip.Size = new System.Drawing.Size(29, 15);
+            this.lSkip.TabIndex = 6;
+            this.lSkip.Text = "Skip";
+            // 
+            // edt
+            // 
+            this.edt.DecimalPlaces = 2;
+            this.edt.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.edt.Location = new System.Drawing.Point(74, 81);
+            this.edt.Name = "edt";
+            this.edt.Size = new System.Drawing.Size(76, 23);
+            this.edt.TabIndex = 35;
+            this.toolTip.SetToolTip(this.edt, "(in milliseconds)");
+            this.edt.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.edt.ValueChanged += new System.EventHandler(this.edt_ValueChanged);
+            // 
+            // eTimeEnd
+            // 
+            this.eTimeEnd.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.eTimeEnd.Location = new System.Drawing.Point(74, 30);
+            this.eTimeEnd.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.eTimeEnd.Name = "eTimeEnd";
+            this.eTimeEnd.Size = new System.Drawing.Size(76, 23);
+            this.eTimeEnd.TabIndex = 33;
+            this.eTimeEnd.ThousandsSeparator = true;
+            this.toolTip.SetToolTip(this.eTimeEnd, "(in milliseconds)");
+            this.eTimeEnd.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.eTimeEnd.ValueChanged += new System.EventHandler(this.eTimeEnd_ValueChanged);
+            this.eTimeEnd.Enter += new System.EventHandler(this.eTimeEnd_Enter);
+            // 
+            // ldt
+            // 
+            this.ldt.AutoSize = true;
+            this.ldt.Location = new System.Drawing.Point(16, 84);
+            this.ldt.Name = "ldt";
+            this.ldt.Size = new System.Drawing.Size(19, 15);
+            this.ldt.TabIndex = 32;
+            this.ldt.Text = "Δt";
+            // 
+            // lRunTime
+            // 
+            this.lRunTime.Location = new System.Drawing.Point(310, 29);
+            this.lRunTime.Name = "lRunTime";
+            this.lRunTime.Size = new System.Drawing.Size(177, 76);
+            this.lRunTime.TabIndex = 31;
+            // 
+            // lStimulus
+            // 
+            this.lStimulus.AutoSize = true;
+            this.lStimulus.Location = new System.Drawing.Point(167, 30);
+            this.lStimulus.Name = "lStimulus";
+            this.lStimulus.Size = new System.Drawing.Size(53, 15);
+            this.lStimulus.TabIndex = 29;
+            this.lStimulus.Text = "Stimulus";
+            // 
+            // ddStimulusMode
+            // 
+            this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddStimulusMode.FormattingEnabled = true;
+            this.ddStimulusMode.Items.AddRange(new object[] {
+            "Step",
+            "Gaussian",
+            "Ramp"});
+            this.ddStimulusMode.Location = new System.Drawing.Point(227, 29);
+            this.ddStimulusMode.Name = "ddStimulusMode";
+            this.ddStimulusMode.Size = new System.Drawing.Size(76, 23);
+            this.ddStimulusMode.TabIndex = 30;
+            // 
+            // linkSaveRun
+            // 
+            this.linkSaveRun.AutoSize = true;
+            this.linkSaveRun.Location = new System.Drawing.Point(249, 85);
+            this.linkSaveRun.Name = "linkSaveRun";
+            this.linkSaveRun.Size = new System.Drawing.Size(55, 15);
+            this.linkSaveRun.TabIndex = 27;
+            this.linkSaveRun.TabStop = true;
+            this.linkSaveRun.Text = "Save Run";
+            this.linkSaveRun.Visible = false;
+            this.linkSaveRun.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveRun_LinkClicked);
+            // 
+            // progressBarRun
+            // 
+            this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.progressBarRun.Location = new System.Drawing.Point(0, 128);
+            this.progressBarRun.Name = "progressBarRun";
+            this.progressBarRun.Size = new System.Drawing.Size(550, 23);
+            this.progressBarRun.TabIndex = 26;
+            this.progressBarRun.Visible = false;
+            // 
+            // btnRun
+            // 
+            this.btnRun.Location = new System.Drawing.Point(167, 81);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(75, 23);
+            this.btnRun.TabIndex = 9;
+            this.btnRun.Text = "Run";
+            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            // 
+            // lTimeEnd
+            // 
+            this.lTimeEnd.AutoSize = true;
+            this.lTimeEnd.Location = new System.Drawing.Point(16, 35);
+            this.lTimeEnd.Name = "lTimeEnd";
+            this.lTimeEnd.Size = new System.Drawing.Size(56, 15);
+            this.lTimeEnd.TabIndex = 3;
+            this.lTimeEnd.Text = "Time End";
+            // 
+            // lRunParameters
+            // 
+            this.lRunParameters.AutoSize = true;
+            this.lRunParameters.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lRunParameters.Location = new System.Drawing.Point(0, 0);
+            this.lRunParameters.Name = "lRunParameters";
+            this.lRunParameters.Padding = new System.Windows.Forms.Padding(10);
+            this.lRunParameters.Size = new System.Drawing.Size(153, 35);
+            this.lRunParameters.TabIndex = 1;
+            this.lRunParameters.Text = "Simulation Parameters";
             // 
             // pMain
             // 
@@ -1009,7 +1241,7 @@ namespace SiliFish.UI
             this.tPlotHTML.Location = new System.Drawing.Point(4, 24);
             this.tPlotHTML.Name = "tPlotHTML";
             this.tPlotHTML.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotHTML.Size = new System.Drawing.Size(772, 335);
+            this.tPlotHTML.Size = new System.Drawing.Size(772, 468);
             this.tPlotHTML.TabIndex = 1;
             this.tPlotHTML.Text = "HTML Plots";
             this.tPlotHTML.UseVisualStyleBackColor = true;
@@ -1022,7 +1254,7 @@ namespace SiliFish.UI
             this.webViewPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlot.Location = new System.Drawing.Point(3, 3);
             this.webViewPlot.Name = "webViewPlot";
-            this.webViewPlot.Size = new System.Drawing.Size(766, 329);
+            this.webViewPlot.Size = new System.Drawing.Size(766, 462);
             this.webViewPlot.TabIndex = 1;
             this.webViewPlot.ZoomFactor = 1D;
             this.webViewPlot.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
@@ -2198,223 +2430,6 @@ namespace SiliFish.UI
             this.btnDisplayModelJSON.UseVisualStyleBackColor = true;
             this.btnDisplayModelJSON.Click += new System.EventHandler(this.btnDisplayModelJSON_Click);
             // 
-            // pParamBottom
-            // 
-            this.pParamBottom.Controls.Add(this.cbMultiple);
-            this.pParamBottom.Controls.Add(this.eRunNumber);
-            this.pParamBottom.Controls.Add(this.eSkip);
-            this.pParamBottom.Controls.Add(this.lSkip);
-            this.pParamBottom.Controls.Add(this.edt);
-            this.pParamBottom.Controls.Add(this.eTimeEnd);
-            this.pParamBottom.Controls.Add(this.ldt);
-            this.pParamBottom.Controls.Add(this.lRunTime);
-            this.pParamBottom.Controls.Add(this.lStimulus);
-            this.pParamBottom.Controls.Add(this.ddStimulusMode);
-            this.pParamBottom.Controls.Add(this.linkSaveRun);
-            this.pParamBottom.Controls.Add(this.progressBarRun);
-            this.pParamBottom.Controls.Add(this.btnRun);
-            this.pParamBottom.Controls.Add(this.lTimeEnd);
-            this.pParamBottom.Controls.Add(this.lRunParameters);
-            this.pParamBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pParamBottom.Location = new System.Drawing.Point(0, 521);
-            this.pParamBottom.Name = "pParamBottom";
-            this.pParamBottom.Size = new System.Drawing.Size(550, 151);
-            this.pParamBottom.TabIndex = 1;
-            // 
-            // cbMultiple
-            // 
-            this.cbMultiple.AutoSize = true;
-            this.cbMultiple.Location = new System.Drawing.Point(169, 58);
-            this.cbMultiple.Name = "cbMultiple";
-            this.cbMultiple.Size = new System.Drawing.Size(70, 19);
-            this.cbMultiple.TabIndex = 37;
-            this.cbMultiple.Text = "Multiple";
-            this.toolTip.SetToolTip(this.cbMultiple, "Runs the model multiple times saving the model details and episodes.");
-            this.cbMultiple.UseVisualStyleBackColor = true;
-            this.cbMultiple.CheckedChanged += new System.EventHandler(this.cbMultiple_CheckedChanged);
-            // 
-            // eRunNumber
-            // 
-            this.eRunNumber.Location = new System.Drawing.Point(240, 56);
-            this.eRunNumber.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.eRunNumber.Name = "eRunNumber";
-            this.eRunNumber.Size = new System.Drawing.Size(63, 23);
-            this.eRunNumber.TabIndex = 36;
-            this.toolTip.SetToolTip(this.eRunNumber, "Warning: depending on the complexity of the model, multiple runs can take a long " +
-        "time.");
-            this.eRunNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.eRunNumber.Visible = false;
-            // 
-            // eSkip
-            // 
-            this.eSkip.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.eSkip.Location = new System.Drawing.Point(74, 56);
-            this.eSkip.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.eSkip.Name = "eSkip";
-            this.eSkip.Size = new System.Drawing.Size(76, 23);
-            this.eSkip.TabIndex = 34;
-            this.toolTip.SetToolTip(this.eSkip, "(in milliseconds)");
-            // 
-            // lSkip
-            // 
-            this.lSkip.AutoSize = true;
-            this.lSkip.Location = new System.Drawing.Point(16, 60);
-            this.lSkip.Name = "lSkip";
-            this.lSkip.Size = new System.Drawing.Size(29, 15);
-            this.lSkip.TabIndex = 6;
-            this.lSkip.Text = "Skip";
-            // 
-            // edt
-            // 
-            this.edt.DecimalPlaces = 2;
-            this.edt.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.edt.Location = new System.Drawing.Point(74, 81);
-            this.edt.Name = "edt";
-            this.edt.Size = new System.Drawing.Size(76, 23);
-            this.edt.TabIndex = 35;
-            this.toolTip.SetToolTip(this.edt, "(in milliseconds)");
-            this.edt.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.edt.ValueChanged += new System.EventHandler(this.edt_ValueChanged);
-            // 
-            // eTimeEnd
-            // 
-            this.eTimeEnd.Increment = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eTimeEnd.Location = new System.Drawing.Point(74, 30);
-            this.eTimeEnd.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.eTimeEnd.Name = "eTimeEnd";
-            this.eTimeEnd.Size = new System.Drawing.Size(76, 23);
-            this.eTimeEnd.TabIndex = 33;
-            this.eTimeEnd.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.eTimeEnd, "(in milliseconds)");
-            this.eTimeEnd.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eTimeEnd.ValueChanged += new System.EventHandler(this.eTimeEnd_ValueChanged);
-            this.eTimeEnd.Enter += new System.EventHandler(this.eTimeEnd_Enter);
-            // 
-            // ldt
-            // 
-            this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(16, 84);
-            this.ldt.Name = "ldt";
-            this.ldt.Size = new System.Drawing.Size(19, 15);
-            this.ldt.TabIndex = 32;
-            this.ldt.Text = "Δt";
-            // 
-            // lRunTime
-            // 
-            this.lRunTime.Location = new System.Drawing.Point(310, 29);
-            this.lRunTime.Name = "lRunTime";
-            this.lRunTime.Size = new System.Drawing.Size(177, 76);
-            this.lRunTime.TabIndex = 31;
-            // 
-            // lStimulus
-            // 
-            this.lStimulus.AutoSize = true;
-            this.lStimulus.Location = new System.Drawing.Point(167, 30);
-            this.lStimulus.Name = "lStimulus";
-            this.lStimulus.Size = new System.Drawing.Size(53, 15);
-            this.lStimulus.TabIndex = 29;
-            this.lStimulus.Text = "Stimulus";
-            // 
-            // ddStimulusMode
-            // 
-            this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddStimulusMode.FormattingEnabled = true;
-            this.ddStimulusMode.Items.AddRange(new object[] {
-            "Step",
-            "Gaussian",
-            "Ramp"});
-            this.ddStimulusMode.Location = new System.Drawing.Point(227, 29);
-            this.ddStimulusMode.Name = "ddStimulusMode";
-            this.ddStimulusMode.Size = new System.Drawing.Size(76, 23);
-            this.ddStimulusMode.TabIndex = 30;
-            // 
-            // linkSaveRun
-            // 
-            this.linkSaveRun.AutoSize = true;
-            this.linkSaveRun.Location = new System.Drawing.Point(249, 85);
-            this.linkSaveRun.Name = "linkSaveRun";
-            this.linkSaveRun.Size = new System.Drawing.Size(55, 15);
-            this.linkSaveRun.TabIndex = 27;
-            this.linkSaveRun.TabStop = true;
-            this.linkSaveRun.Text = "Save Run";
-            this.linkSaveRun.Visible = false;
-            this.linkSaveRun.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveRun_LinkClicked);
-            // 
-            // progressBarRun
-            // 
-            this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBarRun.Location = new System.Drawing.Point(0, 128);
-            this.progressBarRun.Name = "progressBarRun";
-            this.progressBarRun.Size = new System.Drawing.Size(550, 23);
-            this.progressBarRun.TabIndex = 26;
-            this.progressBarRun.Visible = false;
-            // 
-            // btnRun
-            // 
-            this.btnRun.Location = new System.Drawing.Point(167, 81);
-            this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(75, 23);
-            this.btnRun.TabIndex = 9;
-            this.btnRun.Text = "Run";
-            this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
-            // 
-            // lTimeEnd
-            // 
-            this.lTimeEnd.AutoSize = true;
-            this.lTimeEnd.Location = new System.Drawing.Point(16, 35);
-            this.lTimeEnd.Name = "lTimeEnd";
-            this.lTimeEnd.Size = new System.Drawing.Size(56, 15);
-            this.lTimeEnd.TabIndex = 3;
-            this.lTimeEnd.Text = "Time End";
-            // 
-            // lRunParameters
-            // 
-            this.lRunParameters.AutoSize = true;
-            this.lRunParameters.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lRunParameters.Location = new System.Drawing.Point(0, 0);
-            this.lRunParameters.Name = "lRunParameters";
-            this.lRunParameters.Padding = new System.Windows.Forms.Padding(10);
-            this.lRunParameters.Size = new System.Drawing.Size(153, 35);
-            this.lRunParameters.TabIndex = 1;
-            this.lRunParameters.Text = "Simulation Parameters";
-            // 
             // timerRun
             // 
             this.timerRun.Interval = 1000;
@@ -2444,29 +2459,28 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // linkNeuronalCellDynamics
+            // cmNeuronalDynamics
             // 
-            this.linkNeuronalCellDynamics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkNeuronalCellDynamics.AutoSize = true;
-            this.linkNeuronalCellDynamics.Location = new System.Drawing.Point(1223, 16);
-            this.linkNeuronalCellDynamics.Name = "linkNeuronalCellDynamics";
-            this.linkNeuronalCellDynamics.Size = new System.Drawing.Size(111, 15);
-            this.linkNeuronalCellDynamics.TabIndex = 8;
-            this.linkNeuronalCellDynamics.TabStop = true;
-            this.linkNeuronalCellDynamics.Text = "Neuronal Dynamics";
-            this.linkNeuronalCellDynamics.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkNeuronalCellDynamics_LinkClicked);
+            this.cmNeuronalDynamics.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiIzhikevich_9P,
+            this.cmiIzhikevich5P});
+            this.cmNeuronalDynamics.Name = "cmNeuronalDynamics";
+            this.cmNeuronalDynamics.Size = new System.Drawing.Size(181, 70);
+            this.cmNeuronalDynamics.Text = "Izhikevich 9P";
             // 
-            // linkMuscleCellDynamics
+            // cmiIzhikevich_9P
             // 
-            this.linkMuscleCellDynamics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkMuscleCellDynamics.AutoSize = true;
-            this.linkMuscleCellDynamics.Enabled = false;
-            this.linkMuscleCellDynamics.Location = new System.Drawing.Point(1088, 16);
-            this.linkMuscleCellDynamics.Name = "linkMuscleCellDynamics";
-            this.linkMuscleCellDynamics.Size = new System.Drawing.Size(123, 15);
-            this.linkMuscleCellDynamics.TabIndex = 9;
-            this.linkMuscleCellDynamics.TabStop = true;
-            this.linkMuscleCellDynamics.Text = "Muscle Cell Dynamics";
+            this.cmiIzhikevich_9P.Name = "cmiIzhikevich_9P";
+            this.cmiIzhikevich_9P.Size = new System.Drawing.Size(180, 22);
+            this.cmiIzhikevich_9P.Text = "Izhikevich 9P";
+            this.cmiIzhikevich_9P.Click += new System.EventHandler(this.cmiIzhikevich_9P_Click);
+            // 
+            // cmiIzhikevich5P
+            // 
+            this.cmiIzhikevich5P.Name = "cmiIzhikevich5P";
+            this.cmiIzhikevich5P.Size = new System.Drawing.Size(180, 22);
+            this.cmiIzhikevich5P.Text = "Izhikevich 5P";
+            this.cmiIzhikevich5P.Click += new System.EventHandler(this.cmiIzhikevich5P_Click);
             // 
             // MainForm
             // 
@@ -2514,6 +2528,12 @@ namespace SiliFish.UI
             this.pConnectionTop.ResumeLayout(false);
             this.pConnectionTop.PerformLayout();
             this.tabStimuli.ResumeLayout(false);
+            this.pParamBottom.ResumeLayout(false);
+            this.pParamBottom.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
             this.tabOutputs.ResumeLayout(false);
@@ -2572,12 +2592,7 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
-            this.pParamBottom.ResumeLayout(false);
-            this.pParamBottom.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
+            this.cmNeuronalDynamics.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2757,7 +2772,9 @@ namespace SiliFish.UI
         private Label lConnections;
         private ComboBox ddSomites;
         private Label lSomites;
-        private LinkLabel linkMuscleCellDynamics;
         private LinkLabel linkNeuronalCellDynamics;
+        private ContextMenuStrip cmNeuronalDynamics;
+        private ToolStripMenuItem cmiIzhikevich_9P;
+        private ToolStripMenuItem cmiIzhikevich5P;
     }
 }

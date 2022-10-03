@@ -21,7 +21,7 @@ namespace SiliFish.UI.Controls
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
-        private IzhikevichSolver Solver;
+        private CoreSolver Solver;
         Dictionary<string, double> SolverBestValues;
         private bool OptimizationMode
         {
@@ -305,11 +305,7 @@ namespace SiliFish.UI.Controls
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 TimeArray[i] = i * (double)dt;
-            DynamicUnit core = null;
-            if (coreType == CoreType.Izhikevich_9P)
-                core = new Izhikevich_9P(parameters);
-            else if (coreType == CoreType.Leaky_Integrator)
-                core = new Leaky_Integrator(parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
             if (core != null)
             {
                 if (rbManualEntryStimulus.Checked)
@@ -369,16 +365,13 @@ namespace SiliFish.UI.Controls
             ReadParameters();
 
             //TODO muscle cell contraction - how to we handle it?
-            if (coreType == CoreType.Izhikevich_9P)
-            {
-                DynamicUnit core = new Izhikevich_9P(parameters);
-                decimal limit = eRheobaseLimit.Value;
-                decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
-                if (d > 0)
-                    eRheobase.Text = d.ToString(Const.DecimalPointFormat);
-                else
-                    eRheobase.Text = "N/A";
-            }
+            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            decimal limit = eRheobaseLimit.Value;
+            decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
+            if (d > 0)
+                eRheobase.Text = d.ToString(Const.DecimalPointFormat);
+            else
+                eRheobase.Text = "N/A";
         }
         private void btnRheobase_Click(object sender, EventArgs e)
         {
@@ -398,31 +391,26 @@ namespace SiliFish.UI.Controls
                 string param = ddParameter.SelectedItem.ToString();
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == param).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
-            if (coreType == CoreType.Izhikevich_9P)
+            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+
+            foreach (string param in paramToTest.Keys)//change one parameter at a time
             {
-                DynamicUnit core = new Izhikevich_9P(parameters);
-                foreach (string param in paramToTest.Keys)//change one parameter at a time
+                (double[] values, double[] rheos) = core.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
+                    double.Parse(eMinMultiplier.Text), double.Parse(eMaxMultiplier.Text),
+                    20/*num of points*/, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
+                charts.Add(new ChartDataStruct
                 {
-                    (double[] values, double[] rheos) = core.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
-                        double.Parse(eMinMultiplier.Text), double.Parse(eMaxMultiplier.Text),
-                        20/*num of points*/, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
-                    charts.Add(new ChartDataStruct
-                    {
-                        Title = param,
-                        Color = Color.Purple,
-                        xData = values,
-                        yData = rheos,
-                        xLabel = param,
-                        yLabel = "Rheobase",
-                        drawPoints = true,
-                        logScale = cbLogScale.Checked
-                    });
-                }
+                    Title = param,
+                    Color = Color.Purple,
+                    xData = values,
+                    yData = rheos,
+                    xLabel = param,
+                    yLabel = "Rheobase",
+                    drawPoints = true,
+                    logScale = cbLogScale.Checked
+                });
             }
-            else if (coreType == CoreType.Leaky_Integrator)
-            {
                 //TODO muscle cell rheobase 
-            }
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts, 
@@ -535,6 +523,7 @@ namespace SiliFish.UI.Controls
                 (Type)cbGAMutation.SelectedItem,
                 (Type)cbGATermination.SelectedItem);
             Solver.SetOptimizationSettings(minPopulation, maxPopulation,
+                coreType,
                 parameters,
                 targetRheobaseMin, targetRheobaseMax, FitnessValues,
                 MinValues, MaxValues);
@@ -575,12 +564,10 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DynamicUnit core;
-            if (coreType == CoreType.Izhikevich_9P)
-                core = new Izhikevich_9P(parameters);
-            else if (coreType == CoreType.Leaky_Integrator)
-                core = new Leaky_Integrator(parameters);
-            else return;
+            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+
+            if (core == null) return;
+
             (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues)  = core.GetSuggestedMinMaxValues();
 
             dgMinMaxValues.Rows.Clear();
