@@ -14,19 +14,22 @@ namespace SiliFish.DynamicUnits
         public bool IsBurst { get { return SpikeTimeList?.Count >= MinBurstSpikeCount; } }
         public int SpikeCount { get { return SpikeTimeList.Count; } }
 
-        public static FiringPattern FiringPatternOfList(List<BurstOrSpike> Bursts, bool followedByQuiescence)
+        public static FiringPattern FiringPatternOfList(List<BurstOrSpike> Bursts, bool leadByQuiescence, bool followedByQuiescence)
         {
             if (Bursts.Count == 1)
             {
                 if (Bursts[0].IsSpike)
-                    return FiringPattern.Phasic;
+                    return leadByQuiescence?FiringPattern.DelayedPhasic : FiringPattern.Phasic;
                 if (Bursts[0].IsDoublet)
                     return FiringPattern.PhasicDoublet;
                 if (Bursts[0].IsBurst)
-                    return followedByQuiescence ? FiringPattern.PhasicBursting : FiringPattern.Tonic;
+                    return leadByQuiescence && followedByQuiescence ? FiringPattern.DelayedPhasicBursting :
+                        followedByQuiescence ? FiringPattern.PhasicBursting : FiringPattern.Tonic;
                 return FiringPattern.Unknown;
             }
-            //if (Bursts.Count > 1)
+            
+            
+            //(Bursts.Count > 1)
 
             if (!Bursts.Any(b => !b.IsBurst))//All of them are bursts
                 return FiringPattern.TonicBursting;
@@ -187,14 +190,21 @@ namespace SiliFish.DynamicUnits
         */
         public void DefineSpikingPattern()
         {
+            int curStart = IList.ToList().FindIndex(i => i > 0);
+
+            SpikeList.RemoveAll(s => s < curStart);
             if (SpikeList.Count == 0)
             {
                 firingPattern = FiringPattern.Unknown;
                 return;
             }
+            double firsttITime =  curStart * RunParam.static_dt;
+            double firstSpikeTime = SpikeList[0] * RunParam.static_dt;
+            bool leadByQuiescence = firstSpikeTime - firsttITime >= 10 * TonicPadding;
+
             if (SpikeList.Count == 1)
             {
-                firingPattern = FiringPattern.Phasic;
+                firingPattern = leadByQuiescence ? FiringPattern.DelayedPhasic : FiringPattern.Phasic;
                 return;
             }
 
@@ -227,7 +237,8 @@ namespace SiliFish.DynamicUnits
             }
             double lastITime = IList.ToList().FindLastIndex(i => i > 0) * RunParam.static_dt;
             double lastSpikeTime = SpikeList[^1] * RunParam.static_dt;
-            firingPattern = BurstOrSpike.FiringPatternOfList(Bursts, lastITime - lastSpikeTime >= TonicPadding);
+            bool followedByQuiescence = lastITime - lastSpikeTime >= TonicPadding;
+            firingPattern = BurstOrSpike.FiringPatternOfList(Bursts,leadByQuiescence, followedByQuiescence);
             if (firingPattern == FiringPattern.Unknown)
             {
                 int skipend = lastITime - lastSpikeTime <= TonicPadding ? 1 : 0;
@@ -235,7 +246,7 @@ namespace SiliFish.DynamicUnits
                 if (skip + skipend == 0)
                     firingPattern = FiringPattern.Chattering;
                 List<BurstOrSpike> MidBursts = Bursts.Skip(skip).Take(Bursts.Count - skip - skipend).ToList();
-                firingPattern = BurstOrSpike.FiringPatternOfList(MidBursts, skipend == 0);
+                firingPattern = BurstOrSpike.FiringPatternOfList(MidBursts,leadByQuiescence, skipend == 0);
             }
         }
 

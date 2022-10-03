@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,19 @@ namespace SiliFish.DynamicUnits
 {
     public class DynamicUnit
     {
+        public static DynamicUnit CreateCore(CoreType coreType, Dictionary<string, double> parameters)
+        {
+            switch (coreType)
+            {
+                case CoreType.Izhikevich_5P:
+                    return new Izhikevich_5P(parameters);
+                case CoreType.Izhikevich_9P:
+                    return new Izhikevich_9P(parameters);
+                case CoreType.Leaky_Integrator:
+                    return new Leaky_Integrator(parameters);
+            }
+            return null;
+        }
         public virtual double CalculateRheoBase(double maxRheobase, double sensitivity, int infinity, double dt, int warmup = 100, int cooldown = 100)
         {
             throw new NotImplementedException();

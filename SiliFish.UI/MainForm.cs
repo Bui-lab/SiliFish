@@ -1967,8 +1967,24 @@ namespace SiliFish.UI
 
         private void linkNeuronalCellDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Izhikevich_9P izhi = new(paramExternal:null);
+            cmNeuronalDynamics.Show(linkNeuronalCellDynamics, new Point(0,0));
+        }
+
+        private void cmiIzhikevich_9P_Click(object sender, EventArgs e)
+        {
+            Izhikevich_9P izhi = new(paramExternal: null);
             DynamicsTestControl dynControl = new(CoreType.Izhikevich_9P, izhi.GetParametersDouble(), testMode: true);
+            ControlContainer frmControl = new();
+            frmControl.AddControl(dynControl);
+            frmControl.Text = "Neuronal Dynamics Test";
+            frmControl.SaveVisible = false;
+            frmControl.ShowDialog();
+        }
+
+        private void cmiIzhikevich5P_Click(object sender, EventArgs e)
+        {
+            Izhikevich_5P izhi = new(paramExternal: null);
+            DynamicsTestControl dynControl = new(CoreType.Izhikevich_5P, izhi.GetParametersDouble(), testMode: true);
             ControlContainer frmControl = new();
             frmControl.AddControl(dynControl);
             frmControl.Text = "Neuronal Dynamics Test";

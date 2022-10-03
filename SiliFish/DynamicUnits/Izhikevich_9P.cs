@@ -17,6 +17,18 @@ namespace SiliFish.DynamicUnits
         private double c = -65;
         private double d = 2;
 
+        private static double a_suggestedMin = 0.01;
+        private static double a_suggestedMax = 1;
+        private static double b_suggestedMin = 0.01;
+        private static double b_suggestedMax = 1;
+        private static double d_suggestedMin = -10;
+        private static double d_suggestedMax = 10;
+        private static double k_suggestedMin = -100;
+        private static double k_suggestedMax = 100;
+        private static double Cm_suggestedMin = 1;
+        private static double Cm_suggestedMax = 500;
+
+
         // vmax is the peak membrane potential of single action potentials
         [JsonIgnore]
         public double Vmax;
@@ -60,15 +72,15 @@ namespace SiliFish.DynamicUnits
         {
             Dictionary<string, double> paramDict = new()
             {
-                { "Izhikevich_9P.a", a },
-                { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.d", d },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
-                { "Izhikevich_9P.k", k },
-                { "Izhikevich_9P.Cm", Cm }
+                { "Izhikevich_5P.a", a },
+                { "Izhikevich_5P.b", b },
+                { "Izhikevich_5P.c", c },
+                { "Izhikevich_5P.d", d },
+                { "Izhikevich_5P.V_max", Vmax },
+                { "Izhikevich_5P.V_r", Vr },
+                { "Izhikevich_5P.V_t", Vt },
+                { "Izhikevich_5P.k", k },
+                { "Izhikevich_5P.Cm", Cm }
             };
             return paramDict;
         }
@@ -77,64 +89,44 @@ namespace SiliFish.DynamicUnits
         {
             Dictionary<string, object> paramDict = new()
             {
-                { "Izhikevich_9P.a", a },
-                { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.d", d },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
-                { "Izhikevich_9P.k", k },
-                { "Izhikevich_9P.Cm", Cm }
+                { "Izhikevich_5P.a", a },
+                { "Izhikevich_5P.b", b },
+                { "Izhikevich_5P.c", c },
+                { "Izhikevich_5P.d", d },
+                { "Izhikevich_5P.V_max", Vmax },
+                { "Izhikevich_5P.V_r", Vr },
+                { "Izhikevich_5P.V_t", Vt },
+                { "Izhikevich_5P.k", k },
+                { "Izhikevich_5P.Cm", Cm }
             };
             return paramDict;
         }
 
-        private (double, double) CalculateRange(double value)
-        {
-            if (value == 0)
-                return (Const.GeneticAlgorithmMinValue, Const.GeneticAlgorithmMaxValue);
-            int numDigit = Util.NumOfDigits(value);
-            int numDecimal = Util.NumOfDecimalDigits((decimal)value);
-            if (numDigit == 0)
-                numDigit = 1;
 
-            double minValue = value - 10 * numDigit;
-            if (value > 0 && minValue <= 0)
-                minValue = Math.Pow(10, -numDecimal);
-
-            double maxValue = value + 10 * numDigit;
-            if (value < 0 && maxValue >= 0)
-                maxValue = -Math.Pow(10, -numDecimal);
-
-            return (minValue, maxValue);
-        }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
+                { "Izhikevich_5P.c", c },
+                { "Izhikevich_5P.V_max", Vmax },
+                { "Izhikevich_5P.V_r", Vr },
+                { "Izhikevich_5P.V_t", Vt },
+                { "Izhikevich_5P.a", a_suggestedMin },
+                { "Izhikevich_5P.b", b_suggestedMin },
+                { "Izhikevich_5P.d", d_suggestedMin },
+                { "Izhikevich_5P.k", k_suggestedMin },
+                { "Izhikevich_5P.Cm", Cm_suggestedMin }
             };
             Dictionary<string, double> MaxValues = new() {
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
+                { "Izhikevich_5P.c", c },
+                { "Izhikevich_5P.V_max", Vmax },
+                { "Izhikevich_5P.V_r", Vr },
+                { "Izhikevich_5P.V_t", Vt },
+                { "Izhikevich_5P.a", a_suggestedMax },
+                { "Izhikevich_5P.b", b_suggestedMax },
+                { "Izhikevich_5P.d", d_suggestedMax },
+                { "Izhikevich_5P.k", k_suggestedMax },
+                { "Izhikevich_5P.Cm", Cm_suggestedMax }
             };
-            List<string> nonVoltageParams = new()
-                { "Izhikevich_9P.a",
-                "Izhikevich_9P.b",
-                "Izhikevich_9P.d",
-                "Izhikevich_9P.k",
-                "Izhikevich_9P.Cm" };
-            foreach (string par in nonVoltageParams)
-            {
-                (double minValue, double maxValue) = CalculateRange(GetParametersDouble()[par]);
-                MinValues.Add(par, minValue);
-                MaxValues.Add(par, maxValue);
-            }
 
             return (MinValues, MaxValues);
         }
@@ -142,15 +134,15 @@ namespace SiliFish.DynamicUnits
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            a = paramExternal.Read("Izhikevich_9P.a", a);
-            b = paramExternal.Read("Izhikevich_9P.b", b);
-            c = paramExternal.Read("Izhikevich_9P.c", c);
-            d = paramExternal.Read("Izhikevich_9P.d", d);
-            Vmax = paramExternal.Read("Izhikevich_9P.V_max", Vmax);
-            V = Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);
-            Vt = paramExternal.Read("Izhikevich_9P.V_t", Vt);
-            k = paramExternal.Read("Izhikevich_9P.k", k);
-            Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
+            a = paramExternal.Read("Izhikevich_5P.a", a);
+            b = paramExternal.Read("Izhikevich_5P.b", b);
+            c = paramExternal.Read("Izhikevich_5P.c", c);
+            d = paramExternal.Read("Izhikevich_5P.d", d);
+            Vmax = paramExternal.Read("Izhikevich_5P.V_max", Vmax);
+            V = Vr = paramExternal.Read("Izhikevich_5P.V_r", Vr);
+            Vt = paramExternal.Read("Izhikevich_5P.V_t", Vt);
+            k = paramExternal.Read("Izhikevich_5P.k", k);
+            Cm = paramExternal.Read("Izhikevich_5P.Cm", Cm);
         }
 
         public virtual string GetInstanceParams()
