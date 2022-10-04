@@ -112,6 +112,7 @@ namespace SiliFish.UI.Controls
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             cbGATermination.SelectedIndex = 0;
             splitRight.Panel1Collapsed = true;
+            colFitnessFiringRhythm.DataSource = Enum.GetValues(typeof(FiringRhythm));
             colFitnessFiringMode.DataSource = Enum.GetValues(typeof(FiringPattern));
         }
 
@@ -478,7 +479,7 @@ namespace SiliFish.UI.Controls
             return (MinValues, MaxValues);
         }
 
-        private Dictionary<double, FiringPattern> ReadFitnessValues()
+        private Dictionary<double, FiringPattern> ReadFitnessValues()//TODO add firing rhythm
         {
             Dictionary<double, FiringPattern> FitnessValues = new();
             foreach (DataGridViewRow row in dgFitnessParams.Rows)
@@ -601,16 +602,28 @@ namespace SiliFish.UI.Controls
         //https://stackoverflow.com/questions/19406042/databinding-datagridviewcomboboxcolumn-with-enum
         private void dgFitnessParams_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == colFitnessFiringMode.Index)
-                dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value.ToString());
+            try
+            {
+                if (e.ColumnIndex == colFitnessFiringMode.Index)
+                    dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value.ToString());
+                else if (e.ColumnIndex == colFitnessFiringRhythm.Index)
+                    dgFitnessParams[colFitnessFiringRhythm.Index, e.RowIndex].Value = (FiringRhythm)Enum.Parse(typeof(FiringRhythm), dgFitnessParams[colFitnessFiringRhythm.Index, e.RowIndex].Value.ToString());
+            }
+            catch { }
         }
+
 
         private void dgFitnessParams_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
         {
-            if (e.Row.DataBoundItem != null)
+            try
             {
-                e.Row.Cells[colFitnessFiringMode.Index].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), e.Row.Cells[colFitnessFiringMode.Index].Value.ToString());
+                if (e.Row.DataBoundItem != null)
+                {
+                    e.Row.Cells[colFitnessFiringRhythm.Index].Value = (FiringRhythm)Enum.Parse(typeof(FiringRhythm), e.Row.Cells[colFitnessFiringRhythm.Index].Value.ToString());
+                    e.Row.Cells[colFitnessFiringMode.Index].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), e.Row.Cells[colFitnessFiringMode.Index].Value.ToString());
+                }
             }
+            catch { }
         }
     }
 }

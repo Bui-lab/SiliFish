@@ -7,42 +7,35 @@ namespace SiliFish.DynamicUnits
 {
     public class BurstOrSpike
     {
-        public static double MinBurstSpikeCount { get; set; } = 3; //the number of minimum spikes required
+        public static double MinBurstSpikeCount { get; set; } = 2; //the number of minimum spikes required
         public List<double> SpikeTimeList = new();
         public bool IsSpike { get { return SpikeTimeList?.Count == 1; } }
         public bool IsDoublet { get { return SpikeTimeList?.Count == 2; } }
         public bool IsBurst { get { return SpikeTimeList?.Count >= MinBurstSpikeCount; } }
         public int SpikeCount { get { return SpikeTimeList.Count; } }
 
-        public static FiringPattern FiringPatternOfList(List<BurstOrSpike> Bursts, bool leadByQuiescence, bool followedByQuiescence)
+        public static (FiringRhythm, FiringPattern) FiringPatternOfList(List<BurstOrSpike> Bursts, bool followedByQuiescence)
         {
             if (Bursts.Count == 1)
             {
                 if (Bursts[0].IsSpike)
-                    return leadByQuiescence?FiringPattern.DelayedPhasic : FiringPattern.Phasic;
-                if (Bursts[0].IsDoublet)
-                    return FiringPattern.PhasicDoublet;
-                if (Bursts[0].IsBurst)
-                    return leadByQuiescence && followedByQuiescence ? FiringPattern.DelayedPhasicBursting :
-                        followedByQuiescence ? FiringPattern.PhasicBursting : FiringPattern.Tonic;
-                return FiringPattern.Unknown;
+                    return (FiringRhythm.Phasic, FiringPattern.Spiking);  //leadByQuiescence?FiringPattern.DelayedPhasic : FiringPattern.Phasic;
+                else //if (Bursts[0].IsBurst)
+                    return (FiringRhythm.Phasic, followedByQuiescence ? FiringPattern.Bursting : FiringPattern.Spiking);
             }
-            
             
             //(Bursts.Count > 1)
 
             if (!Bursts.Any(b => !b.IsBurst))//All of them are bursts
-                return FiringPattern.TonicBursting;
-
-            if (!Bursts.Any(b => !b.IsDoublet))//all of them are doublets
-                return FiringPattern.TonicDoublet;
+                return (FiringRhythm.Tonic, FiringPattern.Bursting);
 
             if (!Bursts.Any(b => !b.IsSpike))//all of them are spikes
             {
                 if (Bursts.Count == 2)
-                    return FiringPattern.Chattering;
+                    return (FiringRhythm.Tonic, FiringPattern.Spiking);
 
-                FiringPattern firingPattern = FiringPattern.Tonic;
+                FiringRhythm firingRhythm = FiringRhythm.Tonic;
+                FiringPattern firingPattern = FiringPattern.Spiking;
 
                 //check whether the intervals are random
                 double[] intervalArray = new double[Bursts.Count - 1];
@@ -54,18 +47,20 @@ namespace SiliFish.DynamicUnits
                 {
                     if (decreasing && intervalArray[i] > intervalArray[i - 1])
                     {
+                        firingRhythm = FiringRhythm.Chattering;
                         firingPattern = FiringPattern.Chattering;
                         break;
                     }
                     else if (!decreasing && intervalArray[i] < intervalArray[i - 1])
                     {
+                        firingRhythm = FiringRhythm.Chattering;
                         firingPattern = FiringPattern.Chattering;
                         break;
                     }
                 }
-                return firingPattern;
+                return (firingRhythm, firingPattern);
             }
-            return FiringPattern.Unknown;
+            return (FiringRhythm.Chattering, FiringPattern.Mixed);
         }
     }
     /// <summary>
@@ -102,8 +97,12 @@ namespace SiliFish.DynamicUnits
         /// u for neurons and rel. tension for muscle cells
         /// </summary>
         public double[] SecList;
-        private FiringPattern firingPattern = FiringPattern.Unknown;
+        private FiringRhythm firingRhythm = FiringRhythm.Phasic;
+        private FiringDelay firingDelay = FiringDelay.NoDelay;
+        private FiringPattern firingPattern = FiringPattern.NoSpike;
 
+        public FiringRhythm FiringRhythm { get { return firingRhythm; } }
+        public FiringDelay FiringDelay { get { return firingDelay; } }
         public FiringPattern FiringPattern { get { return firingPattern; } }
 
         public Dictionary<double, double> Intervals_ms
@@ -195,16 +194,19 @@ namespace SiliFish.DynamicUnits
             SpikeList.RemoveAll(s => s < curStart);
             if (SpikeList.Count == 0)
             {
-                firingPattern = FiringPattern.Unknown;
+                firingPattern = FiringPattern.NoSpike;
                 return;
             }
             double firsttITime =  curStart * RunParam.static_dt;
             double firstSpikeTime = SpikeList[0] * RunParam.static_dt;
             bool leadByQuiescence = firstSpikeTime - firsttITime >= 10 * TonicPadding;
+            if (leadByQuiescence)
+                firingDelay = FiringDelay.Delayed;
 
             if (SpikeList.Count == 1)
             {
-                firingPattern = leadByQuiescence ? FiringPattern.DelayedPhasic : FiringPattern.Phasic;
+                firingRhythm = FiringRhythm.Phasic;
+                firingPattern = FiringPattern.Spiking;
                 return;
             }
 
@@ -219,7 +221,7 @@ namespace SiliFish.DynamicUnits
             {
                 double curTime = SpikeList[spikeTimeIndex] * RunParam.static_dt;
                 double curInterval = curTime - lastTime;
-                if (lastInterval != double.NaN && curInterval < lastInterval)
+                if (lastInterval != double.NaN && curInterval < lastInterval - Const.Epsilon)
                     spreadingOut = false;
                 if ((spreadingOut && curInterval > MaxBurstInterval_UpperRange) || (!spreadingOut && curInterval > MaxBurstInterval_LowerRange))
                 {
@@ -237,17 +239,10 @@ namespace SiliFish.DynamicUnits
             }
             double lastITime = IList.ToList().FindLastIndex(i => i > 0) * RunParam.static_dt;
             double lastSpikeTime = SpikeList[^1] * RunParam.static_dt;
-            bool followedByQuiescence = lastITime - lastSpikeTime >= TonicPadding;
-            firingPattern = BurstOrSpike.FiringPatternOfList(Bursts,leadByQuiescence, followedByQuiescence);
-            if (firingPattern == FiringPattern.Unknown)
-            {
-                int skipend = lastITime - lastSpikeTime <= TonicPadding ? 1 : 0;
-                int skip = Bursts.Count - skipend > 2 ? 1 : 0;
-                if (skip + skipend == 0)
-                    firingPattern = FiringPattern.Chattering;
-                List<BurstOrSpike> MidBursts = Bursts.Skip(skip).Take(Bursts.Count - skip - skipend).ToList();
-                firingPattern = BurstOrSpike.FiringPatternOfList(MidBursts,leadByQuiescence, skipend == 0);
-            }
+            if (lastInterval == double.NaN)
+                lastInterval = TonicPadding;
+            bool followedByQuiescence = lastITime - lastSpikeTime >= lastInterval + TonicPadding;
+            (firingRhythm, firingPattern) = BurstOrSpike.FiringPatternOfList(Bursts,followedByQuiescence);
         }
 
 

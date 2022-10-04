@@ -81,8 +81,6 @@
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
             this.tFitness = new System.Windows.Forms.TabPage();
             this.dgFitnessParams = new System.Windows.Forms.DataGridView();
-            this.colFitnessRheobaseMultiplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFitnessFiringMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.pFitnessTop = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.eMaxTargetRheobase = new System.Windows.Forms.TextBox();
@@ -116,6 +114,9 @@
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
+            this.colFitnessRheobaseMultiplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFitnessFiringMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colFitnessFiringRhythm = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -773,7 +774,8 @@
             this.dgFitnessParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgFitnessParams.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFitnessRheobaseMultiplier,
-            this.colFitnessFiringMode});
+            this.colFitnessFiringMode,
+            this.colFitnessFiringRhythm});
             this.dgFitnessParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgFitnessParams.Location = new System.Drawing.Point(0, 32);
             this.dgFitnessParams.Name = "dgFitnessParams";
@@ -783,22 +785,6 @@
             this.dgFitnessParams.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgFitnessParams_CellEndEdit);
             this.dgFitnessParams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgFitnessParams_DataError);
             this.dgFitnessParams.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dgFitnessParams_RowStateChanged);
-            // 
-            // colFitnessRheobaseMultiplier
-            // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
-            this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
-            // 
-            // colFitnessFiringMode
-            // 
-            this.colFitnessFiringMode.HeaderText = "Firing Mode";
-            this.colFitnessFiringMode.Name = "colFitnessFiringMode";
-            this.colFitnessFiringMode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colFitnessFiringMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colFitnessFiringMode.Width = 200;
             // 
             // pFitnessTop
             // 
@@ -1107,6 +1093,30 @@
             // 
             this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
             // 
+            // colFitnessRheobaseMultiplier
+            // 
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
+            this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
+            // 
+            // colFitnessFiringMode
+            // 
+            this.colFitnessFiringMode.HeaderText = "Firing Mode";
+            this.colFitnessFiringMode.Name = "colFitnessFiringMode";
+            this.colFitnessFiringMode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colFitnessFiringMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colFitnessFiringMode.Width = 200;
+            // 
+            // colFitnessFiringRhythm
+            // 
+            this.colFitnessFiringRhythm.HeaderText = "Rhythm";
+            this.colFitnessFiringRhythm.Name = "colFitnessFiringRhythm";
+            this.colFitnessFiringRhythm.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colFitnessFiringRhythm.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colFitnessFiringRhythm.Width = 200;
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1247,5 +1257,6 @@
         private TextBox eMaxTargetRheobase;
         private DataGridViewTextBoxColumn colFitnessRheobaseMultiplier;
         private DataGridViewComboBoxColumn colFitnessFiringMode;
+        private DataGridViewComboBoxColumn colFitnessFiringRhythm;
     }
 }

@@ -40,7 +40,7 @@ namespace SiliFish.Services.Optimization
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, instanceValues);
             if (core == null) 
                 return 0;
-            double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity: 400, dt: 0.1);
+            double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: 400, dt: 0.1);
             //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
             if (d < 0)//no rheobase
                 return 0;
