@@ -440,21 +440,24 @@ namespace SiliFish.UI.Controls
             DynamicsRun();
         }
 
-        private void linkLoadCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
                 string JSONString = Util.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                Parameters = (Dictionary<string, double>)Util.CreateObjectFromJSON(typeof(Dictionary<string, double>), JSONString);
+                DynamicUnit core = DynamicUnit.GetOfDerivedType(JSONString);
+                if (core != null)
+                    Parameters = core.GetParametersDouble();
             }
         }
 
-        private void linkSaveCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
-            string JSONString = Util.CreateJSONFromObject(parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            string JSONString = Util.CreateJSONFromObject(core);
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
                 Util.SaveToFile(saveFileJson.FileName, JSONString);

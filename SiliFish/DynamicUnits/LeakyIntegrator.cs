@@ -20,7 +20,7 @@ namespace SiliFish.DynamicUnits
         public double TimeConstant { get { return R * C; } }
 
         double V; //keeps the current v value 
-        private void Initialize()
+        protected override void Initialize()
         {
             V = Vr;
         }
@@ -46,10 +46,11 @@ namespace SiliFish.DynamicUnits
 
         public Leaky_Integrator(Dictionary<string, double> paramExternal)
         {
+            CoreType = CoreType.Leaky_Integrator;
             SetParameters(paramExternal.ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object));
             Initialize();
         }
-        public virtual Dictionary<string, object> GetParameters()
+        public override Dictionary<string, object> GetParameters()
         {
             Dictionary<string, object> paramDict = new()
             {
@@ -72,7 +73,7 @@ namespace SiliFish.DynamicUnits
             paramExternal.AddObject("Leaky_Integrator.Tmax", Tmax, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.ka", ka, skipIfExists: true);
         }
-        public virtual void SetParameters(Dictionary<string, object> paramExternal)
+        public override void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;

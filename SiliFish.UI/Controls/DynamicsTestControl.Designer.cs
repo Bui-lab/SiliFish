@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
@@ -55,8 +55,8 @@
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.pParams = new System.Windows.Forms.FlowLayoutPanel();
             this.pLoadSaveParams = new System.Windows.Forms.Panel();
-            this.linkSaveParams = new System.Windows.Forms.LinkLabel();
-            this.linkLoadParams = new System.Windows.Forms.LinkLabel();
+            this.linkSaveCoreUnit = new System.Windows.Forms.LinkLabel();
+            this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
             this.grSensitivity = new System.Windows.Forms.GroupBox();
             this.cbLogScale = new System.Windows.Forms.CheckBox();
             this.eMaxMultiplier = new System.Windows.Forms.TextBox();
@@ -81,6 +81,9 @@
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
             this.tFitness = new System.Windows.Forms.TabPage();
             this.dgFitnessParams = new System.Windows.Forms.DataGridView();
+            this.colFitnessRheobaseMultiplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFitnessFiringMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colFitnessFiringRhythm = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.pFitnessTop = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.eMaxTargetRheobase = new System.Windows.Forms.TextBox();
@@ -114,9 +117,6 @@
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
-            this.colFitnessRheobaseMultiplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFitnessFiringMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.colFitnessFiringRhythm = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -485,35 +485,35 @@
             // 
             // pLoadSaveParams
             // 
-            this.pLoadSaveParams.Controls.Add(this.linkSaveParams);
-            this.pLoadSaveParams.Controls.Add(this.linkLoadParams);
+            this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
+            this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Top;
             this.pLoadSaveParams.Location = new System.Drawing.Point(3, 3);
             this.pLoadSaveParams.Name = "pLoadSaveParams";
             this.pLoadSaveParams.Size = new System.Drawing.Size(216, 31);
             this.pLoadSaveParams.TabIndex = 21;
             // 
-            // linkSaveParams
+            // linkSaveCoreUnit
             // 
-            this.linkSaveParams.AutoSize = true;
-            this.linkSaveParams.Location = new System.Drawing.Point(87, 9);
-            this.linkSaveParams.Name = "linkSaveParams";
-            this.linkSaveParams.Size = new System.Drawing.Size(73, 15);
-            this.linkSaveParams.TabIndex = 21;
-            this.linkSaveParams.TabStop = true;
-            this.linkSaveParams.Text = "Save Params";
-            this.linkSaveParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCell_LinkClicked);
+            this.linkSaveCoreUnit.AutoSize = true;
+            this.linkSaveCoreUnit.Location = new System.Drawing.Point(98, 9);
+            this.linkSaveCoreUnit.Name = "linkSaveCoreUnit";
+            this.linkSaveCoreUnit.Size = new System.Drawing.Size(84, 15);
+            this.linkSaveCoreUnit.TabIndex = 21;
+            this.linkSaveCoreUnit.TabStop = true;
+            this.linkSaveCoreUnit.Text = "Save Core Unit";
+            this.linkSaveCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCoreUnit_LinkClicked);
             // 
-            // linkLoadParams
+            // linkLoadCoreUnit
             // 
-            this.linkLoadParams.AutoSize = true;
-            this.linkLoadParams.Location = new System.Drawing.Point(6, 9);
-            this.linkLoadParams.Name = "linkLoadParams";
-            this.linkLoadParams.Size = new System.Drawing.Size(75, 15);
-            this.linkLoadParams.TabIndex = 20;
-            this.linkLoadParams.TabStop = true;
-            this.linkLoadParams.Text = "Load Params";
-            this.linkLoadParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCell_LinkClicked);
+            this.linkLoadCoreUnit.AutoSize = true;
+            this.linkLoadCoreUnit.Location = new System.Drawing.Point(6, 9);
+            this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
+            this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
+            this.linkLoadCoreUnit.TabIndex = 20;
+            this.linkLoadCoreUnit.TabStop = true;
+            this.linkLoadCoreUnit.Text = "Load Core Unit";
+            this.linkLoadCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCoreUnit_LinkClicked);
             // 
             // grSensitivity
             // 
@@ -785,6 +785,30 @@
             this.dgFitnessParams.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgFitnessParams_CellEndEdit);
             this.dgFitnessParams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgFitnessParams_DataError);
             this.dgFitnessParams.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dgFitnessParams_RowStateChanged);
+            // 
+            // colFitnessRheobaseMultiplier
+            // 
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
+            this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
+            // 
+            // colFitnessFiringMode
+            // 
+            this.colFitnessFiringMode.HeaderText = "Firing Mode";
+            this.colFitnessFiringMode.Name = "colFitnessFiringMode";
+            this.colFitnessFiringMode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colFitnessFiringMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colFitnessFiringMode.Width = 200;
+            // 
+            // colFitnessFiringRhythm
+            // 
+            this.colFitnessFiringRhythm.HeaderText = "Rhythm";
+            this.colFitnessFiringRhythm.Name = "colFitnessFiringRhythm";
+            this.colFitnessFiringRhythm.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colFitnessFiringRhythm.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colFitnessFiringRhythm.Width = 200;
             // 
             // pFitnessTop
             // 
@@ -1093,30 +1117,6 @@
             // 
             this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
             // 
-            // colFitnessRheobaseMultiplier
-            // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
-            this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
-            // 
-            // colFitnessFiringMode
-            // 
-            this.colFitnessFiringMode.HeaderText = "Firing Mode";
-            this.colFitnessFiringMode.Name = "colFitnessFiringMode";
-            this.colFitnessFiringMode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colFitnessFiringMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colFitnessFiringMode.Width = 200;
-            // 
-            // colFitnessFiringRhythm
-            // 
-            this.colFitnessFiringRhythm.HeaderText = "Rhythm";
-            this.colFitnessFiringRhythm.Name = "colFitnessFiringRhythm";
-            this.colFitnessFiringRhythm.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colFitnessFiringRhythm.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colFitnessFiringRhythm.Width = 200;
-            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1205,8 +1205,8 @@
         private RadioButton rbRheobaseBasedStimulus;
         private FlowLayoutPanel pParams;
         private Panel pLoadSaveParams;
-        private LinkLabel linkSaveParams;
-        private LinkLabel linkLoadParams;
+        private LinkLabel linkSaveCoreUnit;
+        private LinkLabel linkLoadCoreUnit;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
         private Panel pPlots;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits
@@ -13,6 +14,20 @@ namespace SiliFish.DynamicUnits
     }
     public class DynamicUnit
     {
+        private Dictionary<string, double> parametersObsolete; //Used for json only
+        public CoreType CoreType { get; set; }
+        public Dictionary<string, double> Parameters
+        {
+            get { return GetParametersDouble(); }
+            set { SetParametersDouble(value); }
+        }
+        public static DynamicUnit GetOfDerivedType(string json)
+        {
+            DynamicUnit core = JsonSerializer.Deserialize<DynamicUnit>(json);
+            if (core != null)
+                return CreateCore(core.CoreType, core.Parameters);
+            return core;
+        }
         public static DynamicUnit CreateCore(CoreType coreType, Dictionary<string, double> parameters)
         {
             switch (coreType)
@@ -29,7 +44,7 @@ namespace SiliFish.DynamicUnits
 
         public virtual Dictionary<string, double> GetParametersDouble()
         {
-            throw new NotImplementedException();
+            return parametersObsolete;
         }
 
         public virtual Dictionary<string, object> GetParameters()
@@ -39,6 +54,10 @@ namespace SiliFish.DynamicUnits
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
             throw new NotImplementedException();
+        }
+        public virtual void SetParametersDouble(Dictionary<string, double> paramExternal)
+        {
+            parametersObsolete = paramExternal;
         }
 
         protected virtual void Initialize()
