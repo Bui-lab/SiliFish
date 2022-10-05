@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.Helpers;
 
 namespace SiliFish.DynamicUnits
 {
@@ -58,6 +56,7 @@ namespace SiliFish.DynamicUnits
 
         public Izhikevich_9P(Dictionary<string, double> paramExternal)
         {
+            CoreType = CoreType.Izhikevich_9P;
             SetParameters(paramExternal?.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value as object));
             Initialize();
         }
@@ -142,6 +141,21 @@ namespace SiliFish.DynamicUnits
             Vt = paramExternal.Read("Izhikevich_9P.V_t", Vt);
             k = paramExternal.Read("Izhikevich_9P.k", k);
             Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
+        }
+
+        public override void SetParametersDouble(Dictionary<string, double> paramExternal)
+        {
+            if (paramExternal == null || paramExternal.Count == 0)
+                return;
+            paramExternal.TryGetValue("Izhikevich_9P.a", out a);
+            paramExternal.TryGetValue("Izhikevich_9P.b", out b);
+            paramExternal.TryGetValue("Izhikevich_9P.c", out c);
+            paramExternal.TryGetValue("Izhikevich_9P.d", out d);
+            paramExternal.TryGetValue("Izhikevich_9P.V_max", out Vmax);
+            paramExternal.TryGetValue("Izhikevich_9P.V_r", out Vr);
+            paramExternal.TryGetValue("Izhikevich_9P.V_t", out Vt);
+            paramExternal.TryGetValue("Izhikevich_9P.k", out k);
+            paramExternal.TryGetValue("Izhikevich_9P.Cm", out Cm);
         }
 
         public virtual string GetInstanceParams()

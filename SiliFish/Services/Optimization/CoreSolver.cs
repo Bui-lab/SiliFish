@@ -93,7 +93,7 @@ namespace SiliFish.Services.Optimization
         private double latestFitness = 0.0;
 
         public string GetOutput() => string.Join("\r\n", OutputText);
-        public string GetProgress() => $"Generation: {Algorithm.GenerationsNumber}; Target rheobase ± {(latestFitness != 0 ? (1 / latestFitness) : "N/A")}";
+        public string GetProgress() => $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
 
         public CoreSolver(Type selectionType,
             Type crossOverType,

@@ -36,7 +36,7 @@ namespace SiliFish.DataTypes
         public override string ToString()
         {
             int dot = DistType.LastIndexOf('.');
-            string displayedType = distType.Substring(dot + 1);
+            string displayedType = distType[(dot + 1)..];
             return Absolute ? String.Format("{0}: [{1}-{2}]", displayedType, RangeStart, RangeEnd) :
                 String.Format("{0}: %[{1}-{2}]; [{3}-{4}]", displayedType, RangeStart, RangeEnd, LowerLimit, UpperLimit);
         }

@@ -46,6 +46,7 @@ namespace SiliFish.DynamicUnits
 
         public Izhikevich_5P(Dictionary<string, double> paramExternal)
         {
+            CoreType = CoreType.Izhikevich_5P;
             SetParameters(paramExternal?.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value as object));
             Initialize();
         }
@@ -109,6 +110,7 @@ namespace SiliFish.DynamicUnits
 
             return (MinValues, MaxValues);
         }
+
         public override void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
@@ -119,6 +121,17 @@ namespace SiliFish.DynamicUnits
             d = paramExternal.Read("Izhikevich_5P.d", d);
             Vmax = paramExternal.Read("Izhikevich_5P.V_max", Vmax);
             V = Vr = paramExternal.Read("Izhikevich_5P.V_r", Vr);
+        }
+        public override void SetParametersDouble(Dictionary<string, double> paramExternal)
+        {
+            if (paramExternal == null || paramExternal.Count == 0)
+                return;
+            paramExternal.TryGetValue("Izhikevich_5P.a", out a);
+            paramExternal.TryGetValue("Izhikevich_5P.b", out b);
+            paramExternal.TryGetValue("Izhikevich_5P.c", out c);
+            paramExternal.TryGetValue("Izhikevich_5P.d", out d);
+            paramExternal.TryGetValue("Izhikevich_5P.V_max", out Vmax);
+            paramExternal.TryGetValue("Izhikevich_5P.V_r", out Vr);
             /*Vt = paramExternal.Read("Izhikevich_5P.V_t", Vt);
             Cm = paramExternal.Read("Izhikevich_5P.Cm", Cm);*/
         }
