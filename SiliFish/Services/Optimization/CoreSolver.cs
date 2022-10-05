@@ -15,7 +15,13 @@ namespace SiliFish.Services.Optimization
         CoreType CoreType;
         internal double TargetRheobaseMin, TargetRheobaseMax;
         internal Dictionary<double, FiringPattern> FiringPatterns;
-        public CoreFitness(CoreSolver izhikevichSolver, CoreType coreType, double targetRheobaseMin, double targetRheobaseMax, Dictionary<double, FiringPattern> firingPatterns)
+        internal Dictionary<double, FiringRhythm> FiringRhythms;
+        public CoreFitness(CoreSolver izhikevichSolver, 
+            CoreType coreType, 
+            double targetRheobaseMin, 
+            double targetRheobaseMax, 
+            Dictionary<double, FiringPattern> firingPatterns,
+            Dictionary<double, FiringRhythm> firingRhythms)
         {
             IzhikevichSolver = izhikevichSolver;
             CoreType = coreType;
@@ -24,6 +30,7 @@ namespace SiliFish.Services.Optimization
             if (TargetRheobaseMax<TargetRheobaseMin)
                 (TargetRheobaseMin, TargetRheobaseMax) = (TargetRheobaseMax, TargetRheobaseMin);
             FiringPatterns = firingPatterns;
+            FiringRhythms = firingRhythms;
         }
         public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
         {
@@ -40,28 +47,36 @@ namespace SiliFish.Services.Optimization
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, instanceValues);
             if (core == null) 
                 return 0;
-            double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: 400, dt: 0.1);
+            double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
             //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
             if (d < 0)//no rheobase
                 return 0;
-            if (FiringPatterns.Any())
+            double fitnessMultiplier = 1;
+            List<double> rheoMultipliers = FiringRhythms.Keys.Union(FiringPatterns.Keys).Distinct().ToList();
+            foreach (double rheoMultiplier in rheoMultipliers)
             {
-                foreach (double multiplier in FiringPatterns.Keys)
+                DynamicsStats stat = core.DynamicsTest(d * rheoMultiplier, infinity: Const.RheobaseInfinity, dt: 0.1);
+                if (FiringPatterns.TryGetValue(rheoMultiplier, out FiringPattern pattern))
                 {
-                    DynamicsStats stat = core.DynamicsTest(d * multiplier, infinity: 400, dt: 0.1);
-                    if (stat.FiringPattern != FiringPatterns[multiplier])
-                        return 0;
+                    if (stat.FiringPattern == pattern)
+                        fitnessMultiplier += 1;
+                    else
+                        fitnessMultiplier -= 0.5;
+                }
+
+                if (FiringRhythms.TryGetValue(rheoMultiplier, out FiringRhythm rhythm))
+                {
+                    if (stat.FiringRhythm == rhythm)
+                        fitnessMultiplier += 1;
+                    else
+                        fitnessMultiplier -= 0.5;
                 }
             }
+
             if (TargetRheobaseMin <= d && TargetRheobaseMax >= d)
-                return double.MaxValue;
+                return 100 * fitnessMultiplier; //TODO a random number is used here
             double distance = d > TargetRheobaseMax ? d - TargetRheobaseMax : TargetRheobaseMin - d;
-            /*DynamicsStats stat2 = core.DynamicsTest(d * 1, infinity: 400, dt: 0.1);
-            if (stat2.FiringPattern != FiringPattern.Phasic)
-                return 0;
-            if (stat2.SpikeList.Count > 1)
-                return 0;*/
-            return 1 / distance;
+            return fitnessMultiplier / distance;
         }
     }
     public class CoreSolver
@@ -98,10 +113,11 @@ namespace SiliFish.Services.Optimization
             Dictionary<string, double> paramValues,
             double minTargetRheobase, double maxTargetRheobase,
             Dictionary<double, FiringPattern> firingPatterns = null,
+            Dictionary<double, FiringRhythm> firingRhythms = null,
             Dictionary<string, double> minValues = null,
             Dictionary<string, double> maxValues = null)
         {
-            IFitness fitness = new CoreFitness(this, coreType, minTargetRheobase, maxTargetRheobase, firingPatterns);
+            IFitness fitness = new CoreFitness(this, coreType, minTargetRheobase, maxTargetRheobase, firingPatterns, firingRhythms);
 
             ParamValues = paramValues;
             int nCount = paramValues.Count;

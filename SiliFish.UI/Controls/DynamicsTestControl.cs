@@ -21,6 +21,11 @@ namespace SiliFish.UI.Controls
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
+        private Dictionary<string, double> minValues;
+        private Dictionary<string, double> maxValues;
+        Dictionary<double, FiringPattern> firingPatterns;
+        Dictionary<double, FiringRhythm> firingRhythms;
+
         private CoreSolver Solver;
         Dictionary<string, double> SolverBestValues;
         private bool OptimizationMode
@@ -162,11 +167,12 @@ namespace SiliFish.UI.Controls
                 return;
             List<ChartDataStruct> charts = new();
             string firingPattern = dynamics.FiringPattern.ToString();
+            string firingRhythm = dynamics.FiringRhythm.ToString();
             if (cbV.Checked)
             {
                 charts.Add(new ChartDataStruct
                 {
-                    Title = $"V ({firingPattern})",
+                    Title = $"V ({firingRhythm} {firingPattern})",
                     Color = Color.Purple,
                     xData = TimeArray,
                     yData = dynamics.VList,
@@ -266,10 +272,11 @@ namespace SiliFish.UI.Controls
             {
                 DynamicsStats dynamics = dynamicsList[key];
                 string firingPattern = dynamics.FiringPattern.ToString();
+                string firingRhythm = dynamics.FiringRhythm.ToString();
 
                 charts.Add(new ChartDataStruct
                 {
-                    Title = $"{key} ({firingPattern})",
+                    Title = $"{key} ({firingRhythm} {firingPattern})",
                     Color = Color.Purple,
                     xData = TimeArray,
                     yData = dynamics.VList,
@@ -459,38 +466,39 @@ namespace SiliFish.UI.Controls
             CreatePlots();
         }
 
-        private (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) ReadMinMaxParamValues()
+        private void ReadMinMaxParamValues()
         {
-            Dictionary<string, double> MinValues = new();
-            Dictionary<string, double> MaxValues = new();
+            minValues = new();
+            maxValues = new();
             foreach (DataGridViewRow row in dgMinMaxValues.Rows)
             {
                 string param = row.Cells[colParameter.Index].Value?.ToString();
                 double value = parameters[param];
                 if (!string.IsNullOrEmpty(row.Cells[colMinValue.Index].Value?.ToString())
                     && double.TryParse(row.Cells[colMinValue.Index].Value.ToString(), out double dmin))
-                    MinValues.Add(param, dmin);
-                else MinValues.Add(param, value);
+                    minValues.Add(param, dmin);
+                else minValues.Add(param, value);
                 if (!string.IsNullOrEmpty(row.Cells[colMaxValue.Index].Value?.ToString())
                     && double.TryParse(row.Cells[colMaxValue.Index].Value.ToString(), out double dmax))
-                    MaxValues.Add(param, dmax);
-                else MaxValues.Add(param, value);
+                    maxValues.Add(param, dmax);
+                else maxValues.Add(param, value);
             }
-            return (MinValues, MaxValues);
         }
 
-        private Dictionary<double, FiringPattern> ReadFitnessValues()//TODO add firing rhythm
+        private void ReadFitnessValues()
         {
-            Dictionary<double, FiringPattern> FitnessValues = new();
+            firingRhythms = new();
+            firingPatterns = new();
             foreach (DataGridViewRow row in dgFitnessParams.Rows)
             {
                 if (double.TryParse(row.Cells[colFitnessRheobaseMultiplier.Index].Value?.ToString(), out double mult))
                 {
                     if (Enum.TryParse(row.Cells[colFitnessFiringMode.Index].Value?.ToString(), out FiringPattern pattern))
-                        FitnessValues.Add(mult, pattern);
+                        firingPatterns.Add(mult, pattern);
+                    if (Enum.TryParse(row.Cells[colFitnessFiringRhythm.Index].Value?.ToString(), out FiringRhythm rhythm))
+                        firingRhythms.Add(mult, rhythm);
                 }
             }
-            return FitnessValues;
         }
         private void CreateSolver()
         {
@@ -513,8 +521,8 @@ namespace SiliFish.UI.Controls
                 return;
             }
             ReadParameters();
-            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = ReadMinMaxParamValues();
-            Dictionary<double, FiringPattern> FitnessValues = ReadFitnessValues();
+            ReadMinMaxParamValues();
+            ReadFitnessValues();
             if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
                 minPopulation = 50;
             if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
@@ -526,8 +534,9 @@ namespace SiliFish.UI.Controls
             Solver.SetOptimizationSettings(minPopulation, maxPopulation,
                 coreType,
                 parameters,
-                targetRheobaseMin, targetRheobaseMax, FitnessValues,
-                MinValues, MaxValues);
+                targetRheobaseMin, targetRheobaseMax, 
+                firingPatterns, firingRhythms,
+                minValues, maxValues);
 
         }
         private void RunOptimize()

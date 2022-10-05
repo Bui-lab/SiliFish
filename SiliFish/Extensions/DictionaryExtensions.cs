@@ -99,5 +99,19 @@ namespace SiliFish.Extensions
             }
             return true;
         }
+
+        public static Dictionary<string, double[]> GenerateInstanceValues(this Dictionary<string, object> dictionary, int number)
+        {
+            Dictionary<string, double[]> valuesArray = new();
+            foreach (string key in dictionary.Keys)
+            {
+                object obj=dictionary[key];
+                if (obj is Distribution distribution)
+                    valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range));
+                else if (double.TryParse(obj.ToString(), out double d))
+                    valuesArray.Add(key, Enumerable.Repeat(d, number).ToArray());
+            }
+            return valuesArray;
+        }
     }
 }

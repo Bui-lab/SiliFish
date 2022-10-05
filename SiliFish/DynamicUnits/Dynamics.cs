@@ -20,10 +20,11 @@ namespace SiliFish.DynamicUnits
             {
                 if (Bursts[0].IsSpike)
                     return (FiringRhythm.Phasic, FiringPattern.Spiking);  //leadByQuiescence?FiringPattern.DelayedPhasic : FiringPattern.Phasic;
-                else //if (Bursts[0].IsBurst)
-                    return (FiringRhythm.Phasic, followedByQuiescence ? FiringPattern.Bursting : FiringPattern.Spiking);
+                else if (followedByQuiescence)
+                    return (FiringRhythm.Phasic, FiringPattern.Bursting);
+                else return (FiringRhythm.Tonic, FiringPattern.Spiking);
             }
-            
+
             //(Bursts.Count > 1)
 
             if (!Bursts.Any(b => !b.IsBurst))//All of them are bursts
@@ -221,9 +222,11 @@ namespace SiliFish.DynamicUnits
             {
                 double curTime = SpikeList[spikeTimeIndex] * RunParam.static_dt;
                 double curInterval = curTime - lastTime;
-                if (lastInterval != double.NaN && curInterval < lastInterval - Const.Epsilon)
+                if (!(lastInterval is double.NaN) && curInterval < lastInterval - Const.Epsilon)
                     spreadingOut = false;
-                if ((spreadingOut && curInterval > MaxBurstInterval_UpperRange) || (!spreadingOut && curInterval > MaxBurstInterval_LowerRange))
+                if ((lastInterval is double.NaN && curInterval > MaxBurstInterval_LowerRange) ||
+                    (spreadingOut && curInterval > MaxBurstInterval_UpperRange) || 
+                    (!spreadingOut && curInterval > MaxBurstInterval_LowerRange))
                 {
                     burstOrSpike = new();
                     Bursts.Add(burstOrSpike);
