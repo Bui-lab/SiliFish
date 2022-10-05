@@ -2,8 +2,8 @@
 {
     public class Const
     {
-
         public static double Epsilon = 0.00001;
+        public static int RheobaseInfinity = 500;
         public static string DecimalPointFormat = "0.0###";
         public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
         public static double GeneticAlgorithmMinValue = -100;

@@ -369,6 +369,10 @@ namespace SiliFish.ModelUnits
         {
             Parameters = cellTemp.Parameters;
         }
+
+        /// <summary>
+        /// Constructor called from predefined models
+        /// </summary>
         public MuscleCell(string group, int seq, double R, double C, double Vr, double sigma_dyn, Coordinate coor, TimeLine timeline = null)
         {
             CellGroup = group;

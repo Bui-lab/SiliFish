@@ -10,13 +10,6 @@ namespace SiliFish.DynamicUnits
 {
     public class Izhikevich_9P : DynamicUnit
     {
-        //a, b, c, d, are the parameters for the membrane potential dynamics
-        //Default values are taken from Izhikevich 2003 (IEEE)
-        private double a = 0.02;
-        private double b = 0.2;
-        private double c = -65;
-        private double d = 2;
-
         private static double a_suggestedMin = 0.01;
         private static double a_suggestedMax = 1;
         private static double b_suggestedMin = 0.01;
@@ -28,16 +21,20 @@ namespace SiliFish.DynamicUnits
         private static double Cm_suggestedMin = 1;
         private static double Cm_suggestedMax = 500;
 
+        //a, b, c, d, are the parameters for the membrane potential dynamics
+        //Default values are taken from Izhikevich 2003 (IEEE)
+        public double a = 0.02;
+        public double b = 0.2;
+        public double c = -65;
+        public double d = 2;
 
         // vmax is the peak membrane potential of single action potentials
-        [JsonIgnore]
         public double Vmax;
         // vr, vt are the resting and threshold membrane potential 
-        [JsonIgnore]
         public double Vr = -60, Vt = -57;
         // k is a coefficient of the quadratic polynomial 
-        double k = 1;
-        double Cm = 10; //the membrane capacitance
+        public double k = 1;
+        public double Cm = 10; //the membrane capacitance
 
         [JsonIgnore]
         double V = -65;//Keeps the current value of V 
@@ -67,7 +64,7 @@ namespace SiliFish.DynamicUnits
         protected override void Initialize()
         {
             V = Vr;
-            u = 0;
+            u = b * Vr;
         }        
         
         public override Dictionary<string, double> GetParametersDouble()

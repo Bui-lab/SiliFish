@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits
 {
+    public class DynamicUnitTemplate
+    {
+        
+    }
     public class DynamicUnit
     {
         public static DynamicUnit CreateCore(CoreType coreType, Dictionary<string, double> parameters)
