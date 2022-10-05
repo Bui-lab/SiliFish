@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 
 namespace SiliFish.ModelUnits
@@ -301,8 +302,8 @@ namespace SiliFish.ModelUnits
             foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GetCoordinates(n, somite);
-                //TODO DISTRIBUTION similar to getcoordinates, the cell parameters need to be pregenerated if distributions are used
-
+                Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
+                
                 double[] cv = template.ConductionVelocity != null ?
                     ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
                     Enumerable.Repeat(Model.cv, n).ToArray();
@@ -313,6 +314,7 @@ namespace SiliFish.ModelUnits
                         new MuscleCell(template, somite, i + 1);
                     cell.PositionLeftRight = leftright;
                     cell.coordinate = coordinates[i];
+                    cell.Parameters = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
                     AddCell(cell);
                 }
             }

@@ -11,6 +11,7 @@ namespace SiliFish.ModelUnits
 {
     public class Cell
     {
+        protected DynamicUnit Core;
         public CellPool CellPool;
 
         public string CellGroup { get; set; }
@@ -72,7 +73,7 @@ namespace SiliFish.ModelUnits
         {
             return Stimuli.GenerateStimulus(timeIndex, rand);
         }
-        public virtual Dictionary<string, object> Parameters
+        public virtual Dictionary<string, double> Parameters
         {
             get { throw (new NotImplementedException()); }
             set { throw (new NotImplementedException()); }
@@ -150,11 +151,7 @@ namespace SiliFish.ModelUnits
 
         }
 
-        public virtual string GetInstanceParams()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public virtual void CalculateMembranePotential(int t)
         {
             throw new NotImplementedException();
@@ -164,8 +161,6 @@ namespace SiliFish.ModelUnits
 
     public class Neuron : Cell
     {
-
-        readonly Izhikevich_9P Core;
         public double u; //keeps the current u value
         public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
@@ -189,13 +184,12 @@ namespace SiliFish.ModelUnits
         public Neuron(CellPoolTemplate cellTemp, int somite, int seq, double cv)
             : this(cellTemp.CellGroup, somite, seq, cv, cellTemp.TimeLine_ms)
         {
-            Parameters = cellTemp.Parameters;
         }
 
         public Neuron(Dictionary<string, double> parameters)
             : this("Neuron", -1, 0, 0)
         {
-            Parameters = parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
+            Parameters = parameters;
         }
         /// <summary>
         /// neuron constructor called from predefined models
@@ -240,14 +234,14 @@ namespace SiliFish.ModelUnits
             return V.GetPeakIndices(Core.Vmax, iStart, iEnd);
         }
 
-        public override Dictionary<string, object> Parameters
+        public override Dictionary<string, double> Parameters
         {
-            get { return Core.GetParameters(); }
+            get { return Core.GetParametersDouble(); }
             set
             {
                 if (value == null || value.Count == 0)
                     return;
-                Core.SetParameters(value);
+                Core.SetParametersDouble(value);
             }
         }
 
@@ -287,11 +281,6 @@ namespace SiliFish.ModelUnits
         {
             bool spike = false;
             V[t] = Core.GetNextVal(stim, ref spike);
-        }
-
-        public override string GetInstanceParams()
-        {
-            return Core.GetInstanceParams();
         }
 
         public override void CalculateCellularOutputs(int t)
@@ -341,12 +330,11 @@ namespace SiliFish.ModelUnits
 
     public class MuscleCell : Cell
     {
-        readonly Leaky_Integrator Core;
-        public double R { get { return Core.R; } set { } }
+        public double R { get { return (Core as Leaky_Integrator).R; } set { } }
         [JsonIgnore]
-        public double[] RelativeTension { get { return Core.CalculateRelativeTension(V); } }
+        public double[] RelativeTension { get { return (Core as Leaky_Integrator).CalculateRelativeTension(V); } }
         [JsonIgnore]
-        public double[] Tension { get { return Core.CalculateTension(V); } }
+        public double[] Tension { get { return (Core as Leaky_Integrator).CalculateTension(V); } }
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
 
         public List<ChemicalSynapse> EndPlates; //keeps the list of all synapses targeting the current cell
@@ -367,7 +355,6 @@ namespace SiliFish.ModelUnits
         public MuscleCell(CellPoolTemplate cellTemp, int somite, int seq)
             : this(cellTemp.CellGroup, somite, seq, cellTemp.TimeLine_ms)
         {
-            Parameters = cellTemp.Parameters;
         }
 
         /// <summary>
@@ -393,7 +380,7 @@ namespace SiliFish.ModelUnits
         public MuscleCell(Dictionary<string, double> parameters)
             : this("Muscle", -1, 0)
         {
-            Parameters = parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
+            Parameters = parameters;
         }
         public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
@@ -413,14 +400,14 @@ namespace SiliFish.ModelUnits
             return V.GetPeakIndices(Core.Vr * 1.1, iStart, iEnd);//URGENT this is a random multiplier 
         }
 
-        public override Dictionary<string, object> Parameters
+        public override Dictionary<string, double> Parameters
         {
-            get { return Core.GetParameters(); }
+            get { return Core.GetParametersDouble(); }
             set
             {
                 if (value == null || value.Count == 0)
                     return;
-                Core.SetParameters(value);
+                Core.SetParametersDouble(value);
             }
         }
 
@@ -450,7 +437,8 @@ namespace SiliFish.ModelUnits
 
         public void NextStep(int t, double stim)
         {
-            V[t] = Core.GetNextVal(stim);
+            bool spike = false;
+            V[t] = Core.GetNextVal(stim, ref spike);
         }
 
         public override void CalculateMembranePotential(int timeIndex)
@@ -470,12 +458,6 @@ namespace SiliFish.ModelUnits
             }
             NextStep(timeIndex, stim + ISyn + IGap);
         }
-
-        public override string GetInstanceParams()
-        {
-            return Core.GetInstanceParams();
-        }
-
     }
 
 

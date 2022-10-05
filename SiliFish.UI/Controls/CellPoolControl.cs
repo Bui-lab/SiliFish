@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Text.Json;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.UI.Extensions;
@@ -43,6 +45,7 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             distConductionVelocity.AbsoluteEnforced = true;
+            ddCoreType.DataSource = Enum.GetNames(typeof(CoreType));// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
@@ -59,24 +62,28 @@ namespace SiliFish.UI.Controls
                 cell = new Neuron("", 1, 1, cv);
             else if (cellType == CellType.MuscleCell)
                 cell = new MuscleCell("", 1, 1);
-            cell.Parameters = GridToParamDict();
+            poolTemplate.Parameters = GridToParamDict();
+            cell.Parameters = poolTemplate.Parameters.GenerateSingleInstanceValues();
             return cell;
         }
         private void ddCellType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (skipCellTypeChange) return;
             CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
+            CoreType coreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
             if (cellType == CellType.Neuron)
             {
                 if (ddNeuronClass.Items.Count > 0)
                     ddNeuronClass.SelectedIndex = 0;
                 lNeuronClass.Visible = ddNeuronClass.Visible = true;
+                ddCoreType.SelectedIndex = 1;//TODO hardcoded for izhikevich 9P AAAAAAHHHHHRRGGHH
             }
             else
             {
                 lNeuronClass.Visible = ddNeuronClass.Visible = false;
+                ddCoreType.SelectedIndex = 2;//TODO hardcoded for LeakyIntegrator AAAAAAHHHHHRRGGHH
             }
-            poolTemplate.Parameters = GetCell()?.Parameters;
+            poolTemplate.Parameters = DynamicUnit.CreateCore(coreType, null).GetParametersDouble().ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value as object);
             ParamDictToGrid();
         }
 
@@ -136,6 +143,7 @@ namespace SiliFish.UI.Controls
             poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
             poolTemplate.CellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
+            poolTemplate.CoreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
             poolTemplate.NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
             poolTemplate.Parameters = GridToParamDict();
             poolTemplate.Color = btnColor.BackColor;
@@ -160,6 +168,7 @@ namespace SiliFish.UI.Controls
             skipCellTypeChange = true;
             ddCellType.Text = poolTemplate.CellType.ToString();
             skipCellTypeChange = false;
+            ddCoreType.Text = poolTemplate.CoreType.ToString();
             lNeuronClass.Visible = ddNeuronClass.Visible = poolTemplate.CellType == CellType.Neuron;
             ddNeuronClass.Text = poolTemplate.NTMode.ToString();
             if (poolTemplate.PositionLeftRight == SagittalPlane.Both)
@@ -217,7 +226,7 @@ namespace SiliFish.UI.Controls
 
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Dictionary<string, double> dparams = GetCell().Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
+            Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
             dyncontrol = new(poolTemplate.CoreType, dparams, testMode: false);
             dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();
