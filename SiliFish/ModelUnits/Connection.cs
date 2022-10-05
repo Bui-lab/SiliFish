@@ -223,9 +223,9 @@ namespace SiliFish.ModelUnits
             double v1 = tt <= tIndex ? Cell1.V[tIndex - tt] : Cell1.RestingMembranePotential;
             double v2 = Cell2.V[tIndex - 1];
             VoltageDiffFrom1To2 = v1 - v2;
-            v1 = tt <= tIndex ? Cell2.V[tIndex - tt] : Cell2.RestingMembranePotential;
-            v2 = Cell1.V[tIndex - 1];
-            VoltageDiffFrom2To1 = v1 - v2;
+            v2 = tt <= tIndex ? Cell2.V[tIndex - tt] : Cell2.RestingMembranePotential;
+            v1 = Cell1.V[tIndex - 1];
+            VoltageDiffFrom2To1 = v2 - v1;
         }
 
         public double GetGapCurrent(Cell n, int tIndex)

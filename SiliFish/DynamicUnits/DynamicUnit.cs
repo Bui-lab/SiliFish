@@ -4,16 +4,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits
 {
     public class DynamicUnitTemplate
     {
-        
+        private Dictionary<string, object> parameters; 
+        public virtual Dictionary<string, object> GetParameters()
+        {
+            return parameters;
+        }
+        public virtual void SetParameters(Dictionary<string, object> paramExternal)
+        {
+            parameters = paramExternal; ;
+        }
+        /*            a = paramExternal.Read("Izhikevich_5P.a", a);
+            b = paramExternal.Read("Izhikevich_5P.b", b);
+            c = paramExternal.Read("Izhikevich_5P.c", c);
+            d = paramExternal.Read("Izhikevich_5P.d", d);
+            Vmax = paramExternal.Read("Izhikevich_5P.V_max", Vmax);
+            V = Vr = paramExternal.Read("Izhikevich_5P.V_r", Vr);
+*/
     }
     public class DynamicUnit
     {
+        //the resting membrane potential
+        public double Vr = -70;
+        // vmax is the peak membrane potential of single action potentials
+        public double Vmax = 30;
+
+        [JsonIgnore]
+        protected double V = -70;//Keeps the current value of V 
+
         private Dictionary<string, double> parametersObsolete; //Used for json only
         public CoreType CoreType { get; set; }
         public Dictionary<string, double> Parameters
@@ -47,14 +71,6 @@ namespace SiliFish.DynamicUnits
             return parametersObsolete;
         }
 
-        public virtual Dictionary<string, object> GetParameters()
-        {
-            throw new NotImplementedException();
-        }
-        public virtual void SetParameters(Dictionary<string, object> paramExternal)
-        {
-            throw new NotImplementedException();
-        }
         public virtual void SetParametersDouble(Dictionary<string, double> paramExternal)
         {
             parametersObsolete = paramExternal;
@@ -138,8 +154,8 @@ namespace SiliFish.DynamicUnits
         {
             if (maxMultiplier < minMultiplier)
                 (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
-            Dictionary<string, object> parameters = GetParameters();
-            double origValue = (double)parameters[param];
+            Dictionary<string, double> parameters = GetParametersDouble();
+            double origValue = parameters[param];
             double[] values = new double[numOfPoints];
             if (!logScale)
             {
@@ -160,11 +176,11 @@ namespace SiliFish.DynamicUnits
             foreach (double value in values)
             {
                 parameters[param] = value;
-                SetParameters(parameters);
+                SetParametersDouble(parameters);
                 rheos[counter++] = CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
             }
             parameters[param] = origValue;
-            SetParameters(parameters);
+            SetParametersDouble(parameters);
             return (values, rheos);
         }
 
@@ -175,4 +191,5 @@ namespace SiliFish.DynamicUnits
         }
 
     }
+
 }

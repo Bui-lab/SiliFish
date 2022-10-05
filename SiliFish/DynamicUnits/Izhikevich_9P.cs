@@ -26,16 +26,12 @@ namespace SiliFish.DynamicUnits
         public double c = -65;
         public double d = 2;
 
-        // vmax is the peak membrane potential of single action potentials
-        public double Vmax;
-        // vr, vt are the resting and threshold membrane potential 
-        public double Vr = -60, Vt = -57;
+        // threshold membrane potential 
+        public double Vt = -57;
         // k is a coefficient of the quadratic polynomial 
         public double k = 1;
         public double Cm = 10; //the membrane capacitance
 
-        [JsonIgnore]
-        double V = -65;//Keeps the current value of V 
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
 
@@ -57,7 +53,7 @@ namespace SiliFish.DynamicUnits
         public Izhikevich_9P(Dictionary<string, double> paramExternal)
         {
             CoreType = CoreType.Izhikevich_9P;
-            SetParameters(paramExternal?.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value as object));
+            SetParametersDouble(paramExternal);
             Initialize();
         }
         protected override void Initialize()
@@ -69,23 +65,6 @@ namespace SiliFish.DynamicUnits
         public override Dictionary<string, double> GetParametersDouble()
         {
             Dictionary<string, double> paramDict = new()
-            {
-                { "Izhikevich_9P.a", a },
-                { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.d", d },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
-                { "Izhikevich_9P.k", k },
-                { "Izhikevich_9P.Cm", Cm }
-            };
-            return paramDict;
-        }
-
-        public override Dictionary<string, object> GetParameters()
-        {
-            Dictionary<string, object> paramDict = new()
             {
                 { "Izhikevich_9P.a", a },
                 { "Izhikevich_9P.b", b },
@@ -128,21 +107,6 @@ namespace SiliFish.DynamicUnits
 
             return (MinValues, MaxValues);
         }
-        public override void SetParameters(Dictionary<string, object> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            a = paramExternal.Read("Izhikevich_9P.a", a);
-            b = paramExternal.Read("Izhikevich_9P.b", b);
-            c = paramExternal.Read("Izhikevich_9P.c", c);
-            d = paramExternal.Read("Izhikevich_9P.d", d);
-            Vmax = paramExternal.Read("Izhikevich_9P.V_max", Vmax);
-            V = Vr = paramExternal.Read("Izhikevich_9P.V_r", Vr);
-            Vt = paramExternal.Read("Izhikevich_9P.V_t", Vt);
-            k = paramExternal.Read("Izhikevich_9P.k", k);
-            Cm = paramExternal.Read("Izhikevich_9P.Cm", Cm);
-        }
-
         public override void SetParametersDouble(Dictionary<string, double> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
@@ -158,10 +122,6 @@ namespace SiliFish.DynamicUnits
             paramExternal.TryGetValue("Izhikevich_9P.Cm", out Cm);
         }
 
-        public virtual string GetInstanceParams()
-        {
-            return string.Join("\r\n", GetParameters().Select(kv => kv.Key + ": " + kv.Value.ToString()));
-        }
         public override double GetNextVal(double I, ref bool spike)
         {
             double vNew, uNew;
