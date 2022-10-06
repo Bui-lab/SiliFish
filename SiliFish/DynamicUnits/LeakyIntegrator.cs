@@ -123,12 +123,14 @@ namespace SiliFish.DynamicUnits
         {
             int iMax = I.Length;
             DynamicsStats dyn = new(I);
+            dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
+            double[] tensionList = dyn.SecLists["Rel. Tension"];
             bool spike = false;
             for (int t = 0; t < iMax; t++)
             {
                 GetNextVal(I[t], ref spike);
                 dyn.VList[t] = V;
-                dyn.SecList[t] = CalculateRelativeTension(V);
+                tensionList[t] = CalculateRelativeTension(V);
             }
             return dyn;
         }

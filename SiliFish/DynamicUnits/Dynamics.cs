@@ -96,7 +96,7 @@ namespace SiliFish.DynamicUnits
         /// <summary>
         /// u for neurons and rel. tension for muscle cells
         /// </summary>
-        public double[] SecList;
+        public Dictionary <string, double[]> SecLists;
         private FiringRhythm firingRhythm = FiringRhythm.Phasic;
         private FiringDelay firingDelay = FiringDelay.NoDelay;
         private FiringPattern firingPattern = FiringPattern.NoSpike;
@@ -253,7 +253,7 @@ namespace SiliFish.DynamicUnits
             int iMax = stimulus.Length;
             IList = stimulus;
             VList = new double[iMax];
-            SecList = new double[iMax];
+            SecLists = new Dictionary<string, double[]>();
             TauDecay = new();
             TauRise = new();
             SpikeList = new();

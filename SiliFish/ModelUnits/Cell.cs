@@ -169,12 +169,12 @@ namespace SiliFish.ModelUnits
         /// <summary>
         /// Used as a template
         /// </summary>
-        public Neuron(string group, int somite, int seq, double cv, TimeLine timeline = null)
+        public Neuron(string coreType, string group, int somite, int seq, double cv, TimeLine timeline = null)
         {
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = new Izhikevich_9P(dyn: null);
+            Core = DynamicUnit.CreateCore(coreType, null);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
@@ -182,15 +182,10 @@ namespace SiliFish.ModelUnits
             ConductionVelocity = cv;
         }
         public Neuron(CellPoolTemplate cellTemp, int somite, int seq, double cv)
-            : this(cellTemp.CellGroup, somite, seq, cv, cellTemp.TimeLine_ms)
+            : this(cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cv, cellTemp.TimeLine_ms)
         {
         }
 
-        public Neuron(Dictionary<string, double> parameters)
-            : this("Neuron", -1, 0, 0)
-        {
-            Parameters = parameters;
-        }
         /// <summary>
         /// neuron constructor called from predefined models
         /// </summary>
@@ -342,18 +337,18 @@ namespace SiliFish.ModelUnits
         /// <summary>
         /// Used as a template
         /// </summary>
-        public MuscleCell(string group, int somite, int seq, TimeLine timeline = null)
+        public MuscleCell(string coreType, string group, int somite, int seq, TimeLine timeline = null)
         {
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = new Leaky_Integrator(0, 0, 0);
+            Core = DynamicUnit.CreateCore(coreType, null);
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
             TimeLine_ms = timeline;
         }
         public MuscleCell(CellPoolTemplate cellTemp, int somite, int seq)
-            : this(cellTemp.CellGroup, somite, seq, cellTemp.TimeLine_ms)
+            : this(cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellTemp.TimeLine_ms)
         {
         }
 
@@ -377,11 +372,6 @@ namespace SiliFish.ModelUnits
             TimeLine_ms = timeline;
         }
 
-        public MuscleCell(Dictionary<string, double> parameters)
-            : this("Muscle", -1, 0)
-        {
-            Parameters = parameters;
-        }
         public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
             double cur1 = base.MinCurrentValue(iStart, iEnd);

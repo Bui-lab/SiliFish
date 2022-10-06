@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
@@ -111,7 +111,7 @@
             this.grPlotSelection = new System.Windows.Forms.GroupBox();
             this.cbV = new System.Windows.Forms.CheckBox();
             this.cbStimulus = new System.Windows.Forms.CheckBox();
-            this.cbURelTension = new System.Windows.Forms.CheckBox();
+            this.cbSecondaryLists = new System.Windows.Forms.CheckBox();
             this.cbSpikingFrequency = new System.Windows.Forms.CheckBox();
             this.cbTauRise = new System.Windows.Forms.CheckBox();
             this.cbInterval = new System.Windows.Forms.CheckBox();
@@ -198,7 +198,7 @@
             // ldt
             // 
             this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(9, 243);
+            this.ldt.Location = new System.Drawing.Point(9, 98);
             this.ldt.Name = "ldt";
             this.ldt.Size = new System.Drawing.Size(18, 15);
             this.ldt.TabIndex = 10;
@@ -212,7 +212,7 @@
             0,
             0,
             65536});
-            this.edt.Location = new System.Drawing.Point(100, 241);
+            this.edt.Location = new System.Drawing.Point(100, 96);
             this.edt.Minimum = new decimal(new int[] {
             1,
             0,
@@ -234,7 +234,7 @@
             0,
             0,
             0});
-            this.ePlotEndTime.Location = new System.Drawing.Point(100, 216);
+            this.ePlotEndTime.Location = new System.Drawing.Point(100, 71);
             this.ePlotEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -266,7 +266,7 @@
             0,
             0,
             0});
-            this.eStepEndTime.Location = new System.Drawing.Point(100, 192);
+            this.eStepEndTime.Location = new System.Drawing.Point(100, 47);
             this.eStepEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -284,11 +284,11 @@
             // lStepStartTime
             // 
             this.lStepStartTime.AutoSize = true;
-            this.lStepStartTime.Location = new System.Drawing.Point(9, 170);
+            this.lStepStartTime.Location = new System.Drawing.Point(9, 25);
             this.lStepStartTime.Name = "lStepStartTime";
-            this.lStepStartTime.Size = new System.Drawing.Size(60, 15);
+            this.lStepStartTime.Size = new System.Drawing.Size(90, 15);
             this.lStepStartTime.TabIndex = 4;
-            this.lStepStartTime.Text = "Start Time";
+            this.lStepStartTime.Text = "Stim. Start Time";
             // 
             // eStepStartTime
             // 
@@ -297,7 +297,7 @@
             0,
             0,
             0});
-            this.eStepStartTime.Location = new System.Drawing.Point(100, 166);
+            this.eStepStartTime.Location = new System.Drawing.Point(100, 21);
             this.eStepStartTime.Name = "eStepStartTime";
             this.eStepStartTime.Size = new System.Drawing.Size(66, 23);
             this.eStepStartTime.TabIndex = 7;
@@ -310,16 +310,16 @@
             // lStepEndTime
             // 
             this.lStepEndTime.AutoSize = true;
-            this.lStepEndTime.Location = new System.Drawing.Point(9, 194);
+            this.lStepEndTime.Location = new System.Drawing.Point(9, 49);
             this.lStepEndTime.Name = "lStepEndTime";
-            this.lStepEndTime.Size = new System.Drawing.Size(56, 15);
+            this.lStepEndTime.Size = new System.Drawing.Size(86, 15);
             this.lStepEndTime.TabIndex = 5;
-            this.lStepEndTime.Text = "End Time";
+            this.lStepEndTime.Text = "Stim. End Time";
             // 
             // lPlotEndTime
             // 
             this.lPlotEndTime.AutoSize = true;
-            this.lPlotEndTime.Location = new System.Drawing.Point(9, 220);
+            this.lPlotEndTime.Location = new System.Drawing.Point(9, 75);
             this.lPlotEndTime.Name = "lPlotEndTime";
             this.lPlotEndTime.Size = new System.Drawing.Size(80, 15);
             this.lPlotEndTime.TabIndex = 6;
@@ -337,7 +337,7 @@
             this.grRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.grRheobase.Location = new System.Drawing.Point(3, 103);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(216, 114);
+            this.grRheobase.Size = new System.Drawing.Size(233, 114);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
@@ -419,7 +419,7 @@
             this.grTest.Location = new System.Drawing.Point(3, 326);
             this.grTest.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
             this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(216, 300);
+            this.grTest.Size = new System.Drawing.Size(233, 300);
             this.grTest.TabIndex = 17;
             this.grTest.TabStop = false;
             this.grTest.Text = "Test";
@@ -428,7 +428,7 @@
             // 
             this.rbManualEntryStimulus.AutoSize = true;
             this.rbManualEntryStimulus.Checked = true;
-            this.rbManualEntryStimulus.Location = new System.Drawing.Point(9, 22);
+            this.rbManualEntryStimulus.Location = new System.Drawing.Point(9, 128);
             this.rbManualEntryStimulus.Name = "rbManualEntryStimulus";
             this.rbManualEntryStimulus.Size = new System.Drawing.Size(117, 19);
             this.rbManualEntryStimulus.TabIndex = 12;
@@ -439,7 +439,7 @@
             // 
             // stimulusControl1
             // 
-            this.stimulusControl1.Location = new System.Drawing.Point(4, 42);
+            this.stimulusControl1.Location = new System.Drawing.Point(4, 148);
             this.stimulusControl1.Name = "stimulusControl1";
             this.stimulusControl1.Size = new System.Drawing.Size(212, 93);
             this.stimulusControl1.TabIndex = 20;
@@ -448,7 +448,7 @@
             // rbRheobaseBasedStimulus
             // 
             this.rbRheobaseBasedStimulus.AutoSize = true;
-            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(9, 141);
+            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(9, 247);
             this.rbRheobaseBasedStimulus.Name = "rbRheobaseBasedStimulus";
             this.rbRheobaseBasedStimulus.Size = new System.Drawing.Size(175, 19);
             this.rbRheobaseBasedStimulus.TabIndex = 13;
@@ -477,7 +477,7 @@
             this.splitMain.Panel2.Controls.Add(this.splitRight);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
             this.splitMain.Size = new System.Drawing.Size(974, 683);
-            this.splitMain.SplitterDistance = 222;
+            this.splitMain.SplitterDistance = 239;
             this.splitMain.TabIndex = 17;
             // 
             // pParams
@@ -487,7 +487,7 @@
             this.pParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pParams.Location = new System.Drawing.Point(3, 61);
             this.pParams.Name = "pParams";
-            this.pParams.Size = new System.Drawing.Size(216, 42);
+            this.pParams.Size = new System.Drawing.Size(233, 42);
             this.pParams.TabIndex = 23;
             // 
             // pCoreType
@@ -498,7 +498,7 @@
             this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
             this.pCoreType.Location = new System.Drawing.Point(3, 3);
             this.pCoreType.Name = "pCoreType";
-            this.pCoreType.Size = new System.Drawing.Size(216, 58);
+            this.pCoreType.Size = new System.Drawing.Size(233, 58);
             this.pCoreType.TabIndex = 21;
             // 
             // cbAutoDrawPlots
@@ -513,11 +513,13 @@
             // 
             // ddCoreType
             // 
+            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCoreType.FormattingEnabled = true;
             this.ddCoreType.Location = new System.Drawing.Point(70, 4);
             this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(142, 23);
+            this.ddCoreType.Size = new System.Drawing.Size(160, 23);
             this.ddCoreType.TabIndex = 23;
             this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
             // 
@@ -543,7 +545,7 @@
             this.grSensitivity.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.grSensitivity.Location = new System.Drawing.Point(3, 217);
             this.grSensitivity.Name = "grSensitivity";
-            this.grSensitivity.Size = new System.Drawing.Size(216, 109);
+            this.grSensitivity.Size = new System.Drawing.Size(233, 109);
             this.grSensitivity.TabIndex = 18;
             this.grSensitivity.TabStop = false;
             this.grSensitivity.Text = "Sensitivity Analysis";
@@ -616,7 +618,7 @@
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pLoadSaveParams.Location = new System.Drawing.Point(3, 626);
             this.pLoadSaveParams.Name = "pLoadSaveParams";
-            this.pLoadSaveParams.Size = new System.Drawing.Size(216, 31);
+            this.pLoadSaveParams.Size = new System.Drawing.Size(233, 31);
             this.pLoadSaveParams.TabIndex = 20;
             // 
             // linkLoadCoreUnit
@@ -647,7 +649,7 @@
             this.pBottomBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pBottomBottom.Location = new System.Drawing.Point(3, 657);
             this.pBottomBottom.Name = "pBottomBottom";
-            this.pBottomBottom.Size = new System.Drawing.Size(216, 23);
+            this.pBottomBottom.Size = new System.Drawing.Size(233, 23);
             this.pBottomBottom.TabIndex = 24;
             this.pBottomBottom.Visible = false;
             // 
@@ -676,7 +678,7 @@
             // splitRight.Panel2
             // 
             this.splitRight.Panel2.Controls.Add(this.webViewPlots);
-            this.splitRight.Size = new System.Drawing.Size(748, 622);
+            this.splitRight.Size = new System.Drawing.Size(731, 622);
             this.splitRight.SplitterDistance = 311;
             this.splitRight.TabIndex = 2;
             // 
@@ -701,7 +703,7 @@
             this.pOptimize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pOptimize.Location = new System.Drawing.Point(0, 0);
             this.pOptimize.Name = "pOptimize";
-            this.pOptimize.Size = new System.Drawing.Size(748, 311);
+            this.pOptimize.Size = new System.Drawing.Size(731, 311);
             this.pOptimize.TabIndex = 39;
             // 
             // eOptimizationOutput
@@ -733,7 +735,7 @@
             this.tabOptimization.Location = new System.Drawing.Point(310, 3);
             this.tabOptimization.Name = "tabOptimization";
             this.tabOptimization.SelectedIndex = 0;
-            this.tabOptimization.Size = new System.Drawing.Size(438, 309);
+            this.tabOptimization.Size = new System.Drawing.Size(421, 309);
             this.tabOptimization.TabIndex = 30;
             // 
             // tMinMax
@@ -743,7 +745,7 @@
             this.tMinMax.Location = new System.Drawing.Point(4, 24);
             this.tMinMax.Name = "tMinMax";
             this.tMinMax.Padding = new System.Windows.Forms.Padding(3);
-            this.tMinMax.Size = new System.Drawing.Size(430, 281);
+            this.tMinMax.Size = new System.Drawing.Size(413, 281);
             this.tMinMax.TabIndex = 0;
             this.tMinMax.Text = "Parameter Ranges";
             this.tMinMax.UseVisualStyleBackColor = true;
@@ -762,7 +764,7 @@
             this.dgMinMaxValues.Name = "dgMinMaxValues";
             this.dgMinMaxValues.RowHeadersVisible = false;
             this.dgMinMaxValues.RowTemplate.Height = 25;
-            this.dgMinMaxValues.Size = new System.Drawing.Size(424, 241);
+            this.dgMinMaxValues.Size = new System.Drawing.Size(407, 241);
             this.dgMinMaxValues.TabIndex = 27;
             // 
             // colParameter
@@ -790,7 +792,7 @@
             this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMinMax.Location = new System.Drawing.Point(3, 3);
             this.pMinMax.Name = "pMinMax";
-            this.pMinMax.Size = new System.Drawing.Size(424, 34);
+            this.pMinMax.Size = new System.Drawing.Size(407, 34);
             this.pMinMax.TabIndex = 28;
             // 
             // linkSuggestMinMax
@@ -835,9 +837,9 @@
             // 
             // colFitnessRheobaseMultiplier
             // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle2;
             this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
             this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
             // 
@@ -1029,7 +1031,7 @@
             this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlots.Location = new System.Drawing.Point(0, 0);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(748, 307);
+            this.webViewPlots.Size = new System.Drawing.Size(731, 307);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
@@ -1041,14 +1043,14 @@
             this.pPlots.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlots.Location = new System.Drawing.Point(0, 0);
             this.pPlots.Name = "pPlots";
-            this.pPlots.Size = new System.Drawing.Size(748, 61);
+            this.pPlots.Size = new System.Drawing.Size(731, 61);
             this.pPlots.TabIndex = 1;
             // 
             // grPlotSelection
             // 
             this.grPlotSelection.Controls.Add(this.cbV);
             this.grPlotSelection.Controls.Add(this.cbStimulus);
-            this.grPlotSelection.Controls.Add(this.cbURelTension);
+            this.grPlotSelection.Controls.Add(this.cbSecondaryLists);
             this.grPlotSelection.Controls.Add(this.cbSpikingFrequency);
             this.grPlotSelection.Controls.Add(this.cbTauRise);
             this.grPlotSelection.Controls.Add(this.cbInterval);
@@ -1086,16 +1088,18 @@
             this.cbStimulus.UseVisualStyleBackColor = true;
             this.cbStimulus.CheckedChanged += new System.EventHandler(this.cbPlotSelection_CheckedChanged);
             // 
-            // cbURelTension
+            // cbSecondaryLists
             // 
-            this.cbURelTension.AutoSize = true;
-            this.cbURelTension.Location = new System.Drawing.Point(6, 34);
-            this.cbURelTension.Name = "cbURelTension";
-            this.cbURelTension.Size = new System.Drawing.Size(128, 19);
-            this.cbURelTension.TabIndex = 1;
-            this.cbURelTension.Text = "u / Relative Tension";
-            this.cbURelTension.UseVisualStyleBackColor = true;
-            this.cbURelTension.CheckedChanged += new System.EventHandler(this.cbPlotSelection_CheckedChanged);
+            this.cbSecondaryLists.AutoSize = true;
+            this.cbSecondaryLists.Location = new System.Drawing.Point(6, 34);
+            this.cbSecondaryLists.Name = "cbSecondaryLists";
+            this.cbSecondaryLists.Size = new System.Drawing.Size(110, 19);
+            this.cbSecondaryLists.TabIndex = 1;
+            this.cbSecondaryLists.Text = "Other dynamics";
+            this.toolTip1.SetToolTip(this.cbSecondaryLists, "depending on the model, can be feedback current, ion based currents, relative ten" +
+        "sion, etc");
+            this.cbSecondaryLists.UseVisualStyleBackColor = true;
+            this.cbSecondaryLists.CheckedChanged += new System.EventHandler(this.cbPlotSelection_CheckedChanged);
             // 
             // cbSpikingFrequency
             // 
@@ -1264,7 +1268,7 @@
         private CheckBox cbInterval;
         private CheckBox cbTauDecay;
         private CheckBox cbTauRise;
-        private CheckBox cbURelTension;
+        private CheckBox cbSecondaryLists;
         private CheckBox cbV;
         private Panel pBottomBottom;
         private LinkLabel linkUseUpdatedParams;
