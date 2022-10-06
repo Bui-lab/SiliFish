@@ -12,11 +12,26 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
-        public string coreType;
+
+        public string CoreType
+        {
+            get
+            {
+                FillCoreTypes();
+                return ddCoreType.Text;
+            }
+            set { FillCoreTypes(value); }
+        }
         private bool updateParamNames = true;
         DynamicsStats dynamics;
         private double[] TimeArray;
 
+        internal class UpdatedParamsEventArgs : EventArgs
+        {
+            internal string CoreType;
+            internal Dictionary<string, object> ParamsAsObject;
+            internal Dictionary<string, double> ParamsAsDouble;
+        }
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
@@ -81,7 +96,7 @@ namespace SiliFish.UI.Controls
 
         private void NumBox_ValueChanged(object sender, EventArgs e)
         {
-            if (sender is NumericUpDown)
+            if (cbAutoDrawPlots.Checked && sender is NumericUpDown)
             {
                 CalculateRheobase();
                 DynamicsRun();
@@ -90,7 +105,7 @@ namespace SiliFish.UI.Controls
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            if (sender is TextBox textBox)
+            if (cbAutoDrawPlots.Checked && sender is TextBox textBox)
             {
                 if (double.TryParse(textBox.Text, out double _))
                 {
@@ -100,12 +115,21 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void FillCoreTypes(string def = null)
+        {
+            if (ddCoreType.Items.Count == 0)
+                ddCoreType.Items.AddRange(DynamicUnit.GetCoreTypes().ToArray());
+            if (!string.IsNullOrEmpty(def))
+                ddCoreType.Text = def;
+            if (ddCoreType.SelectedIndex < 0)
+                ddCoreType.SelectedIndex = 0;
+        }
         public DynamicsTestControl(string coreType, Dictionary<string, double> parameters, bool testMode)
         {
             InitializeComponent();
             InitAsync();
             Wait();
-            this.coreType = coreType;
+            FillCoreTypes(coreType);
             Parameters = parameters;
             pBottomBottom.Visible = !testMode;
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
@@ -162,6 +186,7 @@ namespace SiliFish.UI.Controls
             parameters = pParams.CreateDoubleDictionaryFromControls();
         }
 
+        #region Plotting
         private void CreatePlots()
         {
             if (dynamics == null)
@@ -184,11 +209,11 @@ namespace SiliFish.UI.Controls
             {
                 charts.Add(new ChartDataStruct
                 {
-                    Title = coreType == "Leaky_Integrator" ? "Rel. Tension" : "u", //TODO hardcoded leaky integrator - add a function to dynamic unit
+                    Title = CoreType == "Leaky_Integrator" ? "Rel. Tension" : "u", //TODO hardcoded leaky integrator - add a function to dynamic unit
                     Color = Color.Blue,
                     xData = TimeArray,
                     yData = dynamics.SecList,
-                    yLabel = coreType == "Leaky_Integrator" ? "Rel. Tension" : "u" //TODO hardcoded leaky integrator - add a function to dynamic unit
+                    yLabel = CoreType == "Leaky_Integrator" ? "Rel. Tension" : "u" //TODO hardcoded leaky integrator - add a function to dynamic unit
                 });
             }
 
@@ -299,6 +324,22 @@ namespace SiliFish.UI.Controls
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             webViewPlots.NavigateToString(html);
         }
+
+        private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
+        {
+            CreatePlots();
+        }
+        #endregion
+        private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Parameters = DynamicUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
+        }
+
+        private void stimulusControl1_StimulusChanged(object sender, EventArgs e)
+        {
+            if (cbAutoDrawPlots.Checked)
+                DynamicsRun();
+        }       
         private void DynamicsRun()
         {
             ReadParameters();
@@ -314,7 +355,7 @@ namespace SiliFish.UI.Controls
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 TimeArray[i] = i * (double)dt;
-            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
             if (core != null)
             {
                 if (rbManualEntryStimulus.Checked)
@@ -372,9 +413,7 @@ namespace SiliFish.UI.Controls
         private void CalculateRheobase()
         {
             ReadParameters();
-
-            //TODO muscle cell contraction - how to we handle it?
-            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d > 0)
@@ -400,7 +439,7 @@ namespace SiliFish.UI.Controls
                 string param = ddParameter.SelectedItem.ToString();
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == param).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
-            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
 
             foreach (string param in paramToTest.Keys)//change one parameter at a time
             {
@@ -428,19 +467,27 @@ namespace SiliFish.UI.Controls
                 height);
             webViewPlots.NavigateToString(html);
         }
-        private void linkUseUpdatedParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ReadParameters();
-            useUpdatedParams?.Invoke(this, EventArgs.Empty);
-        }
 
         private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
             stimulusControl1.Enabled = rbManualEntryStimulus.Checked;
             grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !OptimizationMode;
-            DynamicsRun();
+            if (cbAutoDrawPlots.Checked)
+                DynamicsRun();
         }
 
+        #region Load/Save
+        private void linkUseUpdatedParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ReadParameters();
+            UpdatedParamsEventArgs args = new()
+            {
+                CoreType = CoreType,
+                ParamsAsObject = Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value),
+                ParamsAsDouble = Parameters
+            };
+            useUpdatedParams?.Invoke(this, args);
+        }
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (openFileJson.ShowDialog() == DialogResult.OK)
@@ -451,7 +498,7 @@ namespace SiliFish.UI.Controls
                 DynamicUnit core = DynamicUnit.GetOfDerivedType(JSONString);
                 if (core != null)
                 {
-                    coreType = core.CoreType;
+                    CoreType = core.CoreType;
                     Parameters = core.GetParameters();
                 }
             }
@@ -460,7 +507,7 @@ namespace SiliFish.UI.Controls
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
-            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
             string JSONString = Util.CreateJSONFromObject(core);
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
@@ -468,11 +515,9 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
-        {
-            CreatePlots();
-        }
+        #endregion
 
+        #region Optimization
         private void ReadMinMaxParamValues()
         {
             minValues = new();
@@ -539,7 +584,7 @@ namespace SiliFish.UI.Controls
                 (Type)cbGAMutation.SelectedItem,
                 (Type)cbGATermination.SelectedItem);
             Solver.SetOptimizationSettings(minPopulation, maxPopulation,
-                coreType,
+                CoreType,
                 parameters,
                 targetRheobaseMin, targetRheobaseMax,
                 firingPatterns, firingRhythms,
@@ -581,7 +626,7 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DynamicUnit core = DynamicUnit.CreateCore(coreType, parameters);
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
 
             if (core == null) return;
 
@@ -609,7 +654,6 @@ namespace SiliFish.UI.Controls
             if (Solver == null) return;
             eOptimizationOutput.Text += Solver.GetProgress() + "\r\n";
         }
-
         private void dgFitnessParams_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
@@ -628,7 +672,6 @@ namespace SiliFish.UI.Controls
             catch { }
         }
 
-
         private void dgFitnessParams_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
         {
             try
@@ -641,5 +684,7 @@ namespace SiliFish.UI.Controls
             }
             catch { }
         }
+        #endregion
+
     }
 }

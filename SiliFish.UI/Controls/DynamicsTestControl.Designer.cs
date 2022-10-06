@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
@@ -54,9 +54,10 @@
             this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.pParams = new System.Windows.Forms.FlowLayoutPanel();
-            this.pLoadSaveParams = new System.Windows.Forms.Panel();
-            this.linkSaveCoreUnit = new System.Windows.Forms.LinkLabel();
-            this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
+            this.pCoreType = new System.Windows.Forms.Panel();
+            this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
+            this.ddCoreType = new System.Windows.Forms.ComboBox();
+            this.lCoreType = new System.Windows.Forms.Label();
             this.grSensitivity = new System.Windows.Forms.GroupBox();
             this.cbLogScale = new System.Windows.Forms.CheckBox();
             this.eMaxMultiplier = new System.Windows.Forms.TextBox();
@@ -65,6 +66,9 @@
             this.lMultiplierRange = new System.Windows.Forms.Label();
             this.ddParameter = new System.Windows.Forms.ComboBox();
             this.lParameter = new System.Windows.Forms.Label();
+            this.pLoadSaveParams = new System.Windows.Forms.Panel();
+            this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
+            this.linkSaveCoreUnit = new System.Windows.Forms.LinkLabel();
             this.pBottomBottom = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.splitRight = new System.Windows.Forms.SplitContainer();
@@ -129,8 +133,9 @@
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.pLoadSaveParams.SuspendLayout();
+            this.pCoreType.SuspendLayout();
             this.grSensitivity.SuspendLayout();
+            this.pLoadSaveParams.SuspendLayout();
             this.pBottomBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
             this.splitRight.Panel1.SuspendLayout();
@@ -330,7 +335,7 @@
             this.grRheobase.Controls.Add(this.eRheobaseLimit);
             this.grRheobase.Controls.Add(this.lRheobaseLimit);
             this.grRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grRheobase.Location = new System.Drawing.Point(3, 134);
+            this.grRheobase.Location = new System.Drawing.Point(3, 103);
             this.grRheobase.Name = "grRheobase";
             this.grRheobase.Size = new System.Drawing.Size(216, 114);
             this.grRheobase.TabIndex = 16;
@@ -411,7 +416,7 @@
             this.grTest.Controls.Add(this.eStepEndTime);
             this.grTest.Controls.Add(this.ldt);
             this.grTest.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grTest.Location = new System.Drawing.Point(3, 357);
+            this.grTest.Location = new System.Drawing.Point(3, 326);
             this.grTest.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
             this.grTest.Name = "grTest";
             this.grTest.Size = new System.Drawing.Size(216, 300);
@@ -438,6 +443,7 @@
             this.stimulusControl1.Name = "stimulusControl1";
             this.stimulusControl1.Size = new System.Drawing.Size(212, 93);
             this.stimulusControl1.TabIndex = 20;
+            this.stimulusControl1.StimulusChanged += new System.EventHandler(this.stimulusControl1_StimulusChanged);
             // 
             // rbRheobaseBasedStimulus
             // 
@@ -459,9 +465,10 @@
             // 
             this.splitMain.Panel1.Controls.Add(this.pParams);
             this.splitMain.Panel1.Controls.Add(this.grRheobase);
-            this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
+            this.splitMain.Panel1.Controls.Add(this.pCoreType);
             this.splitMain.Panel1.Controls.Add(this.grSensitivity);
             this.splitMain.Panel1.Controls.Add(this.grTest);
+            this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
             this.splitMain.Panel1.Controls.Add(this.pBottomBottom);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(3);
             // 
@@ -478,42 +485,50 @@
             this.pParams.AutoScroll = true;
             this.pParams.AutoSize = true;
             this.pParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pParams.Location = new System.Drawing.Point(3, 34);
+            this.pParams.Location = new System.Drawing.Point(3, 61);
             this.pParams.Name = "pParams";
-            this.pParams.Size = new System.Drawing.Size(216, 100);
+            this.pParams.Size = new System.Drawing.Size(216, 42);
             this.pParams.TabIndex = 23;
             // 
-            // pLoadSaveParams
+            // pCoreType
             // 
-            this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
-            this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
-            this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 3);
-            this.pLoadSaveParams.Name = "pLoadSaveParams";
-            this.pLoadSaveParams.Size = new System.Drawing.Size(216, 31);
-            this.pLoadSaveParams.TabIndex = 21;
+            this.pCoreType.Controls.Add(this.cbAutoDrawPlots);
+            this.pCoreType.Controls.Add(this.ddCoreType);
+            this.pCoreType.Controls.Add(this.lCoreType);
+            this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pCoreType.Location = new System.Drawing.Point(3, 3);
+            this.pCoreType.Name = "pCoreType";
+            this.pCoreType.Size = new System.Drawing.Size(216, 58);
+            this.pCoreType.TabIndex = 21;
             // 
-            // linkSaveCoreUnit
+            // cbAutoDrawPlots
             // 
-            this.linkSaveCoreUnit.AutoSize = true;
-            this.linkSaveCoreUnit.Location = new System.Drawing.Point(98, 9);
-            this.linkSaveCoreUnit.Name = "linkSaveCoreUnit";
-            this.linkSaveCoreUnit.Size = new System.Drawing.Size(84, 15);
-            this.linkSaveCoreUnit.TabIndex = 21;
-            this.linkSaveCoreUnit.TabStop = true;
-            this.linkSaveCoreUnit.Text = "Save Core Unit";
-            this.linkSaveCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCoreUnit_LinkClicked);
+            this.cbAutoDrawPlots.AutoSize = true;
+            this.cbAutoDrawPlots.Location = new System.Drawing.Point(9, 33);
+            this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
+            this.cbAutoDrawPlots.Size = new System.Drawing.Size(111, 19);
+            this.cbAutoDrawPlots.TabIndex = 24;
+            this.cbAutoDrawPlots.Text = "Auto Draw Plots";
+            this.cbAutoDrawPlots.UseVisualStyleBackColor = true;
             // 
-            // linkLoadCoreUnit
+            // ddCoreType
             // 
-            this.linkLoadCoreUnit.AutoSize = true;
-            this.linkLoadCoreUnit.Location = new System.Drawing.Point(6, 9);
-            this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
-            this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
-            this.linkLoadCoreUnit.TabIndex = 20;
-            this.linkLoadCoreUnit.TabStop = true;
-            this.linkLoadCoreUnit.Text = "Load Core Unit";
-            this.linkLoadCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCoreUnit_LinkClicked);
+            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddCoreType.FormattingEnabled = true;
+            this.ddCoreType.Location = new System.Drawing.Point(70, 4);
+            this.ddCoreType.Name = "ddCoreType";
+            this.ddCoreType.Size = new System.Drawing.Size(142, 23);
+            this.ddCoreType.TabIndex = 23;
+            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
+            // 
+            // lCoreType
+            // 
+            this.lCoreType.AutoSize = true;
+            this.lCoreType.Location = new System.Drawing.Point(6, 8);
+            this.lCoreType.Name = "lCoreType";
+            this.lCoreType.Size = new System.Drawing.Size(59, 15);
+            this.lCoreType.TabIndex = 22;
+            this.lCoreType.Text = "Core Type";
             // 
             // grSensitivity
             // 
@@ -526,7 +541,7 @@
             this.grSensitivity.Controls.Add(this.lParameter);
             this.grSensitivity.Controls.Add(this.btnSensitivityAnalysis);
             this.grSensitivity.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grSensitivity.Location = new System.Drawing.Point(3, 248);
+            this.grSensitivity.Location = new System.Drawing.Point(3, 217);
             this.grSensitivity.Name = "grSensitivity";
             this.grSensitivity.Size = new System.Drawing.Size(216, 109);
             this.grSensitivity.TabIndex = 18;
@@ -593,6 +608,38 @@
             this.lParameter.Size = new System.Drawing.Size(61, 15);
             this.lParameter.TabIndex = 21;
             this.lParameter.Text = "Parameter";
+            // 
+            // pLoadSaveParams
+            // 
+            this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
+            this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
+            this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 626);
+            this.pLoadSaveParams.Name = "pLoadSaveParams";
+            this.pLoadSaveParams.Size = new System.Drawing.Size(216, 31);
+            this.pLoadSaveParams.TabIndex = 20;
+            // 
+            // linkLoadCoreUnit
+            // 
+            this.linkLoadCoreUnit.AutoSize = true;
+            this.linkLoadCoreUnit.Location = new System.Drawing.Point(4, 8);
+            this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
+            this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
+            this.linkLoadCoreUnit.TabIndex = 20;
+            this.linkLoadCoreUnit.TabStop = true;
+            this.linkLoadCoreUnit.Text = "Load Core Unit";
+            this.linkLoadCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCoreUnit_LinkClicked);
+            // 
+            // linkSaveCoreUnit
+            // 
+            this.linkSaveCoreUnit.AutoSize = true;
+            this.linkSaveCoreUnit.Location = new System.Drawing.Point(96, 8);
+            this.linkSaveCoreUnit.Name = "linkSaveCoreUnit";
+            this.linkSaveCoreUnit.Size = new System.Drawing.Size(84, 15);
+            this.linkSaveCoreUnit.TabIndex = 21;
+            this.linkSaveCoreUnit.TabStop = true;
+            this.linkSaveCoreUnit.Text = "Save Core Unit";
+            this.linkSaveCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCoreUnit_LinkClicked);
             // 
             // pBottomBottom
             // 
@@ -788,9 +835,9 @@
             // 
             // colFitnessRheobaseMultiplier
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle1;
             this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
             this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
             // 
@@ -1140,10 +1187,12 @@
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
-            this.pLoadSaveParams.ResumeLayout(false);
-            this.pLoadSaveParams.PerformLayout();
+            this.pCoreType.ResumeLayout(false);
+            this.pCoreType.PerformLayout();
             this.grSensitivity.ResumeLayout(false);
             this.grSensitivity.PerformLayout();
+            this.pLoadSaveParams.ResumeLayout(false);
+            this.pLoadSaveParams.PerformLayout();
             this.pBottomBottom.ResumeLayout(false);
             this.pBottomBottom.PerformLayout();
             this.splitRight.Panel1.ResumeLayout(false);
@@ -1204,7 +1253,7 @@
         private StimulusControl stimulusControl1;
         private RadioButton rbRheobaseBasedStimulus;
         private FlowLayoutPanel pParams;
-        private Panel pLoadSaveParams;
+        private Panel pCoreType;
         private LinkLabel linkSaveCoreUnit;
         private LinkLabel linkLoadCoreUnit;
         private SaveFileDialog saveFileJson;
@@ -1258,5 +1307,9 @@
         private DataGridViewTextBoxColumn colFitnessRheobaseMultiplier;
         private DataGridViewComboBoxColumn colFitnessFiringMode;
         private DataGridViewComboBoxColumn colFitnessFiringRhythm;
+        private ComboBox ddCoreType;
+        private Label lCoreType;
+        private Panel pLoadSaveParams;
+        private CheckBox cbAutoDrawPlots;
     }
 }

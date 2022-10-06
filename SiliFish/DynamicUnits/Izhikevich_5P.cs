@@ -30,7 +30,6 @@ namespace SiliFish.DynamicUnits
 
         public Izhikevich_5P(Dictionary<string, double> paramExternal)
         {
-            //CoreType = CoreType.Izhikevich_5P;
             SetParameters(paramExternal);
             Initialize();
         }

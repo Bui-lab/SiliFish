@@ -206,9 +206,6 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.cmNeuronalDynamics = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiIzhikevich_9P = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiIzhikevich5P = new System.Windows.Forms.ToolStripMenuItem();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -289,7 +286,6 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
-            this.cmNeuronalDynamics.SuspendLayout();
             this.SuspendLayout();
             // 
             // rbSingleCoil
@@ -346,7 +342,6 @@ namespace SiliFish.UI
             // 
             this.linkNeuronalCellDynamics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkNeuronalCellDynamics.AutoSize = true;
-            this.linkNeuronalCellDynamics.ContextMenuStrip = this.cmNeuronalDynamics;
             this.linkNeuronalCellDynamics.Location = new System.Drawing.Point(1223, 16);
             this.linkNeuronalCellDynamics.Name = "linkNeuronalCellDynamics";
             this.linkNeuronalCellDynamics.Size = new System.Drawing.Size(111, 15);
@@ -2459,29 +2454,6 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // cmNeuronalDynamics
-            // 
-            this.cmNeuronalDynamics.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiIzhikevich_9P,
-            this.cmiIzhikevich5P});
-            this.cmNeuronalDynamics.Name = "cmNeuronalDynamics";
-            this.cmNeuronalDynamics.Size = new System.Drawing.Size(181, 70);
-            this.cmNeuronalDynamics.Text = "Izhikevich 9P";
-            // 
-            // cmiIzhikevich_9P
-            // 
-            this.cmiIzhikevich_9P.Name = "cmiIzhikevich_9P";
-            this.cmiIzhikevich_9P.Size = new System.Drawing.Size(180, 22);
-            this.cmiIzhikevich_9P.Text = "Izhikevich 9P";
-            this.cmiIzhikevich_9P.Click += new System.EventHandler(this.cmiIzhikevich_9P_Click);
-            // 
-            // cmiIzhikevich5P
-            // 
-            this.cmiIzhikevich5P.Name = "cmiIzhikevich5P";
-            this.cmiIzhikevich5P.Size = new System.Drawing.Size(180, 22);
-            this.cmiIzhikevich5P.Text = "Izhikevich 5P";
-            this.cmiIzhikevich5P.Click += new System.EventHandler(this.cmiIzhikevich5P_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2592,7 +2564,6 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
-            this.cmNeuronalDynamics.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2773,8 +2744,5 @@ namespace SiliFish.UI
         private ComboBox ddSomites;
         private Label lSomites;
         private LinkLabel linkNeuronalCellDynamics;
-        private ContextMenuStrip cmNeuronalDynamics;
-        private ToolStripMenuItem cmiIzhikevich_9P;
-        private ToolStripMenuItem cmiIzhikevich5P;
     }
 }
