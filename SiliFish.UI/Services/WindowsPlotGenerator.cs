@@ -52,7 +52,7 @@ namespace Services
             return (leftImages, rightImages);
         }
 
-        private static (Dictionary<string, Color> , Dictionary<string, List<double>> )GetAffarentCurrentsOfCell(Cell cell, bool gap, bool chem)
+        private static (Dictionary<string, Color>, Dictionary<string, List<double>>) GetAffarentCurrentsOfCell(Cell cell, bool gap, bool chem)
         {
             Dictionary<string, Color> colors = new();
             Dictionary<string, List<double>> AffarentCurrents = new();
@@ -91,7 +91,7 @@ namespace Services
             }
             return (colors, AffarentCurrents);
         }
-        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection, 
+        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
             int iStart, int iEnd,
             bool gap, bool chem)
         {
@@ -182,7 +182,7 @@ namespace Services
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
-            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection,iStart, iEnd,  gap: true, chem: true);
+            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection, iStart, iEnd, gap: true, chem: true);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
@@ -203,7 +203,7 @@ namespace Services
             (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
             leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
                 tail_tip_coord.Select(c => c.X).ToArray(),
-                model.TimeArray, iStart, iEnd, 
+                model.TimeArray, iStart, iEnd,
                 "X", null, null,
                 Color.Red));
             if (episodes.Any())
@@ -259,11 +259,11 @@ namespace Services
 
 
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection, 
-            double dt , int tStart = 0, int tEnd = -1, int tSkip = 0)
+            CellSelectionStruct cellSelection,
+            double dt, int tStart = 0, int tEnd = -1, int tSkip = 0)
         {
-            if (PlotType != PlotType .Episodes &&
-                (Cells == null || !Cells.Any()) && 
+            if (PlotType != PlotType.Episodes &&
+                (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             int iStart = (int)((tStart + tSkip) / dt);
@@ -273,7 +273,7 @@ namespace Services
             double[] TimeArray = model.TimeArray;
             if (iEnd < iStart || iEnd >= TimeArray.Length)
                 iEnd = TimeArray.Length - 1;
-           
+
             switch (PlotType)
             {
                 case PlotType.MembPotential:

@@ -42,8 +42,8 @@ namespace SiliFish.UI
         /// <param name="colors"></param>
         /// <param name="AffarentCurrents">A dictionary of currents with a unique name as key, which is used for color determination</param>
         /// <returns></returns>
-        public static Image CreateCurrentsPlot(string target, string title, 
-            Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents, 
+        public static Image CreateCurrentsPlot(string target, string title,
+            Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents,
             double[] Time, int iStart, int iEnd,
             string yAxis, double yMin, double yMax,
             int width = 1024, int height = 480,
@@ -82,9 +82,9 @@ namespace SiliFish.UI
             return image;
         }
 
-        public static Image CreateScatterPlot(string title, double[] data, 
-            double[] Time, double tStart, double tEnd, 
-            string yAxis, double? yMin, double? yMax, 
+        public static Image CreateScatterPlot(string title, double[] data,
+            double[] Time, double tStart, double tEnd,
+            string yAxis, double? yMin, double? yMax,
             Color color, int width = 1024, int height = 480,
             bool absoluteYRange = false)
         {
@@ -103,7 +103,7 @@ namespace SiliFish.UI
                 .Select(i => new ScatterPoint(Time[i] < 0 ? 0 : Time[i], data[i])));
 
             model.Series.Add(ls);
-            
+
             var stream = new MemoryStream();
             var pngExporter = new PngExporter { Width = width, Height = height };
             pngExporter.Export(model, stream);
@@ -140,23 +140,23 @@ namespace SiliFish.UI
                 model.Series.Add(ls);
             }
             var stream = new MemoryStream();
-            var pngExporter = new PngExporter { Width = width, Height = height};
+            var pngExporter = new PngExporter { Width = width, Height = height };
             pngExporter.Export(model, stream);
             Image image = Image.FromStream(stream);
             image.Tag = title;
             return image;
         }
 
-        public static Image CreateLinePlot(string title, double[] data, 
-            double[] Time, int iStart, int iEnd, 
-            string yAxis, double? yMin, double? yMax, 
+        public static Image CreateLinePlot(string title, double[] data,
+            double[] Time, int iStart, int iEnd,
+            string yAxis, double? yMin, double? yMax,
             Color color, int width = 1024, int height = 480, bool absoluteYRange = false)
         {
             if (data == null)
                 return null;
 
-            yMin ??= data.Min(); 
-            yMax ??= data.Max(); 
+            yMin ??= data.Min();
+            yMax ??= data.Max();
             PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, (double)yMin, (double)yMax, absoluteYRange);
 
 

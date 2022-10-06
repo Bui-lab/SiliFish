@@ -1,5 +1,4 @@
 ﻿using SiliFish.Definitions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -198,7 +197,7 @@ namespace SiliFish.DynamicUnits
                 firingPattern = FiringPattern.NoSpike;
                 return;
             }
-            double firsttITime =  curStart * RunParam.static_dt;
+            double firsttITime = curStart * RunParam.static_dt;
             double firstSpikeTime = SpikeList[0] * RunParam.static_dt;
             bool leadByQuiescence = firstSpikeTime - firsttITime >= 10 * TonicPadding;
             if (leadByQuiescence)
@@ -225,7 +224,7 @@ namespace SiliFish.DynamicUnits
                 if (!(lastInterval is double.NaN) && curInterval < lastInterval - Const.Epsilon)
                     spreadingOut = false;
                 if ((lastInterval is double.NaN && curInterval > MaxBurstInterval_LowerRange) ||
-                    (spreadingOut && curInterval > MaxBurstInterval_UpperRange) || 
+                    (spreadingOut && curInterval > MaxBurstInterval_UpperRange) ||
                     (!spreadingOut && curInterval > MaxBurstInterval_LowerRange))
                 {
                     burstOrSpike = new();
@@ -245,7 +244,7 @@ namespace SiliFish.DynamicUnits
             if (lastInterval == double.NaN)
                 lastInterval = TonicPadding;
             bool followedByQuiescence = lastITime - lastSpikeTime >= lastInterval + TonicPadding;
-            (firingRhythm, firingPattern) = BurstOrSpike.FiringPatternOfList(Bursts,followedByQuiescence);
+            (firingRhythm, firingPattern) = BurstOrSpike.FiringPatternOfList(Bursts, followedByQuiescence);
         }
 
 

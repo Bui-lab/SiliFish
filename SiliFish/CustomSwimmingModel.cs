@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits;
+using System.Linq;
 
 namespace SiliFish
 {
 
-    public class CustomSwimmingModel: SwimmingModel
+    public class CustomSwimmingModel : SwimmingModel
     {
         public CustomSwimmingModel()
         {

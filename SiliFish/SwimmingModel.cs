@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SiliFish
 {
@@ -23,7 +21,7 @@ namespace SiliFish
 
         public int iIndex(double t)
         {
-            int i = (int)((t+tSkip_ms)/ dt);
+            int i = (int)((t + tSkip_ms) / dt);
             if (i < 0) i = 0;
             if (i >= iMax) i = iMax - 1;
             return i;
@@ -75,7 +73,7 @@ namespace SiliFish
 
         protected double taur, taud, vth; //synapse parameters
 
-        private UnitOfMeasure uom= UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;
+        private UnitOfMeasure uom = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;
         public UnitOfMeasure UoM
         {
             get { return uom; }
@@ -88,7 +86,7 @@ namespace SiliFish
         protected List<InterPool> chemPoolConnections = new();
 
         [JsonIgnore]
-        public double[] TimeArray{ get { return Time; } }
+        public double[] TimeArray { get { return Time; } }
 
         [JsonIgnore]
         public bool ModelRun { get { return model_run; } }
@@ -180,11 +178,11 @@ namespace SiliFish
             return (leftMNs, rightMNs);
         }
 
-        public List<InterPool> ChemPoolConnections 
-        { 
-            get 
-            { 
-                return chemPoolConnections; 
+        public List<InterPool> ChemPoolConnections
+        {
+            get
+            {
+                return chemPoolConnections;
             }
             set
             {
@@ -378,7 +376,7 @@ namespace SiliFish
             List<CellPool> pools = neuronPools.Union(musclePools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
                             && p.OnSide(cellSelection.SagittalPlane)).ToList();
             if (cellSelection.cellSelection == PlotSelection.Summary)
-               return (null, pools);
+                return (null, pools);
             List<Cell> cells = pools.SelectMany(p => p.GetCells(cellSelection)).ToList();
             if (cells.Any())
                 return (cells, null);
@@ -485,7 +483,7 @@ namespace SiliFish
             neuronPools.Clear();
             musclePools.Clear();
             gapPoolConnections.Clear();
-            chemPoolConnections.Clear(); 
+            chemPoolConnections.Clear();
             InitNeurons();
             InitSynapsesAndGapJunctions();
             InitDataVectors(nmax);
@@ -535,7 +533,7 @@ namespace SiliFish
                     foreach (Cell cell in pools.GetCells())
                         cell.CalculateCellularOutputs(t);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -566,7 +564,7 @@ namespace SiliFish
                 Stimulus.nMax = iMax;
 
                 InitStructures(iMax);
-                if (!initialized) 
+                if (!initialized)
                     return;
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
                 Time[0] = Math.Round((double)-1 * runParam.tSkip_ms, 2);

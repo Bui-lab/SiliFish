@@ -1,10 +1,10 @@
-﻿using SiliFish.DataTypes;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace SiliFish.PredefinedModels
 {
@@ -99,10 +99,10 @@ namespace SiliFish.PredefinedModels
 
         protected override void InitNeurons()
         {
-           
+
             MembraneDynamics mn_dyn = new() { a = 0.5, b = 0.01, c = -55, d = 100, Vmax = 10, Vr = -65, Vt = -58, k = 0.5, Cm = 20 };
-            L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Left, 5, Color.Red);
-            R_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Right, 5, Color.Red);
+            L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "MN", SagittalPlane.Left, 5, Color.Red);
+            R_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "MN", SagittalPlane.Right, 5, Color.Red);
 
             for (int i = 0; i < nMN; i++)
             {
@@ -114,8 +114,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_MN);
 
             MembraneDynamics di6_dyn = new() { a = 0.1, b = 0.002, c = -55, d = 4, Vmax = 10, Vr = -60, Vt = -54, k = 0.3, Cm = 10 };
-            L_dI6 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "dI6", SagittalPlane.Left, 1, Color.YellowGreen);
-            R_dI6 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "dI6", SagittalPlane.Right, 1, Color.YellowGreen);
+            L_dI6 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "dI6", SagittalPlane.Left, 1, Color.YellowGreen);
+            R_dI6 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "dI6", SagittalPlane.Right, 1, Color.YellowGreen);
 
             for (int i = 0; i < ndI6; i++)
             {
@@ -126,8 +126,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_dI6);
 
             MembraneDynamics v0v_dyn = new() { a = 0.01, b = 0.002, c = -55, d = 2, Vmax = 8, Vr = -60, Vt = -54, k = 0.3, Cm = 10 };
-            L_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0v", SagittalPlane.Left, 2, Color.Blue);
-            R_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0v", SagittalPlane.Right, 2, Color.Blue);
+            L_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0v", SagittalPlane.Left, 2, Color.Blue);
+            R_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0v", SagittalPlane.Right, 2, Color.Blue);
 
             for (int i = 0; i < nV0v; i++)
             {
@@ -138,8 +138,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_V0v);
 
             MembraneDynamics v2a_dyn = new() { a = 0.1, b = 0.002, c = -55, d = 4, Vmax = 10, Vr = -60, Vt = -54, k = 0.3, Cm = 10 };
-            L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
-            R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
+            L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
+            R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
 
 
             double multiplier = GetStimulusNoiseMultiplier();
@@ -157,8 +157,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_V2a);
 
             MembraneDynamics v1_dyn = new() { a = 0.1, b = 0.002, c = -55, d = 4, Vmax = 10, Vr = -60, Vt = -54, k = 0.3, Cm = 10 };
-            L_V1 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V1", SagittalPlane.Left, 4, Color.Yellow);
-            R_V1 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V1", SagittalPlane.Right, 4, Color.Yellow);
+            L_V1 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V1", SagittalPlane.Left, 4, Color.Yellow);
+            R_V1 = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V1", SagittalPlane.Right, 4, Color.Yellow);
             for (int i = 0; i < nV1; i++)
             {
                 L_V1.AddCell(new Neuron("V1", seq: i + 1, v1_dyn, sigma_dyn, new Coordinate(x: 7.1 + 1.6 * i * GetXNoise(), -1), cv: cv));
@@ -167,8 +167,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(L_V1);
             neuronPools.Add(R_V1);
 
-            L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Left, 6, Color.Purple);
-            R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Right, 6, Color.Purple);
+            L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Left, 6, Color.Purple);
+            R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Right, 6, Color.Purple);
             for (int i = 0; i < nMuscle; i++)
             {
                 L_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 1, C: 3, Vr: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1)));
@@ -217,7 +217,7 @@ namespace SiliFish.PredefinedModels
             PoolToPoolGapJunction(R_MN, R_V0v, cr);
 
             //Ipsilateral glutamatergic projections from V2a to V2a
-            SynapseParameters GluSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_glu};
+            SynapseParameters GluSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_glu };
             cr = new() { AscendingReach = 0, DescendingReach = rangeV2a_V2a_syn, MinReach = rangeMin, Weight = V2a_V2a_syn_weight };
             PoolToPoolChemSynapse(L_V2a, L_V2a, cr, GluSynapse);
             PoolToPoolChemSynapse(R_V2a, R_V2a, cr, GluSynapse);
@@ -242,7 +242,7 @@ namespace SiliFish.PredefinedModels
             PoolToPoolChemSynapse(L_V2a, L_V0v, cr, GluSynapse);
             PoolToPoolChemSynapse(R_V2a, R_V0v, cr, GluSynapse);
 
-            SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly};
+            SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
 
             //Ipsilateral glycinergic projections from V1 to MN 
             cr = new() { AscendingReach = rangeV1_MN, DescendingReach = 0, MinReach = -1, Weight = V1_MN_syn_weight };

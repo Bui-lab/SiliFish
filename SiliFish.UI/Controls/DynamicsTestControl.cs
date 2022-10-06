@@ -7,17 +7,16 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.Services;
 using SiliFish.Services.Optimization;
-using System.Linq;
 
 namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
-        private readonly CoreType coreType;
+        public CoreType coreType;
         private bool updateParamNames = true;
         DynamicsStats dynamics;
         private double[] TimeArray;
-        
+
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
@@ -38,7 +37,9 @@ namespace SiliFish.UI.Controls
                 linkSwitchToOptimization.Text = value ? "Quit Optimization Mode" : "Optimization Mode";
             }
         }
-        public Dictionary<string, double> Parameters { get => parameters;
+        public Dictionary<string, double> Parameters
+        {
+            get => parameters;
             set
             {
                 parameters = value;
@@ -143,7 +144,7 @@ namespace SiliFish.UI.Controls
         private async void InitAsync()
         {
             await webViewPlots.EnsureCoreWebView2Async();
-            }
+        }
 
         private void Wait()
         {
@@ -389,7 +390,7 @@ namespace SiliFish.UI.Controls
         //update each parameter sequentially within the range [/10, *2]
         private void btnSensitivityAnalysis_Click(object sender, EventArgs e)
         {
-            double limit = (double) eRheobaseLimit.Value;
+            double limit = (double)eRheobaseLimit.Value;
             List<ChartDataStruct> charts = new();
             double dt = (double)edt.Value;
             ReadParameters();
@@ -418,12 +419,12 @@ namespace SiliFish.UI.Controls
                     logScale = cbLogScale.Checked
                 });
             }
-                //TODO muscle cell rheobase 
+            //TODO muscle cell rheobase 
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
-            string html = DyChartGenerator.PlotLineCharts(charts, 
+            string html = DyChartGenerator.PlotLineCharts(charts,
                 "Rheobase Sensitivity Analysis", synchronized: false,
-                webViewPlots.ClientSize.Width, 
+                webViewPlots.ClientSize.Width,
                 height);
             webViewPlots.NavigateToString(html);
         }
@@ -449,7 +450,10 @@ namespace SiliFish.UI.Controls
                     return;
                 DynamicUnit core = DynamicUnit.GetOfDerivedType(JSONString);
                 if (core != null)
-                    Parameters = core.GetParametersDouble();
+                {
+                    coreType = core.CoreType;
+                    Parameters = core.GetParameters();
+                }
             }
         }
 
@@ -537,7 +541,7 @@ namespace SiliFish.UI.Controls
             Solver.SetOptimizationSettings(minPopulation, maxPopulation,
                 coreType,
                 parameters,
-                targetRheobaseMin, targetRheobaseMax, 
+                targetRheobaseMin, targetRheobaseMax,
                 firingPatterns, firingRhythms,
                 minValues, maxValues);
 
@@ -581,7 +585,7 @@ namespace SiliFish.UI.Controls
 
             if (core == null) return;
 
-            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues)  = core.GetSuggestedMinMaxValues();
+            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = core.GetSuggestedMinMaxValues();
 
             dgMinMaxValues.Rows.Clear();
             dgMinMaxValues.RowCount = parameters.Count;

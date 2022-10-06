@@ -7,7 +7,7 @@ namespace SiliFish.UI.Controls
     {
         private event EventHandler stimulusChanged;
         public event EventHandler StimulusChanged { add => stimulusChanged += value; remove => stimulusChanged -= value; }
-        
+
         public StimulusControl()
         {
             InitializeComponent();

@@ -41,7 +41,7 @@ namespace SiliFish.UI.Controls
         public TimeLine GetTimeLine()
         {
             TimeLine tl = new();
-            for(int rowIndex = 0; rowIndex <dgTimeLine.Rows.Count; rowIndex++)
+            for (int rowIndex = 0; rowIndex < dgTimeLine.Rows.Count; rowIndex++)
             {
                 string sStart = dgTimeLine[colStartTime.Index, rowIndex].Value?.ToString();
                 string sEnd = dgTimeLine[colEndTime.Index, rowIndex].Value?.ToString();

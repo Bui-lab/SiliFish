@@ -73,7 +73,7 @@ namespace SiliFish.UI.Controls
             {
                 if (pool.Parameters != null && pool.Parameters.Any())
                 {
-                    numVthreshold.Value = pool.Parameters.Read("Izhikevich_9P.V_t", numVthreshold.Value);
+                    //TODO hardcoded parameter name numVthreshold.Value = pool.Parameters.Read("Izhikevich_9P.V_t", numVthreshold.Value);
                 }
                 if (Parameters != null && Parameters.Any())
                 {
@@ -110,7 +110,7 @@ namespace SiliFish.UI.Controls
             {
                 if (pool.Parameters != null && pool.Parameters.Any())
                 {
-                    numEReversal.Value = pool.Parameters.Read("Izhikevich_9P.V_r", numEReversal.Value);
+                    //TODO hardcoded parameter name numEReversal.Value = pool.Parameters.Read("Izhikevich_9P.V_r", numEReversal.Value);
                 }
             }
             interPoolTemplate.PoolTarget = ddTargetPool.Text;
@@ -209,7 +209,7 @@ namespace SiliFish.UI.Controls
 
         public InterPoolTemplate GetInterPoolTemplate()
         {
-            interPoolTemplate.PoolSource =GetDropDownValue(ddSourcePool);
+            interPoolTemplate.PoolSource = GetDropDownValue(ddSourcePool);
             interPoolTemplate.PoolTarget = GetDropDownValue(ddTargetPool);
 
             double? fixedDuration = null;

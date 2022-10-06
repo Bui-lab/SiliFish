@@ -42,7 +42,7 @@ namespace SiliFish.PredefinedModels
         double V2a_V2a_gap_weight = 0.01; //previous value: 0.005;
         double V2a_V0v_syn_weight = 0.0375;
 
-        
+
         #endregion
 
         #region Upper range parameters for neuron to neuron/muscle cell reach
@@ -101,8 +101,8 @@ namespace SiliFish.PredefinedModels
         protected override void InitNeurons()
         {
             MembraneDynamics ic_dyn = new() { a = 0.0002, b = 0.5, c = -40, d = 5, Vmax = 0, Vr = -60, Vt = -45, k = 0.3, Cm = 50 };
-            L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
-            R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
+            L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "IC", SagittalPlane.Left, 1, Color.Brown);
+            R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tlLeft = new();
             tlLeft.AddTimeRange(this.tStimStart_ms);
             double multiplierleft = GetStimulusNoiseMultiplier();
@@ -111,8 +111,8 @@ namespace SiliFish.PredefinedModels
             double multiplierleft2 = stim_mode == StimulusMode.Step ? 0 : multiplierleft; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
             double multiplierright2 = stim_mode == StimulusMode.Step ? 0 : multiplierright; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
 
-            Stimulus stimLeft = new(new StimulusSettings( stim_mode, stim_value1 * multiplierleft, stim_value2 * multiplierleft2), tlLeft);
-            TimeLine tlRight= new();
+            Stimulus stimLeft = new(new StimulusSettings(stim_mode, stim_value1 * multiplierleft, stim_value2 * multiplierleft2), tlLeft);
+            TimeLine tlRight = new();
             tlRight.AddTimeRange(this.tasyncdelay);
             Stimulus stimRight = new(new StimulusSettings(stim_mode, stim_value1 * multiplierright, stim_value2 * multiplierright2), tlRight);
 
@@ -125,8 +125,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_IC);
 
             MembraneDynamics mn_dyn = new() { a = 0.5, b = 0.1, c = -50, d = 100, Vmax = 10, Vr = -60, Vt = -50, k = 0.05, Cm = 20 };
-            L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Left, 4, Color.Red);
-            R_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Right, 4, Color.Red);
+            L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "MN", SagittalPlane.Left, 4, Color.Red);
+            R_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "MN", SagittalPlane.Right, 4, Color.Red);
             for (int i = 0; i < nMN; i++)
             {
                 L_MN.AddCell(new Neuron("MN", seq: i + 1, mn_dyn, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
@@ -136,8 +136,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_MN);
 
             MembraneDynamics v0d_dyn = new() { a = 0.02, b = 0.1, c = -30, d = 3.75, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
-            L_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0d", SagittalPlane.Left, 1, Color.Green);
-            R_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0d", SagittalPlane.Right, 1, Color.Green);
+            L_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0d", SagittalPlane.Left, 1, Color.Green);
+            R_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0d", SagittalPlane.Right, 1, Color.Green);
             for (int i = 0; i < nV0d; i++)
             {
                 L_V0d.AddCell(new Neuron("V0d", seq: i + 1, v0d_dyn, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
@@ -147,8 +147,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_V0d);
 
             MembraneDynamics v0v_dyn = new() { a = 0.02, b = 0.1, c = -30, d = 11.6, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
-            L_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0v", SagittalPlane.Left, 2, Color.Blue);
-            R_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0v", SagittalPlane.Right, 2, Color.Blue);
+            L_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0v", SagittalPlane.Left, 2, Color.Blue);
+            R_V0v = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0v", SagittalPlane.Right, 2, Color.Blue);
             for (int i = 0; i < nV0v; i++)
             {
                 L_V0v.AddCell(new Neuron("V0v", seq: i + 1, v0v_dyn, sigma_dyn, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), -1), cv: cv));
@@ -158,8 +158,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(R_V0v);
 
             MembraneDynamics v2a_dyn = new() { a = 0.5, b = 0.1, c = -50, d = 100, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
-            L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
-            R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
+            L_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V2a", SagittalPlane.Left, 3, Color.RebeccaPurple);
+            R_V2a = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V2a", SagittalPlane.Right, 3, Color.RebeccaPurple);
             for (int i = 0; i < nV2a; i++)
             {
                 L_V2a.AddCell(new Neuron("V2a", seq: i + 1, v2a_dyn, sigma_dyn, new Coordinate(x: 5.1 + 1.6 * i * GetXNoise(), -1), cv: cv));
@@ -168,8 +168,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(L_V2a);
             neuronPools.Add(R_V2a);
 
-            L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Left, 5, Color.Purple);
-            R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Right, 5, Color.Purple);
+            L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Left, 5, Color.Purple);
+            R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Right, 5, Color.Purple);
             for (int i = 0; i < nMuscle; i++)
             {
                 L_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 50, C: 5.0, Vr: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, -1)));
@@ -244,35 +244,35 @@ namespace SiliFish.PredefinedModels
             //Contralateral glycinergic projections from V0d to MN 
             SynapseParameters GlySynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_gly };
             cr = new() { AscendingReach = rangeV0d_MN, DescendingReach = rangeV0d_MN, MinReach = rangeMin, Weight = V0d_MN_syn_weight };
-            PoolToPoolChemSynapse(L_V0d ,R_MN, cr, GlySynapse);
-            PoolToPoolChemSynapse(R_V0d ,L_MN, cr, GlySynapse);
+            PoolToPoolChemSynapse(L_V0d, R_MN, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V0d, L_MN, cr, GlySynapse);
 
             //Contralateral glycinergic projections from V0d to IC 
             cr = new() { AscendingReach = rangeV0d_IC, DescendingReach = rangeV0d_IC, MinReach = rangeMin, Weight = V0d_IC_syn_weight };
-            PoolToPoolChemSynapse(L_V0d ,R_IC, cr, GlySynapse);
-            PoolToPoolChemSynapse(R_V0d ,L_IC, cr, GlySynapse);
+            PoolToPoolChemSynapse(L_V0d, R_IC, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V0d, L_IC, cr, GlySynapse);
 
             //Contralateral glycinergic projections from V0d to V2a 
             cr = new() { AscendingReach = rangeV0d_V2a, DescendingReach = rangeV0d_V2a, MinReach = rangeMin, Weight = V0d_V2a_syn_weight };
-            PoolToPoolChemSynapse(L_V0d ,R_V2a, cr, GlySynapse);
-            PoolToPoolChemSynapse(R_V0d ,L_V2a, cr, GlySynapse);
+            PoolToPoolChemSynapse(L_V0d, R_V2a, cr, GlySynapse);
+            PoolToPoolChemSynapse(R_V0d, L_V2a, cr, GlySynapse);
 
             //Contralateral glutamatergic projections from V0v to IC 
             SynapseParameters GluSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_glu };
             cr = new() { AscendingReach = rangeV0v_IC_max, DescendingReach = rangeV0v_IC_max, MinReach = rangeV0v_IC_min, Weight = V0v_IC_syn_weight };
-            PoolToPoolChemSynapse(L_V0v ,R_IC, cr, GluSynapse);
-            PoolToPoolChemSynapse(R_V0v ,L_IC, cr, GluSynapse);
+            PoolToPoolChemSynapse(L_V0v, R_IC, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V0v, L_IC, cr, GluSynapse);
 
             //Ipsilateral glutamatergic projections from V2a to V0v 
             cr = new() { AscendingReach = rangeV2a_V0v_asc, DescendingReach = rangeV2a_V0v_desc, MinReach = rangeMin, Weight = V2a_V0v_syn_weight };
-            PoolToPoolChemSynapse(L_V2a,L_V0v, cr, GluSynapse);
-            PoolToPoolChemSynapse(R_V2a,R_V0v, cr, GluSynapse);
+            PoolToPoolChemSynapse(L_V2a, L_V0v, cr, GluSynapse);
+            PoolToPoolChemSynapse(R_V2a, R_V0v, cr, GluSynapse);
 
             //Ipsilateral cholinergic projections from MN to Muscle cells
             SynapseParameters AChSynapse = new() { TauD = taud, TauR = taur, VTh = vth, E_rev = E_ach };
             cr = new() { AscendingReach = rangeMN_Muscle, DescendingReach = rangeMN_Muscle, MinReach = -1, Weight = MN_Muscle_syn_weight, FixedDuration_ms = 10 };
-            PoolToPoolChemSynapse(L_MN,L_Muscle, cr, AChSynapse);
-            PoolToPoolChemSynapse(R_MN,R_Muscle, cr, AChSynapse);
+            PoolToPoolChemSynapse(L_MN, L_Muscle, cr, AChSynapse);
+            PoolToPoolChemSynapse(R_MN, R_Muscle, cr, AChSynapse);
         }
 
         public override Dictionary<string, object> GetParameters()
@@ -288,35 +288,35 @@ namespace SiliFish.PredefinedModels
             paramDict.Add("Cell Num.nV2a", nV2a);
             paramDict.Add("Cell Num.nMuscle", nMuscle);
 
-            paramDict.Add("Weight.IC_IC_gap_weight",IC_IC_gap_weight);
-            paramDict.Add("Weight.IC_MN_gap_weight",IC_MN_gap_weight);
+            paramDict.Add("Weight.IC_IC_gap_weight", IC_IC_gap_weight);
+            paramDict.Add("Weight.IC_MN_gap_weight", IC_MN_gap_weight);
             paramDict.Add("Weight.IC_V0d_gap_weight", IC_V0d_gap_weight);
             paramDict.Add("Weight.IC_V0v_gap_weight", IC_V0v_gap_weight);
             paramDict.Add("Weight.IC_V2a_gap_weight", IC_V2a_gap_weight);
-            paramDict.Add("Weight.MN_MN_gap_weight",MN_MN_gap_weight);
-            paramDict.Add("Weight.MN_V0d_gap_weight",MN_V0d_gap_weight);
+            paramDict.Add("Weight.MN_MN_gap_weight", MN_MN_gap_weight);
+            paramDict.Add("Weight.MN_V0d_gap_weight", MN_V0d_gap_weight);
             paramDict.Add("Weight.MN_V0v_gap_weight", MN_V0v_gap_weight);
             paramDict.Add("Weight.V0d_V0d_gap_weight", V0d_V0d_gap_weight);
             paramDict.Add("Weight.V0v_V0v_gap_weight", V0v_V0v_gap_weight);
             paramDict.Add("Weight.V2a_MN_gap_weight", V2a_MN_gap_weight);
             paramDict.Add("Weight.V2a_V2a_gap_weight", V2a_V2a_gap_weight);
-            paramDict.Add("Weight.MN_Muscle_syn_weight",MN_Muscle_syn_weight);
-            paramDict.Add("Weight.V0d_MN_syn_weight",V0d_MN_syn_weight);
-            paramDict.Add("Weight.V0d_IC_syn_weight",V0d_IC_syn_weight);
+            paramDict.Add("Weight.MN_Muscle_syn_weight", MN_Muscle_syn_weight);
+            paramDict.Add("Weight.V0d_MN_syn_weight", V0d_MN_syn_weight);
+            paramDict.Add("Weight.V0d_IC_syn_weight", V0d_IC_syn_weight);
             paramDict.Add("Weight.V0d_V2a_syn_weight", V0d_V2a_syn_weight);
             paramDict.Add("Weight.V0v_IC_syn_weight", V0v_IC_syn_weight);
             paramDict.Add("Weight.V2a_V0v_syn_weight", V2a_V0v_syn_weight);
 
-            paramDict.Add("Range.rangeMin",rangeMin);
-            paramDict.Add("Range.rangeIC_MN",rangeIC_MN);
-            paramDict.Add("Range.rangeIC_V0d",rangeIC_V0d);
+            paramDict.Add("Range.rangeMin", rangeMin);
+            paramDict.Add("Range.rangeIC_MN", rangeIC_MN);
+            paramDict.Add("Range.rangeIC_V0d", rangeIC_V0d);
             paramDict.Add("Range.rangeIC_V0v", rangeIC_V0v);
             paramDict.Add("Range.rangeIC_V2a", rangeIC_V2a);
-            paramDict.Add("Range.rangeMN_MN",rangeMN_MN);
-            paramDict.Add("Range.rangeMN_V0d",rangeMN_V0d);
+            paramDict.Add("Range.rangeMN_MN", rangeMN_MN);
+            paramDict.Add("Range.rangeMN_V0d", rangeMN_V0d);
             paramDict.Add("Range.rangeMN_V0v", rangeMN_V0v);
             paramDict.Add("Range.rangeV0d_IC", rangeV0d_IC);
-            paramDict.Add("Range.rangeV0d_MN",rangeV0d_MN);
+            paramDict.Add("Range.rangeV0d_MN", rangeV0d_MN);
             paramDict.Add("Range.rangeV0d_V0d", rangeV0d_V0d);
             paramDict.Add("Range.rangeV0v_V0v", rangeV0v_V0v);
             paramDict.Add("Range.rangeV0d_V2a", rangeV0d_V2a);

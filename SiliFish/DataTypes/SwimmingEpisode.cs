@@ -13,7 +13,7 @@ namespace SiliFish.DataTypes
         List<(double beatStart, double beatEnd)> beats;
         public List<(double beatStart, double beatEnd)> Beats { get => beats; }
         public List<(double beatStart, double beatEnd)> InlierBeats
-        { 
+        {
             get
             {
                 double n_1 = beats.Count - 1;

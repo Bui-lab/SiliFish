@@ -5,8 +5,6 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -34,7 +32,7 @@ namespace SiliFish.Services
         {
             try
             {
-                StringBuilder html = synchronized?
+                StringBuilder html = synchronized ?
                     new(ReadEmbeddedResource("SiliFish.Resources.DyChartSync.html")) :
                     new(ReadEmbeddedResource("SiliFish.Resources.DyChartUnsync.html"));
                 StringBuilder plot = new(ReadEmbeddedResource("SiliFish.Resources.DyChart.js"));
@@ -118,7 +116,7 @@ namespace SiliFish.Services
                 xMin = xMin.ToString(Const.DecimalPointFormat),
                 xMax = xMax.ToString(Const.DecimalPointFormat),
                 yMin = yMin.ToString(Const.DecimalPointFormat),
-                yMax = yMax.ToString(Const.DecimalPointFormat), 
+                yMax = yMax.ToString(Const.DecimalPointFormat),
                 drawPoints = chartData.drawPoints,
                 logScale = chartData.logScale
             };
@@ -166,7 +164,7 @@ namespace SiliFish.Services
         }
 
 
-        private static List<DyChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool, 
+        private static List<DyChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true)
         {
             List<DyChartStruct> gapCharts = new();
@@ -261,7 +259,7 @@ namespace SiliFish.Services
                     });
                 }
                 if (synOutExists)
-                { 
+                {
                     string csvData = "`" + synOutTitle[..^1] + "\n" + string.Join("\n", synOutData.Select(line => line[..^1]).ToArray()) + "`";
                     synCharts.Add(new DyChartStruct
                     {
@@ -279,11 +277,11 @@ namespace SiliFish.Services
             return gapCharts.Union(synCharts).ToList();
         }
 
-        private static List<DyChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool, 
+        private static List<DyChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
             List<DyChartStruct> charts = new();
-            if (cells == null || !cells.Any()) 
+            if (cells == null || !cells.Any())
                 return charts;
 
             double yMin = cells.Min(c => c.MinStimulusValue);
@@ -569,7 +567,7 @@ namespace SiliFish.Services
             return PlotHTML;
         }
 
-        public static string PlotSummaryMembranePotentials(SwimmingModel model, List<Cell> Cells, 
+        public static string PlotSummaryMembranePotentials(SwimmingModel model, List<Cell> Cells,
             int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
         {
             double dt = model.runParam.dt;
@@ -583,7 +581,7 @@ namespace SiliFish.Services
             return PlotHTML;
         }
 
-        public static string PlotLineCharts(List<ChartDataStruct> chartsData, 
+        public static string PlotLineCharts(List<ChartDataStruct> chartsData,
             string mainTitle, bool synchronized,
             int width = 480, int height = 240)
         {

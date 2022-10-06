@@ -119,7 +119,7 @@ namespace SiliFish.Helpers
         }
 
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
-        { 
+        {
             if (filename == null || Time == null || Values == null)
                 return;
 
@@ -190,7 +190,7 @@ namespace SiliFish.Helpers
                 int beatCounter = 1;
                 foreach ((double beatStart, double beatEnd) in episode.Beats)
                 {
-                    string beatRow = $"{run}," + 
+                    string beatRow = $"{run}," +
                         $"{epiCounter}," +
                         $"{beatCounter++}," +
                         $"{beatStart:0.####}," +
@@ -301,7 +301,7 @@ namespace SiliFish.Helpers
             {
                 double padding = (yMax - yMin) / 10;
                 yMin -= padding;
-                if (yMin > 0 && (yMax - yMin) > yMin/10) //do not start from zero if the values are close to each other
+                if (yMin > 0 && (yMax - yMin) > yMin / 10) //do not start from zero if the values are close to each other
                     yMin = 0;
                 else if (yMax - yMin < Const.Epsilon)
                     yMin *= 0.9;

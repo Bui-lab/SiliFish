@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using SiliFish.Definitions;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
 
 namespace SiliFish.DynamicUnits
 {
@@ -35,7 +33,6 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
 
-
         public Izhikevich_9P(MembraneDynamics dyn)
         {
             a = dyn?.a ?? 0;
@@ -53,16 +50,16 @@ namespace SiliFish.DynamicUnits
         public Izhikevich_9P(Dictionary<string, double> paramExternal)
         {
             CoreType = CoreType.Izhikevich_9P;
-            SetParametersDouble(paramExternal);
+            SetParameters(paramExternal);
             Initialize();
         }
         protected override void Initialize()
         {
             V = Vr;
             u = b * Vr;
-        }        
-        
-        public override Dictionary<string, double> GetParametersDouble()
+        }
+
+        public override Dictionary<string, double> GetParameters()
         {
             Dictionary<string, double> paramDict = new()
             {
@@ -79,7 +76,13 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
-
+        public override string GetParamName_Threshold
+        {
+            get
+            {
+                return "Izhikevich_9P.V_t";
+            }
+        }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {
@@ -107,7 +110,7 @@ namespace SiliFish.DynamicUnits
 
             return (MinValues, MaxValues);
         }
-        public override void SetParametersDouble(Dictionary<string, double> paramExternal)
+        public override void SetParameters(Dictionary<string, double> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;

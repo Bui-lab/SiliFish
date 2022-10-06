@@ -1,8 +1,7 @@
-﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using SiliFish.Definitions;
+﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
+using System;
+using System.Text.Json;
 
 namespace SiliFish.DataTypes
 {
@@ -30,7 +29,7 @@ namespace SiliFish.DataTypes
 
         protected double LowerLimit { get { return Absolute ? RangeStart : Range * RangeStart / 100; } }
 
-        protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd/ 100; } }
+        protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }
 
         public virtual double UniqueValue { get { throw new NotImplementedException(); } }
         public override string ToString()
@@ -66,6 +65,16 @@ namespace SiliFish.DataTypes
             }
         }
 
+        public static Distribution CreateDistributionObject(object obj)
+        {
+            if (obj is Distribution)
+                return (Distribution)obj;
+            if (double.TryParse(obj.ToString(), out double d))
+                return new Constant_NoDistribution(d, false, 0);
+            if (obj is JsonElement element)
+                return GetOfDerivedType(element.GetRawText());
+            return null;
+        }
         public static Distribution GetOfDerivedType(string json)
         {
             Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
@@ -120,11 +129,11 @@ namespace SiliFish.DataTypes
         }
     }
 
-    public class UniformDistribution: Distribution
+    public class UniformDistribution : Distribution
     {
-        public override double UniqueValue 
-        { 
-            get { return (RangeStart + RangeEnd) / 2; } 
+        public override double UniqueValue
+        {
+            get { return (RangeStart + RangeEnd) / 2; }
         }
 
         public UniformDistribution()
@@ -163,7 +172,7 @@ namespace SiliFish.DataTypes
         public override double[] GenerateNNumbers(int n, double range)
         {
             if (Random == null)
-                Random = new Random(); 
+                Random = new Random();
             double[] result = new double[n];
             for (int i = 0; i < n; i++)
             {
@@ -300,7 +309,7 @@ namespace SiliFish.DataTypes
         }
     }
 
-    public class SpatialDistribution 
+    public class SpatialDistribution
     {
         public Distribution XDistribution { get; set; }
         public Distribution Y_AngleDistribution { get; set; }

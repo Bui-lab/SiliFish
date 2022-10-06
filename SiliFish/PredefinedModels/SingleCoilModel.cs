@@ -65,12 +65,12 @@ namespace SiliFish.PredefinedModels
         protected override void InitNeurons()
         {
             MembraneDynamics ic_dyn = new() { a = 0.0005, b = 0.5, c = -30, d = 5, Vmax = 0, Vr = -60, Vt = -45, k = 0.05, Cm = 50 };
-            L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Left, 1, Color.Brown);
-            R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "IC", SagittalPlane.Right, 1, Color.Brown);
+            L_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "IC", SagittalPlane.Left, 1, Color.Brown);
+            R_IC = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "IC", SagittalPlane.Right, 1, Color.Brown);
             TimeLine tl = new();
             tl.AddTimeRange(this.tStimStart_ms);
             double multiplier = GetStimulusNoiseMultiplier();
-            double multiplier2 = stim_mode == StimulusMode.Step? 0 : multiplier; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
+            double multiplier2 = stim_mode == StimulusMode.Step ? 0 : multiplier; //to prevent stim_value2 to be used as noise, as there is already a stig_stim for it in predefined models.
             Stimulus stim = new(new StimulusSettings(stim_mode, stim_value1 * multiplier, stim_value2 * multiplier2), tl);
 
             for (int i = 0; i < nIC; i++)
@@ -83,8 +83,8 @@ namespace SiliFish.PredefinedModels
 
 
             MembraneDynamics v0d_dyn = new() { a = 0.5, b = 0.01, c = -50, d = 0.2, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
-            L_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0d", SagittalPlane.Left, 1, Color.Green);
-            R_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "V0d", SagittalPlane.Right, 1, Color.Green);
+            L_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0d", SagittalPlane.Left, 1, Color.Green);
+            R_V0d = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "V0d", SagittalPlane.Right, 1, Color.Green);
             for (int i = 0; i < nV0d; i++)
             {
                 L_V0d.AddCell(new Neuron("V0d", seq: i + 1, v0d_dyn, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i * GetXNoise(), -1), cv: cv));
@@ -93,8 +93,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(L_V0d);
             neuronPools.Add(R_V0d);
 
-            L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Left, 2, Color.Red);
-            R_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord,  "MN", SagittalPlane.Right, 2, Color.Red);
+            L_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "MN", SagittalPlane.Left, 2, Color.Red);
+            R_MN = new CellPool(this, CellType.Neuron, BodyLocation.SpinalCord, "MN", SagittalPlane.Right, 2, Color.Red);
             MembraneDynamics mn_dyn = new() { a = 0.5, b = 0.1, c = -50, d = 0.2, Vmax = 10, Vr = -60, Vt = -45, k = 0.05, Cm = 20 };
             for (int i = 0; i < nMN; i++)
             {
@@ -104,8 +104,8 @@ namespace SiliFish.PredefinedModels
             neuronPools.Add(L_MN);
             neuronPools.Add(R_MN);
 
-            L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Left, 3, Color.Purple);
-            R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body,  "Muscle", SagittalPlane.Right, 3, Color.Purple);
+            L_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Left, 3, Color.Purple);
+            R_Muscle = new CellPool(this, CellType.MuscleCell, BodyLocation.Body, "Muscle", SagittalPlane.Right, 3, Color.Purple);
             for (int i = 0; i < nMuscle; i++)
             {
                 L_Muscle.AddCell(new MuscleCell("Muscle", seq: i + 1, R: 25, C: 10.0, Vr: 0, sigma_dyn, new Coordinate(x: 5.0 + 1.6 * i, -1)));

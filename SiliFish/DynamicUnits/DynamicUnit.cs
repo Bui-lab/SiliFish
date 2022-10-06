@@ -2,32 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits
 {
-    public class DynamicUnitTemplate
-    {
-        private Dictionary<string, object> parameters; 
-        public virtual Dictionary<string, object> GetParameters()
-        {
-            return parameters;
-        }
-        public virtual void SetParameters(Dictionary<string, object> paramExternal)
-        {
-            parameters = paramExternal; ;
-        }
-        /*            a = paramExternal.Read("Izhikevich_5P.a", a);
-            b = paramExternal.Read("Izhikevich_5P.b", b);
-            c = paramExternal.Read("Izhikevich_5P.c", c);
-            d = paramExternal.Read("Izhikevich_5P.d", d);
-            Vmax = paramExternal.Read("Izhikevich_5P.V_max", Vmax);
-            V = Vr = paramExternal.Read("Izhikevich_5P.V_r", Vr);
-*/
-    }
     public class DynamicUnit
     {
         //the resting membrane potential
@@ -42,8 +21,17 @@ namespace SiliFish.DynamicUnits
         public CoreType CoreType { get; set; }
         public Dictionary<string, double> Parameters
         {
-            get { return GetParametersDouble(); }
-            set { SetParametersDouble(value); }
+            get { return GetParameters(); }
+            set { SetParameters(value); }
+        }
+
+        [JsonIgnore]
+        public virtual string GetParamName_Threshold
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
         public static DynamicUnit GetOfDerivedType(string json)
         {
@@ -66,12 +54,24 @@ namespace SiliFish.DynamicUnits
             return null;
         }
 
-        public virtual Dictionary<string, double> GetParametersDouble()
+        /// <summary>
+        /// static function to return dictionary of objects to keep the distributions
+        /// </summary>
+        /// <param name="coreType"></param>
+        /// <returns></returns>
+        public static Dictionary<string, object> GetParameters(CoreType coreType)
+        {
+            DynamicUnit core = DynamicUnit.CreateCore(coreType, null);
+            return core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
+        }
+
+
+        public virtual Dictionary<string, double> GetParameters()
         {
             return parametersObsolete;
         }
 
-        public virtual void SetParametersDouble(Dictionary<string, double> paramExternal)
+        public virtual void SetParameters(Dictionary<string, double> paramExternal)
         {
             parametersObsolete = paramExternal;
         }
@@ -154,7 +154,7 @@ namespace SiliFish.DynamicUnits
         {
             if (maxMultiplier < minMultiplier)
                 (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
-            Dictionary<string, double> parameters = GetParametersDouble();
+            Dictionary<string, double> parameters = GetParameters();
             double origValue = parameters[param];
             double[] values = new double[numOfPoints];
             if (!logScale)
@@ -176,11 +176,11 @@ namespace SiliFish.DynamicUnits
             foreach (double value in values)
             {
                 parameters[param] = value;
-                SetParametersDouble(parameters);
+                SetParameters(parameters);
                 rheos[counter++] = CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
             }
             parameters[param] = origValue;
-            SetParametersDouble(parameters);
+            SetParameters(parameters);
             return (values, rheos);
         }
 

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
+using SiliFish.Extensions;
+using SiliFish.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
-using SiliFish.DataTypes;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
 
 namespace SiliFish.ModelUnits
 {
@@ -41,8 +41,9 @@ namespace SiliFish.ModelUnits
         public readonly int columnIndex2D = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
         public List<Cell> Cells { get; }
         private SpatialDistribution SpatialDistribution = new();
-        public Distribution XDistribution { 
-            get { return SpatialDistribution.XDistribution; } 
+        public Distribution XDistribution
+        {
+            get { return SpatialDistribution.XDistribution; }
             set { SpatialDistribution.XDistribution = value; }
         }
         public Distribution Y_AngleDistribution
@@ -295,7 +296,7 @@ namespace SiliFish.ModelUnits
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
             List<int> somites;
-            if (template.PerSomiteOrTotal== CountingMode.PerSomite)
+            if (template.PerSomiteOrTotal == CountingMode.PerSomite)
                 somites = Enumerable.Range(1, Model.NumberOfSomites).ToList();
             else somites = new List<int>() { -1 };
 
@@ -303,7 +304,7 @@ namespace SiliFish.ModelUnits
             {
                 Coordinate[] coordinates = GetCoordinates(n, somite);
                 Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
-                
+
                 double[] cv = template.ConductionVelocity != null ?
                     ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
                     Enumerable.Repeat(Model.cv, n).ToArray();
@@ -371,7 +372,7 @@ namespace SiliFish.ModelUnits
             {//if target pool has a limit, prevent the scenario where one source cell fulfills that limit
                 int numSource = this.GetCells().Count();
                 int numTarget = target.GetCells().Count();
-                maxOutgoing = (int)Math.Ceiling((double)maxIncoming * numTarget/numSource);
+                maxOutgoing = (int)Math.Ceiling((double)maxIncoming * numTarget / numSource);
             }
             else if (maxIncoming == 0 && maxOutgoing > 0)
             {//if the source pool has a limit, prevent the scenario where one target cell fulfills that limit

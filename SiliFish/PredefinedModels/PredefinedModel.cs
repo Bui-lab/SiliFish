@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SiliFish.DataTypes;
+﻿using System.Collections.Generic;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits;
 
 namespace SiliFish.PredefinedModels
 {
@@ -20,7 +14,7 @@ namespace SiliFish.PredefinedModels
         protected double stim_value2 = 8; //obsolete if step current, SD value if gaussian, end value if ramp
 
         //noise sigmas
-        protected double sigma_range = 0; 
+        protected double sigma_range = 0;
         protected double sigma_chem = 0; //for synaptic weights
         protected double sigma_gap = 0; //for gap junction weights
         protected double sigma_stim = 0; //for stimulus
