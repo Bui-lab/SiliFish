@@ -1,16 +1,11 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.UI;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
     public partial class DistributionDataGrid : UserControl
     {
-        public bool PauseDistributionFeature { 
-            get { return !colDist.Visible; }
-            set { colDist.Visible = !value; } 
-        }
         public DistributionDataGrid()
         {
             InitializeComponent();

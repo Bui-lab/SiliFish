@@ -1,6 +1,6 @@
-﻿using System;
+﻿using GeneticSharp;
+using System;
 using System.Collections.Generic;
-using GeneticSharp;
 
 
 

@@ -1,20 +1,17 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Text.Json;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
-using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
-using SiliFish.UI.Extensions;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace SiliFish.UI.Controls
 {
     public partial class CellPoolControl : UserControl
     {
         private event EventHandler savePool;
-        public event EventHandler SavePool{ add => savePool+= value; remove => savePool-= value; }
+        public event EventHandler SavePool { add => savePool += value; remove => savePool -= value; }
 
         private event EventHandler loadPool;
         public event EventHandler LoadPool { add => loadPool += value; remove => loadPool -= value; }
@@ -27,18 +24,18 @@ namespace SiliFish.UI.Controls
         {
             get
             {
-                ReadDataFromControl(); 
+                ReadDataFromControl();
                 return poolTemplate;
             }
             set
             {
-                poolTemplate = value ?? new ();
+                poolTemplate = value ?? new();
                 WriteDataToControl();
             }
         }
         public string JSONString;
 
-        public string CellName { get { return eGroupName.Text; }set { eGroupName.Text = value; } }
+        public string CellName { get { return eGroupName.Text; } set { eGroupName.Text = value; } }
 
         private bool skipCellTypeChange = false;
         public CellPoolControl()
@@ -51,26 +48,10 @@ namespace SiliFish.UI.Controls
             ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
         }
 
-        private Cell GetCell()
-        {
-            CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
-            Cell cell = null;
-            double cv = poolTemplate?.ConductionVelocity != null ?
-                ((Distribution)poolTemplate.ConductionVelocity).GenerateNNumbers(1, 0)[0] :
-                0;
-            if (cellType == CellType.Neuron)
-                cell = new Neuron("", 1, 1, cv);
-            else if (cellType == CellType.MuscleCell)
-                cell = new MuscleCell("", 1, 1);
-            poolTemplate.Parameters = GridToParamDict();
-            cell.Parameters = poolTemplate.Parameters.GenerateSingleInstanceValues();
-            return cell;
-        }
         private void ddCellType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (skipCellTypeChange) return;
             CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
-            CoreType coreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
             if (cellType == CellType.Neuron)
             {
                 if (ddNeuronClass.Items.Count > 0)
@@ -83,7 +64,12 @@ namespace SiliFish.UI.Controls
                 lNeuronClass.Visible = ddNeuronClass.Visible = false;
                 ddCoreType.SelectedIndex = 2;//TODO hardcoded for LeakyIntegrator AAAAAAHHHHHRRGGHH
             }
-            poolTemplate.Parameters = DynamicUnit.CreateCore(coreType, null).GetParametersDouble().ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value as object);
+        }
+
+        private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CoreType coreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
+            poolTemplate.Parameters = DynamicUnit.GetParameters(coreType);
             ParamDictToGrid();
         }
 
@@ -109,7 +95,7 @@ namespace SiliFish.UI.Controls
             loadPool.Invoke(this, new EventArgs());
             if (string.IsNullOrEmpty(JSONString))
                 return;
-            poolTemplate = (CellPoolTemplate) Util.CreateObjectFromJSON(typeof(CellPoolTemplate), JSONString);
+            poolTemplate = (CellPoolTemplate)Util.CreateObjectFromJSON(typeof(CellPoolTemplate), JSONString);
             WriteDataToControl();
         }
 
@@ -118,7 +104,7 @@ namespace SiliFish.UI.Controls
             if (savePool == null) return;
             ReadDataFromControl();
             JSONString = Util.CreateJSONFromObject(poolTemplate);
-            savePool.Invoke(this, new EventArgs()) ;
+            savePool.Invoke(this, new EventArgs());
         }
 
         private void ReadDataFromControl()
@@ -150,7 +136,7 @@ namespace SiliFish.UI.Controls
             poolTemplate.Active = cbActive.Checked;
             poolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
             poolTemplate.ConductionVelocity = distConductionVelocity.GetDistribution();
-            
+
             poolTemplate.Attachments.Clear();
             foreach (var att in listAttachments.Items)
             {
@@ -207,7 +193,7 @@ namespace SiliFish.UI.Controls
             else
             {
                 lYAxis.Text = "Y - Axis (Medial->Lateral)";
-                distributionY.Angular = false; 
+                distributionY.Angular = false;
                 lZAxis.Text = "Z - Axis (Dorsal->Ventral)";
             }
         }
@@ -227,13 +213,14 @@ namespace SiliFish.UI.Controls
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
+            poolTemplate.CoreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
             dyncontrol = new(poolTemplate.CoreType, dparams, testMode: false);
             dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
             frmControl.Text = eGroupName.Text;
             frmControl.SaveVisible = false;
-            frmControl.ShowDialog(); 
+            frmControl.ShowDialog();
         }
 
         private void Dyncontrol_UseupdatedParams(object sender, EventArgs e)
@@ -241,6 +228,8 @@ namespace SiliFish.UI.Controls
             if (dyncontrol?.Parameters == null)
                 return;
             poolTemplate.Parameters = dyncontrol.Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
+            poolTemplate.CoreType = dyncontrol.coreType;
+            ddCoreType.Text = poolTemplate.CoreType.ToString();
             ParamDictToGrid();
         }
 
@@ -277,6 +266,7 @@ namespace SiliFish.UI.Controls
             if (MessageBox.Show("Do you want to remove the selected attachment?", "SiliFish", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 listAttachments.Items.RemoveAt(listAttachments.SelectedIndex);
         }
+
 
     }
 }

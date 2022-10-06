@@ -1,17 +1,14 @@
-﻿using System;
+﻿using SiliFish.DataTypes;
+using SiliFish.Extensions;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.DataTypes;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
 {
-    public class AnimationGenerator: VisualsGenerator
+    public class AnimationGenerator : VisualsGenerator
     {
         private static string CreateSomiteDataPoint(string somite, double x, double y)
         {
@@ -62,7 +59,7 @@ namespace SiliFish.Services
             string swidth = "4800";
             string sheight = "800";
             //Calculate ratio
-            double ratio = (double)(maxX-minX)/(maxY-minY);
+            double ratio = (double)(maxX - minX) / (maxY - minY);
             if (ratio > 1)
                 sheight = (800 / ratio).ToString("0");
             else if (ratio < 1)
@@ -73,18 +70,14 @@ namespace SiliFish.Services
             html.Replace("__HEIGHT__", sheight);
         }
         public static string CreateTimeSeries(string title, string animParams,
-            Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, 
+            Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time,
             int iStart, int iEnd, double dt, double animdt)
         {
-            if (!Util.CheckOnlineStatus())
-                return "Animation requires internet connection.";
-
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 
-
-                int jump = (int)(animdt / dt);
+            int jump = (int)(animdt / dt);
             if (jump < 1) jump = 1;
             List<string> timeSeries = new();
             Dictionary<int, string> somitePoints = new();
@@ -108,11 +101,11 @@ namespace SiliFish.Services
             html.Replace("__TIME_START__", (Time[iStart]).ToString());
             html.Replace("__TIME_END__", (Time[iEnd]).ToString());
             html.Replace("__TIME_INCREMENT__", dt.ToString());
-            
+
             return html.ToString();
         }
-        
-        
+
+
 
         public static string GenerateAnimation(SwimmingModel model, int tStart, int tEnd, double animdt)
         {
@@ -140,10 +133,10 @@ namespace SiliFish.Services
 
             return CreateTimeSeries(title: model.ModelName + "Animation.html",
                 animParams,
-                SwimmingModelKinematics.GenerateSpineCoordinates(model, iStart, iEnd), 
-                model.TimeArray, 
-                iStart, 
-                iEnd, 
+                SwimmingModelKinematics.GenerateSpineCoordinates(model, iStart, iEnd),
+                model.TimeArray,
+                iStart,
+                iEnd,
                 dt,
                 animdt);
         }

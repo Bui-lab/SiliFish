@@ -44,6 +44,8 @@ namespace SiliFish.UI.Controls
             this.pXAxis = new System.Windows.Forms.Panel();
             this.lXAxis = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
+            this.ddCoreType = new System.Windows.Forms.ComboBox();
+            this.lCoreType = new System.Windows.Forms.Label();
             this.eDescription = new System.Windows.Forms.RichTextBox();
             this.lAttachments = new System.Windows.Forms.Label();
             this.listAttachments = new System.Windows.Forms.ListBox();
@@ -87,8 +89,6 @@ namespace SiliFish.UI.Controls
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.ddCoreType = new System.Windows.Forms.ComboBox();
-            this.lCoreType = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
@@ -267,6 +267,25 @@ namespace SiliFish.UI.Controls
             this.pMain.Name = "pMain";
             this.pMain.Size = new System.Drawing.Size(261, 723);
             this.pMain.TabIndex = 0;
+            // 
+            // ddCoreType
+            // 
+            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddCoreType.FormattingEnabled = true;
+            this.ddCoreType.Location = new System.Drawing.Point(112, 166);
+            this.ddCoreType.Name = "ddCoreType";
+            this.ddCoreType.Size = new System.Drawing.Size(146, 23);
+            this.ddCoreType.TabIndex = 32;
+            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
+            // 
+            // lCoreType
+            // 
+            this.lCoreType.AutoSize = true;
+            this.lCoreType.Location = new System.Drawing.Point(5, 169);
+            this.lCoreType.Name = "lCoreType";
+            this.lCoreType.Size = new System.Drawing.Size(59, 15);
+            this.lCoreType.TabIndex = 33;
+            this.lCoreType.Text = "Core Type";
             // 
             // eDescription
             // 
@@ -613,7 +632,6 @@ namespace SiliFish.UI.Controls
             this.dgDynamics.Location = new System.Drawing.Point(3, 146);
             this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
             this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.PauseDistributionFeature = true;
             this.dgDynamics.Size = new System.Drawing.Size(321, 546);
             this.dgDynamics.TabIndex = 3;
             // 
@@ -711,24 +729,6 @@ namespace SiliFish.UI.Controls
             this.splitMain.Size = new System.Drawing.Size(600, 723);
             this.splitMain.SplitterDistance = 261;
             this.splitMain.TabIndex = 16;
-            // 
-            // ddCoreType
-            // 
-            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(112, 166);
-            this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(146, 23);
-            this.ddCoreType.TabIndex = 32;
-            // 
-            // lCoreType
-            // 
-            this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(5, 169);
-            this.lCoreType.Name = "lCoreType";
-            this.lCoreType.Size = new System.Drawing.Size(59, 15);
-            this.lCoreType.TabIndex = 33;
-            this.lCoreType.Text = "Core Type";
             // 
             // CellPoolControl
             // 

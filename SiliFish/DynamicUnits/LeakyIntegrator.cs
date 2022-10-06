@@ -1,13 +1,13 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using SiliFish.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
 
 namespace SiliFish.DynamicUnits
 {
-    public class Leaky_Integrator: DynamicUnit
+    public class Leaky_Integrator : DynamicUnit
     {
         public double R; //resustance
         public double C;//capacitance
@@ -17,7 +17,7 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore]
         public double TimeConstant { get { return R * C; } }
-protected override void Initialize()
+        protected override void Initialize()
         {
             V = Vr;
         }
@@ -44,10 +44,10 @@ protected override void Initialize()
         public Leaky_Integrator(Dictionary<string, double> paramExternal)
         {
             CoreType = CoreType.Leaky_Integrator;
-            SetParametersDouble(paramExternal);
+            SetParameters(paramExternal);
             Initialize();
         }
-        public override Dictionary<string, double> GetParametersDouble()
+        public override Dictionary<string, double> GetParameters()
         {
             Dictionary<string, double> paramDict = new()
             {
@@ -66,11 +66,11 @@ protected override void Initialize()
             paramExternal.AddObject("Leaky_Integrator.R", R, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.C", C, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.Vr", Vr, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Va",Va , skipIfExists: true);
+            paramExternal.AddObject("Leaky_Integrator.Va", Va, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.Tmax", Tmax, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.ka", ka, skipIfExists: true);
         }
-        public override void SetParametersDouble(Dictionary<string, double> paramExternal)
+        public override void SetParameters(Dictionary<string, double> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
@@ -85,12 +85,12 @@ protected override void Initialize()
             V = Vr;
         }
 
-        
+
         //formula from [Dulhunty 1992 (Prog. Biophys)]
         public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used
         {
             //T_a = T_max / (1 + exp(V_a - V_m) / k_a
-            return 1 / (1 + Math.Exp((Va - (Vm??V)) / ka));
+            return 1 / (1 + Math.Exp((Va - (Vm ?? V)) / ka));
         }
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]

@@ -28,7 +28,7 @@ namespace SiliFish.DataTypes
     public class TimeLine
     {
         private List<(int start, int end)> Periods = new();
-        
+
         public string PeriodsJSON//Required for JSON
         {
             get
@@ -50,7 +50,7 @@ namespace SiliFish.DataTypes
             }
         }
         [JsonIgnore]
-        public int Start { get { return Periods.Count > 0 ? Periods.Min(tr => tr.start) : 0; }  }
+        public int Start { get { return Periods.Count > 0 ? Periods.Min(tr => tr.start) : 0; } }
         [JsonIgnore]
         public int End { get { return Periods.Count > 0 ? Periods.Max(tr => tr.end) : -1; } set { } }
 
@@ -96,7 +96,7 @@ namespace SiliFish.DataTypes
         {
             if (Periods.Count == 0)
                 return "no timeline";
-            return string.Join("; ", Periods.Select(tr => $"{tr.start}-{((tr.end == -1) ? "end":tr.end)}"));
+            return string.Join("; ", Periods.Select(tr => $"{tr.start}-{((tr.end == -1) ? "end" : tr.end)}"));
         }
     }
 

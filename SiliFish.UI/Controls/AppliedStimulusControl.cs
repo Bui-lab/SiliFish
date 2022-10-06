@@ -1,5 +1,4 @@
-﻿using SiliFish.DataTypes;
-using SiliFish.ModelUnits;
+﻿using SiliFish.ModelUnits;
 
 namespace SiliFish.UI.Controls
 {
@@ -10,7 +9,7 @@ namespace SiliFish.UI.Controls
         {
             add
             {
-                stimulusChanged += value; 
+                stimulusChanged += value;
                 stimControl.StimulusChanged += value;
             }
             remove
@@ -62,7 +61,7 @@ namespace SiliFish.UI.Controls
             ddSagittalPosition.Text = stim.LeftRight;
             cbActive.Checked = stim.Active;
 
-            if (stim.TimeLine_ms!= null)
+            if (stim.TimeLine_ms != null)
                 timeLineControl.SetTimeLine(stim.TimeLine_ms);
         }
 
@@ -92,7 +91,7 @@ namespace SiliFish.UI.Controls
         {
             if (ddTargetSomites.Text == "All Somites")
                 ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            else 
+            else
                 ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
         }
 

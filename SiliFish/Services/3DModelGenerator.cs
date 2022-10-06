@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SiliFish.Extensions;
+using SiliFish.Helpers;
+using SiliFish.ModelUnits;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
 {
@@ -70,11 +70,11 @@ namespace SiliFish.Services
             {
                 if (gap)
                     foreach (GapJunction jnc in neuron.GapJunctions
-                            .Where(j => j.Cell2 == cell && j.Cell1.Somite >=minSomite && j.Cell1.Somite <= maxSomite))
+                            .Where(j => j.Cell2 == cell && j.Cell1.Somite >= minSomite && j.Cell1.Somite <= maxSomite))
                         links.Add(CreateLinkDataPoint(jnc));
                 if (chem)
                     foreach (ChemicalSynapse jnc in neuron.Synapses
-                            .Where(syn=>syn.PostCell.Somite >= minSomite && syn.PostCell.Somite <= maxSomite))
+                            .Where(syn => syn.PostCell.Somite >= minSomite && syn.PostCell.Somite <= maxSomite))
                         links.Add(CreateLinkDataPoint(jnc));
             }
             else if (chem && cell is MuscleCell muscle)
@@ -101,7 +101,7 @@ namespace SiliFish.Services
         //gap and chem are obsolete if singlePanel = false
         public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem, string somiteRange)
         {
-            StringBuilder html = singlePanel? new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")):
+            StringBuilder html = singlePanel ? new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")) :
                     new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
 
             string filename = saveFile ? model.ModelName + "Model.html" : "";
@@ -130,7 +130,7 @@ namespace SiliFish.Services
                 html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
                 html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chem Jnc"));
             }
-            else 
+            else
             {
                 string s = gap && chem ? "Gap and Chem" : gap ? "Gap" : chem ? "Chem" : "No";
                 html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + String.Format(" - {0} Jnc", s)));
@@ -146,9 +146,9 @@ namespace SiliFish.Services
                 yRange = 2 * YRange1D;
             }
             double range = Math.Max(xRange, Math.Max(yRange, zRange));
-            int width = 400; 
+            int width = 400;
             XYZMult = width / range;
-            XOffset = singlePanel ? width/2 : width;
+            XOffset = singlePanel ? width / 2 : width;
             YOffset = 0;
             ZOffset = 0;
             int numOfConnections = model.GetNumberOfConnections();
@@ -161,7 +161,7 @@ namespace SiliFish.Services
                 (minSomite, maxSomite) = Util.ParseRange(somiteRange);
 
             int numOfCells = model.GetNumberOfCells();
-            double nodesize = numOfCells > 0?
+            double nodesize = numOfCells > 0 ?
                 (zRange < 0.1 ?//No z axis
                 Math.Sqrt(xRange * yRange / (30 * numOfCells)) :
                 Math.Pow(xRange * yRange * zRange / (160 * numOfCells), 0.33))

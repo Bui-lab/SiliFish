@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
+using SiliFish.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using SiliFish.DataTypes;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
 
 namespace SiliFish.ModelUnits
 {
@@ -95,10 +95,10 @@ namespace SiliFish.ModelUnits
         public static int nMax; //in time increments
 
         public StimulusSettings StimulusSettings { get; set; }
-        public StimulusMode Mode 
-        { 
+        public StimulusMode Mode
+        {
             get { return StimulusSettings.Mode; }
-            set { StimulusSettings.Mode = value; } 
+            set { StimulusSettings.Mode = value; }
         }
         public double Value1
         {
@@ -127,9 +127,9 @@ namespace SiliFish.ModelUnits
         }
         public double this[int index]
         {
-            get 
-            { 
-                if (values?.Length > index) 
+            get
+            {
+                if (values?.Length > index)
                     return values[index];
                 return 0;
             }
@@ -177,7 +177,7 @@ namespace SiliFish.ModelUnits
                 Initialize();
             if (values.Length <= tIndex)
             {
-                double[] copyArr = new double[nMax];  
+                double[] copyArr = new double[nMax];
                 values.CopyTo(copyArr, 0);
                 values = copyArr;
             }
@@ -205,7 +205,7 @@ namespace SiliFish.ModelUnits
                     {
                         double t = t_ms - TimeSpan_ms.StartOf(t_ms);
                         double period = 1 / Value2;
-                        while (t > period) 
+                        while (t > period)
                             t -= period;
                         if (t <= period / 2)
                             value = Value1;

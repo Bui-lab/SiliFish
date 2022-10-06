@@ -1,7 +1,4 @@
 ﻿using SiliFish.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Extensions
 {
@@ -57,7 +54,7 @@ namespace Extensions
                 decimal val = Convert.ToDecimal(ParamDict[key]);
                 int[] bits = Decimal.GetBits(val);
                 int decPoints = (bits[3] >> 16) & 0x7F;//https://docs.microsoft.com/en-us/dotnet/api/system.decimal.getbits?view=net-6.0
-                decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10,decPoints)));
+                decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10, decPoints)));
                 NumericUpDown numBox = new()
                 {
                     Tag = val,

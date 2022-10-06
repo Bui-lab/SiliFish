@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SiliFish.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using SiliFish.DataTypes;
 
 namespace SiliFish.Extensions
 {
@@ -58,7 +58,7 @@ namespace SiliFish.Extensions
         {
             if (dictionary.ContainsKey(key))
                 return dictionary[key];
-            foreach (var obj in dictionary.Values.Where(x=>x is Dictionary<string, object>))
+            foreach (var obj in dictionary.Values.Where(x => x is Dictionary<string, object>))
             {
                 var ret = ((Dictionary<string, object>)obj).GetNestedValue(key);
                 if (ret != null)
@@ -90,12 +90,12 @@ namespace SiliFish.Extensions
             if (dictionary?.Count != dic2?.Count) return false;
             foreach (var key in dictionary.Keys)
             {
-                if (!dic2.ContainsKey(key)) 
+                if (!dic2.ContainsKey(key))
                     return false;
                 string s1 = dictionary[key]?.ToString() ?? "";
                 string s2 = dic2[key]?.ToString() ?? "";
-                if (s1 != s2) 
-                    return false; 
+                if (s1 != s2)
+                    return false;
             }
             return true;
         }
@@ -119,7 +119,7 @@ namespace SiliFish.Extensions
             Dictionary<string, double[]> valuesArray = new();
             foreach (string key in dictionary.Keys)
             {
-                object obj=dictionary[key];
+                object obj = dictionary[key];
                 if (obj is Distribution distribution)
                     valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range));
                 else if (double.TryParse(obj.ToString(), out double d))

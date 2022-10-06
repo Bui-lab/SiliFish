@@ -10,7 +10,7 @@ namespace SiliFish.Extensions
             double minValue = double.MaxValue;
             int numrow = matrix.GetLength(0);
             int numcol = matrix.GetLength(1);
-            for (int rowind = 0; rowind<numrow; rowind++)
+            for (int rowind = 0; rowind < numrow; rowind++)
             {
                 for (int colind = 0; colind < numcol; colind++)
                 {
@@ -65,7 +65,7 @@ namespace SiliFish.Extensions
         public static List<string> ConvertRowToList(this double[,] matrix, int row)
         {
             int numofcols = matrix.GetLength(1);
-            List<string> strlist = new ();
+            List<string> strlist = new();
             for (int j = 0; j < numofcols; j++)
                 strlist.Add(matrix[row, j].ToString());
             return strlist;
@@ -78,11 +78,11 @@ namespace SiliFish.Extensions
                 subset[j] = matrix[rowIndex, j];
             return subset;
         }
-        public static double[,] GetRowsSubset(this double[,] matrix, int? rowstart=null, int? rowend=null)
+        public static double[,] GetRowsSubset(this double[,] matrix, int? rowstart = null, int? rowend = null)
         {
             if (rowstart == null)
                 rowstart = 0;
-            if (rowend==null || rowend >= matrix.GetLength(0))
+            if (rowend == null || rowend >= matrix.GetLength(0))
                 rowend = matrix.GetLength(0) - 1;
             if (rowstart < 0 || rowstart > rowend)
                 return null;

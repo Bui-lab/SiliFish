@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
@@ -151,7 +151,7 @@ namespace SiliFish.ModelUnits
 
         }
 
-        
+
         public virtual void CalculateMembranePotential(int t)
         {
             throw new NotImplementedException();
@@ -236,12 +236,12 @@ namespace SiliFish.ModelUnits
 
         public override Dictionary<string, double> Parameters
         {
-            get { return Core.GetParametersDouble(); }
+            get { return Core.GetParameters(); }
             set
             {
                 if (value == null || value.Count == 0)
                     return;
-                Core.SetParametersDouble(value);
+                Core.SetParameters(value);
             }
         }
 
@@ -402,12 +402,12 @@ namespace SiliFish.ModelUnits
 
         public override Dictionary<string, double> Parameters
         {
-            get { return Core.GetParametersDouble(); }
+            get { return Core.GetParameters(); }
             set
             {
                 if (value == null || value.Count == 0)
                     return;
-                Core.SetParametersDouble(value);
+                Core.SetParameters(value);
             }
         }
 

@@ -1,6 +1,6 @@
-﻿using System.Drawing;
+﻿using SiliFish.Extensions;
+using System.Drawing;
 using System.Linq;
-using SiliFish.Extensions;
 
 namespace SiliFish.DataTypes
 {

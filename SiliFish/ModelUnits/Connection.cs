@@ -1,8 +1,8 @@
-﻿using System;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
+using System;
 
 namespace SiliFish.ModelUnits
 {
@@ -46,7 +46,8 @@ namespace SiliFish.ModelUnits
 
         string SomiteReach
         {
-            get {
+            get
+            {
                 return WithinSomite && OtherSomite ? "Same and other" :
                     WithinSomite ? "Same somite" :
                     OtherSomite ? "Other somite" :
@@ -91,7 +92,7 @@ namespace SiliFish.ModelUnits
                 (MaxOutgoing > 0 ? $"Max out: {MaxOutgoing:0}\r\n" : "") +
                 $"Fixed Duration: {FixedDuration_ms: 0.###}\r\n" +
                 $"Delay: {Delay_ms: 0.###}\r\n" +
-                $"Weight: {Weight: 0.###}\r\n"+
+                $"Weight: {Weight: 0.###}\r\n" +
                 $"Somite Reach: {SomiteReach}\r\n";
         }
 
@@ -105,20 +106,20 @@ namespace SiliFish.ModelUnits
         {
             if (!WithinSomite && cell1.Somite == cell2.Somite)
                 return false;
-            
+
             if (!OtherSomite && cell1.Somite != cell2.Somite)
                 return false;
-            
+
             if (!Autapse && cell1 == cell2)
                 return false;
-            
+
             double diff_x = SomiteBased ? cell2.Somite - cell1.Somite :
                 (cell2.X - cell1.X) * noise;//positive values mean cell2 is more caudal
             if (diff_x > 0 && diff_x > DescendingReach) //Not enough descending reach 
                 return false;
             else if (diff_x < 0 && Math.Abs(diff_x) > AscendingReach) //Not enough ascending reach 
                 return false;
-            
+
             double diff_y = cell2.Y - cell1.Y; //positive values mean cell2 is more lateral
             if (diff_y > 0 && diff_y > LateralReach)
                 return false;
@@ -132,7 +133,7 @@ namespace SiliFish.ModelUnits
             else if (diff_z < 0 && Math.Abs(diff_z) > DorsalReach)
                 return false;
 
-            double dist = Util.Distance(cell1.coordinate, cell2.coordinate, DistanceMode) *  noise;
+            double dist = Util.Distance(cell1.coordinate, cell2.coordinate, DistanceMode) * noise;
             return dist >= MinReach && dist <= MaxReach;
         }
 
@@ -145,12 +146,12 @@ namespace SiliFish.ModelUnits
         public double E_rev { get; set; }
 
         public SynapseParameters() { }
-        public SynapseParameters(SynapseParameters sp) 
+        public SynapseParameters(SynapseParameters sp)
         {
             if (sp == null) return;
-            TauD = sp.TauD; 
+            TauD = sp.TauD;
             TauR = sp.TauR;
-            VTh = sp.VTh; 
+            VTh = sp.VTh;
             E_rev = sp.E_rev;
         }
 
@@ -174,8 +175,8 @@ namespace SiliFish.ModelUnits
         private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
                                                 //
-        //Voltage Diff * 1/2 * conductance will give the momentary current value
-        private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } } 
+                                                //Voltage Diff * 1/2 * conductance will give the momentary current value
+        private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } }
         int t_current = 0; //the time point  where the momentary values are kept for
         private TimeLine timeLine_ms;
         internal bool IsActive(int timepoint)
@@ -208,7 +209,7 @@ namespace SiliFish.ModelUnits
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / RunParam.static_dt );
+            Delay = (int)(delay / RunParam.static_dt);
         }
         public void SetTimeSpan(TimeLine span)
         {
@@ -230,7 +231,7 @@ namespace SiliFish.ModelUnits
 
         public double GetGapCurrent(Cell n, int tIndex)
         {
-            double current = IsActive(tIndex) ? Conductance * VoltageDiff: 0; 
+            double current = IsActive(tIndex) ? Conductance * VoltageDiff : 0;
 
             if (n == Cell1)
                 return current;
@@ -255,7 +256,7 @@ namespace SiliFish.ModelUnits
         public double[] InputCurrent; //Current vector 
         private TimeLine timeLine_ms;
         public string ID { get { return string.Format("Syn: {0} -> {1}; Conductance: {2:0.#####}", PreNeuron.ID, PostCell.ID, Conductance); } }
-        public double Conductance {get{return Core.Conductance;} }
+        public double Conductance { get { return Core.Conductance; } }
         internal bool IsActive(int timepoint)
         {
             double t_ms = RunParam.GetTimeOfIndex(timepoint);
@@ -268,7 +269,7 @@ namespace SiliFish.ModelUnits
             PreNeuron = preN;
             PostCell = postN;
             double distance = Util.Distance(PreNeuron.coordinate, PostCell.coordinate, distmode);
-            Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt )), 1);
+            Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt)), 1);
         }
         public void InitDataVectors(int nmax)
         {
@@ -278,11 +279,11 @@ namespace SiliFish.ModelUnits
 
         public void SetFixedDuration(double dur)
         {
-            Duration = (int)(dur / RunParam.static_dt );
+            Duration = (int)(dur / RunParam.static_dt);
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / RunParam.static_dt );
+            Delay = (int)(delay / RunParam.static_dt);
         }
         public void SetTimeLine(TimeLine span)
         {

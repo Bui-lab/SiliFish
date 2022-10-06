@@ -4,8 +4,6 @@ using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish
 {
@@ -186,7 +184,7 @@ namespace SiliFish
             //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
 
             Coordinate[] tail_tip_coord = spineCoordinates.Last().Value;
-            double left_bound = - model.kinemParam.kinemBound;
+            double left_bound = -model.kinemParam.kinemBound;
             double right_bound = model.kinemParam.kinemBound;
             int side = 0;
             const int LEFT = -1;
@@ -250,8 +248,8 @@ namespace SiliFish
         }
 
 
-        public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(SwimmingModel model, List<Cell> leftMNs, List<Cell> rightMNs, 
-            double burstBreak,  double episodeBreak)
+        public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(SwimmingModel model, List<Cell> leftMNs, List<Cell> rightMNs,
+            double burstBreak, double episodeBreak)
         {
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();

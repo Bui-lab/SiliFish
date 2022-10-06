@@ -19,8 +19,8 @@ namespace SiliFish.UI.Controls
                         rbAbsolute.Top;
                     pTop.Height = lRange.Bottom + lRange.Margin.Bottom + 12;
                 }
-            } 
-        } 
+            }
+        }
         public DistributionControl()
         {
             InitializeComponent();
@@ -107,7 +107,7 @@ namespace SiliFish.UI.Controls
         public Distribution GetDistribution()
         {
             string mode = ddDistribution.Text;
-            if (mode == "None") 
+            if (mode == "None")
                 return null;
             bool absolute = rbAbsolute.Checked;
             if (!double.TryParse(eRangeStart.Text, out double start))

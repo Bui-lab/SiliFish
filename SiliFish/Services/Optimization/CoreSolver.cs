@@ -2,7 +2,6 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +15,10 @@ namespace SiliFish.Services.Optimization
         internal double TargetRheobaseMin, TargetRheobaseMax;
         internal Dictionary<double, FiringPattern> FiringPatterns;
         internal Dictionary<double, FiringRhythm> FiringRhythms;
-        public CoreFitness(CoreSolver izhikevichSolver, 
-            CoreType coreType, 
-            double targetRheobaseMin, 
-            double targetRheobaseMax, 
+        public CoreFitness(CoreSolver izhikevichSolver,
+            CoreType coreType,
+            double targetRheobaseMin,
+            double targetRheobaseMax,
             Dictionary<double, FiringPattern> firingPatterns,
             Dictionary<double, FiringRhythm> firingRhythms)
         {
@@ -27,7 +26,7 @@ namespace SiliFish.Services.Optimization
             CoreType = coreType;
             TargetRheobaseMin = targetRheobaseMin;
             TargetRheobaseMax = targetRheobaseMax;
-            if (TargetRheobaseMax<TargetRheobaseMin)
+            if (TargetRheobaseMax < TargetRheobaseMin)
                 (TargetRheobaseMin, TargetRheobaseMax) = (TargetRheobaseMax, TargetRheobaseMin);
             FiringPatterns = firingPatterns;
             FiringRhythms = firingRhythms;
@@ -45,7 +44,7 @@ namespace SiliFish.Services.Optimization
                 instanceValues.Add(key, values[iter++]);
             }
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, instanceValues);
-            if (core == null) 
+            if (core == null)
                 return 0;
             double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
             //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
@@ -82,7 +81,7 @@ namespace SiliFish.Services.Optimization
     public class CoreSolver
     {
         Dictionary<string, double> ParamValues;
-        
+
         internal List<string> OutputText = new();
         internal List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
         private readonly SelectionBase Selection;
@@ -170,7 +169,7 @@ namespace SiliFish.Services.Optimization
                 }
             };
             Algorithm.Start();
-            
+
             Dictionary<string, double> BestValues = new();
             int iter = 0;
             foreach (string key in SortedKeys)

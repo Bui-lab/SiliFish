@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using SiliFish.Definitions;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
 
 namespace SiliFish.DynamicUnits
 {
@@ -33,10 +31,10 @@ namespace SiliFish.DynamicUnits
         public Izhikevich_5P(Dictionary<string, double> paramExternal)
         {
             CoreType = CoreType.Izhikevich_5P;
-            SetParametersDouble(paramExternal);
+            SetParameters(paramExternal);
             Initialize();
         }
-        public override Dictionary<string, double> GetParametersDouble()
+        public override Dictionary<string, double> GetParameters()
         {
             Dictionary<string, double> paramDict = new()
             {
@@ -50,7 +48,13 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
-
+        public override string GetParamName_Threshold
+        {
+            get
+            {
+                return "";
+            }
+        }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {
@@ -73,7 +77,7 @@ namespace SiliFish.DynamicUnits
             return (MinValues, MaxValues);
         }
 
-        public override void SetParametersDouble(Dictionary<string, double> paramExternal)
+        public override void SetParameters(Dictionary<string, double> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;

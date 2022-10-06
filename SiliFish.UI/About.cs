@@ -27,7 +27,7 @@ namespace SiliFish.UI
 
         private void TimerAbout_Tick(object sender, EventArgs e)
         {
-            timerAbout.Tick-=TimerAbout_Tick;
+            timerAbout.Tick -= TimerAbout_Tick;
             timerAbout.Enabled = false;
             this.Close();
         }

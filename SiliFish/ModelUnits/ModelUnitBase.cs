@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
-    public abstract class ModelUnitBase: IComparable<ModelUnitBase>
+    public abstract class ModelUnitBase : IComparable<ModelUnitBase>
     {
         [JsonIgnore]
         public virtual string Distinguisher { get; }

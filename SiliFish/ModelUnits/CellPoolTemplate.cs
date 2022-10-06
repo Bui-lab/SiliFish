@@ -1,34 +1,31 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
-    public class CellPoolTemplate: ModelUnitBase
+    public class CellPoolTemplate : ModelUnitBase
     {
         public string CellGroup { get; set; }
         public string Description { get; set; }
         public List<string> Attachments { get; set; } = new();
-
-        private CellType cellType;
-        public CellType CellType
-        {
-            get { return cellType; }
-            set
-            {
-                cellType = value;
-                CoreType = value == CellType.Neuron ? CoreType.Izhikevich_9P : CoreType.Leaky_Integrator;
-            }
-        }
-
-        public CoreType CoreType { get; set; }//Currently set by CellType -- Future: handle mutliple core types, add it to the UI
+        public CellType CellType { get; set; }
+        public CoreType CoreType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
-        public Dictionary<string, object> Parameters { get; set; }
+        public Dictionary<string, object> Parameters
+        {
+            get { return parameters; }
+            set
+            {
+                parameters = value.ToDictionary(kvp => kvp.Key,
+                    kvp => Distribution.CreateDistributionObject(kvp.Value) as object);
+            }
+        }
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
         public int ColumnIndex2D { get; set; }
         public int NumOfCells { get; set; } = 1;
@@ -41,7 +38,7 @@ namespace SiliFish.ModelUnits
             get { return SpatialDistribution.XDistribution; }
             set
             {
-                SpatialDistribution.XDistribution = value is JsonElement element ? Distribution.GetOfDerivedType(element.GetRawText()) : (Distribution)value;
+                SpatialDistribution.XDistribution = Distribution.CreateDistributionObject(value);
             }
         }
         public object Y_AngleDistribution
@@ -49,7 +46,7 @@ namespace SiliFish.ModelUnits
             get { return SpatialDistribution.Y_AngleDistribution; }
             set
             {
-                SpatialDistribution.Y_AngleDistribution = value is JsonElement element ? Distribution.GetOfDerivedType(element.GetRawText()) : (Distribution)value;
+                SpatialDistribution.Y_AngleDistribution = Distribution.CreateDistributionObject(value);
             }
         }
         public object Z_RadiusDistribution
@@ -57,17 +54,19 @@ namespace SiliFish.ModelUnits
             get { return SpatialDistribution.Z_RadiusDistribution; }
             set
             {
-                SpatialDistribution.Z_RadiusDistribution = value is JsonElement element ? Distribution.GetOfDerivedType(element.GetRawText()) : (Distribution)value;
+                SpatialDistribution.Z_RadiusDistribution = Distribution.CreateDistributionObject(value);
             }
         }
 
         private Distribution _ConductionVelocity;
+        private Dictionary<string, object> parameters;
+
         public object ConductionVelocity
         {
             get { return _ConductionVelocity; }
             set
             {
-                _ConductionVelocity = value is JsonElement element ? Distribution.GetOfDerivedType(element.GetRawText()) : (Distribution)value;
+                _ConductionVelocity = Distribution.CreateDistributionObject(value);
             }
         }
         [JsonIgnore]
@@ -112,7 +111,7 @@ namespace SiliFish.ModelUnits
 
         public override int CompareTo(ModelUnitBase otherbase)
         {
-            CellPoolTemplate other = otherbase as CellPoolTemplate; 
+            CellPoolTemplate other = otherbase as CellPoolTemplate;
             return CellGroup.CompareTo(other.CellGroup);
         }
 

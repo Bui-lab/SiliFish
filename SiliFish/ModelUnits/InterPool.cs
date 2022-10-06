@@ -6,8 +6,8 @@ namespace SiliFish.ModelUnits
     public class InterPool
     {
         //Source and Target properties added for Json
-        public string Source { get; set;}
-        public string Target { get; set;}
+        public string Source { get; set; }
+        public string Target { get; set; }
 
         [JsonIgnore]
         internal CellPool SourcePool;
@@ -23,9 +23,9 @@ namespace SiliFish.ModelUnits
         { }
         public InterPool(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synPar = null, TimeLine timeline = null)
         {
-            SourcePool = pool1; 
-            TargetPool = pool2; 
-            Reach = cr; 
+            SourcePool = pool1;
+            TargetPool = pool2;
+            Reach = cr;
             SynapseParameters = synPar;
             TimeLine = timeline;
         }
