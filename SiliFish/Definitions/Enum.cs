@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 namespace SiliFish.Definitions
 {
     public enum CellType { Neuron, MuscleCell }
-    public enum CoreType { Izhikevich_5P, Izhikevich_9P, Leaky_Integrator }
-
     public enum FiringDelay { NoDelay, Delayed }
     public enum FiringRhythm { Phasic, Tonic, Chattering }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }

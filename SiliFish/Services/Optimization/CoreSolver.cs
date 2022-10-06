@@ -11,12 +11,12 @@ namespace SiliFish.Services.Optimization
     public class CoreFitness : IFitness
     {
         readonly CoreSolver IzhikevichSolver;
-        CoreType CoreType;
+        string CoreType;
         internal double TargetRheobaseMin, TargetRheobaseMax;
         internal Dictionary<double, FiringPattern> FiringPatterns;
         internal Dictionary<double, FiringRhythm> FiringRhythms;
         public CoreFitness(CoreSolver izhikevichSolver,
-            CoreType coreType,
+            string coreType,
             double targetRheobaseMin,
             double targetRheobaseMax,
             Dictionary<double, FiringPattern> firingPatterns,
@@ -108,7 +108,7 @@ namespace SiliFish.Services.Optimization
 
         public void SetOptimizationSettings(int minPopulationSize,
             int maxPopulationSize,
-            CoreType coreType,
+            string coreType,
             Dictionary<string, double> paramValues,
             double minTargetRheobase, double maxTargetRheobase,
             Dictionary<double, FiringPattern> firingPatterns = null,

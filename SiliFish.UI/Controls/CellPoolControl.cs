@@ -42,7 +42,7 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             distConductionVelocity.AbsoluteEnforced = true;
-            ddCoreType.DataSource = Enum.GetNames(typeof(CoreType));// fill before celltypes
+            ddCoreType.Items.AddRange(DynamicUnit.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
@@ -68,7 +68,7 @@ namespace SiliFish.UI.Controls
 
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CoreType coreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
+            string coreType = ddCoreType.Text;
             poolTemplate.Parameters = DynamicUnit.GetParameters(coreType);
             ParamDictToGrid();
         }
@@ -129,7 +129,7 @@ namespace SiliFish.UI.Controls
             poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
             poolTemplate.CellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
-            poolTemplate.CoreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
+            poolTemplate.CoreType = ddCoreType.Text;
             poolTemplate.NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
             poolTemplate.Parameters = GridToParamDict();
             poolTemplate.Color = btnColor.BackColor;
@@ -213,7 +213,7 @@ namespace SiliFish.UI.Controls
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            poolTemplate.CoreType = (CoreType)Enum.Parse(typeof(CoreType), ddCoreType.Text);
+            poolTemplate.CoreType = ddCoreType.Text;
             dyncontrol = new(poolTemplate.CoreType, dparams, testMode: false);
             dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
             ControlContainer frmControl = new();

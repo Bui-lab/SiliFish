@@ -49,7 +49,7 @@ namespace SiliFish.DynamicUnits
 
         public Izhikevich_9P(Dictionary<string, double> paramExternal)
         {
-            CoreType = CoreType.Izhikevich_9P;
+            //CoreType = CoreType.Izhikevich_9P;
             SetParameters(paramExternal);
             Initialize();
         }

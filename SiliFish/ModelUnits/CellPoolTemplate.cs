@@ -14,7 +14,7 @@ namespace SiliFish.ModelUnits
         public string Description { get; set; }
         public List<string> Attachments { get; set; } = new();
         public CellType CellType { get; set; }
-        public CoreType CoreType { get; set; }
+        public string CoreType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;
         public Dictionary<string, object> Parameters

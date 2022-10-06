@@ -43,7 +43,7 @@ namespace SiliFish.DynamicUnits
 
         public Leaky_Integrator(Dictionary<string, double> paramExternal)
         {
-            CoreType = CoreType.Leaky_Integrator;
+            //CoreType = CoreType.Leaky_Integrator;
             SetParameters(paramExternal);
             Initialize();
         }

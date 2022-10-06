@@ -1973,7 +1973,7 @@ namespace SiliFish.UI
         private void cmiIzhikevich_9P_Click(object sender, EventArgs e)
         {
             Izhikevich_9P izhi = new(paramExternal: null);
-            DynamicsTestControl dynControl = new(CoreType.Izhikevich_9P, izhi.GetParameters(), testMode: true);
+            DynamicsTestControl dynControl = new("Izhikevich_9P", izhi.GetParameters(), testMode: true);
             ControlContainer frmControl = new();
             frmControl.AddControl(dynControl);
             frmControl.Text = "Neuronal Dynamics Test";
@@ -1984,7 +1984,7 @@ namespace SiliFish.UI
         private void cmiIzhikevich5P_Click(object sender, EventArgs e)
         {
             Izhikevich_5P izhi = new(paramExternal: null);
-            DynamicsTestControl dynControl = new(CoreType.Izhikevich_5P, izhi.GetParameters(), testMode: true);
+            DynamicsTestControl dynControl = new("Izhikevich_5P", izhi.GetParameters(), testMode: true);
             ControlContainer frmControl = new();
             frmControl.AddControl(dynControl);
             frmControl.Text = "Neuronal Dynamics Test";
