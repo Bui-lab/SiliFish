@@ -12,7 +12,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
-        public CoreType coreType;
+        public string coreType;
         private bool updateParamNames = true;
         DynamicsStats dynamics;
         private double[] TimeArray;
@@ -100,7 +100,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        public DynamicsTestControl(CoreType coreType, Dictionary<string, double> parameters, bool testMode)
+        public DynamicsTestControl(string coreType, Dictionary<string, double> parameters, bool testMode)
         {
             InitializeComponent();
             InitAsync();
@@ -184,11 +184,11 @@ namespace SiliFish.UI.Controls
             {
                 charts.Add(new ChartDataStruct
                 {
-                    Title = coreType == CoreType.Leaky_Integrator ? "Rel. Tension" : "u",
+                    Title = coreType == "Leaky_Integrator" ? "Rel. Tension" : "u", //TODO hardcoded leaky integrator - add a function to dynamic unit
                     Color = Color.Blue,
                     xData = TimeArray,
                     yData = dynamics.SecList,
-                    yLabel = coreType == CoreType.Leaky_Integrator ? "Rel. Tension" : "u"
+                    yLabel = coreType == "Leaky_Integrator" ? "Rel. Tension" : "u" //TODO hardcoded leaky integrator - add a function to dynamic unit
                 });
             }
 

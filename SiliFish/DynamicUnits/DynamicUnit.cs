@@ -18,11 +18,22 @@ namespace SiliFish.DynamicUnits
         protected double V = -70;//Keeps the current value of V 
 
         private Dictionary<string, double> parametersObsolete; //Used for json only
-        public CoreType CoreType { get; set; }
         public Dictionary<string, double> Parameters
         {
             get { return GetParameters(); }
             set { SetParameters(value); }
+        }
+
+        private string coreType;
+        public string CoreType 
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(coreType))
+                    coreType = this.GetType().ToString();
+                return coreType;
+            }
+            set { coreType = value; } //for json
         }
 
         [JsonIgnore]
@@ -33,6 +44,17 @@ namespace SiliFish.DynamicUnits
                 throw new NotImplementedException();
             }
         }
+
+        public static List<string> GetCoreTypes()
+        {
+            List<string> coreTypes = new()
+            {
+                "Izhikevich_5P",
+                "Izhikevich_9P",
+                "Leaky_Integrator"
+            };
+            return coreTypes;
+        }
         public static DynamicUnit GetOfDerivedType(string json)
         {
             DynamicUnit core = JsonSerializer.Deserialize<DynamicUnit>(json);
@@ -40,15 +62,15 @@ namespace SiliFish.DynamicUnits
                 return CreateCore(core.CoreType, core.Parameters);
             return core;
         }
-        public static DynamicUnit CreateCore(CoreType coreType, Dictionary<string, double> parameters)
+        public static DynamicUnit CreateCore(string coreType, Dictionary<string, double> parameters)
         {
             switch (coreType)
             {
-                case CoreType.Izhikevich_5P:
+                case "Izhikevich_5P":
                     return new Izhikevich_5P(parameters);
-                case CoreType.Izhikevich_9P:
+                case "Izhikevich_9P":
                     return new Izhikevich_9P(parameters);
-                case CoreType.Leaky_Integrator:
+                case "Leaky_Integrator":
                     return new Leaky_Integrator(parameters);
             }
             return null;
@@ -59,9 +81,9 @@ namespace SiliFish.DynamicUnits
         /// </summary>
         /// <param name="coreType"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetParameters(CoreType coreType)
+        public static Dictionary<string, object> GetParameters(string coreType)
         {
-            DynamicUnit core = DynamicUnit.CreateCore(coreType, null);
+            DynamicUnit core = CreateCore(coreType, null);
             return core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
         }
 
