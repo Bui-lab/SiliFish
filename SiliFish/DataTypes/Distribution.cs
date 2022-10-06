@@ -41,7 +41,7 @@ namespace SiliFish.DataTypes
         }
         public Distribution()
         {
-            distType = GetType().ToString();
+            distType = GetType().Name;
             //default values of 0 and 999 used
         }
         public virtual Distribution CreateCopy()
@@ -52,7 +52,7 @@ namespace SiliFish.DataTypes
         {
             Absolute = absolute;
             Angular = angular;
-            distType = GetType().ToString();
+            distType = GetType().Name;
             if (rangeStart < rangeEnd)
             {
                 RangeStart = rangeStart;

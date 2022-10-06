@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System.ComponentModel;
 using System.Diagnostics;
+using static SiliFish.UI.Controls.DynamicsTestControl;
 
 namespace SiliFish.UI.Controls
 {
@@ -215,7 +216,7 @@ namespace SiliFish.UI.Controls
             Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
             poolTemplate.CoreType = ddCoreType.Text;
             dyncontrol = new(poolTemplate.CoreType, dparams, testMode: false);
-            dyncontrol.UseUpdatedParams += Dyncontrol_UseupdatedParams;
+            dyncontrol.UseUpdatedParams += Dyncontrol_UseUpdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
             frmControl.Text = eGroupName.Text;
@@ -223,12 +224,13 @@ namespace SiliFish.UI.Controls
             frmControl.ShowDialog();
         }
 
-        private void Dyncontrol_UseupdatedParams(object sender, EventArgs e)
+        private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)
         {
-            if (dyncontrol?.Parameters == null)
+            UpdatedParamsEventArgs args = e as UpdatedParamsEventArgs;
+            if (args==null || args.ParamsAsObject == null)
                 return;
-            poolTemplate.Parameters = dyncontrol.Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value);
-            poolTemplate.CoreType = dyncontrol.coreType;
+            poolTemplate.Parameters = args.ParamsAsObject;
+            poolTemplate.CoreType = args.CoreType;
             ddCoreType.Text = poolTemplate.CoreType.ToString();
             ParamDictToGrid();
         }

@@ -30,7 +30,7 @@ namespace SiliFish.DynamicUnits
             get
             {
                 if (string.IsNullOrEmpty(coreType))
-                    coreType = this.GetType().ToString();
+                    coreType = this.GetType().Name;
                 return coreType;
             }
             set { coreType = value; } //for json
