@@ -158,13 +158,16 @@ namespace SiliFish.DynamicUnits
             double decayStart = 0, riseStart = 0;
             int iMax = I.Length;
             DynamicsStats dyn = new(I);
+            dyn.SecLists.Add("u", new double[I.Length]);
+            double[] feedbackCurrent = dyn.SecLists["u"];
+
             bool spike = false;
             double dt = RunParam.static_dt;
             for (int tIndex = 0; tIndex < iMax; tIndex++)
             {
                 GetNextVal(I[tIndex], ref spike);
                 dyn.VList[tIndex] = V;
-                dyn.SecList[tIndex] = u;
+                feedbackCurrent[tIndex] = u;
                 //if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
                 //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
                 if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * c)

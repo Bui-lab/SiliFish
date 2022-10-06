@@ -205,16 +205,19 @@ namespace SiliFish.UI.Controls
                     yLabel = "V (mV)"
                 });
             }
-            if (cbURelTension.Checked)
+            if (cbSecondaryLists.Checked)
             {
-                charts.Add(new ChartDataStruct
+                foreach (string key in dynamics.SecLists.Keys)
                 {
-                    Title = CoreType == "Leaky_Integrator" ? "Rel. Tension" : "u", //TODO hardcoded leaky integrator - add a function to dynamic unit
-                    Color = Color.Blue,
-                    xData = TimeArray,
-                    yData = dynamics.SecList,
-                    yLabel = CoreType == "Leaky_Integrator" ? "Rel. Tension" : "u" //TODO hardcoded leaky integrator - add a function to dynamic unit
-                });
+                    charts.Add(new ChartDataStruct
+                    {
+                        Title = key,
+                        Color = Color.Blue,
+                        xData = TimeArray,
+                        yData = dynamics.SecLists[key],
+                        yLabel = key
+                    });
+                }
             }
 
             if (cbTauRise.Checked && dynamics.TauRise.Any())

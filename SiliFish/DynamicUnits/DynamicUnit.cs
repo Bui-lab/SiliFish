@@ -49,9 +49,11 @@ namespace SiliFish.DynamicUnits
         {
             List<string> coreTypes = new()
             {
-                "Izhikevich_5P",
-                "Izhikevich_9P",
-                "Leaky_Integrator"
+                typeof(HodgkinHuxley).Name,
+                typeof(Izhikevich_5P).Name,
+                typeof(Izhikevich_9P).Name,
+                typeof(QuadraticIntegrateAndFire).Name,
+                typeof(Leaky_Integrator).Name,
             };
             return coreTypes;
         }
@@ -66,12 +68,16 @@ namespace SiliFish.DynamicUnits
         {
             switch (coreType)
             {
+                case "HodgkinHuxley":
+                    return new HodgkinHuxley(parameters);
                 case "Izhikevich_5P":
                     return new Izhikevich_5P(parameters);
                 case "Izhikevich_9P":
                     return new Izhikevich_9P(parameters);
                 case "Leaky_Integrator":
                     return new Leaky_Integrator(parameters);
+                case "QuadraticIntegrateAndFire":
+                    return new QuadraticIntegrateAndFire(parameters);
             }
             return null;
         }
