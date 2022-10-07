@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
@@ -84,15 +83,8 @@
             this.pMinMax = new System.Windows.Forms.Panel();
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
             this.tFitness = new System.Windows.Forms.TabPage();
-            this.dgFitnessParams = new System.Windows.Forms.DataGridView();
-            this.colFitnessRheobaseMultiplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFitnessFiringMode = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.colFitnessFiringRhythm = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.pFitnessTop = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.eMaxTargetRheobase = new System.Windows.Forms.TextBox();
-            this.lTargetRheobase = new System.Windows.Forms.Label();
-            this.eMinTargetRheobase = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pFitnessParams = new System.Windows.Forms.FlowLayoutPanel();
             this.linkStopOptimization = new System.Windows.Forms.LinkLabel();
             this.lGAMutation = new System.Windows.Forms.Label();
             this.lGAMinMaxChromosome = new System.Windows.Forms.Label();
@@ -121,6 +113,7 @@
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -147,11 +140,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).BeginInit();
             this.pMinMax.SuspendLayout();
             this.tFitness.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgFitnessParams)).BeginInit();
-            this.pFitnessTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // eRheobaseLimit
@@ -809,99 +801,34 @@
             // 
             // tFitness
             // 
-            this.tFitness.Controls.Add(this.dgFitnessParams);
-            this.tFitness.Controls.Add(this.pFitnessTop);
+            this.tFitness.Controls.Add(this.pFitnessParams);
+            this.tFitness.Controls.Add(this.panel1);
             this.tFitness.Location = new System.Drawing.Point(4, 24);
             this.tFitness.Name = "tFitness";
-            this.tFitness.Size = new System.Drawing.Size(430, 281);
+            this.tFitness.Size = new System.Drawing.Size(413, 281);
             this.tFitness.TabIndex = 2;
             this.tFitness.Text = "Fitness Parameters";
             this.tFitness.UseVisualStyleBackColor = true;
             // 
-            // dgFitnessParams
+            // button1
             // 
-            this.dgFitnessParams.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgFitnessParams.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colFitnessRheobaseMultiplier,
-            this.colFitnessFiringMode,
-            this.colFitnessFiringRhythm});
-            this.dgFitnessParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgFitnessParams.Location = new System.Drawing.Point(0, 32);
-            this.dgFitnessParams.Name = "dgFitnessParams";
-            this.dgFitnessParams.RowTemplate.Height = 25;
-            this.dgFitnessParams.Size = new System.Drawing.Size(430, 249);
-            this.dgFitnessParams.TabIndex = 4;
-            this.dgFitnessParams.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgFitnessParams_CellEndEdit);
-            this.dgFitnessParams.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgFitnessParams_DataError);
-            this.dgFitnessParams.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dgFitnessParams_RowStateChanged);
+            this.button1.Location = new System.Drawing.Point(3, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // colFitnessRheobaseMultiplier
+            // pFitnessParams
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.colFitnessRheobaseMultiplier.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colFitnessRheobaseMultiplier.HeaderText = "x Rheobase";
-            this.colFitnessRheobaseMultiplier.Name = "colFitnessRheobaseMultiplier";
-            // 
-            // colFitnessFiringMode
-            // 
-            this.colFitnessFiringMode.HeaderText = "Firing Mode";
-            this.colFitnessFiringMode.Name = "colFitnessFiringMode";
-            this.colFitnessFiringMode.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colFitnessFiringMode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colFitnessFiringMode.Width = 200;
-            // 
-            // colFitnessFiringRhythm
-            // 
-            this.colFitnessFiringRhythm.HeaderText = "Rhythm";
-            this.colFitnessFiringRhythm.Name = "colFitnessFiringRhythm";
-            this.colFitnessFiringRhythm.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colFitnessFiringRhythm.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colFitnessFiringRhythm.Width = 200;
-            // 
-            // pFitnessTop
-            // 
-            this.pFitnessTop.Controls.Add(this.label2);
-            this.pFitnessTop.Controls.Add(this.eMaxTargetRheobase);
-            this.pFitnessTop.Controls.Add(this.lTargetRheobase);
-            this.pFitnessTop.Controls.Add(this.eMinTargetRheobase);
-            this.pFitnessTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pFitnessTop.Location = new System.Drawing.Point(0, 0);
-            this.pFitnessTop.Name = "pFitnessTop";
-            this.pFitnessTop.Size = new System.Drawing.Size(430, 32);
-            this.pFitnessTop.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(178, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(12, 15);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "-";
-            // 
-            // eMaxTargetRheobase
-            // 
-            this.eMaxTargetRheobase.Location = new System.Drawing.Point(191, 6);
-            this.eMaxTargetRheobase.Name = "eMaxTargetRheobase";
-            this.eMaxTargetRheobase.Size = new System.Drawing.Size(35, 23);
-            this.eMaxTargetRheobase.TabIndex = 3;
-            // 
-            // lTargetRheobase
-            // 
-            this.lTargetRheobase.AutoSize = true;
-            this.lTargetRheobase.Location = new System.Drawing.Point(6, 9);
-            this.lTargetRheobase.Name = "lTargetRheobase";
-            this.lTargetRheobase.Size = new System.Drawing.Size(129, 15);
-            this.lTargetRheobase.TabIndex = 1;
-            this.lTargetRheobase.Text = "Target Rheobase Range";
-            // 
-            // eMinTargetRheobase
-            // 
-            this.eMinTargetRheobase.Location = new System.Drawing.Point(141, 6);
-            this.eMinTargetRheobase.Name = "eMinTargetRheobase";
-            this.eMinTargetRheobase.Size = new System.Drawing.Size(35, 23);
-            this.eMinTargetRheobase.TabIndex = 2;
+            this.pFitnessParams.AutoScroll = true;
+            this.pFitnessParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pFitnessParams.Location = new System.Drawing.Point(0, 0);
+            this.pFitnessParams.Name = "pFitnessParams";
+            this.pFitnessParams.Padding = new System.Windows.Forms.Padding(5);
+            this.pFitnessParams.Size = new System.Drawing.Size(413, 252);
+            this.pFitnessParams.TabIndex = 1;
             // 
             // linkStopOptimization
             // 
@@ -1168,6 +1095,15 @@
             // 
             this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 252);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(413, 29);
+            this.panel1.TabIndex = 2;
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1211,14 +1147,12 @@
             this.pMinMax.ResumeLayout(false);
             this.pMinMax.PerformLayout();
             this.tFitness.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgFitnessParams)).EndInit();
-            this.pFitnessTop.ResumeLayout(false);
-            this.pFitnessTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
             this.pPlots.ResumeLayout(false);
             this.pPlots.PerformLayout();
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1275,8 +1209,6 @@
         private LinkLabel linkOptimize;
         private RichTextBox eOptimizationOutput;
         private DataGridView dgMinMaxValues;
-        private TextBox eMinTargetRheobase;
-        private Label lTargetRheobase;
         private DataGridViewTextBoxColumn colParameter;
         private DataGridViewTextBoxColumn colMinValue;
         private DataGridViewTextBoxColumn colMaxValue;
@@ -1304,16 +1236,12 @@
         private TabControl tabOptimization;
         private TabPage tMinMax;
         private TabPage tFitness;
-        private DataGridView dgFitnessParams;
-        private Panel pFitnessTop;
-        private Label label2;
-        private TextBox eMaxTargetRheobase;
-        private DataGridViewTextBoxColumn colFitnessRheobaseMultiplier;
-        private DataGridViewComboBoxColumn colFitnessFiringMode;
-        private DataGridViewComboBoxColumn colFitnessFiringRhythm;
         private ComboBox ddCoreType;
         private Label lCoreType;
         private Panel pLoadSaveParams;
         private CheckBox cbAutoDrawPlots;
+        private FlowLayoutPanel pFitnessParams;
+        private Button button1;
+        private Panel panel1;
     }
 }

@@ -8,28 +8,74 @@ using System.Linq;
 //https://diegogiacomelli.com.br/function-optimization-with-geneticsharp/
 namespace SiliFish.Services.Optimization
 {
+
+    public class FitnessFunction
+    {
+        public double Weight;
+    }
+    public class TargetRheobaseFunction: FitnessFunction
+    {
+        public double TargetRheobaseMin = double.NaN, TargetRheobaseMax = double.NaN;
+        public double CalculateFitness(DynamicUnit core, out double rheobase)
+        {
+            rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
+            if (rheobase < 0) return 0;
+            if (TargetRheobaseMin <= rheobase && TargetRheobaseMax >= rheobase)
+                return 10 * Weight; //TODO arbitrary 100 multiplier
+            if (rheobase < TargetRheobaseMin)
+                return 10 * Weight / (TargetRheobaseMin - rheobase);
+            return 10 * Weight / (rheobase - TargetRheobaseMax);
+        }
+    }
+
+    public class FiringFitnessFunction : FitnessFunction
+    {
+        public bool RheobaseBased;
+        public double CurrentValueOrRheobaseMultiplier;
+        public FitnessFunctionOptions FitnessFunctionOptions;
+        public FiringPattern TargetPattern;
+        public FiringDelay TargetDelay;
+        public FiringRhythm TargetRhythm;
+
+        public double CalculateFitness(DynamicsStats stat)
+        {
+            switch (FitnessFunctionOptions)
+            {
+                case FitnessFunctionOptions.TargetRheobase:
+                    break;
+                case FitnessFunctionOptions.FiringDelay:
+                    break;
+                case FitnessFunctionOptions.FiringRhythm:
+                    if (stat.FiringRhythm == TargetRhythm)
+                        return Weight;
+                    else
+                        return 0;
+                case FitnessFunctionOptions.FiringPattern:
+                    if (stat.FiringPattern == TargetPattern)
+                        return Weight;
+                    else
+                        return 0;
+            }
+            return 0;
+        }
+    }
+
     public class CoreFitness : IFitness
     {
         readonly CoreSolver IzhikevichSolver;
         string CoreType;
-        internal double TargetRheobaseMin, TargetRheobaseMax;
-        internal Dictionary<double, FiringPattern> FiringPatterns;
-        internal Dictionary<double, FiringRhythm> FiringRhythms;
+        TargetRheobaseFunction TargetRheobaseFunction;
+        List<FiringFitnessFunction> FitnessFunctions;
+
         public CoreFitness(CoreSolver izhikevichSolver,
             string coreType,
-            double targetRheobaseMin,
-            double targetRheobaseMax,
-            Dictionary<double, FiringPattern> firingPatterns,
-            Dictionary<double, FiringRhythm> firingRhythms)
+            TargetRheobaseFunction targetRheobaseFunction,
+            List<FiringFitnessFunction> fitnessFunctions)
         {
             IzhikevichSolver = izhikevichSolver;
             CoreType = coreType;
-            TargetRheobaseMin = targetRheobaseMin;
-            TargetRheobaseMax = targetRheobaseMax;
-            if (TargetRheobaseMax < TargetRheobaseMin)
-                (TargetRheobaseMin, TargetRheobaseMax) = (TargetRheobaseMax, TargetRheobaseMin);
-            FiringPatterns = firingPatterns;
-            FiringRhythms = firingRhythms;
+            TargetRheobaseFunction = targetRheobaseFunction;
+            FitnessFunctions = fitnessFunctions;
         }
         public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
         {
@@ -43,39 +89,41 @@ namespace SiliFish.Services.Optimization
                 valueStr += $"{key}: {values[iter]}; ";
                 instanceValues.Add(key, values[iter++]);
             }
+
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, instanceValues);
             if (core == null)
                 return 0;
-            double d = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
-            //IzhikevichSolver.OutputText.Add($"{valueStr} - rheobase:{d}\r\n");
-            if (d < 0)//no rheobase
-                return 0;
-            double fitnessMultiplier = 1;
-            List<double> rheoMultipliers = FiringRhythms.Keys.Union(FiringPatterns.Keys).Distinct().ToList();
-            foreach (double rheoMultiplier in rheoMultipliers)
-            {
-                DynamicsStats stat = core.DynamicsTest(d * rheoMultiplier, infinity: Const.RheobaseInfinity, dt: 0.1);
-                if (FiringPatterns.TryGetValue(rheoMultiplier, out FiringPattern pattern))
-                {
-                    if (stat.FiringPattern == pattern)
-                        fitnessMultiplier += 1;
-                    else
-                        fitnessMultiplier -= 0.5;
-                }
 
-                if (FiringRhythms.TryGetValue(rheoMultiplier, out FiringRhythm rhythm))
-                {
-                    if (stat.FiringRhythm == rhythm)
-                        fitnessMultiplier += 1;
-                    else
-                        fitnessMultiplier -= 0.5;
-                }
+            double fitnessMultiplier = 1;
+            double rheobase = 0;
+            if (TargetRheobaseFunction != null)
+            {
+                fitnessMultiplier *= TargetRheobaseFunction.CalculateFitness(core, out rheobase);
+            }
+            else if (FitnessFunctions.Any(ff => ff.RheobaseBased))
+                rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
+
+            List<double> currentValues = FitnessFunctions
+                .Select(ff => ff.CurrentValueOrRheobaseMultiplier * (ff.RheobaseBased ? rheobase : 1))
+                .Distinct()
+                .ToList();
+
+            //generate a dictionary of DynamicStats - to prevent multiple runs
+            Dictionary<double, DynamicsStats> stats = new();
+            foreach (double current in currentValues)
+            {
+                DynamicsStats stat = core.DynamicsTest(current, infinity: Const.RheobaseInfinity, dt: 0.1);
+                stats.Add(current, stat);
             }
 
-            if (TargetRheobaseMin <= d && TargetRheobaseMax >= d)
-                return 100 * fitnessMultiplier; //TODO a random number is used here
-            double distance = d > TargetRheobaseMax ? d - TargetRheobaseMax : TargetRheobaseMin - d;
-            return fitnessMultiplier / distance;
+            double weight = 1;
+            foreach (FiringFitnessFunction function in FitnessFunctions)
+            {
+                double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
+                DynamicsStats stat = stats[current];
+                weight += function.CalculateFitness(stat);
+            }
+            return fitnessMultiplier * weight;
         }
     }
     public class CoreSolver
@@ -110,13 +158,12 @@ namespace SiliFish.Services.Optimization
             int maxPopulationSize,
             string coreType,
             Dictionary<string, double> paramValues,
-            double minTargetRheobase, double maxTargetRheobase,
-            Dictionary<double, FiringPattern> firingPatterns = null,
-            Dictionary<double, FiringRhythm> firingRhythms = null,
+            TargetRheobaseFunction targetRheobaseFunction,
+            List<FiringFitnessFunction> fitnessFunctions,
             Dictionary<string, double> minValues = null,
             Dictionary<string, double> maxValues = null)
         {
-            IFitness fitness = new CoreFitness(this, coreType, minTargetRheobase, maxTargetRheobase, firingPatterns, firingRhythms);
+            IFitness fitness = new CoreFitness(this, coreType, targetRheobaseFunction, fitnessFunctions);
 
             ParamValues = paramValues;
             int nCount = paramValues.Count;
