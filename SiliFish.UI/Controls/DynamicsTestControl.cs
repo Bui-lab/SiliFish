@@ -1,4 +1,5 @@
-﻿using Extensions;
+﻿using Controls;
+using Extensions;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
@@ -12,6 +13,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
+        private List<FitnessFunctionControl> FitnessControls;
 
         public string CoreType
         {
@@ -37,8 +39,8 @@ namespace SiliFish.UI.Controls
         private Dictionary<string, double> parameters;
         private Dictionary<string, double> minValues;
         private Dictionary<string, double> maxValues;
-        Dictionary<double, FiringPattern> firingPatterns;
-        Dictionary<double, FiringRhythm> firingRhythms;
+        private TargetRheobaseFunction targetRheobaseFunction;
+        private List<FiringFitnessFunction> firingFitnessFunctions;
 
         private CoreSolver Solver;
         Dictionary<string, double> SolverBestValues;
@@ -130,7 +132,8 @@ namespace SiliFish.UI.Controls
             InitAsync();
             Wait();
             FillCoreTypes(coreType);
-            Parameters = parameters;
+            if (parameters != null)
+                Parameters = parameters;
             pBottomBottom.Visible = !testMode;
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
             cbGASelection.Items.AddRange(GeneticAlgorithmExtension.GetSelectionBases().ToArray());
@@ -142,8 +145,8 @@ namespace SiliFish.UI.Controls
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             cbGATermination.SelectedIndex = 0;
             splitRight.Panel1Collapsed = true;
-            colFitnessFiringRhythm.DataSource = Enum.GetValues(typeof(FiringRhythm));
-            colFitnessFiringMode.DataSource = Enum.GetValues(typeof(FiringPattern));
+
+            FitnessControls = new();
         }
 
         private void FirstRun()
@@ -542,39 +545,14 @@ namespace SiliFish.UI.Controls
 
         private void ReadFitnessValues()
         {
-            firingRhythms = new();
-            firingPatterns = new();
-            foreach (DataGridViewRow row in dgFitnessParams.Rows)
-            {
-                if (double.TryParse(row.Cells[colFitnessRheobaseMultiplier.Index].Value?.ToString(), out double mult))
-                {
-                    if (Enum.TryParse(row.Cells[colFitnessFiringMode.Index].Value?.ToString(), out FiringPattern pattern))
-                        firingPatterns.Add(mult, pattern);
-                    if (Enum.TryParse(row.Cells[colFitnessFiringRhythm.Index].Value?.ToString(), out FiringRhythm rhythm))
-                        firingRhythms.Add(mult, rhythm);
-                }
-            }
+            List<FitnessFunction> fitnessFunctions = FitnessControls.Select(fc => fc.GetFitnessFunction()).ToList();
+            targetRheobaseFunction = fitnessFunctions.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
+            fitnessFunctions.RemoveAll(fc => fc is TargetRheobaseFunction);
+            firingFitnessFunctions = fitnessFunctions.Select(fc => fc as FiringFitnessFunction).ToList();
         }
         private void CreateSolver()
         {
             Solver = null;
-            if (string.IsNullOrEmpty(eMinTargetRheobase.Text) && !string.IsNullOrEmpty(eMaxTargetRheobase.Text))
-                eMinTargetRheobase.Text = eMaxTargetRheobase.Text;
-            else if (!string.IsNullOrEmpty(eMinTargetRheobase.Text) && string.IsNullOrEmpty(eMaxTargetRheobase.Text))
-                eMaxTargetRheobase.Text = eMinTargetRheobase.Text;
-
-            if (!double.TryParse(eMinTargetRheobase.Text, out double targetRheobaseMin))
-            {
-                eMinTargetRheobase.Focus();
-                MessageBox.Show("Please enter a valid target rheobase value.");
-                return;
-            }
-            if (!double.TryParse(eMaxTargetRheobase.Text, out double targetRheobaseMax))
-            {
-                eMaxTargetRheobase.Focus();
-                MessageBox.Show("Please enter a valid target rheobase value.");
-                return;
-            }
             ReadParameters();
             ReadMinMaxParamValues();
             ReadFitnessValues();
@@ -589,10 +567,9 @@ namespace SiliFish.UI.Controls
             Solver.SetOptimizationSettings(minPopulation, maxPopulation,
                 CoreType,
                 parameters,
-                targetRheobaseMin, targetRheobaseMax,
-                firingPatterns, firingRhythms,
+                targetRheobaseFunction, 
+                firingFitnessFunctions,
                 minValues, maxValues);
-
         }
         private void RunOptimize()
         {
@@ -657,37 +634,14 @@ namespace SiliFish.UI.Controls
             if (Solver == null) return;
             eOptimizationOutput.Text += Solver.GetProgress() + "\r\n";
         }
-        private void dgFitnessParams_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-
-        }
-
-        //https://stackoverflow.com/questions/19406042/databinding-datagridviewcomboboxcolumn-with-enum
-        private void dgFitnessParams_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                if (e.ColumnIndex == colFitnessFiringMode.Index)
-                    dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), dgFitnessParams[colFitnessFiringMode.Index, e.RowIndex].Value.ToString());
-                else if (e.ColumnIndex == colFitnessFiringRhythm.Index)
-                    dgFitnessParams[colFitnessFiringRhythm.Index, e.RowIndex].Value = (FiringRhythm)Enum.Parse(typeof(FiringRhythm), dgFitnessParams[colFitnessFiringRhythm.Index, e.RowIndex].Value.ToString());
-            }
-            catch { }
-        }
-
-        private void dgFitnessParams_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
-        {
-            try
-            {
-                if (e.Row.DataBoundItem != null)
-                {
-                    e.Row.Cells[colFitnessFiringRhythm.Index].Value = (FiringRhythm)Enum.Parse(typeof(FiringRhythm), e.Row.Cells[colFitnessFiringRhythm.Index].Value.ToString());
-                    e.Row.Cells[colFitnessFiringMode.Index].Value = (FiringPattern)Enum.Parse(typeof(FiringPattern), e.Row.Cells[colFitnessFiringMode.Index].Value.ToString());
-                }
-            }
-            catch { }
-        }
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FitnessFunctionControl fitness = new();
+            fitness.BorderStyle = BorderStyle.FixedSingle;
+            pFitnessParams.Controls.Add(fitness);
+            FitnessControls.Add(fitness);
+        }
     }
 }

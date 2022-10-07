@@ -7,6 +7,8 @@ namespace SiliFish.Definitions
     public enum FiringDelay { NoDelay, Delayed }
     public enum FiringRhythm { Phasic, Tonic, Chattering }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }
+
+    public enum FitnessFunctionOptions { TargetRheobase, FiringDelay, FiringRhythm, FiringPattern}
     public enum BodyLocation { SpinalCord, Body }
 
     public enum CountingMode { PerSomite, Total }
