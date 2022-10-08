@@ -45,6 +45,7 @@
             this.lCurrentApplied = new System.Windows.Forms.Label();
             this.lCurrentMode = new System.Windows.Forms.Label();
             this.ddCurrentSelection = new System.Windows.Forms.ComboBox();
+            this.linkRemove = new System.Windows.Forms.LinkLabel();
             this.pFitnessFunction.SuspendLayout();
             this.pTargetRheobase.SuspendLayout();
             this.pFiringRelated.SuspendLayout();
@@ -229,15 +230,29 @@
             this.ddCurrentSelection.TabIndex = 4;
             this.ddCurrentSelection.Tag = "0";
             // 
+            // linkRemove
+            // 
+            this.linkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkRemove.AutoSize = true;
+            this.linkRemove.Location = new System.Drawing.Point(189, 198);
+            this.linkRemove.Name = "linkRemove";
+            this.linkRemove.Size = new System.Drawing.Size(50, 15);
+            this.linkRemove.TabIndex = 7;
+            this.linkRemove.TabStop = true;
+            this.linkRemove.Text = "Remove";
+            this.linkRemove.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkRemove_LinkClicked);
+            // 
             // FitnessFunctionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.linkRemove);
             this.Controls.Add(this.pFiringRelated);
             this.Controls.Add(this.pTargetRheobase);
             this.Controls.Add(this.pFitnessFunction);
             this.Name = "FitnessFunctionControl";
-            this.Size = new System.Drawing.Size(245, 194);
+            this.Size = new System.Drawing.Size(245, 223);
             this.pFitnessFunction.ResumeLayout(false);
             this.pFitnessFunction.PerformLayout();
             this.pTargetRheobase.ResumeLayout(false);
@@ -245,6 +260,7 @@
             this.pFiringRelated.ResumeLayout(false);
             this.pFiringRelated.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -267,5 +283,6 @@
         private Label lFiringValues;
         private TextBox eFitnessWeight;
         private Label lFitnessWeight;
+        private LinkLabel linkRemove;
     }
 }

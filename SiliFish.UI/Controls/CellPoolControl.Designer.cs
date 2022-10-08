@@ -127,7 +127,7 @@ namespace SiliFish.UI.Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eGroupName.Location = new System.Drawing.Point(112, 36);
             this.eGroupName.Name = "eGroupName";
-            this.eGroupName.Size = new System.Drawing.Size(146, 23);
+            this.eGroupName.Size = new System.Drawing.Size(144, 23);
             this.eGroupName.TabIndex = 0;
             this.eGroupName.TextChanged += new System.EventHandler(this.eGroupName_TextChanged);
             // 
@@ -265,7 +265,7 @@ namespace SiliFish.UI.Controls
             this.pMain.MaximumSize = new System.Drawing.Size(400, 0);
             this.pMain.MinimumSize = new System.Drawing.Size(244, 0);
             this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(261, 723);
+            this.pMain.Size = new System.Drawing.Size(259, 721);
             this.pMain.TabIndex = 0;
             // 
             // ddCoreType
@@ -293,7 +293,7 @@ namespace SiliFish.UI.Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eDescription.Location = new System.Drawing.Point(112, 66);
             this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(146, 67);
+            this.eDescription.Size = new System.Drawing.Size(144, 67);
             this.eDescription.TabIndex = 1;
             this.eDescription.Text = "";
             // 
@@ -317,7 +317,7 @@ namespace SiliFish.UI.Controls
             this.listAttachments.ItemHeight = 15;
             this.listAttachments.Location = new System.Drawing.Point(5, 323);
             this.listAttachments.Name = "listAttachments";
-            this.listAttachments.Size = new System.Drawing.Size(252, 394);
+            this.listAttachments.Size = new System.Drawing.Size(250, 379);
             this.listAttachments.TabIndex = 30;
             // 
             // cmAttachments
@@ -405,7 +405,7 @@ namespace SiliFish.UI.Controls
             this.pMainTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMainTop.Location = new System.Drawing.Point(0, 0);
             this.pMainTop.Name = "pMainTop";
-            this.pMainTop.Size = new System.Drawing.Size(261, 30);
+            this.pMainTop.Size = new System.Drawing.Size(259, 30);
             this.pMainTop.TabIndex = 10;
             // 
             // linkSavePool
@@ -486,7 +486,7 @@ namespace SiliFish.UI.Controls
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 689);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 687);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // distributionX
@@ -597,7 +597,7 @@ namespace SiliFish.UI.Controls
             this.tabCellPool.Location = new System.Drawing.Point(0, 0);
             this.tabCellPool.Name = "tabCellPool";
             this.tabCellPool.SelectedIndex = 0;
-            this.tabCellPool.Size = new System.Drawing.Size(335, 723);
+            this.tabCellPool.Size = new System.Drawing.Size(333, 721);
             this.tabCellPool.TabIndex = 15;
             // 
             // tSpatialDist
@@ -606,7 +606,7 @@ namespace SiliFish.UI.Controls
             this.tSpatialDist.Location = new System.Drawing.Point(4, 24);
             this.tSpatialDist.Name = "tSpatialDist";
             this.tSpatialDist.Padding = new System.Windows.Forms.Padding(3);
-            this.tSpatialDist.Size = new System.Drawing.Size(327, 695);
+            this.tSpatialDist.Size = new System.Drawing.Size(325, 693);
             this.tSpatialDist.TabIndex = 0;
             this.tSpatialDist.Text = "Spatial Distribution";
             this.tSpatialDist.UseVisualStyleBackColor = true;
@@ -714,6 +714,7 @@ namespace SiliFish.UI.Controls
             // 
             // splitMain
             // 
+            this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitMain.Location = new System.Drawing.Point(0, 0);
             this.splitMain.Name = "splitMain";

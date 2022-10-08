@@ -130,7 +130,6 @@ namespace SiliFish.Services.Optimization
     {
         Dictionary<string, double> ParamValues;
 
-        internal List<string> OutputText = new();
         internal List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
         private readonly SelectionBase Selection;
         private readonly CrossoverBase Crossover;
@@ -139,8 +138,23 @@ namespace SiliFish.Services.Optimization
         private GeneticAlgorithm Algorithm;
         private double latestFitness = 0.0;
 
-        public string GetOutput() => string.Join("\r\n", OutputText);
-        public string GetProgress() => $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
+        public string ProgressText
+        {
+            get
+            {
+                return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
+            }
+        }
+        public int Progress
+        {
+            get
+             {
+                if (Algorithm.Termination is GenerationNumberTermination gnt)
+                    return (int)(100 * Algorithm.GenerationsNumber / gnt.ExpectedGenerationNumber);
+
+                return 0;
+            }
+        }
 
         public CoreSolver(Type selectionType,
             Type crossOverType,
@@ -212,7 +226,6 @@ namespace SiliFish.Services.Optimization
                     string valueStr = "";
                     foreach (string key in SortedKeys)
                         valueStr += $"{key}: {phenotype[iter++]}; ";
-                    OutputText.Add($"Generation {Algorithm.GenerationsNumber}: {valueStr} Fitness = {bestFitness}");
                 }
             };
             Algorithm.Start();
