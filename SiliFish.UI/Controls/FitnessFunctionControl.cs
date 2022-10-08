@@ -1,17 +1,25 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Services.Optimization;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace Controls
 {
     public partial class FitnessFunctionControl : UserControl
     {
+        private event EventHandler removeClicked;
+        public event EventHandler RemoveClicked
+        {
+            add
+            {
+                removeClicked += value;
+                linkRemove.Click += value;
+            }
+            remove
+            {
+                removeClicked -= value;
+                linkRemove.Click -= value;
+            }
+        }
+
         public FitnessFunctionControl()
         {
             InitializeComponent();
@@ -25,13 +33,13 @@ namespace Controls
             {
                 pTargetRheobase.Visible = true;
                 pFiringRelated.Visible = false;
-                this.Height = pFitnessFunction.Height + pTargetRheobase.Height;
+                this.Height = pFitnessFunction.Height + pTargetRheobase.Height + 35;
             }
             else
             {
                 pTargetRheobase.Visible = false;
                 pFiringRelated.Visible = true;
-                this.Height = pFitnessFunction.Height + pFiringRelated.Height;
+                this.Height = pFitnessFunction.Height + pFiringRelated.Height + 35;
                 lFiringValues.Text = function;
                 if (function == FitnessFunctionOptions.FiringDelay.ToString())
                     ddFiringValues.DataSource = Enum.GetNames(typeof(FiringDelay));
@@ -82,6 +90,11 @@ namespace Controls
                 };
 
             return null;
+        }
+
+        private void linkRemove_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            removeClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

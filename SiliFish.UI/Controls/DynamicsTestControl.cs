@@ -28,6 +28,7 @@ namespace SiliFish.UI.Controls
         DynamicsStats dynamics;
         private double[] TimeArray;
 
+        private ProgressForm optimizationProgress;
         internal class UpdatedParamsEventArgs : EventArgs
         {
             internal string CoreType;
@@ -50,7 +51,7 @@ namespace SiliFish.UI.Controls
             set
             {
                 grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !value;
-                splitRight.Panel1Collapsed = !value;
+                splitGAAndPlots.Panel1Collapsed = !value;
                 linkSwitchToOptimization.Text = value ? "Quit Optimization Mode" : "Optimization Mode";
             }
         }
@@ -62,13 +63,13 @@ namespace SiliFish.UI.Controls
                 parameters = value;
                 if (parameters == null)
                 {
-                    pParams.Controls.Clear();
+                    pfParams.Controls.Clear();
                     ddParameter.Items.Clear();
                 }
                 else
                 {
-                    pParams.CreateNumericUpDownControlsForDictionary(parameters);
-                    foreach (Control control in pParams.Controls)
+                    pfParams.CreateNumericUpDownControlsForDictionary(parameters);
+                    foreach (Control control in pfParams.Controls)
                     {
                         if (control is TextBox textBox)
                             textBox.TextChanged += TextBox_TextChanged;
@@ -144,7 +145,7 @@ namespace SiliFish.UI.Controls
             cbGAMutation.SelectedIndex = 0;
             cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             cbGATermination.SelectedIndex = 0;
-            splitRight.Panel1Collapsed = true;
+            splitGAAndPlots.Panel1Collapsed = true;
 
             FitnessControls = new();
         }
@@ -186,7 +187,7 @@ namespace SiliFish.UI.Controls
 
         private void ReadParameters()
         {
-            parameters = pParams.CreateDoubleDictionaryFromControls();
+            parameters = pfParams.CreateDoubleDictionaryFromControls();
         }
 
         #region Plotting
@@ -406,8 +407,6 @@ namespace SiliFish.UI.Controls
                         }
                         CreatePlots(dynamicsList, columnNames, I);
                     }
-                    else
-                        MessageBox.Show("Invalid rheobase. Check the upper limit of rheobase and try again.");
                 }
             }
         }
@@ -423,9 +422,17 @@ namespace SiliFish.UI.Controls
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d > 0)
+            {
                 eRheobase.Text = d.ToString(Const.DecimalPointFormat);
+                lRheobaseWarning.Visible = false;
+                rbRheobaseBasedStimulus.ForeColor = Color.Black;
+            }
             else
+            {
                 eRheobase.Text = "N/A";
+                lRheobaseWarning.Visible = true;
+                rbRheobaseBasedStimulus.ForeColor = Color.Red;
+            }
         }
         private void btnRheobase_Click(object sender, EventArgs e)
         {
@@ -581,27 +588,35 @@ namespace SiliFish.UI.Controls
         private void CompleteOptimization()
         {
             timerOptimization.Enabled = false;
-            linkOptimize.Visible = true;
-            linkStopOptimization.Visible = false;
+            linkOptimize.Enabled = true;
             updateParamNames = false;
             Parameters = SolverBestValues;
             updateParamNames = true;
+            if (optimizationProgress != null && optimizationProgress.Visible)
+                optimizationProgress.Close();
+            optimizationProgress = null;
         }
         private void linkOptimize_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             CreateSolver();
             timerOptimization.Enabled = true;
-            linkOptimize.Visible = false;
-            linkStopOptimization.Visible = true;
+            linkOptimize.Enabled = false;
             eOptimizationOutput.Text = "";
+            optimizationProgress = new()
+            {
+                Text = "Optimization",
+                Progress = 0
+            };
+            optimizationProgress.StopRunClicked += ProgressForm_StopRunClicked;
+            optimizationProgress.Show();
             Task.Run(RunOptimize);
         }
-        private void linkStopOptimization_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+
+        private void ProgressForm_StopRunClicked(object sender, EventArgs e)
         {
             timerOptimization.Enabled = false;
             Solver?.CancelOptimization();
-            linkOptimize.Visible = true;
-            linkStopOptimization.Visible = false;
+            linkOptimize.Enabled = true;
         }
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -632,16 +647,26 @@ namespace SiliFish.UI.Controls
         private void timerOptimization_Tick(object sender, EventArgs e)
         {
             if (Solver == null) return;
-            eOptimizationOutput.Text += Solver.GetProgress() + "\r\n";
+            eOptimizationOutput.AppendText(Solver.ProgressText + "\r\n");
+            optimizationProgress.Progress = Solver.Progress;
         }
-        #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             FitnessFunctionControl fitness = new();
             fitness.BorderStyle = BorderStyle.FixedSingle;
-            pFitnessParams.Controls.Add(fitness);
+            pfGAParams.Controls.Add(fitness);
+            pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
+            fitness.RemoveClicked += Fitness_RemoveClicked;
             FitnessControls.Add(fitness);
         }
+
+        private void Fitness_RemoveClicked(object sender, EventArgs e)
+        {
+            pfGAParams.Controls.Remove(sender as FitnessFunctionControl);
+            pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
+            FitnessControls.Remove(sender as FitnessFunctionControl);
+        }
+        #endregion
     }
 }

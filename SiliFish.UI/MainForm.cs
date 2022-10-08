@@ -585,7 +585,7 @@ namespace SiliFish.UI
             //throw new NotImplementedException();
         }
 
-        private string CheckJSONVersion(string json)
+        private static string CheckJSONVersion(string json)
         {
             //Compare to Version 0.1
             if (json.Contains("\"TimeLine\""))

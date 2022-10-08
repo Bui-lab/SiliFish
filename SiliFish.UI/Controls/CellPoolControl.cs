@@ -226,8 +226,7 @@ namespace SiliFish.UI.Controls
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)
         {
-            UpdatedParamsEventArgs args = e as UpdatedParamsEventArgs;
-            if (args==null || args.ParamsAsObject == null)
+            if (e is not UpdatedParamsEventArgs args || args.ParamsAsObject == null)
                 return;
             poolTemplate.Parameters = args.ParamsAsObject;
             poolTemplate.CoreType = args.CoreType;

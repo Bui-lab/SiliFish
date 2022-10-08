@@ -42,21 +42,22 @@
             this.lStepEndTime = new System.Windows.Forms.Label();
             this.lPlotEndTime = new System.Windows.Forms.Label();
             this.grRheobase = new System.Windows.Forms.GroupBox();
+            this.lRheobaseWarning = new System.Windows.Forms.Label();
             this.eRheobaseDuration = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.eRheobase = new System.Windows.Forms.TextBox();
             this.lRheobase = new System.Windows.Forms.Label();
             this.btnSensitivityAnalysis = new System.Windows.Forms.Button();
             this.grTest = new System.Windows.Forms.GroupBox();
-            this.rbManualEntryStimulus = new System.Windows.Forms.RadioButton();
             this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
+            this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
+            this.rbManualEntryStimulus = new System.Windows.Forms.RadioButton();
             this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.pParams = new System.Windows.Forms.FlowLayoutPanel();
-            this.pCoreType = new System.Windows.Forms.Panel();
-            this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
-            this.ddCoreType = new System.Windows.Forms.ComboBox();
-            this.lCoreType = new System.Windows.Forms.Label();
+            this.pfParams = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabAnalysis = new System.Windows.Forms.TabControl();
+            this.tTest = new System.Windows.Forms.TabPage();
+            this.tSensitivityAnalysis = new System.Windows.Forms.TabPage();
             this.grSensitivity = new System.Windows.Forms.GroupBox();
             this.cbLogScale = new System.Windows.Forms.CheckBox();
             this.eMaxMultiplier = new System.Windows.Forms.TextBox();
@@ -65,39 +66,43 @@
             this.lMultiplierRange = new System.Windows.Forms.Label();
             this.ddParameter = new System.Windows.Forms.ComboBox();
             this.lParameter = new System.Windows.Forms.Label();
+            this.pCoreType = new System.Windows.Forms.Panel();
+            this.ddCoreType = new System.Windows.Forms.ComboBox();
+            this.lCoreType = new System.Windows.Forms.Label();
             this.pLoadSaveParams = new System.Windows.Forms.Panel();
             this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
             this.linkSaveCoreUnit = new System.Windows.Forms.LinkLabel();
             this.pBottomBottom = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
-            this.splitRight = new System.Windows.Forms.SplitContainer();
+            this.splitGAAndPlots = new System.Windows.Forms.SplitContainer();
             this.pOptimize = new System.Windows.Forms.Panel();
-            this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
-            this.lGASelection = new System.Windows.Forms.Label();
+            this.splitGA = new System.Windows.Forms.SplitContainer();
             this.tabOptimization = new System.Windows.Forms.TabControl();
-            this.tMinMax = new System.Windows.Forms.TabPage();
+            this.tGAParameters = new System.Windows.Forms.TabPage();
+            this.splitGAParams = new System.Windows.Forms.SplitContainer();
             this.dgMinMaxValues = new System.Windows.Forms.DataGridView();
             this.colParameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMinValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colMaxValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pMinMax = new System.Windows.Forms.Panel();
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
-            this.tFitness = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.pFitnessParams = new System.Windows.Forms.FlowLayoutPanel();
-            this.linkStopOptimization = new System.Windows.Forms.LinkLabel();
+            this.pfGAParams = new System.Windows.Forms.FlowLayoutPanel();
+            this.linkAddFitnessFunction = new System.Windows.Forms.LinkLabel();
+            this.tGAOutput = new System.Windows.Forms.TabPage();
+            this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
+            this.lGASelection = new System.Windows.Forms.Label();
+            this.cbGACrossOver = new System.Windows.Forms.ComboBox();
+            this.eMaxChromosome = new System.Windows.Forms.TextBox();
             this.lGAMutation = new System.Windows.Forms.Label();
+            this.cbGAMutation = new System.Windows.Forms.ComboBox();
             this.lGAMinMaxChromosome = new System.Windows.Forms.Label();
+            this.cbGATermination = new System.Windows.Forms.ComboBox();
             this.cbGASelection = new System.Windows.Forms.ComboBox();
+            this.linkOptimize = new System.Windows.Forms.LinkLabel();
             this.eMinChromosome = new System.Windows.Forms.TextBox();
+            this.lGACrossOver = new System.Windows.Forms.Label();
             this.lMinMaxSeperator = new System.Windows.Forms.Label();
             this.lGATermination = new System.Windows.Forms.Label();
-            this.lGACrossOver = new System.Windows.Forms.Label();
-            this.linkOptimize = new System.Windows.Forms.LinkLabel();
-            this.cbGATermination = new System.Windows.Forms.ComboBox();
-            this.cbGAMutation = new System.Windows.Forms.ComboBox();
-            this.eMaxChromosome = new System.Windows.Forms.TextBox();
-            this.cbGACrossOver = new System.Windows.Forms.ComboBox();
             this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlots = new System.Windows.Forms.Panel();
             this.grPlotSelection = new System.Windows.Forms.GroupBox();
@@ -113,6 +118,7 @@
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
+            this.lFitnessFunctions = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
@@ -126,20 +132,32 @@
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.pCoreType.SuspendLayout();
+            this.tabAnalysis.SuspendLayout();
+            this.tTest.SuspendLayout();
+            this.tSensitivityAnalysis.SuspendLayout();
             this.grSensitivity.SuspendLayout();
+            this.pCoreType.SuspendLayout();
             this.pLoadSaveParams.SuspendLayout();
             this.pBottomBottom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
-            this.splitRight.Panel1.SuspendLayout();
-            this.splitRight.Panel2.SuspendLayout();
-            this.splitRight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitGAAndPlots)).BeginInit();
+            this.splitGAAndPlots.Panel1.SuspendLayout();
+            this.splitGAAndPlots.Panel2.SuspendLayout();
+            this.splitGAAndPlots.SuspendLayout();
             this.pOptimize.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitGA)).BeginInit();
+            this.splitGA.Panel1.SuspendLayout();
+            this.splitGA.Panel2.SuspendLayout();
+            this.splitGA.SuspendLayout();
             this.tabOptimization.SuspendLayout();
-            this.tMinMax.SuspendLayout();
+            this.tGAParameters.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitGAParams)).BeginInit();
+            this.splitGAParams.Panel1.SuspendLayout();
+            this.splitGAParams.Panel2.SuspendLayout();
+            this.splitGAParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).BeginInit();
             this.pMinMax.SuspendLayout();
-            this.tFitness.SuspendLayout();
+            this.pfGAParams.SuspendLayout();
+            this.tGAOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
@@ -243,7 +261,7 @@
             // 
             // btnDynamicsRun
             // 
-            this.btnDynamicsRun.Location = new System.Drawing.Point(99, 270);
+            this.btnDynamicsRun.Location = new System.Drawing.Point(4, 271);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(67, 23);
             this.btnDynamicsRun.TabIndex = 3;
@@ -319,6 +337,7 @@
             // 
             // grRheobase
             // 
+            this.grRheobase.Controls.Add(this.lRheobaseWarning);
             this.grRheobase.Controls.Add(this.eRheobaseDuration);
             this.grRheobase.Controls.Add(this.label1);
             this.grRheobase.Controls.Add(this.eRheobase);
@@ -326,13 +345,24 @@
             this.grRheobase.Controls.Add(this.btnRheobase);
             this.grRheobase.Controls.Add(this.eRheobaseLimit);
             this.grRheobase.Controls.Add(this.lRheobaseLimit);
-            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grRheobase.Location = new System.Drawing.Point(3, 103);
+            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grRheobase.Location = new System.Drawing.Point(3, 3);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(233, 114);
+            this.grRheobase.Size = new System.Drawing.Size(285, 114);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
+            // 
+            // lRheobaseWarning
+            // 
+            this.lRheobaseWarning.AutoSize = true;
+            this.lRheobaseWarning.ForeColor = System.Drawing.Color.Red;
+            this.lRheobaseWarning.Location = new System.Drawing.Point(134, 77);
+            this.lRheobaseWarning.Name = "lRheobaseWarning";
+            this.lRheobaseWarning.Size = new System.Drawing.Size(140, 15);
+            this.lRheobaseWarning.TabIndex = 20;
+            this.lRheobaseWarning.Text = "No rheobase within limit.";
+            this.lRheobaseWarning.Visible = false;
             // 
             // eRheobaseDuration
             // 
@@ -395,8 +425,9 @@
             // 
             // grTest
             // 
-            this.grTest.Controls.Add(this.rbManualEntryStimulus);
             this.grTest.Controls.Add(this.stimulusControl1);
+            this.grTest.Controls.Add(this.cbAutoDrawPlots);
+            this.grTest.Controls.Add(this.rbManualEntryStimulus);
             this.grTest.Controls.Add(this.rbRheobaseBasedStimulus);
             this.grTest.Controls.Add(this.edt);
             this.grTest.Controls.Add(this.lPlotEndTime);
@@ -407,14 +438,32 @@
             this.grTest.Controls.Add(this.btnDynamicsRun);
             this.grTest.Controls.Add(this.eStepEndTime);
             this.grTest.Controls.Add(this.ldt);
-            this.grTest.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grTest.Location = new System.Drawing.Point(3, 326);
+            this.grTest.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grTest.Location = new System.Drawing.Point(3, 117);
             this.grTest.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
             this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(233, 300);
+            this.grTest.Size = new System.Drawing.Size(285, 300);
             this.grTest.TabIndex = 17;
             this.grTest.TabStop = false;
             this.grTest.Text = "Test";
+            // 
+            // stimulusControl1
+            // 
+            this.stimulusControl1.Location = new System.Drawing.Point(9, 148);
+            this.stimulusControl1.Name = "stimulusControl1";
+            this.stimulusControl1.Size = new System.Drawing.Size(176, 93);
+            this.stimulusControl1.TabIndex = 25;
+            this.stimulusControl1.StimulusChanged += new System.EventHandler(this.stimulusControl1_StimulusChanged);
+            // 
+            // cbAutoDrawPlots
+            // 
+            this.cbAutoDrawPlots.AutoSize = true;
+            this.cbAutoDrawPlots.Location = new System.Drawing.Point(83, 275);
+            this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
+            this.cbAutoDrawPlots.Size = new System.Drawing.Size(111, 19);
+            this.cbAutoDrawPlots.TabIndex = 24;
+            this.cbAutoDrawPlots.Text = "Auto Draw Plots";
+            this.cbAutoDrawPlots.UseVisualStyleBackColor = true;
             // 
             // rbManualEntryStimulus
             // 
@@ -429,14 +478,6 @@
             this.rbManualEntryStimulus.UseVisualStyleBackColor = true;
             this.rbManualEntryStimulus.CheckedChanged += new System.EventHandler(this.rbManualEntryStimulus_CheckedChanged);
             // 
-            // stimulusControl1
-            // 
-            this.stimulusControl1.Location = new System.Drawing.Point(4, 148);
-            this.stimulusControl1.Name = "stimulusControl1";
-            this.stimulusControl1.Size = new System.Drawing.Size(212, 93);
-            this.stimulusControl1.TabIndex = 20;
-            this.stimulusControl1.StimulusChanged += new System.EventHandler(this.stimulusControl1_StimulusChanged);
-            // 
             // rbRheobaseBasedStimulus
             // 
             this.rbRheobaseBasedStimulus.AutoSize = true;
@@ -449,80 +490,71 @@
             // 
             // splitMain
             // 
+            this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitMain.Location = new System.Drawing.Point(0, 0);
             this.splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.pParams);
-            this.splitMain.Panel1.Controls.Add(this.grRheobase);
+            this.splitMain.Panel1.Controls.Add(this.pfParams);
+            this.splitMain.Panel1.Controls.Add(this.tabAnalysis);
             this.splitMain.Panel1.Controls.Add(this.pCoreType);
-            this.splitMain.Panel1.Controls.Add(this.grSensitivity);
-            this.splitMain.Panel1.Controls.Add(this.grTest);
             this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
             this.splitMain.Panel1.Controls.Add(this.pBottomBottom);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.splitRight);
+            this.splitMain.Panel2.Controls.Add(this.splitGAAndPlots);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
-            this.splitMain.Size = new System.Drawing.Size(974, 683);
-            this.splitMain.SplitterDistance = 239;
+            this.splitMain.Size = new System.Drawing.Size(1252, 683);
+            this.splitMain.SplitterDistance = 307;
             this.splitMain.TabIndex = 17;
             // 
-            // pParams
+            // pfParams
             // 
-            this.pParams.AutoScroll = true;
-            this.pParams.AutoSize = true;
-            this.pParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pParams.Location = new System.Drawing.Point(3, 61);
-            this.pParams.Name = "pParams";
-            this.pParams.Size = new System.Drawing.Size(233, 42);
-            this.pParams.TabIndex = 23;
+            this.pfParams.AutoScroll = true;
+            this.pfParams.AutoSize = true;
+            this.pfParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pfParams.Location = new System.Drawing.Point(3, 33);
+            this.pfParams.Name = "pfParams";
+            this.pfParams.Size = new System.Drawing.Size(299, 146);
+            this.pfParams.TabIndex = 23;
             // 
-            // pCoreType
+            // tabAnalysis
             // 
-            this.pCoreType.Controls.Add(this.cbAutoDrawPlots);
-            this.pCoreType.Controls.Add(this.ddCoreType);
-            this.pCoreType.Controls.Add(this.lCoreType);
-            this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pCoreType.Location = new System.Drawing.Point(3, 3);
-            this.pCoreType.Name = "pCoreType";
-            this.pCoreType.Size = new System.Drawing.Size(233, 58);
-            this.pCoreType.TabIndex = 21;
+            this.tabAnalysis.Controls.Add(this.tTest);
+            this.tabAnalysis.Controls.Add(this.tSensitivityAnalysis);
+            this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tabAnalysis.Location = new System.Drawing.Point(3, 179);
+            this.tabAnalysis.Name = "tabAnalysis";
+            this.tabAnalysis.SelectedIndex = 0;
+            this.tabAnalysis.Size = new System.Drawing.Size(299, 445);
+            this.tabAnalysis.TabIndex = 39;
             // 
-            // cbAutoDrawPlots
+            // tTest
             // 
-            this.cbAutoDrawPlots.AutoSize = true;
-            this.cbAutoDrawPlots.Location = new System.Drawing.Point(9, 33);
-            this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
-            this.cbAutoDrawPlots.Size = new System.Drawing.Size(111, 19);
-            this.cbAutoDrawPlots.TabIndex = 24;
-            this.cbAutoDrawPlots.Text = "Auto Draw Plots";
-            this.cbAutoDrawPlots.UseVisualStyleBackColor = true;
+            this.tTest.Controls.Add(this.grTest);
+            this.tTest.Controls.Add(this.grRheobase);
+            this.tTest.Location = new System.Drawing.Point(4, 24);
+            this.tTest.Name = "tTest";
+            this.tTest.Padding = new System.Windows.Forms.Padding(3);
+            this.tTest.Size = new System.Drawing.Size(291, 417);
+            this.tTest.TabIndex = 0;
+            this.tTest.Text = "Test";
+            this.tTest.UseVisualStyleBackColor = true;
             // 
-            // ddCoreType
+            // tSensitivityAnalysis
             // 
-            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(70, 4);
-            this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(160, 23);
-            this.ddCoreType.TabIndex = 23;
-            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
-            // 
-            // lCoreType
-            // 
-            this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(6, 8);
-            this.lCoreType.Name = "lCoreType";
-            this.lCoreType.Size = new System.Drawing.Size(59, 15);
-            this.lCoreType.TabIndex = 22;
-            this.lCoreType.Text = "Core Type";
+            this.tSensitivityAnalysis.Controls.Add(this.grSensitivity);
+            this.tSensitivityAnalysis.Location = new System.Drawing.Point(4, 24);
+            this.tSensitivityAnalysis.Name = "tSensitivityAnalysis";
+            this.tSensitivityAnalysis.Padding = new System.Windows.Forms.Padding(3);
+            this.tSensitivityAnalysis.Size = new System.Drawing.Size(291, 417);
+            this.tSensitivityAnalysis.TabIndex = 1;
+            this.tSensitivityAnalysis.Text = "Sensitivity Analysis";
+            this.tSensitivityAnalysis.UseVisualStyleBackColor = true;
             // 
             // grSensitivity
             // 
@@ -534,10 +566,9 @@
             this.grSensitivity.Controls.Add(this.ddParameter);
             this.grSensitivity.Controls.Add(this.lParameter);
             this.grSensitivity.Controls.Add(this.btnSensitivityAnalysis);
-            this.grSensitivity.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.grSensitivity.Location = new System.Drawing.Point(3, 217);
+            this.grSensitivity.Location = new System.Drawing.Point(6, 6);
             this.grSensitivity.Name = "grSensitivity";
-            this.grSensitivity.Size = new System.Drawing.Size(233, 109);
+            this.grSensitivity.Size = new System.Drawing.Size(301, 109);
             this.grSensitivity.TabIndex = 18;
             this.grSensitivity.TabStop = false;
             this.grSensitivity.Text = "Sensitivity Analysis";
@@ -603,14 +634,45 @@
             this.lParameter.TabIndex = 21;
             this.lParameter.Text = "Parameter";
             // 
+            // pCoreType
+            // 
+            this.pCoreType.Controls.Add(this.ddCoreType);
+            this.pCoreType.Controls.Add(this.lCoreType);
+            this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pCoreType.Location = new System.Drawing.Point(3, 3);
+            this.pCoreType.Name = "pCoreType";
+            this.pCoreType.Size = new System.Drawing.Size(299, 30);
+            this.pCoreType.TabIndex = 21;
+            // 
+            // ddCoreType
+            // 
+            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddCoreType.FormattingEnabled = true;
+            this.ddCoreType.Location = new System.Drawing.Point(70, 4);
+            this.ddCoreType.Name = "ddCoreType";
+            this.ddCoreType.Size = new System.Drawing.Size(226, 23);
+            this.ddCoreType.TabIndex = 23;
+            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
+            // 
+            // lCoreType
+            // 
+            this.lCoreType.AutoSize = true;
+            this.lCoreType.Location = new System.Drawing.Point(6, 8);
+            this.lCoreType.Name = "lCoreType";
+            this.lCoreType.Size = new System.Drawing.Size(59, 15);
+            this.lCoreType.TabIndex = 22;
+            this.lCoreType.Text = "Core Type";
+            // 
             // pLoadSaveParams
             // 
             this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
             this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 626);
+            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 624);
             this.pLoadSaveParams.Name = "pLoadSaveParams";
-            this.pLoadSaveParams.Size = new System.Drawing.Size(233, 31);
+            this.pLoadSaveParams.Size = new System.Drawing.Size(299, 31);
             this.pLoadSaveParams.TabIndex = 20;
             // 
             // linkLoadCoreUnit
@@ -639,9 +701,9 @@
             // 
             this.pBottomBottom.Controls.Add(this.linkUseUpdatedParams);
             this.pBottomBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottomBottom.Location = new System.Drawing.Point(3, 657);
+            this.pBottomBottom.Location = new System.Drawing.Point(3, 655);
             this.pBottomBottom.Name = "pBottomBottom";
-            this.pBottomBottom.Size = new System.Drawing.Size(233, 23);
+            this.pBottomBottom.Size = new System.Drawing.Size(299, 23);
             this.pBottomBottom.TabIndex = 24;
             this.pBottomBottom.Visible = false;
             // 
@@ -656,91 +718,104 @@
             this.linkUseUpdatedParams.Text = "Use Updated Parameters";
             this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
-            // splitRight
+            // splitGAAndPlots
             // 
-            this.splitRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitRight.Location = new System.Drawing.Point(0, 61);
-            this.splitRight.Name = "splitRight";
-            this.splitRight.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.splitGAAndPlots.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitGAAndPlots.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitGAAndPlots.Location = new System.Drawing.Point(0, 61);
+            this.splitGAAndPlots.Name = "splitGAAndPlots";
+            this.splitGAAndPlots.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitRight.Panel1
+            // splitGAAndPlots.Panel1
             // 
-            this.splitRight.Panel1.Controls.Add(this.pOptimize);
+            this.splitGAAndPlots.Panel1.Controls.Add(this.pOptimize);
             // 
-            // splitRight.Panel2
+            // splitGAAndPlots.Panel2
             // 
-            this.splitRight.Panel2.Controls.Add(this.webViewPlots);
-            this.splitRight.Size = new System.Drawing.Size(731, 622);
-            this.splitRight.SplitterDistance = 311;
-            this.splitRight.TabIndex = 2;
+            this.splitGAAndPlots.Panel2.Controls.Add(this.webViewPlots);
+            this.splitGAAndPlots.Size = new System.Drawing.Size(941, 622);
+            this.splitGAAndPlots.SplitterDistance = 311;
+            this.splitGAAndPlots.TabIndex = 2;
             // 
             // pOptimize
             // 
-            this.pOptimize.Controls.Add(this.eOptimizationOutput);
-            this.pOptimize.Controls.Add(this.lGASelection);
-            this.pOptimize.Controls.Add(this.tabOptimization);
-            this.pOptimize.Controls.Add(this.linkStopOptimization);
-            this.pOptimize.Controls.Add(this.lGAMutation);
-            this.pOptimize.Controls.Add(this.lGAMinMaxChromosome);
-            this.pOptimize.Controls.Add(this.cbGASelection);
-            this.pOptimize.Controls.Add(this.eMinChromosome);
-            this.pOptimize.Controls.Add(this.lMinMaxSeperator);
-            this.pOptimize.Controls.Add(this.lGATermination);
-            this.pOptimize.Controls.Add(this.lGACrossOver);
-            this.pOptimize.Controls.Add(this.linkOptimize);
-            this.pOptimize.Controls.Add(this.cbGATermination);
-            this.pOptimize.Controls.Add(this.cbGAMutation);
-            this.pOptimize.Controls.Add(this.eMaxChromosome);
-            this.pOptimize.Controls.Add(this.cbGACrossOver);
+            this.pOptimize.Controls.Add(this.splitGA);
             this.pOptimize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pOptimize.Location = new System.Drawing.Point(0, 0);
             this.pOptimize.Name = "pOptimize";
-            this.pOptimize.Size = new System.Drawing.Size(731, 311);
+            this.pOptimize.Size = new System.Drawing.Size(939, 309);
             this.pOptimize.TabIndex = 39;
             // 
-            // eOptimizationOutput
+            // splitGA
             // 
-            this.eOptimizationOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.eOptimizationOutput.Location = new System.Drawing.Point(3, 171);
-            this.eOptimizationOutput.Name = "eOptimizationOutput";
-            this.eOptimizationOutput.Size = new System.Drawing.Size(305, 137);
-            this.eOptimizationOutput.TabIndex = 25;
-            this.eOptimizationOutput.Text = "";
+            this.splitGA.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitGA.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitGA.Location = new System.Drawing.Point(0, 0);
+            this.splitGA.Name = "splitGA";
             // 
-            // lGASelection
+            // splitGA.Panel1
             // 
-            this.lGASelection.AutoSize = true;
-            this.lGASelection.Location = new System.Drawing.Point(12, 10);
-            this.lGASelection.Name = "lGASelection";
-            this.lGASelection.Size = new System.Drawing.Size(55, 15);
-            this.lGASelection.TabIndex = 26;
-            this.lGASelection.Text = "Selection";
+            this.splitGA.Panel1.Controls.Add(this.tabOptimization);
+            // 
+            // splitGA.Panel2
+            // 
+            this.splitGA.Panel2.Controls.Add(this.lGASelection);
+            this.splitGA.Panel2.Controls.Add(this.cbGACrossOver);
+            this.splitGA.Panel2.Controls.Add(this.eMaxChromosome);
+            this.splitGA.Panel2.Controls.Add(this.lGAMutation);
+            this.splitGA.Panel2.Controls.Add(this.cbGAMutation);
+            this.splitGA.Panel2.Controls.Add(this.lGAMinMaxChromosome);
+            this.splitGA.Panel2.Controls.Add(this.cbGATermination);
+            this.splitGA.Panel2.Controls.Add(this.cbGASelection);
+            this.splitGA.Panel2.Controls.Add(this.linkOptimize);
+            this.splitGA.Panel2.Controls.Add(this.eMinChromosome);
+            this.splitGA.Panel2.Controls.Add(this.lGACrossOver);
+            this.splitGA.Panel2.Controls.Add(this.lMinMaxSeperator);
+            this.splitGA.Panel2.Controls.Add(this.lGATermination);
+            this.splitGA.Size = new System.Drawing.Size(939, 309);
+            this.splitGA.SplitterDistance = 653;
+            this.splitGA.TabIndex = 38;
             // 
             // tabOptimization
             // 
-            this.tabOptimization.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabOptimization.Controls.Add(this.tMinMax);
-            this.tabOptimization.Controls.Add(this.tFitness);
-            this.tabOptimization.Location = new System.Drawing.Point(310, 3);
+            this.tabOptimization.Controls.Add(this.tGAParameters);
+            this.tabOptimization.Controls.Add(this.tGAOutput);
+            this.tabOptimization.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabOptimization.Location = new System.Drawing.Point(0, 0);
             this.tabOptimization.Name = "tabOptimization";
             this.tabOptimization.SelectedIndex = 0;
-            this.tabOptimization.Size = new System.Drawing.Size(421, 309);
+            this.tabOptimization.Size = new System.Drawing.Size(651, 307);
             this.tabOptimization.TabIndex = 30;
             // 
-            // tMinMax
+            // tGAParameters
             // 
-            this.tMinMax.Controls.Add(this.dgMinMaxValues);
-            this.tMinMax.Controls.Add(this.pMinMax);
-            this.tMinMax.Location = new System.Drawing.Point(4, 24);
-            this.tMinMax.Name = "tMinMax";
-            this.tMinMax.Padding = new System.Windows.Forms.Padding(3);
-            this.tMinMax.Size = new System.Drawing.Size(413, 281);
-            this.tMinMax.TabIndex = 0;
-            this.tMinMax.Text = "Parameter Ranges";
-            this.tMinMax.UseVisualStyleBackColor = true;
+            this.tGAParameters.Controls.Add(this.splitGAParams);
+            this.tGAParameters.Location = new System.Drawing.Point(4, 24);
+            this.tGAParameters.Name = "tGAParameters";
+            this.tGAParameters.Padding = new System.Windows.Forms.Padding(3);
+            this.tGAParameters.Size = new System.Drawing.Size(643, 279);
+            this.tGAParameters.TabIndex = 0;
+            this.tGAParameters.Text = "Optimization Parameters";
+            this.tGAParameters.UseVisualStyleBackColor = true;
+            // 
+            // splitGAParams
+            // 
+            this.splitGAParams.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitGAParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitGAParams.Location = new System.Drawing.Point(3, 3);
+            this.splitGAParams.Name = "splitGAParams";
+            // 
+            // splitGAParams.Panel1
+            // 
+            this.splitGAParams.Panel1.Controls.Add(this.dgMinMaxValues);
+            this.splitGAParams.Panel1.Controls.Add(this.pMinMax);
+            // 
+            // splitGAParams.Panel2
+            // 
+            this.splitGAParams.Panel2.Controls.Add(this.pfGAParams);
+            this.splitGAParams.Size = new System.Drawing.Size(637, 273);
+            this.splitGAParams.SplitterDistance = 211;
+            this.splitGAParams.TabIndex = 29;
             // 
             // dgMinMaxValues
             // 
@@ -752,11 +827,11 @@
             this.colMinValue,
             this.colMaxValue});
             this.dgMinMaxValues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgMinMaxValues.Location = new System.Drawing.Point(3, 37);
+            this.dgMinMaxValues.Location = new System.Drawing.Point(0, 29);
             this.dgMinMaxValues.Name = "dgMinMaxValues";
             this.dgMinMaxValues.RowHeadersVisible = false;
             this.dgMinMaxValues.RowTemplate.Height = 25;
-            this.dgMinMaxValues.Size = new System.Drawing.Size(407, 241);
+            this.dgMinMaxValues.Size = new System.Drawing.Size(209, 242);
             this.dgMinMaxValues.TabIndex = 27;
             // 
             // colParameter
@@ -782,9 +857,9 @@
             // 
             this.pMinMax.Controls.Add(this.linkSuggestMinMax);
             this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMinMax.Location = new System.Drawing.Point(3, 3);
+            this.pMinMax.Location = new System.Drawing.Point(0, 0);
             this.pMinMax.Name = "pMinMax";
-            this.pMinMax.Size = new System.Drawing.Size(407, 34);
+            this.pMinMax.Size = new System.Drawing.Size(209, 29);
             this.pMinMax.TabIndex = 28;
             // 
             // linkSuggestMinMax
@@ -799,88 +874,160 @@
             this.toolTip1.SetToolTip(this.linkSuggestMinMax, "If not entered, current values will be used as min/max.");
             this.linkSuggestMinMax.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSuggestMinMax_LinkClicked);
             // 
-            // tFitness
+            // pfGAParams
             // 
-            this.tFitness.Controls.Add(this.pFitnessParams);
-            this.tFitness.Controls.Add(this.panel1);
-            this.tFitness.Location = new System.Drawing.Point(4, 24);
-            this.tFitness.Name = "tFitness";
-            this.tFitness.Size = new System.Drawing.Size(413, 281);
-            this.tFitness.TabIndex = 2;
-            this.tFitness.Text = "Fitness Parameters";
-            this.tFitness.UseVisualStyleBackColor = true;
+            this.pfGAParams.AutoScroll = true;
+            this.pfGAParams.Controls.Add(this.panel1);
+            this.pfGAParams.Controls.Add(this.linkAddFitnessFunction);
+            this.pfGAParams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pfGAParams.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.pfGAParams.Location = new System.Drawing.Point(0, 0);
+            this.pfGAParams.Name = "pfGAParams";
+            this.pfGAParams.Size = new System.Drawing.Size(420, 271);
+            this.pfGAParams.TabIndex = 0;
             // 
-            // button1
+            // linkAddFitnessFunction
             // 
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.linkAddFitnessFunction.AutoSize = true;
+            this.linkAddFitnessFunction.Location = new System.Drawing.Point(3, 35);
+            this.linkAddFitnessFunction.Name = "linkAddFitnessFunction";
+            this.linkAddFitnessFunction.Padding = new System.Windows.Forms.Padding(10);
+            this.linkAddFitnessFunction.Size = new System.Drawing.Size(138, 35);
+            this.linkAddFitnessFunction.TabIndex = 1;
+            this.linkAddFitnessFunction.TabStop = true;
+            this.linkAddFitnessFunction.Text = "Add Fitness Function";
+            this.linkAddFitnessFunction.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkAddFitnessFunction_LinkClicked);
             // 
-            // pFitnessParams
+            // tGAOutput
             // 
-            this.pFitnessParams.AutoScroll = true;
-            this.pFitnessParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pFitnessParams.Location = new System.Drawing.Point(0, 0);
-            this.pFitnessParams.Name = "pFitnessParams";
-            this.pFitnessParams.Padding = new System.Windows.Forms.Padding(5);
-            this.pFitnessParams.Size = new System.Drawing.Size(413, 252);
-            this.pFitnessParams.TabIndex = 1;
+            this.tGAOutput.Controls.Add(this.eOptimizationOutput);
+            this.tGAOutput.Location = new System.Drawing.Point(4, 24);
+            this.tGAOutput.Name = "tGAOutput";
+            this.tGAOutput.Size = new System.Drawing.Size(643, 279);
+            this.tGAOutput.TabIndex = 2;
+            this.tGAOutput.Text = "Output";
+            this.tGAOutput.UseVisualStyleBackColor = true;
             // 
-            // linkStopOptimization
+            // eOptimizationOutput
             // 
-            this.linkStopOptimization.AutoSize = true;
-            this.linkStopOptimization.Location = new System.Drawing.Point(233, 153);
-            this.linkStopOptimization.Name = "linkStopOptimization";
-            this.linkStopOptimization.Size = new System.Drawing.Size(31, 15);
-            this.linkStopOptimization.TabIndex = 38;
-            this.linkStopOptimization.TabStop = true;
-            this.linkStopOptimization.Text = "Stop";
-            this.linkStopOptimization.Visible = false;
-            this.linkStopOptimization.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStopOptimization_LinkClicked);
+            this.eOptimizationOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eOptimizationOutput.Location = new System.Drawing.Point(0, 0);
+            this.eOptimizationOutput.Name = "eOptimizationOutput";
+            this.eOptimizationOutput.Size = new System.Drawing.Size(643, 279);
+            this.eOptimizationOutput.TabIndex = 25;
+            this.eOptimizationOutput.Text = "";
+            // 
+            // lGASelection
+            // 
+            this.lGASelection.AutoSize = true;
+            this.lGASelection.Location = new System.Drawing.Point(3, 15);
+            this.lGASelection.Name = "lGASelection";
+            this.lGASelection.Size = new System.Drawing.Size(55, 15);
+            this.lGASelection.TabIndex = 26;
+            this.lGASelection.Text = "Selection";
+            // 
+            // cbGACrossOver
+            // 
+            this.cbGACrossOver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbGACrossOver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGACrossOver.FormattingEnabled = true;
+            this.cbGACrossOver.Location = new System.Drawing.Point(79, 41);
+            this.cbGACrossOver.Name = "cbGACrossOver";
+            this.cbGACrossOver.Size = new System.Drawing.Size(191, 23);
+            this.cbGACrossOver.TabIndex = 31;
+            // 
+            // eMaxChromosome
+            // 
+            this.eMaxChromosome.Location = new System.Drawing.Point(200, 125);
+            this.eMaxChromosome.Name = "eMaxChromosome";
+            this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
+            this.eMaxChromosome.TabIndex = 36;
+            this.eMaxChromosome.Text = "100";
             // 
             // lGAMutation
             // 
             this.lGAMutation.AutoSize = true;
-            this.lGAMutation.Location = new System.Drawing.Point(12, 68);
+            this.lGAMutation.Location = new System.Drawing.Point(3, 73);
             this.lGAMutation.Name = "lGAMutation";
             this.lGAMutation.Size = new System.Drawing.Size(56, 15);
             this.lGAMutation.TabIndex = 28;
             this.lGAMutation.Text = "Mutation";
             // 
+            // cbGAMutation
+            // 
+            this.cbGAMutation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbGAMutation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGAMutation.FormattingEnabled = true;
+            this.cbGAMutation.Location = new System.Drawing.Point(79, 70);
+            this.cbGAMutation.Name = "cbGAMutation";
+            this.cbGAMutation.Size = new System.Drawing.Size(191, 23);
+            this.cbGAMutation.TabIndex = 32;
+            // 
             // lGAMinMaxChromosome
             // 
             this.lGAMinMaxChromosome.AutoSize = true;
-            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(12, 125);
+            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(3, 130);
             this.lGAMinMaxChromosome.Name = "lGAMinMaxChromosome";
             this.lGAMinMaxChromosome.Size = new System.Drawing.Size(142, 15);
             this.lGAMinMaxChromosome.TabIndex = 34;
             this.lGAMinMaxChromosome.Text = "Min/Max Chromosome #";
             // 
+            // cbGATermination
+            // 
+            this.cbGATermination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbGATermination.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbGATermination.FormattingEnabled = true;
+            this.cbGATermination.Location = new System.Drawing.Point(79, 98);
+            this.cbGATermination.Name = "cbGATermination";
+            this.cbGATermination.Size = new System.Drawing.Size(191, 23);
+            this.cbGATermination.TabIndex = 33;
+            // 
             // cbGASelection
             // 
+            this.cbGASelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbGASelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbGASelection.FormattingEnabled = true;
-            this.cbGASelection.Location = new System.Drawing.Point(88, 7);
+            this.cbGASelection.Location = new System.Drawing.Point(79, 12);
             this.cbGASelection.Name = "cbGASelection";
-            this.cbGASelection.Size = new System.Drawing.Size(193, 23);
+            this.cbGASelection.Size = new System.Drawing.Size(191, 23);
             this.cbGASelection.TabIndex = 30;
+            // 
+            // linkOptimize
+            // 
+            this.linkOptimize.AutoSize = true;
+            this.linkOptimize.Location = new System.Drawing.Point(9, 158);
+            this.linkOptimize.Name = "linkOptimize";
+            this.linkOptimize.Size = new System.Drawing.Size(55, 15);
+            this.linkOptimize.TabIndex = 0;
+            this.linkOptimize.TabStop = true;
+            this.linkOptimize.Text = "Optimize";
+            this.linkOptimize.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOptimize_LinkClicked);
             // 
             // eMinChromosome
             // 
-            this.eMinChromosome.Location = new System.Drawing.Point(155, 120);
+            this.eMinChromosome.Location = new System.Drawing.Point(146, 125);
             this.eMinChromosome.Name = "eMinChromosome";
             this.eMinChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMinChromosome.TabIndex = 35;
             this.eMinChromosome.Text = "50";
             // 
+            // lGACrossOver
+            // 
+            this.lGACrossOver.AutoSize = true;
+            this.lGACrossOver.Location = new System.Drawing.Point(3, 44);
+            this.lGACrossOver.Name = "lGACrossOver";
+            this.lGACrossOver.Size = new System.Drawing.Size(61, 15);
+            this.lGACrossOver.TabIndex = 27;
+            this.lGACrossOver.Text = "CrossOver";
+            // 
             // lMinMaxSeperator
             // 
             this.lMinMaxSeperator.AutoSize = true;
-            this.lMinMaxSeperator.Location = new System.Drawing.Point(196, 126);
+            this.lMinMaxSeperator.Location = new System.Drawing.Point(187, 131);
             this.lMinMaxSeperator.Name = "lMinMaxSeperator";
             this.lMinMaxSeperator.Size = new System.Drawing.Size(12, 15);
             this.lMinMaxSeperator.TabIndex = 37;
@@ -889,66 +1036,11 @@
             // lGATermination
             // 
             this.lGATermination.AutoSize = true;
-            this.lGATermination.Location = new System.Drawing.Point(12, 97);
+            this.lGATermination.Location = new System.Drawing.Point(3, 102);
             this.lGATermination.Name = "lGATermination";
             this.lGATermination.Size = new System.Drawing.Size(70, 15);
             this.lGATermination.TabIndex = 29;
             this.lGATermination.Text = "Termination";
-            // 
-            // lGACrossOver
-            // 
-            this.lGACrossOver.AutoSize = true;
-            this.lGACrossOver.Location = new System.Drawing.Point(12, 39);
-            this.lGACrossOver.Name = "lGACrossOver";
-            this.lGACrossOver.Size = new System.Drawing.Size(61, 15);
-            this.lGACrossOver.TabIndex = 27;
-            this.lGACrossOver.Text = "CrossOver";
-            // 
-            // linkOptimize
-            // 
-            this.linkOptimize.AutoSize = true;
-            this.linkOptimize.Location = new System.Drawing.Point(233, 153);
-            this.linkOptimize.Name = "linkOptimize";
-            this.linkOptimize.Size = new System.Drawing.Size(55, 15);
-            this.linkOptimize.TabIndex = 0;
-            this.linkOptimize.TabStop = true;
-            this.linkOptimize.Text = "Optimize";
-            this.linkOptimize.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOptimize_LinkClicked);
-            // 
-            // cbGATermination
-            // 
-            this.cbGATermination.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGATermination.FormattingEnabled = true;
-            this.cbGATermination.Location = new System.Drawing.Point(88, 93);
-            this.cbGATermination.Name = "cbGATermination";
-            this.cbGATermination.Size = new System.Drawing.Size(193, 23);
-            this.cbGATermination.TabIndex = 33;
-            // 
-            // cbGAMutation
-            // 
-            this.cbGAMutation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGAMutation.FormattingEnabled = true;
-            this.cbGAMutation.Location = new System.Drawing.Point(88, 65);
-            this.cbGAMutation.Name = "cbGAMutation";
-            this.cbGAMutation.Size = new System.Drawing.Size(193, 23);
-            this.cbGAMutation.TabIndex = 32;
-            // 
-            // eMaxChromosome
-            // 
-            this.eMaxChromosome.Location = new System.Drawing.Point(209, 120);
-            this.eMaxChromosome.Name = "eMaxChromosome";
-            this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
-            this.eMaxChromosome.TabIndex = 36;
-            this.eMaxChromosome.Text = "100";
-            // 
-            // cbGACrossOver
-            // 
-            this.cbGACrossOver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbGACrossOver.FormattingEnabled = true;
-            this.cbGACrossOver.Location = new System.Drawing.Point(88, 36);
-            this.cbGACrossOver.Name = "cbGACrossOver";
-            this.cbGACrossOver.Size = new System.Drawing.Size(193, 23);
-            this.cbGACrossOver.TabIndex = 31;
             // 
             // webViewPlots
             // 
@@ -958,7 +1050,7 @@
             this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlots.Location = new System.Drawing.Point(0, 0);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(731, 307);
+            this.webViewPlots.Size = new System.Drawing.Size(939, 305);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
@@ -970,7 +1062,7 @@
             this.pPlots.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlots.Location = new System.Drawing.Point(0, 0);
             this.pPlots.Name = "pPlots";
-            this.pPlots.Size = new System.Drawing.Size(731, 61);
+            this.pPlots.Size = new System.Drawing.Size(941, 61);
             this.pPlots.TabIndex = 1;
             // 
             // grPlotSelection
@@ -1095,14 +1187,25 @@
             // 
             this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
             // 
+            // lFitnessFunctions
+            // 
+            this.lFitnessFunctions.AutoSize = true;
+            this.lFitnessFunctions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lFitnessFunctions.Location = new System.Drawing.Point(13, 6);
+            this.lFitnessFunctions.Name = "lFitnessFunctions";
+            this.lFitnessFunctions.Size = new System.Drawing.Size(101, 15);
+            this.lFitnessFunctions.TabIndex = 2;
+            this.lFitnessFunctions.Text = "Fitness Functions";
+            // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 252);
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.lFitnessFunctions);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(413, 29);
-            this.panel1.TabIndex = 2;
+            this.panel1.Size = new System.Drawing.Size(138, 29);
+            this.panel1.TabIndex = 29;
             // 
             // DynamicsTestControl
             // 
@@ -1110,7 +1213,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitMain);
             this.Name = "DynamicsTestControl";
-            this.Size = new System.Drawing.Size(974, 683);
+            this.Size = new System.Drawing.Size(1252, 683);
             this.Load += new System.EventHandler(this.DynamicsTestControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
@@ -1127,32 +1230,46 @@
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
-            this.pCoreType.ResumeLayout(false);
-            this.pCoreType.PerformLayout();
+            this.tabAnalysis.ResumeLayout(false);
+            this.tTest.ResumeLayout(false);
+            this.tSensitivityAnalysis.ResumeLayout(false);
             this.grSensitivity.ResumeLayout(false);
             this.grSensitivity.PerformLayout();
+            this.pCoreType.ResumeLayout(false);
+            this.pCoreType.PerformLayout();
             this.pLoadSaveParams.ResumeLayout(false);
             this.pLoadSaveParams.PerformLayout();
             this.pBottomBottom.ResumeLayout(false);
             this.pBottomBottom.PerformLayout();
-            this.splitRight.Panel1.ResumeLayout(false);
-            this.splitRight.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitRight)).EndInit();
-            this.splitRight.ResumeLayout(false);
+            this.splitGAAndPlots.Panel1.ResumeLayout(false);
+            this.splitGAAndPlots.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitGAAndPlots)).EndInit();
+            this.splitGAAndPlots.ResumeLayout(false);
             this.pOptimize.ResumeLayout(false);
-            this.pOptimize.PerformLayout();
+            this.splitGA.Panel1.ResumeLayout(false);
+            this.splitGA.Panel2.ResumeLayout(false);
+            this.splitGA.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitGA)).EndInit();
+            this.splitGA.ResumeLayout(false);
             this.tabOptimization.ResumeLayout(false);
-            this.tMinMax.ResumeLayout(false);
+            this.tGAParameters.ResumeLayout(false);
+            this.splitGAParams.Panel1.ResumeLayout(false);
+            this.splitGAParams.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitGAParams)).EndInit();
+            this.splitGAParams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).EndInit();
             this.pMinMax.ResumeLayout(false);
             this.pMinMax.PerformLayout();
-            this.tFitness.ResumeLayout(false);
+            this.pfGAParams.ResumeLayout(false);
+            this.pfGAParams.PerformLayout();
+            this.tGAOutput.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
             this.pPlots.ResumeLayout(false);
             this.pPlots.PerformLayout();
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1188,9 +1305,8 @@
         private Label lParameter;
         private CheckBox cbLogScale;
         private RadioButton rbManualEntryStimulus;
-        private StimulusControl stimulusControl1;
         private RadioButton rbRheobaseBasedStimulus;
-        private FlowLayoutPanel pParams;
+        private FlowLayoutPanel pfParams;
         private Panel pCoreType;
         private LinkLabel linkSaveCoreUnit;
         private LinkLabel linkLoadCoreUnit;
@@ -1229,19 +1345,26 @@
         private Label lGAMinMaxChromosome;
         private LinkLabel linkSwitchToOptimization;
         private GroupBox grPlotSelection;
-        private LinkLabel linkStopOptimization;
         private System.Windows.Forms.Timer timerOptimization;
-        private SplitContainer splitRight;
+        private SplitContainer splitGAAndPlots;
         private Panel pOptimize;
         private TabControl tabOptimization;
-        private TabPage tMinMax;
-        private TabPage tFitness;
+        private TabPage tGAParameters;
+        private TabPage tGAOutput;
         private ComboBox ddCoreType;
         private Label lCoreType;
         private Panel pLoadSaveParams;
         private CheckBox cbAutoDrawPlots;
-        private FlowLayoutPanel pFitnessParams;
-        private Button button1;
+        private SplitContainer splitGAParams;
+        private FlowLayoutPanel pfGAParams;
+        private LinkLabel linkAddFitnessFunction;
+        private TabControl tabAnalysis;
+        private TabPage tTest;
+        private TabPage tSensitivityAnalysis;
+        private StimulusControl stimulusControl1;
+        private Label lRheobaseWarning;
+        private SplitContainer splitGA;
         private Panel panel1;
+        private Label lFitnessFunctions;
     }
 }

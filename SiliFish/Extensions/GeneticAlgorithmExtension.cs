@@ -54,10 +54,10 @@ namespace SiliFish.Extensions
         {
             List<Type> terminationBases = new()
             {
-                typeof(GenerationNumberTermination),
+                typeof(GenerationNumberTermination)/*TODO ,
                 typeof(TimeEvolvingTermination),
                 typeof(FitnessStagnationTermination),
-                typeof(FitnessThresholdTermination)
+                typeof(FitnessThresholdTermination)*/
             };
             //terminationBases.Add(typeof(AndTermination));
             //terminationBases.Add(typeof(OrTermination));

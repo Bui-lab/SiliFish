@@ -411,6 +411,7 @@ namespace SiliFish.UI
             // 
             // splitMain
             // 
+            this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitMain.Location = new System.Drawing.Point(0, 39);
             this.splitMain.Name = "splitMain";
@@ -437,7 +438,7 @@ namespace SiliFish.UI
             this.tabParams.Location = new System.Drawing.Point(0, 34);
             this.tabParams.Name = "tabParams";
             this.tabParams.SelectedIndex = 0;
-            this.tabParams.Size = new System.Drawing.Size(550, 487);
+            this.tabParams.Size = new System.Drawing.Size(548, 485);
             this.tabParams.TabIndex = 2;
             this.tabParams.Tag = "";
             // 
@@ -759,13 +760,14 @@ namespace SiliFish.UI
             this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
             this.tabCellPools.Location = new System.Drawing.Point(4, 24);
             this.tabCellPools.Name = "tabCellPools";
-            this.tabCellPools.Size = new System.Drawing.Size(542, 459);
+            this.tabCellPools.Size = new System.Drawing.Size(540, 457);
             this.tabCellPools.TabIndex = 1;
             this.tabCellPools.Text = "Cell Pools & Connections";
             this.tabCellPools.UseVisualStyleBackColor = true;
             // 
             // splitCellPoolsAndConnections
             // 
+            this.splitCellPoolsAndConnections.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitCellPoolsAndConnections.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitCellPoolsAndConnections.Location = new System.Drawing.Point(0, 0);
             this.splitCellPoolsAndConnections.Name = "splitCellPoolsAndConnections";
@@ -781,8 +783,8 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.pConnectionTop);
             this.splitCellPoolsAndConnections.Panel2MinSize = 200;
-            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(542, 459);
-            this.splitCellPoolsAndConnections.SplitterDistance = 252;
+            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(540, 457);
+            this.splitCellPoolsAndConnections.SplitterDistance = 251;
             this.splitCellPoolsAndConnections.TabIndex = 5;
             // 
             // listCellPool
@@ -792,7 +794,7 @@ namespace SiliFish.UI
             this.listCellPool.Name = "listCellPool";
             this.listCellPool.SelectedIndex = -1;
             this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(252, 427);
+            this.listCellPool.Size = new System.Drawing.Size(249, 423);
             this.listCellPool.TabIndex = 5;
             this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -808,7 +810,7 @@ namespace SiliFish.UI
             this.pCellPoolTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pCellPoolTop.Location = new System.Drawing.Point(0, 0);
             this.pCellPoolTop.Name = "pCellPoolTop";
-            this.pCellPoolTop.Size = new System.Drawing.Size(252, 32);
+            this.pCellPoolTop.Size = new System.Drawing.Size(249, 32);
             this.pCellPoolTop.TabIndex = 6;
             // 
             // lCellPools
@@ -828,7 +830,7 @@ namespace SiliFish.UI
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(286, 427);
+            this.listConnections.Size = new System.Drawing.Size(283, 423);
             this.listConnections.TabIndex = 6;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -844,7 +846,7 @@ namespace SiliFish.UI
             this.pConnectionTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pConnectionTop.Location = new System.Drawing.Point(0, 0);
             this.pConnectionTop.Name = "pConnectionTop";
-            this.pConnectionTop.Size = new System.Drawing.Size(286, 32);
+            this.pConnectionTop.Size = new System.Drawing.Size(283, 32);
             this.pConnectionTop.TabIndex = 7;
             // 
             // lConnections
@@ -900,9 +902,9 @@ namespace SiliFish.UI
             this.pParamBottom.Controls.Add(this.lTimeEnd);
             this.pParamBottom.Controls.Add(this.lRunParameters);
             this.pParamBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pParamBottom.Location = new System.Drawing.Point(0, 521);
+            this.pParamBottom.Location = new System.Drawing.Point(0, 519);
             this.pParamBottom.Name = "pParamBottom";
-            this.pParamBottom.Size = new System.Drawing.Size(550, 151);
+            this.pParamBottom.Size = new System.Drawing.Size(548, 151);
             this.pParamBottom.TabIndex = 1;
             // 
             // cbMultiple
@@ -1065,7 +1067,7 @@ namespace SiliFish.UI
             this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.progressBarRun.Location = new System.Drawing.Point(0, 128);
             this.progressBarRun.Name = "progressBarRun";
-            this.progressBarRun.Size = new System.Drawing.Size(550, 23);
+            this.progressBarRun.Size = new System.Drawing.Size(548, 23);
             this.progressBarRun.TabIndex = 26;
             this.progressBarRun.Visible = false;
             // 
@@ -1107,7 +1109,7 @@ namespace SiliFish.UI
             this.pMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMain.Location = new System.Drawing.Point(0, 0);
             this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(550, 34);
+            this.pMain.Size = new System.Drawing.Size(548, 34);
             this.pMain.TabIndex = 4;
             // 
             // linkLoadParam
@@ -1155,7 +1157,7 @@ namespace SiliFish.UI
             this.tabOutputs.Location = new System.Drawing.Point(0, 0);
             this.tabOutputs.Name = "tabOutputs";
             this.tabOutputs.SelectedIndex = 0;
-            this.tabOutputs.Size = new System.Drawing.Size(794, 672);
+            this.tabOutputs.Size = new System.Drawing.Size(792, 670);
             this.tabOutputs.TabIndex = 1;
             // 
             // tabPlot
@@ -1165,7 +1167,7 @@ namespace SiliFish.UI
             this.tabPlot.Location = new System.Drawing.Point(4, 24);
             this.tabPlot.Name = "tabPlot";
             this.tabPlot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPlot.Size = new System.Drawing.Size(786, 644);
+            this.tabPlot.Size = new System.Drawing.Size(784, 642);
             this.tabPlot.TabIndex = 4;
             this.tabPlot.Text = "Plots";
             this.tabPlot.UseVisualStyleBackColor = true;
@@ -1178,7 +1180,7 @@ namespace SiliFish.UI
             this.tabPlotSub.Location = new System.Drawing.Point(3, 145);
             this.tabPlotSub.Name = "tabPlotSub";
             this.tabPlotSub.SelectedIndex = 0;
-            this.tabPlotSub.Size = new System.Drawing.Size(780, 496);
+            this.tabPlotSub.Size = new System.Drawing.Size(778, 494);
             this.tabPlotSub.TabIndex = 6;
             // 
             // tPlotWindows
@@ -1187,7 +1189,7 @@ namespace SiliFish.UI
             this.tPlotWindows.Location = new System.Drawing.Point(4, 24);
             this.tPlotWindows.Name = "tPlotWindows";
             this.tPlotWindows.Padding = new System.Windows.Forms.Padding(3);
-            this.tPlotWindows.Size = new System.Drawing.Size(772, 468);
+            this.tPlotWindows.Size = new System.Drawing.Size(770, 466);
             this.tPlotWindows.TabIndex = 0;
             this.tPlotWindows.Text = "Image Plots";
             // 
@@ -1207,8 +1209,8 @@ namespace SiliFish.UI
             // 
             this.splitPlotWindows.Panel2.AutoScroll = true;
             this.splitPlotWindows.Panel2.Controls.Add(this.pictureBoxRight);
-            this.splitPlotWindows.Size = new System.Drawing.Size(766, 462);
-            this.splitPlotWindows.SplitterDistance = 356;
+            this.splitPlotWindows.Size = new System.Drawing.Size(764, 460);
+            this.splitPlotWindows.SplitterDistance = 355;
             this.splitPlotWindows.TabIndex = 0;
             this.splitPlotWindows.DoubleClick += new System.EventHandler(this.splitWindows_DoubleClick);
             // 
@@ -1289,7 +1291,7 @@ namespace SiliFish.UI
             this.pPlot.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlot.Location = new System.Drawing.Point(3, 3);
             this.pPlot.Name = "pPlot";
-            this.pPlot.Size = new System.Drawing.Size(780, 142);
+            this.pPlot.Size = new System.Drawing.Size(778, 142);
             this.pPlot.TabIndex = 5;
             // 
             // ePlotHeight
@@ -1809,13 +1811,14 @@ namespace SiliFish.UI
             this.tabMNKinematics.Controls.Add(this.panel1);
             this.tabMNKinematics.Location = new System.Drawing.Point(4, 24);
             this.tabMNKinematics.Name = "tabMNKinematics";
-            this.tabMNKinematics.Size = new System.Drawing.Size(786, 644);
+            this.tabMNKinematics.Size = new System.Drawing.Size(784, 642);
             this.tabMNKinematics.TabIndex = 7;
             this.tabMNKinematics.Text = "MN Based Kinematics";
             this.tabMNKinematics.UseVisualStyleBackColor = true;
             // 
             // splitKinematics
             // 
+            this.splitKinematics.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitKinematics.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitKinematics.Location = new System.Drawing.Point(0, 78);
             this.splitKinematics.Name = "splitKinematics";
@@ -1829,8 +1832,8 @@ namespace SiliFish.UI
             this.splitKinematics.Panel2.Controls.Add(this.eEpisodesRight);
             this.splitKinematics.Panel2.Controls.Add(this.eEpisodesLeft);
             this.splitKinematics.Panel2.SizeChanged += new System.EventHandler(this.splitContainer1_Panel2_SizeChanged);
-            this.splitKinematics.Size = new System.Drawing.Size(786, 566);
-            this.splitKinematics.SplitterDistance = 535;
+            this.splitKinematics.Size = new System.Drawing.Size(784, 564);
+            this.splitKinematics.SplitterDistance = 533;
             this.splitKinematics.TabIndex = 8;
             // 
             // webViewSummaryV
@@ -1841,7 +1844,7 @@ namespace SiliFish.UI
             this.webViewSummaryV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewSummaryV.Location = new System.Drawing.Point(0, 0);
             this.webViewSummaryV.Name = "webViewSummaryV";
-            this.webViewSummaryV.Size = new System.Drawing.Size(535, 566);
+            this.webViewSummaryV.Size = new System.Drawing.Size(531, 562);
             this.webViewSummaryV.TabIndex = 6;
             this.webViewSummaryV.ZoomFactor = 1D;
             this.webViewSummaryV.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webView_CoreWebView2InitializationCompleted);
@@ -1851,7 +1854,7 @@ namespace SiliFish.UI
             this.eEpisodesRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eEpisodesRight.Location = new System.Drawing.Point(115, 0);
             this.eEpisodesRight.Name = "eEpisodesRight";
-            this.eEpisodesRight.Size = new System.Drawing.Size(132, 566);
+            this.eEpisodesRight.Size = new System.Drawing.Size(130, 562);
             this.eEpisodesRight.TabIndex = 1;
             this.eEpisodesRight.Text = "";
             // 
@@ -1860,7 +1863,7 @@ namespace SiliFish.UI
             this.eEpisodesLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.eEpisodesLeft.Location = new System.Drawing.Point(0, 0);
             this.eEpisodesLeft.Name = "eEpisodesLeft";
-            this.eEpisodesLeft.Size = new System.Drawing.Size(115, 566);
+            this.eEpisodesLeft.Size = new System.Drawing.Size(115, 562);
             this.eEpisodesLeft.TabIndex = 0;
             this.eEpisodesLeft.Text = "";
             // 
@@ -1886,7 +1889,7 @@ namespace SiliFish.UI
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(786, 78);
+            this.panel1.Size = new System.Drawing.Size(784, 78);
             this.panel1.TabIndex = 7;
             // 
             // ePlotKinematicsHeight
