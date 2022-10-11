@@ -83,7 +83,9 @@
             // 
             this.ddStimulusMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddStimulusMode.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddStimulusMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddStimulusMode.FormattingEnabled = true;
             this.ddStimulusMode.Location = new System.Drawing.Point(100, 10);
             this.ddStimulusMode.Name = "ddStimulusMode";

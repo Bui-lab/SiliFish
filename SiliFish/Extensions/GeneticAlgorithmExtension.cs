@@ -14,7 +14,9 @@ namespace SiliFish.Extensions
             {
                 typeof(EliteSelection),
                 typeof(RouletteWheelSelection),
-                typeof(StochasticUniversalSamplingSelection)
+                typeof(StochasticUniversalSamplingSelection),
+                typeof(TournamentSelection),
+                typeof(TruncationSelection)
             };
             return selectionBases;
         }
@@ -23,17 +25,18 @@ namespace SiliFish.Extensions
         {
             List<Type> crossoverBases = new()
             {
-                typeof(UniformCrossover),
-                //TODO giving an error message - test whether there needs to be a parameter typeof(CutAndSpliceCrossover),
-                typeof(CycleCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(AlternatingPositionCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(CutAndSpliceCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(CycleCrossover),
                 typeof(OnePointCrossover),
-                typeof(OrderBasedCrossover),
-                typeof(OrderedCrossover),
-                typeof(PartiallyMappedCrossover),
-                typeof(PositionBasedCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(OrderBasedCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(OrderedCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(PartiallyMappedCrossover),
+                //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(PositionBasedCrossover),
                 typeof(ThreeParentCrossover),
                 typeof(TwoPointCrossover),
-                typeof(UniformCrossover)
+                typeof(UniformCrossover),
+                typeof(VotingRecombinationCrossover)
             };
             return crossoverBases;
         }
@@ -42,7 +45,10 @@ namespace SiliFish.Extensions
         {
             List<Type> mutationBases = new()
             {
+                typeof(DisplacementMutation),
                 typeof(FlipBitMutation),
+                typeof(InsertionMutation),
+                typeof(PartialShuffleMutation),
                 typeof(ReverseSequenceMutation),
                 typeof(TworsMutation),
                 typeof(UniformMutation)
@@ -50,15 +56,41 @@ namespace SiliFish.Extensions
             return mutationBases;
         }
 
+        public static List<Type> GetReinsertionBases()
+        {
+            List<Type> mutationBases = new()
+            {
+                typeof(ElitistReinsertion),
+                //Cannot expand the number of chromosome in population typeof(FitnessBasedReinsertion),
+                //Cannot expand the number of chromosome in population typeof(PureReinsertion),
+                typeof(UniformReinsertion)
+            };
+            return mutationBases;
+        }
+
+        public static string GetTerminationParameter(string terminationBase)
+        {
+            if (terminationBase == typeof(GenerationNumberTermination).FullName)
+                return "Number of generations";
+            if (terminationBase == typeof(TimeEvolvingTermination).FullName)
+                return "Time to run in minutes";
+            if (terminationBase == typeof(FitnessStagnationTermination).FullName)
+                return "Max iteration w/o progress";
+            if (terminationBase == typeof(FitnessThresholdTermination).FullName)
+                return "Target fitness";
+
+            return "No parameter required";
+        }
         public static List<Type> GetTerminationBases()
         {
             List<Type> terminationBases = new()
             {
-                typeof(GenerationNumberTermination)/*TODO ,
+                typeof(GenerationNumberTermination),
                 typeof(TimeEvolvingTermination),
                 typeof(FitnessStagnationTermination),
-                typeof(FitnessThresholdTermination)*/
+                typeof(FitnessThresholdTermination)
             };
+
             //terminationBases.Add(typeof(AndTermination));
             //terminationBases.Add(typeof(OrTermination));
             return terminationBases;

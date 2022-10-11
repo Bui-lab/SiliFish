@@ -1,4 +1,4 @@
-﻿namespace Controls
+﻿namespace SiliFish.UI.Controls
 {
     partial class FitnessFunctionControl
     {
@@ -64,7 +64,9 @@
             // 
             // ddFitnessFunction
             // 
+            this.ddFitnessFunction.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddFitnessFunction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddFitnessFunction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddFitnessFunction.FormattingEnabled = true;
             this.ddFitnessFunction.Location = new System.Drawing.Point(102, 9);
             this.ddFitnessFunction.Name = "ddFitnessFunction";
@@ -166,7 +168,9 @@
             // 
             // ddFiringValues
             // 
+            this.ddFiringValues.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddFiringValues.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddFiringValues.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddFiringValues.FormattingEnabled = true;
             this.ddFiringValues.Items.AddRange(new object[] {
             "x Rheobase",
@@ -219,7 +223,9 @@
             // 
             // ddCurrentSelection
             // 
+            this.ddCurrentSelection.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCurrentSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddCurrentSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddCurrentSelection.FormattingEnabled = true;
             this.ddCurrentSelection.Items.AddRange(new object[] {
             "x Rheobase",

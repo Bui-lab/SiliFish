@@ -1,4 +1,4 @@
-﻿using Controls;
+﻿
 using Extensions;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
@@ -13,22 +13,20 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
-        private List<FitnessFunctionControl> FitnessControls;
-
+        private string coreType;
         public string CoreType
         {
-            get
-            {
-                FillCoreTypes();
-                return ddCoreType.Text;
+            get { return coreType; }
+            set 
+            { 
+                coreType = value;
+                gaControl.CoreType = coreType;
             }
-            set { FillCoreTypes(value); }
         }
         private bool updateParamNames = true;
         DynamicsStats dynamics;
         private double[] TimeArray;
 
-        private ProgressForm optimizationProgress;
         internal class UpdatedParamsEventArgs : EventArgs
         {
             internal string CoreType;
@@ -38,13 +36,8 @@ namespace SiliFish.UI.Controls
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
-        private Dictionary<string, double> minValues;
-        private Dictionary<string, double> maxValues;
-        private TargetRheobaseFunction targetRheobaseFunction;
-        private List<FiringFitnessFunction> firingFitnessFunctions;
 
-        private CoreSolver Solver;
-        Dictionary<string, double> SolverBestValues;
+
         private bool OptimizationMode
         {
             get { return linkSwitchToOptimization.Text != "Optimization Mode"; }
@@ -61,6 +54,7 @@ namespace SiliFish.UI.Controls
             set
             {
                 parameters = value;
+                gaControl.Parameters = parameters;
                 if (parameters == null)
                 {
                     pfParams.Controls.Clear();
@@ -84,13 +78,7 @@ namespace SiliFish.UI.Controls
                             ddParameter.Items.Add(p.Key);
                         ddParameter.SelectedIndex = 0;
 
-                        dgMinMaxValues.Rows.Clear();
-                        dgMinMaxValues.RowCount = parameters.Count;
-                        int rowIndex = 0;
-                        foreach (string key in parameters.Keys)
-                        {
-                            dgMinMaxValues[colParameter.Index, rowIndex++].Value = key;
-                        }
+                        gaControl.ResetParameters(parameters);
                     }
                     FirstRun();
                 }
@@ -137,17 +125,15 @@ namespace SiliFish.UI.Controls
                 Parameters = parameters;
             pBottomBottom.Visible = !testMode;
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
-            cbGASelection.Items.AddRange(GeneticAlgorithmExtension.GetSelectionBases().ToArray());
-            cbGASelection.SelectedIndex = 0;
-            cbGACrossOver.Items.AddRange(GeneticAlgorithmExtension.GetCrossoverBases().ToArray());
-            cbGACrossOver.SelectedIndex = 0;
-            cbGAMutation.Items.AddRange(GeneticAlgorithmExtension.GetMutationBases().ToArray());
-            cbGAMutation.SelectedIndex = 0;
-            cbGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
-            cbGATermination.SelectedIndex = 0;
+          
             splitGAAndPlots.Panel1Collapsed = true;
+            gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
 
-            FitnessControls = new();
+        }
+
+        private void GaControl_OnCompleteOptimization(object sender, EventArgs e)
+        {
+            Parameters = gaControl.Parameters;
         }
 
         private void FirstRun()
@@ -188,6 +174,7 @@ namespace SiliFish.UI.Controls
         private void ReadParameters()
         {
             parameters = pfParams.CreateDoubleDictionaryFromControls();
+            gaControl.Parameters = parameters;
         }
 
         #region Plotting
@@ -339,6 +326,7 @@ namespace SiliFish.UI.Controls
         #endregion
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            CoreType = ddCoreType.Text;
             Parameters = DynamicUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
         }
 
@@ -471,7 +459,6 @@ namespace SiliFish.UI.Controls
                     logScale = cbLogScale.Checked
                 });
             }
-            //TODO muscle cell rheobase 
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts,
@@ -531,142 +518,21 @@ namespace SiliFish.UI.Controls
         #endregion
 
         #region Optimization
-        private void ReadMinMaxParamValues()
-        {
-            minValues = new();
-            maxValues = new();
-            foreach (DataGridViewRow row in dgMinMaxValues.Rows)
-            {
-                string param = row.Cells[colParameter.Index].Value?.ToString();
-                double value = parameters[param];
-                if (!string.IsNullOrEmpty(row.Cells[colMinValue.Index].Value?.ToString())
-                    && double.TryParse(row.Cells[colMinValue.Index].Value.ToString(), out double dmin))
-                    minValues.Add(param, dmin);
-                else minValues.Add(param, value);
-                if (!string.IsNullOrEmpty(row.Cells[colMaxValue.Index].Value?.ToString())
-                    && double.TryParse(row.Cells[colMaxValue.Index].Value.ToString(), out double dmax))
-                    maxValues.Add(param, dmax);
-                else maxValues.Add(param, value);
-            }
-        }
 
-        private void ReadFitnessValues()
-        {
-            List<FitnessFunction> fitnessFunctions = FitnessControls.Select(fc => fc.GetFitnessFunction()).ToList();
-            targetRheobaseFunction = fitnessFunctions.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
-            fitnessFunctions.RemoveAll(fc => fc is TargetRheobaseFunction);
-            firingFitnessFunctions = fitnessFunctions.Select(fc => fc as FiringFitnessFunction).ToList();
-        }
-        private void CreateSolver()
-        {
-            Solver = null;
-            ReadParameters();
-            ReadMinMaxParamValues();
-            ReadFitnessValues();
-            if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
-                minPopulation = 50;
-            if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
-                maxPopulation = 50;
-            Solver = new((Type)cbGASelection.SelectedItem,
-                (Type)cbGACrossOver.SelectedItem,
-                (Type)cbGAMutation.SelectedItem,
-                (Type)cbGATermination.SelectedItem);
-            Solver.SetOptimizationSettings(minPopulation, maxPopulation,
-                CoreType,
-                parameters,
-                targetRheobaseFunction, 
-                firingFitnessFunctions,
-                minValues, maxValues);
-        }
-        private void RunOptimize()
-        {
-            if (Solver == null) return;
-            SolverBestValues = Solver.Optimize();
-            Invoke(CompleteOptimization);
-        }
-
-        private void CompleteOptimization()
-        {
-            timerOptimization.Enabled = false;
-            linkOptimize.Enabled = true;
-            updateParamNames = false;
-            Parameters = SolverBestValues;
-            updateParamNames = true;
-            if (optimizationProgress != null && optimizationProgress.Visible)
-                optimizationProgress.Close();
-            optimizationProgress = null;
-        }
-        private void linkOptimize_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            CreateSolver();
-            timerOptimization.Enabled = true;
-            linkOptimize.Enabled = false;
-            eOptimizationOutput.Text = "";
-            optimizationProgress = new()
-            {
-                Text = "Optimization",
-                Progress = 0
-            };
-            optimizationProgress.StopRunClicked += ProgressForm_StopRunClicked;
-            optimizationProgress.Show();
-            Task.Run(RunOptimize);
-        }
-
-        private void ProgressForm_StopRunClicked(object sender, EventArgs e)
-        {
-            timerOptimization.Enabled = false;
-            Solver?.CancelOptimization();
-            linkOptimize.Enabled = true;
-        }
-
-        private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
-
-            if (core == null) return;
-
-            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = core.GetSuggestedMinMaxValues();
-
-            dgMinMaxValues.Rows.Clear();
-            dgMinMaxValues.RowCount = parameters.Count;
-            int rowIndex = 0;
-            foreach (string key in parameters.Keys)
-            {
-                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
-                dgMinMaxValues[colMinValue.Index, rowIndex].Value = MinValues[key];
-                dgMinMaxValues[colMaxValue.Index, rowIndex].Value = MaxValues[key];
-                rowIndex++;
-            }
-        }
 
         private void linkSwitchToOptimization_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             OptimizationMode = !OptimizationMode;
         }
 
-        private void timerOptimization_Tick(object sender, EventArgs e)
-        {
-            if (Solver == null) return;
-            eOptimizationOutput.AppendText(Solver.ProgressText + "\r\n");
-            optimizationProgress.Progress = Solver.Progress;
-        }
 
-        private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            FitnessFunctionControl fitness = new();
-            fitness.BorderStyle = BorderStyle.FixedSingle;
-            pfGAParams.Controls.Add(fitness);
-            pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
-            fitness.RemoveClicked += Fitness_RemoveClicked;
-            FitnessControls.Add(fitness);
-        }
 
-        private void Fitness_RemoveClicked(object sender, EventArgs e)
-        {
-            pfGAParams.Controls.Remove(sender as FitnessFunctionControl);
-            pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
-            FitnessControls.Remove(sender as FitnessFunctionControl);
-        }
         #endregion
+
+        private void cbAutoDrawPlots_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbAutoDrawPlots.Checked)
+                DynamicsRun();
+        }
     }
 }

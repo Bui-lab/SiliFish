@@ -2006,8 +2006,6 @@ namespace SiliFish.UI
             frmControl.ShowDialog();
         }
 
-
-
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {
             if (eSpinalMedialLateral.Focused)

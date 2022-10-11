@@ -209,7 +209,9 @@
             // 
             // ddSourcePool
             // 
+            this.ddSourcePool.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddSourcePool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddSourcePool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddSourcePool.FormattingEnabled = true;
             this.ddSourcePool.Location = new System.Drawing.Point(105, 11);
             this.ddSourcePool.Name = "ddSourcePool";
@@ -219,7 +221,9 @@
             // 
             // ddTargetPool
             // 
+            this.ddTargetPool.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddTargetPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddTargetPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddTargetPool.FormattingEnabled = true;
             this.ddTargetPool.Location = new System.Drawing.Point(105, 37);
             this.ddTargetPool.Name = "ddTargetPool";
@@ -229,7 +233,9 @@
             // 
             // ddAxonReachMode
             // 
+            this.ddAxonReachMode.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddAxonReachMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddAxonReachMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddAxonReachMode.FormattingEnabled = true;
             this.ddAxonReachMode.Location = new System.Drawing.Point(105, 63);
             this.ddAxonReachMode.Name = "ddAxonReachMode";
@@ -239,7 +245,9 @@
             // 
             // ddConnectionType
             // 
+            this.ddConnectionType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddConnectionType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddConnectionType.FormattingEnabled = true;
             this.ddConnectionType.Items.AddRange(new object[] {
             "Synapse",
@@ -747,7 +755,9 @@
             // 
             // ddDistanceMode
             // 
+            this.ddDistanceMode.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddDistanceMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddDistanceMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddDistanceMode.FormattingEnabled = true;
             this.ddDistanceMode.Location = new System.Drawing.Point(100, 16);
             this.ddDistanceMode.Name = "ddDistanceMode";

@@ -94,11 +94,11 @@ namespace SiliFish.Services.Optimization
             if (core == null)
                 return 0;
 
-            double fitnessMultiplier = 1;
+            double fitness = 0;
             double rheobase = 0;
             if (TargetRheobaseFunction != null)
             {
-                fitnessMultiplier *= TargetRheobaseFunction.CalculateFitness(core, out rheobase);
+                fitness += TargetRheobaseFunction.CalculateFitness(core, out rheobase);
             }
             else if (FitnessFunctions.Any(ff => ff.RheobaseBased))
                 rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
@@ -121,9 +121,9 @@ namespace SiliFish.Services.Optimization
             {
                 double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
                 DynamicsStats stat = stats[current];
-                weight += function.CalculateFitness(stat);
+                fitness += weight * function.CalculateFitness(stat);
             }
-            return fitnessMultiplier * weight;
+            return fitness;
         }
     }
     public class CoreSolver
@@ -134,6 +134,7 @@ namespace SiliFish.Services.Optimization
         private readonly SelectionBase Selection;
         private readonly CrossoverBase Crossover;
         private readonly MutationBase Mutation;
+        private readonly ReinsertionBase Reinsertion;
         private readonly TerminationBase Termination;
         private GeneticAlgorithm Algorithm;
         private double latestFitness = 0.0;
@@ -156,15 +157,19 @@ namespace SiliFish.Services.Optimization
             }
         }
 
+        //https://github.com/giacomelli/GeneticSharp/wiki/terminations
         public CoreSolver(Type selectionType,
             Type crossOverType,
             Type mutationType,
-            Type terminationType)
+            Type reinsertionType,
+            Type terminationType
+            )
 
         {
             Selection = (SelectionBase)Activator.CreateInstance(selectionType); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
             Crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
             Mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
+            Reinsertion = (ReinsertionBase)Activator.CreateInstance(reinsertionType);
             Termination = (TerminationBase)Activator.CreateInstance(terminationType); //new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
         }
 
@@ -208,7 +213,8 @@ namespace SiliFish.Services.Optimization
                 Crossover,
                 Mutation)
             {
-                Termination = Termination
+                Termination = Termination,
+                Reinsertion = Reinsertion
             };
         }
         public Dictionary<string, double> Optimize()

@@ -55,7 +55,9 @@
             // 
             // ddTargetPool
             // 
+            this.ddTargetPool.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddTargetPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddTargetPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddTargetPool.FormattingEnabled = true;
             this.ddTargetPool.Location = new System.Drawing.Point(101, 91);
             this.ddTargetPool.Name = "ddTargetPool";
@@ -83,7 +85,9 @@
             // 
             // ddSagittalPosition
             // 
+            this.ddSagittalPosition.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddSagittalPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddSagittalPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddSagittalPosition.FormattingEnabled = true;
             this.ddSagittalPosition.Items.AddRange(new object[] {
             "Left/Right",
@@ -118,7 +122,9 @@
             // 
             // ddTargetCells
             // 
+            this.ddTargetCells.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddTargetCells.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddTargetCells.FormattingEnabled = true;
             this.ddTargetCells.Items.AddRange(new object[] {
             "All Cells",
@@ -132,7 +138,9 @@
             // 
             // ddTargetSomites
             // 
+            this.ddTargetSomites.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddTargetSomites.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddTargetSomites.FormattingEnabled = true;
             this.ddTargetSomites.Items.AddRange(new object[] {
             "All Somites",
@@ -160,6 +168,7 @@
             // 
             // stimControl
             // 
+            this.stimControl.BackColor = System.Drawing.Color.White;
             this.stimControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.stimControl.Location = new System.Drawing.Point(0, 0);
             this.stimControl.Name = "stimControl";
