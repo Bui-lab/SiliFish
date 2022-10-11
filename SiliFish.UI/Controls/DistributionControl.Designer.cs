@@ -68,7 +68,9 @@
             // 
             // ddDistribution
             // 
+            this.ddDistribution.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddDistribution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddDistribution.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddDistribution.FormattingEnabled = true;
             this.ddDistribution.Items.AddRange(new object[] {
             "None",

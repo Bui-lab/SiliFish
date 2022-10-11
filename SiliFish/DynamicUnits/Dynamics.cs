@@ -97,7 +97,7 @@ namespace SiliFish.DynamicUnits
         /// u for neurons and rel. tension for muscle cells
         /// </summary>
         public Dictionary <string, double[]> SecLists;
-        private FiringRhythm firingRhythm = FiringRhythm.Phasic;
+        private FiringRhythm firingRhythm = FiringRhythm.NoSpike;
         private FiringDelay firingDelay = FiringDelay.NoDelay;
         private FiringPattern firingPattern = FiringPattern.NoSpike;
 

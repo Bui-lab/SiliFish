@@ -1,7 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Services.Optimization;
 
-namespace Controls
+namespace SiliFish.UI.Controls
 {
     public partial class FitnessFunctionControl : UserControl
     {

@@ -330,7 +330,9 @@ namespace SiliFish.UI
             // 
             // ddModelSelection
             // 
+            this.ddModelSelection.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddModelSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddModelSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddModelSelection.FormattingEnabled = true;
             this.ddModelSelection.Items.AddRange(new object[] {
             "User defined",
@@ -1061,8 +1063,9 @@ namespace SiliFish.UI
             // 
             // ddStimulusMode
             // 
-            this.ddStimulusMode.BackColor = System.Drawing.Color.White;
+            this.ddStimulusMode.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddStimulusMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddStimulusMode.FormattingEnabled = true;
             this.ddStimulusMode.Items.AddRange(new object[] {
             "Step",
@@ -1458,7 +1461,9 @@ namespace SiliFish.UI
             // 
             // ddPlotSagittal
             // 
+            this.ddPlotSagittal.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddPlotSagittal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddPlotSagittal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotSagittal.FormattingEnabled = true;
             this.ddPlotSagittal.Location = new System.Drawing.Point(280, 32);
             this.ddPlotSagittal.Name = "ddPlotSagittal";
@@ -1497,7 +1502,9 @@ namespace SiliFish.UI
             // 
             // ddPlotCellSelection
             // 
+            this.ddPlotCellSelection.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddPlotCellSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddPlotCellSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotCellSelection.FormattingEnabled = true;
             this.ddPlotCellSelection.Location = new System.Drawing.Point(280, 110);
             this.ddPlotCellSelection.Name = "ddPlotCellSelection";
@@ -1534,7 +1541,9 @@ namespace SiliFish.UI
             // 
             // ddPlotSomiteSelection
             // 
+            this.ddPlotSomiteSelection.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddPlotSomiteSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddPlotSomiteSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotSomiteSelection.FormattingEnabled = true;
             this.ddPlotSomiteSelection.Location = new System.Drawing.Point(280, 84);
             this.ddPlotSomiteSelection.Name = "ddPlotSomiteSelection";
@@ -1632,7 +1641,9 @@ namespace SiliFish.UI
             // 
             // ddPlotPools
             // 
+            this.ddPlotPools.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddPlotPools.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddPlotPools.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotPools.FormattingEnabled = true;
             this.ddPlotPools.Location = new System.Drawing.Point(280, 58);
             this.ddPlotPools.Name = "ddPlotPools";
@@ -1687,7 +1698,9 @@ namespace SiliFish.UI
             // 
             // ddPlot
             // 
+            this.ddPlot.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddPlot.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddPlot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlot.FormattingEnabled = true;
             this.ddPlot.Location = new System.Drawing.Point(280, 6);
             this.ddPlot.Name = "ddPlot";
@@ -1819,8 +1832,9 @@ namespace SiliFish.UI
             // 
             // ddSomites
             // 
-            this.ddSomites.BackColor = System.Drawing.Color.White;
+            this.ddSomites.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddSomites.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddSomites.FormattingEnabled = true;
             this.ddSomites.Items.AddRange(new object[] {
             "All Somites",
@@ -1856,8 +1870,9 @@ namespace SiliFish.UI
             // 
             // dd3DModelType
             // 
-            this.dd3DModelType.BackColor = System.Drawing.Color.White;
+            this.dd3DModelType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.dd3DModelType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dd3DModelType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.dd3DModelType.FormattingEnabled = true;
             this.dd3DModelType.Items.AddRange(new object[] {
             "Gap Jnc",
