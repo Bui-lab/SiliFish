@@ -155,7 +155,7 @@ namespace SiliFish.UI.Controls
             skipCellTypeChange = true;
             ddCellType.Text = poolTemplate.CellType.ToString();
             skipCellTypeChange = false;
-            ddCoreType.Text = poolTemplate.CoreType.ToString();
+            ddCoreType.Text = poolTemplate.CoreType?.ToString();
             lNeuronClass.Visible = ddNeuronClass.Visible = poolTemplate.CellType == CellType.Neuron;
             ddNeuronClass.Text = poolTemplate.NTMode.ToString();
             if (poolTemplate.PositionLeftRight == SagittalPlane.Both)

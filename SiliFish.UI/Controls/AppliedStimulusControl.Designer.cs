@@ -46,6 +46,7 @@
             // 
             // timeLineControl
             // 
+            this.timeLineControl.BackColor = System.Drawing.Color.WhiteSmoke;
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.timeLineControl.Location = new System.Drawing.Point(0, 225);
             this.timeLineControl.Name = "timeLineControl";
@@ -169,6 +170,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.stimControl);
             this.Controls.Add(this.ddTargetSomites);
             this.Controls.Add(this.lTargetSomites);

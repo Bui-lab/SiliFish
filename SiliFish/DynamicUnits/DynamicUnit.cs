@@ -90,7 +90,7 @@ namespace SiliFish.DynamicUnits
         public static Dictionary<string, object> GetParameters(string coreType)
         {
             DynamicUnit core = CreateCore(coreType, null);
-            return core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
+            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
         }
 
 

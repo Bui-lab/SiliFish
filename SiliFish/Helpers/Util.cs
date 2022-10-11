@@ -118,6 +118,25 @@ namespace SiliFish.Helpers
             return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
         }
 
+        public static List<string> CheckJSONVersion(ref string json)
+        {
+            List<string> list = new List<string>();
+            //Compare to Version 0.1
+            if (json.Contains("\"TimeLine\""))
+            {
+                //created by old version 
+                json = json.Replace("\"TimeLine\"", "\"TimeLine_ms\"");
+                list.Add("Stimulus parameters");
+            }
+            if (json.Contains("\"CoreType\": 0") || json.Contains("\"CoreType\": 1") || json.Contains("\"CoreType\": 2")) 
+            {
+                json = json.Replace("\"CoreType\": 0", "\"CoreType\": \"Izhikevich_5P\"")
+                .Replace("\"CoreType\": 1", "\"CoreType\": \"Izhikevich_9P\"")
+                .Replace("\"CoreType\": 2", "\"CoreType\": \"Leaky_Integrator\"");
+                list.Add("Core types");
+            }
+            return list;
+        }
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
             if (filename == null || Time == null || Values == null)

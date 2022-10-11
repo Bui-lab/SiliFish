@@ -52,6 +52,43 @@ namespace SiliFish.UI
         Dictionary<string, object> lastRunSCParams, lastRunDCParams, lastRunBGParams, lastRunCustomParams;
         DateTime runStart;
 
+        private bool SingleCoilSelected
+        {
+            get { return ddModelSelection.Text == "Single coil"; }
+            set
+            {
+                if (value)
+                    ddModelSelection.Text = "Single coil";
+            }
+        }
+        private bool DoubleCoilSelected
+        {
+            get { return ddModelSelection.Text == "Double coil"; }
+            set
+            {
+                if (value)
+                    ddModelSelection.Text = "Double coil";
+            }
+        }
+        private bool BeatGlideSelected
+        {
+            get { return ddModelSelection.Text == "Beat and glide"; }
+            set
+            {
+                if (value)
+                    ddModelSelection.Text = "Beat and glide";
+            }
+        }
+        private bool CustomSelected
+        {
+            get { return ddModelSelection.SelectedIndex <= 0; }
+            set
+            {
+                if (value)
+                    ddModelSelection.SelectedIndex = 0;
+            }
+        }
+
         public MainForm()
         {
             try
@@ -59,7 +96,7 @@ namespace SiliFish.UI
                 InitializeComponent();
                 InitAsync();
                 Wait();
-                rbCustom.Checked = true;
+                ddModelSelection.SelectedIndex = 0;
                 splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
                 tempFolder = Path.GetTempPath() + "SiliFish";
                 outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
@@ -104,6 +141,7 @@ namespace SiliFish.UI
 
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
+                tabParams.BackColor = Color.White;
             }
             catch (Exception ex)
             {
@@ -198,7 +236,7 @@ namespace SiliFish.UI
             if (modelUpdated && Model != null)
                 return;
             modelUpdated = false;
-            if (rbCustom.Checked)
+            if (CustomSelected)
             {
                 ReadModelTemplate(includeHidden: false);
                 RefreshModelFromTemplate();
@@ -218,11 +256,11 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
-            if (rbSingleCoil.Checked)
+            if (SingleCoilSelected)
                 LoadParams(Model.ModelRun ? lastRunSCParams : lastSavedSCParams);
-            else if (rbDoubleCoil.Checked)
+            else if (DoubleCoilSelected)
                 LoadParams(Model.ModelRun ? lastRunDCParams : lastSavedDCParams);
-            else if (rbBeatGlide.Checked)
+            else if (BeatGlideSelected)
                 LoadParams(Model.ModelRun ? lastRunBGParams : lastSavedBGParams);
             else //custom
             {
@@ -232,78 +270,77 @@ namespace SiliFish.UI
         }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (rbSingleCoil.Checked)
+            if (SingleCoilSelected)
                 Model = scModel = new SingleCoilModel();
-            else if (rbDoubleCoil.Checked)
+            else if (DoubleCoilSelected)
                 Model = dcModel = new DoubleCoilModel();
-            else if (rbBeatGlide.Checked)
+            else if (BeatGlideSelected)
                 Model = bgModel = new BeatAndGlideModel();
-            else if (rbCustom.Checked)
+            else //Custom
                 Model = customModel = new CustomSwimmingModel(null);
             LoadParams(Model.GetParameters());
         }
 
-        private void rbSingleCoil_CheckedChanged(object sender, EventArgs e)
+        private void ddModelSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!rbSingleCoil.Checked) return;
-            if (scModel != null)
-                Model = scModel;
-            else
+            bool custom = false;
+            if (SingleCoilSelected)
             {
-                Model = scModel = new SingleCoilModel();
-                lastSavedSCParams = Model.GetParameters();
+                if (scModel != null)
+                    Model = scModel;
+                else
+                {
+                    Model = scModel = new SingleCoilModel();
+                    lastSavedSCParams = Model.GetParameters();
+                }
             }
-            SwitchToModel();
-        }
-
-        private void rbDoubleCoil_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!rbDoubleCoil.Checked) return;
-            if (dcModel != null)
-                Model = dcModel;
-            else
+            else if (DoubleCoilSelected)
             {
-                Model = dcModel = new DoubleCoilModel();
-                lastSavedDCParams = Model.GetParameters();
+                if (dcModel != null)
+                    Model = dcModel;
+                else
+                {
+                    Model = dcModel = new DoubleCoilModel();
+                    lastSavedDCParams = Model.GetParameters();
+                }
             }
-            SwitchToModel();
-        }
-
-        private void rbBeatGlide_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!rbBeatGlide.Checked) return;
-            if (bgModel != null)
+            else if (BeatGlideSelected)
             {
-                Model = bgModel;
+                if (bgModel != null)
+                {
+                    Model = bgModel;
+                }
+                else
+                {
+                    Model = bgModel = new BeatAndGlideModel();
+                    lastSavedBGParams = Model.GetParameters();
+                }
             }
-            else
+            else //user defined/custom
             {
-                Model = bgModel = new BeatAndGlideModel();
-                lastSavedBGParams = Model.GetParameters();
+                custom = true;
+                if (customModel != null)
+                    Model = customModel;
+                else
+                {
+                    Model = customModel = new CustomSwimmingModel(null);
+                    lastSavedCustomParams = Model.GetParameters();
+                    lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
+                }
+            }
+            linkSaveParam.Text = custom ? "Save Model" : "Save Parameters";
+            linkLoadParam.Text = custom ? "Load Model" : "Load Parameters";
+            lStimulus.Visible = ddStimulusMode.Visible = !custom;
+            if (!custom)
+            {
+                if (ddStimulusMode.SelectedIndex == -1)
+                    ddStimulusMode.SelectedIndex = 0;
             }
             SwitchToModel();
         }
 
         private void rbCustom_CheckedChanged(object sender, EventArgs e)
         {
-            linkSaveParam.Text = rbCustom.Checked ? "Save Model" : "Save Parameters";
-            linkLoadParam.Text = rbCustom.Checked ? "Load Model" : "Load Parameters";
-            lStimulus.Visible = ddStimulusMode.Visible = !rbCustom.Checked;
-            if (!rbCustom.Checked)
-            {
-                if (ddStimulusMode.SelectedIndex == -1)
-                    ddStimulusMode.SelectedIndex = 0;
-                return;
-            }
-            if (customModel != null)
-                Model = customModel;
-            else
-            {
-                Model = customModel = new CustomSwimmingModel(null);
-                lastSavedCustomParams = Model.GetParameters();
-                lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
-            }
-            SwitchToModel();
         }
         #endregion
 
@@ -340,7 +377,7 @@ namespace SiliFish.UI
             this.Text = $"SiliFish {Model.ModelName}";
 
             tabParams.TabPages.Clear();
-            if (rbCustom.Checked)
+            if (CustomSelected)
             {
                 ClearCustomModelFields();
                 tabParams.TabPages.Add(tabGeneral);
@@ -355,7 +392,7 @@ namespace SiliFish.UI
             List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList();
 
             List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
-            int tabIndex = rbCustom.Checked ? 1 : 0;
+            int tabIndex = CustomSelected ? 1 : 0;
             var _ = tabParams.Handle;//requires for the insert command to work
             foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
             {
@@ -370,7 +407,8 @@ namespace SiliFish.UI
                 TabPage tabPage = new()
                 {
                     Text = group,
-                    Tag = "Param"
+                    Tag = "Param",
+                    BackColor = tabGeneral.BackColor
                 };
                 //insert after the general tab, keep Animation at the end
                 if (group == "Kinematics")
@@ -587,13 +625,14 @@ namespace SiliFish.UI
 
         private static string CheckJSONVersion(string json)
         {
+            List<string> issues = Util.CheckJSONVersion(ref json);
+            if (issues?.Count > 0)
             //Compare to Version 0.1
-            if (json.Contains("\"TimeLine\""))
             {
-                //createa by old version 
-                json = json.Replace("\"TimeLine\"", "\"TimeLine_ms\"");
+                //created by old version 
                 MessageBox.Show("This file was generated by an old version of SiliFish. " +
-                    "Please double check the stimulus parameters for accuracy before running the model.");
+                    "Please double check the following items for accuracy before running the model:\r\n" +
+                    string.Join("; ", issues));
             }
             return json;
         }
@@ -601,13 +640,13 @@ namespace SiliFish.UI
         {
             try
             {
-                SwimmingModelTemplate mt = rbCustom.Checked ? ReadModelTemplate(includeHidden: true) : null;
+                SwimmingModelTemplate mt = CustomSelected ? ReadModelTemplate(includeHidden: true) : null;
 
                 if (string.IsNullOrEmpty(saveFileJson.FileName))
                     saveFileJson.FileName = mt?.ModelName ?? Model?.ModelName;
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
-                    if (rbCustom.Checked)
+                    if (CustomSelected)
                     {
                         //To make sure deactivated items are saved, even though not displayed
                         //Show all
@@ -618,11 +657,11 @@ namespace SiliFish.UI
                     else
                     {
                         Util.SaveToJSON(saveFileJson.FileName, ReadParams());
-                        if (rbSingleCoil.Checked)
+                        if (SingleCoilSelected)
                             lastSavedSCParams = scModel.GetParameters();
-                        else if (rbDoubleCoil.Checked)
+                        else if (DoubleCoilSelected)
                             lastSavedDCParams = dcModel.GetParameters();
-                        else if (rbBeatGlide.Checked)
+                        else if (BeatGlideSelected)
                             lastSavedBGParams = bgModel.GetParameters();
                     }
                     return true;
@@ -648,7 +687,7 @@ namespace SiliFish.UI
                 {
                     tabParams.Visible = false;
                     Application.DoEvents();
-                    if (rbCustom.Checked)
+                    if (CustomSelected)
                     {
                         string json = Util.ReadFromFile(openFileJson.FileName);
                         json = CheckJSONVersion(json);
@@ -663,11 +702,11 @@ namespace SiliFish.UI
                     {
                         Dictionary<string, object> ParamDict = Util.ReadDictionaryFromJSON(openFileJson.FileName);
                         Model?.SetParameters(ParamDict);
-                        if (rbSingleCoil.Checked)
+                        if (SingleCoilSelected)
                             lastSavedSCParams = ParamDict;
-                        else if (rbDoubleCoil.Checked)
+                        else if (DoubleCoilSelected)
                             lastSavedDCParams = ParamDict;
-                        else if (rbBeatGlide.Checked)
+                        else if (BeatGlideSelected)
                             lastSavedBGParams = ParamDict;
                         SwitchToModel();
                     }
@@ -691,10 +730,7 @@ namespace SiliFish.UI
             try
             {
                 RunParam rp = new() { tMax = tRunEnd, tSkip_ms = tRunSkip };
-                if (cbMultiple.Checked)
-                    Model.RunModel(0, rp, (int)eRunNumber.Value);
-                else
-                    Model.RunModel(0, rp);
+                Model.RunModel(0, rp, (int)eRunNumber.Value);
                 if (Model is SingleCoilModel)
                     lastRunSCParams = Model.GetParameters();
                 else if (Model is DoubleCoilModel)
@@ -728,7 +764,7 @@ namespace SiliFish.UI
             btnPlotWindows.Enabled = false;
             btnPlotHTML.Enabled = false;
             btnAnimate.Enabled = false;
-            linkSaveRun.Visible = false;
+            linkExportOutput.Visible = false;
 
             lRunTime.Text = $"Last run cancelled\r\n" +
                 $"Model: {Model.ModelName}";
@@ -749,7 +785,7 @@ namespace SiliFish.UI
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
             btnAnimate.Enabled = true;
-            linkSaveRun.Visible = true;
+            linkExportOutput.Visible = true;
             btnGenerateEpisodes.Enabled = true;
 
             TimeSpan ts = DateTime.Now - runStart;
@@ -797,7 +833,7 @@ namespace SiliFish.UI
         private void timerRun_Tick(object sender, EventArgs e)
         {
             progressBarRun.Value = (int)((Model?.GetProgress() ?? 0) * progressBarRun.Maximum);
-            if (cbMultiple.Checked)
+            if (eRunNumber.Value > 1)
             {
                 int? i = Model?.GetRunCounter();
                 if (i != null)
@@ -1297,7 +1333,7 @@ namespace SiliFish.UI
         private void eTemplateJSON_TextChanged(object sender, EventArgs e)
         {
             if (eTemplateJSON.Focused)
-                btnLoadTemplateJSON.Enabled = rbCustom.Checked;
+                btnLoadTemplateJSON.Enabled = CustomSelected;
         }
 
         private void btnDisplayTemplateJSON_Click(object sender, EventArgs e)
@@ -1727,7 +1763,7 @@ namespace SiliFish.UI
                     string jsonstring = Util.CreateJSONFromObject(ModelTemplate);
                     if (jsonstring != lastSavedCustomModelJSON)
                     {
-                        rbCustom.Checked = true;
+                        CustomSelected = true;
                         DialogResult res = MessageBox.Show("The custom model has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
@@ -1746,7 +1782,7 @@ namespace SiliFish.UI
                     //check whether the predefined model parameters have changed
                     if (lastSavedSCParams != null && lastSavedSCParams.Any() && !scModel.GetParameters().SameAs(lastSavedSCParams))
                     {
-                        rbSingleCoil.Checked = true;
+                        SingleCoilSelected = true;
                         DialogResult res = MessageBox.Show("The single coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
@@ -1764,7 +1800,7 @@ namespace SiliFish.UI
                     }
                     if (lastSavedDCParams != null && lastSavedDCParams.Any() && !dcModel.GetParameters().SameAs(lastSavedDCParams))
                     {
-                        rbDoubleCoil.Checked = true;
+                        DoubleCoilSelected = true;
                         DialogResult res = MessageBox.Show("The double coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
@@ -1782,7 +1818,7 @@ namespace SiliFish.UI
                     }
                     if (lastSavedBGParams != null && lastSavedBGParams.Any() && !bgModel.GetParameters().SameAs(lastSavedBGParams))
                     {
-                        rbBeatGlide.Checked = true;
+                        BeatGlideSelected = true;
                         DialogResult res = MessageBox.Show("The beat and glide coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
@@ -1829,7 +1865,7 @@ namespace SiliFish.UI
             lastEnteredTime = (int)eTimeEnd.Value;
         }
 
-        private void linkBrowseToOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -1838,7 +1874,7 @@ namespace SiliFish.UI
             catch { }
         }
 
-        private void linkBrowseToTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -1855,10 +1891,6 @@ namespace SiliFish.UI
             about.ShowDialog();
         }
 
-        private void cbMultiple_CheckedChanged(object sender, EventArgs e)
-        {
-            eRunNumber.Visible = cbMultiple.Checked;
-        }
 
         #region Body Size
 
@@ -1964,16 +1996,17 @@ namespace SiliFish.UI
             else
                 ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
         }
-
-        private void linkNeuronalCellDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnCellularDynamics_Click(object sender, EventArgs e)
         {
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
             ControlContainer frmControl = new();
             frmControl.AddControl(dynControl);
-            frmControl.Text = "Neuronal Dynamics Test";
+            frmControl.Text = "Cellular Dynamics Test";
             frmControl.SaveVisible = false;
             frmControl.ShowDialog();
         }
+
+
 
         private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
         {

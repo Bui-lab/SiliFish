@@ -87,6 +87,8 @@
             this.pMinMax = new System.Windows.Forms.Panel();
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
             this.pfGAParams = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lFitnessFunctions = new System.Windows.Forms.Label();
             this.linkAddFitnessFunction = new System.Windows.Forms.LinkLabel();
             this.tGAOutput = new System.Windows.Forms.TabPage();
             this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
@@ -118,8 +120,6 @@
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
-            this.lFitnessFunctions = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -157,11 +157,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).BeginInit();
             this.pMinMax.SuspendLayout();
             this.pfGAParams.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.tGAOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // eRheobaseLimit
@@ -197,12 +197,15 @@
             // 
             // btnRheobase
             // 
+            this.btnRheobase.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnRheobase.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnRheobase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRheobase.Location = new System.Drawing.Point(128, 22);
             this.btnRheobase.Name = "btnRheobase";
             this.btnRheobase.Size = new System.Drawing.Size(66, 23);
             this.btnRheobase.TabIndex = 13;
             this.btnRheobase.Text = "Calculate";
-            this.btnRheobase.UseVisualStyleBackColor = true;
+            this.btnRheobase.UseVisualStyleBackColor = false;
             this.btnRheobase.Click += new System.EventHandler(this.btnRheobase_Click);
             // 
             // ldt
@@ -261,12 +264,15 @@
             // 
             // btnDynamicsRun
             // 
+            this.btnDynamicsRun.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnDynamicsRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnDynamicsRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDynamicsRun.Location = new System.Drawing.Point(4, 271);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(67, 23);
             this.btnDynamicsRun.TabIndex = 3;
             this.btnDynamicsRun.Text = "Run";
-            this.btnDynamicsRun.UseVisualStyleBackColor = true;
+            this.btnDynamicsRun.UseVisualStyleBackColor = false;
             this.btnDynamicsRun.Click += new System.EventHandler(this.btnDynamicsRun_Click);
             // 
             // eStepEndTime
@@ -414,13 +420,16 @@
             // 
             // btnSensitivityAnalysis
             // 
+            this.btnSensitivityAnalysis.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnSensitivityAnalysis.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnSensitivityAnalysis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSensitivityAnalysis.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnSensitivityAnalysis.Location = new System.Drawing.Point(131, 75);
+            this.btnSensitivityAnalysis.Location = new System.Drawing.Point(131, 80);
             this.btnSensitivityAnalysis.Name = "btnSensitivityAnalysis";
             this.btnSensitivityAnalysis.Size = new System.Drawing.Size(63, 23);
             this.btnSensitivityAnalysis.TabIndex = 20;
             this.btnSensitivityAnalysis.Text = "Run";
-            this.btnSensitivityAnalysis.UseVisualStyleBackColor = true;
+            this.btnSensitivityAnalysis.UseVisualStyleBackColor = false;
             this.btnSensitivityAnalysis.Click += new System.EventHandler(this.btnSensitivityAnalysis_Click);
             // 
             // grTest
@@ -449,6 +458,7 @@
             // 
             // stimulusControl1
             // 
+            this.stimulusControl1.BackColor = System.Drawing.Color.White;
             this.stimulusControl1.Location = new System.Drawing.Point(9, 148);
             this.stimulusControl1.Name = "stimulusControl1";
             this.stimulusControl1.Size = new System.Drawing.Size(176, 93);
@@ -576,7 +586,7 @@
             // cbLogScale
             // 
             this.cbLogScale.AutoSize = true;
-            this.cbLogScale.Location = new System.Drawing.Point(6, 75);
+            this.cbLogScale.Location = new System.Drawing.Point(6, 80);
             this.cbLogScale.Name = "cbLogScale";
             this.cbLogScale.Size = new System.Drawing.Size(76, 19);
             this.cbLogScale.TabIndex = 28;
@@ -678,6 +688,7 @@
             // linkLoadCoreUnit
             // 
             this.linkLoadCoreUnit.AutoSize = true;
+            this.linkLoadCoreUnit.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkLoadCoreUnit.Location = new System.Drawing.Point(4, 8);
             this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
             this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
@@ -689,6 +700,7 @@
             // linkSaveCoreUnit
             // 
             this.linkSaveCoreUnit.AutoSize = true;
+            this.linkSaveCoreUnit.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkSaveCoreUnit.Location = new System.Drawing.Point(96, 8);
             this.linkSaveCoreUnit.Name = "linkSaveCoreUnit";
             this.linkSaveCoreUnit.Size = new System.Drawing.Size(84, 15);
@@ -710,6 +722,7 @@
             // linkUseUpdatedParams
             // 
             this.linkUseUpdatedParams.AutoSize = true;
+            this.linkUseUpdatedParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkUseUpdatedParams.Location = new System.Drawing.Point(6, 5);
             this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
             this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
@@ -865,6 +878,7 @@
             // linkSuggestMinMax
             // 
             this.linkSuggestMinMax.AutoSize = true;
+            this.linkSuggestMinMax.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkSuggestMinMax.Location = new System.Drawing.Point(6, 9);
             this.linkSuggestMinMax.Name = "linkSuggestMinMax";
             this.linkSuggestMinMax.Size = new System.Drawing.Size(137, 15);
@@ -886,9 +900,30 @@
             this.pfGAParams.Size = new System.Drawing.Size(420, 271);
             this.pfGAParams.TabIndex = 0;
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.lFitnessFunctions);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(138, 29);
+            this.panel1.TabIndex = 29;
+            // 
+            // lFitnessFunctions
+            // 
+            this.lFitnessFunctions.AutoSize = true;
+            this.lFitnessFunctions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lFitnessFunctions.Location = new System.Drawing.Point(13, 6);
+            this.lFitnessFunctions.Name = "lFitnessFunctions";
+            this.lFitnessFunctions.Size = new System.Drawing.Size(101, 15);
+            this.lFitnessFunctions.TabIndex = 2;
+            this.lFitnessFunctions.Text = "Fitness Functions";
+            // 
             // linkAddFitnessFunction
             // 
             this.linkAddFitnessFunction.AutoSize = true;
+            this.linkAddFitnessFunction.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkAddFitnessFunction.Location = new System.Drawing.Point(3, 35);
             this.linkAddFitnessFunction.Name = "linkAddFitnessFunction";
             this.linkAddFitnessFunction.Padding = new System.Windows.Forms.Padding(10);
@@ -999,6 +1034,7 @@
             // linkOptimize
             // 
             this.linkOptimize.AutoSize = true;
+            this.linkOptimize.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkOptimize.Location = new System.Drawing.Point(9, 158);
             this.linkOptimize.Name = "linkOptimize";
             this.linkOptimize.Size = new System.Drawing.Size(55, 15);
@@ -1167,6 +1203,7 @@
             // linkSwitchToOptimization
             // 
             this.linkSwitchToOptimization.AutoSize = true;
+            this.linkSwitchToOptimization.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkSwitchToOptimization.Location = new System.Drawing.Point(528, 38);
             this.linkSwitchToOptimization.Name = "linkSwitchToOptimization";
             this.linkSwitchToOptimization.Size = new System.Drawing.Size(110, 15);
@@ -1187,30 +1224,11 @@
             // 
             this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
             // 
-            // lFitnessFunctions
-            // 
-            this.lFitnessFunctions.AutoSize = true;
-            this.lFitnessFunctions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lFitnessFunctions.Location = new System.Drawing.Point(13, 6);
-            this.lFitnessFunctions.Name = "lFitnessFunctions";
-            this.lFitnessFunctions.Size = new System.Drawing.Size(101, 15);
-            this.lFitnessFunctions.TabIndex = 2;
-            this.lFitnessFunctions.Text = "Fitness Functions";
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.lFitnessFunctions);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(138, 29);
-            this.panel1.TabIndex = 29;
-            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.splitMain);
             this.Name = "DynamicsTestControl";
             this.Size = new System.Drawing.Size(1252, 683);
@@ -1262,14 +1280,14 @@
             this.pMinMax.PerformLayout();
             this.pfGAParams.ResumeLayout(false);
             this.pfGAParams.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.tGAOutput.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).EndInit();
             this.pPlots.ResumeLayout(false);
             this.pPlots.PerformLayout();
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }

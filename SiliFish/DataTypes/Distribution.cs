@@ -2,6 +2,7 @@
 using SiliFish.Extensions;
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.DataTypes
 {
@@ -31,13 +32,14 @@ namespace SiliFish.DataTypes
 
         protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }
 
+        [JsonIgnore]
         public virtual double UniqueValue { get { throw new NotImplementedException(); } }
         public override string ToString()
         {
             int dot = DistType.LastIndexOf('.');
             string displayedType = distType[(dot + 1)..];
-            return Absolute ? String.Format("{0}: [{1}-{2}]", displayedType, RangeStart, RangeEnd) :
-                String.Format("{0}: %[{1}-{2}]; [{3}-{4}]", displayedType, RangeStart, RangeEnd, LowerLimit, UpperLimit);
+            return Absolute ? String.Format("{0}-{1} [{2}]", RangeStart, RangeEnd, displayedType) :
+                String.Format("%{0}-{1}; [{2}-{3}] [{4}]", RangeStart, RangeEnd, LowerLimit, UpperLimit, displayedType);
         }
         public Distribution()
         {
@@ -156,6 +158,12 @@ namespace SiliFish.DataTypes
             get { return (RangeStart + RangeEnd) / 2; }
         }
         public double NoiseStdDev { get; set; } = 0;
+
+        public override string ToString()
+        {
+            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:1; SD:{1:0.#####}" : "";
+            return $"{UniqueValue}{noise}";
+        }
         public Constant_NoDistribution()
         { }
         public Constant_NoDistribution(double val, bool angular, double noiseStdDev)
