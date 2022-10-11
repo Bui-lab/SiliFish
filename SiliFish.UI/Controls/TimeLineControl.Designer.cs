@@ -34,20 +34,21 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgTimeLine = new System.Windows.Forms.DataGridView();
-            this.cmTimeLine = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiClearAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiSort = new System.Windows.Forms.ToolStripMenuItem();
             this.colStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRepeat = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colRest = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRepetition = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmTimeLine = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiClearAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiSort = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgTimeLine)).BeginInit();
             this.cmTimeLine.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgTimeLine
             // 
+            this.dgTimeLine.BackgroundColor = System.Drawing.Color.WhiteSmoke;
             this.dgTimeLine.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgTimeLine.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colStartTime,
@@ -63,29 +64,6 @@
             this.dgTimeLine.Size = new System.Drawing.Size(467, 150);
             this.dgTimeLine.TabIndex = 0;
             this.dgTimeLine.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgTimeLine_CellValueChanged);
-            // 
-            // cmTimeLine
-            // 
-            this.cmTimeLine.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiClearAll,
-            this.cmiSort});
-            this.cmTimeLine.Name = "cmTimeLine";
-            this.cmTimeLine.Size = new System.Drawing.Size(119, 48);
-            this.cmTimeLine.Opening += new System.ComponentModel.CancelEventHandler(this.cmTimeLine_Opening);
-            // 
-            // cmiClearAll
-            // 
-            this.cmiClearAll.Name = "cmiClearAll";
-            this.cmiClearAll.Size = new System.Drawing.Size(118, 22);
-            this.cmiClearAll.Text = "Clear All";
-            this.cmiClearAll.Click += new System.EventHandler(this.cmiClearAll_Click);
-            // 
-            // cmiSort
-            // 
-            this.cmiSort.Name = "cmiSort";
-            this.cmiSort.Size = new System.Drawing.Size(118, 22);
-            this.cmiSort.Text = "Sort";
-            this.cmiSort.Click += new System.EventHandler(this.cmiSort_Click);
             // 
             // colStartTime
             // 
@@ -125,6 +103,29 @@
             this.colRepetition.HeaderText = "Repetition";
             this.colRepetition.Name = "colRepetition";
             this.colRepetition.Visible = false;
+            // 
+            // cmTimeLine
+            // 
+            this.cmTimeLine.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiClearAll,
+            this.cmiSort});
+            this.cmTimeLine.Name = "cmTimeLine";
+            this.cmTimeLine.Size = new System.Drawing.Size(119, 48);
+            this.cmTimeLine.Opening += new System.ComponentModel.CancelEventHandler(this.cmTimeLine_Opening);
+            // 
+            // cmiClearAll
+            // 
+            this.cmiClearAll.Name = "cmiClearAll";
+            this.cmiClearAll.Size = new System.Drawing.Size(118, 22);
+            this.cmiClearAll.Text = "Clear All";
+            this.cmiClearAll.Click += new System.EventHandler(this.cmiClearAll_Click);
+            // 
+            // cmiSort
+            // 
+            this.cmiSort.Name = "cmiSort";
+            this.cmiSort.Size = new System.Drawing.Size(118, 22);
+            this.cmiSort.Text = "Sort";
+            this.cmiSort.Click += new System.EventHandler(this.cmiSort_Click);
             // 
             // TimeLineControl
             // 

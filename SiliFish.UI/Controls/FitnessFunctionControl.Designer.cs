@@ -235,6 +235,7 @@
             this.linkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.linkRemove.AutoSize = true;
+            this.linkRemove.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkRemove.Location = new System.Drawing.Point(189, 198);
             this.linkRemove.Name = "linkRemove";
             this.linkRemove.Size = new System.Drawing.Size(50, 15);
@@ -247,6 +248,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.linkRemove);
             this.Controls.Add(this.pFiringRelated);
             this.Controls.Add(this.pTargetRheobase);

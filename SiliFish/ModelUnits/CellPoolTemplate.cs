@@ -22,7 +22,7 @@ namespace SiliFish.ModelUnits
             get { return parameters; }
             set
             {
-                parameters = value.ToDictionary(kvp => kvp.Key,
+                parameters = value?.ToDictionary(kvp => kvp.Key,
                     kvp => Distribution.CreateDistributionObject(kvp.Value) as object);
             }
         }
