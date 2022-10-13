@@ -46,6 +46,9 @@
             this.lFitnessFunctions = new System.Windows.Forms.Label();
             this.tGAOutput = new System.Windows.Forms.TabPage();
             this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
+            this.btnOptimize = new System.Windows.Forms.Button();
+            this.linkLoadGAParams = new System.Windows.Forms.LinkLabel();
+            this.linkSaveGAParams = new System.Windows.Forms.LinkLabel();
             this.eTerminationParameter = new System.Windows.Forms.TextBox();
             this.lGATerminationParameter = new System.Windows.Forms.Label();
             this.LGAReinsertion = new System.Windows.Forms.Label();
@@ -58,12 +61,13 @@
             this.lGAMinMaxChromosome = new System.Windows.Forms.Label();
             this.ddGATermination = new System.Windows.Forms.ComboBox();
             this.ddGASelection = new System.Windows.Forms.ComboBox();
-            this.linkOptimize = new System.Windows.Forms.LinkLabel();
             this.eMinChromosome = new System.Windows.Forms.TextBox();
             this.lGACrossOver = new System.Windows.Forms.Label();
             this.lMinMaxSeperator = new System.Windows.Forms.Label();
             this.lGATermination = new System.Windows.Forms.Label();
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
+            this.openFileJson = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitGA)).BeginInit();
             this.splitGA.Panel1.SuspendLayout();
             this.splitGA.Panel2.SuspendLayout();
@@ -94,6 +98,9 @@
             // 
             // splitGA.Panel2
             // 
+            this.splitGA.Panel2.Controls.Add(this.btnOptimize);
+            this.splitGA.Panel2.Controls.Add(this.linkLoadGAParams);
+            this.splitGA.Panel2.Controls.Add(this.linkSaveGAParams);
             this.splitGA.Panel2.Controls.Add(this.eTerminationParameter);
             this.splitGA.Panel2.Controls.Add(this.lGATerminationParameter);
             this.splitGA.Panel2.Controls.Add(this.LGAReinsertion);
@@ -106,7 +113,6 @@
             this.splitGA.Panel2.Controls.Add(this.lGAMinMaxChromosome);
             this.splitGA.Panel2.Controls.Add(this.ddGATermination);
             this.splitGA.Panel2.Controls.Add(this.ddGASelection);
-            this.splitGA.Panel2.Controls.Add(this.linkOptimize);
             this.splitGA.Panel2.Controls.Add(this.eMinChromosome);
             this.splitGA.Panel2.Controls.Add(this.lGACrossOver);
             this.splitGA.Panel2.Controls.Add(this.lMinMaxSeperator);
@@ -286,9 +292,46 @@
             this.eOptimizationOutput.TabIndex = 25;
             this.eOptimizationOutput.Text = "";
             // 
+            // btnOptimize
+            // 
+            this.btnOptimize.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnOptimize.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnOptimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOptimize.Location = new System.Drawing.Point(6, 219);
+            this.btnOptimize.Name = "btnOptimize";
+            this.btnOptimize.Size = new System.Drawing.Size(67, 23);
+            this.btnOptimize.TabIndex = 44;
+            this.btnOptimize.Text = "Optimize";
+            this.btnOptimize.UseVisualStyleBackColor = false;
+            this.btnOptimize.Click += new System.EventHandler(this.btnOptimize_Click);
+            // 
+            // linkLoadGAParams
+            // 
+            this.linkLoadGAParams.AutoSize = true;
+            this.linkLoadGAParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkLoadGAParams.Location = new System.Drawing.Point(84, 223);
+            this.linkLoadGAParams.Name = "linkLoadGAParams";
+            this.linkLoadGAParams.Size = new System.Drawing.Size(94, 15);
+            this.linkLoadGAParams.TabIndex = 42;
+            this.linkLoadGAParams.TabStop = true;
+            this.linkLoadGAParams.Text = "Load GA Params";
+            this.linkLoadGAParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadGAParams_LinkClicked);
+            // 
+            // linkSaveGAParams
+            // 
+            this.linkSaveGAParams.AutoSize = true;
+            this.linkSaveGAParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkSaveGAParams.Location = new System.Drawing.Point(184, 223);
+            this.linkSaveGAParams.Name = "linkSaveGAParams";
+            this.linkSaveGAParams.Size = new System.Drawing.Size(92, 15);
+            this.linkSaveGAParams.TabIndex = 43;
+            this.linkSaveGAParams.TabStop = true;
+            this.linkSaveGAParams.Text = "Save GA Params";
+            this.linkSaveGAParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveGAParams_LinkClicked);
+            // 
             // eTerminationParameter
             // 
-            this.eTerminationParameter.Location = new System.Drawing.Point(143, 157);
+            this.eTerminationParameter.Location = new System.Drawing.Point(151, 157);
             this.eTerminationParameter.Name = "eTerminationParameter";
             this.eTerminationParameter.Size = new System.Drawing.Size(35, 23);
             this.eTerminationParameter.TabIndex = 41;
@@ -297,7 +340,7 @@
             // lGATerminationParameter
             // 
             this.lGATerminationParameter.AutoSize = true;
-            this.lGATerminationParameter.Location = new System.Drawing.Point(3, 162);
+            this.lGATerminationParameter.Location = new System.Drawing.Point(6, 162);
             this.lGATerminationParameter.Name = "lGATerminationParameter";
             this.lGATerminationParameter.Size = new System.Drawing.Size(127, 15);
             this.lGATerminationParameter.TabIndex = 40;
@@ -306,7 +349,7 @@
             // LGAReinsertion
             // 
             this.LGAReinsertion.AutoSize = true;
-            this.LGAReinsertion.Location = new System.Drawing.Point(3, 102);
+            this.LGAReinsertion.Location = new System.Drawing.Point(6, 102);
             this.LGAReinsertion.Name = "LGAReinsertion";
             this.LGAReinsertion.Size = new System.Drawing.Size(66, 15);
             this.LGAReinsertion.TabIndex = 38;
@@ -328,7 +371,7 @@
             // lGASelection
             // 
             this.lGASelection.AutoSize = true;
-            this.lGASelection.Location = new System.Drawing.Point(3, 15);
+            this.lGASelection.Location = new System.Drawing.Point(6, 15);
             this.lGASelection.Name = "lGASelection";
             this.lGASelection.Size = new System.Drawing.Size(55, 15);
             this.lGASelection.TabIndex = 26;
@@ -349,7 +392,7 @@
             // 
             // eMaxChromosome
             // 
-            this.eMaxChromosome.Location = new System.Drawing.Point(197, 190);
+            this.eMaxChromosome.Location = new System.Drawing.Point(205, 190);
             this.eMaxChromosome.Name = "eMaxChromosome";
             this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMaxChromosome.TabIndex = 36;
@@ -358,7 +401,7 @@
             // lGAMutation
             // 
             this.lGAMutation.AutoSize = true;
-            this.lGAMutation.Location = new System.Drawing.Point(3, 73);
+            this.lGAMutation.Location = new System.Drawing.Point(6, 73);
             this.lGAMutation.Name = "lGAMutation";
             this.lGAMutation.Size = new System.Drawing.Size(56, 15);
             this.lGAMutation.TabIndex = 28;
@@ -380,7 +423,7 @@
             // lGAMinMaxChromosome
             // 
             this.lGAMinMaxChromosome.AutoSize = true;
-            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(0, 195);
+            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(6, 193);
             this.lGAMinMaxChromosome.Name = "lGAMinMaxChromosome";
             this.lGAMinMaxChromosome.Size = new System.Drawing.Size(142, 15);
             this.lGAMinMaxChromosome.TabIndex = 34;
@@ -413,21 +456,9 @@
             this.ddGASelection.Size = new System.Drawing.Size(206, 23);
             this.ddGASelection.TabIndex = 30;
             // 
-            // linkOptimize
-            // 
-            this.linkOptimize.AutoSize = true;
-            this.linkOptimize.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkOptimize.Location = new System.Drawing.Point(6, 223);
-            this.linkOptimize.Name = "linkOptimize";
-            this.linkOptimize.Size = new System.Drawing.Size(55, 15);
-            this.linkOptimize.TabIndex = 0;
-            this.linkOptimize.TabStop = true;
-            this.linkOptimize.Text = "Optimize";
-            this.linkOptimize.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOptimize_LinkClicked);
-            // 
             // eMinChromosome
             // 
-            this.eMinChromosome.Location = new System.Drawing.Point(143, 190);
+            this.eMinChromosome.Location = new System.Drawing.Point(151, 190);
             this.eMinChromosome.Name = "eMinChromosome";
             this.eMinChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMinChromosome.TabIndex = 35;
@@ -436,7 +467,7 @@
             // lGACrossOver
             // 
             this.lGACrossOver.AutoSize = true;
-            this.lGACrossOver.Location = new System.Drawing.Point(3, 44);
+            this.lGACrossOver.Location = new System.Drawing.Point(6, 44);
             this.lGACrossOver.Name = "lGACrossOver";
             this.lGACrossOver.Size = new System.Drawing.Size(61, 15);
             this.lGACrossOver.TabIndex = 27;
@@ -445,7 +476,7 @@
             // lMinMaxSeperator
             // 
             this.lMinMaxSeperator.AutoSize = true;
-            this.lMinMaxSeperator.Location = new System.Drawing.Point(184, 196);
+            this.lMinMaxSeperator.Location = new System.Drawing.Point(192, 196);
             this.lMinMaxSeperator.Name = "lMinMaxSeperator";
             this.lMinMaxSeperator.Size = new System.Drawing.Size(12, 15);
             this.lMinMaxSeperator.TabIndex = 37;
@@ -454,7 +485,7 @@
             // lGATermination
             // 
             this.lGATermination.AutoSize = true;
-            this.lGATermination.Location = new System.Drawing.Point(3, 131);
+            this.lGATermination.Location = new System.Drawing.Point(6, 131);
             this.lGATermination.Name = "lGATermination";
             this.lGATermination.Size = new System.Drawing.Size(70, 15);
             this.lGATermination.TabIndex = 29;
@@ -463,6 +494,14 @@
             // timerOptimization
             // 
             this.timerOptimization.Tick += new System.EventHandler(this.timerOptimization_Tick);
+            // 
+            // openFileJson
+            // 
+            this.openFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // saveFileJson
+            // 
+            this.saveFileJson.Filter = "JSON files(*.json)|*.json";
             // 
             // GAControl
             // 
@@ -525,11 +564,15 @@
         private Label lGAMinMaxChromosome;
         private ComboBox ddGATermination;
         private ComboBox ddGASelection;
-        private LinkLabel linkOptimize;
         private TextBox eMinChromosome;
         private Label lGACrossOver;
         private Label lMinMaxSeperator;
         private Label lGATermination;
         private System.Windows.Forms.Timer timerOptimization;
+        private LinkLabel linkLoadGAParams;
+        private LinkLabel linkSaveGAParams;
+        private Button btnOptimize;
+        private OpenFileDialog openFileJson;
+        private SaveFileDialog saveFileJson;
     }
 }

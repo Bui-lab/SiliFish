@@ -72,6 +72,7 @@ namespace SiliFish.UI.Controls
                     }
                     if (updateParamNames)
                     {
+                        updateParamNames = false;
                         ddParameter.Items.Clear();
                         ddParameter.Items.Add("All Parameters");
                         foreach (var p in parameters)
@@ -327,6 +328,7 @@ namespace SiliFish.UI.Controls
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
             CoreType = ddCoreType.Text;
+            updateParamNames = true;
             Parameters = DynamicUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
         }
 

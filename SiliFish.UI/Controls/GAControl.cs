@@ -1,5 +1,6 @@
 ﻿using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.Services.Optimization;
 using System.Data;
 
@@ -57,7 +58,7 @@ namespace SiliFish.UI.Controls
         private void CompleteOptimization()
         {
             timerOptimization.Enabled = false;
-            linkOptimize.Enabled = true;
+            btnOptimize.Enabled = true;
             Parameters = SolverBestValues;
             if (optimizationProgress != null && optimizationProgress.Visible)
                 optimizationProgress.Close();
@@ -77,8 +78,10 @@ namespace SiliFish.UI.Controls
                 (Type)ddGACrossOver.SelectedItem,
                 (Type)ddGAMutation.SelectedItem,
                 (Type)ddGAReinsertion.SelectedItem,
-                (Type)ddGATermination.SelectedItem);
-            Solver.SetOptimizationSettings(minPopulation, maxPopulation,
+                (Type)ddGATermination.SelectedItem,
+                eTerminationParameter.Text);
+            Solver.SetOptimizationSettings(minPopulation, 
+                maxPopulation,
                 CoreType,
                 Parameters,
                 targetRheobaseFunction,
@@ -117,7 +120,7 @@ namespace SiliFish.UI.Controls
         {
             timerOptimization.Enabled = false;
             Solver?.CancelOptimization();
-            linkOptimize.Enabled = true;
+            btnOptimize.Enabled = true;
         }
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -139,22 +142,6 @@ namespace SiliFish.UI.Controls
                 rowIndex++;
             }
         }
-        private void linkOptimize_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            CreateSolver();
-            timerOptimization.Enabled = true;
-            linkOptimize.Enabled = false;
-            eOptimizationOutput.Text = "";
-            optimizationProgress = new()
-            {
-                Text = "Optimization",
-                Progress = 0
-            };
-            optimizationProgress.StopRunClicked += ProgressForm_StopRunClicked;
-            optimizationProgress.Show();
-            Task.Run(RunOptimize);
-        }
-
         private void timerOptimization_Tick(object sender, EventArgs e)
         {
             if (Solver == null) return;
@@ -182,6 +169,67 @@ namespace SiliFish.UI.Controls
         private void ddGATermination_SelectedIndexChanged(object sender, EventArgs e)
         {
             lGATerminationParameter.Text = GeneticAlgorithmExtension.GetTerminationParameter(ddGATermination.Text);
+        }
+
+        private void btnOptimize_Click(object sender, EventArgs e)
+        {
+            CreateSolver();
+            timerOptimization.Enabled = true;
+            btnOptimize.Enabled = false;
+            eOptimizationOutput.Text = "";
+            optimizationProgress = new()
+            {
+                Text = "Optimization",
+                Progress = 0
+            };
+            optimizationProgress.StopRunClicked += ProgressForm_StopRunClicked;
+            optimizationProgress.Show();
+            Task.Run(RunOptimize);
+        }
+
+        private void linkLoadGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (openFileJson.ShowDialog() == DialogResult.OK)
+            {
+                string JSONString = Util.ReadFromFile(openFileJson.FileName);
+                if (string.IsNullOrEmpty(JSONString))
+                    return;
+                Solver = (CoreSolver)Util.CreateObjectFromJSON(typeof(CoreSolver), JSONString);
+                if (Solver != null)
+                {
+                    /*eMinChromosome.Text = Solver
+                    ReadMinMaxParamValues();
+                    ReadFitnessValues();
+                    if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
+                        minPopulation = 50;
+                    if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
+                        maxPopulation = 50;
+                    Solver = new((Type)ddGASelection.SelectedItem,
+                        (Type)ddGACrossOver.SelectedItem,
+                        (Type)ddGAMutation.SelectedItem,
+                        (Type)ddGAReinsertion.SelectedItem,
+                        (Type)ddGATermination.SelectedItem,
+                        eTerminationParameter.Text);
+                    Solver.SetOptimizationSettings(minPopulation,
+                        maxPopulation,
+                        CoreType,
+                        Parameters,
+                        targetRheobaseFunction,
+                        firingFitnessFunctions,
+                        minValues, maxValues);*/
+                }
+            }
+
+        }
+
+        private void linkSaveGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            CreateSolver();
+            string JSONString = Util.CreateJSONFromObject(Solver);
+            if (saveFileJson.ShowDialog() == DialogResult.OK)
+            {
+                Util.SaveToFile(saveFileJson.FileName, JSONString);
+            }
         }
     }
 }
