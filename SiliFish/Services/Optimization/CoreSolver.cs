@@ -152,17 +152,43 @@ namespace SiliFish.Services.Optimization
              {
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
                     return (int)(100 * Algorithm.GenerationsNumber / gnt.ExpectedGenerationNumber);
-
+                if (Algorithm.Termination is TimeEvolvingTermination tet)
+                    return (int)(100*Algorithm.TimeEvolving/tet.MaxTime);
+                if (Algorithm.Termination is FitnessStagnationTermination fst)
+                    return 50;// fst.ExpectedStagnantGenerationsNumber;
+                if (Algorithm.Termination is FitnessThresholdTermination ftt)
+                    return (int)(100 * Algorithm.BestChromosome.Fitness.Value / ftt.ExpectedFitness);
                 return 0;
             }
         }
 
+        private TerminationBase CreateTerminator(Type terminationType, string terminationParam)
+        {
+            if (string.IsNullOrEmpty(terminationParam))
+                return (TerminationBase)Activator.CreateInstance(terminationType);
+
+            if (!int.TryParse(terminationParam, out int iParam))
+                iParam = 0;
+            if (!double.TryParse(terminationParam, out double dParam))
+                dParam = 0;
+
+            if ((terminationType == typeof(GenerationNumberTermination) || terminationType == typeof(FitnessStagnationTermination)) && iParam>0)
+                return (TerminationBase)Activator.CreateInstance(terminationType, iParam);
+            if (terminationType == typeof(FitnessThresholdTermination) && dParam>0)
+                return (TerminationBase)Activator.CreateInstance(terminationType, dParam);
+            if (terminationType == typeof(TimeEvolvingTermination))
+                return (TerminationBase)Activator.CreateInstance(terminationType, new TimeSpan(0, iParam, 0));
+            return (TerminationBase)Activator.CreateInstance(terminationType);
+        }
+
         //https://github.com/giacomelli/GeneticSharp/wiki/terminations
+        //And e Or (allows combine others terminations).
         public CoreSolver(Type selectionType,
             Type crossOverType,
             Type mutationType,
             Type reinsertionType,
-            Type terminationType
+            Type terminationType,
+            string terminationParam
             )
 
         {
@@ -170,7 +196,7 @@ namespace SiliFish.Services.Optimization
             Crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
             Mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
             Reinsertion = (ReinsertionBase)Activator.CreateInstance(reinsertionType);
-            Termination = (TerminationBase)Activator.CreateInstance(terminationType); //new FitnessThresholdTermination(0.05);// Generation number, Time evolving, Fitness stagnation, Fitness threshold, And e Or (allows combine others terminations).
+            Termination = CreateTerminator(terminationType, terminationParam);
         }
 
         public void SetOptimizationSettings(int minPopulationSize,
