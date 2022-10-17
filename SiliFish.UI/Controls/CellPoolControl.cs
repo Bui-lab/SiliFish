@@ -96,7 +96,15 @@ namespace SiliFish.UI.Controls
             loadPool.Invoke(this, new EventArgs());
             if (string.IsNullOrEmpty(JSONString))
                 return;
-            poolTemplate = (CellPoolTemplate)Util.CreateObjectFromJSON(typeof(CellPoolTemplate), JSONString);
+            try
+            {
+                poolTemplate = (CellPoolTemplate)Util.CreateObjectFromJSON(typeof(CellPoolTemplate), JSONString);
+            }
+            catch
+            {
+                MessageBox.Show("Selected file is not a valid Cell Pool Template file.");
+                return;
+            }
             WriteDataToControl();
         }
 

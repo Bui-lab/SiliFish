@@ -24,6 +24,7 @@ namespace SiliFish.UI.Controls
             }
         }
         private bool updateParamNames = true;
+        private bool skipCoreTypeChange = false;
         DynamicsStats dynamics;
         private double[] TimeArray;
 
@@ -129,7 +130,15 @@ namespace SiliFish.UI.Controls
           
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
+            gaControl.OnLoadParams += GaControl_OnLoadParams;
+        }
 
+        private void GaControl_OnLoadParams(object sender, EventArgs e)
+        {
+            skipCoreTypeChange = true;
+            CoreType = gaControl.CoreType;
+            Parameters = gaControl.Parameters;
+            skipCoreTypeChange = false;
         }
 
         private void GaControl_OnCompleteOptimization(object sender, EventArgs e)
@@ -327,6 +336,7 @@ namespace SiliFish.UI.Controls
         #endregion
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (skipCoreTypeChange) return;
             CoreType = ddCoreType.Text;
             updateParamNames = true;
             Parameters = DynamicUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
@@ -500,6 +510,9 @@ namespace SiliFish.UI.Controls
                 DynamicUnit core = DynamicUnit.GetOfDerivedType(JSONString);
                 if (core != null)
                 {
+                    skipCoreTypeChange = true;
+                    ddCoreType.Text = core.CoreType;
+                    skipCoreTypeChange = false;
                     CoreType = core.CoreType;
                     Parameters = core.GetParameters();
                 }
