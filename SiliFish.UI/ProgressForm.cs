@@ -31,6 +31,14 @@ namespace SiliFish.UI
                 progressBar.Value = (int)Math.Floor(value);
             }
         }
+
+        public string ProgressText
+        {
+            set 
+            {
+                lProgressDetails.Text = value;
+            }
+        }
         public ProgressForm()
         {
             InitializeComponent();

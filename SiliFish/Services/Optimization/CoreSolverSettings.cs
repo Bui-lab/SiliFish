@@ -99,7 +99,6 @@ namespace SiliFish.Services.Optimization
                     decimalDigits[iter++] = numOfDecimalDigit;
                 }
 
-                decimalDigits = Enumerable.Repeat(64, nCount).ToArray();
                 return decimalDigits;
             }
             set { decimalDigits = value; }

@@ -31,6 +31,7 @@ namespace SiliFish.Services.Optimization
         {
             get
             {
+                if (Algorithm == null) return "";
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
                     return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
@@ -38,7 +39,7 @@ namespace SiliFish.Services.Optimization
                 if (Algorithm.Termination is FitnessStagnationTermination fst)
                     return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Stagnant for ??? out of {fst.ExpectedStagnantGenerationsNumber:0.##};";
                 if (Algorithm.Termination is FitnessThresholdTermination ftt)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Fitness Threshold: {ftt.ExpectedFitness:0.##}";
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Target Fitness: {ftt.ExpectedFitness:0.##}";
                 return "Progress unknown";
             }
         }
@@ -48,6 +49,7 @@ namespace SiliFish.Services.Optimization
         {
             get
              {
+                if (Algorithm == null) return 0;
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
                     return (int)(100 * Algorithm.GenerationsNumber / gnt.ExpectedGenerationNumber);
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
@@ -74,11 +76,18 @@ namespace SiliFish.Services.Optimization
                 dParam = 0;
 
             Type termType = Type.GetType(terminationType + AssemblySuffix);
-            if ((terminationType == typeof(GenerationNumberTermination).Name || terminationType == typeof(FitnessStagnationTermination).Name) && iParam>0)
+            if ((terminationType == typeof(GenerationNumberTermination).FullName
+                || terminationType == typeof(FitnessStagnationTermination).FullName
+                || terminationType == nameof(GenerationNumberTermination)
+                || terminationType == nameof(FitnessStagnationTermination))
+                && iParam > 0)
                 Termination = (TerminationBase)Activator.CreateInstance(termType, iParam);
-            else if (terminationType == typeof(FitnessThresholdTermination).Name && dParam>0)
+            else if ((terminationType == typeof(FitnessThresholdTermination).FullName
+                || terminationType == nameof(FitnessThresholdTermination))
+                && dParam > 0)
                 Termination = (TerminationBase)Activator.CreateInstance(termType, dParam);
-            else if (terminationType == typeof(TimeEvolvingTermination).Name)
+            else if (terminationType == typeof(TimeEvolvingTermination).FullName
+                || terminationType == nameof(TimeEvolvingTermination))
                 Termination = (TerminationBase)Activator.CreateInstance(termType, new TimeSpan(0, iParam, 0));
             else
                 Termination = (TerminationBase)Activator.CreateInstance(termType);
@@ -108,7 +117,7 @@ namespace SiliFish.Services.Optimization
                 Reinsertion = Reinsertion
             };
         }
-        public Dictionary<string, double> Optimize()
+        public (Dictionary<string, double>, double) Optimize()
         {
             InitializeOptimization();
             latestFitness = 0.0;
@@ -119,11 +128,11 @@ namespace SiliFish.Services.Optimization
                 if (bestFitness != latestFitness)
                 {
                     latestFitness = bestFitness;
-                    var phenotype = bestChromosome.ToFloatingPoints();
+              /*      var phenotype = bestChromosome.ToFloatingPoints();
                     int iter = 0;
                     string valueStr = "";
                     foreach (string key in Settings.SortedKeys)
-                        valueStr += $"{key}: {phenotype[iter++]}; ";
+                        valueStr += $"{key}: {phenotype[iter++]}; ";*/
                 }
             };
             Algorithm.Start();
@@ -135,7 +144,7 @@ namespace SiliFish.Services.Optimization
                 var phenotype = (Algorithm.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
                 BestValues.Add(key, phenotype[iter++]);
             }
-            return BestValues;
+            return (BestValues, latestFitness);
         }
         public void CancelOptimization()
         {

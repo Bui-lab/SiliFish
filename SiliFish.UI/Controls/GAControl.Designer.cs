@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitGA = new System.Windows.Forms.SplitContainer();
-            this.tabOptimization = new System.Windows.Forms.TabControl();
-            this.tGAParameters = new System.Windows.Forms.TabPage();
             this.splitGAParams = new System.Windows.Forms.SplitContainer();
             this.dgMinMaxValues = new System.Windows.Forms.DataGridView();
             this.colParameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,8 +42,7 @@
             this.pFitnessFunctions = new System.Windows.Forms.Panel();
             this.pLineFitnessFunctions = new System.Windows.Forms.Panel();
             this.lFitnessFunctions = new System.Windows.Forms.Label();
-            this.tGAOutput = new System.Windows.Forms.TabPage();
-            this.eOptimizationOutput = new System.Windows.Forms.RichTextBox();
+            this.lOptimizationOutput = new System.Windows.Forms.Label();
             this.btnOptimize = new System.Windows.Forms.Button();
             this.linkLoadGAParams = new System.Windows.Forms.LinkLabel();
             this.linkSaveGAParams = new System.Windows.Forms.LinkLabel();
@@ -72,8 +69,6 @@
             this.splitGA.Panel1.SuspendLayout();
             this.splitGA.Panel2.SuspendLayout();
             this.splitGA.SuspendLayout();
-            this.tabOptimization.SuspendLayout();
-            this.tGAParameters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitGAParams)).BeginInit();
             this.splitGAParams.Panel1.SuspendLayout();
             this.splitGAParams.Panel2.SuspendLayout();
@@ -82,7 +77,6 @@
             this.pMinMax.SuspendLayout();
             this.pfGAParams.SuspendLayout();
             this.pFitnessFunctions.SuspendLayout();
-            this.tGAOutput.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitGA
@@ -94,10 +88,11 @@
             // 
             // splitGA.Panel1
             // 
-            this.splitGA.Panel1.Controls.Add(this.tabOptimization);
+            this.splitGA.Panel1.Controls.Add(this.splitGAParams);
             // 
             // splitGA.Panel2
             // 
+            this.splitGA.Panel2.Controls.Add(this.lOptimizationOutput);
             this.splitGA.Panel2.Controls.Add(this.btnOptimize);
             this.splitGA.Panel2.Controls.Add(this.linkLoadGAParams);
             this.splitGA.Panel2.Controls.Add(this.linkSaveGAParams);
@@ -121,33 +116,11 @@
             this.splitGA.SplitterDistance = 697;
             this.splitGA.TabIndex = 39;
             // 
-            // tabOptimization
-            // 
-            this.tabOptimization.Controls.Add(this.tGAParameters);
-            this.tabOptimization.Controls.Add(this.tGAOutput);
-            this.tabOptimization.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabOptimization.Location = new System.Drawing.Point(0, 0);
-            this.tabOptimization.Name = "tabOptimization";
-            this.tabOptimization.SelectedIndex = 0;
-            this.tabOptimization.Size = new System.Drawing.Size(695, 474);
-            this.tabOptimization.TabIndex = 30;
-            // 
-            // tGAParameters
-            // 
-            this.tGAParameters.Controls.Add(this.splitGAParams);
-            this.tGAParameters.Location = new System.Drawing.Point(4, 24);
-            this.tGAParameters.Name = "tGAParameters";
-            this.tGAParameters.Padding = new System.Windows.Forms.Padding(3);
-            this.tGAParameters.Size = new System.Drawing.Size(687, 446);
-            this.tGAParameters.TabIndex = 0;
-            this.tGAParameters.Text = "Optimization Parameters";
-            this.tGAParameters.UseVisualStyleBackColor = true;
-            // 
             // splitGAParams
             // 
             this.splitGAParams.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitGAParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitGAParams.Location = new System.Drawing.Point(3, 3);
+            this.splitGAParams.Location = new System.Drawing.Point(0, 0);
             this.splitGAParams.Name = "splitGAParams";
             // 
             // splitGAParams.Panel1
@@ -159,8 +132,8 @@
             // 
             this.splitGAParams.Panel2.Controls.Add(this.pfGAParams);
             this.splitGAParams.Panel2.Controls.Add(this.pFitnessFunctions);
-            this.splitGAParams.Size = new System.Drawing.Size(681, 440);
-            this.splitGAParams.SplitterDistance = 225;
+            this.splitGAParams.Size = new System.Drawing.Size(697, 476);
+            this.splitGAParams.SplitterDistance = 214;
             this.splitGAParams.TabIndex = 29;
             // 
             // dgMinMaxValues
@@ -177,7 +150,7 @@
             this.dgMinMaxValues.Name = "dgMinMaxValues";
             this.dgMinMaxValues.RowHeadersVisible = false;
             this.dgMinMaxValues.RowTemplate.Height = 25;
-            this.dgMinMaxValues.Size = new System.Drawing.Size(223, 409);
+            this.dgMinMaxValues.Size = new System.Drawing.Size(212, 445);
             this.dgMinMaxValues.TabIndex = 27;
             // 
             // colParameter
@@ -205,7 +178,7 @@
             this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMinMax.Location = new System.Drawing.Point(0, 0);
             this.pMinMax.Name = "pMinMax";
-            this.pMinMax.Size = new System.Drawing.Size(223, 29);
+            this.pMinMax.Size = new System.Drawing.Size(212, 29);
             this.pMinMax.TabIndex = 28;
             // 
             // linkSuggestMinMax
@@ -228,7 +201,7 @@
             this.pfGAParams.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.pfGAParams.Location = new System.Drawing.Point(0, 29);
             this.pfGAParams.Name = "pfGAParams";
-            this.pfGAParams.Size = new System.Drawing.Size(450, 409);
+            this.pfGAParams.Size = new System.Drawing.Size(477, 445);
             this.pfGAParams.TabIndex = 0;
             // 
             // linkAddFitnessFunction
@@ -251,7 +224,7 @@
             this.pFitnessFunctions.Dock = System.Windows.Forms.DockStyle.Top;
             this.pFitnessFunctions.Location = new System.Drawing.Point(0, 0);
             this.pFitnessFunctions.Name = "pFitnessFunctions";
-            this.pFitnessFunctions.Size = new System.Drawing.Size(450, 29);
+            this.pFitnessFunctions.Size = new System.Drawing.Size(477, 29);
             this.pFitnessFunctions.TabIndex = 29;
             // 
             // pLineFitnessFunctions
@@ -260,7 +233,7 @@
             this.pLineFitnessFunctions.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pLineFitnessFunctions.Location = new System.Drawing.Point(0, 28);
             this.pLineFitnessFunctions.Name = "pLineFitnessFunctions";
-            this.pLineFitnessFunctions.Size = new System.Drawing.Size(450, 1);
+            this.pLineFitnessFunctions.Size = new System.Drawing.Size(477, 1);
             this.pLineFitnessFunctions.TabIndex = 3;
             // 
             // lFitnessFunctions
@@ -273,24 +246,16 @@
             this.lFitnessFunctions.TabIndex = 2;
             this.lFitnessFunctions.Text = "Fitness Functions";
             // 
-            // tGAOutput
+            // lOptimizationOutput
             // 
-            this.tGAOutput.Controls.Add(this.eOptimizationOutput);
-            this.tGAOutput.Location = new System.Drawing.Point(4, 24);
-            this.tGAOutput.Name = "tGAOutput";
-            this.tGAOutput.Size = new System.Drawing.Size(687, 446);
-            this.tGAOutput.TabIndex = 2;
-            this.tGAOutput.Text = "Output";
-            this.tGAOutput.UseVisualStyleBackColor = true;
-            // 
-            // eOptimizationOutput
-            // 
-            this.eOptimizationOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.eOptimizationOutput.Location = new System.Drawing.Point(0, 0);
-            this.eOptimizationOutput.Name = "eOptimizationOutput";
-            this.eOptimizationOutput.Size = new System.Drawing.Size(687, 446);
-            this.eOptimizationOutput.TabIndex = 25;
-            this.eOptimizationOutput.Text = "";
+            this.lOptimizationOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lOptimizationOutput.Location = new System.Drawing.Point(6, 245);
+            this.lOptimizationOutput.Name = "lOptimizationOutput";
+            this.lOptimizationOutput.Size = new System.Drawing.Size(270, 219);
+            this.lOptimizationOutput.TabIndex = 45;
+            this.lOptimizationOutput.Text = "Latest fitness:";
             // 
             // btnOptimize
             // 
@@ -365,7 +330,7 @@
             this.ddGAReinsertion.FormattingEnabled = true;
             this.ddGAReinsertion.Location = new System.Drawing.Point(79, 99);
             this.ddGAReinsertion.Name = "ddGAReinsertion";
-            this.ddGAReinsertion.Size = new System.Drawing.Size(206, 23);
+            this.ddGAReinsertion.Size = new System.Drawing.Size(174, 23);
             this.ddGAReinsertion.TabIndex = 39;
             // 
             // lGASelection
@@ -387,7 +352,7 @@
             this.ddGACrossOver.FormattingEnabled = true;
             this.ddGACrossOver.Location = new System.Drawing.Point(79, 41);
             this.ddGACrossOver.Name = "ddGACrossOver";
-            this.ddGACrossOver.Size = new System.Drawing.Size(206, 23);
+            this.ddGACrossOver.Size = new System.Drawing.Size(174, 23);
             this.ddGACrossOver.TabIndex = 31;
             // 
             // eMaxChromosome
@@ -417,7 +382,7 @@
             this.ddGAMutation.FormattingEnabled = true;
             this.ddGAMutation.Location = new System.Drawing.Point(79, 70);
             this.ddGAMutation.Name = "ddGAMutation";
-            this.ddGAMutation.Size = new System.Drawing.Size(206, 23);
+            this.ddGAMutation.Size = new System.Drawing.Size(174, 23);
             this.ddGAMutation.TabIndex = 32;
             // 
             // lGAMinMaxChromosome
@@ -439,7 +404,7 @@
             this.ddGATermination.FormattingEnabled = true;
             this.ddGATermination.Location = new System.Drawing.Point(79, 128);
             this.ddGATermination.Name = "ddGATermination";
-            this.ddGATermination.Size = new System.Drawing.Size(206, 23);
+            this.ddGATermination.Size = new System.Drawing.Size(174, 23);
             this.ddGATermination.TabIndex = 33;
             this.ddGATermination.SelectedIndexChanged += new System.EventHandler(this.ddGATermination_SelectedIndexChanged);
             // 
@@ -453,7 +418,7 @@
             this.ddGASelection.FormattingEnabled = true;
             this.ddGASelection.Location = new System.Drawing.Point(79, 12);
             this.ddGASelection.Name = "ddGASelection";
-            this.ddGASelection.Size = new System.Drawing.Size(206, 23);
+            this.ddGASelection.Size = new System.Drawing.Size(174, 23);
             this.ddGASelection.TabIndex = 30;
             // 
             // eMinChromosome
@@ -515,8 +480,6 @@
             this.splitGA.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitGA)).EndInit();
             this.splitGA.ResumeLayout(false);
-            this.tabOptimization.ResumeLayout(false);
-            this.tGAParameters.ResumeLayout(false);
             this.splitGAParams.Panel1.ResumeLayout(false);
             this.splitGAParams.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitGAParams)).EndInit();
@@ -528,7 +491,6 @@
             this.pfGAParams.PerformLayout();
             this.pFitnessFunctions.ResumeLayout(false);
             this.pFitnessFunctions.PerformLayout();
-            this.tGAOutput.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -536,8 +498,6 @@
         #endregion
 
         private SplitContainer splitGA;
-        private TabControl tabOptimization;
-        private TabPage tGAParameters;
         private SplitContainer splitGAParams;
         private DataGridView dgMinMaxValues;
         private DataGridViewTextBoxColumn colParameter;
@@ -550,8 +510,6 @@
         private Panel pFitnessFunctions;
         private Panel pLineFitnessFunctions;
         private Label lFitnessFunctions;
-        private TabPage tGAOutput;
-        private RichTextBox eOptimizationOutput;
         private TextBox eTerminationParameter;
         private Label lGATerminationParameter;
         private Label LGAReinsertion;
@@ -574,5 +532,6 @@
         private Button btnOptimize;
         private OpenFileDialog openFileJson;
         private SaveFileDialog saveFileJson;
+        private Label lOptimizationOutput;
     }
 }

@@ -8,11 +8,22 @@ namespace SiliFish.UI.Controls
 {
     public partial class GAControl : UserControl
     {
-        public string CoreType { get; set; }
+        private string coreType;
+        public string CoreType
+        {
+            get { return coreType; }
+            set
+            {
+                coreType = value;
+                if (Solver?.Settings != null)
+                    Solver.Settings.CoreType = value;
+            }
+        }
         public Dictionary<string, double> Parameters { get; set; }
         private List<FitnessFunctionControl> FitnessControls;
         private CoreSolver Solver;
         Dictionary<string, double> SolverBestValues;
+        double SolverBestFitness;
         private Dictionary<string, double> minValues;
         private Dictionary<string, double> maxValues;
         private TargetRheobaseFunction targetRheobaseFunction;
@@ -20,6 +31,8 @@ namespace SiliFish.UI.Controls
         private ProgressForm optimizationProgress;
         private event EventHandler onCompleteOptimization;
         public event EventHandler OnCompleteOptimization { add => onCompleteOptimization += value; remove => onCompleteOptimization -= value; }
+        private event EventHandler onLoadParams;
+        public event EventHandler OnLoadParams { add => onLoadParams += value; remove => onLoadParams -= value; }
 
         public GAControl()
         {
@@ -83,7 +96,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimize()
         {
             if (Solver == null) return;
-            SolverBestValues = Solver.Optimize();
+            (SolverBestValues, SolverBestFitness) = Solver.Optimize();
             Invoke(CompleteOptimization);
         }
 
@@ -96,6 +109,7 @@ namespace SiliFish.UI.Controls
                 optimizationProgress.Close();
             optimizationProgress = null;
             onCompleteOptimization?.Invoke(this, EventArgs.Empty);
+            lOptimizationOutput.Text = $"Latest fitness: {SolverBestFitness}";
         }
         private void CreateSolver()
         {
@@ -174,11 +188,12 @@ namespace SiliFish.UI.Controls
         private void timerOptimization_Tick(object sender, EventArgs e)
         {
             if (Solver == null) return;
-            eOptimizationOutput.AppendText(Solver.ProgressText + "\r\n");
+            string progress = Solver.ProgressText;
             optimizationProgress.Progress = Solver.Progress;
+            optimizationProgress.ProgressText = progress;
         }
 
-        private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void AddFitnessFunction(FitnessFunction fitnessFunction = null)
         {
             FitnessFunctionControl fitness = new();
             fitness.BorderStyle = BorderStyle.FixedSingle;
@@ -186,6 +201,14 @@ namespace SiliFish.UI.Controls
             pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
             fitness.RemoveClicked += Fitness_RemoveClicked;
             FitnessControls.Add(fitness);
+            if (fitnessFunction != null)
+            {
+                fitness.SetFitnessFunction(fitnessFunction);
+            }
+        }
+        private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AddFitnessFunction();
         }
 
         private void Fitness_RemoveClicked(object sender, EventArgs e)
@@ -193,6 +216,22 @@ namespace SiliFish.UI.Controls
             pfGAParams.Controls.Remove(sender as FitnessFunctionControl);
             pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
             FitnessControls.Remove(sender as FitnessFunctionControl);
+        }
+
+        private void ClearFitnessControls()
+        {
+            foreach (Control ctrl in FitnessControls)
+                pfGAParams.Controls.Remove(ctrl);
+            FitnessControls.Clear();
+        }
+
+        private void LoadFitnessControls()
+        {
+            ClearFitnessControls();
+            if (Solver.Settings.TargetRheobaseFunction!=null)
+                AddFitnessFunction(Solver.Settings.TargetRheobaseFunction);
+            foreach (FitnessFunction fitnessFunction in Solver.Settings.FitnessFunctions)
+                AddFitnessFunction(fitnessFunction);
         }
 
         private void ddGATermination_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,11 +244,11 @@ namespace SiliFish.UI.Controls
             CreateSolver();
             timerOptimization.Enabled = true;
             btnOptimize.Enabled = false;
-            eOptimizationOutput.Text = "";
             optimizationProgress = new()
             {
                 Text = "Optimization",
-                Progress = 0
+                Progress = 0,
+                ProgressText = ""
             };
             optimizationProgress.StopRunClicked += ProgressForm_StopRunClicked;
             optimizationProgress.Show();
@@ -223,35 +262,31 @@ namespace SiliFish.UI.Controls
                 string JSONString = Util.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                Solver = new();
-                Solver.Settings = (CoreSolverSettings)Util.CreateObjectFromJSON(typeof(CoreSolverSettings), JSONString);
-                if (Solver != null)
+                try
                 {
+                    Solver = new()
+                    {
+                        Settings = (CoreSolverSettings)Util.CreateObjectFromJSON(typeof(CoreSolverSettings), JSONString)
+                    };
+                    coreType = Solver.Settings.CoreType;
                     eMinChromosome.Text = Solver.Settings.MinPopulationSize.ToString();
                     eMaxChromosome.Text = Solver.Settings.MaxPopulationSize.ToString();
                     ResetParameters(Solver.Settings.ParamValues, Solver.Settings.MinValues, Solver.Settings.MaxValues);
-
-/*                    ReadFitnessValues();
-                    if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
-                        minPopulation = 50;
-                    if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
-                        maxPopulation = 50;
-                    Solver = new((Type)ddGASelection.SelectedItem,
-                        (Type)ddGACrossOver.SelectedItem,
-                        (Type)ddGAMutation.SelectedItem,
-                        (Type)ddGAReinsertion.SelectedItem,
-                        (Type)ddGATermination.SelectedItem,
-                        eTerminationParameter.Text);
-                    Solver.SetOptimizationSettings(minPopulation,
-                        maxPopulation,
-                        CoreType,
-                        Parameters,
-                        targetRheobaseFunction,
-                        firingFitnessFunctions,
-                        minValues, maxValues);*/
+                    LoadFitnessControls();
+                    ddGASelection.Text = Solver.Settings.SelectionType;
+                    ddGACrossOver.Text = Solver.Settings.CrossOverType;
+                    ddGAMutation.Text = Solver.Settings.MutationType;
+                    ddGAReinsertion.Text = Solver.Settings.ReinsertionType;
+                    ddGATermination.Text = Solver.Settings.TerminationType;
+                    eTerminationParameter.Text = Solver.Settings.TerminationParam;
                 }
+                catch
+                {
+                    MessageBox.Show("Selected file is not a valid Genetic Algorithm Parameters file.");
+                    return;
+                }
+                onLoadParams?.Invoke(this, EventArgs.Empty);
             }
-
         }
 
         private void linkSaveGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

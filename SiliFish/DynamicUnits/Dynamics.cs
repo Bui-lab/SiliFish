@@ -4,6 +4,31 @@ using System.Linq;
 
 namespace SiliFish.DynamicUnits
 {
+    internal class Cluster
+    {
+        public double clusterMin, clusterMax, centroid;
+        public int numMember = 0;
+        public Cluster(double center)
+        {
+            clusterMin = clusterMax = centroid = center;
+            numMember++;
+        }
+        public Cluster(List<double> intervals)
+        {
+            clusterMin = intervals.Min();
+            clusterMax = intervals.Max();
+            centroid = intervals.Average();
+            numMember = intervals.Count;
+        }
+        public void AddMember(double d)
+        {
+            centroid = (d + centroid * numMember) / ++numMember;
+            if (clusterMin > d)
+                clusterMin = d;
+            if (clusterMax < d)
+                clusterMax = d;
+        }
+    }
     public class BurstOrSpike
     {
         public static double MinBurstSpikeCount { get; set; } = 2; //the number of minimum spikes required
@@ -26,7 +51,8 @@ namespace SiliFish.DynamicUnits
 
             //(Bursts.Count > 1)
 
-            if (!Bursts.Any(b => !b.IsBurst))//All of them are bursts
+            if (!Bursts.Any(b => !b.IsBurst) ||
+                !followedByQuiescence && !Bursts.SkipLast(1).Any(b => !b.IsBurst))//All of them are bursts
                 return (FiringRhythm.Tonic, FiringPattern.Bursting);
 
             if (!Bursts.Any(b => !b.IsSpike))//all of them are spikes
@@ -69,9 +95,9 @@ namespace SiliFish.DynamicUnits
     public class DynamicsStats
     {
         private Dictionary<double, double> intervals = null;
-
         public static double MaxBurstInterval_LowerRange { get; set; } = 5; //in ms, the maximum interval two spikes can have to be considered as part of a burst
         public static double MaxBurstInterval_UpperRange { get; set; } = 30; //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public static double OneClusterMultiplier { get; set; } = 1.1; // (Centroid2 - Centroid1) < Centroid1 * OneClusterMultiplier means there is only one cluster (all spikes part of a burst)
         public static double TonicPadding { get; set; } = 1; //in ms, the range between the last spike and the end of current to be considered as tonic firing
         /// <summary>
         /// The list of tau values for each spike (by time)
@@ -126,56 +152,28 @@ namespace SiliFish.DynamicUnits
                 return Intervals_ms?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value > 0 ? 1000 / kvp.Value : 0);
             }
         }
-        /*
-        internal class Cluster
+        
+
+        private bool HasClusters()//check whether there are two clusters of intervals: interspike & interburst
         {
-            public double clusterMin, clusterMax, centroid;
-            public int numMember = 0;
-            public Cluster(double center)
-            {
-                clusterMin = clusterMax = centroid = center;
-                numMember++;
-            }
-            public Cluster(List<double> intervals)
-            {
-                clusterMin = intervals.Min();
-                clusterMax = intervals.Max();
-                centroid = intervals.Average();
-                numMember = intervals.Count;
-            }
-            public void AddMember(double d)
-            {
-                centroid = (d + centroid * numMember) / ++numMember;
-                if (clusterMin > d)
-                    clusterMin = d;
-                if (clusterMax < d)
-                    clusterMax = d;
-            }
-        }
-        private void CreateClusters()
-        {
-            BurstCluster = null;
-            InterBurstCluster = null;
             if (Intervals_ms == null || Intervals_ms.Count <= 1)
-                return;
+                return false;
             List<double> intervals = Intervals_ms.Select(kvp => kvp.Value).ToList();
 
             double centroid1 = intervals.Min();
-            if (centroid1 > MaxBurstInterval)// no bursts, only single spikes
+            if (centroid1 > MaxBurstInterval_LowerRange)// no bursts, only single spikes
             {
-                InterBurstCluster = new(intervals);
-                return;
+                return false;
             }
             double centroid2 = intervals.Max();
-            if (centroid2 - centroid1 < centroid1 * OneClusterMultiplier)//single cluster
+            if (centroid2 < centroid1 * OneClusterMultiplier)//single cluster
             {
-                BurstCluster = new(intervals);
-                return;
+                return false;
             }
             intervals.Remove(centroid1);
             intervals.Remove(centroid2);
-            BurstCluster = new(centroid1);
-            InterBurstCluster = new(centroid2);
+            Cluster BurstCluster = new(centroid1);
+            Cluster InterBurstCluster = new(centroid2);
             double center = (centroid1 + centroid2) / 2;
             foreach (double d in intervals)
             {
@@ -185,8 +183,10 @@ namespace SiliFish.DynamicUnits
                     InterBurstCluster.AddMember(d);
                 center = (BurstCluster.centroid + InterBurstCluster.centroid) / 2;
             }
+            MaxBurstInterval_LowerRange = MaxBurstInterval_UpperRange = BurstCluster.clusterMax;
+            return true;
         }
-        */
+        
         public void DefineSpikingPattern()
         {
             int curStart = IList.ToList().FindIndex(i => i > 0);
@@ -209,6 +209,7 @@ namespace SiliFish.DynamicUnits
                 firingPattern = FiringPattern.Spiking;
                 return;
             }
+            bool hasClusters = HasClusters();//TODO 
 
             List<BurstOrSpike> Bursts = new();
             BurstOrSpike burstOrSpike = new();
@@ -221,11 +222,11 @@ namespace SiliFish.DynamicUnits
             {
                 double curTime = SpikeList[spikeTimeIndex] * RunParam.static_dt;
                 double curInterval = curTime - lastTime;
-                if (!(lastInterval is double.NaN) && curInterval < lastInterval - Const.Epsilon)
+                if (lastInterval is not double.NaN && curInterval < lastInterval - Const.Epsilon)
                     spreadingOut = false;
                 if ((lastInterval is double.NaN && curInterval > MaxBurstInterval_LowerRange) ||
-                    (spreadingOut && curInterval > MaxBurstInterval_UpperRange) ||
-                    (!spreadingOut && curInterval > MaxBurstInterval_LowerRange))
+                    (spreadingOut && curInterval >= MaxBurstInterval_UpperRange + Const.Epsilon) ||
+                    (!spreadingOut && curInterval >= MaxBurstInterval_LowerRange + Const.Epsilon))
                 {
                     burstOrSpike = new();
                     Bursts.Add(burstOrSpike);

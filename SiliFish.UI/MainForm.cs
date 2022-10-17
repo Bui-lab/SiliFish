@@ -691,7 +691,15 @@ namespace SiliFish.UI
                     {
                         string json = Util.ReadFromFile(openFileJson.FileName);
                         json = CheckJSONVersion(json);
-                        ModelTemplate = (SwimmingModelTemplate)Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), json);
+                        try
+                        {
+                            ModelTemplate = (SwimmingModelTemplate)Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), json);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Selected file is not a valid Swimming Model Template file.");
+                            return;
+                        }
                         ModelTemplate.LinkObjects();
                         Model = customModel = new CustomSwimmingModel(ModelTemplate);
                         lastSavedCustomParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
@@ -1349,7 +1357,15 @@ namespace SiliFish.UI
                 MessageBox.Show("The changes you made will not be visible until you rerun the model.");
                 jsonRefreshMsgShown = true;
             }
-            eTemplateJSON.Text = Util.CreateJSONFromObject(ModelTemplate);
+            try
+            {
+                eTemplateJSON.Text = Util.CreateJSONFromObject(ModelTemplate);
+            }
+            catch
+            {
+                MessageBox.Show("Selected file is not a valid Swimming Model Template file.");
+                return;
+            }
             btnLoadTemplateJSON.Enabled = false;
         }
 
@@ -1408,7 +1424,15 @@ namespace SiliFish.UI
                 MessageBox.Show("The changes you made will not be visible until you rerun the model.");
                 jsonRefreshMsgShown = true;
             }
-            eModelJSON.Text = Util.CreateJSONFromObject(Model);
+            try
+            {
+                eModelJSON.Text = Util.CreateJSONFromObject(Model);
+            }
+            catch
+            {
+                MessageBox.Show("Selected file is not a valid Swimming Model file.");
+                return;
+            }
             btnLoadModelJSON.Enabled = false;
         }
 
