@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SiliFish.Extensions
 {
-    public class GeneticAlgorithmExtension
+    public static class GeneticAlgorithmExtension
     {
         public static List<Type> GetSelectionBases()
         {
@@ -95,5 +95,19 @@ namespace SiliFish.Extensions
             //terminationBases.Add(typeof(OrTermination));
             return terminationBases;
         }
+
+        public static string GetTerminationParam(this TerminationBase termination)
+        {
+            if (termination is GenerationNumberTermination gnt)
+                return gnt.ExpectedGenerationNumber.ToString();
+            if (termination is FitnessThresholdTermination ftt)
+                return ftt.ExpectedFitness.ToString();
+            if (termination is TimeEvolvingTermination tet)
+                return tet.MaxTime.ToString();
+            if (termination is FitnessStagnationTermination fst)
+                return fst.ExpectedStagnantGenerationsNumber.ToString();
+            return null;
+        }
+
     }
 }

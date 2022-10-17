@@ -1,151 +1,49 @@
 ﻿using GeneticSharp;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 //https://diegogiacomelli.com.br/function-optimization-with-geneticsharp/
 namespace SiliFish.Services.Optimization
 {
 
-    public class FitnessFunction
-    {
-        public double Weight;
-    }
-    public class TargetRheobaseFunction: FitnessFunction
-    {
-        public double TargetRheobaseMin = double.NaN, TargetRheobaseMax = double.NaN;
-        public double CalculateFitness(DynamicUnit core, out double rheobase)
-        {
-            rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
-            if (rheobase < 0) return 0;
-            if (TargetRheobaseMin <= rheobase && TargetRheobaseMax >= rheobase)
-                return 10 * Weight; //TODO arbitrary 100 multiplier
-            if (rheobase < TargetRheobaseMin)
-                return 10 * Weight / (TargetRheobaseMin - rheobase);
-            return 10 * Weight / (rheobase - TargetRheobaseMax);
-        }
-    }
-
-    public class FiringFitnessFunction : FitnessFunction
-    {
-        public bool RheobaseBased;
-        public double CurrentValueOrRheobaseMultiplier;
-        public FitnessFunctionOptions FitnessFunctionOptions;
-        public FiringPattern TargetPattern;
-        public FiringDelay TargetDelay;
-        public FiringRhythm TargetRhythm;
-
-        public double CalculateFitness(DynamicsStats stat)
-        {
-            switch (FitnessFunctionOptions)
-            {
-                case FitnessFunctionOptions.TargetRheobase:
-                    break;
-                case FitnessFunctionOptions.FiringDelay:
-                    break;
-                case FitnessFunctionOptions.FiringRhythm:
-                    if (stat.FiringRhythm == TargetRhythm)
-                        return Weight;
-                    else
-                        return 0;
-                case FitnessFunctionOptions.FiringPattern:
-                    if (stat.FiringPattern == TargetPattern)
-                        return Weight;
-                    else
-                        return 0;
-            }
-            return 0;
-        }
-    }
-
-    public class CoreFitness : IFitness
-    {
-        readonly CoreSolver IzhikevichSolver;
-        string CoreType;
-        TargetRheobaseFunction TargetRheobaseFunction;
-        List<FiringFitnessFunction> FitnessFunctions;
-
-        public CoreFitness(CoreSolver izhikevichSolver,
-            string coreType,
-            TargetRheobaseFunction targetRheobaseFunction,
-            List<FiringFitnessFunction> fitnessFunctions)
-        {
-            IzhikevichSolver = izhikevichSolver;
-            CoreType = coreType;
-            TargetRheobaseFunction = targetRheobaseFunction;
-            FitnessFunctions = fitnessFunctions;
-        }
-        public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
-        {
-            var fc = chromosome as FloatingPointChromosome;
-            var values = fc.ToFloatingPoints();
-            int iter = 0;
-            string valueStr = "";
-            Dictionary<string, double> instanceValues = new();
-            foreach (string key in IzhikevichSolver.SortedKeys)
-            {
-                valueStr += $"{key}: {values[iter]}; ";
-                instanceValues.Add(key, values[iter++]);
-            }
-
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, instanceValues);
-            if (core == null)
-                return 0;
-
-            double fitness = 0;
-            double rheobase = 0;
-            if (TargetRheobaseFunction != null)
-            {
-                fitness += TargetRheobaseFunction.CalculateFitness(core, out rheobase);
-            }
-            else if (FitnessFunctions.Any(ff => ff.RheobaseBased))
-                rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
-
-            List<double> currentValues = FitnessFunctions
-                .Select(ff => ff.CurrentValueOrRheobaseMultiplier * (ff.RheobaseBased ? rheobase : 1))
-                .Distinct()
-                .ToList();
-
-            //generate a dictionary of DynamicStats - to prevent multiple runs
-            Dictionary<double, DynamicsStats> stats = new();
-            foreach (double current in currentValues)
-            {
-                DynamicsStats stat = core.DynamicsTest(current, infinity: Const.RheobaseInfinity, dt: 0.1);
-                stats.Add(current, stat);
-            }
-
-            double weight = 1;
-            foreach (FiringFitnessFunction function in FitnessFunctions)
-            {
-                double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
-                DynamicsStats stat = stats[current];
-                fitness += weight * function.CalculateFitness(stat);
-            }
-            return fitness;
-        }
-    }
     public class CoreSolver
     {
-        Dictionary<string, double> ParamValues;
+        static string AssemblySuffix = ", GeneticSharp.Domain";
 
-        internal List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
-        private readonly SelectionBase Selection;
-        private readonly CrossoverBase Crossover;
-        private readonly MutationBase Mutation;
-        private readonly ReinsertionBase Reinsertion;
-        private readonly TerminationBase Termination;
+        public CoreSolverSettings Settings { get; set; }
+
+        private SelectionBase Selection;
+        private CrossoverBase Crossover;
+        private MutationBase Mutation;
+        private ReinsertionBase Reinsertion;
+        private TerminationBase Termination;
         private GeneticAlgorithm Algorithm;
+
         private double latestFitness = 0.0;
 
+        [JsonIgnore]
         public string ProgressText
         {
             get
             {
-                return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
+                if (Algorithm.Termination is GenerationNumberTermination gnt)
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
+                if (Algorithm.Termination is TimeEvolvingTermination tet)
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Time elapsed: {Algorithm.TimeEvolving.TotalMinutes:0.##} mins;";
+                if (Algorithm.Termination is FitnessStagnationTermination fst)
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Stagnant for ??? out of {fst.ExpectedStagnantGenerationsNumber:0.##};";
+                if (Algorithm.Termination is FitnessThresholdTermination ftt)
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Fitness Threshold: {ftt.ExpectedFitness:0.##}";
+                return "Progress unknown";
             }
         }
+
+        [JsonIgnore]
         public int Progress
         {
             get
@@ -155,89 +53,56 @@ namespace SiliFish.Services.Optimization
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
                     return (int)(100*Algorithm.TimeEvolving/tet.MaxTime);
                 if (Algorithm.Termination is FitnessStagnationTermination fst)
-                    return 50;// fst.ExpectedStagnantGenerationsNumber;
+                    return 50;// fst.GetNumberOfStagnantGenerations() / fst.ExpectedStagnantGenerationsNumber;
                 if (Algorithm.Termination is FitnessThresholdTermination ftt)
-                    return (int)(100 * Algorithm.BestChromosome.Fitness.Value / ftt.ExpectedFitness);
+                    return (int)(100 * (Algorithm.BestChromosome?.Fitness.Value ?? 0) / ftt.ExpectedFitness);
                 return 0;
             }
         }
 
-        private TerminationBase CreateTerminator(Type terminationType, string terminationParam)
+        private void CreateTerminator(string terminationType, string terminationParam)
         {
             if (string.IsNullOrEmpty(terminationParam))
-                return (TerminationBase)Activator.CreateInstance(terminationType);
+            {
+                Termination = (TerminationBase)Activator.CreateInstance(Type.GetType(terminationType + AssemblySuffix));
+                return;
+            }
 
             if (!int.TryParse(terminationParam, out int iParam))
                 iParam = 0;
             if (!double.TryParse(terminationParam, out double dParam))
                 dParam = 0;
 
-            if ((terminationType == typeof(GenerationNumberTermination) || terminationType == typeof(FitnessStagnationTermination)) && iParam>0)
-                return (TerminationBase)Activator.CreateInstance(terminationType, iParam);
-            if (terminationType == typeof(FitnessThresholdTermination) && dParam>0)
-                return (TerminationBase)Activator.CreateInstance(terminationType, dParam);
-            if (terminationType == typeof(TimeEvolvingTermination))
-                return (TerminationBase)Activator.CreateInstance(terminationType, new TimeSpan(0, iParam, 0));
-            return (TerminationBase)Activator.CreateInstance(terminationType);
+            Type termType = Type.GetType(terminationType + AssemblySuffix);
+            if ((terminationType == typeof(GenerationNumberTermination).Name || terminationType == typeof(FitnessStagnationTermination).Name) && iParam>0)
+                Termination = (TerminationBase)Activator.CreateInstance(termType, iParam);
+            else if (terminationType == typeof(FitnessThresholdTermination).Name && dParam>0)
+                Termination = (TerminationBase)Activator.CreateInstance(termType, dParam);
+            else if (terminationType == typeof(TimeEvolvingTermination).Name)
+                Termination = (TerminationBase)Activator.CreateInstance(termType, new TimeSpan(0, iParam, 0));
+            else
+                Termination = (TerminationBase)Activator.CreateInstance(termType);
         }
 
         //https://github.com/giacomelli/GeneticSharp/wiki/terminations
         //And e Or (allows combine others terminations).
-        public CoreSolver(Type selectionType,
-            Type crossOverType,
-            Type mutationType,
-            Type reinsertionType,
-            Type terminationType,
-            string terminationParam
-            )
 
+        public CoreSolver()
+        { }
+        
+
+        private void InitializeOptimization()
         {
-            Selection = (SelectionBase)Activator.CreateInstance(selectionType); //Elite, Roulete Wheel, Stochastic Universal Sampling and Tournament.
-            Crossover = (CrossoverBase)Activator.CreateInstance(crossOverType); //new UniformCrossover(0.5f);//Cut and Splice, Cycle (CX), One-Point (C1), Order-based (OX2), Ordered (OX1), Partially Mapped (PMX), Position-based (POS), Three parent, Two-Point (C2) and Uniform
-            Mutation = (MutationBase)Activator.CreateInstance(mutationType); //Flip-bit, Reverse Sequence (RSM), Twors and Uniform.
-            Reinsertion = (ReinsertionBase)Activator.CreateInstance(reinsertionType);
-            Termination = CreateTerminator(terminationType, terminationParam);
-        }
+            Selection = (SelectionBase)Activator.CreateInstance(Type.GetType(Settings.SelectionType+AssemblySuffix));
+            Crossover = (CrossoverBase)Activator.CreateInstance(Type.GetType(Settings.CrossOverType + AssemblySuffix));
+            Mutation = (MutationBase)Activator.CreateInstance(Type.GetType(Settings.MutationType + AssemblySuffix));
+            Reinsertion = (ReinsertionBase)Activator.CreateInstance(Type.GetType(Settings.ReinsertionType + AssemblySuffix));
+            CreateTerminator(Settings.TerminationType, Settings.TerminationParam);
 
-        public void SetOptimizationSettings(int minPopulationSize,
-            int maxPopulationSize,
-            string coreType,
-            Dictionary<string, double> paramValues,
-            TargetRheobaseFunction targetRheobaseFunction,
-            List<FiringFitnessFunction> fitnessFunctions,
-            Dictionary<string, double> minValues = null,
-            Dictionary<string, double> maxValues = null)
-        {
-            IFitness fitness = new CoreFitness(this, coreType, targetRheobaseFunction, fitnessFunctions);
-
-            ParamValues = paramValues;
-            int nCount = paramValues.Count;
-            double[] MinValues = new double[nCount];
-            double[] MaxValues = new double[nCount];
-            int[] NumBits = new int[nCount];
-            int[] DecimalDigits = new int[nCount];
-            int iter = 0;
-            foreach (string key in SortedKeys)
-            {
-                NumBits[iter] = 64;
-                int numOfDecimalDigit = Util.NumOfDecimalDigits(paramValues[key]);
-                MinValues[iter] = minValues?.GetValueOrDefault(key, Const.GeneticAlgorithmMinValue) ?? Const.GeneticAlgorithmMinValue;
-                MaxValues[iter] = maxValues?.GetValueOrDefault(key, Const.GeneticAlgorithmMaxValue) ?? Const.GeneticAlgorithmMaxValue;
-                DecimalDigits[iter++] = numOfDecimalDigit;
-            }
-
-            ChromosomeBase chromosome = new FloatingPointChromosome(
-                MinValues,
-                MaxValues,
-                NumBits,
-                DecimalDigits);
-            Population population = new(minPopulationSize, maxPopulationSize, chromosome); //min 50, max 100
-            Algorithm = new(
-                population,
-                fitness,
-                Selection,
-                Crossover,
-                Mutation)
+            IFitness Fitness = new CoreFitness(this, Settings);
+            ChromosomeBase chromosome = new FloatingPointChromosome(Settings.MinValues, Settings.MaxValues, Settings.NumBits, Settings.DecimalDigits);
+            Population initialPopulation = new(Settings.MinPopulationSize, Settings.MaxPopulationSize, chromosome);
+            Algorithm = new(initialPopulation, Fitness, Selection, Crossover, Mutation)
             {
                 Termination = Termination,
                 Reinsertion = Reinsertion
@@ -245,6 +110,7 @@ namespace SiliFish.Services.Optimization
         }
         public Dictionary<string, double> Optimize()
         {
+            InitializeOptimization();
             latestFitness = 0.0;
             Algorithm.GenerationRan += (sender, e) =>
             {
@@ -256,7 +122,7 @@ namespace SiliFish.Services.Optimization
                     var phenotype = bestChromosome.ToFloatingPoints();
                     int iter = 0;
                     string valueStr = "";
-                    foreach (string key in SortedKeys)
+                    foreach (string key in Settings.SortedKeys)
                         valueStr += $"{key}: {phenotype[iter++]}; ";
                 }
             };
@@ -264,7 +130,7 @@ namespace SiliFish.Services.Optimization
 
             Dictionary<string, double> BestValues = new();
             int iter = 0;
-            foreach (string key in SortedKeys)
+            foreach (string key in Settings.SortedKeys)
             {
                 var phenotype = (Algorithm.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
                 BestValues.Add(key, phenotype[iter++]);

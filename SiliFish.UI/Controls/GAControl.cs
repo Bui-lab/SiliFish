@@ -48,6 +48,38 @@ namespace SiliFish.UI.Controls
                 dgMinMaxValues[colParameter.Index, rowIndex++].Value = key;
             }
         }
+
+        public void ResetParameters(Dictionary<string, double> parameters, Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues)
+        {
+            Parameters = parameters;
+            dgMinMaxValues.Rows.Clear();
+            dgMinMaxValues.RowCount = parameters.Count;
+            int rowIndex = 0;
+            foreach (string key in parameters.Keys)
+            {
+                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
+                if (MinValues.TryGetValue(key, out double minValue))
+                    dgMinMaxValues[colMinValue.Index, rowIndex].Value = minValue;
+                if (MaxValues.TryGetValue(key, out double maxValue))
+                    dgMinMaxValues[colMaxValue.Index, rowIndex].Value = maxValue;
+                rowIndex++;
+            }
+        }
+        //TODO 3 version of reset parameters - fix
+        public void ResetParameters(Dictionary<string, double> parameters, double[] MinValues, double[] MaxValues)
+        {
+            Parameters = parameters;
+            dgMinMaxValues.Rows.Clear();
+            dgMinMaxValues.RowCount = parameters.Count;
+            int rowIndex = 0;
+            foreach (string key in parameters.Keys)
+            {
+                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
+                dgMinMaxValues[colMinValue.Index, rowIndex].Value = MinValues[rowIndex];
+                dgMinMaxValues[colMaxValue.Index, rowIndex].Value = MaxValues[rowIndex];
+                rowIndex++;
+            }
+        }
         private void RunOptimize()
         {
             if (Solver == null) return;
@@ -74,19 +106,25 @@ namespace SiliFish.UI.Controls
                 minPopulation = 50;
             if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
                 maxPopulation = 50;
-            Solver = new((Type)ddGASelection.SelectedItem,
-                (Type)ddGACrossOver.SelectedItem,
-                (Type)ddGAMutation.SelectedItem,
-                (Type)ddGAReinsertion.SelectedItem,
-                (Type)ddGATermination.SelectedItem,
-                eTerminationParameter.Text);
-            Solver.SetOptimizationSettings(minPopulation, 
-                maxPopulation,
-                CoreType,
-                Parameters,
-                targetRheobaseFunction,
-                firingFitnessFunctions,
-                minValues, maxValues);
+            CoreSolverSettings settings = new()
+            {
+                SelectionType = ddGASelection.Text,
+                CrossOverType = ddGACrossOver.Text,
+                MutationType = ddGAMutation.Text,
+                ReinsertionType = ddGAReinsertion.Text,
+                TerminationType = ddGATermination.Text,
+                TerminationParam = eTerminationParameter.Text,
+                MinPopulationSize = minPopulation,
+                MaxPopulationSize = maxPopulation,
+
+                CoreType = CoreType,
+                TargetRheobaseFunction = targetRheobaseFunction,
+                FitnessFunctions = firingFitnessFunctions,
+                ParamValues = Parameters,
+                MinValueDictionary = minValues,
+                MaxValueDictionary = maxValues
+            };
+            Solver = new() { Settings = settings };
         }
 
         private void ReadMinMaxParamValues()
@@ -131,16 +169,7 @@ namespace SiliFish.UI.Controls
 
             (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = core.GetSuggestedMinMaxValues();
 
-            dgMinMaxValues.Rows.Clear();
-            dgMinMaxValues.RowCount = Parameters.Count;
-            int rowIndex = 0;
-            foreach (string key in Parameters.Keys)
-            {
-                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
-                dgMinMaxValues[colMinValue.Index, rowIndex].Value = MinValues[key];
-                dgMinMaxValues[colMaxValue.Index, rowIndex].Value = MaxValues[key];
-                rowIndex++;
-            }
+            ResetParameters(Parameters, MinValues, MaxValues);
         }
         private void timerOptimization_Tick(object sender, EventArgs e)
         {
@@ -194,12 +223,15 @@ namespace SiliFish.UI.Controls
                 string JSONString = Util.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                Solver = (CoreSolver)Util.CreateObjectFromJSON(typeof(CoreSolver), JSONString);
+                Solver = new();
+                Solver.Settings = (CoreSolverSettings)Util.CreateObjectFromJSON(typeof(CoreSolverSettings), JSONString);
                 if (Solver != null)
                 {
-                    /*eMinChromosome.Text = Solver
-                    ReadMinMaxParamValues();
-                    ReadFitnessValues();
+                    eMinChromosome.Text = Solver.Settings.MinPopulationSize.ToString();
+                    eMaxChromosome.Text = Solver.Settings.MaxPopulationSize.ToString();
+                    ResetParameters(Solver.Settings.ParamValues, Solver.Settings.MinValues, Solver.Settings.MaxValues);
+
+/*                    ReadFitnessValues();
                     if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
                         minPopulation = 50;
                     if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
@@ -225,7 +257,7 @@ namespace SiliFish.UI.Controls
         private void linkSaveGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             CreateSolver();
-            string JSONString = Util.CreateJSONFromObject(Solver);
+            string JSONString = Util.CreateJSONFromObject(Solver.Settings);
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
                 Util.SaveToFile(saveFileJson.FileName, JSONString);
