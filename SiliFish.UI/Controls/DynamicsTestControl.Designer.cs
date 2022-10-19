@@ -47,7 +47,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.eRheobase = new System.Windows.Forms.TextBox();
             this.lRheobase = new System.Windows.Forms.Label();
-            this.btnSensitivityAnalysis = new System.Windows.Forms.Button();
             this.grTest = new System.Windows.Forms.GroupBox();
             this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
             this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
@@ -58,14 +57,8 @@
             this.tabAnalysis = new System.Windows.Forms.TabControl();
             this.tTest = new System.Windows.Forms.TabPage();
             this.tSensitivityAnalysis = new System.Windows.Forms.TabPage();
-            this.grSensitivity = new System.Windows.Forms.GroupBox();
-            this.cbLogScale = new System.Windows.Forms.CheckBox();
-            this.eMaxMultiplier = new System.Windows.Forms.TextBox();
-            this.lDash = new System.Windows.Forms.Label();
-            this.eMinMultiplier = new System.Windows.Forms.TextBox();
-            this.lMultiplierRange = new System.Windows.Forms.Label();
-            this.ddParameter = new System.Windows.Forms.ComboBox();
-            this.lParameter = new System.Windows.Forms.Label();
+            this.grFiring = new System.Windows.Forms.GroupBox();
+            this.grRheoSens = new System.Windows.Forms.GroupBox();
             this.pCoreType = new System.Windows.Forms.Panel();
             this.pLineCoreType = new System.Windows.Forms.Panel();
             this.ddCoreType = new System.Windows.Forms.ComboBox();
@@ -77,6 +70,7 @@
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.splitGAAndPlots = new System.Windows.Forms.SplitContainer();
             this.pOptimize = new System.Windows.Forms.Panel();
+            this.gaControl = new SiliFish.UI.Controls.GAControl();
             this.webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlots = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -92,7 +86,8 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.gaControl = new Controls.GAControl();
+            this.sensitivityAnalysisRheobase = new Controls.SensitivityAnalysisControl();
+            this.sensitivityAnalysisFiring = new Controls.SensitivityAnalysisControl();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -108,7 +103,8 @@
             this.tabAnalysis.SuspendLayout();
             this.tTest.SuspendLayout();
             this.tSensitivityAnalysis.SuspendLayout();
-            this.grSensitivity.SuspendLayout();
+            this.grFiring.SuspendLayout();
+            this.grRheoSens.SuspendLayout();
             this.pCoreType.SuspendLayout();
             this.pLoadSaveParams.SuspendLayout();
             this.pBottomBottom.SuspendLayout();
@@ -376,20 +372,6 @@
             this.lRheobase.TabIndex = 16;
             this.lRheobase.Text = "Rheobase";
             // 
-            // btnSensitivityAnalysis
-            // 
-            this.btnSensitivityAnalysis.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnSensitivityAnalysis.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnSensitivityAnalysis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSensitivityAnalysis.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnSensitivityAnalysis.Location = new System.Drawing.Point(131, 80);
-            this.btnSensitivityAnalysis.Name = "btnSensitivityAnalysis";
-            this.btnSensitivityAnalysis.Size = new System.Drawing.Size(63, 23);
-            this.btnSensitivityAnalysis.TabIndex = 20;
-            this.btnSensitivityAnalysis.Text = "Run";
-            this.btnSensitivityAnalysis.UseVisualStyleBackColor = false;
-            this.btnSensitivityAnalysis.Click += new System.EventHandler(this.btnSensitivityAnalysis_Click);
-            // 
             // grTest
             // 
             this.grTest.Controls.Add(this.stimulusControl1);
@@ -516,7 +498,8 @@
             // 
             // tSensitivityAnalysis
             // 
-            this.tSensitivityAnalysis.Controls.Add(this.grSensitivity);
+            this.tSensitivityAnalysis.Controls.Add(this.grFiring);
+            this.tSensitivityAnalysis.Controls.Add(this.grRheoSens);
             this.tSensitivityAnalysis.Location = new System.Drawing.Point(4, 24);
             this.tSensitivityAnalysis.Name = "tSensitivityAnalysis";
             this.tSensitivityAnalysis.Padding = new System.Windows.Forms.Padding(3);
@@ -525,86 +508,27 @@
             this.tSensitivityAnalysis.Text = "Sensitivity Analysis";
             this.tSensitivityAnalysis.UseVisualStyleBackColor = true;
             // 
-            // grSensitivity
+            // grFiring
             // 
-            this.grSensitivity.Controls.Add(this.cbLogScale);
-            this.grSensitivity.Controls.Add(this.eMaxMultiplier);
-            this.grSensitivity.Controls.Add(this.lDash);
-            this.grSensitivity.Controls.Add(this.eMinMultiplier);
-            this.grSensitivity.Controls.Add(this.lMultiplierRange);
-            this.grSensitivity.Controls.Add(this.ddParameter);
-            this.grSensitivity.Controls.Add(this.lParameter);
-            this.grSensitivity.Controls.Add(this.btnSensitivityAnalysis);
-            this.grSensitivity.Location = new System.Drawing.Point(6, 6);
-            this.grSensitivity.Name = "grSensitivity";
-            this.grSensitivity.Size = new System.Drawing.Size(301, 109);
-            this.grSensitivity.TabIndex = 18;
-            this.grSensitivity.TabStop = false;
-            this.grSensitivity.Text = "Sensitivity Analysis";
+            this.grFiring.Controls.Add(this.sensitivityAnalysisFiring);
+            this.grFiring.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grFiring.Location = new System.Drawing.Point(3, 147);
+            this.grFiring.Name = "grFiring";
+            this.grFiring.Size = new System.Drawing.Size(285, 138);
+            this.grFiring.TabIndex = 19;
+            this.grFiring.TabStop = false;
+            this.grFiring.Text = "Firing Pattern";
             // 
-            // cbLogScale
+            // grRheoSens
             // 
-            this.cbLogScale.AutoSize = true;
-            this.cbLogScale.Location = new System.Drawing.Point(6, 80);
-            this.cbLogScale.Name = "cbLogScale";
-            this.cbLogScale.Size = new System.Drawing.Size(76, 19);
-            this.cbLogScale.TabIndex = 28;
-            this.cbLogScale.Text = "Log Scale";
-            this.cbLogScale.UseVisualStyleBackColor = true;
-            // 
-            // eMaxMultiplier
-            // 
-            this.eMaxMultiplier.Location = new System.Drawing.Point(152, 51);
-            this.eMaxMultiplier.Name = "eMaxMultiplier";
-            this.eMaxMultiplier.Size = new System.Drawing.Size(41, 23);
-            this.eMaxMultiplier.TabIndex = 26;
-            this.eMaxMultiplier.Text = "10";
-            // 
-            // lDash
-            // 
-            this.lDash.AutoSize = true;
-            this.lDash.Location = new System.Drawing.Point(141, 54);
-            this.lDash.Name = "lDash";
-            this.lDash.Size = new System.Drawing.Size(12, 15);
-            this.lDash.TabIndex = 27;
-            this.lDash.Text = "-";
-            // 
-            // eMinMultiplier
-            // 
-            this.eMinMultiplier.Location = new System.Drawing.Point(100, 51);
-            this.eMinMultiplier.Name = "eMinMultiplier";
-            this.eMinMultiplier.Size = new System.Drawing.Size(41, 23);
-            this.eMinMultiplier.TabIndex = 24;
-            this.eMinMultiplier.Text = "0.1";
-            // 
-            // lMultiplierRange
-            // 
-            this.lMultiplierRange.AutoSize = true;
-            this.lMultiplierRange.Location = new System.Drawing.Point(6, 54);
-            this.lMultiplierRange.Name = "lMultiplierRange";
-            this.lMultiplierRange.Size = new System.Drawing.Size(94, 15);
-            this.lMultiplierRange.TabIndex = 23;
-            this.lMultiplierRange.Text = "Multiplier Range";
-            // 
-            // ddParameter
-            // 
-            this.ddParameter.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddParameter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddParameter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddParameter.FormattingEnabled = true;
-            this.ddParameter.Location = new System.Drawing.Point(73, 22);
-            this.ddParameter.Name = "ddParameter";
-            this.ddParameter.Size = new System.Drawing.Size(121, 23);
-            this.ddParameter.TabIndex = 22;
-            // 
-            // lParameter
-            // 
-            this.lParameter.AutoSize = true;
-            this.lParameter.Location = new System.Drawing.Point(6, 28);
-            this.lParameter.Name = "lParameter";
-            this.lParameter.Size = new System.Drawing.Size(61, 15);
-            this.lParameter.TabIndex = 21;
-            this.lParameter.Text = "Parameter";
+            this.grRheoSens.Controls.Add(this.sensitivityAnalysisRheobase);
+            this.grRheoSens.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grRheoSens.Location = new System.Drawing.Point(3, 3);
+            this.grRheoSens.Name = "grRheoSens";
+            this.grRheoSens.Size = new System.Drawing.Size(285, 144);
+            this.grRheoSens.TabIndex = 18;
+            this.grRheoSens.TabStop = false;
+            this.grRheoSens.Text = "Rheobase Sensitivity";
             // 
             // pCoreType
             // 
@@ -732,6 +656,16 @@
             this.pOptimize.Name = "pOptimize";
             this.pOptimize.Size = new System.Drawing.Size(939, 307);
             this.pOptimize.TabIndex = 39;
+            // 
+            // gaControl
+            // 
+            this.gaControl.CoreType = null;
+            this.gaControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaControl.Location = new System.Drawing.Point(0, 0);
+            this.gaControl.Name = "gaControl";
+            this.gaControl.Parameters = null;
+            this.gaControl.Size = new System.Drawing.Size(939, 307);
+            this.gaControl.TabIndex = 0;
             // 
             // webViewPlots
             // 
@@ -884,14 +818,19 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
-            // gaControl
+            // sensitivityAnalysisRheobase
             // 
-            this.gaControl.CoreType = null;
-            this.gaControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaControl.Location = new System.Drawing.Point(0, 0);
-            this.gaControl.Name = "gaControl";
-            this.gaControl.Size = new System.Drawing.Size(939, 307);
-            this.gaControl.TabIndex = 0;
+            this.sensitivityAnalysisRheobase.Location = new System.Drawing.Point(3, 22);
+            this.sensitivityAnalysisRheobase.Name = "sensitivityAnalysisRheobase";
+            this.sensitivityAnalysisRheobase.Size = new System.Drawing.Size(215, 120);
+            this.sensitivityAnalysisRheobase.TabIndex = 0;
+            // 
+            // sensitivityAnalysisFiring
+            // 
+            this.sensitivityAnalysisFiring.Location = new System.Drawing.Point(6, 18);
+            this.sensitivityAnalysisFiring.Name = "sensitivityAnalysisFiring";
+            this.sensitivityAnalysisFiring.Size = new System.Drawing.Size(215, 120);
+            this.sensitivityAnalysisFiring.TabIndex = 0;
             // 
             // DynamicsTestControl
             // 
@@ -920,8 +859,8 @@
             this.tabAnalysis.ResumeLayout(false);
             this.tTest.ResumeLayout(false);
             this.tSensitivityAnalysis.ResumeLayout(false);
-            this.grSensitivity.ResumeLayout(false);
-            this.grSensitivity.PerformLayout();
+            this.grFiring.ResumeLayout(false);
+            this.grRheoSens.ResumeLayout(false);
             this.pCoreType.ResumeLayout(false);
             this.pCoreType.PerformLayout();
             this.pLoadSaveParams.ResumeLayout(false);
@@ -963,15 +902,7 @@
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlots;
         private NumericUpDown eRheobaseDuration;
         private Label label1;
-        private Button btnSensitivityAnalysis;
-        private GroupBox grSensitivity;
-        private TextBox eMaxMultiplier;
-        private Label lDash;
-        private TextBox eMinMultiplier;
-        private Label lMultiplierRange;
-        private ComboBox ddParameter;
-        private Label lParameter;
-        private CheckBox cbLogScale;
+        private GroupBox grRheoSens;
         private RadioButton rbManualEntryStimulus;
         private RadioButton rbRheobaseBasedStimulus;
         private FlowLayoutPanel pfParams;
@@ -1007,5 +938,8 @@
         private Panel pLineCoreType;
         private Panel panel1;
         private Controls.GAControl gaControl;
+        private GroupBox grFiring;
+        private Controls.SensitivityAnalysisControl sensitivityAnalysisFiring;
+        private Controls.SensitivityAnalysisControl sensitivityAnalysisRheobase;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,6 +11,10 @@ namespace SiliFish.DynamicUnits
 {
     public class DynamicUnit
     {
+        private static Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
+        .Where(type => typeof(DynamicUnit).IsAssignableFrom(type))
+        .ToDictionary(type => type.Name, type => type);
+
         //the resting membrane potential
         public double Vr = -70;
         // vmax is the peak membrane potential of single action potentials
@@ -47,15 +53,7 @@ namespace SiliFish.DynamicUnits
 
         public static List<string> GetCoreTypes()
         {
-            List<string> coreTypes = new()
-            {
-                typeof(HodgkinHuxley).Name,
-                typeof(Izhikevich_5P).Name,
-                typeof(Izhikevich_9P).Name,
-                typeof(QuadraticIntegrateAndFire).Name,
-                typeof(Leaky_Integrator).Name,
-            };
-            return coreTypes;
+            return typeMap.Keys.Where(k => k != typeof(DynamicUnit).Name).ToList();
         }
         public static DynamicUnit GetOfDerivedType(string json)
         {
@@ -66,20 +64,7 @@ namespace SiliFish.DynamicUnits
         }
         public static DynamicUnit CreateCore(string coreType, Dictionary<string, double> parameters)
         {
-            switch (coreType)
-            {
-                case "HodgkinHuxley":
-                    return new HodgkinHuxley(parameters);
-                case "Izhikevich_5P":
-                    return new Izhikevich_5P(parameters);
-                case "Izhikevich_9P":
-                    return new Izhikevich_9P(parameters);
-                case "Leaky_Integrator":
-                    return new Leaky_Integrator(parameters);
-                case "QuadraticIntegrateAndFire":
-                    return new QuadraticIntegrateAndFire(parameters);
-            }
-            return null;
+            return (DynamicUnit)Activator.CreateInstance(typeMap[coreType], parameters);
         }
 
         /// <summary>
@@ -149,6 +134,13 @@ namespace SiliFish.DynamicUnits
                     curI = (curI + (rheobase > 0 ? rheobase : maxRheobase)) / 2;
                 }
             }
+            if (curI < minI + sensitivity)//test the minimum current as well - some neurons fire without any stimulus
+            {
+                foreach (int i in Enumerable.Range(warmup, infinity))
+                    I[i] = minI;
+                if (DoesSpike(I, warmup))
+                    rheobase = minI;
+            }
             return rheobase;
         }
 
@@ -177,29 +169,12 @@ namespace SiliFish.DynamicUnits
             return DynamicsTest(I);
         }
 
-        public virtual (double[], double[]) RheobaseSensitivityAnalysis(string param, bool logScale, double minMultiplier, double maxMultiplier, int numOfPoints,
+        public virtual double[] RheobaseSensitivityAnalysis(string param, double[] values,
                     double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)
         {
-            if (maxMultiplier < minMultiplier)
-                (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
             Dictionary<string, double> parameters = GetParameters();
             double origValue = parameters[param];
-            double[] values = new double[numOfPoints];
-            if (!logScale)
-            {
-                double incMultiplier = (maxMultiplier - minMultiplier) / (numOfPoints - 1);
-                foreach (int i in Enumerable.Range(0, numOfPoints))
-                    values[i] = (incMultiplier * i + minMultiplier) * origValue;
-            }
-            else
-            {
-                double logMinMultiplier = Math.Log10(minMultiplier);
-                double logMaxMultiplier = Math.Log10(maxMultiplier);
-                double incMultiplier = (logMaxMultiplier - logMinMultiplier) / (numOfPoints - 1);
-                foreach (int i in Enumerable.Range(0, numOfPoints))
-                    values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
-            }
-            double[] rheos = new double[numOfPoints];
+            double[] rheos = new double[values.Length];
             int counter = 0;
             foreach (double value in values)
             {
@@ -209,10 +184,25 @@ namespace SiliFish.DynamicUnits
             }
             parameters[param] = origValue;
             SetParameters(parameters);
-            return (values, rheos);
+            return rheos;
         }
 
-
+        public DynamicsStats[] FiringAnalysis(string param, double[] values, double[] I)
+        {
+            Dictionary<string, double> parameters = GetParameters();
+            double origValue = parameters[param];
+            DynamicsStats[] stats = new DynamicsStats[values.Length];
+            int counter = 0;
+            foreach (double value in values)
+            {
+                parameters[param] = value;
+                SetParameters(parameters);
+                stats[counter++] = DynamicsTest(I);
+            }
+            parameters[param] = origValue;
+            SetParameters(parameters);
+            return stats;
+        }
         public virtual (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             throw new NotImplementedException();
