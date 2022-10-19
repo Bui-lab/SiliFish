@@ -35,9 +35,9 @@
             this.lFitnessWeight = new System.Windows.Forms.Label();
             this.pTargetRheobase = new System.Windows.Forms.Panel();
             this.lSeperator = new System.Windows.Forms.Label();
-            this.eMaxRheobase = new System.Windows.Forms.TextBox();
-            this.eMinRheobase = new System.Windows.Forms.TextBox();
-            this.lMinMaxRheobase = new System.Windows.Forms.Label();
+            this.eMaxValue = new System.Windows.Forms.TextBox();
+            this.eMinValue = new System.Windows.Forms.TextBox();
+            this.lMinMaxValue = new System.Windows.Forms.Label();
             this.pFiringRelated = new System.Windows.Forms.Panel();
             this.ddFiringValues = new System.Windows.Forms.ComboBox();
             this.lFiringValues = new System.Windows.Forms.Label();
@@ -109,9 +109,9 @@
             // pTargetRheobase
             // 
             this.pTargetRheobase.Controls.Add(this.lSeperator);
-            this.pTargetRheobase.Controls.Add(this.eMaxRheobase);
-            this.pTargetRheobase.Controls.Add(this.eMinRheobase);
-            this.pTargetRheobase.Controls.Add(this.lMinMaxRheobase);
+            this.pTargetRheobase.Controls.Add(this.eMaxValue);
+            this.pTargetRheobase.Controls.Add(this.eMinValue);
+            this.pTargetRheobase.Controls.Add(this.lMinMaxValue);
             this.pTargetRheobase.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTargetRheobase.Location = new System.Drawing.Point(0, 64);
             this.pTargetRheobase.MinimumSize = new System.Drawing.Size(240, 32);
@@ -130,26 +130,26 @@
             // 
             // eMaxRheobase
             // 
-            this.eMaxRheobase.Location = new System.Drawing.Point(176, 4);
-            this.eMaxRheobase.Name = "eMaxRheobase";
-            this.eMaxRheobase.Size = new System.Drawing.Size(56, 23);
-            this.eMaxRheobase.TabIndex = 2;
+            this.eMaxValue.Location = new System.Drawing.Point(176, 4);
+            this.eMaxValue.Name = "eMaxRheobase";
+            this.eMaxValue.Size = new System.Drawing.Size(56, 23);
+            this.eMaxValue.TabIndex = 2;
             // 
             // eMinRheobase
             // 
-            this.eMinRheobase.Location = new System.Drawing.Point(102, 4);
-            this.eMinRheobase.Name = "eMinRheobase";
-            this.eMinRheobase.Size = new System.Drawing.Size(56, 23);
-            this.eMinRheobase.TabIndex = 1;
+            this.eMinValue.Location = new System.Drawing.Point(102, 4);
+            this.eMinValue.Name = "eMinRheobase";
+            this.eMinValue.Size = new System.Drawing.Size(56, 23);
+            this.eMinValue.TabIndex = 1;
             // 
             // lMinMaxRheobase
             // 
-            this.lMinMaxRheobase.AutoSize = true;
-            this.lMinMaxRheobase.Location = new System.Drawing.Point(3, 10);
-            this.lMinMaxRheobase.Name = "lMinMaxRheobase";
-            this.lMinMaxRheobase.Size = new System.Drawing.Size(56, 15);
-            this.lMinMaxRheobase.TabIndex = 0;
-            this.lMinMaxRheobase.Text = "Min-Max";
+            this.lMinMaxValue.AutoSize = true;
+            this.lMinMaxValue.Location = new System.Drawing.Point(3, 10);
+            this.lMinMaxValue.Name = "lMinMaxRheobase";
+            this.lMinMaxValue.Size = new System.Drawing.Size(56, 15);
+            this.lMinMaxValue.TabIndex = 0;
+            this.lMinMaxValue.Text = "Min-Max";
             // 
             // pFiringRelated
             // 
@@ -279,9 +279,9 @@
         private Panel pFitnessFunction;
         private Panel pTargetRheobase;
         private Label lSeperator;
-        private TextBox eMaxRheobase;
-        private TextBox eMinRheobase;
-        private Label lMinMaxRheobase;
+        private TextBox eMaxValue;
+        private TextBox eMinValue;
+        private Label lMinMaxValue;
         private Panel pFiringRelated;
         private TextBox eCurrentApplied;
         private Label lCurrentApplied;

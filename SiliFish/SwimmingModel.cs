@@ -451,10 +451,10 @@ namespace SiliFish
                 }
 
             }
-            Util.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
-            Util.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
-            Util.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
-            Util.SaveToJSON(filenamejson, GetParameters());
+            FileUtil.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
+            FileUtil.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
+            FileUtil.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
+            JsonUtil.SaveToJsonFile(filenamejson, GetParameters());
         }
 
         protected virtual void InitNeurons()
@@ -609,8 +609,8 @@ namespace SiliFish
                     string runfilename = $"{filename}_Run{iRunCounter}";
                     runfilename = Path.Combine(outputFolder, runfilename);
                     //Util.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
-                    Util.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
-                    Util.SaveToJSON(runfilename + ".json", this);
+                    FileUtil.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
+                    JsonUtil.SaveToJsonFile(runfilename + ".json", this);
                     seed = null;
                 }
                 if (CancelLoop)

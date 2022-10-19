@@ -69,8 +69,8 @@ namespace SiliFish.DataTypes
 
         public static Distribution CreateDistributionObject(object obj)
         {
-            if (obj is Distribution)
-                return (Distribution)obj;
+            if (obj is Distribution distribution)
+                return distribution;
             if (double.TryParse(obj.ToString(), out double d))
                 return new Constant_NoDistribution(d, false, 0);
             if (obj is JsonElement element)

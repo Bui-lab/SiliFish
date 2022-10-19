@@ -29,7 +29,7 @@ namespace SiliFish.UI.Controls
         private void ddFitnessFunction_SelectedIndexChanged(object sender, EventArgs e)
         {
             string function = ddFitnessFunction.Text;
-            if (function == FitnessFunctionOptions.TargetRheobase.ToString())
+            if (function == FitnessFunctionOptions.TargetRheobase.ToString())// || function == FitnessFunctionOptions.FiringDelay.ToString())
             {
                 pTargetRheobase.Visible = true;
                 pFiringRelated.Visible = false;
@@ -41,9 +41,7 @@ namespace SiliFish.UI.Controls
                 pFiringRelated.Visible = true;
                 this.Height = pFitnessFunction.Height + pFiringRelated.Height + 35;
                 lFiringValues.Text = function;
-                if (function == FitnessFunctionOptions.FiringDelay.ToString())
-                    ddFiringValues.DataSource = Enum.GetNames(typeof(FiringDelay));
-                else if (function == FitnessFunctionOptions.FiringRhythm.ToString())
+                if (function == FitnessFunctionOptions.FiringRhythm.ToString())
                     ddFiringValues.DataSource = Enum.GetNames(typeof(FiringRhythm));
                 else if (function == FitnessFunctionOptions.FiringPattern.ToString())
                     ddFiringValues.DataSource = Enum.GetNames(typeof(FiringPattern));
@@ -56,35 +54,42 @@ namespace SiliFish.UI.Controls
                 return new TargetRheobaseFunction()
                 {
                     Weight = double.Parse(eFitnessWeight.Text.ToString()),
-                    TargetRheobaseMin = double.Parse(eMinRheobase.Text.ToString()),
-                    TargetRheobaseMax = double.Parse(eMaxRheobase.Text.ToString())
+                    TargetRheobaseMin = double.Parse(eMinValue.Text.ToString()),
+                    TargetRheobaseMax = double.Parse(eMaxValue.Text.ToString())
                 };
+            /*TODO if (ddFitnessFunction.Text == FitnessFunctionOptions.FiringDelay.ToString())
+                 return new FiringDelayFunction()
+                 {
+                     Weight = double.Parse(eFitnessWeight.Text.ToString()),
+                     FiringDelayMin = double.Parse(eMinValue.Text.ToString()),
+                     FiringDelayMax = double.Parse(eMaxValue.Text.ToString())
+                 };*/
 
-            FiringFitnessFunction fff = new()
+            if (ddFitnessFunction.Text == FitnessFunctionOptions.FiringPattern.ToString())
             {
-                Weight = double.Parse(eFitnessWeight.Text.ToString()),
-                CurrentValueOrRheobaseMultiplier = double.Parse(eCurrentApplied.Text.ToString()),
-                RheobaseBased = ddCurrentSelection.Text == "x Rheobase",
-            };
-            if (ddFitnessFunction.Text == FitnessFunctionOptions.FiringDelay.ToString())
-            {
-                fff.FitnessFunctionOptions = FitnessFunctionOptions.FiringDelay;
-                fff.TargetDelay = (FiringDelay)Enum.Parse(typeof(FiringDelay), ddFiringValues.Text);
+                FiringPatternFunction fpf = new()
+                {
+                    Weight = double.Parse(eFitnessWeight.Text.ToString()),
+                    CurrentValueOrRheobaseMultiplier = double.Parse(eCurrentApplied.Text.ToString()),
+                    RheobaseBased = ddCurrentSelection.Text == "x Rheobase",
+                    TargetPattern = (FiringPattern)Enum.Parse(typeof(FiringPattern), ddFiringValues.Text)
+                };
+                return fpf;
             }
 
-            else if (ddFitnessFunction.Text == FitnessFunctionOptions.FiringPattern.ToString())
+            if (ddFitnessFunction.Text == FitnessFunctionOptions.FiringRhythm.ToString())
             {
-                fff.FitnessFunctionOptions = FitnessFunctionOptions.FiringPattern;
-                fff.TargetPattern = (FiringPattern)Enum.Parse(typeof(FiringPattern), ddFiringValues.Text);
+                FiringRhythmFunction fpf = new()
+                {
+                    Weight = double.Parse(eFitnessWeight.Text.ToString()),
+                    CurrentValueOrRheobaseMultiplier = double.Parse(eCurrentApplied.Text.ToString()),
+                    RheobaseBased = ddCurrentSelection.Text == "x Rheobase",
+                    TargetRhythm = (FiringRhythm)Enum.Parse(typeof(FiringRhythm), ddFiringValues.Text)
+                };
+                return fpf;
             }
 
-            else if (ddFitnessFunction.Text == FitnessFunctionOptions.FiringRhythm.ToString())
-            {
-                fff.FitnessFunctionOptions = FitnessFunctionOptions.FiringRhythm;
-                fff.TargetRhythm = (FiringRhythm)Enum.Parse(typeof(FiringRhythm), ddFiringValues.Text);
-            }
-
-            return fff;
+            return null;
         }
         public void SetFitnessFunction(FitnessFunction fitnessFunction)
         {
@@ -92,28 +97,28 @@ namespace SiliFish.UI.Controls
             {
                 ddFitnessFunction.Text = FitnessFunctionOptions.TargetRheobase.ToString();
                 eFitnessWeight.Text = trf.Weight.ToString();
-                eMinRheobase.Text = trf.TargetRheobaseMin.ToString();
-                eMaxRheobase.Text = trf.TargetRheobaseMax.ToString();
+                eMinValue.Text = trf.TargetRheobaseMin.ToString();
+                eMaxValue.Text = trf.TargetRheobaseMax.ToString();
                 return;
             }
+            /*TODO if (fitnessFunction is FiringDelayFunction fdf)
+            {
+                ddFitnessFunction.Text = FitnessFunctionOptions.FiringDelay.ToString();
+                eFitnessWeight.Text = fdf.Weight.ToString();
+                eMinValue.Text = fdf.FiringDelayMin.ToString();
+                eMaxValue.Text = fdf.FiringDelayMax.ToString();
+                return;
+            }*/
             if (fitnessFunction is FiringFitnessFunction fff)
             {
+                ddFitnessFunction.Text = fff.FitnessFunctionOption.ToString();
                 eFitnessWeight.Text = fff.Weight.ToString();
                 eCurrentApplied.Text = fff.CurrentValueOrRheobaseMultiplier.ToString();
                 ddCurrentSelection.Text = fff.RheobaseBased ? "x Rheobase" : "Fixed Current";
-                ddFitnessFunction.Text = fff.FitnessFunctionOptions.ToString();
-                switch (fff.FitnessFunctionOptions)
-                {
-                    case FitnessFunctionOptions.FiringDelay:
-                        ddFiringValues.Text = fff.TargetDelay.ToString();
-                        break;
-                    case FitnessFunctionOptions.FiringRhythm:
-                        ddFiringValues.Text = fff.TargetRhythm.ToString();
-                        break;
-                    case FitnessFunctionOptions.FiringPattern:
-                        ddFiringValues.Text = fff.TargetPattern.ToString();
-                        break;
-                }
+                if (fff is FiringRhythmFunction frf)
+                    ddFiringValues.Text = frf.TargetRhythm.ToString();
+                else if (fff is FiringPatternFunction fpf)
+                    ddFiringValues.Text = fpf.TargetPattern.ToString();
             }
         }
 
