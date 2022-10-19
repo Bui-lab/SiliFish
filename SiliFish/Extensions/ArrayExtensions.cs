@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,7 +61,35 @@ namespace SiliFish.Extensions
             return Math.Sqrt(thisArray.Skip(iStart).Take(iEnd - iStart).Average(v => Math.Pow(v - avg, 2)));
         }
 
-
+        public static bool IsRandom(this double[] thisArray, double randomDegree, out bool decreasing, out bool increasing)
+        {
+            if (thisArray.Length <= 1)
+            {
+                decreasing = false;
+                increasing = false;
+                return false;
+            }
+            decreasing = true;//skip the first interval thisArray[1] < thisArray[0];
+            increasing = true;//skip the first intervalthisArray[1] > thisArray[0];
+            for (int i = 2; i < thisArray.Length; i++)
+            {
+                if (decreasing && thisArray[i] > thisArray[i - 1] + Const.Epsilon)
+                {
+                    decreasing = false;
+                }
+                if (increasing && thisArray[i] < thisArray[i - 1] - Const.Epsilon)
+                {
+                    increasing = false; 
+                }
+                if (!decreasing && !increasing)
+                    break;
+            }
+            if (increasing || decreasing)
+                return false;
+            double std = thisArray.StandardDeviation();
+            double avg = thisArray.AverageValue();
+            return (std / avg) > randomDegree;
+        }
         public static List<int> GetPeakIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
         {
             List<int> indices = new();

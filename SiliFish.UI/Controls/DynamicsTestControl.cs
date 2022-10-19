@@ -59,7 +59,8 @@ namespace SiliFish.UI.Controls
                 if (parameters == null)
                 {
                     pfParams.Controls.Clear();
-                    ddParameter.Items.Clear();
+                    sensitivityAnalysisRheobase.SetParameters(false, null);
+                    sensitivityAnalysisFiring.SetParameters(false, null);
                 }
                 else
                 {
@@ -74,12 +75,8 @@ namespace SiliFish.UI.Controls
                     if (updateParamNames)
                     {
                         updateParamNames = false;
-                        ddParameter.Items.Clear();
-                        ddParameter.Items.Add("All Parameters");
-                        foreach (var p in parameters)
-                            ddParameter.Items.Add(p.Key);
-                        ddParameter.SelectedIndex = 0;
-
+                        sensitivityAnalysisRheobase.SetParameters(true, parameters.Keys.ToArray());
+                        sensitivityAnalysisFiring.SetParameters(false, parameters.Keys.ToArray());
                         gaControl.ResetParameters(parameters);
                     }
                     FirstRun();
@@ -131,6 +128,80 @@ namespace SiliFish.UI.Controls
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
             gaControl.OnLoadParams += GaControl_OnLoadParams;
+            sensitivityAnalysisRheobase.RunAnalysis += SensitivityAnalysisRheobase_RunAnalysis;
+            sensitivityAnalysisFiring.RunAnalysis += SensitivityAnalysisFiring_RunAnalysis;
+        }
+
+        private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
+        {
+            double limit = (double)eRheobaseLimit.Value;
+            List<ChartDataStruct> charts = new();
+            double dt = (double)edt.Value;
+            ReadParameters();
+            string param = sensitivityAnalysisFiring.SelectedParam;
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+
+            double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
+            double[] I  = GenerateStimulus();
+            DynamicsStats[] stats = core.FiringAnalysis(param, values, I);
+            for (int iter = 0; iter < values.Length; iter++)
+            {
+                DynamicsStats stat = stats[iter];
+                charts.Add(new ChartDataStruct
+                {
+                    Title = values[iter].ToString(),
+                    Color = Color.Purple,
+                    xData = TimeArray,
+                    yData = stat.VList,
+                    xLabel = param,
+                    yLabel = "V (mV)"
+                });
+            }
+            int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
+            if (height < 200) height = 200;
+            string html = DyChartGenerator.PlotLineCharts(charts,
+                "Firing Analysis", synchronized: true,
+                webViewPlots.ClientSize.Width,
+                height);
+            webViewPlots.NavigateToString(html);
+        }
+
+        private void SensitivityAnalysisRheobase_RunAnalysis(object sender, EventArgs e)
+        {
+            double limit = (double)eRheobaseLimit.Value;
+            List<ChartDataStruct> charts = new();
+            double dt = (double)edt.Value;
+            ReadParameters();
+            Dictionary<string, double> paramToTest = parameters;
+            string selectedParam = sensitivityAnalysisRheobase.SelectedParam;
+            if (parameters.ContainsKey(selectedParam))
+                paramToTest = parameters.Where(kvp => kvp.Key.ToString() == selectedParam).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+
+            foreach (string param in paramToTest.Keys)//change one parameter at a time
+            {
+                double[] values = sensitivityAnalysisRheobase.GetValues(parameters[param]);
+
+                double[] rheos = core.RheobaseSensitivityAnalysis(param, values, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
+                charts.Add(new ChartDataStruct
+                {
+                    Title = param,
+                    Color = Color.Purple,
+                    xData = values,
+                    yData = rheos,
+                    xLabel = param,
+                    yLabel = "Rheobase",
+                    drawPoints = true,
+                    logScale = sensitivityAnalysisRheobase.LogScale
+                });
+            }
+            int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
+            if (height < 200) height = 200;
+            string html = DyChartGenerator.PlotLineCharts(charts,
+                "Rheobase Sensitivity Analysis", synchronized: false,
+                webViewPlots.ClientSize.Width,
+                height);
+            webViewPlots.NavigateToString(html);
         }
 
         private void GaControl_OnLoadParams(object sender, EventArgs e)
@@ -347,7 +418,31 @@ namespace SiliFish.UI.Controls
         {
             if (cbAutoDrawPlots.Checked)
                 DynamicsRun();
-        }       
+        }
+
+        private double[] GenerateStimulus()
+        {
+            decimal dt = edt.Value;
+            RunParam.static_Skip = 0;
+            RunParam.static_dt = (double)dt;
+            int stimStart = (int)(eStepStartTime.Value / dt);
+            int stimEnd = (int)(eStepEndTime.Value / dt);
+            int plotEnd = (int)(ePlotEndTime.Value / dt);
+            TimeArray = new double[plotEnd + 1];
+            TimeLine tl = new();
+            tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
+            foreach (int i in Enumerable.Range(0, plotEnd + 1))
+                TimeArray[i] = i * (double)dt;
+            double[] I = new double[plotEnd + 1];
+            Stimulus stim = new()
+            {
+                StimulusSettings = stimulusControl1.GetStimulus(),
+                TimeSpan_ms = tl
+            };
+            foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
+                I[i] = stim.generateStimulus(i, SwimmingModel.rand);
+            return I;
+        }
         private void DynamicsRun()
         {
             ReadParameters();
@@ -368,14 +463,7 @@ namespace SiliFish.UI.Controls
             {
                 if (rbManualEntryStimulus.Checked)
                 {
-                    double[] I = new double[plotEnd + 1];
-                    Stimulus stim = new()
-                    {
-                        StimulusSettings = stimulusControl1.GetStimulus(),
-                        TimeSpan_ms = tl
-                    };
-                    foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                        I[i] = stim.generateStimulus(i, SwimmingModel.rand);
+                    double[] I = GenerateStimulus();
                     dynamics = core.DynamicsTest(I);
                     CreatePlots();
                 }
@@ -422,7 +510,7 @@ namespace SiliFish.UI.Controls
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
-            if (d > 0)
+            if (d >= 0)
             {
                 eRheobase.Text = d.ToString(Const.DecimalPointFormat);
                 lRheobaseWarning.Visible = false;
@@ -440,46 +528,7 @@ namespace SiliFish.UI.Controls
             CalculateRheobase();
         }
 
-        //update each parameter sequentially within the range [/10, *2]
-        private void btnSensitivityAnalysis_Click(object sender, EventArgs e)
-        {
-            double limit = (double)eRheobaseLimit.Value;
-            List<ChartDataStruct> charts = new();
-            double dt = (double)edt.Value;
-            ReadParameters();
-            Dictionary<string, double> paramToTest = parameters;
-            if (ddParameter.SelectedIndex > 0)
-            {
-                string param = ddParameter.SelectedItem.ToString();
-                paramToTest = parameters.Where(kvp => kvp.Key.ToString() == param).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
 
-            foreach (string param in paramToTest.Keys)//change one parameter at a time
-            {
-                (double[] values, double[] rheos) = core.RheobaseSensitivityAnalysis(param, cbLogScale.Checked,
-                    double.Parse(eMinMultiplier.Text), double.Parse(eMaxMultiplier.Text),
-                    20/*num of points*/, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
-                charts.Add(new ChartDataStruct
-                {
-                    Title = param,
-                    Color = Color.Purple,
-                    xData = values,
-                    yData = rheos,
-                    xLabel = param,
-                    yLabel = "Rheobase",
-                    drawPoints = true,
-                    logScale = cbLogScale.Checked
-                });
-            }
-            int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
-            if (height < 200) height = 200;
-            string html = DyChartGenerator.PlotLineCharts(charts,
-                "Rheobase Sensitivity Analysis", synchronized: false,
-                webViewPlots.ClientSize.Width,
-                height);
-            webViewPlots.NavigateToString(html);
-        }
 
         private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
@@ -550,5 +599,6 @@ namespace SiliFish.UI.Controls
             if (cbAutoDrawPlots.Checked)
                 DynamicsRun();
         }
+
     }
 }

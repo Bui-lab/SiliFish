@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using System;
+using System.Linq;
 using System.Net.Http;
 
 
@@ -155,6 +156,29 @@ namespace SiliFish.Helpers
                     return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "pF" : "nF";
             }
             return "";
+        }
+
+        static public double[] GenerateValues(double origValue, double minMultiplier, double maxMultiplier, int numOfPoints, bool logScale)
+        {
+            if (maxMultiplier < minMultiplier)
+                (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
+
+            double[] values = new double[numOfPoints];
+            if (!logScale)
+            {
+                double incMultiplier = (maxMultiplier - minMultiplier) / (numOfPoints - 1);
+                foreach (int i in Enumerable.Range(0, numOfPoints))
+                    values[i] = (incMultiplier * i + minMultiplier) * origValue;
+            }
+            else
+            {
+                double logMinMultiplier = Math.Log10(minMultiplier);
+                double logMaxMultiplier = Math.Log10(maxMultiplier);
+                double incMultiplier = (logMaxMultiplier - logMinMultiplier) / (numOfPoints - 1);
+                foreach (int i in Enumerable.Range(0, numOfPoints))
+                    values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
+            }
+            return values;
         }
     }
 }
