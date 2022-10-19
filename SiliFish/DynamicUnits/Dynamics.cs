@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SiliFish.DynamicUnits
 {
-    internal class Cluster
+    public class Cluster
     {
         public double clusterMin, clusterMax, centroid;
         public int numMember = 0;
@@ -28,6 +28,7 @@ namespace SiliFish.DynamicUnits
             if (clusterMax < d)
                 clusterMax = d;
         }
+
     }
     public class BurstOrSpike
     {
@@ -73,20 +74,18 @@ namespace SiliFish.DynamicUnits
                 {
                     if (decreasing && intervalArray[i] > intervalArray[i - 1])
                     {
-                        firingRhythm = FiringRhythm.Chattering;
                         firingPattern = FiringPattern.Chattering;
                         break;
                     }
                     else if (!decreasing && intervalArray[i] < intervalArray[i - 1])
                     {
-                        firingRhythm = FiringRhythm.Chattering;
                         firingPattern = FiringPattern.Chattering;
                         break;
                     }
                 }
                 return (firingRhythm, firingPattern);
             }
-            return (FiringRhythm.Chattering, FiringPattern.Mixed);
+            return (FiringRhythm.Tonic, FiringPattern.Mixed);
         }
     }
     /// <summary>
@@ -94,9 +93,13 @@ namespace SiliFish.DynamicUnits
     /// </summary>
     public class DynamicsStats
     {
+        public Cluster BurstCluster;
+        public Cluster InterBurstCluster;
+
         private Dictionary<double, double> intervals = null;
-        public static double MaxBurstInterval_LowerRange { get; set; } = 5; //in ms, the maximum interval two spikes can have to be considered as part of a burst
-        public static double MaxBurstInterval_UpperRange { get; set; } = 30; //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        private bool analyzed = false;
+        public double MaxBurstInterval_LowerRange { get; set; } = 5; //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public double MaxBurstInterval_UpperRange { get; set; } = 30; //in ms, the maximum interval two spikes can have to be considered as part of a burst
         public static double OneClusterMultiplier { get; set; } = 1.1; // (Centroid2 - Centroid1) < Centroid1 * OneClusterMultiplier means there is only one cluster (all spikes part of a burst)
         public static double TonicPadding { get; set; } = 1; //in ms, the range between the last spike and the end of current to be considered as tonic firing
         /// <summary>
@@ -124,11 +127,9 @@ namespace SiliFish.DynamicUnits
         /// </summary>
         public Dictionary <string, double[]> SecLists;
         private FiringRhythm firingRhythm = FiringRhythm.NoSpike;
-        private FiringDelay firingDelay = FiringDelay.NoDelay;
         private FiringPattern firingPattern = FiringPattern.NoSpike;
 
         public FiringRhythm FiringRhythm { get { return firingRhythm; } }
-        public FiringDelay FiringDelay { get { return firingDelay; } }
         public FiringPattern FiringPattern { get { return firingPattern; } }
 
         public Dictionary<double, double> Intervals_ms
@@ -152,7 +153,40 @@ namespace SiliFish.DynamicUnits
                 return Intervals_ms?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value > 0 ? 1000 / kvp.Value : 0);
             }
         }
-        
+        private List<BurstOrSpike> burstsOrSpikes;
+        public List<BurstOrSpike> BurstsOrSpikes
+        {
+            get
+            {
+                if (!analyzed)
+                    DefineSpikingPattern();
+                return burstsOrSpikes;
+            }
+            set { burstsOrSpikes = value; }
+        }
+
+        private double spikeDelay = double.NaN;
+        public double SpikeDelay
+        {
+            get
+            {
+                if (spikeDelay is double.NaN)
+                {
+                    if (SpikeList.Count == 0)
+                    {
+                        spikeDelay = -1;
+                    }
+                    else
+                    {
+                        int curStart = IList.ToList().FindIndex(i => i > 0);
+                        int firstSpike = SpikeList.FirstOrDefault(s => s >= curStart, -1);
+                        if (firstSpike < 0) spikeDelay = -1;
+                        else spikeDelay = (firstSpike - curStart) * RunParam.static_dt;
+                    }
+                }
+                return spikeDelay;
+            }
+        }
 
         private bool HasClusters()//check whether there are two clusters of intervals: interspike & interburst
         {
@@ -161,19 +195,21 @@ namespace SiliFish.DynamicUnits
             List<double> intervals = Intervals_ms.Select(kvp => kvp.Value).ToList();
 
             double centroid1 = intervals.Min();
+            double centroid2 = intervals.Max();
             if (centroid1 > MaxBurstInterval_LowerRange)// no bursts, only single spikes
             {
+                InterBurstCluster = new(centroid2);
                 return false;
             }
-            double centroid2 = intervals.Max();
             if (centroid2 < centroid1 * OneClusterMultiplier)//single cluster
             {
+                BurstCluster = new(centroid1);
                 return false;
             }
             intervals.Remove(centroid1);
             intervals.Remove(centroid2);
-            Cluster BurstCluster = new(centroid1);
-            Cluster InterBurstCluster = new(centroid2);
+            BurstCluster = new(centroid1);
+            InterBurstCluster = new(centroid2);
             double center = (centroid1 + centroid2) / 2;
             foreach (double d in intervals)
             {
@@ -189,31 +225,32 @@ namespace SiliFish.DynamicUnits
         
         public void DefineSpikingPattern()
         {
+            if (analyzed) return;
+            burstsOrSpikes = new();
             int curStart = IList.ToList().FindIndex(i => i > 0);
 
             SpikeList.RemoveAll(s => s < curStart);
             if (SpikeList.Count == 0)
             {
                 firingPattern = FiringPattern.NoSpike;
+                analyzed = true;
                 return;
             }
             double firsttITime = curStart * RunParam.static_dt;
             double firstSpikeTime = SpikeList[0] * RunParam.static_dt;
-            bool leadByQuiescence = firstSpikeTime - firsttITime >= 10 * TonicPadding;
-            if (leadByQuiescence)
-                firingDelay = FiringDelay.Delayed;
-
+            //bool leadByQuiescence = firstSpikeTime - firsttITime >= 10 * TonicPadding;
+            
             if (SpikeList.Count == 1)
             {
                 firingRhythm = FiringRhythm.Phasic;
                 firingPattern = FiringPattern.Spiking;
+                analyzed = true;
                 return;
             }
             bool hasClusters = HasClusters();//TODO 
 
-            List<BurstOrSpike> Bursts = new();
             BurstOrSpike burstOrSpike = new();
-            Bursts.Add(burstOrSpike);
+            burstsOrSpikes.Add(burstOrSpike);
             double lastTime = SpikeList[0] * RunParam.static_dt;
             burstOrSpike.SpikeTimeList.Add(lastTime);
             double lastInterval = double.NaN;
@@ -229,7 +266,7 @@ namespace SiliFish.DynamicUnits
                     (!spreadingOut && curInterval >= MaxBurstInterval_LowerRange + Const.Epsilon))
                 {
                     burstOrSpike = new();
-                    Bursts.Add(burstOrSpike);
+                    burstsOrSpikes.Add(burstOrSpike);
                     spreadingOut = true;
                     lastInterval = double.NaN;
                 }
@@ -245,7 +282,8 @@ namespace SiliFish.DynamicUnits
             if (lastInterval == double.NaN)
                 lastInterval = TonicPadding;
             bool followedByQuiescence = lastITime - lastSpikeTime >= lastInterval + TonicPadding;
-            (firingRhythm, firingPattern) = BurstOrSpike.FiringPatternOfList(Bursts, followedByQuiescence);
+            (firingRhythm, firingPattern) = BurstOrSpike.FiringPatternOfList(burstsOrSpikes, followedByQuiescence);
+            analyzed = true;
         }
 
 
@@ -258,6 +296,8 @@ namespace SiliFish.DynamicUnits
             TauDecay = new();
             TauRise = new();
             SpikeList = new();
+            spikeDelay = double.NaN;
+            analyzed = false;
         }
     }
 }

@@ -98,7 +98,7 @@ namespace SiliFish.UI.Controls
                 return;
             try
             {
-                poolTemplate = (CellPoolTemplate)Util.CreateObjectFromJSON(typeof(CellPoolTemplate), JSONString);
+                poolTemplate = (CellPoolTemplate)JsonUtil.ToObject(typeof(CellPoolTemplate), JSONString);
             }
             catch
             {
@@ -112,7 +112,7 @@ namespace SiliFish.UI.Controls
         {
             if (savePool == null) return;
             ReadDataFromControl();
-            JSONString = Util.CreateJSONFromObject(poolTemplate);
+            JSONString = JsonUtil.ToJson(poolTemplate);
             savePool.Invoke(this, new EventArgs());
         }
 

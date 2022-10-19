@@ -325,7 +325,7 @@ namespace SiliFish.UI
                 {
                     Model = customModel = new CustomSwimmingModel(null);
                     lastSavedCustomParams = Model.GetParameters();
-                    lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
+                    lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
                 }
             }
             linkSaveParam.Text = custom ? "Save Model" : "Save Parameters";
@@ -625,7 +625,7 @@ namespace SiliFish.UI
 
         private static string CheckJSONVersion(string json)
         {
-            List<string> issues = Util.CheckJSONVersion(ref json);
+            List<string> issues = JsonUtil.CheckJsonVersion(ref json);
             if (issues?.Count > 0)
             //Compare to Version 0.1
             {
@@ -650,13 +650,13 @@ namespace SiliFish.UI
                     {
                         //To make sure deactivated items are saved, even though not displayed
                         //Show all
-                        Util.SaveToJSON(saveFileJson.FileName, ModelTemplate);
+                        JsonUtil.SaveToJsonFile(saveFileJson.FileName, ModelTemplate);
                         this.Text = $"SiliFish {ModelTemplate.ModelName}";
-                        lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
+                        lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
                     }
                     else
                     {
-                        Util.SaveToJSON(saveFileJson.FileName, ReadParams());
+                        JsonUtil.SaveToJsonFile(saveFileJson.FileName, ReadParams());
                         if (SingleCoilSelected)
                             lastSavedSCParams = scModel.GetParameters();
                         else if (DoubleCoilSelected)
@@ -689,11 +689,11 @@ namespace SiliFish.UI
                     Application.DoEvents();
                     if (CustomSelected)
                     {
-                        string json = Util.ReadFromFile(openFileJson.FileName);
+                        string json = FileUtil.ReadFromFile(openFileJson.FileName);
                         json = CheckJSONVersion(json);
                         try
                         {
-                            ModelTemplate = (SwimmingModelTemplate)Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), json);
+                            ModelTemplate = (SwimmingModelTemplate)JsonUtil.ToObject(typeof(SwimmingModelTemplate), json);
                         }
                         catch
                         {
@@ -704,11 +704,11 @@ namespace SiliFish.UI
                         Model = customModel = new CustomSwimmingModel(ModelTemplate);
                         lastSavedCustomParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
                         SwitchToModel();
-                        lastSavedCustomModelJSON = Util.CreateJSONFromObject(ModelTemplate);
+                        lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
                     }
                     else
                     {
-                        Dictionary<string, object> ParamDict = Util.ReadDictionaryFromJSON(openFileJson.FileName);
+                        Dictionary<string, object> ParamDict = JsonUtil.ReadDictionaryFromJsonFile(openFileJson.FileName);
                         Model?.SetParameters(ParamDict);
                         if (SingleCoilSelected)
                             lastSavedSCParams = ParamDict;
@@ -1332,7 +1332,7 @@ namespace SiliFish.UI
             if (saveFileCSV.ShowDialog() != DialogResult.OK)
                 return;
 
-            Util.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
+            FileUtil.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
         }
 
         #endregion
@@ -1359,7 +1359,7 @@ namespace SiliFish.UI
             }
             try
             {
-                eTemplateJSON.Text = Util.CreateJSONFromObject(ModelTemplate);
+                eTemplateJSON.Text = JsonUtil.ToJson(ModelTemplate);
             }
             catch
             {
@@ -1373,7 +1373,7 @@ namespace SiliFish.UI
         {
             try
             {
-                if (Util.CreateObjectFromJSON(typeof(SwimmingModelTemplate), eTemplateJSON.Text) is SwimmingModelTemplate temp)
+                if (JsonUtil.ToObject(typeof(SwimmingModelTemplate), eTemplateJSON.Text) is SwimmingModelTemplate temp)
                 {
 
                     ModelTemplate = temp;
@@ -1426,7 +1426,7 @@ namespace SiliFish.UI
             }
             try
             {
-                eModelJSON.Text = Util.CreateJSONFromObject(Model);
+                eModelJSON.Text = JsonUtil.ToJson(Model);
             }
             catch
             {
@@ -1440,7 +1440,7 @@ namespace SiliFish.UI
         {
             try
             {
-                if (Util.CreateObjectFromJSON(typeof(CustomSwimmingModel), eModelJSON.Text) is CustomSwimmingModel model)
+                if (JsonUtil.ToObject(typeof(CustomSwimmingModel), eModelJSON.Text) is CustomSwimmingModel model)
                 {
                     Model = customModel = model;
                     modelUpdated = true;
@@ -1498,7 +1498,7 @@ namespace SiliFish.UI
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
                 CellPoolControl cpl = (CellPoolControl)sender;
-                Util.SaveToFile(saveFileJson.FileName, cpl.JSONString);
+                FileUtil.SaveToFile(saveFileJson.FileName, cpl.JSONString);
                 modifiedPools = true;
             }
         }
@@ -1507,7 +1507,7 @@ namespace SiliFish.UI
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
                 CellPoolControl cpl = (CellPoolControl)sender;
-                cpl.JSONString = Util.ReadFromFile(openFileJson.FileName);
+                cpl.JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
             }
         }
 
@@ -1784,7 +1784,7 @@ namespace SiliFish.UI
                 if (ModelTemplate != null)
                 {
                     //check whether the custom model has changed
-                    string jsonstring = Util.CreateJSONFromObject(ModelTemplate);
+                    string jsonstring = JsonUtil.ToJson(ModelTemplate);
                     if (jsonstring != lastSavedCustomModelJSON)
                     {
                         CustomSelected = true;

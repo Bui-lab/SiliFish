@@ -1,17 +1,17 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace SiliFish.Services.Optimization
 {
 
     public class CoreSolverSettings
     {
+        private List<FitnessFunction> fitnessFunctions;
+
         public string SelectionType { get; set; }
         public string CrossOverType { get; set; }
         public string MutationType { get; set; }
@@ -19,7 +19,30 @@ namespace SiliFish.Services.Optimization
         public string TerminationType { get; set; }
         public string TerminationParam { get; set; }
         public TargetRheobaseFunction TargetRheobaseFunction { get; set; }
-        public List<FiringFitnessFunction> FitnessFunctions { get; set; }
+
+        [JsonIgnore]
+        public List<FitnessFunction> FitnessFunctions
+        {
+            get => fitnessFunctions ??= new();
+            set => fitnessFunctions = value;
+        }
+
+        public object[] FitnessFunctionsObjects
+        {
+            get => FitnessFunctions.ToArray();
+            set
+            {
+                fitnessFunctions = new();
+                
+                foreach (object item in value)
+                {
+                    if (item is JsonElement element)
+                        fitnessFunctions.Add(FitnessFunction.FromJson(element.GetRawText()));
+                    else if (item is FitnessFunction fff)
+                        fitnessFunctions.Add(fff);
+                }
+            }
+        }
 
         public Dictionary<string, double> ParamValues { get; set; }
 

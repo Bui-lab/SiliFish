@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations;
 namespace SiliFish.Definitions
 {
     public enum CellType { Neuron, MuscleCell }
-    public enum FiringDelay { NoDelay, Delayed }
-    public enum FiringRhythm { NoSpike, Phasic, Tonic, Chattering }
+    public enum FiringRhythm { NoSpike, Phasic, Tonic }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }
 
-    public enum FitnessFunctionOptions { TargetRheobase, FiringDelay, FiringRhythm, FiringPattern}
+    public enum FitnessFunctionOptions { TargetRheobase, /*TODO FiringDelay,*/ FiringRhythm, FiringPattern}
     public enum BodyLocation { SpinalCord, Body }
 
     public enum CountingMode { PerSomite, Total }

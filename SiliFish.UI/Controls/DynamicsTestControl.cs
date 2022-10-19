@@ -137,6 +137,7 @@ namespace SiliFish.UI.Controls
         {
             skipCoreTypeChange = true;
             CoreType = gaControl.CoreType;
+            ddCoreType.Text = CoreType;
             Parameters = gaControl.Parameters;
             skipCoreTypeChange = false;
         }
@@ -504,7 +505,7 @@ namespace SiliFish.UI.Controls
         {
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
-                string JSONString = Util.ReadFromFile(openFileJson.FileName);
+                string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
                 DynamicUnit core = DynamicUnit.GetOfDerivedType(JSONString);
@@ -523,10 +524,10 @@ namespace SiliFish.UI.Controls
         {
             ReadParameters();
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
-            string JSONString = Util.CreateJSONFromObject(core);
+            string JSONString = JsonUtil.ToJson(core);
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
-                Util.SaveToFile(saveFileJson.FileName, JSONString);
+                FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
             }
         }
 

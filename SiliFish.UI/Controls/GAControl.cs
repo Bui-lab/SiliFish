@@ -27,7 +27,7 @@ namespace SiliFish.UI.Controls
         private Dictionary<string, double> minValues;
         private Dictionary<string, double> maxValues;
         private TargetRheobaseFunction targetRheobaseFunction;
-        private List<FiringFitnessFunction> firingFitnessFunctions;
+        private List<FiringFitnessFunction> firingFitnessFunctions;//All fitness functions except the targetrheobase
         private ProgressForm optimizationProgress;
         private event EventHandler onCompleteOptimization;
         public event EventHandler OnCompleteOptimization { add => onCompleteOptimization += value; remove => onCompleteOptimization -= value; }
@@ -133,7 +133,7 @@ namespace SiliFish.UI.Controls
 
                 CoreType = CoreType,
                 TargetRheobaseFunction = targetRheobaseFunction,
-                FitnessFunctions = firingFitnessFunctions,
+                FitnessFunctions = firingFitnessFunctions.Select(ff => ff as FitnessFunction).ToList(),
                 ParamValues = Parameters,
                 MinValueDictionary = minValues,
                 MaxValueDictionary = maxValues
@@ -259,15 +259,17 @@ namespace SiliFish.UI.Controls
         {
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
-                string JSONString = Util.ReadFromFile(openFileJson.FileName);
+                string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
                 try
                 {
                     Solver = new()
                     {
-                        Settings = (CoreSolverSettings)Util.CreateObjectFromJSON(typeof(CoreSolverSettings), JSONString)
+                        Settings = (CoreSolverSettings)JsonUtil.ToObject(typeof(CoreSolverSettings), JSONString)
                     };
+                    
+                    
                     coreType = Solver.Settings.CoreType;
                     eMinChromosome.Text = Solver.Settings.MinPopulationSize.ToString();
                     eMaxChromosome.Text = Solver.Settings.MaxPopulationSize.ToString();
@@ -292,10 +294,10 @@ namespace SiliFish.UI.Controls
         private void linkSaveGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             CreateSolver();
-            string JSONString = Util.CreateJSONFromObject(Solver.Settings);
+            string JSONString = JsonUtil.ToJson(Solver.Settings);
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
-                Util.SaveToFile(saveFileJson.FileName, JSONString);
+                FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
             }
         }
     }
