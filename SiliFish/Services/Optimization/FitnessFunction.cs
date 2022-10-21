@@ -147,8 +147,8 @@ namespace SiliFish.Services.Optimization
                 return Weight;
             if (stat.FiringPattern == FiringPattern.NoSpike)
                 return 0;
-            double avg = stat.Intervals_ms.Values.ToArray().AverageValue();
-            double SD = stat.Intervals_ms.Values.ToArray().StandardDeviation();
+            double avg = stat.Intervals_ms?.Values.ToArray().AverageValue()??0;
+            double SD = stat.Intervals_ms?.Values.ToArray().StandardDeviation()??0;
             
             switch (TargetPattern)//TODO how to quantify irregularity?
             {

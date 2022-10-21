@@ -97,7 +97,7 @@ namespace SiliFish.UI.Controls
             }
             else if (dist is UniformDistribution)
                 ddDistribution.Text = "Uniform";
-            else //connstant_NoDistribution
+            else //constant_NoDistribution
             {
                 ddDistribution.Text = "Constant";
                 eNoise.Text = (dist as Constant_NoDistribution).NoiseStdDev.ToString("0.###");

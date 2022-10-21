@@ -279,7 +279,10 @@ namespace SiliFish.DynamicUnits
             firingDelay = firstSpikeTime - firsttITime;
             double lastITime = IList.ToList().FindLastIndex(i => i > 0) * RunParam.static_dt;
             double lastSpikeTime = SpikeList[^1] * RunParam.static_dt;
-            followedByQuiescence = lastITime - lastSpikeTime >= TonicPadding;
+            double quiescence = TonicPadding;
+            if (Intervals_ms.Values.Any())
+                quiescence = Intervals_ms.Values.Average();
+            followedByQuiescence = lastITime - lastSpikeTime >= quiescence;
 
             if (SpikeList.Count == 1)
             {
@@ -326,7 +329,7 @@ namespace SiliFish.DynamicUnits
                 lastTime = curTime;
             }
             if (double.IsNaN(lastInterval))
-                lastInterval = TonicPadding;
+                lastInterval = quiescence;
             followedByQuiescence = lastITime - lastSpikeTime >= lastInterval + TonicPadding;
             SetFiringPatternOfList();
             analyzed = true;

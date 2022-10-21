@@ -39,6 +39,7 @@ namespace SiliFish.UI.Controls
         public string CellName { get { return eGroupName.Text; } set { eGroupName.Text = value; } }
 
         private bool skipCellTypeChange = false;
+        private bool skipCoreTypeChange = false;
         public CellPoolControl()
         {
             InitializeComponent();
@@ -69,6 +70,7 @@ namespace SiliFish.UI.Controls
 
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
             poolTemplate.Parameters = DynamicUnit.GetParameters(coreType);
             ParamDictToGrid();
@@ -163,7 +165,9 @@ namespace SiliFish.UI.Controls
             skipCellTypeChange = true;
             ddCellType.Text = poolTemplate.CellType.ToString();
             skipCellTypeChange = false;
+            skipCoreTypeChange = true;
             ddCoreType.Text = poolTemplate.CoreType?.ToString();
+            skipCoreTypeChange = false;
             lNeuronClass.Visible = ddNeuronClass.Visible = poolTemplate.CellType == CellType.Neuron;
             ddNeuronClass.Text = poolTemplate.NTMode.ToString();
             if (poolTemplate.PositionLeftRight == SagittalPlane.Both)

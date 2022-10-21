@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
+using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
@@ -178,27 +179,27 @@ namespace SiliFish.UI.Controls
                 eDescription.Text = interPoolTemplate.Description;
                 cbWithinSomite.Checked = interPoolTemplate.CellReach.WithinSomite;
                 cbOtherSomite.Checked = interPoolTemplate.CellReach.OtherSomite;
-                numProbability.Value = (decimal)interPoolTemplate.Probability;
-                numMinReach.Value = (decimal)interPoolTemplate.CellReach.MinReach;
-                numMaxReach.Value = (decimal)interPoolTemplate.CellReach.MaxReach;
-                numAscReach.Value = (decimal)interPoolTemplate.CellReach.AscendingReach;
-                numDescReach.Value = (decimal)interPoolTemplate.CellReach.DescendingReach;
-                numLateralReach.Value = (decimal)interPoolTemplate.CellReach.LateralReach;
-                numMedialReach.Value = (decimal)interPoolTemplate.CellReach.MedialReach;
-                numDorsalReach.Value = (decimal)interPoolTemplate.CellReach.DorsalReach;
-                numVentralReach.Value = (decimal)interPoolTemplate.CellReach.VentralReach;
-                numMaxIncoming.Value = (decimal)interPoolTemplate.CellReach.MaxIncoming;
-                numMaxOutgoing.Value = (decimal)interPoolTemplate.CellReach.MaxOutgoing;
+                numProbability.SetValue(interPoolTemplate.Probability);
+                numMinReach.SetValue(interPoolTemplate.CellReach.MinReach);
+                numMaxReach.SetValue(interPoolTemplate.CellReach.MaxReach);
+                numAscReach.SetValue(interPoolTemplate.CellReach.AscendingReach);
+                numDescReach.SetValue(interPoolTemplate.CellReach.DescendingReach);
+                numLateralReach.SetValue(interPoolTemplate.CellReach.LateralReach);
+                numMedialReach.SetValue(interPoolTemplate.CellReach.MedialReach);
+                numDorsalReach.SetValue(interPoolTemplate.CellReach.DorsalReach);
+                numVentralReach.SetValue(interPoolTemplate.CellReach.VentralReach);
+                numMaxIncoming.SetValue(interPoolTemplate.CellReach.MaxIncoming);
+                numMaxOutgoing.SetValue(interPoolTemplate.CellReach.MaxOutgoing);
 
-                numConductance.Value = (decimal)interPoolTemplate.CellReach.Weight;
-                numDelay.Value = (decimal)interPoolTemplate.CellReach.Delay_ms;
+                numConductance.SetValue(interPoolTemplate.CellReach.Weight);
+                numDelay.SetValue(interPoolTemplate.CellReach.Delay_ms);
                 eFixedDuration.Text = interPoolTemplate.CellReach.FixedDuration_ms?.ToString() ?? "";
                 if (interPoolTemplate.SynapseParameters != null)
                 {
-                    numTauD.Value = (decimal)interPoolTemplate.SynapseParameters.TauD;
-                    numTauR.Value = (decimal)interPoolTemplate.SynapseParameters.TauR;
-                    numVthreshold.Value = (decimal)interPoolTemplate.SynapseParameters.VTh;
-                    numEReversal.Value = (decimal)interPoolTemplate.SynapseParameters.E_rev;
+                    numTauD.SetValue(interPoolTemplate.SynapseParameters.TauD);
+                    numTauR.SetValue(interPoolTemplate.SynapseParameters.TauR);
+                    numVthreshold.SetValue(interPoolTemplate.SynapseParameters.VTh);
+                    numEReversal.SetValue(interPoolTemplate.SynapseParameters.E_rev);
                 }
                 cbActive.Checked = interPoolTemplate.JncActive;
                 timeLineControl.SetTimeLine(interPoolTemplate.TimeLine_ms);
