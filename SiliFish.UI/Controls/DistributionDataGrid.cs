@@ -33,7 +33,7 @@ namespace SiliFish.UI.Controls
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     dist = distControl.GetDistribution();
-                    if (dist.DistType == typeof(Constant_NoDistribution).ToString() && (dist as Constant_NoDistribution).NoiseStdDev < Const.Epsilon)
+                    if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < Const.Epsilon)
                     {
                         dgDynamics[colValue.Index, rowind].Value = dist.RangeStart;
                         dgDynamics[colValue.Index, rowind].Tag = null;
@@ -46,7 +46,22 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-
+        private void dgDynamics_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgDynamics[colValue.Index, e.RowIndex].Tag is Distribution dist)
+            {
+                if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < Const.Epsilon)
+                    dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
+                else
+                    dgDynamics[colValue.Index, e.RowIndex].ReadOnly = true;
+            }
+            else
+                dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
+        }
+        private void dgDynamics_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            dgDynamics[colValue.Index, e.RowIndex].Tag = null;
+        }
         public void WriteToGrid(Dictionary<string, object> parameters)
         {
             parameters.WriteToGrid(dgDynamics, colField.Index, colValue.Index);
@@ -58,5 +73,6 @@ namespace SiliFish.UI.Controls
             paramDict.ReadFromGrid(dgDynamics, colField.Index, colValue.Index);
             return paramDict;
         }
+
     }
 }

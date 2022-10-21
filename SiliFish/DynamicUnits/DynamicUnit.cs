@@ -53,7 +53,7 @@ namespace SiliFish.DynamicUnits
 
         public static List<string> GetCoreTypes()
         {
-            return typeMap.Keys.Where(k => k != typeof(DynamicUnit).Name).ToList();
+            return typeMap.Keys.Where(k => k != nameof(DynamicUnit)).ToList();
         }
         public static DynamicUnit GetOfDerivedType(string json)
         {
@@ -63,8 +63,22 @@ namespace SiliFish.DynamicUnits
             return core;
         }
         public static DynamicUnit CreateCore(string coreType, Dictionary<string, double> parameters)
-        {
-            return (DynamicUnit)Activator.CreateInstance(typeMap[coreType], parameters);
+        {           switch (coreType)
+            {
+                case "HodgkinHuxley":
+                    return new HodgkinHuxley(parameters);
+                case "Izhikevich_5P":
+                    return new Izhikevich_5P(parameters);
+                case "Izhikevich_9P":
+                    return new Izhikevich_9P(parameters);
+                case "Leaky_Integrator":
+                    return new Leaky_Integrator(parameters);
+                case "QuadraticIntegrateAndFire":
+                    return new QuadraticIntegrateAndFire(parameters);
+            }
+            return null;
+
+//            return (DynamicUnit)Activator.CreateInstance(typeMap[coreType], parameters);
         }
 
         /// <summary>

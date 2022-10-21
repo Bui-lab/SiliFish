@@ -77,20 +77,22 @@ namespace SiliFish.DataTypes
                 return GetOfDerivedType(element.GetRawText());
             return null;
         }
+
+
         public static Distribution GetOfDerivedType(string json)
         {
             Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
             if (dist != null)
             {
-                if (dist.DistType == typeof(Constant_NoDistribution).ToString())
+                if (dist.DistType == nameof(Constant_NoDistribution)|| dist.DistType == typeof(Constant_NoDistribution).FullName)
                     return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
-                if (dist.DistType == typeof(UniformDistribution).ToString())
+                if (dist.DistType == nameof(UniformDistribution)|| dist.DistType == typeof(UniformDistribution).FullName)
                     return JsonSerializer.Deserialize<UniformDistribution>(json);
-                if (dist.DistType == typeof(SpacedDistribution).ToString())
+                if (dist.DistType == nameof(SpacedDistribution)|| dist.DistType == typeof(SpacedDistribution).FullName)
                     return JsonSerializer.Deserialize<SpacedDistribution>(json);
-                if (dist.DistType == typeof(GaussianDistribution).ToString())
+                if (dist.DistType == nameof(GaussianDistribution)|| dist.DistType == typeof(GaussianDistribution).FullName)
                     return JsonSerializer.Deserialize<GaussianDistribution>(json);
-                if (dist.DistType == typeof(BimodalDistribution).ToString())
+                if (dist.DistType == nameof(BimodalDistribution)|| dist.DistType == typeof(BimodalDistribution).FullName)
                     return JsonSerializer.Deserialize<BimodalDistribution>(json);
             }
             return dist;

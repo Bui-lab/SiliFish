@@ -51,7 +51,9 @@
             this.dgDynamics.RowTemplate.Height = 25;
             this.dgDynamics.Size = new System.Drawing.Size(100, 100);
             this.dgDynamics.TabIndex = 10;
+            this.dgDynamics.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellClick);
             this.dgDynamics.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
+            this.dgDynamics.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellEndEdit);
             // 
             // colField
             // 

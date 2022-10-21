@@ -358,16 +358,16 @@ namespace SiliFish.UI
             eModelName.Text = paramDict.Read("General.Name", "");
             eModelDescription.Text = paramDict.Read("General.Description", "");
 
-            eSpinalRostraoCaudal.Value = (decimal)paramDict.ReadDouble("General.SpinalRostralCaudalDistance");
-            eSpinalDorsalVentral.Value = (decimal)paramDict.ReadDouble("General.SpinalDorsalVentralDistance");
+            eSpinalRostraoCaudal.SetValue(paramDict.ReadDouble("General.SpinalRostralCaudalDistance"));
+            eSpinalDorsalVentral.SetValue(paramDict.ReadDouble("General.SpinalDorsalVentralDistance"));
 
-            eSpinalMedialLateral.Value = (decimal)paramDict.ReadDouble("General.SpinalMedialLateralDistance");
-            eNumSomites.Value = (decimal)paramDict.ReadInteger("General.NumberOfSomites");
+            eSpinalMedialLateral.SetValue(paramDict.ReadDouble("General.SpinalMedialLateralDistance"));
+            eNumSomites.SetValue(paramDict.ReadInteger("General.NumberOfSomites"));
 
-            eSpinalBodyPosition.Value = (decimal)paramDict.ReadDouble("General.SpinalBodyPosition");
+            eSpinalBodyPosition.SetValue(paramDict.ReadDouble("General.SpinalBodyPosition"));
 
-            eBodyDorsalVentral.Value = (decimal)paramDict.ReadDouble("General.BodyDorsalVentralDistance");
-            eBodyMedialLateral.Value = (decimal)paramDict.ReadDouble("General.BodyMedialLateralDistance");
+            eBodyDorsalVentral.SetValue(paramDict.ReadDouble("General.BodyDorsalVentralDistance"));
+            eBodyMedialLateral.SetValue(paramDict.ReadDouble("General.BodyMedialLateralDistance"));
         }
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
