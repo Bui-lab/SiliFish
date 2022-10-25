@@ -63,22 +63,8 @@ namespace SiliFish.DynamicUnits
             return core;
         }
         public static DynamicUnit CreateCore(string coreType, Dictionary<string, double> parameters)
-        {           switch (coreType)
-            {
-                case "HodgkinHuxley":
-                    return new HodgkinHuxley(parameters);
-                case "Izhikevich_5P":
-                    return new Izhikevich_5P(parameters);
-                case "Izhikevich_9P":
-                    return new Izhikevich_9P(parameters);
-                case "Leaky_Integrator":
-                    return new Leaky_Integrator(parameters);
-                case "QuadraticIntegrateAndFire":
-                    return new QuadraticIntegrateAndFire(parameters);
-            }
-            return null;
-
-//            return (DynamicUnit)Activator.CreateInstance(typeMap[coreType], parameters);
+        {
+            return (DynamicUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
         }
 
         /// <summary>

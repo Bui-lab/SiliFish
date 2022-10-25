@@ -46,11 +46,11 @@ namespace SiliFish.Services.Optimization
             {
                 fitness += TargetRheobaseFunction.CalculateFitness(core, out rheobase);
             }
-            else if (FitnessFunctions.Any(ff => (ff as FiringFitnessFunction).RheobaseBased))
+            else if (FitnessFunctions.Any(ff => ff.CurrentRequired && ff.RheobaseBased))
                 rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
 
             List<double> currentValues = FitnessFunctions
-                .Select(ff => (ff as FiringFitnessFunction).CurrentValueOrRheobaseMultiplier * ((ff as FiringFitnessFunction).RheobaseBased ? rheobase : 1))
+                .Select(ff => ff.CurrentValueOrRheobaseMultiplier * (ff.RheobaseBased ? rheobase : 1))
                 .Distinct()
                 .ToList();
 
@@ -63,7 +63,7 @@ namespace SiliFish.Services.Optimization
             }
 
             
-            foreach (FiringFitnessFunction function in FitnessFunctions)
+            foreach (FitnessFunction function in FitnessFunctions)
             {
                 double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
                 DynamicsStats stat = stats[current];
