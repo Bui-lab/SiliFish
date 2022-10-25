@@ -104,11 +104,14 @@ namespace SiliFish.DynamicUnits
         {
             get
             {
-                if (intervals == null && SpikeList.Count > 1)
+                if (intervals == null)
                 {
                     intervals = new();
-                    foreach (int i in Enumerable.Range(0, SpikeList.Count - 1))
-                        intervals.Add(RunParam.static_dt * SpikeList[i], RunParam.static_dt * (SpikeList[i + 1] - SpikeList[i]));
+                    if (SpikeList.Count > 1)
+                    {
+                        foreach (int i in Enumerable.Range(0, SpikeList.Count - 1))
+                            intervals.Add(RunParam.static_dt * SpikeList[i], RunParam.static_dt * (SpikeList[i + 1] - SpikeList[i]));
+                    }
                 }
                 return intervals;
             }

@@ -27,7 +27,7 @@ namespace SiliFish.UI.Controls
         private Dictionary<string, double> minValues;
         private Dictionary<string, double> maxValues;
         private TargetRheobaseFunction targetRheobaseFunction;
-        private List<FiringFitnessFunction> firingFitnessFunctions;//All fitness functions except the targetrheobase
+        private List<FitnessFunction> fitnessFunctions;//All fitness functions except the targetrheobase
         private ProgressForm optimizationProgress;
         private event EventHandler onCompleteOptimization;
         public event EventHandler OnCompleteOptimization { add => onCompleteOptimization += value; remove => onCompleteOptimization -= value; }
@@ -133,7 +133,7 @@ namespace SiliFish.UI.Controls
 
                 CoreType = CoreType,
                 TargetRheobaseFunction = targetRheobaseFunction,
-                FitnessFunctions = firingFitnessFunctions.Select(ff => ff as FitnessFunction).ToList(),
+                FitnessFunctions = fitnessFunctions.Select(ff => ff as FitnessFunction).ToList(),
                 ParamValues = Parameters,
                 MinValueDictionary = minValues,
                 MaxValueDictionary = maxValues
@@ -162,10 +162,10 @@ namespace SiliFish.UI.Controls
 
         private void ReadFitnessValues()
         {
-            List<FitnessFunction> fitnessFunctions = FitnessControls.Select(fc => fc.GetFitnessFunction()).ToList();
-            targetRheobaseFunction = fitnessFunctions.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
-            fitnessFunctions.RemoveAll(fc => fc is TargetRheobaseFunction);
-            firingFitnessFunctions = fitnessFunctions.Select(fc => fc as FiringFitnessFunction).ToList();
+            List<FitnessFunction> ff = FitnessControls.Select(fc => fc.GetFitnessFunction()).ToList();
+            targetRheobaseFunction = ff.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
+            ff.RemoveAll(fc => fc is TargetRheobaseFunction);
+            fitnessFunctions = ff;
         }
 
         private void ProgressForm_StopRunClicked(object sender, EventArgs e)

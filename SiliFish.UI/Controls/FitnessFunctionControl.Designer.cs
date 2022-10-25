@@ -33,22 +33,24 @@
             this.pFitnessFunction = new System.Windows.Forms.Panel();
             this.eFitnessWeight = new System.Windows.Forms.TextBox();
             this.lFitnessWeight = new System.Windows.Forms.Label();
-            this.pTargetRheobase = new System.Windows.Forms.Panel();
+            this.pMinMax = new System.Windows.Forms.Panel();
             this.lSeperator = new System.Windows.Forms.Label();
             this.eMaxValue = new System.Windows.Forms.TextBox();
             this.eMinValue = new System.Windows.Forms.TextBox();
             this.lMinMaxValue = new System.Windows.Forms.Label();
-            this.pFiringRelated = new System.Windows.Forms.Panel();
-            this.ddFiringValues = new System.Windows.Forms.ComboBox();
-            this.lFiringValues = new System.Windows.Forms.Label();
+            this.pCurrentRequired = new System.Windows.Forms.Panel();
             this.eCurrentApplied = new System.Windows.Forms.TextBox();
             this.lCurrentApplied = new System.Windows.Forms.Label();
             this.lCurrentMode = new System.Windows.Forms.Label();
             this.ddCurrentSelection = new System.Windows.Forms.ComboBox();
+            this.ddFiringOption = new System.Windows.Forms.ComboBox();
+            this.lFiringOption = new System.Windows.Forms.Label();
             this.linkRemove = new System.Windows.Forms.LinkLabel();
+            this.pFiringOption = new System.Windows.Forms.Panel();
             this.pFitnessFunction.SuspendLayout();
-            this.pTargetRheobase.SuspendLayout();
-            this.pFiringRelated.SuspendLayout();
+            this.pMinMax.SuspendLayout();
+            this.pCurrentRequired.SuspendLayout();
+            this.pFiringOption.SuspendLayout();
             this.SuspendLayout();
             // 
             // lFitnessFunction
@@ -106,18 +108,18 @@
             this.lFitnessWeight.Text = "Weight";
             this.lFitnessWeight.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // pTargetRheobase
+            // pMinMax
             // 
-            this.pTargetRheobase.Controls.Add(this.lSeperator);
-            this.pTargetRheobase.Controls.Add(this.eMaxValue);
-            this.pTargetRheobase.Controls.Add(this.eMinValue);
-            this.pTargetRheobase.Controls.Add(this.lMinMaxValue);
-            this.pTargetRheobase.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTargetRheobase.Location = new System.Drawing.Point(0, 64);
-            this.pTargetRheobase.MinimumSize = new System.Drawing.Size(240, 32);
-            this.pTargetRheobase.Name = "pTargetRheobase";
-            this.pTargetRheobase.Size = new System.Drawing.Size(245, 32);
-            this.pTargetRheobase.TabIndex = 5;
+            this.pMinMax.Controls.Add(this.lSeperator);
+            this.pMinMax.Controls.Add(this.eMaxValue);
+            this.pMinMax.Controls.Add(this.eMinValue);
+            this.pMinMax.Controls.Add(this.lMinMaxValue);
+            this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pMinMax.Location = new System.Drawing.Point(0, 158);
+            this.pMinMax.MinimumSize = new System.Drawing.Size(240, 32);
+            this.pMinMax.Name = "pMinMax";
+            this.pMinMax.Size = new System.Drawing.Size(245, 32);
+            this.pMinMax.TabIndex = 5;
             // 
             // lSeperator
             // 
@@ -128,73 +130,44 @@
             this.lSeperator.TabIndex = 3;
             this.lSeperator.Text = "-";
             // 
-            // eMaxRheobase
+            // eMaxValue
             // 
             this.eMaxValue.Location = new System.Drawing.Point(176, 4);
-            this.eMaxValue.Name = "eMaxRheobase";
+            this.eMaxValue.Name = "eMaxValue";
             this.eMaxValue.Size = new System.Drawing.Size(56, 23);
             this.eMaxValue.TabIndex = 2;
             // 
-            // eMinRheobase
+            // eMinValue
             // 
             this.eMinValue.Location = new System.Drawing.Point(102, 4);
-            this.eMinValue.Name = "eMinRheobase";
+            this.eMinValue.Name = "eMinValue";
             this.eMinValue.Size = new System.Drawing.Size(56, 23);
             this.eMinValue.TabIndex = 1;
             // 
-            // lMinMaxRheobase
+            // lMinMaxValue
             // 
             this.lMinMaxValue.AutoSize = true;
             this.lMinMaxValue.Location = new System.Drawing.Point(3, 10);
-            this.lMinMaxValue.Name = "lMinMaxRheobase";
+            this.lMinMaxValue.Name = "lMinMaxValue";
             this.lMinMaxValue.Size = new System.Drawing.Size(56, 15);
             this.lMinMaxValue.TabIndex = 0;
             this.lMinMaxValue.Text = "Min-Max";
             // 
-            // pFiringRelated
+            // pCurrentRequired
             // 
-            this.pFiringRelated.Controls.Add(this.ddFiringValues);
-            this.pFiringRelated.Controls.Add(this.lFiringValues);
-            this.pFiringRelated.Controls.Add(this.eCurrentApplied);
-            this.pFiringRelated.Controls.Add(this.lCurrentApplied);
-            this.pFiringRelated.Controls.Add(this.lCurrentMode);
-            this.pFiringRelated.Controls.Add(this.ddCurrentSelection);
-            this.pFiringRelated.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pFiringRelated.Location = new System.Drawing.Point(0, 96);
-            this.pFiringRelated.MinimumSize = new System.Drawing.Size(240, 92);
-            this.pFiringRelated.Name = "pFiringRelated";
-            this.pFiringRelated.Size = new System.Drawing.Size(245, 92);
-            this.pFiringRelated.TabIndex = 6;
-            // 
-            // ddFiringValues
-            // 
-            this.ddFiringValues.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddFiringValues.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddFiringValues.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddFiringValues.FormattingEnabled = true;
-            this.ddFiringValues.Items.AddRange(new object[] {
-            "x Rheobase",
-            "Fixed Current"});
-            this.ddFiringValues.Location = new System.Drawing.Point(102, 62);
-            this.ddFiringValues.Name = "ddFiringValues";
-            this.ddFiringValues.Size = new System.Drawing.Size(130, 23);
-            this.ddFiringValues.TabIndex = 9;
-            this.ddFiringValues.Tag = "0";
-            // 
-            // lFiringValues
-            // 
-            this.lFiringValues.AutoSize = true;
-            this.lFiringValues.Location = new System.Drawing.Point(5, 69);
-            this.lFiringValues.Name = "lFiringValues";
-            this.lFiringValues.Size = new System.Drawing.Size(60, 15);
-            this.lFiringValues.TabIndex = 8;
-            this.lFiringValues.Tag = "0";
-            this.lFiringValues.Text = "Firing ____";
-            this.lFiringValues.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.pCurrentRequired.Controls.Add(this.eCurrentApplied);
+            this.pCurrentRequired.Controls.Add(this.lCurrentApplied);
+            this.pCurrentRequired.Controls.Add(this.lCurrentMode);
+            this.pCurrentRequired.Controls.Add(this.ddCurrentSelection);
+            this.pCurrentRequired.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pCurrentRequired.Location = new System.Drawing.Point(0, 64);
+            this.pCurrentRequired.Name = "pCurrentRequired";
+            this.pCurrentRequired.Size = new System.Drawing.Size(245, 59);
+            this.pCurrentRequired.TabIndex = 6;
             // 
             // eCurrentApplied
             // 
-            this.eCurrentApplied.Location = new System.Drawing.Point(102, 33);
+            this.eCurrentApplied.Location = new System.Drawing.Point(102, 31);
             this.eCurrentApplied.Name = "eCurrentApplied";
             this.eCurrentApplied.Size = new System.Drawing.Size(56, 23);
             this.eCurrentApplied.TabIndex = 7;
@@ -202,7 +175,7 @@
             // lCurrentApplied
             // 
             this.lCurrentApplied.AutoSize = true;
-            this.lCurrentApplied.Location = new System.Drawing.Point(5, 37);
+            this.lCurrentApplied.Location = new System.Drawing.Point(3, 35);
             this.lCurrentApplied.Name = "lCurrentApplied";
             this.lCurrentApplied.Size = new System.Drawing.Size(91, 15);
             this.lCurrentApplied.TabIndex = 6;
@@ -236,13 +209,36 @@
             this.ddCurrentSelection.TabIndex = 4;
             this.ddCurrentSelection.Tag = "0";
             // 
+            // ddFiringOption
+            // 
+            this.ddFiringOption.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ddFiringOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddFiringOption.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ddFiringOption.FormattingEnabled = true;
+            this.ddFiringOption.Location = new System.Drawing.Point(102, 6);
+            this.ddFiringOption.Name = "ddFiringOption";
+            this.ddFiringOption.Size = new System.Drawing.Size(130, 23);
+            this.ddFiringOption.TabIndex = 9;
+            this.ddFiringOption.Tag = "0";
+            // 
+            // lFiringOption
+            // 
+            this.lFiringOption.AutoSize = true;
+            this.lFiringOption.Location = new System.Drawing.Point(3, 13);
+            this.lFiringOption.Name = "lFiringOption";
+            this.lFiringOption.Size = new System.Drawing.Size(60, 15);
+            this.lFiringOption.TabIndex = 8;
+            this.lFiringOption.Tag = "0";
+            this.lFiringOption.Text = "Firing ____";
+            this.lFiringOption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // linkRemove
             // 
             this.linkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.linkRemove.AutoSize = true;
             this.linkRemove.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkRemove.Location = new System.Drawing.Point(189, 198);
+            this.linkRemove.Location = new System.Drawing.Point(189, 197);
             this.linkRemove.Name = "linkRemove";
             this.linkRemove.Size = new System.Drawing.Size(50, 15);
             this.linkRemove.TabIndex = 7;
@@ -250,23 +246,36 @@
             this.linkRemove.Text = "Remove";
             this.linkRemove.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkRemove_LinkClicked);
             // 
+            // pFiringOption
+            // 
+            this.pFiringOption.Controls.Add(this.ddFiringOption);
+            this.pFiringOption.Controls.Add(this.lFiringOption);
+            this.pFiringOption.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pFiringOption.Location = new System.Drawing.Point(0, 123);
+            this.pFiringOption.Name = "pFiringOption";
+            this.pFiringOption.Size = new System.Drawing.Size(245, 35);
+            this.pFiringOption.TabIndex = 8;
+            // 
             // FitnessFunctionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.pMinMax);
+            this.Controls.Add(this.pFiringOption);
             this.Controls.Add(this.linkRemove);
-            this.Controls.Add(this.pFiringRelated);
-            this.Controls.Add(this.pTargetRheobase);
+            this.Controls.Add(this.pCurrentRequired);
             this.Controls.Add(this.pFitnessFunction);
             this.Name = "FitnessFunctionControl";
-            this.Size = new System.Drawing.Size(245, 223);
+            this.Size = new System.Drawing.Size(245, 222);
             this.pFitnessFunction.ResumeLayout(false);
             this.pFitnessFunction.PerformLayout();
-            this.pTargetRheobase.ResumeLayout(false);
-            this.pTargetRheobase.PerformLayout();
-            this.pFiringRelated.ResumeLayout(false);
-            this.pFiringRelated.PerformLayout();
+            this.pMinMax.ResumeLayout(false);
+            this.pMinMax.PerformLayout();
+            this.pCurrentRequired.ResumeLayout(false);
+            this.pCurrentRequired.PerformLayout();
+            this.pFiringOption.ResumeLayout(false);
+            this.pFiringOption.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -277,20 +286,21 @@
         private Label lFitnessFunction;
         private ComboBox ddFitnessFunction;
         private Panel pFitnessFunction;
-        private Panel pTargetRheobase;
+        private Panel pMinMax;
         private Label lSeperator;
         private TextBox eMaxValue;
         private TextBox eMinValue;
         private Label lMinMaxValue;
-        private Panel pFiringRelated;
+        private Panel pCurrentRequired;
         private TextBox eCurrentApplied;
         private Label lCurrentApplied;
         private Label lCurrentMode;
         private ComboBox ddCurrentSelection;
-        private ComboBox ddFiringValues;
-        private Label lFiringValues;
+        private ComboBox ddFiringOption;
+        private Label lFiringOption;
         private TextBox eFitnessWeight;
         private Label lFitnessWeight;
         private LinkLabel linkRemove;
+        private Panel pFiringOption;
     }
 }
