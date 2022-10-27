@@ -226,10 +226,10 @@
             this.lFiringOption.AutoSize = true;
             this.lFiringOption.Location = new System.Drawing.Point(3, 13);
             this.lFiringOption.Name = "lFiringOption";
-            this.lFiringOption.Size = new System.Drawing.Size(60, 15);
+            this.lFiringOption.Size = new System.Drawing.Size(77, 15);
             this.lFiringOption.TabIndex = 8;
             this.lFiringOption.Tag = "0";
-            this.lFiringOption.Text = "Firing ____";
+            this.lFiringOption.Text = "Firing Option";
             this.lFiringOption.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // linkRemove

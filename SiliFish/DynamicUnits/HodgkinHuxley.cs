@@ -7,11 +7,11 @@ namespace SiliFish.DynamicUnits
     public class HodgkinHuxley : DynamicUnit
     {
         public double g_K = 36;
-        public double g_Na=120;
-        public double g_L=0.3;
-        public double E_K=-12;
-        public double E_Na=120;
-        public double E_L=10.6;
+        public double g_Na = 120;
+        public double g_L = 0.3;
+        public double E_K = -12;
+        public double E_Na = 120;
+        public double E_L = 10.6;
 
         // threshold membrane potential 
         public double Vt = -57;
@@ -178,9 +178,9 @@ namespace SiliFish.DynamicUnits
                 I_KList[tIndex] = IK;
                 I_NaList[tIndex] = INa;
                 I_LList[tIndex] = IL;
-                /*//if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
-                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
-                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * c)
+                //if passed the 0.37 of the drop (the difference between Vmax and Vreset): 
+                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 Vr
+                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * Vr)
                 {
                     dyn.TauDecay.Add(dt * tIndex, dt * (tIndex - decayStart));
                     tauDecaySet = true;
@@ -203,7 +203,7 @@ namespace SiliFish.DynamicUnits
                 {
                     onDecay = false;
                     tauDecaySet = false;
-                }*/
+                }
                 if (spike)
                 {
                     if (tIndex > 0)

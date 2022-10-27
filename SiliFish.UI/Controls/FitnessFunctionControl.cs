@@ -44,8 +44,7 @@ namespace SiliFish.UI.Controls
         {
             FitnessFunction ff = (FitnessFunction)Activator.CreateInstance(FitnessFunction.TypeMap[ddFitnessFunction.Text]);
             ff.Weight = double.Parse(eFitnessWeight.Text.ToString());
-            double d;
-            if (double.TryParse(eMinValue.Text.ToString(), out d))
+            if (double.TryParse(eMinValue.Text.ToString(), out double d))
                 ff.ValueMin = d;
             if (double.TryParse(eMaxValue.Text.ToString(), out d))
                 ff.ValueMax = d;
@@ -60,7 +59,7 @@ namespace SiliFish.UI.Controls
         }
         public void SetFitnessFunction(FitnessFunction fitnessFunction)
         {
-            ddFitnessFunction.Text = nameof(fitnessFunction);
+            ddFitnessFunction.Text = fitnessFunction.GetType().Name;
             eFitnessWeight.Text = fitnessFunction.Weight.ToString();
             eMinValue.Text = fitnessFunction.ValueMin.ToString();
             eMaxValue.Text = fitnessFunction.ValueMax.ToString();
