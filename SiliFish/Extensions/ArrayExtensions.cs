@@ -37,6 +37,8 @@ namespace SiliFish.Extensions
 
         public static double AverageValue(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
+            if (thisArray == null || !thisArray.Any())
+                return 0;
             if (iEnd == -1 && iStart == 0)
                 return thisArray.Average();
             if (iStart < 0 || iStart >= thisArray.Length)
@@ -49,6 +51,8 @@ namespace SiliFish.Extensions
 
         public static double StandardDeviation(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
+            if (thisArray == null || !thisArray.Any())
+                return 0;
             double avg = thisArray.AverageValue(iStart, iEnd);
             
             if (iEnd == -1 && iStart == 0)

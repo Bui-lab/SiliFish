@@ -195,8 +195,10 @@ namespace SiliFish.UI.Controls
 
         private void AddFitnessFunction(FitnessFunction fitnessFunction = null)
         {
-            FitnessFunctionControl fitness = new();
-            fitness.BorderStyle = BorderStyle.FixedSingle;
+            FitnessFunctionControl fitness = new()
+            {
+                BorderStyle = BorderStyle.FixedSingle
+            };
             pfGAParams.Controls.Add(fitness);
             pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
             fitness.RemoveClicked += Fitness_RemoveClicked;

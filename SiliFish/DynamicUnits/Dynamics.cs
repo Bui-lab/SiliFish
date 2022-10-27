@@ -202,7 +202,8 @@ namespace SiliFish.DynamicUnits
                     InterBurstCluster.AddMember(d);
                 center = (BurstCluster.centroid + InterBurstCluster.centroid) / 2;
             }
-            if (InterBurstCluster.centroid < BurstCluster.centroid * OneClusterMultiplier)//single cluster
+            if (InterBurstCluster.centroid < BurstCluster.centroid * OneClusterMultiplier ||
+                BurstCluster.clusterMax*BurstCluster.clusterMax/BurstCluster.clusterMin > InterBurstCluster.centroid)//single cluster
             {
                 BurstCluster.MergeCluster(InterBurstCluster);
                 InterBurstCluster = null;
