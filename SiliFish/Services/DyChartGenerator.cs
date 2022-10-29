@@ -36,6 +36,18 @@ namespace SiliFish.Services
                 string chartDiv = ReadEmbeddedResource("SiliFish.Resources.DyChartDiv.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
+
+                if (Util.CheckOnlineStatus())
+                {
+                    html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", "");
+                    html.Replace("__ONLINE_DYGRAPH_SCRIPT__", "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js\"></script>");
+                }
+                else
+                {
+                    html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.dygraph.js"));
+                    html.Replace("__ONLINE_DYGRAPH_SCRIPT__", "");
+                }
+
                 if (width < 200) width = 200;
                 if (height < 100) height = 100;
 

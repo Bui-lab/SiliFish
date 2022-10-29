@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using SiliFish.DataTypes;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
@@ -75,11 +76,15 @@ namespace SiliFish.Services
             Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, 
             int iStart, int iEnd, double dt, double animdt)
         {
+            if (!Util.CheckOnlineStatus())
+                return "Animation requires internet connection.";
+
             StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 
-            int jump = (int)(animdt / dt);
+
+                int jump = (int)(animdt / dt);
             if (jump < 1) jump = 1;
             List<string> timeSeries = new();
             Dictionary<int, string> somitePoints = new();

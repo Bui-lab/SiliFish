@@ -61,7 +61,7 @@ namespace SiliFish.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2022-07-10T08:55:15
+        ///   Looks up a localized string similar to 2022-10-28T21:30:19
         ///.
         /// </summary>
         public static string BuildDate {

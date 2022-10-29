@@ -6,13 +6,13 @@
 # pathname.
 
 # D3.js
-.*d3.*\.js$
+- (^|\/)d3(\.v\d+)?([^.]*)\.js$
 
 # force-graph.js
-- .*force-graph.*\.js
+- (^|\/)force-graph(\.v\d+)?([^.]*)\.js$
 
 # three.js
-.*three.*\.js
+- (^|\/)three(\.v\d+)?([^.]*)\.js$
 
 # dychart synchronizer.js
-- .*synchronizer.*\.js$
+- (^|\/)synchronizer(\.v\d+)?([^.]*)\.js$

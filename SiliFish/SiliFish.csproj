@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <AssemblyVersion></AssemblyVersion>
-    <Version>0.1.5</Version>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,6 +60,7 @@
     <EmbeddedResource Include="Resources\DyChart.js" />
     <EmbeddedResource Include="Resources\DyChart.html" />
     <EmbeddedResource Include="Resources\DyChartDiv.html" />
+    <EmbeddedResource Include="Resources\dygraph.js" />
     <EmbeddedResource Include="Resources\force-graph.min.js" />
     <EmbeddedResource Include="Resources\Logo.png" />
     <EmbeddedResource Include="Resources\DyStyleSheet.css" />

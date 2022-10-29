@@ -123,7 +123,7 @@ namespace SiliFish.UI.Controls
             switch (mode)
             {
                 case "Constant":
-                    return new Constant_NoDistribution(start, Angular, noise);
+                    return new Constant_NoDistribution(start, absolute, Angular, noise);
                 case "Uniform":
                     return new UniformDistribution(start, end, absolute, Angular);
                 case "Equally Spaced":

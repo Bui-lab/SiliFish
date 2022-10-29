@@ -1,5 +1,6 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits;
+using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
@@ -170,13 +171,13 @@ namespace SiliFish.UI.Controls
                 eDescription.Text = interPool.Description;
                 cbWithinSomite.Checked = interPool.CellReach.WithinSomite;
                 cbOtherSomite.Checked = interPool.CellReach.OtherSomite;
-                numProbability.Value = (decimal)interPool.Probability;
-                numMinReach.Value = (decimal)interPool.CellReach.MinReach;
-                numMaxReach.Value = (decimal)interPool.CellReach.MaxReach;
-                numAscReach.Value = (decimal)interPool.CellReach.AscendingReach;
-                numDescReach.Value = (decimal)interPool.CellReach.DescendingReach;
-                numConductance.Value = (decimal)interPool.CellReach.Weight;
-                numDelay.Value = (decimal)interPool.CellReach.Delay_ms;
+                numProbability.SetValue(interPool.Probability);
+                numMinReach.SetValue(interPool.CellReach.MinReach);
+                numMaxReach.SetValue(interPool.CellReach.MaxReach);
+                numAscReach.SetValue(interPool.CellReach.AscendingReach);
+                numDescReach.SetValue(interPool.CellReach.DescendingReach);
+                numConductance.SetValue(interPool.CellReach.Weight);
+                numDelay.SetValue(interPool.CellReach.Delay_ms);
                 eFixedDuration.Text = interPool.CellReach.FixedDuration_ms?.ToString() ?? "";
                 if (interPool.SynapseParameters != null)
                 {

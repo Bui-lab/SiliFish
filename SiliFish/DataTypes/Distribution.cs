@@ -137,15 +137,15 @@ namespace SiliFish.DataTypes
         public double NoiseStdDev { get; set; } = 0;
         public Constant_NoDistribution()
         { }
-        public Constant_NoDistribution(double val, bool angular, double noiseStdDev)
-            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, true, angular)
+        public Constant_NoDistribution(double val, bool absolute, bool angular, double noiseStdDev)
+            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, absolute, angular)
         {
             NoiseStdDev = noiseStdDev;
         }
 
         public override Distribution CreateCopy()
         {
-            return new Constant_NoDistribution(RangeStart, Angular, NoiseStdDev);
+            return new Constant_NoDistribution(RangeStart, Absolute, Angular, NoiseStdDev);
         }
 
         public override double[] GenerateNNumbers(int n, double range)
