@@ -63,4 +63,4 @@
 #*.RTF   diff=astextplain
 
 # Do not include in language statistics
-/DataSet/** linguist-documentation
+/DataSet 1.0/** linguist-documentation
