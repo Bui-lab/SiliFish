@@ -63,6 +63,8 @@
 #*.RTF   diff=astextplain
 
 # Do not include in language statistics
-DataSet 1.0/** linguist-documentation
+DataSet%201.0/** linguist-documentation
 SiliFish/Resources/** linguist-documentation
+/DataSet%201.0/** linguist-documentation
+/SiliFish/Resources/** linguist-documentation
 
