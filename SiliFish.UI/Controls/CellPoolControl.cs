@@ -11,6 +11,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class CellPoolControl : UserControl
     {
+        private static string cellPoolFileDefaultFolder;
         private event EventHandler savePool;
         public event EventHandler SavePool { add => savePool += value; remove => savePool -= value; }
 
@@ -270,8 +271,12 @@ namespace SiliFish.UI.Controls
 
         private void cmiAddAttachment_Click(object sender, EventArgs e)
         {
+            dlgOpenFile.InitialDirectory = cellPoolFileDefaultFolder;
             if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+            {
                 listAttachments.Items.Add(dlgOpenFile.FileName);
+                cellPoolFileDefaultFolder = Path.GetDirectoryName(dlgOpenFile.FileName);
+            }
         }
 
         private void cmiRemoveAttachment_Click(object sender, EventArgs e)
@@ -279,7 +284,6 @@ namespace SiliFish.UI.Controls
             if (MessageBox.Show("Do you want to remove the selected attachment?", "SiliFish", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 listAttachments.Items.RemoveAt(listAttachments.SelectedIndex);
         }
-
 
     }
 }

@@ -13,6 +13,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class DynamicsTestControl : UserControl
     {
+        private static string coreUnitFileDefaultFolder;
         private string coreType;
         public string CoreType
         {
@@ -128,6 +129,7 @@ namespace SiliFish.UI.Controls
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
             gaControl.OnLoadParams += GaControl_OnLoadParams;
+            gaControl.OnGetParams += GaControl_OnGetParams;
             sensitivityAnalysisRheobase.RunAnalysis += SensitivityAnalysisRheobase_RunAnalysis;
             sensitivityAnalysisFiring.RunAnalysis += SensitivityAnalysisFiring_RunAnalysis;
         }
@@ -209,6 +211,12 @@ namespace SiliFish.UI.Controls
             ddCoreType.Text = CoreType;
             Parameters = gaControl.Parameters;
             skipCoreTypeChange = false;
+        }
+
+        private void GaControl_OnGetParams(object sender, EventArgs e)
+        {
+            gaControl.CoreType = CoreType;
+            gaControl.Parameters = Parameters;
         }
 
         private void GaControl_OnCompleteOptimization(object sender, EventArgs e)
@@ -550,8 +558,11 @@ namespace SiliFish.UI.Controls
         }
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
+                coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
+
                 string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
@@ -572,9 +583,11 @@ namespace SiliFish.UI.Controls
             ReadParameters();
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
             string JSONString = JsonUtil.ToJson(core);
+            saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
                 FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
+                coreUnitFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
             }
         }
 

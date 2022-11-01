@@ -115,7 +115,7 @@ namespace SiliFish.Services.Optimization
                 case FiringRhythm.Phasic: //but stat is not phasic (tonic)
                     return Weight / stat.BurstsOrSpikes.Count;
                 case FiringRhythm.Tonic: //but stat is not tonic (phasic)
-                    return Weight / 10;//TODO hardcoded
+                    return Weight * stat.SpikeCoverage(ignoreDelay: true);
                 default:
                     break;
             }
@@ -144,21 +144,25 @@ namespace SiliFish.Services.Optimization
                 return Weight;
             if (stat.FiringPattern == FiringPattern.NoSpike)
                 return 0;
-            //double avg = stat.Intervals_ms?.Values.ToArray().AverageValue()??0;
-            double SD = stat.Intervals_ms?.Values.ToArray().StandardDeviation() ?? 0;
-            
+            double irregularity = 0;
+            if (stat.SpikeList.Count > 1)
+            {
+                double avg = stat.Intervals_ms?.Values.ToArray().AverageValue() ?? 0;
+                double SD = stat.Intervals_ms?.Values.ToArray().StandardDeviation() ?? 0;
+                irregularity = SD / avg/10;
+            }
             switch (TargetPattern)//TODO how to quantify irregularity?
             {
                 case FiringPattern.NoSpike:
                     return 0;
-                case FiringPattern.Spiking://the lower SD should give a higher fitness value
-                    return Weight / Math.Min(1, SD);
-                case FiringPattern.Bursting://the higher SD should give a higher fitness value
-                    return Weight * Math.Min(1, SD);
-                case FiringPattern.Chattering:
-                    break;
-                case FiringPattern.Mixed:
-                    break;
+                case FiringPattern.Spiking://the lower irregularity should give a higher fitness value
+                    return Weight * Math.Max(0, (1 - irregularity));
+                case FiringPattern.Bursting://the higher irregularity should give a higher fitness value
+                    return Weight * Math.Min(1, irregularity);
+                case FiringPattern.Chattering://the higher irregularity should give a higher fitness value
+                    return Weight * Math.Min(1, irregularity);
+                case FiringPattern.Mixed://the higher irregularity should give a higher fitness value
+                    return Weight * Math.Min(1, irregularity);
             }
 
             return 0;

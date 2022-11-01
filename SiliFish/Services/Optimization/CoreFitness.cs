@@ -23,6 +23,43 @@ namespace SiliFish.Services.Optimization
             TargetRheobaseFunction = settings.TargetRheobaseFunction;
             FitnessFunctions = settings.FitnessFunctions;
         }
+
+        public static double Evaluate(TargetRheobaseFunction targetRheobaseFunction, List<FitnessFunction> fitnessFunctions, DynamicUnit core)
+        {
+            if (core == null)
+                return 0;
+
+            double fitness = 0;
+            double rheobase = 0;
+            if (targetRheobaseFunction != null)
+            {
+                fitness += targetRheobaseFunction.CalculateFitness(core, out rheobase);
+            }
+            else if (fitnessFunctions.Any(ff => ff.CurrentRequired && ff.RheobaseBased))
+                rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
+
+            List<double> currentValues = fitnessFunctions
+                .Select(ff => ff.CurrentValueOrRheobaseMultiplier * (ff.RheobaseBased ? rheobase : 1))
+                .Distinct()
+                .ToList();
+
+            //generate a dictionary of DynamicStats - to prevent multiple runs
+            Dictionary<double, DynamicsStats> stats = new();
+            foreach (double current in currentValues)
+            {
+                DynamicsStats stat = core.DynamicsTest(current, infinity: Const.RheobaseInfinity, dt: 0.1);
+                stats.Add(current, stat);
+            }
+
+
+            foreach (FitnessFunction function in fitnessFunctions)
+            {
+                double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
+                DynamicsStats stat = stats[current];
+                fitness += function.CalculateFitness(stat);
+            }
+            return fitness;
+        }
         public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
         {
             var fc = chromosome as FloatingPointChromosome;
@@ -37,39 +74,7 @@ namespace SiliFish.Services.Optimization
             }
 
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, instanceValues);
-            if (core == null)
-                return 0;
-
-            double fitness = 0;
-            double rheobase = 0;
-            if (TargetRheobaseFunction != null)
-            {
-                fitness += TargetRheobaseFunction.CalculateFitness(core, out rheobase);
-            }
-            else if (FitnessFunctions.Any(ff => ff.CurrentRequired && ff.RheobaseBased))
-                rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
-
-            List<double> currentValues = FitnessFunctions
-                .Select(ff => ff.CurrentValueOrRheobaseMultiplier * (ff.RheobaseBased ? rheobase : 1))
-                .Distinct()
-                .ToList();
-
-            //generate a dictionary of DynamicStats - to prevent multiple runs
-            Dictionary<double, DynamicsStats> stats = new();
-            foreach (double current in currentValues)
-            {
-                DynamicsStats stat = core.DynamicsTest(current, infinity: Const.RheobaseInfinity, dt: 0.1);
-                stats.Add(current, stat);
-            }
-
-            
-            foreach (FitnessFunction function in FitnessFunctions)
-            {
-                double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
-                DynamicsStats stat = stats[current];
-                fitness += function.CalculateFitness(stat);
-            }
-            return fitness;
+            return Evaluate(TargetRheobaseFunction, FitnessFunctions, core);
         }
     }
 

@@ -159,6 +159,37 @@ namespace SiliFish.DynamicUnits
             }
         }
 
+        public double Irregularity
+        {
+            get
+            {
+                if (decreasingIntervals || increasingIntervals)
+                    return 0;
+                if (SpikeList.Count > 1)
+                {
+                    double avg = Intervals_ms?.Values.ToArray().AverageValue() ?? 0;
+                    double SD = Intervals_ms?.Values.ToArray().StandardDeviation() ?? 0;
+                    return SD / avg;
+                }
+                return 0;
+            }
+        }
+
+        public double SpikeCoverage(bool ignoreDelay)
+        {
+            if (!SpikeList.Any()) 
+                return 0;
+            int firstIIndex = IList.ToList().FindIndex(i => i > 0);
+            if (firstIIndex == -1) 
+                return 0;
+            int lastIIndex = IList.ToList().FindLastIndex(i => i > 0);
+            if (firstIIndex == lastIIndex) 
+                return 0;
+            int lastSpikeIndex = SpikeList.Last();
+            int firstSpikeIndex = ignoreDelay ? firstIIndex: SpikeList.First();
+            return (double)(lastSpikeIndex - firstSpikeIndex) / (lastIIndex - firstIIndex);
+        }
+
         public DynamicsStats(double[] stimulus)
         {
             int iMax = stimulus.Length;

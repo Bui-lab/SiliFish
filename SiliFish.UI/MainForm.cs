@@ -19,6 +19,7 @@ namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
+        static string modelFileDefaultFolder;
         SwimmingModel Model;
         bool modelRefreshMsgShown = false;
         bool jsonRefreshMsgShown = false;
@@ -51,7 +52,6 @@ namespace SiliFish.UI
         Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams, lastSavedCustomParams;
         Dictionary<string, object> lastRunSCParams, lastRunDCParams, lastRunBGParams, lastRunCustomParams;
         DateTime runStart;
-
         private bool SingleCoilSelected
         {
             get { return ddModelSelection.Text == "Single coil"; }
@@ -644,8 +644,11 @@ namespace SiliFish.UI
 
                 if (string.IsNullOrEmpty(saveFileJson.FileName))
                     saveFileJson.FileName = mt?.ModelName ?? Model?.ModelName;
+                else
+                    saveFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
+                    modelFileDefaultFolder  = Path.GetDirectoryName(saveFileJson.FileName);
                     if (CustomSelected)
                     {
                         //To make sure deactivated items are saved, even though not displayed
@@ -683,6 +686,7 @@ namespace SiliFish.UI
         {
             try
             {
+                openFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (openFileJson.ShowDialog() == DialogResult.OK)
                 {
                     tabParams.Visible = false;
