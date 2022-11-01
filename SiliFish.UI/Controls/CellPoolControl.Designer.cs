@@ -1,5 +1,4 @@
-﻿using SiliFish.UI.Controls;
-
+﻿
 namespace SiliFish.UI.Controls
 {
     partial class CellPoolControl
@@ -456,7 +455,7 @@ namespace SiliFish.UI.Controls
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeLineControl.Location = new System.Drawing.Point(3, 33);
             this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(319, 657);
+            this.timeLineControl.Size = new System.Drawing.Size(314, 657);
             this.timeLineControl.TabIndex = 23;
             // 
             // lSagittalPosition
@@ -630,7 +629,7 @@ namespace SiliFish.UI.Controls
             this.tDynamics.Location = new System.Drawing.Point(4, 24);
             this.tDynamics.Name = "tDynamics";
             this.tDynamics.Padding = new System.Windows.Forms.Padding(3);
-            this.tDynamics.Size = new System.Drawing.Size(325, 693);
+            this.tDynamics.Size = new System.Drawing.Size(320, 693);
             this.tDynamics.TabIndex = 1;
             this.tDynamics.Text = "Dynamics";
             this.tDynamics.UseVisualStyleBackColor = true;
@@ -644,7 +643,7 @@ namespace SiliFish.UI.Controls
             this.dgDynamics.Location = new System.Drawing.Point(3, 146);
             this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
             this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.Size = new System.Drawing.Size(319, 544);
+            this.dgDynamics.Size = new System.Drawing.Size(314, 544);
             this.dgDynamics.TabIndex = 3;
             // 
             // grConductionVelocity
@@ -654,7 +653,7 @@ namespace SiliFish.UI.Controls
             this.grConductionVelocity.Dock = System.Windows.Forms.DockStyle.Top;
             this.grConductionVelocity.Location = new System.Drawing.Point(3, 33);
             this.grConductionVelocity.Name = "grConductionVelocity";
-            this.grConductionVelocity.Size = new System.Drawing.Size(319, 113);
+            this.grConductionVelocity.Size = new System.Drawing.Size(314, 113);
             this.grConductionVelocity.TabIndex = 2;
             this.grConductionVelocity.TabStop = false;
             this.grConductionVelocity.Text = "ConductionVelocity";
@@ -670,7 +669,7 @@ namespace SiliFish.UI.Controls
             this.distConductionVelocity.Location = new System.Drawing.Point(3, 19);
             this.distConductionVelocity.MinimumSize = new System.Drawing.Size(204, 0);
             this.distConductionVelocity.Name = "distConductionVelocity";
-            this.distConductionVelocity.Size = new System.Drawing.Size(313, 91);
+            this.distConductionVelocity.Size = new System.Drawing.Size(308, 91);
             this.distConductionVelocity.TabIndex = 0;
             // 
             // pDynamicsTops
@@ -679,7 +678,7 @@ namespace SiliFish.UI.Controls
             this.pDynamicsTops.Dock = System.Windows.Forms.DockStyle.Top;
             this.pDynamicsTops.Location = new System.Drawing.Point(3, 3);
             this.pDynamicsTops.Name = "pDynamicsTops";
-            this.pDynamicsTops.Size = new System.Drawing.Size(319, 30);
+            this.pDynamicsTops.Size = new System.Drawing.Size(314, 30);
             this.pDynamicsTops.TabIndex = 0;
             // 
             // linkTestDynamics
@@ -700,7 +699,7 @@ namespace SiliFish.UI.Controls
             this.tTimeline.Location = new System.Drawing.Point(4, 24);
             this.tTimeline.Name = "tTimeline";
             this.tTimeline.Padding = new System.Windows.Forms.Padding(3);
-            this.tTimeline.Size = new System.Drawing.Size(325, 693);
+            this.tTimeline.Size = new System.Drawing.Size(320, 693);
             this.tTimeline.TabIndex = 2;
             this.tTimeline.Text = "Timeline";
             this.tTimeline.UseVisualStyleBackColor = true;
@@ -711,7 +710,7 @@ namespace SiliFish.UI.Controls
             this.pTimelineTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTimelineTop.Location = new System.Drawing.Point(3, 3);
             this.pTimelineTop.Name = "pTimelineTop";
-            this.pTimelineTop.Size = new System.Drawing.Size(319, 30);
+            this.pTimelineTop.Size = new System.Drawing.Size(314, 30);
             this.pTimelineTop.TabIndex = 0;
             // 
             // linkClearTimeline

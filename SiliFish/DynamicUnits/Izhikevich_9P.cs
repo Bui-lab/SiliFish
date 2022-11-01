@@ -12,7 +12,7 @@ namespace SiliFish.DynamicUnits
         private static double b_suggestedMax = 1;
         private static double d_suggestedMin = -10;
         private static double d_suggestedMax = 10;
-        private static double k_suggestedMin = -100;
+        private static double k_suggestedMin = 0.01;
         private static double k_suggestedMax = 100;
         private static double Cm_suggestedMin = 1;
         private static double Cm_suggestedMax = 500;

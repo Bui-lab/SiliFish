@@ -8,6 +8,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class GAControl : UserControl
     {
+        private static string GAFileDefaultFolder;
         private string coreType;
         public string CoreType
         {
@@ -22,17 +23,18 @@ namespace SiliFish.UI.Controls
         public Dictionary<string, double> Parameters { get; set; }
         private List<FitnessFunctionControl> FitnessControls;
         private CoreSolver Solver;
-        Dictionary<string, double> SolverBestValues;
-        double SolverBestFitness;
+        private CoreSolverOutput SolverOutput;
         private Dictionary<string, double> minValues;
         private Dictionary<string, double> maxValues;
         private TargetRheobaseFunction targetRheobaseFunction;
-        private List<FitnessFunction> fitnessFunctions;//All fitness functions except the targetrheobase
+        private List<FitnessFunction> fitnessFunctions;//All fitness functions except the target rheobase
         private ProgressForm optimizationProgress;
         private event EventHandler onCompleteOptimization;
         public event EventHandler OnCompleteOptimization { add => onCompleteOptimization += value; remove => onCompleteOptimization -= value; }
         private event EventHandler onLoadParams;
         public event EventHandler OnLoadParams { add => onLoadParams += value; remove => onLoadParams -= value; }
+        private event EventHandler onGetParams;
+        public event EventHandler OnGetParams { add => onGetParams += value; remove => onGetParams -= value; }
 
         public GAControl()
         {
@@ -96,7 +98,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimize()
         {
             if (Solver == null) return;
-            (SolverBestValues, SolverBestFitness) = Solver.Optimize();
+            SolverOutput = Solver.Optimize();
             Invoke(CompleteOptimization);
         }
 
@@ -104,18 +106,20 @@ namespace SiliFish.UI.Controls
         {
             timerOptimization.Enabled = false;
             btnOptimize.Enabled = true;
-            Parameters = SolverBestValues;
+            Parameters = SolverOutput?.BestValues;
             if (optimizationProgress != null && optimizationProgress.Visible)
                 optimizationProgress.Close();
             optimizationProgress = null;
             onCompleteOptimization?.Invoke(this, EventArgs.Empty);
-            lOptimizationOutput.Text = $"Latest fitness: {SolverBestFitness}";
+            lOptimizationOutput.Text = $"Latest fitness: {SolverOutput.BestFitness}";
+            if (!string.IsNullOrEmpty(SolverOutput.ErrorMessage))
+                lOptimizationOutput.Text += $"\r\nOptimization ran with errors: {SolverOutput.ErrorMessage}";
         }
         private void CreateSolver()
         {
             Solver = null;
             ReadMinMaxParamValues();
-            ReadFitnessValues();
+            ReadFitnessFunctions();
             if (!int.TryParse(eMinChromosome.Text, out int minPopulation))
                 minPopulation = 50;
             if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
@@ -160,7 +164,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void ReadFitnessValues()
+        private void ReadFitnessFunctions()
         {
             List<FitnessFunction> ff = FitnessControls.Select(fc => fc.GetFitnessFunction()).ToList();
             targetRheobaseFunction = ff.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
@@ -259,6 +263,7 @@ namespace SiliFish.UI.Controls
 
         private void linkLoadGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            openFileJson.InitialDirectory = GAFileDefaultFolder;
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
                 string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
@@ -297,10 +302,21 @@ namespace SiliFish.UI.Controls
         {
             CreateSolver();
             string JSONString = JsonUtil.ToJson(Solver.Settings);
+            saveFileJson.InitialDirectory = GAFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
                 FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
+                GAFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
             }
+        }
+
+        private void btnCalculateFitness_Click(object sender, EventArgs e)
+        {
+            onGetParams.Invoke(this, EventArgs.Empty);
+            ReadFitnessFunctions();
+            DynamicUnit core = DynamicUnit.CreateCore(CoreType, Parameters);
+            double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
+            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
         }
     }
 }

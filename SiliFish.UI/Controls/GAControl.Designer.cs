@@ -65,6 +65,7 @@
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
+            this.btnCalculateFitness = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitGA)).BeginInit();
             this.splitGA.Panel1.SuspendLayout();
             this.splitGA.Panel2.SuspendLayout();
@@ -219,6 +220,7 @@
             // 
             // pFitnessFunctions
             // 
+            this.pFitnessFunctions.Controls.Add(this.btnCalculateFitness);
             this.pFitnessFunctions.Controls.Add(this.pLineFitnessFunctions);
             this.pFitnessFunctions.Controls.Add(this.lFitnessFunctions);
             this.pFitnessFunctions.Dock = System.Windows.Forms.DockStyle.Top;
@@ -468,6 +470,19 @@
             // 
             this.saveFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // btnCalculateFitness
+            // 
+            this.btnCalculateFitness.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnCalculateFitness.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnCalculateFitness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCalculateFitness.Location = new System.Drawing.Point(351, 3);
+            this.btnCalculateFitness.Name = "btnCalculateFitness";
+            this.btnCalculateFitness.Size = new System.Drawing.Size(123, 23);
+            this.btnCalculateFitness.TabIndex = 46;
+            this.btnCalculateFitness.Text = "Calculate Fitness";
+            this.btnCalculateFitness.UseVisualStyleBackColor = false;
+            this.btnCalculateFitness.Click += new System.EventHandler(this.btnCalculateFitness_Click);
+            // 
             // GAControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -533,5 +548,6 @@
         private OpenFileDialog openFileJson;
         private SaveFileDialog saveFileJson;
         private Label lOptimizationOutput;
+        private Button btnCalculateFitness;
     }
 }

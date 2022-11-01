@@ -1,16 +1,16 @@
 ﻿using GeneticSharp;
-using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 //https://diegogiacomelli.com.br/function-optimization-with-geneticsharp/
 namespace SiliFish.Services.Optimization
 {
-
+    public class CoreSolverOutput
+    {
+        public Dictionary<string, double> BestValues;
+        public double BestFitness;
+        public string ErrorMessage;
+    }
     public class CoreSolver
     {
         static string AssemblySuffix = ", GeneticSharp.Domain";
@@ -25,12 +25,15 @@ namespace SiliFish.Services.Optimization
         private GeneticAlgorithm Algorithm;
 
         private double latestFitness = 0.0;
+        private string errorMessage;
 
         [JsonIgnore]
         public string ProgressText
         {
             get
             {
+                if (!string.IsNullOrEmpty(errorMessage))
+                    return errorMessage;
                 if (Algorithm == null) return "";
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
                     return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
@@ -117,8 +120,9 @@ namespace SiliFish.Services.Optimization
                 Reinsertion = Reinsertion
             };
         }
-        public (Dictionary<string, double>, double) Optimize()
+        public CoreSolverOutput Optimize()
         {
+            CoreSolverOutput output = new();
             InitializeOptimization();
             latestFitness = 0.0;
             Algorithm.GenerationRan += (sender, e) =>
@@ -135,7 +139,15 @@ namespace SiliFish.Services.Optimization
                         valueStr += $"{key}: {phenotype[iter++]}; ";*/
                 }
             };
-            Algorithm.Start();
+            errorMessage = "";
+            try
+            {
+                Algorithm.Start();
+            }
+            catch (Exception exc)
+            { 
+                output.ErrorMessage = exc.Message;
+            }
 
             Dictionary<string, double> BestValues = new();
             int iter = 0;
@@ -144,7 +156,9 @@ namespace SiliFish.Services.Optimization
                 var phenotype = (Algorithm.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
                 BestValues.Add(key, phenotype[iter++]);
             }
-            return (BestValues, latestFitness);
+            output.BestValues = BestValues;
+            output.BestFitness = latestFitness;
+            return output;
         }
         public void CancelOptimization()
         {
