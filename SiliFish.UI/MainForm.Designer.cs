@@ -537,7 +537,7 @@ namespace SiliFish.UI
             // 
             // eSpinalBodyPosition
             // 
-            this.eSpinalBodyPosition.DecimalPlaces = 1;
+            this.eSpinalBodyPosition.DecimalPlaces = 3;
             this.eSpinalBodyPosition.Location = new System.Drawing.Point(98, 128);
             this.eSpinalBodyPosition.Maximum = new decimal(new int[] {
             1000,
@@ -566,7 +566,7 @@ namespace SiliFish.UI
             // 
             // eSpinalRostraoCaudal
             // 
-            this.eSpinalRostraoCaudal.DecimalPlaces = 1;
+            this.eSpinalRostraoCaudal.DecimalPlaces = 3;
             this.eSpinalRostraoCaudal.Location = new System.Drawing.Point(98, 100);
             this.eSpinalRostraoCaudal.Maximum = new decimal(new int[] {
             1000,
@@ -593,7 +593,7 @@ namespace SiliFish.UI
             // 
             // eSpinalMedialLateral
             // 
-            this.eSpinalMedialLateral.DecimalPlaces = 1;
+            this.eSpinalMedialLateral.DecimalPlaces = 3;
             this.eSpinalMedialLateral.Location = new System.Drawing.Point(98, 72);
             this.eSpinalMedialLateral.Maximum = new decimal(new int[] {
             1000,
@@ -622,7 +622,7 @@ namespace SiliFish.UI
             // 
             // eSpinalDorsalVentral
             // 
-            this.eSpinalDorsalVentral.DecimalPlaces = 1;
+            this.eSpinalDorsalVentral.DecimalPlaces = 3;
             this.eSpinalDorsalVentral.Location = new System.Drawing.Point(98, 44);
             this.eSpinalDorsalVentral.Maximum = new decimal(new int[] {
             1000,
@@ -664,7 +664,7 @@ namespace SiliFish.UI
             // 
             // eBodyMedialLateral
             // 
-            this.eBodyMedialLateral.DecimalPlaces = 1;
+            this.eBodyMedialLateral.DecimalPlaces = 3;
             this.eBodyMedialLateral.Location = new System.Drawing.Point(98, 55);
             this.eBodyMedialLateral.Maximum = new decimal(new int[] {
             1000,
@@ -693,7 +693,7 @@ namespace SiliFish.UI
             // 
             // eBodyDorsalVentral
             // 
-            this.eBodyDorsalVentral.DecimalPlaces = 1;
+            this.eBodyDorsalVentral.DecimalPlaces = 3;
             this.eBodyDorsalVentral.Location = new System.Drawing.Point(98, 27);
             this.eBodyDorsalVentral.Maximum = new decimal(new int[] {
             1000,

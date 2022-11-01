@@ -193,8 +193,8 @@ namespace SiliFish.Services
             double spinalposY = model.SpinalBodyPosition + model.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;
             double spinallag = Math.Max(model.SpinalRostralCaudalDistance, xRange);
-            (double newX, double newY, double newZ) = GetNewCoordinates(-3, spinalposZ, spinalposY, 0);
-            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 5, spinalposZ, spinalposY, 0);
+            (double newX, double newY, double newZ) = GetNewCoordinates(-3 * XMin, spinalposZ, spinalposY, 0);
+            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 5 * XMin, spinalposZ, spinalposY, 0);
 
             html.Replace("__SPINE_X__", newX.ToString());
             html.Replace("__SPINE_Y__", newY.ToString());

@@ -134,9 +134,7 @@ namespace SiliFish.UI.Controls
 
         private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
         {
-            double limit = (double)eRheobaseLimit.Value;
             List<ChartDataStruct> charts = new();
-            double dt = (double)edt.Value;
             ReadParameters();
             string param = sensitivityAnalysisFiring.SelectedParam;
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);

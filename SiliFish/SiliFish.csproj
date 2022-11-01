@@ -103,8 +103,4 @@
     <EmbeddedResource Include="Resources\DySynchronizer.js" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
-  </ItemGroup>
-
 </Project>
