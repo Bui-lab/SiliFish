@@ -69,10 +69,12 @@ namespace SiliFish.DataTypes
 
         public static Distribution CreateDistributionObject(object obj)
         {
+            if (obj == null)
+                return null;
             if (obj is Distribution distribution)
                 return distribution;
             if (double.TryParse(obj.ToString(), out double d))
-                return new Constant_NoDistribution(d, false, 0);
+                return new Constant_NoDistribution(d, true, false, 0);
             if (obj is JsonElement element)
                 return GetOfDerivedType(element.GetRawText());
             return null;
@@ -168,15 +170,15 @@ namespace SiliFish.DataTypes
         }
         public Constant_NoDistribution()
         { }
-        public Constant_NoDistribution(double val, bool angular, double noiseStdDev)
-            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, true, angular)
+        public Constant_NoDistribution(double val, bool absolute, bool angular, double noiseStdDev)
+            : base(val - 10 * noiseStdDev, val + 10 * noiseStdDev, absolute, angular)
         {
             NoiseStdDev = noiseStdDev;
         }
 
         public override Distribution CreateCopy()
         {
-            return new Constant_NoDistribution(RangeStart, Angular, NoiseStdDev);
+            return new Constant_NoDistribution(RangeStart, Absolute, Angular, NoiseStdDev);
         }
 
         public override double[] GenerateNNumbers(int n, double range)

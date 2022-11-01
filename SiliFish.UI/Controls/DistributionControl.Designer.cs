@@ -57,6 +57,8 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pOptions = new System.Windows.Forms.FlowLayoutPanel();
+            this.lValue = new System.Windows.Forms.Label();
+            this.eUniqueValue = new System.Windows.Forms.TextBox();
             this.pBimodal.SuspendLayout();
             this.pGaussian.SuspendLayout();
             this.pNoise.SuspendLayout();
@@ -257,6 +259,8 @@
             // 
             // pTopIn
             // 
+            this.pTopIn.Controls.Add(this.lValue);
+            this.pTopIn.Controls.Add(this.eUniqueValue);
             this.pTopIn.Controls.Add(this.rbPerc);
             this.pTopIn.Controls.Add(this.rbAbsolute);
             this.pTopIn.Controls.Add(this.lDistributionType);
@@ -333,6 +337,22 @@
             this.pOptions.Size = new System.Drawing.Size(204, 158);
             this.pOptions.TabIndex = 20;
             // 
+            // lValue
+            // 
+            this.lValue.AutoSize = true;
+            this.lValue.Location = new System.Drawing.Point(5, 61);
+            this.lValue.Name = "lValue";
+            this.lValue.Size = new System.Drawing.Size(35, 15);
+            this.lValue.TabIndex = 13;
+            this.lValue.Text = "Value";
+            // 
+            // eUniqueValue
+            // 
+            this.eUniqueValue.Location = new System.Drawing.Point(78, 57);
+            this.eUniqueValue.Name = "eUniqueValue";
+            this.eUniqueValue.Size = new System.Drawing.Size(52, 23);
+            this.eUniqueValue.TabIndex = 12;
+            // 
             // DistributionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -392,5 +412,7 @@
         private Label lMode1Weight;
         private RadioButton rbPerc;
         private RadioButton rbAbsolute;
+        private Label lValue;
+        private TextBox eUniqueValue;
     }
 }

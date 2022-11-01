@@ -43,17 +43,16 @@ namespace SiliFish.UI.Controls
             }
             if (ddDistribution.Text == "Constant")
             {
-                lRangeSeparator.Visible = false;
-                eRangeEnd.Visible = false;
-                lRange.Text = "Value";
-                lRange.Visible = true;
-                eRangeStart.Visible = true;
+                lRangeSeparator.Visible = lRange.Visible =
+                eRangeEnd.Visible = eRangeStart.Visible = false;
+                lValue.Visible = eUniqueValue.Visible = true;
             }
             else if (ddDistribution.Text == "None")
             {
                 lRangeSeparator.Visible = false;
                 eRangeStart.Visible = eRangeEnd.Visible = false;
                 lRange.Visible = false;
+                lValue.Visible = eUniqueValue.Visible = false;
             }
             else
             {
@@ -61,6 +60,7 @@ namespace SiliFish.UI.Controls
                 eRangeStart.Visible = eRangeEnd.Visible = true;
                 lRange.Text = "Range";
                 lRange.Visible = true;
+                lValue.Visible = eUniqueValue.Visible = false;
             }
         }
 
@@ -68,6 +68,7 @@ namespace SiliFish.UI.Controls
         {
             if (dist == null)
                 return;
+            eUniqueValue.Text = dist.UniqueValue.ToString();
             eRangeStart.Text = dist.RangeStart.ToString();
             eRangeEnd.Text = dist.RangeEnd.ToString();
             rbAbsolute.Checked = dist.Absolute;
@@ -114,6 +115,8 @@ namespace SiliFish.UI.Controls
                 start = 0;
             if (!double.TryParse(eRangeEnd.Text, out double end))
                 end = 100;
+            if (!double.TryParse(eUniqueValue.Text, out double value))
+                value = 0;
             if (Angular && end > 180) end = 180;
             else if (!Angular && !absolute && end > 100) end = 100;
 
@@ -122,7 +125,7 @@ namespace SiliFish.UI.Controls
             switch (mode)
             {
                 case "Constant":
-                    return new Constant_NoDistribution(start, absolute, Angular, noise);
+                    return new Constant_NoDistribution(value, absolute, Angular, noise);
                 case "Uniform":
                     return new UniformDistribution(start, end, absolute, Angular);
                 case "Equally Spaced":

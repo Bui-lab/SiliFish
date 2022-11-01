@@ -27,7 +27,7 @@ namespace SiliFish.UI.Controls
                 else
                 {
                     double val = double.Parse(dgDynamics[colValue.Index, e.RowIndex].Tag?.ToString() ?? dgDynamics[colValue.Index, e.RowIndex].Value?.ToString());
-                    dist = new Constant_NoDistribution(val, absolute: true, angular: false, 0);
+                    dist = new Constant_NoDistribution(val, true, false, 0);
                     distControl.SetDistribution(dist);
                 }
                 if (frmControl.ShowDialog() == DialogResult.OK)
