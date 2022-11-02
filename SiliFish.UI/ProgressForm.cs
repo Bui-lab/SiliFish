@@ -27,8 +27,8 @@ namespace SiliFish.UI
         {
             set
             {
-                lProgressValue.Text = $"{value:0.##}%";
-                progressBar.Value = (int)Math.Floor(value);
+                lProgressValue.Text = value < 0 ? "N/A" : $"{value:0.##}%";
+                progressBar.Value = value < 0 ? 50 : (int)Math.Floor(value);
             }
         }
 

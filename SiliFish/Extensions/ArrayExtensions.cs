@@ -65,13 +65,13 @@ namespace SiliFish.Extensions
             return Math.Sqrt(thisArray.Skip(iStart).Take(iEnd - iStart).Average(v => Math.Pow(v - avg, 2)));
         }
 
-        public static bool IsRandom(this double[] thisArray, double randomDegree, out bool decreasing, out bool increasing)
+        public static double Irregularity(this double[] thisArray, out bool decreasing, out bool increasing)
         {
             if (thisArray.Length <= 1)
             {
                 decreasing = false;
                 increasing = false;
-                return false;
+                return 0;
             }
             decreasing = true;//skip the first interval thisArray[1] < thisArray[0];
             increasing = true;//skip the first intervalthisArray[1] > thisArray[0];
@@ -89,10 +89,10 @@ namespace SiliFish.Extensions
                     break;
             }
             if (increasing || decreasing)
-                return false;
+                return 0;
             double std = thisArray.StandardDeviation();
             double avg = thisArray.AverageValue();
-            return (std / avg) > randomDegree;
+            return std / avg;
         }
         public static List<int> GetPeakIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
         {
