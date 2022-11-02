@@ -25,6 +25,7 @@ namespace SiliFish.Services.Optimization
         private GeneticAlgorithm Algorithm;
 
         private double latestFitness = 0.0;
+        private double bestFitness = 0.0;
         private string errorMessage;
 
         [JsonIgnore]
@@ -36,13 +37,17 @@ namespace SiliFish.Services.Optimization
                     return errorMessage;
                 if (Algorithm == null) return "";
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}";
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
+                        $"\r\nBest fitness: {bestFitness}";
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Time elapsed: {Algorithm.TimeEvolving.TotalMinutes:0.##} mins;";
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
+                        $"\r\nBest fitness: {bestFitness}; Time elapsed: {Algorithm.TimeEvolving.TotalMinutes:0.##} mins;";
                 if (Algorithm.Termination is FitnessStagnationTermination fst)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Stagnant for ??? out of {fst.ExpectedStagnantGenerationsNumber:0.##};";
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
+                        $"\r\nBest fitness: {bestFitness}; Stagnant for ??? out of {fst.ExpectedStagnantGenerationsNumber:0.##};";
                 if (Algorithm.Termination is FitnessThresholdTermination ftt)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness}; Target Fitness: {ftt.ExpectedFitness:0.##}";
+                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
+                        $"\r\nBest fitness: {bestFitness}; Target Fitness: {ftt.ExpectedFitness:0.##}";
                 return "Progress unknown";
             }
         }
@@ -58,7 +63,7 @@ namespace SiliFish.Services.Optimization
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
                     return (int)(100*Algorithm.TimeEvolving/tet.MaxTime);
                 if (Algorithm.Termination is FitnessStagnationTermination fst)
-                    return 50;// fst.GetNumberOfStagnantGenerations() / fst.ExpectedStagnantGenerationsNumber;
+                    return -1;// fst.GetNumberOfStagnantGenerations() / fst.ExpectedStagnantGenerationsNumber;
                 if (Algorithm.Termination is FitnessThresholdTermination ftt)
                     return (int)(100 * (Algorithm.BestChromosome?.Fitness.Value ?? 0) / ftt.ExpectedFitness);
                 return 0;
@@ -128,16 +133,9 @@ namespace SiliFish.Services.Optimization
             Algorithm.GenerationRan += (sender, e) =>
             {
                 var bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
-                var bestFitness = bestChromosome.Fitness.Value;
-                if (bestFitness != latestFitness)
-                {
-                    latestFitness = bestFitness;
-              /*      var phenotype = bestChromosome.ToFloatingPoints();
-                    int iter = 0;
-                    string valueStr = "";
-                    foreach (string key in Settings.SortedKeys)
-                        valueStr += $"{key}: {phenotype[iter++]}; ";*/
-                }
+                latestFitness = bestChromosome.Fitness.Value;
+                if (bestFitness < latestFitness)
+                    bestFitness = latestFitness;
             };
             errorMessage = "";
             try
@@ -157,7 +155,7 @@ namespace SiliFish.Services.Optimization
                 BestValues.Add(key, phenotype[iter++]);
             }
             output.BestValues = BestValues;
-            output.BestFitness = latestFitness;
+            output.BestFitness = Algorithm.BestChromosome.Fitness ?? 0;
             return output;
         }
         public void CancelOptimization()

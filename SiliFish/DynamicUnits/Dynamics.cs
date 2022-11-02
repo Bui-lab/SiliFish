@@ -56,6 +56,12 @@ namespace SiliFish.DynamicUnits
     /// </summary>
     public class DynamicsStats
     {
+        public static double ChatteringIrregularity { get; set; } = 0.1; //the SD/avg ratio to be considered chattering
+        public static double MaxBurstInterval_DefaultLowerRange { get; set; } = 5; //TODO in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public static double MaxBurstInterval_DefaultUpperRange { get; set; } = 30; //TODO in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public static double OneClusterMultiplier { get; set; } = 2; //TODO Centroid2 < Centroid1 * OneClusterMultiplier means there is only one cluster (all spikes part of a burst)
+        public static double TonicPadding { get; set; } = 1; //in ms, the range between the last spike and the end of current to be considered as tonic firing
+
         public Cluster BurstCluster;
         public Cluster InterBurstCluster;
 
@@ -64,20 +70,21 @@ namespace SiliFish.DynamicUnits
         private bool followedByQuiescence;
         private bool decreasingIntervals;
         private bool increasingIntervals;
-        private bool randomIntervals;
-            public double MaxBurstInterval_LowerRange { get; set; } = 5; //TODO in ms, the maximum interval two spikes can have to be considered as part of a burst
-        public double MaxBurstInterval_UpperRange { get; set; } = 30; //TODO in ms, the maximum interval two spikes can have to be considered as part of a burst
-        public static double OneClusterMultiplier { get; set; } = 2; //TODO Centroid2 < Centroid1 * OneClusterMultiplier means there is only one cluster (all spikes part of a burst)
-        public static double TonicPadding { get; set; } = 1; //in ms, the range between the last spike and the end of current to be considered as tonic firing
+        public double Irregularity { get; set; }
+
+        public double MaxBurstInterval_LowerRange { get; set; } = MaxBurstInterval_DefaultLowerRange; //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public double MaxBurstInterval_UpperRange { get; set; } = MaxBurstInterval_DefaultUpperRange; //in ms, the maximum interval two spikes can have to be considered as part of a burst
         /// <summary>
         /// The list of tau values for each spike (by time)
         /// </summary>
         public Dictionary<double, double> TauDecay, TauRise;
 
         /// <summary>
-        /// The time index of each spike
+        /// The time index of each spike during the stimulus
         /// </summary>
         public List<int> SpikeList;
+        public List<int> PreStimulusSpikeList;
+        public List<int> PostStimulusSpikeList;
 
         /// <summary>
         /// The input current (stimulus)
@@ -156,22 +163,6 @@ namespace SiliFish.DynamicUnits
                     }
                 }
                 return spikeDelay;
-            }
-        }
-
-        public double Irregularity
-        {
-            get
-            {
-                if (decreasingIntervals || increasingIntervals)
-                    return 0;
-                if (SpikeList.Count > 1)
-                {
-                    double avg = Intervals_ms?.Values.ToArray().AverageValue() ?? 0;
-                    double SD = Intervals_ms?.Values.ToArray().StandardDeviation() ?? 0;
-                    return SD / avg;
-                }
-                return 0;
             }
         }
 
@@ -289,8 +280,8 @@ namespace SiliFish.DynamicUnits
                 int intIndex = 0;
                 foreach (int i in Enumerable.Range(0, burstsOrSpikes.Count - 1))
                     intervalArray[intIndex++] = burstsOrSpikes[i + 1].SpikeTimeList[0] - burstsOrSpikes[i].SpikeTimeList[0];
-                randomIntervals = intervalArray.IsRandom(0.1, out decreasingIntervals, out increasingIntervals);//TODO hardcoded 0.1
-                firingPattern = randomIntervals ? FiringPattern.Chattering : FiringPattern.Spiking;
+                Irregularity = intervalArray.Irregularity(out decreasingIntervals, out increasingIntervals);
+                firingPattern = Irregularity > ChatteringIrregularity ? FiringPattern.Chattering : FiringPattern.Spiking;
                 return;
             }
             firingPattern = FiringPattern.Mixed;
@@ -300,24 +291,27 @@ namespace SiliFish.DynamicUnits
         {
             if (analyzed) return;
             burstsOrSpikes = new();
-            int curStart = IList.ToList().FindIndex(i => i > 0);
+            int stimulusStart = IList.ToList().FindIndex(i => i > 0);
+            int stimulusEnd = IList.ToList().FindLastIndex(i => i > 0);
 
-            SpikeList.RemoveAll(s => s < curStart);
+            PreStimulusSpikeList = SpikeList.Where(s => s < stimulusStart).ToList();
+            PostStimulusSpikeList = SpikeList.Where(s => s > stimulusEnd).ToList();
+            SpikeList.RemoveAll(s => s < stimulusStart || s > stimulusEnd);
             if (SpikeList.Count == 0)
             {
                 firingPattern = FiringPattern.NoSpike;
                 analyzed = true;
                 return;
             }
-            double firsttITime = curStart * RunParam.static_dt;
+            double firstStimulusTime = stimulusStart * RunParam.static_dt;
             double firstSpikeTime = SpikeList[0] * RunParam.static_dt;
-            firingDelay = firstSpikeTime - firsttITime;
-            double lastITime = IList.ToList().FindLastIndex(i => i > 0) * RunParam.static_dt;
+            firingDelay = firstSpikeTime - firstStimulusTime;
+            double lastStimulusTime = stimulusEnd * RunParam.static_dt;
             double lastSpikeTime = SpikeList[^1] * RunParam.static_dt;
             double quiescence = TonicPadding;
             if (Intervals_ms.Values.Any())
                 quiescence = Intervals_ms.Values.Average();
-            followedByQuiescence = lastITime - lastSpikeTime >= quiescence;
+            followedByQuiescence = lastStimulusTime - lastSpikeTime >= quiescence;
 
             if (SpikeList.Count == 1)
             {
@@ -365,7 +359,7 @@ namespace SiliFish.DynamicUnits
             }
             if (double.IsNaN(lastInterval))
                 lastInterval = quiescence;
-            followedByQuiescence = lastITime - lastSpikeTime >= lastInterval + TonicPadding;
+            followedByQuiescence = lastStimulusTime - lastSpikeTime >= lastInterval + TonicPadding;
             SetFiringPatternOfList();
             analyzed = true;
         }
