@@ -320,7 +320,7 @@ namespace SiliFish.UI.Controls
             this.listAttachments.ItemHeight = 15;
             this.listAttachments.Location = new System.Drawing.Point(5, 323);
             this.listAttachments.Name = "listAttachments";
-            this.listAttachments.Size = new System.Drawing.Size(255, 379);
+            this.listAttachments.Size = new System.Drawing.Size(255, 394);
             this.listAttachments.TabIndex = 30;
             // 
             // cmAttachments

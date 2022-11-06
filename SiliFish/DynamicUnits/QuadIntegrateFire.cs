@@ -50,13 +50,16 @@ namespace SiliFish.DynamicUnits
         public override double GetNextVal(double Stim, ref bool spike)
         {
             // ODE eqs
-            double dv = V * V + Stim;
-            double vNew = V + dv * RunParam.static_dt;
-            V = vNew;
             if (V >= Vmax)
             {
                 spike = true;
                 V = Vr;
+            }
+            else
+            {
+                double dv = V * V + Stim;
+                double vNew = V + dv * RunParam.static_dt;
+                V = vNew;
             }
             return V;
         }

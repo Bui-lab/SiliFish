@@ -165,7 +165,22 @@ namespace SiliFish.DynamicUnits
                 return spikeDelay;
             }
         }
-
+        public double CurrentStartTime
+        {
+            get 
+            {
+                int curStart = IList.ToList().FindIndex(i => i > 0);
+                return curStart * RunParam.static_dt;
+            }
+        }
+        public double CurrentEndTime
+        {
+            get
+            {
+                int curEnd = IList.ToList().FindLastIndex(i => i > 0);
+                return curEnd * RunParam.static_dt;
+            }
+        }
         public double SpikeCoverage(bool ignoreDelay)
         {
             if (!SpikeList.Any()) 
@@ -296,7 +311,8 @@ namespace SiliFish.DynamicUnits
 
             PreStimulusSpikeList = SpikeList.Where(s => s < stimulusStart).ToList();
             PostStimulusSpikeList = SpikeList.Where(s => s > stimulusEnd).ToList();
-            SpikeList.RemoveAll(s => s < stimulusStart || s > stimulusEnd);
+            if (stimulusStart >= 0) //if there is no stimulus - check without removing the spikes before the stimulus
+                SpikeList.RemoveAll(s => s < stimulusStart || s > stimulusEnd);
             if (SpikeList.Count == 0)
             {
                 firingPattern = FiringPattern.NoSpike;

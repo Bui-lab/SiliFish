@@ -149,7 +149,7 @@ namespace SiliFish.UI.Controls
                 DynamicsStats stat = stats[iter];
                 charts.Add(new ChartDataStruct
                 {
-                    Title = values[iter].ToString(),
+                    Title = values[iter].ToString("0.###"),
                     Color = Color.Purple,
                     xData = TimeArray,
                     yData = stat.VList,
