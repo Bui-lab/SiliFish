@@ -40,7 +40,7 @@ External stimuli applied to a specific cell pool can be defined.
 *Sili*Fish offers a visual tool to facilitate parameter fitting of the mathematical cellular model selected.
 <img src="https://raw.githubusercontent.com/Bui-lab/SiliFish/main/Snapshots/CellularDynamicsTest.png">
 
-### Genetic Algorithm for Parallel Fitting
+### Genetic Algorithm for Parameter Fitting
 *Sili*Fish incorporates a genetic algorithm facilitate parameter fitting of the mathematical cellular model selected.
 <img src="https://raw.githubusercontent.com/Bui-lab/SiliFish/main/Snapshots/GeneticAlgorithm.png">
 
