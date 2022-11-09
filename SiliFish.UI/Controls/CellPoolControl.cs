@@ -126,8 +126,8 @@ namespace SiliFish.UI.Controls
                 sagPlane = SagittalPlane.Left;
             else if (ddSagittalPosition.Text == "Right")
                 sagPlane = SagittalPlane.Right;
-            //else if (ddSagittalPosition.Text == "Left/Right")
-            //    sagPlane = SagittalPlane.Both;
+            else if (ddSagittalPosition.Text == "Left/Right")
+                sagPlane = SagittalPlane.Both;
             string groupName = eGroupName.Text;
             if (poolTemplate == null)
                 poolTemplate = new CellPoolTemplate();

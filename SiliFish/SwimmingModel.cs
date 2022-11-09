@@ -371,10 +371,6 @@ namespace SiliFish
             SetAnimationParameters(paramExternal);
         }
 
-        public virtual List<string> CheckModel()
-        {
-            return null;
-        }
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, CellSelectionStruct cellSelection)
         {
             List<CellPool> pools = neuronPools.Union(musclePools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
