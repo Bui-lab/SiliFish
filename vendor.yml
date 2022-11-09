@@ -16,3 +16,6 @@
 
 # dychart synchronizer.js
 - (^|\/)synchronizer(\.v\d+)?([^.]*)\.js$
+
+# html files
+- (^|\/)([^.]*)\.html$
