@@ -93,7 +93,7 @@ namespace SiliFish.Services
         private static DyChartStruct CreateLineChart(ChartDataStruct chartData)
         {
             DyChartStruct chart = new();
-            if (chartData.xData?.Length != chartData.yData?.Length && chartData.xData?.Length != chartData.yMultiData?.GetLength(0))
+            if (chartData.xData?.Length != chartData.yData?.Length && chartData.xData?.Length != chartData.yMultiData?.FirstOrDefault().Length)
                 return chart;
 
             double yMin = chartData.yMin;
@@ -111,10 +111,11 @@ namespace SiliFish.Services
             }
             else
             {
-                for (int colIndex = 0; colIndex < chartData.yMultiData.GetLength(1); colIndex++)
+                for (int colIndex = 0; colIndex < chartData.yMultiData.Count; colIndex++)
                 {
-                    foreach (int i in Enumerable.Range(0, chartData.yMultiData.GetLength(0)))
-                        data[i] += chartData.yMultiData[i, colIndex].ToString(Const.DecimalPointFormat) + ",";
+                    double[] singleyData = chartData.yMultiData[colIndex];
+                    foreach (int i in Enumerable.Range(0, singleyData.Length))
+                        data[i] += singleyData[i].ToString(Const.DecimalPointFormat) + ",";
                 }
             }
             string csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";

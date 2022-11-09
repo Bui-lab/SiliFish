@@ -142,6 +142,11 @@ namespace SiliFish.UI.Controls
             // eNumOfCells
             // 
             this.eNumOfCells.Location = new System.Drawing.Point(113, 222);
+            this.eNumOfCells.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eNumOfCells.Name = "eNumOfCells";
             this.eNumOfCells.Size = new System.Drawing.Size(64, 23);
             this.eNumOfCells.TabIndex = 5;

@@ -58,7 +58,9 @@
             this.tTest = new System.Windows.Forms.TabPage();
             this.tSensitivityAnalysis = new System.Windows.Forms.TabPage();
             this.grFiring = new System.Windows.Forms.GroupBox();
+            this.sensitivityAnalysisFiring = new SiliFish.UI.Controls.SensitivityAnalysisControl();
             this.grRheoSens = new System.Windows.Forms.GroupBox();
+            this.sensitivityAnalysisRheobase = new SiliFish.UI.Controls.SensitivityAnalysisControl();
             this.pCoreType = new System.Windows.Forms.Panel();
             this.pLineCoreType = new System.Windows.Forms.Panel();
             this.ddCoreType = new System.Windows.Forms.ComboBox();
@@ -86,8 +88,6 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.sensitivityAnalysisRheobase = new Controls.SensitivityAnalysisControl();
-            this.sensitivityAnalysisFiring = new Controls.SensitivityAnalysisControl();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -268,6 +268,11 @@
             0,
             0});
             this.eStepStartTime.Location = new System.Drawing.Point(100, 21);
+            this.eStepStartTime.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.eStepStartTime.Name = "eStepStartTime";
             this.eStepStartTime.Size = new System.Drawing.Size(66, 23);
             this.eStepStartTime.TabIndex = 7;
@@ -519,6 +524,13 @@
             this.grFiring.TabStop = false;
             this.grFiring.Text = "Firing Pattern";
             // 
+            // sensitivityAnalysisFiring
+            // 
+            this.sensitivityAnalysisFiring.Location = new System.Drawing.Point(6, 18);
+            this.sensitivityAnalysisFiring.Name = "sensitivityAnalysisFiring";
+            this.sensitivityAnalysisFiring.Size = new System.Drawing.Size(215, 120);
+            this.sensitivityAnalysisFiring.TabIndex = 0;
+            // 
             // grRheoSens
             // 
             this.grRheoSens.Controls.Add(this.sensitivityAnalysisRheobase);
@@ -529,6 +541,13 @@
             this.grRheoSens.TabIndex = 18;
             this.grRheoSens.TabStop = false;
             this.grRheoSens.Text = "Rheobase Sensitivity";
+            // 
+            // sensitivityAnalysisRheobase
+            // 
+            this.sensitivityAnalysisRheobase.Location = new System.Drawing.Point(3, 22);
+            this.sensitivityAnalysisRheobase.Name = "sensitivityAnalysisRheobase";
+            this.sensitivityAnalysisRheobase.Size = new System.Drawing.Size(215, 120);
+            this.sensitivityAnalysisRheobase.TabIndex = 0;
             // 
             // pCoreType
             // 
@@ -817,20 +836,6 @@
             // openFileJson
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
-            // 
-            // sensitivityAnalysisRheobase
-            // 
-            this.sensitivityAnalysisRheobase.Location = new System.Drawing.Point(3, 22);
-            this.sensitivityAnalysisRheobase.Name = "sensitivityAnalysisRheobase";
-            this.sensitivityAnalysisRheobase.Size = new System.Drawing.Size(215, 120);
-            this.sensitivityAnalysisRheobase.TabIndex = 0;
-            // 
-            // sensitivityAnalysisFiring
-            // 
-            this.sensitivityAnalysisFiring.Location = new System.Drawing.Point(6, 18);
-            this.sensitivityAnalysisFiring.Name = "sensitivityAnalysisFiring";
-            this.sensitivityAnalysisFiring.Size = new System.Drawing.Size(215, 120);
-            this.sensitivityAnalysisFiring.TabIndex = 0;
             // 
             // DynamicsTestControl
             // 

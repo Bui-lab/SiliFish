@@ -1,4 +1,5 @@
 ﻿using SiliFish.Extensions;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -11,7 +12,7 @@ namespace SiliFish.DataTypes
         public double[] xData = null;
         public double[] yData = null;
         //If multiple lines are plotted on the same chart, yMuliData is used instead of yData
-        public double[,] yMultiData = null;
+        public List<double[]> yMultiData = null;
         public bool drawPoints = false;
         public bool logScale = false;
 
@@ -26,8 +27,8 @@ namespace SiliFish.DataTypes
             get { return xMaxSet ?? xData.Max(); }
             set { xMaxSet = value; }
         }
-        public double yMin { get { return yData?.Min() ?? yMultiData?.Min() ?? 0; } }
-        public double yMax { get { return yData?.Max() ?? yMultiData?.Max() ?? 0; } }
+        public double yMin { get { return yData?.Min() ?? yMultiData?.Min(sd => sd.Min()) ?? 0; } }
+        public double yMax { get { return yData?.Max() ?? yMultiData?.Max(sd => sd.Max()) ?? 0; } }
         public ChartDataStruct()
         {
         }
