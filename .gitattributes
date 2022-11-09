@@ -65,6 +65,5 @@
 # Do not include in language statistics
 DataSet%201.0/** linguist-documentation
 SiliFish/Resources/** linguist-documentation
-/DataSet%201.0/** linguist-documentation
-/SiliFish/Resources/** linguist-documentation
+
 
