@@ -168,7 +168,15 @@ namespace SiliFish.ModelUnits
                 values = new double[iEnd];
             initialized = true;
         }
-        public double generateStimulus(int tIndex, Random rand)
+
+        public double[] GenerateStimulus(int stimStart, int stimDuration, Random rand)
+        {
+            double[] stim = new double[stimStart + stimDuration];
+            foreach (int i in Enumerable.Range(stimStart, stimDuration))
+                stim[i] = generateStimulus(i, rand);
+            return stim;
+        }
+        internal double generateStimulus(int tIndex, Random rand)
         {
             double t_ms = RunParam.GetTimeOfIndex(tIndex);
             if (!TimeSpan_ms.IsActive(t_ms))
@@ -201,10 +209,11 @@ namespace SiliFish.ModelUnits
                     break;
                 case StimulusMode.Pulse:
                     value = 0;
-                    if (Value2 > 0)
+                    if (Value2 > 0)//Value2 is the number of pulses
                     {
-                        double t = t_ms - TimeSpan_ms.StartOf(t_ms);
-                        double period = 1 / Value2;
+                        double timeRange = TimeSpan_ms.End > 0 ? TimeSpan_ms.End - TimeSpan_ms.Start : 1000;
+                        double period = timeRange / Value2;
+                        double t = t_ms - TimeSpan_ms.Start; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
                         while (t > period)
                             t -= period;
                         if (t <= period / 2)

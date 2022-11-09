@@ -34,8 +34,6 @@ namespace SiliFish.UI
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pTop = new System.Windows.Forms.Panel();
             this.btnCellularDynamics = new System.Windows.Forms.Button();
-            this.ddModelSelection = new System.Windows.Forms.ComboBox();
-            this.lModelSelection = new System.Windows.Forms.Label();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkOpenOutputFolder = new System.Windows.Forms.LinkLabel();
             this.linkClearModel = new System.Windows.Forms.LinkLabel();
@@ -87,17 +85,15 @@ namespace SiliFish.UI
             this.eTimeEnd = new System.Windows.Forms.NumericUpDown();
             this.ldt = new System.Windows.Forms.Label();
             this.lRunTime = new System.Windows.Forms.Label();
-            this.lStimulus = new System.Windows.Forms.Label();
-            this.ddStimulusMode = new System.Windows.Forms.ComboBox();
             this.linkExportOutput = new System.Windows.Forms.LinkLabel();
             this.progressBarRun = new System.Windows.Forms.ProgressBar();
             this.btnRun = new System.Windows.Forms.Button();
             this.lTimeEnd = new System.Windows.Forms.Label();
             this.lRunParameters = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
-            this.linkLoadParam = new System.Windows.Forms.LinkLabel();
+            this.linkLoadModel = new System.Windows.Forms.LinkLabel();
             this.lParameters = new System.Windows.Forms.Label();
-            this.linkSaveParam = new System.Windows.Forms.LinkLabel();
+            this.linkSaveModel = new System.Windows.Forms.LinkLabel();
             this.tabOutputs = new System.Windows.Forms.TabControl();
             this.tabPlot = new System.Windows.Forms.TabPage();
             this.tabPlotSub = new System.Windows.Forms.TabControl();
@@ -302,11 +298,8 @@ namespace SiliFish.UI
             this.pTop.BackColor = System.Drawing.Color.White;
             this.pTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pTop.Controls.Add(this.btnCellularDynamics);
-            this.pTop.Controls.Add(this.ddModelSelection);
-            this.pTop.Controls.Add(this.lModelSelection);
             this.pTop.Controls.Add(this.linkBrowseToTempFolder);
             this.pTop.Controls.Add(this.linkOpenOutputFolder);
-            this.pTop.Controls.Add(this.linkClearModel);
             this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTop.Location = new System.Drawing.Point(0, 0);
             this.pTop.Name = "pTop";
@@ -320,39 +313,13 @@ namespace SiliFish.UI
             this.btnCellularDynamics.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnCellularDynamics.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCellularDynamics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCellularDynamics.Location = new System.Drawing.Point(428, 8);
+            this.btnCellularDynamics.Location = new System.Drawing.Point(4, 6);
             this.btnCellularDynamics.Name = "btnCellularDynamics";
             this.btnCellularDynamics.Size = new System.Drawing.Size(120, 27);
             this.btnCellularDynamics.TabIndex = 23;
             this.btnCellularDynamics.Text = "Cellular Dynamics";
             this.btnCellularDynamics.UseVisualStyleBackColor = false;
             this.btnCellularDynamics.Click += new System.EventHandler(this.btnCellularDynamics_Click);
-            // 
-            // ddModelSelection
-            // 
-            this.ddModelSelection.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddModelSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddModelSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddModelSelection.FormattingEnabled = true;
-            this.ddModelSelection.Items.AddRange(new object[] {
-            "User defined",
-            "Single coil",
-            "Double coil",
-            "Beat and glide"});
-            this.ddModelSelection.Location = new System.Drawing.Point(107, 11);
-            this.ddModelSelection.Name = "ddModelSelection";
-            this.ddModelSelection.Size = new System.Drawing.Size(121, 23);
-            this.ddModelSelection.TabIndex = 10;
-            this.ddModelSelection.SelectedIndexChanged += new System.EventHandler(this.ddModelSelection_SelectedIndexChanged);
-            // 
-            // lModelSelection
-            // 
-            this.lModelSelection.AutoSize = true;
-            this.lModelSelection.Location = new System.Drawing.Point(9, 14);
-            this.lModelSelection.Name = "lModelSelection";
-            this.lModelSelection.Size = new System.Drawing.Size(92, 15);
-            this.lModelSelection.TabIndex = 9;
-            this.lModelSelection.Text = "Model Selection";
             // 
             // linkBrowseToTempFolder
             // 
@@ -387,10 +354,11 @@ namespace SiliFish.UI
             // 
             // linkClearModel
             // 
+            this.linkClearModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkClearModel.AutoSize = true;
             this.linkClearModel.ForeColor = System.Drawing.Color.White;
             this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearModel.Location = new System.Drawing.Point(249, 14);
+            this.linkClearModel.Location = new System.Drawing.Point(464, 10);
             this.linkClearModel.Name = "linkClearModel";
             this.linkClearModel.Size = new System.Drawing.Size(71, 15);
             this.linkClearModel.TabIndex = 5;
@@ -918,8 +886,6 @@ namespace SiliFish.UI
             this.pParamBottom.Controls.Add(this.eTimeEnd);
             this.pParamBottom.Controls.Add(this.ldt);
             this.pParamBottom.Controls.Add(this.lRunTime);
-            this.pParamBottom.Controls.Add(this.lStimulus);
-            this.pParamBottom.Controls.Add(this.ddStimulusMode);
             this.pParamBottom.Controls.Add(this.linkExportOutput);
             this.pParamBottom.Controls.Add(this.progressBarRun);
             this.pParamBottom.Controls.Add(this.btnRun);
@@ -1052,30 +1018,6 @@ namespace SiliFish.UI
             this.lRunTime.Size = new System.Drawing.Size(224, 80);
             this.lRunTime.TabIndex = 31;
             // 
-            // lStimulus
-            // 
-            this.lStimulus.AutoSize = true;
-            this.lStimulus.Location = new System.Drawing.Point(168, 18);
-            this.lStimulus.Name = "lStimulus";
-            this.lStimulus.Size = new System.Drawing.Size(53, 15);
-            this.lStimulus.TabIndex = 29;
-            this.lStimulus.Text = "Stimulus";
-            // 
-            // ddStimulusMode
-            // 
-            this.ddStimulusMode.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddStimulusMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddStimulusMode.FormattingEnabled = true;
-            this.ddStimulusMode.Items.AddRange(new object[] {
-            "Step",
-            "Gaussian",
-            "Ramp"});
-            this.ddStimulusMode.Location = new System.Drawing.Point(234, 15);
-            this.ddStimulusMode.Name = "ddStimulusMode";
-            this.ddStimulusMode.Size = new System.Drawing.Size(63, 23);
-            this.ddStimulusMode.TabIndex = 30;
-            // 
             // linkExportOutput
             // 
             this.linkExportOutput.AutoSize = true;
@@ -1133,26 +1075,27 @@ namespace SiliFish.UI
             // pMain
             // 
             this.pMain.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.pMain.Controls.Add(this.linkLoadParam);
+            this.pMain.Controls.Add(this.linkLoadModel);
             this.pMain.Controls.Add(this.lParameters);
-            this.pMain.Controls.Add(this.linkSaveParam);
+            this.pMain.Controls.Add(this.linkSaveModel);
+            this.pMain.Controls.Add(this.linkClearModel);
             this.pMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMain.Location = new System.Drawing.Point(0, 0);
             this.pMain.Name = "pMain";
             this.pMain.Size = new System.Drawing.Size(548, 34);
             this.pMain.TabIndex = 4;
             // 
-            // linkLoadParam
+            // linkLoadModel
             // 
-            this.linkLoadParam.AutoSize = true;
-            this.linkLoadParam.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadParam.Location = new System.Drawing.Point(247, 10);
-            this.linkLoadParam.Name = "linkLoadParam";
-            this.linkLoadParam.Size = new System.Drawing.Size(95, 15);
-            this.linkLoadParam.TabIndex = 4;
-            this.linkLoadParam.TabStop = true;
-            this.linkLoadParam.Text = "Load Parameters";
-            this.linkLoadParam.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadParam_LinkClicked);
+            this.linkLoadModel.AutoSize = true;
+            this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkLoadModel.Location = new System.Drawing.Point(220, 10);
+            this.linkLoadModel.Name = "linkLoadModel";
+            this.linkLoadModel.Size = new System.Drawing.Size(70, 15);
+            this.linkLoadModel.TabIndex = 4;
+            this.linkLoadModel.TabStop = true;
+            this.linkLoadModel.Text = "Load Model";
+            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadModel_LinkClicked);
             // 
             // lParameters
             // 
@@ -1164,17 +1107,17 @@ namespace SiliFish.UI
             this.lParameters.TabIndex = 0;
             this.lParameters.Text = "Model Parameters";
             // 
-            // linkSaveParam
+            // linkSaveModel
             // 
-            this.linkSaveParam.AutoSize = true;
-            this.linkSaveParam.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveParam.Location = new System.Drawing.Point(135, 10);
-            this.linkSaveParam.Name = "linkSaveParam";
-            this.linkSaveParam.Size = new System.Drawing.Size(93, 15);
-            this.linkSaveParam.TabIndex = 3;
-            this.linkSaveParam.TabStop = true;
-            this.linkSaveParam.Text = "Save Parameters";
-            this.linkSaveParam.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveParam_LinkClicked);
+            this.linkSaveModel.AutoSize = true;
+            this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkSaveModel.Location = new System.Drawing.Point(135, 10);
+            this.linkSaveModel.Name = "linkSaveModel";
+            this.linkSaveModel.Size = new System.Drawing.Size(68, 15);
+            this.linkSaveModel.TabIndex = 3;
+            this.linkSaveModel.TabStop = true;
+            this.linkSaveModel.Text = "Save Model";
+            this.linkSaveModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModel_LinkClicked);
             // 
             // tabOutputs
             // 
@@ -2783,9 +2726,9 @@ namespace SiliFish.UI
         private Label lAnimationEnd;
         private Label lms4;
         private TabControl tabParams;
-        private LinkLabel linkSaveParam;
+        private LinkLabel linkSaveModel;
         private Panel pMain;
-        private LinkLabel linkLoadParam;
+        private LinkLabel linkLoadModel;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
         private LinkLabel linkExportOutput;
@@ -2804,8 +2747,6 @@ namespace SiliFish.UI
         private Button btnPlotWindows;
         private ComboBox ddPlot;
         private NumericUpDown ePlotSomiteSelection;
-        private Label lStimulus;
-        private ComboBox ddStimulusMode;
         private TabPage tabCellPools;
         private TabPage tabStimuli;
         private ComboBox dd3DModelType;
@@ -2931,8 +2872,6 @@ namespace SiliFish.UI
         private Panel pLineTemplateJSON;
         private Panel pLineModelJSON;
         private Button btnCellularDynamics;
-        private ComboBox ddModelSelection;
-        private Label lModelSelection;
         private Panel pLineCellPools;
         private Panel pLineConnections;
     }

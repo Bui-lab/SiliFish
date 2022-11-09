@@ -373,7 +373,7 @@ namespace SiliFish.UI.Controls
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             webViewPlots.NavigateToString(html);
         }
-        private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, double[,] I)
+        private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
             List<ChartDataStruct> charts = new();
             foreach (string key in dynamicsList.Keys)
@@ -439,14 +439,12 @@ namespace SiliFish.UI.Controls
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 TimeArray[i] = i * (double)dt;
-            double[] I = new double[plotEnd + 1];
             Stimulus stim = new()
             {
                 StimulusSettings = stimulusControl1.GetStimulus(),
                 TimeSpan_ms = tl
             };
-            foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                I[i] = stim.generateStimulus(i, SwimmingModel.rand);
+            double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, SwimmingModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
             return I;
         }
         private void DynamicsRun()
@@ -480,7 +478,7 @@ namespace SiliFish.UI.Controls
                     List<string> columnNames = new();
                     if (double.TryParse(eRheobase.Text, out double rheobase))
                     {
-                        double[,] I = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
+                        List<double[]>I = new();// = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
                         int iter = 0;
                         foreach (double multiplier in Const.RheobaseTestMultipliers)
                         {
@@ -495,9 +493,8 @@ namespace SiliFish.UI.Controls
                                 TimeSpan_ms = tl
                             };
                             //cell.InitDataVectors(plotEnd + 1);
-                            foreach (int i in Enumerable.Range(stimStart, stimEnd - stimStart))
-                                I[i, iter] = stim.generateStimulus(i, SwimmingModel.rand);
-                            dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", core.DynamicsTest(I.GetColumn(iter++)));
+                            I.Add(stim.GenerateStimulus(stimStart, stimEnd - stimStart, SwimmingModel.rand).Concat(new double[plotEnd + 1 - stimEnd]).ToArray());
+                            dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", core.DynamicsTest(I[iter++]));
                             columnNames.Add($"x {multiplier:0.##}");
                         }
                         CreatePlots(dynamicsList, columnNames, I);

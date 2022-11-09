@@ -39,7 +39,7 @@ namespace SiliFish.UI.Controls
                 case StimulusMode.Sinusoidal:
                 case StimulusMode.Pulse:
                     lValue1.Text = "Amplitude";
-                    lValue2.Text = "Freq. (kHz)";
+                    lValue2.Text = "# of Pulse";
                     break;
                 default:
                     break;

@@ -3,11 +3,9 @@ using Microsoft.Web.WebView2.WinForms;
 using Services;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
-using SiliFish.PredefinedModels;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
 using SiliFish.UI.Extensions;
@@ -25,11 +23,6 @@ namespace SiliFish.UI
         bool jsonRefreshMsgShown = false;
         bool modifiedPools = false;
         bool modifiedJncs = false;
-
-        SingleCoilModel scModel;
-        DoubleCoilModel dcModel;
-        BeatAndGlideModel bgModel;
-        CustomSwimmingModel customModel;
         bool modelUpdated = false;
 
         SwimmingModelTemplate ModelTemplate = new();
@@ -49,45 +42,9 @@ namespace SiliFish.UI
         private string tempFile;
         readonly string outputFolder;
         string lastSavedCustomModelJSON;
-        Dictionary<string, object> lastSavedSCParams, lastSavedDCParams, lastSavedBGParams, lastSavedCustomParams;
-        Dictionary<string, object> lastRunSCParams, lastRunDCParams, lastRunBGParams, lastRunCustomParams;
+        Dictionary<string, object> lastSavedParams;
+        Dictionary<string, object> lastRunParams;
         DateTime runStart;
-        private bool SingleCoilSelected
-        {
-            get { return ddModelSelection.Text == "Single coil"; }
-            set
-            {
-                if (value)
-                    ddModelSelection.Text = "Single coil";
-            }
-        }
-        private bool DoubleCoilSelected
-        {
-            get { return ddModelSelection.Text == "Double coil"; }
-            set
-            {
-                if (value)
-                    ddModelSelection.Text = "Double coil";
-            }
-        }
-        private bool BeatGlideSelected
-        {
-            get { return ddModelSelection.Text == "Beat and glide"; }
-            set
-            {
-                if (value)
-                    ddModelSelection.Text = "Beat and glide";
-            }
-        }
-        private bool CustomSelected
-        {
-            get { return ddModelSelection.SelectedIndex <= 0; }
-            set
-            {
-                if (value)
-                    ddModelSelection.SelectedIndex = 0;
-            }
-        }
 
         public MainForm()
         {
@@ -96,7 +53,6 @@ namespace SiliFish.UI
                 InitializeComponent();
                 InitAsync();
                 Wait();
-                ddModelSelection.SelectedIndex = 0;
                 splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
                 tempFolder = Path.GetTempPath() + "SiliFish";
                 outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
@@ -236,112 +192,28 @@ namespace SiliFish.UI
             if (modelUpdated && Model != null)
                 return;
             modelUpdated = false;
-            if (CustomSelected)
-            {
-                ReadModelTemplate(includeHidden: false);
-                RefreshModelFromTemplate();
-            }
-            else
-            {
-                Model?.SetParameters(ReadParams());
-            }
+            ReadModelTemplate(includeHidden: false);
+            RefreshModelFromTemplate();
         }
 
         private void RefreshModelFromTemplate()
         {
-            Model = customModel = new CustomSwimmingModel(ModelTemplate);
-            lastSavedCustomParams = ModelTemplate.Parameters;
+            Model = new CustomSwimmingModel(ModelTemplate);
+            lastSavedParams = ModelTemplate.Parameters;
         }
         private void SwitchToModel()
         {
             if (Model == null) return;
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
-            if (SingleCoilSelected)
-                LoadParams(Model.ModelRun ? lastRunSCParams : lastSavedSCParams);
-            else if (DoubleCoilSelected)
-                LoadParams(Model.ModelRun ? lastRunDCParams : lastSavedDCParams);
-            else if (BeatGlideSelected)
-                LoadParams(Model.ModelRun ? lastRunBGParams : lastSavedBGParams);
-            else //custom
-            {
-                LoadParams(Model.ModelRun ? lastRunCustomParams : lastSavedCustomParams);
-                LoadModelTemplate();
-            }
+            LoadParams(Model.ModelRun ? lastRunParams : lastSavedParams);
+            LoadModelTemplate();
         }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (SingleCoilSelected)
-                Model = scModel = new SingleCoilModel();
-            else if (DoubleCoilSelected)
-                Model = dcModel = new DoubleCoilModel();
-            else if (BeatGlideSelected)
-                Model = bgModel = new BeatAndGlideModel();
-            else //Custom
-                Model = customModel = new CustomSwimmingModel(null);
+            Model = new CustomSwimmingModel(null);
             LoadParams(Model.GetParameters());
         }
 
-        private void ddModelSelection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            bool custom = false;
-            if (SingleCoilSelected)
-            {
-                if (scModel != null)
-                    Model = scModel;
-                else
-                {
-                    Model = scModel = new SingleCoilModel();
-                    lastSavedSCParams = Model.GetParameters();
-                }
-            }
-            else if (DoubleCoilSelected)
-            {
-                if (dcModel != null)
-                    Model = dcModel;
-                else
-                {
-                    Model = dcModel = new DoubleCoilModel();
-                    lastSavedDCParams = Model.GetParameters();
-                }
-            }
-            else if (BeatGlideSelected)
-            {
-                if (bgModel != null)
-                {
-                    Model = bgModel;
-                }
-                else
-                {
-                    Model = bgModel = new BeatAndGlideModel();
-                    lastSavedBGParams = Model.GetParameters();
-                }
-            }
-            else //user defined/custom
-            {
-                custom = true;
-                if (customModel != null)
-                    Model = customModel;
-                else
-                {
-                    Model = customModel = new CustomSwimmingModel(null);
-                    lastSavedCustomParams = Model.GetParameters();
-                    lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
-                }
-            }
-            linkSaveParam.Text = custom ? "Save Model" : "Save Parameters";
-            linkLoadParam.Text = custom ? "Load Model" : "Load Parameters";
-            lStimulus.Visible = ddStimulusMode.Visible = !custom;
-            if (!custom)
-            {
-                if (ddStimulusMode.SelectedIndex == -1)
-                    ddStimulusMode.SelectedIndex = 0;
-            }
-            SwitchToModel();
-        }
-
-        private void rbCustom_CheckedChanged(object sender, EventArgs e)
-        {
-        }
         #endregion
 
         #region Read/Load Model and Parameters
@@ -377,13 +249,10 @@ namespace SiliFish.UI
             this.Text = $"SiliFish {Model.ModelName}";
 
             tabParams.TabPages.Clear();
-            if (CustomSelected)
-            {
-                ClearCustomModelFields();
-                tabParams.TabPages.Add(tabGeneral);
-                tabParams.TabPages.Add(tabCellPools);
-                tabParams.TabPages.Add(tabStimuli);
-            }
+            ClearCustomModelFields();
+            tabParams.TabPages.Add(tabGeneral);
+            tabParams.TabPages.Add(tabCellPools);
+            tabParams.TabPages.Add(tabStimuli);
 
             //To fill in newly generated params that did not exist during the model creation
             SwimmingModel swimmingModel = new();
@@ -392,7 +261,7 @@ namespace SiliFish.UI
             List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList();
 
             List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
-            int tabIndex = CustomSelected ? 1 : 0;
+            int tabIndex = 1;
             var _ = tabParams.Handle;//requires for the insert command to work
             foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
             {
@@ -636,11 +505,11 @@ namespace SiliFish.UI
             }
             return json;
         }
-        private bool SaveParamsOrModelTemplate()
+        private bool SaveModelTemplate()
         {
             try
             {
-                SwimmingModelTemplate mt = CustomSelected ? ReadModelTemplate(includeHidden: true) : null;
+                SwimmingModelTemplate mt = ReadModelTemplate(includeHidden: true);
 
                 if (string.IsNullOrEmpty(saveFileJson.FileName))
                     saveFileJson.FileName = mt?.ModelName ?? Model?.ModelName;
@@ -649,24 +518,11 @@ namespace SiliFish.UI
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     modelFileDefaultFolder  = Path.GetDirectoryName(saveFileJson.FileName);
-                    if (CustomSelected)
-                    {
-                        //To make sure deactivated items are saved, even though not displayed
-                        //Show all
-                        JsonUtil.SaveToJsonFile(saveFileJson.FileName, ModelTemplate);
-                        this.Text = $"SiliFish {ModelTemplate.ModelName}";
-                        lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
-                    }
-                    else
-                    {
-                        JsonUtil.SaveToJsonFile(saveFileJson.FileName, ReadParams());
-                        if (SingleCoilSelected)
-                            lastSavedSCParams = scModel.GetParameters();
-                        else if (DoubleCoilSelected)
-                            lastSavedDCParams = dcModel.GetParameters();
-                        else if (BeatGlideSelected)
-                            lastSavedBGParams = bgModel.GetParameters();
-                    }
+                    //To make sure deactivated items are saved, even though not displayed
+                    //Show all
+                    JsonUtil.SaveToJsonFile(saveFileJson.FileName, ModelTemplate);
+                    this.Text = $"SiliFish {ModelTemplate.ModelName}";
+                    lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
                     return true;
                 }
                 return false;
@@ -677,12 +533,12 @@ namespace SiliFish.UI
                 return false;
             }
         }
-        private void linkSaveParam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SaveParamsOrModelTemplate();
+            SaveModelTemplate();
         }
 
-        private void linkLoadParam_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -691,37 +547,22 @@ namespace SiliFish.UI
                 {
                     tabParams.Visible = false;
                     Application.DoEvents();
-                    if (CustomSelected)
+                    string json = FileUtil.ReadFromFile(openFileJson.FileName);
+                    json = CheckJSONVersion(json);
+                    try
                     {
-                        string json = FileUtil.ReadFromFile(openFileJson.FileName);
-                        json = CheckJSONVersion(json);
-                        try
-                        {
-                            ModelTemplate = (SwimmingModelTemplate)JsonUtil.ToObject(typeof(SwimmingModelTemplate), json);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Selected file is not a valid Swimming Model Template file.");
-                            return;
-                        }
-                        ModelTemplate.LinkObjects();
-                        Model = customModel = new CustomSwimmingModel(ModelTemplate);
-                        lastSavedCustomParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
-                        SwitchToModel();
-                        lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
+                        ModelTemplate = (SwimmingModelTemplate)JsonUtil.ToObject(typeof(SwimmingModelTemplate), json);
                     }
-                    else
+                    catch
                     {
-                        Dictionary<string, object> ParamDict = JsonUtil.ReadDictionaryFromJsonFile(openFileJson.FileName);
-                        Model?.SetParameters(ParamDict);
-                        if (SingleCoilSelected)
-                            lastSavedSCParams = ParamDict;
-                        else if (DoubleCoilSelected)
-                            lastSavedDCParams = ParamDict;
-                        else if (BeatGlideSelected)
-                            lastSavedBGParams = ParamDict;
-                        SwitchToModel();
+                        MessageBox.Show("Selected file is not a valid Swimming Model Template file.");
+                        return;
                     }
+                    ModelTemplate.LinkObjects();
+                    Model = new CustomSwimmingModel(ModelTemplate);
+                    lastSavedParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
+                    SwitchToModel();
+                    lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
                 }
             }
             catch
@@ -743,13 +584,7 @@ namespace SiliFish.UI
             {
                 RunParam rp = new() { tMax = tRunEnd, tSkip_ms = tRunSkip };
                 Model.RunModel(0, rp, (int)eRunNumber.Value);
-                if (Model is SingleCoilModel)
-                    lastRunSCParams = Model.GetParameters();
-                else if (Model is DoubleCoilModel)
-                    lastRunDCParams = Model.GetParameters();
-                else if (Model is BeatAndGlideModel)
-                    lastRunBGParams = Model.GetParameters();
-                else lastRunCustomParams = Model.GetParameters();
+                lastRunParams = Model.GetParameters();
 
             }
             catch (Exception ex)
@@ -826,14 +661,6 @@ namespace SiliFish.UI
             tRunSkip = (int)eSkip.Value;
 
             RefreshModel();
-            if (Model is PredefinedModel pdModel)
-            {
-                StimulusMode stimMode = ddStimulusMode.Text == "Gaussian" ? StimulusMode.Gaussian :
-                  ddStimulusMode.Text == "Ramp" ? StimulusMode.Ramp :
-                  StimulusMode.Step;
-                pdModel.SetStimulusMode(stimMode);
-            }
-
             Model.runParam.tSkip_ms = tRunSkip;
             Model.runParam.tMax = tRunEnd;
             Model.runParam.dt = (double)edt.Value;
@@ -1345,7 +1172,7 @@ namespace SiliFish.UI
         private void eTemplateJSON_TextChanged(object sender, EventArgs e)
         {
             if (eTemplateJSON.Focused)
-                btnLoadTemplateJSON.Enabled = CustomSelected;
+                btnLoadTemplateJSON.Enabled = true;
         }
 
         private void btnDisplayTemplateJSON_Click(object sender, EventArgs e)
@@ -1446,7 +1273,7 @@ namespace SiliFish.UI
             {
                 if (JsonUtil.ToObject(typeof(CustomSwimmingModel), eModelJSON.Text) is CustomSwimmingModel model)
                 {
-                    Model = customModel = model;
+                    Model = model;
                     modelUpdated = true;
                 }
             }
@@ -1785,72 +1612,16 @@ namespace SiliFish.UI
         {
             try
             {
-                if (ModelTemplate != null)
+                if (ModelTemplate != null && Model != null)
                 {
                     //check whether the custom model has changed
                     string jsonstring = JsonUtil.ToJson(ModelTemplate);
                     if (jsonstring != lastSavedCustomModelJSON)
                     {
-                        CustomSelected = true;
-                        DialogResult res = MessageBox.Show("The custom model has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                        DialogResult res = MessageBox.Show("The model has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
-                            if (!SaveParamsOrModelTemplate())
-                            {
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
-                        else if (res == DialogResult.Cancel)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-                    }
-                    //check whether the predefined model parameters have changed
-                    if (lastSavedSCParams != null && lastSavedSCParams.Any() && !scModel.GetParameters().SameAs(lastSavedSCParams))
-                    {
-                        SingleCoilSelected = true;
-                        DialogResult res = MessageBox.Show("The single coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
-                        if (res == DialogResult.Yes)
-                        {
-                            if (!SaveParamsOrModelTemplate())
-                            {
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
-                        else if (res == DialogResult.Cancel)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-                    }
-                    if (lastSavedDCParams != null && lastSavedDCParams.Any() && !dcModel.GetParameters().SameAs(lastSavedDCParams))
-                    {
-                        DoubleCoilSelected = true;
-                        DialogResult res = MessageBox.Show("The double coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
-                        if (res == DialogResult.Yes)
-                        {
-                            if (!SaveParamsOrModelTemplate())
-                            {
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
-                        else if (res == DialogResult.Cancel)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-                    }
-                    if (lastSavedBGParams != null && lastSavedBGParams.Any() && !bgModel.GetParameters().SameAs(lastSavedBGParams))
-                    {
-                        BeatGlideSelected = true;
-                        DialogResult res = MessageBox.Show("The beat and glide coil model parameters have changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
-                        if (res == DialogResult.Yes)
-                        {
-                            if (!SaveParamsOrModelTemplate())
+                            if (!SaveModelTemplate())
                             {
                                 e.Cancel = true;
                                 return;
