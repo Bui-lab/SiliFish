@@ -1,12 +1,10 @@
-﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SiliFish.DataTypes;
+using SiliFish.Helpers;
 
 namespace SiliFish.ModelUnits
 {
@@ -41,9 +39,8 @@ namespace SiliFish.ModelUnits
         public readonly int columnIndex2D = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
         public List<Cell> Cells { get; }
         private SpatialDistribution SpatialDistribution = new();
-        public Distribution XDistribution
-        {
-            get { return SpatialDistribution.XDistribution; }
+        public Distribution XDistribution { 
+            get { return SpatialDistribution.XDistribution; } 
             set { SpatialDistribution.XDistribution = value; }
         }
         public Distribution Y_AngleDistribution
@@ -70,10 +67,7 @@ namespace SiliFish.ModelUnits
                 return FTS;
             }
         }
-        public CellPool()
-        {
-            Cells = new List<Cell>();
-        }
+
         public CellPool(SwimmingModel model, CellPoolTemplate template, SagittalPlane leftright)
         {
             Model = model;
@@ -86,11 +80,6 @@ namespace SiliFish.ModelUnits
             Cells = new List<Cell>();
             GenerateCells(template, leftright);
         }
-
-        /// <summary>
-        /// Called from predefined models
-        /// </summary>
-        /// <param name="placement">columnIndex2D</param>
         public CellPool(SwimmingModel model, CellType cellType, BodyLocation position, string group, SagittalPlane pos, int placement, Color color)
         {
             Model = model;
@@ -112,28 +101,10 @@ namespace SiliFish.ModelUnits
                 return true;
             return false;
         }
-        public virtual (double, double, double) XYZMiddle()
+        public virtual double XAvg()
         {
-            if (Cells == null || Cells.Count == 0) return (0, 0, 0);
-            int minSomite = Cells.Min(c => c.Somite);
-            int maxSomite = Cells.Max(c => c.Somite);
-            Cell midCell;
-            if (minSomite == maxSomite) //check the cell with middle sequence
-            {
-                List<Cell> cells = Cells.OrderBy(c => c.Sequence).ToList();
-                midCell = cells[Cells.Count / 2];
-            }
-            else
-            {
-                double avgSomite = (minSomite + maxSomite) / 2;
-                double minDistance = Cells.Min(c => Math.Abs(c.Somite - avgSomite));
-                List<Cell> midSomiteCells = Cells.Where(c => c.Somite - avgSomite == minDistance).OrderBy(c => c.Sequence).ToList();
-                midCell = midSomiteCells[midSomiteCells.Count / 2];
-            }
-            int mult = 1;
-            if (columnIndex2D > 0)
-                mult = columnIndex2D;
-            return (midCell.X, mult * midCell.Y, midCell.Z);
+            if (Cells == null || Cells.Count == 0) return 0;
+            return Cells.Average(c => c.X);
         }
         public virtual (double, double) XRange()
         {
@@ -141,10 +112,26 @@ namespace SiliFish.ModelUnits
             return (Cells.Min(c => c.X), Cells.Max(c => c.X));
         }
 
+        public virtual double YAvg()
+        {
+            if (Cells == null || Cells.Count == 0) return 0;
+            int mult = 1;
+            if (PositionLeftRight == SagittalPlane.Left)
+                mult = -1;
+            if (columnIndex2D == 0)
+                return mult * Cells.Average(c => Math.Abs(c.Y));
+            return mult * columnIndex2D;
+        }
         public virtual (double, double) YRange()
         {
             if (Cells == null || Cells.Count == 0) return (999, -999);
             return (Cells.Min(c => c.Y), Cells.Max(c => c.Y));
+        }
+
+        public virtual double ZAvg()
+        {
+            if (Cells == null || Cells.Count == 0) return 0;
+            return Cells.Average(c => c.Z);
         }
 
         public virtual (double, double) ZRange()
@@ -296,14 +283,13 @@ namespace SiliFish.ModelUnits
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
             List<int> somites;
-            if (template.PerSomiteOrTotal == CountingMode.PerSomite)
+            if (template.PerSomiteOrTotal== CountingMode.PerSomite)
                 somites = Enumerable.Range(1, Model.NumberOfSomites).ToList();
             else somites = new List<int>() { -1 };
 
             foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GetCoordinates(n, somite);
-                Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
 
                 double[] cv = template.ConductionVelocity != null ?
                     ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
@@ -315,7 +301,6 @@ namespace SiliFish.ModelUnits
                         new MuscleCell(template, somite, i + 1);
                     cell.PositionLeftRight = leftright;
                     cell.coordinate = coordinates[i];
-                    cell.Parameters = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
                     AddCell(cell);
                 }
             }
@@ -338,11 +323,11 @@ namespace SiliFish.ModelUnits
         }
         public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probabibility)
         {
-            foreach (Cell pre in this.GetCells())
+            foreach (Neuron pre in this.GetCells())
             {
                 //To prevent recursive gap junctions in self projecting pools
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
-                foreach (Cell post in targetcells)
+                foreach (Neuron post in targetcells)
                 {
                     if (probabibility < SwimmingModel.rand.Next(1))
                         continue;
@@ -366,40 +351,10 @@ namespace SiliFish.ModelUnits
 
         public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline, double probability)
         {
-            int maxIncoming = reach.MaxIncoming;
-            int maxOutgoing = reach.MaxOutgoing;
-            if (maxIncoming > 0 && maxOutgoing == 0)
-            {//if target pool has a limit, prevent the scenario where one source cell fulfills that limit
-                int numSource = this.GetCells().Count();
-                int numTarget = target.GetCells().Count();
-                maxOutgoing = (int)Math.Ceiling((double)maxIncoming * numTarget / numSource);
-            }
-            else if (maxIncoming == 0 && maxOutgoing > 0)
-            {//if the source pool has a limit, prevent the scenario where one target cell fulfills that limit
-                int numSource = this.GetCells().Count();
-                int numTarget = target.GetCells().Count();
-                maxIncoming = (int)Math.Ceiling((double)maxOutgoing * numSource / numTarget);
-            }
             foreach (Neuron pre in this.GetCells())
             {
-                int counter = 0;
                 foreach (Cell post in target.GetCells())
                 {
-                    if (maxIncoming > 0) //check whether the target cell already has connections from the same pool
-                    {
-                        if (post is MuscleCell muscleCell)
-                        {
-                            int existing = muscleCell.EndPlates.Count(ep => ep.PreNeuron.CellPool == this);
-                            if (existing >= maxIncoming)
-                                continue;
-                        }
-                        else if (post is Neuron neuron)
-                        {
-                            int existing = neuron.Synapses.Count(syn => syn.PreNeuron.CellPool == this);
-                            if (existing >= maxIncoming)
-                                continue;
-                        }
-                    }
                     if (probability < SwimmingModel.rand.Next(1))
                         continue;
                     double mult = 1;
@@ -415,9 +370,6 @@ namespace SiliFish.ModelUnits
                         if (reach.FixedDuration_ms != null)
                             syn.SetFixedDuration((double)reach.FixedDuration_ms);
                         syn.SetTimeLine(timeline);
-                        counter++;
-                        if (maxOutgoing > 0 && counter >= maxOutgoing)
-                            break;
                     }
                 }
             }
@@ -425,8 +377,6 @@ namespace SiliFish.ModelUnits
 
         public void ApplyStimulus(Stimulus stimulus_ms, string TargetSomite, string TargetCell)
         {
-            if (stimulus_ms == null)
-                return;
             int minSom = -1;
             int maxSom = int.MaxValue;
             int minSeq = -1;
@@ -438,7 +388,7 @@ namespace SiliFish.ModelUnits
 
             foreach (Cell cell in GetCells().Where(c => c.Somite >= minSom && c.Somite <= maxSom && c.Sequence >= minSeq && c.Sequence <= maxSeq))
             {
-                cell.Stimuli.Add(stimulus_ms);
+                cell.Stimulus = stimulus_ms;
             }
         }
     }

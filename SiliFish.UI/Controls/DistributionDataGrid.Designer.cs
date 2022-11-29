@@ -51,9 +51,7 @@
             this.dgDynamics.RowTemplate.Height = 25;
             this.dgDynamics.Size = new System.Drawing.Size(100, 100);
             this.dgDynamics.TabIndex = 10;
-            this.dgDynamics.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellClick);
             this.dgDynamics.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
-            this.dgDynamics.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellEndEdit);
             // 
             // colField
             // 
@@ -78,7 +76,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.Controls.Add(this.dgDynamics);
             this.MinimumSize = new System.Drawing.Size(100, 100);
             this.Name = "DistributionDataGrid";

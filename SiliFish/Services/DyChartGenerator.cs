@@ -1,10 +1,10 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -13,7 +13,7 @@ namespace SiliFish.Services
 {
     public class DyChartGenerator : VisualsGenerator
     {
-        public struct DyChartStruct
+        public struct ChartStruct
         {
             public string csvData = "";
             public string Title = "", xLabel = "`Time (ms)`", yLabel = "", Color = "'red'";
@@ -21,20 +21,16 @@ namespace SiliFish.Services
             public string yMax = "null";
             public string xMin = "";
             public string xMax = "";
-            public bool drawPoints = false;
-            public bool logScale = false;
             public bool ScatterPlot = false;
-            public DyChartStruct()
+            public ChartStruct()
             {
             }
         }
-        public static string PlotCharts(string title, List<DyChartStruct> charts, bool synchronized, int width, int height)
+        public static string PlotCharts(string title, List<ChartStruct> charts, int width, int height)
         {
             try
             {
-                StringBuilder html = synchronized ?
-                    new(ReadEmbeddedResource("SiliFish.Resources.DyChartSync.html")) :
-                    new(ReadEmbeddedResource("SiliFish.Resources.DyChartUnsync.html"));
+                StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.DyChart.html"));
                 StringBuilder plot = new(ReadEmbeddedResource("SiliFish.Resources.DyChart.js"));
                 StringBuilder synchronizer = new(ReadEmbeddedResource("SiliFish.Resources.DySynchronizer.js"));
                 string chartDiv = ReadEmbeddedResource("SiliFish.Resources.DyChartDiv.html");
@@ -73,8 +69,6 @@ namespace SiliFish.Services
                     chart.Replace("__Y_MAX__", charts[chartIndex].yMax);
                     chart.Replace("__Y_LABEL__", charts[chartIndex].yLabel);
                     chart.Replace("__X_LABEL__", charts[chartIndex].xLabel);
-                    chart.Replace("__DRAW_POINTS__", charts[chartIndex].drawPoints ? "true" : "false");
-                    chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
                     chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
                     chartHTML.Add(chart.ToString());
                 }
@@ -90,78 +84,31 @@ namespace SiliFish.Services
             }
         }
 
-        private static DyChartStruct CreateLineChart(ChartDataStruct chartData)
-        {
-            DyChartStruct chart = new();
-            if (chartData.xData?.Length != chartData.yData?.Length && chartData.xData?.Length != chartData.yMultiData?.FirstOrDefault().Length)
-                return chart;
 
-            double yMin = chartData.yMin;
-            double yMax = chartData.yMax;
-            double xMin = chartData.xMin;
-            double xMax = chartData.xMax;
-            Helpers.Util.SetYRange(ref yMin, ref yMax);
-
-            string columnTitles = $"{chartData.xLabel},{chartData.yLabel}";
-            List<string> data = new(chartData.xData.Select(t => t.ToString(Const.DecimalPointFormat) + ","));
-            if (chartData.yData != null)
-            {
-                foreach (int i in Enumerable.Range(0, chartData.yData.Length))
-                    data[i] += chartData.yData[i].ToString(Const.DecimalPointFormat) + ",";
-            }
-            else
-            {
-                for (int colIndex = 0; colIndex < chartData.yMultiData.Count; colIndex++)
-                {
-                    double[] singleyData = chartData.yMultiData[colIndex];
-                    foreach (int i in Enumerable.Range(0, singleyData.Length))
-                        data[i] += singleyData[i].ToString(Const.DecimalPointFormat) + ",";
-                }
-            }
-            string csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-            chart = new DyChartStruct
-            {
-                csvData = csvData,
-                Color = $"`{string.Join(',', chartData.Color.ToRGB())}`",
-                Title = $"`{chartData.Title}`",
-                xLabel = $"`{chartData.xLabel}`",
-                yLabel = $"`{chartData.yLabel}`",
-                xMin = xMin.ToString(Const.DecimalPointFormat),
-                xMax = xMax.ToString(Const.DecimalPointFormat),
-                yMin = yMin.ToString(Const.DecimalPointFormat),
-                yMax = yMax.ToString(Const.DecimalPointFormat),
-                drawPoints = chartData.drawPoints,
-                logScale = chartData.logScale
-            };
-
-            return chart;
-        }
-        private static List<DyChartStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
+        private static List<ChartStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
-            List<DyChartStruct> charts = new();
-            if (cells == null || !cells.Any())
-                return charts;
+            List<ChartStruct> charts = new();
 
-            double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));
-            double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
+            double yMin = cells.Min(c => c.MinPotentialValue);
+            double yMax = cells.Max(c => c.MaxPotentialValue);
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
-                string columnTitles = "Time,";
+                string title = "Time,";
                 List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
                 List<string> colorPerChart = new();
                 foreach (Cell cell in cellGroup)
                 {
-                    columnTitles += cell.ID + ",";
+                    title += cell.ID + ",";
                     colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.V?[iStart + i].ToString(Const.DecimalPointFormat) + ",";
+                        data[i] += cell.V?[iStart + i].ToString("0.0####") + ",";
                 }
-                string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                charts.Add(new DyChartStruct
+                string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Color = string.Join(',', colorPerChart),
@@ -177,66 +124,65 @@ namespace SiliFish.Services
         }
 
 
-        private static List<DyChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
+        private static List<ChartStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd, bool includeGap = true, bool includeChem = true)
         {
-            List<DyChartStruct> gapCharts = new();
-            List<DyChartStruct> synCharts = new();
-            double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
-            double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
+            List<ChartStruct> gapCharts = new();
+            List<ChartStruct> synCharts = new();
+            double yMin = cells.Min(c => c.MinCurrentValue);
+            double yMax = cells.Max(c => c.MaxCurrentValue);
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string gapTitle = "Time,";
-                string synInTitle = "Time,";
-                string synOutTitle = "Time,";
+                string synTitle = "Time,";
                 List<string> gapData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> synInData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> synOutData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> synData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
                 List<string> colorPerGapChart = new();
-                List<string> colorPerInSynChart = new();
-                List<string> colorPerOutSynChart = new();
+                List<string> colorPerSynChart = new();
                 bool gapExists = false;
-                bool synInExists = false;
-                bool synOutExists = false;
+                bool synExists = false;
                 foreach (Cell cell in cellGroup)
                 {
-                    if (includeGap)
+                    if (cell is Neuron neuron)
                     {
-                        foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell))
+                        if (includeGap)
                         {
-                            gapExists = true;
-                            Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            gapTitle += "Gap: " + otherCell.ID + ",";
-                            colorPerGapChart.Add("'" + otherCell.CellPool.Color.ToRGB() + "'");
-                            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
+                            foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell))
+                            {
+                                gapExists = true;
+                                Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
+                                gapTitle += "Gap: " + otherCell.ID + ",";
+                                colorPerGapChart.Add("'" + otherCell.CellPool.Color.ToRGB() + "'");
+                                foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                                    gapData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
+                            }
+                        }
+                        if (includeChem)
+                        {
+                            foreach (ChemicalSynapse jnc in neuron.Synapses)
+                            {
+                                synExists = true;
+                                synTitle += jnc.PreNeuron.ID + ",";
+                                colorPerSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
+                                foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                                    synData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
+                            }
                         }
                     }
-                    if (includeChem)
+                    else if (cell is MuscleCell muscleCell)
                     {
-                        List<ChemicalSynapse> synapses = null;
-                        if (cell is Neuron neuron) synapses = neuron.Synapses;
-                        else if (cell is MuscleCell muscleCell) synapses = muscleCell.EndPlates;
-                        foreach (ChemicalSynapse jnc in synapses)
+                        if (includeChem)
                         {
-                            synInExists = true;
-                            synInTitle += jnc.PreNeuron.ID + ",";
-                            colorPerInSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
-                            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
-                        }
-                        if (cell is Neuron neuron2)
-                        {
-                            foreach (ChemicalSynapse jnc in neuron2.Terminals)
+                            foreach (ChemicalSynapse jnc in muscleCell.EndPlates)
                             {
-                                synOutExists = true;
-                                synOutTitle += jnc.PostCell.ID + ",";
-                                colorPerOutSynChart.Add("'" + jnc.PostCell.CellPool.Color.ToRGB() + "'");
-                                foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
+                                synExists = true;
+                                synTitle += jnc.PreNeuron.ID + ",";
+                                colorPerSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
+                                foreach (int i in Enumerable.Range(0, iEnd - iStart))
+                                    synData[i] += jnc.InputCurrent[iStart + i].ToString("0.0####") + ",";
                             }
                         }
                     }
@@ -244,42 +190,27 @@ namespace SiliFish.Services
                 if (gapExists)
                 {
                     string csvData = "`" + gapTitle[..^1] + "\n" + string.Join("\n", gapData.Select(line => line[..^1]).ToArray()) + "`";
-                    gapCharts.Add(new DyChartStruct
+                    gapCharts.Add(new ChartStruct
                     {
                         csvData = csvData,
                         Color = string.Join(',', colorPerGapChart),
-                        Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(Const.UoM, Measure.Current)})`",
+                        Title = $"`{cellGroup.Key} Incoming Gap Currents`",
+                        yLabel = "`Current (pA)`",
                         yMin = yMin.ToString("0.0"),
                         yMax = yMax.ToString("0.0"),
                         xMin = TimeArray[iStart].ToString(),
                         xMax = (TimeArray[iEnd] + 1).ToString()
                     });
                 }
-                if (synInExists)
+                if (synExists)
                 {
-                    string csvData = "`" + synInTitle[..^1] + "\n" + string.Join("\n", synInData.Select(line => line[..^1]).ToArray()) + "`";
-                    synCharts.Add(new DyChartStruct
+                    string csvData = "`" + synTitle[..^1] + "\n" + string.Join("\n", synData.Select(line => line[..^1]).ToArray()) + "`";
+                    synCharts.Add(new ChartStruct
                     {
                         csvData = csvData,
-                        Color = string.Join(',', colorPerInSynChart),
+                        Color = string.Join(',', colorPerSynChart),
                         Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(Const.UoM, Measure.Current)})`",
-                        yMin = yMin.ToString("0.0"),
-                        yMax = yMax.ToString("0.0"),
-                        xMin = TimeArray[iStart].ToString(),
-                        xMax = (TimeArray[iEnd] + 1).ToString()
-                    });
-                }
-                if (synOutExists)
-                {
-                    string csvData = "`" + synOutTitle[..^1] + "\n" + string.Join("\n", synOutData.Select(line => line[..^1]).ToArray()) + "`";
-                    synCharts.Add(new DyChartStruct
-                    {
-                        csvData = csvData,
-                        Color = string.Join(',', colorPerOutSynChart),
-                        Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(Const.UoM, Measure.Current)})`",
+                        yLabel = "`Current (pA)`",
                         yMin = yMin.ToString("0.0"),
                         yMax = yMax.ToString("0.0"),
                         xMin = TimeArray[iStart].ToString(),
@@ -290,81 +221,35 @@ namespace SiliFish.Services
             return gapCharts.Union(synCharts).ToList();
         }
 
-        private static List<DyChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
+        private static List<ChartStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
-            List<DyChartStruct> charts = new();
-            if (cells == null || !cells.Any())
-                return charts;
+            List<ChartStruct> charts = new();
 
             double yMin = cells.Min(c => c.MinStimulusValue);
             double yMax = cells.Max(c => c.MaxStimulusValue);
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.CellGroup : c.ID);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string title = "Time,";
                 List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
                 List<string> colorPerChart = new();
-                bool stimExists = false;
-                foreach (Cell cell in cellGroup.Where(c => c.Stimuli.HasStimulus))
+                foreach (Cell cell in cellGroup)
                 {
-                    stimExists = true;
                     title += cell.ID + ",";
                     colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(Const.DecimalPointFormat) + ",";
-                }
-                if (stimExists)
-                {
-                    string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                    charts.Add(new DyChartStruct
-                    {
-                        csvData = csvData,
-                        Color = string.Join(',', colorPerChart),
-                        Title = $"`{cellGroup.Key} Applied Stimuli`",
-                        yLabel = $"`Stimulus ({Util.GetUoM(Const.UoM, Measure.Current)})`",
-                        yMin = yMin.ToString("0.0"),
-                        yMax = yMax.ToString("0.0"),
-                        xMin = TimeArray[iStart].ToString(),
-                        xMax = (TimeArray[iEnd] + 1).ToString()
-                    });
-                }
-            }
-            return charts;
-        }
-
-        private static List<DyChartStruct> CreateTensionCharts(double[] TimeArray, List<MuscleCell> cells, bool groupByPool,
-            int iStart, int iEnd)
-        {
-            List<DyChartStruct> charts = new();
-
-            double yMin = 0;
-            double yMax = 1.2;
-            Helpers.Util.SetYRange(ref yMin, ref yMax);
-
-            IEnumerable<IGrouping<string, MuscleCell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
-            foreach (IGrouping<string, MuscleCell> cellGroup in cellGroups)
-            {
-                string title = "Time,";
-                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> colorPerChart = new();
-                foreach (MuscleCell cell in cellGroup)
-                {
-                    double[] Tension = cell.RelativeTension;
-                    title += cell.ID + ",";
-                    colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
-                    foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += Tension[iStart + i].ToString(Const.DecimalPointFormat) + ",";
+                        data[i] += cell.Stimulus?[iStart + i].ToString("0.0####") + ",";
                 }
                 string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                charts.Add(new DyChartStruct
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Color = string.Join(',', colorPerChart),
-                    Title = $"`{cellGroup.Key} Relative Tension`",
-                    yLabel = "`Relative Tension`",
+                    Title = $"`{cellGroup.Key} Applied Stimuli`",
+                    yLabel = "`Stimulus (pA)`",
                     yMin = yMin.ToString("0.0"),
                     yMax = yMax.ToString("0.0"),
                     xMin = TimeArray[iStart].ToString(),
@@ -374,24 +259,21 @@ namespace SiliFish.Services
             return charts;
         }
 
-        private static List<DyChartStruct> CreateFullDynamicsCharts(double[] TimeOffset, List<Cell> cells, bool groupByPool,
+        private static List<ChartStruct> CreateFullDynamicsCharts(double[] TimeOffset, List<Cell> cells, bool groupByPool,
             int iStart, int iEnd)
         {
-            List<DyChartStruct> charts = new();
+            List<ChartStruct> charts = new();
             charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
             charts.AddRange(CreateCurrentCharts(TimeOffset, cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: true));
             charts.AddRange(CreateStimuliCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
-            List<MuscleCell> muscleCells = cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
-            if (muscleCells.Any())
-                charts.AddRange(CreateTensionCharts(TimeOffset, muscleCells, groupByPool, iStart, iEnd));
             return charts;
         }
 
-        private static List<DyChartStruct> CreateEpisodeCharts(SwimmingModel model, int iStart, int iEnd)
+        private static List<ChartStruct> CreateEpisodeCharts(SwimmingModel model, int iStart, int iEnd)
         {
-            List<DyChartStruct> charts = new();
+            List<ChartStruct> charts = new();
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes();
 
             double[] Time = model.TimeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;
@@ -403,7 +285,7 @@ namespace SiliFish.Services
             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                 data[i] = xValues[i] + "," + yValues[i];
             string csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-            charts.Add(new DyChartStruct
+            charts.Add(new ChartStruct
             {
                 csvData = csvData,
                 Title = $"`Tail Movement`",
@@ -421,7 +303,7 @@ namespace SiliFish.Services
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new DyChartStruct
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Title = $"`Episode Duration`",
@@ -441,7 +323,7 @@ namespace SiliFish.Services
                     foreach (int i in Enumerable.Range(0, episodes.Count - 1))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    charts.Add(new DyChartStruct
+                    charts.Add(new ChartStruct
                     {
                         csvData = csvData,
                         Title = $"`Episode Intervals`",
@@ -459,7 +341,7 @@ namespace SiliFish.Services
                 foreach (int i in Enumerable.Range(0, xValues.Length))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new DyChartStruct
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Title = $"`Instantenous Frequency`",
@@ -476,7 +358,7 @@ namespace SiliFish.Services
                 foreach (int i in Enumerable.Range(0, xValues.Length))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new DyChartStruct
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Title = $"`Instantenous Frequency (Outliers Removed)`",
@@ -493,7 +375,7 @@ namespace SiliFish.Services
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new DyChartStruct
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Title = $"`Tail Beat Frequency`",
@@ -510,7 +392,7 @@ namespace SiliFish.Services
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new DyChartStruct
+                charts.Add(new ChartStruct
                 {
                     csvData = csvData,
                     Title = $"`Tail Beat/Episode`",
@@ -543,7 +425,7 @@ namespace SiliFish.Services
                 Cells = Pools.OrderBy(p => p.ID).SelectMany(p => p.GetCells(cellSelection)).ToList();
                 groupByPool = true;
             }
-            List<DyChartStruct> charts = new();
+            List<ChartStruct> charts = new();
             string Title = "";
             switch (PlotType)
             {
@@ -576,35 +458,9 @@ namespace SiliFish.Services
                     charts = CreateEpisodeCharts(model, iStart, iEnd);
                     break;
             }
-            string PlotHTML = PlotCharts(Title, charts, synchronized: true, width, height);
+            string PlotHTML = PlotCharts(Title, charts, width, height);
             return PlotHTML;
         }
 
-        public static string PlotSummaryMembranePotentials(SwimmingModel model, List<Cell> Cells,
-            int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
-        {
-            double dt = model.runParam.dt;
-            int iStart = (int)((tStart + model.runParam.tSkip_ms) / dt);
-            int iEnd = (int)((tEnd + model.runParam.tSkip_ms) / dt);
-            if (iEnd < iStart || iEnd >= model.TimeArray.Length)
-                iEnd = model.TimeArray.Length - 1;
-
-            List<DyChartStruct> charts = CreateMembranePotentialCharts(model.TimeArray, Cells, groupByPool: true, iStart, iEnd);
-            string PlotHTML = PlotCharts(title: "Summary Membrane Potentials", charts, synchronized: true, width, height);
-            return PlotHTML;
-        }
-
-        public static string PlotLineCharts(List<ChartDataStruct> chartsData,
-            string mainTitle, bool synchronized,
-            int width = 480, int height = 240)
-        {
-            List<DyChartStruct> charts = new();
-            foreach (ChartDataStruct chartData in chartsData)
-            {
-                charts.Add(CreateLineChart(chartData));
-            }
-            string PlotHTML = PlotCharts(title: mainTitle, charts, synchronized, width, height);
-            return PlotHTML;
-        }
     }
 }

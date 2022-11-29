@@ -8,7 +8,8 @@ namespace SiliFish.ModelUnits
         public string TargetSomite { get; set; }
         public string TargetCell { get; set; }
 
-        public StimulusSettings StimulusSettings { get; set; }
+        public Stimulus Stimulus_ms { get; set; }
+
         public string LeftRight { get; set; }
 
         public override int CompareTo(ModelUnitBase otherbase)
@@ -26,11 +27,11 @@ namespace SiliFish.ModelUnits
             get
             {
                 return string.Format("Target: {0} {1}-{2} {3}; {4}",
-                    LeftRight, TargetPool, TargetSomite, TargetCell, StimulusSettings?.ToString());
+                    LeftRight, TargetPool, TargetSomite, TargetCell, Stimulus_ms?.ToString());
             }
         }
         [JsonIgnore]
-        public override string Tooltip { get { return $"{ToString()}\r\n{StimulusSettings?.ToString()}\r\n{TimeLine_ms}"; } }
+        public override string Tooltip { get { return $"{ToString()}\r\n{Stimulus_ms.GetTooltip()}"; } }
     }
 
 }

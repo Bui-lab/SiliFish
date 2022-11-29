@@ -57,8 +57,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.lValue = new System.Windows.Forms.Label();
-            this.eUniqueValue = new System.Windows.Forms.TextBox();
             this.pBimodal.SuspendLayout();
             this.pGaussian.SuspendLayout();
             this.pNoise.SuspendLayout();
@@ -70,9 +68,7 @@
             // 
             // ddDistribution
             // 
-            this.ddDistribution.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddDistribution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddDistribution.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddDistribution.FormattingEnabled = true;
             this.ddDistribution.Items.AddRange(new object[] {
             "None",
@@ -259,8 +255,6 @@
             // 
             // pTopIn
             // 
-            this.pTopIn.Controls.Add(this.lValue);
-            this.pTopIn.Controls.Add(this.eUniqueValue);
             this.pTopIn.Controls.Add(this.rbPerc);
             this.pTopIn.Controls.Add(this.rbAbsolute);
             this.pTopIn.Controls.Add(this.lDistributionType);
@@ -337,29 +331,12 @@
             this.pOptions.Size = new System.Drawing.Size(204, 158);
             this.pOptions.TabIndex = 20;
             // 
-            // lValue
-            // 
-            this.lValue.AutoSize = true;
-            this.lValue.Location = new System.Drawing.Point(5, 61);
-            this.lValue.Name = "lValue";
-            this.lValue.Size = new System.Drawing.Size(35, 15);
-            this.lValue.TabIndex = 13;
-            this.lValue.Text = "Value";
-            // 
-            // eUniqueValue
-            // 
-            this.eUniqueValue.Location = new System.Drawing.Point(78, 57);
-            this.eUniqueValue.Name = "eUniqueValue";
-            this.eUniqueValue.Size = new System.Drawing.Size(52, 23);
-            this.eUniqueValue.TabIndex = 12;
-            // 
             // DistributionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.White;
             this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Controls.Add(this.flowLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(204, 0);
@@ -412,7 +389,5 @@
         private Label lMode1Weight;
         private RadioButton rbPerc;
         private RadioButton rbAbsolute;
-        private Label lValue;
-        private TextBox eUniqueValue;
     }
 }

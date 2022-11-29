@@ -1,6 +1,5 @@
 ﻿using SiliFish;
 using SiliFish.DataTypes;
-using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -18,21 +17,21 @@ namespace Services
             string yAxis = "Memb. Potential (mV)";
             if (cells != null)
             {
-                double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));
-                double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
+                double yMin = cells.Min(c => c.MinPotentialValue);
+                double yMax = cells.Max(c => c.MaxPotentialValue);
                 foreach (Cell c in cells)
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             if (cellPools != null)
             {
-                double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinPotentialValue(iStart, iEnd)));
-                double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue(iStart, iEnd)));
+                double yMin = cellPools.Min(cp => cp.GetCells().Min(c => c.MinPotentialValue));
+                double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue));
                 foreach (CellPool pool in cellPools)
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
@@ -44,15 +43,15 @@ namespace Services
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             return (leftImages, rightImages);
         }
 
-        private static (Dictionary<string, Color>, Dictionary<string, List<double>>) GetAffarentCurrentsOfCell(Cell cell, bool gap, bool chem)
+        private static (Dictionary<string, Color> , Dictionary<string, List<double>> )GetAffarentCurrentsOfCell(Cell cell, bool gap, bool chem)
         {
             Dictionary<string, Color> colors = new();
             Dictionary<string, List<double>> AffarentCurrents = new();
@@ -91,31 +90,31 @@ namespace Services
             }
             return (colors, AffarentCurrents);
         }
-        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
+        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection, 
             int iStart, int iEnd,
             bool gap, bool chem)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Current ({Util.GetUoM(Const.UoM, Measure.Current)})";
+            string yAxis = "Current (pA)";
             if (cells != null)
             {
-                double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
-                double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
+                double yMin = cells.Min(c => c.MinCurrentValue);
+                double yMax = cells.Max(c => c.MaxCurrentValue);
                 foreach (Cell c in cells)
                 {
                     (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                        leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                     else
-                        rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                        rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                 }
             }
 
             if (pools != null)
             {
-                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue(iStart, iEnd)));
-                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue(iStart, iEnd)));
+                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue));
+                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue));
                 foreach (CellPool pool in pools)
                 {
                     IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
@@ -123,9 +122,9 @@ namespace Services
                     {
                         (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
                         if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                         else
-                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                     }
                 }
             }
@@ -137,7 +136,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Stimulus ({Util.GetUoM(Const.UoM, Measure.Current)})";
+            string yAxis = "Stimulus (pA)";
 
             if (cells != null)
             {
@@ -147,9 +146,9 @@ namespace Services
                 {
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimulus?.getValues(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             if (pools != null)
@@ -163,13 +162,13 @@ namespace Services
 
                     int i = 0;
                     foreach (Cell c in poolcells)
-                        stimArray.UpdateRow(i++, c.Stimuli.GetStimulusArray(timeArray.Length));
+                        stimArray.UpdateRow(i++, c.Stimulus?.getValues(timeArray.Length));
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             return (leftImages, rightImages);
@@ -182,7 +181,7 @@ namespace Services
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
-            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection, iStart, iEnd, gap: true, chem: true);
+            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection,iStart, iEnd,  gap: true, chem: true);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
@@ -200,10 +199,10 @@ namespace Services
             int iEnd = model.runParam.iIndex(tEnd);
             //TODO color
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = model.GetSwimmingEpisodes();
             leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
                 tail_tip_coord.Select(c => c.X).ToArray(),
-                model.TimeArray, iStart, iEnd,
+                model.TimeArray, iStart, iEnd, 
                 "X", null, null,
                 Color.Red));
             if (episodes.Any())
@@ -247,7 +246,7 @@ namespace Services
                     Color.Red));
             }
 
-            FileUtil.SaveEpisodesToCSV("Episodes.csv", 1, episodes);
+            Util.SaveEpisodesToCSV("Episodes.csv", 1, episodes);
 
             return (leftImages, null);
         }
@@ -259,11 +258,11 @@ namespace Services
 
 
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection,
-            double dt, int tStart = 0, int tEnd = -1, int tSkip = 0)
+            CellSelectionStruct cellSelection, 
+            double dt , int tStart = 0, int tEnd = -1, int tSkip = 0)
         {
-            if (PlotType != PlotType.Episodes &&
-                (Cells == null || !Cells.Any()) &&
+            if (PlotType != PlotType .Episodes &&
+                (Cells == null || !Cells.Any()) && 
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             int iStart = (int)((tStart + tSkip) / dt);
@@ -273,7 +272,7 @@ namespace Services
             double[] TimeArray = model.TimeArray;
             if (iEnd < iStart || iEnd >= TimeArray.Length)
                 iEnd = TimeArray.Length - 1;
-
+           
             switch (PlotType)
             {
                 case PlotType.MembPotential:

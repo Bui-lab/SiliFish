@@ -56,33 +56,32 @@
     </style>
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.js"></script>
 
     <div id="titleDiv" class="title">__TITLE__</div>
+    <script>
+        __OFFLINE_DYGRAPH_SCRIPT__
+    </script>
     <div style="display:flex;flex-flow:row wrap;">
         __CHART_DIVS__
     </div>
     <!-- Resources -->
-    __ONLINE_DYGRAPH_SCRIPT__
-    <script>
-        __OFFLINE_DYGRAPH_SCRIPT__
-    </script>
-
     <script>
         __DY_SYNCHRONIZER__
 
         window.addEventListener('DOMContentLoaded', () => {
-            var gs = [];
+        var gs = [];
 
-            __CHARTS__
+        __CHARTS__
 
-            Dygraph.synchronize(gs, { zoom: true, selection: true, range: false });
+        Dygraph.synchronize(gs, { zoom: true, selection: true, range: false });
 
 
         });
 
     </script>
     <p>
-        Select to zoom, double click to return to the original view.
+        Select to zoom, double clik to return to the original view.
         Shift-drag to scroll.
         Plots are synchronized.
     </p>

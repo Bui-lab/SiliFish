@@ -41,7 +41,7 @@ namespace SiliFish.UI.Controls
         public TimeLine GetTimeLine()
         {
             TimeLine tl = new();
-            for (int rowIndex = 0; rowIndex < dgTimeLine.Rows.Count; rowIndex++)
+            for(int rowIndex = 0; rowIndex <dgTimeLine.Rows.Count; rowIndex++)
             {
                 string sStart = dgTimeLine[colStartTime.Index, rowIndex].Value?.ToString();
                 string sEnd = dgTimeLine[colEndTime.Index, rowIndex].Value?.ToString();
@@ -60,22 +60,6 @@ namespace SiliFish.UI.Controls
         {
             if (dgTimeLine.Focused)
                 timeLineChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void cmiClearAll_Click(object sender, EventArgs e)
-        {
-            dgTimeLine.Rows.Clear();
-            dgTimeLine.RowCount = 1;
-        }
-
-        private void cmiSort_Click(object sender, EventArgs e)
-        {
-            dgTimeLine.Sort(dgTimeLine.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
-        }
-
-        private void cmTimeLine_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            cmiSort.Enabled = dgTimeLine.RowCount > 2;
         }
     }
 }

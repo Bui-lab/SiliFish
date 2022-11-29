@@ -17,13 +17,11 @@
     <div id="left-panel" style="width:50%; float:left">
         <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
         <div id="3d-graph-gap"></div>
-        <div class="scene-nav-info">Left-click on a node to select the whole cell pool, right-click to display the neighboring cells.</div>
     </div>
     <div id="seperator" class="vertical"></div>
     <div id="right-panel" style="width:50%; float:right">
         <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
         <div id="3d-graph-chem"></div>
-        <div class="scene-nav-info">Left-click on a node to select the whole cell pool, right-click to display the neighboring cells.</div>
     </div>
     <script>
         __OFFLINE_3D_SCRIPT__
@@ -33,8 +31,6 @@
             (document.getElementById("3d-graph-gap"));
         const chemGraph = ForceGraph3D()
             (document.getElementById("3d-graph-chem"));
-        gapGraph.height(window.innerHeight - 60);
-        chemGraph.height(window.innerHeight - 60);
 
         const gapData = {
             "nodes": [__NODES__],
@@ -59,49 +55,22 @@
         gapGraph.scene().add(spineLineGap);
         chemGraph.scene().add(spineLineChem);
 
-        //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
-        var linkedByID = {};
-        gapData.links.forEach(function (d) {
-            linkedByID["gap," + d.source + "," + d.target] = 1;
-        });
-        chemData.links.forEach(function (d) {
-            linkedByID["chem," + d.source + "," + d.target] = 1;
-        });
-
-        function neighboring(gc, a, b) {
-            return linkedByID[gc + "," + a.id + "," + b.id];
-        }
-
         let hoverNodeGap = null;
-        let showNeighborsGap = false;
 
         const gapDataSet = gapGraph
-            .nodeColor(n => (hoverNodeGap == null || hoverNodeGap == n ? colorSet[n.g] :
-                !showNeighborsGap && hoverNodeGap.g == n.g ? colorSet[n.g] :
-                    (showNeighborsGap && (neighboring("gap", hoverNodeGap, n) || neighboring("gap", n, hoverNodeGap))) ? colorSet[n.g] :
-                        '#EEE'))
-            .nodeOpacity(0.9)
+            .nodeColor(n => (hoverNodeGap == null || hoverNodeGap.g == n.g ? colorSet[n.g] : '#EEE'))
             .nodeLabel(n => `${n.id} ${n.crd}`)
-            .nodeRelSize(__NODE_SIZE__)
             .graphData(gapData)
-            .linkColor(l => hoverNodeGap == null ? '#808080' : (showNeighborsGap && l.source == hoverNodeGap) ? '#C00' : (showNeighborsGap && l.target == hoverNodeGap) ? '#0C0' : '#DDD')
-            .linkOpacity(l => hoverNodeGap == null ? 0.4 : l.source == hoverNodeGap || l.target == hoverNodeGap ? 0.9 : 0.1)
+            .linkColor(l => hoverNodeGap == null ? '#444' : l.source == hoverNodeGap ? '#F00' : l.target == hoverNodeGap ? '#0F0' : '#FFF')
             .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.01))
+            .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
-            .onNodeRightClick(node => {
-                hoverNodeGap = node;
-                showNeighborsGap = true;
-                updateHighlightGap();
-            })
             .onNodeClick(node => {
                 hoverNodeGap = node;
-                showNeighborsGap = true;
                 updateHighlightGap();
             })
             .onBackgroundClick(() => {
                 hoverNodeGap = null;
-                showNeighborsGap = false;
                 updateHighlightGap();
             })
             .enableNodeDrag(false)
@@ -113,41 +82,26 @@
             gapGraph
                 .nodeColor(gapGraph.nodeColor())
                 .linkColor(gapGraph.linkColor())
-                .linkOpacity(gapGraph.linkOpacity())
         }
 
         let hoverNodeChem = null;
-        let showNeighborsChem = false;
 
         const chemDataSet = chemGraph
-            .nodeColor(n => (hoverNodeChem == null || hoverNodeChem == n ? colorSet[n.g] :
-                !showNeighborsChem && hoverNodeChem.g == n.g ? colorSet[n.g] :
-                    (showNeighborsChem && (neighboring("chem", hoverNodeChem, n) || neighboring("chem", n, hoverNodeChem))) ? colorSet[n.g] :
-                        '#EEE'))
-            .nodeOpacity(0.9)
+            .nodeColor(n => (hoverNodeChem == null || hoverNodeChem.g == n.g ? colorSet[n.g] : '#EEE'))
             .nodeLabel(n => `${n.id} ${n.crd}`)
-            .nodeRelSize(__NODE_SIZE__)
             .graphData(chemData)
             .linkDirectionalArrowRelPos(1)
             .linkDirectionalArrowLength(5)
-            .linkColor(l => hoverNodeChem == null ? '#808080' : (showNeighborsChem && l.source == hoverNodeChem) ? '#C00' : (showNeighborsChem && l.target == hoverNodeChem) ? '#0C0' : '#DDD')
-            .linkOpacity(l => hoverNodeChem == null ? 0.4 : l.source == hoverNodeChem || l.target == hoverNodeChem ? 0.9 : 0.1)
+            .linkColor(() => '#333')
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.01))
+            .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
-            .onNodeRightClick(node => {
-                hoverNodeChem = node;
-                showNeighborsChem = true;
-                updateHighlightChem();
-            })
             .onNodeClick(node => {
                 hoverNodeChem = node;
-                showNeighborsChem = false;
                 updateHighlightChem();
             })
             .onBackgroundClick(() => {
                 hoverNodeChem = null;
-                showNeighborsChem = false;
                 updateHighlightChem();
             })
             .enableNodeDrag(false)
@@ -158,7 +112,6 @@
             chemGraph
                 .nodeColor(chemGraph.nodeColor())
                 .linkColor(chemGraph.linkColor())
-                .linkOpacity(chemGraph.linkOpacity())
         }
     </script>
 

@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace SiliFish.Definitions
+namespace SiliFish
 {
     public enum CellType { Neuron, MuscleCell }
-    public enum FiringRhythm { NoSpike, Phasic, Tonic }
-    public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }
-
-    public enum BodyLocation { SpinalCord, Body }
+    public enum BodyLocation { SpinalCord, Body}
 
     public enum CountingMode { PerSomite, Total }
 
@@ -18,14 +15,10 @@ namespace SiliFish.Definitions
         Ventral
     }
     public enum TransversePlane { NotSet, Anterior, Central, Posterior }
-    public enum SagittalPlane
-    {
-        Left, Right,
-        [Display(Name = "Left/Right")] Both
-    }
-
-    public enum PlotType
-    {
+    public enum SagittalPlane { Left, Right,
+        [Display(Name = "Left/Right")] Both }
+ 
+    public enum PlotType {
         [Display(Name = "")] NotSet,
         [Display(Name = "Memb. Potential")] MembPotential,
         [Display(Name = "Current"), Description("Gap and chemical currents")] Current,
@@ -48,21 +41,9 @@ namespace SiliFish.Definitions
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
     public enum DistanceMode { Euclidean, Manhattan } //FUTURE_IMPROVEMENT, Chebyshev, Haversine }
-    public enum ConnectionType { NotSet, Synapse, Gap, NMJ }
-    public enum StimulusMode { Step, Gaussian, Ramp, Sinusoidal, Pulse }
-    public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed }
+    public enum ConnectionType { NotSet, Synapse, Gap, NMJ}
+    public enum StimulusMode { None, Step, Gaussian, Ramp}
+    public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed}
 
-    public enum UnitOfMeasure
-    {
-        [Display(Name = "mV/pA/GΩ/pF"), Description("Voltage: mV; Current: pA; Resistance: GΩ; Capacitance: pF")] milliVolt_picoAmpere_GigaOhm_picoFarad,
-        [Display(Name = "mV/nA/MΩ/nF"), Description("Voltage: mV; Current: nA; Resistance: MΩ; Capacitance: nF")] milliVolt_nanoAmpere_MegaOhm_nanoFarad
-    }
 
-    public enum Measure
-    {
-        Voltage,
-        Current,
-        Resistance,
-        Capacitance
-    }
 }

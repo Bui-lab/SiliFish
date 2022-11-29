@@ -1,142 +1,69 @@
-﻿using SiliFish.Definitions;
-using SiliFish.Extensions;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SiliFish.Extensions;
 
 namespace SiliFish.DynamicUnits
 {
-    public class Leaky_Integrator : DynamicUnit
+    class Leaky_Integrator
     {
-        public double R; //resustance
-        public double C;//capacitance
-        public double Va; //Vm when tension is half of Tmax/2
-        public double Tmax; //maximum tension
-        public double ka; //slope factor [Dulhunty 1992 (Prog. Biophys)]
+        public double R, C;
 
         [JsonIgnore]
-        public double TimeConstant { get { return R * C; } }
-        protected override void Initialize()
+        double V; //keeps the current v value 
+        public Leaky_Integrator(double R, double C, double init_v)
         {
-            V = Vr;
-        }
-        //private double Vmax; //the possible maximum membrane potential 
-        public Leaky_Integrator(double R, double C, double Vr)
-        {
+            //Set Neuron constants.
             this.R = R;
             this.C = C;
-            this.Vr = Vr;
-            V = Vr;
-            //Vmax = 99999;
+            V = init_v;
         }
-        public Leaky_Integrator(double R, double C, double Vr, double Va, double Tmax, double ka)
+        public virtual Dictionary<string, object> GetParameters()
         {
-            this.R = R;
-            this.C = C;
-            this.Vr = Vr;
-            this.Va = Va;
-            this.Tmax = Tmax;
-            this.ka = ka;
-            V = Vr;
-        }
-
-        public Leaky_Integrator(Dictionary<string, double> paramExternal)
-        {
-            SetParameters(paramExternal);
-            Initialize();
-        }
-        public override Dictionary<string, double> GetParameters()
-        {
-            Dictionary<string, double> paramDict = new()
+            Dictionary<string, object> paramDict = new()
             {
                 { "Leaky_Integrator.R", R },
                 { "Leaky_Integrator.C", C },
-                { "Leaky_Integrator.Vr", Vr },
-                { "Leaky_Integrator.Va", Va },
-                { "Leaky_Integrator.Tmax", Tmax },
-                { "Leaky_Integrator.ka", ka }
+                { "Leaky_Integrator.V", V }
             };
             return paramDict;
         }
 
-        public virtual void FillMissingParameters(Dictionary<string, double> paramExternal)
-        {
-            paramExternal.AddObject("Leaky_Integrator.R", R, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.C", C, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Vr", Vr, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Va", Va, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Tmax", Tmax, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.ka", ka, skipIfExists: true);
-        }
-        public override void SetParameters(Dictionary<string, double> paramExternal)
+        public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            FillMissingParameters(paramExternal);
-
-            paramExternal.TryGetValue("Leaky_Integrator.R", out R);
-            paramExternal.TryGetValue("Leaky_Integrator.C", out C);
-            paramExternal.TryGetValue("Leaky_Integrator.Vr", out Vr);
-            paramExternal.TryGetValue("Leaky_Integrator.Va", out Va);
-            paramExternal.TryGetValue("Leaky_Integrator.Tmax", out Tmax);
-            paramExternal.TryGetValue("Leaky_Integrator.ka", out ka);
-            V = Vr;
+            R = paramExternal.Read("Leaky_Integrator.R", R);
+            C = paramExternal.Read("Leaky_Integrator.C", C);
+            V = paramExternal.Read("Leaky_Integrator.V", V);
         }
 
-
-        //formula from [Dulhunty 1992 (Prog. Biophys)]
-        public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used
+        public virtual string GetInstanceParams()
         {
-            //T_a = T_max / (1 + exp(V_a - V_m) / k_a
-            return 1 / (1 + Math.Exp((Va - (Vm ?? V)) / ka));
+            return string.Join("\r\n", GetParameters().Select(kv => kv.Key + ": " + kv.Value.ToString()));
         }
 
-        //formula from [Dulhunty 1992 (Prog. Biophys)]
-        public double CalculateTension(double? Vm = null) //if Vm is null, current V value is used
-        {
-            //T_a = T_max / (1 + exp(V_a - V_m) / k_a
-            return Tmax * CalculateRelativeTension(Vm);
-        }
-
-        public double[] CalculateRelativeTension(double[] V)
-        {
-            return V.Select(v => CalculateRelativeTension(v)).ToArray();
-        }
-        public double[] CalculateTension(double[] V)
-        {
-            return V.Select(v => CalculateTension(v)).ToArray();
-        }
-
-        public override double GetNextVal(double Stim, ref bool spike)
+        public double GetNextVal(double Stim)
         {
             double I = Stim;
-            double dt = RunParam.static_dt_Euler;
-            double dtTracker = 0;
-            while (dtTracker < RunParam.static_dt)
-            {
-                dtTracker += dt; // ODE eqs
-                double dv = (-1 / (R * C)) * (V - Vr) + I / C;
-                double vNew = V + dv * dt;
-                V = vNew;
-                //if (V >= Vmax) V = Vmax;
-            }
+            // ODE eqs
+            double dv = -1 / (R * C) * V + I / C;
+            double vNew = V + dv * RunParam.static_dt;
+            V = vNew;
+
             return V;
         }
-        public override DynamicsStats SolveODE(double[] I)
+        public double[] SolveODE(double[] I)
         {
-            int iMax = I.Length;
-            DynamicsStats dyn = new(I);
-            dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
-            double[] tensionList = dyn.SecLists["Rel. Tension"];
-            bool spike = false;
-            for (int t = 0; t < iMax; t++)
+            int tmax = I.Length;
+            double[] Vlist = new double[tmax];
+
+            for (int t = 0; t < tmax; t++)
             {
-                GetNextVal(I[t], ref spike);
-                dyn.VList[t] = V;
-                tensionList[t] = CalculateRelativeTension(V);
+                GetNextVal(I[t]);
+                Vlist[t] = this.V;
             }
-            return dyn;
+            return Vlist;
         }
     }
 

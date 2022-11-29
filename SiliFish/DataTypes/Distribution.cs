@@ -1,8 +1,7 @@
-﻿using SiliFish.Definitions;
-using SiliFish.Extensions;
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SiliFish.Extensions;
 
 namespace SiliFish.DataTypes
 {
@@ -30,20 +29,17 @@ namespace SiliFish.DataTypes
 
         protected double LowerLimit { get { return Absolute ? RangeStart : Range * RangeStart / 100; } }
 
-        protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }
-
-        [JsonIgnore]
-        public virtual double UniqueValue { get { throw new NotImplementedException(); } }
+        protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd/ 100; } }
         public override string ToString()
         {
             int dot = DistType.LastIndexOf('.');
-            string displayedType = distType[(dot + 1)..];
-            return Absolute ? String.Format("{0}-{1} [{2}]", RangeStart, RangeEnd, displayedType) :
-                String.Format("%{0}-{1}; [{2}-{3}] [{4}]", RangeStart, RangeEnd, LowerLimit, UpperLimit, displayedType);
+            string displayedType = distType.Substring(dot + 1);
+            return Absolute ? String.Format("{0}: [{1}-{2}]", displayedType, RangeStart, RangeEnd) :
+                String.Format("{0}: %[{1}-{2}]; [{3}-{4}]", displayedType, RangeStart, RangeEnd, LowerLimit, UpperLimit);
         }
         public Distribution()
         {
-            distType = GetType().Name;
+            distType = GetType().ToString();
             //default values of 0 and 999 used
         }
         public virtual Distribution CreateCopy()
@@ -54,7 +50,7 @@ namespace SiliFish.DataTypes
         {
             Absolute = absolute;
             Angular = angular;
-            distType = GetType().Name;
+            distType = GetType().ToString();
             if (rangeStart < rangeEnd)
             {
                 RangeStart = rangeStart;
@@ -67,35 +63,21 @@ namespace SiliFish.DataTypes
             }
         }
 
-        public static Distribution CreateDistributionObject(object obj)
-        {
-            if (obj == null)
-                return null;
-            if (obj is Distribution distribution)
-                return distribution;
-            if (double.TryParse(obj.ToString(), out double d))
-                return new Constant_NoDistribution(d, true, false, 0);
-            if (obj is JsonElement element)
-                return GetOfDerivedType(element.GetRawText());
-            return null;
-        }
-
-
         public static Distribution GetOfDerivedType(string json)
         {
             Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
             if (dist != null)
             {
-                if (dist.DistType == nameof(Constant_NoDistribution)|| dist.DistType == typeof(Constant_NoDistribution).FullName)
-                    return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
-                if (dist.DistType == nameof(UniformDistribution)|| dist.DistType == typeof(UniformDistribution).FullName)
-                    return JsonSerializer.Deserialize<UniformDistribution>(json);
-                if (dist.DistType == nameof(SpacedDistribution)|| dist.DistType == typeof(SpacedDistribution).FullName)
-                    return JsonSerializer.Deserialize<SpacedDistribution>(json);
-                if (dist.DistType == nameof(GaussianDistribution)|| dist.DistType == typeof(GaussianDistribution).FullName)
-                    return JsonSerializer.Deserialize<GaussianDistribution>(json);
-                if (dist.DistType == nameof(BimodalDistribution)|| dist.DistType == typeof(BimodalDistribution).FullName)
-                    return JsonSerializer.Deserialize<BimodalDistribution>(json);
+            if (dist.DistType == typeof(Constant_NoDistribution).ToString())
+                return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
+            if (dist.DistType == typeof(UniformDistribution).ToString())
+                return JsonSerializer.Deserialize<UniformDistribution>(json);
+            if (dist.DistType == typeof(SpacedDistribution).ToString())
+                return JsonSerializer.Deserialize<SpacedDistribution>(json); 
+            if (dist.DistType == typeof(GaussianDistribution).ToString())
+                return JsonSerializer.Deserialize<GaussianDistribution>(json);
+            if (dist.DistType == typeof(BimodalDistribution).ToString())
+                return JsonSerializer.Deserialize<BimodalDistribution>(json);
             }
             return dist;
         }
@@ -135,13 +117,8 @@ namespace SiliFish.DataTypes
         }
     }
 
-    public class UniformDistribution : Distribution
+    public class UniformDistribution: Distribution
     {
-        public override double UniqueValue
-        {
-            get { return (RangeStart + RangeEnd) / 2; }
-        }
-
         public UniformDistribution()
         { }
         public UniformDistribution(double rangeStart, double rangeEnd, bool absolute, bool angular)
@@ -157,17 +134,7 @@ namespace SiliFish.DataTypes
 
     public class Constant_NoDistribution : Distribution
     {
-        public override double UniqueValue
-        {
-            get { return (RangeStart + RangeEnd) / 2; }
-        }
         public double NoiseStdDev { get; set; } = 0;
-
-        public override string ToString()
-        {
-            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:1; SD:{1:0.#####}" : "";
-            return $"{UniqueValue}{noise}";
-        }
         public Constant_NoDistribution()
         { }
         public Constant_NoDistribution(double val, bool absolute, bool angular, double noiseStdDev)
@@ -184,7 +151,7 @@ namespace SiliFish.DataTypes
         public override double[] GenerateNNumbers(int n, double range)
         {
             if (Random == null)
-                Random = new Random();
+                Random = new Random(); 
             double[] result = new double[n];
             for (int i = 0; i < n; i++)
             {
@@ -197,10 +164,6 @@ namespace SiliFish.DataTypes
     public class SpacedDistribution : Distribution
     {
         public double NoiseStdDev { get; set; } = 0;
-        public override double UniqueValue
-        {
-            get { return (RangeStart + RangeEnd) / 2; }
-        }
         public override string ToString()
         {
             return string.Format("{0}\r\nNoise: µ:1; SD:{1:0.#####}", base.ToString(), NoiseStdDev);
@@ -230,10 +193,6 @@ namespace SiliFish.DataTypes
     {
         public double Mean { get; set; } = 0;
         public double Stddev { get; set; } = 0;
-        public override double UniqueValue
-        {
-            get { return Mean; }
-        }
         public override string ToString()
         {
             return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
@@ -274,10 +233,6 @@ namespace SiliFish.DataTypes
     }
     public class BimodalDistribution : GaussianDistribution
     {
-        public override double UniqueValue
-        {
-            get { return (Mean + Mean2) / 2; }
-        }
         public double Mean2 { get; set; } = 1;
         public double Stddev2 { get; set; } = 0;
         public double Mode1Weight { get; set; } = 1;
@@ -321,7 +276,7 @@ namespace SiliFish.DataTypes
         }
     }
 
-    public class SpatialDistribution
+    public class SpatialDistribution 
     {
         public Distribution XDistribution { get; set; }
         public Distribution Y_AngleDistribution { get; set; }

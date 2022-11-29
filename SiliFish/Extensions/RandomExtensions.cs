@@ -79,7 +79,7 @@ namespace SiliFish.Extensions
                 if (result[i] < start) result[i] = start;
                 if (result[i] > end) result[i] = end;
             }
-
+        
             return result;
         }
 

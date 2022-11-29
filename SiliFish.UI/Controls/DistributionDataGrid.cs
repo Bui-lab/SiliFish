@@ -1,11 +1,16 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
+using SiliFish.Helpers;
+using SiliFish.UI;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
     public partial class DistributionDataGrid : UserControl
     {
+        public bool PauseDistributionFeature { 
+            get { return !colDist.Visible; }
+            set { colDist.Visible = !value; } 
+        }
         public DistributionDataGrid()
         {
             InitializeComponent();
@@ -27,13 +32,13 @@ namespace SiliFish.UI.Controls
                 else
                 {
                     double val = double.Parse(dgDynamics[colValue.Index, e.RowIndex].Tag?.ToString() ?? dgDynamics[colValue.Index, e.RowIndex].Value?.ToString());
-                    dist = new Constant_NoDistribution(val, true, false, 0);
+                    dist = new Constant_NoDistribution(val, absolute: true, angular: false, 0);
                     distControl.SetDistribution(dist);
                 }
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     dist = distControl.GetDistribution();
-                    if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < Const.Epsilon)
+                    if (dist.DistType == typeof(Constant_NoDistribution).ToString() && (dist as Constant_NoDistribution).NoiseStdDev < Const.epsilon)
                     {
                         dgDynamics[colValue.Index, rowind].Value = dist.RangeStart;
                         dgDynamics[colValue.Index, rowind].Tag = null;
@@ -46,22 +51,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private void dgDynamics_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dgDynamics[colValue.Index, e.RowIndex].Tag is Distribution dist)
-            {
-                if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < Const.Epsilon)
-                    dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
-                else
-                    dgDynamics[colValue.Index, e.RowIndex].ReadOnly = true;
-            }
-            else
-                dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
-        }
-        private void dgDynamics_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            dgDynamics[colValue.Index, e.RowIndex].Tag = null;
-        }
+
         public void WriteToGrid(Dictionary<string, object> parameters)
         {
             parameters.WriteToGrid(dgDynamics, colField.Index, colValue.Index);
@@ -73,6 +63,5 @@ namespace SiliFish.UI.Controls
             paramDict.ReadFromGrid(dgDynamics, colField.Index, colValue.Index);
             return paramDict;
         }
-
     }
 }

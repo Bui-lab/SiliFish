@@ -1,12 +1,12 @@
-﻿using SiliFish.Extensions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using SiliFish.Extensions;
+using SiliFish.Helpers;
+using SiliFish.ModelUnits;
 
 namespace SiliFish.Services
 {
@@ -16,7 +16,7 @@ namespace SiliFish.Services
         double XYZMult;
         double XMin, YMin, ZMin;
         double XOffset, YOffset, ZOffset;
-        double WeightMin, WeightMax;
+        double WeightMax;
         double WeightMult;
         private string CreateLinkDataPoint(GapJunction jnc)
         {
@@ -47,34 +47,32 @@ namespace SiliFish.Services
         }
         private double GetNewWeight(double d)
         {
-            return d * WeightMult;
+            double w = d * WeightMult;
+            return w > 1 ? w : 1;
         }
         private string CreateNodeDataPoint(Cell cell)
         {
             (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.columnIndex2D);
             return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"crd\":\"{cell.coordinate}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
         }
-        private string CreateNodeDataPoints(CellPool pool, int minSomite, int maxSomite)
+        private string CreateNodeDataPoints(CellPool pool)
         {
-            List<string> nodes = new();
-            List<Cell> cells = pool.GetCells().Where(c => c.Somite >= minSomite && c.Somite <= maxSomite).ToList();
-            foreach (Cell cell in cells)
+            List<string> nodes = new List<string>();
+            foreach (Cell cell in pool.GetCells())
                 nodes.Add(CreateNodeDataPoint(cell));
             return string.Join(",", nodes);
         }
 
-        private string CreateLinkDataPoints(Cell cell, bool gap, bool chem, int minSomite, int maxSomite)
+        private string CreateLinkDataPoints(Cell cell, bool gap, bool chem)
         {
             List<string> links = new();
             if (cell is Neuron neuron)
             {
                 if (gap)
-                    foreach (GapJunction jnc in neuron.GapJunctions
-                            .Where(j => j.Cell2 == cell && j.Cell1.Somite >= minSomite && j.Cell1.Somite <= maxSomite))
+                    foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
                         links.Add(CreateLinkDataPoint(jnc));
                 if (chem)
-                    foreach (ChemicalSynapse jnc in neuron.Synapses
-                            .Where(syn => syn.PostCell.Somite >= minSomite && syn.PostCell.Somite <= maxSomite))
+                    foreach (ChemicalSynapse jnc in neuron.Synapses)
                         links.Add(CreateLinkDataPoint(jnc));
             }
             else if (chem && cell is MuscleCell muscle)
@@ -84,13 +82,12 @@ namespace SiliFish.Services
             }
             return string.Join(",", links);
         }
-        private string CreateLinkDataPoints(CellPool pool, bool gap, bool chem, int minSomite, int maxSomite)
+        private string CreateLinkDataPoints(CellPool pool, bool gap, bool chem)
         {
             List<string> links = new();
-            List<Cell> cells = pool.GetCells().Where(c => c.Somite >= minSomite && c.Somite <= maxSomite).ToList();
-            foreach (Cell cell in cells)
+            foreach (Cell cell in pool.GetCells())
             {
-                string cellLinks = CreateLinkDataPoints(cell, gap, chem, minSomite, maxSomite);
+                string cellLinks = CreateLinkDataPoints(cell, gap, chem);
                 if (!string.IsNullOrEmpty(cellLinks))
                     links.Add(cellLinks);
             }
@@ -99,9 +96,9 @@ namespace SiliFish.Services
 
 
         //gap and chem are obsolete if singlePanel = false
-        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem, string somiteRange)
+        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem)
         {
-            StringBuilder html = singlePanel ? new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")) :
+            StringBuilder html = singlePanel? new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")):
                     new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
 
             string filename = saveFile ? model.ModelName + "Model.html" : "";
@@ -130,7 +127,7 @@ namespace SiliFish.Services
                 html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
                 html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chem Jnc"));
             }
-            else
+            else 
             {
                 string s = gap && chem ? "Gap and Chem" : gap ? "Gap" : chem ? "Chem" : "No";
                 html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + String.Format(" - {0} Jnc", s)));
@@ -146,55 +143,41 @@ namespace SiliFish.Services
                 yRange = 2 * YRange1D;
             }
             double range = Math.Max(xRange, Math.Max(yRange, zRange));
-            int width = 400;
+            int width = 400; 
             XYZMult = width / range;
-            XOffset = singlePanel ? width / 2 : width;
+            XOffset = singlePanel ? width/2 : width;
             YOffset = 0;
             ZOffset = 0;
-            int numOfConnections = model.GetNumberOfConnections();
-            double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
-            (WeightMin, WeightMax) = model.GetConnectionRange();
-            WeightMult = maxjncsize / WeightMax;
 
-            int minSomite = -1, maxSomite = model.NumberOfSomites;
-            if (!somiteRange.StartsWith("All"))
-                (minSomite, maxSomite) = Util.ParseRange(somiteRange);
-
-            int numOfCells = model.GetNumberOfCells();
-            double nodesize = numOfCells > 0 ?
-                (zRange < 0.1 ?//No z axis
-                Math.Sqrt(xRange * yRange / (30 * numOfCells)) :
-                Math.Pow(xRange * yRange * zRange / (160 * numOfCells), 0.33))
-                : 0; //~40 times the nodes to fit in the space
-            nodesize *= XYZMult;
+            (_, WeightMax) = model.GetConnectionRange();
+            WeightMult = 3 / WeightMax;
 
             List<string> nodes = new();
-            pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool, minSomite, maxSomite)));
+            pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool)));
             html.Replace("__NODES__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
-            html.Replace("__NODE_SIZE__", nodesize.ToString("0.##"));
 
             if (!singlePanel)
             {
                 List<string> gapLinks = new();
-                pools.ForEach(pool => gapLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: false, minSomite, maxSomite)));
+                pools.ForEach(pool => gapLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: false)));
                 html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
 
                 List<string> chemLinks = new();
-                pools.ForEach(pool => chemLinks.Add(CreateLinkDataPoints(pool, gap: false, chem: true, minSomite, maxSomite)));
+                pools.ForEach(pool => chemLinks.Add(CreateLinkDataPoints(pool, gap: false, chem: true)));
                 html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
             }
             else
             {
                 List<string> gapChemLinks = new();
-                pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: gap, chem: chem, minSomite, maxSomite)));
+                pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: gap, chem: chem)));
                 html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
             }
 
             double spinalposY = model.SpinalBodyPosition + model.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;
             double spinallag = Math.Max(model.SpinalRostralCaudalDistance, xRange);
-            (double newX, double newY, double newZ) = GetNewCoordinates(-3 * XMin, spinalposZ, spinalposY, 0);
-            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 5 * XMin, spinalposZ, spinalposY, 0);
+            (double newX, double newY, double newZ) = GetNewCoordinates(-3, spinalposZ, spinalposY, 0);
+            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 5, spinalposZ, spinalposY, 0);
 
             html.Replace("__SPINE_X__", newX.ToString());
             html.Replace("__SPINE_Y__", newY.ToString());

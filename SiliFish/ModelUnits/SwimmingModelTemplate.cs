@@ -44,7 +44,7 @@ namespace SiliFish.ModelUnits
             foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolTarget == poolSource.CellGroup))
             {
                 InterPoolTemplate iptCopy = new(ipt);
-                iptCopy.PoolTarget = poolTarget.CellGroup;
+                iptCopy.PoolTarget= poolTarget.CellGroup;
                 iptNewList.Add(iptCopy);
             }
             InterPoolTemplates.AddRange(iptNewList);
@@ -67,7 +67,7 @@ namespace SiliFish.ModelUnits
         {
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cpt.CellGroup);
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolTarget == cpt.CellGroup);
-            AppliedStimuli.RemoveAll(s => s.TargetPool == cpt.CellGroup);
+            AppliedStimuli.RemoveAll(s=>s.TargetPool == cpt.CellGroup);
             CellPoolTemplates.Remove(cpt);
         }
 

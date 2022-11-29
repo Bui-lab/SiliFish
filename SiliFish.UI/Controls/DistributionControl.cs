@@ -19,8 +19,8 @@ namespace SiliFish.UI.Controls
                         rbAbsolute.Top;
                     pTop.Height = lRange.Bottom + lRange.Margin.Bottom + 12;
                 }
-            }
-        }
+            } 
+        } 
         public DistributionControl()
         {
             InitializeComponent();
@@ -43,16 +43,17 @@ namespace SiliFish.UI.Controls
             }
             if (ddDistribution.Text == "Constant")
             {
-                lRangeSeparator.Visible = lRange.Visible =
-                eRangeEnd.Visible = eRangeStart.Visible = false;
-                lValue.Visible = eUniqueValue.Visible = true;
+                lRangeSeparator.Visible = false;
+                eRangeEnd.Visible = false;
+                lRange.Text = "Value";
+                lRange.Visible = true;
+                eRangeStart.Visible = true;
             }
             else if (ddDistribution.Text == "None")
             {
                 lRangeSeparator.Visible = false;
                 eRangeStart.Visible = eRangeEnd.Visible = false;
                 lRange.Visible = false;
-                lValue.Visible = eUniqueValue.Visible = false;
             }
             else
             {
@@ -60,7 +61,6 @@ namespace SiliFish.UI.Controls
                 eRangeStart.Visible = eRangeEnd.Visible = true;
                 lRange.Text = "Range";
                 lRange.Visible = true;
-                lValue.Visible = eUniqueValue.Visible = false;
             }
         }
 
@@ -68,7 +68,6 @@ namespace SiliFish.UI.Controls
         {
             if (dist == null)
                 return;
-            eUniqueValue.Text = dist.UniqueValue.ToString();
             eRangeStart.Text = dist.RangeStart.ToString();
             eRangeEnd.Text = dist.RangeEnd.ToString();
             rbAbsolute.Checked = dist.Absolute;
@@ -98,7 +97,7 @@ namespace SiliFish.UI.Controls
             }
             else if (dist is UniformDistribution)
                 ddDistribution.Text = "Uniform";
-            else //constant_NoDistribution
+            else //connstant_NoDistribution
             {
                 ddDistribution.Text = "Constant";
                 eNoise.Text = (dist as Constant_NoDistribution).NoiseStdDev.ToString("0.###");
@@ -108,15 +107,14 @@ namespace SiliFish.UI.Controls
         public Distribution GetDistribution()
         {
             string mode = ddDistribution.Text;
-            if (mode == "None")
+            if (mode == "None") 
                 return null;
             bool absolute = rbAbsolute.Checked;
             if (!double.TryParse(eRangeStart.Text, out double start))
                 start = 0;
             if (!double.TryParse(eRangeEnd.Text, out double end))
                 end = 100;
-            if (!double.TryParse(eUniqueValue.Text, out double value))
-                value = 0;
+            if (start < 0) start = 0;
             if (Angular && end > 180) end = 180;
             else if (!Angular && !absolute && end > 100) end = 100;
 
@@ -125,7 +123,7 @@ namespace SiliFish.UI.Controls
             switch (mode)
             {
                 case "Constant":
-                    return new Constant_NoDistribution(value, absolute, Angular, noise);
+                    return new Constant_NoDistribution(start, absolute, Angular, noise);
                 case "Uniform":
                     return new UniformDistribution(start, end, absolute, Angular);
                 case "Equally Spaced":

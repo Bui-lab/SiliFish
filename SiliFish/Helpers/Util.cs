@@ -1,60 +1,197 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 
 namespace SiliFish.Helpers
 {
     public class Util
     {
-        public static int NumOfDigits(double val)
+        //https://stackoverflow.com/questions/69664644/serialize-deserialize-system-drawing-color-with-system-text-json
+        public class ColorJsonConverter : JsonConverter<Color>
         {
-            int digits = 0;
-            val = Math.Abs(val);
-            while (val >= 1)
+            public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => ColorTranslator.FromHtml(reader.GetString());
+
+            public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options) => writer.WriteStringValue("#" + value.R.ToString("X2") + value.G.ToString("X2") + value.B.ToString("X2").ToLower());
+        }
+
+        public static string CreateJSONFromObject(object content)
+        {
+            var options = new JsonSerializerOptions()
             {
-                digits++;
-                val /= 10;
+                Converters = { new ColorJsonConverter() },
+                WriteIndented = true
+            };
+            string jsonstring = JsonSerializer.Serialize(content, options);
+            return jsonstring;
+        }
+        public static object CreateObjectFromJSON(Type content, string jsonstring)
+        {
+            var options = new JsonSerializerOptions()
+            {
+                Converters = { new ColorJsonConverter() }
+            };
+            return JsonSerializer.Deserialize(jsonstring, content, options);
+        }
+        public static string ReadFromFile(string path)
+        {
+            return File.ReadAllText(path);
+        }
+
+        public static void SaveToFile(string path, string content)
+        {
+            File.WriteAllText(path, content);
+        }
+
+        public static void SaveToJSON(string path, object content)
+        {
+            var options = new JsonSerializerOptions()
+            {
+                Converters = { new ColorJsonConverter() },
+                WriteIndented = true
+            };
+            string jsonstring = JsonSerializer.Serialize(content, options);
+            File.WriteAllText(path, jsonstring);
+        }
+
+        public static Dictionary<string, object> ReadDictionaryFromJSON(string path)
+        {
+            string jsonstring = File.ReadAllText(path);
+            var options = new JsonSerializerOptions()
+            {
+                Converters = { new ColorJsonConverter() }
+            };
+            return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
+        }
+
+        public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
+        { 
+            if (filename == null || Time == null || Values == null)
+                return;
+
+            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+            using StreamWriter sw = new(fs);
+            sw.WriteLine("Time," + string.Join(',', Values.Keys));
+
+            for (int t = 0; t < Time.Length; t++)
+            {
+                string row = Time[t].ToString() + ',' +
+                    string.Join(',', Values.Select(item => item.Value[t]));
+                sw.WriteLine(row);
             }
-            return digits;
-        }
-        public static int NumOfDecimalDigits(double val)
-        {
-            return NumOfDecimalDigits((decimal)val);
-        }
-        public static int NumOfDecimalDigits(decimal val)
-        {
-            int[] bits = Decimal.GetBits(val);
-            int decPoints = (bits[3] >> 16) & 0x7F;//https://docs.microsoft.com/en-us/dotnet/api/system.decimal.getbits?view=net-6.0
-            //decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10, decPoints)));
-            return decPoints;
         }
 
-        /// <summary>
-        /// Currently not used
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private (double, double) CalculateRange(double value)
+        public static void SaveTailMovementToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord)
         {
-            if (value == 0)
-                return (Const.GeneticAlgorithmMinValue, Const.GeneticAlgorithmMaxValue);
-            int numDigit = Util.NumOfDigits(value);
-            int numDecimal = Util.NumOfDecimalDigits((decimal)value);
-            if (numDigit == 0)
-                numDigit = 1;
+            if (filename == null || tail_tip_coord == null)
+                return;
 
-            double minValue = value - 10 * numDigit;
-            if (value > 0 && minValue <= 0)
-                minValue = Math.Pow(10, -numDecimal);
+            string tailFilename = Path.ChangeExtension(filename, "TailTip.csv");
+            using FileStream fsTail = File.Open(tailFilename, FileMode.Create, FileAccess.Write);
+            using StreamWriter swTail = new(fsTail);
+            swTail.WriteLine("Time,X,Y,Z");
+            for (int t = 0; t < Time.Length; t++)
+            {
+                if (t >= tail_tip_coord.Length)
+                    break;
+                string row = $"{Time[t]:0.##},{tail_tip_coord[t].X:0.000},{tail_tip_coord[t].Y:0.000},{tail_tip_coord[t].Z:0.000}";
+                swTail.WriteLine(row);
+            }
+        }
 
-            double maxValue = value + 10 * numDigit;
-            if (value < 0 && maxValue >= 0)
-                maxValue = -Math.Pow(10, -numDecimal);
+        public static void SaveEpisodesToCSV(string filename, int run, List<SwimmingEpisode> episodes)
+        {
+            if (filename == null || episodes == null)
+                return;
 
-            return (minValue, maxValue);
+            string episodeFilename = Path.ChangeExtension(filename, "Episodes.csv");
+            string beatsFilename = Path.ChangeExtension(filename, "Beats.csv");
+            using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Append, FileAccess.Write);
+            using FileStream fsBeats = File.Open(beatsFilename, FileMode.Append, FileAccess.Write);
+            using StreamWriter swEpisode = new(fsEpisode);
+            using StreamWriter swBeats = new(fsBeats);
+            if (run == 1)
+            {
+                swEpisode.WriteLine("Run,Episode,Start,Finish,Duration,Time to Next,Tail Beat Freq.,# of Tail Beats");
+                swBeats.WriteLine("Run,Episode,Beat,Start,Finish,Instan.Freq.");
+            }
+            int epiCounter = 1;
+            foreach (SwimmingEpisode episode in episodes)
+            {
+                double? timeToNext = null;
+                if (epiCounter < episodes.Count - 2)
+                {
+                    SwimmingEpisode nextEpisode = episodes[epiCounter];//1-based index is used
+                    timeToNext = nextEpisode.Start - episode.End;
+                }
+                string epiRow = $"{run}," +
+                    $"{epiCounter}," +
+                    $"{episode.Start:0.####}," +
+                    $"{episode.End:0.####}," +
+                    $"{episode.EpisodeDuration:0.####}," +
+                    $"{timeToNext?.ToString() ?? ""}," +
+                    $"{episode.BeatFrequency}," +
+                    $"{episode.Beats.Count}";
+                swEpisode.WriteLine(epiRow);
+                int beatCounter = 1;
+                foreach ((double beatStart, double beatEnd) in episode.Beats)
+                {
+                    string beatRow = $"{run}," + 
+                        $"{epiCounter}," +
+                        $"{beatCounter++}," +
+                        $"{beatStart:0.####}," +
+                        $"{beatEnd:0.####}," +
+                        $"{1000 / (beatEnd - beatStart):0.####}";
+                    swBeats.WriteLine(beatRow);
+                }
+                epiCounter++;
+            }
+        }
+        public static Dictionary<string, double[]> ReadFromCSV(string filename)
+        {
+            if (filename == null)
+                return null;
+            Dictionary<string, double[]> data = new();
+            Dictionary<string, List<double>> tempdata = new();
+            using StreamReader sr = new(filename);
+            string line = sr.ReadLine();
+            if (line == null) return null;
+            string[] columns = line.Split(",");
+            foreach (string column in columns)
+                tempdata.Add(column, new List<double>());
+            int counter = 0;
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] values = line.Split(",");
+                for (int i = 0; i < values.Length; i++)
+                    tempdata[columns[i]].Add(double.Parse(values[i]));
+                counter++;
+                //if (counter > 10000) break;
+            }
+            foreach (string column in columns)
+                data.Add(column, tempdata[column].ToArray());
+
+            return data;
+        }
+        public static void SaveAnimation(string filename, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, int startIndex)
+        {
+            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+            using StreamWriter sw = new(fs);
+            string columnHeaders = string.Join(',', somiteCoordinates.Keys.Select(k => k + "-X," + k + "-Y'"));
+            sw.WriteLine(columnHeaders);
+            int nmax = Time.Length - 1;
+            foreach (var i in Enumerable.Range(1, nmax))
+            {
+                string rowStart = (Time[startIndex + i - 1]).ToString("0.##");
+                string row = rowStart + string.Join(',', somiteCoordinates.Select(item => item.Value[i].X + "," + item.Value[i].X));
+                sw.WriteLine(row);
+            }
         }
         public static bool CheckOnlineStatus()
         {
@@ -116,10 +253,8 @@ namespace SiliFish.Helpers
             {
                 double padding = (yMax - yMin) / 10;
                 yMin -= padding;
-                if (yMin > 0 && (yMax - yMin) > yMin / 10) //do not start from zero if the values are close to each other
+                if (yMin > 0)
                     yMin = 0;
-                else if (yMax - yMin < Const.Epsilon)
-                    yMin *= 0.9;
                 yMax += padding;
             }
         }
@@ -141,45 +276,5 @@ namespace SiliFish.Helpers
                 _ => Math.Sqrt(x * x + y * y + z * z),
             };
         }
-
-        static public string GetUoM(UnitOfMeasure uom, Measure measure)
-        {
-            switch (measure)
-            {
-                case Measure.Voltage:
-                    return "mV";
-                case Measure.Current:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "pA" : "nA";
-                case Measure.Resistance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "GΩ" : "MΩ";
-                case Measure.Capacitance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "pF" : "nF";
-            }
-            return "";
-        }
-
-        static public double[] GenerateValues(double origValue, double minMultiplier, double maxMultiplier, int numOfPoints, bool logScale)
-        {
-            if (maxMultiplier < minMultiplier)
-                (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
-
-            double[] values = new double[numOfPoints];
-            if (!logScale)
-            {
-                double incMultiplier = (maxMultiplier - minMultiplier) / (numOfPoints - 1);
-                foreach (int i in Enumerable.Range(0, numOfPoints))
-                    values[i] = (incMultiplier * i + minMultiplier) * origValue;
-            }
-            else
-            {
-                double logMinMultiplier = Math.Log10(minMultiplier);
-                double logMaxMultiplier = Math.Log10(maxMultiplier);
-                double incMultiplier = (logMaxMultiplier - logMinMultiplier) / (numOfPoints - 1);
-                foreach (int i in Enumerable.Range(0, numOfPoints))
-                    values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
-            }
-            return values;
-        }
     }
 }
-

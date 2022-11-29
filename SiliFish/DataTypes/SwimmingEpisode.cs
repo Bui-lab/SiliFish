@@ -13,7 +13,7 @@ namespace SiliFish.DataTypes
         List<(double beatStart, double beatEnd)> beats;
         public List<(double beatStart, double beatEnd)> Beats { get => beats; }
         public List<(double beatStart, double beatEnd)> InlierBeats
-        {
+        { 
             get
             {
                 double n_1 = beats.Count - 1;
@@ -81,41 +81,5 @@ namespace SiliFish.DataTypes
         public double Start { get { return episodeStart; } }
         public double End { get { return episodeEnd; } }
 
-        public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> indices, double burstBreak, double episodeBreak)
-        {
-            List<SwimmingEpisode> episodes = new();
-            int ind = 0;
-            bool inEpisode = false;
-            SwimmingEpisode episode = null;
-            double last_t = -1;
-            while (ind < indices.Count)
-            {
-                double t = TimeArray[indices[ind++]];
-                if (!inEpisode)
-                {
-                    inEpisode = true;
-                    episode = new(t);
-                    episodes.Add(episode);
-                }
-                else if (last_t > 0)
-                {
-                    if ((t - last_t) > episodeBreak)
-                    {
-                        episode.EndEpisode(last_t);
-                        inEpisode = false;
-                        episode = null;
-                    }
-                    else if (episode.InBeat && (t - last_t) > burstBreak)
-                    {
-                        episode.EndBeat(last_t);
-                        episode.StartBeat(t);
-                    }
-                    else if (!episode.InBeat)
-                        episode.StartBeat(t);
-                }
-                last_t = t;
-            }
-            return episodes;
-        }
     }
 }

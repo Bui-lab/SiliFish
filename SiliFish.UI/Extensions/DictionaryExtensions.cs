@@ -27,7 +27,7 @@ namespace SiliFish.UI.Extensions
                     dgParamGrid[colValue, rowIndex++].Value = paramDict[key].ToString();
                 }
             }
-            catch { }
+            catch {}
         }
 
         /// <summary>

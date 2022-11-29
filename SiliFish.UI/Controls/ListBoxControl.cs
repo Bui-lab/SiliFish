@@ -24,9 +24,9 @@ namespace SiliFish.UI.Controls
         private event EventHandler sortItems;
         public event EventHandler SortItems { add => sortItems += value; remove => sortItems -= value; }
 
-        private Dictionary<int, object> HiddenItems = new Dictionary<int, object>();
-        public List<object> GetItems(bool includeHidden)
-        {
+        private Dictionary<int, object> HiddenItems=new Dictionary<int, object>();
+        public List<object> GetItems(bool includeHidden) 
+        { 
             if (!includeHidden || !HiddenItems.Any())
                 return listBox.Items.Cast<object>().ToList();
             List<object> fullList = new();
@@ -100,7 +100,7 @@ namespace SiliFish.UI.Controls
             if (mi != null)
             {
                 mi.Visible = visible;
-                mi.Enabled = enabled;
+                mi.Enabled=enabled;
             }
         }
         private void miCustomSort_Click(object sender, EventArgs e)
@@ -120,7 +120,7 @@ namespace SiliFish.UI.Controls
         }
 
         private void miCreateCopy_Click(object sender, EventArgs e)
-        {
+        { 
             copyItem?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
@@ -147,7 +147,7 @@ namespace SiliFish.UI.Controls
         private void miActivateAll_Click(object sender, EventArgs e)
         {
             foreach (int index in Enumerable.Range(0, listBox.Items.Count))
-                SetActive(listBox.Items[index], index, true);
+                SetActive(listBox.Items[index], index, true);             
         }
 
         private void miDeactivateAll_Click(object sender, EventArgs e)
