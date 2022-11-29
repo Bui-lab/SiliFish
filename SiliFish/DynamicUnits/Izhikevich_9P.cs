@@ -128,25 +128,32 @@ namespace SiliFish.DynamicUnits
         {
             double vNew, uNew;
             spike = false;
-            if (V < Vmax)
+            double dt = RunParam.static_dt_Euler;
+            double dtTracker = 0;
+            while (dtTracker < RunParam.static_dt)
             {
-                // ODE eqs
-                // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
-                double Cdv = k * (V - Vr) * (V - Vt) - u + I;
-                vNew = V + Cdv * RunParam.static_dt / Cm;
-                double du = a * (b * (V - Vr) - u);
-                uNew = u + RunParam.static_dt * du;
-                V = vNew;
-                u = uNew;
-            }
-            else
-            {
-                // Spike
-                spike = true;
-                vNew = c;
-                uNew = u + d;
-                V = vNew;
-                u = uNew;
+                dtTracker += dt;
+                if (V < Vmax)
+                {
+                    // ODE eqs
+                    // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
+                    double Cdv = k * (V - Vr) * (V - Vt) - u + I;
+                    vNew = V + Cdv * dt / Cm;
+                    double du = a * (b * (V - Vr) - u);
+                    uNew = u + dt * du;
+                    V = vNew;
+                    u = uNew;
+                }
+                else
+                {
+                    // Spike
+                    spike = true;
+                    vNew = c;
+                    uNew = u + d;
+                    V = vNew;
+                    u = uNew;
+                    break;
+                }
             }
             return V;
         }

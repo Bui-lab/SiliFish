@@ -94,7 +94,7 @@ namespace SiliFish.DynamicUnits
             throw new NotImplementedException();
         }
 
-        public virtual bool DoesSpike(double[] I, int warmup)
+        protected virtual bool DoesSpike(double[] I, int warmup)
         {
             bool spike = false;
             int tmax = I.Length;

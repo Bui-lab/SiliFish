@@ -38,9 +38,7 @@ namespace SiliFish.UI
         int tRunSkip = 0;
         PlotType PlotType = PlotType.MembPotential;
         CellSelectionStruct plotCellSelection;
-        private readonly string tempFolder;
         private string tempFile;
-        readonly string outputFolder;
         string lastSavedCustomModelJSON;
         Dictionary<string, object> lastSavedParams;
         Dictionary<string, object> lastRunParams;
@@ -54,17 +52,17 @@ namespace SiliFish.UI
                 InitAsync();
                 Wait();
                 splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
-                tempFolder = Path.GetTempPath() + "SiliFish";
-                outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
-                if (!Directory.Exists(tempFolder))
-                    Directory.CreateDirectory(tempFolder);
+                Settings.TempFolder = Path.GetTempPath() + "SiliFish";
+                Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+                if (!Directory.Exists(Settings.TempFolder))
+                    Directory.CreateDirectory(Settings.TempFolder);
                 else
                 {
-                    foreach (string f in Directory.GetFiles(tempFolder))
+                    foreach (string f in Directory.GetFiles(Settings.TempFolder))
                         File.Delete(f);
                 }
-                if (!Directory.Exists(outputFolder))
-                    Directory.CreateDirectory(outputFolder);
+                if (!Directory.Exists(Settings.OutputFolder))
+                    Directory.CreateDirectory(Settings.OutputFolder);
                 webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webView3DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
@@ -172,10 +170,10 @@ namespace SiliFish.UI
                 {
                     string target = (sender as CoreWebView2).DocumentTitle;
                     string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(outputFolder, prefix + ".html");
+                    target = Path.Combine(Settings.OutputFolder, prefix + ".html");
                     int suffix = 0;
                     while (File.Exists(target))
-                        target = Path.Combine(outputFolder, prefix + (suffix++).ToString() + ".html");
+                        target = Path.Combine(Settings.OutputFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
                     RegenerateWebview(sender as WebView2);
                     Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
@@ -664,6 +662,7 @@ namespace SiliFish.UI
             Model.runParam.tSkip_ms = tRunSkip;
             Model.runParam.tMax = tRunEnd;
             Model.runParam.dt = (double)edt.Value;
+            Model.runParam.dtEuler = (double)edtEuler.Value;
             if (Model == null) return;
             btnRun.Text = "Stop Run";
             Task.Run(RunModel);
@@ -862,7 +861,7 @@ namespace SiliFish.UI
         }
         private void CompletePlotHTML()
         {
-            webViewPlot.NavigateTo(htmlPlot, tempFolder, ref tempFile);
+            webViewPlot.NavigateTo(htmlPlot, Settings.TempFolder, ref tempFile);
             UseWaitCursor = false;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
@@ -1020,7 +1019,7 @@ namespace SiliFish.UI
             }
             TwoDModelGenerator modelGenerator = new();
             string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
-            webView2DModel.NavigateTo(html, tempFolder, ref tempFile);
+            webView2DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
 
         }
         private void btnGenerate2DModel_Click(object sender, EventArgs e)
@@ -1069,7 +1068,7 @@ namespace SiliFish.UI
             ThreeDModelGenerator threeDModelGenerator = new();
             string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem, ddSomites.Text);
 
-            webView3DModel.NavigateTo(html, tempFolder, ref tempFile);
+            webView3DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
         }
 
         private void btnGenerate3DModel_Click(object sender, EventArgs e)
@@ -1113,7 +1112,7 @@ namespace SiliFish.UI
         }
         private void CompleteAnimation()
         {
-            webViewAnimation.NavigateTo(htmlAnimation, tempFolder, ref tempFile);
+            webViewAnimation.NavigateTo(htmlAnimation, Settings.TempFolder, ref tempFile);
             linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
             lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
             btnAnimate.Enabled = true;
@@ -1634,7 +1633,7 @@ namespace SiliFish.UI
                         }
                     }
                 }
-                foreach (string f in Directory.GetFiles(tempFolder))
+                foreach (string f in Directory.GetFiles(Settings.TempFolder))
                     File.Delete(f);
             }
             catch { }
@@ -1668,7 +1667,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", outputFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Settings.OutputFolder);
             }
             catch { }
         }
@@ -1677,7 +1676,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", tempFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Settings.TempFolder);
             }
             catch { }
         }
@@ -1773,7 +1772,7 @@ namespace SiliFish.UI
                 (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
             string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
-            webViewSummaryV.NavigateTo(html, tempFolder, ref tempFile);
+            webViewSummaryV.NavigateTo(html, Settings.TempFolder, ref tempFile);
             eEpisodesLeft.Text = "";
             eEpisodesRight.Text = "";
             foreach (SwimmingEpisode episode in episodesLeft)

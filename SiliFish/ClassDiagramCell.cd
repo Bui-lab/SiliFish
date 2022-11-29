@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SiliFish.ModelUnits.Cell">
+    <Position X="13.5" Y="0.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAACKAAAIAggIgQAwgECYABAASAACYCJIAIAEw4AE=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Core" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Neuron">
+    <Position X="16" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIAACACAAABBAAAAAAAEAAAAAAQAACAALAAAAAggAA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.MuscleCell">
+    <Position X="12.25" Y="10" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIAACACAAAAAAAAAAAAEIAAAAAQAACAENAAAAAAgQA=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.DynamicUnit">
+    <Position X="5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAIBAAAAAgAwAAABAIAAAEAAAEAAAEQIBAhIAwDCA=</HashCode>
+      <FileName>DynamicUnits\DynamicUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.Izhikevich_9P">
+    <Position X="7.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAACghAAAgQIAAAAIAAAEAAEEBBCkgQIQhAAADAA=</HashCode>
+      <FileName>DynamicUnits\Izhikevich_9P.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.HodgkinHuxley" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAABYAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DynamicUnits\HodgkinHuxley.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.HodgkinHuxleyClassic" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAABAAAAQAAABYIQAIEABEIAAAAUgAEoAAADAg=</HashCode>
+      <FileName>DynamicUnits\HodgkinHuxleyClassic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.Izhikevich_5P">
+    <Position X="9.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACgAAAAgQIAAAAIAAAEAAAEBACkAQIQgAAADAA=</HashCode>
+      <FileName>DynamicUnits\Izhikevich_5P.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.Leaky_Integrator">
+    <Position X="2.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQIAACAAQAAAAAIAAgEAAAAgCAEAAAAgAAACQA=</HashCode>
+      <FileName>DynamicUnits\LeakyIntegrator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.QuadraticIntegrateAndFire">
+    <Position X="5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAQAAAAAIAAAEAAAAAAAAAAAAgAAACAA=</HashCode>
+      <FileName>DynamicUnits\QuadIntegrateFire.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

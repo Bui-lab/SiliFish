@@ -18,6 +18,7 @@ namespace SiliFish
         public int tSkip_ms { get; set; } = 0;
         public int tMax { get; set; } = 1000;
         public double dt { get; set; } = 0.1;//The step size
+        public double dtEuler { get; set; } = 0.01;//The step size for Euler method
 
         public int iIndex(double t)
         {
@@ -32,6 +33,8 @@ namespace SiliFish
         public static double static_Skip { get; set; } = 0;//Used from data structures that don't have direct access to the model
         [JsonIgnore]
         public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
+        [JsonIgnore]
+        public static double static_dt_Euler { get; set; } = 0.1;//Used by the Euler method differential equation solutions
 
         public static double GetTimeOfIndex(int index)
         { return Math.Round(static_dt * index - static_Skip, 2); }
@@ -559,6 +562,7 @@ namespace SiliFish
                     rand = new Random(seed != null ? (int)seed : 0);
                 runParam = rp;
                 RunParam.static_dt = rp.dt;
+                RunParam.static_dt_Euler = rp.dtEuler;
                 RunParam.static_Skip = rp.tSkip_ms;
                 iMax = rp.iMax;
                 Stimulus.nMax = iMax;

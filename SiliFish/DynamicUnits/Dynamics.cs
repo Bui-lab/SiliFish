@@ -89,7 +89,7 @@ namespace SiliFish.DynamicUnits
         /// <summary>
         /// The input current (stimulus)
         /// </summary>
-        public double[] IList;
+        public double[] StimulusArray;
 
         /// <summary>
         /// The membrane potential
@@ -156,7 +156,7 @@ namespace SiliFish.DynamicUnits
                     }
                     else
                     {
-                        int curStart = IList.ToList().FindIndex(i => i > 0);
+                        int curStart = StimulusArray.ToList().FindIndex(i => i > 0);
                         int firstSpike = SpikeList.FirstOrDefault(s => s >= curStart, -1);
                         if (firstSpike < 0) spikeDelay = -1;
                         else spikeDelay = (firstSpike - curStart) * RunParam.static_dt;
@@ -169,7 +169,7 @@ namespace SiliFish.DynamicUnits
         {
             get 
             {
-                int curStart = IList.ToList().FindIndex(i => i > 0);
+                int curStart = StimulusArray.ToList().FindIndex(i => i > 0);
                 return curStart * RunParam.static_dt;
             }
         }
@@ -177,7 +177,7 @@ namespace SiliFish.DynamicUnits
         {
             get
             {
-                int curEnd = IList.ToList().FindLastIndex(i => i > 0);
+                int curEnd = StimulusArray.ToList().FindLastIndex(i => i > 0);
                 return curEnd * RunParam.static_dt;
             }
         }
@@ -185,10 +185,10 @@ namespace SiliFish.DynamicUnits
         {
             if (!SpikeList.Any()) 
                 return 0;
-            int firstIIndex = IList.ToList().FindIndex(i => i > 0);
+            int firstIIndex = StimulusArray.ToList().FindIndex(i => i > 0);
             if (firstIIndex == -1) 
                 return 0;
-            int lastIIndex = IList.ToList().FindLastIndex(i => i > 0);
+            int lastIIndex = StimulusArray.ToList().FindLastIndex(i => i > 0);
             if (firstIIndex == lastIIndex) 
                 return 0;
             int lastSpikeIndex = SpikeList.Last();
@@ -199,7 +199,7 @@ namespace SiliFish.DynamicUnits
         public DynamicsStats(double[] stimulus)
         {
             int iMax = stimulus.Length;
-            IList = stimulus;
+            StimulusArray = stimulus;
             VList = new double[iMax];
             SecLists = new Dictionary<string, double[]>();
             TauDecay = new();
@@ -306,8 +306,8 @@ namespace SiliFish.DynamicUnits
         {
             if (analyzed) return;
             burstsOrSpikes = new();
-            int stimulusStart = IList.ToList().FindIndex(i => i > 0);
-            int stimulusEnd = IList.ToList().FindLastIndex(i => i > 0);
+            int stimulusStart = StimulusArray.ToList().FindIndex(i => i > 0);
+            int stimulusEnd = StimulusArray.ToList().FindLastIndex(i => i > 0);
 
             PreStimulusSpikeList = SpikeList.Where(s => s < stimulusStart).ToList();
             PostStimulusSpikeList = SpikeList.Where(s => s > stimulusEnd).ToList();

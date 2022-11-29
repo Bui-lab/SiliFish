@@ -88,6 +88,7 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.edtEuler = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -116,6 +117,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             this.SuspendLayout();
             // 
             // eRheobaseLimit
@@ -379,6 +381,7 @@
             // 
             // grTest
             // 
+            this.grTest.Controls.Add(this.edtEuler);
             this.grTest.Controls.Add(this.stimulusControl1);
             this.grTest.Controls.Add(this.cbAutoDrawPlots);
             this.grTest.Controls.Add(this.rbManualEntryStimulus);
@@ -475,7 +478,7 @@
             this.pfParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pfParams.Location = new System.Drawing.Point(3, 43);
             this.pfParams.Name = "pfParams";
-            this.pfParams.Size = new System.Drawing.Size(299, 136);
+            this.pfParams.Size = new System.Drawing.Size(299, 134);
             this.pfParams.TabIndex = 23;
             // 
             // tabAnalysis
@@ -483,10 +486,10 @@
             this.tabAnalysis.Controls.Add(this.tTest);
             this.tabAnalysis.Controls.Add(this.tSensitivityAnalysis);
             this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabAnalysis.Location = new System.Drawing.Point(3, 179);
+            this.tabAnalysis.Location = new System.Drawing.Point(3, 177);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(299, 445);
+            this.tabAnalysis.Size = new System.Drawing.Size(299, 447);
             this.tabAnalysis.TabIndex = 39;
             // 
             // tTest
@@ -496,7 +499,7 @@
             this.tTest.Location = new System.Drawing.Point(4, 24);
             this.tTest.Name = "tTest";
             this.tTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tTest.Size = new System.Drawing.Size(291, 417);
+            this.tTest.Size = new System.Drawing.Size(291, 419);
             this.tTest.TabIndex = 0;
             this.tTest.Text = "Test";
             this.tTest.UseVisualStyleBackColor = true;
@@ -837,6 +840,29 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // edtEuler
+            // 
+            this.edtEuler.DecimalPlaces = 2;
+            this.edtEuler.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.edtEuler.Location = new System.Drawing.Point(172, 96);
+            this.edtEuler.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.edtEuler.Name = "edtEuler";
+            this.edtEuler.Size = new System.Drawing.Size(66, 23);
+            this.edtEuler.TabIndex = 26;
+            this.edtEuler.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -882,6 +908,7 @@
             this.pPlots.PerformLayout();
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -946,5 +973,6 @@
         private GroupBox grFiring;
         private Controls.SensitivityAnalysisControl sensitivityAnalysisFiring;
         private Controls.SensitivityAnalysisControl sensitivityAnalysisRheobase;
+        private NumericUpDown edtEuler;
     }
 }

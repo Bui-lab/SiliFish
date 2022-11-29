@@ -8,6 +8,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.Services;
 using SiliFish.Services.Optimization;
+using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
@@ -163,7 +164,8 @@ namespace SiliFish.UI.Controls
                 "Firing Analysis", synchronized: true,
                 webViewPlots.ClientSize.Width,
                 height);
-            webViewPlots.NavigateToString(html);
+            string tempFile = "";
+            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
         }
 
         private void SensitivityAnalysisRheobase_RunAnalysis(object sender, EventArgs e)
@@ -201,7 +203,8 @@ namespace SiliFish.UI.Controls
                 "Rheobase Sensitivity Analysis", synchronized: false,
                 webViewPlots.ClientSize.Width,
                 height);
-            webViewPlots.NavigateToString(html);
+            string tempFile = "";
+            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
         }
 
         private void GaControl_OnLoadParams(object sender, EventArgs e)
@@ -263,6 +266,12 @@ namespace SiliFish.UI.Controls
         {
             parameters = pfParams.CreateDoubleDictionaryFromControls();
             gaControl.Parameters = parameters;
+            double dt = (double)edt.Value;
+            RunParam.static_Skip = 0;
+            RunParam.static_dt = dt;
+            RunParam.static_dt_Euler = (double)edtEuler.Value;
+            if (dt < RunParam.static_dt_Euler)
+                RunParam.static_dt_Euler = dt;
         }
 
         #region Plotting
@@ -362,7 +371,7 @@ namespace SiliFish.UI.Controls
                     Title = "Stimulus",
                     Color = Color.Red,
                     xData = TimeArray,
-                    yData = dynamics.IList,
+                    yData = dynamics.StimulusArray,
                     yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
                 });
             }
@@ -371,7 +380,8 @@ namespace SiliFish.UI.Controls
                 "Dynamics Test Results", synchronized: true,
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
-            webViewPlots.NavigateToString(html);
+            string tempFile = "";
+            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
         }
         private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
@@ -404,7 +414,8 @@ namespace SiliFish.UI.Controls
                 "Dynamics Test Results", synchronized: true,
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
-            webViewPlots.NavigateToString(html);
+            string tempFile = "";
+            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
         }
 
         private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
@@ -452,8 +463,7 @@ namespace SiliFish.UI.Controls
             ReadParameters();
 
             decimal dt = edt.Value;
-            RunParam.static_Skip = 0;
-            RunParam.static_dt = (double)dt;
+            
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);

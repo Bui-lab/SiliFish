@@ -211,6 +211,8 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.edtEuler = new System.Windows.Forms.NumericUpDown();
+            this.ldtEuler = new System.Windows.Forms.Label();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -291,6 +293,7 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             this.SuspendLayout();
             // 
             // pTop
@@ -408,7 +411,7 @@ namespace SiliFish.UI
             this.tabParams.Location = new System.Drawing.Point(0, 34);
             this.tabParams.Name = "tabParams";
             this.tabParams.SelectedIndex = 0;
-            this.tabParams.Size = new System.Drawing.Size(548, 484);
+            this.tabParams.Size = new System.Drawing.Size(548, 453);
             this.tabParams.TabIndex = 2;
             this.tabParams.Tag = "";
             // 
@@ -424,7 +427,7 @@ namespace SiliFish.UI
             this.tabGeneral.Controls.Add(this.lModelName);
             this.tabGeneral.Location = new System.Drawing.Point(4, 24);
             this.tabGeneral.Name = "tabGeneral";
-            this.tabGeneral.Size = new System.Drawing.Size(540, 456);
+            this.tabGeneral.Size = new System.Drawing.Size(540, 425);
             this.tabGeneral.TabIndex = 4;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
@@ -439,7 +442,7 @@ namespace SiliFish.UI
             this.pBodyDiagrams.Controls.Add(this.picCrossSection);
             this.pBodyDiagrams.Location = new System.Drawing.Point(192, 77);
             this.pBodyDiagrams.Name = "pBodyDiagrams";
-            this.pBodyDiagrams.Size = new System.Drawing.Size(348, 383);
+            this.pBodyDiagrams.Size = new System.Drawing.Size(348, 352);
             this.pBodyDiagrams.TabIndex = 15;
             this.pBodyDiagrams.SizeChanged += new System.EventHandler(this.pBodyDiagrams_SizeChanged);
             // 
@@ -878,6 +881,8 @@ namespace SiliFish.UI
             // 
             // pParamBottom
             // 
+            this.pParamBottom.Controls.Add(this.ldtEuler);
+            this.pParamBottom.Controls.Add(this.edtEuler);
             this.pParamBottom.Controls.Add(this.lRunCount);
             this.pParamBottom.Controls.Add(this.eRunNumber);
             this.pParamBottom.Controls.Add(this.eSkip);
@@ -892,15 +897,15 @@ namespace SiliFish.UI
             this.pParamBottom.Controls.Add(this.lTimeEnd);
             this.pParamBottom.Controls.Add(this.lRunParameters);
             this.pParamBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pParamBottom.Location = new System.Drawing.Point(0, 518);
+            this.pParamBottom.Location = new System.Drawing.Point(0, 487);
             this.pParamBottom.Name = "pParamBottom";
-            this.pParamBottom.Size = new System.Drawing.Size(548, 151);
+            this.pParamBottom.Size = new System.Drawing.Size(548, 182);
             this.pParamBottom.TabIndex = 1;
             // 
             // lRunCount
             // 
             this.lRunCount.AutoSize = true;
-            this.lRunCount.Location = new System.Drawing.Point(164, 45);
+            this.lRunCount.Location = new System.Drawing.Point(157, 45);
             this.lRunCount.Name = "lRunCount";
             this.lRunCount.Size = new System.Drawing.Size(64, 15);
             this.lRunCount.TabIndex = 37;
@@ -910,7 +915,7 @@ namespace SiliFish.UI
             // 
             // eRunNumber
             // 
-            this.eRunNumber.Location = new System.Drawing.Point(234, 42);
+            this.eRunNumber.Location = new System.Drawing.Point(227, 42);
             this.eRunNumber.Minimum = new decimal(new int[] {
             1,
             0,
@@ -934,7 +939,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.eSkip.Location = new System.Drawing.Point(73, 68);
+            this.eSkip.Location = new System.Drawing.Point(72, 69);
             this.eSkip.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -948,7 +953,7 @@ namespace SiliFish.UI
             // lSkip
             // 
             this.lSkip.AutoSize = true;
-            this.lSkip.Location = new System.Drawing.Point(15, 68);
+            this.lSkip.Location = new System.Drawing.Point(11, 71);
             this.lSkip.Name = "lSkip";
             this.lSkip.Size = new System.Drawing.Size(29, 15);
             this.lSkip.TabIndex = 6;
@@ -961,8 +966,8 @@ namespace SiliFish.UI
             1,
             0,
             0,
-            65536});
-            this.edt.Location = new System.Drawing.Point(73, 94);
+            131072});
+            this.edt.Location = new System.Drawing.Point(72, 96);
             this.edt.Name = "edt";
             this.edt.Size = new System.Drawing.Size(76, 23);
             this.edt.TabIndex = 35;
@@ -981,7 +986,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.eTimeEnd.Location = new System.Drawing.Point(73, 42);
+            this.eTimeEnd.Location = new System.Drawing.Point(72, 42);
             this.eTimeEnd.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -1003,17 +1008,17 @@ namespace SiliFish.UI
             // ldt
             // 
             this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(16, 94);
+            this.ldt.Location = new System.Drawing.Point(11, 97);
             this.ldt.Name = "ldt";
-            this.ldt.Size = new System.Drawing.Size(19, 15);
+            this.ldt.Size = new System.Drawing.Size(60, 15);
             this.ldt.TabIndex = 32;
-            this.ldt.Text = "Δt";
+            this.ldt.Text = "Δt Output";
             // 
             // lRunTime
             // 
             this.lRunTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lRunTime.Location = new System.Drawing.Point(309, 42);
+            this.lRunTime.Location = new System.Drawing.Point(302, 42);
             this.lRunTime.Name = "lRunTime";
             this.lRunTime.Size = new System.Drawing.Size(224, 80);
             this.lRunTime.TabIndex = 31;
@@ -1022,7 +1027,7 @@ namespace SiliFish.UI
             // 
             this.linkExportOutput.AutoSize = true;
             this.linkExportOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkExportOutput.Location = new System.Drawing.Point(220, 96);
+            this.linkExportOutput.Location = new System.Drawing.Point(213, 96);
             this.linkExportOutput.Name = "linkExportOutput";
             this.linkExportOutput.Size = new System.Drawing.Size(82, 15);
             this.linkExportOutput.TabIndex = 27;
@@ -1034,7 +1039,7 @@ namespace SiliFish.UI
             // progressBarRun
             // 
             this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBarRun.Location = new System.Drawing.Point(0, 128);
+            this.progressBarRun.Location = new System.Drawing.Point(0, 159);
             this.progressBarRun.Name = "progressBarRun";
             this.progressBarRun.Size = new System.Drawing.Size(548, 23);
             this.progressBarRun.TabIndex = 26;
@@ -1045,7 +1050,7 @@ namespace SiliFish.UI
             this.btnRun.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRun.Location = new System.Drawing.Point(234, 68);
+            this.btnRun.Location = new System.Drawing.Point(227, 68);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(63, 23);
             this.btnRun.TabIndex = 9;
@@ -1056,7 +1061,7 @@ namespace SiliFish.UI
             // lTimeEnd
             // 
             this.lTimeEnd.AutoSize = true;
-            this.lTimeEnd.Location = new System.Drawing.Point(15, 45);
+            this.lTimeEnd.Location = new System.Drawing.Point(11, 45);
             this.lTimeEnd.Name = "lTimeEnd";
             this.lTimeEnd.Size = new System.Drawing.Size(56, 15);
             this.lTimeEnd.TabIndex = 3;
@@ -1066,7 +1071,7 @@ namespace SiliFish.UI
             // 
             this.lRunParameters.AutoSize = true;
             this.lRunParameters.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lRunParameters.Location = new System.Drawing.Point(16, 15);
+            this.lRunParameters.Location = new System.Drawing.Point(9, 15);
             this.lRunParameters.Name = "lRunParameters";
             this.lRunParameters.Size = new System.Drawing.Size(133, 15);
             this.lRunParameters.TabIndex = 1;
@@ -2579,6 +2584,34 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // edtEuler
+            // 
+            this.edtEuler.DecimalPlaces = 3;
+            this.edtEuler.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.edtEuler.Location = new System.Drawing.Point(72, 123);
+            this.edtEuler.Name = "edtEuler";
+            this.edtEuler.Size = new System.Drawing.Size(76, 23);
+            this.edtEuler.TabIndex = 38;
+            this.toolTip.SetToolTip(this.edtEuler, "(in milliseconds)");
+            this.edtEuler.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            // 
+            // ldtEuler
+            // 
+            this.ldtEuler.AutoSize = true;
+            this.ldtEuler.Location = new System.Drawing.Point(11, 123);
+            this.ldtEuler.Name = "ldtEuler";
+            this.ldtEuler.Size = new System.Drawing.Size(48, 15);
+            this.ldtEuler.TabIndex = 39;
+            this.ldtEuler.Text = "Δt Euler";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2690,6 +2723,7 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2874,5 +2908,7 @@ namespace SiliFish.UI
         private Button btnCellularDynamics;
         private Panel pLineCellPools;
         private Panel pLineConnections;
+        private Label ldtEuler;
+        private NumericUpDown edtEuler;
     }
 }

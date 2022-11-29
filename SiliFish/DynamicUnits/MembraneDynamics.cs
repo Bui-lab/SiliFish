@@ -18,7 +18,7 @@ namespace SiliFish.DynamicUnits
         {
             if (sigma < 0.00000001) return this;
             Random rand = SwimmingModel.rand;
-            MembraneDynamics dyn = new MembraneDynamics()
+            MembraneDynamics dyn = new()
             {
                 a = a * rand.Gauss(1, sigma),
                 b = b * rand.Gauss(1, sigma),

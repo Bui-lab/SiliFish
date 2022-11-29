@@ -125,28 +125,31 @@ namespace SiliFish.DynamicUnits
         {
             double vNew, nNew, mNew, hNew;
             spike = false;
-            //if (V < Vmax)
+            double dt = RunParam.static_dt_Euler;
+            double dtTracker = 0;
+            while (dtTracker<RunParam.static_dt)
             {
+                dtTracker += dt;
                 // ODE eqs
                 double Cdv = I - IK - INa - IL;
-                vNew = V + Cdv * RunParam.static_dt / Cm;
+                vNew = V + Cdv * dt / Cm;
 
                 double dn = alpha_n * (1 - n) - beta_n * n;
-                nNew = n + RunParam.static_dt * dn;
+                nNew = n + dt * dn;
 
                 double dm = alpha_m * (1 - m) - beta_m * m;
-                mNew = m + RunParam.static_dt * dm;
+                mNew = m + dt * dm;
 
                 double dh = alpha_h * (1 - h) - beta_h * h;
-                hNew = h + RunParam.static_dt * dh;
+                hNew = h + dt * dh;
 
                 V = vNew;
                 n = nNew;
                 m = mNew;
                 h = hNew;
+                if (V > Vmax)
+                    spike = true;
             }
-            if (V > Vmax)
-                spike = true;
             return V;
         }
 

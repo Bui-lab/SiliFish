@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SiliFish.SwimmingModel">
+    <Position X="0.5" Y="1.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BUAICtioABIVQwCQEAMmRAQIQEAEAAiZCAKElygimXg=</HashCode>
+      <FileName>SwimmingModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="neuronPools" />
+      <Field Name="musclePools" />
+      <Field Name="gapPoolConnections" />
+      <Field Name="chemPoolConnections" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cell" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAACKAAAIAggIgQAwgECYABAASAACYCJIAIAEw4AE=</HashCode>
+      <FileName>ModelUnits\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.CellPool" Collapsed="true">
+    <Position X="5.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QIAAAFAgAAoAgAEgAAoVwAIAJCAgiAIACAgAgQAAiAA=</HashCode>
+      <FileName>ModelUnits\CellPool.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Cells" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.InterPool" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <AssociationLine Name="TargetPool" Type="SiliFish.ModelUnits.CellPool">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.161" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAJACAAAAIAAEAAAAACAAAAABA=</HashCode>
+      <FileName>ModelUnits\InterPool.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="SourcePool" />
+      <Field Name="TargetPool" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

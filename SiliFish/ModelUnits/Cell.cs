@@ -161,7 +161,6 @@ namespace SiliFish.ModelUnits
 
     public class Neuron : Cell
     {
-        public double u; //keeps the current u value
         public List<ChemicalSynapse> Terminals; //keeps the list of all synapses the current cells extends to
         public List<ChemicalSynapse> Synapses; //keeps the list of all synapses targeting the current cell
 

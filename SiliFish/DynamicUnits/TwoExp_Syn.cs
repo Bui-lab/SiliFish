@@ -21,24 +21,31 @@ namespace SiliFish.DynamicUnits
 
         public (double, double) GetNextVal(double v1, double v2, double IsynA, double IsynB)
         {
-            double IsynANew, IsynBNew;
-            if (v1 > vth)//pre-synaptic neuron spikes
+            double IsynANew = IsynA, IsynBNew = IsynB;
+            double dt = RunParam.static_dt_Euler;
+            double dtTracker = 0;
+            while (dtTracker < RunParam.static_dt)
             {
-                // mEPSC
-                IsynA += (E_rev - v2) * Conductance;
-                IsynB += (E_rev - v2) * Conductance;
-                double dIsynA = -1 / taud * IsynA;
-                double dIsynB = -1 / taur * IsynB;
-                IsynANew = IsynA + RunParam.static_dt * dIsynA;
-                IsynBNew = IsynB + RunParam.static_dt * dIsynB;
-            }
-            else
-            {
-                // no synaptic event
-                double dIsynA = -1 / taud * IsynA;
-                double dIsynB = -1 / taur * IsynB;
-                IsynANew = IsynA + RunParam.static_dt * dIsynA;
-                IsynBNew = IsynB + RunParam.static_dt * dIsynB;
+                dtTracker += dt;
+                if (v1 > vth)//pre-synaptic neuron spikes
+                {
+                    // mEPSC
+                    IsynA += (E_rev - v2) * Conductance;
+                    IsynB += (E_rev - v2) * Conductance;
+                    double dIsynA = -1 / taud * IsynA;
+                    double dIsynB = -1 / taur * IsynB;
+                    IsynANew = IsynA + dt * dIsynA;
+                    IsynBNew = IsynB + dt * dIsynB;
+                    break;
+                }
+                else
+                {
+                    // no synaptic event
+                    double dIsynA = -1 / taud * IsynA;
+                    double dIsynB = -1 / taur * IsynB;
+                    IsynANew = IsynA + dt * dIsynA;
+                    IsynBNew = IsynB + dt * dIsynB;
+                }
             }
 
             return (IsynANew, IsynBNew);
