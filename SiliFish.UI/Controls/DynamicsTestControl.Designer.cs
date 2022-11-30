@@ -32,10 +32,9 @@
             this.eRheobaseLimit = new System.Windows.Forms.NumericUpDown();
             this.lRheobaseLimit = new System.Windows.Forms.Label();
             this.btnRheobase = new System.Windows.Forms.Button();
-            this.ldt = new System.Windows.Forms.Label();
+            this.lPlotdt = new System.Windows.Forms.Label();
             this.edt = new System.Windows.Forms.NumericUpDown();
             this.ePlotEndTime = new System.Windows.Forms.NumericUpDown();
-            this.btnDynamicsRun = new System.Windows.Forms.Button();
             this.eStepEndTime = new System.Windows.Forms.NumericUpDown();
             this.lStepStartTime = new System.Windows.Forms.Label();
             this.eStepStartTime = new System.Windows.Forms.NumericUpDown();
@@ -47,15 +46,25 @@
             this.label1 = new System.Windows.Forms.Label();
             this.eRheobase = new System.Windows.Forms.TextBox();
             this.lRheobase = new System.Windows.Forms.Label();
-            this.grTest = new System.Windows.Forms.GroupBox();
+            this.edtEuler = new System.Windows.Forms.NumericUpDown();
             this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
-            this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
-            this.rbManualEntryStimulus = new System.Windows.Forms.RadioButton();
+            this.rbSingleEntryStimulus = new System.Windows.Forms.RadioButton();
             this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.pfParams = new System.Windows.Forms.FlowLayoutPanel();
+            this.pRheobase = new System.Windows.Forms.Panel();
             this.tabAnalysis = new System.Windows.Forms.TabControl();
             this.tTest = new System.Windows.Forms.TabPage();
+            this.pSep2 = new System.Windows.Forms.Panel();
+            this.pSep1 = new System.Windows.Forms.Panel();
+            this.btnDynamicsRun = new System.Windows.Forms.Button();
+            this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
+            this.eMultipleStimulus = new System.Windows.Forms.TextBox();
+            this.lMultipleEntryNote = new System.Windows.Forms.Label();
+            this.rbMultipleEntry = new System.Windows.Forms.RadioButton();
+            this.lEulerdt = new System.Windows.Forms.Label();
+            this.lms2 = new System.Windows.Forms.Label();
+            this.lms = new System.Windows.Forms.Label();
             this.tSensitivityAnalysis = new System.Windows.Forms.TabPage();
             this.grFiring = new System.Windows.Forms.GroupBox();
             this.sensitivityAnalysisFiring = new SiliFish.UI.Controls.SensitivityAnalysisControl();
@@ -88,7 +97,6 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.edtEuler = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -96,11 +104,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.eStepStartTime)).BeginInit();
             this.grRheobase.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseDuration)).BeginInit();
-            this.grTest.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
+            this.pRheobase.SuspendLayout();
             this.tabAnalysis.SuspendLayout();
             this.tTest.SuspendLayout();
             this.tSensitivityAnalysis.SuspendLayout();
@@ -117,7 +126,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             this.SuspendLayout();
             // 
             // eRheobaseLimit
@@ -164,14 +172,14 @@
             this.btnRheobase.UseVisualStyleBackColor = false;
             this.btnRheobase.Click += new System.EventHandler(this.btnRheobase_Click);
             // 
-            // ldt
+            // lPlotdt
             // 
-            this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(9, 98);
-            this.ldt.Name = "ldt";
-            this.ldt.Size = new System.Drawing.Size(18, 15);
-            this.ldt.TabIndex = 10;
-            this.ldt.Text = "dt";
+            this.lPlotdt.AutoSize = true;
+            this.lPlotdt.Location = new System.Drawing.Point(6, 69);
+            this.lPlotdt.Name = "lPlotdt";
+            this.lPlotdt.Size = new System.Drawing.Size(43, 15);
+            this.lPlotdt.TabIndex = 10;
+            this.lPlotdt.Text = "Plot Δt";
             // 
             // edt
             // 
@@ -181,7 +189,7 @@
             0,
             0,
             65536});
-            this.edt.Location = new System.Drawing.Point(100, 96);
+            this.edt.Location = new System.Drawing.Point(69, 65);
             this.edt.Minimum = new decimal(new int[] {
             1,
             0,
@@ -203,7 +211,7 @@
             0,
             0,
             0});
-            this.ePlotEndTime.Location = new System.Drawing.Point(100, 71);
+            this.ePlotEndTime.Location = new System.Drawing.Point(69, 38);
             this.ePlotEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -218,19 +226,6 @@
             0,
             0});
             // 
-            // btnDynamicsRun
-            // 
-            this.btnDynamicsRun.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnDynamicsRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnDynamicsRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDynamicsRun.Location = new System.Drawing.Point(4, 271);
-            this.btnDynamicsRun.Name = "btnDynamicsRun";
-            this.btnDynamicsRun.Size = new System.Drawing.Size(67, 23);
-            this.btnDynamicsRun.TabIndex = 3;
-            this.btnDynamicsRun.Text = "Run";
-            this.btnDynamicsRun.UseVisualStyleBackColor = false;
-            this.btnDynamicsRun.Click += new System.EventHandler(this.btnDynamicsRun_Click);
-            // 
             // eStepEndTime
             // 
             this.eStepEndTime.Increment = new decimal(new int[] {
@@ -238,7 +233,7 @@
             0,
             0,
             0});
-            this.eStepEndTime.Location = new System.Drawing.Point(100, 47);
+            this.eStepEndTime.Location = new System.Drawing.Point(172, 9);
             this.eStepEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -256,11 +251,11 @@
             // lStepStartTime
             // 
             this.lStepStartTime.AutoSize = true;
-            this.lStepStartTime.Location = new System.Drawing.Point(9, 25);
+            this.lStepStartTime.Location = new System.Drawing.Point(6, 13);
             this.lStepStartTime.Name = "lStepStartTime";
-            this.lStepStartTime.Size = new System.Drawing.Size(90, 15);
+            this.lStepStartTime.Size = new System.Drawing.Size(61, 15);
             this.lStepStartTime.TabIndex = 4;
-            this.lStepStartTime.Text = "Stim. Start Time";
+            this.lStepStartTime.Text = "Stim. Start";
             // 
             // eStepStartTime
             // 
@@ -269,7 +264,7 @@
             0,
             0,
             0});
-            this.eStepStartTime.Location = new System.Drawing.Point(100, 21);
+            this.eStepStartTime.Location = new System.Drawing.Point(69, 9);
             this.eStepStartTime.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -287,20 +282,20 @@
             // lStepEndTime
             // 
             this.lStepEndTime.AutoSize = true;
-            this.lStepEndTime.Location = new System.Drawing.Point(9, 49);
+            this.lStepEndTime.Location = new System.Drawing.Point(141, 13);
             this.lStepEndTime.Name = "lStepEndTime";
-            this.lStepEndTime.Size = new System.Drawing.Size(86, 15);
+            this.lStepEndTime.Size = new System.Drawing.Size(27, 15);
             this.lStepEndTime.TabIndex = 5;
-            this.lStepEndTime.Text = "Stim. End Time";
+            this.lStepEndTime.Text = "End";
             // 
             // lPlotEndTime
             // 
             this.lPlotEndTime.AutoSize = true;
-            this.lPlotEndTime.Location = new System.Drawing.Point(9, 75);
+            this.lPlotEndTime.Location = new System.Drawing.Point(6, 40);
             this.lPlotEndTime.Name = "lPlotEndTime";
-            this.lPlotEndTime.Size = new System.Drawing.Size(80, 15);
+            this.lPlotEndTime.Size = new System.Drawing.Size(51, 15);
             this.lPlotEndTime.TabIndex = 6;
-            this.lPlotEndTime.Text = "Plot End Time";
+            this.lPlotEndTime.Text = "Plot End";
             // 
             // grRheobase
             // 
@@ -312,10 +307,10 @@
             this.grRheobase.Controls.Add(this.btnRheobase);
             this.grRheobase.Controls.Add(this.eRheobaseLimit);
             this.grRheobase.Controls.Add(this.lRheobaseLimit);
-            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grRheobase.Location = new System.Drawing.Point(3, 3);
+            this.grRheobase.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grRheobase.Location = new System.Drawing.Point(0, 0);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(285, 114);
+            this.grRheobase.Size = new System.Drawing.Size(299, 124);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
@@ -379,72 +374,60 @@
             this.lRheobase.TabIndex = 16;
             this.lRheobase.Text = "Rheobase";
             // 
-            // grTest
+            // edtEuler
             // 
-            this.grTest.Controls.Add(this.edtEuler);
-            this.grTest.Controls.Add(this.stimulusControl1);
-            this.grTest.Controls.Add(this.cbAutoDrawPlots);
-            this.grTest.Controls.Add(this.rbManualEntryStimulus);
-            this.grTest.Controls.Add(this.rbRheobaseBasedStimulus);
-            this.grTest.Controls.Add(this.edt);
-            this.grTest.Controls.Add(this.lPlotEndTime);
-            this.grTest.Controls.Add(this.lStepEndTime);
-            this.grTest.Controls.Add(this.eStepStartTime);
-            this.grTest.Controls.Add(this.ePlotEndTime);
-            this.grTest.Controls.Add(this.lStepStartTime);
-            this.grTest.Controls.Add(this.btnDynamicsRun);
-            this.grTest.Controls.Add(this.eStepEndTime);
-            this.grTest.Controls.Add(this.ldt);
-            this.grTest.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grTest.Location = new System.Drawing.Point(3, 117);
-            this.grTest.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
-            this.grTest.Name = "grTest";
-            this.grTest.Size = new System.Drawing.Size(285, 300);
-            this.grTest.TabIndex = 17;
-            this.grTest.TabStop = false;
-            this.grTest.Text = "Test";
+            this.edtEuler.DecimalPlaces = 2;
+            this.edtEuler.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.edtEuler.Location = new System.Drawing.Point(195, 65);
+            this.edtEuler.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.edtEuler.Name = "edtEuler";
+            this.edtEuler.Size = new System.Drawing.Size(66, 23);
+            this.edtEuler.TabIndex = 26;
+            this.edtEuler.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             // 
             // stimulusControl1
             // 
             this.stimulusControl1.BackColor = System.Drawing.Color.White;
-            this.stimulusControl1.Location = new System.Drawing.Point(9, 148);
+            this.stimulusControl1.Location = new System.Drawing.Point(6, 191);
             this.stimulusControl1.Name = "stimulusControl1";
             this.stimulusControl1.Size = new System.Drawing.Size(176, 93);
             this.stimulusControl1.TabIndex = 25;
             this.stimulusControl1.StimulusChanged += new System.EventHandler(this.stimulusControl1_StimulusChanged);
             // 
-            // cbAutoDrawPlots
+            // rbSingleEntryStimulus
             // 
-            this.cbAutoDrawPlots.AutoSize = true;
-            this.cbAutoDrawPlots.Location = new System.Drawing.Point(83, 275);
-            this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
-            this.cbAutoDrawPlots.Size = new System.Drawing.Size(111, 19);
-            this.cbAutoDrawPlots.TabIndex = 24;
-            this.cbAutoDrawPlots.Text = "Auto Draw Plots";
-            this.cbAutoDrawPlots.UseVisualStyleBackColor = true;
-            this.cbAutoDrawPlots.CheckedChanged += new System.EventHandler(this.cbAutoDrawPlots_CheckedChanged);
-            // 
-            // rbManualEntryStimulus
-            // 
-            this.rbManualEntryStimulus.AutoSize = true;
-            this.rbManualEntryStimulus.Checked = true;
-            this.rbManualEntryStimulus.Location = new System.Drawing.Point(9, 128);
-            this.rbManualEntryStimulus.Name = "rbManualEntryStimulus";
-            this.rbManualEntryStimulus.Size = new System.Drawing.Size(117, 19);
-            this.rbManualEntryStimulus.TabIndex = 12;
-            this.rbManualEntryStimulus.TabStop = true;
-            this.rbManualEntryStimulus.Text = "Use Manual Entry";
-            this.rbManualEntryStimulus.UseVisualStyleBackColor = true;
-            this.rbManualEntryStimulus.CheckedChanged += new System.EventHandler(this.rbManualEntryStimulus_CheckedChanged);
+            this.rbSingleEntryStimulus.AutoSize = true;
+            this.rbSingleEntryStimulus.Checked = true;
+            this.rbSingleEntryStimulus.Location = new System.Drawing.Point(6, 174);
+            this.rbSingleEntryStimulus.Name = "rbSingleEntryStimulus";
+            this.rbSingleEntryStimulus.Size = new System.Drawing.Size(87, 19);
+            this.rbSingleEntryStimulus.TabIndex = 12;
+            this.rbSingleEntryStimulus.TabStop = true;
+            this.rbSingleEntryStimulus.Text = "Single Entry";
+            this.rbSingleEntryStimulus.UseVisualStyleBackColor = true;
+            this.rbSingleEntryStimulus.CheckedChanged += new System.EventHandler(this.rbManualEntryStimulus_CheckedChanged);
             // 
             // rbRheobaseBasedStimulus
             // 
             this.rbRheobaseBasedStimulus.AutoSize = true;
-            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(9, 247);
+            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(6, 94);
             this.rbRheobaseBasedStimulus.Name = "rbRheobaseBasedStimulus";
-            this.rbRheobaseBasedStimulus.Size = new System.Drawing.Size(175, 19);
+            this.rbRheobaseBasedStimulus.Size = new System.Drawing.Size(187, 19);
             this.rbRheobaseBasedStimulus.TabIndex = 13;
-            this.rbRheobaseBasedStimulus.Text = "Use Rheobase (x1, x1.1, x1.5)";
+            this.rbRheobaseBasedStimulus.Text = "Rheobase based (x1, x1.1, x1.5)";
+            this.toolTip1.SetToolTip(this.rbRheobaseBasedStimulus, "Step stimulus with 0 noise");
             this.rbRheobaseBasedStimulus.UseVisualStyleBackColor = true;
             // 
             // splitMain
@@ -457,6 +440,7 @@
             // splitMain.Panel1
             // 
             this.splitMain.Panel1.Controls.Add(this.pfParams);
+            this.splitMain.Panel1.Controls.Add(this.pRheobase);
             this.splitMain.Panel1.Controls.Add(this.tabAnalysis);
             this.splitMain.Panel1.Controls.Add(this.pCoreType);
             this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
@@ -478,31 +462,161 @@
             this.pfParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pfParams.Location = new System.Drawing.Point(3, 43);
             this.pfParams.Name = "pfParams";
-            this.pfParams.Size = new System.Drawing.Size(299, 134);
+            this.pfParams.Size = new System.Drawing.Size(299, 118);
             this.pfParams.TabIndex = 23;
+            // 
+            // pRheobase
+            // 
+            this.pRheobase.Controls.Add(this.grRheobase);
+            this.pRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pRheobase.Location = new System.Drawing.Point(3, 161);
+            this.pRheobase.Name = "pRheobase";
+            this.pRheobase.Size = new System.Drawing.Size(299, 124);
+            this.pRheobase.TabIndex = 40;
             // 
             // tabAnalysis
             // 
             this.tabAnalysis.Controls.Add(this.tTest);
             this.tabAnalysis.Controls.Add(this.tSensitivityAnalysis);
             this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabAnalysis.Location = new System.Drawing.Point(3, 177);
+            this.tabAnalysis.Location = new System.Drawing.Point(3, 285);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(299, 447);
+            this.tabAnalysis.Size = new System.Drawing.Size(299, 339);
             this.tabAnalysis.TabIndex = 39;
             // 
             // tTest
             // 
-            this.tTest.Controls.Add(this.grTest);
-            this.tTest.Controls.Add(this.grRheobase);
+            this.tTest.Controls.Add(this.pSep2);
+            this.tTest.Controls.Add(this.pSep1);
+            this.tTest.Controls.Add(this.btnDynamicsRun);
+            this.tTest.Controls.Add(this.cbAutoDrawPlots);
+            this.tTest.Controls.Add(this.eMultipleStimulus);
+            this.tTest.Controls.Add(this.lMultipleEntryNote);
+            this.tTest.Controls.Add(this.rbRheobaseBasedStimulus);
+            this.tTest.Controls.Add(this.rbMultipleEntry);
+            this.tTest.Controls.Add(this.lPlotdt);
+            this.tTest.Controls.Add(this.lEulerdt);
+            this.tTest.Controls.Add(this.eStepEndTime);
+            this.tTest.Controls.Add(this.lms2);
+            this.tTest.Controls.Add(this.lStepStartTime);
+            this.tTest.Controls.Add(this.lms);
+            this.tTest.Controls.Add(this.ePlotEndTime);
+            this.tTest.Controls.Add(this.edtEuler);
+            this.tTest.Controls.Add(this.eStepStartTime);
+            this.tTest.Controls.Add(this.stimulusControl1);
+            this.tTest.Controls.Add(this.lStepEndTime);
+            this.tTest.Controls.Add(this.lPlotEndTime);
+            this.tTest.Controls.Add(this.rbSingleEntryStimulus);
+            this.tTest.Controls.Add(this.edt);
             this.tTest.Location = new System.Drawing.Point(4, 24);
             this.tTest.Name = "tTest";
             this.tTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tTest.Size = new System.Drawing.Size(291, 419);
+            this.tTest.Size = new System.Drawing.Size(291, 311);
             this.tTest.TabIndex = 0;
             this.tTest.Text = "Test";
             this.tTest.UseVisualStyleBackColor = true;
+            // 
+            // pSep2
+            // 
+            this.pSep2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pSep2.BackColor = System.Drawing.Color.DimGray;
+            this.pSep2.Location = new System.Drawing.Point(6, 167);
+            this.pSep2.Name = "pSep2";
+            this.pSep2.Size = new System.Drawing.Size(279, 3);
+            this.pSep2.TabIndex = 37;
+            // 
+            // pSep1
+            // 
+            this.pSep1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pSep1.BackColor = System.Drawing.Color.DimGray;
+            this.pSep1.Location = new System.Drawing.Point(6, 115);
+            this.pSep1.Name = "pSep1";
+            this.pSep1.Size = new System.Drawing.Size(279, 3);
+            this.pSep1.TabIndex = 36;
+            // 
+            // btnDynamicsRun
+            // 
+            this.btnDynamicsRun.Location = new System.Drawing.Point(107, 282);
+            this.btnDynamicsRun.Name = "btnDynamicsRun";
+            this.btnDynamicsRun.Size = new System.Drawing.Size(66, 23);
+            this.btnDynamicsRun.TabIndex = 35;
+            this.btnDynamicsRun.Text = "Run";
+            this.btnDynamicsRun.UseVisualStyleBackColor = true;
+            this.btnDynamicsRun.Click += new System.EventHandler(this.btnDynamicsRun_Click);
+            // 
+            // cbAutoDrawPlots
+            // 
+            this.cbAutoDrawPlots.AutoSize = true;
+            this.cbAutoDrawPlots.Location = new System.Drawing.Point(9, 286);
+            this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
+            this.cbAutoDrawPlots.Size = new System.Drawing.Size(82, 19);
+            this.cbAutoDrawPlots.TabIndex = 34;
+            this.cbAutoDrawPlots.Text = "Auto Draw";
+            this.cbAutoDrawPlots.UseVisualStyleBackColor = true;
+            this.cbAutoDrawPlots.CheckedChanged += new System.EventHandler(this.cbAutoDrawPlots_CheckedChanged);
+            // 
+            // eMultipleStimulus
+            // 
+            this.eMultipleStimulus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eMultipleStimulus.Location = new System.Drawing.Point(8, 141);
+            this.eMultipleStimulus.Name = "eMultipleStimulus";
+            this.eMultipleStimulus.ReadOnly = true;
+            this.eMultipleStimulus.Size = new System.Drawing.Size(276, 23);
+            this.eMultipleStimulus.TabIndex = 33;
+            this.eMultipleStimulus.Text = "example: 1;10";
+            this.toolTip1.SetToolTip(this.eMultipleStimulus, "Step stimulus with 0 noise");
+            // 
+            // lMultipleEntryNote
+            // 
+            this.lMultipleEntryNote.AutoSize = true;
+            this.lMultipleEntryNote.Location = new System.Drawing.Point(105, 121);
+            this.lMultipleEntryNote.Name = "lMultipleEntryNote";
+            this.lMultipleEntryNote.Size = new System.Drawing.Size(174, 15);
+            this.lMultipleEntryNote.TabIndex = 32;
+            this.lMultipleEntryNote.Text = "(enter values seperated with \";\")";
+            // 
+            // rbMultipleEntry
+            // 
+            this.rbMultipleEntry.AutoSize = true;
+            this.rbMultipleEntry.Location = new System.Drawing.Point(6, 119);
+            this.rbMultipleEntry.Name = "rbMultipleEntry";
+            this.rbMultipleEntry.Size = new System.Drawing.Size(99, 19);
+            this.rbMultipleEntry.TabIndex = 31;
+            this.rbMultipleEntry.Text = "Multiple Entry";
+            this.toolTip1.SetToolTip(this.rbMultipleEntry, "Step stimulus with 0 noise");
+            this.rbMultipleEntry.UseVisualStyleBackColor = true;
+            this.rbMultipleEntry.CheckedChanged += new System.EventHandler(this.rbMultipleEntry_CheckedChanged);
+            // 
+            // lEulerdt
+            // 
+            this.lEulerdt.AutoSize = true;
+            this.lEulerdt.Location = new System.Drawing.Point(141, 69);
+            this.lEulerdt.Name = "lEulerdt";
+            this.lEulerdt.Size = new System.Drawing.Size(48, 15);
+            this.lEulerdt.TabIndex = 30;
+            this.lEulerdt.Text = "Euler Δt";
+            // 
+            // lms2
+            // 
+            this.lms2.AutoSize = true;
+            this.lms2.Location = new System.Drawing.Point(142, 40);
+            this.lms2.Name = "lms2";
+            this.lms2.Size = new System.Drawing.Size(31, 15);
+            this.lms2.TabIndex = 28;
+            this.lms2.Text = "(ms)";
+            // 
+            // lms
+            // 
+            this.lms.AutoSize = true;
+            this.lms.Location = new System.Drawing.Point(248, 13);
+            this.lms.Name = "lms";
+            this.lms.Size = new System.Drawing.Size(31, 15);
+            this.lms.TabIndex = 27;
+            this.lms.Text = "(ms)";
             // 
             // tSensitivityAnalysis
             // 
@@ -511,7 +625,7 @@
             this.tSensitivityAnalysis.Location = new System.Drawing.Point(4, 24);
             this.tSensitivityAnalysis.Name = "tSensitivityAnalysis";
             this.tSensitivityAnalysis.Padding = new System.Windows.Forms.Padding(3);
-            this.tSensitivityAnalysis.Size = new System.Drawing.Size(291, 417);
+            this.tSensitivityAnalysis.Size = new System.Drawing.Size(291, 311);
             this.tSensitivityAnalysis.TabIndex = 1;
             this.tSensitivityAnalysis.Text = "Sensitivity Analysis";
             this.tSensitivityAnalysis.UseVisualStyleBackColor = true;
@@ -840,29 +954,6 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
-            // edtEuler
-            // 
-            this.edtEuler.DecimalPlaces = 2;
-            this.edtEuler.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.edtEuler.Location = new System.Drawing.Point(172, 96);
-            this.edtEuler.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.edtEuler.Name = "edtEuler";
-            this.edtEuler.Size = new System.Drawing.Size(66, 23);
-            this.edtEuler.TabIndex = 26;
-            this.edtEuler.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -880,15 +971,16 @@
             this.grRheobase.ResumeLayout(false);
             this.grRheobase.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseDuration)).EndInit();
-            this.grTest.ResumeLayout(false);
-            this.grTest.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel1.PerformLayout();
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
+            this.pRheobase.ResumeLayout(false);
             this.tabAnalysis.ResumeLayout(false);
             this.tTest.ResumeLayout(false);
+            this.tTest.PerformLayout();
             this.tSensitivityAnalysis.ResumeLayout(false);
             this.grFiring.ResumeLayout(false);
             this.grRheoSens.ResumeLayout(false);
@@ -908,7 +1000,6 @@
             this.pPlots.PerformLayout();
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -917,10 +1008,9 @@
         private NumericUpDown eRheobaseLimit;
         private Label lRheobaseLimit;
         private Button btnRheobase;
-        private Label ldt;
+        private Label lPlotdt;
         private NumericUpDown edt;
         private NumericUpDown ePlotEndTime;
-        private Button btnDynamicsRun;
         private NumericUpDown eStepEndTime;
         private Label lStepStartTime;
         private NumericUpDown eStepStartTime;
@@ -929,13 +1019,12 @@
         private GroupBox grRheobase;
         private TextBox eRheobase;
         private Label lRheobase;
-        private GroupBox grTest;
         private SplitContainer splitMain;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlots;
         private NumericUpDown eRheobaseDuration;
         private Label label1;
         private GroupBox grRheoSens;
-        private RadioButton rbManualEntryStimulus;
+        private RadioButton rbSingleEntryStimulus;
         private RadioButton rbRheobaseBasedStimulus;
         private FlowLayoutPanel pfParams;
         private Panel pCoreType;
@@ -961,7 +1050,6 @@
         private ComboBox ddCoreType;
         private Label lCoreType;
         private Panel pLoadSaveParams;
-        private CheckBox cbAutoDrawPlots;
         private TabControl tabAnalysis;
         private TabPage tTest;
         private TabPage tSensitivityAnalysis;
@@ -974,5 +1062,16 @@
         private Controls.SensitivityAnalysisControl sensitivityAnalysisFiring;
         private Controls.SensitivityAnalysisControl sensitivityAnalysisRheobase;
         private NumericUpDown edtEuler;
+        private Label lms2;
+        private Label lms;
+        private Panel pRheobase;
+        private Label lEulerdt;
+        private TextBox eMultipleStimulus;
+        private Label lMultipleEntryNote;
+        private RadioButton rbMultipleEntry;
+        private CheckBox cbAutoDrawPlots;
+        private Panel pSep2;
+        private Panel pSep1;
+        private Button btnDynamicsRun;
     }
 }

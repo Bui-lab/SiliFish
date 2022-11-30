@@ -1,5 +1,0 @@
-Double Coil:
-- Python: 
-	- cv is set to 0.55 in the code, but NB files all have 1
-	- stim is  set to 8 in the code, but NB files all have 35. Excpt 50 fole 30 somites
-	- Egly is set to -70 in the code, but NB files all have -58

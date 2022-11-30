@@ -46,7 +46,7 @@ namespace SiliFish.UI.Controls
             get { return linkSwitchToOptimization.Text != "Optimization Mode"; }
             set
             {
-                grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !value;
+                grPlotSelection.Enabled = rbSingleEntryStimulus.Checked && !value;
                 splitGAAndPlots.Panel1Collapsed = !value;
                 linkSwitchToOptimization.Text = value ? "Quit Optimization Mode" : "Optimization Mode";
             }
@@ -463,7 +463,7 @@ namespace SiliFish.UI.Controls
             ReadParameters();
 
             decimal dt = edt.Value;
-            
+
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
@@ -475,7 +475,7 @@ namespace SiliFish.UI.Controls
             DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
             if (core != null)
             {
-                if (rbManualEntryStimulus.Checked)
+                if (rbSingleEntryStimulus.Checked)
                 {
                     double[] I = GenerateStimulus();
                     dynamics = core.DynamicsTest(I);
@@ -486,26 +486,43 @@ namespace SiliFish.UI.Controls
                     dynamics = null;
                     Dictionary<string, DynamicsStats> dynamicsList = new();
                     List<string> columnNames = new();
-                    if (double.TryParse(eRheobase.Text, out double rheobase))
+                    List<double> stimValues = new();
+                    if (rbRheobaseBasedStimulus.Checked)
                     {
-                        List<double[]>I = new();// = new double[plotEnd + 1, Const.RheobaseTestMultipliers.Length];
-                        int iter = 0;
-                        foreach (double multiplier in Const.RheobaseTestMultipliers)
+                        if (double.TryParse(eRheobase.Text, out double rheobase))
                         {
-                            Stimulus stim = new()
+                            stimValues = Const.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
+                            columnNames.AddRange(Const.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
+                        }
+                    }
+                    else //if (rbMultipleEntry.Checked)
+                    {
+                        string[] multValues = eMultipleStimulus.Text.Split(new char[] { ';', ' ', ':', '-' });
+                        foreach (string s in multValues)
+                            if (double.TryParse(s, out double d))
+                            {
+                                stimValues.Add(d);
+                                columnNames.Add($"Stim_{columnNames.Count+1}");
+                            }
+                    }
+                    if (stimValues.Any())
+                    {
+                        List<double[]> I = new();
+                        int iter = 0;
+                        foreach (double stim in stimValues)
+                        {
+                            Stimulus stimulus = new()
                             {
                                 StimulusSettings = new()
                                 {
                                     Mode = StimulusMode.Step,
-                                    Value1 = rheobase * multiplier,
+                                    Value1 = stim,
                                     Value2 = 0
                                 },
                                 TimeSpan_ms = tl
                             };
-                            //cell.InitDataVectors(plotEnd + 1);
-                            I.Add(stim.GenerateStimulus(stimStart, stimEnd - stimStart, SwimmingModel.rand).Concat(new double[plotEnd + 1 - stimEnd]).ToArray());
-                            dynamicsList.Add($"V - Rheobase x {multiplier:0.##}", core.DynamicsTest(I[iter++]));
-                            columnNames.Add($"x {multiplier:0.##}");
+                            I.Add(stimulus.GenerateStimulus(stimStart, stimEnd - stimStart, SwimmingModel.rand).Concat(new double[plotEnd + 1 - stimEnd]).ToArray());
+                            dynamicsList.Add($"Stimulus: {stim:0.##}", core.DynamicsTest(I[iter++]));
                         }
                         CreatePlots(dynamicsList, columnNames, I);
                     }
@@ -545,8 +562,8 @@ namespace SiliFish.UI.Controls
 
         private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
-            stimulusControl1.Enabled = rbManualEntryStimulus.Checked;
-            grPlotSelection.Enabled = rbManualEntryStimulus.Checked && !OptimizationMode;
+            stimulusControl1.Enabled = rbSingleEntryStimulus.Checked;
+            grPlotSelection.Enabled = rbSingleEntryStimulus.Checked && !OptimizationMode;
             if (cbAutoDrawPlots.Checked)
                 DynamicsRun();
         }
@@ -618,5 +635,9 @@ namespace SiliFish.UI.Controls
                 DynamicsRun();
         }
 
+        private void rbMultipleEntry_CheckedChanged(object sender, EventArgs e)
+        {
+            eMultipleStimulus.ReadOnly = !rbMultipleEntry.Checked;
+        }
     }
 }
