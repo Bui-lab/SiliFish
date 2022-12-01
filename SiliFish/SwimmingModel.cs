@@ -292,6 +292,11 @@ namespace SiliFish
             return paramDict;
         }
 
+        /// <summary>
+        /// Parameter Desc keeps some descriptive text for the relevant parameters
+        /// for easy user entry
+        /// </summary>
+        /// <returns>The tooltip values for the model parameters</returns>
         public virtual Dictionary<string, object> GetParameterDesc()
         {
             Dictionary<string, object> paramDescDict = new()
@@ -311,6 +316,12 @@ namespace SiliFish
 
             return paramDescDict;
         }
+
+        /// <summary>
+        /// Ensures all JSON files with missing parameters are brought up to date 
+        /// if there are new parameters added to the code
+        /// </summary>
+        /// <param name="paramDict"></param>
         protected virtual void FillMissingParameters(Dictionary<string, object> paramDict)
         {
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
@@ -482,15 +493,7 @@ namespace SiliFish
 
         protected virtual void InitStructures(int nmax)
         {
-            Time = new double[nmax];
-            neuronPools.Clear();
-            musclePools.Clear();
-            gapPoolConnections.Clear();
-            chemPoolConnections.Clear();
-            InitNeurons();
-            InitSynapsesAndGapJunctions();
-            InitDataVectors(nmax);
-            initialized = true;
+            throw (new NotImplementedException());
         }
 
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)

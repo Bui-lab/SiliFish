@@ -186,18 +186,18 @@ namespace SiliFish.ModelUnits
         }
 
         /// <summary>
-        /// neuron constructor called from predefined models
+        /// neuron constructor called from hardcoded models
         /// </summary>
-        public Neuron(string group, int seq, MembraneDynamics dyn, double sigma_dyn,
+        public Neuron(string group, string coreType, int somite, int seq, Dictionary<string, double> coreParams, 
             Coordinate coor, double cv, Stimulus stim = null, TimeLine timeline = null)
         {
             CellGroup = group;
+            Somite = somite;
             Sequence = seq;
             PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
-            if (sigma_dyn > 0)
-                dyn = dyn.RandomizedDynamics(sigma_dyn);
 
-            Core = new Izhikevich_9P(dyn);
+            Core = DynamicUnit.CreateCore(coreType, coreParams);
+
             coordinate = coor;
             if (stim != null)
                 Stimuli.Add(stim);

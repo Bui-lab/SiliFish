@@ -33,20 +33,6 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
 
-        public Izhikevich_9P(MembraneDynamics dyn)
-        {
-            a = dyn?.a ?? 0;
-            b = dyn?.b ?? 0;
-            c = dyn?.c ?? 0;
-            d = dyn?.d ?? 0;
-            Vmax = dyn?.Vmax ?? 0;
-            Vr = dyn?.Vr ?? 0;
-            Vt = dyn?.Vt ?? 0;
-            k = dyn?.k ?? 0;
-            Cm = dyn?.Cm ?? 0;
-            Initialize();
-        }
-
         public Izhikevich_9P(Dictionary<string, double> paramExternal)
         {
             SetParameters(paramExternal);
