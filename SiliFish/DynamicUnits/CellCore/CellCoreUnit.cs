@@ -9,10 +9,10 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class DynamicUnit
+    public class CellCoreUnit
     {
         private static Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
-        .Where(type => typeof(DynamicUnit).IsAssignableFrom(type))
+        .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
 
         //the resting membrane potential
@@ -53,18 +53,18 @@ namespace SiliFish.DynamicUnits
 
         public static List<string> GetCoreTypes()
         {
-            return typeMap.Keys.Where(k => k != nameof(DynamicUnit)).ToList();
+            return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
         }
-        public static DynamicUnit GetOfDerivedType(string json)
+        public static CellCoreUnit GetOfDerivedType(string json)
         {
-            DynamicUnit core = JsonSerializer.Deserialize<DynamicUnit>(json);
+            CellCoreUnit core = JsonSerializer.Deserialize<CellCoreUnit>(json);
             if (core != null)
                 return CreateCore(core.CoreType, core.Parameters);
             return core;
         }
-        public static DynamicUnit CreateCore(string coreType, Dictionary<string, double> parameters)
+        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters)
         {
-            return (DynamicUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            return (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace SiliFish.DynamicUnits
         /// <returns></returns>
         public static Dictionary<string, object> GetParameters(string coreType)
         {
-            DynamicUnit core = CreateCore(coreType, null);
+            CellCoreUnit core = CreateCore(coreType, null);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
         }
 

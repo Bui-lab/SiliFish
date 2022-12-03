@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SiliFish.DynamicUnits
 {
-    public class HodgkinHuxleyClassic: DynamicUnit
+    public class HodgkinHuxleyClassic: CellCoreUnit
     {
         public double g_K = 36;
         public double g_Na = 120;

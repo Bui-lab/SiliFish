@@ -110,7 +110,7 @@ namespace SiliFish.UI.Controls
         private void FillCoreTypes(string def = null)
         {
             if (ddCoreType.Items.Count == 0)
-                ddCoreType.Items.AddRange(DynamicUnit.GetCoreTypes().ToArray());
+                ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
             if (!string.IsNullOrEmpty(def))
                 ddCoreType.Text = def;
             if (ddCoreType.SelectedIndex < 0)
@@ -140,7 +140,7 @@ namespace SiliFish.UI.Controls
             List<ChartDataStruct> charts = new();
             ReadParameters();
             string param = sensitivityAnalysisFiring.SelectedParam;
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
             double[] I  = GenerateStimulus();
@@ -178,7 +178,7 @@ namespace SiliFish.UI.Controls
             string selectedParam = sensitivityAnalysisRheobase.SelectedParam;
             if (parameters.ContainsKey(selectedParam))
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == selectedParam).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
 
             foreach (string param in paramToTest.Keys)//change one parameter at a time
             {
@@ -428,7 +428,7 @@ namespace SiliFish.UI.Controls
             if (skipCoreTypeChange) return;
             CoreType = ddCoreType.Text;
             updateParamNames = true;
-            Parameters = DynamicUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
+            Parameters = CellCoreUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
         }
 
         private void stimulusControl1_StimulusChanged(object sender, EventArgs e)
@@ -472,7 +472,7 @@ namespace SiliFish.UI.Controls
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 TimeArray[i] = i * (double)dt;
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
             if (core != null)
             {
                 if (rbSingleEntryStimulus.Checked)
@@ -537,7 +537,7 @@ namespace SiliFish.UI.Controls
         private void CalculateRheobase()
         {
             ReadParameters();
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
@@ -590,7 +590,7 @@ namespace SiliFish.UI.Controls
                 string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                DynamicUnit core = DynamicUnit.GetOfDerivedType(JSONString);
+                CellCoreUnit core = CellCoreUnit.GetOfDerivedType(JSONString);
                 if (core != null)
                 {
                     skipCoreTypeChange = true;
@@ -605,7 +605,7 @@ namespace SiliFish.UI.Controls
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
             string JSONString = JsonUtil.ToJson(core);
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)

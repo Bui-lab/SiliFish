@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SiliFish.DynamicUnits
 {
-    public class QuadraticIntegrateAndFire : DynamicUnit
+    public class QuadraticIntegrateAndFire : CellCoreUnit
     {
         protected override void Initialize()
         {

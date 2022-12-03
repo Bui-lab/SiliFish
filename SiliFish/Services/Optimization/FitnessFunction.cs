@@ -64,7 +64,7 @@ namespace SiliFish.Services.Optimization
         /// <param name="core"></param>
         /// <param name="rheobase"></param>
         /// <returns></returns>
-        public double CalculateFitness(DynamicUnit core, out double rheobase)
+        public double CalculateFitness(CellCoreUnit core, out double rheobase)
         {
             rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
             if (rheobase < 0) return 0;

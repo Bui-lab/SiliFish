@@ -66,6 +66,10 @@ namespace SiliFish.UI.Controls
         {
             parameters.WriteToGrid(dgDynamics, colField.Index, colValue.Index);
         }
+        public void WriteToGrid(Dictionary<string, double> parameters)
+        {
+            parameters.WriteToGrid(dgDynamics, colField.Index, colValue.Index);
+        }
 
         public Dictionary<string, object> ReadFromGrid()
         {

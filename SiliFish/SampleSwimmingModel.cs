@@ -53,9 +53,9 @@ namespace SiliFish
         public override Dictionary<string, object> GetParameters()
         {
             Dictionary<string, object> paramDict = base.GetParameters();
-            DynamicUnit NeuronCore = DynamicUnit.CreateCore(NeuronCoreType, null);
+            CellCoreUnit NeuronCore = CellCoreUnit.CreateCore(NeuronCoreType, null);
             Dictionary<string, double> neuronParameters = NeuronCore.GetParameters();
-            DynamicUnit MuscleCore = DynamicUnit.CreateCore(MuscleCoreType, null);
+            CellCoreUnit MuscleCore = CellCoreUnit.CreateCore(MuscleCoreType, null);
             Dictionary<string, double> muscleParameters = MuscleCore.GetParameters();
 
             foreach (string key in NeuronCount.Keys)

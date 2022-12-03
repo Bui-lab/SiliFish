@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class Leaky_Integrator : DynamicUnit
+    public class Leaky_Integrator : CellCoreUnit
     {
         public double R; //resustance
         public double C;//capacitance

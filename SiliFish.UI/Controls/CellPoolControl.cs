@@ -45,7 +45,7 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             distConductionVelocity.AbsoluteEnforced = true;
-            ddCoreType.Items.AddRange(DynamicUnit.GetCoreTypes().ToArray());// fill before celltypes
+            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
@@ -73,7 +73,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            poolTemplate.Parameters = DynamicUnit.GetParameters(coreType);
+            poolTemplate.Parameters = CellCoreUnit.GetParameters(coreType);
             ParamDictToGrid();
         }
 

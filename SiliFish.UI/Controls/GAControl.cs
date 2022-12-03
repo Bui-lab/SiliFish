@@ -181,7 +181,7 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, Parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters);
 
             if (core == null) return;
 
@@ -314,7 +314,7 @@ namespace SiliFish.UI.Controls
         {
             onGetParams.Invoke(this, EventArgs.Empty);
             ReadFitnessFunctions();
-            DynamicUnit core = DynamicUnit.CreateCore(CoreType, Parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters);
             double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
         }

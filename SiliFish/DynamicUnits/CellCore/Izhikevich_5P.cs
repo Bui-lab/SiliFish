@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class Izhikevich_5P : DynamicUnit
+    public class Izhikevich_5P : CellCoreUnit
     {
         private static double a_suggestedMin = 0.01;
         private static double a_suggestedMax = 1;

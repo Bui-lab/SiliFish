@@ -11,7 +11,7 @@ namespace SiliFish.ModelUnits
 {
     public class Cell
     {
-        protected DynamicUnit Core;
+        protected CellCoreUnit Core;
         public CellPool CellPool;
 
         public string CellGroup { get; set; }
@@ -173,7 +173,7 @@ namespace SiliFish.ModelUnits
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = DynamicUnit.CreateCore(coreType, null);
+            Core = CellCoreUnit.CreateCore(coreType, null);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
@@ -196,7 +196,7 @@ namespace SiliFish.ModelUnits
             Sequence = seq;
             PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
 
-            Core = DynamicUnit.CreateCore(coreType, coreParams);
+            Core = CellCoreUnit.CreateCore(coreType, coreParams);
 
             coordinate = coor;
             if (stim != null)
@@ -341,7 +341,7 @@ namespace SiliFish.ModelUnits
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = DynamicUnit.CreateCore(coreType, null);
+            Core = CellCoreUnit.CreateCore(coreType, null);
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
             TimeLine_ms = timeline;

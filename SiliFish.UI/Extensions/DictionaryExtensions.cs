@@ -29,7 +29,23 @@ namespace SiliFish.UI.Extensions
             }
             catch { }
         }
-
+        public static void WriteToGrid(this Dictionary<string, double> paramDict, DataGridView dgParamGrid, int colField, int colValue)
+        {
+            try
+            {
+                dgParamGrid.RowCount = paramDict?.Count ?? 0;
+                if (paramDict == null)
+                    return;
+                int rowIndex = 0;
+                foreach (string key in paramDict.Keys)
+                {
+                    dgParamGrid[colField, rowIndex].Value = key;
+                    dgParamGrid[colValue, rowIndex].Tag = paramDict[key];
+                    dgParamGrid[colValue, rowIndex++].Value = paramDict[key].ToString();
+                }
+            }
+            catch { }
+        }
         /// <summary>
         /// Accepts distribution from "value" cell's tag as values
         /// </summary>
