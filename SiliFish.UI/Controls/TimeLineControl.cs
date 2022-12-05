@@ -77,5 +77,10 @@ namespace SiliFish.UI.Controls
         {
             cmiSort.Enabled = dgTimeLine.RowCount > 2;
         }
+
+        private void linkClearTimeline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ClearTimeLine();
+        }
     }
 }

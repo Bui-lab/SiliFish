@@ -11,7 +11,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class CellPoolControl : UserControl
     {
-        private static string cellPoolFileDefaultFolder;
+        
         private event EventHandler savePool;
         public event EventHandler SavePool { add => savePool += value; remove => savePool -= value; }
 
@@ -48,7 +48,13 @@ namespace SiliFish.UI.Controls
             ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
-            ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
+            if (SwimmingModelTemplate.SomiteBased)
+                ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
+            else
+            {
+                ddSelection.Items.Clear();
+                ddSelection.Items.Add(CountingMode.Total.ToString());
+            }
         }
 
         private void ddCellType_SelectedIndexChanged(object sender, EventArgs e)
@@ -149,11 +155,7 @@ namespace SiliFish.UI.Controls
             poolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
             poolTemplate.ConductionVelocity = distConductionVelocity.GetDistribution();
 
-            poolTemplate.Attachments.Clear();
-            foreach (var att in listAttachments.Items)
-            {
-                poolTemplate.Attachments.Add(att.ToString());
-            }
+            poolTemplate.Attachments = attachmentList.GetAttachments();
         }
 
 
@@ -192,8 +194,7 @@ namespace SiliFish.UI.Controls
             distConductionVelocity.SetDistribution(poolTemplate.ConductionVelocity as Distribution);
             ParamDictToGrid();
 
-            listAttachments.Items.Clear();
-            listAttachments.Items.AddRange(poolTemplate.Attachments?.ToArray());
+            attachmentList.SetAttachments(poolTemplate.Attachments);
         }
 
         private void rbYZAngular_CheckedChanged(object sender, EventArgs e)
@@ -219,11 +220,6 @@ namespace SiliFish.UI.Controls
                 btnColor.BackColor = colorDialog.Color;
             }
         }
-        private void linkClearTimeline_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            timeLineControl.ClearTimeLine();
-        }
-
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
@@ -247,43 +243,7 @@ namespace SiliFish.UI.Controls
             ParamDictToGrid();
         }
 
-        private void cmAttachments_Opening(object sender, CancelEventArgs e)
-        {
-            cmiViewFile.Enabled = cmiRemoveAttachment.Enabled = listAttachments.SelectedItems.Count > 0;
-        }
-        private void cmiViewFile_Click(object sender, EventArgs e)
-        {
-            string filename = listAttachments.SelectedItem.ToString();
-            Process p = new()
-            {
-                StartInfo = new ProcessStartInfo(filename)
-                {
-                    UseShellExecute = true
-                }
-            };
-            if (!File.Exists(filename))
-            {
-                MessageBox.Show($"Path or file {filename} does not exist.");
-                return;
-            }
-            p.Start();
-        }
 
-        private void cmiAddAttachment_Click(object sender, EventArgs e)
-        {
-            dlgOpenFile.InitialDirectory = cellPoolFileDefaultFolder;
-            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
-            {
-                listAttachments.Items.Add(dlgOpenFile.FileName);
-                cellPoolFileDefaultFolder = Path.GetDirectoryName(dlgOpenFile.FileName);
-            }
-        }
-
-        private void cmiRemoveAttachment_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Do you want to remove the selected attachment?", "SiliFish", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                listAttachments.Items.RemoveAt(listAttachments.SelectedIndex);
-        }
 
     }
 }

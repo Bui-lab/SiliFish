@@ -47,13 +47,8 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
-        public override string GetParamName_Threshold
-        {
-            get
-            {
-                return "";
-            }
-        }
+        public override string VThresholdParamName { get { return ""; } }
+        public override string VReversalParamName { get { return "Izhikevich_5P.V_r"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {

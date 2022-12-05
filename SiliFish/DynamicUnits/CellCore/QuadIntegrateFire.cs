@@ -20,6 +20,10 @@ namespace SiliFish.DynamicUnits
             SetParameters(paramExternal);
             Initialize();
         }
+
+        public override string VThresholdParamName { get { return ""; } }
+        public override string VReversalParamName { get { return "QIF.Vr"; } }
+
         public override Dictionary<string, double> GetParameters()
         {
             Dictionary<string, double> paramDict = new()

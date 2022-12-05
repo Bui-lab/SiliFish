@@ -70,40 +70,35 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
-        public override string GetParamName_Threshold
-        {
-            get
-            {
-                return "HodgkinHuxley.V_t";
-            }
-        }
-       /* public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
-        {
-            Dictionary<string, double> MinValues = new() {
-                { "HodgkinHuxley.c", c },
-                { "HodgkinHuxley.V_max", Vmax },
-                { "HodgkinHuxley.V_r", Vr },
-                { "HodgkinHuxley.V_t", Vt },
-                { "HodgkinHuxley.a", a_suggestedMin },
-                { "HodgkinHuxley.b", b_suggestedMin },
-                { "HodgkinHuxley.d", d_suggestedMin },
-                { "HodgkinHuxley.k", k_suggestedMin },
-                { "HodgkinHuxley.Cm", Cm_suggestedMin }
-            };
-            Dictionary<string, double> MaxValues = new() {
-                { "HodgkinHuxley.c", c },
-                { "HodgkinHuxley.V_max", Vmax },
-                { "HodgkinHuxley.V_r", Vr },
-                { "HodgkinHuxley.V_t", Vt },
-                { "HodgkinHuxley.a", a_suggestedMax },
-                { "HodgkinHuxley.b", b_suggestedMax },
-                { "HodgkinHuxley.d", d_suggestedMax },
-                { "HodgkinHuxley.k", k_suggestedMax },
-                { "HodgkinHuxley.Cm", Cm_suggestedMax }
-            };
+        public override string VThresholdParamName { get { return "HodgkinHuxley.V_t"; } }
+        public override string VReversalParamName { get { return "HodgkinHuxley.V_r"; } }
+        /* public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
+         {
+             Dictionary<string, double> MinValues = new() {
+                 { "HodgkinHuxley.c", c },
+                 { "HodgkinHuxley.V_max", Vmax },
+                 { "HodgkinHuxley.V_r", Vr },
+                 { "HodgkinHuxley.V_t", Vt },
+                 { "HodgkinHuxley.a", a_suggestedMin },
+                 { "HodgkinHuxley.b", b_suggestedMin },
+                 { "HodgkinHuxley.d", d_suggestedMin },
+                 { "HodgkinHuxley.k", k_suggestedMin },
+                 { "HodgkinHuxley.Cm", Cm_suggestedMin }
+             };
+             Dictionary<string, double> MaxValues = new() {
+                 { "HodgkinHuxley.c", c },
+                 { "HodgkinHuxley.V_max", Vmax },
+                 { "HodgkinHuxley.V_r", Vr },
+                 { "HodgkinHuxley.V_t", Vt },
+                 { "HodgkinHuxley.a", a_suggestedMax },
+                 { "HodgkinHuxley.b", b_suggestedMax },
+                 { "HodgkinHuxley.d", d_suggestedMax },
+                 { "HodgkinHuxley.k", k_suggestedMax },
+                 { "HodgkinHuxley.Cm", Cm_suggestedMax }
+             };
 
-            return (MinValues, MaxValues);
-        }*/
+             return (MinValues, MaxValues);
+         }*/
 
         public override void SetParameters(Dictionary<string, double> paramExternal)
         {

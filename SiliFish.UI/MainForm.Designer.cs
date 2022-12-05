@@ -77,6 +77,8 @@ namespace SiliFish.UI
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.pParamBottom = new System.Windows.Forms.Panel();
+            this.ldtEuler = new System.Windows.Forms.Label();
+            this.edtEuler = new System.Windows.Forms.NumericUpDown();
             this.lRunCount = new System.Windows.Forms.Label();
             this.eRunNumber = new System.Windows.Forms.NumericUpDown();
             this.eSkip = new System.Windows.Forms.NumericUpDown();
@@ -211,8 +213,6 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.edtEuler = new System.Windows.Forms.NumericUpDown();
-            this.ldtEuler = new System.Windows.Forms.Label();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -241,6 +241,7 @@ namespace SiliFish.UI
             this.pConnectionTop.SuspendLayout();
             this.tabStimuli.SuspendLayout();
             this.pParamBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
@@ -293,7 +294,6 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             this.SuspendLayout();
             // 
             // pTop
@@ -414,6 +414,7 @@ namespace SiliFish.UI
             this.tabParams.Size = new System.Drawing.Size(548, 453);
             this.tabParams.TabIndex = 2;
             this.tabParams.Tag = "";
+            this.tabParams.SelectedIndexChanged += new System.EventHandler(this.tabParams_SelectedIndexChanged);
             // 
             // tabGeneral
             // 
@@ -496,6 +497,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
+            this.eNumSomites.ValueChanged += new System.EventHandler(this.eNumSomites_ValueChanged);
             // 
             // lNoOfSomites
             // 
@@ -735,7 +737,7 @@ namespace SiliFish.UI
             this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
             this.tabCellPools.Location = new System.Drawing.Point(4, 24);
             this.tabCellPools.Name = "tabCellPools";
-            this.tabCellPools.Size = new System.Drawing.Size(540, 456);
+            this.tabCellPools.Size = new System.Drawing.Size(540, 425);
             this.tabCellPools.TabIndex = 1;
             this.tabCellPools.Text = "Cell Pools & Connections";
             this.tabCellPools.UseVisualStyleBackColor = true;
@@ -758,7 +760,7 @@ namespace SiliFish.UI
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
             this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.pConnectionTop);
             this.splitCellPoolsAndConnections.Panel2MinSize = 200;
-            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(540, 456);
+            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(540, 425);
             this.splitCellPoolsAndConnections.SplitterDistance = 251;
             this.splitCellPoolsAndConnections.TabIndex = 5;
             // 
@@ -769,7 +771,7 @@ namespace SiliFish.UI
             this.listCellPool.Name = "listCellPool";
             this.listCellPool.SelectedIndex = -1;
             this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(249, 422);
+            this.listCellPool.Size = new System.Drawing.Size(249, 391);
             this.listCellPool.TabIndex = 5;
             this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -815,7 +817,7 @@ namespace SiliFish.UI
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(283, 422);
+            this.listConnections.Size = new System.Drawing.Size(283, 391);
             this.listConnections.TabIndex = 6;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -859,7 +861,7 @@ namespace SiliFish.UI
             this.tabStimuli.Controls.Add(this.listStimuli);
             this.tabStimuli.Location = new System.Drawing.Point(4, 24);
             this.tabStimuli.Name = "tabStimuli";
-            this.tabStimuli.Size = new System.Drawing.Size(540, 456);
+            this.tabStimuli.Size = new System.Drawing.Size(540, 425);
             this.tabStimuli.TabIndex = 3;
             this.tabStimuli.Text = "Stimuli";
             this.tabStimuli.UseVisualStyleBackColor = true;
@@ -871,7 +873,7 @@ namespace SiliFish.UI
             this.listStimuli.Name = "listStimuli";
             this.listStimuli.SelectedIndex = -1;
             this.listStimuli.SelectedItem = null;
-            this.listStimuli.Size = new System.Drawing.Size(540, 456);
+            this.listStimuli.Size = new System.Drawing.Size(540, 425);
             this.listStimuli.TabIndex = 6;
             this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
             this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
@@ -901,6 +903,34 @@ namespace SiliFish.UI
             this.pParamBottom.Name = "pParamBottom";
             this.pParamBottom.Size = new System.Drawing.Size(548, 182);
             this.pParamBottom.TabIndex = 1;
+            // 
+            // ldtEuler
+            // 
+            this.ldtEuler.AutoSize = true;
+            this.ldtEuler.Location = new System.Drawing.Point(11, 123);
+            this.ldtEuler.Name = "ldtEuler";
+            this.ldtEuler.Size = new System.Drawing.Size(48, 15);
+            this.ldtEuler.TabIndex = 39;
+            this.ldtEuler.Text = "Δt Euler";
+            // 
+            // edtEuler
+            // 
+            this.edtEuler.DecimalPlaces = 3;
+            this.edtEuler.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.edtEuler.Location = new System.Drawing.Point(72, 123);
+            this.edtEuler.Name = "edtEuler";
+            this.edtEuler.Size = new System.Drawing.Size(76, 23);
+            this.edtEuler.TabIndex = 38;
+            this.toolTip.SetToolTip(this.edtEuler, "(in milliseconds)");
+            this.edtEuler.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             // 
             // lRunCount
             // 
@@ -2584,34 +2614,6 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // edtEuler
-            // 
-            this.edtEuler.DecimalPlaces = 3;
-            this.edtEuler.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.edtEuler.Location = new System.Drawing.Point(72, 123);
-            this.edtEuler.Name = "edtEuler";
-            this.edtEuler.Size = new System.Drawing.Size(76, 23);
-            this.edtEuler.TabIndex = 38;
-            this.toolTip.SetToolTip(this.edtEuler, "(in milliseconds)");
-            this.edtEuler.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            // 
-            // ldtEuler
-            // 
-            this.ldtEuler.AutoSize = true;
-            this.ldtEuler.Location = new System.Drawing.Point(11, 123);
-            this.ldtEuler.Name = "ldtEuler";
-            this.ldtEuler.Size = new System.Drawing.Size(48, 15);
-            this.ldtEuler.TabIndex = 39;
-            this.ldtEuler.Text = "Δt Euler";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2661,6 +2663,7 @@ namespace SiliFish.UI
             this.tabStimuli.ResumeLayout(false);
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
@@ -2723,7 +2726,6 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             this.ResumeLayout(false);
 
         }

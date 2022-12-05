@@ -1,4 +1,5 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.UI.Extensions;
@@ -30,6 +31,22 @@ namespace SiliFish.UI.Controls
             ddConnectionType.Items.Add(ConnectionType.Gap);
             ddConnectionType.Items.Add(ConnectionType.Synapse);
             ddConnectionType.Items.Add(ConnectionType.NMJ);
+            if (SwimmingModelTemplate.SomiteBased)
+            {
+                lUoD1.Text = lUoD2.Text = "somites";
+                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 0;
+                numMinAscReach.Increment = numMinDescReach.Increment =
+                    numMaxAscReach.Increment = numMaxDescReach.Increment = 1;
+            }
+            else
+            {
+                lUoD1.Text = lUoD2.Text = "";
+                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 3;
+                numMinAscReach.Increment = numMinDescReach.Increment =
+                    numMaxAscReach.Increment = numMaxDescReach.Increment = (decimal)0.1;
+            }
         }
 
         private void FillConnectionTypes()
@@ -72,25 +89,25 @@ namespace SiliFish.UI.Controls
                 return;
             if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
-                if (pool.Parameters != null && pool.Parameters.Any())
+                if (pool.VThreshold != null)
                 {
-                    //TODO hardcoded parameter name numVthreshold.Value = pool.Parameters.Read("Izhikevich_9P.V_t", numVthreshold.Value);
+                    synapseControl.VThreshold = (double)pool.VThreshold;
                 }
                 if (Parameters != null && Parameters.Any())
                 {
                     switch (pool.NTMode)
                     {
-                        case NeuronClass.Glycinergic:
-                            numEReversal.Value = Parameters.Read("Dynamic.E_gly", numEReversal.Value);
+                       case NeuronClass.Glycinergic:
+                           synapseControl.EReversal= Parameters.Read("Dynamic.E_gly", synapseControl.EReversal);
                             break;
                         case NeuronClass.GABAergic:
-                            numEReversal.Value = Parameters.Read("Dynamic.E_gaba", numEReversal.Value);
+                            synapseControl.EReversal = Parameters.Read("Dynamic.E_gaba", synapseControl.EReversal);
                             break;
                         case NeuronClass.Glutamatergic:
-                            numEReversal.Value = Parameters.Read("Dynamic.E_glu", numEReversal.Value);
+                            synapseControl.EReversal = Parameters.Read("Dynamic.E_glu", synapseControl.EReversal);
                             break;
                         case NeuronClass.Cholinergic:
-                            numEReversal.Value = Parameters.Read("Dynamic.E_ach", numEReversal.Value);
+                            synapseControl.EReversal = Parameters.Read("Dynamic.E_ach", synapseControl.EReversal);
                             break;
                         default:
                             break;
@@ -109,9 +126,9 @@ namespace SiliFish.UI.Controls
                 return;
             if (ddTargetPool.SelectedItem is CellPoolTemplate pool)
             {
-                if (pool.Parameters != null && pool.Parameters.Any())
+                if (pool.VReversal != null)
                 {
-                    //TODO hardcoded parameter name numEReversal.Value = pool.Parameters.Read("Izhikevich_9P.V_r", numEReversal.Value);
+                    synapseControl.EReversal= (double)pool.VReversal;
                 }
             }
             interPoolTemplate.PoolTarget = ddTargetPool.Text;
@@ -177,17 +194,14 @@ namespace SiliFish.UI.Controls
                 autoGenerateName = name == interPoolTemplate.Name;
                 eName.Text = interPoolTemplate.Name;
                 eDescription.Text = interPoolTemplate.Description;
-                cbWithinSomite.Checked = interPoolTemplate.CellReach.WithinSomite;
-                cbOtherSomite.Checked = interPoolTemplate.CellReach.OtherSomite;
+               
                 numProbability.SetValue(interPoolTemplate.Probability);
-                numMinReach.SetValue(interPoolTemplate.CellReach.MinReach);
-                numMaxReach.SetValue(interPoolTemplate.CellReach.MaxReach);
-                numAscReach.SetValue(interPoolTemplate.CellReach.AscendingReach);
-                numDescReach.SetValue(interPoolTemplate.CellReach.DescendingReach);
-                numLateralReach.SetValue(interPoolTemplate.CellReach.LateralReach);
-                numMedialReach.SetValue(interPoolTemplate.CellReach.MedialReach);
-                numDorsalReach.SetValue(interPoolTemplate.CellReach.DorsalReach);
-                numVentralReach.SetValue(interPoolTemplate.CellReach.VentralReach);
+                cbAscending.Checked = interPoolTemplate.CellReach.Ascending;
+                cbDescending.Checked = interPoolTemplate.CellReach.Descending;
+                numMinAscReach.SetValue(interPoolTemplate.CellReach.MinAscReach);
+                numMaxAscReach.SetValue(interPoolTemplate.CellReach.MaxAscReach);
+                numMinDescReach.SetValue(interPoolTemplate.CellReach.MinDescReach);
+                numMaxDescReach.SetValue(interPoolTemplate.CellReach.MaxDescReach);
                 numMaxIncoming.SetValue(interPoolTemplate.CellReach.MaxIncoming);
                 numMaxOutgoing.SetValue(interPoolTemplate.CellReach.MaxOutgoing);
 
@@ -196,16 +210,14 @@ namespace SiliFish.UI.Controls
                 eFixedDuration.Text = interPoolTemplate.CellReach.FixedDuration_ms?.ToString() ?? "";
                 if (interPoolTemplate.SynapseParameters != null)
                 {
-                    numTauD.SetValue(interPoolTemplate.SynapseParameters.TauD);
-                    numTauR.SetValue(interPoolTemplate.SynapseParameters.TauR);
-                    numVthreshold.SetValue(interPoolTemplate.SynapseParameters.VTh);
-                    numEReversal.SetValue(interPoolTemplate.SynapseParameters.E_rev);
+                    synapseControl.SetSynapseParameters(interPoolTemplate.SynapseParameters);
                 }
                 cbActive.Checked = interPoolTemplate.JncActive;
                 timeLineControl.SetTimeLine(interPoolTemplate.TimeLine_ms);
             }
             else
                 this.interPoolTemplate = new();
+            attachmentList.SetAttachments(interPoolTemplate.Attachments);
         }
 
         public InterPoolTemplate GetInterPoolTemplate()
@@ -218,16 +230,12 @@ namespace SiliFish.UI.Controls
                 fixedDuration = fd;
             interPoolTemplate.CellReach = new CellReach
             {
-                WithinSomite = cbWithinSomite.Checked,
-                OtherSomite = cbOtherSomite.Checked,
-                MinReach = (double)numMinReach.Value,
-                MaxReach = (double)numMaxReach.Value,
-                AscendingReach = (double)numAscReach.Value,
-                DescendingReach = (double)numDescReach.Value,
-                LateralReach = (double)numLateralReach.Value,
-                MedialReach = (double)numMedialReach.Value,
-                DorsalReach = (double)numDorsalReach.Value,
-                VentralReach = (double)numVentralReach.Value,
+                Ascending = cbAscending.Checked,
+                Descending = cbDescending.Checked,
+                MinAscReach = (double)numMinAscReach.Value,
+                MaxAscReach = (double)numMaxAscReach.Value,
+                MinDescReach = (double)numMinDescReach.Value,
+                MaxDescReach = (double)numMaxDescReach.Value,
                 MaxIncoming = (int)numMaxIncoming.Value,
                 MaxOutgoing = (int)numMaxOutgoing.Value,
                 Weight = (double)numConductance.Value,
@@ -244,16 +252,12 @@ namespace SiliFish.UI.Controls
 
             if (interPoolTemplate.ConnectionType != ConnectionType.Gap)
             {
-                interPoolTemplate.SynapseParameters = new SynapseParameters
-                {
-                    TauD = (double)numTauD.Value,
-                    TauR = (double)numTauR.Value,
-                    VTh = (double)numVthreshold.Value,
-                    E_rev = (double)numEReversal.Value,
-                };
+                interPoolTemplate.SynapseParameters = synapseControl.GetSynapseParameters();
             }
             interPoolTemplate.JncActive = cbActive.Checked;
             interPoolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
+            interPoolTemplate.Attachments = attachmentList.GetAttachments();
+
             return interPoolTemplate;
         }
 
@@ -267,16 +271,14 @@ namespace SiliFish.UI.Controls
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void cbWithinSomite_CheckedChanged(object sender, EventArgs e)
+        private void cbAscending_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbWithinSomite.Focused && !cbWithinSomite.Checked)
-                cbOtherSomite.Checked = true;
+            numMinAscReach.Enabled = numMaxAscReach.Enabled = cbAscending.Checked;
         }
 
-        private void cbOtherSomite_CheckedChanged(object sender, EventArgs e)
+        private void cbDescending_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbOtherSomite.Focused && !cbOtherSomite.Checked)
-                cbWithinSomite.Checked = true;
+            numMinDescReach.Enabled = numMaxDescReach.Enabled = cbDescending.Checked;
         }
     }
 }

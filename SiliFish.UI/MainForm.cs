@@ -1852,5 +1852,15 @@ namespace SiliFish.UI
         }
         #endregion
 
+        private void tabParams_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //RefreshModel();
+        }
+
+        private void eNumSomites_ValueChanged(object sender, EventArgs e)
+        {
+            SwimmingModelTemplate.SomiteBased = eNumSomites.Value > 0;
+            //TODO consider the case where modeltemplate is not used
+        }
     }
 }

@@ -300,7 +300,12 @@ namespace SiliFish.ModelUnits
                 somites = Enumerable.Range(1, Model.NumberOfSomites).ToList();
             else somites = new List<int>() { -1 };
 
-            foreach (int somite in somites)
+            double somiteLength = 0;
+            if (template.PerSomiteOrTotal == CountingMode.Total && SwimmingModelTemplate.SomiteBased)
+            {
+                somiteLength = Model.SpinalDorsalVentralDistance / Model.NumberOfSomites;
+            }
+                foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GetCoordinates(n, somite);
                 Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
@@ -311,8 +316,20 @@ namespace SiliFish.ModelUnits
 
                 foreach (int i in Enumerable.Range(0, n))
                 {
-                    Cell cell = neuron ? new Neuron(template, somite, i + 1, cv[i]) :
-                        new MuscleCell(template, somite, i + 1);
+                    int actualSomite = somite;
+                    //if the model is somite based but the distribution is based on the total length, calculate the somite index
+                    if (somite < 0 && SwimmingModelTemplate.SomiteBased)
+                    {
+                        double x = coordinates[i].X;
+                        actualSomite = 0;
+                        while (x > 0)
+                        {
+                            x -= somiteLength;
+                            actualSomite++;
+                        }
+                    }
+                    Cell cell = neuron ? new Neuron(template, actualSomite, i + 1, cv[i]) :
+                        new MuscleCell(template, actualSomite, i + 1);
                     cell.PositionLeftRight = leftright;
                     cell.coordinate = coordinates[i];
                     cell.Parameters = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);

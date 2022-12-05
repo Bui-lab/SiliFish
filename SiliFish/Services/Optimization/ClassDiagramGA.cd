@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SiliFish.Services.Optimization.FitnessFunction">
+    <Position X="8.5" Y="1" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAUhBAAAAAAAAAAAARQAAQAAACAAAAAAgAQAAIAAADA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.TargetRheobaseFunction" Collapsed="true">
+    <Position X="6" Y="5.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.FiringRhythmFunction">
+    <Position X="14" Y="5.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.FiringPatternFunction">
+    <Position X="0.5" Y="5.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.FiringDelayFunction" Collapsed="true">
+    <Position X="8.75" Y="5.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.SpikePerBurstFunction" Collapsed="true">
+    <Position X="16.75" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.SpikeFrequencyFunction" Collapsed="true">
+    <Position X="3.25" Y="5.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.BurstFrequencyFunction" Collapsed="true">
+    <Position X="11.25" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Optimization\FitnessFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.CoreFitness">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAABgAAAAAAAAAAAAAAgAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Services\Optimization\CoreFitness.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="IzhikevichSolver" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="FitnessFunctions" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.Services.Optimization.CoreSolver" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAEAAAEEAAAAABAAAIASAAAAQAAIBAAAoAAAAASAQAE=</HashCode>
+      <FileName>Services\Optimization\CoreSolver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

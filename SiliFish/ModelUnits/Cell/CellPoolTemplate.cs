@@ -1,5 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,7 +14,6 @@ namespace SiliFish.ModelUnits
     {
         public string CellGroup { get; set; }
         public string Description { get; set; }
-        public List<string> Attachments { get; set; } = new();
         public CellType CellType { get; set; }
         public string CoreType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
@@ -81,6 +82,7 @@ namespace SiliFish.ModelUnits
                     (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "LR");
                 return FTS;
             }
+        
         }
         public override string ToString()
         {
@@ -106,6 +108,30 @@ namespace SiliFish.ModelUnits
                     $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
                     $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
+            }
+        }
+
+        [JsonIgnore]
+        public double? VThreshold
+        {
+            get
+            {
+                string Threshold_property = CellCoreUnit.CreateCore(CoreType, null)?.VThresholdParamName;
+                if (Parameters.ContainsKey(Threshold_property))
+                    return Parameters.ReadDouble(Threshold_property);
+                return null;
+            }
+        }
+        [JsonIgnore]
+        public double? VReversal
+        {
+            get
+            {
+                string Reversal_property = CellCoreUnit.CreateCore(CoreType, null)?.VReversalParamName;
+
+                if (Parameters.ContainsKey(Reversal_property))
+                    return Parameters.ReadDouble(Reversal_property);
+                return null;
             }
         }
 

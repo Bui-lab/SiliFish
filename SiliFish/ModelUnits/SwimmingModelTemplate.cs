@@ -6,6 +6,7 @@ namespace SiliFish.ModelUnits
 {
     public class SwimmingModelTemplate
     {
+        public static bool SomiteBased = false;
         public List<CellPoolTemplate> CellPoolTemplates { get; set; } = new();
         public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
         public Dictionary<string, object> Parameters { get; set; }

@@ -1,6 +1,4 @@
-﻿using SiliFish.Definitions;
-using SiliFish.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -43,7 +41,16 @@ namespace SiliFish.DynamicUnits
         }
 
         [JsonIgnore]
-        public virtual string GetParamName_Threshold
+        public virtual string VThresholdParamName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [JsonIgnore]
+        public virtual string VReversalParamName
         {
             get
             {

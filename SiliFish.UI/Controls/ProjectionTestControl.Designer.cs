@@ -44,10 +44,12 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.pfParamsSource = new System.Windows.Forms.FlowLayoutPanel();
             this.pCoreType = new System.Windows.Forms.Panel();
+            this.eSource = new System.Windows.Forms.TextBox();
             this.pLineCoreType = new System.Windows.Forms.Panel();
             this.lSource = new System.Windows.Forms.Label();
             this.pfParamsTarget = new System.Windows.Forms.FlowLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.eTarget = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.lTarget = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -77,8 +79,15 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.eSource = new System.Windows.Forms.TextBox();
-            this.eTarget = new System.Windows.Forms.TextBox();
+            this.gSynapse = new System.Windows.Forms.GroupBox();
+            this.numEReversal = new System.Windows.Forms.NumericUpDown();
+            this.numVthreshold = new System.Windows.Forms.NumericUpDown();
+            this.numTauR = new System.Windows.Forms.NumericUpDown();
+            this.numTauD = new System.Windows.Forms.NumericUpDown();
+            this.lEReversal = new System.Windows.Forms.Label();
+            this.lVThreshold = new System.Windows.Forms.Label();
+            this.lTauR = new System.Windows.Forms.Label();
+            this.lTauD = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).BeginInit();
@@ -98,6 +107,7 @@
             this.splitContainer2.SuspendLayout();
             this.pCoreType.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.pRheobase.SuspendLayout();
             this.pLoadSaveParams.SuspendLayout();
@@ -108,6 +118,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
+            this.gSynapse.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEReversal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numVthreshold)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTauR)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTauD)).BeginInit();
             this.SuspendLayout();
             // 
             // lPlotdt
@@ -349,6 +364,16 @@
             this.pCoreType.Size = new System.Drawing.Size(140, 29);
             this.pCoreType.TabIndex = 21;
             // 
+            // eSource
+            // 
+            this.eSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eSource.Location = new System.Drawing.Point(55, 3);
+            this.eSource.Name = "eSource";
+            this.eSource.ReadOnly = true;
+            this.eSource.Size = new System.Drawing.Size(82, 23);
+            this.eSource.TabIndex = 25;
+            // 
             // pLineCoreType
             // 
             this.pLineCoreType.BackColor = System.Drawing.Color.LightGray;
@@ -388,6 +413,16 @@
             this.panel2.Size = new System.Drawing.Size(155, 29);
             this.panel2.TabIndex = 24;
             // 
+            // eTarget
+            // 
+            this.eTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eTarget.Location = new System.Drawing.Point(51, 3);
+            this.eTarget.Name = "eTarget";
+            this.eTarget.ReadOnly = true;
+            this.eTarget.Size = new System.Drawing.Size(101, 23);
+            this.eTarget.TabIndex = 26;
+            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.LightGray;
@@ -410,6 +445,7 @@
             // 
             this.flowLayoutPanel2.AutoScroll = true;
             this.flowLayoutPanel2.AutoSize = true;
+            this.flowLayoutPanel2.Controls.Add(this.gSynapse);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 29);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -691,25 +727,127 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
-            // eSource
+            // gSynapse
             // 
-            this.eSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eSource.Location = new System.Drawing.Point(55, 3);
-            this.eSource.Name = "eSource";
-            this.eSource.ReadOnly = true;
-            this.eSource.Size = new System.Drawing.Size(82, 23);
-            this.eSource.TabIndex = 25;
+            this.gSynapse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.gSynapse.Controls.Add(this.numEReversal);
+            this.gSynapse.Controls.Add(this.numVthreshold);
+            this.gSynapse.Controls.Add(this.numTauR);
+            this.gSynapse.Controls.Add(this.numTauD);
+            this.gSynapse.Controls.Add(this.lEReversal);
+            this.gSynapse.Controls.Add(this.lVThreshold);
+            this.gSynapse.Controls.Add(this.lTauR);
+            this.gSynapse.Controls.Add(this.lTauD);
+            this.gSynapse.Location = new System.Drawing.Point(3, 3);
+            this.gSynapse.Name = "gSynapse";
+            this.gSynapse.Size = new System.Drawing.Size(239, 145);
+            this.gSynapse.TabIndex = 3;
+            this.gSynapse.TabStop = false;
+            this.gSynapse.Text = "Synapse Parameters";
             // 
-            // eTarget
+            // numEReversal
             // 
-            this.eTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTarget.Location = new System.Drawing.Point(51, 3);
-            this.eTarget.Name = "eTarget";
-            this.eTarget.ReadOnly = true;
-            this.eTarget.Size = new System.Drawing.Size(101, 23);
-            this.eTarget.TabIndex = 26;
+            this.numEReversal.DecimalPlaces = 2;
+            this.numEReversal.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numEReversal.Location = new System.Drawing.Point(102, 105);
+            this.numEReversal.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numEReversal.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.numEReversal.Name = "numEReversal";
+            this.numEReversal.Size = new System.Drawing.Size(120, 23);
+            this.numEReversal.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.numEReversal, "Reversal potential");
+            // 
+            // numVthreshold
+            // 
+            this.numVthreshold.DecimalPlaces = 2;
+            this.numVthreshold.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numVthreshold.Location = new System.Drawing.Point(102, 76);
+            this.numVthreshold.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.numVthreshold.Name = "numVthreshold";
+            this.numVthreshold.Size = new System.Drawing.Size(120, 23);
+            this.numVthreshold.TabIndex = 5;
+            // 
+            // numTauR
+            // 
+            this.numTauR.DecimalPlaces = 2;
+            this.numTauR.Location = new System.Drawing.Point(102, 47);
+            this.numTauR.Name = "numTauR";
+            this.numTauR.Size = new System.Drawing.Size(120, 23);
+            this.numTauR.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.numTauR, "Rise time constant");
+            // 
+            // numTauD
+            // 
+            this.numTauD.DecimalPlaces = 2;
+            this.numTauD.Location = new System.Drawing.Point(102, 18);
+            this.numTauD.Name = "numTauD";
+            this.numTauD.Size = new System.Drawing.Size(120, 23);
+            this.numTauD.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.numTauD, "Decay time constant");
+            this.numTauD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lEReversal
+            // 
+            this.lEReversal.AutoSize = true;
+            this.lEReversal.Location = new System.Drawing.Point(15, 107);
+            this.lEReversal.Name = "lEReversal";
+            this.lEReversal.Size = new System.Drawing.Size(32, 15);
+            this.lEReversal.TabIndex = 6;
+            this.lEReversal.Text = "E rev";
+            this.toolTip1.SetToolTip(this.lEReversal, "Reversal potential");
+            // 
+            // lVThreshold
+            // 
+            this.lVThreshold.AutoSize = true;
+            this.lVThreshold.Location = new System.Drawing.Point(15, 78);
+            this.lVThreshold.Name = "lVThreshold";
+            this.lVThreshold.Size = new System.Drawing.Size(69, 15);
+            this.lVThreshold.TabIndex = 4;
+            this.lVThreshold.Text = "Threshold V";
+            // 
+            // lTauR
+            // 
+            this.lTauR.AutoSize = true;
+            this.lTauR.Location = new System.Drawing.Point(15, 49);
+            this.lTauR.Name = "lTauR";
+            this.lTauR.Size = new System.Drawing.Size(17, 15);
+            this.lTauR.TabIndex = 2;
+            this.lTauR.Text = "τr";
+            this.toolTip1.SetToolTip(this.lTauR, "Rise time constant");
+            // 
+            // lTauD
+            // 
+            this.lTauD.AutoSize = true;
+            this.lTauD.Location = new System.Drawing.Point(15, 20);
+            this.lTauD.Name = "lTauD";
+            this.lTauD.Size = new System.Drawing.Size(20, 15);
+            this.lTauD.TabIndex = 0;
+            this.lTauD.Text = "τd";
+            this.toolTip1.SetToolTip(this.lTauD, "Decay time constant");
             // 
             // ProjectionTestControl
             // 
@@ -744,6 +882,7 @@
             this.pCoreType.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.pRheobase.ResumeLayout(false);
@@ -759,6 +898,12 @@
             this.pPlots.ResumeLayout(false);
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
+            this.gSynapse.ResumeLayout(false);
+            this.gSynapse.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numEReversal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numVthreshold)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTauR)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTauD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -814,5 +959,14 @@
         private Label label2;
         private TextBox eSource;
         private TextBox eTarget;
+        private GroupBox gSynapse;
+        private NumericUpDown numEReversal;
+        private NumericUpDown numVthreshold;
+        private NumericUpDown numTauR;
+        private NumericUpDown numTauD;
+        private Label lEReversal;
+        private Label lVThreshold;
+        private Label lTauR;
+        private Label lTauD;
     }
 }
