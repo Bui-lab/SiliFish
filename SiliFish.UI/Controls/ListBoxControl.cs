@@ -62,6 +62,7 @@ namespace SiliFish.UI.Controls
         {
             listBox.Items.RemoveAt(ind);
             listBox.Items.Insert(ind, obj);
+            listBox.SelectedIndex = ind;
         }
 
         public int SelectedIndex

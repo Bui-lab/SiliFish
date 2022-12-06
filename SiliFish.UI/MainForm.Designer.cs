@@ -930,7 +930,7 @@ namespace SiliFish.UI
             1,
             0,
             0,
-            131072});
+            65536});
             // 
             // lRunCount
             // 

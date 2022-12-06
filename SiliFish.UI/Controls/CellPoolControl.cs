@@ -66,12 +66,12 @@ namespace SiliFish.UI.Controls
                 if (ddNeuronClass.Items.Count > 0)
                     ddNeuronClass.SelectedIndex = 0;
                 lNeuronClass.Visible = ddNeuronClass.Visible = true;
-                ddCoreType.SelectedIndex = 1;//TODO hardcoded for izhikevich 9P AAAAAAHHHHHRRGGHH
+                ddCoreType.Text = Const.DefaultNeuronCore;
             }
             else
             {
                 lNeuronClass.Visible = ddNeuronClass.Visible = false;
-                ddCoreType.SelectedIndex = 2;//TODO hardcoded for LeakyIntegrator AAAAAAHHHHHRRGGHH
+                ddCoreType.Text = Const.DefaultMuscleCore;
             }
         }
 

@@ -303,9 +303,9 @@ namespace SiliFish.ModelUnits
             double somiteLength = 0;
             if (template.PerSomiteOrTotal == CountingMode.Total && SwimmingModelTemplate.SomiteBased)
             {
-                somiteLength = Model.SpinalDorsalVentralDistance / Model.NumberOfSomites;
+                somiteLength = Model.SpinalRostralCaudalDistance/ Model.NumberOfSomites;
             }
-                foreach (int somite in somites)
+            foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GetCoordinates(n, somite);
                 Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);

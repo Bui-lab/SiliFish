@@ -19,8 +19,6 @@ namespace SiliFish.UI
     {
         static string modelFileDefaultFolder;
         SwimmingModel Model;
-        bool modelRefreshMsgShown = false;
-        bool jsonRefreshMsgShown = false;
         bool modifiedPools = false;
         bool modifiedJncs = false;
         bool modelUpdated = false;
@@ -194,6 +192,18 @@ namespace SiliFish.UI
             RefreshModelFromTemplate();
         }
 
+        private void RefreshModelSafeMode()
+        {
+            if (!Model.ModelRun)
+                RefreshModel();
+            else if (modifiedJncs || modifiedPools)
+            {
+                string msg = "Do you want to recreate the model using the modifications you have done in the UI? You will need to rerun the simulation.";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    RefreshModel();
+            }
+
+        }
         private void RefreshModelFromTemplate()
         {
             Model = new CustomSwimmingModel(ModelTemplate);
@@ -1007,16 +1017,7 @@ namespace SiliFish.UI
         private void Generate2DModel()
         {
             if (Model == null) return;
-
-            if (!Model.ModelRun)
-            {
-                RefreshModel();
-            }
-            else if (!modelRefreshMsgShown && (modifiedPools || modifiedJncs))
-            {
-                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
-                modelRefreshMsgShown = true;
-            }
+            RefreshModelSafeMode();
             TwoDModelGenerator modelGenerator = new();
             string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
             webView2DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
@@ -1052,15 +1053,7 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
 
-            if (!Model.ModelRun)
-            {
-                RefreshModel();
-            }
-            else if (!modelRefreshMsgShown && (modifiedPools || modifiedJncs))
-            {
-                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
-                modelRefreshMsgShown = true;
-            }
+            RefreshModelSafeMode();
             string mode = dd3DModelType.Text;
             bool singlePanel = mode != "Gap/Chem";
             bool gap = mode.Contains("Gap");
@@ -1178,15 +1171,7 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
 
-            if (!Model.ModelRun)
-            {
-                RefreshModel();
-            }
-            else if (!jsonRefreshMsgShown && (modifiedPools || modifiedJncs))
-            {
-                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
-                jsonRefreshMsgShown = true;
-            }
+            RefreshModelSafeMode();
             try
             {
                 eTemplateJSON.Text = JsonUtil.ToJson(ModelTemplate);
@@ -1245,15 +1230,7 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
 
-            if (!Model.ModelRun)
-            {
-                RefreshModel();
-            }
-            else if (!jsonRefreshMsgShown && (modifiedPools || modifiedJncs))
-            {
-                MessageBox.Show("The changes you made will not be visible until you rerun the model.");
-                jsonRefreshMsgShown = true;
-            }
+            RefreshModelSafeMode();
             try
             {
                 eModelJSON.Text = JsonUtil.ToJson(Model);

@@ -30,11 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             this.listAttachments = new System.Windows.Forms.ListBox();
-            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.cmAttachments = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiViewFile = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiAddAttachment = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiRemoveAttachment = new System.Windows.Forms.ToolStripMenuItem();
+            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.cmAttachments.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             this.listAttachments.Name = "listAttachments";
             this.listAttachments.Size = new System.Drawing.Size(472, 505);
             this.listAttachments.TabIndex = 32;
+            this.toolTip1.SetToolTip(this.listAttachments, "Only the locations of the files are kept.");
             // 
             // cmAttachments
             // 
@@ -102,5 +104,6 @@
         private ToolStripMenuItem cmiViewFile;
         private ToolStripMenuItem cmiAddAttachment;
         private ToolStripMenuItem cmiRemoveAttachment;
+        private ToolTip toolTip1;
     }
 }

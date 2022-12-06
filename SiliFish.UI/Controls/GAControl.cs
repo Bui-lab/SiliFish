@@ -52,19 +52,7 @@ namespace SiliFish.UI.Controls
             FitnessControls = new();
         }
 
-        public void ResetParameters(Dictionary<string, double> parameters)
-        {
-            Parameters = parameters;
-            dgMinMaxValues.Rows.Clear();
-            dgMinMaxValues.RowCount = parameters.Count;
-            int rowIndex = 0;
-            foreach (string key in parameters.Keys)
-            {
-                dgMinMaxValues[colParameter.Index, rowIndex++].Value = key;
-            }
-        }
-
-        public void ResetParameters(Dictionary<string, double> parameters, Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues)
+        public void ResetParameters(Dictionary<string, double> parameters, Dictionary<string, double> MinValues = null, Dictionary<string, double> MaxValues = null)
         {
             Parameters = parameters;
             dgMinMaxValues.Rows.Clear();
@@ -73,14 +61,13 @@ namespace SiliFish.UI.Controls
             foreach (string key in parameters.Keys)
             {
                 dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
-                if (MinValues.TryGetValue(key, out double minValue))
+                if (MinValues != null && MinValues.TryGetValue(key, out double minValue))
                     dgMinMaxValues[colMinValue.Index, rowIndex].Value = minValue;
-                if (MaxValues.TryGetValue(key, out double maxValue))
+                if (MaxValues != null && MaxValues.TryGetValue(key, out double maxValue))
                     dgMinMaxValues[colMaxValue.Index, rowIndex].Value = maxValue;
                 rowIndex++;
             }
         }
-        //TODO 3 version of reset parameters - fix
         public void ResetParameters(Dictionary<string, double> parameters, double[] MinValues, double[] MaxValues)
         {
             Parameters = parameters;

@@ -73,7 +73,7 @@ namespace SiliFish.Services
                             .Where(j => j.Cell2 == cell && j.Cell1.Somite >= minSomite && j.Cell1.Somite <= maxSomite))
                         links.Add(CreateLinkDataPoint(jnc));
                 if (chem)
-                    foreach (ChemicalSynapse jnc in neuron.Synapses
+                    foreach (ChemicalSynapse jnc in neuron.Terminals
                             .Where(syn => syn.PostCell.Somite >= minSomite && syn.PostCell.Somite <= maxSomite))
                         links.Add(CreateLinkDataPoint(jnc));
             }

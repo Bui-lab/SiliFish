@@ -1,4 +1,6 @@
-﻿namespace SiliFish.Definitions
+﻿using SiliFish.DynamicUnits;
+
+namespace SiliFish.Definitions
 {
     public class Const
     {
@@ -9,6 +11,8 @@
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
         public static UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;//Used from data structures that don't have direct access to the model
+        public static string DefaultNeuronCore = typeof(Izhikevich_9P).Name;
+        public static string DefaultMuscleCore = typeof(Leaky_Integrator).Name;
 
     }
 }

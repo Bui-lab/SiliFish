@@ -53,10 +53,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.lTarget = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.gSynapse = new System.Windows.Forms.GroupBox();
             this.pRheobase = new System.Windows.Forms.Panel();
             this.btnDynamicsRun = new System.Windows.Forms.Button();
             this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
@@ -79,15 +76,7 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.gSynapse = new System.Windows.Forms.GroupBox();
-            this.numEReversal = new System.Windows.Forms.NumericUpDown();
-            this.numVthreshold = new System.Windows.Forms.NumericUpDown();
-            this.numTauR = new System.Windows.Forms.NumericUpDown();
-            this.numTauD = new System.Windows.Forms.NumericUpDown();
-            this.lEReversal = new System.Windows.Forms.Label();
-            this.lVThreshold = new System.Windows.Forms.Label();
-            this.lTauR = new System.Windows.Forms.Label();
-            this.lTauD = new System.Windows.Forms.Label();
+            this.synapseControl1 = new SiliFish.UI.Controls.SynapseControl();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).BeginInit();
@@ -108,7 +97,7 @@
             this.pCoreType.SuspendLayout();
             this.panel2.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.gSynapse.SuspendLayout();
             this.pRheobase.SuspendLayout();
             this.pLoadSaveParams.SuspendLayout();
             this.pBottomBottom.SuspendLayout();
@@ -118,11 +107,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.webViewPlots)).BeginInit();
             this.pPlots.SuspendLayout();
             this.grPlotSelection.SuspendLayout();
-            this.gSynapse.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEReversal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numVthreshold)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTauR)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTauD)).BeginInit();
             this.SuspendLayout();
             // 
             // lPlotdt
@@ -319,7 +303,6 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel2);
-            this.splitContainer1.Panel2.Controls.Add(this.panel4);
             this.splitContainer1.Size = new System.Drawing.Size(299, 390);
             this.splitContainer1.SplitterDistance = 195;
             this.splitContainer1.TabIndex = 41;
@@ -447,52 +430,21 @@
             this.flowLayoutPanel2.AutoSize = true;
             this.flowLayoutPanel2.Controls.Add(this.gSynapse);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 29);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(299, 162);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(299, 191);
             this.flowLayoutPanel2.TabIndex = 25;
             // 
-            // panel4
+            // gSynapse
             // 
-            this.panel4.Controls.Add(this.panel5);
-            this.panel4.Controls.Add(this.comboBox2);
-            this.panel4.Controls.Add(this.label2);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(299, 29);
-            this.panel4.TabIndex = 24;
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.LightGray;
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 28);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(299, 1);
-            this.panel5.TabIndex = 24;
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(71, 6);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(219, 23);
-            this.comboBox2.TabIndex = 23;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 15);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "Core Type";
+            this.gSynapse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.gSynapse.Controls.Add(this.synapseControl1);
+            this.gSynapse.Location = new System.Drawing.Point(3, 3);
+            this.gSynapse.Name = "gSynapse";
+            this.gSynapse.Size = new System.Drawing.Size(239, 145);
+            this.gSynapse.TabIndex = 3;
+            this.gSynapse.TabStop = false;
+            this.gSynapse.Text = "Synapse Parameters";
             // 
             // pRheobase
             // 
@@ -727,127 +679,14 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
-            // gSynapse
+            // synapseControl1
             // 
-            this.gSynapse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.gSynapse.Controls.Add(this.numEReversal);
-            this.gSynapse.Controls.Add(this.numVthreshold);
-            this.gSynapse.Controls.Add(this.numTauR);
-            this.gSynapse.Controls.Add(this.numTauD);
-            this.gSynapse.Controls.Add(this.lEReversal);
-            this.gSynapse.Controls.Add(this.lVThreshold);
-            this.gSynapse.Controls.Add(this.lTauR);
-            this.gSynapse.Controls.Add(this.lTauD);
-            this.gSynapse.Location = new System.Drawing.Point(3, 3);
-            this.gSynapse.Name = "gSynapse";
-            this.gSynapse.Size = new System.Drawing.Size(239, 145);
-            this.gSynapse.TabIndex = 3;
-            this.gSynapse.TabStop = false;
-            this.gSynapse.Text = "Synapse Parameters";
-            // 
-            // numEReversal
-            // 
-            this.numEReversal.DecimalPlaces = 2;
-            this.numEReversal.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numEReversal.Location = new System.Drawing.Point(102, 105);
-            this.numEReversal.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numEReversal.Minimum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            -2147483648});
-            this.numEReversal.Name = "numEReversal";
-            this.numEReversal.Size = new System.Drawing.Size(120, 23);
-            this.numEReversal.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.numEReversal, "Reversal potential");
-            // 
-            // numVthreshold
-            // 
-            this.numVthreshold.DecimalPlaces = 2;
-            this.numVthreshold.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numVthreshold.Location = new System.Drawing.Point(102, 76);
-            this.numVthreshold.Minimum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            -2147483648});
-            this.numVthreshold.Name = "numVthreshold";
-            this.numVthreshold.Size = new System.Drawing.Size(120, 23);
-            this.numVthreshold.TabIndex = 5;
-            // 
-            // numTauR
-            // 
-            this.numTauR.DecimalPlaces = 2;
-            this.numTauR.Location = new System.Drawing.Point(102, 47);
-            this.numTauR.Name = "numTauR";
-            this.numTauR.Size = new System.Drawing.Size(120, 23);
-            this.numTauR.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.numTauR, "Rise time constant");
-            // 
-            // numTauD
-            // 
-            this.numTauD.DecimalPlaces = 2;
-            this.numTauD.Location = new System.Drawing.Point(102, 18);
-            this.numTauD.Name = "numTauD";
-            this.numTauD.Size = new System.Drawing.Size(120, 23);
-            this.numTauD.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.numTauD, "Decay time constant");
-            this.numTauD.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // lEReversal
-            // 
-            this.lEReversal.AutoSize = true;
-            this.lEReversal.Location = new System.Drawing.Point(15, 107);
-            this.lEReversal.Name = "lEReversal";
-            this.lEReversal.Size = new System.Drawing.Size(32, 15);
-            this.lEReversal.TabIndex = 6;
-            this.lEReversal.Text = "E rev";
-            this.toolTip1.SetToolTip(this.lEReversal, "Reversal potential");
-            // 
-            // lVThreshold
-            // 
-            this.lVThreshold.AutoSize = true;
-            this.lVThreshold.Location = new System.Drawing.Point(15, 78);
-            this.lVThreshold.Name = "lVThreshold";
-            this.lVThreshold.Size = new System.Drawing.Size(69, 15);
-            this.lVThreshold.TabIndex = 4;
-            this.lVThreshold.Text = "Threshold V";
-            // 
-            // lTauR
-            // 
-            this.lTauR.AutoSize = true;
-            this.lTauR.Location = new System.Drawing.Point(15, 49);
-            this.lTauR.Name = "lTauR";
-            this.lTauR.Size = new System.Drawing.Size(17, 15);
-            this.lTauR.TabIndex = 2;
-            this.lTauR.Text = "τr";
-            this.toolTip1.SetToolTip(this.lTauR, "Rise time constant");
-            // 
-            // lTauD
-            // 
-            this.lTauD.AutoSize = true;
-            this.lTauD.Location = new System.Drawing.Point(15, 20);
-            this.lTauD.Name = "lTauD";
-            this.lTauD.Size = new System.Drawing.Size(20, 15);
-            this.lTauD.TabIndex = 0;
-            this.lTauD.Text = "τd";
-            this.toolTip1.SetToolTip(this.lTauD, "Decay time constant");
+            this.synapseControl1.EReversal = 0D;
+            this.synapseControl1.Location = new System.Drawing.Point(10, 18);
+            this.synapseControl1.Name = "synapseControl1";
+            this.synapseControl1.Size = new System.Drawing.Size(152, 127);
+            this.synapseControl1.TabIndex = 0;
+            this.synapseControl1.VThreshold = 0D;
             // 
             // ProjectionTestControl
             // 
@@ -883,8 +722,7 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.gSynapse.ResumeLayout(false);
             this.pRheobase.ResumeLayout(false);
             this.pRheobase.PerformLayout();
             this.pLoadSaveParams.ResumeLayout(false);
@@ -898,12 +736,6 @@
             this.pPlots.ResumeLayout(false);
             this.grPlotSelection.ResumeLayout(false);
             this.grPlotSelection.PerformLayout();
-            this.gSynapse.ResumeLayout(false);
-            this.gSynapse.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEReversal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numVthreshold)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTauR)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTauD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -953,20 +785,9 @@
         private Panel panel3;
         private Label lTarget;
         private FlowLayoutPanel flowLayoutPanel2;
-        private Panel panel4;
-        private Panel panel5;
-        private ComboBox comboBox2;
-        private Label label2;
         private TextBox eSource;
         private TextBox eTarget;
         private GroupBox gSynapse;
-        private NumericUpDown numEReversal;
-        private NumericUpDown numVthreshold;
-        private NumericUpDown numTauR;
-        private NumericUpDown numTauD;
-        private Label lEReversal;
-        private Label lVThreshold;
-        private Label lTauR;
-        private Label lTauD;
+        private SynapseControl synapseControl1;
     }
 }

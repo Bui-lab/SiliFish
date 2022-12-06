@@ -34,6 +34,9 @@ namespace SiliFish.UI.Controls
             if (SwimmingModelTemplate.SomiteBased)
             {
                 lUoD1.Text = lUoD2.Text = "somites";
+                toolTip1.SetToolTip(numMinAscReach, "Set 0 for within somite projections");
+                toolTip1.SetToolTip(numMinDescReach, "Set 0 for within somite projections");
+                toolTip1.SetToolTip(lMinReach, "Set 0 for within somite projections");
                 numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
                     numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 0;
                 numMinAscReach.Increment = numMinDescReach.Increment =
@@ -42,6 +45,9 @@ namespace SiliFish.UI.Controls
             else
             {
                 lUoD1.Text = lUoD2.Text = "";
+                toolTip1.SetToolTip(numMinAscReach, "");
+                toolTip1.SetToolTip(numMinDescReach, "");
+                toolTip1.SetToolTip(lMinReach, "");
                 numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
                     numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 3;
                 numMinAscReach.Increment = numMinDescReach.Increment =
