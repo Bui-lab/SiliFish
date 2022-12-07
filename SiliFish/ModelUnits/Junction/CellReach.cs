@@ -80,7 +80,7 @@ namespace SiliFish.ModelUnits
                 (cell2.X - cell1.X) * noise;//positive values mean cell2 is more caudal
             if (Descending && diff_x >= 0 && diff_x >= MinDescReach && diff_x <= MaxDescReach)
                 return true;
-            if (Ascending && diff_x <= 0 && diff_x >= MinAscReach && diff_x <= MaxAscReach)
+            if (Ascending && diff_x <= 0 && -diff_x >= MinAscReach && -diff_x <= MaxAscReach)
                 return true;
             return false;
 

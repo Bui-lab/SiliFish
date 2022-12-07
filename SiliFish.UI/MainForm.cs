@@ -90,6 +90,7 @@ namespace SiliFish.UI
                 ddPlotSagittal.SelectedIndex = ddPlotSagittal.Items.Count - 1;
                 ddPlotSomiteSelection.SelectedIndex = 0;
                 ddPlotCellSelection.SelectedIndex = 0;
+                dd3DModelType.SelectedIndex = 2; //Gap+Chem
 
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
@@ -711,7 +712,7 @@ namespace SiliFish.UI
             if (count > 0)
             {
                 if (PlotType == PlotType.FullDyn)
-                    count *= 3;
+                    count *= 5;
                 if (PlotType == PlotType.Stimuli)
                     lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + count.ToString();
                 else
@@ -1052,16 +1053,23 @@ namespace SiliFish.UI
         private void Generate3DModel()
         {
             if (Model == null) return;
+            try
+            {
 
-            RefreshModelSafeMode();
-            string mode = dd3DModelType.Text;
-            bool singlePanel = mode != "Gap/Chem";
-            bool gap = mode.Contains("Gap");
-            bool chem = mode.Contains("Chem");
-            ThreeDModelGenerator threeDModelGenerator = new();
-            string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem, ddSomites.Text);
+                RefreshModelSafeMode();
+                string mode = dd3DModelType.Text;
+                bool singlePanel = mode != "Gap/Chem";
+                bool gap = mode.Contains("Gap");
+                bool chem = mode.Contains("Chem");
+                ThreeDModelGenerator threeDModelGenerator = new();
+                string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem, cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text);
 
-            webView3DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
+                webView3DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
         }
 
         private void btnGenerate3DModel_Click(object sender, EventArgs e)
@@ -1764,13 +1772,6 @@ namespace SiliFish.UI
             eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
         }
 
-        private void ddSomites_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddSomites.Text == "All Somites")
-                ddSomites.DropDownStyle = ComboBoxStyle.DropDownList;
-            else
-                ddSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-        }
         private void btnCellularDynamics_Click(object sender, EventArgs e)
         {
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
@@ -1829,15 +1830,17 @@ namespace SiliFish.UI
         }
         #endregion
 
-        private void tabParams_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //RefreshModel();
-        }
 
         private void eNumSomites_ValueChanged(object sender, EventArgs e)
         {
             SwimmingModelTemplate.SomiteBased = eNumSomites.Value > 0;
             //TODO consider the case where modeltemplate is not used
+        }
+
+        private void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
+        {
+            e3DSomiteRange.ReadOnly = cb3DAllSomites.Checked;
+
         }
     }
 }

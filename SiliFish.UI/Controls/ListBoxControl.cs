@@ -175,7 +175,10 @@ namespace SiliFish.UI.Controls
 
             miActivate.Visible = miDeactivate.Visible = false;
             if (listBox.Items.Count == 0)
-                miShowAll.Visible = miHideInactive.Visible = false;
+            {
+                miHideInactive.Visible = false;
+                miShowAll.Visible = HiddenItems.Any();
+            }
             else
             {
                 var (_, exists) = listBox.Items[0].GetPropertyValue("Active", true);

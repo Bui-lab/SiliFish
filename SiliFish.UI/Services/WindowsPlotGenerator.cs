@@ -52,42 +52,59 @@ namespace Services
             return (leftImages, rightImages);
         }
 
-        private static (Dictionary<string, Color>, Dictionary<string, List<double>>) GetAffarentCurrentsOfCell(Cell cell, bool gap, bool chem)
+
+        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, Cell c,
+            int iStart, int iEnd,
+            double yMin, double yMax,
+            bool gap, bool chem)
         {
-            Dictionary<string, Color> colors = new();
-            Dictionary<string, List<double>> AffarentCurrents = new();
-            if (gap && cell is Neuron neuron)
+            List<Image> leftImages = new();
+            List<Image> rightImages = new();
+            string yAxis = $"Current ({Util.GetUoM(Const.UoM, Measure.Current)})";
+
+            if (gap)
             {
-                foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell2 == cell))
-                {
-                    colors.TryAdd(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);
-                    AffarentCurrents.AddObject(jnc.Cell1.ID, jnc.InputCurrent.ToList());
-                }
-                foreach (GapJunction jnc in neuron.GapJunctions.Where(j => j.Cell1 == cell))
-                {
-                    colors.TryAdd(jnc.Cell2.ID, jnc.Cell2.CellPool.Color);
-                    AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
-                }
+                (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = c.GetGapCurrents();
+                if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
+                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                else
+                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
             }
             if (chem)
             {
-                if (cell is Neuron neuron2)
-                {
-                    foreach (ChemicalSynapse jnc in neuron2.Synapses)
-                    {
-                        colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
-                        AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                    }
-                }
-                else if (cell is MuscleCell muscle)
-                {
-                    foreach (ChemicalSynapse jnc in muscle.EndPlates)
-                    {
-                        colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
-                        AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                    }
-                }
+                (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = c.GetIncomingSynapticCurrents();
+                if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
+                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                else
+                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
 
+                (colors, Dictionary<string, List<double>> EfferentCurrents) = c.GetOutgoingSynapticCurrents();
+                if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
+                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                else
+                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+            }
+            return (leftImages, rightImages);
+        }
+        private static (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticsCurrentsOfCell(Cell cell)
+        {
+            Dictionary<string, Color> colors = new();
+            Dictionary<string, List<double>> AffarentCurrents = new();
+            if (cell is Neuron neuron)
+            {
+                foreach (ChemicalSynapse jnc in neuron.Synapses)
+                {
+                    colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
+                    AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
+                }
+            }
+            else if (cell is MuscleCell muscle)
+            {
+                foreach (ChemicalSynapse jnc in muscle.EndPlates)
+                {
+                    colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
+                    AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
+                }
             }
             return (colors, AffarentCurrents);
         }
@@ -97,20 +114,18 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Current ({Util.GetUoM(Const.UoM, Measure.Current)})";
             if (cells != null)
             {
                 double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
                 double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
                 foreach (Cell c in cells)
                 {
-                    (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
-                    if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
-                    else
-                        rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    (List<Image> subLeftImages, List < Image > subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chem);
+                    leftImages.AddRange(subLeftImages);
+                    rightImages.AddRange(subRightImages);
                 }
             }
+
 
             if (pools != null)
             {
@@ -121,11 +136,9 @@ namespace Services
                     IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
                     foreach (Cell c in sampleCells)
                     {
-                        (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = GetAffarentCurrentsOfCell(c, gap, chem);
-                        if (pool.PositionLeftRight == SagittalPlane.Left)
-                            leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
-                        else
-                            rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                        (List<Image> subLeftImages, List<Image> subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chem);
+                        leftImages.AddRange(subLeftImages);
+                        rightImages.AddRange(subRightImages);
                     }
                 }
             }

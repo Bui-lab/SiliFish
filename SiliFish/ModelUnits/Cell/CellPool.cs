@@ -291,8 +291,8 @@ namespace SiliFish.ModelUnits
             int n = template.NumOfCells;
             bool neuron = template.CellType == CellType.Neuron;
             XDistribution = (Distribution)template.XDistribution;
-            Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution).CreateCopy();
-            Y_AngleDistribution.ReviewYDistribution(leftright);
+            Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution)?.CreateCopy();
+            Y_AngleDistribution?.ReviewYDistribution(leftright);
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
             List<int> somites;

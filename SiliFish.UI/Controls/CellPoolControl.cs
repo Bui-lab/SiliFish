@@ -187,7 +187,7 @@ namespace SiliFish.UI.Controls
             distributionX.SetDistribution((Distribution)poolTemplate.XDistribution);
             distributionY.SetDistribution((Distribution)poolTemplate.Y_AngleDistribution);
             distributionZ.SetDistribution((Distribution)poolTemplate.Z_RadiusDistribution);
-            rbYZAngular.Checked = distributionY.GetDistribution().Angular;
+            rbYZAngular.Checked = distributionY.GetDistribution() != null && distributionY.GetDistribution().Angular;
 
             cbActive.Checked = poolTemplate.Active;
             timeLineControl.SetTimeLine(poolTemplate.TimeLine_ms);

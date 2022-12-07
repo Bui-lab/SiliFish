@@ -52,12 +52,24 @@ namespace SiliFish.UI.Controls
             ddTargetPool.Text = stim.TargetPool;
             if (ddTargetPool.Text == "")
                 ddTargetPool.Text = stim.TargetPool + " (inactive)";
-            if (!ddTargetSomites.Items.Contains(stim.TargetSomite) && stim.TargetSomite != null)
-                ddTargetSomites.Items.Add(stim.TargetSomite);
-            ddTargetSomites.Text = stim.TargetSomite;
-            if (!ddTargetCells.Items.Contains(stim.TargetCell) && stim.TargetCell != null)
-                ddTargetCells.Items.Add(stim.TargetCell);
-            ddTargetCells.Text = stim.TargetCell;
+            if (stim.TargetSomite.StartsWith("All"))
+            {
+                cbAllSomites.Checked = true;
+            }
+            else
+            {
+                cbAllSomites.Checked = false;
+                eTargetSomites.Text = stim.TargetSomite;
+            }
+            if (stim.TargetCell.StartsWith("All"))
+            {
+                cbAllCells.Checked = true;
+            }
+            else
+            {
+                cbAllCells.Checked = false;
+                eTargetCells.Text = stim.TargetCell;
+            }
             ddSagittalPosition.Text = stim.LeftRight;
             cbActive.Checked = stim.Active;
 
@@ -71,8 +83,8 @@ namespace SiliFish.UI.Controls
             {
                 StimulusSettings = stimControl.GetStimulus(),
                 TargetPool = ddTargetPool.Text,
-                TargetSomite = ddTargetSomites.Text,
-                TargetCell = ddTargetCells.Text,
+                TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
+                TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
                 LeftRight = ddSagittalPosition.Text,
                 TimeLine_ms = timeLineControl.GetTimeLine(),
                 Active = cbActive.Checked
@@ -87,26 +99,21 @@ namespace SiliFish.UI.Controls
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-        private void ddTargetSomites_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddTargetSomites.Text == "All Somites")
-                ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            else
-                ddTargetSomites.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-        }
-
-        private void ddTargetCell_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddTargetCells.Text == "All Cells")
-                ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            else
-                ddTargetCells.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
-        }
         private void ddSagittalPosition_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddSagittalPosition.Focused)
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
 
+        }
+
+        private void cbAllSomites_CheckedChanged(object sender, EventArgs e)
+        {
+            eTargetSomites.ReadOnly = cbAllSomites.Checked;
+        }
+
+        private void cbAllCells_CheckedChanged(object sender, EventArgs e)
+        {
+            eTargetCells.ReadOnly = cbAllCells.Checked;
         }
     }
 }

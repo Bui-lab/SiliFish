@@ -223,7 +223,7 @@ namespace SiliFish.UI.Controls
             }
             else
                 this.interPoolTemplate = new();
-            attachmentList.SetAttachments(interPoolTemplate.Attachments);
+            attachmentList.SetAttachments(this.interPoolTemplate.Attachments);
         }
 
         public InterPoolTemplate GetInterPoolTemplate()

@@ -4,6 +4,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -157,6 +158,31 @@ namespace SiliFish.ModelUnits
             throw new NotImplementedException();
         }
 
+        public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetGapCurrents()
+        {
+            Dictionary<string, Color> colors = new();
+            Dictionary<string, List<double>> AffarentCurrents = new();
+            foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell2 == this))
+            {
+                colors.TryAdd(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);
+                AffarentCurrents.AddObject(jnc.Cell1.ID, jnc.InputCurrent.ToList());
+            }
+            foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this))
+            {
+                colors.TryAdd(jnc.Cell2.ID, jnc.Cell2.CellPool.Color);
+                AffarentCurrents.AddObject(jnc.Cell2.ID, jnc.InputCurrent.Select(d => -d).ToList());
+            }
+            return (colors, AffarentCurrents);
+        }
+
+        public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
+        {
+            throw new NotImplementedException();
+        }
+        public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetOutgoingSynapticCurrents()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Neuron : Cell
@@ -320,6 +346,29 @@ namespace SiliFish.ModelUnits
             }
         }
 
+        public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
+        {
+            Dictionary<string, Color> colors = new();
+            Dictionary<string, List<double>> AffarentCurrents = new();
+            foreach (ChemicalSynapse jnc in Synapses)
+            {
+                colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
+                AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
+            }
+            return (colors, AffarentCurrents);
+        }
+        public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetOutgoingSynapticCurrents()
+        {
+            Dictionary<string, Color> colors = new();
+            Dictionary<string, List<double>> EfferentCurrents = new();
+            foreach (ChemicalSynapse jnc in Terminals)
+            {
+                colors.TryAdd(jnc.PostCell.ID, jnc.PostCell.CellPool.Color);
+                EfferentCurrents.AddObject(jnc.PostCell.ID, jnc.InputCurrent.ToList());
+            }
+            return (colors, EfferentCurrents);
+        }
+
     }
 
     public class MuscleCell : Cell
@@ -446,6 +495,23 @@ namespace SiliFish.ModelUnits
                 stim = GetStimulus(timeIndex, SwimmingModel.rand);
             }
             NextStep(timeIndex, stim + ISyn + IGap);
+        }
+
+        public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
+        {
+            Dictionary<string, Color> colors = new();
+            Dictionary<string, List<double>> AffarentCurrents = new();
+            foreach (ChemicalSynapse jnc in EndPlates)
+            {
+                colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
+                AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
+            }
+            return (colors, AffarentCurrents);
+        }
+
+        public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetOutgoingSynapticCurrents()
+        {
+            return (null, null);
         }
     }
 

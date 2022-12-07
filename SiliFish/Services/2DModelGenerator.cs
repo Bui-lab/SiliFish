@@ -48,7 +48,7 @@ namespace SiliFish.Services
         private string CreateNodeDataPoint(CellPool pool)
         {
             (double origX, double origY) = PoolCoordinates[pool.ID];
-            (double newX, double newY) = (origX * XMult + XOffset, origY * YMult + YOffset);
+            (double newX, double newY) = (origX * XMult + XOffset, origY * -1 * YMult + YOffset);
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 

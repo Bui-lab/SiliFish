@@ -50,6 +50,8 @@
             this.eNoise = new System.Windows.Forms.TextBox();
             this.pTop = new System.Windows.Forms.Panel();
             this.pTopIn = new System.Windows.Forms.Panel();
+            this.lValue = new System.Windows.Forms.Label();
+            this.eUniqueValue = new System.Windows.Forms.TextBox();
             this.rbPerc = new System.Windows.Forms.RadioButton();
             this.rbAbsolute = new System.Windows.Forms.RadioButton();
             this.eRangeEnd = new System.Windows.Forms.TextBox();
@@ -57,8 +59,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.pOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.lValue = new System.Windows.Forms.Label();
-            this.eUniqueValue = new System.Windows.Forms.TextBox();
             this.pBimodal.SuspendLayout();
             this.pGaussian.SuspendLayout();
             this.pNoise.SuspendLayout();
@@ -150,7 +150,8 @@
             this.pBimodal.Controls.Add(this.eMean2);
             this.pBimodal.Controls.Add(this.lMean2);
             this.pBimodal.Controls.Add(this.lStdDev2);
-            this.pBimodal.Location = new System.Drawing.Point(0, 78);
+            this.pBimodal.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pBimodal.Location = new System.Drawing.Point(0, 0);
             this.pBimodal.Margin = new System.Windows.Forms.Padding(0);
             this.pBimodal.Name = "pBimodal";
             this.pBimodal.Size = new System.Drawing.Size(204, 80);
@@ -210,7 +211,8 @@
             this.pGaussian.Controls.Add(this.eMean1);
             this.pGaussian.Controls.Add(this.lMean);
             this.pGaussian.Controls.Add(this.lStdDev);
-            this.pGaussian.Location = new System.Drawing.Point(0, 26);
+            this.pGaussian.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pGaussian.Location = new System.Drawing.Point(0, 80);
             this.pGaussian.Margin = new System.Windows.Forms.Padding(0);
             this.pGaussian.Name = "pGaussian";
             this.pGaussian.Size = new System.Drawing.Size(204, 52);
@@ -234,7 +236,8 @@
             // 
             this.pNoise.Controls.Add(this.eNoise);
             this.pNoise.Controls.Add(this.lNoise);
-            this.pNoise.Location = new System.Drawing.Point(0, 0);
+            this.pNoise.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pNoise.Location = new System.Drawing.Point(0, 132);
             this.pNoise.Margin = new System.Windows.Forms.Padding(0);
             this.pNoise.Name = "pNoise";
             this.pNoise.Size = new System.Drawing.Size(204, 26);
@@ -269,12 +272,28 @@
             this.pTopIn.Controls.Add(this.eRangeStart);
             this.pTopIn.Controls.Add(this.lRangeSeparator);
             this.pTopIn.Controls.Add(this.ddDistribution);
-            this.pTopIn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pTopIn.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTopIn.Location = new System.Drawing.Point(0, 0);
             this.pTopIn.Margin = new System.Windows.Forms.Padding(0);
             this.pTopIn.Name = "pTopIn";
             this.pTopIn.Size = new System.Drawing.Size(204, 84);
             this.pTopIn.TabIndex = 14;
+            // 
+            // lValue
+            // 
+            this.lValue.AutoSize = true;
+            this.lValue.Location = new System.Drawing.Point(5, 61);
+            this.lValue.Name = "lValue";
+            this.lValue.Size = new System.Drawing.Size(35, 15);
+            this.lValue.TabIndex = 13;
+            this.lValue.Text = "Value";
+            // 
+            // eUniqueValue
+            // 
+            this.eUniqueValue.Location = new System.Drawing.Point(78, 57);
+            this.eUniqueValue.Name = "eUniqueValue";
+            this.eUniqueValue.Size = new System.Drawing.Size(52, 23);
+            this.eUniqueValue.TabIndex = 12;
             // 
             // rbPerc
             // 
@@ -336,22 +355,6 @@
             this.pOptions.Name = "pOptions";
             this.pOptions.Size = new System.Drawing.Size(204, 158);
             this.pOptions.TabIndex = 20;
-            // 
-            // lValue
-            // 
-            this.lValue.AutoSize = true;
-            this.lValue.Location = new System.Drawing.Point(5, 61);
-            this.lValue.Name = "lValue";
-            this.lValue.Size = new System.Drawing.Size(35, 15);
-            this.lValue.TabIndex = 13;
-            this.lValue.Text = "Value";
-            // 
-            // eUniqueValue
-            // 
-            this.eUniqueValue.Location = new System.Drawing.Point(78, 57);
-            this.eUniqueValue.Name = "eUniqueValue";
-            this.eUniqueValue.Size = new System.Drawing.Size(52, 23);
-            this.eUniqueValue.TabIndex = 12;
             // 
             // DistributionControl
             // 

@@ -16,6 +16,7 @@ namespace SiliFish.UI.Controls
                 if (value)
                 {
                     lRange.Top = eRangeStart.Top = eRangeEnd.Top = lRangeSeparator.Top =
+                        lValue.Top = eUniqueValue.Top = 
                         rbAbsolute.Top;
                     pTop.Height = lRange.Bottom + lRange.Margin.Bottom + 12;
                 }
@@ -24,7 +25,7 @@ namespace SiliFish.UI.Controls
         public DistributionControl()
         {
             InitializeComponent();
-            ddDistribution.SelectedIndex = 2;
+            ddDistribution.SelectedIndex = 0;
             rbAbsolute.Checked = true;
         }
         private void ddDistribution_SelectedIndexChanged(object sender, EventArgs e)
@@ -44,7 +45,7 @@ namespace SiliFish.UI.Controls
             if (ddDistribution.Text == "Constant")
             {
                 lRangeSeparator.Visible = lRange.Visible =
-                eRangeEnd.Visible = eRangeStart.Visible = false;
+                    eRangeEnd.Visible = eRangeStart.Visible = false;
                 lValue.Visible = eUniqueValue.Visible = true;
             }
             else if (ddDistribution.Text == "None")
