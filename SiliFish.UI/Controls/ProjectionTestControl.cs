@@ -163,7 +163,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new ChartDataStruct
                 {
                     Title = $"V ({firingRhythm} {firingPattern})",
-                    Color = Color.Purple,
+                    Color = Color.Purple.ToRGB(),
                     xData = TimeArray,
                     yData = dynamics.VList,
                     yLabel = "V (mV)"
@@ -176,7 +176,7 @@ namespace SiliFish.UI.Controls
                     charts.Add(new ChartDataStruct
                     {
                         Title = key,
-                        Color = Color.Blue,
+                        Color = Color.Blue.ToRGB(),
                         xData = TimeArray,
                         yData = dynamics.SecLists[key],
                         yLabel = key
@@ -189,7 +189,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new ChartDataStruct
                 {
                     Title = "Stimulus",
-                    Color = Color.Red,
+                    Color = Color.Red.ToRGB(),
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
                     yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
@@ -215,7 +215,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new ChartDataStruct
                 {
                     Title = $"{key} ({firingRhythm} {firingPattern})",
-                    Color = Color.Purple,
+                    Color = Color.Purple.ToRGB(),
                     xData = TimeArray,
                     yData = dynamics.VList,
                     yLabel = "V (mV)"
@@ -224,7 +224,7 @@ namespace SiliFish.UI.Controls
             charts.Add(new ChartDataStruct
             {
                 Title = $"Stimulus",
-                Color = Color.Red,
+                Color = Color.Red.ToRGB(),
                 xData = TimeArray,
                 yMultiData = I,
                 yLabel = string.Join(',', columnNames)

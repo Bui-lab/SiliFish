@@ -32,6 +32,8 @@ namespace SiliFish.ModelUnits
         public int NumOfCells { get; set; } = 1;
         public CountingMode PerSomiteOrTotal { get; set; } = CountingMode.Total;
 
+        public string SomiteRange { get; set; }
+
         private SpatialDistribution SpatialDistribution = new();
 
         public object XDistribution
@@ -157,6 +159,7 @@ namespace SiliFish.ModelUnits
             ColumnIndex2D = cpl.ColumnIndex2D;
             NumOfCells = cpl.NumOfCells;
             PerSomiteOrTotal = cpl.PerSomiteOrTotal;
+            SomiteRange = cpl.SomiteRange;
             SpatialDistribution = new SpatialDistribution(cpl.SpatialDistribution);
             _ConductionVelocity = cpl._ConductionVelocity?.CreateCopy();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);

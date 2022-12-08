@@ -689,7 +689,7 @@ namespace SiliFish.UI
                     lRunTime.Text = $"Run number: {i}";
             }
         }
-        private void linkSaveRun_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkExportOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string msg = "Save Run may take a while depending on the duration and number of cells.";
             if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
@@ -713,6 +713,10 @@ namespace SiliFish.UI
             {
                 if (PlotType == PlotType.FullDyn)
                     count *= 5;
+                else if (PlotType == PlotType.Current)
+                    count *= 3;
+                else if (PlotType == PlotType.ChemCurrent)
+                    count *= 2;
                 if (PlotType == PlotType.Stimuli)
                     lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + count.ToString();
                 else
@@ -841,7 +845,27 @@ namespace SiliFish.UI
             if (tPlotEnd > tRunEnd)
                 tPlotEnd = tRunEnd;
         }
+        private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (Model == null || !Model.ModelRun) return;
 
+            string msg = "Every plot data will be saved as a separate CSV file. File names are appended to ";
+            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                return;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                Model.SaveToFile(saveFileCSV.FileName);
+            }
+
+            GetPlotSubset();
+            if (PlotType == PlotType.Episodes)
+                Model.SetAnimationParameters(ReadParams("Kinematics"));
+
+            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+
+            (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
+                Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+        }
         #region HTML Plots
         private void PlotHTML()
         {
@@ -1075,6 +1099,11 @@ namespace SiliFish.UI
         private void btnGenerate3DModel_Click(object sender, EventArgs e)
         {
             Generate3DModel();
+        }
+        private void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
+        {
+            e3DSomiteRange.ReadOnly = cb3DAllSomites.Checked;
+
         }
 
         private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1677,6 +1706,11 @@ namespace SiliFish.UI
 
         #region Body Size
 
+        private void eNumSomites_ValueChanged(object sender, EventArgs e)
+        {
+            SwimmingModelTemplate.SomiteBased = eNumSomites.Value > 0;
+            //TODO consider the case where modeltemplate is not used
+        }
         private decimal? prevBodyDorsalVentral = null;
         private void eBodyDorsalVentral_Enter(object sender, EventArgs e)
         {
@@ -1831,16 +1865,8 @@ namespace SiliFish.UI
         #endregion
 
 
-        private void eNumSomites_ValueChanged(object sender, EventArgs e)
-        {
-            SwimmingModelTemplate.SomiteBased = eNumSomites.Value > 0;
-            //TODO consider the case where modeltemplate is not used
-        }
 
-        private void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
-        {
-            e3DSomiteRange.ReadOnly = cb3DAllSomites.Checked;
 
-        }
+
     }
 }

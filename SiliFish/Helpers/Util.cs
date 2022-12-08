@@ -88,6 +88,8 @@ namespace SiliFish.Helpers
 
         public static (int, int) ParseRange(string s, int defMin = -1, int defMax = int.MaxValue)
         {
+            if (string.IsNullOrEmpty(s))
+                return (defMin, defMax);
             int i1;
             int i2 = defMax;
             int sep = s.IndexOfAny(new[] { '-', '_', '.' });

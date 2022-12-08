@@ -49,9 +49,13 @@ namespace SiliFish.UI.Controls
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             if (SwimmingModelTemplate.SomiteBased)
+            {
+                cbAllSomites.Enabled = eSomiteRange.Enabled = true;
                 ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
+            }
             else
             {
+                cbAllSomites.Enabled = eSomiteRange.Enabled = false;
                 ddSelection.Items.Clear();
                 ddSelection.Items.Add(CountingMode.Total.ToString());
             }
@@ -143,6 +147,7 @@ namespace SiliFish.UI.Controls
             poolTemplate.ColumnIndex2D = (int)e2DColumn.Value;
             poolTemplate.NumOfCells = (int)eNumOfCells.Value;
             poolTemplate.PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), ddSelection.Text);
+            poolTemplate.SomiteRange = SwimmingModelTemplate.SomiteBased && !cbAllSomites.Checked ? eSomiteRange.Text : "";
             poolTemplate.XDistribution = distributionX.GetDistribution();
             poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
@@ -182,6 +187,16 @@ namespace SiliFish.UI.Controls
             e2DColumn.Value = Math.Max(poolTemplate.ColumnIndex2D, e2DColumn.Minimum);
             eNumOfCells.Value = poolTemplate.NumOfCells;
             ddSelection.Text = poolTemplate.PerSomiteOrTotal.ToString();
+            if (string.IsNullOrEmpty(poolTemplate.SomiteRange))
+            {
+                cbAllSomites.Checked = true;
+            }
+            else
+            {
+                cbAllSomites.Checked = false;
+                eSomiteRange.Text = poolTemplate.SomiteRange;
+            }
+
             btnColor.BackColor = poolTemplate.Color;
 
             distributionX.SetDistribution((Distribution)poolTemplate.XDistribution);
@@ -243,7 +258,11 @@ namespace SiliFish.UI.Controls
             ParamDictToGrid();
         }
 
-
-
+        private void cbAllSomites_CheckedChanged(object sender, EventArgs e)
+        {
+            eSomiteRange.ReadOnly = cbAllSomites.Checked;
+            if (!cbAllSomites.Checked && eSomiteRange.Text == toolTip1.GetToolTip(eSomiteRange))
+                eSomiteRange.Text = "";
+        }
     }
 }

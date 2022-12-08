@@ -106,6 +106,7 @@ namespace SiliFish.UI
             this.tPlotHTML = new System.Windows.Forms.TabPage();
             this.webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pPlot = new System.Windows.Forms.Panel();
+            this.linkExportPlotData = new System.Windows.Forms.LinkLabel();
             this.pLinePlots = new System.Windows.Forms.Panel();
             this.ePlotHeight = new System.Windows.Forms.NumericUpDown();
             this.ePlotWidth = new System.Windows.Forms.NumericUpDown();
@@ -162,19 +163,19 @@ namespace SiliFish.UI
             this.ePlotKinematicsHeight = new System.Windows.Forms.NumericUpDown();
             this.ePlotKinematicsWidth = new System.Windows.Forms.NumericUpDown();
             this.lPlotKinematicsWidth = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lpx3 = new System.Windows.Forms.Label();
             this.lPlotKinematicsHeight = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.lpx4 = new System.Windows.Forms.Label();
+            this.lNumOfSomitesMNDynamics = new System.Windows.Forms.Label();
             this.eKinematicsSomite = new System.Windows.Forms.NumericUpDown();
             this.btnGenerateEpisodes = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lEpisodeBreak = new System.Windows.Forms.Label();
             this.eKinematicsEpisodeBreak = new System.Windows.Forms.NumericUpDown();
             this.lBurstBreak = new System.Windows.Forms.Label();
             this.eKinematicsBurstBreak = new System.Windows.Forms.NumericUpDown();
             this.lKinematicsTimes = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lms5 = new System.Windows.Forms.Label();
+            this.lms6 = new System.Windows.Forms.Label();
             this.tabAnimation = new System.Windows.Forms.TabPage();
             this.webViewAnimation = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.pAnimation = new System.Windows.Forms.Panel();
@@ -374,7 +375,7 @@ namespace SiliFish.UI
             this.linkSaveHTMLPlots.AutoSize = true;
             this.linkSaveHTMLPlots.Enabled = false;
             this.linkSaveHTMLPlots.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveHTMLPlots.Location = new System.Drawing.Point(527, 114);
+            this.linkSaveHTMLPlots.Location = new System.Drawing.Point(524, 62);
             this.linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
             this.linkSaveHTMLPlots.Size = new System.Drawing.Size(66, 15);
             this.linkSaveHTMLPlots.TabIndex = 53;
@@ -1063,7 +1064,7 @@ namespace SiliFish.UI
             this.linkExportOutput.TabStop = true;
             this.linkExportOutput.Text = "Export Output";
             this.linkExportOutput.Visible = false;
-            this.linkExportOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveRun_LinkClicked);
+            this.linkExportOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExportOutput_LinkClicked);
             // 
             // progressBarRun
             // 
@@ -1270,6 +1271,7 @@ namespace SiliFish.UI
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.Color.White;
+            this.pPlot.Controls.Add(this.linkExportPlotData);
             this.pPlot.Controls.Add(this.pLinePlots);
             this.pPlot.Controls.Add(this.ePlotHeight);
             this.pPlot.Controls.Add(this.ePlotWidth);
@@ -1306,6 +1308,20 @@ namespace SiliFish.UI
             this.pPlot.Size = new System.Drawing.Size(778, 140);
             this.pPlot.TabIndex = 5;
             // 
+            // linkExportPlotData
+            // 
+            this.linkExportPlotData.AutoSize = true;
+            this.linkExportPlotData.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkExportPlotData.Location = new System.Drawing.Point(446, 89);
+            this.linkExportPlotData.Name = "linkExportPlotData";
+            this.linkExportPlotData.Size = new System.Drawing.Size(92, 15);
+            this.linkExportPlotData.TabIndex = 59;
+            this.linkExportPlotData.TabStop = true;
+            this.linkExportPlotData.Text = "Export Plot Data";
+            this.toolTip.SetToolTip(this.linkExportPlotData, "Every plot data will be exported as a separate CSV file.");
+            this.linkExportPlotData.Visible = false;
+            this.linkExportPlotData.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExportPlotData_LinkClicked);
+            // 
             // pLinePlots
             // 
             this.pLinePlots.BackColor = System.Drawing.Color.LightGray;
@@ -1322,7 +1338,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.ePlotHeight.Location = new System.Drawing.Point(494, 28);
+            this.ePlotHeight.Location = new System.Drawing.Point(73, 110);
             this.ePlotHeight.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -1351,7 +1367,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.ePlotWidth.Location = new System.Drawing.Point(494, 3);
+            this.ePlotWidth.Location = new System.Drawing.Point(73, 84);
             this.ePlotWidth.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -1376,7 +1392,7 @@ namespace SiliFish.UI
             // lPlotWidth
             // 
             this.lPlotWidth.AutoSize = true;
-            this.lPlotWidth.Location = new System.Drawing.Point(449, 8);
+            this.lPlotWidth.Location = new System.Drawing.Point(12, 86);
             this.lPlotWidth.Name = "lPlotWidth";
             this.lPlotWidth.Size = new System.Drawing.Size(39, 15);
             this.lPlotWidth.TabIndex = 54;
@@ -1386,7 +1402,7 @@ namespace SiliFish.UI
             // lpx1
             // 
             this.lpx1.AutoSize = true;
-            this.lpx1.Location = new System.Drawing.Point(548, 5);
+            this.lpx1.Location = new System.Drawing.Point(127, 89);
             this.lpx1.Name = "lpx1";
             this.lpx1.Size = new System.Drawing.Size(28, 15);
             this.lpx1.TabIndex = 55;
@@ -1395,7 +1411,7 @@ namespace SiliFish.UI
             // lPlotHeight
             // 
             this.lPlotHeight.AutoSize = true;
-            this.lPlotHeight.Location = new System.Drawing.Point(449, 31);
+            this.lPlotHeight.Location = new System.Drawing.Point(12, 112);
             this.lPlotHeight.Name = "lPlotHeight";
             this.lPlotHeight.Size = new System.Drawing.Size(43, 15);
             this.lPlotHeight.TabIndex = 56;
@@ -1405,7 +1421,7 @@ namespace SiliFish.UI
             // lpx2
             // 
             this.lpx2.AutoSize = true;
-            this.lpx2.Location = new System.Drawing.Point(548, 31);
+            this.lpx2.Location = new System.Drawing.Point(127, 115);
             this.lpx2.Name = "lpx2";
             this.lpx2.Size = new System.Drawing.Size(28, 15);
             this.lpx2.TabIndex = 57;
@@ -1414,7 +1430,7 @@ namespace SiliFish.UI
             // lNumberOfPlots
             // 
             this.lNumberOfPlots.AutoSize = true;
-            this.lNumberOfPlots.Location = new System.Drawing.Point(449, 62);
+            this.lNumberOfPlots.Location = new System.Drawing.Point(446, 8);
             this.lNumberOfPlots.Name = "lNumberOfPlots";
             this.lNumberOfPlots.Size = new System.Drawing.Size(63, 15);
             this.lNumberOfPlots.TabIndex = 53;
@@ -1428,11 +1444,12 @@ namespace SiliFish.UI
             this.btnPlotWindows.Enabled = false;
             this.btnPlotWindows.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnPlotWindows.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPlotWindows.Location = new System.Drawing.Point(449, 83);
+            this.btnPlotWindows.Location = new System.Drawing.Point(446, 31);
             this.btnPlotWindows.Name = "btnPlotWindows";
             this.btnPlotWindows.Size = new System.Drawing.Size(75, 23);
             this.btnPlotWindows.TabIndex = 50;
             this.btnPlotWindows.Text = "Plot";
+            this.toolTip.SetToolTip(this.btnPlotWindows, "Fater plots - non user-interactive");
             this.btnPlotWindows.UseVisualStyleBackColor = false;
             this.btnPlotWindows.Click += new System.EventHandler(this.btnPlotWindows_Click);
             // 
@@ -1453,7 +1470,7 @@ namespace SiliFish.UI
             this.linkSavePlots.AutoSize = true;
             this.linkSavePlots.Enabled = false;
             this.linkSavePlots.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSavePlots.Location = new System.Drawing.Point(527, 88);
+            this.linkSavePlots.Location = new System.Drawing.Point(524, 36);
             this.linkSavePlots.Name = "linkSavePlots";
             this.linkSavePlots.Size = new System.Drawing.Size(96, 15);
             this.linkSavePlots.TabIndex = 51;
@@ -1468,7 +1485,7 @@ namespace SiliFish.UI
             this.btnPlotHTML.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnPlotHTML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPlotHTML.ForeColor = System.Drawing.Color.Black;
-            this.btnPlotHTML.Location = new System.Drawing.Point(449, 110);
+            this.btnPlotHTML.Location = new System.Drawing.Point(446, 58);
             this.btnPlotHTML.Name = "btnPlotHTML";
             this.btnPlotHTML.Size = new System.Drawing.Size(75, 23);
             this.btnPlotHTML.TabIndex = 52;
@@ -1544,7 +1561,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.ePlotEnd.Location = new System.Drawing.Point(74, 32);
+            this.ePlotEnd.Location = new System.Drawing.Point(73, 32);
             this.ePlotEnd.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -1568,7 +1585,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.ePlotStart.Location = new System.Drawing.Point(74, 6);
+            this.ePlotStart.Location = new System.Drawing.Point(73, 6);
             this.ePlotStart.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -1960,19 +1977,19 @@ namespace SiliFish.UI
             this.pMNKinematicsTop.Controls.Add(this.ePlotKinematicsHeight);
             this.pMNKinematicsTop.Controls.Add(this.ePlotKinematicsWidth);
             this.pMNKinematicsTop.Controls.Add(this.lPlotKinematicsWidth);
-            this.pMNKinematicsTop.Controls.Add(this.label3);
+            this.pMNKinematicsTop.Controls.Add(this.lpx3);
             this.pMNKinematicsTop.Controls.Add(this.lPlotKinematicsHeight);
-            this.pMNKinematicsTop.Controls.Add(this.label8);
-            this.pMNKinematicsTop.Controls.Add(this.label7);
+            this.pMNKinematicsTop.Controls.Add(this.lpx4);
+            this.pMNKinematicsTop.Controls.Add(this.lNumOfSomitesMNDynamics);
             this.pMNKinematicsTop.Controls.Add(this.eKinematicsSomite);
             this.pMNKinematicsTop.Controls.Add(this.btnGenerateEpisodes);
-            this.pMNKinematicsTop.Controls.Add(this.label2);
+            this.pMNKinematicsTop.Controls.Add(this.lEpisodeBreak);
             this.pMNKinematicsTop.Controls.Add(this.eKinematicsEpisodeBreak);
             this.pMNKinematicsTop.Controls.Add(this.lBurstBreak);
             this.pMNKinematicsTop.Controls.Add(this.eKinematicsBurstBreak);
             this.pMNKinematicsTop.Controls.Add(this.lKinematicsTimes);
-            this.pMNKinematicsTop.Controls.Add(this.label4);
-            this.pMNKinematicsTop.Controls.Add(this.label6);
+            this.pMNKinematicsTop.Controls.Add(this.lms5);
+            this.pMNKinematicsTop.Controls.Add(this.lms6);
             this.pMNKinematicsTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMNKinematicsTop.Location = new System.Drawing.Point(0, 0);
             this.pMNKinematicsTop.Name = "pMNKinematicsTop";
@@ -2056,14 +2073,14 @@ namespace SiliFish.UI
             this.lPlotKinematicsWidth.Text = "Width";
             this.toolTip.SetToolTip(this.lPlotKinematicsWidth, "for each plot - 15% of it will be used for legend");
             // 
-            // label3
+            // lpx3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(298, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(28, 15);
-            this.label3.TabIndex = 61;
-            this.label3.Text = "(px)";
+            this.lpx3.AutoSize = true;
+            this.lpx3.Location = new System.Drawing.Point(298, 9);
+            this.lpx3.Name = "lpx3";
+            this.lpx3.Size = new System.Drawing.Size(28, 15);
+            this.lpx3.TabIndex = 61;
+            this.lpx3.Text = "(px)";
             // 
             // lPlotKinematicsHeight
             // 
@@ -2075,23 +2092,23 @@ namespace SiliFish.UI
             this.lPlotKinematicsHeight.Text = "Height";
             this.toolTip.SetToolTip(this.lPlotKinematicsHeight, "for each plot");
             // 
-            // label8
+            // lpx4
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(298, 36);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(28, 15);
-            this.label8.TabIndex = 63;
-            this.label8.Text = "(px)";
+            this.lpx4.AutoSize = true;
+            this.lpx4.Location = new System.Drawing.Point(298, 36);
+            this.lpx4.Name = "lpx4";
+            this.lpx4.Size = new System.Drawing.Size(28, 15);
+            this.lpx4.TabIndex = 63;
+            this.lpx4.Text = "(px)";
             // 
-            // label7
+            // lNumOfSomitesMNDynamics
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 63);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 15);
-            this.label7.TabIndex = 43;
-            this.label7.Text = "# of Somites";
+            this.lNumOfSomitesMNDynamics.AutoSize = true;
+            this.lNumOfSomitesMNDynamics.Location = new System.Drawing.Point(6, 63);
+            this.lNumOfSomitesMNDynamics.Name = "lNumOfSomitesMNDynamics";
+            this.lNumOfSomitesMNDynamics.Size = new System.Drawing.Size(73, 15);
+            this.lNumOfSomitesMNDynamics.TabIndex = 43;
+            this.lNumOfSomitesMNDynamics.Text = "# of Somites";
             // 
             // eKinematicsSomite
             // 
@@ -2124,14 +2141,14 @@ namespace SiliFish.UI
             this.btnGenerateEpisodes.UseVisualStyleBackColor = false;
             this.btnGenerateEpisodes.Click += new System.EventHandler(this.btnGenerateEpisodes_Click);
             // 
-            // label2
+            // lEpisodeBreak
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 15);
-            this.label2.TabIndex = 41;
-            this.label2.Text = "Episode Break";
+            this.lEpisodeBreak.AutoSize = true;
+            this.lEpisodeBreak.Location = new System.Drawing.Point(6, 36);
+            this.lEpisodeBreak.Name = "lEpisodeBreak";
+            this.lEpisodeBreak.Size = new System.Drawing.Size(80, 15);
+            this.lEpisodeBreak.TabIndex = 41;
+            this.lEpisodeBreak.Text = "Episode Break";
             // 
             // eKinematicsEpisodeBreak
             // 
@@ -2186,23 +2203,23 @@ namespace SiliFish.UI
             this.lKinematicsTimes.TabIndex = 33;
             this.lKinematicsTimes.Text = "Last kinematics:";
             // 
-            // label4
+            // lms5
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(153, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 15);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "(ms)";
+            this.lms5.AutoSize = true;
+            this.lms5.Location = new System.Drawing.Point(153, 9);
+            this.lms5.Name = "lms5";
+            this.lms5.Size = new System.Drawing.Size(31, 15);
+            this.lms5.TabIndex = 13;
+            this.lms5.Text = "(ms)";
             // 
-            // label6
+            // lms6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(153, 36);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 15);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "(ms)";
+            this.lms6.AutoSize = true;
+            this.lms6.Location = new System.Drawing.Point(153, 36);
+            this.lms6.Name = "lms6";
+            this.lms6.Size = new System.Drawing.Size(31, 15);
+            this.lms6.TabIndex = 16;
+            this.lms6.Text = "(ms)";
             // 
             // tabAnimation
             // 
@@ -2868,24 +2885,24 @@ namespace SiliFish.UI
         private TabPage tabMNKinematics;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewSummaryV;
         private Panel pMNKinematicsTop;
-        private Label label7;
+        private Label lNumOfSomitesMNDynamics;
         private NumericUpDown eKinematicsSomite;
-        private Label label2;
+        private Label lEpisodeBreak;
         private NumericUpDown eKinematicsEpisodeBreak;
         private Label lBurstBreak;
         private NumericUpDown eKinematicsBurstBreak;
         private Label lKinematicsTimes;
         private Button btnGenerateEpisodes;
-        private Label label4;
-        private Label label6;
+        private Label lms5;
+        private Label lms6;
         private SplitContainer splitKinematics;
         private RichTextBox eEpisodesLeft;
         private NumericUpDown ePlotKinematicsHeight;
         private NumericUpDown ePlotKinematicsWidth;
         private Label lPlotKinematicsWidth;
-        private Label label3;
+        private Label lpx3;
         private Label lPlotKinematicsHeight;
-        private Label label8;
+        private Label lpx4;
         private RichTextBox eEpisodesRight;
         private Panel pCellPoolTop;
         private Label lCellPools;
@@ -2908,5 +2925,6 @@ namespace SiliFish.UI
         private NumericUpDown edtEuler;
         private TextBox e3DSomiteRange;
         private CheckBox cb3DAllSomites;
+        private LinkLabel linkExportPlotData;
     }
 }

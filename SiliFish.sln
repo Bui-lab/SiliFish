@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiliFish.UI", "SiliFish.UI\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{DF1638C5-F765-4FC3-9197-BFED1B3D4F11}"
 	ProjectSection(SolutionItems) = preProject
-		ModelNotes.txt = ModelNotes.txt
+		Notes\ModelNotes.txt = Notes\ModelNotes.txt
 		Notes\QuickNotes.txt = Notes\QuickNotes.txt
 		Notes\Todo.txt = Notes\Todo.txt
 	EndProjectSection

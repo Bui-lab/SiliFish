@@ -296,8 +296,10 @@ namespace SiliFish.ModelUnits
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
             List<int> somites;
+            (int firstSomite, int lastSomite) = Util.ParseRange(template.SomiteRange, defMin: 1, defMax: Model.NumberOfSomites);
+
             if (template.PerSomiteOrTotal == CountingMode.PerSomite)
-                somites = Enumerable.Range(1, Model.NumberOfSomites).ToList();
+                somites = Enumerable.Range(firstSomite, lastSomite - firstSomite + 1).ToList();
             else somites = new List<int>() { -1 };
 
             double somiteLength = 0;
