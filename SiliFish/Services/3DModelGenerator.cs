@@ -202,7 +202,7 @@ namespace SiliFish.Services
             html.Replace("__SPINE_LENGTH__", newX2.ToString());
 
             List<string> colors = new();
-            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": \"{pool.Color.ToRGB()}\""));
+            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
             if (!string.IsNullOrEmpty(filename))

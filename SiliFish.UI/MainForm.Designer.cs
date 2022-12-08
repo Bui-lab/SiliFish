@@ -1311,15 +1311,15 @@ namespace SiliFish.UI
             // linkExportPlotData
             // 
             this.linkExportPlotData.AutoSize = true;
+            this.linkExportPlotData.Enabled = false;
             this.linkExportPlotData.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkExportPlotData.Location = new System.Drawing.Point(446, 89);
+            this.linkExportPlotData.Location = new System.Drawing.Point(524, 84);
             this.linkExportPlotData.Name = "linkExportPlotData";
             this.linkExportPlotData.Size = new System.Drawing.Size(92, 15);
             this.linkExportPlotData.TabIndex = 59;
             this.linkExportPlotData.TabStop = true;
             this.linkExportPlotData.Text = "Export Plot Data";
             this.toolTip.SetToolTip(this.linkExportPlotData, "Every plot data will be exported as a separate CSV file.");
-            this.linkExportPlotData.Visible = false;
             this.linkExportPlotData.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExportPlotData_LinkClicked);
             // 
             // pLinePlots

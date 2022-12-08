@@ -41,6 +41,7 @@ namespace SiliFish.UI
         Dictionary<string, object> lastSavedParams;
         Dictionary<string, object> lastRunParams;
         DateTime runStart;
+        List<ChartDataStruct> LastPlottedCharts;
 
         public MainForm()
         {
@@ -706,6 +707,7 @@ namespace SiliFish.UI
 
         private void DisplayNumberOfPlots()
         {
+            if (Model == null) return;
             GetPlotSubset();
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
             int count = Cells?.Count ?? 0 + Pools?.Count ?? 0;
@@ -759,7 +761,7 @@ namespace SiliFish.UI
             else
             {
                 ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+                    ePlotSomiteSelection.Enabled = Model?.NumberOfSomites > 0;
                 ddPlotCellSelection.Enabled =
                     ePlotCellSelection.Enabled =
                     ddPlotSagittal.Enabled =
@@ -847,24 +849,29 @@ namespace SiliFish.UI
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (Model == null || !Model.ModelRun) return;
+            if (!LastPlottedCharts.Any()) return;
 
-            string msg = "Every plot data will be saved as a separate CSV file. File names are appended to ";
-            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
-                return;
+            if (LastPlottedCharts.Count > 1)
+            {
+                string msg = "Every plot data will be saved as a separate CSV file. File names are appended to ";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
+            List<string> fileNames = new();
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                Model.SaveToFile(saveFileCSV.FileName);
+                foreach (ChartDataStruct chart in LastPlottedCharts)
+                {
+                    string title = chart.Title.Replace("'", "").Replace("\"", "").Replace("`", "");
+                    string ext = Path.GetExtension(saveFileCSV.FileName);
+                    string path = Path.GetDirectoryName(saveFileCSV.FileName);
+                    string filename = Path.GetFileNameWithoutExtension(saveFileCSV.FileName);
+                    filename = filename + title + ext;
+                    FileUtil.SaveToFile(path + "\\" + filename, chart.CsvData);
+                    fileNames.Add(filename);
+                }
             }
-
-            GetPlotSubset();
-            if (PlotType == PlotType.Episodes)
-                Model.SetAnimationParameters(ReadParams("Kinematics"));
-
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-
-            (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
-                Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+            MessageBox.Show($"File(s) {string.Join(",", fileNames)} are saved.");
         }
         #region HTML Plots
         private void PlotHTML()
@@ -873,9 +880,9 @@ namespace SiliFish.UI
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-            htmlPlot = DyChartGenerator.Plot(PlotType,
-                Model, Cells, Pools, plotCellSelection,
-                tPlotStart, tPlotEnd, tRunSkip,
+            (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
+
+            htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts,
                 (int)ePlotWidth.Value, (int)ePlotHeight.Value);
             Invoke(CompletePlotHTML);
         }
@@ -901,6 +908,7 @@ namespace SiliFish.UI
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
             linkSaveHTMLPlots.Enabled = true;
+            linkExportPlotData.Enabled = true;
             toolTip.SetToolTip(btnPlotHTML, $"Last HTML plot: {DateTime.Now:t}");
         }
         private void linkSaveHTMLPlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

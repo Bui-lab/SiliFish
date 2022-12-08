@@ -98,14 +98,14 @@ namespace SiliFish.Services
                     StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.DyChart.js"));
                     chart.Replace("__CHART_INDEX__", chartIndex.ToString());
                     chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
-                    chart.Replace("__CHART_COLORS__", charts[chartIndex].Color, '`');
-                    chart.Replace("__CHART_TITLE__", charts[chartIndex].Title, '`');
+                    chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
+                    chart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
                     chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(Const.DecimalPointFormat));
                     chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(Const.DecimalPointFormat));
                     chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(Const.DecimalPointFormat));
                     chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(Const.DecimalPointFormat));
-                    chart.Replace("__Y_LABEL__", charts[chartIndex].yLabel, '`');
-                    chart.Replace("__X_LABEL__", charts[chartIndex].xLabel, '`');
+                    chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
+                    chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
                     chart.Replace("__DRAW_POINTS__", charts[chartIndex].drawPoints ? "true" : "false");
                     chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
                     chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
@@ -124,10 +124,8 @@ namespace SiliFish.Services
         }
 
 
-        public static string Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1, int tSkip = 0, int width = 480, int height = 240)
+        public static string Plot(string Title, List<ChartDataStruct> charts, int width = 480, int height = 240)
         {
-            (string Title , List<ChartDataStruct> charts) = PlotDataGenerator.GetPlotData(PlotType, model, Cells, Pools, cellSelection, tStart, tEnd, tSkip);
             string PlotHTML = PlotCharts(Title, charts, synchronized: true, width, height);
             return PlotHTML;
         }

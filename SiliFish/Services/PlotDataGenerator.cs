@@ -32,7 +32,7 @@ namespace SiliFish.Services
                 foreach (Cell cell in cellGroup)
                 {
                     columnTitles += cell.ID + ",";
-                    colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
+                    colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += cell.V?[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                 }
@@ -86,7 +86,7 @@ namespace SiliFish.Services
                             gapExists = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
                             gapTitle += "Gap: " + otherCell.ID + ",";
-                            colorPerGapChart.Add("'" + otherCell.CellPool.Color.ToRGB() + "'");
+                            colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 gapData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                         }
@@ -100,7 +100,7 @@ namespace SiliFish.Services
                         {
                             synInExists = true;
                             synInTitle += jnc.PreNeuron.ID + ",";
-                            colorPerInSynChart.Add("'" + jnc.PreNeuron.CellPool.Color.ToRGB() + "'");
+                            colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 synInData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                         }
@@ -110,7 +110,7 @@ namespace SiliFish.Services
                             {
                                 synOutExists = true;
                                 synOutTitle += jnc.PostCell.ID + ",";
-                                colorPerOutSynChart.Add("'" + jnc.PostCell.CellPool.Color.ToRGB() + "'");
+                                colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                     synOutData[i] += jnc.InputCurrent[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                             }
@@ -188,7 +188,7 @@ namespace SiliFish.Services
                 {
                     stimExists = true;
                     title += cell.ID + ",";
-                    colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
+                    colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(Const.DecimalPointFormat) + ",";
                 }
@@ -230,7 +230,7 @@ namespace SiliFish.Services
                 {
                     double[] Tension = cell.RelativeTension;
                     title += cell.ID + ",";
-                    colorPerChart.Add("'" + cell.CellPool.Color.ToRGB() + "'");
+                    colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += Tension[iStart + i].ToString(Const.DecimalPointFormat) + ",";
                 }

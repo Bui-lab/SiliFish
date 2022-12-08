@@ -112,7 +112,7 @@ namespace SiliFish.Services
             html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> colors = new();
-            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": \'{pool.Color.ToRGB()}\'"));
+            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
             //FUTURE_IMPROVEMENT custom shapes

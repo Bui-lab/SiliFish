@@ -9,6 +9,18 @@ namespace SiliFish.Helpers
 {
     public class Util
     {
+
+        public static string JavaScriptEncode(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return s;
+            if (s.StartsWith('`') && s.EndsWith('`'))
+                s = s[1..^1];
+            s = s.Replace("\\`", "`");//to prevent double escape
+            s = s.Replace("`", "\\`");
+            s = '`' + s + '`';
+            return s;
+        }
         public static int NumOfDigits(double val)
         {
             int digits = 0;
