@@ -15,6 +15,7 @@ namespace SiliFish.ModelUnits
         public string CellGroup { get; set; }
         public string Description { get; set; }
         public CellType CellType { get; set; }
+        public BodyLocation BodyLocation { get; set; }
         public string CoreType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
         public Color Color { get; set; } = Color.Red;

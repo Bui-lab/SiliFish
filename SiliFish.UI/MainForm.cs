@@ -337,6 +337,9 @@ namespace SiliFish.UI
             paramDict.Add("General.Name", eModelName.Text);
             paramDict.Add("General.Description", eModelDescription.Text);
             paramDict.Add("General.NumberOfSomites", eNumSomites.Value);
+            paramDict.Add("General.SupraSpinalRostralCaudalDistance", eSupraSpinalRostraCaudal.Value);
+            paramDict.Add("General.SupraSpinalDorsalVentralDistance", eSupraSpinalDorsalVentral.Value);
+            paramDict.Add("General.SupraSpinalMedialLateralDistance", eSupraSpinalMedialLateral.Value);
             paramDict.Add("General.SpinalRostralCaudalDistance", eSpinalRostraoCaudal.Value);
             paramDict.Add("General.SpinalDorsalVentralDistance", eSpinalDorsalVentral.Value);
             paramDict.Add("General.SpinalMedialLateralDistance", eSpinalMedialLateral.Value);
@@ -1863,11 +1866,7 @@ namespace SiliFish.UI
         {
             if (skipSizeChanged) return;
             skipSizeChanged = true;
-            int prevWidth = picRostroCaudal.Width;
-            picCrossSection.Width = picCrossSection.Height = picRostroCaudal.Width = pBodyDiagrams.Width - 6;
-            picRostroCaudal.Height = picRostroCaudal.Width * picRostroCaudal.Height / prevWidth;
-            picRostroCaudal.Top = picCrossSection.Bottom + 6;
-            pBodyDiagrams.Height = picCrossSection.Height + picRostroCaudal.Height + 12;
+
             skipSizeChanged = false;
         }
         #endregion

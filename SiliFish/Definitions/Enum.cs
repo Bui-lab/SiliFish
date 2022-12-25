@@ -7,7 +7,7 @@ namespace SiliFish.Definitions
     public enum FiringRhythm { NoSpike, Phasic, Tonic }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }
 
-    public enum BodyLocation { SpinalCord, Body }
+    public enum BodyLocation { SpinalCord, MusculoSkeletal, SupraSpinal }
 
     public enum CountingMode { PerSomite, Total }
 

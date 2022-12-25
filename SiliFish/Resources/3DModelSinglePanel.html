@@ -44,6 +44,14 @@
         const spineLine = new THREE.Line(spineGeometry, spineMaterial);
         gapChemGraph.scene().add(spineLine);
 
+        const headGeometry = new THREE.CapsuleGeometry(__BRAIN_R__, __BRAIN_L__);//(radius, length)
+        const headMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const headSphere = new THREE.Mesh(headGeometry, headMaterial);
+        headGeometry.translate(-200, 0, 0);
+        gapChemGraph.scene().add(headSphere);
+
+
+
         //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
         var linkedByID = {};
         gapChemData.links.forEach(function (d) {

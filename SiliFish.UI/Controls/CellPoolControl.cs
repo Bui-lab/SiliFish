@@ -48,6 +48,7 @@ namespace SiliFish.UI.Controls
             ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
+            ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
             if (SwimmingModelTemplate.SomiteBased)
             {
                 cbAllSomites.Enabled = eSomiteRange.Enabled = true;
@@ -143,6 +144,7 @@ namespace SiliFish.UI.Controls
                 poolTemplate = new CellPoolTemplate();
             poolTemplate.CellGroup = groupName;
             poolTemplate.Description = eDescription.Text;
+            poolTemplate.BodyLocation= (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text);
             poolTemplate.PositionLeftRight = sagPlane;
             poolTemplate.ColumnIndex2D = (int)e2DColumn.Value;
             poolTemplate.NumOfCells = (int)eNumOfCells.Value;
@@ -176,6 +178,7 @@ namespace SiliFish.UI.Controls
             skipCoreTypeChange = true;
             ddCoreType.Text = poolTemplate.CoreType?.ToString();
             skipCoreTypeChange = false;
+            ddBodyPosition.Text = poolTemplate.BodyLocation.ToString();
             lNeuronClass.Visible = ddNeuronClass.Visible = poolTemplate.CellType == CellType.Neuron;
             ddNeuronClass.Text = poolTemplate.NTMode.ToString();
             if (poolTemplate.PositionLeftRight == SagittalPlane.Both)

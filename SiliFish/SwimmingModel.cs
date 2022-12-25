@@ -57,6 +57,9 @@ namespace SiliFish
         private string modelName;
         public string ModelName { get => modelName; set => modelName = value; }
         public string ModelDescription { get; set; }
+        public double SupraSpinalRostralCaudalDistance { get; set; }
+        public double SupraSpinalDorsalVentralDistance { get; set; }
+        public double SupraSpinalMedialLateralDistance { get; set; }
         public double SpinalRostralCaudalDistance { get; set; }
         public double SpinalDorsalVentralDistance { get; set; }
         public double SpinalMedialLateralDistance { get; set; }
@@ -267,6 +270,9 @@ namespace SiliFish
                 { "General.Name", ModelName },
                 { "General.Description", ModelDescription },
                 { "General.NumberOfSomites", NumberOfSomites },
+                { "General.SupraSpinalRostralCaudalDistance", SupraSpinalRostralCaudalDistance },
+                { "General.SupraSpinalDorsalVentralDistance", SupraSpinalDorsalVentralDistance },
+                { "General.SupraSpinalMedialLateralDistance", SupraSpinalMedialLateralDistance },
                 { "General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance },
                 { "General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance },
                 { "General.SpinalMedialLateralDistance", SpinalMedialLateralDistance },
@@ -327,6 +333,9 @@ namespace SiliFish
             paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
             paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
             paramDict.AddObject("General.NumberOfSomites", NumberOfSomites, skipIfExists: true);
+            paramDict.AddObject("General.SupraSpinalRostralCaudalDistance", SupraSpinalRostralCaudalDistance, skipIfExists: true);
+            paramDict.AddObject("General.SupraSpinalDorsalVentralDistance", SupraSpinalDorsalVentralDistance, skipIfExists: true);
+            paramDict.AddObject("General.SupraSpinalMedialLateralDistance", SupraSpinalMedialLateralDistance, skipIfExists: true);
             paramDict.AddObject("General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance, skipIfExists: true);
             paramDict.AddObject("General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance, skipIfExists: true);
             paramDict.AddObject("General.SpinalMedialLateralDistance", SpinalMedialLateralDistance, skipIfExists: true);
@@ -369,6 +378,9 @@ namespace SiliFish
             ModelName = paramExternal.Read("General.Name", ModelName);
             ModelDescription = paramExternal.Read("General.Description", ModelDescription);
             NumberOfSomites = paramExternal.ReadInteger("General.NumberOfSomites");
+            SupraSpinalRostralCaudalDistance = paramExternal.ReadDouble("General.SupraSpinalRostralCaudalDistance");
+            SupraSpinalDorsalVentralDistance = paramExternal.ReadDouble("General.SupraSpinalDorsalVentralDistance");
+            SupraSpinalMedialLateralDistance = paramExternal.ReadDouble("General.SupraSpinalMedialLateralDistance");
             SpinalRostralCaudalDistance = paramExternal.ReadDouble("General.SpinalRostralCaudalDistance");
             SpinalDorsalVentralDistance = paramExternal.ReadDouble("General.SpinalDorsalVentralDistance");
             SpinalMedialLateralDistance = paramExternal.ReadDouble("General.SpinalMedialLateralDistance");

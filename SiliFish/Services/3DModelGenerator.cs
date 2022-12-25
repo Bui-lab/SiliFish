@@ -190,16 +190,26 @@ namespace SiliFish.Services
                 html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
             }
 
+            double spinalposX = model.SupraSpinalRostralCaudalDistance;
             double spinalposY = model.SpinalBodyPosition + model.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;
-            double spinallag = Math.Max(model.SpinalRostralCaudalDistance, xRange);
-            (double newX, double newY, double newZ) = GetNewCoordinates(-3 * XMin, spinalposZ, spinalposY, 0);
-            (double newX2, newY, newZ) = GetNewCoordinates(spinallag + 5 * XMin, spinalposZ, spinalposY, 0);
+            double spinallength = model.SpinalRostralCaudalDistance;
+            (double newX, double newY, double newZ) = GetNewCoordinates(spinalposX, spinalposZ, spinalposY, 0);
+            (double newX2, newY, newZ) = GetNewCoordinates(spinallength + spinalposX, spinalposZ, spinalposY, 0);
 
             html.Replace("__SPINE_X__", newX.ToString());
             html.Replace("__SPINE_Y__", newY.ToString());
             html.Replace("__SPINE_Z__", newZ.ToString());
             html.Replace("__SPINE_LENGTH__", newX2.ToString());
+
+            double brainLength = spinalposX;
+            double brainHeight = model.SupraSpinalDorsalVentralDistance;
+            double brainWidth = model.SupraSpinalMedialLateralDistance;
+            double brainRadius = Math.Max(brainHeight/2, brainWidth);
+            brainLength -= brainRadius;
+            if (brainLength < 0) brainLength = 0;
+            html.Replace("__BRAIN_R__", (brainRadius * XYZMult).ToString());
+            html.Replace("__BRAIN_L__", (brainLength * XYZMult).ToString());
 
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
