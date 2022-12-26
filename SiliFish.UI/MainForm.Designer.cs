@@ -55,7 +55,7 @@ namespace SiliFish.UI
             this.grSpinalCord = new System.Windows.Forms.GroupBox();
             this.eSpinalBodyPosition = new System.Windows.Forms.NumericUpDown();
             this.lSpinalBodyPosition = new System.Windows.Forms.Label();
-            this.eSpinalRostraoCaudal = new System.Windows.Forms.NumericUpDown();
+            this.eSpinalRostraCaudal = new System.Windows.Forms.NumericUpDown();
             this.lSpinalRostroCaudal = new System.Windows.Forms.Label();
             this.eSpinalMedialLateral = new System.Windows.Forms.NumericUpDown();
             this.lSpinalMedialLateral = new System.Windows.Forms.Label();
@@ -236,7 +236,7 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).BeginInit();
             this.grSpinalCord.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalBodyPosition)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraoCaudal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraCaudal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalMedialLateral)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalDorsalVentral)).BeginInit();
             this.grBody.SuspendLayout();
@@ -581,7 +581,7 @@ namespace SiliFish.UI
             // 
             this.grSpinalCord.Controls.Add(this.eSpinalBodyPosition);
             this.grSpinalCord.Controls.Add(this.lSpinalBodyPosition);
-            this.grSpinalCord.Controls.Add(this.eSpinalRostraoCaudal);
+            this.grSpinalCord.Controls.Add(this.eSpinalRostraCaudal);
             this.grSpinalCord.Controls.Add(this.lSpinalRostroCaudal);
             this.grSpinalCord.Controls.Add(this.eSpinalMedialLateral);
             this.grSpinalCord.Controls.Add(this.lSpinalMedialLateral);
@@ -625,17 +625,17 @@ namespace SiliFish.UI
             // 
             // eSpinalRostraoCaudal
             // 
-            this.eSpinalRostraoCaudal.DecimalPlaces = 3;
-            this.eSpinalRostraoCaudal.Location = new System.Drawing.Point(98, 73);
-            this.eSpinalRostraoCaudal.Maximum = new decimal(new int[] {
+            this.eSpinalRostraCaudal.DecimalPlaces = 3;
+            this.eSpinalRostraCaudal.Location = new System.Drawing.Point(98, 73);
+            this.eSpinalRostraCaudal.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.eSpinalRostraoCaudal.Name = "eSpinalRostraoCaudal";
-            this.eSpinalRostraoCaudal.Size = new System.Drawing.Size(63, 23);
-            this.eSpinalRostraoCaudal.TabIndex = 16;
-            this.eSpinalRostraoCaudal.Value = new decimal(new int[] {
+            this.eSpinalRostraCaudal.Name = "eSpinalRostraoCaudal";
+            this.eSpinalRostraCaudal.Size = new System.Drawing.Size(63, 23);
+            this.eSpinalRostraCaudal.TabIndex = 16;
+            this.eSpinalRostraCaudal.Value = new decimal(new int[] {
             5,
             0,
             0,
@@ -2747,7 +2747,7 @@ namespace SiliFish.UI
             this.grSpinalCord.ResumeLayout(false);
             this.grSpinalCord.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalBodyPosition)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraoCaudal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraCaudal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalMedialLateral)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSpinalDorsalVentral)).EndInit();
             this.grBody.ResumeLayout(false);
@@ -2899,7 +2899,7 @@ namespace SiliFish.UI
         private GroupBox grSpinalCord;
         private NumericUpDown eSpinalBodyPosition;
         private Label lSpinalBodyPosition;
-        private NumericUpDown eSpinalRostraoCaudal;
+        private NumericUpDown eSpinalRostraCaudal;
         private Label lSpinalRostroCaudal;
         private NumericUpDown eSpinalMedialLateral;
         private Label lSpinalMedialLateral;

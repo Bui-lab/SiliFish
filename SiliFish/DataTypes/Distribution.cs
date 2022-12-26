@@ -185,6 +185,7 @@ namespace SiliFish.DataTypes
         {
             if (Random == null)
                 Random = new Random();
+            Range = range;
             double[] result = new double[n];
             for (int i = 0; i < n; i++)
             {

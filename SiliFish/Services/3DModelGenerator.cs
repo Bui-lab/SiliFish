@@ -15,7 +15,7 @@ namespace SiliFish.Services
         bool SingleDimension = false;
         double XYZMult;
         double XMin, YMin, ZMin;
-        double XOffset, YOffset, ZOffset;
+        double XOffset;
         double WeightMin, WeightMax;
         double WeightMult;
         private string CreateLinkDataPoint(GapJunction jnc)
@@ -38,12 +38,14 @@ namespace SiliFish.Services
         }
         private (double, double, double) GetNewCoordinates(double x, double y, double z, int columnIndex2D)
         {
-            //to be consistent with how x-y-z coordinates are used: flip y and z, and negate y
+            //to be consistent with how x-y-z coordinates are used: flip y and z, and negate both y and z 
+            //y is negated because closer to us is left, minus
+            //z is negated because more dorsal is considered as 0
             double newX = (x - XMin) * XYZMult - XOffset;
-            double newY = SingleDimension ? (y * columnIndex2D) * XYZMult - YOffset :
-                (y - YMin) * XYZMult - YOffset;
-            double newZ = ((z - ZMin) * XYZMult - ZOffset);
-            return (newX, newZ, -newY);
+            double newY = SingleDimension ? (y * columnIndex2D) * XYZMult:
+                (y - YMin) * XYZMult;
+            double newZ = (z - ZMin) * XYZMult;
+            return (newX, -newZ, -newY);
         }
         private double GetNewWeight(double d)
         {
@@ -148,9 +150,8 @@ namespace SiliFish.Services
             double range = Math.Max(xRange, Math.Max(yRange, zRange));
             int width = 400;
             XYZMult = width / range;
-            XOffset = singlePanel ? width / 2 : width;
-            YOffset = 0;
-            ZOffset = 0;
+            XOffset = singlePanel ? width / 2 : width; //The center of the window is 0 - so half width is removed from all X values
+
             int numOfConnections = model.GetNumberOfConnections();
             double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
             (WeightMin, WeightMax) = model.GetConnectionRange();
@@ -196,7 +197,6 @@ namespace SiliFish.Services
             double spinallength = model.SpinalRostralCaudalDistance;
             (double newX, double newY, double newZ) = GetNewCoordinates(spinalposX, spinalposZ, spinalposY, 0);
             (double newX2, newY, newZ) = GetNewCoordinates(spinallength + spinalposX, spinalposZ, spinalposY, 0);
-
             html.Replace("__SPINE_X__", newX.ToString());
             html.Replace("__SPINE_Y__", newY.ToString());
             html.Replace("__SPINE_Z__", newZ.ToString());
@@ -205,11 +205,9 @@ namespace SiliFish.Services
             double brainLength = spinalposX;
             double brainHeight = model.SupraSpinalDorsalVentralDistance;
             double brainWidth = model.SupraSpinalMedialLateralDistance;
-            double brainRadius = Math.Max(brainHeight/2, brainWidth);
-            brainLength -= brainRadius;
-            if (brainLength < 0) brainLength = 0;
-            html.Replace("__BRAIN_R__", (brainRadius * XYZMult).ToString());
-            html.Replace("__BRAIN_L__", (brainLength * XYZMult).ToString());
+            html.Replace("__BRAIN_WIDTH__", (brainLength * XYZMult).ToString());
+            html.Replace("__BRAIN_HEIGHT__", (brainHeight * XYZMult).ToString());
+            html.Replace("__BRAIN_DEPTH__", (brainWidth * XYZMult).ToString());
 
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));

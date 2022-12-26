@@ -240,10 +240,14 @@ namespace SiliFish.UI
             eModelName.Text = paramDict.Read("General.Name", "");
             eModelDescription.Text = paramDict.Read("General.Description", "");
 
-            eSpinalRostraoCaudal.SetValue(paramDict.ReadDouble("General.SpinalRostralCaudalDistance"));
-            eSpinalDorsalVentral.SetValue(paramDict.ReadDouble("General.SpinalDorsalVentralDistance"));
+            eSupraSpinalDorsalVentral.SetValue(paramDict.ReadDouble("General.SupraSpinalDorsalVentralDistance"));
+            eSupraSpinalMedialLateral.SetValue(paramDict.ReadDouble("General.SupraSpinalMedialLateralDistance"));
+            eSupraSpinalRostraCaudal.SetValue(paramDict.ReadDouble("General.SupraSpinalRostralCaudalDistance"));
 
+            eSpinalRostraCaudal.SetValue(paramDict.ReadDouble("General.SpinalRostralCaudalDistance"));
+            eSpinalDorsalVentral.SetValue(paramDict.ReadDouble("General.SpinalDorsalVentralDistance"));
             eSpinalMedialLateral.SetValue(paramDict.ReadDouble("General.SpinalMedialLateralDistance"));
+
             eNumSomites.SetValue(paramDict.ReadInteger("General.NumberOfSomites"));
 
             eSpinalBodyPosition.SetValue(paramDict.ReadDouble("General.SpinalBodyPosition"));
@@ -340,7 +344,7 @@ namespace SiliFish.UI
             paramDict.Add("General.SupraSpinalRostralCaudalDistance", eSupraSpinalRostraCaudal.Value);
             paramDict.Add("General.SupraSpinalDorsalVentralDistance", eSupraSpinalDorsalVentral.Value);
             paramDict.Add("General.SupraSpinalMedialLateralDistance", eSupraSpinalMedialLateral.Value);
-            paramDict.Add("General.SpinalRostralCaudalDistance", eSpinalRostraoCaudal.Value);
+            paramDict.Add("General.SpinalRostralCaudalDistance", eSpinalRostraCaudal.Value);
             paramDict.Add("General.SpinalDorsalVentralDistance", eSpinalDorsalVentral.Value);
             paramDict.Add("General.SpinalMedialLateralDistance", eSpinalMedialLateral.Value);
             paramDict.Add("General.SpinalBodyPosition", eSpinalBodyPosition.Value);

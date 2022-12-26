@@ -190,7 +190,7 @@ namespace SiliFish.ModelUnits
                     x_length = somite < 0 ? Model.SpinalRostralCaudalDistance : Model.SpinalRostralCaudalDistance / Model.NumberOfSomites;
                     x_offset = Model.SupraSpinalRostralCaudalDistance + (somite >= 0 ? somite * Model.SpinalRostralCaudalDistance / Model.NumberOfSomites : 0);
                     y_length = Model.BodyMedialLateralDistance;
-                    y_offset = Model.SpinalMedialLateralDistance;
+                    //y_offset = Model.SpinalMedialLateralDistance;
                     z_length = Model.BodyDorsalVentralDistance;
                     radius = Math.Sqrt(Math.Pow(Model.BodyMedialLateralDistance, 2) + Math.Pow(Model.BodyDorsalVentralDistance / 2, 2));
                     break;
@@ -208,7 +208,7 @@ namespace SiliFish.ModelUnits
             if (Y_AngleDistribution != null && Y_AngleDistribution.Angular)
             {
                 double[] angles = Y_AngleDistribution?.GenerateNNumbers(n, 180) ?? Distribution.GenerateNRandomNumbers(n, 180);
-                double centerZ = BodyLocation == BodyLocation.SpinalCord ? Model.SpinalDorsalVentralDistance / 2 : Model.BodyDorsalVentralDistance / 2;
+                double centerZ = z_offset + z_length / 2;
                 double[] radii = Z_RadiusDistribution?.GenerateNNumbers(n, radius) ?? Distribution.GenerateNRandomNumbers(n, radius);
                 foreach (int i in Enumerable.Range(0, n))
                 {

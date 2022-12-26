@@ -44,11 +44,11 @@
         const spineLine = new THREE.Line(spineGeometry, spineMaterial);
         gapChemGraph.scene().add(spineLine);
 
-        const headGeometry = new THREE.CapsuleGeometry(__BRAIN_R__, __BRAIN_L__);//(radius, length)
+        const headGeometry = new THREE.BoxGeometry(__BRAIN_WIDTH__, __BRAIN_HEIGHT__, __BRAIN_DEPTH__);
         const headMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        const headSphere = new THREE.Mesh(headGeometry, headMaterial);
+        const headBox = new THREE.Mesh(headGeometry, headMaterial);
         headGeometry.translate(-200, 0, 0);
-        gapChemGraph.scene().add(headSphere);
+        gapChemGraph.scene().add(headBox);
 
 
 

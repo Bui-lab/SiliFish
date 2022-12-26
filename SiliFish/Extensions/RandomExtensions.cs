@@ -5,6 +5,17 @@ namespace SiliFish.Extensions
 {
     public static class RandomExtensions
     {
+        //https://stackoverflow.com/questions/108819/best-way-to-randomize-an-array-with-net
+        public static void Shuffle(this Random rand, double[] array)
+        {
+            int n = array.Length;
+            while (n > 1)
+            {
+                int k = rand.Next(n--);
+                (array[k], array[n]) = (array[n], array[k]);
+            }
+        }
+
         //https://stackoverflow.com/questions/218060/random-gaussian-variables
         public static double Gauss(this Random rand, double mean, double stdDev, double? minValue = null, double? maxValue = null)
         {
@@ -61,7 +72,7 @@ namespace SiliFish.Extensions
         /// <summary>
         /// Generate equally spaced numbers with noise
         /// </summary>
-        public static double[] Spaced(this Random rand, double start, double end, double noiseStdDev, int n)
+        public static double[] Spaced(this Random rand, double start, double end, double noiseStdDev, int n, bool ordered = false)
         {
             if (n <= 0) return null;
             double[] result = new double[n];
@@ -79,7 +90,11 @@ namespace SiliFish.Extensions
                 if (result[i] < start) result[i] = start;
                 if (result[i] > end) result[i] = end;
             }
-
+            if (!ordered)
+            {
+                Random rnd = new Random();
+                rnd.Shuffle(result);
+            }
             return result;
         }
 
