@@ -16,6 +16,8 @@ namespace SiliFish.Services.Optimization
         public string CrossOverType { get; set; }
         public string MutationType { get; set; }
         public string ReinsertionType { get; set; }
+        public double? TargetFitness { get; set; }
+        public int? MaxGeneration { get; set; }
         public string TerminationType { get; set; }
         public string TerminationParam { get; set; }
         public TargetRheobaseFunction TargetRheobaseFunction { get; set; }

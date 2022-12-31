@@ -111,17 +111,27 @@ namespace SiliFish.UI.Controls
                 minPopulation = 50;
             if (!int.TryParse(eMaxChromosome.Text, out int maxPopulation))
                 maxPopulation = 50;
+            double? targetFitness = null;
+            if (cbTargetFitness.Checked && double.TryParse(eTargetFitness.Text, out double d))
+                targetFitness = d;
+            int? maxGeneration = null;
+            if (cbMaxGeneration.Checked && int.TryParse(eMaxGeneration.Text, out int i))
+                maxGeneration = i;
+            string customTermination = cbCustomTermination.Checked ? ddGATermination.Text : "";
+            string customTerminationParam = cbCustomTermination.Checked ? eTerminationParameter.Text : "";
+
             CoreSolverSettings settings = new()
             {
                 SelectionType = ddGASelection.Text,
                 CrossOverType = ddGACrossOver.Text,
                 MutationType = ddGAMutation.Text,
                 ReinsertionType = ddGAReinsertion.Text,
-                TerminationType = ddGATermination.Text,
-                TerminationParam = eTerminationParameter.Text,
+                MaxGeneration = maxGeneration,
+                TargetFitness = targetFitness,
+                TerminationType = customTermination,
+                TerminationParam = customTerminationParam,
                 MinPopulationSize = minPopulation,
                 MaxPopulationSize = maxPopulation,
-
                 CoreType = CoreType,
                 TargetRheobaseFunction = targetRheobaseFunction,
                 FitnessFunctions = fitnessFunctions.Select(ff => ff as FitnessFunction).ToList(),
@@ -234,6 +244,11 @@ namespace SiliFish.UI.Controls
 
         private void btnOptimize_Click(object sender, EventArgs e)
         {
+            if (!cbTargetFitness.Checked && !cbMaxGeneration.Checked && !cbCustomTermination.Checked)
+            {
+                MessageBox.Show("Select at least one termination mode.");
+                return;
+            }
             CreateSolver();
             timerOptimization.Enabled = true;
             btnOptimize.Enabled = false;
@@ -304,6 +319,22 @@ namespace SiliFish.UI.Controls
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters);
             double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
+        }
+
+        private void cbTargetFitness_CheckedChanged(object sender, EventArgs e)
+        {
+            eTargetFitness.Visible = cbTargetFitness.Checked;
+        }
+
+        private void cbMaxGeneration_CheckedChanged(object sender, EventArgs e)
+        {
+            eMaxGeneration.Visible = cbMaxGeneration.Checked;
+        }
+
+        private void cbCustomTermination_CheckedChanged(object sender, EventArgs e)
+        {
+            ddGATermination.Visible = lGATerminationParameter.Visible = eTerminationParameter.Visible =
+                cbCustomTermination.Checked;
         }
     }
 }

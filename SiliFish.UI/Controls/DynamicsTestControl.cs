@@ -509,7 +509,7 @@ namespace SiliFish.UI.Controls
                     {
                         List<double[]> I = new();
                         int iter = 0;
-                        foreach (double stim in stimValues)
+                        foreach (double stim in stimValues.Distinct())
                         {
                             Stimulus stimulus = new()
                             {
@@ -525,6 +525,10 @@ namespace SiliFish.UI.Controls
                             dynamicsList.Add($"Stimulus: {stim:0.##}", core.DynamicsTest(I[iter++]));
                         }
                         CreatePlots(dynamicsList, columnNames, I);
+                    }
+                    else
+                    {
+                        webViewPlots.NavigateToString("No rheobase within limit.");
                     }
                 }
             }

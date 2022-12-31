@@ -623,7 +623,7 @@ namespace SiliFish.UI
             this.lSpinalBodyPosition.TabIndex = 17;
             this.lSpinalBodyPosition.Text = "Body Position";
             // 
-            // eSpinalRostraoCaudal
+            // eSpinalRostraCaudal
             // 
             this.eSpinalRostraCaudal.DecimalPlaces = 3;
             this.eSpinalRostraCaudal.Location = new System.Drawing.Point(98, 73);
@@ -632,7 +632,7 @@ namespace SiliFish.UI
             0,
             0,
             0});
-            this.eSpinalRostraCaudal.Name = "eSpinalRostraoCaudal";
+            this.eSpinalRostraCaudal.Name = "eSpinalRostraCaudal";
             this.eSpinalRostraCaudal.Size = new System.Drawing.Size(63, 23);
             this.eSpinalRostraCaudal.TabIndex = 16;
             this.eSpinalRostraCaudal.Value = new decimal(new int[] {
@@ -2531,6 +2531,7 @@ namespace SiliFish.UI
             // 
             // eTemplateJSON
             // 
+            this.eTemplateJSON.AcceptsTab = true;
             this.eTemplateJSON.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eTemplateJSON.Location = new System.Drawing.Point(0, 40);
             this.eTemplateJSON.Name = "eTemplateJSON";
@@ -2614,6 +2615,7 @@ namespace SiliFish.UI
             // 
             // eModelJSON
             // 
+            this.eModelJSON.AcceptsTab = true;
             this.eModelJSON.Dock = System.Windows.Forms.DockStyle.Fill;
             this.eModelJSON.Location = new System.Drawing.Point(0, 40);
             this.eModelJSON.Name = "eModelJSON";

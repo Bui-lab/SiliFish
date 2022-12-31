@@ -43,6 +43,8 @@ namespace SiliFish.UI.Controls
             this.pXAxis = new System.Windows.Forms.Panel();
             this.lXAxis = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
+            this.ddBodyPosition = new System.Windows.Forms.ComboBox();
+            this.lBodyPosition = new System.Windows.Forms.Label();
             this.eSomiteRange = new System.Windows.Forms.TextBox();
             this.cbAllSomites = new System.Windows.Forms.CheckBox();
             this.ddCoreType = new System.Windows.Forms.ComboBox();
@@ -84,8 +86,6 @@ namespace SiliFish.UI.Controls
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.ddBodyPosition = new System.Windows.Forms.ComboBox();
-            this.lBodyPosition = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
@@ -273,6 +273,26 @@ namespace SiliFish.UI.Controls
             this.pMain.Size = new System.Drawing.Size(264, 721);
             this.pMain.TabIndex = 0;
             // 
+            // ddBodyPosition
+            // 
+            this.ddBodyPosition.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ddBodyPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddBodyPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ddBodyPosition.FormattingEnabled = true;
+            this.ddBodyPosition.Location = new System.Drawing.Point(112, 147);
+            this.ddBodyPosition.Name = "ddBodyPosition";
+            this.ddBodyPosition.Size = new System.Drawing.Size(146, 23);
+            this.ddBodyPosition.TabIndex = 28;
+            // 
+            // lBodyPosition
+            // 
+            this.lBodyPosition.AutoSize = true;
+            this.lBodyPosition.Location = new System.Drawing.Point(5, 150);
+            this.lBodyPosition.Name = "lBodyPosition";
+            this.lBodyPosition.Size = new System.Drawing.Size(80, 15);
+            this.lBodyPosition.TabIndex = 27;
+            this.lBodyPosition.Text = "Body Position";
+            // 
             // eSomiteRange
             // 
             this.eSomiteRange.Location = new System.Drawing.Point(112, 205);
@@ -319,6 +339,7 @@ namespace SiliFish.UI.Controls
             // 
             // eDescription
             // 
+            this.eDescription.AcceptsTab = true;
             this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -713,26 +734,6 @@ namespace SiliFish.UI.Controls
             this.splitMain.Size = new System.Drawing.Size(600, 723);
             this.splitMain.SplitterDistance = 266;
             this.splitMain.TabIndex = 16;
-            // 
-            // ddBodyPosition
-            // 
-            this.ddBodyPosition.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddBodyPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddBodyPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddBodyPosition.FormattingEnabled = true;
-            this.ddBodyPosition.Location = new System.Drawing.Point(112, 147);
-            this.ddBodyPosition.Name = "ddBodyPosition";
-            this.ddBodyPosition.Size = new System.Drawing.Size(146, 23);
-            this.ddBodyPosition.TabIndex = 28;
-            // 
-            // lBodyPosition
-            // 
-            this.lBodyPosition.AutoSize = true;
-            this.lBodyPosition.Location = new System.Drawing.Point(5, 150);
-            this.lBodyPosition.Name = "lBodyPosition";
-            this.lBodyPosition.Size = new System.Drawing.Size(80, 15);
-            this.lBodyPosition.TabIndex = 27;
-            this.lBodyPosition.Text = "Body Position";
             // 
             // CellPoolControl
             // 

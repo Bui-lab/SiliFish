@@ -40,14 +40,22 @@
             this.pfGAParams = new System.Windows.Forms.FlowLayoutPanel();
             this.linkAddFitnessFunction = new System.Windows.Forms.LinkLabel();
             this.pFitnessFunctions = new System.Windows.Forms.Panel();
+            this.btnCalculateFitness = new System.Windows.Forms.Button();
             this.pLineFitnessFunctions = new System.Windows.Forms.Panel();
             this.lFitnessFunctions = new System.Windows.Forms.Label();
+            this.grTermination = new System.Windows.Forms.GroupBox();
+            this.cbTargetFitness = new System.Windows.Forms.CheckBox();
+            this.cbCustomTermination = new System.Windows.Forms.CheckBox();
+            this.eTargetFitness = new System.Windows.Forms.TextBox();
+            this.eMaxGeneration = new System.Windows.Forms.TextBox();
+            this.cbMaxGeneration = new System.Windows.Forms.CheckBox();
+            this.ddGATermination = new System.Windows.Forms.ComboBox();
+            this.lGATerminationParameter = new System.Windows.Forms.Label();
+            this.eTerminationParameter = new System.Windows.Forms.TextBox();
             this.lOptimizationOutput = new System.Windows.Forms.Label();
             this.btnOptimize = new System.Windows.Forms.Button();
             this.linkLoadGAParams = new System.Windows.Forms.LinkLabel();
             this.linkSaveGAParams = new System.Windows.Forms.LinkLabel();
-            this.eTerminationParameter = new System.Windows.Forms.TextBox();
-            this.lGATerminationParameter = new System.Windows.Forms.Label();
             this.LGAReinsertion = new System.Windows.Forms.Label();
             this.ddGAReinsertion = new System.Windows.Forms.ComboBox();
             this.lGASelection = new System.Windows.Forms.Label();
@@ -56,16 +64,13 @@
             this.lGAMutation = new System.Windows.Forms.Label();
             this.ddGAMutation = new System.Windows.Forms.ComboBox();
             this.lGAMinMaxChromosome = new System.Windows.Forms.Label();
-            this.ddGATermination = new System.Windows.Forms.ComboBox();
             this.ddGASelection = new System.Windows.Forms.ComboBox();
             this.eMinChromosome = new System.Windows.Forms.TextBox();
             this.lGACrossOver = new System.Windows.Forms.Label();
             this.lMinMaxSeperator = new System.Windows.Forms.Label();
-            this.lGATermination = new System.Windows.Forms.Label();
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
-            this.btnCalculateFitness = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitGA)).BeginInit();
             this.splitGA.Panel1.SuspendLayout();
             this.splitGA.Panel2.SuspendLayout();
@@ -78,6 +83,7 @@
             this.pMinMax.SuspendLayout();
             this.pfGAParams.SuspendLayout();
             this.pFitnessFunctions.SuspendLayout();
+            this.grTermination.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitGA
@@ -93,12 +99,11 @@
             // 
             // splitGA.Panel2
             // 
+            this.splitGA.Panel2.Controls.Add(this.grTermination);
             this.splitGA.Panel2.Controls.Add(this.lOptimizationOutput);
             this.splitGA.Panel2.Controls.Add(this.btnOptimize);
             this.splitGA.Panel2.Controls.Add(this.linkLoadGAParams);
             this.splitGA.Panel2.Controls.Add(this.linkSaveGAParams);
-            this.splitGA.Panel2.Controls.Add(this.eTerminationParameter);
-            this.splitGA.Panel2.Controls.Add(this.lGATerminationParameter);
             this.splitGA.Panel2.Controls.Add(this.LGAReinsertion);
             this.splitGA.Panel2.Controls.Add(this.ddGAReinsertion);
             this.splitGA.Panel2.Controls.Add(this.lGASelection);
@@ -107,12 +112,10 @@
             this.splitGA.Panel2.Controls.Add(this.lGAMutation);
             this.splitGA.Panel2.Controls.Add(this.ddGAMutation);
             this.splitGA.Panel2.Controls.Add(this.lGAMinMaxChromosome);
-            this.splitGA.Panel2.Controls.Add(this.ddGATermination);
             this.splitGA.Panel2.Controls.Add(this.ddGASelection);
             this.splitGA.Panel2.Controls.Add(this.eMinChromosome);
             this.splitGA.Panel2.Controls.Add(this.lGACrossOver);
             this.splitGA.Panel2.Controls.Add(this.lMinMaxSeperator);
-            this.splitGA.Panel2.Controls.Add(this.lGATermination);
             this.splitGA.Size = new System.Drawing.Size(1003, 476);
             this.splitGA.SplitterDistance = 697;
             this.splitGA.TabIndex = 39;
@@ -229,6 +232,19 @@
             this.pFitnessFunctions.Size = new System.Drawing.Size(477, 29);
             this.pFitnessFunctions.TabIndex = 29;
             // 
+            // btnCalculateFitness
+            // 
+            this.btnCalculateFitness.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnCalculateFitness.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnCalculateFitness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCalculateFitness.Location = new System.Drawing.Point(351, 3);
+            this.btnCalculateFitness.Name = "btnCalculateFitness";
+            this.btnCalculateFitness.Size = new System.Drawing.Size(123, 23);
+            this.btnCalculateFitness.TabIndex = 46;
+            this.btnCalculateFitness.Text = "Calculate Fitness";
+            this.btnCalculateFitness.UseVisualStyleBackColor = false;
+            this.btnCalculateFitness.Click += new System.EventHandler(this.btnCalculateFitness_Click);
+            // 
             // pLineFitnessFunctions
             // 
             this.pLineFitnessFunctions.BackColor = System.Drawing.Color.LightGray;
@@ -248,14 +264,116 @@
             this.lFitnessFunctions.TabIndex = 2;
             this.lFitnessFunctions.Text = "Fitness Functions";
             // 
+            // grTermination
+            // 
+            this.grTermination.Controls.Add(this.cbTargetFitness);
+            this.grTermination.Controls.Add(this.cbCustomTermination);
+            this.grTermination.Controls.Add(this.eTargetFitness);
+            this.grTermination.Controls.Add(this.eMaxGeneration);
+            this.grTermination.Controls.Add(this.cbMaxGeneration);
+            this.grTermination.Controls.Add(this.ddGATermination);
+            this.grTermination.Controls.Add(this.lGATerminationParameter);
+            this.grTermination.Controls.Add(this.eTerminationParameter);
+            this.grTermination.Location = new System.Drawing.Point(6, 128);
+            this.grTermination.Name = "grTermination";
+            this.grTermination.Size = new System.Drawing.Size(279, 121);
+            this.grTermination.TabIndex = 51;
+            this.grTermination.TabStop = false;
+            this.grTermination.Text = "Termination";
+            // 
+            // cbTargetFitness
+            // 
+            this.cbTargetFitness.AutoSize = true;
+            this.cbTargetFitness.Location = new System.Drawing.Point(6, 16);
+            this.cbTargetFitness.Name = "cbTargetFitness";
+            this.cbTargetFitness.Size = new System.Drawing.Size(97, 19);
+            this.cbTargetFitness.TabIndex = 46;
+            this.cbTargetFitness.Text = "Target Fitness";
+            this.cbTargetFitness.UseVisualStyleBackColor = true;
+            this.cbTargetFitness.CheckedChanged += new System.EventHandler(this.cbTargetFitness_CheckedChanged);
+            // 
+            // cbCustomTermination
+            // 
+            this.cbCustomTermination.AutoSize = true;
+            this.cbCustomTermination.Location = new System.Drawing.Point(6, 66);
+            this.cbCustomTermination.Name = "cbCustomTermination";
+            this.cbCustomTermination.Size = new System.Drawing.Size(68, 19);
+            this.cbCustomTermination.TabIndex = 50;
+            this.cbCustomTermination.Text = "Custom";
+            this.cbCustomTermination.UseVisualStyleBackColor = true;
+            this.cbCustomTermination.CheckedChanged += new System.EventHandler(this.cbCustomTermination_CheckedChanged);
+            // 
+            // eTargetFitness
+            // 
+            this.eTargetFitness.Location = new System.Drawing.Point(113, 13);
+            this.eTargetFitness.Name = "eTargetFitness";
+            this.eTargetFitness.Size = new System.Drawing.Size(35, 23);
+            this.eTargetFitness.TabIndex = 47;
+            this.eTargetFitness.Text = "1";
+            this.eTargetFitness.Visible = false;
+            // 
+            // eMaxGeneration
+            // 
+            this.eMaxGeneration.Location = new System.Drawing.Point(113, 38);
+            this.eMaxGeneration.Name = "eMaxGeneration";
+            this.eMaxGeneration.Size = new System.Drawing.Size(35, 23);
+            this.eMaxGeneration.TabIndex = 49;
+            this.eMaxGeneration.Text = "50";
+            this.eMaxGeneration.Visible = false;
+            // 
+            // cbMaxGeneration
+            // 
+            this.cbMaxGeneration.AutoSize = true;
+            this.cbMaxGeneration.Location = new System.Drawing.Point(6, 41);
+            this.cbMaxGeneration.Name = "cbMaxGeneration";
+            this.cbMaxGeneration.Size = new System.Drawing.Size(110, 19);
+            this.cbMaxGeneration.TabIndex = 48;
+            this.cbMaxGeneration.Text = "Max Generation";
+            this.cbMaxGeneration.UseVisualStyleBackColor = true;
+            this.cbMaxGeneration.CheckedChanged += new System.EventHandler(this.cbMaxGeneration_CheckedChanged);
+            // 
+            // ddGATermination
+            // 
+            this.ddGATermination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddGATermination.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ddGATermination.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddGATermination.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ddGATermination.FormattingEnabled = true;
+            this.ddGATermination.Location = new System.Drawing.Point(75, 64);
+            this.ddGATermination.Name = "ddGATermination";
+            this.ddGATermination.Size = new System.Drawing.Size(172, 23);
+            this.ddGATermination.TabIndex = 33;
+            this.ddGATermination.Visible = false;
+            this.ddGATermination.SelectedIndexChanged += new System.EventHandler(this.ddGATermination_SelectedIndexChanged);
+            // 
+            // lGATerminationParameter
+            // 
+            this.lGATerminationParameter.AutoSize = true;
+            this.lGATerminationParameter.Location = new System.Drawing.Point(6, 93);
+            this.lGATerminationParameter.Name = "lGATerminationParameter";
+            this.lGATerminationParameter.Size = new System.Drawing.Size(76, 15);
+            this.lGATerminationParameter.TabIndex = 40;
+            this.lGATerminationParameter.Text = "Term. Param.";
+            this.lGATerminationParameter.Visible = false;
+            // 
+            // eTerminationParameter
+            // 
+            this.eTerminationParameter.Location = new System.Drawing.Point(113, 90);
+            this.eTerminationParameter.Name = "eTerminationParameter";
+            this.eTerminationParameter.Size = new System.Drawing.Size(35, 23);
+            this.eTerminationParameter.TabIndex = 41;
+            this.eTerminationParameter.Text = "50";
+            this.eTerminationParameter.Visible = false;
+            // 
             // lOptimizationOutput
             // 
             this.lOptimizationOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lOptimizationOutput.Location = new System.Drawing.Point(6, 245);
+            this.lOptimizationOutput.Location = new System.Drawing.Point(6, 316);
             this.lOptimizationOutput.Name = "lOptimizationOutput";
-            this.lOptimizationOutput.Size = new System.Drawing.Size(270, 219);
+            this.lOptimizationOutput.Size = new System.Drawing.Size(270, 148);
             this.lOptimizationOutput.TabIndex = 45;
             this.lOptimizationOutput.Text = "Latest fitness:";
             // 
@@ -264,7 +382,7 @@
             this.btnOptimize.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnOptimize.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnOptimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOptimize.Location = new System.Drawing.Point(6, 219);
+            this.btnOptimize.Location = new System.Drawing.Point(6, 290);
             this.btnOptimize.Name = "btnOptimize";
             this.btnOptimize.Size = new System.Drawing.Size(67, 23);
             this.btnOptimize.TabIndex = 44;
@@ -276,7 +394,7 @@
             // 
             this.linkLoadGAParams.AutoSize = true;
             this.linkLoadGAParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadGAParams.Location = new System.Drawing.Point(84, 223);
+            this.linkLoadGAParams.Location = new System.Drawing.Point(84, 294);
             this.linkLoadGAParams.Name = "linkLoadGAParams";
             this.linkLoadGAParams.Size = new System.Drawing.Size(94, 15);
             this.linkLoadGAParams.TabIndex = 42;
@@ -288,30 +406,13 @@
             // 
             this.linkSaveGAParams.AutoSize = true;
             this.linkSaveGAParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveGAParams.Location = new System.Drawing.Point(184, 223);
+            this.linkSaveGAParams.Location = new System.Drawing.Point(184, 294);
             this.linkSaveGAParams.Name = "linkSaveGAParams";
             this.linkSaveGAParams.Size = new System.Drawing.Size(92, 15);
             this.linkSaveGAParams.TabIndex = 43;
             this.linkSaveGAParams.TabStop = true;
             this.linkSaveGAParams.Text = "Save GA Params";
             this.linkSaveGAParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveGAParams_LinkClicked);
-            // 
-            // eTerminationParameter
-            // 
-            this.eTerminationParameter.Location = new System.Drawing.Point(151, 157);
-            this.eTerminationParameter.Name = "eTerminationParameter";
-            this.eTerminationParameter.Size = new System.Drawing.Size(35, 23);
-            this.eTerminationParameter.TabIndex = 41;
-            this.eTerminationParameter.Text = "50";
-            // 
-            // lGATerminationParameter
-            // 
-            this.lGATerminationParameter.AutoSize = true;
-            this.lGATerminationParameter.Location = new System.Drawing.Point(6, 162);
-            this.lGATerminationParameter.Name = "lGATerminationParameter";
-            this.lGATerminationParameter.Size = new System.Drawing.Size(127, 15);
-            this.lGATerminationParameter.TabIndex = 40;
-            this.lGATerminationParameter.Text = "Termination Parameter";
             // 
             // LGAReinsertion
             // 
@@ -359,7 +460,7 @@
             // 
             // eMaxChromosome
             // 
-            this.eMaxChromosome.Location = new System.Drawing.Point(205, 190);
+            this.eMaxChromosome.Location = new System.Drawing.Point(205, 261);
             this.eMaxChromosome.Name = "eMaxChromosome";
             this.eMaxChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMaxChromosome.TabIndex = 36;
@@ -390,25 +491,11 @@
             // lGAMinMaxChromosome
             // 
             this.lGAMinMaxChromosome.AutoSize = true;
-            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(6, 193);
+            this.lGAMinMaxChromosome.Location = new System.Drawing.Point(6, 264);
             this.lGAMinMaxChromosome.Name = "lGAMinMaxChromosome";
             this.lGAMinMaxChromosome.Size = new System.Drawing.Size(142, 15);
             this.lGAMinMaxChromosome.TabIndex = 34;
             this.lGAMinMaxChromosome.Text = "Min/Max Chromosome #";
-            // 
-            // ddGATermination
-            // 
-            this.ddGATermination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddGATermination.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddGATermination.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddGATermination.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddGATermination.FormattingEnabled = true;
-            this.ddGATermination.Location = new System.Drawing.Point(79, 128);
-            this.ddGATermination.Name = "ddGATermination";
-            this.ddGATermination.Size = new System.Drawing.Size(174, 23);
-            this.ddGATermination.TabIndex = 33;
-            this.ddGATermination.SelectedIndexChanged += new System.EventHandler(this.ddGATermination_SelectedIndexChanged);
             // 
             // ddGASelection
             // 
@@ -425,7 +512,7 @@
             // 
             // eMinChromosome
             // 
-            this.eMinChromosome.Location = new System.Drawing.Point(151, 190);
+            this.eMinChromosome.Location = new System.Drawing.Point(151, 261);
             this.eMinChromosome.Name = "eMinChromosome";
             this.eMinChromosome.Size = new System.Drawing.Size(35, 23);
             this.eMinChromosome.TabIndex = 35;
@@ -443,20 +530,11 @@
             // lMinMaxSeperator
             // 
             this.lMinMaxSeperator.AutoSize = true;
-            this.lMinMaxSeperator.Location = new System.Drawing.Point(192, 196);
+            this.lMinMaxSeperator.Location = new System.Drawing.Point(192, 267);
             this.lMinMaxSeperator.Name = "lMinMaxSeperator";
             this.lMinMaxSeperator.Size = new System.Drawing.Size(12, 15);
             this.lMinMaxSeperator.TabIndex = 37;
             this.lMinMaxSeperator.Text = "/";
-            // 
-            // lGATermination
-            // 
-            this.lGATermination.AutoSize = true;
-            this.lGATermination.Location = new System.Drawing.Point(6, 131);
-            this.lGATermination.Name = "lGATermination";
-            this.lGATermination.Size = new System.Drawing.Size(70, 15);
-            this.lGATermination.TabIndex = 29;
-            this.lGATermination.Text = "Termination";
             // 
             // timerOptimization
             // 
@@ -469,19 +547,6 @@
             // saveFileJson
             // 
             this.saveFileJson.Filter = "JSON files(*.json)|*.json";
-            // 
-            // btnCalculateFitness
-            // 
-            this.btnCalculateFitness.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.btnCalculateFitness.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnCalculateFitness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCalculateFitness.Location = new System.Drawing.Point(351, 3);
-            this.btnCalculateFitness.Name = "btnCalculateFitness";
-            this.btnCalculateFitness.Size = new System.Drawing.Size(123, 23);
-            this.btnCalculateFitness.TabIndex = 46;
-            this.btnCalculateFitness.Text = "Calculate Fitness";
-            this.btnCalculateFitness.UseVisualStyleBackColor = false;
-            this.btnCalculateFitness.Click += new System.EventHandler(this.btnCalculateFitness_Click);
             // 
             // GAControl
             // 
@@ -506,6 +571,8 @@
             this.pfGAParams.PerformLayout();
             this.pFitnessFunctions.ResumeLayout(false);
             this.pFitnessFunctions.PerformLayout();
+            this.grTermination.ResumeLayout(false);
+            this.grTermination.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -540,7 +607,6 @@
         private TextBox eMinChromosome;
         private Label lGACrossOver;
         private Label lMinMaxSeperator;
-        private Label lGATermination;
         private System.Windows.Forms.Timer timerOptimization;
         private LinkLabel linkLoadGAParams;
         private LinkLabel linkSaveGAParams;
@@ -549,5 +615,11 @@
         private SaveFileDialog saveFileJson;
         private Label lOptimizationOutput;
         private Button btnCalculateFitness;
+        private GroupBox grTermination;
+        private CheckBox cbTargetFitness;
+        private CheckBox cbCustomTermination;
+        private TextBox eTargetFitness;
+        private TextBox eMaxGeneration;
+        private CheckBox cbMaxGeneration;
     }
 }

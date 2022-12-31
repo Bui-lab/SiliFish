@@ -267,5 +267,6 @@ namespace SiliFish.UI.Controls
             if (!cbAllSomites.Checked && eSomiteRange.Text == toolTip1.GetToolTip(eSomiteRange))
                 eSomiteRange.Text = "";
         }
+
     }
 }

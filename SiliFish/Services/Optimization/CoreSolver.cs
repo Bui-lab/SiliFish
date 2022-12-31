@@ -21,7 +21,7 @@ namespace SiliFish.Services.Optimization
         private CrossoverBase Crossover;
         private MutationBase Mutation;
         private ReinsertionBase Reinsertion;
-        private TerminationBase Termination;
+        private ITermination Termination;
         private GeneticAlgorithm Algorithm;
 
         private double latestFitness = 0.0;
@@ -29,26 +29,23 @@ namespace SiliFish.Services.Optimization
         private string errorMessage;
 
         [JsonIgnore]
-        public string ProgressText
+        public string ProgressText //TODO or termination: progress can't be generated
         {
             get
             {
                 if (!string.IsNullOrEmpty(errorMessage))
                     return errorMessage;
                 if (Algorithm == null) return "";
-                if (Algorithm.Termination is GenerationNumberTermination gnt)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
+                string msg = $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};" +
                         $"\r\nBest fitness: {bestFitness}";
                 if (Algorithm.Termination is TimeEvolvingTermination tet)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
-                        $"\r\nBest fitness: {bestFitness}; Time elapsed: {Algorithm.TimeEvolving.TotalMinutes:0.##} mins;";
+                    return $"{msg}\r\nTime elapsed: {Algorithm.TimeEvolving.TotalMinutes:0.##} mins;";
                 if (Algorithm.Termination is FitnessStagnationTermination fst)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
-                        $"\r\nBest fitness: {bestFitness}; Stagnant for ??? out of {fst.ExpectedStagnantGenerationsNumber:0.##};";
+                    return $"{msg}\r\nStagnant for ??? out of {fst.ExpectedStagnantGenerationsNumber:0.##};";
                 if (Algorithm.Termination is FitnessThresholdTermination ftt)
-                    return $"Generation: {Algorithm.GenerationsNumber}; Fitness: {latestFitness};"+
-                        $"\r\nBest fitness: {bestFitness}; Target Fitness: {ftt.ExpectedFitness:0.##}";
-                return "Progress unknown";
+                    return $"{msg}\r\nTarget Fitness: {ftt.ExpectedFitness:0.##}";
+
+                return msg;
             }
         }
 
@@ -70,35 +67,52 @@ namespace SiliFish.Services.Optimization
             }
         }
 
-        private void CreateTerminator(string terminationType, string terminationParam)
+        private void CreateTerminator(CoreSolverSettings settings)
         {
-            if (string.IsNullOrEmpty(terminationParam))
+            List<TerminationBase> terminationList = new();
+            if (settings.MaxGeneration != null)
+                terminationList.Add(new GenerationNumberTermination((int)settings.MaxGeneration));
+            if (settings.TargetFitness != null)
+                terminationList.Add(new FitnessThresholdTermination((double)settings.TargetFitness));
+            if (!string.IsNullOrEmpty(settings.TerminationType))
             {
-                Termination = (TerminationBase)Activator.CreateInstance(Type.GetType(terminationType + AssemblySuffix));
-                return;
+                string terminationType = settings.TerminationType;
+                string terminationParam = settings.TerminationParam;
+                TerminationBase custTermination;
+                if (string.IsNullOrEmpty(terminationParam))
+                    custTermination = (TerminationBase)Activator.CreateInstance(Type.GetType(terminationType + AssemblySuffix));
+                else
+                {
+                    if (!int.TryParse(terminationParam, out int iParam))
+                        iParam = 0;
+                    if (!double.TryParse(terminationParam, out double dParam))
+                        dParam = 0;
+
+                    Type termType = Type.GetType(terminationType + AssemblySuffix);
+                    if ((terminationType == typeof(GenerationNumberTermination).FullName
+                        || terminationType == typeof(FitnessStagnationTermination).FullName
+                        || terminationType == nameof(GenerationNumberTermination)
+                        || terminationType == nameof(FitnessStagnationTermination))
+                        && iParam > 0)
+                        custTermination = (TerminationBase)Activator.CreateInstance(termType, iParam);
+                    else if ((terminationType == typeof(FitnessThresholdTermination).FullName
+                        || terminationType == nameof(FitnessThresholdTermination))
+                        && dParam > 0)
+                        custTermination = (TerminationBase)Activator.CreateInstance(termType, dParam);
+                    else if (terminationType == typeof(TimeEvolvingTermination).FullName
+                        || terminationType == nameof(TimeEvolvingTermination))
+                        custTermination = (TerminationBase)Activator.CreateInstance(termType, new TimeSpan(0, iParam, 0));
+                    else
+                        custTermination = (TerminationBase)Activator.CreateInstance(termType);
+                }
+                terminationList.Add(custTermination);
             }
-
-            if (!int.TryParse(terminationParam, out int iParam))
-                iParam = 0;
-            if (!double.TryParse(terminationParam, out double dParam))
-                dParam = 0;
-
-            Type termType = Type.GetType(terminationType + AssemblySuffix);
-            if ((terminationType == typeof(GenerationNumberTermination).FullName
-                || terminationType == typeof(FitnessStagnationTermination).FullName
-                || terminationType == nameof(GenerationNumberTermination)
-                || terminationType == nameof(FitnessStagnationTermination))
-                && iParam > 0)
-                Termination = (TerminationBase)Activator.CreateInstance(termType, iParam);
-            else if ((terminationType == typeof(FitnessThresholdTermination).FullName
-                || terminationType == nameof(FitnessThresholdTermination))
-                && dParam > 0)
-                Termination = (TerminationBase)Activator.CreateInstance(termType, dParam);
-            else if (terminationType == typeof(TimeEvolvingTermination).FullName
-                || terminationType == nameof(TimeEvolvingTermination))
-                Termination = (TerminationBase)Activator.CreateInstance(termType, new TimeSpan(0, iParam, 0));
-            else
-                Termination = (TerminationBase)Activator.CreateInstance(termType);
+            if (terminationList.Count == 1)
+                Termination = terminationList[0];
+            else if (terminationList.Count > 1)
+            {
+                Termination = new OrTermination(terminationList.ToArray());
+            }
         }
 
         //https://github.com/giacomelli/GeneticSharp/wiki/terminations
@@ -114,7 +128,7 @@ namespace SiliFish.Services.Optimization
             Crossover = (CrossoverBase)Activator.CreateInstance(Type.GetType(Settings.CrossOverType + AssemblySuffix));
             Mutation = (MutationBase)Activator.CreateInstance(Type.GetType(Settings.MutationType + AssemblySuffix));
             Reinsertion = (ReinsertionBase)Activator.CreateInstance(Type.GetType(Settings.ReinsertionType + AssemblySuffix));
-            CreateTerminator(Settings.TerminationType, Settings.TerminationParam);
+            CreateTerminator(Settings);
 
             IFitness Fitness = new CoreFitness(this, Settings);
             ChromosomeBase chromosome = new FloatingPointChromosome(Settings.MinValues, Settings.MaxValues, Settings.NumBits, Settings.DecimalDigits);
