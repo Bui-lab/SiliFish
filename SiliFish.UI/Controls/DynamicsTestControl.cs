@@ -445,6 +445,8 @@ namespace SiliFish.UI.Controls
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
+            if (stimEnd > plotEnd)
+                stimEnd = plotEnd;
             TimeArray = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);

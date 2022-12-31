@@ -71,6 +71,7 @@
             this.timerOptimization = new System.Windows.Forms.Timer(this.components);
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitGA)).BeginInit();
             this.splitGA.Panel1.SuspendLayout();
             this.splitGA.Panel2.SuspendLayout();
@@ -266,6 +267,8 @@
             // 
             // grTermination
             // 
+            this.grTermination.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grTermination.Controls.Add(this.cbTargetFitness);
             this.grTermination.Controls.Add(this.cbCustomTermination);
             this.grTermination.Controls.Add(this.eTargetFitness);
@@ -342,7 +345,7 @@
             this.ddGATermination.FormattingEnabled = true;
             this.ddGATermination.Location = new System.Drawing.Point(75, 64);
             this.ddGATermination.Name = "ddGATermination";
-            this.ddGATermination.Size = new System.Drawing.Size(172, 23);
+            this.ddGATermination.Size = new System.Drawing.Size(198, 23);
             this.ddGATermination.TabIndex = 33;
             this.ddGATermination.Visible = false;
             this.ddGATermination.SelectedIndexChanged += new System.EventHandler(this.ddGATermination_SelectedIndexChanged);
@@ -433,7 +436,7 @@
             this.ddGAReinsertion.FormattingEnabled = true;
             this.ddGAReinsertion.Location = new System.Drawing.Point(79, 99);
             this.ddGAReinsertion.Name = "ddGAReinsertion";
-            this.ddGAReinsertion.Size = new System.Drawing.Size(174, 23);
+            this.ddGAReinsertion.Size = new System.Drawing.Size(197, 23);
             this.ddGAReinsertion.TabIndex = 39;
             // 
             // lGASelection
@@ -455,7 +458,7 @@
             this.ddGACrossOver.FormattingEnabled = true;
             this.ddGACrossOver.Location = new System.Drawing.Point(79, 41);
             this.ddGACrossOver.Name = "ddGACrossOver";
-            this.ddGACrossOver.Size = new System.Drawing.Size(174, 23);
+            this.ddGACrossOver.Size = new System.Drawing.Size(197, 23);
             this.ddGACrossOver.TabIndex = 31;
             // 
             // eMaxChromosome
@@ -485,7 +488,7 @@
             this.ddGAMutation.FormattingEnabled = true;
             this.ddGAMutation.Location = new System.Drawing.Point(79, 70);
             this.ddGAMutation.Name = "ddGAMutation";
-            this.ddGAMutation.Size = new System.Drawing.Size(174, 23);
+            this.ddGAMutation.Size = new System.Drawing.Size(197, 23);
             this.ddGAMutation.TabIndex = 32;
             // 
             // lGAMinMaxChromosome
@@ -507,7 +510,7 @@
             this.ddGASelection.FormattingEnabled = true;
             this.ddGASelection.Location = new System.Drawing.Point(79, 12);
             this.ddGASelection.Name = "ddGASelection";
-            this.ddGASelection.Size = new System.Drawing.Size(174, 23);
+            this.ddGASelection.Size = new System.Drawing.Size(197, 23);
             this.ddGASelection.TabIndex = 30;
             // 
             // eMinChromosome
@@ -621,5 +624,6 @@
         private TextBox eTargetFitness;
         private TextBox eMaxGeneration;
         private CheckBox cbMaxGeneration;
+        private ToolTip toolTip;
     }
 }

@@ -29,7 +29,7 @@ namespace SiliFish.Services.Optimization
         private string errorMessage;
 
         [JsonIgnore]
-        public string ProgressText //TODO or termination: progress can't be generated
+        public string ProgressText 
         {
             get
             {
@@ -55,6 +55,13 @@ namespace SiliFish.Services.Optimization
             get
              {
                 if (Algorithm == null) return 0;
+                if (Algorithm.Termination is OrTermination)
+                {
+                    if (Settings.MaxGeneration != null)
+                        return (int)(100 * Algorithm.GenerationsNumber / (int)Settings.MaxGeneration);
+                    if (Settings.TargetFitness != null)
+                        return (int)(100 * (Algorithm.BestChromosome?.Fitness.Value ?? 0) / (double)Settings.TargetFitness);
+                }
                 if (Algorithm.Termination is GenerationNumberTermination gnt)
                     return (int)(100 * Algorithm.GenerationsNumber / gnt.ExpectedGenerationNumber);
                 if (Algorithm.Termination is TimeEvolvingTermination tet)

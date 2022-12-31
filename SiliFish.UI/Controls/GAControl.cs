@@ -239,7 +239,7 @@ namespace SiliFish.UI.Controls
 
         private void ddGATermination_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lGATerminationParameter.Text = GeneticAlgorithmExtension.GetTerminationParameter(ddGATermination.Text);
+            toolTip.SetToolTip(lGATerminationParameter, GeneticAlgorithmExtension.GetTerminationParameter(ddGATermination.Text));
         }
 
         private void btnOptimize_Click(object sender, EventArgs e)
@@ -277,8 +277,8 @@ namespace SiliFish.UI.Controls
                     {
                         Settings = (CoreSolverSettings)JsonUtil.ToObject(typeof(CoreSolverSettings), JSONString)
                     };
-                    
-                    
+
+
                     coreType = Solver.Settings.CoreType;
                     eMinChromosome.Text = Solver.Settings.MinPopulationSize.ToString();
                     eMaxChromosome.Text = Solver.Settings.MaxPopulationSize.ToString();
@@ -288,6 +288,11 @@ namespace SiliFish.UI.Controls
                     ddGACrossOver.Text = Solver.Settings.CrossOverType;
                     ddGAMutation.Text = Solver.Settings.MutationType;
                     ddGAReinsertion.Text = Solver.Settings.ReinsertionType;
+                    cbMaxGeneration.Checked = Solver.Settings.MaxGeneration != null;
+                    eMaxGeneration.Text = Solver.Settings.MaxGeneration?.ToString();
+                    cbTargetFitness.Checked = Solver.Settings.TargetFitness != null;
+                    eTargetFitness.Text = Solver.Settings.TargetFitness?.ToString();
+                    cbCustomTermination.Checked = !string.IsNullOrEmpty(Solver.Settings.TerminationType);
                     ddGATermination.Text = Solver.Settings.TerminationType;
                     eTerminationParameter.Text = Solver.Settings.TerminationParam;
                 }
