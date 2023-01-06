@@ -1,3 +1,5 @@
+using SiliFish.Definitions;
+
 namespace SiliFish.UI
 {
     internal static class Program

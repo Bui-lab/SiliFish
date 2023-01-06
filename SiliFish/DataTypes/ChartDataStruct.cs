@@ -70,11 +70,11 @@ namespace SiliFish.DataTypes
         private void GenerateCsv()
         {
             string columnTitles = $"{xLabel},{yLabel}";
-            List<string> data = new(xData.Select(t => t.ToString(Const.DecimalPointFormat) + ","));
+            List<string> data = new(xData.Select(t => t.ToString(Settings.DecimalPointFormat) + ","));
             if (yData != null)
             {
                 foreach (int i in Enumerable.Range(0, yData.Length))
-                    data[i] += yData[i].ToString(Const.DecimalPointFormat) + ",";
+                    data[i] += yData[i].ToString(Settings.DecimalPointFormat) + ",";
             }
             else
             {
@@ -82,7 +82,7 @@ namespace SiliFish.DataTypes
                 {
                     double[] singleyData = yMultiData[colIndex];
                     foreach (int i in Enumerable.Range(0, singleyData.Length))
-                        data[i] += singleyData[i].ToString(Const.DecimalPointFormat) + ",";
+                        data[i] += singleyData[i].ToString(Settings.DecimalPointFormat) + ",";
                 }
             }
             csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";

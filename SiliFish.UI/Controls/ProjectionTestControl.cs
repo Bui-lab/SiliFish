@@ -192,7 +192,7 @@ namespace SiliFish.UI.Controls
                     Color = Color.Red.ToRGBQuoted(),
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
-                    yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
+                    yLabel = $"I ({Util.GetUoM(Settings.UoM, Measure.Current)})"
                 });
             }
             int numCharts = charts.Any() ? charts.Count : 1;

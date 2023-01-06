@@ -124,14 +124,23 @@ namespace SiliFish.DataTypes
         //Y Distribution is different than the other distributions
         //medial --> lateral limits are defined for one side only
         //depending on the side (left/right), the distribution needs to be reviewed
-        public void ReviewYDistribution(SagittalPlane leftright)
+        public Distribution ReviewYDistribution(SagittalPlane leftright)
         {
             if (RangeStart >= 0 && leftright == SagittalPlane.Right ||
                 RangeStart <= 0 && RangeEnd <= 0 && leftright == SagittalPlane.Left)
-                return;
-            //TODO SagittalPlane.Both - if gaussian, make it bimodal. trickier than flipping
+                return this;
             if (RangeStart >= 0 && leftright == SagittalPlane.Left)
+            {
                 FlipOnYAxis();
+                return this;
+            }
+            //Convert gaussian to bimodal
+            if (leftright == SagittalPlane.Both && this is GaussianDistribution gd)
+            {
+                BimodalDistribution bd = new(gd.Mean, gd.Stddev, -gd.Mean, gd.Stddev, 0.5);
+                return bd;
+            }
+            return this;
         }
     }
 

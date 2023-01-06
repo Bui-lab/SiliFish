@@ -168,68 +168,7 @@ namespace SiliFish.ModelUnits
         }
         private Coordinate[] GetCoordinates(int n, int somite = -1)
         {
-            if (n <= 0) return null;
-            Coordinate[] coordinates = new Coordinate[n];
-            Distribution.Random = SwimmingModel.rand;
-
-            double x_length = 0, x_offset = 0;
-            double y_length = 0, y_offset = 0;
-            double z_length = 0, z_offset = 0;
-            double radius = 0;//TODO use two radii for eliiptic shapes
-            switch (BodyLocation)
-            {
-                case BodyLocation.SpinalCord:
-                    x_length = somite < 0 ? Model.SpinalRostralCaudalDistance : Model.SpinalRostralCaudalDistance / Model.NumberOfSomites;
-                    x_offset = Model.SupraSpinalRostralCaudalDistance + (somite >= 0 ? somite * Model.SpinalRostralCaudalDistance / Model.NumberOfSomites : 0);
-                    y_length = Model.SpinalMedialLateralDistance;
-                    z_length = Model.SpinalDorsalVentralDistance;
-                    z_offset = Model.SpinalBodyPosition;
-                    radius = Math.Sqrt(Math.Pow(Model.SpinalMedialLateralDistance, 2) + Math.Pow(Model.SpinalDorsalVentralDistance / 2, 2));
-                    break;
-                case BodyLocation.MusculoSkeletal:
-                    x_length = somite < 0 ? Model.SpinalRostralCaudalDistance : Model.SpinalRostralCaudalDistance / Model.NumberOfSomites;
-                    x_offset = Model.SupraSpinalRostralCaudalDistance + (somite >= 0 ? somite * Model.SpinalRostralCaudalDistance / Model.NumberOfSomites : 0);
-                    y_length = Model.BodyMedialLateralDistance;
-                    z_length = Model.BodyDorsalVentralDistance;
-                    radius = Math.Sqrt(Math.Pow(Model.BodyMedialLateralDistance, 2) + Math.Pow(Model.BodyDorsalVentralDistance / 2, 2));
-                    break;
-                case BodyLocation.SupraSpinal:
-                    x_length = Model.SupraSpinalRostralCaudalDistance;
-                    y_length = Model.SupraSpinalMedialLateralDistance;
-                    z_length = Model.SupraSpinalDorsalVentralDistance;
-                    radius = Math.Sqrt(Math.Pow(Model.SupraSpinalMedialLateralDistance, 2) + Math.Pow(Model.SupraSpinalDorsalVentralDistance / 2, 2));
-                    break;
-            }
-            double[] x = XDistribution?.GenerateNNumbers(n, x_length) ?? Distribution.GenerateNRandomNumbers(n, x_length);
-            double[] y = new double[n];
-            double[] z = new double[n];
-            
-            if (Y_AngleDistribution != null && Y_AngleDistribution.Angular)
-            {
-                //TODO radii and angles should be generated together to handle elliptic shapes
-                double[] angles = Y_AngleDistribution?.GenerateNNumbers(n, 180) ?? Distribution.GenerateNRandomNumbers(n, 180);
-                double centerZ = z_length / 2;
-                double[] radii = Z_RadiusDistribution?.GenerateNNumbers(n, radius) ?? Distribution.GenerateNRandomNumbers(n, radius);
-                foreach (int i in Enumerable.Range(0, n))
-                {
-                    double radian = angles[i] * Math.PI / 180;
-                    y[i] = Math.Sin(radian) * radii[i];
-                    z[i] = centerZ - Math.Cos(radian) * radii[i];
-                }
-            }
-            else
-            {
-                y = Y_AngleDistribution?.GenerateNNumbers(n, y_length) ?? Distribution.GenerateNRandomNumbers(n, y_length);
-                z = Z_RadiusDistribution?.GenerateNNumbers(n, z_length) ?? Distribution.GenerateNRandomNumbers(n, z_length);
-            }
-
-            foreach (int i in Enumerable.Range(0, n))
-            {
-                coordinates[i].X = x[i] + x_offset;
-                coordinates[i].Y = y[i] + y_offset;
-                coordinates[i].Z = z[i] + z_offset;
-            }
-            return coordinates;
+            return Coordinate.GenerateCoordinates(Model, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
         }
         public void AddCell(Cell c)
         {
@@ -310,7 +249,7 @@ namespace SiliFish.ModelUnits
             bool neuron = template.CellType == CellType.Neuron;
             XDistribution = (Distribution)template.XDistribution;
             Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution)?.CreateCopy();
-            Y_AngleDistribution?.ReviewYDistribution(leftright);
+            Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
             List<int> somites;

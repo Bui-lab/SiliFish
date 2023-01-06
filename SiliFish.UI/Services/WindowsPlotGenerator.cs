@@ -60,7 +60,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Current ({Util.GetUoM(Const.UoM, Measure.Current)})";
+            string yAxis = $"Current ({Util.GetUoM(Settings.UoM, Measure.Current)})";
 
             if (gap)
             {
@@ -150,7 +150,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Stimulus ({Util.GetUoM(Const.UoM, Measure.Current)})";
+            string yAxis = $"Stimulus ({Util.GetUoM(Settings.UoM, Measure.Current)})";
 
             if (cells != null)
             {

@@ -13,14 +13,15 @@ namespace SiliFish
     /// <summary>
     /// This class is generated as a sample on how to create a model using the code
     /// </summary>
-    public class SampleSwimmingModel : SwimmingModel
+    public class SampleSwimmingModel : SwimmingModel //TODO not tested/incomplete
     {
         string NeuronCoreType = "Izhikevich_9P";
         string MuscleCoreType = "LeakyIntegrator";
 
         //Create any number of cellular groupings that will be relevant to your model.
-        //Groups of neurons and muscle cells are created as an example
-        Dictionary<string, int> NeuronCount;
+        //Groups of supraspinal neurons, spinal neurons  and muscle cells are created as an example
+        Dictionary<string, int> SupraSpinalNeuronCount;
+        Dictionary<string, int> SpinalNeuronCount;
         Dictionary<string, int> MuscleCount;
 
         Dictionary<string, double> Sigma;
@@ -29,13 +30,18 @@ namespace SiliFish
 
         public SampleSwimmingModel()
         {
-            NeuronCount = new Dictionary<string, int>();
-            for (int i = 0; i < 10; i++)
-                NeuronCount.Add($"NeuronGroup{i + 1}", 10); //replace the neuronal cell group names and default numbers 
+            //This sample creates 3 brain neuronal pools, 5 neuronal pools, and 3 muscular pools.
+            SupraSpinalNeuronCount = new Dictionary<string, int>();
+            for (int i = 0; i < 3; i++)
+                SupraSpinalNeuronCount.Add($"SupraSpinal{i + 1}", 5); //replace the neuronal cell group names and default numbers 
+
+            SpinalNeuronCount = new Dictionary<string, int>();
+            for (int i = 0; i < 5; i++)
+                SpinalNeuronCount.Add($"Spinal{i + 1}", 5); //replace the neuronal cell group names and default numbers 
 
             MuscleCount = new Dictionary<string, int>();
-            for (int i = 0; i < 3; i++)
-                MuscleCount.Add($"MuscleGroup{i + 1}", 5); //replace the muscular cell group names and default numbers
+            for (int i = 0; i < 2; i++)
+                MuscleCount.Add($"Muscle{i + 1}", 5); //replace the muscular cell group names and default numbers
 
             Sigma = new Dictionary<string, double>
             {
@@ -58,9 +64,17 @@ namespace SiliFish
             CellCoreUnit MuscleCore = CellCoreUnit.CreateCore(MuscleCoreType, null);
             Dictionary<string, double> muscleParameters = MuscleCore.GetParameters();
 
-            foreach (string key in NeuronCount.Keys)
+            foreach (string key in SpinalNeuronCount.Keys)
             {
-                paramDict.Add($"Number.{key}", NeuronCount[key]);
+                paramDict.Add($"Number.{key}", SpinalNeuronCount[key]);
+                foreach (string neuronParam in neuronParameters.Keys)
+                {
+                    paramDict.Add($"CoreParam{key}.{neuronParam}", neuronParameters[neuronParam]);
+                }
+            }
+            foreach (string key in SupraSpinalNeuronCount.Keys)
+            {
+                paramDict.Add($"Number.{key}", SupraSpinalNeuronCount[key]);
                 foreach (string neuronParam in neuronParameters.Keys)
                 {
                     paramDict.Add($"CoreParam{key}.{neuronParam}", neuronParameters[neuronParam]);
@@ -103,8 +117,10 @@ namespace SiliFish
                 if (key.StartsWith("Number."))
                 {
                     string cellName = key[7..];//skip "Number."
-                    if (NeuronCount.ContainsKey(cellName))
-                        NeuronCount[cellName] = paramExternal.ReadInteger(key, NeuronCount[cellName]);
+                    if (SupraSpinalNeuronCount.ContainsKey(cellName))
+                        SupraSpinalNeuronCount[cellName] = paramExternal.ReadInteger(key, SupraSpinalNeuronCount[cellName]);
+                    else if (SpinalNeuronCount.ContainsKey(cellName))
+                        SpinalNeuronCount[cellName] = paramExternal.ReadInteger(key, SpinalNeuronCount[cellName]);
                     else if (MuscleCount.ContainsKey(cellName))
                         MuscleCount[cellName] = paramExternal.ReadInteger(key, MuscleCount[cellName]);
                 }
@@ -126,20 +142,71 @@ namespace SiliFish
             //This sample assumes the model is somite based
             if (NumberOfSomites <= 0) return;
             NeuronPools = new List<CellPool>();
-            //TODO SpinalRostralCaudalDistance
-            foreach (string key in NeuronCount.Keys)
+            //Spinal cells
+            foreach (string key in SpinalNeuronCount.Keys)
             {
                 if (colorIndex >= colors.Length)
                     colorIndex = 0;
                 CellPool pool = new(this, CellType.Neuron, BodyLocation.SpinalCord, key, SagittalPlane.Both, 1, colors[colorIndex++]);
+                //this sample uniformly distributes all of the cell pools across the spinal cord
+
+                int neuronCount = SpinalNeuronCount[key];
+                UniformDistribution xdist = new(SupraSpinalRostralCaudalDistance, SpinalRostralCaudalDistance + SupraSpinalRostralCaudalDistance, true, false);
+                UniformDistribution ydist = new(0, SpinalMedialLateralDistance, true, false);
+                UniformDistribution zdist = new(0, SpinalDorsalVentralDistance, true, false);
                 for (int somite = 0; somite < NumberOfSomites; somite++)
                 {
-                    Coordinate coor;
-                    for (int i = 0; i < NeuronCount[key]; i++)
+                    Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, somite);
+                    for (int i = 0; i < neuronCount; i++)
                     {
-                        //TODO Neuron n = new Neuron(key, "Izhikevich_9P", somite + 1, i + 1, coreParams, coor, cv);
+                        Neuron n = new Neuron(key, NeuronCoreType, somite + 1, i + 1, cv);
+                        n.coordinate = coors[i];
                     }
                 }
+                NeuronPools.Add(pool);
+            }
+            //Musculoskeletal cells
+            foreach (string key in MuscleCount.Keys)
+            {
+                if (colorIndex >= colors.Length)
+                    colorIndex = 0;
+                CellPool pool = new(this, CellType.MuscleCell, BodyLocation.MusculoSkeletal, key, SagittalPlane.Both, 1, colors[colorIndex++]);
+                //this sample uniformly distributes all of the cell pools across the spinal cord
+
+                int muscleCount = SpinalNeuronCount[key];
+                UniformDistribution xdist = new(SupraSpinalRostralCaudalDistance, SpinalRostralCaudalDistance + SupraSpinalRostralCaudalDistance, true, false);
+                UniformDistribution ydist = new(0, BodyMedialLateralDistance, true, false);
+                UniformDistribution zdist = new(0, BodyDorsalVentralDistance, true, false);
+                for (int somite = 0; somite < NumberOfSomites; somite++)
+                {
+                    Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, muscleCount, somite);
+                    for (int i = 0; i < muscleCount; i++)
+                    {
+                        Neuron n = new Neuron(key, NeuronCoreType, somite + 1, i + 1, cv);
+                        n.coordinate = coors[i];
+                    }
+                }
+                NeuronPools.Add(pool);
+            }
+            //SupraSpinal cells
+            foreach (string key in SupraSpinalNeuronCount.Keys)
+            {
+                if (colorIndex >= colors.Length)
+                    colorIndex = 0;
+                CellPool pool = new(this, CellType.Neuron, BodyLocation.SupraSpinal, key, SagittalPlane.Both, 1, colors[colorIndex++]);
+                //this sample uniformly distributes all of the cell pools across the brain region
+
+                int neuronCount = SpinalNeuronCount[key];
+                UniformDistribution xdist = new(SupraSpinalRostralCaudalDistance, SpinalRostralCaudalDistance + SupraSpinalRostralCaudalDistance, true, false);
+                UniformDistribution ydist = new(0, SpinalMedialLateralDistance, true, false);
+                UniformDistribution zdist = new(0, SpinalDorsalVentralDistance, true, false);
+                Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, -1);
+                for (int i = 0; i < neuronCount; i++)
+                {
+                    Neuron n = new Neuron(key, NeuronCoreType, 0, i + 1, cv);
+                    n.coordinate = coors[i];
+                }
+
                 NeuronPools.Add(pool);
             }
         }

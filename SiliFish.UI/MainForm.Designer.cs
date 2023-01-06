@@ -41,31 +41,9 @@ namespace SiliFish.UI
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.tabParams = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
-            this.grSupraSpinal = new System.Windows.Forms.GroupBox();
-            this.lSupraSpinalRostralCaudal = new System.Windows.Forms.Label();
-            this.eSupraSpinalRostraCaudal = new System.Windows.Forms.NumericUpDown();
-            this.eSupraSpinalMedialLateral = new System.Windows.Forms.NumericUpDown();
-            this.lSupraSpinalMedialLateral = new System.Windows.Forms.Label();
-            this.eSupraSpinalDorsalVentral = new System.Windows.Forms.NumericUpDown();
-            this.lSupraSpinalDorsalVentral = new System.Windows.Forms.Label();
-            this.eNumSomites = new System.Windows.Forms.NumericUpDown();
+            this.propModel = new System.Windows.Forms.PropertyGrid();
             this.pBodyDiagrams = new System.Windows.Forms.Panel();
             this.picLarva = new System.Windows.Forms.PictureBox();
-            this.lNoOfSomites = new System.Windows.Forms.Label();
-            this.grSpinalCord = new System.Windows.Forms.GroupBox();
-            this.eSpinalBodyPosition = new System.Windows.Forms.NumericUpDown();
-            this.lSpinalBodyPosition = new System.Windows.Forms.Label();
-            this.eSpinalRostraCaudal = new System.Windows.Forms.NumericUpDown();
-            this.lSpinalRostroCaudal = new System.Windows.Forms.Label();
-            this.eSpinalMedialLateral = new System.Windows.Forms.NumericUpDown();
-            this.lSpinalMedialLateral = new System.Windows.Forms.Label();
-            this.eSpinalDorsalVentral = new System.Windows.Forms.NumericUpDown();
-            this.lSpinalDorsalVentral = new System.Windows.Forms.Label();
-            this.grBody = new System.Windows.Forms.GroupBox();
-            this.eBodyMedialLateral = new System.Windows.Forms.NumericUpDown();
-            this.lBodyMedialLateral = new System.Windows.Forms.Label();
-            this.eBodyDorsalVentral = new System.Windows.Forms.NumericUpDown();
-            this.lBodyDorsalVentral = new System.Windows.Forms.Label();
             this.eModelDescription = new System.Windows.Forms.TextBox();
             this.eModelName = new System.Windows.Forms.TextBox();
             this.lModelDescription = new System.Windows.Forms.Label();
@@ -82,6 +60,8 @@ namespace SiliFish.UI
             this.lConnections = new System.Windows.Forms.Label();
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
+            this.tabSettings = new System.Windows.Forms.TabPage();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.pParamBottom = new System.Windows.Forms.Panel();
             this.ldtEuler = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
@@ -227,21 +207,8 @@ namespace SiliFish.UI
             this.splitMain.SuspendLayout();
             this.tabParams.SuspendLayout();
             this.tabGeneral.SuspendLayout();
-            this.grSupraSpinal.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eSupraSpinalRostraCaudal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSupraSpinalMedialLateral)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSupraSpinalDorsalVentral)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eNumSomites)).BeginInit();
             this.pBodyDiagrams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).BeginInit();
-            this.grSpinalCord.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalBodyPosition)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraCaudal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalMedialLateral)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalDorsalVentral)).BeginInit();
-            this.grBody.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eBodyMedialLateral)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eBodyDorsalVentral)).BeginInit();
             this.tabCellPools.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).BeginInit();
             this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
@@ -250,6 +217,7 @@ namespace SiliFish.UI
             this.pCellPoolTop.SuspendLayout();
             this.pConnectionTop.SuspendLayout();
             this.tabStimuli.SuspendLayout();
+            this.tabSettings.SuspendLayout();
             this.pParamBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
@@ -417,6 +385,7 @@ namespace SiliFish.UI
             this.tabParams.Controls.Add(this.tabGeneral);
             this.tabParams.Controls.Add(this.tabCellPools);
             this.tabParams.Controls.Add(this.tabStimuli);
+            this.tabParams.Controls.Add(this.tabSettings);
             this.tabParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabParams.Location = new System.Drawing.Point(0, 34);
             this.tabParams.Name = "tabParams";
@@ -428,12 +397,8 @@ namespace SiliFish.UI
             // tabGeneral
             // 
             this.tabGeneral.BackColor = System.Drawing.Color.White;
-            this.tabGeneral.Controls.Add(this.grSupraSpinal);
-            this.tabGeneral.Controls.Add(this.eNumSomites);
+            this.tabGeneral.Controls.Add(this.propModel);
             this.tabGeneral.Controls.Add(this.pBodyDiagrams);
-            this.tabGeneral.Controls.Add(this.lNoOfSomites);
-            this.tabGeneral.Controls.Add(this.grSpinalCord);
-            this.tabGeneral.Controls.Add(this.grBody);
             this.tabGeneral.Controls.Add(this.eModelDescription);
             this.tabGeneral.Controls.Add(this.eModelName);
             this.tabGeneral.Controls.Add(this.lModelDescription);
@@ -445,104 +410,12 @@ namespace SiliFish.UI
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
             // 
-            // grSupraSpinal
+            // propModel
             // 
-            this.grSupraSpinal.Controls.Add(this.lSupraSpinalRostralCaudal);
-            this.grSupraSpinal.Controls.Add(this.eSupraSpinalRostraCaudal);
-            this.grSupraSpinal.Controls.Add(this.eSupraSpinalMedialLateral);
-            this.grSupraSpinal.Controls.Add(this.lSupraSpinalMedialLateral);
-            this.grSupraSpinal.Controls.Add(this.eSupraSpinalDorsalVentral);
-            this.grSupraSpinal.Controls.Add(this.lSupraSpinalDorsalVentral);
-            this.grSupraSpinal.Location = new System.Drawing.Point(7, 104);
-            this.grSupraSpinal.Name = "grSupraSpinal";
-            this.grSupraSpinal.Size = new System.Drawing.Size(178, 101);
-            this.grSupraSpinal.TabIndex = 15;
-            this.grSupraSpinal.TabStop = false;
-            this.grSupraSpinal.Text = "Supraspinal";
-            // 
-            // lSupraSpinalRostralCaudal
-            // 
-            this.lSupraSpinalRostralCaudal.AutoSize = true;
-            this.lSupraSpinalRostralCaudal.Location = new System.Drawing.Point(6, 74);
-            this.lSupraSpinalRostralCaudal.Name = "lSupraSpinalRostralCaudal";
-            this.lSupraSpinalRostralCaudal.Size = new System.Drawing.Size(83, 15);
-            this.lSupraSpinalRostralCaudal.TabIndex = 16;
-            this.lSupraSpinalRostralCaudal.Text = "Rostro-Caudal";
-            // 
-            // eSupraSpinalRostraCaudal
-            // 
-            this.eSupraSpinalRostraCaudal.DecimalPlaces = 3;
-            this.eSupraSpinalRostraCaudal.Location = new System.Drawing.Point(98, 72);
-            this.eSupraSpinalRostraCaudal.Name = "eSupraSpinalRostraCaudal";
-            this.eSupraSpinalRostraCaudal.Size = new System.Drawing.Size(65, 23);
-            this.eSupraSpinalRostraCaudal.TabIndex = 15;
-            // 
-            // eSupraSpinalMedialLateral
-            // 
-            this.eSupraSpinalMedialLateral.DecimalPlaces = 3;
-            this.eSupraSpinalMedialLateral.Location = new System.Drawing.Point(99, 45);
-            this.eSupraSpinalMedialLateral.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSupraSpinalMedialLateral.Name = "eSupraSpinalMedialLateral";
-            this.eSupraSpinalMedialLateral.Size = new System.Drawing.Size(63, 23);
-            this.eSupraSpinalMedialLateral.TabIndex = 14;
-            this.eSupraSpinalMedialLateral.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // lSupraSpinalMedialLateral
-            // 
-            this.lSupraSpinalMedialLateral.AutoSize = true;
-            this.lSupraSpinalMedialLateral.Location = new System.Drawing.Point(7, 47);
-            this.lSupraSpinalMedialLateral.Name = "lSupraSpinalMedialLateral";
-            this.lSupraSpinalMedialLateral.Size = new System.Drawing.Size(83, 15);
-            this.lSupraSpinalMedialLateral.TabIndex = 13;
-            this.lSupraSpinalMedialLateral.Text = "Medial-Lateral";
-            // 
-            // eSupraSpinalDorsalVentral
-            // 
-            this.eSupraSpinalDorsalVentral.DecimalPlaces = 3;
-            this.eSupraSpinalDorsalVentral.Location = new System.Drawing.Point(99, 17);
-            this.eSupraSpinalDorsalVentral.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSupraSpinalDorsalVentral.Name = "eSupraSpinalDorsalVentral";
-            this.eSupraSpinalDorsalVentral.Size = new System.Drawing.Size(63, 23);
-            this.eSupraSpinalDorsalVentral.TabIndex = 12;
-            this.eSupraSpinalDorsalVentral.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            // 
-            // lSupraSpinalDorsalVentral
-            // 
-            this.lSupraSpinalDorsalVentral.AutoSize = true;
-            this.lSupraSpinalDorsalVentral.Location = new System.Drawing.Point(7, 19);
-            this.lSupraSpinalDorsalVentral.Name = "lSupraSpinalDorsalVentral";
-            this.lSupraSpinalDorsalVentral.Size = new System.Drawing.Size(81, 15);
-            this.lSupraSpinalDorsalVentral.TabIndex = 11;
-            this.lSupraSpinalDorsalVentral.Text = "Dorsal-Ventral";
-            // 
-            // eNumSomites
-            // 
-            this.eNumSomites.Location = new System.Drawing.Point(106, 75);
-            this.eNumSomites.Name = "eNumSomites";
-            this.eNumSomites.Size = new System.Drawing.Size(63, 23);
-            this.eNumSomites.TabIndex = 11;
-            this.eNumSomites.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.eNumSomites.ValueChanged += new System.EventHandler(this.eNumSomites_ValueChanged);
+            this.propModel.Location = new System.Drawing.Point(5, 84);
+            this.propModel.Name = "propModel";
+            this.propModel.Size = new System.Drawing.Size(169, 169);
+            this.propModel.TabIndex = 60;
             // 
             // pBodyDiagrams
             // 
@@ -555,7 +428,6 @@ namespace SiliFish.UI
             this.pBodyDiagrams.Name = "pBodyDiagrams";
             this.pBodyDiagrams.Size = new System.Drawing.Size(348, 352);
             this.pBodyDiagrams.TabIndex = 15;
-            this.pBodyDiagrams.SizeChanged += new System.EventHandler(this.pBodyDiagrams_SizeChanged);
             // 
             // picLarva
             // 
@@ -567,217 +439,6 @@ namespace SiliFish.UI
             this.picLarva.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picLarva.TabIndex = 12;
             this.picLarva.TabStop = false;
-            // 
-            // lNoOfSomites
-            // 
-            this.lNoOfSomites.AutoSize = true;
-            this.lNoOfSomites.Location = new System.Drawing.Point(11, 77);
-            this.lNoOfSomites.Name = "lNoOfSomites";
-            this.lNoOfSomites.Size = new System.Drawing.Size(73, 15);
-            this.lNoOfSomites.TabIndex = 19;
-            this.lNoOfSomites.Text = "# of Somites";
-            // 
-            // grSpinalCord
-            // 
-            this.grSpinalCord.Controls.Add(this.eSpinalBodyPosition);
-            this.grSpinalCord.Controls.Add(this.lSpinalBodyPosition);
-            this.grSpinalCord.Controls.Add(this.eSpinalRostraCaudal);
-            this.grSpinalCord.Controls.Add(this.lSpinalRostroCaudal);
-            this.grSpinalCord.Controls.Add(this.eSpinalMedialLateral);
-            this.grSpinalCord.Controls.Add(this.lSpinalMedialLateral);
-            this.grSpinalCord.Controls.Add(this.eSpinalDorsalVentral);
-            this.grSpinalCord.Controls.Add(this.lSpinalDorsalVentral);
-            this.grSpinalCord.Location = new System.Drawing.Point(8, 211);
-            this.grSpinalCord.Name = "grSpinalCord";
-            this.grSpinalCord.Size = new System.Drawing.Size(178, 129);
-            this.grSpinalCord.TabIndex = 14;
-            this.grSpinalCord.TabStop = false;
-            this.grSpinalCord.Text = "Spinal Cord";
-            // 
-            // eSpinalBodyPosition
-            // 
-            this.eSpinalBodyPosition.DecimalPlaces = 3;
-            this.eSpinalBodyPosition.Location = new System.Drawing.Point(98, 101);
-            this.eSpinalBodyPosition.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSpinalBodyPosition.Name = "eSpinalBodyPosition";
-            this.eSpinalBodyPosition.Size = new System.Drawing.Size(63, 23);
-            this.eSpinalBodyPosition.TabIndex = 18;
-            this.eSpinalBodyPosition.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.eSpinalBodyPosition.ValueChanged += new System.EventHandler(this.eSpinalBodyPosition_ValueChanged);
-            this.eSpinalBodyPosition.Enter += new System.EventHandler(this.eSpinalBodyPosition_Enter);
-            // 
-            // lSpinalBodyPosition
-            // 
-            this.lSpinalBodyPosition.AutoSize = true;
-            this.lSpinalBodyPosition.Location = new System.Drawing.Point(6, 103);
-            this.lSpinalBodyPosition.Name = "lSpinalBodyPosition";
-            this.lSpinalBodyPosition.Size = new System.Drawing.Size(80, 15);
-            this.lSpinalBodyPosition.TabIndex = 17;
-            this.lSpinalBodyPosition.Text = "Body Position";
-            // 
-            // eSpinalRostraCaudal
-            // 
-            this.eSpinalRostraCaudal.DecimalPlaces = 3;
-            this.eSpinalRostraCaudal.Location = new System.Drawing.Point(98, 73);
-            this.eSpinalRostraCaudal.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSpinalRostraCaudal.Name = "eSpinalRostraCaudal";
-            this.eSpinalRostraCaudal.Size = new System.Drawing.Size(63, 23);
-            this.eSpinalRostraCaudal.TabIndex = 16;
-            this.eSpinalRostraCaudal.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // lSpinalRostroCaudal
-            // 
-            this.lSpinalRostroCaudal.AutoSize = true;
-            this.lSpinalRostroCaudal.Location = new System.Drawing.Point(6, 75);
-            this.lSpinalRostroCaudal.Name = "lSpinalRostroCaudal";
-            this.lSpinalRostroCaudal.Size = new System.Drawing.Size(83, 15);
-            this.lSpinalRostroCaudal.TabIndex = 15;
-            this.lSpinalRostroCaudal.Text = "Rostro-Caudal";
-            // 
-            // eSpinalMedialLateral
-            // 
-            this.eSpinalMedialLateral.DecimalPlaces = 3;
-            this.eSpinalMedialLateral.Location = new System.Drawing.Point(98, 45);
-            this.eSpinalMedialLateral.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSpinalMedialLateral.Name = "eSpinalMedialLateral";
-            this.eSpinalMedialLateral.Size = new System.Drawing.Size(63, 23);
-            this.eSpinalMedialLateral.TabIndex = 14;
-            this.eSpinalMedialLateral.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.eSpinalMedialLateral.ValueChanged += new System.EventHandler(this.eSpinalMedialLateral_ValueChanged);
-            this.eSpinalMedialLateral.Enter += new System.EventHandler(this.eSpinalMedialLateral_Enter);
-            // 
-            // lSpinalMedialLateral
-            // 
-            this.lSpinalMedialLateral.AutoSize = true;
-            this.lSpinalMedialLateral.Location = new System.Drawing.Point(6, 47);
-            this.lSpinalMedialLateral.Name = "lSpinalMedialLateral";
-            this.lSpinalMedialLateral.Size = new System.Drawing.Size(83, 15);
-            this.lSpinalMedialLateral.TabIndex = 13;
-            this.lSpinalMedialLateral.Text = "Medial-Lateral";
-            // 
-            // eSpinalDorsalVentral
-            // 
-            this.eSpinalDorsalVentral.DecimalPlaces = 3;
-            this.eSpinalDorsalVentral.Location = new System.Drawing.Point(98, 17);
-            this.eSpinalDorsalVentral.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSpinalDorsalVentral.Name = "eSpinalDorsalVentral";
-            this.eSpinalDorsalVentral.Size = new System.Drawing.Size(63, 23);
-            this.eSpinalDorsalVentral.TabIndex = 12;
-            this.eSpinalDorsalVentral.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.eSpinalDorsalVentral.ValueChanged += new System.EventHandler(this.eSpinalDorsalVentral_ValueChanged);
-            this.eSpinalDorsalVentral.Enter += new System.EventHandler(this.eSpinalDorsalVentral_Enter);
-            // 
-            // lSpinalDorsalVentral
-            // 
-            this.lSpinalDorsalVentral.AutoSize = true;
-            this.lSpinalDorsalVentral.Location = new System.Drawing.Point(6, 19);
-            this.lSpinalDorsalVentral.Name = "lSpinalDorsalVentral";
-            this.lSpinalDorsalVentral.Size = new System.Drawing.Size(81, 15);
-            this.lSpinalDorsalVentral.TabIndex = 11;
-            this.lSpinalDorsalVentral.Text = "Dorsal-Ventral";
-            // 
-            // grBody
-            // 
-            this.grBody.Controls.Add(this.eBodyMedialLateral);
-            this.grBody.Controls.Add(this.lBodyMedialLateral);
-            this.grBody.Controls.Add(this.eBodyDorsalVentral);
-            this.grBody.Controls.Add(this.lBodyDorsalVentral);
-            this.grBody.Location = new System.Drawing.Point(7, 346);
-            this.grBody.Name = "grBody";
-            this.grBody.Size = new System.Drawing.Size(178, 74);
-            this.grBody.TabIndex = 13;
-            this.grBody.TabStop = false;
-            this.grBody.Text = "Musculoskeletal";
-            // 
-            // eBodyMedialLateral
-            // 
-            this.eBodyMedialLateral.DecimalPlaces = 3;
-            this.eBodyMedialLateral.Location = new System.Drawing.Point(99, 45);
-            this.eBodyMedialLateral.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eBodyMedialLateral.Name = "eBodyMedialLateral";
-            this.eBodyMedialLateral.Size = new System.Drawing.Size(63, 23);
-            this.eBodyMedialLateral.TabIndex = 14;
-            this.eBodyMedialLateral.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.eBodyMedialLateral.ValueChanged += new System.EventHandler(this.eBodyMedialLateral_ValueChanged);
-            this.eBodyMedialLateral.Enter += new System.EventHandler(this.eBodyMedialLateral_Enter);
-            // 
-            // lBodyMedialLateral
-            // 
-            this.lBodyMedialLateral.AutoSize = true;
-            this.lBodyMedialLateral.Location = new System.Drawing.Point(7, 47);
-            this.lBodyMedialLateral.Name = "lBodyMedialLateral";
-            this.lBodyMedialLateral.Size = new System.Drawing.Size(83, 15);
-            this.lBodyMedialLateral.TabIndex = 13;
-            this.lBodyMedialLateral.Text = "Medial-Lateral";
-            // 
-            // eBodyDorsalVentral
-            // 
-            this.eBodyDorsalVentral.DecimalPlaces = 3;
-            this.eBodyDorsalVentral.Location = new System.Drawing.Point(99, 17);
-            this.eBodyDorsalVentral.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eBodyDorsalVentral.Name = "eBodyDorsalVentral";
-            this.eBodyDorsalVentral.Size = new System.Drawing.Size(63, 23);
-            this.eBodyDorsalVentral.TabIndex = 12;
-            this.eBodyDorsalVentral.Value = new decimal(new int[] {
-            15,
-            0,
-            0,
-            0});
-            this.eBodyDorsalVentral.ValueChanged += new System.EventHandler(this.eBodyDorsalVentral_ValueChanged);
-            this.eBodyDorsalVentral.Enter += new System.EventHandler(this.eBodyDorsalVentral_Enter);
-            // 
-            // lBodyDorsalVentral
-            // 
-            this.lBodyDorsalVentral.AutoSize = true;
-            this.lBodyDorsalVentral.Location = new System.Drawing.Point(7, 19);
-            this.lBodyDorsalVentral.Name = "lBodyDorsalVentral";
-            this.lBodyDorsalVentral.Size = new System.Drawing.Size(81, 15);
-            this.lBodyDorsalVentral.TabIndex = 11;
-            this.lBodyDorsalVentral.Text = "Dorsal-Ventral";
             // 
             // eModelDescription
             // 
@@ -966,6 +627,24 @@ namespace SiliFish.UI
             this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
             this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
             this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
+            // 
+            // tabSettings
+            // 
+            this.tabSettings.Controls.Add(this.propertyGrid1);
+            this.tabSettings.Location = new System.Drawing.Point(4, 24);
+            this.tabSettings.Name = "tabSettings";
+            this.tabSettings.Size = new System.Drawing.Size(540, 425);
+            this.tabSettings.TabIndex = 5;
+            this.tabSettings.Text = "Settings";
+            this.tabSettings.UseVisualStyleBackColor = true;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(540, 425);
+            this.propertyGrid1.TabIndex = 0;
             // 
             // pParamBottom
             // 
@@ -2738,24 +2417,8 @@ namespace SiliFish.UI
             this.tabParams.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
-            this.grSupraSpinal.ResumeLayout(false);
-            this.grSupraSpinal.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eSupraSpinalRostraCaudal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSupraSpinalMedialLateral)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSupraSpinalDorsalVentral)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eNumSomites)).EndInit();
             this.pBodyDiagrams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).EndInit();
-            this.grSpinalCord.ResumeLayout(false);
-            this.grSpinalCord.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalBodyPosition)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalRostraCaudal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalMedialLateral)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSpinalDorsalVentral)).EndInit();
-            this.grBody.ResumeLayout(false);
-            this.grBody.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eBodyMedialLateral)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eBodyDorsalVentral)).EndInit();
             this.tabCellPools.ResumeLayout(false);
             this.splitCellPoolsAndConnections.Panel1.ResumeLayout(false);
             this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
@@ -2766,6 +2429,7 @@ namespace SiliFish.UI
             this.pConnectionTop.ResumeLayout(false);
             this.pConnectionTop.PerformLayout();
             this.tabStimuli.ResumeLayout(false);
+            this.tabSettings.ResumeLayout(false);
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
@@ -2898,20 +2562,6 @@ namespace SiliFish.UI
         private SaveFileDialog saveFileText;
         private TextBox eModelDescription;
         private TextBox eModelName;
-        private GroupBox grSpinalCord;
-        private NumericUpDown eSpinalBodyPosition;
-        private Label lSpinalBodyPosition;
-        private NumericUpDown eSpinalRostraCaudal;
-        private Label lSpinalRostroCaudal;
-        private NumericUpDown eSpinalMedialLateral;
-        private Label lSpinalMedialLateral;
-        private NumericUpDown eSpinalDorsalVentral;
-        private Label lSpinalDorsalVentral;
-        private GroupBox grBody;
-        private NumericUpDown eBodyMedialLateral;
-        private Label lBodyMedialLateral;
-        private NumericUpDown eBodyDorsalVentral;
-        private Label lBodyDorsalVentral;
         private PictureBox picLarva;
         private SplitContainer splitCellPoolsAndConnections;
         private ListBoxControl listCellPool;
@@ -2925,8 +2575,6 @@ namespace SiliFish.UI
         private Label ldt;
         private NumericUpDown eSkip;
         private Label lSkip;
-        private NumericUpDown eNumSomites;
-        private Label lNoOfSomites;
         private PictureBox pictureBoxLeft;
         private PictureBox pictureBoxRight;
         private Label lSagittal;
@@ -3017,12 +2665,8 @@ namespace SiliFish.UI
         private TextBox e3DSomiteRange;
         private CheckBox cb3DAllSomites;
         private LinkLabel linkExportPlotData;
-        private GroupBox grSupraSpinal;
-        private NumericUpDown eSupraSpinalRostraCaudal;
-        private NumericUpDown eSupraSpinalMedialLateral;
-        private Label lSupraSpinalMedialLateral;
-        private NumericUpDown eSupraSpinalDorsalVentral;
-        private Label lSupraSpinalDorsalVentral;
-        private Label lSupraSpinalRostralCaudal;
+        private TabPage tabSettings;
+        private PropertyGrid propertyGrid1;
+        private PropertyGrid propModel;
     }
 }

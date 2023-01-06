@@ -71,12 +71,12 @@ namespace SiliFish.UI.Controls
                 if (ddNeuronClass.Items.Count > 0)
                     ddNeuronClass.SelectedIndex = 0;
                 lNeuronClass.Visible = ddNeuronClass.Visible = true;
-                ddCoreType.Text = Const.DefaultNeuronCore;
+                ddCoreType.Text = Settings.DefaultNeuronCore.GetType().ToString();
             }
             else
             {
                 lNeuronClass.Visible = ddNeuronClass.Visible = false;
-                ddCoreType.Text = Const.DefaultMuscleCore;
+                ddCoreType.Text = Settings.DefaultMuscleCore.GetType().ToString();
             }
         }
 

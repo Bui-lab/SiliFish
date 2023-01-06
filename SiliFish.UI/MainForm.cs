@@ -3,6 +3,7 @@ using Microsoft.Web.WebView2.WinForms;
 using Services;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -96,6 +97,7 @@ namespace SiliFish.UI
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
                 tabParams.BackColor = Color.White;
+                propertyGrid1.SelectedObject = new CustomObjectWrapper(new Settings(), true);
             }
             catch (Exception ex)
             {
@@ -217,6 +219,7 @@ namespace SiliFish.UI
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
             LoadParams(Model.ModelRun ? lastRunParams : lastSavedParams);
             LoadModelTemplate();
+            propModel.SelectedObject = Model;
         }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -239,21 +242,8 @@ namespace SiliFish.UI
         {
             eModelName.Text = paramDict.Read("General.Name", "");
             eModelDescription.Text = paramDict.Read("General.Description", "");
+            propModel.SelectedObject = Model;
 
-            eSupraSpinalDorsalVentral.SetValue(paramDict.ReadDouble("General.SupraSpinalDorsalVentralDistance"));
-            eSupraSpinalMedialLateral.SetValue(paramDict.ReadDouble("General.SupraSpinalMedialLateralDistance"));
-            eSupraSpinalRostraCaudal.SetValue(paramDict.ReadDouble("General.SupraSpinalRostralCaudalDistance"));
-
-            eSpinalRostraCaudal.SetValue(paramDict.ReadDouble("General.SpinalRostralCaudalDistance"));
-            eSpinalDorsalVentral.SetValue(paramDict.ReadDouble("General.SpinalDorsalVentralDistance"));
-            eSpinalMedialLateral.SetValue(paramDict.ReadDouble("General.SpinalMedialLateralDistance"));
-
-            eNumSomites.SetValue(paramDict.ReadInteger("General.NumberOfSomites"));
-
-            eSpinalBodyPosition.SetValue(paramDict.ReadDouble("General.SpinalBodyPosition"));
-
-            eBodyDorsalVentral.SetValue(paramDict.ReadDouble("General.BodyDorsalVentralDistance"));
-            eBodyMedialLateral.SetValue(paramDict.ReadDouble("General.BodyMedialLateralDistance"));
         }
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
@@ -334,6 +324,8 @@ namespace SiliFish.UI
                     }
                 }
             }
+
+            tabParams.TabPages.Add(tabSettings);
         }
 
         private void ReadGeneralParams(Dictionary<string, object> paramDict)
@@ -1719,79 +1711,14 @@ namespace SiliFish.UI
         }
 
 
-        #region Body Size
+
 
         private void eNumSomites_ValueChanged(object sender, EventArgs e)
         {
             SwimmingModelTemplate.SomiteBased = eNumSomites.Value > 0;
             //TODO consider the case where modeltemplate is not used
         }
-        private decimal? prevBodyDorsalVentral = null;
-        private void eBodyDorsalVentral_Enter(object sender, EventArgs e)
-        {
-            prevBodyDorsalVentral = eBodyDorsalVentral.Value;
-        }
-
-        private void eBodyDorsalVentral_ValueChanged(object sender, EventArgs e)
-        {
-            if (eBodyDorsalVentral.Focused)
-            {
-                decimal bodyPos = eSpinalBodyPosition.Value;
-                decimal bodyDV = eBodyDorsalVentral.Value;
-                decimal spinalDV = eSpinalDorsalVentral.Value;
-                if (bodyDV <= bodyPos + spinalDV)
-                {
-                    WarningMessage("Body's dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position");
-                    eBodyDorsalVentral.Value = prevBodyDorsalVentral ?? bodyPos + spinalDV + eBodyDorsalVentral.Increment;
-                }
-            }
-        }
-
-        private decimal? prevBodyMedialLateral = null;
-        private void eBodyMedialLateral_Enter(object sender, EventArgs e)
-        {
-            prevBodyMedialLateral = eBodyMedialLateral.Value;
-        }
-        private void eBodyMedialLateral_ValueChanged(object sender, EventArgs e)
-        {
-            if (eBodyMedialLateral.Focused)
-            {
-                decimal bodyML = eBodyMedialLateral.Value;
-                decimal spinalML = eSpinalMedialLateral.Value;
-                if (bodyML <= spinalML)
-                {
-                    WarningMessage("Body's medial-lateral width has to be greater than spinal medial-lateral width");
-                    eBodyMedialLateral.Value = prevBodyMedialLateral ?? spinalML + eBodyMedialLateral.Increment;
-                }
-            }
-        }
-
-        private decimal? prevSpinalDorsalVentral = null;
-        private void eSpinalDorsalVentral_Enter(object sender, EventArgs e)
-        {
-            prevSpinalDorsalVentral = eSpinalDorsalVentral.Value;
-        }
-
-        private void eSpinalDorsalVentral_ValueChanged(object sender, EventArgs e)
-        {
-            if (eSpinalDorsalVentral.Focused)
-            {
-                decimal bodyPos = eSpinalBodyPosition.Value;
-                decimal bodyDV = eBodyDorsalVentral.Value;
-                decimal spinalDV = eSpinalDorsalVentral.Value;
-                if (bodyDV <= bodyPos + spinalDV)
-                {
-                    WarningMessage("Body's dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position");
-                    eSpinalDorsalVentral.Value = prevSpinalDorsalVentral ?? bodyDV - bodyPos - eSpinalDorsalVentral.Increment;
-                }
-            }
-        }
-        private decimal? prevSpinalMedialLateral = null;
-        private void eSpinalMedialLateral_Enter(object sender, EventArgs e)
-        {
-            prevSpinalMedialLateral = eSpinalMedialLateral.Value;
-        }
-
+        
         private void edt_ValueChanged(object sender, EventArgs e)
         {
             eAnimationdt.Minimum = edt.Value;
@@ -1830,54 +1757,6 @@ namespace SiliFish.UI
             frmControl.SaveVisible = false;
             frmControl.ShowDialog();
         }
-
-        private void eSpinalMedialLateral_ValueChanged(object sender, EventArgs e)
-        {
-            if (eSpinalMedialLateral.Focused)
-            {
-                decimal bodyML = eBodyMedialLateral.Value;
-                decimal spinalML = eSpinalMedialLateral.Value;
-                if (bodyML <= spinalML)
-                {
-                    WarningMessage("Body's medial-lateral width has to be greater than spinal medial-lateral width");
-                    eSpinalMedialLateral.Value = prevSpinalMedialLateral ?? bodyML - eSpinalMedialLateral.Increment;
-                }
-            }
-        }
-        private decimal? prevSpinalBodyPos = null;
-        private void eSpinalBodyPosition_Enter(object sender, EventArgs e)
-        {
-            prevSpinalBodyPos = eSpinalBodyPosition.Value;
-        }
-
-        private void eSpinalBodyPosition_ValueChanged(object sender, EventArgs e)
-        {
-            if (eSpinalBodyPosition.Focused)
-            {
-                decimal bodyPos = eSpinalBodyPosition.Value;
-                decimal bodyDV = eBodyDorsalVentral.Value;
-                decimal spinalDV = eSpinalDorsalVentral.Value;
-                if (bodyDV <= bodyPos + spinalDV)
-                {
-                    WarningMessage("Body's dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position");
-                    eSpinalBodyPosition.Value = prevSpinalBodyPos ?? bodyDV - spinalDV - eSpinalBodyPosition.Increment;
-                }
-            }
-        }
-
-        bool skipSizeChanged = false;
-        private void pBodyDiagrams_SizeChanged(object sender, EventArgs e)
-        {
-            if (skipSizeChanged) return;
-            skipSizeChanged = true;
-
-            skipSizeChanged = false;
-        }
-        #endregion
-
-
-
-
 
     }
 }

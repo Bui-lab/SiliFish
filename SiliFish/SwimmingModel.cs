@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,15 +57,28 @@ namespace SiliFish
 
         private string modelName;
         public string ModelName { get => modelName; set => modelName = value; }
-        public string ModelDescription { get; set; }
+
+        [Browsable(false)] public string ModelDescription { get; set; }
+
+        [DisplayName("Rostral-Caudal"), Category("Supra Spinal")]
         public double SupraSpinalRostralCaudalDistance { get; set; }
+        [DisplayName("Dorsal-Ventral"), Category("Supra Spinal")]
         public double SupraSpinalDorsalVentralDistance { get; set; }
+        [DisplayName("Medial-Lateral"), Category("Supra Spinal")]
         public double SupraSpinalMedialLateralDistance { get; set; }
+        [DisplayName("Rostral-Caudal"), Category("Spinal")]
         public double SpinalRostralCaudalDistance { get; set; }
+        [DisplayName("Dorsal-Ventral"), Category("Spinal")]
         public double SpinalDorsalVentralDistance { get; set; }
+        [DisplayName("Medial-Lateral"), Category("Spinal")]
         public double SpinalMedialLateralDistance { get; set; }
+        [DisplayName("Body Position"), Category("Spinal")]
         public double SpinalBodyPosition { get; set; }
+
+        [DisplayName("Medial-Lateral"), Category("Musculo-Skeletal")]
+
         public double BodyMedialLateralDistance { get; set; }
+        [DisplayName("Dorsal-Ventral"), Category("Musculo-Skeletal")]
         public double BodyDorsalVentralDistance { get; set; }
 
         public int NumberOfSomites { get; set; } = 0;
@@ -83,7 +97,7 @@ namespace SiliFish
         public UnitOfMeasure UoM
         {
             get { return uom; }
-            set { Const.UoM = uom = value; }
+            set { Settings.UoM = uom = value; }
         }
 
         protected List<CellPool> neuronPools = new();
@@ -92,12 +106,15 @@ namespace SiliFish
         protected List<InterPool> chemPoolConnections = new();
 
         [JsonIgnore]
+        [Browsable(false)]
         public double[] TimeArray { get { return Time; } }
 
         [JsonIgnore]
+        [Browsable(false)]
         public bool ModelRun { get { return model_run; } }
 
         [JsonIgnore]
+        [Browsable(false)]
         public bool CancelRun { get; set; } = false;
         private bool CancelLoop { get; set; } = false;
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
@@ -111,6 +128,7 @@ namespace SiliFish
         }
 
         [JsonIgnore]
+        [Browsable(false)]
         public List<CellPool> CellPools
         {
             get
@@ -120,6 +138,7 @@ namespace SiliFish
                 return neuronPools.Union(musclePools).ToList();
             }
         }
+        [Browsable(false)]
         public List<CellPool> NeuronPools
         {
             get
@@ -134,6 +153,7 @@ namespace SiliFish
                 neuronPools = value;
             }
         }
+        [Browsable(false)]
         public List<CellPool> MusclePools
         {
             get
@@ -149,6 +169,7 @@ namespace SiliFish
             }
         }
         [JsonIgnore]
+        [Browsable(false)]
         public List<CellPool> MotoNeuronPools //MotoNeurons are the neurons projecting to the muscle cells
         {
             get
@@ -184,6 +205,7 @@ namespace SiliFish
             return (leftMNs, rightMNs);
         }
 
+        [Browsable(false)]
         public List<InterPool> ChemPoolConnections
         {
             get
@@ -197,6 +219,7 @@ namespace SiliFish
             }
         }
 
+        [Browsable(false)]
         public List<InterPool> GapPoolConnections
         {
             get

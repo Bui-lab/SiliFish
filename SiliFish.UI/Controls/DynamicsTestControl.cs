@@ -125,7 +125,7 @@ namespace SiliFish.UI.Controls
             if (parameters != null)
                 Parameters = parameters;
             pBottomBottom.Visible = !testMode;
-            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Const.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
+            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Settings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
           
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
@@ -372,7 +372,7 @@ namespace SiliFish.UI.Controls
                     Color = Color.Red.ToRGBQuoted(),
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
-                    yLabel = $"I ({Util.GetUoM(Const.UoM, Measure.Current)})"
+                    yLabel = $"I ({Util.GetUoM(Settings.UoM, Measure.Current)})"
                 });
             }
             int numCharts = charts.Any() ? charts.Count : 1;
@@ -493,8 +493,8 @@ namespace SiliFish.UI.Controls
                     {
                         if (double.TryParse(eRheobase.Text, out double rheobase))
                         {
-                            stimValues = Const.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
-                            columnNames.AddRange(Const.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
+                            stimValues = Settings.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
+                            columnNames.AddRange(Settings.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
                         }
                     }
                     else //if (rbMultipleEntry.Checked)
@@ -548,7 +548,7 @@ namespace SiliFish.UI.Controls
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
             {
-                eRheobase.Text = d.ToString(Const.DecimalPointFormat);
+                eRheobase.Text = d.ToString(Settings.DecimalPointFormat);
                 lRheobaseWarning.Visible = false;
                 rbRheobaseBasedStimulus.ForeColor = Color.Black;
             }

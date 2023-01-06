@@ -36,7 +36,7 @@ namespace SiliFish.Services.Optimization
                 fitness += targetRheobaseFunction.CalculateFitness(core, out rheobase);
             }
             else if (fitnessFunctions.Any(ff => ff.CurrentRequired && ff.RheobaseBased))
-                rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Const.RheobaseInfinity, dt: 0.1);
+                rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Settings.RheobaseInfinity, dt: 0.1);
 
             List<double> currentValues = fitnessFunctions
                 .Select(ff => ff.CurrentValueOrRheobaseMultiplier * (ff.RheobaseBased ? rheobase : 1))
@@ -47,7 +47,7 @@ namespace SiliFish.Services.Optimization
             Dictionary<double, DynamicsStats> stats = new();
             foreach (double current in currentValues)
             {
-                DynamicsStats stat = core.DynamicsTest(current, infinity: Const.RheobaseInfinity, dt: 0.1);
+                DynamicsStats stat = core.DynamicsTest(current, infinity: Settings.RheobaseInfinity, dt: 0.1);
                 stats.Add(current, stat);
             }
 
