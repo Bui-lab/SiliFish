@@ -1,9 +1,9 @@
-﻿using SiliFish;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +34,7 @@ namespace SiliFish.Services
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.V?[iStart + i].ToString(Settings.DecimalPointFormat) + ",";
+                        data[i] += cell.V?[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
                 }
                 string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new ChartDataStruct
@@ -88,7 +88,7 @@ namespace SiliFish.Services
                             gapTitle += "Gap: " + otherCell.ID + ",";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(Settings.DecimalPointFormat) + ",";
+                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
                         }
                     }
                     if (includeChem)
@@ -102,7 +102,7 @@ namespace SiliFish.Services
                             synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(Settings.DecimalPointFormat) + ",";
+                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
                         }
                         if (cell is Neuron neuron2)
                         {
@@ -112,7 +112,7 @@ namespace SiliFish.Services
                                 synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(Settings.DecimalPointFormat) + ",";
+                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
                             }
                         }
                     }
@@ -125,7 +125,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerGapChart),
                         Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -140,7 +140,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerInSynChart),
                         Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -155,7 +155,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerOutSynChart),
                         Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -190,7 +190,7 @@ namespace SiliFish.Services
                     title += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(Settings.DecimalPointFormat) + ",";
+                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
                 }
                 if (stimExists)
                 {
@@ -200,7 +200,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerChart),
                         Title = $"`{cellGroup.Key} Applied Stimuli`",
-                        yLabel = $"`Stimulus ({Util.GetUoM(Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Stimulus ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -232,7 +232,7 @@ namespace SiliFish.Services
                     title += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += Tension[iStart + i].ToString(Settings.DecimalPointFormat) + ",";
+                        data[i] += Tension[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
                 }
                 string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new ChartDataStruct

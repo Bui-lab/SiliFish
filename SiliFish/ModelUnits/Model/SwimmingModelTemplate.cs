@@ -1,17 +1,30 @@
-﻿using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Model
 {
     public class SwimmingModelTemplate
     {
-        public static bool SomiteBased = false;
+        public string ModelName { get; set; }
+        public string ModelDescription { get; set; }
+
+        public ModelDimensions ModelDimensions { get; set; } = new();
+
+        public Settings Settings { get; set; } = new();
+
         public List<CellPoolTemplate> CellPoolTemplates { get; set; } = new();
         public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
         public Dictionary<string, object> Parameters { get; set; }
         public List<StimulusTemplate> AppliedStimuli { get; set; } = new();
 
+        public void ClearLists()
+        {
+            CellPoolTemplates.Clear();
+            InterPoolTemplates.Clear();
+            Parameters?.Clear();
+            AppliedStimuli.Clear();
+        }
         //Needs to be run after created from JSON
         public void LinkObjects()
         {
@@ -72,19 +85,21 @@ namespace SiliFish.ModelUnits
             CellPoolTemplates.Remove(cpt);
         }
 
-        public string ModelName
+        public void BackwardCompatibility()
         {
-            get
+            if (Parameters == null || !Parameters.Any())
+                return;
+            if (Parameters.ContainsKey("General.Name"))
             {
-                return (string)Parameters?.Read("General.Name", "") ?? "";
+                ModelName = Parameters["General.Name"].ToString();
+                Parameters.Remove("General.Name");
             }
-        }
-        public string ModelDescription
-        {
-            get
+            if (Parameters.ContainsKey("General.Description"))
             {
-                return (string)Parameters?.Read("General.Description", "") ?? "";
+                ModelDescription = Parameters["General.Description"].ToString();
+                Parameters.Remove("General.Description");
             }
+            Parameters = ModelDimensions.BackwardCompatibility(Parameters);
         }
 
     }

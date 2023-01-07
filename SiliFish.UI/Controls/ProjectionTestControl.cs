@@ -6,6 +6,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using SiliFish.Services;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.Extensions;
@@ -192,7 +193,7 @@ namespace SiliFish.UI.Controls
                     Color = Color.Red.ToRGBQuoted(),
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
-                    yLabel = $"I ({Util.GetUoM(Settings.UoM, Measure.Current)})"
+                    yLabel = $"I ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})"
                 });
             }
             int numCharts = charts.Any() ? charts.Count : 1;
@@ -201,7 +202,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
         }
         private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
@@ -235,7 +236,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
         }
 
         private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)

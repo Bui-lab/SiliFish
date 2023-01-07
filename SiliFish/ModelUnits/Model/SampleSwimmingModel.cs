@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
-namespace SiliFish
+namespace SiliFish.ModelUnits.Model
 {
     /// <summary>
     /// This class is generated as a sample on how to create a model using the code
@@ -140,7 +140,7 @@ namespace SiliFish
             int colorIndex = 0;
 
             //This sample assumes the model is somite based
-            if (NumberOfSomites <= 0) return;
+            if (ModelDimensions.NumberOfSomites <= 0) return;
             NeuronPools = new List<CellPool>();
             //Spinal cells
             foreach (string key in SpinalNeuronCount.Keys)
@@ -151,10 +151,10 @@ namespace SiliFish
                 //this sample uniformly distributes all of the cell pools across the spinal cord
 
                 int neuronCount = SpinalNeuronCount[key];
-                UniformDistribution xdist = new(SupraSpinalRostralCaudalDistance, SpinalRostralCaudalDistance + SupraSpinalRostralCaudalDistance, true, false);
-                UniformDistribution ydist = new(0, SpinalMedialLateralDistance, true, false);
-                UniformDistribution zdist = new(0, SpinalDorsalVentralDistance, true, false);
-                for (int somite = 0; somite < NumberOfSomites; somite++)
+                UniformDistribution xdist = new(ModelDimensions.SupraSpinalRostralCaudalDistance, ModelDimensions.SpinalRostralCaudalDistance + ModelDimensions.SupraSpinalRostralCaudalDistance, true, false);
+                UniformDistribution ydist = new(0, ModelDimensions.SpinalMedialLateralDistance, true, false);
+                UniformDistribution zdist = new(0, ModelDimensions.SpinalDorsalVentralDistance, true, false);
+                for (int somite = 0; somite < ModelDimensions.NumberOfSomites; somite++)
                 {
                     Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, somite);
                     for (int i = 0; i < neuronCount; i++)
@@ -174,10 +174,10 @@ namespace SiliFish
                 //this sample uniformly distributes all of the cell pools across the spinal cord
 
                 int muscleCount = SpinalNeuronCount[key];
-                UniformDistribution xdist = new(SupraSpinalRostralCaudalDistance, SpinalRostralCaudalDistance + SupraSpinalRostralCaudalDistance, true, false);
-                UniformDistribution ydist = new(0, BodyMedialLateralDistance, true, false);
-                UniformDistribution zdist = new(0, BodyDorsalVentralDistance, true, false);
-                for (int somite = 0; somite < NumberOfSomites; somite++)
+                UniformDistribution xdist = new(ModelDimensions.SupraSpinalRostralCaudalDistance, ModelDimensions.SpinalRostralCaudalDistance + ModelDimensions.SupraSpinalRostralCaudalDistance, true, false);
+                UniformDistribution ydist = new(0, ModelDimensions.BodyMedialLateralDistance, true, false);
+                UniformDistribution zdist = new(0, ModelDimensions.BodyDorsalVentralDistance, true, false);
+                for (int somite = 0; somite < ModelDimensions.NumberOfSomites; somite++)
                 {
                     Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, muscleCount, somite);
                     for (int i = 0; i < muscleCount; i++)
@@ -197,9 +197,9 @@ namespace SiliFish
                 //this sample uniformly distributes all of the cell pools across the brain region
 
                 int neuronCount = SpinalNeuronCount[key];
-                UniformDistribution xdist = new(SupraSpinalRostralCaudalDistance, SpinalRostralCaudalDistance + SupraSpinalRostralCaudalDistance, true, false);
-                UniformDistribution ydist = new(0, SpinalMedialLateralDistance, true, false);
-                UniformDistribution zdist = new(0, SpinalDorsalVentralDistance, true, false);
+                UniformDistribution xdist = new(ModelDimensions.SupraSpinalRostralCaudalDistance, ModelDimensions.SpinalRostralCaudalDistance + ModelDimensions.SupraSpinalRostralCaudalDistance, true, false);
+                UniformDistribution ydist = new(0, ModelDimensions.SpinalMedialLateralDistance, true, false);
+                UniformDistribution zdist = new(0, ModelDimensions.SpinalDorsalVentralDistance, true, false);
                 Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, -1);
                 for (int i = 0; i < neuronCount; i++)
                 {

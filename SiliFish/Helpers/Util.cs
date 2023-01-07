@@ -52,7 +52,7 @@ namespace SiliFish.Helpers
         private (double, double) CalculateRange(double value)
         {
             if (value == 0)
-                return (Settings.GeneticAlgorithmMinValue, Settings.GeneticAlgorithmMaxValue);
+                return (CurrentSettings.Settings.GeneticAlgorithmMinValue, CurrentSettings.Settings.GeneticAlgorithmMaxValue);
             int numDigit = Util.NumOfDigits(value);
             int numDecimal = Util.NumOfDecimalDigits((decimal)value);
             if (numDigit == 0)
@@ -132,7 +132,7 @@ namespace SiliFish.Helpers
                 yMin -= padding;
                 if (yMin > 0 && (yMax - yMin) > yMin / 10) //do not start from zero if the values are close to each other
                     yMin = 0;
-                else if (yMax - yMin < Settings.Epsilon)
+                else if (yMax - yMin < CurrentSettings.Settings.Epsilon)
                     yMin *= 0.9;
                 yMax += padding;
             }

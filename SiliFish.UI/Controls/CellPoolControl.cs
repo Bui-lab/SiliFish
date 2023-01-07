@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using System.ComponentModel;
 using System.Diagnostics;
 using static SiliFish.UI.Controls.DynamicsTestControl;
@@ -22,6 +23,7 @@ namespace SiliFish.UI.Controls
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private DynamicsTestControl dyncontrol = null;
+        private bool SomiteBased = false;
         public CellPoolTemplate PoolTemplate
         {
             get
@@ -41,15 +43,16 @@ namespace SiliFish.UI.Controls
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
-        public CellPoolControl()
+        public CellPoolControl(bool somiteBased)
         {
             InitializeComponent();
+            SomiteBased = somiteBased;
             distConductionVelocity.AbsoluteEnforced = true;
             ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
-            if (SwimmingModelTemplate.SomiteBased)
+            if (SomiteBased)
             {
                 cbAllSomites.Enabled = eSomiteRange.Enabled = true;
                 ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
@@ -71,12 +74,12 @@ namespace SiliFish.UI.Controls
                 if (ddNeuronClass.Items.Count > 0)
                     ddNeuronClass.SelectedIndex = 0;
                 lNeuronClass.Visible = ddNeuronClass.Visible = true;
-                ddCoreType.Text = Settings.DefaultNeuronCore.GetType().ToString();
+                ddCoreType.Text = CurrentSettings.Settings.DefaultNeuronCore.GetType().ToString();
             }
             else
             {
                 lNeuronClass.Visible = ddNeuronClass.Visible = false;
-                ddCoreType.Text = Settings.DefaultMuscleCore.GetType().ToString();
+                ddCoreType.Text = CurrentSettings.Settings.DefaultMuscleCellCore.GetType().ToString();
             }
         }
 
@@ -149,7 +152,7 @@ namespace SiliFish.UI.Controls
             poolTemplate.ColumnIndex2D = (int)e2DColumn.Value;
             poolTemplate.NumOfCells = (int)eNumOfCells.Value;
             poolTemplate.PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), ddSelection.Text);
-            poolTemplate.SomiteRange = SwimmingModelTemplate.SomiteBased && !cbAllSomites.Checked ? eSomiteRange.Text : "";
+            poolTemplate.SomiteRange = SomiteBased && !cbAllSomites.Checked ? eSomiteRange.Text : "";
             poolTemplate.XDistribution = distributionX.GetDistribution();
             poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
             poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();

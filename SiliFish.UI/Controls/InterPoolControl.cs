@@ -2,6 +2,7 @@
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
@@ -14,6 +15,7 @@ namespace SiliFish.UI.Controls
         private bool autoGenerateName = true;
         private InterPoolTemplate interPoolTemplate;
         private Dictionary<string, object> Parameters;
+        private bool SomiteBased = false;
         public override string ToString()
         {
             string activeStatus = !cbActive.Checked ? " (inactive)" :
@@ -21,9 +23,10 @@ namespace SiliFish.UI.Controls
                 "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
-        public InterPoolControl()
+        public InterPoolControl(bool somiteBased)
         {
             InitializeComponent();
+            SomiteBased = somiteBased;
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
@@ -31,7 +34,7 @@ namespace SiliFish.UI.Controls
             ddConnectionType.Items.Add(ConnectionType.Gap);
             ddConnectionType.Items.Add(ConnectionType.Synapse);
             ddConnectionType.Items.Add(ConnectionType.NMJ);
-            if (SwimmingModelTemplate.SomiteBased)
+            if (SomiteBased)
             {
                 lUoD1.Text = lUoD2.Text = "somites";
                 toolTip1.SetToolTip(numMinAscReach, "Set 0 for within somite projections");

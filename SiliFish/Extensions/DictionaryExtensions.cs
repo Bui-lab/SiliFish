@@ -8,6 +8,26 @@ namespace SiliFish.Extensions
 {
     public static class DictionaryExtensions
     {
+        public static int ReadIntegerAndRemoveKey(this Dictionary<string, object> dictionary, string key, int defaultValue = default)
+        {
+            int ret = ReadInteger(dictionary, key, defaultValue);
+            try
+            {
+                dictionary.Remove(key);
+            }
+            catch {  }
+            return ret;
+        }
+        public static double ReadDoubleAndRemoveKey(this Dictionary<string, object> dictionary, string key, double defaultValue = default)
+        {
+            double ret = ReadDouble(dictionary, key, defaultValue);
+            try
+            {
+                dictionary.Remove(key);
+            }
+            catch { }
+            return ret;
+        }
         public static int ReadInteger(this Dictionary<string, object> dictionary, string key, int defaultValue = default)
         {
             try

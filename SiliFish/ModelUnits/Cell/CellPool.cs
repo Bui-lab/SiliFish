@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -252,17 +253,18 @@ namespace SiliFish.ModelUnits
             Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
+            ModelDimensions MD = Model.ModelDimensions;
             List<int> somites;
-            (int firstSomite, int lastSomite) = Util.ParseRange(template.SomiteRange, defMin: 1, defMax: Model.NumberOfSomites);
+            (int firstSomite, int lastSomite) = Util.ParseRange(template.SomiteRange, defMin: 1, defMax: MD.NumberOfSomites);
 
             if (template.PerSomiteOrTotal == CountingMode.PerSomite)
                 somites = Enumerable.Range(firstSomite, lastSomite - firstSomite + 1).ToList();
             else somites = new List<int>() { -1 };
 
             double somiteLength = 0;
-            if (template.PerSomiteOrTotal == CountingMode.Total && SwimmingModelTemplate.SomiteBased)
+            if (template.PerSomiteOrTotal == CountingMode.Total && MD.NumberOfSomites > 0)
             {
-                somiteLength = Model.SpinalRostralCaudalDistance/ Model.NumberOfSomites;
+                somiteLength = MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
             }
             foreach (int somite in somites)
             {
@@ -277,7 +279,7 @@ namespace SiliFish.ModelUnits
                 {
                     int actualSomite = somite;
                     //if the model is somite based but the distribution is based on the total length, calculate the somite index
-                    if (somite < 0 && SwimmingModelTemplate.SomiteBased)
+                    if (somite < 0 && MD.NumberOfSomites > 0)
                     {
                         double x = coordinates[i].X;
                         actualSomite = 0;

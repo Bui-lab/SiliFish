@@ -7,6 +7,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
 using SiliFish.UI.Extensions;
@@ -52,17 +53,17 @@ namespace SiliFish.UI
                 InitAsync();
                 Wait();
                 splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
-                Settings.TempFolder = Path.GetTempPath() + "SiliFish";
-                Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
-                if (!Directory.Exists(Settings.TempFolder))
-                    Directory.CreateDirectory(Settings.TempFolder);
+                ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
+                ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+                if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
+                    Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
                 else
                 {
-                    foreach (string f in Directory.GetFiles(Settings.TempFolder))
+                    foreach (string f in Directory.GetFiles(ModelTemplate.Settings.TempFolder))
                         File.Delete(f);
                 }
-                if (!Directory.Exists(Settings.OutputFolder))
-                    Directory.CreateDirectory(Settings.OutputFolder);
+                if (!Directory.Exists(ModelTemplate.Settings.OutputFolder))
+                    Directory.CreateDirectory(ModelTemplate.Settings.OutputFolder);
                 webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webView3DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
@@ -97,7 +98,8 @@ namespace SiliFish.UI
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
                 tabParams.BackColor = Color.White;
-                propertyGrid1.SelectedObject = new CustomObjectWrapper(new Settings(), true);
+
+                LoadGeneralParamsAndSettings();
             }
             catch (Exception ex)
             {
@@ -172,10 +174,10 @@ namespace SiliFish.UI
                 {
                     string target = (sender as CoreWebView2).DocumentTitle;
                     string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(Settings.OutputFolder, prefix + ".html");
+                    target = Path.Combine(ModelTemplate.Settings.OutputFolder, prefix + ".html");
                     int suffix = 0;
                     while (File.Exists(target))
-                        target = Path.Combine(Settings.OutputFolder, prefix + (suffix++).ToString() + ".html");
+                        target = Path.Combine(ModelTemplate.Settings.OutputFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
                     RegenerateWebview(sender as WebView2);
                     Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
@@ -206,7 +208,6 @@ namespace SiliFish.UI
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     RefreshModel();
             }
-
         }
         private void RefreshModelFromTemplate()
         {
@@ -216,14 +217,34 @@ namespace SiliFish.UI
         private void SwitchToModel()
         {
             if (Model == null) return;
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.ModelDimensions.NumberOfSomites > 0;
             LoadParams(Model.ModelRun ? lastRunParams : lastSavedParams);
             LoadModelTemplate();
-            propModel.SelectedObject = Model;
+        }
+
+        private void LoadGeneralParamsAndSettings()
+        {
+            //General Params
+            eModelName.Text = ModelTemplate.ModelName;
+            eModelDescription.Text = ModelTemplate.ModelDescription;
+            propModelDimensions.SelectedObject = ModelTemplate.ModelDimensions;
+            
+            //Settings
+            if (ddDefaultNeuronCore.Items.Count == 0)
+                ddDefaultNeuronCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
+            ddDefaultNeuronCore.Text = ModelTemplate.Settings.DefaultNeuronCore;
+            if (ddDefaultMuscleCellCore.Items.Count == 0)
+                ddDefaultMuscleCellCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
+            ddDefaultMuscleCellCore.Text = ModelTemplate.Settings.DefaultMuscleCellCore;
+            eTemporaryFolder.Text = ModelTemplate.Settings.TempFolder;
+            eOutputFolder.Text = ModelTemplate.Settings.OutputFolder;
+            propSettings.SelectedObject = ModelTemplate.Settings;
         }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Model = new CustomSwimmingModel(null);
+            ModelTemplate = new();
+            Model = new CustomSwimmingModel(ModelTemplate);
+            LoadGeneralParamsAndSettings();
             LoadParams(Model.GetParameters());
         }
 
@@ -237,17 +258,9 @@ namespace SiliFish.UI
             listConnections.ClearItems();
             listStimuli.ClearItems();
         }
-
-        private void LoadGeneralParams(Dictionary<string, object> paramDict)
-        {
-            eModelName.Text = paramDict.Read("General.Name", "");
-            eModelDescription.Text = paramDict.Read("General.Description", "");
-            propModel.SelectedObject = Model;
-
-        }
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.ModelDimensions.NumberOfSomites > 0;
 
             if (ParamDict == null) return;
             this.Text = $"SiliFish {Model.ModelName}";
@@ -270,11 +283,6 @@ namespace SiliFish.UI
             foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
             {
                 Dictionary<string, object> SubDict = ParamDict.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
-                if (group == "General")
-                {
-                    LoadGeneralParams(SubDict);
-                    continue;
-                }
                 if (SubDict == null || SubDict.Count == 0)
                     SubDict = currentParams.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
                 TabPage tabPage = new()
@@ -306,13 +314,6 @@ namespace SiliFish.UI
                     };
                     flowPanel.Controls.Add(lbl);
                     TextBox textBox = new();
-                    if (group == "General")
-                    {
-                        textBox.Width = 200;
-                        textBox.Multiline = true;
-                        textBox.Height = 60;
-                        textBox.ScrollBars = ScrollBars.Both;
-                    }
                     textBox.Tag = kvp.Value;
                     textBox.Text = kvp.Value?.ToString();
                     flowPanel.Controls.Add(textBox);
@@ -326,22 +327,6 @@ namespace SiliFish.UI
             }
 
             tabParams.TabPages.Add(tabSettings);
-        }
-
-        private void ReadGeneralParams(Dictionary<string, object> paramDict)
-        {
-            paramDict.Add("General.Name", eModelName.Text);
-            paramDict.Add("General.Description", eModelDescription.Text);
-            paramDict.Add("General.NumberOfSomites", eNumSomites.Value);
-            paramDict.Add("General.SupraSpinalRostralCaudalDistance", eSupraSpinalRostraCaudal.Value);
-            paramDict.Add("General.SupraSpinalDorsalVentralDistance", eSupraSpinalDorsalVentral.Value);
-            paramDict.Add("General.SupraSpinalMedialLateralDistance", eSupraSpinalMedialLateral.Value);
-            paramDict.Add("General.SpinalRostralCaudalDistance", eSpinalRostraCaudal.Value);
-            paramDict.Add("General.SpinalDorsalVentralDistance", eSpinalDorsalVentral.Value);
-            paramDict.Add("General.SpinalMedialLateralDistance", eSpinalMedialLateral.Value);
-            paramDict.Add("General.SpinalBodyPosition", eSpinalBodyPosition.Value);
-            paramDict.Add("General.BodyDorsalVentralDistance", eBodyDorsalVentral.Value);
-            paramDict.Add("General.BodyMedialLateralDistance", eBodyMedialLateral.Value);
         }
 
         private void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
@@ -388,7 +373,6 @@ namespace SiliFish.UI
         private Dictionary<string, object> ReadParams()
         {
             Dictionary<string, object> ParamDict = new();
-            ReadGeneralParams(ParamDict);
             foreach (TabPage page in tabParams.TabPages)
             {
                 if (page.Tag?.ToString() != "Param")
@@ -473,7 +457,10 @@ namespace SiliFish.UI
         {
             try
             {
-                ModelTemplate = new SwimmingModelTemplate();
+                ModelTemplate.ClearLists();//only lists are cleared.
+                                           //The general parameters are read from the proeprties grid automatically
+                ModelTemplate.ModelName = eModelName.Text;
+                ModelTemplate.ModelDescription = eModelDescription.Text;
 
                 ReadModelTemplatePools(includeHidden);
                 ReadModelTemplateInterPools(includeHidden);
@@ -542,12 +529,12 @@ namespace SiliFish.UI
                 return false;
             }
         }
-        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkSaveTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SaveModelTemplate();
         }
 
-        private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkLoadTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -561,6 +548,8 @@ namespace SiliFish.UI
                     try
                     {
                         ModelTemplate = (SwimmingModelTemplate)JsonUtil.ToObject(typeof(SwimmingModelTemplate), json);
+                        ModelTemplate.BackwardCompatibility();
+                        LoadGeneralParamsAndSettings();
                     }
                     catch
                     {
@@ -635,8 +624,9 @@ namespace SiliFish.UI
             modifiedJncs = modifiedPools = false;
 
             PopulatePlotPools();
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.NumberOfSomites > 0;
-            eKinematicsSomite.Maximum = Model.NumberOfSomites > 0 ? Model.NumberOfSomites : Model.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
+            int NumberOfSomites = Model.ModelDimensions.NumberOfSomites;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = NumberOfSomites > 0;
+            eKinematicsSomite.Maximum = NumberOfSomites > 0 ? NumberOfSomites : Model.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
 
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
@@ -760,7 +750,7 @@ namespace SiliFish.UI
             else
             {
                 ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled = Model?.NumberOfSomites > 0;
+                    ePlotSomiteSelection.Enabled = Model?.ModelDimensions.NumberOfSomites > 0;
                 ddPlotCellSelection.Enabled =
                     ePlotCellSelection.Enabled =
                     ddPlotSagittal.Enabled =
@@ -902,7 +892,7 @@ namespace SiliFish.UI
         }
         private void CompletePlotHTML()
         {
-            webViewPlot.NavigateTo(htmlPlot, Settings.TempFolder, ref tempFile);
+            webViewPlot.NavigateTo(htmlPlot, ModelTemplate.Settings.TempFolder, ref tempFile);
             UseWaitCursor = false;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
@@ -1052,7 +1042,7 @@ namespace SiliFish.UI
             RefreshModelSafeMode();
             TwoDModelGenerator modelGenerator = new();
             string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
-            webView2DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webView2DModel.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
 
         }
         private void btnGenerate2DModel_Click(object sender, EventArgs e)
@@ -1095,7 +1085,7 @@ namespace SiliFish.UI
                 ThreeDModelGenerator threeDModelGenerator = new();
                 string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem, cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text);
 
-                webView3DModel.NavigateTo(html, Settings.TempFolder, ref tempFile);
+                webView3DModel.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
             }
             catch (Exception ex)
             {
@@ -1149,7 +1139,7 @@ namespace SiliFish.UI
         }
         private void CompleteAnimation()
         {
-            webViewAnimation.NavigateTo(htmlAnimation, Settings.TempFolder, ref tempFile);
+            webViewAnimation.NavigateTo(htmlAnimation, ModelTemplate.Settings.TempFolder, ref tempFile);
             linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
             lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
             btnAnimate.Enabled = true;
@@ -1213,9 +1203,7 @@ namespace SiliFish.UI
 
         private void btnDisplayTemplateJSON_Click(object sender, EventArgs e)
         {
-            if (Model == null) return;
-
-            RefreshModelSafeMode();
+            ReadModelTemplate(includeHidden: true);
             try
             {
                 eTemplateJSON.Text = JsonUtil.ToJson(ModelTemplate);
@@ -1234,10 +1222,10 @@ namespace SiliFish.UI
             {
                 if (JsonUtil.ToObject(typeof(SwimmingModelTemplate), eTemplateJSON.Text) is SwimmingModelTemplate temp)
                 {
-
                     ModelTemplate = temp;
                     ModelTemplate.LinkObjects();
                     LoadModelTemplate();
+                    LoadGeneralParamsAndSettings();
                     RefreshModelFromTemplate();
                     MessageBox.Show("Updated template is loaded.");
                 }
@@ -1332,7 +1320,7 @@ namespace SiliFish.UI
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
             ControlContainer frmControl = new();
-            CellPoolControl cpl = new();
+            CellPoolControl cpl = new(ModelTemplate.ModelDimensions.NumberOfSomites > 0);
             cpl.LoadPool += Cpl_LoadPool;
             cpl.SavePool += Cpl_SavePool;
 
@@ -1454,7 +1442,7 @@ namespace SiliFish.UI
         private InterPoolTemplate OpenConnectionDialog(InterPoolTemplate interpool)
         {
             ControlContainer frmControl = new();
-            InterPoolControl ipl = new();
+            InterPoolControl ipl = new(ModelTemplate.ModelDimensions.NumberOfSomites > 0);
 
             ipl.SetInterPoolTemplate(ModelTemplate.CellPoolTemplates, interpool, ModelTemplate);
             frmControl.AddControl(ipl);
@@ -1654,7 +1642,7 @@ namespace SiliFish.UI
                         }
                     }
                 }
-                foreach (string f in Directory.GetFiles(Settings.TempFolder))
+                foreach (string f in Directory.GetFiles(ModelTemplate.Settings.TempFolder))
                     File.Delete(f);
             }
             catch { }
@@ -1688,7 +1676,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Settings.OutputFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.OutputFolder);
             }
             catch { }
         }
@@ -1697,7 +1685,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Settings.TempFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.TempFolder);
             }
             catch { }
         }
@@ -1710,15 +1698,7 @@ namespace SiliFish.UI
             about.ShowDialog();
         }
 
-
-
-
-        private void eNumSomites_ValueChanged(object sender, EventArgs e)
-        {
-            SwimmingModelTemplate.SomiteBased = eNumSomites.Value > 0;
-            //TODO consider the case where modeltemplate is not used
-        }
-        
+       
         private void edt_ValueChanged(object sender, EventArgs e)
         {
             eAnimationdt.Minimum = edt.Value;
@@ -1733,7 +1713,7 @@ namespace SiliFish.UI
                 (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
             string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
-            webViewSummaryV.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewSummaryV.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
             eEpisodesLeft.Text = "";
             eEpisodesRight.Text = "";
             foreach (SwimmingEpisode episode in episodesLeft)
@@ -1758,5 +1738,34 @@ namespace SiliFish.UI
             frmControl.ShowDialog();
         }
 
+        private void ddDefaultNeuronCore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ModelTemplate.Settings.DefaultNeuronCore = ddDefaultNeuronCore.Text;
+        }
+
+        private void ddDefaultMuscleCellCore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ModelTemplate.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
+        }
+
+        private void eOutputFolder_Click(object sender, EventArgs e)
+        {
+            browseFolder.InitialDirectory = eOutputFolder.Text;
+            if (browseFolder.ShowDialog() == DialogResult.OK)
+            {
+                ModelTemplate.Settings.OutputFolder = 
+                    eOutputFolder.Text = browseFolder.SelectedPath;                
+            }
+        }
+
+        private void eTemporaryFolder_Click(object sender, EventArgs e)
+        {
+            browseFolder.InitialDirectory = eTemporaryFolder.Text;
+            if (browseFolder.ShowDialog() == DialogResult.OK)
+            {
+                ModelTemplate.Settings.TempFolder = 
+                    eTemporaryFolder.Text = browseFolder.SelectedPath;
+            }
+        }
     }
 }

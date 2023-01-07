@@ -6,6 +6,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using SiliFish.Services;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.Extensions;
@@ -125,7 +126,7 @@ namespace SiliFish.UI.Controls
             if (parameters != null)
                 Parameters = parameters;
             pBottomBottom.Visible = !testMode;
-            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", Settings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
+            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", CurrentSettings.Settings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
           
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
@@ -165,7 +166,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
         }
 
         private void SensitivityAnalysisRheobase_RunAnalysis(object sender, EventArgs e)
@@ -204,7 +205,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
         }
 
         private void GaControl_OnLoadParams(object sender, EventArgs e)
@@ -372,7 +373,7 @@ namespace SiliFish.UI.Controls
                     Color = Color.Red.ToRGBQuoted(),
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
-                    yLabel = $"I ({Util.GetUoM(Settings.UoM, Measure.Current)})"
+                    yLabel = $"I ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})"
                 });
             }
             int numCharts = charts.Any() ? charts.Count : 1;
@@ -381,7 +382,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
         }
         private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
@@ -415,7 +416,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
         }
 
         private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
@@ -493,8 +494,8 @@ namespace SiliFish.UI.Controls
                     {
                         if (double.TryParse(eRheobase.Text, out double rheobase))
                         {
-                            stimValues = Settings.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
-                            columnNames.AddRange(Settings.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
+                            stimValues = CurrentSettings.Settings.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
+                            columnNames.AddRange(CurrentSettings.Settings.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
                         }
                     }
                     else //if (rbMultipleEntry.Checked)
@@ -548,7 +549,7 @@ namespace SiliFish.UI.Controls
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
             {
-                eRheobase.Text = d.ToString(Settings.DecimalPointFormat);
+                eRheobase.Text = d.ToString(CurrentSettings.Settings.DecimalPointFormat);
                 lRheobaseWarning.Visible = false;
                 rbRheobaseBasedStimulus.ForeColor = Color.Black;
             }

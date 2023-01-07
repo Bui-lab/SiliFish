@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,11 +74,11 @@ namespace SiliFish
         private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(SwimmingModel model, int startIndex, int endIndex)
         {
             if (!model.ModelRun) return (null, null);
-            if (model.NumberOfSomites <= 0)
+            if (model.ModelDimensions.NumberOfSomites <= 0)
                 return GenerateSpineVelAndAngleNoSomite(model, startIndex, endIndex);
 
             int nmax = endIndex - startIndex + 1;
-            int nSomite = model.NumberOfSomites;
+            int nSomite = model.ModelDimensions.NumberOfSomites;
 
             // Allocating arrays for velocity and position
             double[,] vel = new double[nSomite, nmax];

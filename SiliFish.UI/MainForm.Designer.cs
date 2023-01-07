@@ -41,7 +41,8 @@ namespace SiliFish.UI
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.tabParams = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
-            this.propModel = new System.Windows.Forms.PropertyGrid();
+            this.splitGeneral = new System.Windows.Forms.SplitContainer();
+            this.propModelDimensions = new System.Windows.Forms.PropertyGrid();
             this.pBodyDiagrams = new System.Windows.Forms.Panel();
             this.picLarva = new System.Windows.Forms.PictureBox();
             this.eModelDescription = new System.Windows.Forms.TextBox();
@@ -61,7 +62,16 @@ namespace SiliFish.UI
             this.tabStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.tabSettings = new System.Windows.Forms.TabPage();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.propSettings = new System.Windows.Forms.PropertyGrid();
+            this.pSettingsTop = new System.Windows.Forms.Panel();
+            this.eTemporaryFolder = new System.Windows.Forms.TextBox();
+            this.eOutputFolder = new System.Windows.Forms.TextBox();
+            this.lTemporaryFolder = new System.Windows.Forms.Label();
+            this.lOutputFolder = new System.Windows.Forms.Label();
+            this.ddDefaultMuscleCellCore = new System.Windows.Forms.ComboBox();
+            this.lDefaultMuscleCellCore = new System.Windows.Forms.Label();
+            this.ddDefaultNeuronCore = new System.Windows.Forms.ComboBox();
+            this.lDefaultNeuronCore = new System.Windows.Forms.Label();
             this.pParamBottom = new System.Windows.Forms.Panel();
             this.ldtEuler = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
@@ -81,7 +91,7 @@ namespace SiliFish.UI
             this.pMain = new System.Windows.Forms.Panel();
             this.linkLoadModel = new System.Windows.Forms.LinkLabel();
             this.lParameters = new System.Windows.Forms.Label();
-            this.linkSaveModel = new System.Windows.Forms.LinkLabel();
+            this.linkSaveTemplate = new System.Windows.Forms.LinkLabel();
             this.tabOutputs = new System.Windows.Forms.TabControl();
             this.tabPlot = new System.Windows.Forms.TabPage();
             this.tabPlotSub = new System.Windows.Forms.TabControl();
@@ -200,6 +210,7 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -207,6 +218,10 @@ namespace SiliFish.UI
             this.splitMain.SuspendLayout();
             this.tabParams.SuspendLayout();
             this.tabGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitGeneral)).BeginInit();
+            this.splitGeneral.Panel1.SuspendLayout();
+            this.splitGeneral.Panel2.SuspendLayout();
+            this.splitGeneral.SuspendLayout();
             this.pBodyDiagrams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).BeginInit();
             this.tabCellPools.SuspendLayout();
@@ -218,6 +233,7 @@ namespace SiliFish.UI
             this.pConnectionTop.SuspendLayout();
             this.tabStimuli.SuspendLayout();
             this.tabSettings.SuspendLayout();
+            this.pSettingsTop.SuspendLayout();
             this.pParamBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
@@ -397,8 +413,7 @@ namespace SiliFish.UI
             // tabGeneral
             // 
             this.tabGeneral.BackColor = System.Drawing.Color.White;
-            this.tabGeneral.Controls.Add(this.propModel);
-            this.tabGeneral.Controls.Add(this.pBodyDiagrams);
+            this.tabGeneral.Controls.Add(this.splitGeneral);
             this.tabGeneral.Controls.Add(this.eModelDescription);
             this.tabGeneral.Controls.Add(this.eModelName);
             this.tabGeneral.Controls.Add(this.lModelDescription);
@@ -410,23 +425,41 @@ namespace SiliFish.UI
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
             // 
-            // propModel
+            // splitGeneral
             // 
-            this.propModel.Location = new System.Drawing.Point(5, 84);
-            this.propModel.Name = "propModel";
-            this.propModel.Size = new System.Drawing.Size(169, 169);
-            this.propModel.TabIndex = 60;
+            this.splitGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitGeneral.Location = new System.Drawing.Point(0, 77);
+            this.splitGeneral.Name = "splitGeneral";
+            // 
+            // splitGeneral.Panel1
+            // 
+            this.splitGeneral.Panel1.Controls.Add(this.propModelDimensions);
+            // 
+            // splitGeneral.Panel2
+            // 
+            this.splitGeneral.Panel2.Controls.Add(this.pBodyDiagrams);
+            this.splitGeneral.Size = new System.Drawing.Size(540, 348);
+            this.splitGeneral.SplitterDistance = 180;
+            this.splitGeneral.TabIndex = 61;
+            // 
+            // propModelDimensions
+            // 
+            this.propModelDimensions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propModelDimensions.Location = new System.Drawing.Point(0, 0);
+            this.propModelDimensions.Name = "propModelDimensions";
+            this.propModelDimensions.Size = new System.Drawing.Size(180, 348);
+            this.propModelDimensions.TabIndex = 60;
             // 
             // pBodyDiagrams
             // 
-            this.pBodyDiagrams.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pBodyDiagrams.AutoScroll = true;
             this.pBodyDiagrams.Controls.Add(this.picLarva);
-            this.pBodyDiagrams.Location = new System.Drawing.Point(192, 77);
+            this.pBodyDiagrams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pBodyDiagrams.Location = new System.Drawing.Point(0, 0);
             this.pBodyDiagrams.Name = "pBodyDiagrams";
-            this.pBodyDiagrams.Size = new System.Drawing.Size(348, 352);
+            this.pBodyDiagrams.Size = new System.Drawing.Size(356, 348);
             this.pBodyDiagrams.TabIndex = 15;
             // 
             // picLarva
@@ -435,7 +468,7 @@ namespace SiliFish.UI
             this.picLarva.Image = ((System.Drawing.Image)(resources.GetObject("picLarva.Image")));
             this.picLarva.Location = new System.Drawing.Point(0, 0);
             this.picLarva.Name = "picLarva";
-            this.picLarva.Size = new System.Drawing.Size(348, 352);
+            this.picLarva.Size = new System.Drawing.Size(356, 348);
             this.picLarva.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picLarva.TabIndex = 12;
             this.picLarva.TabStop = false;
@@ -630,7 +663,8 @@ namespace SiliFish.UI
             // 
             // tabSettings
             // 
-            this.tabSettings.Controls.Add(this.propertyGrid1);
+            this.tabSettings.Controls.Add(this.propSettings);
+            this.tabSettings.Controls.Add(this.pSettingsTop);
             this.tabSettings.Location = new System.Drawing.Point(4, 24);
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.Size = new System.Drawing.Size(540, 425);
@@ -638,13 +672,113 @@ namespace SiliFish.UI
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
             // 
-            // propertyGrid1
+            // propSettings
             // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(540, 425);
-            this.propertyGrid1.TabIndex = 0;
+            this.propSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propSettings.Location = new System.Drawing.Point(0, 112);
+            this.propSettings.Name = "propSettings";
+            this.propSettings.Size = new System.Drawing.Size(540, 313);
+            this.propSettings.TabIndex = 0;
+            // 
+            // pSettingsTop
+            // 
+            this.pSettingsTop.Controls.Add(this.eTemporaryFolder);
+            this.pSettingsTop.Controls.Add(this.eOutputFolder);
+            this.pSettingsTop.Controls.Add(this.lTemporaryFolder);
+            this.pSettingsTop.Controls.Add(this.lOutputFolder);
+            this.pSettingsTop.Controls.Add(this.ddDefaultMuscleCellCore);
+            this.pSettingsTop.Controls.Add(this.lDefaultMuscleCellCore);
+            this.pSettingsTop.Controls.Add(this.ddDefaultNeuronCore);
+            this.pSettingsTop.Controls.Add(this.lDefaultNeuronCore);
+            this.pSettingsTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pSettingsTop.Location = new System.Drawing.Point(0, 0);
+            this.pSettingsTop.Name = "pSettingsTop";
+            this.pSettingsTop.Size = new System.Drawing.Size(540, 112);
+            this.pSettingsTop.TabIndex = 1;
+            // 
+            // eTemporaryFolder
+            // 
+            this.eTemporaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eTemporaryFolder.Location = new System.Drawing.Point(153, 84);
+            this.eTemporaryFolder.Name = "eTemporaryFolder";
+            this.eTemporaryFolder.ReadOnly = true;
+            this.eTemporaryFolder.Size = new System.Drawing.Size(378, 23);
+            this.eTemporaryFolder.TabIndex = 7;
+            this.toolTip.SetToolTip(this.eTemporaryFolder, "Folder that temporary files are saved under. Will be cleared after the program ex" +
+        "its.");
+            this.eTemporaryFolder.Click += new System.EventHandler(this.eTemporaryFolder_Click);
+            // 
+            // eOutputFolder
+            // 
+            this.eOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eOutputFolder.Location = new System.Drawing.Point(153, 58);
+            this.eOutputFolder.Name = "eOutputFolder";
+            this.eOutputFolder.ReadOnly = true;
+            this.eOutputFolder.Size = new System.Drawing.Size(378, 23);
+            this.eOutputFolder.TabIndex = 6;
+            this.toolTip.SetToolTip(this.eOutputFolder, "The default folder that output files are saved under.");
+            this.eOutputFolder.Click += new System.EventHandler(this.eOutputFolder_Click);
+            // 
+            // lTemporaryFolder
+            // 
+            this.lTemporaryFolder.AutoSize = true;
+            this.lTemporaryFolder.Location = new System.Drawing.Point(8, 88);
+            this.lTemporaryFolder.Name = "lTemporaryFolder";
+            this.lTemporaryFolder.Size = new System.Drawing.Size(99, 15);
+            this.lTemporaryFolder.TabIndex = 5;
+            this.lTemporaryFolder.Text = "Temporary Folder";
+            this.toolTip.SetToolTip(this.lTemporaryFolder, "Folder that temporary files are saved under. Will be cleared after the program ex" +
+        "its.");
+            // 
+            // lOutputFolder
+            // 
+            this.lOutputFolder.AutoSize = true;
+            this.lOutputFolder.Location = new System.Drawing.Point(8, 61);
+            this.lOutputFolder.Name = "lOutputFolder";
+            this.lOutputFolder.Size = new System.Drawing.Size(81, 15);
+            this.lOutputFolder.TabIndex = 4;
+            this.lOutputFolder.Text = "Output Folder";
+            this.toolTip.SetToolTip(this.lOutputFolder, "The default folder that output files are saved under.");
+            // 
+            // ddDefaultMuscleCellCore
+            // 
+            this.ddDefaultMuscleCellCore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddDefaultMuscleCellCore.FormattingEnabled = true;
+            this.ddDefaultMuscleCellCore.Location = new System.Drawing.Point(153, 32);
+            this.ddDefaultMuscleCellCore.Name = "ddDefaultMuscleCellCore";
+            this.ddDefaultMuscleCellCore.Size = new System.Drawing.Size(187, 23);
+            this.ddDefaultMuscleCellCore.TabIndex = 3;
+            this.ddDefaultMuscleCellCore.SelectedIndexChanged += new System.EventHandler(this.ddDefaultMuscleCellCore_SelectedIndexChanged);
+            // 
+            // lDefaultMuscleCellCore
+            // 
+            this.lDefaultMuscleCellCore.AutoSize = true;
+            this.lDefaultMuscleCellCore.Location = new System.Drawing.Point(8, 35);
+            this.lDefaultMuscleCellCore.Name = "lDefaultMuscleCellCore";
+            this.lDefaultMuscleCellCore.Size = new System.Drawing.Size(137, 15);
+            this.lDefaultMuscleCellCore.TabIndex = 2;
+            this.lDefaultMuscleCellCore.Text = "Default Muscle Cell Core";
+            // 
+            // ddDefaultNeuronCore
+            // 
+            this.ddDefaultNeuronCore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddDefaultNeuronCore.FormattingEnabled = true;
+            this.ddDefaultNeuronCore.Location = new System.Drawing.Point(153, 5);
+            this.ddDefaultNeuronCore.Name = "ddDefaultNeuronCore";
+            this.ddDefaultNeuronCore.Size = new System.Drawing.Size(187, 23);
+            this.ddDefaultNeuronCore.TabIndex = 1;
+            this.ddDefaultNeuronCore.SelectedIndexChanged += new System.EventHandler(this.ddDefaultNeuronCore_SelectedIndexChanged);
+            // 
+            // lDefaultNeuronCore
+            // 
+            this.lDefaultNeuronCore.AutoSize = true;
+            this.lDefaultNeuronCore.Location = new System.Drawing.Point(8, 8);
+            this.lDefaultNeuronCore.Name = "lDefaultNeuronCore";
+            this.lDefaultNeuronCore.Size = new System.Drawing.Size(116, 15);
+            this.lDefaultNeuronCore.TabIndex = 0;
+            this.lDefaultNeuronCore.Text = "Default Neuron Core";
             // 
             // pParamBottom
             // 
@@ -877,7 +1011,7 @@ namespace SiliFish.UI
             this.pMain.BackColor = System.Drawing.Color.WhiteSmoke;
             this.pMain.Controls.Add(this.linkLoadModel);
             this.pMain.Controls.Add(this.lParameters);
-            this.pMain.Controls.Add(this.linkSaveModel);
+            this.pMain.Controls.Add(this.linkSaveTemplate);
             this.pMain.Controls.Add(this.linkClearModel);
             this.pMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMain.Location = new System.Drawing.Point(0, 0);
@@ -889,13 +1023,13 @@ namespace SiliFish.UI
             // 
             this.linkLoadModel.AutoSize = true;
             this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadModel.Location = new System.Drawing.Point(220, 10);
+            this.linkLoadModel.Location = new System.Drawing.Point(260, 10);
             this.linkLoadModel.Name = "linkLoadModel";
-            this.linkLoadModel.Size = new System.Drawing.Size(70, 15);
+            this.linkLoadModel.Size = new System.Drawing.Size(84, 15);
             this.linkLoadModel.TabIndex = 4;
             this.linkLoadModel.TabStop = true;
-            this.linkLoadModel.Text = "Load Model";
-            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadModel_LinkClicked);
+            this.linkLoadModel.Text = "Load Template";
+            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadTemplate_LinkClicked);
             // 
             // lParameters
             // 
@@ -907,17 +1041,17 @@ namespace SiliFish.UI
             this.lParameters.TabIndex = 0;
             this.lParameters.Text = "Model Parameters";
             // 
-            // linkSaveModel
+            // linkSaveTemplate
             // 
-            this.linkSaveModel.AutoSize = true;
-            this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveModel.Location = new System.Drawing.Point(135, 10);
-            this.linkSaveModel.Name = "linkSaveModel";
-            this.linkSaveModel.Size = new System.Drawing.Size(68, 15);
-            this.linkSaveModel.TabIndex = 3;
-            this.linkSaveModel.TabStop = true;
-            this.linkSaveModel.Text = "Save Model";
-            this.linkSaveModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModel_LinkClicked);
+            this.linkSaveTemplate.AutoSize = true;
+            this.linkSaveTemplate.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkSaveTemplate.Location = new System.Drawing.Point(135, 10);
+            this.linkSaveTemplate.Name = "linkSaveTemplate";
+            this.linkSaveTemplate.Size = new System.Drawing.Size(82, 15);
+            this.linkSaveTemplate.TabIndex = 3;
+            this.linkSaveTemplate.TabStop = true;
+            this.linkSaveTemplate.Text = "Save Template";
+            this.linkSaveTemplate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveTemplate_LinkClicked);
             // 
             // tabOutputs
             // 
@@ -2417,6 +2551,10 @@ namespace SiliFish.UI
             this.tabParams.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.tabGeneral.PerformLayout();
+            this.splitGeneral.Panel1.ResumeLayout(false);
+            this.splitGeneral.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitGeneral)).EndInit();
+            this.splitGeneral.ResumeLayout(false);
             this.pBodyDiagrams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).EndInit();
             this.tabCellPools.ResumeLayout(false);
@@ -2430,6 +2568,8 @@ namespace SiliFish.UI
             this.pConnectionTop.PerformLayout();
             this.tabStimuli.ResumeLayout(false);
             this.tabSettings.ResumeLayout(false);
+            this.pSettingsTop.ResumeLayout(false);
+            this.pSettingsTop.PerformLayout();
             this.pParamBottom.ResumeLayout(false);
             this.pParamBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
@@ -2531,7 +2671,7 @@ namespace SiliFish.UI
         private Label lAnimationEnd;
         private Label lms4;
         private TabControl tabParams;
-        private LinkLabel linkSaveModel;
+        private LinkLabel linkSaveTemplate;
         private Panel pMain;
         private LinkLabel linkLoadModel;
         private SaveFileDialog saveFileJson;
@@ -2666,7 +2806,18 @@ namespace SiliFish.UI
         private CheckBox cb3DAllSomites;
         private LinkLabel linkExportPlotData;
         private TabPage tabSettings;
-        private PropertyGrid propertyGrid1;
-        private PropertyGrid propModel;
+        private PropertyGrid propSettings;
+        private PropertyGrid propModelDimensions;
+        private SplitContainer splitGeneral;
+        private Panel pSettingsTop;
+        private ComboBox ddDefaultMuscleCellCore;
+        private Label lDefaultMuscleCellCore;
+        private ComboBox ddDefaultNeuronCore;
+        private Label lDefaultNeuronCore;
+        private TextBox eTemporaryFolder;
+        private TextBox eOutputFolder;
+        private Label lTemporaryFolder;
+        private Label lOutputFolder;
+        private FolderBrowserDialog browseFolder;
     }
 }

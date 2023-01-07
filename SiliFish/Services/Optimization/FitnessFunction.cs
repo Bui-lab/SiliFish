@@ -66,12 +66,12 @@ namespace SiliFish.Services.Optimization
         /// <returns></returns>
         public double CalculateFitness(CellCoreUnit core, out double rheobase)
         {
-            rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: Settings.RheobaseInfinity, dt: 0.1);
+            rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: CurrentSettings.Settings.RheobaseInfinity, dt: 0.1);
             if (rheobase < 0) return 0;
             if (ValueMin <= rheobase && ValueMax >= rheobase)
                 return Weight;
             double range = ValueMax - ValueMin;
-            if (range < Settings.Epsilon)
+            if (range < CurrentSettings.Settings.Epsilon)
                 range = ValueMin / 2;
             if (rheobase <= ValueMin - range || rheobase >= ValueMax + range)
                 return 0;

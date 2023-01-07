@@ -33,7 +33,7 @@ namespace SiliFish.UI.Controls
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     dist = distControl.GetDistribution();
-                    if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < Settings.Epsilon)
+                    if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon)
                     {
                         dgDynamics[colValue.Index, rowind].Value = dist.RangeStart;
                         dgDynamics[colValue.Index, rowind].Tag = null;
@@ -50,7 +50,7 @@ namespace SiliFish.UI.Controls
         {
             if (dgDynamics[colValue.Index, e.RowIndex].Tag is Distribution dist)
             {
-                if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < Settings.Epsilon)
+                if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon)
                     dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
                 else
                     dgDynamics[colValue.Index, e.RowIndex].ReadOnly = true;

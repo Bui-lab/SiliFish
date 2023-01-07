@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace SiliFish
+namespace SiliFish.ModelUnits.Model
 {
 
     public struct RunParam
@@ -58,30 +58,9 @@ namespace SiliFish
         private string modelName;
         public string ModelName { get => modelName; set => modelName = value; }
 
-        [Browsable(false)] public string ModelDescription { get; set; }
+        public string ModelDescription { get; set; }
 
-        [DisplayName("Rostral-Caudal"), Category("Supra Spinal")]
-        public double SupraSpinalRostralCaudalDistance { get; set; }
-        [DisplayName("Dorsal-Ventral"), Category("Supra Spinal")]
-        public double SupraSpinalDorsalVentralDistance { get; set; }
-        [DisplayName("Medial-Lateral"), Category("Supra Spinal")]
-        public double SupraSpinalMedialLateralDistance { get; set; }
-        [DisplayName("Rostral-Caudal"), Category("Spinal")]
-        public double SpinalRostralCaudalDistance { get; set; }
-        [DisplayName("Dorsal-Ventral"), Category("Spinal")]
-        public double SpinalDorsalVentralDistance { get; set; }
-        [DisplayName("Medial-Lateral"), Category("Spinal")]
-        public double SpinalMedialLateralDistance { get; set; }
-        [DisplayName("Body Position"), Category("Spinal")]
-        public double SpinalBodyPosition { get; set; }
-
-        [DisplayName("Medial-Lateral"), Category("Musculo-Skeletal")]
-
-        public double BodyMedialLateralDistance { get; set; }
-        [DisplayName("Dorsal-Ventral"), Category("Musculo-Skeletal")]
-        public double BodyDorsalVentralDistance { get; set; }
-
-        public int NumberOfSomites { get; set; } = 0;
+        public ModelDimensions ModelDimensions;
 
         private int iRunCounter = 0;
         private int iProgress = 0;
@@ -97,7 +76,7 @@ namespace SiliFish
         public UnitOfMeasure UoM
         {
             get { return uom; }
-            set { Settings.UoM = uom = value; }
+            set { CurrentSettings.Settings.UoM = uom = value; }
         }
 
         protected List<CellPool> neuronPools = new();
@@ -187,6 +166,7 @@ namespace SiliFish
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
         {
             List<CellPool> motoNeurons = MotoNeuronPools;
+            int NumberOfSomites = ModelDimensions.NumberOfSomites;
             int maxSeq = NumberOfSomites - numSomites;
             if (NumberOfSomites <= 0)
                 maxSeq = CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
@@ -290,19 +270,6 @@ namespace SiliFish
         {
             Dictionary<string, object> paramDict = new()
             {
-                { "General.Name", ModelName },
-                { "General.Description", ModelDescription },
-                { "General.NumberOfSomites", NumberOfSomites },
-                { "General.SupraSpinalRostralCaudalDistance", SupraSpinalRostralCaudalDistance },
-                { "General.SupraSpinalDorsalVentralDistance", SupraSpinalDorsalVentralDistance },
-                { "General.SupraSpinalMedialLateralDistance", SupraSpinalMedialLateralDistance },
-                { "General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance },
-                { "General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance },
-                { "General.SpinalMedialLateralDistance", SpinalMedialLateralDistance },
-                { "General.SpinalBodyPosition", SpinalBodyPosition },
-                { "General.BodyDorsalVentralDistance", BodyDorsalVentralDistance },
-                { "General.BodyMedialLateralDistance", BodyMedialLateralDistance },
-
                 { "Dynamic.ConductionVelocity", cv },
                 { "Dynamic.E_ach", E_ach },
                 { "Dynamic.E_glu", E_glu },
@@ -353,19 +320,6 @@ namespace SiliFish
         /// <param name="paramDict"></param>
         protected virtual void FillMissingParameters(Dictionary<string, object> paramDict)
         {
-            paramDict.AddObject("General.Name", ModelName, skipIfExists: true);
-            paramDict.AddObject("General.Description", ModelDescription, skipIfExists: true);
-            paramDict.AddObject("General.NumberOfSomites", NumberOfSomites, skipIfExists: true);
-            paramDict.AddObject("General.SupraSpinalRostralCaudalDistance", SupraSpinalRostralCaudalDistance, skipIfExists: true);
-            paramDict.AddObject("General.SupraSpinalDorsalVentralDistance", SupraSpinalDorsalVentralDistance, skipIfExists: true);
-            paramDict.AddObject("General.SupraSpinalMedialLateralDistance", SupraSpinalMedialLateralDistance, skipIfExists: true);
-            paramDict.AddObject("General.SpinalRostralCaudalDistance", SpinalRostralCaudalDistance, skipIfExists: true);
-            paramDict.AddObject("General.SpinalDorsalVentralDistance", SpinalDorsalVentralDistance, skipIfExists: true);
-            paramDict.AddObject("General.SpinalMedialLateralDistance", SpinalMedialLateralDistance, skipIfExists: true);
-            paramDict.AddObject("General.SpinalBodyPosition", SpinalBodyPosition, skipIfExists: true);
-            paramDict.AddObject("General.BodyDorsalVentralDistance", BodyDorsalVentralDistance, skipIfExists: true);
-            paramDict.AddObject("General.BodyMedialLateralDistance", BodyMedialLateralDistance, skipIfExists: true);
-
             paramDict.AddObject("Dynamic.ConductionVelocity", cv, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
             paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
@@ -398,18 +352,6 @@ namespace SiliFish
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             FillMissingParameters(paramExternal);
-            ModelName = paramExternal.Read("General.Name", ModelName);
-            ModelDescription = paramExternal.Read("General.Description", ModelDescription);
-            NumberOfSomites = paramExternal.ReadInteger("General.NumberOfSomites");
-            SupraSpinalRostralCaudalDistance = paramExternal.ReadDouble("General.SupraSpinalRostralCaudalDistance");
-            SupraSpinalDorsalVentralDistance = paramExternal.ReadDouble("General.SupraSpinalDorsalVentralDistance");
-            SupraSpinalMedialLateralDistance = paramExternal.ReadDouble("General.SupraSpinalMedialLateralDistance");
-            SpinalRostralCaudalDistance = paramExternal.ReadDouble("General.SpinalRostralCaudalDistance");
-            SpinalDorsalVentralDistance = paramExternal.ReadDouble("General.SpinalDorsalVentralDistance");
-            SpinalMedialLateralDistance = paramExternal.ReadDouble("General.SpinalMedialLateralDistance");
-            SpinalBodyPosition = paramExternal.ReadDouble("General.SpinalBodyPosition");
-            BodyDorsalVentralDistance = paramExternal.ReadDouble("General.BodyDorsalVentralDistance");
-            BodyMedialLateralDistance = paramExternal.ReadDouble("General.BodyMedialLateralDistance");
 
             cv = paramExternal.Read("Dynamic.ConductionVelocity", cv);
             E_ach = paramExternal.Read("Dynamic.E_ach", E_ach);
@@ -548,7 +490,7 @@ namespace SiliFish
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
-            cr.SomiteBased = NumberOfSomites > 0;
+            cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
             gapPoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability);
@@ -558,7 +500,7 @@ namespace SiliFish
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
-            cr.SomiteBased = NumberOfSomites > 0;
+            cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine_ms;
             chemPoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));

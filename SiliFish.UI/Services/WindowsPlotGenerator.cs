@@ -4,6 +4,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using SiliFish.UI;
 
 namespace Services
@@ -60,7 +61,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Current ({Util.GetUoM(Settings.UoM, Measure.Current)})";
+            string yAxis = $"Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})";
 
             if (gap)
             {
@@ -150,7 +151,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = $"Stimulus ({Util.GetUoM(Settings.UoM, Measure.Current)})";
+            string yAxis = $"Stimulus ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})";
 
             if (cells != null)
             {

@@ -1,10 +1,8 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits;
 using System.Linq;
 
-namespace SiliFish
+namespace SiliFish.ModelUnits.Model
 {
-
     public class CustomSwimmingModel : SwimmingModel
     {
         public CustomSwimmingModel()
@@ -21,6 +19,10 @@ namespace SiliFish
 
             if (swimmingModelTemplate == null) return;
 
+            ModelName = swimmingModelTemplate.ModelName;
+            ModelDescription = swimmingModelTemplate.ModelDescription;
+            ModelDimensions = swimmingModelTemplate.ModelDimensions;
+            CurrentSettings.Settings = swimmingModelTemplate.Settings;
             SetParameters(swimmingModelTemplate.Parameters);
 
             #region Generate pools and cells

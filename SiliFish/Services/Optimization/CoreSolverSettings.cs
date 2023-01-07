@@ -71,7 +71,7 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    minValues[iter++] = MinValueDictionary?.GetValueOrDefault(key, Settings.GeneticAlgorithmMinValue) ?? Settings.GeneticAlgorithmMinValue;
+                    minValues[iter++] = MinValueDictionary?.GetValueOrDefault(key, CurrentSettings.Settings.GeneticAlgorithmMinValue) ?? CurrentSettings.Settings.GeneticAlgorithmMinValue;
                 }
                 return minValues;
             }
@@ -88,7 +88,7 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    maxValues[iter++] = MaxValueDictionary?.GetValueOrDefault(key, Settings.GeneticAlgorithmMinValue) ?? Settings.GeneticAlgorithmMinValue;
+                    maxValues[iter++] = MaxValueDictionary?.GetValueOrDefault(key, CurrentSettings.Settings.GeneticAlgorithmMinValue) ?? CurrentSettings.Settings.GeneticAlgorithmMinValue;
                 }
                 return maxValues;
             }

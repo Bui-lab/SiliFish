@@ -1,6 +1,7 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -157,7 +158,8 @@ namespace SiliFish.Services
             (WeightMin, WeightMax) = model.GetConnectionRange();
             WeightMult = maxjncsize / WeightMax;
 
-            int minSomite = -1, maxSomite = model.NumberOfSomites;
+            ModelDimensions MD = model.ModelDimensions;
+            int minSomite = -1, maxSomite = MD.NumberOfSomites;
             if (!somiteRange.StartsWith("All"))
                 (minSomite, maxSomite) = Util.ParseRange(somiteRange);
 
@@ -191,10 +193,10 @@ namespace SiliFish.Services
                 html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
             }
 
-            double spinalposX = model.SupraSpinalRostralCaudalDistance;
-            double spinalposY = model.SpinalBodyPosition + model.SpinalDorsalVentralDistance / 2;
+            double spinalposX = MD.SupraSpinalRostralCaudalDistance;
+            double spinalposY = MD.SpinalBodyPosition + MD.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;
-            double spinallength = model.SpinalRostralCaudalDistance;
+            double spinallength = MD.SpinalRostralCaudalDistance;
             (double newX, double newY, double newZ) = GetNewCoordinates(spinalposX, spinalposZ, spinalposY, 0);
             (double newX2, newY, newZ) = GetNewCoordinates(spinallength + spinalposX, spinalposZ, spinalposY, 0);
             html.Replace("__SPINE_X__", newX.ToString());
@@ -203,8 +205,8 @@ namespace SiliFish.Services
             html.Replace("__SPINE_LENGTH__", newX2.ToString());
 
             double brainLength = spinalposX;
-            double brainHeight = model.SupraSpinalDorsalVentralDistance;
-            double brainWidth = model.SupraSpinalMedialLateralDistance;
+            double brainHeight = MD.SupraSpinalDorsalVentralDistance;
+            double brainWidth = MD.SupraSpinalMedialLateralDistance;
             html.Replace("__BRAIN_WIDTH__", (brainLength * XYZMult).ToString());
             html.Replace("__BRAIN_HEIGHT__", (brainHeight * XYZMult).ToString());
             html.Replace("__BRAIN_DEPTH__", (brainWidth * XYZMult).ToString());
