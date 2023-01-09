@@ -53,5 +53,18 @@ namespace SiliFish.ModelUnits.Model
             BodyMedialLateralDistance = paramExternal.ReadDoubleAndRemoveKey("General.BodyMedialLateralDistance", BodyMedialLateralDistance);
             return paramExternal;
         }
+
+        public bool CheckConsistency(out string error)
+        {
+            error = "";
+
+            if (BodyDorsalVentralDistance < SpinalBodyPosition + SpinalDorsalVentralDistance)
+                error = "Musculoskeletal dorsal-ventral height has to be greater than spinal dorsal-ventral height + spinal body position\r\n";
+
+            if (BodyMedialLateralDistance < SpinalMedialLateralDistance)
+                error += "Musculoskeletal medial-lateral width has to be greater than spinal medial-lateral width";
+
+            return string.IsNullOrEmpty(error);
+        }
     }
 }

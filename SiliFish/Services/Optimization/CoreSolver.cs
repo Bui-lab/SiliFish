@@ -26,6 +26,8 @@ namespace SiliFish.Services.Optimization
 
         private double latestFitness = 0.0;
         private double bestFitness = 0.0;
+        IChromosome bestestChromosome = null;
+
         private string errorMessage;
 
         [JsonIgnore]
@@ -156,7 +158,10 @@ namespace SiliFish.Services.Optimization
                 var bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
                 latestFitness = bestChromosome.Fitness.Value;
                 if (bestFitness < latestFitness)
+                {
                     bestFitness = latestFitness;
+                    bestestChromosome = bestChromosome;
+                }
             };
             errorMessage = "";
             try
@@ -168,15 +173,17 @@ namespace SiliFish.Services.Optimization
                 output.ErrorMessage = exc.Message;
             }
 
+            if (Algorithm.BestChromosome != bestestChromosome)
+            { }
             Dictionary<string, double> BestValues = new();
             int iter = 0;
             foreach (string key in Settings.SortedKeys)
             {
-                var phenotype = (Algorithm.BestChromosome as FloatingPointChromosome).ToFloatingPoints();
+                var phenotype = (bestestChromosome as FloatingPointChromosome).ToFloatingPoints();
                 BestValues.Add(key, phenotype[iter++]);
             }
             output.BestValues = BestValues;
-            output.BestFitness = Algorithm.BestChromosome.Fitness ?? 0;
+            output.BestFitness = bestestChromosome.Fitness ?? 0;
             return output;
         }
         public void CancelOptimization()

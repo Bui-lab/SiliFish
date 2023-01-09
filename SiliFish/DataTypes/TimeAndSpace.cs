@@ -41,7 +41,7 @@ namespace SiliFish.DataTypes
             {
                 case BodyLocation.SpinalCord:
                     x_length = somite < 0 ? MD.SpinalRostralCaudalDistance : MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
-                    x_offset = MD.SupraSpinalRostralCaudalDistance + (somite >= 0 ? somite * MD.SpinalRostralCaudalDistance / MD.NumberOfSomites : 0);
+                    x_offset = MD.SupraSpinalRostralCaudalDistance + (somite > 0 ? (somite - 1) * MD.SpinalRostralCaudalDistance / MD.NumberOfSomites : 0);
                     y_length = MD.SpinalMedialLateralDistance;
                     z_length = MD.SpinalDorsalVentralDistance;
                     z_offset = MD.SpinalBodyPosition;
@@ -49,7 +49,7 @@ namespace SiliFish.DataTypes
                     break;
                 case BodyLocation.MusculoSkeletal:
                     x_length = somite < 0 ? MD.SpinalRostralCaudalDistance : MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
-                    x_offset = MD.SupraSpinalRostralCaudalDistance + (somite >= 0 ? somite * MD.SpinalRostralCaudalDistance / MD.NumberOfSomites : 0);
+                    x_offset = MD.SupraSpinalRostralCaudalDistance + (somite > 0 ? (somite - 1) * MD.SpinalRostralCaudalDistance / MD.NumberOfSomites : 0);
                     y_length = MD.BodyMedialLateralDistance;
                     z_length = MD.BodyDorsalVentralDistance;
                     radius = Math.Sqrt(Math.Pow(MD.BodyMedialLateralDistance, 2) + Math.Pow(MD.BodyDorsalVentralDistance / 2, 2));

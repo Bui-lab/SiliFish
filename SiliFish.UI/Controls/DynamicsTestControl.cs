@@ -8,7 +8,6 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Model;
 using SiliFish.Services;
-using SiliFish.Services.Optimization;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls

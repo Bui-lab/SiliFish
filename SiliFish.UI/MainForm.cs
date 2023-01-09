@@ -507,6 +507,11 @@ namespace SiliFish.UI
             {
                 SwimmingModelTemplate mt = ReadModelTemplate(includeHidden: true);
 
+                if (!mt.ModelDimensions.CheckConsistency(out string error))
+                {
+                    WarningMessage(error);
+                    return false;
+                }
                 if (string.IsNullOrEmpty(saveFileJson.FileName))
                     saveFileJson.FileName = mt?.ModelName ?? Model?.ModelName;
                 else

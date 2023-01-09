@@ -79,13 +79,14 @@ namespace SiliFish.UI.Controls
             this.grConductionVelocity = new System.Windows.Forms.GroupBox();
             this.distConductionVelocity = new SiliFish.UI.Controls.DistributionControl();
             this.pDynamicsTops = new System.Windows.Forms.Panel();
+            this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
             this.linkTestDynamics = new System.Windows.Forms.LinkLabel();
             this.tTimeline = new System.Windows.Forms.TabPage();
             this.tAttachments = new System.Windows.Forms.TabPage();
             this.attachmentList = new SiliFish.UI.Controls.AttachmentListControl();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+            this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
@@ -669,6 +670,7 @@ namespace SiliFish.UI.Controls
             // 
             // pDynamicsTops
             // 
+            this.pDynamicsTops.Controls.Add(this.linkLoadCoreUnit);
             this.pDynamicsTops.Controls.Add(this.linkTestDynamics);
             this.pDynamicsTops.Dock = System.Windows.Forms.DockStyle.Top;
             this.pDynamicsTops.Location = new System.Drawing.Point(3, 3);
@@ -676,9 +678,22 @@ namespace SiliFish.UI.Controls
             this.pDynamicsTops.Size = new System.Drawing.Size(314, 30);
             this.pDynamicsTops.TabIndex = 0;
             // 
+            // linkLoadCoreUnit
+            // 
+            this.linkLoadCoreUnit.AutoSize = true;
+            this.linkLoadCoreUnit.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkLoadCoreUnit.Location = new System.Drawing.Point(94, 9);
+            this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
+            this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
+            this.linkLoadCoreUnit.TabIndex = 22;
+            this.linkLoadCoreUnit.TabStop = true;
+            this.linkLoadCoreUnit.Text = "Load Core Unit";
+            this.linkLoadCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCoreUnit_LinkClicked);
+            // 
             // linkTestDynamics
             // 
             this.linkTestDynamics.AutoSize = true;
+            this.linkTestDynamics.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkTestDynamics.Location = new System.Drawing.Point(6, 9);
             this.linkTestDynamics.Name = "linkTestDynamics";
             this.linkTestDynamics.Size = new System.Drawing.Size(82, 15);
@@ -734,6 +749,10 @@ namespace SiliFish.UI.Controls
             this.splitMain.Size = new System.Drawing.Size(600, 723);
             this.splitMain.SplitterDistance = 266;
             this.splitMain.TabIndex = 16;
+            // 
+            // openFileJson
+            // 
+            this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
             // CellPoolControl
             // 
@@ -826,7 +845,7 @@ namespace SiliFish.UI.Controls
         private Label lDescription;
         private Controls.DistributionDataGrid dgDynamics;
         private ComboBox ddSelection;
-        private OpenFileDialog dlgOpenFile;
+        private OpenFileDialog openFileJson;
         private RichTextBox eDescription;
         private ComboBox ddCoreType;
         private Label lCoreType;
@@ -836,5 +855,6 @@ namespace SiliFish.UI.Controls
         private CheckBox cbAllSomites;
         private ComboBox ddBodyPosition;
         private Label lBodyPosition;
+        private LinkLabel linkLoadCoreUnit;
     }
 }

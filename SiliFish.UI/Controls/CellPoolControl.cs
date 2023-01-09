@@ -3,16 +3,14 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Model;
 using System.ComponentModel;
-using System.Diagnostics;
 using static SiliFish.UI.Controls.DynamicsTestControl;
 
 namespace SiliFish.UI.Controls
 {
     public partial class CellPoolControl : UserControl
     {
-        
+        private static string coreUnitFileDefaultFolder;
         private event EventHandler savePool;
         public event EventHandler SavePool { add => savePool += value; remove => savePool -= value; }
 
@@ -241,6 +239,29 @@ namespace SiliFish.UI.Controls
                 btnColor.BackColor = colorDialog.Color;
             }
         }
+        private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
+            if (openFileJson.ShowDialog() == DialogResult.OK)
+            {
+                coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
+
+                string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
+                if (string.IsNullOrEmpty(JSONString))
+                    return;
+                CellCoreUnit core = CellCoreUnit.GetOfDerivedType(JSONString);
+                if (core != null)
+                {
+                    skipCoreTypeChange = true;
+                    ddCoreType.Text = core.CoreType;
+                    skipCoreTypeChange = false;
+                    ddCoreType.Text = poolTemplate.CoreType = core.CoreType;
+                    poolTemplate.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
+                    ParamDictToGrid();
+                }
+            }
+        }
+
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
@@ -270,6 +291,7 @@ namespace SiliFish.UI.Controls
             if (!cbAllSomites.Checked && eSomiteRange.Text == toolTip1.GetToolTip(eSomiteRange))
                 eSomiteRange.Text = "";
         }
+
 
     }
 }

@@ -28,7 +28,7 @@ namespace SiliFish.UI.Controls
 
         private void ddFitnessFunction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FitnessFunction ff = GetFitnessFunction();
+            FitnessFunction ff = (FitnessFunction)Activator.CreateInstance(FitnessFunction.TypeMap[ddFitnessFunction.Text]);
             int height = pFitnessFunction.Height + 35;
             pMinMax.Visible = ff.MinMaxExists;
             height += pMinMax.Visible ? pMinMax.Height : 0;

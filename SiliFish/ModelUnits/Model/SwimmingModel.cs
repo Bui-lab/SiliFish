@@ -374,38 +374,6 @@ namespace SiliFish.ModelUnits.Model
             return (null, pools);
         }
 
-        public virtual string SummarizeModel()
-        {
-            StringBuilder strBuilder = new();
-            foreach (CellPool pool in neuronPools.Union(musclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
-            {
-                strBuilder.AppendLine("#Cell Pool#");
-                strBuilder.AppendLine(pool.ID);
-                foreach (Cell cell in pool.GetCells())
-                {
-                    strBuilder.AppendLine(cell.ID);
-                    strBuilder.AppendLine("##Gap Junctions##");
-                    foreach (GapJunction jnc in cell.GapJunctions)
-                        strBuilder.AppendLine(jnc.ID);
-                    if (cell is Neuron neuron)
-                    {
-                        strBuilder.AppendLine("##Terminals##");
-                        foreach (ChemicalSynapse jnc in neuron.Terminals)
-                            strBuilder.AppendLine(jnc.ID);
-                        strBuilder.AppendLine("##Synapses##");
-                        foreach (ChemicalSynapse jnc in neuron.Synapses)
-                            strBuilder.AppendLine(jnc.ID);
-                    }
-                    else if (cell is MuscleCell muscle)
-                    {
-                        strBuilder.AppendLine("##EndPlates##");
-                        foreach (ChemicalSynapse jnc in muscle.EndPlates)
-                            strBuilder.AppendLine(jnc.ID);
-                    }
-                }
-            }
-            return strBuilder.ToString();
-        }
         public virtual void SaveToFile(string filename)
         {
             if (!this.model_run)
