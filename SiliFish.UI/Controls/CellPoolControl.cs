@@ -50,6 +50,7 @@ namespace SiliFish.UI.Controls
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
+            distConductionVelocity.SetDistribution(new Constant_NoDistribution(CurrentSettings.Settings.cv, absolute: true, angular: false, noiseStdDev: 0));
             if (SomiteBased)
             {
                 cbAllSomites.Enabled = eSomiteRange.Enabled = true;

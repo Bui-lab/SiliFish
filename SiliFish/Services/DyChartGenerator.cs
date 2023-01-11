@@ -66,11 +66,11 @@ namespace SiliFish.Services
             try
             {
                 StringBuilder html = synchronized ?
-                    new(ReadEmbeddedResource("SiliFish.Resources.DyChartSync.html")) :
-                    new(ReadEmbeddedResource("SiliFish.Resources.DyChartUnsync.html"));
-                StringBuilder plot = new(ReadEmbeddedResource("SiliFish.Resources.DyChart.js"));
-                StringBuilder synchronizer = new(ReadEmbeddedResource("SiliFish.Resources.DySynchronizer.js"));
-                string chartDiv = ReadEmbeddedResource("SiliFish.Resources.DyChartDiv.html");
+                    new(ReadEmbeddedText("SiliFish.Resources.DyChartSync.html")) :
+                    new(ReadEmbeddedText("SiliFish.Resources.DyChartUnsync.html"));
+                StringBuilder plot = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
+                StringBuilder synchronizer = new(ReadEmbeddedText("SiliFish.Resources.DySynchronizer.js"));
+                string chartDiv = ReadEmbeddedText("SiliFish.Resources.DyChartDiv.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
 
@@ -81,7 +81,7 @@ namespace SiliFish.Services
                 }
                 else
                 {
-                    html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.dygraph.js"));
+                    html.Replace("__OFFLINE_DYGRAPH_SCRIPT__", ReadEmbeddedText("SiliFish.Resources.dygraph.js"));
                     html.Replace("__ONLINE_DYGRAPH_SCRIPT__", "");
                 }
 
@@ -95,7 +95,7 @@ namespace SiliFish.Services
                 foreach (int chartIndex in Enumerable.Range(0, charts.Count))
                 {
                     chartDivs += chartDiv.Replace("__CHART_INDEX__", chartIndex.ToString());
-                    StringBuilder chart = new(ReadEmbeddedResource("SiliFish.Resources.DyChart.js"));
+                    StringBuilder chart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
                     chart.Replace("__CHART_INDEX__", chartIndex.ToString());
                     chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
                     chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);

@@ -1,4 +1,5 @@
-﻿using SiliFish.Definitions;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -100,6 +101,14 @@ namespace SiliFish.ModelUnits.Model
                 Parameters.Remove("General.Description");
             }
             Parameters = ModelDimensions.BackwardCompatibility(Parameters);
+            CurrentSettings.Settings.BackwardCompatibility(Parameters);
+            foreach (CellPoolTemplate cpt in CellPoolTemplates)
+            {
+                if (cpt.ConductionVelocity == null)
+                {
+                    cpt.ConductionVelocity = new Constant_NoDistribution(CurrentSettings.Settings.cv, absolute: true, angular: false, noiseStdDev: 0);
+                }
+            }
         }
 
     }

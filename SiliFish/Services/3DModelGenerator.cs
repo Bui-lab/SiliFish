@@ -24,6 +24,7 @@ namespace SiliFish.Services
             string curvInfo = jnc.Cell1.ID == jnc.Cell2.ID ? ",curv: 0.3" : "";
             return $"{{\"source\":\"{jnc.Cell1.ID}\"," +
                 $"\"target\":\"{jnc.Cell2.ID}\"," +
+                $"\"type\":\"gap\"," +
                 $"\"value\":{GetNewWeight(jnc.Conductance):0.##}," +
                 $"\"conductance\":{jnc.Conductance:0.######}" +
                 $"{curvInfo} }}";
@@ -33,6 +34,7 @@ namespace SiliFish.Services
             string curvInfo = jnc.PreNeuron.ID == jnc.PostCell.ID ? ",curv: 0.3" : "";
             return $"{{\"source\":\"{jnc.PreNeuron.ID}\"," +
                 $"\"target\":\"{jnc.PostCell.ID}\"," +
+                $"\"type\":\"chem\"," +
                 $"\"value\":{GetNewWeight(jnc.Conductance):0.##}," +
                 $"\"conductance\":{jnc.Conductance:0.######}" +
                 $"{curvInfo} }}";
@@ -100,17 +102,14 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-
-        //gap and chem are obsolete if singlePanel = false
-        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, bool singlePanel, bool gap, bool chem, string somiteRange)
+        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, string somiteRange)
         {
-            StringBuilder html = singlePanel ? new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModelSinglePanel.html")) :
-                    new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedResource("SiliFish.Resources.3DModel.html"));
+            StringBuilder html = new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedText("SiliFish.Resources.3DModel.html"));
 
             string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 3D Model";
 
-            html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
+            html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
 
             if (Util.CheckOnlineStatus())
             {
@@ -121,23 +120,16 @@ namespace SiliFish.Services
             }
             else
             {
-                html.Replace("__OFFLINE_3D_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.3d-force-graph.min.js") +
-                    ReadEmbeddedResource("SiliFish.Resources.d3-dsv.min.js") +
-                    ReadEmbeddedResource("SiliFish.Resources.three.js"));
+                html.Replace("__OFFLINE_3D_SCRIPT__", ReadEmbeddedText("SiliFish.Resources.3d-force-graph.min.js") +
+                    ReadEmbeddedText("SiliFish.Resources.d3-dsv.min.js") +
+                    ReadEmbeddedText("SiliFish.Resources.three.js"));
                 html.Replace("__ONLINE_3D_SCRIPT__", "");
             }
 
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
-            if (!singlePanel)
-            {
-                html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
-                html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chem Jnc"));
-            }
-            else
-            {
-                string s = gap && chem ? "Gap and Chem" : gap ? "Gap" : chem ? "Chem" : "No";
-                html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + String.Format(" - {0} Jnc", s)));
-            }
+            
+            html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title));
+            
             ((XMin, double maxX), (YMin, double maxY), (ZMin, double maxZ), int YRange1D) = model.GetSpatialRange();
 
             double xRange = maxX - XMin;
@@ -151,7 +143,7 @@ namespace SiliFish.Services
             double range = Math.Max(xRange, Math.Max(yRange, zRange));
             int width = 400;
             XYZMult = width / range;
-            XOffset = singlePanel ? width / 2 : width; //The center of the window is 0 - so half width is removed from all X values
+            XOffset = width / 2; //The center of the window is 0 - so half width is removed from all X values
 
             int numOfConnections = model.GetNumberOfConnections();
             double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
@@ -176,23 +168,11 @@ namespace SiliFish.Services
             html.Replace("__NODES__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
             html.Replace("__NODE_SIZE__", nodesize.ToString("0.##"));
 
-            if (!singlePanel)
-            {
-                List<string> gapLinks = new();
-                pools.ForEach(pool => gapLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: false, minSomite, maxSomite)));
-                html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
-
-                List<string> chemLinks = new();
-                pools.ForEach(pool => chemLinks.Add(CreateLinkDataPoints(pool, gap: false, chem: true, minSomite, maxSomite)));
-                html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
-            }
-            else
-            {
-                List<string> gapChemLinks = new();
-                pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: gap, chem: chem, minSomite, maxSomite)));
-                html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
-            }
-
+            
+            List<string> gapChemLinks = new();
+            pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: true, minSomite, maxSomite)));
+            html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
+            
             double spinalposX = MD.SupraSpinalRostralCaudalDistance;
             double spinalposY = MD.SpinalBodyPosition + MD.SpinalDorsalVentralDistance / 2;
             double spinalposZ = 0;
@@ -210,6 +190,14 @@ namespace SiliFish.Services
             html.Replace("__BRAIN_WIDTH__", (brainLength * XYZMult).ToString());
             html.Replace("__BRAIN_HEIGHT__", (brainHeight * XYZMult).ToString());
             html.Replace("__BRAIN_DEPTH__", (brainWidth * XYZMult).ToString());
+
+            string lateralHeadStr = Convert.ToBase64String(ReadEmbeddedBinary("SiliFish.Resources.LateralHead.png"));
+            string lateralHead = $"data:image/png;base64,{lateralHeadStr}";
+            html.Replace("__LATERAL_HEAD__", lateralHead);
+
+            string dorsalHeadStr = Convert.ToBase64String(ReadEmbeddedBinary("SiliFish.Resources.DorsalHead.png"));
+            string dorsalHead = $"data:image/png;base64,{dorsalHeadStr}";
+            html.Replace("__DORSAL_HEAD__", dorsalHead);
 
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));

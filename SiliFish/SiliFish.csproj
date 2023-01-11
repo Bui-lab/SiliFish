@@ -32,10 +32,12 @@
   <ItemGroup>
     <None Remove="Resources\2DModel.html" />
     <None Remove="Resources\3DModel.html" />
-    <None Remove="Resources\3DModelSinglePanel.html" />
+    <None Remove="Resources\3DModel2.html" />
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
+    <None Remove="Resources\DorsalHead.jpg" />
+    <None Remove="Resources\DorsalHead.png" />
     <None Remove="Resources\DyChart.js" />
     <None Remove="Resources\DyChartDiv.html" />
     <None Remove="Resources\DyChartSync.html" />
@@ -44,6 +46,8 @@
     <None Remove="Resources\DyStyleSheet.css" />
     <None Remove="Resources\fishbone.ico" />
     <None Remove="Resources\fishbone2.ico" />
+    <None Remove="Resources\LateralHead.jpg" />
+    <None Remove="Resources\LateralHead.png" />
     <None Remove="Resources\LineChart.Chart.js" />
     <None Remove="Resources\LineChart.html" />
     <None Remove="Resources\LineChart.Series.js" />
@@ -55,10 +59,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\2DModel.html" />
     <EmbeddedResource Include="Resources\3d-force-graph.min.js" />
-    <EmbeddedResource Include="Resources\3DModelSinglePanel.html" />
     <EmbeddedResource Include="Resources\3DModel.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
+    <EmbeddedResource Include="Resources\DorsalHead.png" />
     <EmbeddedResource Include="Resources\DyChartUnsync.html" />
     <EmbeddedResource Include="Resources\DyChart.js" />
     <EmbeddedResource Include="Resources\DyChartSync.html" />
@@ -97,6 +101,10 @@
 
   <ItemGroup>
     <EditorConfigFiles Remove="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LateralHead.png" />
   </ItemGroup>
 
   <ItemGroup>

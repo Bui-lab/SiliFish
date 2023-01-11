@@ -46,13 +46,6 @@ namespace SiliFish.ModelUnits.Model
     {
         public RunParam runParam;
         public KinemParam kinemParam;
-        public double cv = 1; //the transmission speed
-
-        protected double E_glu = 0; //the reversal potential of glutamate
-        protected double E_gly = -70; //the reversal potential of glycine
-        protected double E_gaba = -70; //the reversal potential of GABA
-        protected double E_ach = 120; //reversal potential for ACh receptors
-
         public static Random rand = new(0);
 
         private string modelName;
@@ -270,12 +263,6 @@ namespace SiliFish.ModelUnits.Model
         {
             Dictionary<string, object> paramDict = new()
             {
-                { "Dynamic.ConductionVelocity", cv },
-                { "Dynamic.E_ach", E_ach },
-                { "Dynamic.E_glu", E_glu },
-                { "Dynamic.E_gly", E_gly },
-                { "Dynamic.E_gaba", E_gaba },
-
                 { "Kinematics.Damping Coef", kinemParam.kinemZeta },
                 { "Kinematics.w0", kinemParam.kinemW0 },
                 { "Kinematics.Conversion Coef", kinemParam.kinemConvCoef },
@@ -297,11 +284,6 @@ namespace SiliFish.ModelUnits.Model
         {
             Dictionary<string, object> paramDescDict = new()
             {
-                { "Dynamic.E_ach", "Reversal potential of ACh" },
-                { "Dynamic.E_glu", "Reversal potential of glutamate" },
-                { "Dynamic.E_gly", "Reversal potential of glycine" },
-                { "Dynamic.E_gaba", "Reversal potential of GABA" },
-
                 { "Kinematics.w0", "Natural oscillation frequency" },
                 { "Kinematics.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
                 { "Kinematics.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
@@ -320,12 +302,6 @@ namespace SiliFish.ModelUnits.Model
         /// <param name="paramDict"></param>
         protected virtual void FillMissingParameters(Dictionary<string, object> paramDict)
         {
-            paramDict.AddObject("Dynamic.ConductionVelocity", cv, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_ach", E_ach, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_glu", E_glu, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_gly", E_gly, skipIfExists: true);
-            paramDict.AddObject("Dynamic.E_gaba", E_gaba, skipIfExists: true);
-
             paramDict.AddObject("Kinematics.Damping Coef", kinemParam.kinemZeta, skipIfExists: true);
             paramDict.AddObject("Kinematics.w0", kinemParam.kinemW0, skipIfExists: true);
             paramDict.AddObject("Kinematics.Conversion Coef", kinemParam.kinemConvCoef, skipIfExists: true);
@@ -352,13 +328,6 @@ namespace SiliFish.ModelUnits.Model
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             FillMissingParameters(paramExternal);
-
-            cv = paramExternal.Read("Dynamic.ConductionVelocity", cv);
-            E_ach = paramExternal.Read("Dynamic.E_ach", E_ach);
-            E_glu = paramExternal.Read("Dynamic.E_glu", E_glu);
-            E_gly = paramExternal.Read("Dynamic.E_gly", E_gly);
-            E_gaba = paramExternal.Read("Dynamic.E_gaba", E_gaba);
-
             SetAnimationParameters(paramExternal);
         }
 

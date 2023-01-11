@@ -58,9 +58,9 @@ namespace SiliFish.Services
             string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 2D Model";
 
-            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.2DModel.html"));
+            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.2DModel.html"));
 
-            html.Replace("__STYLE_SHEET__", ReadEmbeddedResource("SiliFish.Resources.StyleSheet.css"));
+            html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
 
             if (Util.CheckOnlineStatus())
             {
@@ -70,8 +70,8 @@ namespace SiliFish.Services
             }
             else
             {
-                html.Replace("__OFFLINE_2D_SCRIPT__", ReadEmbeddedResource("SiliFish.Resources.force-graph.min.js") +
-                    ReadEmbeddedResource("SiliFish.Resources.three.js"));
+                html.Replace("__OFFLINE_2D_SCRIPT__", ReadEmbeddedText("SiliFish.Resources.force-graph.min.js") +
+                    ReadEmbeddedText("SiliFish.Resources.three.js"));
                 html.Replace("__ONLINE_2D_SCRIPT__", "");
             }
 

@@ -107,16 +107,16 @@ namespace SiliFish.UI.Controls
                     switch (pool.NTMode)
                     {
                        case NeuronClass.Glycinergic:
-                           synapseControl.EReversal= Parameters.Read("Dynamic.E_gly", synapseControl.EReversal);
+                           synapseControl.EReversal = CurrentSettings.Settings.E_gly;
                             break;
                         case NeuronClass.GABAergic:
-                            synapseControl.EReversal = Parameters.Read("Dynamic.E_gaba", synapseControl.EReversal);
+                            synapseControl.EReversal = CurrentSettings.Settings.E_gaba;
                             break;
                         case NeuronClass.Glutamatergic:
-                            synapseControl.EReversal = Parameters.Read("Dynamic.E_glu", synapseControl.EReversal);
+                            synapseControl.EReversal = CurrentSettings.Settings.E_glu;
                             break;
                         case NeuronClass.Cholinergic:
-                            synapseControl.EReversal = Parameters.Read("Dynamic.E_ach", synapseControl.EReversal);
+                            synapseControl.EReversal = CurrentSettings.Settings.E_ach;
                             break;
                         default:
                             break;

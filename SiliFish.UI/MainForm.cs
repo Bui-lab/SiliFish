@@ -93,7 +93,6 @@ namespace SiliFish.UI
                 ddPlotSagittal.SelectedIndex = ddPlotSagittal.Items.Count - 1;
                 ddPlotSomiteSelection.SelectedIndex = 0;
                 ddPlotCellSelection.SelectedIndex = 0;
-                dd3DModelType.SelectedIndex = 2; //Gap+Chem
 
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
@@ -228,7 +227,7 @@ namespace SiliFish.UI
             eModelName.Text = ModelTemplate.ModelName;
             eModelDescription.Text = ModelTemplate.ModelDescription;
             propModelDimensions.SelectedObject = ModelTemplate.ModelDimensions;
-            
+
             //Settings
             if (ddDefaultNeuronCore.Items.Count == 0)
                 ddDefaultNeuronCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
@@ -518,7 +517,7 @@ namespace SiliFish.UI
                     saveFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
-                    modelFileDefaultFolder  = Path.GetDirectoryName(saveFileJson.FileName);
+                    modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
                     //To make sure deactivated items are saved, even though not displayed
                     //Show all
                     JsonUtil.SaveToJsonFile(saveFileJson.FileName, ModelTemplate);
@@ -581,6 +580,30 @@ namespace SiliFish.UI
         #endregion
 
         #region Run
+  
+        private void eTimeEnd_ValueChanged(object sender, EventArgs e)
+        {
+            if (lastEnteredTime != null)
+            {
+                int newValue = (int)eTimeEnd.Value;
+                if ((int)ePlotEnd.Value == lastEnteredTime)
+                    ePlotEnd.Value = newValue;
+                if ((int)eAnimationEnd.Value == lastEnteredTime)
+                    eAnimationEnd.Value = newValue;
+                lastEnteredTime = newValue;
+            }
+        }
+        int? lastEnteredTime;
+        private void eTimeEnd_Enter(object sender, EventArgs e)
+        {
+            lastEnteredTime = (int)eTimeEnd.Value;
+        }       
+          private void edt_ValueChanged(object sender, EventArgs e)
+        {
+            eAnimationdt.Minimum = edt.Value;
+            eAnimationdt.Increment = edt.Value;
+            eAnimationdt.Value = 10 * edt.Value;
+        }      
         private void RunModel()
         {
             try
@@ -699,6 +722,7 @@ namespace SiliFish.UI
 
         #region Outputs
 
+        #region HTML and Windows Plots - Common Functions
         private void DisplayNumberOfPlots()
         {
             if (Model == null) return;
@@ -867,6 +891,7 @@ namespace SiliFish.UI
             }
             MessageBox.Show($"File(s) {string.Join(",", fileNames)} are saved.");
         }
+        #endregion
         #region HTML Plots
         private void PlotHTML()
         {
@@ -1081,14 +1106,9 @@ namespace SiliFish.UI
             if (Model == null) return;
             try
             {
-
                 RefreshModelSafeMode();
-                string mode = dd3DModelType.Text;
-                bool singlePanel = mode != "Gap/Chem";
-                bool gap = mode.Contains("Gap");
-                bool chem = mode.Contains("Chem");
                 ThreeDModelGenerator threeDModelGenerator = new();
-                string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, singlePanel, gap, chem, cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text);
+                string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text);
 
                 webView3DModel.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
             }
@@ -1124,6 +1144,40 @@ namespace SiliFish.UI
             {
                 MessageBox.Show("There is a problem in saving the file:" + exc.Message);
             }
+        }
+
+        private async void cb3DChemJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb3DChemJunc.Checked)
+                await webView3DModel.ExecuteScriptAsync("ShowChemJunc();");
+            else
+                await webView3DModel.ExecuteScriptAsync("HideChemJunc();");
+        }
+
+        private async void cb3DGapJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb3DGapJunc.Checked)
+                await webView3DModel.ExecuteScriptAsync("ShowGapJunc();");
+            else
+                await webView3DModel.ExecuteScriptAsync("HideGapJunc();");
+        }
+
+        private async void rb3DView_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb3DDorsalView.Checked)
+                await webView3DModel.ExecuteScriptAsync("DorsalView();");
+            else if (rb3DVentralView.Checked)
+                await webView3DModel.ExecuteScriptAsync("VentralView();");
+            else if (rb3DRostralView.Checked)
+                await webView3DModel.ExecuteScriptAsync("RostralView();");
+            else if (rb3DCaudalView.Checked)
+                await webView3DModel.ExecuteScriptAsync("CaudalView();");
+            else if (rb3DLateralViewLeft.Checked)
+                await webView3DModel.ExecuteScriptAsync("LateralLeftView();");
+            else if (rb3DLateralViewRight.Checked)
+                await webView3DModel.ExecuteScriptAsync("LateralRightView();");
+            else if (rb3DFreeView.Checked)
+                await webView3DModel.ExecuteScriptAsync("FreeView();");
         }
 
         #endregion
@@ -1314,6 +1368,30 @@ namespace SiliFish.UI
             }
         }
 
+
+        #endregion
+        #region MN Based Kinematics
+        
+         private void btnGenerateEpisodes_Click(object sender, EventArgs e)
+        {
+            (List<Cell> LeftMNs, List<Cell> RightMNs) = Model.GetMotoNeurons((int)eKinematicsSomite.Value);
+            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs,
+                (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
+            string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
+                width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
+            webViewSummaryV.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
+            eEpisodesLeft.Text = "";
+            eEpisodesRight.Text = "";
+            foreach (SwimmingEpisode episode in episodesLeft)
+                eEpisodesLeft.Text += episode.ToString() + "\r\n\r\n";
+            foreach (SwimmingEpisode episode in episodesRight)
+                eEpisodesRight.Text += episode.ToString() + "\r\n\r\n";
+            lKinematicsTimes.Text = $"Last kinematics:{DateTime.Now:t}";
+        }       
+        private void splitKinematics_Panel2_SizeChanged(object sender, EventArgs e)
+        {
+            eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
+        }
 
         #endregion
 
@@ -1615,8 +1693,70 @@ namespace SiliFish.UI
 
         #endregion
         #endregion
+        
+        #region Settings
+        private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.OutputFolder);
+            }
+            catch { }
+        }
 
+        private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.TempFolder);
+            }
+            catch { }
+        }
 
+        private void ddDefaultNeuronCore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ModelTemplate.Settings.DefaultNeuronCore = ddDefaultNeuronCore.Text;
+        }
+
+        private void ddDefaultMuscleCellCore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ModelTemplate.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
+        }
+
+        private void eOutputFolder_Click(object sender, EventArgs e)
+        {
+            browseFolder.InitialDirectory = eOutputFolder.Text;
+            if (browseFolder.ShowDialog() == DialogResult.OK)
+            {
+                ModelTemplate.Settings.OutputFolder =
+                    eOutputFolder.Text = browseFolder.SelectedPath;
+            }
+        }
+
+        private void eTemporaryFolder_Click(object sender, EventArgs e)
+        {
+            browseFolder.InitialDirectory = eTemporaryFolder.Text;
+            if (browseFolder.ShowDialog() == DialogResult.OK)
+            {
+                ModelTemplate.Settings.TempFolder =
+                    eTemporaryFolder.Text = browseFolder.SelectedPath;
+            }
+        }
+
+        #endregion
+
+        #region General Form Functions
+        private void pTop_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            About about = new();
+            about.ShowDialog();
+        }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            About about = new();
+            about.SetTimer(2000);
+            about.ShowDialog();
+        }
         private void splitWindows_DoubleClick(object sender, EventArgs e)
         {
             splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
@@ -1652,86 +1792,7 @@ namespace SiliFish.UI
             }
             catch { }
         }
-
-        private void pTop_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            About about = new();
-            about.ShowDialog();
-        }
-
-        private void eTimeEnd_ValueChanged(object sender, EventArgs e)
-        {
-            if (lastEnteredTime != null)
-            {
-                int newValue = (int)eTimeEnd.Value;
-                if ((int)ePlotEnd.Value == lastEnteredTime)
-                    ePlotEnd.Value = newValue;
-                if ((int)eAnimationEnd.Value == lastEnteredTime)
-                    eAnimationEnd.Value = newValue;
-                lastEnteredTime = newValue;
-            }
-        }
-        int? lastEnteredTime;
-        private void eTimeEnd_Enter(object sender, EventArgs e)
-        {
-            lastEnteredTime = (int)eTimeEnd.Value;
-        }
-
-        private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.OutputFolder);
-            }
-            catch { }
-        }
-
-        private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.TempFolder);
-            }
-            catch { }
-        }
-
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            About about = new();
-            about.SetTimer(2000);
-            about.ShowDialog();
-        }
-
-       
-        private void edt_ValueChanged(object sender, EventArgs e)
-        {
-            eAnimationdt.Minimum = edt.Value;
-            eAnimationdt.Increment = edt.Value;
-            eAnimationdt.Value = 10 * edt.Value;
-        }
-
-        private void btnGenerateEpisodes_Click(object sender, EventArgs e)
-        {
-            (List<Cell> LeftMNs, List<Cell> RightMNs) = Model.GetMotoNeurons((int)eKinematicsSomite.Value);
-            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs,
-                (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
-            string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
-                width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
-            webViewSummaryV.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
-            eEpisodesLeft.Text = "";
-            eEpisodesRight.Text = "";
-            foreach (SwimmingEpisode episode in episodesLeft)
-                eEpisodesLeft.Text += episode.ToString() + "\r\n\r\n";
-            foreach (SwimmingEpisode episode in episodesRight)
-                eEpisodesRight.Text += episode.ToString() + "\r\n\r\n";
-            lKinematicsTimes.Text = $"Last kinematics:{DateTime.Now:t}";
-        }
-
-        private void splitContainer1_Panel2_SizeChanged(object sender, EventArgs e)
-        {
-            eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
-        }
+        #endregion
 
         private void btnCellularDynamics_Click(object sender, EventArgs e)
         {
@@ -1743,34 +1804,5 @@ namespace SiliFish.UI
             frmControl.ShowDialog();
         }
 
-        private void ddDefaultNeuronCore_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ModelTemplate.Settings.DefaultNeuronCore = ddDefaultNeuronCore.Text;
-        }
-
-        private void ddDefaultMuscleCellCore_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ModelTemplate.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
-        }
-
-        private void eOutputFolder_Click(object sender, EventArgs e)
-        {
-            browseFolder.InitialDirectory = eOutputFolder.Text;
-            if (browseFolder.ShowDialog() == DialogResult.OK)
-            {
-                ModelTemplate.Settings.OutputFolder = 
-                    eOutputFolder.Text = browseFolder.SelectedPath;                
-            }
-        }
-
-        private void eTemporaryFolder_Click(object sender, EventArgs e)
-        {
-            browseFolder.InitialDirectory = eTemporaryFolder.Text;
-            if (browseFolder.ShowDialog() == DialogResult.OK)
-            {
-                ModelTemplate.Settings.TempFolder = 
-                    eTemporaryFolder.Text = browseFolder.SelectedPath;
-            }
-        }
     }
 }

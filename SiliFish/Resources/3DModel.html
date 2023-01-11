@@ -14,35 +14,23 @@
 </head>
 
 <body>
-    <div id="left-panel" style="width:50%; float:left">
+    <div id="left-panel" style="width:100%">
         <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
-        <div id="3d-graph-gap"></div>
-        <div class="scene-nav-info">Left-click on a node to select the whole cell pool, right-click to display the neighboring cells.</div>
-    </div>
-    <div id="seperator" class="vertical"></div>
-    <div id="right-panel" style="width:50%; float:right">
-        <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
-        <div id="3d-graph-chem"></div>
+        <div id="3d-graph"></div>
         <div class="scene-nav-info">Left-click on a node to select the whole cell pool, right-click to display the neighboring cells.</div>
     </div>
     <script>
         __OFFLINE_3D_SCRIPT__
     </script>
     <script>
-        const gapGraph = ForceGraph3D()
-            (document.getElementById("3d-graph-gap"));
-        const chemGraph = ForceGraph3D()
-            (document.getElementById("3d-graph-chem"));
-        gapGraph.height(window.innerHeight - 60);
-        chemGraph.height(window.innerHeight - 60);
+        const gapChemGraph = ForceGraph3D()
+            (document.getElementById("3d-graph"));
 
-        const gapData = {
+        gapChemGraph.height(window.innerHeight - 60);
+
+        const gapChemData = {
             "nodes": [__NODES__],
-            "links": [__GAP_LINKS__]
-        };
-        const chemData = {
-            "nodes": [__NODES__],
-            "links": [__CHEM_LINKS__]
+            "links": [__GAP_CHEM_LINKS__]
         };
 
         const colorSet = { __COLOR_SET__ };
@@ -53,113 +41,125 @@
         spinePoints.push(new THREE.Vector3(__SPINE_LENGTH__, __SPINE_Y__, __SPINE_Z__));
 
         const spineGeometry = new THREE.BufferGeometry().setFromPoints(spinePoints);
-        const spineLineGap = new THREE.Line(spineGeometry, spineMaterial);
-        const spineLineChem = new THREE.Line(spineGeometry, spineMaterial);
+        const spineLine = new THREE.Line(spineGeometry, spineMaterial);
+        gapChemGraph.scene().add(spineLine);
 
-        gapGraph.scene().add(spineLineGap);
-        chemGraph.scene().add(spineLineChem);
+        //https://codepen.io/duhaime/pen/jaYdLg/
+        var loader = new THREE.TextureLoader();
+        var lateralHeadMaterial = new THREE.MeshLambertMaterial({
+            map: loader.load('__LATERAL_HEAD__')
+        });
+        lateralHeadMaterial.transparent = true;
+        lateralHeadMaterial.opacity = 0.3;
+        var lateralHeadGeometry = new THREE.BoxGeometry(__BRAIN_WIDTH__, __BRAIN_HEIGHT__, 0.1);
+        var lateralHeadBox = new THREE.Mesh(lateralHeadGeometry, lateralHeadMaterial);
+        lateralHeadBox.position.set(__SPINE_X__ - __BRAIN_WIDTH__, - __BRAIN_HEIGHT__, 0)
+        gapChemGraph.scene().add(lateralHeadBox);
+
+        var dorsalHeadMaterial = new THREE.MeshLambertMaterial({
+            map: loader.load('__DORSAL_HEAD__')
+        });
+        dorsalHeadMaterial.transparent = true;
+        dorsalHeadMaterial.opacity = 0.3;
+		var dorsalHeadGeometry = new THREE.BoxGeometry(__BRAIN_WIDTH__, 0.1, __BRAIN_DEPTH__);
+        var dorsalHeadBox = new THREE.Mesh(dorsalHeadGeometry, dorsalHeadMaterial);
+        dorsalHeadBox.position.set(__SPINE_X__ - __BRAIN_WIDTH__, 0, - __BRAIN_DEPTH__ / 2)
+        gapChemGraph.scene().add(dorsalHeadBox);
 
         //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
         var linkedByID = {};
-        gapData.links.forEach(function (d) {
-            linkedByID["gap," + d.source + "," + d.target] = 1;
-        });
-        chemData.links.forEach(function (d) {
-            linkedByID["chem," + d.source + "," + d.target] = 1;
+        gapChemData.links.forEach(function (d) {
+            linkedByID[d.source + "," + d.target] = 1;
         });
 
-        function neighboring(gc, a, b) {
-            return linkedByID[gc + "," + a.id + "," + b.id];
+        function neighboring(a, b) {
+            return linkedByID[a.id + "," + b.id];
         }
 
-        let hoverNodeGap = null;
-        let showNeighborsGap = false;
+        let hoverNode = null;
+        let showNeighbors = false;
+        let showChemJnc = true;
+        let showGapJnc = true;
 
-        const gapDataSet = gapGraph
-            .nodeColor(n => (hoverNodeGap == null || hoverNodeGap == n ? colorSet[n.g] :
-                !showNeighborsGap && hoverNodeGap.g == n.g ? colorSet[n.g] :
-                    (showNeighborsGap && (neighboring("gap", hoverNodeGap, n) || neighboring("gap", n, hoverNodeGap))) ? colorSet[n.g] :
+        const gapChemDataSet = gapChemGraph
+            .nodeColor(n => (hoverNode == null || hoverNode == n ? colorSet[n.g] :
+                !showNeighbors && hoverNode.g == n.g ? colorSet[n.g] :
+                    (showNeighbors && (neighboring(hoverNode, n) || neighboring(n, hoverNode))) ? colorSet[n.g] :
                         '#EEE'))
             .nodeOpacity(0.9)
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
-            .graphData(gapData)
-            .linkColor(l => hoverNodeGap == null ? '#808080' : (showNeighborsGap && l.source == hoverNodeGap) ? '#C00' : (showNeighborsGap && l.target == hoverNodeGap) ? '#0C0' : '#DDD')
-            .linkOpacity(l => hoverNodeGap == null ? 0.4 : l.source == hoverNodeGap || l.target == hoverNodeGap ? 0.9 : 0.1)
-            .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.01))
-            .linkCurvature('curv')
-            .onNodeRightClick(node => {
-                hoverNodeGap = node;
-                showNeighborsGap = true;
-                updateHighlightGap();
-            })
-            .onNodeClick(node => {
-                hoverNodeGap = node;
-                showNeighborsGap = true;
-                updateHighlightGap();
-            })
-            .onBackgroundClick(() => {
-                hoverNodeGap = null;
-                showNeighborsGap = false;
-                updateHighlightGap();
-            })
-            .enableNodeDrag(false)
-            .backgroundColor("#FFF")
-            .width(document.body.offsetWidth);
-
-        function updateHighlightGap() {
-            // trigger update of highlighted objects in scene
-            gapGraph
-                .nodeColor(gapGraph.nodeColor())
-                .linkColor(gapGraph.linkColor())
-                .linkOpacity(gapGraph.linkOpacity())
-        }
-
-        let hoverNodeChem = null;
-        let showNeighborsChem = false;
-
-        const chemDataSet = chemGraph
-            .nodeColor(n => (hoverNodeChem == null || hoverNodeChem == n ? colorSet[n.g] :
-                !showNeighborsChem && hoverNodeChem.g == n.g ? colorSet[n.g] :
-                    (showNeighborsChem && (neighboring("chem", hoverNodeChem, n) || neighboring("chem", n, hoverNodeChem))) ? colorSet[n.g] :
-                        '#EEE'))
-            .nodeOpacity(0.9)
-            .nodeLabel(n => `${n.id} ${n.crd}`)
-            .nodeRelSize(__NODE_SIZE__)
-            .graphData(chemData)
-            .linkDirectionalArrowRelPos(1)
-            .linkDirectionalArrowLength(5)
-            .linkColor(l => hoverNodeChem == null ? '#808080' : (showNeighborsChem && l.source == hoverNodeChem) ? '#C00' : (showNeighborsChem && l.target == hoverNodeChem) ? '#0C0' : '#DDD')
-            .linkOpacity(l => hoverNodeChem == null ? 0.4 : l.source == hoverNodeChem || l.target == hoverNodeChem ? 0.9 : 0.1)
+            .graphData(gapChemData)
+            .linkColor(l => hoverNode == null ? '#808080' : (showNeighbors && l.source == hoverNode) ? '#C00' : (showNeighbors && l.target == hoverNode) ? '#0C0' : '#DDD')
+            .linkOpacity(l => hoverNode == null ? 0.4 : l.source == hoverNode || l.target == hoverNode ? 0.9 : 0.1)
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.01))
             .linkCurvature('curv')
+            .linkVisibility(l => l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc)
             .onNodeRightClick(node => {
-                hoverNodeChem = node;
-                showNeighborsChem = true;
-                updateHighlightChem();
+                hoverNode = node;
+                showNeighbors = true;
+                updateHighlight();
             })
             .onNodeClick(node => {
-                hoverNodeChem = node;
-                showNeighborsChem = false;
-                updateHighlightChem();
+                hoverNode = node;
+                showNeighbors = false;
+                updateHighlight();
             })
             .onBackgroundClick(() => {
-                hoverNodeChem = null;
-                showNeighborsChem = false;
-                updateHighlightChem();
+                hoverNode = null;
+                showNeighbors = false;
+                updateHighlight();
             })
             .enableNodeDrag(false)
-            .backgroundColor("#FFF")
-            .width(document.body.offsetWidth);
-        function updateHighlightChem() {
+            .backgroundColor("#FFF");
+
+        function updateHighlight() {
             // trigger update of highlighted objects in scene
-            chemGraph
-                .nodeColor(chemGraph.nodeColor())
-                .linkColor(chemGraph.linkColor())
-                .linkOpacity(chemGraph.linkOpacity())
+            gapChemGraph
+                .nodeColor(gapChemGraph.nodeColor())
+                .linkColor(gapChemGraph.linkColor())
+                .linkOpacity(gapChemGraph.linkOpacity())
         }
+
+        function ShowGapJunc() {
+            showGapJnc = true;
+            gapChemGraph.refresh();
+        }
+        function HideGapJunc() {
+            showGapJnc = false;
+            gapChemGraph.refresh();
+        }
+        function ShowChemJunc() {
+            showChemJnc = true;
+            gapChemGraph.refresh();
+        }
+        function HideChemJunc() {
+            showChemJnc = false;
+            gapChemGraph.refresh();
+        }
+
+        const distance = 500;
+        function FixedView(x, y, z) {
+            if (y != 0) //dorsal/ventral
+                gapChemGraph.camera().up.set(-1, 0, 0);
+            else //lateral/rostral/caudal
+                gapChemGraph.camera().up.set(0, 1, 0);
+            gapChemGraph.cameraPosition({ x: x, y: y, z: z },
+                { x: 0, y: 0, z: 0 });
+            gapChemGraph.controls().mouseButtons.LEFT = undefined;
+        }
+        function DorsalView() { FixedView(0, distance, 0); }
+        function VentralView() { FixedView(0, -distance, 0); }
+        function RostralView() { FixedView(-distance, 0, 0); }
+        function CaudalView() { FixedView(distance, 0, 0); }
+        function LateralLeftView() { FixedView(0, 0, distance); }
+        function LateralRightView() { FixedView(0, 0, -distance); }
+        function FreeView() {
+            gapChemGraph.cameraPosition({});
+            gapChemGraph.controls().mouseButtons.LEFT = THREE.MOUSE.LEFT;
+        }
+
     </script>
 
 </body>

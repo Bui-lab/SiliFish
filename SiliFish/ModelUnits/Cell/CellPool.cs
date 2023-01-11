@@ -271,9 +271,10 @@ namespace SiliFish.ModelUnits
                 Coordinate[] coordinates = GetCoordinates(n, somite);
                 Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
 
+                double defaultCV = CurrentSettings.Settings.cv;
                 double[] cv = template.ConductionVelocity != null ?
                     ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
-                    Enumerable.Repeat(Model.cv, n).ToArray();
+                    Enumerable.Repeat(defaultCV, n).ToArray();
 
                 foreach (int i in Enumerable.Range(0, n))
                 {

@@ -78,7 +78,7 @@ namespace SiliFish.Services
             if (!Util.CheckOnlineStatus())
                 return "Animation requires internet connection.";
 
-            StringBuilder html = new(ReadEmbeddedResource("SiliFish.Resources.Animation.html"));
+            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.Animation.html"));
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__PARAMS__", HttpUtility.HtmlEncode(animParams).Replace("\n", "<br/>"));
 

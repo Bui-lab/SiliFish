@@ -138,7 +138,7 @@ namespace SiliFish.ModelUnits.Model
             Color[] colors = colorProperties.Select(prop => (Color)prop.GetValue(null, null)).ToArray();
 
             int colorIndex = 0;
-
+            double cv = CurrentSettings.Settings.cv;
             //This sample assumes the model is somite based
             if (ModelDimensions.NumberOfSomites <= 0) return;
             NeuronPools = new List<CellPool>();
@@ -154,6 +154,7 @@ namespace SiliFish.ModelUnits.Model
                 UniformDistribution xdist = new(ModelDimensions.SupraSpinalRostralCaudalDistance, ModelDimensions.SpinalRostralCaudalDistance + ModelDimensions.SupraSpinalRostralCaudalDistance, true, false);
                 UniformDistribution ydist = new(0, ModelDimensions.SpinalMedialLateralDistance, true, false);
                 UniformDistribution zdist = new(0, ModelDimensions.SpinalDorsalVentralDistance, true, false);
+
                 for (int somite = 0; somite < ModelDimensions.NumberOfSomites; somite++)
                 {
                     Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, somite);

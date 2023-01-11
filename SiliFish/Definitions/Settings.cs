@@ -1,5 +1,8 @@
 ﻿using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace SiliFish.Definitions
 {
@@ -54,6 +57,25 @@ namespace SiliFish.Definitions
         [Browsable(false), Category("Default values")]
         public string DefaultMuscleCellCore { get; set; } = typeof(Leaky_Integrator).Name;
 
+        [Description("Default conduction velocity of currents between cells."),
+            DisplayName("Conduction Velocity"),
+            Category("Default Values")]
+        public double cv { get; set; } = 1; //the transmission speed
+
+        [Description("Default reversal potential of glutamate."),
+            Category("Default Values")]
+        public double E_glu { get; set; } = 0;////the reversal potential of glutamate
+        [Description("Default reversal potential of glycine."),
+            Category("Default Values")]
+        public double E_gly { get; set; } = -70; //the reversal potential of glycine
+        [Description("Default reversal potential of GABA."),
+            Category("Default Values")]
+        public double E_gaba { get; set; } = -70; //the reversal potential of GABA
+        [Description("Default reversal potential of ACh."),
+            Category("Default Values")]
+        public double E_ach { get; set; } = 120; //reversal potential for ACh receptors
+
+
 
         [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"), 
             DisplayName ("Chattering Irregularity"),
@@ -83,5 +105,18 @@ namespace SiliFish.Definitions
             DisplayName("Tonic Padding"),
             Category("Dynamics")]
         public double TonicPadding { get; set; } = 1;
+
+        public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
+        {
+            if (paramExternal == null || !paramExternal.Keys.Any(k => k.StartsWith("Dynamic.")))
+                return paramExternal;
+
+            cv = paramExternal.ReadDoubleAndRemoveKey("Dynamic.ConductionVelocity", cv);
+            E_ach = paramExternal.ReadDoubleAndRemoveKey("Dynamic.E_ach", E_ach);
+            E_gaba = paramExternal.ReadDoubleAndRemoveKey("Dynamic.E_gaba", E_gaba);
+            E_glu = paramExternal.ReadDoubleAndRemoveKey("Dynamic.E_glu", E_glu);
+            E_gly = paramExternal.ReadDoubleAndRemoveKey("Dynamic.E_gly", E_gly);
+            return paramExternal;
+        }
     }
 }
