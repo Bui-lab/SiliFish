@@ -222,6 +222,11 @@ namespace SiliFish.UI
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
             this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.legendUnselected = new System.Windows.Forms.Label();
+            this.legendGap = new System.Windows.Forms.Label();
+            this.legendIncoming = new System.Windows.Forms.Label();
+            this.legendOutgoing = new System.Windows.Forms.Label();
+            this.grLegend = new System.Windows.Forms.GroupBox();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -299,6 +304,7 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
+            this.grLegend.SuspendLayout();
             this.SuspendLayout();
             // 
             // pTop
@@ -1727,6 +1733,7 @@ namespace SiliFish.UI
             // 
             // p3DModel
             // 
+            this.p3DModel.Controls.Add(this.grLegend);
             this.p3DModel.Controls.Add(this.btnZoomIn);
             this.p3DModel.Controls.Add(this.btnZoomOut);
             this.p3DModel.Controls.Add(this.rb3DFreeView);
@@ -1746,6 +1753,7 @@ namespace SiliFish.UI
             this.p3DModel.Dock = System.Windows.Forms.DockStyle.Top;
             this.p3DModel.Location = new System.Drawing.Point(0, 0);
             this.p3DModel.Name = "p3DModel";
+            this.p3DModel.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.p3DModel.Size = new System.Drawing.Size(784, 95);
             this.p3DModel.TabIndex = 3;
             // 
@@ -1754,7 +1762,7 @@ namespace SiliFish.UI
             this.btnZoomIn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
             this.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnZoomIn.Location = new System.Drawing.Point(534, 9);
+            this.btnZoomIn.Location = new System.Drawing.Point(606, 6);
             this.btnZoomIn.Name = "btnZoomIn";
             this.btnZoomIn.Size = new System.Drawing.Size(32, 32);
             this.btnZoomIn.TabIndex = 48;
@@ -1765,7 +1773,7 @@ namespace SiliFish.UI
             // 
             this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
             this.btnZoomOut.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnZoomOut.Location = new System.Drawing.Point(496, 9);
+            this.btnZoomOut.Location = new System.Drawing.Point(572, 6);
             this.btnZoomOut.Name = "btnZoomOut";
             this.btnZoomOut.Size = new System.Drawing.Size(32, 32);
             this.btnZoomOut.TabIndex = 47;
@@ -1905,7 +1913,7 @@ namespace SiliFish.UI
             this.pLine3D.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pLine3D.Location = new System.Drawing.Point(0, 94);
             this.pLine3D.Name = "pLine3D";
-            this.pLine3D.Size = new System.Drawing.Size(784, 1);
+            this.pLine3D.Size = new System.Drawing.Size(779, 1);
             this.pLine3D.TabIndex = 30;
             // 
             // linkSaveHTML3D
@@ -1913,7 +1921,7 @@ namespace SiliFish.UI
             this.linkSaveHTML3D.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkSaveHTML3D.AutoSize = true;
             this.linkSaveHTML3D.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveHTML3D.Location = new System.Drawing.Point(711, 13);
+            this.linkSaveHTML3D.Location = new System.Drawing.Point(572, 74);
             this.linkSaveHTML3D.Name = "linkSaveHTML3D";
             this.linkSaveHTML3D.Size = new System.Drawing.Size(66, 15);
             this.linkSaveHTML3D.TabIndex = 27;
@@ -1926,7 +1934,7 @@ namespace SiliFish.UI
             this.btnGenerate3DModel.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnGenerate3DModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerate3DModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerate3DModel.Location = new System.Drawing.Point(14, 63);
+            this.btnGenerate3DModel.Location = new System.Drawing.Point(14, 65);
             this.btnGenerate3DModel.Name = "btnGenerate3DModel";
             this.btnGenerate3DModel.Size = new System.Drawing.Size(120, 23);
             this.btnGenerate3DModel.TabIndex = 26;
@@ -2675,6 +2683,60 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // legendUnselected
+            // 
+            this.legendUnselected.BackColor = System.Drawing.Color.Gray;
+            this.legendUnselected.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendUnselected.Location = new System.Drawing.Point(6, 17);
+            this.legendUnselected.Name = "legendUnselected";
+            this.legendUnselected.Size = new System.Drawing.Size(120, 18);
+            this.legendUnselected.TabIndex = 49;
+            this.legendUnselected.Text = "Unselected";
+            // 
+            // legendGap
+            // 
+            this.legendGap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.legendGap.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendGap.Location = new System.Drawing.Point(6, 35);
+            this.legendGap.Name = "legendGap";
+            this.legendGap.Size = new System.Drawing.Size(120, 18);
+            this.legendGap.TabIndex = 50;
+            this.legendGap.Text = "Gap junc";
+            // 
+            // legendIncoming
+            // 
+            this.legendIncoming.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.legendIncoming.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendIncoming.Location = new System.Drawing.Point(6, 53);
+            this.legendIncoming.Name = "legendIncoming";
+            this.legendIncoming.Size = new System.Drawing.Size(120, 18);
+            this.legendIncoming.TabIndex = 51;
+            this.legendIncoming.Text = "Incoming Projections";
+            // 
+            // legendOutgoing
+            // 
+            this.legendOutgoing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(204)))), ((int)(((byte)(0)))));
+            this.legendOutgoing.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendOutgoing.Location = new System.Drawing.Point(6, 71);
+            this.legendOutgoing.Name = "legendOutgoing";
+            this.legendOutgoing.Size = new System.Drawing.Size(120, 18);
+            this.legendOutgoing.TabIndex = 52;
+            this.legendOutgoing.Text = "Outgoing Projections";
+            // 
+            // grLegend
+            // 
+            this.grLegend.Controls.Add(this.legendUnselected);
+            this.grLegend.Controls.Add(this.legendOutgoing);
+            this.grLegend.Controls.Add(this.legendGap);
+            this.grLegend.Controls.Add(this.legendIncoming);
+            this.grLegend.Dock = System.Windows.Forms.DockStyle.Right;
+            this.grLegend.Location = new System.Drawing.Point(649, 0);
+            this.grLegend.Name = "grLegend";
+            this.grLegend.Size = new System.Drawing.Size(130, 94);
+            this.grLegend.TabIndex = 53;
+            this.grLegend.TabStop = false;
+            this.grLegend.Text = "Legend";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2782,6 +2844,7 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
+            this.grLegend.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2977,5 +3040,10 @@ namespace SiliFish.UI
         private Button btnZoomIn;
         private Button btnZoomOut;
         private Button btnAbout;
+        private Label legendUnselected;
+        private Label legendGap;
+        private Label legendIncoming;
+        private Label legendOutgoing;
+        private GroupBox grLegend;
     }
 }

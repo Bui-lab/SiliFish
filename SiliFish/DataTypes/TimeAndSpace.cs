@@ -98,7 +98,7 @@ namespace SiliFish.DataTypes
     public class TimeLine
     {
         private List<(int start, int end)> Periods = new();
-
+        //private Dictionary<(int start, int end), (int active, int rest)> Cycles = new();
         public string PeriodsJSON//Required for JSON
         {
             get

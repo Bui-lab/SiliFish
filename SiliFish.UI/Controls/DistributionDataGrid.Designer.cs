@@ -28,49 +28,98 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dgDynamics = new System.Windows.Forms.DataGridView();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dgDistribution = new System.Windows.Forms.DataGridView();
             this.colField = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDist = new System.Windows.Forms.DataGridViewButtonColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).BeginInit();
+            this.colUniqueValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRange = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDistribution = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDistDetails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDistButton = new System.Windows.Forms.DataGridViewButtonColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dgDistribution)).BeginInit();
             this.SuspendLayout();
             // 
-            // dgDynamics
+            // dgDistribution
             // 
-            this.dgDynamics.AllowUserToAddRows = false;
-            this.dgDynamics.AllowUserToDeleteRows = false;
-            this.dgDynamics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgDynamics.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgDistribution.AllowUserToAddRows = false;
+            this.dgDistribution.AllowUserToDeleteRows = false;
+            this.dgDistribution.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgDistribution.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgDistribution.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colField,
-            this.colValue,
-            this.colDist});
-            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgDynamics.Location = new System.Drawing.Point(0, 0);
-            this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.RowHeadersVisible = false;
-            this.dgDynamics.RowTemplate.Height = 25;
-            this.dgDynamics.Size = new System.Drawing.Size(100, 100);
-            this.dgDynamics.TabIndex = 10;
-            this.dgDynamics.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellClick);
-            this.dgDynamics.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
-            this.dgDynamics.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellEndEdit);
+            this.colUniqueValue,
+            this.colRange,
+            this.colDistribution,
+            this.colDistDetails,
+            this.colDistButton});
+            this.dgDistribution.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgDistribution.Location = new System.Drawing.Point(0, 0);
+            this.dgDistribution.Name = "dgDistribution";
+            this.dgDistribution.RowHeadersVisible = false;
+            this.dgDistribution.RowTemplate.Height = 25;
+            this.dgDistribution.Size = new System.Drawing.Size(100, 100);
+            this.dgDistribution.TabIndex = 10;
+            this.dgDistribution.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellClick);
+            this.dgDistribution.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
+            this.dgDistribution.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellEndEdit);
             // 
             // colField
             // 
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            this.colField.DefaultCellStyle = dataGridViewCellStyle1;
             this.colField.HeaderText = "Field";
             this.colField.Name = "colField";
             this.colField.ReadOnly = true;
+            this.colField.Width = 57;
             // 
-            // colValue
+            // colUniqueValue
             // 
-            this.colValue.HeaderText = "Value";
-            this.colValue.Name = "colValue";
+            this.colUniqueValue.HeaderText = "Unique Value";
+            this.colUniqueValue.Name = "colUniqueValue";
+            this.colUniqueValue.Width = 93;
             // 
-            // colDist
+            // colRange
             // 
-            this.colDist.HeaderText = "Distr.";
-            this.colDist.Name = "colDist";
-            this.colDist.Width = 40;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.colRange.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colRange.HeaderText = "Range";
+            this.colRange.Name = "colRange";
+            this.colRange.ReadOnly = true;
+            this.colRange.Width = 65;
+            // 
+            // colDistribution
+            // 
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.colDistribution.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colDistribution.HeaderText = "Distribution";
+            this.colDistribution.Name = "colDistribution";
+            this.colDistribution.ReadOnly = true;
+            this.colDistribution.Width = 94;
+            // 
+            // colDistDetails
+            // 
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.colDistDetails.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colDistDetails.HeaderText = "Details";
+            this.colDistDetails.Name = "colDistDetails";
+            this.colDistDetails.ReadOnly = true;
+            this.colDistDetails.Width = 67;
+            // 
+            // colDistButton
+            // 
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(102)))), ((int)(((byte)(210)))));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            this.colDistButton.DefaultCellStyle = dataGridViewCellStyle5;
+            this.colDistButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.colDistButton.HeaderText = "Distr.";
+            this.colDistButton.Name = "colDistButton";
+            this.colDistButton.Width = 40;
             // 
             // DistributionDataGrid
             // 
@@ -79,20 +128,23 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.Controls.Add(this.dgDynamics);
+            this.Controls.Add(this.dgDistribution);
             this.MinimumSize = new System.Drawing.Size(100, 100);
             this.Name = "DistributionDataGrid";
             this.Size = new System.Drawing.Size(100, 100);
-            ((System.ComponentModel.ISupportInitialize)(this.dgDynamics)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgDistribution)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private DataGridView dgDynamics;
+        private DataGridView dgDistribution;
         private DataGridViewTextBoxColumn colField;
-        private DataGridViewTextBoxColumn colValue;
-        private DataGridViewButtonColumn colDist;
+        private DataGridViewTextBoxColumn colUniqueValue;
+        private DataGridViewTextBoxColumn colRange;
+        private DataGridViewTextBoxColumn colDistribution;
+        private DataGridViewTextBoxColumn colDistDetails;
+        private DataGridViewButtonColumn colDistButton;
     }
 }

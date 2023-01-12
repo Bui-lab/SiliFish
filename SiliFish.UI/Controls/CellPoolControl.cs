@@ -280,10 +280,17 @@ namespace SiliFish.UI.Controls
         {
             if (e is not UpdatedParamsEventArgs args || args.ParamsAsObject == null)
                 return;
+            if (poolTemplate.CoreType == args.CoreType && poolTemplate.Parameters.Values.Any(v => v is Distribution dist && !dist.IsConstant))
+            {
+                string msg = "This cell pool has defined distributions for dynamics parameters, which will be cleared. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    return;
+            }
             poolTemplate.Parameters = args.ParamsAsObject;
             poolTemplate.CoreType = args.CoreType;
             ddCoreType.Text = poolTemplate.CoreType.ToString();
             ParamDictToGrid();
+            MessageBox.Show($"Parameters are carried to {poolTemplate.CellGroup}", "SiliFish");
         }
 
         private void cbAllSomites_CheckedChanged(object sender, EventArgs e)

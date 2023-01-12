@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgTimeLine = new System.Windows.Forms.DataGridView();
-            this.colStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colRepeat = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.colRest = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colRepetition = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cmTimeLine = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiClearAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiSort = new System.Windows.Forms.ToolStripMenuItem();
             this.pTimelineTop = new System.Windows.Forms.Panel();
             this.linkClearTimeline = new System.Windows.Forms.LinkLabel();
+            this.colStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCyclic = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.colActive = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRest = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgTimeLine)).BeginInit();
             this.cmTimeLine.SuspendLayout();
             this.pTimelineTop.SuspendLayout();
@@ -56,9 +56,9 @@
             this.dgTimeLine.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colStartTime,
             this.colEndTime,
-            this.colRepeat,
-            this.colRest,
-            this.colRepetition});
+            this.colCyclic,
+            this.colActive,
+            this.colRest});
             this.dgTimeLine.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgTimeLine.Location = new System.Drawing.Point(0, 30);
             this.dgTimeLine.Name = "dgTimeLine";
@@ -67,45 +67,6 @@
             this.dgTimeLine.Size = new System.Drawing.Size(467, 120);
             this.dgTimeLine.TabIndex = 0;
             this.dgTimeLine.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgTimeLine_CellValueChanged);
-            // 
-            // colStartTime
-            // 
-            dataGridViewCellStyle5.Format = "N0";
-            dataGridViewCellStyle5.NullValue = null;
-            this.colStartTime.DefaultCellStyle = dataGridViewCellStyle5;
-            this.colStartTime.HeaderText = "Start (ms)";
-            this.colStartTime.Name = "colStartTime";
-            this.colStartTime.Width = 85;
-            // 
-            // colEndTime
-            // 
-            dataGridViewCellStyle6.Format = "N0";
-            this.colEndTime.DefaultCellStyle = dataGridViewCellStyle6;
-            this.colEndTime.HeaderText = "End (ms)";
-            this.colEndTime.Name = "colEndTime";
-            this.colEndTime.Width = 80;
-            // 
-            // colRepeat
-            // 
-            this.colRepeat.HeaderText = "Repeat";
-            this.colRepeat.Name = "colRepeat";
-            this.colRepeat.Visible = false;
-            // 
-            // colRest
-            // 
-            dataGridViewCellStyle7.Format = "N0";
-            this.colRest.DefaultCellStyle = dataGridViewCellStyle7;
-            this.colRest.HeaderText = "Rest (ms)";
-            this.colRest.Name = "colRest";
-            this.colRest.Visible = false;
-            // 
-            // colRepetition
-            // 
-            dataGridViewCellStyle8.Format = "N0";
-            this.colRepetition.DefaultCellStyle = dataGridViewCellStyle8;
-            this.colRepetition.HeaderText = "Repetition";
-            this.colRepetition.Name = "colRepetition";
-            this.colRepetition.Visible = false;
             // 
             // cmTimeLine
             // 
@@ -150,6 +111,48 @@
             this.linkClearTimeline.Text = "Clear Timeline";
             this.linkClearTimeline.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearTimeline_LinkClicked);
             // 
+            // colStartTime
+            // 
+            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colStartTime.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colStartTime.HeaderText = "Start (ms)";
+            this.colStartTime.Name = "colStartTime";
+            this.colStartTime.Width = 85;
+            // 
+            // colEndTime
+            // 
+            dataGridViewCellStyle2.Format = "N0";
+            this.colEndTime.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colEndTime.HeaderText = "End (ms)";
+            this.colEndTime.Name = "colEndTime";
+            this.colEndTime.Width = 80;
+            // 
+            // colCyclic
+            // 
+            this.colCyclic.HeaderText = "Cyclic";
+            this.colCyclic.Name = "colCyclic";
+            this.colCyclic.Visible = false;
+            this.colCyclic.Width = 44;
+            // 
+            // colActive
+            // 
+            dataGridViewCellStyle3.Format = "N0";
+            this.colActive.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colActive.HeaderText = "Active (ms)";
+            this.colActive.Name = "colActive";
+            this.colActive.ReadOnly = true;
+            this.colActive.Visible = false;
+            // 
+            // colRest
+            // 
+            dataGridViewCellStyle4.Format = "N0";
+            this.colRest.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colRest.HeaderText = "Rest (ms)";
+            this.colRest.Name = "colRest";
+            this.colRest.ReadOnly = true;
+            this.colRest.Visible = false;
+            // 
             // TimeLineControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -172,12 +175,12 @@
         private ContextMenuStrip cmTimeLine;
         private ToolStripMenuItem cmiClearAll;
         private ToolStripMenuItem cmiSort;
-        private DataGridViewTextBoxColumn colStartTime;
-        private DataGridViewTextBoxColumn colEndTime;
-        private DataGridViewCheckBoxColumn colRepeat;
-        private DataGridViewTextBoxColumn colRest;
-        private DataGridViewTextBoxColumn colRepetition;
         private Panel pTimelineTop;
         private LinkLabel linkClearTimeline;
+        private DataGridViewTextBoxColumn colStartTime;
+        private DataGridViewTextBoxColumn colEndTime;
+        private DataGridViewCheckBoxColumn colCyclic;
+        private DataGridViewTextBoxColumn colActive;
+        private DataGridViewTextBoxColumn colRest;
     }
 }

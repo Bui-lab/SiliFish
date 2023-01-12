@@ -15,18 +15,20 @@ namespace SiliFish.UI.Controls
         {
             if (e.RowIndex < 0) return;
             int rowind = e.RowIndex;
-            if (dgDynamics.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
+            if (dgDistribution.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
             {
-                DistributionControl distControl = new();
-                distControl.AbsoluteEnforced = true;
+                DistributionControl distControl = new()
+                {
+                    AbsoluteEnforced = true
+                };
                 ControlContainer frmControl = new();
                 frmControl.AddControl(distControl);
-                frmControl.Text = dgDynamics[colField.Index, e.RowIndex].Value.ToString();
-                if (dgDynamics[colValue.Index, e.RowIndex].Tag is Distribution dist)
+                frmControl.Text = dgDistribution[colField.Index, e.RowIndex].Value.ToString();
+                if (dgDistribution.Rows[e.RowIndex].Tag is Distribution dist)
                     distControl.SetDistribution(dist);
                 else
                 {
-                    double val = double.Parse(dgDynamics[colValue.Index, e.RowIndex].Tag?.ToString() ?? dgDynamics[colValue.Index, e.RowIndex].Value?.ToString());
+                    double val = double.Parse(dgDistribution[colUniqueValue.Index, e.RowIndex].Tag?.ToString() ?? dgDistribution[colUniqueValue.Index, e.RowIndex].Value?.ToString());
                     dist = new Constant_NoDistribution(val, true, false, 0);
                     distControl.SetDistribution(dist);
                 }
@@ -34,48 +36,109 @@ namespace SiliFish.UI.Controls
                 {
                     dist = distControl.GetDistribution();
                     if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon)
-                    {
-                        dgDynamics[colValue.Index, rowind].Value = dist.RangeStart;
-                        dgDynamics[colValue.Index, rowind].Tag = null;
-                    }
+                        WriteNoDistToRow(null, dist.UniqueValue, rowind);
                     else
-                    {
-                        dgDynamics[colValue.Index, rowind].Value = dist.ToString();
-                        dgDynamics[colValue.Index, rowind].Tag = dist;
-                    }
+                        WriteDistToRow(null, dist, rowind);
                 }
             }
         }
         private void dgDynamics_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgDynamics[colValue.Index, e.RowIndex].Tag is Distribution dist)
+            if (dgDistribution.Rows[e.RowIndex].Tag is Distribution dist)
             {
                 if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon)
-                    dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
+                    dgDistribution[colUniqueValue.Index, e.RowIndex].ReadOnly = false;
                 else
-                    dgDynamics[colValue.Index, e.RowIndex].ReadOnly = true;
+                    dgDistribution[colUniqueValue.Index, e.RowIndex].ReadOnly = true;
             }
             else
-                dgDynamics[colValue.Index, e.RowIndex].ReadOnly = false;
+                dgDistribution[colUniqueValue.Index, e.RowIndex].ReadOnly = false;
         }
         private void dgDynamics_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            dgDynamics[colValue.Index, e.RowIndex].Tag = null;
+            dgDistribution.Rows[e.RowIndex].Tag = null;
         }
-        public void WriteToGrid(Dictionary<string, object> parameters)
+
+        private void WriteDistToRow(string key, Distribution dist, int rowIndex)
         {
-            parameters.WriteToGrid(dgDynamics, colField.Index, colValue.Index);
+            if (dgDistribution.RowCount <= rowIndex || dist == null) return;
+            if (key != null)
+                dgDistribution[colField.Index, rowIndex].Value = key;
+            dgDistribution.Rows[rowIndex].Tag = dist;
+            dgDistribution[colUniqueValue.Index, rowIndex].Value = dist.UniqueValue.ToString("0.#####");
+            dgDistribution[colRange.Index, rowIndex].Value = dist.RangeStr;
+            dgDistribution[colDistribution.Index, rowIndex].Value = dist.DistType;
+            dgDistribution[colDistDetails.Index, rowIndex].Value = dist.ToString();
+        }
+
+        private void WriteNoDistToRow(string key, double d, int rowIndex)
+        {
+            if (dgDistribution.RowCount <= rowIndex) return;
+            if (key != null)
+                dgDistribution[colField.Index, rowIndex].Value = key;
+            dgDistribution.Rows[rowIndex].Tag = null;
+            dgDistribution[colUniqueValue.Index, rowIndex].Value = d.ToString("0.#####");
+            dgDistribution[colRange.Index, rowIndex].Value = "";
+            dgDistribution[colDistribution.Index, rowIndex].Value = "";
+            dgDistribution[colDistDetails.Index, rowIndex].Value = "";
         }
         public void WriteToGrid(Dictionary<string, double> parameters)
         {
-            parameters.WriteToGrid(dgDynamics, colField.Index, colValue.Index);
+            try
+            {
+                dgDistribution.RowCount = parameters?.Count ?? 0;
+                if (parameters == null)
+                    return;
+                int rowIndex = 0;
+                foreach (string key in parameters.Keys)
+                {
+                    WriteNoDistToRow(key, parameters[key], rowIndex);
+                    rowIndex++;
+                }
+            }
+            catch { }
+        }
+
+        public void WriteToGrid(Dictionary<string, object> parameters)
+        {
+            try
+            {
+                dgDistribution.RowCount = parameters?.Count ?? 0;
+                if (parameters == null)
+                    return;
+                int rowIndex = 0;
+                foreach (string key in parameters.Keys)
+                {
+                    if (parameters[key] is Distribution dist)
+                    {
+                        if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon)
+                            WriteNoDistToRow(key, dist.UniqueValue, rowIndex);
+                        else
+                            WriteDistToRow(key, dist, rowIndex);
+                    }
+                    else
+                        WriteNoDistToRow(key, (double)parameters[key], rowIndex);
+                    rowIndex++;
+                }
+            }
+            catch { }
         }
 
         public Dictionary<string, object> ReadFromGrid()
         {
-            Dictionary<string, object> paramDict = new();
-            paramDict.ReadFromGrid(dgDynamics, colField.Index, colValue.Index);
-            return paramDict;
+            try
+            {
+                Dictionary<string, object> paramDict = new();
+                for (int rowIndex = 0; rowIndex < dgDistribution.RowCount; rowIndex++)
+                {
+                    if (dgDistribution.Rows[rowIndex].Tag is Distribution dist)
+                        paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), dist);
+                    else
+                        paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), dgDistribution[colUniqueValue.Index, rowIndex].Value);
+                }
+                return paramDict;
+            }
+            catch { return null; }
         }
 
     }

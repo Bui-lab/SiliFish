@@ -76,39 +76,48 @@
             return linkedByID[a.id + "," + b.id];
         }
 
-        let hoverNode = null;
-        let showNeighbors = false;
-        let showChemJnc = true;
-        let showGapJnc = true;
+        let selectedNode = null;
+        let showSingleNodeLinks = false;
+        let showChemJnc = __SHOW_CHEM__;
+        let showGapJnc = __SHOW_GAP__;
 
+        function showLink(l) {
+            return selectedNode == null ||
+                (showSingleNodeLinks && (l.source == selectedNode || l.target == selectedNode)
+                    || !showSingleNodeLinks && (l.source.g == selectedNode.g || l.target.g == selectedNode.g));
+        }
         const gapChemDataSet = gapChemGraph
-            .nodeColor(n => (hoverNode == null || hoverNode == n ? colorSet[n.g] :
-                !showNeighbors && hoverNode.g == n.g ? colorSet[n.g] :
-                    (showNeighbors && (neighboring(hoverNode, n) || neighboring(n, hoverNode))) ? colorSet[n.g] :
+            .nodeColor(n => (selectedNode == null || selectedNode == n ? colorSet[n.g] :
+                !showSingleNodeLinks && selectedNode.g == n.g ? colorSet[n.g] :
+                    (showSingleNodeLinks && (neighboring(selectedNode, n) || neighboring(n, selectedNode))) ? colorSet[n.g] :
                         '#EEE'))
             .nodeOpacity(0.9)
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
             .graphData(gapChemData)
-            .linkColor(l => hoverNode == null ? '#808080' : (showNeighbors && l.source == hoverNode) ? '#C00' : (showNeighbors && l.target == hoverNode) ? '#0C0' : '#DDD')
-            .linkOpacity(l => hoverNode == null ? 0.4 : l.source == hoverNode || l.target == hoverNode ? 0.9 : 0.1)
+            .linkColor(l => selectedNode == null ? '#808080' ://medium gray
+                !showLink(l) ? '#DDD' ://light gray
+                l.type == 'gap'? '#333' ://dark gray
+               (l.source.g == selectedNode.g) ? '#C00' ://red - incoming0
+                '#0C0') //green - outgoing
+            .linkOpacity(l => selectedNode == null ? 0.8 : showLink(l) ? 1 : 0)
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.01))
+            .linkWidth(l => Math.max(l.value, 0.001)) 
             .linkCurvature('curv')
-            .linkVisibility(l => l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc)
+            .linkVisibility(l => (l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
             .onNodeRightClick(node => {
-                hoverNode = node;
-                showNeighbors = true;
+                selectedNode = node;
+                showSingleNodeLinks = true;
                 updateHighlight();
             })
             .onNodeClick(node => {
-                hoverNode = node;
-                showNeighbors = false;
+                selectedNode = node;
+                showSingleNodeLinks = false;
                 updateHighlight();
             })
             .onBackgroundClick(() => {
-                hoverNode = null;
-                showNeighbors = false;
+                selectedNode = null;
+                showSingleNodeLinks = false;
                 updateHighlight();
             })
             .enableNodeDrag(false)

@@ -28,6 +28,24 @@ namespace SiliFish.DataTypes
         /// </summary>
         public double Range { get; set; } = 0;
 
+        [JsonIgnore]
+        public bool IsConstant
+        {
+            get
+            {
+                return DistType == nameof(Constant_NoDistribution) && (this as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon;
+            }
+        }
+        [JsonIgnore]
+        public string RangeStr 
+        {
+            get
+            {
+                return Absolute ? $"{RangeStart}-{RangeEnd}" :
+                    $"{LowerLimit}%-{UpperLimit}%";
+            }
+        }
+
         protected double LowerLimit { get { return Absolute ? RangeStart : Range * RangeStart / 100; } }
 
         protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }

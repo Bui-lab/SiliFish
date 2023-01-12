@@ -93,7 +93,8 @@ namespace SiliFish.UI.Controls
         {
             timerOptimization.Enabled = false;
             btnOptimize.Enabled = true;
-            Parameters = SolverOutput?.BestValues;
+            if (SolverOutput == null) return;
+            Parameters = SolverOutput.BestValues;
             if (optimizationProgress != null && optimizationProgress.Visible)
                 optimizationProgress.Close();
             optimizationProgress = null;

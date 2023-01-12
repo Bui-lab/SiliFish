@@ -14,6 +14,7 @@ namespace SiliFish.DynamicUnits
         public double Va; //Vm when tension is half of Tmax/2
         public double Tmax; //maximum tension
         public double ka; //slope factor [Dulhunty 1992 (Prog. Biophys)]
+        public double Vmax;
 
         [JsonIgnore]
         public double TimeConstant { get { return R * C; } }
@@ -28,9 +29,9 @@ namespace SiliFish.DynamicUnits
             this.C = C;
             this.Vr = Vr;
             V = Vr;
-            //Vmax = 99999;
+            Vmax = 99999;
         }
-        public Leaky_Integrator(double R, double C, double Vr, double Va, double Tmax, double ka)
+        public Leaky_Integrator(double R, double C, double Vr, double Va, double Tmax, double ka, double Vmax)
         {
             this.R = R;
             this.C = C;
@@ -38,6 +39,7 @@ namespace SiliFish.DynamicUnits
             this.Va = Va;
             this.Tmax = Tmax;
             this.ka = ka;
+            this.Vmax = Vmax;
             V = Vr;
         }
 
@@ -59,7 +61,8 @@ namespace SiliFish.DynamicUnits
                 { "Leaky_Integrator.Vr", Vr },
                 { "Leaky_Integrator.Va", Va },
                 { "Leaky_Integrator.Tmax", Tmax },
-                { "Leaky_Integrator.ka", ka }
+                { "Leaky_Integrator.ka", ka },
+                { "Leaky_Integrator.Vmax", Vmax }
             };
             return paramDict;
         }
@@ -72,6 +75,7 @@ namespace SiliFish.DynamicUnits
             paramExternal.AddObject("Leaky_Integrator.Va", Va, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.Tmax", Tmax, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.ka", ka, skipIfExists: true);
+            paramExternal.AddObject("Leaky_Integrator.Vmax", Vmax, skipIfExists: true);
         }
         public override void SetParameters(Dictionary<string, double> paramExternal)
         {
@@ -85,6 +89,7 @@ namespace SiliFish.DynamicUnits
             paramExternal.TryGetValue("Leaky_Integrator.Va", out Va);
             paramExternal.TryGetValue("Leaky_Integrator.Tmax", out Tmax);
             paramExternal.TryGetValue("Leaky_Integrator.ka", out ka);
+            paramExternal.TryGetValue("Leaky_Integrator.Vmax", out Vmax);
             V = Vr;
         }
 
@@ -99,7 +104,6 @@ namespace SiliFish.DynamicUnits
         //formula from [Dulhunty 1992 (Prog. Biophys)]
         public double CalculateTension(double? Vm = null) //if Vm is null, current V value is used
         {
-            //T_a = T_max / (1 + exp(V_a - V_m) / k_a
             return Tmax * CalculateRelativeTension(Vm);
         }
 
@@ -123,7 +127,7 @@ namespace SiliFish.DynamicUnits
                 double dv = (-1 / (R * C)) * (V - Vr) + I / C;
                 double vNew = V + dv * dt;
                 V = vNew;
-                //if (V >= Vmax) V = Vmax;
+                if (V >= Vmax) V = Vmax;
             }
             return V;
         }

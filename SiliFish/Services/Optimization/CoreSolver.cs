@@ -26,7 +26,11 @@ namespace SiliFish.Services.Optimization
 
         private double latestFitness = 0.0;
         private double bestFitness = 0.0;
-        IChromosome bestestChromosome = null;
+        /// <summary>
+        /// The algorithm does not always return the best solution, if the next generation's solution is not as well.
+        /// bestestchromosome is kept as a bookmark, and returns the best available solution at the end. 
+        /// </summary>
+        IChromosome bestestChromosome = null; 
 
         private string errorMessage;
 
@@ -150,41 +154,46 @@ namespace SiliFish.Services.Optimization
         }
         public CoreSolverOutput Optimize()
         {
-            CoreSolverOutput output = new();
-            InitializeOptimization();
-            latestFitness = 0.0;
-            Algorithm.GenerationRan += (sender, e) =>
-            {
-                var bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
-                latestFitness = bestChromosome.Fitness.Value;
-                if (bestFitness < latestFitness)
-                {
-                    bestFitness = latestFitness;
-                    bestestChromosome = bestChromosome;
-                }
-            };
-            errorMessage = "";
             try
             {
-                Algorithm.Start();
-            }
-            catch (Exception exc)
-            { 
-                output.ErrorMessage = exc.Message;
-            }
+                CoreSolverOutput output = new();
+                InitializeOptimization();
+                latestFitness = 0.0;
+                Algorithm.GenerationRan += (sender, e) =>
+                {
+                    var bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
+                    latestFitness = bestChromosome.Fitness.Value;
+                    if (bestFitness < latestFitness)
+                    {
+                        bestFitness = latestFitness;
+                        bestestChromosome = bestChromosome;
+                    }
+                };
+                errorMessage = "";
+                try
+                {
+                    Algorithm.Start();
+                }
+                catch (Exception exc)
+                {
+                    output.ErrorMessage = exc.Message;
+                }
 
-            if (Algorithm.BestChromosome != bestestChromosome)
-            { }
-            Dictionary<string, double> BestValues = new();
-            int iter = 0;
-            foreach (string key in Settings.SortedKeys)
-            {
-                var phenotype = (bestestChromosome as FloatingPointChromosome).ToFloatingPoints();
-                BestValues.Add(key, phenotype[iter++]);
+                Dictionary<string, double> BestValues = new();
+                int iter = 0;
+                foreach (string key in Settings.SortedKeys)
+                {
+                    var phenotype = (bestestChromosome as FloatingPointChromosome).ToFloatingPoints();
+                    BestValues.Add(key, phenotype[iter++]);
+                }
+                output.BestValues = BestValues;
+                output.BestFitness = bestestChromosome.Fitness ?? 0;
+                return output;
             }
-            output.BestValues = BestValues;
-            output.BestFitness = bestestChromosome.Fitness ?? 0;
-            return output;
+            catch 
+            {
+                return null;
+            }
         }
         public void CancelOptimization()
         {

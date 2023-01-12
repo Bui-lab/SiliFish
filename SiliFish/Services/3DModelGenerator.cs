@@ -17,7 +17,7 @@ namespace SiliFish.Services
         double XYZMult;
         double XMin, YMin, ZMin;
         double XOffset;
-        double WeightMin, WeightMax;
+        double WeightMax;
         double WeightMult;
         private string CreateLinkDataPoint(GapJunction jnc)
         {
@@ -25,7 +25,7 @@ namespace SiliFish.Services
             return $"{{\"source\":\"{jnc.Cell1.ID}\"," +
                 $"\"target\":\"{jnc.Cell2.ID}\"," +
                 $"\"type\":\"gap\"," +
-                $"\"value\":{GetNewWeight(jnc.Conductance):0.##}," +
+                $"\"value\":{GetNewWeight(jnc.Conductance):0.###}," +
                 $"\"conductance\":{jnc.Conductance:0.######}" +
                 $"{curvInfo} }}";
         }
@@ -35,7 +35,7 @@ namespace SiliFish.Services
             return $"{{\"source\":\"{jnc.PreNeuron.ID}\"," +
                 $"\"target\":\"{jnc.PostCell.ID}\"," +
                 $"\"type\":\"chem\"," +
-                $"\"value\":{GetNewWeight(jnc.Conductance):0.##}," +
+                $"\"value\":{GetNewWeight(jnc.Conductance):0.###}," +
                 $"\"conductance\":{jnc.Conductance:0.######}" +
                 $"{curvInfo} }}";
         }
@@ -102,14 +102,16 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, string somiteRange)
+        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
         {
-            StringBuilder html = new(global::SiliFish.Services.VisualsGenerator.ReadEmbeddedText("SiliFish.Resources.3DModel.html"));
+            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DModel.html"));
 
             string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 3D Model";
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
+            html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
+            html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
             if (Util.CheckOnlineStatus())
             {
@@ -146,8 +148,8 @@ namespace SiliFish.Services
             XOffset = width / 2; //The center of the window is 0 - so half width is removed from all X values
 
             int numOfConnections = model.GetNumberOfConnections();
-            double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
-            (WeightMin, WeightMax) = model.GetConnectionRange();
+            double maxjncsize = 0.03; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
+            (_, WeightMax) = model.GetConnectionRange();
             WeightMult = maxjncsize / WeightMax;
 
             ModelDimensions MD = model.ModelDimensions;

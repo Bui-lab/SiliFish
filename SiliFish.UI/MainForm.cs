@@ -1108,8 +1108,9 @@ namespace SiliFish.UI
             {
                 RefreshModelSafeMode();
                 ThreeDModelGenerator threeDModelGenerator = new();
-                string html = threeDModelGenerator.Create3DModel(false, Model, Model.CellPools, cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text);
-
+                string html = threeDModelGenerator.Create3DModel(saveFile:false, Model, Model.CellPools, 
+                    somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
+                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 webView3DModel.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
             }
             catch (Exception ex)
