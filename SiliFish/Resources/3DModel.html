@@ -53,7 +53,7 @@
         lateralHeadMaterial.opacity = 0.3;
         var lateralHeadGeometry = new THREE.BoxGeometry(__BRAIN_WIDTH__, __BRAIN_HEIGHT__, 0.1);
         var lateralHeadBox = new THREE.Mesh(lateralHeadGeometry, lateralHeadMaterial);
-        lateralHeadBox.position.set(__SPINE_X__ - __BRAIN_WIDTH__, - __BRAIN_HEIGHT__, 0)
+        lateralHeadBox.position.set(__SPINE_X__ - __BRAIN_WIDTH__, __SPINE_Y__, __SPINE_Z__)
         gapChemGraph.scene().add(lateralHeadBox);
 
         var dorsalHeadMaterial = new THREE.MeshLambertMaterial({
@@ -63,7 +63,7 @@
         dorsalHeadMaterial.opacity = 0.3;
 		var dorsalHeadGeometry = new THREE.BoxGeometry(__BRAIN_WIDTH__, 0.1, __BRAIN_DEPTH__);
         var dorsalHeadBox = new THREE.Mesh(dorsalHeadGeometry, dorsalHeadMaterial);
-        dorsalHeadBox.position.set(__SPINE_X__ - __BRAIN_WIDTH__, 0, - __BRAIN_DEPTH__ / 2)
+        dorsalHeadBox.position.set(__SPINE_X__ - __BRAIN_WIDTH__, __SPINE_Y__, __SPINE_Z__ )
         gapChemGraph.scene().add(dorsalHeadBox);
 
         //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
@@ -139,22 +139,23 @@
             gapChemGraph.refresh();
         }
 
-        const distance = 500;
         function FixedView(x, y, z) {
+            pos = gapChemGraph.camera().position
+            distance = Math.sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z)
             if (y != 0) //dorsal/ventral
                 gapChemGraph.camera().up.set(-1, 0, 0);
             else //lateral/rostral/caudal
                 gapChemGraph.camera().up.set(0, 1, 0);
-            gapChemGraph.cameraPosition({ x: x, y: y, z: z },
+            gapChemGraph.cameraPosition({ x: x * distance, y: y * distance, z: z * distance },
                 { x: 0, y: 0, z: 0 });
             gapChemGraph.controls().mouseButtons.LEFT = undefined;
         }
-        function DorsalView() { FixedView(0, distance, 0); }
-        function VentralView() { FixedView(0, -distance, 0); }
-        function RostralView() { FixedView(-distance, 0, 0); }
-        function CaudalView() { FixedView(distance, 0, 0); }
-        function LateralLeftView() { FixedView(0, 0, distance); }
-        function LateralRightView() { FixedView(0, 0, -distance); }
+        function DorsalView() { FixedView(0, 1, 0); }
+        function VentralView() { FixedView(0, -1, 0); }
+        function RostralView() { FixedView(-1, 0, 0); }
+        function CaudalView() { FixedView(1, 0, 0); }
+        function LateralLeftView() { FixedView(0, 0, 1); }
+        function LateralRightView() { FixedView(0, 0, -1); }
         function FreeView() {
             gapChemGraph.cameraPosition({});
             gapChemGraph.controls().mouseButtons.LEFT = THREE.MOUSE.LEFT;
