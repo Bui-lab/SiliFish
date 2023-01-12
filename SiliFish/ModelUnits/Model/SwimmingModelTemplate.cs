@@ -26,6 +26,7 @@ namespace SiliFish.ModelUnits.Model
             Parameters?.Clear();
             AppliedStimuli.Clear();
         }
+
         //Needs to be run after created from JSON
         public void LinkObjects()
         {

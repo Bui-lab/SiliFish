@@ -61,12 +61,42 @@ namespace SiliFish.UI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2022-07-10T09:16:55
+        ///   Looks up a localized string similar to 2023-01-12T16:28:29
         ///.
         /// </summary>
         public static string BuildDate {
             get {
                 return ResourceManager.GetString("BuildDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap fishbone {
+            get {
+                object obj = ResourceManager.GetObject("fishbone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MinusSign {
+            get {
+                object obj = ResourceManager.GetObject("MinusSign", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap PlusSign {
+            get {
+                object obj = ResourceManager.GetObject("PlusSign", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

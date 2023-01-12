@@ -62,7 +62,6 @@
     <EmbeddedResource Include="Resources\3DModel.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
-    <EmbeddedResource Include="Resources\DorsalHead.png" />
     <EmbeddedResource Include="Resources\DyChartUnsync.html" />
     <EmbeddedResource Include="Resources\DyChart.js" />
     <EmbeddedResource Include="Resources\DyChartSync.html" />
@@ -101,10 +100,6 @@
 
   <ItemGroup>
     <EditorConfigFiles Remove="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\LateralHead.png" />
   </ItemGroup>
 
   <ItemGroup>

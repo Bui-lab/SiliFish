@@ -33,6 +33,7 @@ namespace SiliFish.UI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pTop = new System.Windows.Forms.Panel();
+            this.btnAbout = new System.Windows.Forms.Button();
             this.btnCellularDynamics = new System.Windows.Forms.Button();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkOpenOutputFolder = new System.Windows.Forms.LinkLabel();
@@ -141,6 +142,14 @@ namespace SiliFish.UI
             this.tab3DModel = new System.Windows.Forms.TabPage();
             this.webView3DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.p3DModel = new System.Windows.Forms.Panel();
+            this.btnZoomIn = new System.Windows.Forms.Button();
+            this.btnZoomOut = new System.Windows.Forms.Button();
+            this.rb3DFreeView = new System.Windows.Forms.RadioButton();
+            this.rb3DLateralViewRight = new System.Windows.Forms.RadioButton();
+            this.rb3DLateralViewLeft = new System.Windows.Forms.RadioButton();
+            this.rb3DCaudalView = new System.Windows.Forms.RadioButton();
+            this.rb3DRostralView = new System.Windows.Forms.RadioButton();
+            this.rb3DVentralView = new System.Windows.Forms.RadioButton();
             this.rb3DDorsalView = new System.Windows.Forms.RadioButton();
             this.cb3DGapJunc = new System.Windows.Forms.CheckBox();
             this.cb3DChemJunc = new System.Windows.Forms.CheckBox();
@@ -213,12 +222,6 @@ namespace SiliFish.UI
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
             this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.rb3DVentralView = new System.Windows.Forms.RadioButton();
-            this.rb3DRostralView = new System.Windows.Forms.RadioButton();
-            this.rb3DCaudalView = new System.Windows.Forms.RadioButton();
-            this.rb3DLateralViewLeft = new System.Windows.Forms.RadioButton();
-            this.rb3DLateralViewRight = new System.Windows.Forms.RadioButton();
-            this.rb3DFreeView = new System.Windows.Forms.RadioButton();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -302,6 +305,7 @@ namespace SiliFish.UI
             // 
             this.pTop.BackColor = System.Drawing.Color.White;
             this.pTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pTop.Controls.Add(this.btnAbout);
             this.pTop.Controls.Add(this.btnCellularDynamics);
             this.pTop.Controls.Add(this.linkBrowseToTempFolder);
             this.pTop.Controls.Add(this.linkOpenOutputFolder);
@@ -310,7 +314,20 @@ namespace SiliFish.UI
             this.pTop.Name = "pTop";
             this.pTop.Size = new System.Drawing.Size(1348, 40);
             this.pTop.TabIndex = 3;
-            this.pTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pTop_MouseDoubleClick);
+            // 
+            // btnAbout
+            // 
+            this.btnAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAbout.AutoSize = true;
+            this.btnAbout.BackColor = System.Drawing.Color.Transparent;
+            this.btnAbout.Image = ((System.Drawing.Image)(resources.GetObject("btnAbout.Image")));
+            this.btnAbout.Location = new System.Drawing.Point(1302, 5);
+            this.btnAbout.Name = "btnAbout";
+            this.btnAbout.Size = new System.Drawing.Size(33, 30);
+            this.btnAbout.TabIndex = 24;
+            this.toolTip.SetToolTip(this.btnAbout, "About");
+            this.btnAbout.UseVisualStyleBackColor = false;
+            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
             // 
             // btnCellularDynamics
             // 
@@ -332,7 +349,7 @@ namespace SiliFish.UI
             this.linkBrowseToTempFolder.AutoSize = true;
             this.linkBrowseToTempFolder.ForeColor = System.Drawing.Color.White;
             this.linkBrowseToTempFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1211, 14);
+            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1173, 14);
             this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
             this.linkBrowseToTempFolder.Size = new System.Drawing.Size(104, 15);
             this.linkBrowseToTempFolder.TabIndex = 7;
@@ -347,7 +364,7 @@ namespace SiliFish.UI
             this.linkOpenOutputFolder.AutoSize = true;
             this.linkOpenOutputFolder.ForeColor = System.Drawing.Color.White;
             this.linkOpenOutputFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1092, 14);
+            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1054, 14);
             this.linkOpenOutputFolder.Name = "linkOpenOutputFolder";
             this.linkOpenOutputFolder.Size = new System.Drawing.Size(113, 15);
             this.linkOpenOutputFolder.TabIndex = 6;
@@ -1710,6 +1727,8 @@ namespace SiliFish.UI
             // 
             // p3DModel
             // 
+            this.p3DModel.Controls.Add(this.btnZoomIn);
+            this.p3DModel.Controls.Add(this.btnZoomOut);
             this.p3DModel.Controls.Add(this.rb3DFreeView);
             this.p3DModel.Controls.Add(this.rb3DLateralViewRight);
             this.p3DModel.Controls.Add(this.rb3DLateralViewLeft);
@@ -1729,6 +1748,97 @@ namespace SiliFish.UI
             this.p3DModel.Name = "p3DModel";
             this.p3DModel.Size = new System.Drawing.Size(784, 95);
             this.p3DModel.TabIndex = 3;
+            // 
+            // btnZoomIn
+            // 
+            this.btnZoomIn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
+            this.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnZoomIn.Location = new System.Drawing.Point(534, 9);
+            this.btnZoomIn.Name = "btnZoomIn";
+            this.btnZoomIn.Size = new System.Drawing.Size(32, 32);
+            this.btnZoomIn.TabIndex = 48;
+            this.btnZoomIn.UseVisualStyleBackColor = true;
+            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            // 
+            // btnZoomOut
+            // 
+            this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
+            this.btnZoomOut.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnZoomOut.Location = new System.Drawing.Point(496, 9);
+            this.btnZoomOut.Name = "btnZoomOut";
+            this.btnZoomOut.Size = new System.Drawing.Size(32, 32);
+            this.btnZoomOut.TabIndex = 47;
+            this.btnZoomOut.UseVisualStyleBackColor = true;
+            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+            // 
+            // rb3DFreeView
+            // 
+            this.rb3DFreeView.AutoSize = true;
+            this.rb3DFreeView.Checked = true;
+            this.rb3DFreeView.Location = new System.Drawing.Point(340, 51);
+            this.rb3DFreeView.Name = "rb3DFreeView";
+            this.rb3DFreeView.Size = new System.Drawing.Size(75, 19);
+            this.rb3DFreeView.TabIndex = 46;
+            this.rb3DFreeView.TabStop = true;
+            this.rb3DFreeView.Text = "Free View";
+            this.rb3DFreeView.UseVisualStyleBackColor = true;
+            this.rb3DFreeView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
+            // 
+            // rb3DLateralViewRight
+            // 
+            this.rb3DLateralViewRight.AutoSize = true;
+            this.rb3DLateralViewRight.Location = new System.Drawing.Point(340, 30);
+            this.rb3DLateralViewRight.Name = "rb3DLateralViewRight";
+            this.rb3DLateralViewRight.Size = new System.Drawing.Size(124, 19);
+            this.rb3DLateralViewRight.TabIndex = 45;
+            this.rb3DLateralViewRight.Text = "Lateral View (right)";
+            this.rb3DLateralViewRight.UseVisualStyleBackColor = true;
+            this.rb3DLateralViewRight.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
+            // 
+            // rb3DLateralViewLeft
+            // 
+            this.rb3DLateralViewLeft.AutoSize = true;
+            this.rb3DLateralViewLeft.Location = new System.Drawing.Point(340, 9);
+            this.rb3DLateralViewLeft.Name = "rb3DLateralViewLeft";
+            this.rb3DLateralViewLeft.Size = new System.Drawing.Size(116, 19);
+            this.rb3DLateralViewLeft.TabIndex = 44;
+            this.rb3DLateralViewLeft.Text = "Lateral View (left)";
+            this.rb3DLateralViewLeft.UseVisualStyleBackColor = true;
+            this.rb3DLateralViewLeft.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
+            // 
+            // rb3DCaudalView
+            // 
+            this.rb3DCaudalView.AutoSize = true;
+            this.rb3DCaudalView.Location = new System.Drawing.Point(240, 72);
+            this.rb3DCaudalView.Name = "rb3DCaudalView";
+            this.rb3DCaudalView.Size = new System.Drawing.Size(90, 19);
+            this.rb3DCaudalView.TabIndex = 43;
+            this.rb3DCaudalView.Text = "Caudal View";
+            this.rb3DCaudalView.UseVisualStyleBackColor = true;
+            this.rb3DCaudalView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
+            // 
+            // rb3DRostralView
+            // 
+            this.rb3DRostralView.AutoSize = true;
+            this.rb3DRostralView.Location = new System.Drawing.Point(240, 51);
+            this.rb3DRostralView.Name = "rb3DRostralView";
+            this.rb3DRostralView.Size = new System.Drawing.Size(89, 19);
+            this.rb3DRostralView.TabIndex = 42;
+            this.rb3DRostralView.Text = "Rostral View";
+            this.rb3DRostralView.UseVisualStyleBackColor = true;
+            this.rb3DRostralView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
+            // 
+            // rb3DVentralView
+            // 
+            this.rb3DVentralView.AutoSize = true;
+            this.rb3DVentralView.Location = new System.Drawing.Point(240, 30);
+            this.rb3DVentralView.Name = "rb3DVentralView";
+            this.rb3DVentralView.Size = new System.Drawing.Size(89, 19);
+            this.rb3DVentralView.TabIndex = 41;
+            this.rb3DVentralView.Text = "Ventral View";
+            this.rb3DVentralView.UseVisualStyleBackColor = true;
+            this.rb3DVentralView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
             // 
             // rb3DDorsalView
             // 
@@ -2565,74 +2675,6 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // rb3DVentralView
-            // 
-            this.rb3DVentralView.AutoSize = true;
-            this.rb3DVentralView.Location = new System.Drawing.Point(240, 30);
-            this.rb3DVentralView.Name = "rb3DVentralView";
-            this.rb3DVentralView.Size = new System.Drawing.Size(89, 19);
-            this.rb3DVentralView.TabIndex = 41;
-            this.rb3DVentralView.Text = "Ventral View";
-            this.rb3DVentralView.UseVisualStyleBackColor = true;
-            this.rb3DVentralView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DRostralView
-            // 
-            this.rb3DRostralView.AutoSize = true;
-            this.rb3DRostralView.Location = new System.Drawing.Point(240, 51);
-            this.rb3DRostralView.Name = "rb3DRostralView";
-            this.rb3DRostralView.Size = new System.Drawing.Size(89, 19);
-            this.rb3DRostralView.TabIndex = 42;
-            this.rb3DRostralView.Text = "Rostral View";
-            this.rb3DRostralView.UseVisualStyleBackColor = true;
-            this.rb3DRostralView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DCaudalView
-            // 
-            this.rb3DCaudalView.AutoSize = true;
-            this.rb3DCaudalView.Location = new System.Drawing.Point(240, 72);
-            this.rb3DCaudalView.Name = "rb3DCaudalView";
-            this.rb3DCaudalView.Size = new System.Drawing.Size(90, 19);
-            this.rb3DCaudalView.TabIndex = 43;
-            this.rb3DCaudalView.Text = "Caudal View";
-            this.rb3DCaudalView.UseVisualStyleBackColor = true;
-            this.rb3DCaudalView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DLateralViewLeft
-            // 
-            this.rb3DLateralViewLeft.AutoSize = true;
-            this.rb3DLateralViewLeft.Location = new System.Drawing.Point(340, 9);
-            this.rb3DLateralViewLeft.Name = "rb3DLateralViewLeft";
-            this.rb3DLateralViewLeft.Size = new System.Drawing.Size(116, 19);
-            this.rb3DLateralViewLeft.TabIndex = 44;
-            this.rb3DLateralViewLeft.Text = "Lateral View (left)";
-            this.rb3DLateralViewLeft.UseVisualStyleBackColor = true;
-            this.rb3DLateralViewLeft.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DLateralViewRight
-            // 
-            this.rb3DLateralViewRight.AutoSize = true;
-            this.rb3DLateralViewRight.Location = new System.Drawing.Point(340, 30);
-            this.rb3DLateralViewRight.Name = "rb3DLateralViewRight";
-            this.rb3DLateralViewRight.Size = new System.Drawing.Size(124, 19);
-            this.rb3DLateralViewRight.TabIndex = 45;
-            this.rb3DLateralViewRight.Text = "Lateral View (right)";
-            this.rb3DLateralViewRight.UseVisualStyleBackColor = true;
-            this.rb3DLateralViewRight.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DFreeView
-            // 
-            this.rb3DFreeView.AutoSize = true;
-            this.rb3DFreeView.Checked = true;
-            this.rb3DFreeView.Location = new System.Drawing.Point(340, 51);
-            this.rb3DFreeView.Name = "rb3DFreeView";
-            this.rb3DFreeView.Size = new System.Drawing.Size(75, 19);
-            this.rb3DFreeView.TabIndex = 46;
-            this.rb3DFreeView.TabStop = true;
-            this.rb3DFreeView.Text = "Free View";
-            this.rb3DFreeView.UseVisualStyleBackColor = true;
-            this.rb3DFreeView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2932,5 +2974,8 @@ namespace SiliFish.UI
         private RadioButton rb3DCaudalView;
         private RadioButton rb3DRostralView;
         private RadioButton rb3DVentralView;
+        private Button btnZoomIn;
+        private Button btnZoomOut;
+        private Button btnAbout;
     }
 }

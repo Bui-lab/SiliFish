@@ -16,7 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\MinusSign.png" />
+    <None Remove="Resources\PlusSign.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\fishbone2BlueBG.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MinusSign.png" />
+    <EmbeddedResource Include="Resources\PlusSign.png" />
   </ItemGroup>
 
   <ItemGroup>

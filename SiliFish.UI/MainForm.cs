@@ -1180,6 +1180,15 @@ namespace SiliFish.UI
                 await webView3DModel.ExecuteScriptAsync("FreeView();");
         }
 
+          private async void btnZoomOut_Click(object sender, EventArgs e)
+        {
+            await webView3DModel.ExecuteScriptAsync("ZoomOut();");
+        }
+
+        private async void btnZoomIn_Click(object sender, EventArgs e)
+        {
+            await webView3DModel.ExecuteScriptAsync("ZoomIn();");
+        }
         #endregion
 
         #region Animation
@@ -1746,7 +1755,7 @@ namespace SiliFish.UI
         #endregion
 
         #region General Form Functions
-        private void pTop_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void btnAbout_Click(object sender, EventArgs e)
         {
             About about = new();
             about.ShowDialog();
@@ -1803,6 +1812,9 @@ namespace SiliFish.UI
             frmControl.SaveVisible = false;
             frmControl.ShowDialog();
         }
+
+
+
 
     }
 }

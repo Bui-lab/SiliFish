@@ -160,7 +160,14 @@
             gapChemGraph.cameraPosition({});
             gapChemGraph.controls().mouseButtons.LEFT = THREE.MOUSE.LEFT;
         }
-
+        function ZoomIn() {
+            pos = gapChemGraph.camera().position;
+            gapChemGraph.cameraPosition({ x: pos.x / 2, y: pos.y / 2, z: pos.z / 2 });
+        }
+        function ZoomOut() {
+            pos = gapChemGraph.camera().position;
+            gapChemGraph.cameraPosition({ x: pos.x * 2, y: pos.y * 2, z: pos.z * 2 });
+        }
     </script>
 
 </body>
