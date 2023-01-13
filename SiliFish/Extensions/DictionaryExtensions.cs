@@ -137,6 +137,8 @@ namespace SiliFish.Extensions
         public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, object> dictionary, int number)
         {
             Dictionary<string, double[]> valuesArray = new();
+            if (dictionary == null)
+                return valuesArray;
             foreach (string key in dictionary.Keys)
             {
                 object obj = dictionary[key];

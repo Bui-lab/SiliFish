@@ -80,11 +80,15 @@
         let showSingleNodeLinks = false;
         let showChemJnc = __SHOW_CHEM__;
         let showGapJnc = __SHOW_GAP__;
+        let somiteList = [__SOMITES__];
 
         function showLink(l) {
             return selectedNode == null ||
                 (showSingleNodeLinks && (l.source == selectedNode || l.target == selectedNode)
                     || !showSingleNodeLinks && (l.source.g == selectedNode.g || l.target.g == selectedNode.g));
+        }
+        function showNode(n) {
+            return n.s <= 0 || somiteList.length == 0 || somiteList.includes(n.s);
         }
         const gapChemDataSet = gapChemGraph
             .nodeColor(n => (selectedNode == null || selectedNode == n ? colorSet[n.g] :
@@ -94,6 +98,7 @@
             .nodeOpacity(0.9)
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
+            .nodeVisibility(n => showNode(n))
             .graphData(gapChemData)
             .linkColor(l => selectedNode == null ? '#808080' ://medium gray
                 !showLink(l) ? '#DDD' ://light gray
@@ -145,6 +150,11 @@
         }
         function HideChemJunc() {
             showChemJnc = false;
+            gapChemGraph.refresh();
+        }
+
+        function SetSomites(somites) {
+            somiteList = somites;
             gapChemGraph.refresh();
         }
 

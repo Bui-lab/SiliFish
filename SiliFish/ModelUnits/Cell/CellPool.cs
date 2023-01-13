@@ -254,12 +254,9 @@ namespace SiliFish.ModelUnits
             Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
 
             ModelDimensions MD = Model.ModelDimensions;
-            List<int> somites;
-            (int firstSomite, int lastSomite) = Util.ParseRange(template.SomiteRange, defMin: 1, defMax: MD.NumberOfSomites);
-
-            if (template.PerSomiteOrTotal == CountingMode.PerSomite)
-                somites = Enumerable.Range(firstSomite, lastSomite - firstSomite + 1).ToList();
-            else somites = new List<int>() { -1 };
+            List<int> somites = template.PerSomiteOrTotal == CountingMode.PerSomite ? 
+                Util.ParseRange(template.SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
+                new List<int>() { -1 };
 
             double somiteLength = 0;
             if (template.PerSomiteOrTotal == CountingMode.Total && MD.NumberOfSomites > 0)
@@ -406,16 +403,15 @@ namespace SiliFish.ModelUnits
         {
             if (stimulus_ms == null)
                 return;
-            int minSom = -1;
-            int maxSom = int.MaxValue;
-            int minSeq = -1;
-            int maxSeq = int.MaxValue;
+            List<int> somites = new();
+            List<int> seqs = new();
             if (!TargetSomite.StartsWith("All"))
-                (minSom, maxSom) = Util.ParseRange(TargetSomite);
+                somites = Util.ParseRange(TargetSomite, 1, Model.ModelDimensions.NumberOfSomites);
             if (!TargetCell.StartsWith("All"))
-                (minSeq, maxSeq) = Util.ParseRange(TargetCell);
+                seqs = Util.ParseRange(TargetCell, 1, this.Cells.Max(c=>c.Sequence));
 
-            foreach (Cell cell in GetCells().Where(c => c.Somite >= minSom && c.Somite <= maxSom && c.Sequence >= minSeq && c.Sequence <= maxSeq))
+            foreach (Cell cell in GetCells()
+                .Where(c => (!somites.Any() || somites.Contains(c.Somite)) && (!seqs.Any() || seqs.Contains(c.Sequence))))
             {
                 cell.Stimuli.Add(stimulus_ms);
             }

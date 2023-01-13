@@ -57,7 +57,7 @@ namespace SiliFish.Services
         private string CreateNodeDataPoint(Cell cell)
         {
             (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.columnIndex2D);
-            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"crd\":\"{cell.coordinate}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
+            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"s\":{cell.Somite},\"crd\":\"{cell.coordinate}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
         }
         private string CreateNodeDataPoints(CellPool pool, int minSomite, int maxSomite)
         {
@@ -153,10 +153,13 @@ namespace SiliFish.Services
             WeightMult = maxjncsize / WeightMax;
 
             ModelDimensions MD = model.ModelDimensions;
-            int minSomite = -1, maxSomite = MD.NumberOfSomites;
-            if (!somiteRange.StartsWith("All"))
-                (minSomite, maxSomite) = Util.ParseRange(somiteRange);
-
+            if (somiteRange.StartsWith("All"))
+                html.Replace("__SOMITES__", "");
+            else
+            {
+                List<int> somites= Util.ParseRange(somiteRange, 1, MD.NumberOfSomites);
+                html.Replace("__SOMITES__", String.Join(',', somites));
+            }
             int numOfCells = model.GetNumberOfCells();
             double nodesize = numOfCells > 0 ?
                 (zRange < 0.1 ?//No z axis
@@ -166,13 +169,13 @@ namespace SiliFish.Services
             nodesize *= XYZMult;
 
             List<string> nodes = new();
-            pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool, minSomite, maxSomite)));
+            pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool, -1, MD.NumberOfSomites)));
             html.Replace("__NODES__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
             html.Replace("__NODE_SIZE__", nodesize.ToString("0.##"));
 
             
             List<string> gapChemLinks = new();
-            pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: true, minSomite, maxSomite)));
+            pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: true, -1, MD.NumberOfSomites)));
             html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
             
             double spinalposX = MD.SupraSpinalRostralCaudalDistance;

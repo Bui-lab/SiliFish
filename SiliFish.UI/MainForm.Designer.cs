@@ -37,7 +37,7 @@ namespace SiliFish.UI
             this.btnCellularDynamics = new System.Windows.Forms.Button();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkOpenOutputFolder = new System.Windows.Forms.LinkLabel();
-            this.linkClearModel = new System.Windows.Forms.LinkLabel();
+            this.linkClearTemplate = new System.Windows.Forms.LinkLabel();
             this.linkSaveHTMLPlots = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.tabParams = new System.Windows.Forms.TabControl();
@@ -140,17 +140,18 @@ namespace SiliFish.UI
             this.linkSaveHTML2D = new System.Windows.Forms.LinkLabel();
             this.btnGenerate2DModel = new System.Windows.Forms.Button();
             this.tab3DModel = new System.Windows.Forms.TabPage();
-            this.webView3DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.p3DModel = new System.Windows.Forms.Panel();
+            this.p3DViewing = new System.Windows.Forms.Panel();
+            this.dd3DViewpoint = new System.Windows.Forms.ComboBox();
             this.btnZoomIn = new System.Windows.Forms.Button();
             this.btnZoomOut = new System.Windows.Forms.Button();
-            this.rb3DFreeView = new System.Windows.Forms.RadioButton();
-            this.rb3DLateralViewRight = new System.Windows.Forms.RadioButton();
-            this.rb3DLateralViewLeft = new System.Windows.Forms.RadioButton();
-            this.rb3DCaudalView = new System.Windows.Forms.RadioButton();
-            this.rb3DRostralView = new System.Windows.Forms.RadioButton();
-            this.rb3DVentralView = new System.Windows.Forms.RadioButton();
-            this.rb3DDorsalView = new System.Windows.Forms.RadioButton();
+            this.grLegend = new System.Windows.Forms.GroupBox();
+            this.legendUnselected = new System.Windows.Forms.Label();
+            this.legendOutgoing = new System.Windows.Forms.Label();
+            this.legendGap = new System.Windows.Forms.Label();
+            this.legendIncoming = new System.Windows.Forms.Label();
+            this.webView3DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.p3DModel = new System.Windows.Forms.Panel();
+            this.cb3DLegend = new System.Windows.Forms.CheckBox();
             this.cb3DGapJunc = new System.Windows.Forms.CheckBox();
             this.cb3DChemJunc = new System.Windows.Forms.CheckBox();
             this.e3DSomiteRange = new System.Windows.Forms.TextBox();
@@ -222,11 +223,6 @@ namespace SiliFish.UI
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
             this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.legendUnselected = new System.Windows.Forms.Label();
-            this.legendGap = new System.Windows.Forms.Label();
-            this.legendIncoming = new System.Windows.Forms.Label();
-            this.legendOutgoing = new System.Windows.Forms.Label();
-            this.grLegend = new System.Windows.Forms.GroupBox();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -280,6 +276,8 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.webView2DModel)).BeginInit();
             this.p2DModel.SuspendLayout();
             this.tab3DModel.SuspendLayout();
+            this.p3DViewing.SuspendLayout();
+            this.grLegend.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webView3DModel)).BeginInit();
             this.p3DModel.SuspendLayout();
             this.tabMNKinematics.SuspendLayout();
@@ -304,7 +302,6 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
-            this.grLegend.SuspendLayout();
             this.SuspendLayout();
             // 
             // pTop
@@ -380,19 +377,19 @@ namespace SiliFish.UI
         "\n");
             this.linkOpenOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenOutputFolder_LinkClicked);
             // 
-            // linkClearModel
+            // linkClearTemplate
             // 
-            this.linkClearModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkClearModel.AutoSize = true;
-            this.linkClearModel.ForeColor = System.Drawing.Color.White;
-            this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearModel.Location = new System.Drawing.Point(464, 10);
-            this.linkClearModel.Name = "linkClearModel";
-            this.linkClearModel.Size = new System.Drawing.Size(71, 15);
-            this.linkClearModel.TabIndex = 5;
-            this.linkClearModel.TabStop = true;
-            this.linkClearModel.Text = "Clear Model";
-            this.linkClearModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearModel_LinkClicked);
+            this.linkClearTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkClearTemplate.AutoSize = true;
+            this.linkClearTemplate.ForeColor = System.Drawing.Color.White;
+            this.linkClearTemplate.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkClearTemplate.Location = new System.Drawing.Point(464, 10);
+            this.linkClearTemplate.Name = "linkClearTemplate";
+            this.linkClearTemplate.Size = new System.Drawing.Size(85, 15);
+            this.linkClearTemplate.TabIndex = 5;
+            this.linkClearTemplate.TabStop = true;
+            this.linkClearTemplate.Text = "Clear Template";
+            this.linkClearTemplate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearTemplate_LinkClicked);
             // 
             // linkSaveHTMLPlots
             // 
@@ -1043,7 +1040,7 @@ namespace SiliFish.UI
             this.pMain.Controls.Add(this.linkLoadModel);
             this.pMain.Controls.Add(this.lParameters);
             this.pMain.Controls.Add(this.linkSaveTemplate);
-            this.pMain.Controls.Add(this.linkClearModel);
+            this.pMain.Controls.Add(this.linkClearTemplate);
             this.pMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMain.Location = new System.Drawing.Point(0, 0);
             this.pMain.Name = "pMain";
@@ -1054,7 +1051,7 @@ namespace SiliFish.UI
             // 
             this.linkLoadModel.AutoSize = true;
             this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadModel.Location = new System.Drawing.Point(260, 10);
+            this.linkLoadModel.Location = new System.Drawing.Point(227, 10);
             this.linkLoadModel.Name = "linkLoadModel";
             this.linkLoadModel.Size = new System.Drawing.Size(84, 15);
             this.linkLoadModel.TabIndex = 4;
@@ -1243,7 +1240,7 @@ namespace SiliFish.UI
             this.linkExportPlotData.AutoSize = true;
             this.linkExportPlotData.Enabled = false;
             this.linkExportPlotData.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkExportPlotData.Location = new System.Drawing.Point(524, 84);
+            this.linkExportPlotData.Location = new System.Drawing.Point(524, 89);
             this.linkExportPlotData.Name = "linkExportPlotData";
             this.linkExportPlotData.Size = new System.Drawing.Size(92, 15);
             this.linkExportPlotData.TabIndex = 59;
@@ -1707,6 +1704,8 @@ namespace SiliFish.UI
             // 
             // tab3DModel
             // 
+            this.tab3DModel.Controls.Add(this.p3DViewing);
+            this.tab3DModel.Controls.Add(this.grLegend);
             this.tab3DModel.Controls.Add(this.webView3DModel);
             this.tab3DModel.Controls.Add(this.p3DModel);
             this.tab3DModel.Location = new System.Drawing.Point(4, 24);
@@ -1715,6 +1714,113 @@ namespace SiliFish.UI
             this.tab3DModel.TabIndex = 0;
             this.tab3DModel.Text = "3D Model";
             this.tab3DModel.UseVisualStyleBackColor = true;
+            // 
+            // p3DViewing
+            // 
+            this.p3DViewing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.p3DViewing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.p3DViewing.Controls.Add(this.dd3DViewpoint);
+            this.p3DViewing.Controls.Add(this.btnZoomIn);
+            this.p3DViewing.Controls.Add(this.btnZoomOut);
+            this.p3DViewing.Location = new System.Drawing.Point(525, 97);
+            this.p3DViewing.Name = "p3DViewing";
+            this.p3DViewing.Size = new System.Drawing.Size(256, 39);
+            this.p3DViewing.TabIndex = 58;
+            // 
+            // dd3DViewpoint
+            // 
+            this.dd3DViewpoint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dd3DViewpoint.FormattingEnabled = true;
+            this.dd3DViewpoint.Items.AddRange(new object[] {
+            "Free view",
+            "Dorsal view",
+            "Ventral view",
+            "Rostral view",
+            "Caudal view",
+            "Lateral view (left)",
+            "Lateral view (right)"});
+            this.dd3DViewpoint.Location = new System.Drawing.Point(3, 7);
+            this.dd3DViewpoint.Name = "dd3DViewpoint";
+            this.dd3DViewpoint.Size = new System.Drawing.Size(180, 23);
+            this.dd3DViewpoint.TabIndex = 54;
+            this.dd3DViewpoint.SelectedIndexChanged += new System.EventHandler(this.dd3DViewpoint_SelectedIndexChanged);
+            // 
+            // btnZoomIn
+            // 
+            this.btnZoomIn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
+            this.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnZoomIn.Location = new System.Drawing.Point(220, 3);
+            this.btnZoomIn.Name = "btnZoomIn";
+            this.btnZoomIn.Size = new System.Drawing.Size(32, 32);
+            this.btnZoomIn.TabIndex = 48;
+            this.btnZoomIn.UseVisualStyleBackColor = true;
+            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
+            // 
+            // btnZoomOut
+            // 
+            this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
+            this.btnZoomOut.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnZoomOut.Location = new System.Drawing.Point(186, 3);
+            this.btnZoomOut.Name = "btnZoomOut";
+            this.btnZoomOut.Size = new System.Drawing.Size(32, 32);
+            this.btnZoomOut.TabIndex = 47;
+            this.btnZoomOut.UseVisualStyleBackColor = true;
+            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
+            // 
+            // grLegend
+            // 
+            this.grLegend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.grLegend.Controls.Add(this.legendUnselected);
+            this.grLegend.Controls.Add(this.legendOutgoing);
+            this.grLegend.Controls.Add(this.legendGap);
+            this.grLegend.Controls.Add(this.legendIncoming);
+            this.grLegend.Location = new System.Drawing.Point(650, 544);
+            this.grLegend.Name = "grLegend";
+            this.grLegend.Size = new System.Drawing.Size(130, 94);
+            this.grLegend.TabIndex = 53;
+            this.grLegend.TabStop = false;
+            this.grLegend.Text = "Projection Legend";
+            // 
+            // legendUnselected
+            // 
+            this.legendUnselected.BackColor = System.Drawing.Color.Gray;
+            this.legendUnselected.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendUnselected.Location = new System.Drawing.Point(6, 17);
+            this.legendUnselected.Name = "legendUnselected";
+            this.legendUnselected.Size = new System.Drawing.Size(120, 18);
+            this.legendUnselected.TabIndex = 49;
+            this.legendUnselected.Text = "Unselected";
+            // 
+            // legendOutgoing
+            // 
+            this.legendOutgoing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(204)))), ((int)(((byte)(0)))));
+            this.legendOutgoing.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendOutgoing.Location = new System.Drawing.Point(6, 71);
+            this.legendOutgoing.Name = "legendOutgoing";
+            this.legendOutgoing.Size = new System.Drawing.Size(120, 18);
+            this.legendOutgoing.TabIndex = 52;
+            this.legendOutgoing.Text = "Outgoing Projections";
+            // 
+            // legendGap
+            // 
+            this.legendGap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.legendGap.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendGap.Location = new System.Drawing.Point(6, 35);
+            this.legendGap.Name = "legendGap";
+            this.legendGap.Size = new System.Drawing.Size(120, 18);
+            this.legendGap.TabIndex = 50;
+            this.legendGap.Text = "Gap junc";
+            // 
+            // legendIncoming
+            // 
+            this.legendIncoming.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.legendIncoming.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.legendIncoming.Location = new System.Drawing.Point(6, 53);
+            this.legendIncoming.Name = "legendIncoming";
+            this.legendIncoming.Size = new System.Drawing.Size(120, 18);
+            this.legendIncoming.TabIndex = 51;
+            this.legendIncoming.Text = "Incoming Projections";
             // 
             // webView3DModel
             // 
@@ -1733,16 +1839,7 @@ namespace SiliFish.UI
             // 
             // p3DModel
             // 
-            this.p3DModel.Controls.Add(this.grLegend);
-            this.p3DModel.Controls.Add(this.btnZoomIn);
-            this.p3DModel.Controls.Add(this.btnZoomOut);
-            this.p3DModel.Controls.Add(this.rb3DFreeView);
-            this.p3DModel.Controls.Add(this.rb3DLateralViewRight);
-            this.p3DModel.Controls.Add(this.rb3DLateralViewLeft);
-            this.p3DModel.Controls.Add(this.rb3DCaudalView);
-            this.p3DModel.Controls.Add(this.rb3DRostralView);
-            this.p3DModel.Controls.Add(this.rb3DVentralView);
-            this.p3DModel.Controls.Add(this.rb3DDorsalView);
+            this.p3DModel.Controls.Add(this.cb3DLegend);
             this.p3DModel.Controls.Add(this.cb3DGapJunc);
             this.p3DModel.Controls.Add(this.cb3DChemJunc);
             this.p3DModel.Controls.Add(this.e3DSomiteRange);
@@ -1757,114 +1854,25 @@ namespace SiliFish.UI
             this.p3DModel.Size = new System.Drawing.Size(784, 95);
             this.p3DModel.TabIndex = 3;
             // 
-            // btnZoomIn
+            // cb3DLegend
             // 
-            this.btnZoomIn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomIn.Image")));
-            this.btnZoomIn.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnZoomIn.Location = new System.Drawing.Point(606, 6);
-            this.btnZoomIn.Name = "btnZoomIn";
-            this.btnZoomIn.Size = new System.Drawing.Size(32, 32);
-            this.btnZoomIn.TabIndex = 48;
-            this.btnZoomIn.UseVisualStyleBackColor = true;
-            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
-            // 
-            // btnZoomOut
-            // 
-            this.btnZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnZoomOut.Image")));
-            this.btnZoomOut.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnZoomOut.Location = new System.Drawing.Point(572, 6);
-            this.btnZoomOut.Name = "btnZoomOut";
-            this.btnZoomOut.Size = new System.Drawing.Size(32, 32);
-            this.btnZoomOut.TabIndex = 47;
-            this.btnZoomOut.UseVisualStyleBackColor = true;
-            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
-            // 
-            // rb3DFreeView
-            // 
-            this.rb3DFreeView.AutoSize = true;
-            this.rb3DFreeView.Checked = true;
-            this.rb3DFreeView.Location = new System.Drawing.Point(340, 51);
-            this.rb3DFreeView.Name = "rb3DFreeView";
-            this.rb3DFreeView.Size = new System.Drawing.Size(75, 19);
-            this.rb3DFreeView.TabIndex = 46;
-            this.rb3DFreeView.TabStop = true;
-            this.rb3DFreeView.Text = "Free View";
-            this.rb3DFreeView.UseVisualStyleBackColor = true;
-            this.rb3DFreeView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DLateralViewRight
-            // 
-            this.rb3DLateralViewRight.AutoSize = true;
-            this.rb3DLateralViewRight.Location = new System.Drawing.Point(340, 30);
-            this.rb3DLateralViewRight.Name = "rb3DLateralViewRight";
-            this.rb3DLateralViewRight.Size = new System.Drawing.Size(124, 19);
-            this.rb3DLateralViewRight.TabIndex = 45;
-            this.rb3DLateralViewRight.Text = "Lateral View (right)";
-            this.rb3DLateralViewRight.UseVisualStyleBackColor = true;
-            this.rb3DLateralViewRight.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DLateralViewLeft
-            // 
-            this.rb3DLateralViewLeft.AutoSize = true;
-            this.rb3DLateralViewLeft.Location = new System.Drawing.Point(340, 9);
-            this.rb3DLateralViewLeft.Name = "rb3DLateralViewLeft";
-            this.rb3DLateralViewLeft.Size = new System.Drawing.Size(116, 19);
-            this.rb3DLateralViewLeft.TabIndex = 44;
-            this.rb3DLateralViewLeft.Text = "Lateral View (left)";
-            this.rb3DLateralViewLeft.UseVisualStyleBackColor = true;
-            this.rb3DLateralViewLeft.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DCaudalView
-            // 
-            this.rb3DCaudalView.AutoSize = true;
-            this.rb3DCaudalView.Location = new System.Drawing.Point(240, 72);
-            this.rb3DCaudalView.Name = "rb3DCaudalView";
-            this.rb3DCaudalView.Size = new System.Drawing.Size(90, 19);
-            this.rb3DCaudalView.TabIndex = 43;
-            this.rb3DCaudalView.Text = "Caudal View";
-            this.rb3DCaudalView.UseVisualStyleBackColor = true;
-            this.rb3DCaudalView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DRostralView
-            // 
-            this.rb3DRostralView.AutoSize = true;
-            this.rb3DRostralView.Location = new System.Drawing.Point(240, 51);
-            this.rb3DRostralView.Name = "rb3DRostralView";
-            this.rb3DRostralView.Size = new System.Drawing.Size(89, 19);
-            this.rb3DRostralView.TabIndex = 42;
-            this.rb3DRostralView.Text = "Rostral View";
-            this.rb3DRostralView.UseVisualStyleBackColor = true;
-            this.rb3DRostralView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DVentralView
-            // 
-            this.rb3DVentralView.AutoSize = true;
-            this.rb3DVentralView.Location = new System.Drawing.Point(240, 30);
-            this.rb3DVentralView.Name = "rb3DVentralView";
-            this.rb3DVentralView.Size = new System.Drawing.Size(89, 19);
-            this.rb3DVentralView.TabIndex = 41;
-            this.rb3DVentralView.Text = "Ventral View";
-            this.rb3DVentralView.UseVisualStyleBackColor = true;
-            this.rb3DVentralView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
-            // 
-            // rb3DDorsalView
-            // 
-            this.rb3DDorsalView.AutoSize = true;
-            this.rb3DDorsalView.Location = new System.Drawing.Point(240, 9);
-            this.rb3DDorsalView.Name = "rb3DDorsalView";
-            this.rb3DDorsalView.Size = new System.Drawing.Size(86, 19);
-            this.rb3DDorsalView.TabIndex = 40;
-            this.rb3DDorsalView.Text = "Dorsal View";
-            this.rb3DDorsalView.UseVisualStyleBackColor = true;
-            this.rb3DDorsalView.CheckedChanged += new System.EventHandler(this.rb3DView_CheckedChanged);
+            this.cb3DLegend.AutoSize = true;
+            this.cb3DLegend.Checked = true;
+            this.cb3DLegend.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb3DLegend.Location = new System.Drawing.Point(148, 57);
+            this.cb3DLegend.Name = "cb3DLegend";
+            this.cb3DLegend.Size = new System.Drawing.Size(65, 19);
+            this.cb3DLegend.TabIndex = 57;
+            this.cb3DLegend.Text = "Legend";
+            this.cb3DLegend.UseVisualStyleBackColor = true;
+            this.cb3DLegend.CheckedChanged += new System.EventHandler(this.cb3DLegend_CheckedChanged);
             // 
             // cb3DGapJunc
             // 
             this.cb3DGapJunc.AutoSize = true;
             this.cb3DGapJunc.Checked = true;
             this.cb3DGapJunc.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb3DGapJunc.Location = new System.Drawing.Point(105, 14);
+            this.cb3DGapJunc.Location = new System.Drawing.Point(239, 11);
             this.cb3DGapJunc.Name = "cb3DGapJunc";
             this.cb3DGapJunc.Size = new System.Drawing.Size(74, 19);
             this.cb3DGapJunc.TabIndex = 39;
@@ -1877,7 +1885,7 @@ namespace SiliFish.UI
             this.cb3DChemJunc.AutoSize = true;
             this.cb3DChemJunc.Checked = true;
             this.cb3DChemJunc.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb3DChemJunc.Location = new System.Drawing.Point(14, 13);
+            this.cb3DChemJunc.Location = new System.Drawing.Point(148, 11);
             this.cb3DChemJunc.Name = "cb3DChemJunc";
             this.cb3DChemJunc.Size = new System.Drawing.Size(85, 19);
             this.cb3DChemJunc.TabIndex = 38;
@@ -1887,19 +1895,21 @@ namespace SiliFish.UI
             // 
             // e3DSomiteRange
             // 
-            this.e3DSomiteRange.Location = new System.Drawing.Point(105, 33);
+            this.e3DSomiteRange.Location = new System.Drawing.Point(239, 30);
             this.e3DSomiteRange.Name = "e3DSomiteRange";
-            this.e3DSomiteRange.ReadOnly = true;
-            this.e3DSomiteRange.Size = new System.Drawing.Size(122, 23);
+            this.e3DSomiteRange.Size = new System.Drawing.Size(89, 23);
             this.e3DSomiteRange.TabIndex = 36;
-            this.e3DSomiteRange.Text = "Enter a range. Ex: 1-5";
+            this.e3DSomiteRange.Text = "Ex: 1, 3-5";
+            this.e3DSomiteRange.Visible = false;
+            this.e3DSomiteRange.Enter += new System.EventHandler(this.e3DSomiteRange_Enter);
+            this.e3DSomiteRange.Leave += new System.EventHandler(this.e3DSomiteRange_Leave);
             // 
             // cb3DAllSomites
             // 
             this.cb3DAllSomites.AutoSize = true;
             this.cb3DAllSomites.Checked = true;
             this.cb3DAllSomites.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb3DAllSomites.Location = new System.Drawing.Point(14, 38);
+            this.cb3DAllSomites.Location = new System.Drawing.Point(148, 34);
             this.cb3DAllSomites.Name = "cb3DAllSomites";
             this.cb3DAllSomites.Size = new System.Drawing.Size(85, 19);
             this.cb3DAllSomites.TabIndex = 35;
@@ -1921,7 +1931,7 @@ namespace SiliFish.UI
             this.linkSaveHTML3D.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkSaveHTML3D.AutoSize = true;
             this.linkSaveHTML3D.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveHTML3D.Location = new System.Drawing.Point(572, 74);
+            this.linkSaveHTML3D.Location = new System.Drawing.Point(713, 7);
             this.linkSaveHTML3D.Name = "linkSaveHTML3D";
             this.linkSaveHTML3D.Size = new System.Drawing.Size(66, 15);
             this.linkSaveHTML3D.TabIndex = 27;
@@ -1934,7 +1944,7 @@ namespace SiliFish.UI
             this.btnGenerate3DModel.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnGenerate3DModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerate3DModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerate3DModel.Location = new System.Drawing.Point(14, 65);
+            this.btnGenerate3DModel.Location = new System.Drawing.Point(13, 7);
             this.btnGenerate3DModel.Name = "btnGenerate3DModel";
             this.btnGenerate3DModel.Size = new System.Drawing.Size(120, 23);
             this.btnGenerate3DModel.TabIndex = 26;
@@ -2683,60 +2693,6 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // legendUnselected
-            // 
-            this.legendUnselected.BackColor = System.Drawing.Color.Gray;
-            this.legendUnselected.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.legendUnselected.Location = new System.Drawing.Point(6, 17);
-            this.legendUnselected.Name = "legendUnselected";
-            this.legendUnselected.Size = new System.Drawing.Size(120, 18);
-            this.legendUnselected.TabIndex = 49;
-            this.legendUnselected.Text = "Unselected";
-            // 
-            // legendGap
-            // 
-            this.legendGap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
-            this.legendGap.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.legendGap.Location = new System.Drawing.Point(6, 35);
-            this.legendGap.Name = "legendGap";
-            this.legendGap.Size = new System.Drawing.Size(120, 18);
-            this.legendGap.TabIndex = 50;
-            this.legendGap.Text = "Gap junc";
-            // 
-            // legendIncoming
-            // 
-            this.legendIncoming.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.legendIncoming.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.legendIncoming.Location = new System.Drawing.Point(6, 53);
-            this.legendIncoming.Name = "legendIncoming";
-            this.legendIncoming.Size = new System.Drawing.Size(120, 18);
-            this.legendIncoming.TabIndex = 51;
-            this.legendIncoming.Text = "Incoming Projections";
-            // 
-            // legendOutgoing
-            // 
-            this.legendOutgoing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(204)))), ((int)(((byte)(0)))));
-            this.legendOutgoing.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.legendOutgoing.Location = new System.Drawing.Point(6, 71);
-            this.legendOutgoing.Name = "legendOutgoing";
-            this.legendOutgoing.Size = new System.Drawing.Size(120, 18);
-            this.legendOutgoing.TabIndex = 52;
-            this.legendOutgoing.Text = "Outgoing Projections";
-            // 
-            // grLegend
-            // 
-            this.grLegend.Controls.Add(this.legendUnselected);
-            this.grLegend.Controls.Add(this.legendOutgoing);
-            this.grLegend.Controls.Add(this.legendGap);
-            this.grLegend.Controls.Add(this.legendIncoming);
-            this.grLegend.Dock = System.Windows.Forms.DockStyle.Right;
-            this.grLegend.Location = new System.Drawing.Point(649, 0);
-            this.grLegend.Name = "grLegend";
-            this.grLegend.Size = new System.Drawing.Size(130, 94);
-            this.grLegend.TabIndex = 53;
-            this.grLegend.TabStop = false;
-            this.grLegend.Text = "Legend";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2815,6 +2771,8 @@ namespace SiliFish.UI
             this.p2DModel.ResumeLayout(false);
             this.p2DModel.PerformLayout();
             this.tab3DModel.ResumeLayout(false);
+            this.p3DViewing.ResumeLayout(false);
+            this.grLegend.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.webView3DModel)).EndInit();
             this.p3DModel.ResumeLayout(false);
             this.p3DModel.PerformLayout();
@@ -2844,7 +2802,6 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
-            this.grLegend.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2904,7 +2861,7 @@ namespace SiliFish.UI
         private NumericUpDown ePlotSomiteSelection;
         private TabPage tabCellPools;
         private TabPage tabStimuli;
-        private LinkLabel linkClearModel;
+        private LinkLabel linkClearTemplate;
         private TabPage tabGeneral;
         private Label lModelDescription;
         private Label lModelName;
@@ -3030,13 +2987,6 @@ namespace SiliFish.UI
         private FolderBrowserDialog browseFolder;
         private CheckBox cb3DGapJunc;
         private CheckBox cb3DChemJunc;
-        private RadioButton rb3DDorsalView;
-        private RadioButton rb3DFreeView;
-        private RadioButton rb3DLateralViewRight;
-        private RadioButton rb3DLateralViewLeft;
-        private RadioButton rb3DCaudalView;
-        private RadioButton rb3DRostralView;
-        private RadioButton rb3DVentralView;
         private Button btnZoomIn;
         private Button btnZoomOut;
         private Button btnAbout;
@@ -3045,5 +2995,8 @@ namespace SiliFish.UI
         private Label legendIncoming;
         private Label legendOutgoing;
         private GroupBox grLegend;
+        private ComboBox dd3DViewpoint;
+        private Panel p3DViewing;
+        private CheckBox cb3DLegend;
     }
 }

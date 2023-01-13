@@ -98,6 +98,7 @@ namespace SiliFish.UI
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
                 tabParams.BackColor = Color.White;
 
+                dd3DViewpoint.SelectedIndex = 0;
                 LoadGeneralParamsAndSettings();
             }
             catch (Exception ex)
@@ -239,7 +240,7 @@ namespace SiliFish.UI
             eOutputFolder.Text = ModelTemplate.Settings.OutputFolder;
             propSettings.SelectedObject = ModelTemplate.Settings;
         }
-        private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkClearTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ModelTemplate = new();
             Model = new CustomSwimmingModel(ModelTemplate);
@@ -1123,12 +1124,33 @@ namespace SiliFish.UI
         {
             Generate3DModel();
         }
-        private void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
+        private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
         {
-            e3DSomiteRange.ReadOnly = cb3DAllSomites.Checked;
-
+            e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
+            string func = $"SetSomites([]);";
+            if (!cb3DAllSomites.Checked)
+            {
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, Model.ModelDimensions.NumberOfSomites);
+                func = $"SetSomites([{string.Join(',', somites)}]);";
+            }
+            await webView3DModel.ExecuteScriptAsync(func);
         }
 
+        private string lastSomiteSelection;
+        private void e3DSomiteRange_Enter(object sender, EventArgs e)
+        {
+            lastSomiteSelection = e3DSomiteRange.Text;
+        }
+
+        private async void e3DSomiteRange_Leave(object sender, EventArgs e)
+        {
+            if (lastSomiteSelection != e3DSomiteRange.Text)
+            {
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, Model.ModelDimensions.NumberOfSomites);
+                string func = $"SetSomites([{string.Join(',', somites)}]);";
+                await webView3DModel.ExecuteScriptAsync(func);
+            }
+        }
         private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -1162,26 +1184,30 @@ namespace SiliFish.UI
             else
                 await webView3DModel.ExecuteScriptAsync("HideGapJunc();");
         }
-
-        private async void rb3DView_CheckedChanged(object sender, EventArgs e)
+        private void cb3DLegend_CheckedChanged(object sender, EventArgs e)
         {
-            if (rb3DDorsalView.Checked)
+            grLegend.Visible = cb3DLegend.Checked;
+        }
+
+        private async void dd3DViewpoint_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (dd3DViewpoint.Text == "Dorsal view")
                 await webView3DModel.ExecuteScriptAsync("DorsalView();");
-            else if (rb3DVentralView.Checked)
+            else if (dd3DViewpoint.Text == "Ventral view")
                 await webView3DModel.ExecuteScriptAsync("VentralView();");
-            else if (rb3DRostralView.Checked)
+            else if (dd3DViewpoint.Text == "Rostral view")
                 await webView3DModel.ExecuteScriptAsync("RostralView();");
-            else if (rb3DCaudalView.Checked)
+            else if (dd3DViewpoint.Text == "Caudal view")
                 await webView3DModel.ExecuteScriptAsync("CaudalView();");
-            else if (rb3DLateralViewLeft.Checked)
+            else if (dd3DViewpoint.Text == "Lateral view (left)")
                 await webView3DModel.ExecuteScriptAsync("LateralLeftView();");
-            else if (rb3DLateralViewRight.Checked)
+            else if (dd3DViewpoint.Text == "Lateral view (right)")
                 await webView3DModel.ExecuteScriptAsync("LateralRightView();");
-            else if (rb3DFreeView.Checked)
+            else
                 await webView3DModel.ExecuteScriptAsync("FreeView();");
         }
 
-          private async void btnZoomOut_Click(object sender, EventArgs e)
+        private async void btnZoomOut_Click(object sender, EventArgs e)
         {
             await webView3DModel.ExecuteScriptAsync("ZoomOut();");
         }
@@ -1813,9 +1839,6 @@ namespace SiliFish.UI
             frmControl.SaveVisible = false;
             frmControl.ShowDialog();
         }
-
-
-
 
     }
 }

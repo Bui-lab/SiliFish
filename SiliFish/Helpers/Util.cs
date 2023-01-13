@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 
@@ -98,25 +99,46 @@ namespace SiliFish.Helpers
             return s;
         }
 
-        public static (int, int) ParseRange(string s, int defMin = -1, int defMax = int.MaxValue)
+        public static List<int> ParseContinousRange(string s)
         {
-            if (string.IsNullOrEmpty(s))
-                return (defMin, defMax);
+            List<int> ints = new();
             int i1;
-            int i2 = defMax;
             int sep = s.IndexOfAny(new[] { '-', '_', '.' });
             if (sep < 0)
             {
                 if (int.TryParse(s, out i1))
-                    i2 = i1;
-                else i1 = defMin;
-                return (i1, i2);
+                    ints.Add(i1);
+                return ints;
             }
             if (!int.TryParse(s[..sep], out i1))
-                i1 = defMin;
-            if (!int.TryParse(s[(sep + 1)..], out i2))
-                i2 = defMax;
-            return (i1, i2);
+                i1 = 0;
+            if (!int.TryParse(s[(sep + 1)..], out int i2))
+                i2 = i1;
+            if (i2 == i1)
+            {
+                ints.Add(i1);
+                return ints;
+            }
+            if (i1 > i2)
+                (i1, i2) = (i2, i1);
+            return Enumerable.Range(i1, i2 - i1 + 1).ToList();
+        }
+
+        public static List<int> ParseRange(string s, int defMin, int defMax)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                if (defMin > defMax)
+                    (defMin, defMax) = (defMax, defMin);
+                return Enumerable.Range(defMin, defMax - defMin + 1).ToList();
+            }
+            List<string> uncontinousRanges = s.Split(',').ToList();
+            if (uncontinousRanges.Count == 0)
+                return ParseContinousRange(s);
+            List<int> ints = new();
+            foreach (string subrange in uncontinousRanges)
+                ints.AddRange(ParseContinousRange(subrange));
+            return ints;
         }
 
         public static void SetYRange(ref double yMin, ref double yMax)
