@@ -1,4 +1,5 @@
-﻿using SiliFish.ModelUnits.Model;
+﻿using SiliFish.Extensions;
+using SiliFish.ModelUnits.Model;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -90,10 +91,23 @@ namespace SiliFish.DynamicUnits
 
             return (MinValues, MaxValues);
         }
+        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
+        {
+            paramExternal.AddObject("Izhikevich_9P.a",a, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.b",b, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.c",c, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.d",d, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.V_max",Vmax, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.V_r",Vr, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.V_t",Vt, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.k",k, skipIfExists: true);
+            paramExternal.AddObject("Izhikevich_9P.Cm",Cm, skipIfExists: true);
+        }
         public override void SetParameters(Dictionary<string, double> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
+            BackwardCompatibility(paramExternal);
             paramExternal.TryGetValue("Izhikevich_9P.a", out a);
             paramExternal.TryGetValue("Izhikevich_9P.b", out b);
             paramExternal.TryGetValue("Izhikevich_9P.c", out c);

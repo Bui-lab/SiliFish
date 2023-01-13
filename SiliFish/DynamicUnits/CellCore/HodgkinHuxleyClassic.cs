@@ -101,10 +101,24 @@ namespace SiliFish.DynamicUnits
              return (MinValues, MaxValues);
          }*/
 
+        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
+        {
+            paramExternal.AddObject("HodgkinHuxley.g_K", g_K, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.g_Na", g_Na, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.g_L", g_L, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.E_K", E_K, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.E_Na", E_Na, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.E_L", E_L, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.V_max", Vmax, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.V_r", Vr, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.V_t", Vt, skipIfExists: true);
+            paramExternal.AddObject("HodgkinHuxley.Cm", Cm, skipIfExists: true);
+        }
         public override void SetParameters(Dictionary<string, double> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
+            BackwardCompatibility(paramExternal);
             paramExternal.TryGetValue("HodgkinHuxley.g_K", out g_K);
             paramExternal.TryGetValue("HodgkinHuxley.g_Na", out g_Na);
             paramExternal.TryGetValue("HodgkinHuxley.g_L", out g_L);

@@ -1,8 +1,11 @@
 ﻿using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.Definitions
 {
@@ -17,6 +20,9 @@ namespace SiliFish.Definitions
             DisplayName("Temporary Folder"),
             Category("Folder")]
         public string TempFolder { get; set; }
+
+        [JsonIgnore, Browsable(false)]
+        public List<string> TempFiles = new();
 
         [Browsable(false), 
             Description("The default folder that output files are saved under."),
@@ -108,6 +114,11 @@ namespace SiliFish.Definitions
 
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {
+            if (string.IsNullOrEmpty(TempFolder))
+                TempFolder = Path.GetTempPath() + "SiliFish";
+            if (string.IsNullOrEmpty(OutputFolder))
+                OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+
             if (paramExternal == null || !paramExternal.Keys.Any(k => k.StartsWith("Dynamic.")))
                 return paramExternal;
 

@@ -55,11 +55,6 @@ namespace SiliFish.UI
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
                 if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
-                else
-                {
-                    foreach (string f in Directory.GetFiles(ModelTemplate.Settings.TempFolder))
-                        File.Delete(f);
-                }
                 if (!Directory.Exists(ModelTemplate.Settings.OutputFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.OutputFolder);
                 webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
@@ -1785,7 +1780,11 @@ namespace SiliFish.UI
                     }
                 }
                 foreach (string f in Directory.GetFiles(ModelTemplate.Settings.TempFolder))
-                    File.Delete(f);
+                {
+                    if (CurrentSettings.Settings.TempFiles.Contains(f))
+                        File.Delete(f);
+                }
+                    
             }
             catch { }
         }

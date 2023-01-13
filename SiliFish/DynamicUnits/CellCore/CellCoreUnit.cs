@@ -102,6 +102,10 @@ namespace SiliFish.DynamicUnits
             throw new NotImplementedException();
         }
 
+        public virtual void BackwardCompatibility(Dictionary<string, double> paramExternal)
+        {
+            throw new NotImplementedException();
+        }
         protected virtual bool DoesSpike(double[] I, int warmup)
         {
             bool spike = false;

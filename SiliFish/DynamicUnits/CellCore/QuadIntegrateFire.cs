@@ -35,7 +35,7 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
-        public virtual void FillMissingParameters(Dictionary<string, double> paramExternal)
+        public override void BackwardCompatibility (Dictionary<string, double> paramExternal)
         {
             paramExternal.AddObject("QIF.Vr", Vr, skipIfExists: true);
             paramExternal.AddObject("QIF.Vmax", Vmax, skipIfExists: true);
@@ -44,7 +44,7 @@ namespace SiliFish.DynamicUnits
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            FillMissingParameters(paramExternal);
+            BackwardCompatibility(paramExternal);
 
             paramExternal.TryGetValue("QIF.Vr", out Vr);
             paramExternal.TryGetValue("QIF.Vmax", out Vmax);

@@ -14,7 +14,7 @@ namespace SiliFish.DynamicUnits
         public double Va; //Vm when tension is half of Tmax/2
         public double Tmax; //maximum tension
         public double ka; //slope factor [Dulhunty 1992 (Prog. Biophys)]
-        public double Vmax;
+        public double Vmax = 99999;
 
         [JsonIgnore]
         public double TimeConstant { get { return R * C; } }
@@ -67,7 +67,7 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
-        public virtual void FillMissingParameters(Dictionary<string, double> paramExternal)
+        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
         {
             paramExternal.AddObject("Leaky_Integrator.R", R, skipIfExists: true);
             paramExternal.AddObject("Leaky_Integrator.C", C, skipIfExists: true);
@@ -81,7 +81,7 @@ namespace SiliFish.DynamicUnits
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
-            FillMissingParameters(paramExternal);
+            BackwardCompatibility(paramExternal);
 
             paramExternal.TryGetValue("Leaky_Integrator.R", out R);
             paramExternal.TryGetValue("Leaky_Integrator.C", out C);
