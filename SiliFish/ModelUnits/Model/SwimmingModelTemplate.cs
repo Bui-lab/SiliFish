@@ -11,6 +11,7 @@ namespace SiliFish.ModelUnits.Model
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; } = new();
+        public KinemParam KinemParam { get; set; } = new();
 
         public Settings Settings { get; set; } = new();
 
@@ -103,6 +104,8 @@ namespace SiliFish.ModelUnits.Model
             }
             Parameters = ModelDimensions.BackwardCompatibility(Parameters);
             CurrentSettings.Settings.BackwardCompatibility(Parameters);
+            KinemParam.BackwardCompatibility(Parameters);
+
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
             {
                 if (cpt.ConductionVelocity == null)

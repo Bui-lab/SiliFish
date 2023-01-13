@@ -267,7 +267,7 @@ namespace SiliFish.Services
         {
             List<ChartDataStruct> charts = new();
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
 
             double[] Time = model.TimeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;

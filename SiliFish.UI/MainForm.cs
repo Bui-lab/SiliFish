@@ -40,8 +40,6 @@ namespace SiliFish.UI
         CellSelectionStruct plotCellSelection;
         private string tempFile;
         string lastSavedCustomModelJSON;
-        Dictionary<string, object> lastSavedParams;
-        Dictionary<string, object> lastRunParams;
         DateTime runStart;
         List<ChartDataStruct> LastPlottedCharts;
 
@@ -99,7 +97,7 @@ namespace SiliFish.UI
                 tabParams.BackColor = Color.White;
 
                 dd3DViewpoint.SelectedIndex = 0;
-                LoadGeneralParamsAndSettings();
+                LoadModelTemplate();
             }
             catch (Exception ex)
             {
@@ -195,12 +193,12 @@ namespace SiliFish.UI
                 return;
             modelUpdated = false;
             ReadModelTemplate(includeHidden: false);
-            RefreshModelFromTemplate();
+            Model = new SwimmingModel(ModelTemplate);
         }
 
         private void RefreshModelSafeMode()
         {
-            if (!Model.ModelRun)
+            if (Model == null || !Model.ModelRun)
                 RefreshModel();
             else if (modifiedJncs || modifiedPools)
             {
@@ -209,20 +207,7 @@ namespace SiliFish.UI
                     RefreshModel();
             }
         }
-        private void RefreshModelFromTemplate()
-        {
-            Model = new CustomSwimmingModel(ModelTemplate);
-            lastSavedParams = ModelTemplate.Parameters;
-        }
-        private void SwitchToModel()
-        {
-            if (Model == null) return;
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.ModelDimensions.NumberOfSomites > 0;
-            LoadParams(Model.ModelRun ? lastRunParams : lastSavedParams);
-            LoadModelTemplate();
-        }
-
-        private void LoadGeneralParamsAndSettings()
+        private void LoadModelTemplateParamsAndSettings()
         {
             //General Params
             eModelName.Text = ModelTemplate.ModelName;
@@ -239,63 +224,52 @@ namespace SiliFish.UI
             eTemporaryFolder.Text = ModelTemplate.Settings.TempFolder;
             eOutputFolder.Text = ModelTemplate.Settings.OutputFolder;
             propSettings.SelectedObject = ModelTemplate.Settings;
+            propKinematics.SelectedObject = ModelTemplate.KinemParam;
+            LoadParams(ModelTemplate.Parameters);
         }
         private void linkClearTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ModelTemplate = new();
-            Model = new CustomSwimmingModel(ModelTemplate);
-            LoadGeneralParamsAndSettings();
-            LoadParams(Model.GetParameters());
+            Model = null;
+            LoadModelTemplate();
         }
 
         #endregion
 
         #region Read/Load Model and Parameters
 
-        private void ClearCustomModelFields()
-        {
-            listCellPool.ClearItems();
-            listConnections.ClearItems();
-            listStimuli.ClearItems();
-        }
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = Model.ModelDimensions.NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = ModelTemplate.ModelDimensions.NumberOfSomites > 0;
 
             if (ParamDict == null) return;
-            this.Text = $"SiliFish {Model.ModelName}";
+            this.Text = $"SiliFish {ModelTemplate.ModelName}";
 
-            tabParams.TabPages.Clear();
-            ClearCustomModelFields();
-            tabParams.TabPages.Add(tabGeneral);
-            tabParams.TabPages.Add(tabCellPools);
-            tabParams.TabPages.Add(tabStimuli);
-
-            //To fill in newly generated params that did not exist during the model creation
-            SwimmingModel swimmingModel = new();
-            Dictionary<string, object> currentParams = swimmingModel.GetParameters();
-            Dictionary<string, object> paramDesc = swimmingModel.GetParameterDesc();
-            List<string> currentParamGroups = currentParams.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList();
+            List<TabPage> obsoloteTabpages = new();
+            foreach (TabPage tp in tabParams.TabPages)
+            {
+                if (tp.Tag?.ToString() == "Param")
+                    obsoloteTabpages.Add(tp);
+            }
+            foreach (TabPage tp in obsoloteTabpages)
+            {
+                tabParams.TabPages.Remove(tp);
+            }
 
             List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
             int tabIndex = 1;
             var _ = tabParams.Handle;//requires for the insert command to work
-            foreach (string group in paramGroups.Union(currentParamGroups).Distinct())
+            foreach (string group in paramGroups)
             {
                 Dictionary<string, object> SubDict = ParamDict.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
-                if (SubDict == null || SubDict.Count == 0)
-                    SubDict = currentParams.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
                 TabPage tabPage = new()
                 {
                     Text = group,
                     Tag = "Param",
-                    BackColor = tabGeneral.BackColor
+                    BackColor = tGeneral.BackColor
                 };
-                //insert after the general tab, keep Animation at the end
-                if (group == "Kinematics")
-                    tabParams.TabPages.Add(tabPage);
-                else
-                    tabParams.TabPages.Insert(tabIndex++, tabPage);
+                //insert after the general tab, to keep Animation at the end
+                tabParams.TabPages.Insert(tabIndex++, tabPage);
                 int maxLen = SubDict.Keys.Select(k => k.Length).Max();
                 FlowLayoutPanel flowPanel = new();
                 tabPage.Controls.Add(flowPanel);
@@ -304,7 +278,6 @@ namespace SiliFish.UI
                 flowPanel.AutoScroll = true;
                 foreach (KeyValuePair<string, object> kvp in SubDict)
                 {
-                    paramDesc.TryGetValue(kvp.Key, out object desc);
                     Label lbl = new()
                     {
                         Text = kvp.Key[(group.Length + 1)..],
@@ -318,15 +291,8 @@ namespace SiliFish.UI
                     textBox.Text = kvp.Value?.ToString();
                     flowPanel.Controls.Add(textBox);
                     flowPanel.SetFlowBreak(textBox, true);
-                    if (desc != null)
-                    {
-                        toolTip.SetToolTip(lbl, desc.ToString());
-                        toolTip.SetToolTip(textBox, desc.ToString());
-                    }
                 }
             }
-
-            tabParams.TabPages.Add(tabSettings);
         }
 
         private void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
@@ -414,6 +380,8 @@ namespace SiliFish.UI
         {
             if (ModelTemplate == null) return;
 
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = ModelTemplate.ModelDimensions.NumberOfSomites > 0;
+            LoadModelTemplateParamsAndSettings();
             LoadModelTemplatePools();
             LoadModelTemplateInterPools();
             LoadModelTemplateStimuli();
@@ -553,24 +521,21 @@ namespace SiliFish.UI
                     try
                     {
                         ModelTemplate = (SwimmingModelTemplate)JsonUtil.ToObject(typeof(SwimmingModelTemplate), json);
-                        ModelTemplate.BackwardCompatibility();
-                        LoadGeneralParamsAndSettings();
                     }
                     catch
                     {
                         MessageBox.Show("Selected file is not a valid Swimming Model Template file.");
                         return;
                     }
+                    ModelTemplate.BackwardCompatibility();
                     ModelTemplate.LinkObjects();
-                    Model = new CustomSwimmingModel(ModelTemplate);
-                    lastSavedParams = ModelTemplate.Parameters; //needs to be set before SwitchToModel
-                    SwitchToModel();
+                    LoadModelTemplate(); 
                     lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
                 }
             }
-            catch
+            catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in reading the JSON file. Please make sure it is formatted properly.");
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
                 throw (new Exception());
             }
             finally
@@ -611,8 +576,6 @@ namespace SiliFish.UI
             {
                 RunParam rp = new() { tMax = tRunEnd, tSkip_ms = tRunSkip };
                 Model.RunModel(0, rp, (int)eRunNumber.Value);
-                lastRunParams = Model.GetParameters();
-
             }
             catch (Exception ex)
             {
@@ -674,7 +637,8 @@ namespace SiliFish.UI
         {
             if (btnRun.Text == "Stop Run")
             {
-                Model.CancelRun = true;
+                if (Model != null)
+                    Model.CancelRun = true;
                 return;
             }
             runStart = DateTime.Now;
@@ -912,7 +876,7 @@ namespace SiliFish.UI
 
             GetPlotSubset();
             if (PlotType == PlotType.Episodes)
-                Model.SetAnimationParameters(ReadParams("Kinematics"));
+                Model.SetAnimationParameters(ModelTemplate.KinemParam);
             tabOutputs.SelectedTab = tabPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
@@ -977,7 +941,7 @@ namespace SiliFish.UI
 
                 GetPlotSubset();
                 if (PlotType == PlotType.Episodes)
-                    Model.SetAnimationParameters(ReadParams("Kinematics"));
+                    Model.SetAnimationParameters(ModelTemplate.KinemParam);
                 tabOutputs.SelectedTab = tabPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
@@ -1104,7 +1068,6 @@ namespace SiliFish.UI
 
         private void Generate3DModel()
         {
-            if (Model == null) return;
             try
             {
                 RefreshModelSafeMode();
@@ -1263,8 +1226,8 @@ namespace SiliFish.UI
             int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
-            Model.SetAnimationParameters(ReadParams("Kinematics"));
-            lastAnimationSpineCoordinates = SwimmingModelKinematics.GenerateSpineCoordinates(Model, lastAnimationStartIndex, lastAnimationEndIndex);
+            Model.SetAnimationParameters(ModelTemplate.KinemParam);
+            lastAnimationSpineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(Model, lastAnimationStartIndex, lastAnimationEndIndex);
 
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
@@ -1320,8 +1283,6 @@ namespace SiliFish.UI
                     ModelTemplate = temp;
                     ModelTemplate.LinkObjects();
                     LoadModelTemplate();
-                    LoadGeneralParamsAndSettings();
-                    RefreshModelFromTemplate();
                     MessageBox.Show("Updated template is loaded.");
                 }
             }
@@ -1355,7 +1316,7 @@ namespace SiliFish.UI
 
         private void btnDisplayModelJSON_Click(object sender, EventArgs e)
         {
-            if (Model == null) return;
+            modelUpdated = false;
 
             RefreshModelSafeMode();
             try
@@ -1374,7 +1335,7 @@ namespace SiliFish.UI
         {
             try
             {
-                if (JsonUtil.ToObject(typeof(CustomSwimmingModel), eModelJSON.Text) is CustomSwimmingModel model)
+                if (JsonUtil.ToObject(typeof(SwimmingModel), eModelJSON.Text) is SwimmingModel model)
                 {
                     Model = model;
                     modelUpdated = true;
@@ -1411,7 +1372,7 @@ namespace SiliFish.UI
          private void btnGenerateEpisodes_Click(object sender, EventArgs e)
         {
             (List<Cell> LeftMNs, List<Cell> RightMNs) = Model.GetMotoNeurons((int)eKinematicsSomite.Value);
-            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs,
+            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs,
                 (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
             string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
@@ -1801,13 +1762,13 @@ namespace SiliFish.UI
         {
             try
             {
-                if (ModelTemplate != null && Model != null)
+                if (ModelTemplate != null)
                 {
                     //check whether the custom model has changed
                     string jsonstring = JsonUtil.ToJson(ModelTemplate);
                     if (jsonstring != lastSavedCustomModelJSON)
                     {
-                        DialogResult res = MessageBox.Show("The model has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                        DialogResult res = MessageBox.Show("The template has changed. Do you want to save the modifications?", "Model Template Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
                             if (!SaveModelTemplate())

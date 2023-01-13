@@ -1,10 +1,10 @@
-﻿using SiliFish;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Model;
+using SiliFish.Services;
 using SiliFish.UI;
 
 namespace Services
@@ -214,7 +214,7 @@ namespace Services
             int iEnd = model.runParam.iIndex(tEnd);
             //TODO color
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
             leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
                 tail_tip_coord.Select(c => c.X).ToArray(),
                 model.TimeArray, iStart, iEnd,

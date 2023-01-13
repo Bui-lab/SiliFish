@@ -9,7 +9,7 @@ namespace SiliFish.UI.Extensions
             try
             {
                 tempFile = "";
-                if (html.Length > 1000000)
+                if (html.Length > 1000000 && !string.IsNullOrEmpty(tempFolder))
                 {
                     tempFile = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
                     File.WriteAllText(tempFile, html.ToString());

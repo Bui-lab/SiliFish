@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,47 +14,18 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Model
 {
-
-    public struct RunParam
-    {
-        public int tSkip_ms { get; set; } = 0;
-        public int tMax { get; set; } = 1000;
-        public double dt { get; set; } = 0.1;//The step size
-        public double dtEuler { get; set; } = 0.01;//The step size for Euler method
-
-        public int iIndex(double t)
-        {
-            int i = (int)((t + tSkip_ms) / dt);
-            if (i < 0) i = 0;
-            if (i >= iMax) i = iMax - 1;
-            return i;
-        }
-        [JsonIgnore]
-        public int iMax { get { return Convert.ToInt32(((tMax + tSkip_ms) / dt) + 1); } }
-        [JsonIgnore]
-        public static double static_Skip { get; set; } = 0;//Used from data structures that don't have direct access to the model
-        [JsonIgnore]
-        public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
-        [JsonIgnore]
-        public static double static_dt_Euler { get; set; } = 0.1;//Used by the Euler method differential equation solutions
-
-        public static double GetTimeOfIndex(int index)
-        { return Math.Round(static_dt * index - static_Skip, 2); }
-        public RunParam() { }
-    }
-
     public class SwimmingModel
     {
-        public RunParam runParam;
-        public KinemParam kinemParam;
         public static Random rand = new(0);
 
         private string modelName;
         public string ModelName { get => modelName; set => modelName = value; }
-
         public string ModelDescription { get; set; }
 
-        public ModelDimensions ModelDimensions;
+        public ModelDimensions ModelDimensions { get; set; }
+        public RunParam runParam { get; set; } = new();
+        public KinemParam kinemParam { get; set; }
+
 
         private int iRunCounter = 0;
         private int iProgress = 0;
@@ -97,6 +69,103 @@ namespace SiliFish.ModelUnits.Model
         {
             modelName = this.GetType().Name;
             kinemParam = new();
+        }
+
+        public SwimmingModel(SwimmingModelTemplate swimmingModelTemplate)
+        {
+            neuronPools.Clear();
+            musclePools.Clear();
+            gapPoolConnections.Clear();
+            chemPoolConnections.Clear();
+
+            initialized = false;
+
+            if (swimmingModelTemplate == null) return;
+
+            ModelName = swimmingModelTemplate.ModelName;
+            ModelDescription = swimmingModelTemplate.ModelDescription;
+            ModelDimensions = swimmingModelTemplate.ModelDimensions;
+            CurrentSettings.Settings = swimmingModelTemplate.Settings;
+            kinemParam = swimmingModelTemplate.KinemParam;
+            SetParameters(swimmingModelTemplate.Parameters);
+
+            #region Generate pools and cells
+            foreach (CellPoolTemplate pool in swimmingModelTemplate.CellPoolTemplates.Where(cp => cp.Active))
+            {
+                if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Left)
+                {
+                    if (pool.CellType == CellType.Neuron)
+                        neuronPools.Add(new CellPool(this, pool, SagittalPlane.Left));
+                    else if (pool.CellType == CellType.MuscleCell)
+                        musclePools.Add(new CellPool(this, pool, SagittalPlane.Left));
+                }
+                if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Right)
+                {
+                    if (pool.CellType == CellType.Neuron)
+                        neuronPools.Add(new CellPool(this, pool, SagittalPlane.Right));
+                    else if (pool.CellType == CellType.MuscleCell)
+                        musclePools.Add(new CellPool(this, pool, SagittalPlane.Right));
+                }
+            }
+            #endregion
+
+            #region Generate Gap Junctions and Chemical Synapses
+            foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
+            {
+                CellPool leftSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
+
+                CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
+
+                if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
+                {
+                    if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolChemSynapse(leftSource, leftTarget, jncTemp);
+                        PoolToPoolChemSynapse(rightSource, rightTarget, jncTemp);
+                    }
+                    if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolChemSynapse(leftSource, rightTarget, jncTemp);
+                        PoolToPoolChemSynapse(rightSource, leftTarget, jncTemp);
+                    }
+                }
+                else if (jncTemp.ConnectionType == ConnectionType.Gap)
+                {
+                    if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolGapJunction(leftSource, leftTarget, jncTemp);
+                        PoolToPoolGapJunction(rightSource, rightTarget, jncTemp);
+                    }
+                    if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolGapJunction(leftSource, rightTarget, jncTemp);
+                        PoolToPoolGapJunction(rightSource, leftTarget, jncTemp);
+                    }
+                }
+            }
+            #endregion
+
+            #region Generate Stimuli
+            if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
+            {
+                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
+                {
+                    Stimulus stim = new(stimulus.StimulusSettings, stimulus.TimeLine_ms);
+                    if (stimulus.LeftRight.Contains("Left"))
+                    {
+                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
+                        target?.ApplyStimulus(stim, stimulus.TargetSomite, stimulus.TargetCell);
+                    }
+                    if (stimulus.LeftRight.Contains("Right"))
+                    {
+                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
+                        target?.ApplyStimulus(stim, stimulus.TargetSomite, stimulus.TargetCell);
+                    }
+                }
+            }
+            #endregion
         }
 
         [JsonIgnore]
@@ -261,18 +330,7 @@ namespace SiliFish.ModelUnits.Model
 
         public virtual Dictionary<string, object> GetParameters()
         {
-            Dictionary<string, object> paramDict = new()
-            {
-                { "Kinematics.Damping Coef", kinemParam.kinemZeta },
-                { "Kinematics.w0", kinemParam.kinemW0 },
-                { "Kinematics.Conversion Coef", kinemParam.kinemConvCoef },
-                { "Kinematics.Alpha", kinemParam.kinemAlpha },
-                { "Kinematics.Beta", kinemParam.kinemBeta },
-                { "Kinematics.Boundary", kinemParam.kinemBound },
-                { "Kinematics.Delay", kinemParam.kinemDelay }
-            };
-
-            return paramDict;
+            return null;
         }
 
         /// <summary>
@@ -282,17 +340,7 @@ namespace SiliFish.ModelUnits.Model
         /// <returns>The tooltip values for the model parameters</returns>
         public virtual Dictionary<string, object> GetParameterDesc()
         {
-            Dictionary<string, object> paramDescDict = new()
-            {
-                { "Kinematics.w0", "Natural oscillation frequency" },
-                { "Kinematics.Alpha", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
-                { "Kinematics.Beta", "If non-zero, (α + β * R) is used as 'Conversion Coefficient') " },
-                { "Kinematics.Conversion Coef", "Coefficient to convert membrane potential to driving force for the oscillation" },
-                { "Kinematics.Boundary", "The distance considered as a move from the center line." },
-                { "Kinematics.Delay", "The time range that will be looked ahead to detect motion." }
-            };
-
-            return paramDescDict;
+            return null;
         }
 
         /// <summary>
@@ -302,33 +350,17 @@ namespace SiliFish.ModelUnits.Model
         /// <param name="paramDict"></param>
         protected virtual void FillMissingParameters(Dictionary<string, object> paramDict)
         {
-            paramDict.AddObject("Kinematics.Damping Coef", kinemParam.kinemZeta, skipIfExists: true);
-            paramDict.AddObject("Kinematics.w0", kinemParam.kinemW0, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Conversion Coef", kinemParam.kinemConvCoef, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Alpha", kinemParam.kinemAlpha, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Beta", kinemParam.kinemBeta, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Boundary", kinemParam.kinemBound, skipIfExists: true);
-            paramDict.AddObject("Kinematics.Delay", kinemParam.kinemDelay, skipIfExists: true);
         }
 
-        public virtual void SetAnimationParameters(Dictionary<string, object> paramExternal)
+        public virtual void SetAnimationParameters(KinemParam kinemParam)
         {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            kinemParam.kinemZeta = paramExternal.Read("Kinematics.Damping Coef", kinemParam.kinemZeta);
-            kinemParam.kinemW0 = paramExternal.Read("Kinematics.w0", kinemParam.kinemW0);
-            kinemParam.kinemConvCoef = paramExternal.Read("Kinematics.Conversion Coef", kinemParam.kinemConvCoef);
-            kinemParam.kinemAlpha = paramExternal.Read("Kinematics.Alpha", kinemParam.kinemAlpha);
-            kinemParam.kinemBeta = paramExternal.Read("Kinematics.Beta", kinemParam.kinemBeta);
-            kinemParam.kinemBound = paramExternal.Read("Kinematics.Boundary", kinemParam.kinemBound);
-            kinemParam.kinemDelay = paramExternal.Read("Kinematics.Delay", kinemParam.kinemDelay);
+            this.kinemParam = kinemParam;
         }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             FillMissingParameters(paramExternal);
-            SetAnimationParameters(paramExternal);
         }
 
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, CellSelectionStruct cellSelection)
@@ -385,15 +417,6 @@ namespace SiliFish.ModelUnits.Model
             JsonUtil.SaveToJsonFile(filenamejson, GetParameters());
         }
 
-        protected virtual void InitNeurons()
-        {
-            throw (new NotImplementedException());
-        }
-        protected virtual void InitSynapsesAndGapJunctions()
-        {
-            throw (new NotImplementedException());
-        }
-
         protected virtual void InitDataVectors(int nmax)
         {
             foreach (CellPool neurons in neuronPools)
@@ -407,7 +430,12 @@ namespace SiliFish.ModelUnits.Model
 
         protected virtual void InitStructures(int nmax)
         {
-            throw (new NotImplementedException());
+            this.Time = new double[nmax];
+            InitDataVectors(nmax);
+            if (!neuronPools.Any(p => p.GetCells().Any()) &&
+                !musclePools.Any(p => p.GetCells().Any()))
+                return;
+            initialized = true;
         }
 
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)
@@ -526,7 +554,7 @@ namespace SiliFish.ModelUnits.Model
                 RunModelLoop(seed, rp);
                 if (count > 1 && ModelRun)
                 {
-                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingModelKinematics.GetSwimmingEpisodesUsingMuscleCells(this);
+                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(this);
                     string runfilename = $"{filename}_Run{iRunCounter}";
                     runfilename = Path.Combine(outputFolder, runfilename);
                     //Util.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);

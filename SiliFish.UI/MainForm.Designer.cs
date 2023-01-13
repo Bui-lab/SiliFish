@@ -41,7 +41,7 @@ namespace SiliFish.UI
             this.linkSaveHTMLPlots = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.tabParams = new System.Windows.Forms.TabControl();
-            this.tabGeneral = new System.Windows.Forms.TabPage();
+            this.tGeneral = new System.Windows.Forms.TabPage();
             this.splitGeneral = new System.Windows.Forms.SplitContainer();
             this.propModelDimensions = new System.Windows.Forms.PropertyGrid();
             this.pBodyDiagrams = new System.Windows.Forms.Panel();
@@ -50,7 +50,7 @@ namespace SiliFish.UI
             this.eModelName = new System.Windows.Forms.TextBox();
             this.lModelDescription = new System.Windows.Forms.Label();
             this.lModelName = new System.Windows.Forms.Label();
-            this.tabCellPools = new System.Windows.Forms.TabPage();
+            this.tCellPools = new System.Windows.Forms.TabPage();
             this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
             this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
             this.pCellPoolTop = new System.Windows.Forms.Panel();
@@ -60,9 +60,9 @@ namespace SiliFish.UI
             this.pConnectionTop = new System.Windows.Forms.Panel();
             this.pLineConnections = new System.Windows.Forms.Panel();
             this.lConnections = new System.Windows.Forms.Label();
-            this.tabStimuli = new System.Windows.Forms.TabPage();
+            this.tStimuli = new System.Windows.Forms.TabPage();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
-            this.tabSettings = new System.Windows.Forms.TabPage();
+            this.tSettings = new System.Windows.Forms.TabPage();
             this.propSettings = new System.Windows.Forms.PropertyGrid();
             this.pSettingsTop = new System.Windows.Forms.Panel();
             this.eTemporaryFolder = new System.Windows.Forms.TextBox();
@@ -223,28 +223,30 @@ namespace SiliFish.UI
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
             this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.tKinematics = new System.Windows.Forms.TabPage();
+            this.propKinematics = new System.Windows.Forms.PropertyGrid();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
             this.tabParams.SuspendLayout();
-            this.tabGeneral.SuspendLayout();
+            this.tGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitGeneral)).BeginInit();
             this.splitGeneral.Panel1.SuspendLayout();
             this.splitGeneral.Panel2.SuspendLayout();
             this.splitGeneral.SuspendLayout();
             this.pBodyDiagrams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).BeginInit();
-            this.tabCellPools.SuspendLayout();
+            this.tCellPools.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).BeginInit();
             this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
             this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
             this.splitCellPoolsAndConnections.SuspendLayout();
             this.pCellPoolTop.SuspendLayout();
             this.pConnectionTop.SuspendLayout();
-            this.tabStimuli.SuspendLayout();
-            this.tabSettings.SuspendLayout();
+            this.tStimuli.SuspendLayout();
+            this.tSettings.SuspendLayout();
             this.pSettingsTop.SuspendLayout();
             this.pParamBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
@@ -302,6 +304,7 @@ namespace SiliFish.UI
             this.pTemplateJSONTop.SuspendLayout();
             this.tabModelJSON.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
+            this.tKinematics.SuspendLayout();
             this.SuspendLayout();
             // 
             // pTop
@@ -426,10 +429,11 @@ namespace SiliFish.UI
             // 
             // tabParams
             // 
-            this.tabParams.Controls.Add(this.tabGeneral);
-            this.tabParams.Controls.Add(this.tabCellPools);
-            this.tabParams.Controls.Add(this.tabStimuli);
-            this.tabParams.Controls.Add(this.tabSettings);
+            this.tabParams.Controls.Add(this.tGeneral);
+            this.tabParams.Controls.Add(this.tCellPools);
+            this.tabParams.Controls.Add(this.tStimuli);
+            this.tabParams.Controls.Add(this.tKinematics);
+            this.tabParams.Controls.Add(this.tSettings);
             this.tabParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabParams.Location = new System.Drawing.Point(0, 34);
             this.tabParams.Name = "tabParams";
@@ -438,20 +442,20 @@ namespace SiliFish.UI
             this.tabParams.TabIndex = 2;
             this.tabParams.Tag = "";
             // 
-            // tabGeneral
+            // tGeneral
             // 
-            this.tabGeneral.BackColor = System.Drawing.Color.White;
-            this.tabGeneral.Controls.Add(this.splitGeneral);
-            this.tabGeneral.Controls.Add(this.eModelDescription);
-            this.tabGeneral.Controls.Add(this.eModelName);
-            this.tabGeneral.Controls.Add(this.lModelDescription);
-            this.tabGeneral.Controls.Add(this.lModelName);
-            this.tabGeneral.Location = new System.Drawing.Point(4, 24);
-            this.tabGeneral.Name = "tabGeneral";
-            this.tabGeneral.Size = new System.Drawing.Size(540, 425);
-            this.tabGeneral.TabIndex = 4;
-            this.tabGeneral.Text = "General";
-            this.tabGeneral.UseVisualStyleBackColor = true;
+            this.tGeneral.BackColor = System.Drawing.Color.White;
+            this.tGeneral.Controls.Add(this.splitGeneral);
+            this.tGeneral.Controls.Add(this.eModelDescription);
+            this.tGeneral.Controls.Add(this.eModelName);
+            this.tGeneral.Controls.Add(this.lModelDescription);
+            this.tGeneral.Controls.Add(this.lModelName);
+            this.tGeneral.Location = new System.Drawing.Point(4, 24);
+            this.tGeneral.Name = "tGeneral";
+            this.tGeneral.Size = new System.Drawing.Size(540, 425);
+            this.tGeneral.TabIndex = 4;
+            this.tGeneral.Text = "General";
+            this.tGeneral.UseVisualStyleBackColor = true;
             // 
             // splitGeneral
             // 
@@ -539,16 +543,16 @@ namespace SiliFish.UI
             this.lModelName.TabIndex = 0;
             this.lModelName.Text = "Model Name";
             // 
-            // tabCellPools
+            // tCellPools
             // 
-            this.tabCellPools.BackColor = System.Drawing.Color.White;
-            this.tabCellPools.Controls.Add(this.splitCellPoolsAndConnections);
-            this.tabCellPools.Location = new System.Drawing.Point(4, 24);
-            this.tabCellPools.Name = "tabCellPools";
-            this.tabCellPools.Size = new System.Drawing.Size(540, 425);
-            this.tabCellPools.TabIndex = 1;
-            this.tabCellPools.Text = "Cell Pools & Connections";
-            this.tabCellPools.UseVisualStyleBackColor = true;
+            this.tCellPools.BackColor = System.Drawing.Color.White;
+            this.tCellPools.Controls.Add(this.splitCellPoolsAndConnections);
+            this.tCellPools.Location = new System.Drawing.Point(4, 24);
+            this.tCellPools.Name = "tCellPools";
+            this.tCellPools.Size = new System.Drawing.Size(540, 425);
+            this.tCellPools.TabIndex = 1;
+            this.tCellPools.Text = "Cell Pools & Connections";
+            this.tCellPools.UseVisualStyleBackColor = true;
             // 
             // splitCellPoolsAndConnections
             // 
@@ -664,15 +668,15 @@ namespace SiliFish.UI
             this.lConnections.TabIndex = 0;
             this.lConnections.Text = "Connections";
             // 
-            // tabStimuli
+            // tStimuli
             // 
-            this.tabStimuli.Controls.Add(this.listStimuli);
-            this.tabStimuli.Location = new System.Drawing.Point(4, 24);
-            this.tabStimuli.Name = "tabStimuli";
-            this.tabStimuli.Size = new System.Drawing.Size(540, 425);
-            this.tabStimuli.TabIndex = 3;
-            this.tabStimuli.Text = "Stimuli";
-            this.tabStimuli.UseVisualStyleBackColor = true;
+            this.tStimuli.Controls.Add(this.listStimuli);
+            this.tStimuli.Location = new System.Drawing.Point(4, 24);
+            this.tStimuli.Name = "tStimuli";
+            this.tStimuli.Size = new System.Drawing.Size(540, 425);
+            this.tStimuli.TabIndex = 3;
+            this.tStimuli.Text = "Stimuli";
+            this.tStimuli.UseVisualStyleBackColor = true;
             // 
             // listStimuli
             // 
@@ -689,16 +693,16 @@ namespace SiliFish.UI
             this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
             this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
             // 
-            // tabSettings
+            // tSettings
             // 
-            this.tabSettings.Controls.Add(this.propSettings);
-            this.tabSettings.Controls.Add(this.pSettingsTop);
-            this.tabSettings.Location = new System.Drawing.Point(4, 24);
-            this.tabSettings.Name = "tabSettings";
-            this.tabSettings.Size = new System.Drawing.Size(540, 425);
-            this.tabSettings.TabIndex = 5;
-            this.tabSettings.Text = "Settings";
-            this.tabSettings.UseVisualStyleBackColor = true;
+            this.tSettings.Controls.Add(this.propSettings);
+            this.tSettings.Controls.Add(this.pSettingsTop);
+            this.tSettings.Location = new System.Drawing.Point(4, 24);
+            this.tSettings.Name = "tSettings";
+            this.tSettings.Size = new System.Drawing.Size(540, 425);
+            this.tSettings.TabIndex = 5;
+            this.tSettings.Text = "Settings";
+            this.tSettings.UseVisualStyleBackColor = true;
             // 
             // propSettings
             // 
@@ -2693,6 +2697,24 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // tKinematics
+            // 
+            this.tKinematics.Controls.Add(this.propKinematics);
+            this.tKinematics.Location = new System.Drawing.Point(4, 24);
+            this.tKinematics.Name = "tKinematics";
+            this.tKinematics.Size = new System.Drawing.Size(540, 425);
+            this.tKinematics.TabIndex = 6;
+            this.tKinematics.Text = "Kinematics";
+            this.tKinematics.UseVisualStyleBackColor = true;
+            // 
+            // propKinematics
+            // 
+            this.propKinematics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propKinematics.Location = new System.Drawing.Point(0, 0);
+            this.propKinematics.Name = "propKinematics";
+            this.propKinematics.Size = new System.Drawing.Size(540, 425);
+            this.propKinematics.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2714,15 +2736,15 @@ namespace SiliFish.UI
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
             this.tabParams.ResumeLayout(false);
-            this.tabGeneral.ResumeLayout(false);
-            this.tabGeneral.PerformLayout();
+            this.tGeneral.ResumeLayout(false);
+            this.tGeneral.PerformLayout();
             this.splitGeneral.Panel1.ResumeLayout(false);
             this.splitGeneral.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitGeneral)).EndInit();
             this.splitGeneral.ResumeLayout(false);
             this.pBodyDiagrams.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLarva)).EndInit();
-            this.tabCellPools.ResumeLayout(false);
+            this.tCellPools.ResumeLayout(false);
             this.splitCellPoolsAndConnections.Panel1.ResumeLayout(false);
             this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
@@ -2731,8 +2753,8 @@ namespace SiliFish.UI
             this.pCellPoolTop.PerformLayout();
             this.pConnectionTop.ResumeLayout(false);
             this.pConnectionTop.PerformLayout();
-            this.tabStimuli.ResumeLayout(false);
-            this.tabSettings.ResumeLayout(false);
+            this.tStimuli.ResumeLayout(false);
+            this.tSettings.ResumeLayout(false);
             this.pSettingsTop.ResumeLayout(false);
             this.pSettingsTop.PerformLayout();
             this.pParamBottom.ResumeLayout(false);
@@ -2802,6 +2824,7 @@ namespace SiliFish.UI
             this.tabModelJSON.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
             this.pModelJSONTop.PerformLayout();
+            this.tKinematics.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2859,10 +2882,10 @@ namespace SiliFish.UI
         private Button btnPlotWindows;
         private ComboBox ddPlot;
         private NumericUpDown ePlotSomiteSelection;
-        private TabPage tabCellPools;
-        private TabPage tabStimuli;
+        private TabPage tCellPools;
+        private TabPage tStimuli;
         private LinkLabel linkClearTemplate;
-        private TabPage tabGeneral;
+        private TabPage tGeneral;
         private Label lModelDescription;
         private Label lModelName;
         private SaveFileDialog saveFileText;
@@ -2971,7 +2994,7 @@ namespace SiliFish.UI
         private TextBox e3DSomiteRange;
         private CheckBox cb3DAllSomites;
         private LinkLabel linkExportPlotData;
-        private TabPage tabSettings;
+        private TabPage tSettings;
         private PropertyGrid propSettings;
         private PropertyGrid propModelDimensions;
         private SplitContainer splitGeneral;
@@ -2998,5 +3021,7 @@ namespace SiliFish.UI
         private ComboBox dd3DViewpoint;
         private Panel p3DViewing;
         private CheckBox cb3DLegend;
+        private TabPage tKinematics;
+        private PropertyGrid propKinematics;
     }
 }

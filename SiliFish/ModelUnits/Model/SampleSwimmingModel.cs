@@ -131,7 +131,7 @@ namespace SiliFish.ModelUnits.Model
 
             }
         }
-        protected override void InitNeurons()
+        protected void InitNeurons()
         {
             //https://stackoverflow.com/questions/4834659/loop-through-all-colors
             var colorProperties = Colors.GetType().GetProperties(BindingFlags.Static | BindingFlags.Public);
@@ -212,9 +212,8 @@ namespace SiliFish.ModelUnits.Model
             }
         }
 
-        protected override void InitSynapsesAndGapJunctions()
+        protected void InitSynapsesAndGapJunctions()
         {
-            //base.InitSynapsesAndGapJunctions();
         }
         protected override void InitStructures(int nmax)
         {

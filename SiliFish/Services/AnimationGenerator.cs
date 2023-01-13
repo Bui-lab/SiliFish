@@ -128,17 +128,9 @@ namespace SiliFish.Services
             if (iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;
 
-            AnimationGenerator animationGenerator = new();
-            Dictionary<string, object> animParamDict = model.GetParameters().Where(p => p.Key.StartsWith("Kinematics")).ToDictionary(x => x.Key, x => x.Value);
-            string animParams = "";
-            foreach (var param in animParamDict)
-            {
-                animParams += $"{param.Key}: {param.Value}\n";
-            }
-
             return CreateTimeSeries(title: model.ModelName + "Animation.html",
-                animParams,
-                SwimmingModelKinematics.GenerateSpineCoordinates(model, iStart, iEnd),
+                model.kinemParam.GetAnimationDetails(),
+                SwimmingKinematics.GenerateSpineCoordinates(model, iStart, iEnd),
                 model.TimeArray,
                 iStart,
                 iEnd,
