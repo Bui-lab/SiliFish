@@ -3,7 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Linq;
@@ -74,7 +74,7 @@ namespace SiliFish.ModelUnits
             Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt)), 1);
         }
 
-        public void LinkObjects(SwimmingModel model)
+        public void LinkObjects(RunningModel model)
         {
             CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == target)).FirstOrDefault();
             PostCell = cp.GetCell(target);
@@ -82,6 +82,12 @@ namespace SiliFish.ModelUnits
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
+        }
+        public override string ToString()
+        {
+            //TODO string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
+            //JncActive ? " (timeline)" : " (inactive)";
+            return $"{PreNeuron.ID}-{PostCell.ID} chem jnc";//String.Format("{0} [{1}]/{2}{3}", Name, ConnectionType.ToString(), AxonReachMode.ToString(), activeStatus);
         }
         public void InitDataVectors(int nmax)
         {

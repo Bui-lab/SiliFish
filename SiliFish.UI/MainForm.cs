@@ -3,12 +3,10 @@ using Microsoft.Web.WebView2.WinForms;
 using Services;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
@@ -21,13 +19,9 @@ namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
-        static string modelFileDefaultFolder;
-        SwimmingModel Model;
-        bool modifiedPools = false;
-        bool modifiedJncs = false;
-        bool modelUpdated = false;
+        RunningModel Model;
 
-        SwimmingModelTemplate ModelTemplate = new();
+        ModelTemplate ModelTemplate = new();
         string htmlAnimation = "";
         string htmlPlot = "";
         string PlotSubset = "";
@@ -41,7 +35,6 @@ namespace SiliFish.UI
         PlotType PlotType = PlotType.MembPotential;
         CellSelectionStruct plotCellSelection;
         private string tempFile;
-        string lastSavedCustomModelJSON;
         DateTime runStart;
         List<ChartDataStruct> LastPlottedCharts;
 
@@ -66,11 +59,6 @@ namespace SiliFish.UI
                 webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
                 webViewSummaryV.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
-                listCellPool.AddContextMenu("Sort by Type", listCellPool_SortByNTType);
-                listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
-                listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
-                listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
-
                 foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
                 {
                     ddPlot.Items.Add(pt.GetDisplayName());
@@ -92,17 +80,17 @@ namespace SiliFish.UI
 
                 pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
-                tabParams.BackColor = Color.White;
-
+    
                 dd3DViewpoint.SelectedIndex = 0;
-                LoadModelTemplate();
+                //TODO LoadModelTemplate();
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
                 throw;
             }
         }
+
 
         #region webViewPlot
         private async void InitAsync()
@@ -187,359 +175,30 @@ namespace SiliFish.UI
 
         private void RefreshModel()
         {
-            if (modelUpdated && Model != null)
+            //TODO if (modelUpdated && Model != null)
                 return;
-            modelUpdated = false;
-            ReadModelTemplate(includeHidden: false);
-            Model = new SwimmingModel(ModelTemplate);
+            //TODO modelUpdated = false;
+            //TODO ReadModelTemplate(includeHidden: false);
+            Model = new RunningModel(ModelTemplate);
         }
 
         private void RefreshModelSafeMode()
         {
-            if (modelUpdated) return;
+            //TODO if (modelUpdated) return;
             if (Model == null || !Model.ModelRun)
                 RefreshModel();
-            else if (modifiedJncs || modifiedPools)
+            else //TODO if (modifiedJncs || modifiedPools)
             {
                 string msg = "Do you want to recreate the model using the modifications you have done in the UI? You will need to rerun the simulation.";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     RefreshModel();
             }
         }
-        private void LoadModelTemplateParamsAndSettings()
-        {
-            //General Params
-            eModelName.Text = ModelTemplate.ModelName;
-            eModelDescription.Text = ModelTemplate.ModelDescription;
-            propModelDimensions.SelectedObject = ModelTemplate.ModelDimensions;
 
-            //Settings
-            if (ddDefaultNeuronCore.Items.Count == 0)
-                ddDefaultNeuronCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
-            ddDefaultNeuronCore.Text = ModelTemplate.Settings.DefaultNeuronCore;
-            if (ddDefaultMuscleCellCore.Items.Count == 0)
-                ddDefaultMuscleCellCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
-            ddDefaultMuscleCellCore.Text = ModelTemplate.Settings.DefaultMuscleCellCore;
-            eTemporaryFolder.Text = ModelTemplate.Settings.TempFolder;
-            eOutputFolder.Text = ModelTemplate.Settings.OutputFolder;
-            propSettings.SelectedObject = ModelTemplate.Settings;
-            propKinematics.SelectedObject = ModelTemplate.KinemParam;
-            LoadParams(null);//ModelTemplate.Parameters are kept for backward compatibility. Parameters will be used only for hardcoded models
-        }
-        private void linkClearTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ModelTemplate = new();
-            Model = null;
-            LoadModelTemplate();
-        }
 
         #endregion
 
-        #region Read/Load Model and Parameters
 
-        /// <summary>
-        /// LoadParams will be valid only when hardcoded models are implemedted. Everything in the Modeltemplate.Parameters are carried over to classes
-        /// </summary>
-        /// <param name="ParamDict"></param>
-        private void LoadParams(Dictionary<string, object> ParamDict)
-        {
-            List<TabPage> obsoloteTabpages = new();
-            foreach (TabPage tp in tabParams.TabPages)
-            {
-                if (tp.Tag?.ToString() == "Param")
-                    obsoloteTabpages.Add(tp);
-            }
-            foreach (TabPage tp in obsoloteTabpages)
-            {
-                tabParams.TabPages.Remove(tp);
-            }
-
-            if (ParamDict == null) return;
-
-            List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
-            int tabIndex = 1;
-            var _ = tabParams.Handle;//requires for the insert command to work
-            foreach (string group in paramGroups)
-            {
-                Dictionary<string, object> SubDict = ParamDict.Where(x => x.Key.StartsWith(group)).ToDictionary(x => x.Key, x => x.Value);
-                TabPage tabPage = new()
-                {
-                    Text = group,
-                    Tag = "Param",
-                    BackColor = tGeneral.BackColor
-                };
-                //insert after the general tab, to keep Animation at the end
-                tabParams.TabPages.Insert(tabIndex++, tabPage);
-                int maxLen = SubDict.Keys.Select(k => k.Length).Max();
-                FlowLayoutPanel flowPanel = new();
-                tabPage.Controls.Add(flowPanel);
-                flowPanel.FlowDirection = FlowDirection.LeftToRight;
-                flowPanel.Dock = DockStyle.Fill;
-                flowPanel.AutoScroll = true;
-                foreach (KeyValuePair<string, object> kvp in SubDict)
-                {
-                    Label lbl = new()
-                    {
-                        Text = kvp.Key[(group.Length + 1)..],
-                        Height = 23,
-                        Width = 5 * maxLen,
-                        TextAlign = ContentAlignment.BottomRight
-                    };
-                    flowPanel.Controls.Add(lbl);
-                    TextBox textBox = new();
-                    textBox.Tag = kvp.Value;
-                    textBox.Text = kvp.Value?.ToString();
-                    flowPanel.Controls.Add(textBox);
-                    flowPanel.SetFlowBreak(textBox, true);
-                }
-            }
-        }
-
-        private void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
-        {
-            if (page.Tag?.ToString() != "Param" || ParamDict == null)
-                return;
-
-            string key = "";
-            FlowLayoutPanel panel = page.Controls[0] as FlowLayoutPanel;
-            foreach (Control control in panel.Controls)
-            {
-                if (control is Label)
-                {
-                    key = control.Text;
-                    continue;
-                }
-                if (!string.IsNullOrEmpty(key) && control is TextBox)
-                {
-                    string value = control.Text;
-                    object origValue = control.Tag;
-                    if (origValue is double)
-                        ParamDict.Add(page.Text + "." + key, double.Parse(value));
-                    else if (origValue is int)
-                        ParamDict.Add(page.Text + "." + key, int.Parse(value));
-                    else //if (origValue is string)
-                        ParamDict.Add(page.Text + "." + key, value);
-                    key = "";
-                }
-            }
-        }
-        private Dictionary<string, object> ReadParams(string subGroup)
-        {
-            Dictionary<string, object> ParamDict = new();
-            foreach (TabPage page in tabParams.TabPages)
-            {
-                if (page.Tag?.ToString() == "Param" && page.Text == subGroup)
-                {
-                    ReadParamsFromTabPage(ParamDict, page);
-                    break;
-                }
-            }
-            return ParamDict;
-        }
-        private Dictionary<string, object> ReadParams()
-        {
-            Dictionary<string, object> ParamDict = new();
-            foreach (TabPage page in tabParams.TabPages)
-            {
-                if (page.Tag?.ToString() != "Param")
-                    continue;
-                ReadParamsFromTabPage(ParamDict, page);
-            }
-            return ParamDict;
-        }
-        private void LoadModelTemplatePools()
-        {
-            listCellPool.ClearItems();
-            if (ModelTemplate?.CellPoolTemplates == null) return;
-            foreach (CellPoolTemplate cpt in ModelTemplate.CellPoolTemplates)
-            {
-                listCellPool.AppendItem(cpt);
-            }
-        }
-        private void LoadModelTemplateInterPools()
-        {
-            listConnections.ClearItems();
-            if (ModelTemplate?.InterPoolTemplates == null) return;
-            foreach (InterPoolTemplate interPoolTemplate in ModelTemplate.InterPoolTemplates)
-            {
-                listConnections.AppendItem(interPoolTemplate);
-            }
-        }
-
-        private void LoadModelTemplateStimuli()
-        {
-            listStimuli.ClearItems();
-            if (ModelTemplate?.AppliedStimuli == null) return;
-            foreach (StimulusTemplate stim in ModelTemplate.AppliedStimuli)
-            {
-                listStimuli.AppendItem(stim);
-            }
-        }
-        private void LoadModelTemplate()
-        {
-            if (ModelTemplate == null) return;
-
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = ModelTemplate.ModelDimensions.NumberOfSomites > 0;
-            LoadModelTemplateParamsAndSettings();
-            LoadModelTemplatePools();
-            LoadModelTemplateInterPools();
-            LoadModelTemplateStimuli();
-            this.Text = $"SiliFish {ModelTemplate.ModelName}";
-        }
-        private void ReadModelTemplatePools(bool includeHidden)
-        {
-            ModelTemplate.CellPoolTemplates.Clear();
-            foreach (var v in listCellPool.GetItems(includeHidden))
-            {
-                if (v is CellPoolTemplate cpt)
-                    ModelTemplate.CellPoolTemplates.Add(cpt);
-            }
-        }
-        private void ReadModelTemplateInterPools(bool includeHidden)
-        {
-            ModelTemplate.InterPoolTemplates.Clear();
-            foreach (var jnc in listConnections.GetItems(includeHidden))
-            {
-                if (jnc is InterPoolTemplate iptemp)
-                {
-                    ModelTemplate.InterPoolTemplates.Add(iptemp);
-                }
-            }
-        }
-        private void ReadModelTemplateStimuli(bool includeHidden)
-        {
-            ModelTemplate.AppliedStimuli.Clear();
-            foreach (var stim in listStimuli.GetItems(includeHidden))
-            {
-                if (stim is StimulusTemplate appstim)
-                {
-                    ModelTemplate.AppliedStimuli.Add(appstim);
-                }
-            }
-        }
-
-        private SwimmingModelTemplate ReadModelTemplate(bool includeHidden)
-        {
-            try
-            {
-                ModelTemplate.ClearLists();//only lists are cleared.
-                                           //The general parameters are read from the proeprties grid automatically
-                ModelTemplate.ModelName = eModelName.Text;
-                ModelTemplate.ModelDescription = eModelDescription.Text;
-
-                ReadModelTemplatePools(includeHidden);
-                ReadModelTemplateInterPools(includeHidden);
-                ReadModelTemplateStimuli(includeHidden);
-
-                ModelTemplate.Parameters = ReadParams();
-                string err = ModelTemplate.CheckTemplate();
-                if (!string.IsNullOrEmpty(err))
-                {
-                    MessageBox.Show(err);
-                    return null;
-                }
-
-                return ModelTemplate;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                throw;
-            }
-        }
-
-        private static void ExceptionHandling(string name, Exception ex)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private static string CheckJSONVersion(string json)
-        {
-            List<string> issues = JsonUtil.CheckJsonVersion(ref json);
-            if (issues?.Count > 0)
-            //Compare to Version 0.1
-            {
-                //created by old version 
-                MessageBox.Show("This file was generated by an old version of SiliFish. " +
-                    "Please double check the following items for accuracy before running the model:\r\n" +
-                    string.Join("; ", issues));
-            }
-            return json;
-        }
-        private bool SaveModelTemplate()
-        {
-            try
-            {
-                SwimmingModelTemplate mt = ReadModelTemplate(includeHidden: true);
-
-                if (!mt.ModelDimensions.CheckConsistency(out string error))
-                {
-                    WarningMessage(error);
-                    return false;
-                }
-                if (string.IsNullOrEmpty(saveFileJson.FileName))
-                    saveFileJson.FileName = mt?.ModelName ?? Model?.ModelName;
-                else
-                    saveFileJson.InitialDirectory = modelFileDefaultFolder;
-                if (saveFileJson.ShowDialog() == DialogResult.OK)
-                {
-                    modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
-                    //To make sure deactivated items are saved, even though not displayed
-                    //Show all
-                    JsonUtil.SaveToJsonFile(saveFileJson.FileName, ModelTemplate);
-                    this.Text = $"SiliFish {ModelTemplate.ModelName}";
-                    lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-        private void linkSaveTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            SaveModelTemplate();
-        }
-        private void linkLoadTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                openFileJson.InitialDirectory = modelFileDefaultFolder;
-                if (openFileJson.ShowDialog() == DialogResult.OK)
-                {
-                    tabParams.Visible = false;
-                    Application.DoEvents();
-                    string json = FileUtil.ReadFromFile(openFileJson.FileName);
-                    json = CheckJSONVersion(json);
-                    try
-                    {
-                        ModelTemplate = (SwimmingModelTemplate)JsonUtil.ToObject(typeof(SwimmingModelTemplate), json);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Selected file is not a valid Swimming Model Template file.");
-                        return;
-                    }
-                    ModelTemplate.BackwardCompatibility();
-                    ModelTemplate.LinkObjects();
-                    LoadModelTemplate(); 
-                    lastSavedCustomModelJSON = JsonUtil.ToJson(ModelTemplate);
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
-                throw new Exception();
-            }
-            finally
-            {
-                tabParams.Visible = true;
-            }
-        }
-        #endregion
 
         #region Simulation
         private void eTimeEnd_ValueChanged(object sender, EventArgs e)
@@ -574,7 +233,7 @@ namespace SiliFish.UI
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -591,7 +250,7 @@ namespace SiliFish.UI
             progressBarRun.Value = progressBarRun.Maximum;
             progressBarRun.Visible = false;
             btnRun.Text = "Run";
-            modifiedJncs = modifiedPools = false;
+            //TODO modifiedJncs = modifiedPools = false;
 
             btnPlotWindows.Enabled = false;
             btnPlotHTML.Enabled = false;
@@ -608,7 +267,7 @@ namespace SiliFish.UI
             progressBarRun.Value = progressBarRun.Maximum;
             progressBarRun.Visible = false;
             btnRun.Text = "Run";
-            modifiedJncs = modifiedPools = false;
+            //TODO modifiedJncs = modifiedPools = false;
 
             PopulatePlotPools();
             int NumberOfSomites = Model.ModelDimensions.NumberOfSomites;
@@ -989,7 +648,7 @@ namespace SiliFish.UI
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
         private void btnPlotWindows_Click(object sender, EventArgs e)
@@ -1076,7 +735,7 @@ namespace SiliFish.UI
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -1258,7 +917,7 @@ namespace SiliFish.UI
 
         private void btnDisplayTemplateJSON_Click(object sender, EventArgs e)
         {
-            ReadModelTemplate(includeHidden: true);
+            //TODO ReadModelTemplate(includeHidden: true);
             try
             {
                 eTemplateJSON.Text = JsonUtil.ToJson(ModelTemplate);
@@ -1275,11 +934,11 @@ namespace SiliFish.UI
         {
             try
             {
-                if (JsonUtil.ToObject(typeof(SwimmingModelTemplate), eTemplateJSON.Text) is SwimmingModelTemplate temp)
+                if (JsonUtil.ToObject(typeof(ModelTemplate), eTemplateJSON.Text) is ModelTemplate temp)
                 {
                     ModelTemplate = temp;
                     ModelTemplate.LinkObjects();
-                    LoadModelTemplate();
+                    //TODO LoadModelTemplate();
                     MessageBox.Show("Updated template is loaded.");
                 }
             }
@@ -1289,7 +948,7 @@ namespace SiliFish.UI
             }
             catch (Exception exc)
             {
-                ExceptionHandling("Read template from JSON", exc);
+                ExceptionHandler.ExceptionHandling("Read template from JSON", exc);
             }
         }
         private void linkSaveTemplateJSON_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1301,7 +960,7 @@ namespace SiliFish.UI
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -1313,7 +972,7 @@ namespace SiliFish.UI
 
         private void btnDisplayModelJSON_Click(object sender, EventArgs e)
         {
-            modelUpdated = false;
+            //TODO modelUpdated = false;
             RefreshModelSafeMode();
             try
             {
@@ -1331,11 +990,11 @@ namespace SiliFish.UI
         {
             try
             {
-                if (JsonUtil.ToObject(typeof(SwimmingModel), eModelJSON.Text) is SwimmingModel model)
+                if (JsonUtil.ToObject(typeof(RunningModel), eModelJSON.Text) is RunningModel model)
                 {
                     Model = model;
                     Model.LinkObjects();
-                    modelUpdated = true;
+                    //TODO modelUpdated = true;
                 }
             }
             catch (JsonException exc)
@@ -1344,7 +1003,7 @@ namespace SiliFish.UI
             }
             catch (Exception exc)
             {
-                ExceptionHandling("Read template from JSON", exc);
+                ExceptionHandler.ExceptionHandling("Read template from JSON", exc);
             }
         }
 
@@ -1358,7 +1017,7 @@ namespace SiliFish.UI
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -1391,302 +1050,7 @@ namespace SiliFish.UI
 
         #endregion
 
-        #region Custom Model
 
-        #region Cell Pool
-        private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
-        {
-            ControlContainer frmControl = new();
-            CellPoolControl cpl = new(ModelTemplate.ModelDimensions.NumberOfSomites > 0);
-            cpl.LoadPool += Cpl_LoadPool;
-            cpl.SavePool += Cpl_SavePool;
-
-            cpl.PoolTemplate = pool;
-            frmControl.AddControl(cpl);
-            frmControl.Text = pool?.ToString() ?? "New Cell Pool";
-
-            if (frmControl.ShowDialog() == DialogResult.OK)
-                return cpl.PoolTemplate;
-            return null;
-        }
-        private void Cpl_SavePool(object sender, EventArgs e)
-        {
-            if (saveFileJson.ShowDialog() == DialogResult.OK)
-            {
-                CellPoolControl cpl = (CellPoolControl)sender;
-                FileUtil.SaveToFile(saveFileJson.FileName, cpl.JSONString);
-                modifiedPools = true;
-            }
-        }
-        private void Cpl_LoadPool(object sender, EventArgs e)
-        {
-            if (openFileJson.ShowDialog() == DialogResult.OK)
-            {
-                CellPoolControl cpl = (CellPoolControl)sender;
-                cpl.JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
-            }
-        }
-
-        private void listCellPool_AddItem(object sender, EventArgs e)
-        {
-            CellPoolTemplate newPool = OpenCellPoolDialog(null);
-            if (newPool != null)
-            {
-                ModelTemplate.CellPoolTemplates.Add(newPool);
-                listCellPool.AppendItem(newPool);
-                modifiedPools = true;
-            }
-        }
-        private void listCellPool_CopyItem(object sender, EventArgs e)
-        {
-            if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
-            CellPoolTemplate poolDuplicate = new(pool);
-            poolDuplicate = OpenCellPoolDialog(poolDuplicate);
-            while (ModelTemplate.CellPoolTemplates.Any(p => p.CellGroup == poolDuplicate?.CellGroup))
-            {
-                WarningMessage("Cell pool group names have to be unique. Please enter a different name.");
-                poolDuplicate = OpenCellPoolDialog(poolDuplicate);
-            }
-            if (poolDuplicate != null)
-            {
-                ModelTemplate.CellPoolTemplates.Add(poolDuplicate);
-                ModelTemplate.CopyConnectionsOfCellPool(pool, poolDuplicate);
-                listCellPool.AppendItem(poolDuplicate);
-                LoadModelTemplateInterPools();
-                modifiedPools = true;
-            }
-        }
-        private void listCellPool_DeleteItem(object sender, EventArgs e)
-        {
-            if (listCellPool.SelectedIndex >= 0)
-            {
-                string msg = "Deleting a cell pool will remove all of its conections and applied stimuli as well. Do you want to continue?";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                {
-                    CellPoolTemplate cpl = (CellPoolTemplate)listCellPool.SelectedItem;
-                    ReadModelTemplateInterPools(includeHidden: true);
-                    ReadModelTemplateStimuli(includeHidden: true);
-                    ModelTemplate.RemoveCellPool(cpl);
-                    listCellPool.RemoveItemAt(listCellPool.SelectedIndex);
-                    LoadModelTemplateInterPools();
-                    LoadModelTemplateStimuli();
-                    modifiedPools = true;
-                    modifiedJncs = true;
-                }
-            }
-        }
-        private void listCellPool_ViewItem(object sender, EventArgs e)
-        {
-            if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
-            string oldName = pool.CellGroup;
-            pool = OpenCellPoolDialog(pool); //check modeltemplate's list
-            if (pool != null)
-            {
-                if (oldName != pool.CellGroup)
-                    ModelTemplate.RenameCellPool(oldName, pool.CellGroup);
-                int ind = listCellPool.SelectedIndex;
-                listCellPool.RefreshItem(ind, pool);
-                LoadModelTemplateInterPools();
-                modifiedPools = true;
-            }
-        }
-
-        private void listCellPool_ActivateItem(object sender, EventArgs e)
-        {
-            if (listCellPool.SelectedItem is not CellPoolTemplate pool) return;
-            ModelTemplate.CellPoolTemplates.FirstOrDefault(p => p.Distinguisher == pool.Distinguisher).Active = pool.Active;
-            modifiedPools = true;
-        }
-
-        private void listCellPool_SortItems(object sender, EventArgs e)
-        {
-            ModelTemplate.CellPoolTemplates.Sort();
-            LoadModelTemplatePools();
-        }
-
-        private void listCellPool_SortByNTType(object sender, EventArgs e)
-        {
-            ModelTemplate.CellPoolTemplates = ModelTemplate.CellPoolTemplates
-                .OrderBy(p => p.CellType.ToString())
-                .ThenBy(p => p.NTMode.ToString())
-                .ToList();
-            LoadModelTemplatePools();
-        }
-
-        #endregion
-
-        #region Connection
-        private InterPoolTemplate OpenConnectionDialog(InterPoolTemplate interpool)
-        {
-            ControlContainer frmControl = new();
-            InterPoolControl ipl = new(ModelTemplate.ModelDimensions.NumberOfSomites > 0);
-
-            ipl.SetInterPoolTemplate(ModelTemplate.CellPoolTemplates, interpool, ModelTemplate);
-            frmControl.AddControl(ipl);
-            frmControl.Text = interpool?.ToString() ?? "New Connection";
-
-            if (frmControl.ShowDialog() == DialogResult.OK)
-            {
-                InterPoolTemplate interPoolTemplate = ipl.GetInterPoolTemplate();
-                ModelTemplate.LinkObjects(interPoolTemplate);
-                return interPoolTemplate;
-            }
-            return null;
-        }
-
-        private void listConnections_AddItem(object sender, EventArgs e)
-        {
-            InterPoolTemplate newJnc = OpenConnectionDialog(null);
-            if (newJnc != null)
-            {
-                ModelTemplate.InterPoolTemplates.Add(newJnc);
-                listConnections.AppendItem(newJnc);
-                modifiedJncs = true;
-            }
-        }
-        private void listConnections_CopyItem(object sender, EventArgs e)
-        {
-            if (listConnections.SelectedItem == null)
-                return;
-            InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
-            jnc = OpenConnectionDialog(jnc);
-            if (jnc != null)
-            {
-                ModelTemplate.InterPoolTemplates.Add(jnc);
-                listConnections.AppendItem(jnc);
-                modifiedJncs = true;
-            }
-        }
-        private void listConnections_DeleteItem(object sender, EventArgs e)
-        {
-            if (listConnections.SelectedIndex >= 0)
-            {
-                InterPoolTemplate ipl = (InterPoolTemplate)listConnections.SelectedItem;
-                ModelTemplate.InterPoolTemplates.Remove(ipl);
-                listConnections.RemoveItemAt(listConnections.SelectedIndex);
-                modifiedJncs = true;
-            }
-        }
-        private void listConnections_ViewItem(object sender, EventArgs e)
-        {
-            if (listConnections.SelectedItem == null)
-                return;
-            InterPoolTemplate interpool = listConnections.SelectedItem as InterPoolTemplate;
-            interpool = OpenConnectionDialog(interpool); //check modeltemplate's list
-            if (interpool != null)
-            {
-                int ind = listConnections.SelectedIndex;
-                listConnections.RefreshItem(ind, interpool);
-                modifiedJncs = true;
-            }
-        }
-
-        private void listConnections_ActivateItem(object sender, EventArgs e)
-        {
-            InterPoolTemplate jnc = sender as InterPoolTemplate;
-            ModelTemplate.InterPoolTemplates.FirstOrDefault(p => p.Distinguisher == jnc.Distinguisher).Active = jnc.Active;
-            modifiedJncs = true;
-        }
-
-        private void listConnections_SortItems(object sender, EventArgs e)
-        {
-            ModelTemplate.InterPoolTemplates.Sort();
-            LoadModelTemplateInterPools();
-        }
-
-        private void listConnections_SortByType(object sender, EventArgs e)
-        {
-            ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.ConnectionType.ToString())
-                .ToList();
-            LoadModelTemplateInterPools();
-        }
-        private void listConnections_SortBySource(object sender, EventArgs e)
-        {
-            ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.PoolSource)
-                .ToList();
-            LoadModelTemplateInterPools();
-        }
-
-        private void listConnections_SortByTarget(object sender, EventArgs e)
-        {
-            ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.PoolTarget)
-                .ToList();
-            LoadModelTemplateInterPools();
-        }
-
-        #endregion
-
-        #region Stimulus
-
-        private StimulusTemplate OpenStimulusDialog(StimulusTemplate stim)
-        {
-            ControlContainer frmControl = new();
-            AppliedStimulusControl sc = new();
-
-            sc.SetStimulus(ModelTemplate.CellPoolTemplates, stim);
-            frmControl.AddControl(sc);
-            frmControl.Text = stim?.ToString() ?? "New Stimulus";
-
-            if (frmControl.ShowDialog() == DialogResult.OK)
-                return sc.GetStimulusTemplate();
-            return null;
-        }
-        private void listStimuli_AddItem(object sender, EventArgs e)
-        {
-            StimulusTemplate stimulus = OpenStimulusDialog(null);
-            if (stimulus != null)
-            {
-                ModelTemplate.AppliedStimuli.Add(stimulus);
-                listStimuli.AppendItem(stimulus);
-            }
-        }
-        private void listStimuli_CopyItem(object sender, EventArgs e)
-        {
-            if (listStimuli.SelectedItem == null)
-                return;
-            StimulusTemplate stimulus = listStimuli.SelectedItem as StimulusTemplate;
-            stimulus = OpenStimulusDialog(stimulus);
-            if (stimulus != null)
-            {
-                ModelTemplate.AppliedStimuli.Add(stimulus);
-                listStimuli.AppendItem(stimulus);
-            }
-        }
-        private void listStimuli_DeleteItem(object sender, EventArgs e)
-        {
-            if (listStimuli.SelectedIndex >= 0)
-            {
-                StimulusTemplate stim = (StimulusTemplate)listStimuli.SelectedItem;
-                ModelTemplate.AppliedStimuli.Remove(stim);
-                listStimuli.RemoveItemAt(listStimuli.SelectedIndex);
-            }
-        }
-        private void listStimuli_ViewItem(object sender, EventArgs e)
-        {
-            if (listStimuli.SelectedItem == null)
-                return;
-            StimulusTemplate stimulus = listStimuli.SelectedItem as StimulusTemplate;
-            stimulus = OpenStimulusDialog(stimulus); //check modeltemplate's list
-            if (stimulus != null)
-            {
-                int ind = listStimuli.SelectedIndex;
-                listStimuli.RefreshItem(ind, stimulus);
-            }
-        }
-
-        private void listStimuli_ActivateItem(object sender, EventArgs e)
-        {
-            StimulusTemplate stim = sender as StimulusTemplate;
-            ModelTemplate.AppliedStimuli.FirstOrDefault(p => p.Distinguisher == stim.Distinguisher).Active = stim.Active;
-        }
-
-
-
-        #endregion
-        #endregion
         
         #region Settings
         private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1707,35 +1071,8 @@ namespace SiliFish.UI
             catch { }
         }
 
-        private void ddDefaultNeuronCore_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ModelTemplate.Settings.DefaultNeuronCore = ddDefaultNeuronCore.Text;
-        }
 
-        private void ddDefaultMuscleCellCore_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ModelTemplate.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
-        }
 
-        private void eOutputFolder_Click(object sender, EventArgs e)
-        {
-            browseFolder.InitialDirectory = eOutputFolder.Text;
-            if (browseFolder.ShowDialog() == DialogResult.OK)
-            {
-                ModelTemplate.Settings.OutputFolder =
-                    eOutputFolder.Text = browseFolder.SelectedPath;
-            }
-        }
-
-        private void eTemporaryFolder_Click(object sender, EventArgs e)
-        {
-            browseFolder.InitialDirectory = eTemporaryFolder.Text;
-            if (browseFolder.ShowDialog() == DialogResult.OK)
-            {
-                ModelTemplate.Settings.TempFolder =
-                    eTemporaryFolder.Text = browseFolder.SelectedPath;
-            }
-        }
 
         #endregion
 
@@ -1763,12 +1100,12 @@ namespace SiliFish.UI
                 {
                     //check whether the custom model has changed
                     string jsonstring = JsonUtil.ToJson(ModelTemplate);
-                    if (jsonstring != lastSavedCustomModelJSON)
+                    //TODO if (jsonstring != lastSavedCustomModelJSON)
                     {
                         DialogResult res = MessageBox.Show("The template has changed. Do you want to save the modifications?", "Model Template Save", MessageBoxButtons.YesNoCancel);
                         if (res == DialogResult.Yes)
                         {
-                            if (!SaveModelTemplate())
+                            //TODO if (!SaveModelTemplate())
                             {
                                 e.Cancel = true;
                                 return;

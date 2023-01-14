@@ -10,12 +10,12 @@ using System.Linq;
 using System.Reflection;
 
 //WORK IN PROGRESS - NOT COMPLETED
-namespace SiliFish.ModelUnits.Model
+namespace SiliFish.ModelUnits.Architecture
 {
     /// <summary>
     /// This class is generated as a sample on how to create a model using the code
     /// </summary>
-    public class SampleSwimmingModel : SwimmingModel //TODO not tested/incomplete
+    public class SampleSwimmingModel : RunningModel //TODO not tested/incomplete
     {
         string NeuronCoreType = "Izhikevich_9P";
         string MuscleCoreType = "LeakyIntegrator";
@@ -222,8 +222,6 @@ namespace SiliFish.ModelUnits.Model
             Time = new double[nmax];
             neuronPools.Clear();
             musclePools.Clear();
-            gapPoolConnections.Clear();
-            chemPoolConnections.Clear();
             InitNeurons();
             InitSynapsesAndGapJunctions();
             InitDataVectors(nmax);

@@ -3,7 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,7 +131,7 @@ namespace SiliFish.Services
             return PlotHTML;
         }
 
-        public static string PlotSummaryMembranePotentials(SwimmingModel model, List<Cell> Cells,
+        public static string PlotSummaryMembranePotentials(RunningModel model, List<Cell> Cells,
             int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
         {
             double dt = model.RunParam.dt;

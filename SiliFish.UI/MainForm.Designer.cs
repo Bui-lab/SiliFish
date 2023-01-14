@@ -37,48 +37,9 @@ namespace SiliFish.UI
             this.btnCellularDynamics = new System.Windows.Forms.Button();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkOpenOutputFolder = new System.Windows.Forms.LinkLabel();
-            this.linkClearTemplate = new System.Windows.Forms.LinkLabel();
             this.linkSaveHTMLPlots = new System.Windows.Forms.LinkLabel();
             this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.tabParams = new System.Windows.Forms.TabControl();
-            this.tGeneral = new System.Windows.Forms.TabPage();
-            this.splitGeneral = new System.Windows.Forms.SplitContainer();
-            this.propModelDimensions = new System.Windows.Forms.PropertyGrid();
-            this.pBodyDiagrams = new System.Windows.Forms.Panel();
-            this.picLarva = new System.Windows.Forms.PictureBox();
-            this.eModelDescription = new System.Windows.Forms.TextBox();
-            this.eModelName = new System.Windows.Forms.TextBox();
-            this.lModelDescription = new System.Windows.Forms.Label();
-            this.lModelName = new System.Windows.Forms.Label();
-            this.tCellPools = new System.Windows.Forms.TabPage();
-            this.splitCellPoolsAndConnections = new System.Windows.Forms.SplitContainer();
-            this.listCellPool = new SiliFish.UI.Controls.ListBoxControl();
-            this.pCellPoolTop = new System.Windows.Forms.Panel();
-            this.pLineCellPools = new System.Windows.Forms.Panel();
-            this.lCellPools = new System.Windows.Forms.Label();
-            this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
-            this.pConnectionTop = new System.Windows.Forms.Panel();
-            this.pLineConnections = new System.Windows.Forms.Panel();
-            this.lConnections = new System.Windows.Forms.Label();
-            this.tStimuli = new System.Windows.Forms.TabPage();
-            this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
-            this.tKinematics = new System.Windows.Forms.TabPage();
-            this.propKinematics = new System.Windows.Forms.PropertyGrid();
-            this.pKinematicsBottom = new System.Windows.Forms.Panel();
-            this.eKinematicsTop = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.tSettings = new System.Windows.Forms.TabPage();
-            this.propSettings = new System.Windows.Forms.PropertyGrid();
-            this.pSettingsTop = new System.Windows.Forms.Panel();
-            this.eTemporaryFolder = new System.Windows.Forms.TextBox();
-            this.eOutputFolder = new System.Windows.Forms.TextBox();
-            this.lTemporaryFolder = new System.Windows.Forms.Label();
-            this.lOutputFolder = new System.Windows.Forms.Label();
-            this.ddDefaultMuscleCellCore = new System.Windows.Forms.ComboBox();
-            this.lDefaultMuscleCellCore = new System.Windows.Forms.Label();
-            this.ddDefaultNeuronCore = new System.Windows.Forms.ComboBox();
-            this.lDefaultNeuronCore = new System.Windows.Forms.Label();
-            this.pParamBottom = new System.Windows.Forms.Panel();
+            this.pSimulation = new System.Windows.Forms.Panel();
             this.ldtEuler = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
             this.lRunCount = new System.Windows.Forms.Label();
@@ -94,10 +55,6 @@ namespace SiliFish.UI
             this.btnRun = new System.Windows.Forms.Button();
             this.lTimeEnd = new System.Windows.Forms.Label();
             this.lRunParameters = new System.Windows.Forms.Label();
-            this.pMain = new System.Windows.Forms.Panel();
-            this.linkLoadTemplate = new System.Windows.Forms.LinkLabel();
-            this.lParameters = new System.Windows.Forms.Label();
-            this.linkSaveTemplate = new System.Windows.Forms.LinkLabel();
             this.tabOutputs = new System.Windows.Forms.TabControl();
             this.tabPlot = new System.Windows.Forms.TabPage();
             this.tabPlotSub = new System.Windows.Forms.TabControl();
@@ -221,39 +178,18 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.modelControl1 = new Controls.ModelControl();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.tabParams.SuspendLayout();
-            this.tGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitGeneral)).BeginInit();
-            this.splitGeneral.Panel1.SuspendLayout();
-            this.splitGeneral.Panel2.SuspendLayout();
-            this.splitGeneral.SuspendLayout();
-            this.pBodyDiagrams.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picLarva)).BeginInit();
-            this.tCellPools.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).BeginInit();
-            this.splitCellPoolsAndConnections.Panel1.SuspendLayout();
-            this.splitCellPoolsAndConnections.Panel2.SuspendLayout();
-            this.splitCellPoolsAndConnections.SuspendLayout();
-            this.pCellPoolTop.SuspendLayout();
-            this.pConnectionTop.SuspendLayout();
-            this.tStimuli.SuspendLayout();
-            this.tKinematics.SuspendLayout();
-            this.pKinematicsBottom.SuspendLayout();
-            this.tSettings.SuspendLayout();
-            this.pSettingsTop.SuspendLayout();
-            this.pParamBottom.SuspendLayout();
+            this.pSimulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
-            this.pMain.SuspendLayout();
             this.tabOutputs.SuspendLayout();
             this.tabPlot.SuspendLayout();
             this.tabPlotSub.SuspendLayout();
@@ -376,20 +312,6 @@ namespace SiliFish.UI
         "\n");
             this.linkOpenOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenOutputFolder_LinkClicked);
             // 
-            // linkClearTemplate
-            // 
-            this.linkClearTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkClearTemplate.AutoSize = true;
-            this.linkClearTemplate.ForeColor = System.Drawing.Color.White;
-            this.linkClearTemplate.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearTemplate.Location = new System.Drawing.Point(464, 10);
-            this.linkClearTemplate.Name = "linkClearTemplate";
-            this.linkClearTemplate.Size = new System.Drawing.Size(85, 15);
-            this.linkClearTemplate.TabIndex = 5;
-            this.linkClearTemplate.TabStop = true;
-            this.linkClearTemplate.Text = "Clear Template";
-            this.linkClearTemplate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearTemplate_LinkClicked);
-            // 
             // linkSaveHTMLPlots
             // 
             this.linkSaveHTMLPlots.Enabled = false;
@@ -411,9 +333,8 @@ namespace SiliFish.UI
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.tabParams);
-            this.splitMain.Panel1.Controls.Add(this.pParamBottom);
-            this.splitMain.Panel1.Controls.Add(this.pMain);
+            this.splitMain.Panel1.Controls.Add(this.modelControl1);
+            this.splitMain.Panel1.Controls.Add(this.pSimulation);
             // 
             // splitMain.Panel2
             // 
@@ -422,476 +343,29 @@ namespace SiliFish.UI
             this.splitMain.SplitterDistance = 550;
             this.splitMain.TabIndex = 5;
             // 
-            // tabParams
-            // 
-            this.tabParams.Controls.Add(this.tGeneral);
-            this.tabParams.Controls.Add(this.tCellPools);
-            this.tabParams.Controls.Add(this.tStimuli);
-            this.tabParams.Controls.Add(this.tKinematics);
-            this.tabParams.Controls.Add(this.tSettings);
-            this.tabParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabParams.Location = new System.Drawing.Point(0, 34);
-            this.tabParams.Name = "tabParams";
-            this.tabParams.SelectedIndex = 0;
-            this.tabParams.Size = new System.Drawing.Size(548, 470);
-            this.tabParams.TabIndex = 2;
-            this.tabParams.Tag = "";
-            // 
-            // tGeneral
-            // 
-            this.tGeneral.BackColor = System.Drawing.Color.White;
-            this.tGeneral.Controls.Add(this.splitGeneral);
-            this.tGeneral.Controls.Add(this.eModelDescription);
-            this.tGeneral.Controls.Add(this.eModelName);
-            this.tGeneral.Controls.Add(this.lModelDescription);
-            this.tGeneral.Controls.Add(this.lModelName);
-            this.tGeneral.Location = new System.Drawing.Point(4, 24);
-            this.tGeneral.Name = "tGeneral";
-            this.tGeneral.Size = new System.Drawing.Size(540, 442);
-            this.tGeneral.TabIndex = 4;
-            this.tGeneral.Text = "General";
-            // 
-            // splitGeneral
-            // 
-            this.splitGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitGeneral.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitGeneral.Location = new System.Drawing.Point(0, 77);
-            this.splitGeneral.Name = "splitGeneral";
-            // 
-            // splitGeneral.Panel1
-            // 
-            this.splitGeneral.Panel1.Controls.Add(this.propModelDimensions);
-            // 
-            // splitGeneral.Panel2
-            // 
-            this.splitGeneral.Panel2.Controls.Add(this.pBodyDiagrams);
-            this.splitGeneral.Size = new System.Drawing.Size(540, 365);
-            this.splitGeneral.SplitterDistance = 180;
-            this.splitGeneral.TabIndex = 61;
-            // 
-            // propModelDimensions
-            // 
-            this.propModelDimensions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.propModelDimensions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propModelDimensions.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(144)))), ((int)(((byte)(156)))));
-            this.propModelDimensions.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
-            this.propModelDimensions.Location = new System.Drawing.Point(0, 0);
-            this.propModelDimensions.Name = "propModelDimensions";
-            this.propModelDimensions.Size = new System.Drawing.Size(178, 363);
-            this.propModelDimensions.TabIndex = 60;
-            // 
-            // pBodyDiagrams
-            // 
-            this.pBodyDiagrams.AutoScroll = true;
-            this.pBodyDiagrams.Controls.Add(this.picLarva);
-            this.pBodyDiagrams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pBodyDiagrams.Location = new System.Drawing.Point(0, 0);
-            this.pBodyDiagrams.Name = "pBodyDiagrams";
-            this.pBodyDiagrams.Size = new System.Drawing.Size(354, 363);
-            this.pBodyDiagrams.TabIndex = 15;
-            // 
-            // picLarva
-            // 
-            this.picLarva.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picLarva.Image = ((System.Drawing.Image)(resources.GetObject("picLarva.Image")));
-            this.picLarva.Location = new System.Drawing.Point(0, 0);
-            this.picLarva.Name = "picLarva";
-            this.picLarva.Size = new System.Drawing.Size(354, 363);
-            this.picLarva.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picLarva.TabIndex = 12;
-            this.picLarva.TabStop = false;
-            // 
-            // eModelDescription
-            // 
-            this.eModelDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eModelDescription.Location = new System.Drawing.Point(106, 30);
-            this.eModelDescription.Multiline = true;
-            this.eModelDescription.Name = "eModelDescription";
-            this.eModelDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.eModelDescription.Size = new System.Drawing.Size(426, 41);
-            this.eModelDescription.TabIndex = 7;
-            // 
-            // eModelName
-            // 
-            this.eModelName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eModelName.Location = new System.Drawing.Point(106, 3);
-            this.eModelName.Name = "eModelName";
-            this.eModelName.Size = new System.Drawing.Size(426, 23);
-            this.eModelName.TabIndex = 6;
-            // 
-            // lModelDescription
-            // 
-            this.lModelDescription.AutoSize = true;
-            this.lModelDescription.Location = new System.Drawing.Point(8, 35);
-            this.lModelDescription.Name = "lModelDescription";
-            this.lModelDescription.Size = new System.Drawing.Size(67, 15);
-            this.lModelDescription.TabIndex = 1;
-            this.lModelDescription.Text = "Description";
-            // 
-            // lModelName
-            // 
-            this.lModelName.AutoSize = true;
-            this.lModelName.Location = new System.Drawing.Point(8, 8);
-            this.lModelName.Name = "lModelName";
-            this.lModelName.Size = new System.Drawing.Size(76, 15);
-            this.lModelName.TabIndex = 0;
-            this.lModelName.Text = "Model Name";
-            // 
-            // tCellPools
-            // 
-            this.tCellPools.BackColor = System.Drawing.Color.White;
-            this.tCellPools.Controls.Add(this.splitCellPoolsAndConnections);
-            this.tCellPools.Location = new System.Drawing.Point(4, 24);
-            this.tCellPools.Name = "tCellPools";
-            this.tCellPools.Size = new System.Drawing.Size(540, 442);
-            this.tCellPools.TabIndex = 1;
-            this.tCellPools.Text = "Cell Pools & Connections";
-            this.tCellPools.UseVisualStyleBackColor = true;
-            // 
-            // splitCellPoolsAndConnections
-            // 
-            this.splitCellPoolsAndConnections.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitCellPoolsAndConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitCellPoolsAndConnections.Location = new System.Drawing.Point(0, 0);
-            this.splitCellPoolsAndConnections.Name = "splitCellPoolsAndConnections";
-            // 
-            // splitCellPoolsAndConnections.Panel1
-            // 
-            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.listCellPool);
-            this.splitCellPoolsAndConnections.Panel1.Controls.Add(this.pCellPoolTop);
-            this.splitCellPoolsAndConnections.Panel1MinSize = 200;
-            // 
-            // splitCellPoolsAndConnections.Panel2
-            // 
-            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.listConnections);
-            this.splitCellPoolsAndConnections.Panel2.Controls.Add(this.pConnectionTop);
-            this.splitCellPoolsAndConnections.Panel2MinSize = 200;
-            this.splitCellPoolsAndConnections.Size = new System.Drawing.Size(540, 442);
-            this.splitCellPoolsAndConnections.SplitterDistance = 251;
-            this.splitCellPoolsAndConnections.TabIndex = 5;
-            // 
-            // listCellPool
-            // 
-            this.listCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listCellPool.Location = new System.Drawing.Point(0, 32);
-            this.listCellPool.Name = "listCellPool";
-            this.listCellPool.SelectedIndex = -1;
-            this.listCellPool.SelectedItem = null;
-            this.listCellPool.Size = new System.Drawing.Size(249, 408);
-            this.listCellPool.TabIndex = 5;
-            this.listCellPool.AddItem += new System.EventHandler(this.listCellPool_AddItem);
-            this.listCellPool.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
-            this.listCellPool.CopyItem += new System.EventHandler(this.listCellPool_CopyItem);
-            this.listCellPool.ViewItem += new System.EventHandler(this.listCellPool_ViewItem);
-            this.listCellPool.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
-            this.listCellPool.SortItems += new System.EventHandler(this.listCellPool_SortItems);
-            // 
-            // pCellPoolTop
-            // 
-            this.pCellPoolTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.pCellPoolTop.Controls.Add(this.pLineCellPools);
-            this.pCellPoolTop.Controls.Add(this.lCellPools);
-            this.pCellPoolTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pCellPoolTop.Location = new System.Drawing.Point(0, 0);
-            this.pCellPoolTop.Name = "pCellPoolTop";
-            this.pCellPoolTop.Size = new System.Drawing.Size(249, 32);
-            this.pCellPoolTop.TabIndex = 6;
-            // 
-            // pLineCellPools
-            // 
-            this.pLineCellPools.BackColor = System.Drawing.Color.LightGray;
-            this.pLineCellPools.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pLineCellPools.Location = new System.Drawing.Point(0, 31);
-            this.pLineCellPools.Name = "pLineCellPools";
-            this.pLineCellPools.Size = new System.Drawing.Size(249, 1);
-            this.pLineCellPools.TabIndex = 25;
-            // 
-            // lCellPools
-            // 
-            this.lCellPools.AutoSize = true;
-            this.lCellPools.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lCellPools.Location = new System.Drawing.Point(8, 6);
-            this.lCellPools.Name = "lCellPools";
-            this.lCellPools.Size = new System.Drawing.Size(59, 15);
-            this.lCellPools.TabIndex = 0;
-            this.lCellPools.Text = "Cell Pools";
-            // 
-            // listConnections
-            // 
-            this.listConnections.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listConnections.Location = new System.Drawing.Point(0, 32);
-            this.listConnections.Name = "listConnections";
-            this.listConnections.SelectedIndex = -1;
-            this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(283, 408);
-            this.listConnections.TabIndex = 6;
-            this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
-            this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
-            this.listConnections.CopyItem += new System.EventHandler(this.listConnections_CopyItem);
-            this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
-            this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
-            this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
-            // 
-            // pConnectionTop
-            // 
-            this.pConnectionTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.pConnectionTop.Controls.Add(this.pLineConnections);
-            this.pConnectionTop.Controls.Add(this.lConnections);
-            this.pConnectionTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pConnectionTop.Location = new System.Drawing.Point(0, 0);
-            this.pConnectionTop.Name = "pConnectionTop";
-            this.pConnectionTop.Size = new System.Drawing.Size(283, 32);
-            this.pConnectionTop.TabIndex = 7;
-            // 
-            // pLineConnections
-            // 
-            this.pLineConnections.BackColor = System.Drawing.Color.LightGray;
-            this.pLineConnections.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pLineConnections.Location = new System.Drawing.Point(0, 31);
-            this.pLineConnections.Name = "pLineConnections";
-            this.pLineConnections.Size = new System.Drawing.Size(283, 1);
-            this.pLineConnections.TabIndex = 25;
-            // 
-            // lConnections
-            // 
-            this.lConnections.AutoSize = true;
-            this.lConnections.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lConnections.Location = new System.Drawing.Point(8, 6);
-            this.lConnections.Name = "lConnections";
-            this.lConnections.Size = new System.Drawing.Size(75, 15);
-            this.lConnections.TabIndex = 0;
-            this.lConnections.Text = "Connections";
-            // 
-            // tStimuli
-            // 
-            this.tStimuli.Controls.Add(this.listStimuli);
-            this.tStimuli.Location = new System.Drawing.Point(4, 24);
-            this.tStimuli.Name = "tStimuli";
-            this.tStimuli.Size = new System.Drawing.Size(540, 442);
-            this.tStimuli.TabIndex = 3;
-            this.tStimuli.Text = "Stimuli";
-            this.tStimuli.UseVisualStyleBackColor = true;
-            // 
-            // listStimuli
-            // 
-            this.listStimuli.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listStimuli.Location = new System.Drawing.Point(0, 0);
-            this.listStimuli.Name = "listStimuli";
-            this.listStimuli.SelectedIndex = -1;
-            this.listStimuli.SelectedItem = null;
-            this.listStimuli.Size = new System.Drawing.Size(540, 442);
-            this.listStimuli.TabIndex = 6;
-            this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
-            this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
-            this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
-            this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
-            this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
-            // 
-            // tKinematics
-            // 
-            this.tKinematics.Controls.Add(this.propKinematics);
-            this.tKinematics.Controls.Add(this.pKinematicsBottom);
-            this.tKinematics.Location = new System.Drawing.Point(4, 24);
-            this.tKinematics.Name = "tKinematics";
-            this.tKinematics.Size = new System.Drawing.Size(540, 442);
-            this.tKinematics.TabIndex = 6;
-            this.tKinematics.Text = "Kinematics";
-            this.tKinematics.UseVisualStyleBackColor = true;
-            // 
-            // propKinematics
-            // 
-            this.propKinematics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.propKinematics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propKinematics.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(144)))), ((int)(((byte)(156)))));
-            this.propKinematics.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
-            this.propKinematics.Location = new System.Drawing.Point(0, 0);
-            this.propKinematics.Name = "propKinematics";
-            this.propKinematics.Size = new System.Drawing.Size(540, 402);
-            this.propKinematics.TabIndex = 1;
-            // 
-            // pKinematicsBottom
-            // 
-            this.pKinematicsBottom.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.pKinematicsBottom.Controls.Add(this.eKinematicsTop);
-            this.pKinematicsBottom.Controls.Add(this.panel2);
-            this.pKinematicsBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pKinematicsBottom.Location = new System.Drawing.Point(0, 402);
-            this.pKinematicsBottom.Name = "pKinematicsBottom";
-            this.pKinematicsBottom.Size = new System.Drawing.Size(540, 40);
-            this.pKinematicsBottom.TabIndex = 7;
-            // 
-            // eKinematicsTop
-            // 
-            this.eKinematicsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.eKinematicsTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.eKinematicsTop.Location = new System.Drawing.Point(0, 0);
-            this.eKinematicsTop.Multiline = true;
-            this.eKinematicsTop.Name = "eKinematicsTop";
-            this.eKinematicsTop.ReadOnly = true;
-            this.eKinematicsTop.Size = new System.Drawing.Size(540, 39);
-            this.eKinematicsTop.TabIndex = 26;
-            this.eKinematicsTop.Text = "Kinematics parameters are used in generating the animations and motoneuron based " +
-    "statistics.\r\nThey do not effect the how the model behaves and can be modified af" +
-    "ter the simulation.";
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.LightGray;
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 39);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(540, 1);
-            this.panel2.TabIndex = 25;
-            // 
-            // tSettings
-            // 
-            this.tSettings.Controls.Add(this.propSettings);
-            this.tSettings.Controls.Add(this.pSettingsTop);
-            this.tSettings.Location = new System.Drawing.Point(4, 24);
-            this.tSettings.Name = "tSettings";
-            this.tSettings.Size = new System.Drawing.Size(540, 442);
-            this.tSettings.TabIndex = 5;
-            this.tSettings.Text = "Advanced Settings";
-            this.tSettings.UseVisualStyleBackColor = true;
-            // 
-            // propSettings
-            // 
-            this.propSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.propSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propSettings.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(144)))), ((int)(((byte)(156)))));
-            this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
-            this.propSettings.Location = new System.Drawing.Point(0, 112);
-            this.propSettings.Name = "propSettings";
-            this.propSettings.Size = new System.Drawing.Size(540, 330);
-            this.propSettings.TabIndex = 0;
-            // 
-            // pSettingsTop
-            // 
-            this.pSettingsTop.Controls.Add(this.eTemporaryFolder);
-            this.pSettingsTop.Controls.Add(this.eOutputFolder);
-            this.pSettingsTop.Controls.Add(this.lTemporaryFolder);
-            this.pSettingsTop.Controls.Add(this.lOutputFolder);
-            this.pSettingsTop.Controls.Add(this.ddDefaultMuscleCellCore);
-            this.pSettingsTop.Controls.Add(this.lDefaultMuscleCellCore);
-            this.pSettingsTop.Controls.Add(this.ddDefaultNeuronCore);
-            this.pSettingsTop.Controls.Add(this.lDefaultNeuronCore);
-            this.pSettingsTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pSettingsTop.Location = new System.Drawing.Point(0, 0);
-            this.pSettingsTop.Name = "pSettingsTop";
-            this.pSettingsTop.Size = new System.Drawing.Size(540, 112);
-            this.pSettingsTop.TabIndex = 1;
-            // 
-            // eTemporaryFolder
-            // 
-            this.eTemporaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTemporaryFolder.Location = new System.Drawing.Point(153, 84);
-            this.eTemporaryFolder.Name = "eTemporaryFolder";
-            this.eTemporaryFolder.ReadOnly = true;
-            this.eTemporaryFolder.Size = new System.Drawing.Size(378, 23);
-            this.eTemporaryFolder.TabIndex = 7;
-            this.toolTip.SetToolTip(this.eTemporaryFolder, "Folder that temporary files are saved under. Will be cleared after the program ex" +
-        "its.");
-            this.eTemporaryFolder.Click += new System.EventHandler(this.eTemporaryFolder_Click);
-            // 
-            // eOutputFolder
-            // 
-            this.eOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eOutputFolder.Location = new System.Drawing.Point(153, 58);
-            this.eOutputFolder.Name = "eOutputFolder";
-            this.eOutputFolder.ReadOnly = true;
-            this.eOutputFolder.Size = new System.Drawing.Size(378, 23);
-            this.eOutputFolder.TabIndex = 6;
-            this.toolTip.SetToolTip(this.eOutputFolder, "The default folder that output files are saved under.");
-            this.eOutputFolder.Click += new System.EventHandler(this.eOutputFolder_Click);
-            // 
-            // lTemporaryFolder
-            // 
-            this.lTemporaryFolder.AutoSize = true;
-            this.lTemporaryFolder.Location = new System.Drawing.Point(8, 88);
-            this.lTemporaryFolder.Name = "lTemporaryFolder";
-            this.lTemporaryFolder.Size = new System.Drawing.Size(99, 15);
-            this.lTemporaryFolder.TabIndex = 5;
-            this.lTemporaryFolder.Text = "Temporary Folder";
-            this.toolTip.SetToolTip(this.lTemporaryFolder, "Folder that temporary files are saved under. Will be cleared after the program ex" +
-        "its.");
-            // 
-            // lOutputFolder
-            // 
-            this.lOutputFolder.AutoSize = true;
-            this.lOutputFolder.Location = new System.Drawing.Point(8, 61);
-            this.lOutputFolder.Name = "lOutputFolder";
-            this.lOutputFolder.Size = new System.Drawing.Size(81, 15);
-            this.lOutputFolder.TabIndex = 4;
-            this.lOutputFolder.Text = "Output Folder";
-            this.toolTip.SetToolTip(this.lOutputFolder, "The default folder that output files are saved under.");
-            // 
-            // ddDefaultMuscleCellCore
-            // 
-            this.ddDefaultMuscleCellCore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddDefaultMuscleCellCore.FormattingEnabled = true;
-            this.ddDefaultMuscleCellCore.Location = new System.Drawing.Point(153, 32);
-            this.ddDefaultMuscleCellCore.Name = "ddDefaultMuscleCellCore";
-            this.ddDefaultMuscleCellCore.Size = new System.Drawing.Size(187, 23);
-            this.ddDefaultMuscleCellCore.TabIndex = 3;
-            this.ddDefaultMuscleCellCore.SelectedIndexChanged += new System.EventHandler(this.ddDefaultMuscleCellCore_SelectedIndexChanged);
-            // 
-            // lDefaultMuscleCellCore
-            // 
-            this.lDefaultMuscleCellCore.AutoSize = true;
-            this.lDefaultMuscleCellCore.Location = new System.Drawing.Point(8, 35);
-            this.lDefaultMuscleCellCore.Name = "lDefaultMuscleCellCore";
-            this.lDefaultMuscleCellCore.Size = new System.Drawing.Size(137, 15);
-            this.lDefaultMuscleCellCore.TabIndex = 2;
-            this.lDefaultMuscleCellCore.Text = "Default Muscle Cell Core";
-            // 
-            // ddDefaultNeuronCore
-            // 
-            this.ddDefaultNeuronCore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddDefaultNeuronCore.FormattingEnabled = true;
-            this.ddDefaultNeuronCore.Location = new System.Drawing.Point(153, 5);
-            this.ddDefaultNeuronCore.Name = "ddDefaultNeuronCore";
-            this.ddDefaultNeuronCore.Size = new System.Drawing.Size(187, 23);
-            this.ddDefaultNeuronCore.TabIndex = 1;
-            this.ddDefaultNeuronCore.SelectedIndexChanged += new System.EventHandler(this.ddDefaultNeuronCore_SelectedIndexChanged);
-            // 
-            // lDefaultNeuronCore
-            // 
-            this.lDefaultNeuronCore.AutoSize = true;
-            this.lDefaultNeuronCore.Location = new System.Drawing.Point(8, 8);
-            this.lDefaultNeuronCore.Name = "lDefaultNeuronCore";
-            this.lDefaultNeuronCore.Size = new System.Drawing.Size(116, 15);
-            this.lDefaultNeuronCore.TabIndex = 0;
-            this.lDefaultNeuronCore.Text = "Default Neuron Core";
-            // 
-            // pParamBottom
-            // 
-            this.pParamBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pParamBottom.Controls.Add(this.ldtEuler);
-            this.pParamBottom.Controls.Add(this.edtEuler);
-            this.pParamBottom.Controls.Add(this.lRunCount);
-            this.pParamBottom.Controls.Add(this.eRunNumber);
-            this.pParamBottom.Controls.Add(this.eSkip);
-            this.pParamBottom.Controls.Add(this.lSkip);
-            this.pParamBottom.Controls.Add(this.edt);
-            this.pParamBottom.Controls.Add(this.eTimeEnd);
-            this.pParamBottom.Controls.Add(this.ldt);
-            this.pParamBottom.Controls.Add(this.lRunTime);
-            this.pParamBottom.Controls.Add(this.linkExportOutput);
-            this.pParamBottom.Controls.Add(this.progressBarRun);
-            this.pParamBottom.Controls.Add(this.btnRun);
-            this.pParamBottom.Controls.Add(this.lTimeEnd);
-            this.pParamBottom.Controls.Add(this.lRunParameters);
-            this.pParamBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pParamBottom.Location = new System.Drawing.Point(0, 504);
-            this.pParamBottom.Name = "pParamBottom";
-            this.pParamBottom.Size = new System.Drawing.Size(548, 165);
-            this.pParamBottom.TabIndex = 1;
+            // pSimulation
+            // 
+            this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pSimulation.Controls.Add(this.ldtEuler);
+            this.pSimulation.Controls.Add(this.edtEuler);
+            this.pSimulation.Controls.Add(this.lRunCount);
+            this.pSimulation.Controls.Add(this.eRunNumber);
+            this.pSimulation.Controls.Add(this.eSkip);
+            this.pSimulation.Controls.Add(this.lSkip);
+            this.pSimulation.Controls.Add(this.edt);
+            this.pSimulation.Controls.Add(this.eTimeEnd);
+            this.pSimulation.Controls.Add(this.ldt);
+            this.pSimulation.Controls.Add(this.lRunTime);
+            this.pSimulation.Controls.Add(this.linkExportOutput);
+            this.pSimulation.Controls.Add(this.progressBarRun);
+            this.pSimulation.Controls.Add(this.btnRun);
+            this.pSimulation.Controls.Add(this.lTimeEnd);
+            this.pSimulation.Controls.Add(this.lRunParameters);
+            this.pSimulation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pSimulation.Location = new System.Drawing.Point(0, 504);
+            this.pSimulation.Name = "pSimulation";
+            this.pSimulation.Size = new System.Drawing.Size(548, 165);
+            this.pSimulation.TabIndex = 1;
             // 
             // ldtEuler
             // 
@@ -1096,53 +570,6 @@ namespace SiliFish.UI
             this.lRunParameters.Size = new System.Drawing.Size(133, 15);
             this.lRunParameters.TabIndex = 1;
             this.lRunParameters.Text = "Simulation Parameters";
-            // 
-            // pMain
-            // 
-            this.pMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pMain.Controls.Add(this.linkLoadTemplate);
-            this.pMain.Controls.Add(this.lParameters);
-            this.pMain.Controls.Add(this.linkSaveTemplate);
-            this.pMain.Controls.Add(this.linkClearTemplate);
-            this.pMain.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMain.Location = new System.Drawing.Point(0, 0);
-            this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(548, 34);
-            this.pMain.TabIndex = 4;
-            // 
-            // linkLoadTemplate
-            // 
-            this.linkLoadTemplate.AutoSize = true;
-            this.linkLoadTemplate.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadTemplate.Location = new System.Drawing.Point(227, 10);
-            this.linkLoadTemplate.Name = "linkLoadTemplate";
-            this.linkLoadTemplate.Size = new System.Drawing.Size(84, 15);
-            this.linkLoadTemplate.TabIndex = 4;
-            this.linkLoadTemplate.TabStop = true;
-            this.linkLoadTemplate.Text = "Load Template";
-            this.linkLoadTemplate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadTemplate_LinkClicked);
-            // 
-            // lParameters
-            // 
-            this.lParameters.AutoSize = true;
-            this.lParameters.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lParameters.Location = new System.Drawing.Point(0, 10);
-            this.lParameters.Name = "lParameters";
-            this.lParameters.Size = new System.Drawing.Size(109, 15);
-            this.lParameters.TabIndex = 0;
-            this.lParameters.Text = "Model Parameters";
-            // 
-            // linkSaveTemplate
-            // 
-            this.linkSaveTemplate.AutoSize = true;
-            this.linkSaveTemplate.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveTemplate.Location = new System.Drawing.Point(135, 10);
-            this.linkSaveTemplate.Name = "linkSaveTemplate";
-            this.linkSaveTemplate.Size = new System.Drawing.Size(82, 15);
-            this.linkSaveTemplate.TabIndex = 3;
-            this.linkSaveTemplate.TabStop = true;
-            this.linkSaveTemplate.Text = "Save Template";
-            this.linkSaveTemplate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveTemplate_LinkClicked);
             // 
             // tabOutputs
             // 
@@ -2689,6 +2116,14 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // modelControl1
+            // 
+            this.modelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelControl1.Location = new System.Drawing.Point(0, 0);
+            this.modelControl1.Name = "modelControl1";
+            this.modelControl1.Size = new System.Drawing.Size(548, 504);
+            this.modelControl1.TabIndex = 2;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2709,40 +2144,13 @@ namespace SiliFish.UI
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
-            this.tabParams.ResumeLayout(false);
-            this.tGeneral.ResumeLayout(false);
-            this.tGeneral.PerformLayout();
-            this.splitGeneral.Panel1.ResumeLayout(false);
-            this.splitGeneral.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitGeneral)).EndInit();
-            this.splitGeneral.ResumeLayout(false);
-            this.pBodyDiagrams.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picLarva)).EndInit();
-            this.tCellPools.ResumeLayout(false);
-            this.splitCellPoolsAndConnections.Panel1.ResumeLayout(false);
-            this.splitCellPoolsAndConnections.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitCellPoolsAndConnections)).EndInit();
-            this.splitCellPoolsAndConnections.ResumeLayout(false);
-            this.pCellPoolTop.ResumeLayout(false);
-            this.pCellPoolTop.PerformLayout();
-            this.pConnectionTop.ResumeLayout(false);
-            this.pConnectionTop.PerformLayout();
-            this.tStimuli.ResumeLayout(false);
-            this.tKinematics.ResumeLayout(false);
-            this.pKinematicsBottom.ResumeLayout(false);
-            this.pKinematicsBottom.PerformLayout();
-            this.tSettings.ResumeLayout(false);
-            this.pSettingsTop.ResumeLayout(false);
-            this.pSettingsTop.PerformLayout();
-            this.pParamBottom.ResumeLayout(false);
-            this.pParamBottom.PerformLayout();
+            this.pSimulation.ResumeLayout(false);
+            this.pSimulation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
-            this.pMain.ResumeLayout(false);
-            this.pMain.PerformLayout();
             this.tabOutputs.ResumeLayout(false);
             this.tabPlot.ResumeLayout(false);
             this.tabPlotSub.ResumeLayout(false);
@@ -2803,8 +2211,7 @@ namespace SiliFish.UI
         #endregion
         private Panel pTop;
         private SplitContainer splitMain;
-        private Panel pParamBottom;
-        private Label lParameters;
+        private Panel pSimulation;
         private Label lRunParameters;
         private Button btnRun;
         private Label lTimeEnd;
@@ -2831,10 +2238,6 @@ namespace SiliFish.UI
         private Label lms3;
         private Label lAnimationEnd;
         private Label lms4;
-        private TabControl tabParams;
-        private LinkLabel linkSaveTemplate;
-        private Panel pMain;
-        private LinkLabel linkLoadTemplate;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
         private LinkLabel linkExportOutput;
@@ -2853,21 +2256,7 @@ namespace SiliFish.UI
         private Button btnPlotWindows;
         private ComboBox ddPlot;
         private NumericUpDown ePlotSomiteSelection;
-        private TabPage tCellPools;
-        private TabPage tStimuli;
-        private LinkLabel linkClearTemplate;
-        private TabPage tGeneral;
-        private Label lModelDescription;
-        private Label lModelName;
         private SaveFileDialog saveFileText;
-        private TextBox eModelDescription;
-        private TextBox eModelName;
-        private PictureBox picLarva;
-        private SplitContainer splitCellPoolsAndConnections;
-        private ListBoxControl listCellPool;
-        private ListBoxControl listConnections;
-        private ListBoxControl listStimuli;
-        private Panel pBodyDiagrams;
         private LinkLabel linkSaveAnimationHTML;
         private Label lRunTime;
         private NumericUpDown edt;
@@ -2937,10 +2326,6 @@ namespace SiliFish.UI
         private Label lPlotKinematicsHeight;
         private Label lpx4;
         private RichTextBox eEpisodesRight;
-        private Panel pCellPoolTop;
-        private Label lCellPools;
-        private Panel pConnectionTop;
-        private Label lConnections;
         private Label lRunCount;
         private Panel pLine2D;
         private Panel pLine3D;
@@ -2952,27 +2337,11 @@ namespace SiliFish.UI
         private Panel pLineTemplateJSON;
         private Panel pLineModelJSON;
         private Button btnCellularDynamics;
-        private Panel pLineCellPools;
-        private Panel pLineConnections;
         private Label ldtEuler;
         private NumericUpDown edtEuler;
         private TextBox e3DSomiteRange;
         private CheckBox cb3DAllSomites;
         private LinkLabel linkExportPlotData;
-        private TabPage tSettings;
-        private PropertyGrid propSettings;
-        private PropertyGrid propModelDimensions;
-        private SplitContainer splitGeneral;
-        private Panel pSettingsTop;
-        private ComboBox ddDefaultMuscleCellCore;
-        private Label lDefaultMuscleCellCore;
-        private ComboBox ddDefaultNeuronCore;
-        private Label lDefaultNeuronCore;
-        private TextBox eTemporaryFolder;
-        private TextBox eOutputFolder;
-        private Label lTemporaryFolder;
-        private Label lOutputFolder;
-        private FolderBrowserDialog browseFolder;
         private CheckBox cb3DGapJunc;
         private CheckBox cb3DChemJunc;
         private Button btnZoomIn;
@@ -2986,10 +2355,6 @@ namespace SiliFish.UI
         private ComboBox dd3DViewpoint;
         private Panel p3DViewing;
         private CheckBox cb3DLegend;
-        private TabPage tKinematics;
-        private PropertyGrid propKinematics;
-        private Panel pKinematicsBottom;
-        private TextBox eKinematicsTop;
-        private Panel panel2;
+        private Controls.ModelControl modelControl1;
     }
 }

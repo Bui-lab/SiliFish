@@ -1,7 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,7 +112,7 @@ namespace SiliFish.Services
 
 
 
-        public static string GenerateAnimation(SwimmingModel model, int tStart, int tEnd, double animdt)
+        public static string GenerateAnimation(RunningModel model, int tStart, int tEnd, double animdt)
         {
             if (model == null || !model.ModelRun)
                 return null;

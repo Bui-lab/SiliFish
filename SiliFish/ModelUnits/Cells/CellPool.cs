@@ -2,7 +2,8 @@
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,74 +12,22 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells
 {
-    public struct CellSelectionStruct
-    {
-        public string Pools = "All";
-        public SagittalPlane SagittalPlane = SagittalPlane.Both;
-        public PlotSelection somiteSelection = PlotSelection.All;
-        public int nSomite = -1;
-        public PlotSelection cellSelection = PlotSelection.All;
-        public int nCell = -1;
-        public CellSelectionStruct()
-        {
-        }
-    }
-    public class CellPool
+    public class CellPool: CellPoolBase
     {
         public static Func<double> gapWeightNoiseMultiplier;
         public static Func<double> synWeightNoiseMultiplier;
         public static Func<double> rangeNoiseMultiplier;
 
-        private readonly SwimmingModel Model;
-        public string CellGroup { get; set; }
-        public CellType CellType { get; set; }
-        public Color Color { get; set; }
-        public BodyLocation BodyLocation { get; set; }
-
-        public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
-
-        public int ColumnIndex2D { get; set; } = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
+        private readonly RunningModel Model;
 
         public List<Cell> Cells { get; set; }
         
-        private SpatialDistribution SpatialDistribution = new();
 
-        public Distribution XDistribution
-        {
-            get { return SpatialDistribution.XDistribution; }
-            set { SpatialDistribution.XDistribution = value; }
-        }
-        public Distribution Y_AngleDistribution
-        {
-            get { return SpatialDistribution.Y_AngleDistribution; }
-            set { SpatialDistribution.Y_AngleDistribution = value; }
-        }
-        public Distribution Z_RadiusDistribution
-        {
-            get { return SpatialDistribution.Z_RadiusDistribution; }
-            set { SpatialDistribution.Z_RadiusDistribution = value; }
-        }
-        [JsonIgnore]
-        public string ID { get { return Position + "_" + CellGroup; } set { } }
-
-        [JsonIgnore]
-        public string Position
-        {
-            get
-            {
-                string FTS =
-                    //                    (PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
-                    //                    (PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
-                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "")
-                    ;
-                return FTS;
-            }
-        }
         public CellPool()
         {
             Cells = new List<Cell>();
         }
-        public CellPool(SwimmingModel model, CellPoolTemplate template, SagittalPlane leftright)
+        public CellPool(RunningModel model, CellPoolTemplate template, SagittalPlane leftright)
         {
             Model = model;
             CellGroup = template.CellGroup;
@@ -95,7 +44,7 @@ namespace SiliFish.ModelUnits.Cells
         /// Called from predefined models
         /// </summary>
         /// <param name="placement">columnIndex2D</param>
-        public CellPool(SwimmingModel model, CellType cellType, BodyLocation position, string group, SagittalPlane pos, int placement, Color color)
+        public CellPool(RunningModel model, CellType cellType, BodyLocation position, string group, SagittalPlane pos, int placement, Color color)
         {
             Model = model;
             CellGroup = group;
@@ -108,7 +57,7 @@ namespace SiliFish.ModelUnits.Cells
         }
 
 
-        public void LinkObjects(SwimmingModel model)
+        public void LinkObjects(RunningModel model)
         {
             foreach (Cell cell in Cells)
             {
@@ -117,6 +66,10 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        public override string ToString()
+        {
+            return CellGroup;//TODO  + (Active ? "" : " (inactive)");
+        }
         public bool OnSide(SagittalPlane sagittal)
         {
             if (sagittal == SagittalPlane.Both)
@@ -334,7 +287,7 @@ namespace SiliFish.ModelUnits.Cells
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
                 foreach (Cell post in targetcells)
                 {
-                    if (probabibility < SwimmingModel.rand.Next(1))
+                    if (probabibility < RunningModel.rand.Next(1))
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)
@@ -390,7 +343,7 @@ namespace SiliFish.ModelUnits.Cells
                                 continue;
                         }
                     }
-                    if (probability < SwimmingModel.rand.Next(1))
+                    if (probability < RunningModel.rand.Next(1))
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)

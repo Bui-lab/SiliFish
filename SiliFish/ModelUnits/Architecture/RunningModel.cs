@@ -2,32 +2,24 @@
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Numerics;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits.Model
+namespace SiliFish.ModelUnits.Architecture
 {
-    public class SwimmingModel
+    public class RunningModel: ModelBase
     {
         public static Random rand = new(0);
-
-        private string modelName;
-        public string ModelName { get => modelName; set => modelName = value; }
-        public string ModelDescription { get; set; }
-
-        public ModelDimensions ModelDimensions { get; set; }
-        public RunParam RunParam { get; set; } = new();
-        public KinemParam KinemParam { get; set; }
-
 
         private int iRunCounter = 0;
         private int iProgress = 0;
@@ -39,17 +31,8 @@ namespace SiliFish.ModelUnits.Model
 
         protected double taur, taud, vth; //synapse parameters
 
-        private UnitOfMeasure uom = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;
-        public UnitOfMeasure UoM
-        {
-            get { return uom; }
-            set { CurrentSettings.Settings.UoM = uom = value; }
-        }
-
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
-        protected List<InterPool> gapPoolConnections = new();
-        protected List<InterPool> chemPoolConnections = new();
 
         [JsonIgnore]
         [Browsable(false)]
@@ -67,19 +50,15 @@ namespace SiliFish.ModelUnits.Model
         public int GetRunCounter() => iRunCounter;
 
 
-        public SwimmingModel()
+        public RunningModel()
         {
-            modelName = this.GetType().Name;
-            KinemParam = new();
         }
 
-        public SwimmingModel(SwimmingModelTemplate swimmingModelTemplate)
+        public RunningModel(ModelTemplate swimmingModelTemplate)
         {
             neuronPools.Clear();
             musclePools.Clear();
-            gapPoolConnections.Clear();
-            chemPoolConnections.Clear();
-
+            
             initialized = false;
 
             if (swimmingModelTemplate == null) return;
@@ -87,7 +66,7 @@ namespace SiliFish.ModelUnits.Model
             ModelName = swimmingModelTemplate.ModelName;
             ModelDescription = swimmingModelTemplate.ModelDescription;
             ModelDimensions = swimmingModelTemplate.ModelDimensions;
-            CurrentSettings.Settings = swimmingModelTemplate.Settings;
+            Settings = swimmingModelTemplate.Settings;
             KinemParam = swimmingModelTemplate.KinemParam;
             SetParameters(swimmingModelTemplate.Parameters);
 
@@ -170,6 +149,8 @@ namespace SiliFish.ModelUnits.Model
             #endregion
         }
 
+        public override void BackwardCompatibility()
+        { }
         [JsonIgnore]
         [Browsable(false)]
         public List<CellPool> CellPools
@@ -211,11 +192,11 @@ namespace SiliFish.ModelUnits.Model
         {
             get
             {
-                return chemPoolConnections
-                    .Where(conn => conn.TargetPool.CellType == CellType.MuscleCell)
+                return null; //TODO  chemPoolConnections
+                    /*.Where(conn => conn.TargetPool.CellType == CellType.MuscleCell)
                     .Select(conn => conn.SourcePool)
                     .Distinct()
-                    .ToList();
+                    .ToList();*/
             }
         }
 
@@ -242,16 +223,11 @@ namespace SiliFish.ModelUnits.Model
         }
 
         [JsonIgnore, Browsable(false)]
-        public List<InterPool> ChemPoolConnections
+        public List<InterPool> ChemPoolConnections//create these from existing junctions
         {
             get
             {
-                return chemPoolConnections;
-            }
-            set
-            {
-                //called by JSON
-                chemPoolConnections = value;
+                return null; //TODO chemPoolConnections;
             }
         }
 
@@ -260,22 +236,68 @@ namespace SiliFish.ModelUnits.Model
         {
             get
             {
-                return gapPoolConnections;
-            }
-            set
-            {
-                //called by JSON
-                gapPoolConnections = value;
+                return null;//TODO gapPoolConnections;
             }
         }
 
         //Needs to be run after created from JSON
-        public void LinkObjects()
+        public override void LinkObjects()
         {
             foreach (CellPool pool in CellPools)
             {
                 pool.LinkObjects(this);
             }
+        }
+
+        public override List<CellPoolBase> GetCellPools() 
+        { 
+            return CellPools.Select(cp=>(CellPoolBase)cp).ToList(); 
+        }
+        public override bool AddCellPool(CellPoolBase cellPool)
+        {
+            if (cellPool is CellPool cp)
+            {
+                CellPools.Add(cp);
+                return true;
+            }
+            return false;
+        }
+
+        public override bool RemoveCellPool(CellPoolBase cellPool)
+        {
+            if (cellPool is CellPool cp)
+            {
+                return CellPools.Remove(cp);
+            }
+            return false;
+        }
+        public override void SortCellPools()
+        {
+            CellPools.Sort();
+        }
+        public override List<object> GetProjections()
+        {
+            List<object> listProjections = new();
+            foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
+            {
+                foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
+                    listProjections.Add(jnc);
+                if (cell is Neuron neuron)
+                    foreach (ChemicalSynapse syn in neuron.Terminals.Where(j => j.PreNeuron == cell))
+                        listProjections.Add(syn);
+            }
+            return listProjections;
+        }
+
+        public override List<object> GetStimuli()
+        {
+            List<object> listStimuli= new();
+            foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
+            {
+                foreach (Stimulus stim in cell.Stimuli.stimuli)
+                    listStimuli.Add(stim);
+            }
+            return listStimuli;
         }
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {
@@ -444,13 +466,11 @@ namespace SiliFish.ModelUnits.Model
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            gapPoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, probability);
         }
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null, double probability = 1)
         {
             if (pool1 == null || pool2 == null) return;
-            chemPoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, probability);
         }
 
@@ -460,7 +480,6 @@ namespace SiliFish.ModelUnits.Model
             CellReach cr = template.CellReach;
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            gapPoolConnections.Add(new InterPool(pool1, pool2, cr, null, timeline));
             pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability);
         }
 
@@ -471,7 +490,6 @@ namespace SiliFish.ModelUnits.Model
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine_ms;
-            chemPoolConnections.Add(new InterPool(pool1, pool2, cr, synParam, timeline));
             pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability);
         }
 
@@ -488,7 +506,7 @@ namespace SiliFish.ModelUnits.Model
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -537,13 +555,13 @@ namespace SiliFish.ModelUnits.Model
             }
             catch (Exception ex)
             {
-                ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
         public void RunModel(int? seed, RunParam rp, int count = 1)
         {
-            string filename = $"{modelName}_{DateTime.Now:yyMMdd-HHmm}";
+            string filename = $"{ModelName}_{DateTime.Now:yyMMdd-HHmm}";
             string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
             filename = Path.Combine(outputFolder, filename);
             for (int i = 0; i < count; i++)
@@ -571,11 +589,6 @@ namespace SiliFish.ModelUnits.Model
                     return;
                 }
             }
-        }
-
-        public static void ExceptionHandling(string name, Exception ex)
-        {
-            Console.WriteLine(name + ex.ToString());
         }
 
     }

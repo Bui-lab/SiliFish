@@ -1,5 +1,5 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Stim;
 
 namespace SiliFish.UI.Controls
 {

@@ -1,8 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace SiliFish.Services
 {
     public static class SwimmingKinematics
     {
-        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngleNoSomite(SwimmingModel model, int startIndex, int endIndex)
+        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngleNoSomite(RunningModel model, int startIndex, int endIndex)
         {
             if (!model.ModelRun) return (null, null);
             List<Cell> LeftMuscleCells = model.MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Left).SelectMany(mp => mp.GetCells()).ToList();
@@ -62,7 +61,7 @@ namespace SiliFish.Services
             return (vel, angle);
         }
 
-        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(SwimmingModel model, int startIndex, int endIndex)
+        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(RunningModel model, int startIndex, int endIndex)
         {
             if (!model.ModelRun) return (null, null);
             if (model.ModelDimensions.NumberOfSomites <= 0)
@@ -121,7 +120,7 @@ namespace SiliFish.Services
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <returns></returns>
-        public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(SwimmingModel model, int startIndex, int endIndex)
+        public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(RunningModel model, int startIndex, int endIndex)
         {
             (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(model, startIndex, endIndex);
 
@@ -158,7 +157,7 @@ namespace SiliFish.Services
             }
             return somiteCoordinates;
         }
-        public static (Coordinate[], List<SwimmingEpisode>) GetSwimmingEpisodesUsingMuscleCells(SwimmingModel model)
+        public static (Coordinate[], List<SwimmingEpisode>) GetSwimmingEpisodesUsingMuscleCells(RunningModel model)
         {
             /*Converted from the code written by Yann Roussel and Tuan Bui
             This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
@@ -240,7 +239,7 @@ namespace SiliFish.Services
         }
 
 
-        public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(SwimmingModel model, List<Cell> leftMNs, List<Cell> rightMNs,
+        public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs,
             double burstBreak, double episodeBreak)
         {
             List<int> leftSpikes = new();

@@ -2,7 +2,7 @@
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -103,7 +103,7 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string Create3DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
+        public string Create3DModel(bool saveFile, RunningModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
         {
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DModel.html"));
 

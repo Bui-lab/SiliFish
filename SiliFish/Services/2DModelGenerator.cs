@@ -2,7 +2,7 @@
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +54,7 @@ namespace SiliFish.Services
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 
-        public string Create2DModel(bool saveFile, SwimmingModel model, List<CellPool> pools, int width, int height)
+        public string Create2DModel(bool saveFile, RunningModel model, List<CellPool> pools, int width, int height)
         {
             string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 2D Model";

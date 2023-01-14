@@ -2,7 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -58,8 +58,8 @@ namespace SiliFish.ModelUnits.Cells
             PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
             if (sigma_dyn > 0)
             {
-                R *= SwimmingModel.rand.Gauss(1, sigma_dyn);
-                C *= SwimmingModel.rand.Gauss(1, sigma_dyn);
+                R *= RunningModel.rand.Gauss(1, sigma_dyn);
+                C *= RunningModel.rand.Gauss(1, sigma_dyn);
             }
             Core = new Leaky_Integrator(R, C, Vr);
             EndPlates = new List<ChemicalSynapse>();
@@ -129,7 +129,7 @@ namespace SiliFish.ModelUnits.Cells
                 {
                     IGap += jnc.GetGapCurrent(this, timeIndex);
                 }
-                stim = GetStimulus(timeIndex, SwimmingModel.rand);
+                stim = GetStimulus(timeIndex, RunningModel.rand);
             }
             NextStep(timeIndex, stim + ISyn + IGap);
         }

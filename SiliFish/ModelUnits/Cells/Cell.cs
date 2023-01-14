@@ -2,8 +2,10 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -116,7 +118,7 @@ namespace SiliFish.ModelUnits.Cells
         public Cell()
         {
         }
-        public virtual void LinkObjects(SwimmingModel model, CellPool pool)
+        public virtual void LinkObjects(RunningModel model, CellPool pool)
         {
             CellPool = pool;
             Core = CellCoreUnit.CreateCore(Core.CoreType, Core.Parameters);
@@ -165,7 +167,7 @@ namespace SiliFish.ModelUnits.Cells
             }
             catch (Exception ex)
             {
-                SwimmingModel.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
 
         }

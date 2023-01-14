@@ -4,7 +4,7 @@ using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -264,7 +264,7 @@ namespace SiliFish.Services
             return charts;
         }
 
-        private static List<ChartDataStruct> CreateEpisodeCharts(SwimmingModel model, int iStart, int iEnd)
+        private static List<ChartDataStruct> CreateEpisodeCharts(RunningModel model, int iStart, int iEnd)
         {
             List<ChartDataStruct> charts = new();
 
@@ -401,7 +401,7 @@ namespace SiliFish.Services
             return charts;
         }
 
-       public static (string, List<ChartDataStruct>) GetPlotData(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
+       public static (string, List<ChartDataStruct>) GetPlotData(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1, int tSkip = 0)
         {
             if (PlotType != PlotType.Episodes &&

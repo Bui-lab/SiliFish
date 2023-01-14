@@ -2,7 +2,9 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -71,7 +73,7 @@ namespace SiliFish.ModelUnits.Cells
             ConductionVelocity = cv;
         }
 
-        public override void LinkObjects(SwimmingModel model, CellPool pool)
+        public override void LinkObjects(RunningModel model, CellPool pool)
         {
             base.LinkObjects(model, pool);
             foreach (ChemicalSynapse jnc in Terminals.Where(t => t.PreNeuron == null))
@@ -150,7 +152,7 @@ namespace SiliFish.ModelUnits.Cells
             }
             catch (Exception ex)
             {
-                SwimmingModel.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
 
         }
@@ -170,14 +172,14 @@ namespace SiliFish.ModelUnits.Cells
                     {
                         IGap += jnc.GetGapCurrent(this, timeIndex);
                     }
-                    stim = GetStimulus(timeIndex, SwimmingModel.rand);
+                    stim = GetStimulus(timeIndex, RunningModel.rand);
                 }
 
                 NextStep(timeIndex, stim + ISyn + IGap);
             }
             catch (Exception ex)
             {
-                SwimmingModel.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 

@@ -5,9 +5,9 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.Extensions;
@@ -277,7 +277,7 @@ namespace SiliFish.UI.Controls
                 StimulusSettings = stimulusControl1.GetStimulus(),
                 TimeSpan_ms = tl
             };
-            double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, SwimmingModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
+            double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
             return I;
         }
         private void DynamicsRun()

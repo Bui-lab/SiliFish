@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using System.ComponentModel;
 using static SiliFish.UI.Controls.DynamicsTestControl;
 
@@ -17,7 +18,7 @@ namespace SiliFish.UI.Controls
         private event EventHandler loadPool;
         public event EventHandler LoadPool { add => loadPool += value; remove => loadPool -= value; }
 
-        CellPoolTemplate poolTemplate = new();
+        CellPoolTemplate poolTemplate;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private DynamicsTestControl dyncontrol = null;

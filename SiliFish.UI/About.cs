@@ -1,4 +1,4 @@
-﻿using SiliFish.ModelUnits.Model;
+﻿using SiliFish.ModelUnits.Architecture;
 using System.Reflection;
 
 namespace SiliFish.UI
@@ -16,7 +16,7 @@ namespace SiliFish.UI
             Version versionUI = Assembly.GetExecutingAssembly().GetName().Version;
             lVersionWindows.Text = string.Format("UI version: {0}.{1}", versionUI.Major, versionUI.Minor);
             //lVersionWindows.Text = string.Format("UI version: {0}.{1}, built on {2}", versionUI.Major, versionUI.Minor, dateUI.ToString("d"));
-            Version versionEngine = typeof(SwimmingModel).Assembly.GetName().Version;
+            Version versionEngine = typeof(RunningModel).Assembly.GetName().Version;
             lVersionEngine.Text = string.Format("Engine version: {0}.{1}, built on {2}", versionEngine.Major, versionEngine.Minor, dateEngine.ToString("d"));
             eCredits.Rtf = @"{\rtf1\pc \i Sili\i0 Fish uses some 3rd party tools. Corresponding licences are below:"+
                             @"\par" +

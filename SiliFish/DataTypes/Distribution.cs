@@ -8,6 +8,12 @@ namespace SiliFish.DataTypes
 {
 
     //Base class for all distributions
+    [JsonDerivedType(typeof(Distribution), typeDiscriminator: "distribution")]
+    [JsonDerivedType(typeof(UniformDistribution), typeDiscriminator: "uniform")]
+    [JsonDerivedType(typeof(Constant_NoDistribution), typeDiscriminator: "constant")]
+    [JsonDerivedType(typeof(SpacedDistribution), typeDiscriminator: "spaced")]
+    [JsonDerivedType(typeof(GaussianDistribution), typeDiscriminator: "gaussian")]
+    [JsonDerivedType(typeof(BimodalDistribution), typeDiscriminator: "bimodal")]
     public class Distribution
     {
         public static Random Random = null;
@@ -51,7 +57,7 @@ namespace SiliFish.DataTypes
         protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }
 
         [JsonIgnore]
-        public virtual double UniqueValue { get { throw new NotImplementedException(); } }
+        public virtual double UniqueValue { get { return 0; } }//TODO throw new NotImplementedException(); } }
         public override string ToString()
         {
             int dot = DistType.LastIndexOf('.');
@@ -94,7 +100,11 @@ namespace SiliFish.DataTypes
             if (double.TryParse(obj.ToString(), out double d))
                 return new Constant_NoDistribution(d, true, false, 0);
             if (obj is JsonElement element)
-                return GetOfDerivedType(element.GetRawText());
+            {
+                //TODO return GetOfDerivedType(element.GetRawText());
+                var r =JsonSerializer.Deserialize<Distribution>(element.GetRawText());//if this works, get rid of DistType field
+                return r;
+            }
             return null;
         }
 
@@ -348,29 +358,4 @@ namespace SiliFish.DataTypes
             return Random.Bimodal(Mean * Range / 100, Stddev * Range / 100, Mean2 * Range / 100, Stddev2 * Range / 100, Mode1Weight, n, LowerLimit, UpperLimit);
         }
     }
-
-    public class SpatialDistribution
-    {
-        public Distribution XDistribution { get; set; }
-        public Distribution Y_AngleDistribution { get; set; }
-        public Distribution Z_RadiusDistribution { get; set; }
-
-        public SpatialDistribution()
-        { }
-        public SpatialDistribution(SpatialDistribution sd)
-        {
-            XDistribution = sd.XDistribution.CreateCopy();
-            Y_AngleDistribution = sd.Y_AngleDistribution.CreateCopy();
-            Z_RadiusDistribution = sd.Z_RadiusDistribution.CreateCopy();
-        }
-        public string GetTooltip()
-        {
-            if (Y_AngleDistribution!=null && Y_AngleDistribution.Angular)
-                return $"X: {XDistribution}\r\nAngle: {Y_AngleDistribution}\r\nRadius:{Z_RadiusDistribution}";
-            else
-                return $"X: {XDistribution}\r\nY: {Y_AngleDistribution}\r\nZ: {Z_RadiusDistribution}";
-        }
-    }
-
-
 }

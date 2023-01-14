@@ -4,7 +4,7 @@ using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using SiliFish.UI;
 
@@ -208,7 +208,7 @@ namespace Services
             return (leftImages, rightImages);
         }
 
-        private static (List<Image>, List<Image>) PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
+        private static (List<Image>, List<Image>) PlotEpisodes(RunningModel model, double tStart, double tEnd)
         {
             List<Image> leftImages = new();
             int iStart = model.RunParam.iIndex(tStart);
@@ -273,7 +273,7 @@ namespace Services
         }
 
 
-        public static (List<Image>, List<Image>) Plot(PlotType PlotType, SwimmingModel model, List<Cell> Cells, List<CellPool> Pools,
+        public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             CellSelectionStruct cellSelection,
             double dt, int tStart = 0, int tEnd = -1, int tSkip = 0)
         {

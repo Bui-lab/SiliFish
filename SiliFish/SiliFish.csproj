@@ -108,4 +108,8 @@
     <EmbeddedResource Include="Resources\DySynchronizer.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>

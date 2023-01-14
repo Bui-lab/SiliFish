@@ -1,7 +1,9 @@
 ﻿using SiliFish.Helpers.JsonConverters;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace SiliFish.Helpers
@@ -48,6 +50,29 @@ namespace SiliFish.Helpers
             return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
         }
 
+        private static void FixDistributionJson(ref string json)
+        {
+            Dictionary<string, string> dist = new Dictionary<string, string>
+            {
+                { "\"DistType\": \"UniformDistribution\",", "\"$type\": \"uniform\"," },
+                { "\"DistType\": \"Constant_NoDistribution\",", "\"$type\": \"constant\"," },
+                { "\"DistType\": \"SpacedDistribution\",", "\"$type\": \"spaced\"," },
+                { "\"DistType\": \"GaussianDistribution\",", "\"$type\": \"gaussian\"," },
+                { "\"DistType\": \"BimodalDistribution\",", "\"$type\": \"bimodal\"," }
+            };
+            foreach (string key in dist.Keys)
+            {
+                string replace = dist[key];
+                while (json.Contains(key))
+                {
+                    int ind = json.IndexOf(key);
+                    int curly = json.LastIndexOf("{", ind - 1);
+                    json = json.Remove(ind, key.Length);
+                    json = json.Insert(curly + 1, replace);
+                }    
+            }
+        }
+
         public static List<string> CheckJsonVersion(ref string json)
         {
             List<string> list = new List<string>();
@@ -65,6 +90,8 @@ namespace SiliFish.Helpers
                 .Replace("\"CoreType\": 2", "\"CoreType\": \"Leaky_Integrator\"");
                 list.Add("Core types");
             }
+            FixDistributionJson(ref json);
+
             return list;
         }
 

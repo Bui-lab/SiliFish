@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using SiliFish.ModelUnits.Cells;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -10,15 +11,9 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
-    public class CellPoolTemplate : ModelUnitBase
+    public class CellPoolTemplate : CellPoolBase
     {
-        public string CellGroup { get; set; }
-        public string Description { get; set; }
-        public CellType CellType { get; set; }
-        public BodyLocation BodyLocation { get; set; }
-        public string CoreType { get; set; }
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
-        public Color Color { get; set; } = Color.Red;
         public Dictionary<string, object> Parameters
         {
             get { return parameters; }
@@ -28,39 +23,10 @@ namespace SiliFish.ModelUnits
                     kvp => Distribution.CreateDistributionObject(kvp.Value) as object);
             }
         }
-        public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
-        public int ColumnIndex2D { get; set; }
         public int NumOfCells { get; set; } = 1;
         public CountingMode PerSomiteOrTotal { get; set; } = CountingMode.Total;
 
         public string SomiteRange { get; set; }
-
-        private SpatialDistribution SpatialDistribution = new();
-
-        public object XDistribution
-        {
-            get { return SpatialDistribution.XDistribution; }
-            set
-            {
-                SpatialDistribution.XDistribution = Distribution.CreateDistributionObject(value);
-            }
-        }
-        public object Y_AngleDistribution
-        {
-            get { return SpatialDistribution.Y_AngleDistribution; }
-            set
-            {
-                SpatialDistribution.Y_AngleDistribution = Distribution.CreateDistributionObject(value);
-            }
-        }
-        public object Z_RadiusDistribution
-        {
-            get { return SpatialDistribution.Z_RadiusDistribution; }
-            set
-            {
-                SpatialDistribution.Z_RadiusDistribution = Distribution.CreateDistributionObject(value);
-            }
-        }
 
         private Distribution _ConductionVelocity;
         private Dictionary<string, object> parameters;
@@ -72,20 +38,6 @@ namespace SiliFish.ModelUnits
             {
                 _ConductionVelocity = Distribution.CreateDistributionObject(value);
             }
-        }
-        [JsonIgnore]
-        public string Position
-        {
-            get
-            {
-                string FTS =
-                    //FUTURE_IMPROVEMENT
-                    //(PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
-                    //(PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
-                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "LR");
-                return FTS;
-            }
-        
         }
         public override string ToString()
         {

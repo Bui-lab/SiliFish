@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace SiliFish.ModelUnits.Model
+namespace SiliFish.ModelUnits.Architecture
 {
     public class ModelDimensions
     {

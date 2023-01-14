@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{DF1638C5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E2D7DE9-EFE2-42B1-A004-25A049901366}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		3rd PARTY LICENSE = 3rd PARTY LICENSE
 		LICENSE = LICENSE
 		README.md = README.md

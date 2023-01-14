@@ -1,8 +1,6 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
-using SiliFish.Extensions;
 using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
@@ -178,7 +176,7 @@ namespace SiliFish.UI.Controls
             return dd.Text.Replace(" (inactive)", "");
         }
 
-        public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, SwimmingModelTemplate modelTemplate)
+        public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
         {
             Parameters = modelTemplate.Parameters;
             ddSourcePool.Items.Clear();

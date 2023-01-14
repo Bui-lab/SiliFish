@@ -1,5 +1,5 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +25,12 @@ namespace SiliFish.DataTypes
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);
-        public static Coordinate[] GenerateCoordinates(SwimmingModel Model, BodyLocation BodyLocation,
+        public static Coordinate[] GenerateCoordinates(RunningModel Model, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
         {
             if (n <= 0) return null;
             Coordinate[] coordinates = new Coordinate[n];
-            Distribution.Random = SwimmingModel.rand;
+            Distribution.Random = RunningModel.rand;
 
             double x_length = 0, x_offset = 0;
             double y_length = 0, y_offset = 0;

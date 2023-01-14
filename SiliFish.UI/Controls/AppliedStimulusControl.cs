@@ -1,4 +1,5 @@
 ﻿using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Stim;
 
 namespace SiliFish.UI.Controls
 {
@@ -114,6 +115,11 @@ namespace SiliFish.UI.Controls
         private void cbAllCells_CheckedChanged(object sender, EventArgs e)
         {
             eTargetCells.ReadOnly = cbAllCells.Checked;
+        }
+
+        internal void SetStimulus(object cellPoolTemplates, StimulusTemplate stim)
+        {
+            throw new NotImplementedException();
         }
     }
 }

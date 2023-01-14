@@ -102,7 +102,8 @@ namespace SiliFish.UI.Controls
             else //constant_NoDistribution
             {
                 ddDistribution.Text = "Constant";
-                eNoise.Text = (dist as Constant_NoDistribution).NoiseStdDev.ToString("0.###");
+                if (dist is Constant_NoDistribution d)
+                    eNoise.Text = d.NoiseStdDev.ToString("0.###");
             }
         }
 

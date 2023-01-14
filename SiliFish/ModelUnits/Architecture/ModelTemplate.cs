@@ -1,25 +1,52 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.ModelUnits.Stim;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SiliFish.ModelUnits.Model
+namespace SiliFish.ModelUnits.Architecture
 {
-    public class SwimmingModelTemplate
+    public class ModelTemplate : ModelBase
     {
-        public string ModelName { get; set; }
-        public string ModelDescription { get; set; }
-
-        public ModelDimensions ModelDimensions { get; set; } = new();
-        public KinemParam KinemParam { get; set; } = new();
-
-        public Settings Settings { get; set; } = new();
-
         public List<CellPoolTemplate> CellPoolTemplates { get; set; } = new();
         public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
-        public Dictionary<string, object> Parameters { get; set; }
         public List<StimulusTemplate> AppliedStimuli { get; set; } = new();
+
+        public ModelTemplate() { }
+
+        public override List<CellPoolBase> GetCellPools()
+        {
+            return CellPoolTemplates.Select(cp => (CellPoolBase)cp).ToList();
+        }
+        public override bool AddCellPool(CellPoolBase cellPool)
+        {
+            if (cellPool is CellPoolTemplate cp)
+            {
+                CellPoolTemplates.Add(cp);
+                return true;
+            }
+            return false;
+        }
+        public override bool RemoveCellPool(CellPoolBase cellPool)
+        {
+            if (cellPool is CellPoolTemplate cp)
+            {
+                return CellPoolTemplates.Remove(cp);
+            }
+            return false;
+        }
+
+        public override List<object> GetProjections()
+        {
+            return InterPoolTemplates.Select(ip => (object)ip).ToList();
+        }
+
+        public override List<object> GetStimuli()
+        {
+            return AppliedStimuli.Select(stim => (object)stim).ToList();
+        }
 
         public void ClearLists()
         {
@@ -30,7 +57,7 @@ namespace SiliFish.ModelUnits.Model
         }
 
         //Needs to be run after created from JSON
-        public void LinkObjects()
+        public override void LinkObjects()
         {
             foreach (InterPoolTemplate jnc in InterPoolTemplates)
             {
@@ -67,20 +94,25 @@ namespace SiliFish.ModelUnits.Model
             }
             InterPoolTemplates.AddRange(iptNewList);
         }
-        public void RenameCellPool(string oldName, string newName)
+        public bool RenameCellPool(string oldName, string newName)
         {
             if (oldName == null || newName == null || oldName == newName)
-                return;
+                return true;
             if (CellPoolTemplates.Any(p => p.CellGroup == oldName))
-                return;
+                return false;
             foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolSource == oldName))
                 ip.PoolSource = newName;
             foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolTarget == oldName))
                 ip.PoolTarget = newName;
             foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.TargetPool == oldName))
                 stim.TargetPool = newName;
+            return true;
         }
 
+        public override void SortCellPools()
+        {
+            CellPoolTemplates.Sort();
+        }
         public void RemoveCellPool(CellPoolTemplate cpt)
         {
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cpt.CellGroup);
@@ -89,24 +121,10 @@ namespace SiliFish.ModelUnits.Model
             CellPoolTemplates.Remove(cpt);
         }
 
-        public void BackwardCompatibility()
+        public override void BackwardCompatibility()
         {
-            if (Parameters == null || !Parameters.Any())
-                return;
-            if (Parameters.ContainsKey("General.Name"))
-            {
-                ModelName = Parameters["General.Name"].ToString();
-                Parameters.Remove("General.Name");
-            }
-            if (Parameters.ContainsKey("General.Description"))
-            {
-                ModelDescription = Parameters["General.Description"].ToString();
-                Parameters.Remove("General.Description");
-            }
-            Parameters = ModelDimensions.BackwardCompatibility(Parameters);
-            Settings.BackwardCompatibility(Parameters);
-            CurrentSettings.Settings = Settings;
-            KinemParam.BackwardCompatibility(Parameters);
+            base.BackwardCompatibility();
+
 
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
             {

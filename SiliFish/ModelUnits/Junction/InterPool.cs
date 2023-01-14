@@ -16,7 +16,7 @@ namespace SiliFish.ModelUnits
         internal CellPool TargetPool;
         public CellReach Reach { get; set; }
         public SynapseParameters SynapseParameters { get; set; }
-        internal bool IsChemical { get { return SynapseParameters != null; } set { } }
+        public bool IsChemical { get { return SynapseParameters != null; } set { } }
         [JsonIgnore]
         public TimeLine TimeLine { get; }
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Stim
 {
     public class StimulusTemplate : ModelUnitBase
     {
