@@ -68,7 +68,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public override string ToString()
         {
-            return CellGroup;//TODO  + (Active ? "" : " (inactive)");
+            return ID + (Active ? "" : " (inactive)");
         }
         public bool OnSide(SagittalPlane sagittal)
         {

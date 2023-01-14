@@ -1,4 +1,5 @@
-﻿using SiliFish.Definitions;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
 using System;
 using System.Collections.Generic;
@@ -88,10 +89,10 @@ namespace SiliFish.DynamicUnits
         /// </summary>
         /// <param name="coreType"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetParameters(string coreType)
+        public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
             CellCoreUnit core = CreateCore(coreType, null);
-            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
+            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value, true, false, 0) as Distribution);
         }
 
 

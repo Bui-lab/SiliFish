@@ -19,7 +19,9 @@ namespace SiliFish.DataTypes
         public static Random Random = null;
         public bool Angular { get; set; } = false;
         private string distType;
-        public string DistType { get { return distType; } set { distType = value; } }
+        
+        [JsonIgnore]
+        public string DistType => distType;
         public bool Absolute { get; set; } = true;
         /// <summary>
         /// Can be percentage or absolute value
@@ -57,7 +59,7 @@ namespace SiliFish.DataTypes
         protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }
 
         [JsonIgnore]
-        public virtual double UniqueValue { get { return 0; } }//TODO throw new NotImplementedException(); } }
+        public virtual double UniqueValue { get { return 666; } }// throw new NotImplementedException(); } }
         public override string ToString()
         {
             int dot = DistType.LastIndexOf('.');
@@ -101,32 +103,11 @@ namespace SiliFish.DataTypes
                 return new Constant_NoDistribution(d, true, false, 0);
             if (obj is JsonElement element)
             {
-                //TODO return GetOfDerivedType(element.GetRawText());
-                var r =JsonSerializer.Deserialize<Distribution>(element.GetRawText());//if this works, get rid of DistType field
-                return r;
+                return JsonSerializer.Deserialize<Distribution>(element.GetRawText());//if this works, get rid of DistType field
             }
             return null;
         }
 
-
-        public static Distribution GetOfDerivedType(string json)
-        {
-            Distribution dist = JsonSerializer.Deserialize<Distribution>(json);
-            if (dist != null)
-            {
-                if (dist.DistType == nameof(Constant_NoDistribution)|| dist.DistType == typeof(Constant_NoDistribution).FullName)
-                    return JsonSerializer.Deserialize<Constant_NoDistribution>(json);
-                if (dist.DistType == nameof(UniformDistribution)|| dist.DistType == typeof(UniformDistribution).FullName)
-                    return JsonSerializer.Deserialize<UniformDistribution>(json);
-                if (dist.DistType == nameof(SpacedDistribution)|| dist.DistType == typeof(SpacedDistribution).FullName)
-                    return JsonSerializer.Deserialize<SpacedDistribution>(json);
-                if (dist.DistType == nameof(GaussianDistribution)|| dist.DistType == typeof(GaussianDistribution).FullName)
-                    return JsonSerializer.Deserialize<GaussianDistribution>(json);
-                if (dist.DistType == nameof(BimodalDistribution)|| dist.DistType == typeof(BimodalDistribution).FullName)
-                    return JsonSerializer.Deserialize<BimodalDistribution>(json);
-            }
-            return dist;
-        }
         public static double[] GenerateNRandomNumbers(int n, double range)
         {
             if (Random == null)

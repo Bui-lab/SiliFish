@@ -34,6 +34,7 @@ namespace SiliFish.Helpers
             var options = new JsonSerializerOptions()
             {
                 Converters = { new ColorJsonConverter() },
+                
                 WriteIndented = true
             };
             string jsonstring = JsonSerializer.Serialize(content, options);
@@ -54,6 +55,11 @@ namespace SiliFish.Helpers
         {
             Dictionary<string, string> dist = new Dictionary<string, string>
             {
+                { "\"DistType\": \"SiliFish.DataTypes.UniformDistribution\",", "\"$type\": \"uniform\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.Constant_NoDistribution\",", "\"$type\": \"constant\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.SpacedDistribution\",", "\"$type\": \"spaced\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.GaussianDistribution\",", "\"$type\": \"gaussian\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.BimodalDistribution\",", "\"$type\": \"bimodal\"," },
                 { "\"DistType\": \"UniformDistribution\",", "\"$type\": \"uniform\"," },
                 { "\"DistType\": \"Constant_NoDistribution\",", "\"$type\": \"constant\"," },
                 { "\"DistType\": \"SpacedDistribution\",", "\"$type\": \"spaced\"," },

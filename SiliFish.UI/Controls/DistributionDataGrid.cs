@@ -99,7 +99,7 @@ namespace SiliFish.UI.Controls
             catch { }
         }
 
-        public void WriteToGrid(Dictionary<string, object> parameters)
+        public void WriteToGrid(Dictionary<string, Distribution> parameters)
         {
             try
             {
@@ -109,32 +109,29 @@ namespace SiliFish.UI.Controls
                 int rowIndex = 0;
                 foreach (string key in parameters.Keys)
                 {
-                    if (parameters[key] is Distribution dist)
-                    {
+                    Distribution dist = parameters[key];
                         if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon)
                             WriteNoDistToRow(key, dist.UniqueValue, rowIndex);
                         else
                             WriteDistToRow(key, dist, rowIndex);
-                    }
-                    else
-                        WriteNoDistToRow(key, (double)parameters[key], rowIndex);
                     rowIndex++;
                 }
             }
             catch { }
         }
 
-        public Dictionary<string, object> ReadFromGrid()
+        public Dictionary<string, Distribution> ReadFromGrid()//TODO review
         {
             try
             {
-                Dictionary<string, object> paramDict = new();
+                Dictionary<string, Distribution> paramDict = new();
                 for (int rowIndex = 0; rowIndex < dgDistribution.RowCount; rowIndex++)
                 {
                     if (dgDistribution.Rows[rowIndex].Tag is Distribution dist)
                         paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), dist);
                     else
-                        paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), dgDistribution[colUniqueValue.Index, rowIndex].Value);
+                        paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), 
+                            new Constant_NoDistribution( (double) dgDistribution[colUniqueValue.Index, rowIndex].Value, true, false, 0));
                 }
                 return paramDict;
             }

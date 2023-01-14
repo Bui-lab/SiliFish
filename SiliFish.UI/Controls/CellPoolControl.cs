@@ -96,7 +96,7 @@ namespace SiliFish.UI.Controls
             dgDynamics.WriteToGrid(poolTemplate.Parameters);
         }
 
-        private Dictionary<string, object> GridToParamDict()
+        private Dictionary<string, Distribution> GridToParamDict()
         {
             return dgDynamics.ReadFromGrid();
         }
@@ -258,7 +258,7 @@ namespace SiliFish.UI.Controls
                     ddCoreType.Text = core.CoreType;
                     skipCoreTypeChange = false;
                     ddCoreType.Text = poolTemplate.CoreType = core.CoreType;
-                    poolTemplate.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => kvp.Value as object);
+                    poolTemplate.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value, true, false, 0) as  Distribution);
                     ParamDictToGrid();
                 }
             }

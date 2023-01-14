@@ -5,8 +5,9 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
 using System.Data;
 using SiliFish.Services;
-using OxyPlot;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Repositories;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.UI.Controls
 {
@@ -90,7 +91,6 @@ namespace SiliFish.UI.Controls
 
         private void LoadParamsAndSettings()
         {
-            if (CurrentMode != Mode.Template) return;
             //General Params
             eModelName.Text = Model.ModelName;
             eModelDescription.Text = Model.ModelDescription;
@@ -137,19 +137,6 @@ namespace SiliFish.UI.Controls
                     key = "";
                 }
             }
-        }
-        private Dictionary<string, object> ReadParams(string subGroup)
-        {
-            Dictionary<string, object> ParamDict = new();
-            foreach (TabPage page in tabModel.TabPages)
-            {
-                if (page.Tag?.ToString() == "Param" && page.Text == subGroup)
-                {
-                    ReadParamsFromTabPage(ParamDict, page);
-                    break;
-                }
-            }
-            return ParamDict;
         }
         private Dictionary<string, object> ReadParams()
         {
@@ -236,7 +223,7 @@ namespace SiliFish.UI.Controls
                 
                 if (!Model.CheckValues(out List<string> errors))
                 {
-                    //TODO WarningMessage(error);
+                    MessageBox.Show(string.Join("\r\n", errors));
                     return false;
                 }
                 if (string.IsNullOrEmpty(saveFileJson.FileName))
@@ -246,9 +233,8 @@ namespace SiliFish.UI.Controls
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
-                    //To make sure deactivated items are saved, even though not displayed
-                    //Show all
-                    JsonUtil.SaveToJsonFile(saveFileJson.FileName, Model);
+                    ModelFile.Save(saveFileJson.FileName, Model);
+                    
                     this.Text = $"SiliFish {Model.ModelName}";
                     lastSavedCustomModelJSON = JsonUtil.ToJson(Model);
                     return true;
@@ -275,19 +261,10 @@ namespace SiliFish.UI.Controls
                 {
                     tabModel.Visible = false;
                     Application.DoEvents();
-                    string json = FileUtil.ReadFromFile(openFileJson.FileName);
-                    json = CheckJSONVersion(json);
+                    
                     try
                     {
-                        try
-                        {
-                            Model = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
-                        //Model = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
-                        }
-                        catch 
-                        {
-                            
-                        }
+                        Model = ModelFile.Load(openFileJson.FileName, out List<string> issues);
                         if (Model is RunningModel)
                         {
                             trackMode.Value = 1;
@@ -360,7 +337,7 @@ namespace SiliFish.UI.Controls
 
         private void listCellPool_AddItem(object sender, EventArgs e)
         {
-            CellPoolBase newPool = OpenCellPoolDialog(null);
+            CellPoolBase newPool = OpenCellPoolDialog(CurrentMode == Mode.RunningModel ? new CellPool() : new CellPoolTemplate());
             if (newPool != null)
             {
                 Model.AddCellPool(newPool);
@@ -375,7 +352,7 @@ namespace SiliFish.UI.Controls
             poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             while (Model.GetCellPools().Any(p => p.CellGroup == poolDuplicate?.CellGroup))
             {
-                //TODO WarningMessage("Cell pool group names have to be unique. Please enter a different name.");
+                MessageBox.Show("Cell pool group names have to be unique. Please enter a different name.");
                 poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             }
             if (poolDuplicate != null)
@@ -650,7 +627,7 @@ namespace SiliFish.UI.Controls
             if (!trackMode.Focused) { return; }
            if (trackMode.Value == 1)
             {
-                Model = new(Model);
+                Model = new RunningModel(Model as ModelTemplate);
                 CurrentMode = Mode.RunningModel;
                 LoadModel();
                 string msg = $"Once you make changes in the model, the changes will not transfer to the model template." +

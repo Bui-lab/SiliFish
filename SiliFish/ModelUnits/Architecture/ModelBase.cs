@@ -14,6 +14,7 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
+        public string ClassType => GetType().Name;
         public string ModelName { get; set; }
         public string ModelDescription { get; set; }
 

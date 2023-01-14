@@ -14,9 +14,14 @@ namespace SiliFish.ModelUnits
     public class CellPoolTemplate : CellPoolBase
     {
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
-        public Dictionary<string, object> Parameters
+
+
+        private Dictionary<string, object> parameters;
+
+        public Dictionary<string, Distribution> Parameters
         {
-            get { return parameters; }
+            get { return parameters.ToDictionary(kvp => kvp.Key,
+                    kvp => Distribution.CreateDistributionObject(kvp.Value)); }
             set
             {
                 parameters = value?.ToDictionary(kvp => kvp.Key,
@@ -28,17 +33,7 @@ namespace SiliFish.ModelUnits
 
         public string SomiteRange { get; set; }
 
-        private Distribution _ConductionVelocity;
-        private Dictionary<string, object> parameters;
-
-        public object ConductionVelocity
-        {
-            get { return _ConductionVelocity; }
-            set
-            {
-                _ConductionVelocity = Distribution.CreateDistributionObject(value);
-            }
-        }
+        public Distribution ConductionVelocity { get; set; }
         public override string ToString()
         {
             return CellGroup + (Active ? "" : " (inactive)");
@@ -107,14 +102,14 @@ namespace SiliFish.ModelUnits
             CellType = cpl.CellType;
             NTMode = cpl.NTMode;
             Color = cpl.Color;
-            Parameters = new Dictionary<string, object>(cpl.Parameters);
+            Parameters = new Dictionary<string, Distribution>(cpl.Parameters);
             PositionLeftRight = cpl.PositionLeftRight;
             ColumnIndex2D = cpl.ColumnIndex2D;
             NumOfCells = cpl.NumOfCells;
             PerSomiteOrTotal = cpl.PerSomiteOrTotal;
             SomiteRange = cpl.SomiteRange;
             SpatialDistribution = new SpatialDistribution(cpl.SpatialDistribution);
-            _ConductionVelocity = cpl._ConductionVelocity?.CreateCopy();
+            ConductionVelocity = cpl.ConductionVelocity?.CreateCopy();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
 

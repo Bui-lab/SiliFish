@@ -107,8 +107,8 @@ namespace SiliFish.ModelUnits.Architecture
         {
             base.FillMissingParameters(paramDict);
         }
-
-        public override void SetParameters(Dictionary<string, object> paramExternal)
+        /*
+        public override void SetParameters(Dictionary<string, Distribution> paramExternal)
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
@@ -132,7 +132,7 @@ namespace SiliFish.ModelUnits.Architecture
                 }
 
             }
-        }
+        }*/
         protected void InitNeurons()
         {
             //https://stackoverflow.com/questions/4834659/loop-through-all-colors

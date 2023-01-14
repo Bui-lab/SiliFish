@@ -34,7 +34,7 @@ namespace SiliFish.UI.Controls
         internal class UpdatedParamsEventArgs : EventArgs
         {
             internal string CoreType;
-            internal Dictionary<string, object> ParamsAsObject;
+            internal Dictionary<string, Distribution> ParamsAsObject;
             internal Dictionary<string, double> ParamsAsDouble;
         }
         private event EventHandler useUpdatedParams;
@@ -582,7 +582,7 @@ namespace SiliFish.UI.Controls
             UpdatedParamsEventArgs args = new()
             {
                 CoreType = CoreType,
-                ParamsAsObject = Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value),
+                //TODO ParamsAsObject = Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)new Constant_NoDistribution(kvp.Value, true, false, 0)),
                 ParamsAsDouble = Parameters
             };
             useUpdatedParams?.Invoke(this, args);

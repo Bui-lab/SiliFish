@@ -46,6 +46,15 @@ namespace SiliFish.Extensions
             catch { return defaultValue; }
         }
 
+        public static double ReadDouble(this Dictionary<string, Distribution> dictionary, string key, double defaultValue = default)
+        {
+            try
+            {
+                return Convert.ToDouble(Read(dictionary, key, defaultValue));
+            }
+            catch { return defaultValue; }
+        }
+
         public static T Read<T>(this Dictionary<string, object> dictionary, string key, T defaultValue = default)
         {
             try
@@ -73,7 +82,19 @@ namespace SiliFish.Extensions
             }
             catch { return defaultValue; }
         }
-
+        public static T Read<T>(this Dictionary<string, Distribution> dictionary, string key, T defaultValue = default)
+        {
+            try
+            {
+                if (dictionary.TryGetValue(key, out var val))
+                {
+                        var v = val.GenerateNNumbers(1, val.Range)[0];
+                    return (T)Convert.ChangeType(v, typeof(T));
+                }
+                return defaultValue;
+            }
+            catch { return defaultValue; }
+        }
         public static object GetNestedValue(this Dictionary<string, object> dictionary, string key)
         {
             if (dictionary.ContainsKey(key))
@@ -146,6 +167,19 @@ namespace SiliFish.Extensions
                     valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range));
                 else if (double.TryParse(obj.ToString(), out double d))
                     valuesArray.Add(key, Enumerable.Repeat(d, number).ToArray());
+            }
+            return valuesArray;
+        }
+
+        public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, Distribution> dictionary, int number)
+        {
+            Dictionary<string, double[]> valuesArray = new();
+            if (dictionary == null)
+                return valuesArray;
+            foreach (string key in dictionary.Keys)
+            {
+                Distribution distribution = dictionary[key];
+                valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range));
             }
             return valuesArray;
         }
