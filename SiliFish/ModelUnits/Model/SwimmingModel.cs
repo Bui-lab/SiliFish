@@ -3,6 +3,8 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
@@ -23,8 +25,8 @@ namespace SiliFish.ModelUnits.Model
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; }
-        public RunParam runParam { get; set; } = new();
-        public KinemParam kinemParam { get; set; }
+        public RunParam RunParam { get; set; } = new();
+        public KinemParam KinemParam { get; set; }
 
 
         private int iRunCounter = 0;
@@ -68,7 +70,7 @@ namespace SiliFish.ModelUnits.Model
         public SwimmingModel()
         {
             modelName = this.GetType().Name;
-            kinemParam = new();
+            KinemParam = new();
         }
 
         public SwimmingModel(SwimmingModelTemplate swimmingModelTemplate)
@@ -86,7 +88,7 @@ namespace SiliFish.ModelUnits.Model
             ModelDescription = swimmingModelTemplate.ModelDescription;
             ModelDimensions = swimmingModelTemplate.ModelDimensions;
             CurrentSettings.Settings = swimmingModelTemplate.Settings;
-            kinemParam = swimmingModelTemplate.KinemParam;
+            KinemParam = swimmingModelTemplate.KinemParam;
             SetParameters(swimmingModelTemplate.Parameters);
 
             #region Generate pools and cells
@@ -174,8 +176,6 @@ namespace SiliFish.ModelUnits.Model
         {
             get
             {
-                if (!initialized)
-                    InitStructures(1);
                 return neuronPools.Union(musclePools).ToList();
             }
         }
@@ -184,8 +184,6 @@ namespace SiliFish.ModelUnits.Model
         {
             get
             {
-                if (!initialized)
-                    InitStructures(1);
                 return neuronPools;
             }
             set
@@ -199,8 +197,6 @@ namespace SiliFish.ModelUnits.Model
         {
             get
             {
-                if (!initialized)
-                    InitStructures(1);
                 return musclePools;
             }
             set
@@ -215,8 +211,6 @@ namespace SiliFish.ModelUnits.Model
         {
             get
             {
-                if (!initialized)
-                    InitStructures(1);
                 return chemPoolConnections
                     .Where(conn => conn.TargetPool.CellType == CellType.MuscleCell)
                     .Select(conn => conn.SourcePool)
@@ -247,7 +241,7 @@ namespace SiliFish.ModelUnits.Model
             return (leftMNs, rightMNs);
         }
 
-        [Browsable(false)]
+        [JsonIgnore, Browsable(false)]
         public List<InterPool> ChemPoolConnections
         {
             get
@@ -261,7 +255,7 @@ namespace SiliFish.ModelUnits.Model
             }
         }
 
-        [Browsable(false)]
+        [JsonIgnore, Browsable(false)]
         public List<InterPool> GapPoolConnections
         {
             get
@@ -272,6 +266,15 @@ namespace SiliFish.ModelUnits.Model
             {
                 //called by JSON
                 gapPoolConnections = value;
+            }
+        }
+
+        //Needs to be run after created from JSON
+        public void LinkObjects()
+        {
+            foreach (CellPool pool in CellPools)
+            {
+                pool.LinkObjects(this);
             }
         }
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
@@ -286,8 +289,8 @@ namespace SiliFish.ModelUnits.Model
 
             foreach (CellPool pool in neuronPools.Union(musclePools))
             {
-                if (pool.columnIndex2D > rangeY1D)
-                    rangeY1D = pool.columnIndex2D;
+                if (pool.ColumnIndex2D > rangeY1D)
+                    rangeY1D = pool.ColumnIndex2D;
                 (double localMin, double localMax) = pool.XRange();
                 if (localMin < minX) minX = localMin;
                 if (localMax > maxX) maxX = localMax;
@@ -354,7 +357,7 @@ namespace SiliFish.ModelUnits.Model
 
         public virtual void SetAnimationParameters(KinemParam kinemParam)
         {
-            this.kinemParam = kinemParam;
+            this.KinemParam = kinemParam;
         }
         public virtual void SetParameters(Dictionary<string, object> paramExternal)
         {
@@ -505,7 +508,7 @@ namespace SiliFish.ModelUnits.Model
                 model_run = false;
                 if (seed != null || rand == null)
                     rand = new Random(seed != null ? (int)seed : 0);
-                runParam = rp;
+                RunParam = rp;
                 RunParam.static_dt = rp.dt;
                 RunParam.static_dt_Euler = rp.dtEuler;
                 RunParam.static_Skip = rp.tSkip_ms;
@@ -516,7 +519,7 @@ namespace SiliFish.ModelUnits.Model
                 if (!initialized)
                     return;
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
-                Time[0] = Math.Round((double)-1 * runParam.tSkip_ms, 2);
+                Time[0] = Math.Round((double)-1 * RunParam.tSkip_ms, 2);
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;

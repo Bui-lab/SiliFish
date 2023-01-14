@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
 using System;
 using System.Collections.Generic;
@@ -26,14 +27,14 @@ namespace SiliFish.Services
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = model.runParam.dt;
+            double dt = model.RunParam.dt;
             int k = 0;
 
-            double kinemAlpha = model.kinemParam.Alpha;
-            double kinemBeta = model.kinemParam.Beta;
-            double kinemConvCoef = model.kinemParam.ConvCoef;
-            double kinemW0 = model.kinemParam.w0;
-            double kinemZeta = model.kinemParam.Zeta;
+            double kinemAlpha = model.KinemParam.Alpha;
+            double kinemBeta = model.KinemParam.Beta;
+            double kinemConvCoef = model.KinemParam.ConvCoef;
+            double kinemW0 = model.KinemParam.w0;
+            double kinemZeta = model.KinemParam.Zeta;
 
             foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
             {
@@ -76,13 +77,13 @@ namespace SiliFish.Services
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = model.runParam.dt;
+            double dt = model.RunParam.dt;
 
-            double kinemAlpha = model.kinemParam.Alpha;
-            double kinemBeta = model.kinemParam.Beta;
-            double kinemConvCoef = model.kinemParam.ConvCoef;
-            double kinemW0 = model.kinemParam.w0;
-            double kinemZeta = model.kinemParam.Zeta;
+            double kinemAlpha = model.KinemParam.Alpha;
+            double kinemBeta = model.KinemParam.Beta;
+            double kinemConvCoef = model.KinemParam.ConvCoef;
+            double kinemW0 = model.KinemParam.w0;
+            double kinemZeta = model.KinemParam.Zeta;
 
             for (int somite = 0; somite < nSomite; somite++)
             {
@@ -175,15 +176,15 @@ namespace SiliFish.Services
             //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
 
             Coordinate[] tail_tip_coord = spineCoordinates.Last().Value;
-            double left_bound = -model.kinemParam.Boundary;
-            double right_bound = model.kinemParam.Boundary;
+            double left_bound = -model.KinemParam.Boundary;
+            double right_bound = model.KinemParam.Boundary;
             int side = 0;
             const int LEFT = -1;
             const int RIGHT = 1;
             int nMax = model.TimeArray.Length;
-            double dt = model.runParam.dt;
-            double offset = model.runParam.tSkip_ms;
-            int delay = (int)(model.kinemParam.Delay / dt);
+            double dt = model.RunParam.dt;
+            double offset = model.RunParam.tSkip_ms;
+            int delay = (int)(model.KinemParam.Delay / dt);
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);
@@ -244,7 +245,7 @@ namespace SiliFish.Services
         {
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();
-            int iSkip = (int)(model.runParam.tSkip_ms / model.runParam.dt);
+            int iSkip = (int)(model.RunParam.tSkip_ms / model.RunParam.dt);
             foreach (Cell c in leftMNs)
                 leftSpikes.AddRange(c.GetSpikeIndices(iSkip));
             foreach (Cell c in rightMNs)

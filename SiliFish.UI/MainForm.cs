@@ -7,7 +7,9 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
 using SiliFish.UI.Extensions;
@@ -53,6 +55,7 @@ namespace SiliFish.UI
                 splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
                 ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+                CurrentSettings.Settings = ModelTemplate.Settings;
                 if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
                 if (!Directory.Exists(ModelTemplate.Settings.OutputFolder))
@@ -193,6 +196,7 @@ namespace SiliFish.UI
 
         private void RefreshModelSafeMode()
         {
+            if (modelUpdated) return;
             if (Model == null || !Model.ModelRun)
                 RefreshModel();
             else if (modifiedJncs || modifiedPools)
@@ -220,7 +224,7 @@ namespace SiliFish.UI
             eOutputFolder.Text = ModelTemplate.Settings.OutputFolder;
             propSettings.SelectedObject = ModelTemplate.Settings;
             propKinematics.SelectedObject = ModelTemplate.KinemParam;
-            LoadParams(ModelTemplate.Parameters);
+            LoadParams(null);//ModelTemplate.Parameters are kept for backward compatibility. Parameters will be used only for hardcoded models
         }
         private void linkClearTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -233,13 +237,12 @@ namespace SiliFish.UI
 
         #region Read/Load Model and Parameters
 
+        /// <summary>
+        /// LoadParams will be valid only when hardcoded models are implemedted. Everything in the Modeltemplate.Parameters are carried over to classes
+        /// </summary>
+        /// <param name="ParamDict"></param>
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = ModelTemplate.ModelDimensions.NumberOfSomites > 0;
-
-            if (ParamDict == null) return;
-            this.Text = $"SiliFish {ModelTemplate.ModelName}";
-
             List<TabPage> obsoloteTabpages = new();
             foreach (TabPage tp in tabParams.TabPages)
             {
@@ -250,6 +253,8 @@ namespace SiliFish.UI
             {
                 tabParams.TabPages.Remove(tp);
             }
+
+            if (ParamDict == null) return;
 
             List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
             int tabIndex = 1;
@@ -342,7 +347,6 @@ namespace SiliFish.UI
             }
             return ParamDict;
         }
-
         private void LoadModelTemplatePools()
         {
             listCellPool.ClearItems();
@@ -402,7 +406,6 @@ namespace SiliFish.UI
                 }
             }
         }
-
         private void ReadModelTemplateStimuli(bool includeHidden)
         {
             ModelTemplate.AppliedStimuli.Clear();
@@ -414,7 +417,6 @@ namespace SiliFish.UI
                 }
             }
         }
-
 
         private SwimmingModelTemplate ReadModelTemplate(bool includeHidden)
         {
@@ -501,7 +503,6 @@ namespace SiliFish.UI
         {
             SaveModelTemplate();
         }
-
         private void linkLoadTemplate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -531,7 +532,7 @@ namespace SiliFish.UI
             catch (Exception exc)
             {
                 MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
-                throw (new Exception());
+                throw new Exception();
             }
             finally
             {
@@ -540,8 +541,7 @@ namespace SiliFish.UI
         }
         #endregion
 
-        #region Run
-  
+        #region Simulation
         private void eTimeEnd_ValueChanged(object sender, EventArgs e)
         {
             if (lastEnteredTime != null)
@@ -648,10 +648,10 @@ namespace SiliFish.UI
             tRunSkip = (int)eSkip.Value;
 
             RefreshModel();
-            Model.runParam.tSkip_ms = tRunSkip;
-            Model.runParam.tMax = tRunEnd;
-            Model.runParam.dt = (double)edt.Value;
-            Model.runParam.dtEuler = (double)edtEuler.Value;
+            Model.RunParam.tSkip_ms = tRunSkip;
+            Model.RunParam.tMax = tRunEnd;
+            Model.RunParam.dt = (double)edt.Value;
+            Model.RunParam.dtEuler = (double)edtEuler.Value;
             if (Model == null) return;
             btnRun.Text = "Stop Run";
             Task.Run(RunModel);
@@ -852,6 +852,7 @@ namespace SiliFish.UI
             MessageBox.Show($"File(s) {string.Join(",", fileNames)} are saved.");
         }
         #endregion
+        
         #region HTML Plots
         private void PlotHTML()
         {
@@ -946,7 +947,7 @@ namespace SiliFish.UI
                 (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
 
                 (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
-                    Model.runParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+                    Model.RunParam.dt, tPlotStart, tPlotEnd, tRunSkip);
 
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
@@ -1025,6 +1026,7 @@ namespace SiliFish.UI
         }
 
         #endregion
+        
         #region 2D Model
         private void Generate2DModel()
         {
@@ -1217,8 +1219,8 @@ namespace SiliFish.UI
             if (tAnimEnd > tRunEnd)
                 tAnimEnd = tRunEnd;
 
-            lastAnimationStartIndex = (int)(tAnimStart / Model.runParam.dt);
-            int lastAnimationEndIndex = (int)(tAnimEnd / Model.runParam.dt);
+            lastAnimationStartIndex = (int)(tAnimStart / Model.RunParam.dt);
+            int lastAnimationEndIndex = (int)(tAnimEnd / Model.RunParam.dt);
             lastAnimationTimeArray = Model.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
             Model.SetAnimationParameters(ModelTemplate.KinemParam);
@@ -1312,7 +1314,6 @@ namespace SiliFish.UI
         private void btnDisplayModelJSON_Click(object sender, EventArgs e)
         {
             modelUpdated = false;
-
             RefreshModelSafeMode();
             try
             {
@@ -1333,6 +1334,7 @@ namespace SiliFish.UI
                 if (JsonUtil.ToObject(typeof(SwimmingModel), eModelJSON.Text) is SwimmingModel model)
                 {
                     Model = model;
+                    Model.LinkObjects();
                     modelUpdated = true;
                 }
             }
@@ -1368,7 +1370,7 @@ namespace SiliFish.UI
         {
             (List<Cell> LeftMNs, List<Cell> RightMNs) = Model.GetMotoNeurons((int)eKinematicsSomite.Value);
             (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs,
-                (int)eKinematicsBurstBreak.Value, (int)eKinematicsEpisodeBreak.Value);
+                Model.KinemParam.BurstBreak, Model.KinemParam.EpisodeBreak);
             string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
             webViewSummaryV.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
@@ -1779,10 +1781,10 @@ namespace SiliFish.UI
                         }
                     }
                 }
-                foreach (string f in Directory.GetFiles(ModelTemplate.Settings.TempFolder))
+
+                foreach (string f in CurrentSettings.Settings.TempFiles)
                 {
-                    if (CurrentSettings.Settings.TempFiles.Contains(f))
-                        File.Delete(f);
+                    File.Delete(f);
                 }
                     
             }

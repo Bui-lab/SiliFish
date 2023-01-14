@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Cells;
 using System;
 
 namespace SiliFish.ModelUnits

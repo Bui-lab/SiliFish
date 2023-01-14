@@ -1,5 +1,5 @@
 ﻿using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +31,8 @@ namespace SiliFish.DynamicUnits
             V = Vr;
             Vmax = 99999;
         }
+        public Leaky_Integrator()
+        { }
         public Leaky_Integrator(double R, double C, double Vr, double Va, double Tmax, double ka, double Vmax)
         {
             this.R = R;

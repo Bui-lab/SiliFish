@@ -117,9 +117,9 @@ namespace SiliFish.Services
             if (model == null || !model.ModelRun)
                 return null;
 
-            int tMax = model.runParam.tMax;
-            int tSkip = model.runParam.tSkip_ms;
-            double dt = model.runParam.dt;
+            int tMax = model.RunParam.tMax;
+            int tSkip = model.RunParam.tSkip_ms;
+            double dt = model.RunParam.dt;
 
             if (tEnd < tStart || tEnd > tMax)
                 tEnd = tMax;
@@ -129,7 +129,7 @@ namespace SiliFish.Services
                 iEnd = model.TimeArray.Length - 1;
 
             return CreateTimeSeries(title: model.ModelName + "Animation.html",
-                model.kinemParam.GetAnimationDetails(),
+                model.KinemParam.GetAnimationDetails(),
                 SwimmingKinematics.GenerateSpineCoordinates(model, iStart, iEnd),
                 model.TimeArray,
                 iStart,

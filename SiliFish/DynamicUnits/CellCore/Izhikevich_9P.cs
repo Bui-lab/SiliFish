@@ -1,5 +1,5 @@
 ﻿using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -33,6 +33,10 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
+
+        public Izhikevich_9P()
+        {
+        }
 
         public Izhikevich_9P(Dictionary<string, double> paramExternal)
         {

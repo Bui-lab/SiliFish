@@ -1,4 +1,5 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits.Cells;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,13 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
+    [JsonDerivedType(typeof(CellCoreUnit), typeDiscriminator: "cellcore")]
+    [JsonDerivedType(typeof(HodgkinHuxley), typeDiscriminator: "hodgkinhuxley")]
+    [JsonDerivedType(typeof(HodgkinHuxleyClassic), typeDiscriminator: "hodgkinhuxleyclassic")]
+    [JsonDerivedType(typeof(Izhikevich_5P), typeDiscriminator: "izhikevich5p")]
+    [JsonDerivedType(typeof(Izhikevich_9P), typeDiscriminator: "izhikevich9p")]
+    [JsonDerivedType(typeof(Leaky_Integrator), typeDiscriminator: "leakyintegrator")]
+    [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
     public class CellCoreUnit
     {
         private static Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
@@ -63,7 +71,7 @@ namespace SiliFish.DynamicUnits
         {
             return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
         }
-        public static CellCoreUnit GetOfDerivedType(string json)
+        public static CellCoreUnit GetOfDerivedType(string json)//TODO test whether we still need this
         {
             CellCoreUnit core = JsonSerializer.Deserialize<CellCoreUnit>(json);
             if (core != null)

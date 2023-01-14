@@ -39,7 +39,7 @@
             this.colRange = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDistribution = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDistDetails = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDistButton = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colDistEditLink = new System.Windows.Forms.DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgDistribution)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,7 +55,7 @@
             this.colRange,
             this.colDistribution,
             this.colDistDetails,
-            this.colDistButton});
+            this.colDistEditLink});
             this.dgDistribution.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgDistribution.Location = new System.Drawing.Point(0, 0);
             this.dgDistribution.Name = "dgDistribution";
@@ -81,7 +81,7 @@
             // 
             this.colUniqueValue.HeaderText = "Unique Value";
             this.colUniqueValue.Name = "colUniqueValue";
-            this.colUniqueValue.Width = 93;
+            this.colUniqueValue.Width = 101;
             // 
             // colRange
             // 
@@ -110,16 +110,19 @@
             this.colDistDetails.ReadOnly = true;
             this.colDistDetails.Width = 67;
             // 
-            // colDistButton
+            // colDistEditLink
             // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(102)))), ((int)(((byte)(210)))));
             dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            this.colDistButton.DefaultCellStyle = dataGridViewCellStyle5;
-            this.colDistButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.colDistButton.HeaderText = "Distr.";
-            this.colDistButton.Name = "colDistButton";
-            this.colDistButton.Width = 40;
+            this.colDistEditLink.DefaultCellStyle = dataGridViewCellStyle5;
+            this.colDistEditLink.HeaderText = "";
+            this.colDistEditLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.colDistEditLink.Name = "colDistEditLink";
+            this.colDistEditLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colDistEditLink.Text = "Edit";
+            this.colDistEditLink.ToolTipText = "Edit distribution";
+            this.colDistEditLink.UseColumnTextForLinkValue = true;
+            this.colDistEditLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.colDistEditLink.Width = 5;
             // 
             // DistributionDataGrid
             // 
@@ -145,6 +148,6 @@
         private DataGridViewTextBoxColumn colRange;
         private DataGridViewTextBoxColumn colDistribution;
         private DataGridViewTextBoxColumn colDistDetails;
-        private DataGridViewButtonColumn colDistButton;
+        private DataGridViewLinkColumn colDistEditLink;
     }
 }

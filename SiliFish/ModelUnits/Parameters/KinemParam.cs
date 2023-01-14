@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace SiliFish.ModelUnits.Model
+namespace SiliFish.ModelUnits.Parameters
 {
     public class KinemParam
     {
@@ -28,6 +28,13 @@ namespace SiliFish.ModelUnits.Model
 
         [Description("The time range that will be looked ahead to detect motion."), DisplayName("Delay"), Category("Animation")]
         public int Delay { get; set; } = 1000;
+
+        [Description("In ms. The duration required considered to be a burst break."), DisplayName("Burst Break"), Category("MN based kinematics")]
+        public int BurstBreak { get; set; } = 10;
+
+        [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("MN based kinematics")]
+        public int EpisodeBreak { get; set; } = 100;
+
 
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {

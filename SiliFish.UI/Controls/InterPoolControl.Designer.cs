@@ -137,7 +137,7 @@
             // lMinReach
             // 
             this.lMinReach.AutoSize = true;
-            this.lMinReach.Location = new System.Drawing.Point(92, 47);
+            this.lMinReach.Location = new System.Drawing.Point(100, 45);
             this.lMinReach.Name = "lMinReach";
             this.lMinReach.Size = new System.Drawing.Size(28, 15);
             this.lMinReach.TabIndex = 2;
@@ -260,7 +260,7 @@
             // lMaxReach
             // 
             this.lMaxReach.AutoSize = true;
-            this.lMaxReach.Location = new System.Drawing.Point(140, 47);
+            this.lMaxReach.Location = new System.Drawing.Point(155, 42);
             this.lMaxReach.Name = "lMaxReach";
             this.lMaxReach.Size = new System.Drawing.Size(30, 15);
             this.lMaxReach.TabIndex = 4;
@@ -319,56 +319,56 @@
             // 
             // numMinAscReach
             // 
-            this.numMinAscReach.Location = new System.Drawing.Point(92, 62);
+            this.numMinAscReach.Location = new System.Drawing.Point(100, 62);
             this.numMinAscReach.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.numMinAscReach.Name = "numMinAscReach";
-            this.numMinAscReach.Size = new System.Drawing.Size(46, 23);
+            this.numMinAscReach.Size = new System.Drawing.Size(50, 23);
             this.numMinAscReach.TabIndex = 14;
             this.toolTip1.SetToolTip(this.numMinAscReach, "The number of maximum connections the target cell can have from the same source p" +
         "ool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMaxAscReach
             // 
-            this.numMaxAscReach.Location = new System.Drawing.Point(144, 62);
+            this.numMaxAscReach.Location = new System.Drawing.Point(155, 62);
             this.numMaxAscReach.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.numMaxAscReach.Name = "numMaxAscReach";
-            this.numMaxAscReach.Size = new System.Drawing.Size(46, 23);
+            this.numMaxAscReach.Size = new System.Drawing.Size(50, 23);
             this.numMaxAscReach.TabIndex = 15;
             this.toolTip1.SetToolTip(this.numMaxAscReach, "The number of maximum connections the target cell can have from the same source p" +
         "ool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMaxDescReach
             // 
-            this.numMaxDescReach.Location = new System.Drawing.Point(144, 89);
+            this.numMaxDescReach.Location = new System.Drawing.Point(155, 89);
             this.numMaxDescReach.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.numMaxDescReach.Name = "numMaxDescReach";
-            this.numMaxDescReach.Size = new System.Drawing.Size(46, 23);
+            this.numMaxDescReach.Size = new System.Drawing.Size(50, 23);
             this.numMaxDescReach.TabIndex = 17;
             this.toolTip1.SetToolTip(this.numMaxDescReach, "The number of maximum connections the target cell can have from the same source p" +
         "ool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMinDescReach
             // 
-            this.numMinDescReach.Location = new System.Drawing.Point(92, 89);
+            this.numMinDescReach.Location = new System.Drawing.Point(100, 89);
             this.numMinDescReach.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.numMinDescReach.Name = "numMinDescReach";
-            this.numMinDescReach.Size = new System.Drawing.Size(46, 23);
+            this.numMinDescReach.Size = new System.Drawing.Size(50, 23);
             this.numMinDescReach.TabIndex = 16;
             this.toolTip1.SetToolTip(this.numMinDescReach, "The number of maximum connections the target cell can have from the same source p" +
         "ool.\r\nEnter 0 if there is no such limit.");
@@ -376,15 +376,16 @@
             // gSynapse
             // 
             this.gSynapse.Controls.Add(this.synapseControl);
-            this.gSynapse.Location = new System.Drawing.Point(10, 143);
+            this.gSynapse.Location = new System.Drawing.Point(10, 128);
             this.gSynapse.Name = "gSynapse";
-            this.gSynapse.Size = new System.Drawing.Size(239, 148);
+            this.gSynapse.Size = new System.Drawing.Size(239, 157);
             this.gSynapse.TabIndex = 2;
             this.gSynapse.TabStop = false;
             this.gSynapse.Text = "Synapse Parameters";
             // 
             // synapseControl
             // 
+            this.synapseControl.BackColor = System.Drawing.Color.White;
             this.synapseControl.EReversal = 0D;
             this.synapseControl.Location = new System.Drawing.Point(14, 21);
             this.synapseControl.Name = "synapseControl";
@@ -395,6 +396,7 @@
             // timeLineControl
             // 
             this.timeLineControl.AutoScroll = true;
+            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeLineControl.Location = new System.Drawing.Point(3, 3);
             this.timeLineControl.Name = "timeLineControl";
@@ -478,7 +480,7 @@
             this.ddDistanceMode.FormattingEnabled = true;
             this.ddDistanceMode.Location = new System.Drawing.Point(100, 16);
             this.ddDistanceMode.Name = "ddDistanceMode";
-            this.ddDistanceMode.Size = new System.Drawing.Size(137, 23);
+            this.ddDistanceMode.Size = new System.Drawing.Size(157, 23);
             this.ddDistanceMode.TabIndex = 1;
             // 
             // lDistanceMode
@@ -516,9 +518,9 @@
             this.grReach.Controls.Add(this.lDistanceMode);
             this.grReach.Controls.Add(this.lMinReach);
             this.grReach.Controls.Add(this.lMaxReach);
-            this.grReach.Location = new System.Drawing.Point(6, 6);
+            this.grReach.Location = new System.Drawing.Point(10, 3);
             this.grReach.Name = "grReach";
-            this.grReach.Size = new System.Drawing.Size(243, 124);
+            this.grReach.Size = new System.Drawing.Size(263, 124);
             this.grReach.TabIndex = 1;
             this.grReach.TabStop = false;
             this.grReach.Text = "Reach";
@@ -528,7 +530,7 @@
             this.cbDescending.AutoSize = true;
             this.cbDescending.Checked = true;
             this.cbDescending.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbDescending.Location = new System.Drawing.Point(2, 91);
+            this.cbDescending.Location = new System.Drawing.Point(8, 89);
             this.cbDescending.Name = "cbDescending";
             this.cbDescending.Size = new System.Drawing.Size(88, 19);
             this.cbDescending.TabIndex = 26;
@@ -541,7 +543,7 @@
             this.cbAscending.AutoSize = true;
             this.cbAscending.Checked = true;
             this.cbAscending.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAscending.Location = new System.Drawing.Point(2, 66);
+            this.cbAscending.Location = new System.Drawing.Point(8, 66);
             this.cbAscending.Name = "cbAscending";
             this.cbAscending.Size = new System.Drawing.Size(82, 19);
             this.cbAscending.TabIndex = 25;
@@ -552,7 +554,7 @@
             // lUoD2
             // 
             this.lUoD2.AutoSize = true;
-            this.lUoD2.Location = new System.Drawing.Point(192, 91);
+            this.lUoD2.Location = new System.Drawing.Point(211, 91);
             this.lUoD2.Name = "lUoD2";
             this.lUoD2.Size = new System.Drawing.Size(48, 15);
             this.lUoD2.TabIndex = 24;
@@ -561,7 +563,7 @@
             // lUoD1
             // 
             this.lUoD1.AutoSize = true;
-            this.lUoD1.Location = new System.Drawing.Point(192, 67);
+            this.lUoD1.Location = new System.Drawing.Point(211, 67);
             this.lUoD1.Name = "lUoD1";
             this.lUoD1.Size = new System.Drawing.Size(48, 15);
             this.lUoD1.TabIndex = 23;

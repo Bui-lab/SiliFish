@@ -34,16 +34,16 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgTimeLine = new System.Windows.Forms.DataGridView();
-            this.cmTimeLine = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmiClearAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmiSort = new System.Windows.Forms.ToolStripMenuItem();
-            this.pTimelineTop = new System.Windows.Forms.Panel();
-            this.linkClearTimeline = new System.Windows.Forms.LinkLabel();
             this.colStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCyclic = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colActive = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRest = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmTimeLine = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmiClearAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmiSort = new System.Windows.Forms.ToolStripMenuItem();
+            this.pTimelineTop = new System.Windows.Forms.Panel();
+            this.linkClearTimeline = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dgTimeLine)).BeginInit();
             this.cmTimeLine.SuspendLayout();
             this.pTimelineTop.SuspendLayout();
@@ -67,49 +67,6 @@
             this.dgTimeLine.Size = new System.Drawing.Size(467, 120);
             this.dgTimeLine.TabIndex = 0;
             this.dgTimeLine.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgTimeLine_CellValueChanged);
-            // 
-            // cmTimeLine
-            // 
-            this.cmTimeLine.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmiClearAll,
-            this.cmiSort});
-            this.cmTimeLine.Name = "cmTimeLine";
-            this.cmTimeLine.Size = new System.Drawing.Size(119, 48);
-            this.cmTimeLine.Opening += new System.ComponentModel.CancelEventHandler(this.cmTimeLine_Opening);
-            // 
-            // cmiClearAll
-            // 
-            this.cmiClearAll.Name = "cmiClearAll";
-            this.cmiClearAll.Size = new System.Drawing.Size(118, 22);
-            this.cmiClearAll.Text = "Clear All";
-            this.cmiClearAll.Click += new System.EventHandler(this.cmiClearAll_Click);
-            // 
-            // cmiSort
-            // 
-            this.cmiSort.Name = "cmiSort";
-            this.cmiSort.Size = new System.Drawing.Size(118, 22);
-            this.cmiSort.Text = "Sort";
-            this.cmiSort.Click += new System.EventHandler(this.cmiSort_Click);
-            // 
-            // pTimelineTop
-            // 
-            this.pTimelineTop.Controls.Add(this.linkClearTimeline);
-            this.pTimelineTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTimelineTop.Location = new System.Drawing.Point(0, 0);
-            this.pTimelineTop.Name = "pTimelineTop";
-            this.pTimelineTop.Size = new System.Drawing.Size(467, 30);
-            this.pTimelineTop.TabIndex = 1;
-            // 
-            // linkClearTimeline
-            // 
-            this.linkClearTimeline.AutoSize = true;
-            this.linkClearTimeline.Location = new System.Drawing.Point(6, 9);
-            this.linkClearTimeline.Name = "linkClearTimeline";
-            this.linkClearTimeline.Size = new System.Drawing.Size(82, 15);
-            this.linkClearTimeline.TabIndex = 0;
-            this.linkClearTimeline.TabStop = true;
-            this.linkClearTimeline.Text = "Clear Timeline";
-            this.linkClearTimeline.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearTimeline_LinkClicked);
             // 
             // colStartTime
             // 
@@ -152,6 +109,50 @@
             this.colRest.Name = "colRest";
             this.colRest.ReadOnly = true;
             this.colRest.Visible = false;
+            // 
+            // cmTimeLine
+            // 
+            this.cmTimeLine.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmiClearAll,
+            this.cmiSort});
+            this.cmTimeLine.Name = "cmTimeLine";
+            this.cmTimeLine.Size = new System.Drawing.Size(119, 48);
+            this.cmTimeLine.Opening += new System.ComponentModel.CancelEventHandler(this.cmTimeLine_Opening);
+            // 
+            // cmiClearAll
+            // 
+            this.cmiClearAll.Name = "cmiClearAll";
+            this.cmiClearAll.Size = new System.Drawing.Size(118, 22);
+            this.cmiClearAll.Text = "Clear All";
+            this.cmiClearAll.Click += new System.EventHandler(this.cmiClearAll_Click);
+            // 
+            // cmiSort
+            // 
+            this.cmiSort.Name = "cmiSort";
+            this.cmiSort.Size = new System.Drawing.Size(118, 22);
+            this.cmiSort.Text = "Sort";
+            this.cmiSort.Click += new System.EventHandler(this.cmiSort_Click);
+            // 
+            // pTimelineTop
+            // 
+            this.pTimelineTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pTimelineTop.Controls.Add(this.linkClearTimeline);
+            this.pTimelineTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pTimelineTop.Location = new System.Drawing.Point(0, 0);
+            this.pTimelineTop.Name = "pTimelineTop";
+            this.pTimelineTop.Size = new System.Drawing.Size(467, 30);
+            this.pTimelineTop.TabIndex = 1;
+            // 
+            // linkClearTimeline
+            // 
+            this.linkClearTimeline.AutoSize = true;
+            this.linkClearTimeline.Location = new System.Drawing.Point(6, 9);
+            this.linkClearTimeline.Name = "linkClearTimeline";
+            this.linkClearTimeline.Size = new System.Drawing.Size(82, 15);
+            this.linkClearTimeline.TabIndex = 0;
+            this.linkClearTimeline.TabStop = true;
+            this.linkClearTimeline.Text = "Clear Timeline";
+            this.linkClearTimeline.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearTimeline_LinkClicked);
             // 
             // TimeLineControl
             // 

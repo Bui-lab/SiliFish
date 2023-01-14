@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Cells
 {
     public struct CellSelectionStruct
     {
@@ -30,18 +30,19 @@ namespace SiliFish.ModelUnits
         public static Func<double> rangeNoiseMultiplier;
 
         private readonly SwimmingModel Model;
-        public string CellGroup { get; }
-        public CellType CellType { get; }
+        public string CellGroup { get; set; }
+        public CellType CellType { get; set; }
+        public Color Color { get; set; }
+        public BodyLocation BodyLocation { get; set; }
 
-        [JsonIgnore]
-        public Color Color { get; }
-        public BodyLocation BodyLocation { get; }
+        public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
 
-        public SagittalPlane PositionLeftRight = SagittalPlane.Both;
+        public int ColumnIndex2D { get; set; } = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
 
-        public readonly int columnIndex2D = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
-        public List<Cell> Cells { get; }
+        public List<Cell> Cells { get; set; }
+        
         private SpatialDistribution SpatialDistribution = new();
+
         public Distribution XDistribution
         {
             get { return SpatialDistribution.XDistribution; }
@@ -57,8 +58,10 @@ namespace SiliFish.ModelUnits
             get { return SpatialDistribution.Z_RadiusDistribution; }
             set { SpatialDistribution.Z_RadiusDistribution = value; }
         }
+        [JsonIgnore]
         public string ID { get { return Position + "_" + CellGroup; } set { } }
 
+        [JsonIgnore]
         public string Position
         {
             get
@@ -83,7 +86,7 @@ namespace SiliFish.ModelUnits
             Color = template.Color;
             BodyLocation = template.BodyLocation;
             PositionLeftRight = leftright;
-            columnIndex2D = template.ColumnIndex2D;
+            ColumnIndex2D = template.ColumnIndex2D;
             Cells = new List<Cell>();
             GenerateCells(template, leftright);
         }
@@ -99,9 +102,19 @@ namespace SiliFish.ModelUnits
             CellType = cellType;
             BodyLocation = position;
             PositionLeftRight = pos;
-            columnIndex2D = placement;
+            ColumnIndex2D = placement;
             Color = color;
             Cells = new List<Cell>();
+        }
+
+
+        public void LinkObjects(SwimmingModel model)
+        {
+            foreach (Cell cell in Cells)
+            {
+                cell.CellPool = this;
+                cell.LinkObjects(model, this);
+            }
         }
 
         public bool OnSide(SagittalPlane sagittal)
@@ -132,8 +145,8 @@ namespace SiliFish.ModelUnits
                 midCell = midSomiteCells[midSomiteCells.Count / 2];
             }
             int mult = 1;
-            if (columnIndex2D > 0)
-                mult = columnIndex2D;
+            if (ColumnIndex2D > 0)
+                mult = ColumnIndex2D;
             return (midCell.X, mult * midCell.Y, midCell.Z);
         }
         public virtual (double, double) XRange()
@@ -287,11 +300,12 @@ namespace SiliFish.ModelUnits
                             actualSomite++;
                         }
                     }
-                    Cell cell = neuron ? new Neuron(template, actualSomite, i + 1, cv[i]) :
-                        new MuscleCell(template, actualSomite, i + 1);
+                    Dictionary<string, double> cellParams = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
+                    Cell cell = neuron ? new Neuron(template, actualSomite, i + 1, cellParams, cv[i]) :
+                        new MuscleCell(template, actualSomite, i + 1, cellParams);
                     cell.PositionLeftRight = leftright;
                     cell.coordinate = coordinates[i];
-                    cell.Parameters = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
+                    
                     AddCell(cell);
                 }
             }

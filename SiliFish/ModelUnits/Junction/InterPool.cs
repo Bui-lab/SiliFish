@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.ModelUnits.Cells;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits

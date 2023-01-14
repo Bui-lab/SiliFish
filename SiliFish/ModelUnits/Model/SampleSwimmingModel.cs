@@ -3,11 +3,13 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 
+//WORK IN PROGRESS - NOT COMPLETED
 namespace SiliFish.ModelUnits.Model
 {
     /// <summary>
@@ -160,7 +162,7 @@ namespace SiliFish.ModelUnits.Model
                     Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, somite);
                     for (int i = 0; i < neuronCount; i++)
                     {
-                        Neuron n = new Neuron(key, NeuronCoreType, somite + 1, i + 1, cv);
+                        Neuron n = new Neuron(key, NeuronCoreType, somite + 1, i + 1, null, cv);//TODO null is sent as params - double check which contructor to use
                         n.coordinate = coors[i];
                     }
                 }
@@ -183,11 +185,11 @@ namespace SiliFish.ModelUnits.Model
                     Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, muscleCount, somite);
                     for (int i = 0; i < muscleCount; i++)
                     {
-                        Neuron n = new Neuron(key, NeuronCoreType, somite + 1, i + 1, cv);
-                        n.coordinate = coors[i];
+                        MuscleCell m = new MuscleCell(key, MuscleCoreType, somite + 1, i + 1, null);//TODO null is sent as params - double check which contructor to use
+                        m.coordinate = coors[i];
                     }
                 }
-                NeuronPools.Add(pool);
+                MusclePools.Add(pool);
             }
             //SupraSpinal cells
             foreach (string key in SupraSpinalNeuronCount.Keys)
@@ -204,7 +206,7 @@ namespace SiliFish.ModelUnits.Model
                 Coordinate[] coors = Coordinate.GenerateCoordinates(this, BodyLocation.SpinalCord, xdist, ydist, zdist, neuronCount, -1);
                 for (int i = 0; i < neuronCount; i++)
                 {
-                    Neuron n = new Neuron(key, NeuronCoreType, 0, i + 1, cv);
+                    Neuron n = new Neuron(key, NeuronCoreType, 0, i + 1, null, cv);//TODO null is sent as params - double check which contructor to use
                     n.coordinate = coors[i];
                 }
 

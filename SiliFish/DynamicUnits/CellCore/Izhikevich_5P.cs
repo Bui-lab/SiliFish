@@ -1,6 +1,5 @@
-﻿using SiliFish.Definitions;
-using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+﻿using SiliFish.Extensions;
+using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -29,7 +28,9 @@ namespace SiliFish.DynamicUnits
             u = b * V;
         }
 
-
+        public Izhikevich_5P()
+        {
+        }
         public Izhikevich_5P(Dictionary<string, double> paramExternal)
         {
             SetParameters(paramExternal);

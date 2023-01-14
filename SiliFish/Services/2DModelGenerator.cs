@@ -1,6 +1,7 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
 using System;
 using System.Collections.Generic;
@@ -105,11 +106,11 @@ namespace SiliFish.Services
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
 
             List<string> gapLinks = new();
-            model.GapPoolConnections.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
+            model.GapPoolConnections?.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> chemLinks = new();
-            model.ChemPoolConnections.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
+            model.ChemPoolConnections?.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> colors = new();

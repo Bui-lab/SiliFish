@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
 using SiliFish.Services;
 using SiliFish.UI;
@@ -210,8 +211,8 @@ namespace Services
         private static (List<Image>, List<Image>) PlotEpisodes(SwimmingModel model, double tStart, double tEnd)
         {
             List<Image> leftImages = new();
-            int iStart = model.runParam.iIndex(tStart);
-            int iEnd = model.runParam.iIndex(tEnd);
+            int iStart = model.RunParam.iIndex(tStart);
+            int iEnd = model.RunParam.iIndex(tEnd);
             //TODO color
 
             (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);

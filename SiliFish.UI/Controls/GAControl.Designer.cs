@@ -100,6 +100,7 @@
             // 
             // splitGA.Panel2
             // 
+            this.splitGA.Panel2.BackColor = System.Drawing.Color.White;
             this.splitGA.Panel2.Controls.Add(this.grTermination);
             this.splitGA.Panel2.Controls.Add(this.lOptimizationOutput);
             this.splitGA.Panel2.Controls.Add(this.btnOptimize);
@@ -179,6 +180,7 @@
             // 
             // pMinMax
             // 
+            this.pMinMax.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pMinMax.Controls.Add(this.linkSuggestMinMax);
             this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMinMax.Location = new System.Drawing.Point(0, 0);
@@ -201,6 +203,7 @@
             // pfGAParams
             // 
             this.pfGAParams.AutoScroll = true;
+            this.pfGAParams.BackColor = System.Drawing.Color.White;
             this.pfGAParams.Controls.Add(this.linkAddFitnessFunction);
             this.pfGAParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pfGAParams.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -224,6 +227,7 @@
             // 
             // pFitnessFunctions
             // 
+            this.pFitnessFunctions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pFitnessFunctions.Controls.Add(this.btnCalculateFitness);
             this.pFitnessFunctions.Controls.Add(this.pLineFitnessFunctions);
             this.pFitnessFunctions.Controls.Add(this.lFitnessFunctions);
@@ -235,9 +239,11 @@
             // 
             // btnCalculateFitness
             // 
-            this.btnCalculateFitness.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnCalculateFitness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCalculateFitness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnCalculateFitness.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCalculateFitness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCalculateFitness.ForeColor = System.Drawing.Color.White;
             this.btnCalculateFitness.Location = new System.Drawing.Point(351, 3);
             this.btnCalculateFitness.Name = "btnCalculateFitness";
             this.btnCalculateFitness.Size = new System.Drawing.Size(123, 23);
@@ -382,9 +388,10 @@
             // 
             // btnOptimize
             // 
-            this.btnOptimize.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnOptimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnOptimize.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnOptimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOptimize.ForeColor = System.Drawing.Color.White;
             this.btnOptimize.Location = new System.Drawing.Point(6, 290);
             this.btnOptimize.Name = "btnOptimize";
             this.btnOptimize.Size = new System.Drawing.Size(67, 23);

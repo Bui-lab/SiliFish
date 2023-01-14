@@ -54,6 +54,7 @@
             this.lTarget = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.gSynapse = new System.Windows.Forms.GroupBox();
+            this.synapseControl1 = new SiliFish.UI.Controls.SynapseControl();
             this.pRheobase = new System.Windows.Forms.Panel();
             this.btnDynamicsRun = new System.Windows.Forms.Button();
             this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
@@ -76,7 +77,6 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.synapseControl1 = new SiliFish.UI.Controls.SynapseControl();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eStepEndTime)).BeginInit();
@@ -338,6 +338,7 @@
             // 
             // pCoreType
             // 
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pCoreType.Controls.Add(this.eSource);
             this.pCoreType.Controls.Add(this.pLineCoreType);
             this.pCoreType.Controls.Add(this.lSource);
@@ -387,6 +388,7 @@
             // 
             // panel2
             // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.panel2.Controls.Add(this.eTarget);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.lTarget);
@@ -446,6 +448,15 @@
             this.gSynapse.TabStop = false;
             this.gSynapse.Text = "Synapse Parameters";
             // 
+            // synapseControl1
+            // 
+            this.synapseControl1.EReversal = 0D;
+            this.synapseControl1.Location = new System.Drawing.Point(10, 18);
+            this.synapseControl1.Name = "synapseControl1";
+            this.synapseControl1.Size = new System.Drawing.Size(152, 127);
+            this.synapseControl1.TabIndex = 0;
+            this.synapseControl1.VThreshold = 0D;
+            // 
             // pRheobase
             // 
             this.pRheobase.Controls.Add(this.btnDynamicsRun);
@@ -471,12 +482,14 @@
             // 
             // btnDynamicsRun
             // 
+            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
             this.btnDynamicsRun.Location = new System.Drawing.Point(111, 189);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(66, 23);
             this.btnDynamicsRun.TabIndex = 35;
             this.btnDynamicsRun.Text = "Run";
-            this.btnDynamicsRun.UseVisualStyleBackColor = true;
+            this.btnDynamicsRun.UseVisualStyleBackColor = false;
             this.btnDynamicsRun.Click += new System.EventHandler(this.btnDynamicsRun_Click);
             // 
             // cbAutoDrawPlots
@@ -519,6 +532,7 @@
             // 
             // pLoadSaveParams
             // 
+            this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
             this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -553,6 +567,7 @@
             // 
             // pBottomBottom
             // 
+            this.pBottomBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
             this.pBottomBottom.Controls.Add(this.linkUseUpdatedParams);
             this.pBottomBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pBottomBottom.Location = new System.Drawing.Point(3, 655);
@@ -604,6 +619,7 @@
             // 
             // pPlots
             // 
+            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pPlots.Controls.Add(this.panel1);
             this.pPlots.Controls.Add(this.grPlotSelection);
             this.pPlots.Dock = System.Windows.Forms.DockStyle.Top;
@@ -678,15 +694,6 @@
             // openFileJson
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
-            // 
-            // synapseControl1
-            // 
-            this.synapseControl1.EReversal = 0D;
-            this.synapseControl1.Location = new System.Drawing.Point(10, 18);
-            this.synapseControl1.Name = "synapseControl1";
-            this.synapseControl1.Size = new System.Drawing.Size(152, 127);
-            this.synapseControl1.TabIndex = 0;
-            this.synapseControl1.VThreshold = 0D;
             // 
             // ProjectionTestControl
             // 

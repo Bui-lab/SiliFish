@@ -1,5 +1,5 @@
 ﻿using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 
 namespace SiliFish.DynamicUnits
@@ -10,6 +10,8 @@ namespace SiliFish.DynamicUnits
         {
             V = Vr;
         }
+        public QuadraticIntegrateAndFire()
+        { }
         public QuadraticIntegrateAndFire(double Vr, double Vmax)
         {
             this.Vr = Vr;

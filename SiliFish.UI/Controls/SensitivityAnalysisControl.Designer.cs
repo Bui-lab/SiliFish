@@ -123,10 +123,11 @@
             // 
             // btnRunAnalysis
             // 
-            this.btnRunAnalysis.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnRunAnalysis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnRunAnalysis.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRunAnalysis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRunAnalysis.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnRunAnalysis.ForeColor = System.Drawing.Color.White;
             this.btnRunAnalysis.Location = new System.Drawing.Point(128, 89);
             this.btnRunAnalysis.Name = "btnRunAnalysis";
             this.btnRunAnalysis.Size = new System.Drawing.Size(63, 23);
@@ -139,6 +140,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.lNumOfValues);
             this.Controls.Add(this.eNumOfValues);
             this.Controls.Add(this.cbLogScale);

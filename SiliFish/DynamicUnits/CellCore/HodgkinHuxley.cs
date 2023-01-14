@@ -25,6 +25,9 @@ namespace SiliFish.DynamicUnits
         protected override double beta_h { get { return 0.25 * Math.Exp((V + 62) / 6) / (Math.Exp((V + 90) / 12)); } }
 
 
+        public HodgkinHuxley()
+        {
+        }
         public HodgkinHuxley(Dictionary<string, double> paramExternal)
             : base(paramExternal)
         {

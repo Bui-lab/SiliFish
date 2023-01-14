@@ -1,7 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace SiliFish.ModelUnits
 
     public class Stimuli
     {
-        private List<Stimulus> stimuli;
+        public List<Stimulus> stimuli { get; set; }
 
         public Stimuli()
         {

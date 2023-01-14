@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
 using System.Collections.Generic;
 using System.Linq;
@@ -407,7 +408,7 @@ namespace SiliFish.Services
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
-            double dt = model.runParam.dt;
+            double dt = model.RunParam.dt;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)

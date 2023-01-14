@@ -1,20 +1,25 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using System;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
     public class GapJunction
     {
         //public bool Bidirectional = true;//TODO currently unidirectional or different conductance gap junctions are not handled
-        public double Conductance = 0;
+        private string target;//used to temporarily hold the target cell's id while reading the JSON files
+        public string Target { get => Cell2.ID; set => target = value; }
+        public double Conductance { get; set; } = 0;
         public Cell Cell1;
         public Cell Cell2;
-        public int Duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
-        public int Delay = 0; //Extra number of time units (dt) to add to Duration
+        public int Duration { get; set; } //The number of time units (dt) it will take for the current to travel from one neuron to the other
+        public int Delay { get; set; } = 0; //Extra number of time units (dt) to add to Duration
 
         private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
@@ -31,8 +36,11 @@ namespace SiliFish.ModelUnits
 
         public double[] InputCurrent; //Current vector
 
+        [JsonIgnore]
         public string ID { get { return string.Format("Gap: {0} -> {1}; Conductance: {2:0.#####}", Cell1.ID, Cell2.ID, Conductance); } }
 
+        public GapJunction()
+        { }
         public GapJunction(double conductance, Cell c1, Cell c2, DistanceMode mode)
         {
             Conductance = conductance;
@@ -40,6 +48,13 @@ namespace SiliFish.ModelUnits
             Cell2 = c2;
             double distance = Util.Distance(c1.coordinate, c2.coordinate, mode);
             Duration = Math.Max((int)(distance / (c1.ConductionVelocity * RunParam.static_dt)), 1);
+        }
+
+        public void LinkObjects(SwimmingModel model)
+        {
+            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == target)).FirstOrDefault();
+            Cell2 = cp.GetCell(target);
+            Cell2.GapJunctions.Add(this);
         }
         public void InitDataVectors(int nmax)
         {

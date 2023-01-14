@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits.Model
+namespace SiliFish.ModelUnits.Parameters
 {
     public class RunParam
     {
@@ -18,7 +18,7 @@ namespace SiliFish.ModelUnits.Model
             return i;
         }
         [JsonIgnore]
-        public int iMax { get { return Convert.ToInt32(((tMax + tSkip_ms) / dt) + 1); } }
+        public int iMax { get { return Convert.ToInt32((tMax + tSkip_ms) / dt + 1); } }
         [JsonIgnore]
         public static double static_Skip { get; set; } = 0;//Used from data structures that don't have direct access to the model
         [JsonIgnore]

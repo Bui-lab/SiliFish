@@ -161,9 +161,10 @@
             // 
             // btnRheobase
             // 
-            this.btnRheobase.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.btnRheobase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnRheobase.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRheobase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRheobase.ForeColor = System.Drawing.Color.White;
             this.btnRheobase.Location = new System.Drawing.Point(128, 22);
             this.btnRheobase.Name = "btnRheobase";
             this.btnRheobase.Size = new System.Drawing.Size(66, 23);
@@ -539,12 +540,14 @@
             // 
             // btnDynamicsRun
             // 
+            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
             this.btnDynamicsRun.Location = new System.Drawing.Point(107, 282);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(66, 23);
             this.btnDynamicsRun.TabIndex = 35;
             this.btnDynamicsRun.Text = "Run";
-            this.btnDynamicsRun.UseVisualStyleBackColor = true;
+            this.btnDynamicsRun.UseVisualStyleBackColor = false;
             this.btnDynamicsRun.Click += new System.EventHandler(this.btnDynamicsRun_Click);
             // 
             // cbAutoDrawPlots
@@ -668,6 +671,7 @@
             // 
             // pCoreType
             // 
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
             this.pCoreType.Controls.Add(this.pLineCoreType);
             this.pCoreType.Controls.Add(this.ddCoreType);
             this.pCoreType.Controls.Add(this.lCoreType);
@@ -694,7 +698,7 @@
             this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(71, 6);
+            this.ddCoreType.Location = new System.Drawing.Point(71, 9);
             this.ddCoreType.Name = "ddCoreType";
             this.ddCoreType.Size = new System.Drawing.Size(221, 23);
             this.ddCoreType.TabIndex = 23;
@@ -703,7 +707,7 @@
             // lCoreType
             // 
             this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(6, 9);
+            this.lCoreType.Location = new System.Drawing.Point(6, 12);
             this.lCoreType.Name = "lCoreType";
             this.lCoreType.Size = new System.Drawing.Size(59, 15);
             this.lCoreType.TabIndex = 22;
@@ -781,7 +785,7 @@
             // 
             this.splitGAAndPlots.Panel2.Controls.Add(this.webViewPlots);
             this.splitGAAndPlots.Size = new System.Drawing.Size(941, 618);
-            this.splitGAAndPlots.SplitterDistance = 309;
+            this.splitGAAndPlots.SplitterDistance = 351;
             this.splitGAAndPlots.TabIndex = 2;
             // 
             // pOptimize
@@ -790,7 +794,7 @@
             this.pOptimize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pOptimize.Location = new System.Drawing.Point(0, 0);
             this.pOptimize.Name = "pOptimize";
-            this.pOptimize.Size = new System.Drawing.Size(939, 307);
+            this.pOptimize.Size = new System.Drawing.Size(939, 349);
             this.pOptimize.TabIndex = 39;
             // 
             // gaControl
@@ -800,7 +804,7 @@
             this.gaControl.Location = new System.Drawing.Point(0, 0);
             this.gaControl.Name = "gaControl";
             this.gaControl.Parameters = null;
-            this.gaControl.Size = new System.Drawing.Size(939, 307);
+            this.gaControl.Size = new System.Drawing.Size(939, 349);
             this.gaControl.TabIndex = 0;
             // 
             // webViewPlots
@@ -811,13 +815,14 @@
             this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlots.Location = new System.Drawing.Point(0, 0);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(939, 303);
+            this.webViewPlots.Size = new System.Drawing.Size(939, 261);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
             // 
             // pPlots
             // 
+            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
             this.pPlots.Controls.Add(this.panel1);
             this.pPlots.Controls.Add(this.grPlotSelection);
             this.pPlots.Controls.Add(this.linkSwitchToOptimization);

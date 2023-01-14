@@ -2,8 +2,12 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 using System;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
@@ -34,17 +38,24 @@ namespace SiliFish.ModelUnits
     }
     public class ChemicalSynapse
     {
-        public TwoExp_syn Core;
+        private string target;//used to temporarily hold the target cell's id while reading the JSON files
+        public string Target { get => PostCell.ID; set => target = value; }
+        public TwoExp_syn Core { get; set; }
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
-        public int Duration; //The number of time units (dt) it will take for the current to travel from presynaptic to postsynaptic neuron
-        public int Delay = 0; //Extra number of time units (dt) to add to Duration
+        public int Duration { get; set; } //The number of time units (dt) it will take for the current to travel from presynaptic to postsynaptic neuron
+        public int Delay { get; set; } = 0; //Extra number of time units (dt) to add to Duration
+        [JsonIgnore]
         public double ISynA = 0; //the momentary current value
+        [JsonIgnore]
         public double ISynB = 0; //the momentary current value
+        [JsonIgnore]
         public double ISyn { get { return ISynA - ISynB; } }
         public double[] InputCurrent; //Current vector 
         private TimeLine timeLine_ms;
+        [JsonIgnore]
         public string ID { get { return string.Format("Syn: {0} -> {1}; Conductance: {2:0.#####}", PreNeuron.ID, PostCell.ID, Conductance); } }
+        [JsonIgnore]
         public double Conductance { get { return Core.Conductance; } }
         internal bool IsActive(int timepoint)
         {
@@ -52,6 +63,8 @@ namespace SiliFish.ModelUnits
             return timeLine_ms?.IsActive(t_ms) ?? true;
         }
 
+        public ChemicalSynapse()
+        { }
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
         {
             Core = new TwoExp_syn(param, conductance);
@@ -59,6 +72,16 @@ namespace SiliFish.ModelUnits
             PostCell = postN;
             double distance = Util.Distance(PreNeuron.coordinate, PostCell.coordinate, distmode);
             Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt)), 1);
+        }
+
+        public void LinkObjects(SwimmingModel model)
+        {
+            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == target)).FirstOrDefault();
+            PostCell = cp.GetCell(target);
+            if (PostCell is Neuron n)
+                n.Synapses.Add(this);
+            else if (PostCell is MuscleCell m)
+                m.EndPlates.Add(this);
         }
         public void InitDataVectors(int nmax)
         {

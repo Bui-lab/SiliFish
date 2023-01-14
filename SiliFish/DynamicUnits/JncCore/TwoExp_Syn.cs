@@ -1,15 +1,19 @@
 ﻿using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Model;
+using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.DynamicUnits
 {
     public class TwoExp_syn
     {
-        readonly double taur;
-        readonly double taud;
-        readonly double vth;
-        readonly double E_rev;
-        public readonly double Conductance;
+        public double taur{ get; set; }
+        public double taud{ get; set; }
+        public double vth{ get; set; }
+        public double E_rev { get; set; }
+        
+        public double Conductance { get; set; }
+
+        public TwoExp_syn()
+        { }
         public TwoExp_syn(SynapseParameters param, double conductance)
         {
             //Set synapse constants.

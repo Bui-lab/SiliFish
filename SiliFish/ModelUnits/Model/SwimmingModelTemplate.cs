@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -103,7 +104,8 @@ namespace SiliFish.ModelUnits.Model
                 Parameters.Remove("General.Description");
             }
             Parameters = ModelDimensions.BackwardCompatibility(Parameters);
-            CurrentSettings.Settings.BackwardCompatibility(Parameters);
+            Settings.BackwardCompatibility(Parameters);
+            CurrentSettings.Settings = Settings;
             KinemParam.BackwardCompatibility(Parameters);
 
             foreach (CellPoolTemplate cpt in CellPoolTemplates)

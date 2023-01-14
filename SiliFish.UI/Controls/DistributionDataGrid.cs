@@ -15,7 +15,7 @@ namespace SiliFish.UI.Controls
         {
             if (e.RowIndex < 0) return;
             int rowind = e.RowIndex;
-            if (dgDistribution.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
+            if (e.ColumnIndex == colDistEditLink.Index)
             {
                 DistributionControl distControl = new()
                 {

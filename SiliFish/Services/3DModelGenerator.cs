@@ -1,6 +1,7 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Model;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace SiliFish.Services
         }
         private string CreateNodeDataPoint(Cell cell)
         {
-            (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.columnIndex2D);
+            (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.ColumnIndex2D);
             return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"s\":{cell.Somite},\"crd\":\"{cell.coordinate}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
         }
         private string CreateNodeDataPoints(CellPool pool, int minSomite, int maxSomite)
