@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using System.Collections.Generic;
@@ -16,11 +17,11 @@ namespace SiliFish.ModelUnits.Architecture
 
         public ModelTemplate() { }
 
-        public override List<CellPoolBase> GetCellPools()
+        public override List<CellPoolTemplate> GetCellPools()
         {
-            return CellPoolTemplates.Select(cp => (CellPoolBase)cp).ToList();
+            return CellPoolTemplates.Select(cp => (CellPoolTemplate)cp).ToList();
         }
-        public override bool AddCellPool(CellPoolBase cellPool)
+        public override bool AddCellPool(CellPoolTemplate cellPool)
         {
             if (cellPool is CellPoolTemplate cp)
             {
@@ -29,13 +30,12 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return false;
         }
-        public override bool RemoveCellPool(CellPoolBase cellPool)
+        public override bool RemoveCellPool(CellPoolTemplate cellPool)
         {
-            if (cellPool is CellPoolTemplate cp)
-            {
-                return CellPoolTemplates.Remove(cp);
-            }
-            return false;
+            InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cellPool.CellGroup);
+            InterPoolTemplates.RemoveAll(ipt => ipt.PoolTarget == cellPool.CellGroup);
+            AppliedStimuli.RemoveAll(s => s.TargetPool == cellPool.CellGroup);
+            return CellPoolTemplates.Remove(cellPool);
         }
 
         public override List<object> GetProjections()
@@ -43,9 +43,19 @@ namespace SiliFish.ModelUnits.Architecture
             return InterPoolTemplates.Select(ip => (object)ip).ToList();
         }
 
-        public override List<object> GetStimuli()
+        public override List<StimulusBase> GetStimuli()
         {
-            return AppliedStimuli.Select(stim => (object)stim).ToList();
+            return AppliedStimuli.Select(stim => (StimulusBase)stim).ToList();
+        }
+
+        public override void AddStimulus(StimulusBase stim)
+        {
+            AppliedStimuli.Add(stim as StimulusTemplate);
+        }
+
+        public override void RemoveStimulus(StimulusBase stim)
+        {
+            AppliedStimuli.Remove(stim as StimulusTemplate);
         }
 
         public void ClearLists()
@@ -113,14 +123,6 @@ namespace SiliFish.ModelUnits.Architecture
         {
             CellPoolTemplates.Sort();
         }
-        public void RemoveCellPool(CellPoolTemplate cpt)
-        {
-            InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cpt.CellGroup);
-            InterPoolTemplates.RemoveAll(ipt => ipt.PoolTarget == cpt.CellGroup);
-            AppliedStimuli.RemoveAll(s => s.TargetPool == cpt.CellGroup);
-            CellPoolTemplates.Remove(cpt);
-        }
-
         public override void BackwardCompatibility()
         {
             base.BackwardCompatibility();

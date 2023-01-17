@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
@@ -48,29 +49,6 @@ namespace SiliFish.ModelUnits.Cells
         public Neuron(CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
             : this(cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
         {
-        }
-
-        /// <summary>
-        /// neuron constructor called from hardcoded models
-        /// </summary>
-        public Neuron(string group, string coreType, int somite, int seq, Dictionary<string, double> coreParams,
-            Coordinate coor, double cv, Stimulus stim = null, TimeLine timeline = null)
-        {
-            CellGroup = group;
-            Somite = somite;
-            Sequence = seq;
-            PositionLeftRight = coor.Y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
-
-            Core = CellCoreUnit.CreateCore(coreType, coreParams);
-
-            coordinate = coor;
-            if (stim != null)
-                Stimuli.Add(stim);
-            GapJunctions = new List<GapJunction>();
-            Synapses = new List<ChemicalSynapse>();
-            Terminals = new List<ChemicalSynapse>();
-            TimeLine_ms = timeline;
-            ConductionVelocity = cv;
         }
 
         public override void LinkObjects(RunningModel model, CellPool pool)

@@ -50,6 +50,9 @@
     <Compile Update="Controls\DynamicsTestByDistControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\JunctionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ProjectionTestControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -81,13 +81,15 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual void LinkObjects() { }
 
-        public virtual List<CellPoolBase> GetCellPools() { throw new NotImplementedException(); }
+        public virtual List<CellPoolTemplate> GetCellPools() { throw new NotImplementedException(); }
         public virtual List<object> GetProjections() { throw new NotImplementedException(); }
-        public virtual List<object> GetStimuli() { throw new NotImplementedException(); }
+        public virtual List<StimulusBase> GetStimuli() { throw new NotImplementedException(); }
+        public virtual void AddStimulus(StimulusBase stim) { throw new NotImplementedException(); }
+        public virtual void RemoveStimulus(StimulusBase stim) { throw new NotImplementedException(); }
 
-        public virtual bool AddCellPool(CellPoolBase cellPool) { throw new NotImplementedException(); }
-        public virtual bool RemoveCellPool(CellPoolBase cellPool) { throw new NotImplementedException(); }
+        public virtual bool AddCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
+        public virtual bool RemoveCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
         public virtual void SortCellPools() { throw new NotImplementedException(); }
-        
+
     }
 }

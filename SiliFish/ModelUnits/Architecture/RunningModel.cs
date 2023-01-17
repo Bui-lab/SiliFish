@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
@@ -133,16 +134,15 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
                 {
-                    Stimulus stim = new(stimulus.StimulusSettings, stimulus.TimeLine_ms);
                     if (stimulus.LeftRight.Contains("Left"))
                     {
                         CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
-                        target?.ApplyStimulus(stim, stimulus.TargetSomite, stimulus.TargetCell);
+                        target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
                     }
                     if (stimulus.LeftRight.Contains("Right"))
                     {
                         CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
-                        target?.ApplyStimulus(stim, stimulus.TargetSomite, stimulus.TargetCell);
+                        target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
                     }
                 }
             }
@@ -188,56 +188,34 @@ namespace SiliFish.ModelUnits.Architecture
         }
         [JsonIgnore]
         [Browsable(false)]
-        public List<CellPool> MotoNeuronPools //MotoNeurons are the neurons projecting to the muscle cells
+        public List<Cell> MotoNeurons //MotoNeurons are the neurons projecting to the muscle cells
         {
             get
             {
-                return null; //TODO  chemPoolConnections
-                    /*.Where(conn => conn.TargetPool.CellType == CellType.MuscleCell)
-                    .Select(conn => conn.SourcePool)
-                    .Distinct()
-                    .ToList();*/
+                List<Cell> MuscleCells = MusclePools.SelectMany(mp => mp.GetCells()).ToList();
+                List<Cell> MNs = MuscleCells.SelectMany(c => ((MuscleCell)c).EndPlates.Select(ep => ep.PreNeuron as Cell)).ToList();
+                return MNs.Distinct().ToList();
             }
         }
 
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
         {
-            List<CellPool> motoNeurons = MotoNeuronPools;
+            List<Cell> motoNeurons = MotoNeurons;
             int NumberOfSomites = ModelDimensions.NumberOfSomites;
             int maxSeq = NumberOfSomites - numSomites;
             if (NumberOfSomites <= 0)
                 maxSeq = CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
             List<Cell> leftMNs = motoNeurons
-                                .Where(pool => pool.PositionLeftRight == SagittalPlane.Left)
-                                .SelectMany(pool => pool.Cells)
-                                .Where(c => NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq)
+                                .Where(c => c.PositionLeftRight == SagittalPlane.Left &&
+                                        (NumberOfSomites > 0 && c.Somite > maxSeq
+                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
                                 .ToList();
             List<Cell> rightMNs = motoNeurons
-                                .Where(pool => pool.PositionLeftRight == SagittalPlane.Right)
-                                .SelectMany(pool => pool.Cells)
-                                .Where(c => NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq)
+                                .Where(c => c.PositionLeftRight == SagittalPlane.Right && 
+                                        (NumberOfSomites > 0 && c.Somite > maxSeq
+                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
                                 .ToList();
             return (leftMNs, rightMNs);
-        }
-
-        [JsonIgnore, Browsable(false)]
-        public List<InterPool> ChemPoolConnections//create these from existing junctions
-        {
-            get
-            {
-                return null; //TODO chemPoolConnections;
-            }
-        }
-
-        [JsonIgnore, Browsable(false)]
-        public List<InterPool> GapPoolConnections
-        {
-            get
-            {
-                return null;//TODO gapPoolConnections;
-            }
         }
 
         //Needs to be run after created from JSON
@@ -249,11 +227,11 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public override List<CellPoolBase> GetCellPools() 
+        public override List<CellPoolTemplate> GetCellPools() 
         { 
-            return CellPools.Select(cp=>(CellPoolBase)cp).ToList(); 
+            return CellPools.Select(cp=>(CellPoolTemplate)cp).ToList(); 
         }
-        public override bool AddCellPool(CellPoolBase cellPool)
+        public override bool AddCellPool(CellPoolTemplate cellPool)
         {
             if (cellPool is CellPool cp)
             {
@@ -263,7 +241,7 @@ namespace SiliFish.ModelUnits.Architecture
             return false;
         }
 
-        public override bool RemoveCellPool(CellPoolBase cellPool)
+        public override bool RemoveCellPool(CellPoolTemplate cellPool)
         {
             if (cellPool is CellPool cp)
             {
@@ -289,9 +267,9 @@ namespace SiliFish.ModelUnits.Architecture
             return listProjections;
         }
 
-        public override List<object> GetStimuli()
+        public override List<StimulusBase> GetStimuli()
         {
-            List<object> listStimuli= new();
+            List<StimulusBase> listStimuli= new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (Stimulus stim in cell.Stimuli.stimuli)
@@ -299,6 +277,20 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return listStimuli;
         }
+
+        public override void AddStimulus(StimulusBase stim)
+        {
+            Stimulus stimulus = stim as Stimulus;
+            stimulus.TargetCell.Stimuli.Add(stimulus);
+        }
+
+        public override void RemoveStimulus(StimulusBase stim)
+        {
+            Stimulus stimulus = stim as Stimulus;
+            stimulus.TargetCell.Stimuli.Remove(stimulus);
+        }
+
+
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {
             double minX = 999;
@@ -518,7 +510,7 @@ namespace SiliFish.ModelUnits.Architecture
                     cell.CalculateMembranePotential(timeIndex);
             }
         }
-        protected virtual void RunModelLoop(int? seed, RunParam rp)
+        protected virtual void RunModelLoop(int? seed)
         {
             try
             {
@@ -526,11 +518,10 @@ namespace SiliFish.ModelUnits.Architecture
                 model_run = false;
                 if (seed != null || rand == null)
                     rand = new Random(seed != null ? (int)seed : 0);
-                RunParam = rp;
-                RunParam.static_dt = rp.dt;
-                RunParam.static_dt_Euler = rp.dtEuler;
-                RunParam.static_Skip = rp.tSkip_ms;
-                iMax = rp.iMax;
+                RunParam.static_dt = RunParam.dt;
+                RunParam.static_dt_Euler = RunParam.dtEuler;
+                RunParam.static_Skip = RunParam.tSkip_ms;
+                iMax = RunParam.iMax;
                 Stimulus.nMax = iMax;
 
                 InitStructures(iMax);
@@ -559,7 +550,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public void RunModel(int? seed, RunParam rp, int count = 1)
+        public void RunModel(int? seed, int count = 1)
         {
             string filename = $"{ModelName}_{DateTime.Now:yyMMdd-HHmm}";
             string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
@@ -572,7 +563,7 @@ namespace SiliFish.ModelUnits.Architecture
                     CancelLoop = false;
                     return;
                 }
-                RunModelLoop(seed, rp);
+                RunModelLoop(seed);
                 if (count > 1 && ModelRun)
                 {
                     (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(this);

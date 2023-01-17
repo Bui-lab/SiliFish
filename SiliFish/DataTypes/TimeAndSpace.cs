@@ -25,7 +25,7 @@ namespace SiliFish.DataTypes
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);
-        public static Coordinate[] GenerateCoordinates(RunningModel Model, BodyLocation BodyLocation,
+        public static Coordinate[] GenerateCoordinates(ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
         {
             if (n <= 0) return null;
@@ -35,30 +35,29 @@ namespace SiliFish.DataTypes
             double x_length = 0, x_offset = 0;
             double y_length = 0, y_offset = 0;
             double z_length = 0, z_offset = 0;
-            double radius = 0;//TODO IMPROVEMENT use two radii for elliptic shapes
-            ModelDimensions MD = Model.ModelDimensions;
+            double radius = 0; //FUTURE_IMPROVEMENT use two radii for elliptic shapes
             switch (BodyLocation)
             {
                 case BodyLocation.SpinalCord:
-                    x_length = somite < 0 ? MD.SpinalRostralCaudalDistance : MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
-                    x_offset = MD.SupraSpinalRostralCaudalDistance + (somite > 0 ? (somite - 1) * MD.SpinalRostralCaudalDistance / MD.NumberOfSomites : 0);
-                    y_length = MD.SpinalMedialLateralDistance;
-                    z_length = MD.SpinalDorsalVentralDistance;
-                    z_offset = MD.SpinalBodyPosition;
-                    radius = Math.Sqrt(Math.Pow(MD.SpinalMedialLateralDistance, 2) + Math.Pow(MD.SpinalDorsalVentralDistance / 2, 2));
+                    x_length = somite < 0 ? modelDimensions.SpinalRostralCaudalDistance : modelDimensions.SpinalRostralCaudalDistance / modelDimensions.NumberOfSomites;
+                    x_offset = modelDimensions.SupraSpinalRostralCaudalDistance + (somite > 0 ? (somite - 1) * modelDimensions.SpinalRostralCaudalDistance / modelDimensions.NumberOfSomites : 0);
+                    y_length = modelDimensions.SpinalMedialLateralDistance;
+                    z_length = modelDimensions.SpinalDorsalVentralDistance;
+                    z_offset = modelDimensions.SpinalBodyPosition;
+                    radius = Math.Sqrt(Math.Pow(modelDimensions.SpinalMedialLateralDistance, 2) + Math.Pow(modelDimensions.SpinalDorsalVentralDistance / 2, 2));
                     break;
                 case BodyLocation.MusculoSkeletal:
-                    x_length = somite < 0 ? MD.SpinalRostralCaudalDistance : MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
-                    x_offset = MD.SupraSpinalRostralCaudalDistance + (somite > 0 ? (somite - 1) * MD.SpinalRostralCaudalDistance / MD.NumberOfSomites : 0);
-                    y_length = MD.BodyMedialLateralDistance;
-                    z_length = MD.BodyDorsalVentralDistance;
-                    radius = Math.Sqrt(Math.Pow(MD.BodyMedialLateralDistance, 2) + Math.Pow(MD.BodyDorsalVentralDistance / 2, 2));
+                    x_length = somite < 0 ? modelDimensions.SpinalRostralCaudalDistance : modelDimensions.SpinalRostralCaudalDistance / modelDimensions.NumberOfSomites;
+                    x_offset = modelDimensions.SupraSpinalRostralCaudalDistance + (somite > 0 ? (somite - 1) * modelDimensions.SpinalRostralCaudalDistance / modelDimensions.NumberOfSomites : 0);
+                    y_length = modelDimensions.BodyMedialLateralDistance;
+                    z_length = modelDimensions.BodyDorsalVentralDistance;
+                    radius = Math.Sqrt(Math.Pow(modelDimensions.BodyMedialLateralDistance, 2) + Math.Pow(modelDimensions.BodyDorsalVentralDistance / 2, 2));
                     break;
                 case BodyLocation.SupraSpinal:
-                    x_length = MD.SupraSpinalRostralCaudalDistance;
-                    y_length = MD.SupraSpinalMedialLateralDistance;
-                    z_length = MD.SupraSpinalDorsalVentralDistance;
-                    radius = Math.Sqrt(Math.Pow(MD.SupraSpinalMedialLateralDistance, 2) + Math.Pow(MD.SupraSpinalDorsalVentralDistance / 2, 2));
+                    x_length = modelDimensions.SupraSpinalRostralCaudalDistance;
+                    y_length = modelDimensions.SupraSpinalMedialLateralDistance;
+                    z_length = modelDimensions.SupraSpinalDorsalVentralDistance;
+                    radius = Math.Sqrt(Math.Pow(modelDimensions.SupraSpinalMedialLateralDistance, 2) + Math.Pow(modelDimensions.SupraSpinalDorsalVentralDistance / 2, 2));
                     break;
             }
             double[] x = XDistribution?.GenerateNNumbers(n, x_length) ?? Distribution.GenerateNRandomNumbers(n, x_length);

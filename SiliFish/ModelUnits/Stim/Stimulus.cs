@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
@@ -29,20 +30,15 @@ namespace SiliFish.ModelUnits.Stim
         }
         public override string ToString()
         {
-            switch (Mode)
+            return Mode switch
             {
-                case StimulusMode.Step:
-                    return string.Format("{0} {1}, Noise: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.Gaussian:
-                    return string.Format("{0} µ: {1}, SD: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.Ramp:
-                    return string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.Sinusoidal:
-                    return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
-                case StimulusMode.Pulse:
-                    return string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2);
-            }
-            return "";
+                StimulusMode.Step => string.Format("{0} {1}, Noise: {2}", Mode.ToString(), Value1, Value2),
+                StimulusMode.Gaussian => string.Format("{0} µ: {1}, SD: {2}", Mode.ToString(), Value1, Value2),
+                StimulusMode.Ramp => string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2),
+                StimulusMode.Sinusoidal => string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2),
+                StimulusMode.Pulse => string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2),
+                _ => "",
+            };
         }
     }
 
@@ -89,29 +85,17 @@ namespace SiliFish.ModelUnits.Stim
                 return;
             stimuli.Add(stim);
         }
-
+        public void Remove(Stimulus stim)
+        {
+            if (stim == null || !stimuli.Contains(stim))
+                return;
+            stimuli.Remove(stim);
+        }
     }
-    public class Stimulus
+    public class Stimulus: StimulusBase
     {
         public static int nMax; //in time increments
-
-        public StimulusSettings StimulusSettings { get; set; }
-        public StimulusMode Mode
-        {
-            get { return StimulusSettings.Mode; }
-            set { StimulusSettings.Mode = value; }
-        }
-        public double Value1
-        {
-            get { return StimulusSettings.Value1; }
-            set { StimulusSettings.Value1 = value; }
-        }
-        public double Value2
-        {
-            get { return StimulusSettings.Value2; }
-            set { StimulusSettings.Value2 = value; }
-        }
-
+        public Cell TargetCell;
         public TimeLine TimeSpan_ms { get; set; } //in  milliseconds
         private double tangent; //valid only if mode==Ramp
         private int iStart, iEnd;
@@ -121,9 +105,10 @@ namespace SiliFish.ModelUnits.Stim
         public double MaxValue { get { return values?.Max() ?? 0; } }
 
         public Stimulus() { }
-        public Stimulus(StimulusSettings settings, TimeLine tl)
+        public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
         {
             StimulusSettings = settings;
+            TargetCell = cell;
             TimeSpan_ms = new(tl);
         }
         public double this[int index]
@@ -137,7 +122,7 @@ namespace SiliFish.ModelUnits.Stim
         }
         public override string ToString()
         {
-            return StimulusSettings.ToString();
+            return TargetCell.ID + ": " +StimulusSettings.ToString();
         }
 
         public string GetTooltip()
@@ -165,8 +150,7 @@ namespace SiliFish.ModelUnits.Stim
                 values = new double[iEnd];
                 copyArr.CopyTo(values, 0);
             }
-            else if (values == null)
-                values = new double[iEnd];
+            else values ??= new double[iEnd];
             initialized = true;
         }
 
@@ -191,7 +175,7 @@ namespace SiliFish.ModelUnits.Stim
                 values = copyArr;
             }
             double value = 0;
-            switch (Mode)
+            switch (StimulusSettings.Mode)
             {
                 case StimulusMode.Step:
                     double noise = Value2 > 0 ? rand.Gauss(1, Value2) : 1;

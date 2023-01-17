@@ -53,7 +53,7 @@ namespace SiliFish.Helpers
 
         private static void FixDistributionJson(ref string json)
         {
-            Dictionary<string, string> dist = new Dictionary<string, string>
+            Dictionary<string, string> dist = new()
             {
                 { "\"DistType\": \"SiliFish.DataTypes.UniformDistribution\",", "\"$type\": \"uniform\"," },
                 { "\"DistType\": \"SiliFish.DataTypes.Constant_NoDistribution\",", "\"$type\": \"constant\"," },
@@ -81,7 +81,7 @@ namespace SiliFish.Helpers
 
         public static List<string> CheckJsonVersion(ref string json)
         {
-            List<string> list = new List<string>();
+            List<string> list = new();
             //Compare to Version 0.1
             if (json.Contains("\"TimeLine\""))
             {

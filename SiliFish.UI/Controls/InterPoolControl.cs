@@ -1,6 +1,8 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls

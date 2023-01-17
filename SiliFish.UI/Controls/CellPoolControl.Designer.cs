@@ -131,7 +131,7 @@ namespace SiliFish.UI.Controls
             // lNumOfCells
             // 
             this.lNumOfCells.AutoSize = true;
-            this.lNumOfCells.Location = new System.Drawing.Point(6, 179);
+            this.lNumOfCells.Location = new System.Drawing.Point(5, 174);
             this.lNumOfCells.Name = "lNumOfCells";
             this.lNumOfCells.Size = new System.Drawing.Size(56, 15);
             this.lNumOfCells.TabIndex = 8;
@@ -139,7 +139,7 @@ namespace SiliFish.UI.Controls
             // 
             // eNumOfCells
             // 
-            this.eNumOfCells.Location = new System.Drawing.Point(113, 176);
+            this.eNumOfCells.Location = new System.Drawing.Point(112, 171);
             this.eNumOfCells.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -157,7 +157,7 @@ namespace SiliFish.UI.Controls
             // l2DModelColumn
             // 
             this.l2DModelColumn.AutoSize = true;
-            this.l2DModelColumn.Location = new System.Drawing.Point(6, 235);
+            this.l2DModelColumn.Location = new System.Drawing.Point(5, 201);
             this.l2DModelColumn.Name = "l2DModelColumn";
             this.l2DModelColumn.Size = new System.Drawing.Size(104, 15);
             this.l2DModelColumn.TabIndex = 13;
@@ -165,7 +165,7 @@ namespace SiliFish.UI.Controls
             // 
             // e2DColumn
             // 
-            this.e2DColumn.Location = new System.Drawing.Point(113, 232);
+            this.e2DColumn.Location = new System.Drawing.Point(112, 198);
             this.e2DColumn.Minimum = new decimal(new int[] {
             1,
             0,
@@ -187,7 +187,7 @@ namespace SiliFish.UI.Controls
             this.ddCellType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCellType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddCellType.FormattingEnabled = true;
-            this.ddCellType.Location = new System.Drawing.Point(112, 65);
+            this.ddCellType.Location = new System.Drawing.Point(112, 63);
             this.ddCellType.Name = "ddCellType";
             this.ddCellType.Size = new System.Drawing.Size(146, 23);
             this.ddCellType.TabIndex = 3;
@@ -196,7 +196,7 @@ namespace SiliFish.UI.Controls
             // lCellType
             // 
             this.lCellType.AutoSize = true;
-            this.lCellType.Location = new System.Drawing.Point(5, 68);
+            this.lCellType.Location = new System.Drawing.Point(5, 66);
             this.lCellType.Name = "lCellType";
             this.lCellType.Size = new System.Drawing.Size(54, 15);
             this.lCellType.TabIndex = 2;
@@ -280,7 +280,7 @@ namespace SiliFish.UI.Controls
             this.ddBodyPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddBodyPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddBodyPosition.FormattingEnabled = true;
-            this.ddBodyPosition.Location = new System.Drawing.Point(112, 147);
+            this.ddBodyPosition.Location = new System.Drawing.Point(112, 144);
             this.ddBodyPosition.Name = "ddBodyPosition";
             this.ddBodyPosition.Size = new System.Drawing.Size(146, 23);
             this.ddBodyPosition.TabIndex = 28;
@@ -288,7 +288,7 @@ namespace SiliFish.UI.Controls
             // lBodyPosition
             // 
             this.lBodyPosition.AutoSize = true;
-            this.lBodyPosition.Location = new System.Drawing.Point(5, 150);
+            this.lBodyPosition.Location = new System.Drawing.Point(5, 147);
             this.lBodyPosition.Name = "lBodyPosition";
             this.lBodyPosition.Size = new System.Drawing.Size(80, 15);
             this.lBodyPosition.TabIndex = 27;
@@ -296,20 +296,20 @@ namespace SiliFish.UI.Controls
             // 
             // eSomiteRange
             // 
-            this.eSomiteRange.Location = new System.Drawing.Point(112, 205);
+            this.eSomiteRange.Location = new System.Drawing.Point(112, 225);
             this.eSomiteRange.Name = "eSomiteRange";
             this.eSomiteRange.ReadOnly = true;
             this.eSomiteRange.Size = new System.Drawing.Size(146, 23);
             this.eSomiteRange.TabIndex = 12;
-            this.eSomiteRange.Text = "Enter a range. Ex: 1-5";
-            this.toolTip1.SetToolTip(this.eSomiteRange, "Enter a range. Ex: 1-5");
+            this.eSomiteRange.Text = "Enter a range. Ex: 1, 3-5";
+            this.toolTip1.SetToolTip(this.eSomiteRange, "Enter a range. Ex: 1, 3-5");
             // 
             // cbAllSomites
             // 
             this.cbAllSomites.AutoSize = true;
             this.cbAllSomites.Checked = true;
             this.cbAllSomites.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAllSomites.Location = new System.Drawing.Point(6, 207);
+            this.cbAllSomites.Location = new System.Drawing.Point(5, 228);
             this.cbAllSomites.Name = "cbAllSomites";
             this.cbAllSomites.Size = new System.Drawing.Size(85, 19);
             this.cbAllSomites.TabIndex = 11;
@@ -323,7 +323,7 @@ namespace SiliFish.UI.Controls
             this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(112, 92);
+            this.ddCoreType.Location = new System.Drawing.Point(112, 90);
             this.ddCoreType.Name = "ddCoreType";
             this.ddCoreType.Size = new System.Drawing.Size(146, 23);
             this.ddCoreType.TabIndex = 5;
@@ -332,7 +332,7 @@ namespace SiliFish.UI.Controls
             // lCoreType
             // 
             this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(5, 95);
+            this.lCoreType.Location = new System.Drawing.Point(5, 93);
             this.lCoreType.Name = "lCoreType";
             this.lCoreType.Size = new System.Drawing.Size(59, 15);
             this.lCoreType.TabIndex = 4;
@@ -344,9 +344,9 @@ namespace SiliFish.UI.Controls
             this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eDescription.Location = new System.Drawing.Point(5, 312);
+            this.eDescription.Location = new System.Drawing.Point(5, 291);
             this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(253, 405);
+            this.eDescription.Size = new System.Drawing.Size(253, 426);
             this.eDescription.TabIndex = 17;
             this.eDescription.Text = "";
             // 
@@ -354,7 +354,7 @@ namespace SiliFish.UI.Controls
             // 
             this.ddSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddSelection.FormattingEnabled = true;
-            this.ddSelection.Location = new System.Drawing.Point(183, 176);
+            this.ddSelection.Location = new System.Drawing.Point(183, 170);
             this.ddSelection.Name = "ddSelection";
             this.ddSelection.Size = new System.Drawing.Size(75, 23);
             this.ddSelection.TabIndex = 10;
@@ -365,7 +365,7 @@ namespace SiliFish.UI.Controls
             this.ddNeuronClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddNeuronClass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddNeuronClass.FormattingEnabled = true;
-            this.ddNeuronClass.Location = new System.Drawing.Point(112, 119);
+            this.ddNeuronClass.Location = new System.Drawing.Point(112, 117);
             this.ddNeuronClass.Name = "ddNeuronClass";
             this.ddNeuronClass.Size = new System.Drawing.Size(146, 23);
             this.ddNeuronClass.TabIndex = 7;
@@ -373,7 +373,7 @@ namespace SiliFish.UI.Controls
             // lNeuronClass
             // 
             this.lNeuronClass.AutoSize = true;
-            this.lNeuronClass.Location = new System.Drawing.Point(5, 122);
+            this.lNeuronClass.Location = new System.Drawing.Point(5, 120);
             this.lNeuronClass.Name = "lNeuronClass";
             this.lNeuronClass.Size = new System.Drawing.Size(77, 15);
             this.lNeuronClass.TabIndex = 6;
@@ -382,7 +382,7 @@ namespace SiliFish.UI.Controls
             // lDescription
             // 
             this.lDescription.AutoSize = true;
-            this.lDescription.Location = new System.Drawing.Point(5, 294);
+            this.lDescription.Location = new System.Drawing.Point(5, 273);
             this.lDescription.Name = "lDescription";
             this.lDescription.Size = new System.Drawing.Size(67, 15);
             this.lDescription.TabIndex = 26;
@@ -390,7 +390,7 @@ namespace SiliFish.UI.Controls
             // 
             // btnColor
             // 
-            this.btnColor.Location = new System.Drawing.Point(183, 232);
+            this.btnColor.Location = new System.Drawing.Point(183, 198);
             this.btnColor.Name = "btnColor";
             this.btnColor.Size = new System.Drawing.Size(75, 23);
             this.btnColor.TabIndex = 15;
@@ -438,7 +438,7 @@ namespace SiliFish.UI.Controls
             this.cbActive.AutoSize = true;
             this.cbActive.Checked = true;
             this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(199, 261);
+            this.cbActive.Location = new System.Drawing.Point(199, 254);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(59, 19);
             this.cbActive.TabIndex = 16;

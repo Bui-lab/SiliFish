@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
@@ -115,6 +116,16 @@ namespace SiliFish.ModelUnits.Cells
         {
             return Stimuli.GenerateStimulus(timeIndex, rand);
         }
+
+        public void AddStimulus(Stimulus stim)
+        {
+            Stimuli.Add(stim);
+        }
+        public void RemoveStimulus(Stimulus stim)
+        {
+            Stimuli.Remove(stim);
+        }
+
         public Cell()
         {
         }

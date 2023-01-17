@@ -1,36 +1,15 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.ModelUnits.Cells;
 using System;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Junction
 {
-    public class InterPoolTemplate : ModelUnitBase
+    public class InterPoolTemplate : JunctionBase
     {
         [JsonIgnore]
         public CellPoolTemplate linkedSource, linkedTarget;
-        private string poolSource, poolTarget;
-        public string PoolSource
-        {
-            get { return poolSource; }
-            set
-            {
-                bool rename = GeneratedName() == Name;
-                poolSource = value;
-                if (rename) Name = GeneratedName();
-            }
-        }
-        public string PoolTarget
-        {
-            get { return poolTarget; }
-            set
-            {
-                bool rename = GeneratedName() == Name;
-                poolTarget = value;
-                if (rename) Name = GeneratedName();
-            }
-        }
-        public CellReach CellReach { get; set; }
         public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;
         public ConnectionType ConnectionType { get; set; } = ConnectionType.NotSet;
         public DistanceMode DistanceMode
@@ -39,21 +18,10 @@ namespace SiliFish.ModelUnits
             set { CellReach.DistanceMode = value; }
         }
 
-        private string _Name;
-        public string Name
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_Name))
-                    _Name = GeneratedName();
-                return _Name;
-            }
-            set { _Name = value; }
-        }
+
         public string Description { get; set; }
 
         public double Probability { get; set; } = 1;
-        public SynapseParameters SynapseParameters { get; set; }//valid if connectionType is Synapse or NMJ
         public bool JncActive //does not check the active flags of the cell pools
         {
             get { return base.Active; }
@@ -89,11 +57,6 @@ namespace SiliFish.ModelUnits
             TimeLine_ms = new TimeLine(ipt.TimeLine_ms);
         }
 
-        public string GeneratedName()
-        {
-            return String.Format("{0}-->{1}", (string.IsNullOrEmpty(PoolSource) ? "__" : PoolSource),
-                (string.IsNullOrEmpty(PoolTarget) ? "__" : PoolTarget));
-        }
         public override string ToString()
         {
             string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :

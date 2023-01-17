@@ -21,7 +21,7 @@ namespace SiliFish.Services
         double WeightMax;
         double WeightMult;
         Dictionary<string, (double, double)> PoolCoordinates;
-        private string CreateLinkDataPoint(InterPool interPool)
+        /*TODO private string CreateLinkDataPoint(InterPool interPool)
         {
             string curvInfo = interPool.SourcePool.ID == interPool.TargetPool.ID ? ",curv: 0.7" : "";
             string link = $"{{\"source\":\"{interPool.SourcePool.ID}\"," +
@@ -31,7 +31,7 @@ namespace SiliFish.Services
                 $"{curvInfo} }}";
             ;
             return link;
-        }
+        }*/
 
         private void GetNewCoordinates(CellPool pool)
         {
@@ -104,7 +104,7 @@ namespace SiliFish.Services
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
 
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
-
+            /*
             List<string> gapLinks = new();
             model.GapPoolConnections?.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
@@ -112,7 +112,7 @@ namespace SiliFish.Services
             List<string> chemLinks = new();
             model.ChemPoolConnections?.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
-
+            */
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));

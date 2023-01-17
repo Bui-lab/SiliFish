@@ -7,6 +7,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using SiliFish.UI;
+using SiliFish.ModelUnits.Junction;
 
 namespace Services
 {
@@ -274,13 +275,14 @@ namespace Services
 
 
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection,
-            double dt, int tStart = 0, int tEnd = -1, int tSkip = 0)
+            CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1)
         {
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
+            double dt = model.RunParam.dt;
+            int tSkip = model.RunParam.tSkip_ms;
             int iStart = (int)((tStart + tSkip) / dt);
             if (tEnd < 0)
                 tEnd = (int)model.TimeArray.Last();

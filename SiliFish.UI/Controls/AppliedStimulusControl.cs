@@ -1,4 +1,5 @@
 ﻿using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Stim;
 
 namespace SiliFish.UI.Controls
@@ -19,7 +20,7 @@ namespace SiliFish.UI.Controls
                 stimControl.StimulusChanged -= value;
             }
         }
-
+        private StimulusBase Stimulus;
         public AppliedStimulusControl()
         {
             InitializeComponent();
@@ -36,7 +37,7 @@ namespace SiliFish.UI.Controls
             string activeStatus = !cbActive.Checked ? " (inactive)" :
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
-            return GetStimulusTemplate().ToString() + activeStatus;
+            return GetStimulus().ToString() + activeStatus;
         }
 
         public void SetStimulus(List<CellPoolTemplate> pools, StimulusTemplate stim)
@@ -47,8 +48,9 @@ namespace SiliFish.UI.Controls
 
             if (stim == null)
                 stim = new();
+            Stimulus = stim;
 
-            stimControl.SetStimulus(stim.StimulusSettings);
+            stimControl.SetStimulus(Stimulus.StimulusSettings);
             ddTargetPool.Items.AddRange(pools.ToArray());
             ddTargetPool.Text = stim.TargetPool;
             if (ddTargetPool.Text == "")
@@ -78,19 +80,65 @@ namespace SiliFish.UI.Controls
                 timeLineControl.SetTimeLine(stim.TimeLine_ms);
         }
 
-        public StimulusTemplate GetStimulusTemplate()
+        public void SetStimulus(List<CellPool> pools, Stimulus stim)
         {
-            StimulusTemplate stim = new()
+
+            if (stim == null)
+                stim = new();
+            Stimulus = stim;
+
+            ddTargetPool.Items.Clear();
+
+            if (pools == null || pools.Count == 0) return;
+            Stimulus = stim;
+            stimControl.SetStimulus(Stimulus.StimulusSettings);
+
+            if (stim == null)
             {
-                StimulusSettings = stimControl.GetStimulus(),
-                TargetPool = ddTargetPool.Text,
-                TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
-                TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
-                LeftRight = ddSagittalPosition.Text,
-                TimeLine_ms = timeLineControl.GetTimeLine(),
-                Active = cbActive.Checked
-            };
-            return stim;
+                stim = new();
+                ddTargetPool.Items.AddRange(pools.ToArray());
+                cbAllSomites.Checked = true;
+                cbAllCells.Checked = true;
+            }
+            else
+            {
+                ddTargetPool.Items.Add(stim.TargetCell.CellPool);
+                ddTargetPool.SelectedIndex = 0;
+                ddTargetPool.Enabled = false;
+                cbAllSomites.Checked = false;
+                eTargetSomites.Text = stim.TargetCell.Somite.ToString();
+                cbAllCells.Checked = false;
+                eTargetCells.Text = stim.TargetCell.Sequence.ToString(); ;
+            }
+            ddSagittalPosition.Text = stim.TargetCell.PositionLeftRight.ToString();
+
+            cbActive.Checked = stim.Active;
+
+            if (stim.TimeLine_ms != null)
+                timeLineControl.SetTimeLine(stim.TimeLine_ms);
+        }
+        public StimulusBase GetStimulus()
+        {
+            if (Stimulus is StimulusTemplate)
+            {
+                Stimulus = new StimulusTemplate()
+                {
+                    StimulusSettings = stimControl.GetStimulus(),
+                    TargetPool = ddTargetPool.Text,
+                    TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
+                    TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
+                    LeftRight = ddSagittalPosition.Text,
+                    TimeLine_ms = timeLineControl.GetTimeLine(),
+                    Active = cbActive.Checked
+                };
+            }
+            else
+            {
+                Stimulus.StimulusSettings = stimControl.GetStimulus();
+                Stimulus.TimeLine_ms = timeLineControl.GetTimeLine();
+                Stimulus.Active = cbActive.Checked;
+            }
+            return Stimulus;
         }
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)

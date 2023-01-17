@@ -8,9 +8,9 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Junction
 {
-    public class GapJunction
+    public class GapJunction: JunctionBase
     {
         //public bool Bidirectional = true;//TODO currently unidirectional or different conductance gap junctions are not handled
         private string target;//used to temporarily hold the target cell's id while reading the JSON files
@@ -27,11 +27,10 @@ namespace SiliFish.ModelUnits
                                                 //Voltage Diff * 1/2 * conductance will give the momentary current value
         private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } }
         int t_current = 0; //the time point  where the momentary values are kept for
-        private TimeLine timeLine_ms;
         internal bool IsActive(int timepoint)
         {
             double t_ms = RunParam.GetTimeOfIndex(timepoint);
-            return timeLine_ms?.IsActive(t_ms) ?? true;
+            return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
 
         public double[] InputCurrent; //Current vector
@@ -78,7 +77,7 @@ namespace SiliFish.ModelUnits
         }
         public void SetTimeSpan(TimeLine span)
         {
-            timeLine_ms = span;
+            TimeLine_ms = span;
         }
 
         public void NextStep(int tIndex)

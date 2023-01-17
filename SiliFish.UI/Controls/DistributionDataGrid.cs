@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Services;
 using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
@@ -131,11 +132,15 @@ namespace SiliFish.UI.Controls
                         paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), dist);
                     else
                         paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), 
-                            new Constant_NoDistribution( (double) dgDistribution[colUniqueValue.Index, rowIndex].Value, true, false, 0));
+                            new Constant_NoDistribution( double.Parse(dgDistribution[colUniqueValue.Index, rowIndex].Value.ToString()), true, false, 0));
                 }
                 return paramDict;
             }
-            catch { return null; }
+            catch (Exception exc)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+                return null; 
+            }
         }
 
     }

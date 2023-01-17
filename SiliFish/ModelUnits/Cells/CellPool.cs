@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells
 {
-    public class CellPool: CellPoolBase
+    public class CellPool: CellPoolTemplate
     {
         public static Func<double> gapWeightNoiseMultiplier;
         public static Func<double> synWeightNoiseMultiplier;
@@ -27,15 +28,37 @@ namespace SiliFish.ModelUnits.Cells
         {
             Cells = new List<Cell>();
         }
+
+        public CellPool(CellPool cellPool):base(cellPool) 
+        {
+        }
+        public override CellPoolTemplate CreateCopy()
+        {
+            return new(this);
+        }
+
         public CellPool(RunningModel model, CellPoolTemplate template, SagittalPlane leftright)
         {
             Model = model;
             CellGroup = template.CellGroup;
+            Description = template.Description;
             CellType = template.CellType;
+            CoreType = template.CoreType;
+            NTMode = template.NTMode;
             Color = template.Color;
             BodyLocation = template.BodyLocation;
             PositionLeftRight = leftright;
             ColumnIndex2D = template.ColumnIndex2D;
+            NumOfCells = template.NumOfCells;
+            XDistribution = (Distribution)template.XDistribution;
+            Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution)?.CreateCopy();
+            Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
+            Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
+            Parameters = template.Parameters;
+            PerSomiteOrTotal = template.PerSomiteOrTotal;
+            SomiteRange = template.SomiteRange;
+            ConductionVelocity = template.ConductionVelocity?.CreateCopy();
+            TimeLine_ms = new TimeLine(template.TimeLine_ms);
             Cells = new List<Cell>();
             GenerateCells(template, leftright);
         }
@@ -133,10 +156,6 @@ namespace SiliFish.ModelUnits.Cells
             }
             return (minWeight, maxWeight);
         }
-        private Coordinate[] GetCoordinates(int n, int somite = -1)
-        {
-            return Coordinate.GenerateCoordinates(Model, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
-        }
         public void AddCell(Cell c)
         {
             Cells.Add(c);
@@ -209,16 +228,11 @@ namespace SiliFish.ModelUnits.Cells
                 .AsEnumerable<Cell>();
         }
 
-
         public void GenerateCells(CellPoolTemplate template, SagittalPlane leftright)
         {
             int n = template.NumOfCells;
             bool neuron = template.CellType == CellType.Neuron;
-            XDistribution = (Distribution)template.XDistribution;
-            Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution)?.CreateCopy();
-            Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
-            Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
-
+            
             ModelDimensions MD = Model.ModelDimensions;
             List<int> somites = template.PerSomiteOrTotal == CountingMode.PerSomite ? 
                 Util.ParseRange(template.SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
@@ -231,7 +245,7 @@ namespace SiliFish.ModelUnits.Cells
             }
             foreach (int somite in somites)
             {
-                Coordinate[] coordinates = GetCoordinates(n, somite);
+                Coordinate[] coordinates = GenerateCoordinates(MD, n, somite);
                 Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
 
                 double defaultCV = CurrentSettings.Settings.cv;
@@ -366,9 +380,9 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public void ApplyStimulus(Stimulus stimulus_ms, string TargetSomite, string TargetCell)
+        public void ApplyStimulus(StimulusTemplate stimulus, string TargetSomite, string TargetCell)
         {
-            if (stimulus_ms == null)
+            if (stimulus == null)
                 return;
             List<int> somites = new();
             List<int> seqs = new();
@@ -380,6 +394,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (Cell cell in GetCells()
                 .Where(c => (!somites.Any() || somites.Contains(c.Somite)) && (!seqs.Any() || seqs.Contains(c.Sequence))))
             {
+                Stimulus stimulus_ms = new Stimulus(stimulus.StimulusSettings, cell, stimulus.TimeLine_ms);
                 cell.Stimuli.Add(stimulus_ms);
             }
         }

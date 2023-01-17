@@ -19,7 +19,7 @@ namespace SiliFish.DynamicUnits
     [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
     public class CellCoreUnit
     {
-        private static Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
+        private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
         .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
 

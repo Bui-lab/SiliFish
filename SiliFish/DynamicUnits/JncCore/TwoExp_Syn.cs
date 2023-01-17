@@ -1,4 +1,5 @@
 ﻿using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.DynamicUnits

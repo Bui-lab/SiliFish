@@ -2,26 +2,38 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Architecture;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text.Json;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.ModelUnits.Cells
 {
-    public class CellPoolTemplate : CellPoolBase
+    public class CellPoolTemplate: ModelUnitBase 
     {
+        public string CellGroup { get; set; }
+        public CellType CellType { get; set; }
+        public string Description { get; set; }
+        public string CoreType { get; set; }
+
+        public BodyLocation BodyLocation { get; set; }
+        public Color Color { get; set; } = Color.Red;
+
+        public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
+
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
 
-
         private Dictionary<string, object> parameters;
-
         public Dictionary<string, Distribution> Parameters
         {
-            get { return parameters.ToDictionary(kvp => kvp.Key,
-                    kvp => Distribution.CreateDistributionObject(kvp.Value)); }
+            get
+            {
+                return parameters?.ToDictionary(kvp => kvp.Key,
+                    kvp => Distribution.CreateDistributionObject(kvp.Value));
+            }
             set
             {
                 parameters = value?.ToDictionary(kvp => kvp.Key,
@@ -60,6 +72,42 @@ namespace SiliFish.ModelUnits
                     $"Active: {Active}";
             }
         }
+        [JsonIgnore]
+        public string Position
+        {
+            get
+            {
+                string FTS =
+                    //FUTURE_IMPROVEMENT
+                    //(PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
+                    //(PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
+                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "LR");
+                return FTS;
+            }
+
+        }
+        public SpatialDistribution SpatialDistribution = new();
+
+        public Distribution XDistribution
+        {
+            get { return SpatialDistribution.XDistribution; }
+            set { SpatialDistribution.XDistribution = value; }
+        }
+        public Distribution Y_AngleDistribution
+        {
+            get { return SpatialDistribution.Y_AngleDistribution; }
+            set { SpatialDistribution.Y_AngleDistribution = value; }
+        }
+        public Distribution Z_RadiusDistribution
+        {
+            get { return SpatialDistribution.Z_RadiusDistribution; }
+            set { SpatialDistribution.Z_RadiusDistribution = value; }
+        }
+
+        public int ColumnIndex2D { get; set; } = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
+
+        [JsonIgnore]
+        public string ID { get { return Position + "_" + CellGroup; } set { } }
 
         [JsonIgnore]
         public double? VThreshold
@@ -90,19 +138,17 @@ namespace SiliFish.ModelUnits
             CellPoolTemplate other = otherbase as CellPoolTemplate;
             return CellGroup.CompareTo(other.CellGroup);
         }
-
-        public CellPoolTemplate()
-        { }
+        public CellPoolTemplate() { }
         public CellPoolTemplate(CellPoolTemplate cpl)
         {
-            if (cpl == null)
-                return;
-            CellGroup = cpl.CellGroup + " copy";
+            CellGroup = cpl.CellGroup;
             Description = cpl.Description;
             CellType = cpl.CellType;
+            CoreType = cpl.CoreType;
             NTMode = cpl.NTMode;
             Color = cpl.Color;
             Parameters = new Dictionary<string, Distribution>(cpl.Parameters);
+            BodyLocation = cpl.BodyLocation;
             PositionLeftRight = cpl.PositionLeftRight;
             ColumnIndex2D = cpl.ColumnIndex2D;
             NumOfCells = cpl.NumOfCells;
@@ -113,6 +159,15 @@ namespace SiliFish.ModelUnits
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
 
-    }
+        public virtual CellPoolTemplate CreateCopy()
+        {
+            throw new NotImplementedException();
+        }
 
+        public Coordinate[] GenerateCoordinates(ModelDimensions modelDimensions, int n, int somite = -1)
+        {
+            return Coordinate.GenerateCoordinates(modelDimensions, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
+        }
+
+    }
 }

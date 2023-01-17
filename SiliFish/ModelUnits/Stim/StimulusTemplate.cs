@@ -2,13 +2,12 @@
 
 namespace SiliFish.ModelUnits.Stim
 {
-    public class StimulusTemplate : ModelUnitBase
+    public class StimulusTemplate : StimulusBase
     {
         public string TargetPool { get; set; }
         public string TargetSomite { get; set; }
         public string TargetCell { get; set; }
 
-        public StimulusSettings StimulusSettings { get; set; }
         public string LeftRight { get; set; }
 
         public override int CompareTo(ModelUnitBase otherbase)

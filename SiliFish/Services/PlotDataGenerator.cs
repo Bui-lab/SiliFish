@@ -7,6 +7,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
 using System.Collections.Generic;
 using System.Linq;
+using SiliFish.ModelUnits.Junction;
 
 namespace SiliFish.Services
 {
@@ -402,14 +403,16 @@ namespace SiliFish.Services
         }
 
        public static (string, List<ChartDataStruct>) GetPlotData(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1, int tSkip = 0)
+            CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1)
         {
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             double dt = model.RunParam.dt;
+            int tSkip = model.RunParam.tSkip_ms;
             int iStart = (int)((tStart + tSkip) / dt);
+            if (tEnd < 0) tEnd = model.RunParam.tMax;
             int iEnd = (int)((tEnd + tSkip) / dt);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;

@@ -14,14 +14,18 @@ using SiliFish.UI.Extensions;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Text.Json;
+using SiliFish.Repositories;
 
 namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
-        RunningModel Model;
+        static string modelFileDefaultFolder;
+        bool templateUpdated = false;
+        bool runningModelUpdated = false;
 
-        ModelTemplate ModelTemplate = new();
+        ModelTemplate ModelTemplate = null;
+        RunningModel RunningModel = null;
         string htmlAnimation = "";
         string htmlPlot = "";
         string PlotSubset = "";
@@ -30,8 +34,6 @@ namespace SiliFish.UI
         int tAnimEnd = 0;
         int tPlotStart = 0;
         int tPlotEnd = 0;
-        int tRunEnd = 0;
-        int tRunSkip = 0;
         PlotType PlotType = PlotType.MembPotential;
         CellSelectionStruct plotCellSelection;
         private string tempFile;
@@ -46,8 +48,10 @@ namespace SiliFish.UI
                 InitAsync();
                 Wait();
                 splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
+                ModelTemplate = new();
                 ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+                mcTemplate.SetModel(ModelTemplate);
                 CurrentSettings.Settings = ModelTemplate.Settings;
                 if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
@@ -82,7 +86,6 @@ namespace SiliFish.UI
                 pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
     
                 dd3DViewpoint.SelectedIndex = 0;
-                //TODO LoadModelTemplate();
             }
             catch (Exception ex)
             {
@@ -173,23 +176,37 @@ namespace SiliFish.UI
 
         #region Model selection
 
+        private void GetRunningModel()
+        {
+            ModelTemplate = mcTemplate.GetModel() as ModelTemplate;
+            if (RunningModel==null)
+            {
+                RunningModel = new(ModelTemplate);
+                mcRunningModel.SetModel(RunningModel);
+            }
+        }
         private void RefreshModel()
         {
-            //TODO if (modelUpdated && Model != null)
-                return;
-            //TODO modelUpdated = false;
-            //TODO ReadModelTemplate(includeHidden: false);
-            Model = new RunningModel(ModelTemplate);
+            ModelTemplate = mcTemplate.GetModel() as ModelTemplate;
+            RunningModel = mcRunningModel.GetModel() as RunningModel;
+            if (ModelTemplate != null)
+            {
+                RunningModel = new(ModelTemplate);
+                mcRunningModel.SetModel(RunningModel);
+            }
+            templateUpdated = runningModelUpdated = false;
         }
 
-        private void RefreshModelSafeMode()
+        private void RefreshModelSafeMode(bool ask)
         {
-            //TODO if (modelUpdated) return;
-            if (Model == null || !Model.ModelRun)
-                RefreshModel();
-            else //TODO if (modifiedJncs || modifiedPools)
+            if (RunningModel == null)
             {
-                string msg = "Do you want to recreate the model using the modifications you have done in the UI? You will need to rerun the simulation.";
+                RefreshModel();
+                return;
+            }
+            if (ask && (templateUpdated || runningModelUpdated))
+            {
+                string msg = "Do you want to regenerate the model using the modifications you have done in the UI?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     RefreshModel();
             }
@@ -228,8 +245,9 @@ namespace SiliFish.UI
         {
             try
             {
-                RunParam rp = new() { tMax = tRunEnd, tSkip_ms = tRunSkip };
-                Model.RunModel(0, rp, (int)eRunNumber.Value);
+                RefreshModelSafeMode(false);
+                ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = RunningModel.ModelDimensions.NumberOfSomites > 0;
+                RunningModel.RunModel(0, (int)eRunNumber.Value);
             }
             catch (Exception ex)
             {
@@ -237,7 +255,7 @@ namespace SiliFish.UI
             }
             finally
             {
-                if (Model.ModelRun)
+                if (RunningModel.ModelRun)
                     Invoke(CompleteRun);
                 else
                     Invoke(CancelRun);
@@ -250,15 +268,14 @@ namespace SiliFish.UI
             progressBarRun.Value = progressBarRun.Maximum;
             progressBarRun.Visible = false;
             btnRun.Text = "Run";
-            //TODO modifiedJncs = modifiedPools = false;
-
+            
             btnPlotWindows.Enabled = false;
             btnPlotHTML.Enabled = false;
             btnAnimate.Enabled = false;
             linkExportOutput.Visible = false;
 
             lRunTime.Text = $"Last run cancelled\r\n" +
-                $"Model: {Model.ModelName}";
+                $"Model: {RunningModel.ModelName}";
         }
         private void CompleteRun()
         {
@@ -267,12 +284,11 @@ namespace SiliFish.UI
             progressBarRun.Value = progressBarRun.Maximum;
             progressBarRun.Visible = false;
             btnRun.Text = "Run";
-            //TODO modifiedJncs = modifiedPools = false;
-
+            
             PopulatePlotPools();
-            int NumberOfSomites = Model.ModelDimensions.NumberOfSomites;
+            int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = NumberOfSomites > 0;
-            eKinematicsSomite.Maximum = NumberOfSomites > 0 ? NumberOfSomites : Model.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
+            eKinematicsSomite.Maximum = NumberOfSomites > 0 ? NumberOfSomites : RunningModel.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
 
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
@@ -284,15 +300,15 @@ namespace SiliFish.UI
 
             lRunTime.Text = $"Last run: {runStart:t}\r\n" +
                 $"Duration: {Util.TimeSpanToString(ts)}\r\n" +
-                $"Model: {Model.ModelName}";
+                $"Model: {RunningModel.ModelName}";
 
         }
         private void btnRun_Click(object sender, EventArgs e)
         {
             if (btnRun.Text == "Stop Run")
             {
-                if (Model != null)
-                    Model.CancelRun = true;
+                if (RunningModel != null)
+                    RunningModel.CancelRun = true;
                 return;
             }
             runStart = DateTime.Now;
@@ -300,28 +316,28 @@ namespace SiliFish.UI
             UseWaitCursor = true;
             progressBarRun.Value = 0;
             progressBarRun.Visible = true;
-            //btnRun.Enabled = false;
             timerRun.Enabled = true;
 
-            tRunEnd = (int)eTimeEnd.Value;
-            tRunSkip = (int)eSkip.Value;
-
-            RefreshModel();
-            Model.RunParam.tSkip_ms = tRunSkip;
-            Model.RunParam.tMax = tRunEnd;
-            Model.RunParam.dt = (double)edt.Value;
-            Model.RunParam.dtEuler = (double)edtEuler.Value;
-            if (Model == null) return;
+            RefreshModelSafeMode(true);
+            if (RunningModel == null) return;
+            RunningModel.RunParam = new()
+            {
+                tSkip_ms = (int)eSkip.Value,
+                tMax = (int)eTimeEnd.Value,
+                dt = (double)edt.Value,
+                dtEuler = (double)edtEuler.Value
+            };
             btnRun.Text = "Stop Run";
             Task.Run(RunModel);
         }
 
         private void timerRun_Tick(object sender, EventArgs e)
         {
-            progressBarRun.Value = (int)((Model?.GetProgress() ?? 0) * progressBarRun.Maximum);
+            if (RunningModel == null) return;
+            progressBarRun.Value = (int)((RunningModel?.GetProgress() ?? 0) * progressBarRun.Maximum);
             if (eRunNumber.Value > 1)
             {
-                int? i = Model?.GetRunCounter();
+                int? i = RunningModel?.GetRunCounter();
                 if (i != null)
                     lRunTime.Text = $"Run number: {i}";
             }
@@ -333,7 +349,7 @@ namespace SiliFish.UI
                 return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                Model.SaveToFile(saveFileCSV.FileName);
+                RunningModel.SaveToFile(saveFileCSV.FileName);
             }
         }
 
@@ -344,9 +360,9 @@ namespace SiliFish.UI
         #region HTML and Windows Plots - Common Functions
         private void DisplayNumberOfPlots()
         {
-            if (Model == null) return;
+            if (RunningModel == null) return;
             GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
             int count = Cells?.Count ?? 0 + Pools?.Count ?? 0;
             if (count > 0)
             {
@@ -372,7 +388,7 @@ namespace SiliFish.UI
                 return;
             string pool = ddPlotPools.Text;
             SagittalPlane sagittal = ddPlotSagittal.Text.GetValueFromName<SagittalPlane>(SagittalPlane.Both);
-            List<CellPool> pools = Model.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
+            List<CellPool> pools = RunningModel.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
             ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Somite)) ?? 0);
             ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Sequence)) ?? 0);
             if (ddPlotPools.Focused)
@@ -398,7 +414,7 @@ namespace SiliFish.UI
             else
             {
                 ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled = Model?.ModelDimensions.NumberOfSomites > 0;
+                    ePlotSomiteSelection.Enabled = RunningModel?.ModelDimensions.NumberOfSomites > 0;
                 ddPlotCellSelection.Enabled =
                     ePlotCellSelection.Enabled =
                     ddPlotSagittal.Enabled =
@@ -449,9 +465,9 @@ namespace SiliFish.UI
             string prevSelection = ddPlotPools.Text;
             ddPlotPools.Items.Clear();
             ddPlotPools.Text = "";
-            if (Model == null) return;
+            if (RunningModel == null) return;
             List<string> itemList = new();
-            itemList.AddRange(Model.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
+            itemList.AddRange(RunningModel.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
             itemList.Insert(0, "All");
 
             ddPlotPools.Items.AddRange(itemList.Distinct().ToArray());
@@ -481,8 +497,8 @@ namespace SiliFish.UI
 
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > tRunEnd)
-                tPlotEnd = tRunEnd;
+            if (tPlotEnd > RunningModel.RunParam.tMax)
+                tPlotEnd = RunningModel.RunParam.tMax;
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -515,11 +531,11 @@ namespace SiliFish.UI
         #region HTML Plots
         private void PlotHTML()
         {
-            if (Model == null) return;
+            if (RunningModel == null) return;
             htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
-            (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, Model, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd, tRunSkip);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+            (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, RunningModel, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd);
 
             htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts,
                 (int)ePlotWidth.Value, (int)ePlotHeight.Value);
@@ -527,11 +543,11 @@ namespace SiliFish.UI
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
         {
-            if (Model == null || !Model.ModelRun) return;
+            if (RunningModel == null || !RunningModel.ModelRun) return;
 
             GetPlotSubset();
             if (PlotType == PlotType.Episodes)
-                Model.SetAnimationParameters(ModelTemplate.KinemParam);
+                RunningModel.SetAnimationParameters(ModelTemplate.KinemParam);
             tabOutputs.SelectedTab = tabPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
@@ -592,21 +608,21 @@ namespace SiliFish.UI
         {
             try
             {
-                if (Model == null || !Model.ModelRun) return;
+                if (RunningModel == null || !RunningModel.ModelRun) return;
 
                 GetPlotSubset();
                 if (PlotType == PlotType.Episodes)
-                    Model.SetAnimationParameters(ModelTemplate.KinemParam);
+                    RunningModel.SetAnimationParameters(ModelTemplate.KinemParam);
                 tabOutputs.SelectedTab = tabPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
                 btnPlotWindows.Enabled = false;
                 btnPlotHTML.Enabled = false;
 
-                (List<Cell> Cells, List<CellPool> Pools) = Model.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, Model, Cells, Pools, plotCellSelection,
-                    Model.RunParam.dt, tPlotStart, tPlotEnd, tRunSkip);
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, plotCellSelection,
+                    tPlotStart, tPlotEnd);
 
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
@@ -689,10 +705,10 @@ namespace SiliFish.UI
         #region 2D Model
         private void Generate2DModel()
         {
-            if (Model == null) return;
-            RefreshModelSafeMode();
+            if (RunningModel == null) return;
+            RefreshModelSafeMode(true);
             TwoDModelGenerator modelGenerator = new();
-            string html = modelGenerator.Create2DModel(false, Model, Model.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
+            string html = modelGenerator.Create2DModel(false, RunningModel, RunningModel.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
             webView2DModel.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
 
         }
@@ -726,9 +742,9 @@ namespace SiliFish.UI
         {
             try
             {
-                RefreshModelSafeMode();
+                RefreshModelSafeMode(true);
                 ThreeDModelGenerator threeDModelGenerator = new();
-                string html = threeDModelGenerator.Create3DModel(saveFile:false, Model, Model.CellPools, 
+                string html = threeDModelGenerator.Create3DModel(saveFile:false, RunningModel, RunningModel.CellPools, 
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 webView3DModel.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
@@ -745,11 +761,12 @@ namespace SiliFish.UI
         }
         private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
         {
+            if (RunningModel == null) return;
             e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             string func = $"SetSomites([]);";
             if (!cb3DAllSomites.Checked)
             {
-                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, Model.ModelDimensions.NumberOfSomites);
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
                 func = $"SetSomites([{string.Join(',', somites)}]);";
             }
             await webView3DModel.ExecuteScriptAsync(func);
@@ -763,9 +780,10 @@ namespace SiliFish.UI
 
         private async void e3DSomiteRange_Leave(object sender, EventArgs e)
         {
+            if (RunningModel == null) return;
             if (lastSomiteSelection != e3DSomiteRange.Text)
             {
-                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, Model.ModelDimensions.NumberOfSomites);
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
                 string func = $"SetSomites([{string.Join(',', somites)}]);";
                 await webView3DModel.ExecuteScriptAsync(func);
             }
@@ -846,7 +864,8 @@ namespace SiliFish.UI
         {
             try
             {
-                htmlAnimation = AnimationGenerator.GenerateAnimation(Model, tAnimStart, tAnimEnd, (double)tAnimdt);
+                if (RunningModel == null || !RunningModel.ModelRun) return;
+                htmlAnimation = AnimationGenerator.GenerateAnimation(RunningModel, tAnimStart, tAnimEnd, (double)tAnimdt);
                 Invoke(CompleteAnimation);
             }
             catch { Invoke(CancelAnimation); }
@@ -867,23 +886,23 @@ namespace SiliFish.UI
         }
         private void btnAnimate_Click(object sender, EventArgs e)
         {
-            if (Model == null || !Model.ModelRun) return;
+            if (RunningModel == null || !RunningModel.ModelRun) return;
 
             btnAnimate.Enabled = false;
 
             tAnimStart = (int)eAnimationStart.Value;
             tAnimEnd = (int)eAnimationEnd.Value;
-            if (tAnimStart > tRunEnd || tAnimStart < 0)
+            if (tAnimStart > RunningModel.RunParam.tMax || tAnimStart < 0)
                 tAnimStart = 0;
-            if (tAnimEnd > tRunEnd)
-                tAnimEnd = tRunEnd;
-
-            lastAnimationStartIndex = (int)(tAnimStart / Model.RunParam.dt);
-            int lastAnimationEndIndex = (int)(tAnimEnd / Model.RunParam.dt);
-            lastAnimationTimeArray = Model.TimeArray;
+            if (tAnimEnd > RunningModel.RunParam.tMax)
+                tAnimEnd = RunningModel.RunParam.tMax;
+            double dt = RunningModel.RunParam.dt;
+            lastAnimationStartIndex = (int)(tAnimStart / dt);
+            int lastAnimationEndIndex = (int)(tAnimEnd / dt);
+            lastAnimationTimeArray = RunningModel.TimeArray;
             //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
-            Model.SetAnimationParameters(ModelTemplate.KinemParam);
-            lastAnimationSpineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(Model, lastAnimationStartIndex, lastAnimationEndIndex);
+            RunningModel.SetAnimationParameters(ModelTemplate.KinemParam);
+            lastAnimationSpineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(RunningModel, lastAnimationStartIndex, lastAnimationEndIndex);
 
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
@@ -948,7 +967,7 @@ namespace SiliFish.UI
             }
             catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling("Read template from JSON", exc);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
         private void linkSaveTemplateJSON_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -973,10 +992,11 @@ namespace SiliFish.UI
         private void btnDisplayModelJSON_Click(object sender, EventArgs e)
         {
             //TODO modelUpdated = false;
-            RefreshModelSafeMode();
+            if (RunningModel == null) return;
+            RefreshModelSafeMode(true);
             try
             {
-                eModelJSON.Text = JsonUtil.ToJson(Model);
+                eModelJSON.Text = JsonUtil.ToJson(RunningModel);
             }
             catch
             {
@@ -992,8 +1012,8 @@ namespace SiliFish.UI
             {
                 if (JsonUtil.ToObject(typeof(RunningModel), eModelJSON.Text) is RunningModel model)
                 {
-                    Model = model;
-                    Model.LinkObjects();
+                    RunningModel = model;
+                    RunningModel.LinkObjects();
                     //TODO modelUpdated = true;
                 }
             }
@@ -1003,7 +1023,7 @@ namespace SiliFish.UI
             }
             catch (Exception exc)
             {
-                ExceptionHandler.ExceptionHandling("Read template from JSON", exc);
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
 
@@ -1027,10 +1047,12 @@ namespace SiliFish.UI
         
          private void btnGenerateEpisodes_Click(object sender, EventArgs e)
         {
-            (List<Cell> LeftMNs, List<Cell> RightMNs) = Model.GetMotoNeurons((int)eKinematicsSomite.Value);
-            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(Model, LeftMNs, RightMNs,
-                Model.KinemParam.BurstBreak, Model.KinemParam.EpisodeBreak);
-            string html = DyChartGenerator.PlotSummaryMembranePotentials(Model, LeftMNs.Union(RightMNs).ToList(),
+            if (RunningModel == null || !RunningModel.ModelRun) return;
+
+            (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons((int)eKinematicsSomite.Value);
+            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) =
+                SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
+            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, LeftMNs.Union(RightMNs).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
             webViewSummaryV.NavigateTo(html, ModelTemplate.Settings.TempFolder, ref tempFile);
             eEpisodesLeft.Text = "";
@@ -1139,5 +1161,162 @@ namespace SiliFish.UI
             frmControl.ShowDialog();
         }
 
+        private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                openFileJson.InitialDirectory = modelFileDefaultFolder;
+                if (openFileJson.ShowDialog() == DialogResult.OK)
+                {
+                    ModelBase mb;
+                    try
+                    {
+                        mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Selected file is not a valid Model or Template file.");
+                        return;
+                    }
+                    mb.BackwardCompatibility();
+                    mb.LinkObjects();
+                    templateUpdated = false;
+                    runningModelUpdated = false;
+                    if (mb is ModelTemplate)
+                    {
+                        ModelTemplate = mb as ModelTemplate;
+                        mcTemplate.SetModel(ModelTemplate);
+                        RunningModel = null;
+                        if (!tabModel.TabPages.Contains(tTemplate))
+                        {
+                            tabModel.TabPages.Add(tTemplate);
+                            mcTemplate.Enabled = true;
+                        }
+                        if (tabModel.TabPages.Contains(tModel))
+                            tabModel.TabPages.Remove(tModel);
+                    }
+                    else
+                    {
+                        RunningModel = mb as RunningModel;
+                        mcRunningModel.SetModel(RunningModel);
+                        ModelTemplate = null;
+                        if (!tabModel.TabPages.Contains(tModel))
+                        {
+                            tabModel.TabPages.Add(tModel);
+                            mcRunningModel.Enabled = true;
+                        }
+                        if (tabModel.TabPages.Contains(tTemplate))
+                            tabModel.TabPages.Remove(tTemplate);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+        }
+
+        private bool SaveModel()
+        {
+            try
+            {
+                ModelBase mb = tabModel.SelectedTab == tTemplate ? 
+                    mcTemplate.GetModel() : mcRunningModel.GetModel();
+
+                if (!mb.CheckValues(out List<string> errors))
+                {
+                    MessageBox.Show(string.Join("\r\n", errors));
+                    return false;
+                }
+                if (string.IsNullOrEmpty(saveFileJson.FileName))
+                    saveFileJson.FileName = mb.ModelName;
+                else
+                    saveFileJson.InitialDirectory = modelFileDefaultFolder;
+                if (saveFileJson.ShowDialog() == DialogResult.OK)
+                {
+                    modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
+                    ModelFile.Save(saveFileJson.FileName, mb);
+
+                    this.Text = $"SiliFish {mb.ModelName}";
+                    if (mb is ModelTemplate)
+                        templateUpdated = false;
+                    else
+                        runningModelUpdated = false;
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SaveModel();
+        }
+
+        private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (MessageBox.Show("Do you want to start from a brand new template? All changes you have made will be cleared.", "Warning",
+                MessageBoxButtons.OKCancel) != DialogResult.OK)
+                return;
+            ModelTemplate = new();
+            mcTemplate.SetModel(ModelTemplate);
+            RunningModel = null;
+            mcRunningModel.SetModel(RunningModel);
+            if (!tabModel.TabPages.Contains(tTemplate))
+            {
+                tabModel.TabPages.Add(tTemplate);
+                mcTemplate.Enabled = true;
+            }
+            if (tabModel.TabPages.Contains(tModel))
+                tabModel.TabPages.Remove(tModel);
+        }
+
+        private void linkGenerateRunningModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (ModelTemplate == null)
+            {
+                MessageBox.Show("There is no model template loaded.", "Error");
+                return;
+            }
+            if (RunningModel != null)
+            {
+                string msg = $"Do you want to write over current model? the Once you make changes in the model, the changes will not transfer to the model template." +
+                    $"You will need to save the model independently.";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
+            RunningModel = new RunningModel(ModelTemplate);
+            mcRunningModel.SetModel(RunningModel);
+            if (!tabModel.TabPages.Contains(tModel))
+            {
+                tabModel.TabPages.Add(tModel);
+                mcRunningModel.Enabled = true;
+            }
+        }
+
+        private void mcTemplate_ModelChanged(object sender, EventArgs e)
+        {
+            if (!templateUpdated && tabModel.TabPages.Contains(tModel))
+            {
+                WarningMessage("The template is updated. Youwill need to regenerate the model.");
+                mcRunningModel.Enabled = false;
+            }
+            templateUpdated = true;
+        }
+
+        private void mcRunningModel_ModelChanged(object sender, EventArgs e)
+        {
+            if (!runningModelUpdated && tabModel.TabPages.Contains(tTemplate))
+            {
+                WarningMessage("Model is updated, you cannot make any more changes to the template.");
+                mcTemplate.Enabled = false;
+            }
+            runningModelUpdated = true;
+        }
     }
 }

@@ -14,8 +14,7 @@ namespace SiliFish.DynamicUnits
         public double Va; //Vm when tension is half of Tmax/2
         public double Tmax; //maximum tension
         public double ka; //slope factor [Dulhunty 1992 (Prog. Biophys)]
-        public double Vmax = 99999;
-
+        
         [JsonIgnore]
         public double TimeConstant { get { return R * C; } }
         protected override void Initialize()

@@ -18,21 +18,21 @@ namespace SiliFish.UI.Controls
         private event EventHandler loadPool;
         public event EventHandler LoadPool { add => loadPool += value; remove => loadPool -= value; }
 
-        CellPoolTemplate poolTemplate;
+        CellPoolTemplate poolBase;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private DynamicsTestControl dyncontrol = null;
         private bool SomiteBased = false;
-        public CellPoolTemplate PoolTemplate
+        public CellPoolTemplate PoolBase
         {
             get
             {
                 ReadDataFromControl();
-                return poolTemplate;
+                return poolBase;
             }
             set
             {
-                poolTemplate = value ?? new();
+                poolBase = value ?? new();
                 WriteDataToControl();
             }
         }
@@ -54,12 +54,12 @@ namespace SiliFish.UI.Controls
             distConductionVelocity.SetDistribution(new Constant_NoDistribution(CurrentSettings.Settings.cv, absolute: true, angular: false, noiseStdDev: 0));
             if (SomiteBased)
             {
-                cbAllSomites.Enabled = eSomiteRange.Enabled = true;
+                cbAllSomites.Visible = eSomiteRange.Visible = true;
                 ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
             }
             else
             {
-                cbAllSomites.Enabled = eSomiteRange.Enabled = false;
+                cbAllSomites.Visible = eSomiteRange.Visible = false;
                 ddSelection.Items.Clear();
                 ddSelection.Items.Add(CountingMode.Total.ToString());
             }
@@ -87,13 +87,13 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            poolTemplate.Parameters = CellCoreUnit.GetParameters(coreType);
+            poolBase.Parameters = CellCoreUnit.GetParameters(coreType);
             ParamDictToGrid();
         }
 
         private void ParamDictToGrid()
         {
-            dgDynamics.WriteToGrid(poolTemplate.Parameters);
+            dgDynamics.WriteToGrid(poolBase.Parameters);
         }
 
         private Dictionary<string, Distribution> GridToParamDict()
@@ -103,8 +103,8 @@ namespace SiliFish.UI.Controls
 
         private void eGroupName_TextChanged(object sender, EventArgs e)
         {
-            if (poolTemplate != null)
-                poolTemplate.CellGroup = eGroupName.Text;
+            if (poolBase != null)
+                poolBase.CellGroup = eGroupName.Text;
         }
 
         private void linkLoadPool_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -115,7 +115,7 @@ namespace SiliFish.UI.Controls
                 return;
             try
             {
-                poolTemplate = (CellPoolTemplate)JsonUtil.ToObject(typeof(CellPoolTemplate), JSONString);
+                poolBase = (CellPoolTemplate)JsonUtil.ToObject(typeof(CellPoolTemplate), JSONString);
             }
             catch
             {
@@ -129,7 +129,7 @@ namespace SiliFish.UI.Controls
         {
             if (savePool == null) return;
             ReadDataFromControl();
-            JSONString = JsonUtil.ToJson(poolTemplate);
+            JSONString = JsonUtil.ToJson(poolBase);
             savePool.Invoke(this, new EventArgs());
         }
 
@@ -143,79 +143,79 @@ namespace SiliFish.UI.Controls
             else if (ddSagittalPosition.Text == "Left/Right")
                 sagPlane = SagittalPlane.Both;
             string groupName = eGroupName.Text;
-            if (poolTemplate == null)
-                poolTemplate = new CellPoolTemplate();
-            poolTemplate.CellGroup = groupName;
-            poolTemplate.Description = eDescription.Text;
-            poolTemplate.BodyLocation= (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text);
-            poolTemplate.PositionLeftRight = sagPlane;
-            poolTemplate.ColumnIndex2D = (int)e2DColumn.Value;
-            poolTemplate.NumOfCells = (int)eNumOfCells.Value;
-            poolTemplate.PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), ddSelection.Text);
-            poolTemplate.SomiteRange = SomiteBased && !cbAllSomites.Checked ? eSomiteRange.Text : "";
-            poolTemplate.XDistribution = distributionX.GetDistribution();
-            poolTemplate.Y_AngleDistribution = distributionY.GetDistribution();
-            poolTemplate.Z_RadiusDistribution = distributionZ.GetDistribution();
-            poolTemplate.CellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
-            poolTemplate.CoreType = ddCoreType.Text;
-            poolTemplate.NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
-            poolTemplate.Parameters = GridToParamDict();
-            poolTemplate.Color = btnColor.BackColor;
-            poolTemplate.Active = cbActive.Checked;
-            poolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
-            poolTemplate.ConductionVelocity = distConductionVelocity.GetDistribution();
+            if (poolBase == null)
+                poolBase = new CellPoolTemplate();
+            poolBase.CellGroup = groupName;
+            poolBase.Description = eDescription.Text;
+            poolBase.BodyLocation= (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text);
+            poolBase.PositionLeftRight = sagPlane;
+            poolBase.ColumnIndex2D = (int)e2DColumn.Value;
+            poolBase.NumOfCells = (int)eNumOfCells.Value;
+            poolBase.PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), ddSelection.Text);
+            poolBase.SomiteRange = SomiteBased && !cbAllSomites.Checked ? eSomiteRange.Text : "";
+            poolBase.XDistribution = distributionX.GetDistribution();
+            poolBase.Y_AngleDistribution = distributionY.GetDistribution();
+            poolBase.Z_RadiusDistribution = distributionZ.GetDistribution();
+            poolBase.CellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
+            poolBase.CoreType = ddCoreType.Text;
+            poolBase.NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), ddNeuronClass.Text);
+            poolBase.Parameters = GridToParamDict();
+            poolBase.Color = btnColor.BackColor;
+            poolBase.Active = cbActive.Checked;
+            poolBase.TimeLine_ms = timeLineControl.GetTimeLine();
+            poolBase.ConductionVelocity = distConductionVelocity.GetDistribution();
 
-            poolTemplate.Attachments = attachmentList.GetAttachments();
+            poolBase.Attachments = attachmentList.GetAttachments();
         }
 
 
         private void WriteDataToControl()
         {
-            if (poolTemplate == null) return;
+            if (poolBase == null) return;
 
-            eGroupName.Text = poolTemplate.CellGroup;
-            eDescription.Text = poolTemplate.Description;
+            eGroupName.Text = poolBase.CellGroup;
+            eDescription.Text = poolBase.Description;
             skipCellTypeChange = true;
-            ddCellType.Text = poolTemplate.CellType.ToString();
+            ddCellType.Text = poolBase.CellType.ToString();
             skipCellTypeChange = false;
             skipCoreTypeChange = true;
-            ddCoreType.Text = poolTemplate.CoreType?.ToString();
+            ddCoreType.Text = poolBase.CoreType?.ToString();
             skipCoreTypeChange = false;
-            ddBodyPosition.Text = poolTemplate.BodyLocation.ToString();
-            lNeuronClass.Visible = ddNeuronClass.Visible = poolTemplate.CellType == CellType.Neuron;
-            ddNeuronClass.Text = poolTemplate.NTMode.ToString();
-            if (poolTemplate.PositionLeftRight == SagittalPlane.Both)
+            ddBodyPosition.Text = poolBase.BodyLocation.ToString();
+            lNeuronClass.Visible = ddNeuronClass.Visible = poolBase.CellType == CellType.Neuron;
+            ddNeuronClass.Text = poolBase.NTMode.ToString();
+            if (poolBase.PositionLeftRight == SagittalPlane.Both)
                 ddSagittalPosition.Text = "Left/Right";
-            else if (poolTemplate.PositionLeftRight == SagittalPlane.Left)
+            else if (poolBase.PositionLeftRight == SagittalPlane.Left)
                 ddSagittalPosition.Text = "Left";
-            else if (poolTemplate.PositionLeftRight == SagittalPlane.Right)
+            else if (poolBase.PositionLeftRight == SagittalPlane.Right)
                 ddSagittalPosition.Text = "Right";
-            e2DColumn.Value = Math.Max(poolTemplate.ColumnIndex2D, e2DColumn.Minimum);
-            eNumOfCells.Value = poolTemplate.NumOfCells;
-            ddSelection.Text = poolTemplate.PerSomiteOrTotal.ToString();
-            if (string.IsNullOrEmpty(poolTemplate.SomiteRange))
+            e2DColumn.Value = Math.Max(poolBase.ColumnIndex2D, e2DColumn.Minimum);
+            eNumOfCells.Value = poolBase.NumOfCells;
+            ddSelection.Text = poolBase.PerSomiteOrTotal.ToString();
+            if (string.IsNullOrEmpty(poolBase.SomiteRange))
             {
                 cbAllSomites.Checked = true;
             }
             else
             {
                 cbAllSomites.Checked = false;
-                eSomiteRange.Text = poolTemplate.SomiteRange;
+                eSomiteRange.Text = poolBase.SomiteRange;
             }
 
-            btnColor.BackColor = poolTemplate.Color;
+            btnColor.BackColor = poolBase.Color;
 
-            distributionX.SetDistribution((Distribution)poolTemplate.XDistribution);
-            distributionY.SetDistribution((Distribution)poolTemplate.Y_AngleDistribution);
-            distributionZ.SetDistribution((Distribution)poolTemplate.Z_RadiusDistribution);
+            distributionX.SetDistribution((Distribution)poolBase.XDistribution);
+            distributionY.SetDistribution((Distribution)poolBase.Y_AngleDistribution);
+            distributionZ.SetDistribution((Distribution)poolBase.Z_RadiusDistribution);
             rbYZAngular.Checked = distributionY.GetDistribution() != null && distributionY.GetDistribution().Angular;
 
-            cbActive.Checked = poolTemplate.Active;
-            timeLineControl.SetTimeLine(poolTemplate.TimeLine_ms);
-            distConductionVelocity.SetDistribution(poolTemplate.ConductionVelocity as Distribution);
+            cbActive.Checked = poolBase.Active;
+            timeLineControl.SetTimeLine(poolBase.TimeLine_ms);
+            distConductionVelocity.SetDistribution(poolBase.ConductionVelocity as Distribution);
             ParamDictToGrid();
 
-            attachmentList.SetAttachments(poolTemplate.Attachments);
+            attachmentList.SetAttachments(poolBase.Attachments);
         }
 
         private void rbYZAngular_CheckedChanged(object sender, EventArgs e)
@@ -257,8 +257,8 @@ namespace SiliFish.UI.Controls
                     skipCoreTypeChange = true;
                     ddCoreType.Text = core.CoreType;
                     skipCoreTypeChange = false;
-                    ddCoreType.Text = poolTemplate.CoreType = core.CoreType;
-                    poolTemplate.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value, true, false, 0) as  Distribution);
+                    ddCoreType.Text = poolBase.CoreType = core.CoreType;
+                    poolBase.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value, true, false, 0) as  Distribution);
                     ParamDictToGrid();
                 }
             }
@@ -266,9 +266,9 @@ namespace SiliFish.UI.Controls
 
         private void linkTestDynamics_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Dictionary<string, double> dparams = poolTemplate.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            poolTemplate.CoreType = ddCoreType.Text;
-            dyncontrol = new(poolTemplate.CoreType, dparams, testMode: false);
+            Dictionary<string, double> dparams = poolBase.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
+            poolBase.CoreType = ddCoreType.Text;
+            dyncontrol = new(poolBase.CoreType, dparams, testMode: false);
             dyncontrol.UseUpdatedParams += Dyncontrol_UseUpdatedParams;
             ControlContainer frmControl = new();
             frmControl.AddControl(dyncontrol);
@@ -281,17 +281,17 @@ namespace SiliFish.UI.Controls
         {
             if (e is not UpdatedParamsEventArgs args || args.ParamsAsObject == null)
                 return;
-            if (poolTemplate.CoreType == args.CoreType && poolTemplate.Parameters.Values.Any(v => v is Distribution dist && !dist.IsConstant))
+            if (poolBase.CoreType == args.CoreType && poolBase.Parameters.Values.Any(v => v is Distribution dist && !dist.IsConstant))
             {
                 string msg = "This cell pool has defined distributions for dynamics parameters, which will be cleared. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
             }
-            poolTemplate.Parameters = args.ParamsAsObject;
-            poolTemplate.CoreType = args.CoreType;
-            ddCoreType.Text = poolTemplate.CoreType.ToString();
+            poolBase.Parameters = args.ParamsAsObject;
+            poolBase.CoreType = args.CoreType;
+            ddCoreType.Text = poolBase.CoreType.ToString();
             ParamDictToGrid();
-            MessageBox.Show($"Parameters are carried to {poolTemplate.CellGroup}", "SiliFish");
+            MessageBox.Show($"Parameters are carried to {poolBase.CellGroup}", "SiliFish");
         }
 
         private void cbAllSomites_CheckedChanged(object sender, EventArgs e)

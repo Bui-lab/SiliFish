@@ -28,14 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.linkLoadModel = new System.Windows.Forms.LinkLabel();
-            this.lTitle = new System.Windows.Forms.Label();
-            this.linkSaveModel = new System.Windows.Forms.LinkLabel();
-            this.linkClearModel = new System.Windows.Forms.LinkLabel();
-            this.pTop = new System.Windows.Forms.Panel();
-            this.lModel = new System.Windows.Forms.Label();
-            this.lTemplate = new System.Windows.Forms.Label();
-            this.trackMode = new System.Windows.Forms.TrackBar();
             this.propModelDimensions = new System.Windows.Forms.PropertyGrid();
             this.pbDrawing = new System.Windows.Forms.PictureBox();
             this.pDrawing = new System.Windows.Forms.Panel();
@@ -79,8 +71,6 @@
             this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
-            this.pTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackMode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDrawing)).BeginInit();
             this.pDrawing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -107,103 +97,6 @@
             this.tabModel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // linkLoadModel
-            // 
-            this.linkLoadModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLoadModel.AutoSize = true;
-            this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadModel.Location = new System.Drawing.Point(607, 10);
-            this.linkLoadModel.Name = "linkLoadModel";
-            this.linkLoadModel.Size = new System.Drawing.Size(70, 15);
-            this.linkLoadModel.TabIndex = 4;
-            this.linkLoadModel.TabStop = true;
-            this.linkLoadModel.Text = "Load Model";
-            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadModel_LinkClicked);
-            // 
-            // lTitle
-            // 
-            this.lTitle.AutoSize = true;
-            this.lTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lTitle.Location = new System.Drawing.Point(275, 10);
-            this.lTitle.Name = "lTitle";
-            this.lTitle.Size = new System.Drawing.Size(109, 15);
-            this.lTitle.TabIndex = 0;
-            this.lTitle.Text = "Model Parameters";
-            // 
-            // linkSaveModel
-            // 
-            this.linkSaveModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkSaveModel.AutoSize = true;
-            this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveModel.Location = new System.Drawing.Point(533, 10);
-            this.linkSaveModel.Name = "linkSaveModel";
-            this.linkSaveModel.Size = new System.Drawing.Size(68, 15);
-            this.linkSaveModel.TabIndex = 3;
-            this.linkSaveModel.TabStop = true;
-            this.linkSaveModel.Text = "Save Model";
-            this.linkSaveModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveTemplate_LinkClicked);
-            // 
-            // linkClearModel
-            // 
-            this.linkClearModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkClearModel.AutoSize = true;
-            this.linkClearModel.ForeColor = System.Drawing.Color.White;
-            this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearModel.Location = new System.Drawing.Point(607, 34);
-            this.linkClearModel.Name = "linkClearModel";
-            this.linkClearModel.Size = new System.Drawing.Size(71, 15);
-            this.linkClearModel.TabIndex = 5;
-            this.linkClearModel.TabStop = true;
-            this.linkClearModel.Text = "Clear Model";
-            this.linkClearModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearModel_LinkClicked);
-            // 
-            // pTop
-            // 
-            this.pTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pTop.Controls.Add(this.lModel);
-            this.pTop.Controls.Add(this.lTemplate);
-            this.pTop.Controls.Add(this.trackMode);
-            this.pTop.Controls.Add(this.linkLoadModel);
-            this.pTop.Controls.Add(this.lTitle);
-            this.pTop.Controls.Add(this.linkSaveModel);
-            this.pTop.Controls.Add(this.linkClearModel);
-            this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTop.Location = new System.Drawing.Point(0, 0);
-            this.pTop.Name = "pTop";
-            this.pTop.Size = new System.Drawing.Size(690, 64);
-            this.pTop.TabIndex = 4;
-            // 
-            // lModel
-            // 
-            this.lModel.AutoSize = true;
-            this.lModel.Location = new System.Drawing.Point(99, 10);
-            this.lModel.Name = "lModel";
-            this.lModel.Size = new System.Drawing.Size(41, 15);
-            this.lModel.TabIndex = 8;
-            this.lModel.Text = "Model";
-            this.lModel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lTemplate
-            // 
-            this.lTemplate.AutoSize = true;
-            this.lTemplate.Location = new System.Drawing.Point(1, 10);
-            this.lTemplate.Name = "lTemplate";
-            this.lTemplate.Size = new System.Drawing.Size(55, 15);
-            this.lTemplate.TabIndex = 7;
-            this.lTemplate.Text = "Template";
-            this.lTemplate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // trackMode
-            // 
-            this.trackMode.AutoSize = false;
-            this.trackMode.Location = new System.Drawing.Point(51, 8);
-            this.trackMode.Maximum = 1;
-            this.trackMode.Name = "trackMode";
-            this.trackMode.Size = new System.Drawing.Size(54, 20);
-            this.trackMode.TabIndex = 6;
-            this.trackMode.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackMode.ValueChanged += new System.EventHandler(this.trackMode_ValueChanged);
-            // 
             // propModelDimensions
             // 
             this.propModelDimensions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
@@ -212,7 +105,7 @@
             this.propModelDimensions.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.propModelDimensions.Location = new System.Drawing.Point(0, 0);
             this.propModelDimensions.Name = "propModelDimensions";
-            this.propModelDimensions.Size = new System.Drawing.Size(225, 412);
+            this.propModelDimensions.Size = new System.Drawing.Size(225, 476);
             this.propModelDimensions.TabIndex = 60;
             // 
             // pbDrawing
@@ -220,7 +113,7 @@
             this.pbDrawing.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbDrawing.Location = new System.Drawing.Point(0, 0);
             this.pbDrawing.Name = "pbDrawing";
-            this.pbDrawing.Size = new System.Drawing.Size(449, 412);
+            this.pbDrawing.Size = new System.Drawing.Size(449, 476);
             this.pbDrawing.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbDrawing.TabIndex = 12;
             this.pbDrawing.TabStop = false;
@@ -232,7 +125,7 @@
             this.pDrawing.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pDrawing.Location = new System.Drawing.Point(0, 0);
             this.pDrawing.Name = "pDrawing";
-            this.pDrawing.Size = new System.Drawing.Size(449, 412);
+            this.pDrawing.Size = new System.Drawing.Size(449, 476);
             this.pDrawing.TabIndex = 15;
             // 
             // splitContainer1
@@ -251,7 +144,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.pDrawing);
-            this.splitContainer1.Size = new System.Drawing.Size(682, 414);
+            this.splitContainer1.Size = new System.Drawing.Size(682, 478);
             this.splitContainer1.SplitterDistance = 227;
             this.splitContainer1.TabIndex = 61;
             // 
@@ -303,7 +196,7 @@
             this.tGeneral.Controls.Add(this.lModelName);
             this.tGeneral.Location = new System.Drawing.Point(4, 24);
             this.tGeneral.Name = "tGeneral";
-            this.tGeneral.Size = new System.Drawing.Size(682, 491);
+            this.tGeneral.Size = new System.Drawing.Size(682, 555);
             this.tGeneral.TabIndex = 4;
             this.tGeneral.Text = "General";
             this.tGeneral.Visible = false;
@@ -670,10 +563,10 @@
             this.tabModel.Controls.Add(this.tKinematics);
             this.tabModel.Controls.Add(this.tSettings);
             this.tabModel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabModel.Location = new System.Drawing.Point(0, 64);
+            this.tabModel.Location = new System.Drawing.Point(0, 0);
             this.tabModel.Name = "tabModel";
             this.tabModel.SelectedIndex = 0;
-            this.tabModel.Size = new System.Drawing.Size(690, 519);
+            this.tabModel.Size = new System.Drawing.Size(690, 583);
             this.tabModel.TabIndex = 2;
             this.tabModel.Tag = "";
             // 
@@ -690,12 +583,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabModel);
-            this.Controls.Add(this.pTop);
             this.Name = "ModelControl";
             this.Size = new System.Drawing.Size(690, 583);
-            this.pTop.ResumeLayout(false);
-            this.pTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackMode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDrawing)).EndInit();
             this.pDrawing.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -730,12 +619,6 @@
         }
 
         #endregion
-
-        private LinkLabel linkLoadModel;
-        private Label lTitle;
-        private LinkLabel linkSaveModel;
-        private LinkLabel linkClearModel;
-        private Panel pTop;
         private PropertyGrid propModelDimensions;
         private PictureBox pbDrawing;
         private Panel pDrawing;
@@ -774,9 +657,6 @@
         private FolderBrowserDialog browseFolder;
         private OpenFileDialog openFileJson;
         private SaveFileDialog saveFileJson;
-        private TrackBar trackMode;
-        private Label lModel;
-        private Label lTemplate;
         private SplitContainer splitCellPools;
         private ListBoxControl listCellPools;
         private ListBoxControl listCells;

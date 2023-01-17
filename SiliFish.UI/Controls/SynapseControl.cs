@@ -1,4 +1,5 @@
 ﻿using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Junction;
 
 namespace SiliFish.UI.Controls
 {

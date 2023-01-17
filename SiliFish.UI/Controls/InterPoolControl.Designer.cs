@@ -48,15 +48,13 @@
             this.lMaxReach = new System.Windows.Forms.Label();
             this.lMaxIncoming = new System.Windows.Forms.Label();
             this.numMaxIncoming = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lMaxOutgoing = new System.Windows.Forms.Label();
             this.numMaxOutgoing = new System.Windows.Forms.NumericUpDown();
             this.numMinAscReach = new System.Windows.Forms.NumericUpDown();
             this.numMaxAscReach = new System.Windows.Forms.NumericUpDown();
             this.numMaxDescReach = new System.Windows.Forms.NumericUpDown();
             this.numMinDescReach = new System.Windows.Forms.NumericUpDown();
             this.gSynapse = new System.Windows.Forms.GroupBox();
-            this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
-            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.cbActive = new System.Windows.Forms.CheckBox();
             this.numProbability = new System.Windows.Forms.NumericUpDown();
             this.lProbability = new System.Windows.Forms.Label();
@@ -76,7 +74,6 @@
             this.tDynamics = new System.Windows.Forms.TabPage();
             this.tTimeline = new System.Windows.Forms.TabPage();
             this.tAttachments = new System.Windows.Forms.TabPage();
-            this.attachmentList = new SiliFish.UI.Controls.AttachmentListControl();
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxIncoming)).BeginInit();
@@ -85,7 +82,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).BeginInit();
-            this.gSynapse.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProbability)).BeginInit();
             this.grReach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -94,8 +90,6 @@
             this.splitContainerMain.SuspendLayout();
             this.tabInterPool.SuspendLayout();
             this.tDynamics.SuspendLayout();
-            this.tTimeline.SuspendLayout();
-            this.tAttachments.SuspendLayout();
             this.SuspendLayout();
             // 
             // lSourcePool
@@ -292,15 +286,15 @@
             this.toolTip1.SetToolTip(this.numMaxIncoming, "The number of maximum connections the target cell can have from the same source p" +
         "ool.\r\nEnter 0 if there is no such limit.");
             // 
-            // label1
+            // lMaxOutgoing
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 139);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 15);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Max Outgoing";
-            this.toolTip1.SetToolTip(this.label1, "The number of maximum connections the source cell can have to the same target poo" +
+            this.lMaxOutgoing.AutoSize = true;
+            this.lMaxOutgoing.Location = new System.Drawing.Point(13, 139);
+            this.lMaxOutgoing.Name = "lMaxOutgoing";
+            this.lMaxOutgoing.Size = new System.Drawing.Size(84, 15);
+            this.lMaxOutgoing.TabIndex = 14;
+            this.lMaxOutgoing.Text = "Max Outgoing";
+            this.toolTip1.SetToolTip(this.lMaxOutgoing, "The number of maximum connections the source cell can have to the same target poo" +
         "l.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMaxOutgoing
@@ -375,33 +369,12 @@
             // 
             // gSynapse
             // 
-            this.gSynapse.Controls.Add(this.synapseControl);
             this.gSynapse.Location = new System.Drawing.Point(10, 128);
             this.gSynapse.Name = "gSynapse";
             this.gSynapse.Size = new System.Drawing.Size(239, 157);
             this.gSynapse.TabIndex = 2;
             this.gSynapse.TabStop = false;
             this.gSynapse.Text = "Synapse Parameters";
-            // 
-            // synapseControl
-            // 
-            this.synapseControl.BackColor = System.Drawing.Color.White;
-            this.synapseControl.EReversal = 0D;
-            this.synapseControl.Location = new System.Drawing.Point(14, 21);
-            this.synapseControl.Name = "synapseControl";
-            this.synapseControl.Size = new System.Drawing.Size(152, 127);
-            this.synapseControl.TabIndex = 0;
-            this.synapseControl.VThreshold = 0D;
-            // 
-            // timeLineControl
-            // 
-            this.timeLineControl.AutoScroll = true;
-            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeLineControl.Location = new System.Drawing.Point(3, 3);
-            this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(539, 525);
-            this.timeLineControl.TabIndex = 0;
             // 
             // cbActive
             // 
@@ -578,7 +551,7 @@
             // splitContainerMain.Panel1
             // 
             this.splitContainerMain.Panel1.Controls.Add(this.lSourcePool);
-            this.splitContainerMain.Panel1.Controls.Add(this.label1);
+            this.splitContainerMain.Panel1.Controls.Add(this.lMaxOutgoing);
             this.splitContainerMain.Panel1.Controls.Add(this.lTargetPool);
             this.splitContainerMain.Panel1.Controls.Add(this.numMaxOutgoing);
             this.splitContainerMain.Panel1.Controls.Add(this.lAxonReachMode);
@@ -636,7 +609,6 @@
             // 
             // tTimeline
             // 
-            this.tTimeline.Controls.Add(this.timeLineControl);
             this.tTimeline.Location = new System.Drawing.Point(4, 24);
             this.tTimeline.Name = "tTimeline";
             this.tTimeline.Padding = new System.Windows.Forms.Padding(3);
@@ -647,21 +619,12 @@
             // 
             // tAttachments
             // 
-            this.tAttachments.Controls.Add(this.attachmentList);
             this.tAttachments.Location = new System.Drawing.Point(4, 24);
             this.tAttachments.Name = "tAttachments";
             this.tAttachments.Size = new System.Drawing.Size(545, 531);
             this.tAttachments.TabIndex = 2;
             this.tAttachments.Text = "Attachments";
             this.tAttachments.UseVisualStyleBackColor = true;
-            // 
-            // attachmentList
-            // 
-            this.attachmentList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.attachmentList.Location = new System.Drawing.Point(0, 0);
-            this.attachmentList.Name = "attachmentList";
-            this.attachmentList.Size = new System.Drawing.Size(545, 531);
-            this.attachmentList.TabIndex = 0;
             // 
             // InterPoolControl
             // 
@@ -680,7 +643,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).EndInit();
-            this.gSynapse.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numProbability)).EndInit();
             this.grReach.ResumeLayout(false);
             this.grReach.PerformLayout();
@@ -691,8 +653,6 @@
             this.splitContainerMain.ResumeLayout(false);
             this.tabInterPool.ResumeLayout(false);
             this.tDynamics.ResumeLayout(false);
-            this.tTimeline.ResumeLayout(false);
-            this.tAttachments.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -730,7 +690,7 @@
         private GroupBox grReach;
         private Label lMaxIncoming;
         private NumericUpDown numMaxIncoming;
-        private Label label1;
+        private Label lMaxOutgoing;
         private NumericUpDown numMaxOutgoing;
         private Label lUoD2;
         private Label lUoD1;
