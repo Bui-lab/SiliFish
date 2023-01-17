@@ -34,7 +34,7 @@ namespace SiliFish.UI.Controls
         internal class UpdatedParamsEventArgs : EventArgs
         {
             internal string CoreType;
-            internal Dictionary<string, Distribution> ParamsAsObject;
+            internal Dictionary<string, Distribution> ParamsAsDistribution;
             internal Dictionary<string, double> ParamsAsDouble;
         }
         private event EventHandler useUpdatedParams;
@@ -455,7 +455,7 @@ namespace SiliFish.UI.Controls
                 TimeArray[i] = i * (double)dt;
             Stimulus stim = new()
             {
-                StimulusSettings = stimulusControl1.GetStimulus(),
+                Settings = stimulusControl1.GetStimulus(),
                 TimeSpan_ms = tl
             };
             double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
@@ -516,7 +516,7 @@ namespace SiliFish.UI.Controls
                         {
                             Stimulus stimulus = new()
                             {
-                                StimulusSettings = new()
+                                Settings = new()
                                 {
                                     Mode = StimulusMode.Step,
                                     Value1 = stim,
@@ -582,7 +582,7 @@ namespace SiliFish.UI.Controls
             UpdatedParamsEventArgs args = new()
             {
                 CoreType = CoreType,
-                //TODO ParamsAsObject = Parameters.ToDictionary(kvp => kvp.Key, kvp => (object)new Constant_NoDistribution(kvp.Value, true, false, 0)),
+                ParamsAsDistribution = Parameters.ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution),
                 ParamsAsDouble = Parameters
             };
             useUpdatedParams?.Invoke(this, args);

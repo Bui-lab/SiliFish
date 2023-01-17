@@ -52,6 +52,8 @@ namespace SiliFish.UI
                 ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
                 mcTemplate.SetModel(ModelTemplate);
+                AddTemplateTab();
+                RemoveModelTab();
                 CurrentSettings.Settings = ModelTemplate.Settings;
                 if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
@@ -179,7 +181,7 @@ namespace SiliFish.UI
         private void GetRunningModel()
         {
             ModelTemplate = mcTemplate.GetModel() as ModelTemplate;
-            if (RunningModel==null)
+            if (RunningModel == null)
             {
                 RunningModel = new(ModelTemplate);
                 mcRunningModel.SetModel(RunningModel);
@@ -1161,6 +1163,36 @@ namespace SiliFish.UI
             frmControl.ShowDialog();
         }
 
+        private void AddModelTab()
+        {
+            if (!tabModel.TabPages.Contains(tModel))
+            {
+                tabModel.TabPages.Add(tModel);
+                mcRunningModel.Enabled = true;
+            }
+        }
+
+        private void RemoveModelTab()
+        {
+            if (tabModel.TabPages.Contains(tModel))
+                tabModel.TabPages.Remove(tModel);
+            mcRunningModel.SetModel(null);
+        }
+
+        private void AddTemplateTab()
+        {
+            if (!tabModel.TabPages.Contains(tTemplate))
+            {
+                tabModel.TabPages.Add(tTemplate);
+                mcTemplate.Enabled = true;
+            }
+        }
+        private void RemoveTemplateTab()
+        {
+            if (tabModel.TabPages.Contains(tTemplate))
+                tabModel.TabPages.Remove(tTemplate);
+            mcTemplate.SetModel(null);
+        }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -1187,26 +1219,16 @@ namespace SiliFish.UI
                         ModelTemplate = mb as ModelTemplate;
                         mcTemplate.SetModel(ModelTemplate);
                         RunningModel = null;
-                        if (!tabModel.TabPages.Contains(tTemplate))
-                        {
-                            tabModel.TabPages.Add(tTemplate);
-                            mcTemplate.Enabled = true;
-                        }
-                        if (tabModel.TabPages.Contains(tModel))
-                            tabModel.TabPages.Remove(tModel);
+                        AddTemplateTab();
+                        RemoveModelTab();
                     }
                     else
                     {
                         RunningModel = mb as RunningModel;
                         mcRunningModel.SetModel(RunningModel);
                         ModelTemplate = null;
-                        if (!tabModel.TabPages.Contains(tModel))
-                        {
-                            tabModel.TabPages.Add(tModel);
-                            mcRunningModel.Enabled = true;
-                        }
-                        if (tabModel.TabPages.Contains(tTemplate))
-                            tabModel.TabPages.Remove(tTemplate);
+                        AddModelTab();
+                        RemoveTemplateTab();
                     }
                 }
             }
@@ -1216,7 +1238,6 @@ namespace SiliFish.UI
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
-
         private bool SaveModel()
         {
             try
@@ -1298,7 +1319,6 @@ namespace SiliFish.UI
                 mcRunningModel.Enabled = true;
             }
         }
-
         private void mcTemplate_ModelChanged(object sender, EventArgs e)
         {
             if (!templateUpdated && tabModel.TabPages.Contains(tModel))

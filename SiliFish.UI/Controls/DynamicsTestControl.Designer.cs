@@ -47,7 +47,7 @@
             this.eRheobase = new System.Windows.Forms.TextBox();
             this.lRheobase = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
-            this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
+            this.stimulusControl1 = new SiliFish.UI.Controls.StimulusSettingsControl();
             this.rbSingleEntryStimulus = new System.Windows.Forms.RadioButton();
             this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
@@ -1058,7 +1058,7 @@
         private TabControl tabAnalysis;
         private TabPage tTest;
         private TabPage tSensitivityAnalysis;
-        private StimulusControl stimulusControl1;
+        private StimulusSettingsControl stimulusControl1;
         private Label lRheobaseWarning;
         private Panel pLineCoreType;
         private Panel panel1;

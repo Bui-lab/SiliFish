@@ -24,6 +24,9 @@ namespace SiliFish.UI.Controls
         private event EventHandler sortItems;
         public event EventHandler SortItems { add => sortItems += value; remove => sortItems -= value; }
 
+        private event EventHandler selectItem;
+        public event EventHandler SelectItem { add => selectItem += value; remove => selectItem -= value; }
+
         private Dictionary<int, object> HiddenItems = new Dictionary<int, object>();
         public List<object> GetItems(bool includeHidden)
         {
@@ -161,6 +164,7 @@ namespace SiliFish.UI.Controls
         {
             (string tt, bool _) = listBox.SelectedItem?.GetPropertyValue("Tooltip", listBox.SelectedItem?.ToString()) ?? ("", false);
             toolTip.SetToolTip(listBox, tt);
+            selectItem?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
         private void listBox_DoubleClick(object sender, EventArgs e)

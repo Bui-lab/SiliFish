@@ -30,7 +30,7 @@ namespace SiliFish.UI.Controls
                 else
                 {
                     double val = double.Parse(dgDistribution[colUniqueValue.Index, e.RowIndex].Tag?.ToString() ?? dgDistribution[colUniqueValue.Index, e.RowIndex].Value?.ToString());
-                    dist = new Constant_NoDistribution(val, true, false, 0);
+                    dist = new Constant_NoDistribution(val);
                     distControl.SetDistribution(dist);
                 }
                 if (frmControl.ShowDialog() == DialogResult.OK)
@@ -121,18 +121,21 @@ namespace SiliFish.UI.Controls
             catch { }
         }
 
-        public Dictionary<string, Distribution> ReadFromGrid()//TODO review
+        public Dictionary<string, Distribution> ReadFromGrid()
         {
             try
             {
                 Dictionary<string, Distribution> paramDict = new();
                 for (int rowIndex = 0; rowIndex < dgDistribution.RowCount; rowIndex++)
                 {
+                    string field = dgDistribution[colField.Index, rowIndex].Value.ToString();
                     if (dgDistribution.Rows[rowIndex].Tag is Distribution dist)
-                        paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), dist);
+                        paramDict.Add(field, dist);
                     else
-                        paramDict.Add(dgDistribution[colField.Index, rowIndex].Value.ToString(), 
-                            new Constant_NoDistribution( double.Parse(dgDistribution[colUniqueValue.Index, rowIndex].Value.ToString()), true, false, 0));
+                    {
+                        double value = double.Parse(dgDistribution[colUniqueValue.Index, rowIndex].Value.ToString());
+                        paramDict.Add(field,new Constant_NoDistribution(value)); 
+                    }
                 }
                 return paramDict;
             }

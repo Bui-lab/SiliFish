@@ -3,12 +3,12 @@ using SiliFish.ModelUnits.Stim;
 
 namespace SiliFish.UI.Controls
 {
-    public partial class StimulusControl : UserControl
+    public partial class StimulusSettingsControl : UserControl
     {
         private event EventHandler stimulusChanged;
         public event EventHandler StimulusChanged { add => stimulusChanged += value; remove => stimulusChanged -= value; }
 
-        public StimulusControl()
+        public StimulusSettingsControl()
         {
             InitializeComponent();
             ddStimulusMode.DataSource = Enum.GetNames(typeof(StimulusMode));

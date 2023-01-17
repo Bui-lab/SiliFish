@@ -38,7 +38,7 @@
             this.lStepEndTime = new System.Windows.Forms.Label();
             this.lPlotEndTime = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
-            this.stimulusControl1 = new SiliFish.UI.Controls.StimulusControl();
+            this.stimulusControl1 = new SiliFish.UI.Controls.StimulusSettingsControl();
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -775,7 +775,7 @@
         private SplitContainer splitGAAndPlots;
         private Label lSource;
         private Panel pLoadSaveParams;
-        private StimulusControl stimulusControl1;
+        private StimulusSettingsControl stimulusControl1;
         private Panel pLineCoreType;
         private Panel panel1;
         private NumericUpDown edtEuler;

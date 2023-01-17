@@ -1,6 +1,6 @@
 ﻿namespace SiliFish.UI.Controls
 {
-    partial class StimulusControl
+    partial class StimulusSettingsControl
     {
         /// <summary> 
         /// Required designer variable.

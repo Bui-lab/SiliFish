@@ -253,6 +253,10 @@ namespace SiliFish.ModelUnits.Architecture
         {
             CellPools.Sort();
         }
+        public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
+        {
+            //TODO
+        }
         public override List<object> GetProjections()
         {
             List<object> listProjections = new();
@@ -437,11 +441,11 @@ namespace SiliFish.ModelUnits.Architecture
         protected virtual void InitDataVectors(int nmax)
         {
             foreach (CellPool neurons in neuronPools)
-                foreach (Neuron neuron in neurons.GetCells())
+                foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
                     neuron.InitDataVectors(nmax);
 
             foreach (CellPool muscleCells in musclePools)
-                foreach (MuscleCell mc in muscleCells.GetCells())
+                foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
                     mc.InitDataVectors(nmax);
         }
 
@@ -455,24 +459,13 @@ namespace SiliFish.ModelUnits.Architecture
             initialized = true;
         }
 
-        protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, CellReach cr, TimeLine timeline = null, double probability = 1)
-        {
-            if (pool1 == null || pool2 == null) return;
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, probability);
-        }
-        protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, CellReach cr, SynapseParameters synParam, TimeLine timeline = null, double probability = 1)
-        {
-            if (pool1 == null || pool2 == null) return;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, probability);
-        }
-
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, InterPoolTemplate template)
         {
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability);
+            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability, template.DistanceMode);
         }
 
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
@@ -482,7 +475,7 @@ namespace SiliFish.ModelUnits.Architecture
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability, template.DistanceMode);
         }
 
         private void CalculateCellularOutputs(int t)

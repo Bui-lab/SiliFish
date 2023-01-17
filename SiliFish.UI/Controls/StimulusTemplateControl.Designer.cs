@@ -1,6 +1,6 @@
 ﻿namespace SiliFish.UI.Controls
 {
-    partial class AppliedStimulusControl
+    partial class StimulusTemplateControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -39,7 +39,7 @@
             this.lTargetSomites = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.stimControl = new SiliFish.UI.Controls.StimulusControl();
+            this.stimControl = new SiliFish.UI.Controls.StimulusSettingsControl();
             this.lAll = new System.Windows.Forms.Label();
             this.cbAllSomites = new System.Windows.Forms.CheckBox();
             this.cbAllCells = new System.Windows.Forms.CheckBox();
@@ -266,7 +266,7 @@
         private Label lTargetSomites;
         private ToolTip toolTip;
         private ContextMenuStrip contextMenuStrip1;
-        private StimulusControl stimControl;
+        private StimulusSettingsControl stimControl;
         private Label lAll;
         private CheckBox cbAllSomites;
         private CheckBox cbAllCells;

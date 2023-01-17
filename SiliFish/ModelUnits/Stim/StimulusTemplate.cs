@@ -25,11 +25,11 @@ namespace SiliFish.ModelUnits.Stim
             get
             {
                 return string.Format("Target: {0} {1}-{2} {3}; {4}",
-                    LeftRight, TargetPool, TargetSomite, TargetCell, StimulusSettings?.ToString());
+                    LeftRight, TargetPool, TargetSomite, TargetCell, Settings?.ToString());
             }
         }
         [JsonIgnore]
-        public override string Tooltip { get { return $"{ToString()}\r\n{StimulusSettings?.ToString()}\r\n{TimeLine_ms}"; } }
+        public override string Tooltip { get { return $"{ToString()}\r\n{Settings?.ToString()}\r\n{TimeLine_ms}"; } }
     }
 
 }

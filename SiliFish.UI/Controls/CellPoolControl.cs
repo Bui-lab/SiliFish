@@ -32,6 +32,7 @@ namespace SiliFish.UI.Controls
             }
             set
             {
+                eNumOfCells.Enabled = value == null || value is not CellPool;
                 poolBase = value ?? new();
                 WriteDataToControl();
             }
@@ -51,7 +52,7 @@ namespace SiliFish.UI.Controls
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
-            distConductionVelocity.SetDistribution(new Constant_NoDistribution(CurrentSettings.Settings.cv, absolute: true, angular: false, noiseStdDev: 0));
+            distConductionVelocity.SetDistribution(new Constant_NoDistribution(CurrentSettings.Settings.cv));
             if (SomiteBased)
             {
                 cbAllSomites.Visible = eSomiteRange.Visible = true;
@@ -143,8 +144,7 @@ namespace SiliFish.UI.Controls
             else if (ddSagittalPosition.Text == "Left/Right")
                 sagPlane = SagittalPlane.Both;
             string groupName = eGroupName.Text;
-            if (poolBase == null)
-                poolBase = new CellPoolTemplate();
+            poolBase ??= new CellPoolTemplate();
             poolBase.CellGroup = groupName;
             poolBase.Description = eDescription.Text;
             poolBase.BodyLocation= (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text);
@@ -258,7 +258,7 @@ namespace SiliFish.UI.Controls
                     ddCoreType.Text = core.CoreType;
                     skipCoreTypeChange = false;
                     ddCoreType.Text = poolBase.CoreType = core.CoreType;
-                    poolBase.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value, true, false, 0) as  Distribution);
+                    poolBase.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as  Distribution);
                     ParamDictToGrid();
                 }
             }
@@ -279,7 +279,7 @@ namespace SiliFish.UI.Controls
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)
         {
-            if (e is not UpdatedParamsEventArgs args || args.ParamsAsObject == null)
+            if (e is not UpdatedParamsEventArgs args || args.ParamsAsDistribution == null)
                 return;
             if (poolBase.CoreType == args.CoreType && poolBase.Parameters.Values.Any(v => v is Distribution dist && !dist.IsConstant))
             {
@@ -287,7 +287,7 @@ namespace SiliFish.UI.Controls
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
             }
-            poolBase.Parameters = args.ParamsAsObject;
+            poolBase.Parameters = args.ParamsAsDistribution;
             poolBase.CoreType = args.CoreType;
             ddCoreType.Text = poolBase.CoreType.ToString();
             ParamDictToGrid();

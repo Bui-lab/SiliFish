@@ -1,5 +1,6 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using System;
@@ -90,6 +91,15 @@ namespace SiliFish.ModelUnits.Architecture
         public virtual bool AddCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
         public virtual bool RemoveCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
         public virtual void SortCellPools() { throw new NotImplementedException(); }
+
+        public virtual bool AddJunction(JunctionBase jnc) { throw new NotImplementedException(); }
+        public virtual bool RemoveJunction(JunctionBase jnc) { throw new NotImplementedException(); }
+        public virtual void SortJunctions() { throw new NotImplementedException(); }
+
+        public virtual void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolTarget)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

@@ -279,7 +279,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.listConnections);
             this.splitContainer2.Panel2.Controls.Add(this.pConnectionsTop);
             this.splitContainer2.Panel2MinSize = 200;
-            this.splitContainer2.Size = new System.Drawing.Size(682, 491);
+            this.splitContainer2.Size = new System.Drawing.Size(682, 555);
             this.splitContainer2.SplitterDistance = 317;
             this.splitContainer2.TabIndex = 5;
             // 
@@ -297,8 +297,8 @@
             // splitCellPools.Panel2
             // 
             this.splitCellPools.Panel2.Controls.Add(this.listCells);
-            this.splitCellPools.Size = new System.Drawing.Size(315, 457);
-            this.splitCellPools.SplitterDistance = 228;
+            this.splitCellPools.Size = new System.Drawing.Size(315, 521);
+            this.splitCellPools.SplitterDistance = 259;
             this.splitCellPools.TabIndex = 8;
             // 
             // listCellPools
@@ -308,7 +308,7 @@
             this.listCellPools.Name = "listCellPools";
             this.listCellPools.SelectedIndex = -1;
             this.listCellPools.SelectedItem = null;
-            this.listCellPools.Size = new System.Drawing.Size(315, 228);
+            this.listCellPools.Size = new System.Drawing.Size(315, 259);
             this.listCellPools.TabIndex = 7;
             this.listCellPools.AddItem += new System.EventHandler(this.listCellPool_AddItem);
             this.listCellPools.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
@@ -316,6 +316,7 @@
             this.listCellPools.ViewItem += new System.EventHandler(this.listCellPool_ViewItem);
             this.listCellPools.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
             this.listCellPools.SortItems += new System.EventHandler(this.listCellPool_SortItems);
+            this.listCellPools.SelectItem += new System.EventHandler(this.listCellPools_SelectItem);
             // 
             // listCells
             // 
@@ -324,7 +325,7 @@
             this.listCells.Name = "listCells";
             this.listCells.SelectedIndex = -1;
             this.listCells.SelectedItem = null;
-            this.listCells.Size = new System.Drawing.Size(315, 225);
+            this.listCells.Size = new System.Drawing.Size(315, 258);
             this.listCells.TabIndex = 0;
             // 
             // listConnections
@@ -334,7 +335,7 @@
             this.listConnections.Name = "listConnections";
             this.listConnections.SelectedIndex = -1;
             this.listConnections.SelectedItem = null;
-            this.listConnections.Size = new System.Drawing.Size(359, 457);
+            this.listConnections.Size = new System.Drawing.Size(359, 521);
             this.listConnections.TabIndex = 8;
             this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
             this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
@@ -349,7 +350,7 @@
             this.tCellPoolsJuncs.Controls.Add(this.splitContainer2);
             this.tCellPoolsJuncs.Location = new System.Drawing.Point(4, 24);
             this.tCellPoolsJuncs.Name = "tCellPoolsJuncs";
-            this.tCellPoolsJuncs.Size = new System.Drawing.Size(682, 491);
+            this.tCellPoolsJuncs.Size = new System.Drawing.Size(682, 555);
             this.tCellPoolsJuncs.TabIndex = 1;
             this.tCellPoolsJuncs.Text = "Cell Pools & Connections";
             this.tCellPoolsJuncs.UseVisualStyleBackColor = true;
@@ -360,7 +361,7 @@
             this.tStimuli.Controls.Add(this.listStimuli);
             this.tStimuli.Location = new System.Drawing.Point(4, 24);
             this.tStimuli.Name = "tStimuli";
-            this.tStimuli.Size = new System.Drawing.Size(682, 491);
+            this.tStimuli.Size = new System.Drawing.Size(682, 555);
             this.tStimuli.TabIndex = 3;
             this.tStimuli.Text = "Stimuli";
             this.tStimuli.UseVisualStyleBackColor = true;
@@ -373,7 +374,7 @@
             this.listStimuli.Name = "listStimuli";
             this.listStimuli.SelectedIndex = -1;
             this.listStimuli.SelectedItem = null;
-            this.listStimuli.Size = new System.Drawing.Size(682, 491);
+            this.listStimuli.Size = new System.Drawing.Size(682, 555);
             this.listStimuli.TabIndex = 0;
             this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
             this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
@@ -389,7 +390,7 @@
             this.propKinematics.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.propKinematics.Location = new System.Drawing.Point(0, 0);
             this.propKinematics.Name = "propKinematics";
-            this.propKinematics.Size = new System.Drawing.Size(682, 451);
+            this.propKinematics.Size = new System.Drawing.Size(682, 515);
             this.propKinematics.TabIndex = 1;
             // 
             // textBox3
@@ -421,7 +422,7 @@
             this.panel7.Controls.Add(this.textBox3);
             this.panel7.Controls.Add(this.panel6);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel7.Location = new System.Drawing.Point(0, 451);
+            this.panel7.Location = new System.Drawing.Point(0, 515);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(682, 40);
             this.panel7.TabIndex = 7;
@@ -432,7 +433,7 @@
             this.tKinematics.Controls.Add(this.panel7);
             this.tKinematics.Location = new System.Drawing.Point(4, 24);
             this.tKinematics.Name = "tKinematics";
-            this.tKinematics.Size = new System.Drawing.Size(682, 491);
+            this.tKinematics.Size = new System.Drawing.Size(682, 555);
             this.tKinematics.TabIndex = 6;
             this.tKinematics.Text = "Kinematics";
             this.tKinematics.UseVisualStyleBackColor = true;
@@ -446,7 +447,7 @@
             this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
             this.propSettings.Location = new System.Drawing.Point(0, 112);
             this.propSettings.Name = "propSettings";
-            this.propSettings.Size = new System.Drawing.Size(682, 379);
+            this.propSettings.Size = new System.Drawing.Size(682, 443);
             this.propSettings.TabIndex = 0;
             // 
             // eTemporaryFolder
@@ -549,7 +550,7 @@
             this.tSettings.Controls.Add(this.panel8);
             this.tSettings.Location = new System.Drawing.Point(4, 24);
             this.tSettings.Name = "tSettings";
-            this.tSettings.Size = new System.Drawing.Size(682, 491);
+            this.tSettings.Size = new System.Drawing.Size(682, 555);
             this.tSettings.TabIndex = 5;
             this.tSettings.Text = "Advanced Settings";
             this.tSettings.UseVisualStyleBackColor = true;

@@ -274,7 +274,7 @@ namespace SiliFish.UI.Controls
                 TimeArray[i] = i * (double)dt;
             Stimulus stim = new()
             {
-                StimulusSettings = stimulusControl1.GetStimulus(),
+                Settings = stimulusControl1.GetStimulus(),
                 TimeSpan_ms = tl
             };
             double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();

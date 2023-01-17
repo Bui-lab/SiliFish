@@ -10,88 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Stim
 {
-    public class StimulusSettings
-    {
-        public StimulusMode Mode { get; set; }
-        //mode = Gaussian: value1 and value2 are mean and SD 
-        //mode = Step: Value1 is the stimulus value, Value2 is obsolete
-        //mode = Ramp: Value1: stimulus at time start, Value2: stimulus at time end
-        public double Value1 { get; set; }
-        public double Value2 { get; set; }
 
-        public StimulusSettings()
-        {
-        }
-        public StimulusSettings(StimulusMode mode, double value1, double value2)
-        {
-            Mode = mode;
-            Value1 = value1;
-            Value2 = value2;
-        }
-        public override string ToString()
-        {
-            return Mode switch
-            {
-                StimulusMode.Step => string.Format("{0} {1}, Noise: {2}", Mode.ToString(), Value1, Value2),
-                StimulusMode.Gaussian => string.Format("{0} µ: {1}, SD: {2}", Mode.ToString(), Value1, Value2),
-                StimulusMode.Ramp => string.Format("{0} {1} - {2}", Mode.ToString(), Value1, Value2),
-                StimulusMode.Sinusoidal => string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2),
-                StimulusMode.Pulse => string.Format("{0} Amplitude: {1}, Freq: {2}", Mode.ToString(), Value1, Value2),
-                _ => "",
-            };
-        }
-    }
-
-    public class Stimuli
-    {
-        public List<Stimulus> stimuli { get; set; }
-
-        public Stimuli()
-        {
-            stimuli = new();
-        }
-
-        [JsonIgnore]
-        public double MinValue { get { return stimuli.Any() ? stimuli.Min(s => s.MinValue) : 0; } }
-        [JsonIgnore]
-        public double MaxValue { get { return stimuli.Any() ? stimuli.Max(s => s.MaxValue) : 0; } }
-        [JsonIgnore]
-        public bool HasStimulus { get { return stimuli.Any(); } }
-        public double GenerateStimulus(int timeIndex, Random rand)
-        {
-            return stimuli.Any() ? stimuli.Sum(s => s.generateStimulus(timeIndex, rand)) : 0;
-        }
-
-        public double GetStimulus(int timeIndex)
-        {
-            return stimuli.Any() ? stimuli.Sum(s => s[timeIndex]) : 0;
-        }
-
-        public double[] GetStimulusArray(int nmax)
-        {
-            double[] ret = new double[nmax];
-            foreach (Stimulus s in stimuli)
-                ret = ret.AddArray(s.getValues(nmax));
-            return ret;
-        }
-        public virtual void InitDataVectors(int nmax)
-        {
-            foreach (Stimulus s in stimuli)
-                s.InitDataVectors(nmax);
-        }
-        public void Add(Stimulus stim)
-        {
-            if (stim == null)
-                return;
-            stimuli.Add(stim);
-        }
-        public void Remove(Stimulus stim)
-        {
-            if (stim == null || !stimuli.Contains(stim))
-                return;
-            stimuli.Remove(stim);
-        }
-    }
     public class Stimulus: StimulusBase
     {
         public static int nMax; //in time increments
@@ -107,7 +26,7 @@ namespace SiliFish.ModelUnits.Stim
         public Stimulus() { }
         public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
         {
-            StimulusSettings = settings;
+            Settings = settings;
             TargetCell = cell;
             TimeSpan_ms = new(tl);
         }
@@ -122,7 +41,7 @@ namespace SiliFish.ModelUnits.Stim
         }
         public override string ToString()
         {
-            return TargetCell.ID + ": " +StimulusSettings.ToString();
+            return TargetCell.ID + ": " +Settings.ToString();
         }
 
         public string GetTooltip()
@@ -138,9 +57,9 @@ namespace SiliFish.ModelUnits.Stim
             if (iEnd < 0)
                 iEnd = nMax;
             iStart = (int)(TimeSpan_ms.Start / RunParam.static_dt);
-            if (StimulusSettings.Mode == StimulusMode.Ramp)
+            if (Settings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
-                    tangent = (StimulusSettings.Value2 - StimulusSettings.Value1) / (iEnd - iStart);
+                    tangent = (Settings.Value2 - Settings.Value1) / (iEnd - iStart);
                 else tangent = 0;
 
             if (values != null && values.Length < iEnd)
@@ -175,34 +94,34 @@ namespace SiliFish.ModelUnits.Stim
                 values = copyArr;
             }
             double value = 0;
-            switch (StimulusSettings.Mode)
+            switch (Settings.Mode)
             {
                 case StimulusMode.Step:
-                    double noise = Value2 > 0 ? rand.Gauss(1, Value2) : 1;
-                    value = Value1 * noise;
+                    double noise = Settings.Value2 > 0 ? rand.Gauss(1, Settings.Value2) : 1;
+                    value = Settings.Value1 * noise;
                     break;
                 case StimulusMode.Ramp:
                     double ramp = (tIndex - iStart) * tangent;
-                    value = Value1 + ramp;
+                    value = Settings.Value1 + ramp;
                     break;
                 case StimulusMode.Gaussian:
-                    value = rand.Gauss(Value1, Value2, Value1 - 3 * Value2, Value1 + 3 * Value2); // µ ± 3SD range
+                    value = rand.Gauss(Settings.Value1, Settings.Value2, Settings.Value1 - 3 * Settings.Value2, Settings.Value1 + 3 * Settings.Value2); // µ ± 3SD range
                     break;
                 case StimulusMode.Sinusoidal:
-                    double sinValue = Math.Sin(2 * Math.PI * Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
-                    value = Value1 * sinValue;
+                    double sinValue = Math.Sin(2 * Math.PI * Settings.Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
+                    value = Settings.Value1 * sinValue;
                     break;
                 case StimulusMode.Pulse:
                     value = 0;
-                    if (Value2 > 0)//Value2 is the number of pulses
+                    if (Settings.Value2 > 0)//Value2 is the number of pulses
                     {
                         double timeRange = TimeSpan_ms.End > 0 ? TimeSpan_ms.End - TimeSpan_ms.Start : 1000;
-                        double period = timeRange / Value2;
+                        double period = timeRange / Settings.Value2;
                         double t = t_ms - TimeSpan_ms.Start; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
                         while (t > period)
                             t -= period;
                         if (t <= period / 2)
-                            value = Value1;
+                            value = Settings.Value1;
                     }
                     break;
             }

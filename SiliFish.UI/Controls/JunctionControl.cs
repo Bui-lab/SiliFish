@@ -13,7 +13,6 @@ namespace SiliFish.UI.Controls
         public event EventHandler JunctionChanged { add => junctionChanged += value; remove => junctionChanged -= value; }
 
         private JunctionBase Junction;
-        private Dictionary<string, object> Parameters;
         public override string ToString()
         {
             string activeStatus = !cbActive.Checked ? " (inactive)" :
@@ -193,8 +192,10 @@ namespace SiliFish.UI.Controls
                 {
                     ddTargetCell.Items.AddRange(postpool.GetCells().Select(c => c.ID).ToArray());
                 }
-                numConductance.SetValue(junction.CellReach.Weight);
-                numDelay.SetValue(junction.CellReach.Delay_ms);
+                double conductance = junction is GapJunction gj ? gj.Conductance : (junction as ChemicalSynapse).Conductance;
+                numConductance.SetValue(conductance);
+                double delay = junction is GapJunction gj2 ? gj2.Delay: (junction as ChemicalSynapse).Delay;
+                numDelay.SetValue(delay);
                 eFixedDuration.Text = junction.CellReach.FixedDuration_ms?.ToString() ?? "";
                 
                 cbActive.Checked = junction.Active;

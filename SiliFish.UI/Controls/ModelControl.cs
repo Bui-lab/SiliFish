@@ -105,22 +105,22 @@ namespace SiliFish.UI.Controls
         private void LoadParamsAndSettings()
         {
             //General Params
-            eModelName.Text = Model.ModelName;
-            eModelDescription.Text = Model.ModelDescription;
-            propModelDimensions.SelectedObject = Model.ModelDimensions;
+            eModelName.Text = Model?.ModelName;
+            eModelDescription.Text = Model?.ModelDescription;
+            propModelDimensions.SelectedObject = Model?.ModelDimensions;
 
             //Settings
             if (ddDefaultNeuronCore.Items.Count == 0)
                 ddDefaultNeuronCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
-            ddDefaultNeuronCore.Text = Model.Settings.DefaultNeuronCore;
+            ddDefaultNeuronCore.Text = Model?.Settings.DefaultNeuronCore;
             if (ddDefaultMuscleCellCore.Items.Count == 0)
                 ddDefaultMuscleCellCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
-            ddDefaultMuscleCellCore.Text = Model.Settings.DefaultMuscleCellCore;
-            eTemporaryFolder.Text = Model.Settings.TempFolder;
-            eOutputFolder.Text = Model.Settings.OutputFolder;
-            propSettings.SelectedObject = Model.Settings;
-            propKinematics.SelectedObject = Model.KinemParam;
-            LoadParams(Model.Parameters);
+            ddDefaultMuscleCellCore.Text = Model?.Settings.DefaultMuscleCellCore;
+            eTemporaryFolder.Text = Model?.Settings.TempFolder;
+            eOutputFolder.Text = Model?.Settings.OutputFolder;
+            propSettings.SelectedObject = Model?.Settings;
+            propKinematics.SelectedObject = Model?.KinemParam;
+            LoadParams(Model?.Parameters);
         }
 
         private void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
@@ -169,19 +169,21 @@ namespace SiliFish.UI.Controls
             LoadPools();
             LoadProjections();
             LoadStimuli();
-            this.Text = $"SiliFish {Model.ModelName}";
+            this.Text = $"SiliFish {Model?.ModelName}";
         }
 
         public void SetModel(ModelBase model)
         {
             Model = model;
             CurrentMode = Model is ModelTemplate ? Mode.Template : Mode.RunningModel;
+            splitCellPools.Panel2Collapsed = CurrentMode == Mode.Template;
             LoadModel();
         }
         public ModelBase GetModel()
         {
             try
             {
+                if (Model == null) return null;
                 Model.ModelName = eModelName.Text;
                 Model.ModelDescription = eModelDescription.Text;
                 Model.Parameters = ReadParams();
@@ -199,6 +201,7 @@ namespace SiliFish.UI.Controls
          private void LoadPools()
         {
             listCellPools.ClearItems();
+            if (Model == null) return;
             foreach (CellPoolTemplate cp in Model.GetCellPools())
             {
                 listCellPools.AppendItem(cp);
@@ -261,7 +264,7 @@ namespace SiliFish.UI.Controls
             if (poolDuplicate != null)
             {
                 Model.AddCellPool(poolDuplicate);
-                //TODO ModelTemplate.CopyConnectionsOfCellPool(pool, poolDuplicate);
+                Model.CopyConnectionsOfCellPool(pool, poolDuplicate);
                 listCellPools.AppendItem(poolDuplicate);
                 LoadProjections();
                 ModelUpdated = true;
@@ -285,6 +288,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPool_ViewItem(object sender, EventArgs e)
         {
+            if (CurrentMode == Mode.RunningModel) return;
             if (listCellPools.SelectedItem is not CellPoolTemplate pool) return;
             string oldName = pool.CellGroup;
             pool = OpenCellPoolDialog(pool); //check modeltemplate's list
@@ -295,12 +299,8 @@ namespace SiliFish.UI.Controls
                 listCellPools.RefreshItem(ind, pool);
                 if (oldName != pool.CellGroup)
                 {
-                    if (Model is ModelTemplate mt)
-                    {
-                        mt.RenameCellPool(oldName, pool.CellGroup);
-                        LoadProjections();
-                    }
-                    else { }//TODO
+                    (Model as ModelTemplate).RenameCellPool(oldName, pool.CellGroup);
+                    LoadProjections();
                 }
             }
         }
@@ -323,42 +323,63 @@ namespace SiliFish.UI.Controls
         #region Connection
         private void LoadProjections()
         {
-            if (CurrentMode != Mode.Template) return;
             listConnections.ClearItems();
+            if (Model == null) return;
             foreach (object jnc in Model.GetProjections())
             {
                 listConnections.AppendItem(jnc);
             }
         }
 
-        private InterPoolTemplate OpenConnectionDialog(InterPoolTemplate interpool)
+        private void LoadProjections(CellPool cp)
+        {
+            if (cp == null)
+            {
+                LoadProjections();
+                return;
+            }
+            listConnections.ClearItems();
+            foreach (JunctionBase jnc in cp.LeavingProjections)
+            {
+                listConnections.AppendItem(jnc);
+            }
+        }
+        private JunctionBase OpenConnectionDialog(JunctionBase interpool)
         {
             if (Model==null) return null;
-            ControlContainer frmControl = new();
-            InterPoolControl ipl = new(Model.ModelDimensions.NumberOfSomites > 0);
-
-            /*TODO ipl.SetInterPoolTemplate(ModelTemplate.CellPoolTemplates, interpool, ModelTemplate);
-            frmControl.AddControl(ipl);
-            frmControl.Text = interpool?.ToString() ?? "New Connection";
-
-            if (frmControl.ShowDialog() == DialogResult.OK)
+            if (CurrentMode == Mode.Template)
             {
-                InterPoolTemplate interPoolTemplate = ipl.GetInterPoolTemplate();
-                ModelTemplate.LinkObjects(interPoolTemplate);
-                return interPoolTemplate;
-            }*/
+                ControlContainer frmControl = new();
+                InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0);
+                ModelTemplate modelTemplate=Model as ModelTemplate;
+                InterPoolTemplate interPoolTemplate= interpool as InterPoolTemplate;
+                ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
+                frmControl.AddControl(ipControl);
+                frmControl.Text = interpool?.ToString() ?? "New Connection";
+
+                if (frmControl.ShowDialog() == DialogResult.OK)
+                {
+                    interPoolTemplate = ipControl.GetInterPoolTemplate();
+                    modelTemplate.LinkObjects(interPoolTemplate);
+                    return interPoolTemplate;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Under implementation.");
+                //TODO JunctionControl jncControl = new();
+            }
             return null;
         }
 
         private void listConnections_AddItem(object sender, EventArgs e)
         {
-           /*TODO  InterPoolTemplate newJnc = OpenConnectionDialog(null);
+            JunctionBase newJnc = OpenConnectionDialog(null);
             if (newJnc != null)
             {
-                ModelTemplate.InterPoolTemplates.Add(newJnc);
+                Model.AddJunction(newJnc);
                 listConnections.AppendItem(newJnc);
-                modifiedJncs = true;
-            }*/
+            }
         }
         private void listConnections_CopyItem(object sender, EventArgs e)
         {
@@ -387,14 +408,14 @@ namespace SiliFish.UI.Controls
         {
             if (listConnections.SelectedItem == null)
                 return;
-            InterPoolTemplate interpool = listConnections.SelectedItem as InterPoolTemplate;
-            interpool = OpenConnectionDialog(interpool); //check modeltemplate's list
+            JunctionBase jnc = listConnections.SelectedItem as JunctionBase;
+            /*interpool = OpenConnectionDialog(interpool); //check modeltemplate's list
             if (interpool != null)
             {
                 int ind = listConnections.SelectedIndex;
                 listConnections.RefreshItem(ind, interpool);
                 ModelUpdated = true;
-            }
+            }*/
         }
 
         private void listConnections_ActivateItem(object sender, EventArgs e)
@@ -441,6 +462,7 @@ namespace SiliFish.UI.Controls
         {
             if (CurrentMode != Mode.Template) return;
             listStimuli.ClearItems();
+            if (Model == null) return;
             foreach (object stim in Model.GetStimuli())
             {
                 listStimuli.AppendItem(stim);
@@ -450,7 +472,7 @@ namespace SiliFish.UI.Controls
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
         {
             ControlContainer frmControl = new();
-            AppliedStimulusControl sc = new();
+            StimulusTemplateControl sc = new();
 
             if (CurrentMode==Mode.Template) 
                 sc.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
@@ -522,11 +544,13 @@ namespace SiliFish.UI.Controls
         
         private void ddDefaultNeuronCore_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (Model == null) return;
             Model.Settings.DefaultNeuronCore = ddDefaultNeuronCore.Text;
         }
 
         private void ddDefaultMuscleCore_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (Model == null) return;
             Model.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
         }
         
@@ -555,6 +579,15 @@ namespace SiliFish.UI.Controls
             }
         }
 
-
+        private void listCellPools_SelectItem(object sender, EventArgs e)
+        {
+            listCells.ClearItems();
+            if (sender is CellPool pool)
+            {
+                LoadProjections(pool);
+                foreach (Cell c in pool.GetCells())
+                    listCells.AppendItem(c);
+            }
+        }
     }
 }

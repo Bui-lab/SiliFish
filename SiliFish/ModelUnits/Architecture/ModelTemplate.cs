@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,6 +43,15 @@ namespace SiliFish.ModelUnits.Architecture
         {
             return InterPoolTemplates.Select(ip => (object)ip).ToList();
         }
+
+
+        public override bool AddJunction(JunctionBase jnc) 
+        { 
+            throw new NotImplementedException(); 
+        }
+        public override bool RemoveJunction(JunctionBase jnc) { throw new NotImplementedException(); }
+        public override void SortJunctions() { throw new NotImplementedException(); }
+
 
         public override List<StimulusBase> GetStimuli()
         {
@@ -87,19 +97,23 @@ namespace SiliFish.ModelUnits.Architecture
                 return "Gap junction and synapse names have to be unique";
             return "";
         }
-        public void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolTarget)
+        public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {
             List<InterPoolTemplate> iptNewList = new();
             foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolSource == poolSource.CellGroup))
             {
-                InterPoolTemplate iptCopy = new(ipt);
-                iptCopy.PoolSource = poolTarget.CellGroup;
+                InterPoolTemplate iptCopy = new(ipt)
+                {
+                    PoolSource = poolCopyTo.CellGroup
+                };
                 iptNewList.Add(iptCopy);
             }
             foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolTarget == poolSource.CellGroup))
             {
-                InterPoolTemplate iptCopy = new(ipt);
-                iptCopy.PoolTarget = poolTarget.CellGroup;
+                InterPoolTemplate iptCopy = new(ipt)
+                {
+                    PoolTarget = poolCopyTo.CellGroup
+                };
                 iptNewList.Add(iptCopy);
             }
             InterPoolTemplates.AddRange(iptNewList);
@@ -130,10 +144,7 @@ namespace SiliFish.ModelUnits.Architecture
 
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
             {
-                if (cpt.ConductionVelocity == null)
-                {
-                    cpt.ConductionVelocity = new Constant_NoDistribution(CurrentSettings.Settings.cv, absolute: true, angular: false, noiseStdDev: 0);
-                }
+                cpt.ConductionVelocity ??= new Constant_NoDistribution(CurrentSettings.Settings.cv);
             }
         }
 

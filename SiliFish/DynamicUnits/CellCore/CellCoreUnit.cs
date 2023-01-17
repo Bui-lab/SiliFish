@@ -92,7 +92,7 @@ namespace SiliFish.DynamicUnits
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
             CellCoreUnit core = CreateCore(coreType, null);
-            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value, true, false, 0) as Distribution);
+            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
 
 

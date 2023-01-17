@@ -4,7 +4,7 @@ using SiliFish.ModelUnits.Stim;
 
 namespace SiliFish.UI.Controls
 {
-    public partial class AppliedStimulusControl : UserControl
+    public partial class StimulusTemplateControl : UserControl
     {
         private event EventHandler stimulusChanged;
         public event EventHandler StimulusChanged
@@ -21,7 +21,7 @@ namespace SiliFish.UI.Controls
             }
         }
         private StimulusBase Stimulus;
-        public AppliedStimulusControl()
+        public StimulusTemplateControl()
         {
             InitializeComponent();
             timeLineControl.TimeLineChanged += TimeLineControl_TimeLineChanged;
@@ -50,7 +50,7 @@ namespace SiliFish.UI.Controls
                 stim = new();
             Stimulus = stim;
 
-            stimControl.SetStimulus(Stimulus.StimulusSettings);
+            stimControl.SetStimulus(Stimulus.Settings);
             ddTargetPool.Items.AddRange(pools.ToArray());
             ddTargetPool.Text = stim.TargetPool;
             if (ddTargetPool.Text == "")
@@ -91,7 +91,7 @@ namespace SiliFish.UI.Controls
 
             if (pools == null || pools.Count == 0) return;
             Stimulus = stim;
-            stimControl.SetStimulus(Stimulus.StimulusSettings);
+            stimControl.SetStimulus(Stimulus.Settings);
 
             if (stim == null)
             {
@@ -123,7 +123,7 @@ namespace SiliFish.UI.Controls
             {
                 Stimulus = new StimulusTemplate()
                 {
-                    StimulusSettings = stimControl.GetStimulus(),
+                    Settings = stimControl.GetStimulus(),
                     TargetPool = ddTargetPool.Text,
                     TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
                     TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
@@ -134,7 +134,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                Stimulus.StimulusSettings = stimControl.GetStimulus();
+                Stimulus.Settings = stimControl.GetStimulus();
                 Stimulus.TimeLine_ms = timeLineControl.GetTimeLine();
                 Stimulus.Active = cbActive.Checked;
             }

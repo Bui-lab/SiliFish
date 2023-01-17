@@ -169,7 +169,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public IEnumerable<Cell> GetCells()
         {
-            return Cells.AsEnumerable<Cell>();
+            return Cells.AsEnumerable();
         }
 
         public IEnumerable<Cell> GetCells(CellSelectionStruct cellSelection)
@@ -228,6 +228,22 @@ namespace SiliFish.ModelUnits.Cells
                 .AsEnumerable<Cell>();
         }
 
+        [JsonIgnore]
+        public IEnumerable<JunctionBase> LeavingProjections
+        {
+            get
+            {
+                List<JunctionBase> jncs = new();
+                foreach (Cell cell in Cells)
+                {
+                    if (cell is Neuron neuron)
+                        jncs.AddRange(neuron.Terminals);
+                    jncs.AddRange(cell.GapJunctions.Where(gj => gj.Cell1 == cell).ToList());
+                }
+                return jncs;
+            }
+        }
+
         public void GenerateCells(CellPoolTemplate template, SagittalPlane leftright)
         {
             int n = template.NumOfCells;
@@ -280,10 +296,10 @@ namespace SiliFish.ModelUnits.Cells
 
         public void FormKernel(double weight)
         {
-            foreach (Neuron ic in GetCells())
+            foreach (Neuron ic in GetCells().Cast<Neuron>())
             {
                 //IC to IC kernel junctions
-                foreach (Neuron ic2 in GetCells().Where(c => c.Sequence > ic.Sequence)) //sequence check is added to prevent recursive or self junctions
+                foreach (Neuron ic2 in GetCells().Where(c => c.Sequence > ic.Sequence).Cast<Neuron>()) //sequence check is added to prevent recursive or self junctions
                 {
                     //no distance check as ICs form a kernel
                     double mult = 1;
@@ -293,7 +309,7 @@ namespace SiliFish.ModelUnits.Cells
                 }
             }
         }
-        public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probabibility)
+        public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probability, DistanceMode distanceMode)
         {
             foreach (Cell pre in this.GetCells())
             {
@@ -301,7 +317,7 @@ namespace SiliFish.ModelUnits.Cells
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
                 foreach (Cell post in targetcells)
                 {
-                    if (probabibility < RunningModel.rand.Next(1))
+                    if (probability < RunningModel.rand.Next(1))
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)
@@ -311,7 +327,7 @@ namespace SiliFish.ModelUnits.Cells
                         mult = 1;
                         if (CellPool.gapWeightNoiseMultiplier != null)
                             mult = gapWeightNoiseMultiplier();
-                        GapJunction jnc = pre.CreateGapJunction(post, reach.Weight * mult, reach.DistanceMode);
+                        GapJunction jnc = pre.CreateGapJunction(post, reach.Weight * mult, distanceMode);
                         jnc.SetDelay(reach.Delay_ms);
                         jnc.SetTimeSpan(timeline);
                         if (reach.FixedDuration_ms != null)
@@ -321,7 +337,7 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline, double probability)
+        public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline, double probability, DistanceMode distanceMode)
         {
             int maxIncoming = reach.MaxIncoming;
             int maxOutgoing = reach.MaxOutgoing;
@@ -337,7 +353,7 @@ namespace SiliFish.ModelUnits.Cells
                 int numTarget = target.GetCells().Count();
                 maxIncoming = (int)Math.Ceiling((double)maxOutgoing * numSource / numTarget);
             }
-            foreach (Neuron pre in this.GetCells())
+            foreach (Neuron pre in GetCells().Cast<Neuron>())
             {
                 int counter = 0;
                 foreach (Cell post in target.GetCells())
@@ -367,7 +383,7 @@ namespace SiliFish.ModelUnits.Cells
                         mult = 1;
                         if (CellPool.synWeightNoiseMultiplier != null)
                             mult = synWeightNoiseMultiplier();
-                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, reach.Weight * mult, reach.DistanceMode);
+                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, reach.Weight * mult, distanceMode);
                         syn.SetDelay(reach.Delay_ms);
                         if (reach.FixedDuration_ms != null)
                             syn.SetFixedDuration((double)reach.FixedDuration_ms);
@@ -394,7 +410,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (Cell cell in GetCells()
                 .Where(c => (!somites.Any() || somites.Contains(c.Somite)) && (!seqs.Any() || seqs.Contains(c.Sequence))))
             {
-                Stimulus stimulus_ms = new Stimulus(stimulus.StimulusSettings, cell, stimulus.TimeLine_ms);
+                Stimulus stimulus_ms = new(stimulus.Settings, cell, stimulus.TimeLine_ms);
                 cell.Stimuli.Add(stimulus_ms);
             }
         }
