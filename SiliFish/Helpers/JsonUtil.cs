@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace SiliFish.Helpers
 {
@@ -51,7 +52,24 @@ namespace SiliFish.Helpers
             return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
         }
 
-        private static void FixDistributionJson(ref string json)
+        private static bool RemoveOldParameters(ref string json)
+        {
+            if (json == null)
+                return false;
+            List<string> oldParamPatterns = new List<string>
+            {
+                "\"Dynamic.sigma_range\":.*",
+                "\"Dynamic.sigma_gap\":.*",
+                "\"Dynamic.sigma_chem\":.*"
+            };
+            int prevLength = json.Length;
+            foreach (string pattern in oldParamPatterns)
+            {
+                json = Regex.Replace(json, pattern, "");
+            }
+            return prevLength!=json.Length;
+        }
+        private static void FixDistributionJson(ref string json)//TODO convert to regex, and return bool
         {
             Dictionary<string, string> dist = new()
             {
@@ -96,6 +114,7 @@ namespace SiliFish.Helpers
                 .Replace("\"CoreType\": 2", "\"CoreType\": \"Leaky_Integrator\"");
                 list.Add("Core types");
             }
+            RemoveOldParameters(ref json);
             FixDistributionJson(ref json);
 
             return list;

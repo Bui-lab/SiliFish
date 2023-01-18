@@ -19,6 +19,7 @@
     <Compile Remove="Extensions\ImageExtensions.cs" />
     <Compile Remove="Helpers\ImageHelper.cs" />
     <Compile Remove="IzhikevichOld.cs" />
+    <Compile Remove="ModelUnits\Architecture\SampleSwimmingModel.cs" />
     <Compile Remove="OldDoubleCoilBase.cs" />
     <Compile Remove="OldSingleCoilBase.cs" />
     <Compile Remove="OldUtil.cs" />

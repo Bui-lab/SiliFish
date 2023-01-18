@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelControl));
             this.propModelDimensions = new System.Windows.Forms.PropertyGrid();
             this.pbDrawing = new System.Windows.Forms.PictureBox();
             this.pDrawing = new System.Windows.Forms.Panel();
@@ -68,6 +69,13 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.tSettings = new System.Windows.Forms.TabPage();
             this.tabModel = new System.Windows.Forms.TabControl();
+            this.tJson = new System.Windows.Forms.TabPage();
+            this.eModelJSON = new System.Windows.Forms.RichTextBox();
+            this.pModelJSONTop = new System.Windows.Forms.Panel();
+            this.pLineModelJSON = new System.Windows.Forms.Panel();
+            this.linkSaveModelJSON = new System.Windows.Forms.LinkLabel();
+            this.btnLoadModelJSON = new System.Windows.Forms.Button();
+            this.btnDisplayModelJSON = new System.Windows.Forms.Button();
             this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
@@ -95,6 +103,8 @@
             this.panel8.SuspendLayout();
             this.tSettings.SuspendLayout();
             this.tabModel.SuspendLayout();
+            this.tJson.SuspendLayout();
+            this.pModelJSONTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // propModelDimensions
@@ -111,6 +121,7 @@
             // pbDrawing
             // 
             this.pbDrawing.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbDrawing.Image = ((System.Drawing.Image)(resources.GetObject("pbDrawing.Image")));
             this.pbDrawing.Location = new System.Drawing.Point(0, 0);
             this.pbDrawing.Name = "pbDrawing";
             this.pbDrawing.Size = new System.Drawing.Size(449, 476);
@@ -564,6 +575,7 @@
             this.tabModel.Controls.Add(this.tStimuli);
             this.tabModel.Controls.Add(this.tKinematics);
             this.tabModel.Controls.Add(this.tSettings);
+            this.tabModel.Controls.Add(this.tJson);
             this.tabModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabModel.Location = new System.Drawing.Point(0, 0);
             this.tabModel.Name = "tabModel";
@@ -571,6 +583,91 @@
             this.tabModel.Size = new System.Drawing.Size(690, 583);
             this.tabModel.TabIndex = 2;
             this.tabModel.Tag = "";
+            // 
+            // tJson
+            // 
+            this.tJson.Controls.Add(this.eModelJSON);
+            this.tJson.Controls.Add(this.pModelJSONTop);
+            this.tJson.Location = new System.Drawing.Point(4, 24);
+            this.tJson.Name = "tJson";
+            this.tJson.Size = new System.Drawing.Size(682, 555);
+            this.tJson.TabIndex = 7;
+            this.tJson.Text = "JSON File";
+            this.tJson.UseVisualStyleBackColor = true;
+            // 
+            // eModelJSON
+            // 
+            this.eModelJSON.AcceptsTab = true;
+            this.eModelJSON.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.eModelJSON.Location = new System.Drawing.Point(0, 40);
+            this.eModelJSON.Name = "eModelJSON";
+            this.eModelJSON.Size = new System.Drawing.Size(682, 515);
+            this.eModelJSON.TabIndex = 5;
+            this.eModelJSON.Text = "";
+            this.eModelJSON.TextChanged += new System.EventHandler(this.eModelJSON_TextChanged);
+            // 
+            // pModelJSONTop
+            // 
+            this.pModelJSONTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pModelJSONTop.Controls.Add(this.pLineModelJSON);
+            this.pModelJSONTop.Controls.Add(this.linkSaveModelJSON);
+            this.pModelJSONTop.Controls.Add(this.btnLoadModelJSON);
+            this.pModelJSONTop.Controls.Add(this.btnDisplayModelJSON);
+            this.pModelJSONTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pModelJSONTop.Location = new System.Drawing.Point(0, 0);
+            this.pModelJSONTop.Name = "pModelJSONTop";
+            this.pModelJSONTop.Size = new System.Drawing.Size(682, 40);
+            this.pModelJSONTop.TabIndex = 4;
+            // 
+            // pLineModelJSON
+            // 
+            this.pLineModelJSON.BackColor = System.Drawing.Color.LightGray;
+            this.pLineModelJSON.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pLineModelJSON.Location = new System.Drawing.Point(0, 39);
+            this.pLineModelJSON.Name = "pLineModelJSON";
+            this.pLineModelJSON.Size = new System.Drawing.Size(682, 1);
+            this.pLineModelJSON.TabIndex = 25;
+            // 
+            // linkSaveModelJSON
+            // 
+            this.linkSaveModelJSON.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkSaveModelJSON.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkSaveModelJSON.Location = new System.Drawing.Point(1188, 10);
+            this.linkSaveModelJSON.Name = "linkSaveModelJSON";
+            this.linkSaveModelJSON.Size = new System.Drawing.Size(68, 16);
+            this.linkSaveModelJSON.TabIndex = 5;
+            this.linkSaveModelJSON.TabStop = true;
+            this.linkSaveModelJSON.Text = "Save Model";
+            this.linkSaveModelJSON.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnLoadModelJSON
+            // 
+            this.btnLoadModelJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnLoadModelJSON.Enabled = false;
+            this.btnLoadModelJSON.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnLoadModelJSON.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLoadModelJSON.ForeColor = System.Drawing.Color.White;
+            this.btnLoadModelJSON.Location = new System.Drawing.Point(88, 8);
+            this.btnLoadModelJSON.Name = "btnLoadModelJSON";
+            this.btnLoadModelJSON.Size = new System.Drawing.Size(75, 24);
+            this.btnLoadModelJSON.TabIndex = 1;
+            this.btnLoadModelJSON.Text = "Load";
+            this.btnLoadModelJSON.UseVisualStyleBackColor = false;
+            this.btnLoadModelJSON.Click += new System.EventHandler(this.btnLoadModelJSON_Click);
+            // 
+            // btnDisplayModelJSON
+            // 
+            this.btnDisplayModelJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDisplayModelJSON.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnDisplayModelJSON.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDisplayModelJSON.ForeColor = System.Drawing.Color.White;
+            this.btnDisplayModelJSON.Location = new System.Drawing.Point(8, 8);
+            this.btnDisplayModelJSON.Name = "btnDisplayModelJSON";
+            this.btnDisplayModelJSON.Size = new System.Drawing.Size(75, 24);
+            this.btnDisplayModelJSON.TabIndex = 0;
+            this.btnDisplayModelJSON.Text = "Display";
+            this.btnDisplayModelJSON.UseVisualStyleBackColor = false;
+            this.btnDisplayModelJSON.Click += new System.EventHandler(this.btnDisplayModelJSON_Click);
             // 
             // openFileJson
             // 
@@ -616,6 +713,8 @@
             this.panel8.PerformLayout();
             this.tSettings.ResumeLayout(false);
             this.tabModel.ResumeLayout(false);
+            this.tJson.ResumeLayout(false);
+            this.pModelJSONTop.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -664,5 +763,12 @@
         private ListBoxControl listCells;
         private ListBoxControl listConnections;
         private ListBoxControl listStimuli;
+        private TabPage tJson;
+        private Panel pModelJSONTop;
+        private Panel pLineModelJSON;
+        private LinkLabel linkSaveModelJSON;
+        private Button btnLoadModelJSON;
+        private Button btnDisplayModelJSON;
+        private RichTextBox eModelJSON;
     }
 }

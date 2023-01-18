@@ -9,6 +9,7 @@ using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using SiliFish.ModelUnits.Junction;
+using System.Text.Json;
 
 namespace SiliFish.UI.Controls
 {
@@ -650,8 +651,51 @@ namespace SiliFish.UI.Controls
             }
         }
 
+
         #endregion
 
- 
+        private void eModelJSON_TextChanged(object sender, EventArgs e)
+        {
+            if (eModelJSON.Focused)
+                btnLoadModelJSON.Enabled = true;
+        }
+
+        private void btnDisplayModelJSON_Click(object sender, EventArgs e)
+        {
+            GetModel();
+            try
+            {
+                eModelJSON.Text = JsonUtil.ToJson(Model);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+            btnLoadModelJSON.Enabled = false;
+        }
+
+        private void btnLoadModelJSON_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                /*TODO reload Model from JSON
+                 * if (JsonUtil.ToObject(typeof(ModelTemplate), eTemplateJSON.Text) is ModelTemplate temp)
+                {
+                    ModelTemplate = temp;
+                    ModelTemplate.LinkObjects();
+                    //TODO LoadModelTemplate();
+                    MessageBox.Show("Updated template is loaded.");
+                }*/
+            }
+            catch (JsonException exc)
+            {
+                MessageBox.Show($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}");
+            }
+            catch (Exception exc)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+
+        }
     }
 }
