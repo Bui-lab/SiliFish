@@ -95,6 +95,9 @@ namespace SiliFish.ModelUnits.Architecture
         public virtual bool AddJunction(JunctionBase jnc) { throw new NotImplementedException(); }
         public virtual bool RemoveJunction(JunctionBase jnc) { throw new NotImplementedException(); }
         public virtual void SortJunctions() { throw new NotImplementedException(); }
+        public virtual void SortJunctionsByType() { throw new NotImplementedException(); }
+        public virtual void SortJunctionsBySource() { throw new NotImplementedException(); }
+        public virtual void SortJunctionsByTarget() { throw new NotImplementedException(); }
 
         public virtual void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolTarget)
         {

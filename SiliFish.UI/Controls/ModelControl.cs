@@ -29,8 +29,11 @@ namespace SiliFish.UI.Controls
                 modelUpdated = true;
                 modelChanged?.Invoke(this, EventArgs.Empty);
             }
-        } 
-        
+        }
+
+        private CellPool SelectedPool; //valid if Mode == Mode.RunningModel
+        private Cell SelectedCell; //valid if Mode == Mode.RunningModel
+
         public ModelControl()
         {
             InitializeComponent();
@@ -198,14 +201,17 @@ namespace SiliFish.UI.Controls
 
         #endregion
         #region Cell Pool
-         private void LoadPools()
+        private void LoadPools()
         {
             listCellPools.ClearItems();
+            listCells.ClearItems();
             if (Model == null) return;
             foreach (CellPoolTemplate cp in Model.GetCellPools())
             {
                 listCellPools.AppendItem(cp);
             }
+            SelectedPool = null;
+            SelectedCell = null;
         }       
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
@@ -248,6 +254,19 @@ namespace SiliFish.UI.Controls
                 Model.AddCellPool(newPool);
                 listCellPools.AppendItem(newPool);
                 ModelUpdated = true;
+            }
+        }
+        private void listCellPools_SelectItem(object sender, EventArgs e)
+        {
+            if (CurrentMode != Mode.RunningModel) return;
+            listCells.ClearItems();
+            if (sender is CellPool pool)
+            {
+                SelectedPool = pool;
+                SelectedCell = null;
+                LoadProjections(pool);
+                foreach (Cell c in pool.GetCells())
+                    listCells.AppendItem(c);
             }
         }
         private void listCellPool_CopyItem(object sender, EventArgs e)
@@ -307,8 +326,6 @@ namespace SiliFish.UI.Controls
 
         private void listCellPool_ActivateItem(object sender, EventArgs e)
         {
-            if (listCellPools.SelectedItem is not CellPoolTemplate pool) return;
-            Model.GetCellPools().FirstOrDefault(p => p.Distinguisher == pool.Distinguisher).Active = pool.Active;
             ModelUpdated = true;
         }
 
@@ -316,6 +333,16 @@ namespace SiliFish.UI.Controls
         {
             Model.SortCellPools();
             LoadPools();
+        }
+
+        private void listCells_SelectItem(object sender, EventArgs e)
+        {
+            if (CurrentMode != Mode.RunningModel) return;
+            if (sender is Cell cell)
+            {
+                SelectedCell = cell;
+                LoadProjections(cell);
+            }
         }
 
         #endregion
@@ -344,15 +371,38 @@ namespace SiliFish.UI.Controls
                 listConnections.AppendItem(jnc);
             }
         }
+        private void LoadProjections(Cell cell)
+        {
+            if (cell == null)
+            {
+                if (SelectedPool != null)
+                    LoadProjections(SelectedPool);
+                else
+                    LoadProjections();
+                return;
+            }
+            listConnections.ClearItems();
+            foreach (JunctionBase jnc in cell.GapJunctions)
+            {
+                listConnections.AppendItem(jnc);
+            }
+            if (cell is Neuron neuron)
+            {
+                foreach (JunctionBase jnc in neuron.Terminals)
+                {
+                    listConnections.AppendItem(jnc);
+                }
+            }
+        }
         private JunctionBase OpenConnectionDialog(JunctionBase interpool)
         {
-            if (Model==null) return null;
+            if (Model == null) return null;
             if (CurrentMode == Mode.Template)
             {
                 ControlContainer frmControl = new();
                 InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0);
-                ModelTemplate modelTemplate=Model as ModelTemplate;
-                InterPoolTemplate interPoolTemplate= interpool as InterPoolTemplate;
+                ModelTemplate modelTemplate = Model as ModelTemplate;
+                InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
                 frmControl.AddControl(ipControl);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
@@ -367,7 +417,7 @@ namespace SiliFish.UI.Controls
             else
             {
                 MessageBox.Show("Under implementation.");
-                //TODO JunctionControl jncControl = new();
+                //MODEL EDIT JunctionControl jncControl = new();
             }
             return null;
         }
@@ -379,79 +429,107 @@ namespace SiliFish.UI.Controls
             {
                 Model.AddJunction(newJnc);
                 listConnections.AppendItem(newJnc);
+                ModelUpdated = true;
             }
         }
         private void listConnections_CopyItem(object sender, EventArgs e)
         {
-            /*TODOif (listConnections.SelectedItem == null)
+            if (Model == null) return ;
+            if (listConnections.SelectedItem == null)
                 return;
-            InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
-            jnc = OpenConnectionDialog(jnc);
-            if (jnc != null)
+            if (CurrentMode == Mode.Template)
             {
-                ModelTemplate.InterPoolTemplates.Add(jnc);
-                listConnections.AppendItem(jnc);
-                modifiedJncs = true;
-            }*/
+                InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
+                jnc = OpenConnectionDialog(jnc) as InterPoolTemplate;
+                if (jnc != null)
+                {
+                    Model.AddJunction(jnc);
+                    listConnections.AppendItem(jnc);
+                }
+                ModelUpdated = true;
+            }
+            else
+            {
+                MessageBox.Show("Under implementation.");
+                //MODEL EDIT JunctionControl jncControl = new();
+            }
         }
         private void listConnections_DeleteItem(object sender, EventArgs e)
         {
-            /*TODO if (listConnections.SelectedIndex >= 0)
+            if (listConnections.SelectedIndex >= 0)
             {
-                InterPoolTemplate ipl = (InterPoolTemplate)listConnections.SelectedItem;
-                ModelTemplate.InterPoolTemplates.Remove(ipl);
+                Model.RemoveJunction(listConnections.SelectedItem as JunctionBase);
                 listConnections.RemoveItemAt(listConnections.SelectedIndex);
-                modifiedJncs = true;
-            }*/
+                ModelUpdated = true;
+            }
         }
         private void listConnections_ViewItem(object sender, EventArgs e)
         {
             if (listConnections.SelectedItem == null)
                 return;
             JunctionBase jnc = listConnections.SelectedItem as JunctionBase;
-            /*interpool = OpenConnectionDialog(interpool); //check modeltemplate's list
-            if (interpool != null)
+            jnc = OpenConnectionDialog(jnc); //check modeltemplate's list
+            if (jnc != null)
             {
                 int ind = listConnections.SelectedIndex;
-                listConnections.RefreshItem(ind, interpool);
+                listConnections.RefreshItem(ind, jnc);
                 ModelUpdated = true;
-            }*/
+            }
         }
 
         private void listConnections_ActivateItem(object sender, EventArgs e)
         {
-            InterPoolTemplate jnc = sender as InterPoolTemplate;
-            //TODO Model.GetProjections().FirstOrDefault(p => p.Distinguisher == jnc.Distinguisher).Active = jnc.Active;
             ModelUpdated = true;
         }
 
         private void listConnections_SortItems(object sender, EventArgs e)
         {
-            /*TODO ModelTemplate.InterPoolTemplates.Sort();
-            LoadModelTemplateInterPools();*/
+            if (SelectedCell != null)
+            {
+                SelectedCell.SortJunctions();
+                LoadProjections(SelectedCell);
+            }
+            else if (CurrentMode == Mode.Template)
+            {
+                Model.SortJunctions();
+                LoadProjections();
+            }
         }
 
         private void listConnections_SortByType(object sender, EventArgs e)
         {
-           /*TODO  ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.ConnectionType.ToString())
-                .ToList();
-            LoadModelTemplateInterPools();*/
+            if (CurrentMode == Mode.Template)
+            {
+                Model.SortJunctionsByType();
+                LoadProjections();
+            }
         }
         private void listConnections_SortBySource(object sender, EventArgs e)
         {
-           /*TODO   ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.PoolSource)
-                .ToList();
-            LoadModelTemplateInterPools();*/
+            if (SelectedCell != null)
+            {
+                SelectedCell.SortJunctionsBySource();
+                LoadProjections(SelectedCell);
+            }
+            else if (CurrentMode == Mode.Template)
+            {
+                Model.SortJunctionsBySource();
+                LoadProjections();
+            }
         }
 
         private void listConnections_SortByTarget(object sender, EventArgs e)
         {
-           /*TODO  ModelTemplate.InterPoolTemplates = ModelTemplate.InterPoolTemplates
-                .OrderBy(jnc => jnc.PoolTarget)
-                .ToList();
-            LoadModelTemplateInterPools();*/
+            if (SelectedCell != null)
+            {
+                SelectedCell.SortJunctionsByTarget();
+                LoadProjections(SelectedCell);
+            }
+            else if (CurrentMode == Mode.Template)
+            {
+                Model.SortJunctionsByTarget();
+                LoadProjections();
+            }
         }
 
         #endregion
@@ -499,7 +577,7 @@ namespace SiliFish.UI.Controls
         {
             if (listStimuli.SelectedItem == null)
                 return;
-            StimulusBase stimulus = listStimuli.SelectedItem as StimulusBase;//TODO create copy!!!
+            StimulusBase stimulus = (listStimuli.SelectedItem as StimulusBase).CreateCopy();
             stimulus = OpenStimulusDialog(stimulus);
             if (stimulus != null)
             {
@@ -534,14 +612,12 @@ namespace SiliFish.UI.Controls
 
         private void listStimuli_ActivateItem(object sender, EventArgs e)
         {
-            StimulusBase stim = sender as StimulusBase;
-            //TODO ModelTemplate.AppliedStimuli.FirstOrDefault(p => p.Distinguisher == stim.Distinguisher).Active = stim.Active;
+            ModelUpdated= true;
         }
 
-
-
         #endregion
-        
+
+        #region Advanced Settings
         private void ddDefaultNeuronCore_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Model == null) return;
@@ -552,11 +628,6 @@ namespace SiliFish.UI.Controls
         {
             if (Model == null) return;
             Model.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
-        }
-        
-        private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
         }
         
         private void eOutputFolder_Click(object sender, EventArgs e)
@@ -579,15 +650,8 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listCellPools_SelectItem(object sender, EventArgs e)
-        {
-            listCells.ClearItems();
-            if (sender is CellPool pool)
-            {
-                LoadProjections(pool);
-                foreach (Cell c in pool.GetCells())
-                    listCells.AppendItem(c);
-            }
-        }
+        #endregion
+
+ 
     }
 }

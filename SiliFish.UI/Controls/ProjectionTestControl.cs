@@ -14,7 +14,7 @@ using SiliFish.UI.Extensions;
 
 namespace SiliFish.UI.Controls
 {
-    public partial class ProjectionTestControl : UserControl
+    public partial class ProjectionTestControl : UserControl //Not completed
     {
         private static string coreUnitFileDefaultFolder;
         private string coreTypeSource;
@@ -248,7 +248,7 @@ namespace SiliFish.UI.Controls
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (skipCoreTypeChange) return;
-            //TODO CoreTypeSource = ddCoreType.Text;
+            //CoreTypeSource = ddCoreType.Text;
             updateParamNames = true;
             Parameters = CellCoreUnit.GetParameters(CoreTypeSource).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
         }
@@ -275,7 +275,7 @@ namespace SiliFish.UI.Controls
             Stimulus stim = new()
             {
                 Settings = stimulusControl1.GetStimulus(),
-                TimeSpan_ms = tl
+                TimeLine_ms = tl
             };
             double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
             return I;
@@ -333,7 +333,7 @@ namespace SiliFish.UI.Controls
                 if (core != null)
                 {
                     skipCoreTypeChange = true;
-                    //TODO ddCoreType.Text = core.CoreType;
+                    //ddCoreType.Text = core.CoreType;
                     skipCoreTypeChange = false;
                     CoreTypeSource = core.CoreType;
                     Parameters = core.GetParameters();

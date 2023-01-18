@@ -36,7 +36,7 @@ namespace SiliFish.ModelUnits.Junction
         public double[] InputCurrent; //Current vector
 
         [JsonIgnore]
-        public string ID { get { return string.Format("Gap: {0} -> {1}; Conductance: {2:0.#####}", Cell1.ID, Cell2.ID, Conductance); } }
+        public override string ID { get { return $"Gap: {Cell1.ID} -> {Cell2.ID}; Conductance: {Conductance:0.#####}"; } }
 
         public GapJunction()
         { }
@@ -57,9 +57,8 @@ namespace SiliFish.ModelUnits.Junction
         }
         public override string ToString()
         {
-            //TODO string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
-            //JncActive ? " (timeline)" : " (inactive)";
-            return $"{Cell1.ID}-{Cell2.ID} gap jnc";//String.Format("{0} [{1}]/{2}{3}", Name, ConnectionType.ToString(), AxonReachMode.ToString(), activeStatus);
+            string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
+            return $"{ID}{activeStatus}";
         }
         public void InitDataVectors(int nmax)
         {

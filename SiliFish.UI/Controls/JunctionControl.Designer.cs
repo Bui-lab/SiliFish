@@ -51,8 +51,10 @@
             this.ddTargetCell = new System.Windows.Forms.ComboBox();
             this.ddTargetPool = new System.Windows.Forms.ComboBox();
             this.gSynapse = new System.Windows.Forms.GroupBox();
+            this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
+            this.gSynapse.SuspendLayout();
             this.SuspendLayout();
             // 
             // lSourcePool
@@ -185,10 +187,10 @@
             this.cbActive.UseVisualStyleBackColor = true;
             this.cbActive.CheckedChanged += new System.EventHandler(this.cbActive_CheckedChanged);
             // 
-            // timeLineControl1
+            // timeLineControl
             // 
             this.timeLineControl.Location = new System.Drawing.Point(9, 437);
-            this.timeLineControl.Name = "timeLineControl1";
+            this.timeLineControl.Name = "timeLineControl";
             this.timeLineControl.Size = new System.Drawing.Size(259, 120);
             this.timeLineControl.TabIndex = 0;
             // 
@@ -266,12 +268,23 @@
             // 
             // gSynapse
             // 
+            this.gSynapse.Controls.Add(this.synapseControl);
             this.gSynapse.Location = new System.Drawing.Point(9, 274);
             this.gSynapse.Name = "gSynapse";
             this.gSynapse.Size = new System.Drawing.Size(239, 157);
             this.gSynapse.TabIndex = 2;
             this.gSynapse.TabStop = false;
             this.gSynapse.Text = "Synapse Parameters";
+            // 
+            // synapseControl
+            // 
+            this.synapseControl.BackColor = System.Drawing.Color.White;
+            this.synapseControl.EReversal = 0D;
+            this.synapseControl.Location = new System.Drawing.Point(18, 22);
+            this.synapseControl.Name = "synapseControl";
+            this.synapseControl.Size = new System.Drawing.Size(152, 127);
+            this.synapseControl.TabIndex = 0;
+            this.synapseControl.VThreshold = 0D;
             // 
             // JunctionControl
             // 
@@ -304,6 +317,7 @@
             this.Size = new System.Drawing.Size(274, 562);
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
+            this.gSynapse.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -324,7 +338,6 @@
         private NumericUpDown numDelay;
         private TextBox eFixedDuration;
         private CheckBox cbActive;
-        private SynapseControl synapseControl;
         private TimeLineControl timeLineControl;
         private Label lSourceCell;
         private ComboBox ddSourceCell;
@@ -334,5 +347,6 @@
         private ComboBox ddTargetCell;
         private ComboBox ddTargetPool;
         private GroupBox gSynapse;
+        private SynapseControl synapseControl;
     }
 }

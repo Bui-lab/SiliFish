@@ -116,7 +116,7 @@ namespace SiliFish.UI
             string yAxis, double yMin, double yMax,
             Color color, int width = 1024, int height = 480,
             bool absoluteYRange = false)
-        {//TODO different colors for different lines
+        {
             if (values == null)
                 return null;
 

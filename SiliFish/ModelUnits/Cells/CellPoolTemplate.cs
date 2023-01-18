@@ -50,10 +50,6 @@ namespace SiliFish.ModelUnits.Cells
         {
             return CellGroup + (Active ? "" : " (inactive)");
         }
-
-        [JsonIgnore]
-        public override string Distinguisher { get { return CellGroup; } }
-
         [JsonIgnore]
         public override string Tooltip
         {
@@ -107,7 +103,7 @@ namespace SiliFish.ModelUnits.Cells
         public int ColumnIndex2D { get; set; } = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
 
         [JsonIgnore]
-        public string ID { get { return Position + "_" + CellGroup; } set { } }
+        public override string ID { get { return Position + "_" + CellGroup; }  }
 
         [JsonIgnore]
         public double? VThreshold

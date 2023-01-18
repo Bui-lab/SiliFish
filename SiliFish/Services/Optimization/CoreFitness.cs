@@ -60,7 +60,7 @@ namespace SiliFish.Services.Optimization
             }
             return fitness;
         }
-        public double Evaluate(IChromosome chromosome)//TODO infinity, sensitivity etc
+        public double Evaluate(IChromosome chromosome)//FUTURE_IMPROVEMENT infinity, sensitivity etc
         {
             var fc = chromosome as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();

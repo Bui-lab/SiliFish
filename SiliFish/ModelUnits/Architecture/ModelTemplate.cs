@@ -46,12 +46,40 @@ namespace SiliFish.ModelUnits.Architecture
 
 
         public override bool AddJunction(JunctionBase jnc) 
-        { 
-            throw new NotImplementedException(); 
+        {
+            if (jnc is InterPoolTemplate ipt && !InterPoolTemplates.Contains(ipt))
+            { 
+                InterPoolTemplates.Add(ipt);
+                return true;
+            }
+            return false;
         }
-        public override bool RemoveJunction(JunctionBase jnc) { throw new NotImplementedException(); }
-        public override void SortJunctions() { throw new NotImplementedException(); }
+        public override bool RemoveJunction(JunctionBase jnc) 
+        {
+            if (jnc is InterPoolTemplate ipt && InterPoolTemplates.Contains(ipt))
+            {
+                InterPoolTemplates.Remove(ipt);
+                return true;
+            }
+            return false;
+        }
+        public override void SortJunctions() 
+        {
+            InterPoolTemplates.Sort();
+        }
+        public override void SortJunctionsByType() 
+        {
+            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.ConnectionType.ToString()).ToList();
+        }
+        public override void SortJunctionsBySource()
+        {
+            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.PoolSource).ToList();
+        }
 
+        public override void SortJunctionsByTarget()
+        {
+            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.PoolTarget).ToList();
+        }
 
         public override List<StimulusBase> GetStimuli()
         {

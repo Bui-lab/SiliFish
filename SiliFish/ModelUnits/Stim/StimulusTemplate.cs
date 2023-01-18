@@ -10,6 +10,20 @@ namespace SiliFish.ModelUnits.Stim
 
         public string LeftRight { get; set; }
 
+        public StimulusTemplate() { }
+
+        public override StimulusBase CreateCopy()
+        {
+            StimulusTemplate stim = new()
+            {
+                TargetPool = TargetPool,
+                TargetSomite = TargetSomite,
+                TargetCell = TargetCell,
+                LeftRight = LeftRight
+            };
+            return stim;
+        }
+
         public override int CompareTo(ModelUnitBase otherbase)
         {
             StimulusTemplate other = otherbase as StimulusTemplate;
@@ -17,19 +31,12 @@ namespace SiliFish.ModelUnits.Stim
         }
         public override string ToString()
         {
-            return Distinguisher + (Active ? "" : " (inactive)");
+            return ID + (Active ? "" : " (inactive)");
         }
         [JsonIgnore]
-        public override string Distinguisher
-        {
-            get
-            {
-                return string.Format("Target: {0} {1}-{2} {3}; {4}",
-                    LeftRight, TargetPool, TargetSomite, TargetCell, Settings?.ToString());
-            }
-        }
+        public override string ID => $"Target: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
         [JsonIgnore]
-        public override string Tooltip { get { return $"{ToString()}\r\n{Settings?.ToString()}\r\n{TimeLine_ms}"; } }
+        public override string Tooltip => $"{ToString()}\r\n{Settings?.ToString()}\r\n{TimeLine_ms}";
     }
 
 }

@@ -66,7 +66,7 @@ namespace SiliFish.DataTypes
 
             if (Y_AngleDistribution != null && Y_AngleDistribution.Angular)
             {
-                //TODO radii and angles should be generated together to handle elliptic shapes
+                //FUTURE_IMPROVEMENT radii and angles should be generated together to handle elliptic shapes
                 double[] angles = Y_AngleDistribution?.GenerateNNumbers(n, 180) ?? Distribution.GenerateNRandomNumbers(n, 180);
                 double centerZ = z_length / 2;
                 double[] radii = Z_RadiusDistribution?.GenerateNNumbers(n, radius) ?? Distribution.GenerateNRandomNumbers(n, radius);

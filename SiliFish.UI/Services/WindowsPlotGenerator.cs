@@ -214,7 +214,7 @@ namespace Services
             List<Image> leftImages = new();
             int iStart = model.RunParam.iIndex(tStart);
             int iEnd = model.RunParam.iIndex(tEnd);
-            //TODO color
+            //FUTURE_IMPROVEMENT color
 
             (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
             leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
@@ -267,12 +267,6 @@ namespace Services
 
             return (leftImages, null);
         }
-
-        private static Image PlotHeatMap(List<SwimmingEpisode> episodes)
-        {
-            return null; //TODO
-        }
-
 
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1)

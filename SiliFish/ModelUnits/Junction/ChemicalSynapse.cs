@@ -28,7 +28,7 @@ namespace SiliFish.ModelUnits.Junction
         public double ISyn { get { return ISynA - ISynB; } }
         public double[] InputCurrent; //Current vector 
         [JsonIgnore]
-        public string ID { get { return string.Format("Syn: {0} -> {1}; Conductance: {2:0.#####}", PreNeuron.ID, PostCell.ID, Conductance); } }
+        public override string ID { get { return $"Syn: {PreNeuron.ID} -> {PostCell.ID}; Conductance: {Conductance:0.#####}"; } }
         [JsonIgnore]
         public double Conductance { get { return Core.Conductance; } }
         internal bool IsActive(int timepoint)
@@ -59,9 +59,8 @@ namespace SiliFish.ModelUnits.Junction
         }
         public override string ToString()
         {
-            //TODO string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
-            //JncActive ? " (timeline)" : " (inactive)";
-            return $"{PreNeuron.ID}-{PostCell.ID} chem jnc";//String.Format("{0} [{1}]/{2}{3}", Name, ConnectionType.ToString(), AxonReachMode.ToString(), activeStatus);
+            string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
+            return $"{ID}{activeStatus}";
         }
         public void InitDataVectors(int nmax)
         {

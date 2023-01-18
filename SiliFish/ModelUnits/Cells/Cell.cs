@@ -18,7 +18,7 @@ namespace SiliFish.ModelUnits.Cells
     [JsonDerivedType(typeof(Cell), typeDiscriminator: "cell")]
     [JsonDerivedType(typeof(Neuron), typeDiscriminator: "neuron")]
     [JsonDerivedType(typeof(MuscleCell), typeDiscriminator: "musclecell")]
-    public class Cell
+    public class Cell: ModelUnitBase
     {
         public CellCoreUnit Core { get; set; }
         public CellPool CellPool;
@@ -54,21 +54,17 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public double MaxStimulusValue { get { return Stimuli.MaxValue; } }
 
-        protected TimeLine TimeLine_ms = null;
-
-
         [JsonIgnore]
         public virtual double RestingMembranePotential { get { throw new NotImplementedException(); } }
 
         public string Name { get { return CellGroup + "_" + Sequence.ToString(); } set { } }
-        public string ID
+        public override string ID
         {
             get
             {
                 string s = Somite > 0 ? "_" + Somite.ToString() : "";
                 return $"{Position}_{CellGroup}{s}_{Sequence}";
             }
-            set { }
         }
         public string Position
         {
@@ -128,6 +124,11 @@ namespace SiliFish.ModelUnits.Cells
 
         public Cell()
         {
+        }
+
+        public override string ToString()
+        {
+            return ID;
         }
         public virtual void LinkObjects(RunningModel model, CellPool pool)
         {
@@ -214,6 +215,21 @@ namespace SiliFish.ModelUnits.Cells
         {
             throw new NotImplementedException();
         }
+
+        public virtual void SortJunctions()
+        {
+            GapJunctions.Sort();
+        }
+        public virtual void SortJunctionsBySource()
+        {
+            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell1.ID).ToList();
+        }
+
+        public virtual void SortJunctionsByTarget()
+        {
+            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell2.ID).ToList();
+        }
+
     }
 
 

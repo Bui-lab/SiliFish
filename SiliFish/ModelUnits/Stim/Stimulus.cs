@@ -15,7 +15,6 @@ namespace SiliFish.ModelUnits.Stim
     {
         public static int nMax; //in time increments
         public Cell TargetCell;
-        public TimeLine TimeSpan_ms { get; set; } //in  milliseconds
         private double tangent; //valid only if mode==Ramp
         private int iStart, iEnd;
         private double[] values = null;
@@ -28,8 +27,14 @@ namespace SiliFish.ModelUnits.Stim
         {
             Settings = settings;
             TargetCell = cell;
-            TimeSpan_ms = new(tl);
+            TimeLine_ms = new(tl);
         }
+
+        public override StimulusBase CreateCopy() 
+        {
+            return new Stimulus(Settings, TargetCell, TimeLine_ms);
+        }
+
         public double this[int index]
         {
             get
@@ -46,17 +51,17 @@ namespace SiliFish.ModelUnits.Stim
 
         public string GetTooltip()
         {
-            return $"{ToString()}\r\nTimeLine: {TimeSpan_ms}";
+            return $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
         }
         private void Initialize()
         {
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeSpan_ms.End / RunParam.static_dt);
+            iEnd = (int)(TimeLine_ms.End / RunParam.static_dt);
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeSpan_ms.Start / RunParam.static_dt);
+            iStart = (int)(TimeLine_ms.Start / RunParam.static_dt);
             if (Settings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (Settings.Value2 - Settings.Value1) / (iEnd - iStart);
@@ -83,7 +88,7 @@ namespace SiliFish.ModelUnits.Stim
         internal double generateStimulus(int tIndex, Random rand)
         {
             double t_ms = RunParam.GetTimeOfIndex(tIndex);
-            if (!TimeSpan_ms.IsActive(t_ms))
+            if (!TimeLine_ms.IsActive(t_ms))
                 return 0;
             if (!initialized)
                 Initialize();
@@ -108,16 +113,16 @@ namespace SiliFish.ModelUnits.Stim
                     value = rand.Gauss(Settings.Value1, Settings.Value2, Settings.Value1 - 3 * Settings.Value2, Settings.Value1 + 3 * Settings.Value2); // µ ± 3SD range
                     break;
                 case StimulusMode.Sinusoidal:
-                    double sinValue = Math.Sin(2 * Math.PI * Settings.Value2 * (t_ms - TimeSpan_ms.StartOf(t_ms)));
+                    double sinValue = Math.Sin(2 * Math.PI * Settings.Value2 * (t_ms - TimeLine_ms.StartOf(t_ms)));
                     value = Settings.Value1 * sinValue;
                     break;
                 case StimulusMode.Pulse:
                     value = 0;
                     if (Settings.Value2 > 0)//Value2 is the number of pulses
                     {
-                        double timeRange = TimeSpan_ms.End > 0 ? TimeSpan_ms.End - TimeSpan_ms.Start : 1000;
+                        double timeRange = TimeLine_ms.End > 0 ? TimeLine_ms.End - TimeLine_ms.Start : 1000;
                         double period = timeRange / Settings.Value2;
-                        double t = t_ms - TimeSpan_ms.Start; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
+                        double t = t_ms - TimeLine_ms.Start; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
                         while (t > period)
                             t -= period;
                         if (t <= period / 2)

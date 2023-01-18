@@ -18,7 +18,42 @@ namespace SiliFish.ModelUnits.Junction
             set { CellReach.DistanceMode = value; }
         }
 
-
+        private string _Name;
+        public string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_Name))
+                    _Name = GeneratedName();
+                return _Name;
+            }
+            set { _Name = value; }
+        }
+        private string poolSource, poolTarget;
+        public string PoolSource
+        {
+            get { return poolSource; }
+            set
+            {
+                bool rename = GeneratedName() == Name;
+                poolSource = value;
+                if (rename) Name = GeneratedName();
+            }
+        }
+        public string PoolTarget
+        {
+            get { return poolTarget; }
+            set
+            {
+                bool rename = GeneratedName() == Name;
+                poolTarget = value;
+                if (rename) Name = GeneratedName();
+            }
+        }
+        public string GeneratedName()
+        {
+            return $"{(!string.IsNullOrEmpty(PoolSource) ? PoolSource : "__")}-->{(!string.IsNullOrEmpty(PoolTarget) ? PoolTarget : "__")}";
+        }
         public string Description { get; set; }
 
         public double Probability { get; set; } = 1;
@@ -61,12 +96,12 @@ namespace SiliFish.ModelUnits.Junction
         {
             string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
                 JncActive ? " (timeline)" : " (inactive)";
-            return String.Format("{0} [{1}]/{2}{3}", Name, ConnectionType.ToString(), AxonReachMode.ToString(), activeStatus);
+            return $"{Name} [{ConnectionType}]/{AxonReachMode}{activeStatus}";
         }
         [JsonIgnore]
-        public override string Distinguisher
+        public override string ID
         {
-            get { return String.Format("{0} [{1}]/{2}", GeneratedName(), ConnectionType.ToString(), AxonReachMode.ToString()); }
+            get { return $"{GeneratedName()} [{ConnectionType}]/{AxonReachMode}"; }
         }
         [JsonIgnore]
         public override string Tooltip

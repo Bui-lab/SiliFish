@@ -327,6 +327,7 @@
             this.listCells.SelectedItem = null;
             this.listCells.Size = new System.Drawing.Size(315, 258);
             this.listCells.TabIndex = 0;
+            this.listCells.SelectItem += new System.EventHandler(this.listCells_SelectItem);
             // 
             // listConnections
             // 

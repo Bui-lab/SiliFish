@@ -184,6 +184,22 @@ namespace SiliFish.ModelUnits.Cells
             return (colors, EfferentCurrents);
         }
 
+        public override void SortJunctions()
+        {
+            base.SortJunctions();
+            Terminals.Sort();
+        }
+        public override void SortJunctionsBySource()
+        {
+            base.SortJunctionsBySource();
+            Terminals = Terminals.OrderBy(jnc => jnc.PreNeuron.ID).ToList();
+        }
+
+        public override void SortJunctionsByTarget()
+        {
+            base.SortJunctionsByTarget();
+            Terminals = Terminals.OrderBy(jnc => jnc.PostCell.ID).ToList();
+        }
     }
 
 }

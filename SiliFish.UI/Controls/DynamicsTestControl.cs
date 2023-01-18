@@ -456,7 +456,7 @@ namespace SiliFish.UI.Controls
             Stimulus stim = new()
             {
                 Settings = stimulusControl1.GetStimulus(),
-                TimeSpan_ms = tl
+                TimeLine_ms = tl
             };
             double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
             return I;
@@ -522,7 +522,7 @@ namespace SiliFish.UI.Controls
                                     Value1 = stim,
                                     Value2 = 0
                                 },
-                                TimeSpan_ms = tl
+                                TimeLine_ms = tl
                             };
                             I.Add(stimulus.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd + 1 - stimEnd]).ToArray());
                             dynamicsList.Add($"Stimulus: {stim:0.##}", core.DynamicsTest(I[iter++]));

@@ -73,7 +73,10 @@
             this.tabInterPool = new System.Windows.Forms.TabControl();
             this.tDynamics = new System.Windows.Forms.TabPage();
             this.tTimeline = new System.Windows.Forms.TabPage();
+            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.tAttachments = new System.Windows.Forms.TabPage();
+            this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
+            this.attachmentListControl = new SiliFish.UI.Controls.AttachmentListControl();
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxIncoming)).BeginInit();
@@ -82,6 +85,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).BeginInit();
+            this.gSynapse.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProbability)).BeginInit();
             this.grReach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -90,6 +94,8 @@
             this.splitContainerMain.SuspendLayout();
             this.tabInterPool.SuspendLayout();
             this.tDynamics.SuspendLayout();
+            this.tTimeline.SuspendLayout();
+            this.tAttachments.SuspendLayout();
             this.SuspendLayout();
             // 
             // lSourcePool
@@ -369,6 +375,7 @@
             // 
             // gSynapse
             // 
+            this.gSynapse.Controls.Add(this.synapseControl);
             this.gSynapse.Location = new System.Drawing.Point(10, 128);
             this.gSynapse.Name = "gSynapse";
             this.gSynapse.Size = new System.Drawing.Size(239, 157);
@@ -609,6 +616,7 @@
             // 
             // tTimeline
             // 
+            this.tTimeline.Controls.Add(this.timeLineControl);
             this.tTimeline.Location = new System.Drawing.Point(4, 24);
             this.tTimeline.Name = "tTimeline";
             this.tTimeline.Padding = new System.Windows.Forms.Padding(3);
@@ -617,14 +625,43 @@
             this.tTimeline.Text = "Timeline";
             this.tTimeline.UseVisualStyleBackColor = true;
             // 
+            // timeLineControl
+            // 
+            this.timeLineControl.AutoScroll = true;
+            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.timeLineControl.Location = new System.Drawing.Point(3, 3);
+            this.timeLineControl.Name = "timeLineControl";
+            this.timeLineControl.Size = new System.Drawing.Size(539, 525);
+            this.timeLineControl.TabIndex = 24;
+            // 
             // tAttachments
             // 
+            this.tAttachments.Controls.Add(this.attachmentListControl);
             this.tAttachments.Location = new System.Drawing.Point(4, 24);
             this.tAttachments.Name = "tAttachments";
             this.tAttachments.Size = new System.Drawing.Size(545, 531);
             this.tAttachments.TabIndex = 2;
             this.tAttachments.Text = "Attachments";
             this.tAttachments.UseVisualStyleBackColor = true;
+            // 
+            // synapseControl
+            // 
+            this.synapseControl.BackColor = System.Drawing.Color.White;
+            this.synapseControl.EReversal = 0D;
+            this.synapseControl.Location = new System.Drawing.Point(8, 22);
+            this.synapseControl.Name = "synapseControl";
+            this.synapseControl.Size = new System.Drawing.Size(152, 127);
+            this.synapseControl.TabIndex = 0;
+            this.synapseControl.VThreshold = 0D;
+            // 
+            // attachmentListControl
+            // 
+            this.attachmentListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.attachmentListControl.Location = new System.Drawing.Point(0, 0);
+            this.attachmentListControl.Name = "attachmentListControl";
+            this.attachmentListControl.Size = new System.Drawing.Size(545, 531);
+            this.attachmentListControl.TabIndex = 0;
             // 
             // InterPoolControl
             // 
@@ -643,6 +680,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).EndInit();
+            this.gSynapse.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numProbability)).EndInit();
             this.grReach.ResumeLayout(false);
             this.grReach.PerformLayout();
@@ -653,6 +691,8 @@
             this.splitContainerMain.ResumeLayout(false);
             this.tabInterPool.ResumeLayout(false);
             this.tDynamics.ResumeLayout(false);
+            this.tTimeline.ResumeLayout(false);
+            this.tAttachments.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -676,7 +716,6 @@
         private NumericUpDown numDelay;
         private TextBox eFixedDuration;
         private GroupBox gSynapse;
-        private TimeLineControl timeLineControl;
         private CheckBox cbActive;
         private NumericUpDown numProbability;
         private Label lProbability;
@@ -706,6 +745,8 @@
         private TabPage tTimeline;
         private TabPage tAttachments;
         private AttachmentListControl attachmentList;
+        private TimeLineControl timeLineControl;
         private SynapseControl synapseControl;
+        private AttachmentListControl attachmentListControl;
     }
 }
