@@ -37,16 +37,15 @@ namespace SiliFish.UI
             this.btnCellularDynamics = new System.Windows.Forms.Button();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
             this.linkOpenOutputFolder = new System.Windows.Forms.LinkLabel();
-            this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.tabModel = new System.Windows.Forms.TabControl();
-            this.tTemplate = new System.Windows.Forms.TabPage();
-            this.tModel = new System.Windows.Forms.TabPage();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.linkGenerateRunningModel = new System.Windows.Forms.LinkLabel();
             this.linkLoadModel = new System.Windows.Forms.LinkLabel();
-            this.lTitle = new System.Windows.Forms.Label();
-            this.linkSaveModel = new System.Windows.Forms.LinkLabel();
             this.linkClearModel = new System.Windows.Forms.LinkLabel();
+            this.linkSaveModel = new System.Windows.Forms.LinkLabel();
+            this.splitMain = new System.Windows.Forms.SplitContainer();
+            this.modelControl = new SiliFish.UI.Controls.ModelControl();
+            this.pGenerateModel = new System.Windows.Forms.Panel();
+            this.btnGenerateModel = new System.Windows.Forms.Button();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.pModelControlTop = new System.Windows.Forms.Panel();
             this.pSimulation = new System.Windows.Forms.Panel();
             this.ldtEuler = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
@@ -63,6 +62,7 @@ namespace SiliFish.UI
             this.btnRun = new System.Windows.Forms.Button();
             this.lTimeEnd = new System.Windows.Forms.Label();
             this.lRunParameters = new System.Windows.Forms.Label();
+            this.modelOutputControl = new SiliFish.UI.Controls.ModelOutputControl();
             this.timerRun = new System.Windows.Forms.Timer(this.components);
             this.saveFileHTML = new System.Windows.Forms.SaveFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
@@ -74,9 +74,10 @@ namespace SiliFish.UI
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
+            this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.tabModel.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pGenerateModel.SuspendLayout();
+            this.pModelControlTop.SuspendLayout();
             this.pSimulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
@@ -133,7 +134,7 @@ namespace SiliFish.UI
             this.linkBrowseToTempFolder.AutoSize = true;
             this.linkBrowseToTempFolder.ForeColor = System.Drawing.Color.White;
             this.linkBrowseToTempFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1173, 14);
+            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1173, 12);
             this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
             this.linkBrowseToTempFolder.Size = new System.Drawing.Size(104, 15);
             this.linkBrowseToTempFolder.TabIndex = 7;
@@ -148,7 +149,7 @@ namespace SiliFish.UI
             this.linkOpenOutputFolder.AutoSize = true;
             this.linkOpenOutputFolder.ForeColor = System.Drawing.Color.White;
             this.linkOpenOutputFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1054, 14);
+            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1054, 12);
             this.linkOpenOutputFolder.Name = "linkOpenOutputFolder";
             this.linkOpenOutputFolder.Size = new System.Drawing.Size(113, 15);
             this.linkOpenOutputFolder.TabIndex = 6;
@@ -157,6 +158,46 @@ namespace SiliFish.UI
             this.toolTip.SetToolTip(this.linkOpenOutputFolder, "If there is a problem in creating html files, they will be saved in this folder.\r" +
         "\n");
             this.linkOpenOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenOutputFolder_LinkClicked);
+            // 
+            // linkLoadModel
+            // 
+            this.linkLoadModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLoadModel.AutoSize = true;
+            this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkLoadModel.Location = new System.Drawing.Point(11, 11);
+            this.linkLoadModel.Name = "linkLoadModel";
+            this.linkLoadModel.Size = new System.Drawing.Size(70, 15);
+            this.linkLoadModel.TabIndex = 4;
+            this.linkLoadModel.TabStop = true;
+            this.linkLoadModel.Text = "Load Model";
+            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadModel_LinkClicked);
+            // 
+            // linkClearModel
+            // 
+            this.linkClearModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkClearModel.AutoSize = true;
+            this.linkClearModel.ForeColor = System.Drawing.Color.White;
+            this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkClearModel.Location = new System.Drawing.Point(464, 11);
+            this.linkClearModel.Name = "linkClearModel";
+            this.linkClearModel.Size = new System.Drawing.Size(71, 15);
+            this.linkClearModel.TabIndex = 5;
+            this.linkClearModel.TabStop = true;
+            this.linkClearModel.Text = "Clear Model";
+            this.linkClearModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearModel_LinkClicked);
+            // 
+            // linkSaveModel
+            // 
+            this.linkSaveModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkSaveModel.AutoSize = true;
+            this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkSaveModel.Location = new System.Drawing.Point(87, 11);
+            this.linkSaveModel.Name = "linkSaveModel";
+            this.linkSaveModel.Size = new System.Drawing.Size(68, 15);
+            this.linkSaveModel.TabIndex = 3;
+            this.linkSaveModel.TabStop = true;
+            this.linkSaveModel.Text = "Save Model";
+            this.linkSaveModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModel_LinkClicked);
             // 
             // splitMain
             // 
@@ -167,119 +208,76 @@ namespace SiliFish.UI
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.tabModel);
-            this.splitMain.Panel1.Controls.Add(this.panel1);
+            this.splitMain.Panel1.Controls.Add(this.modelControl);
+            this.splitMain.Panel1.Controls.Add(this.pGenerateModel);
+            this.splitMain.Panel1.Controls.Add(this.pModelControlTop);
             this.splitMain.Panel1.Controls.Add(this.pSimulation);
+            // 
+            // splitMain.Panel2
+            // 
+            this.splitMain.Panel2.Controls.Add(this.modelOutputControl);
             this.splitMain.Size = new System.Drawing.Size(1348, 671);
             this.splitMain.SplitterDistance = 550;
             this.splitMain.TabIndex = 5;
             // 
-            // tabModel
+            // modelControl
             // 
-            this.tabModel.Controls.Add(this.tTemplate);
-            this.tabModel.Controls.Add(this.tModel);
-            this.tabModel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabModel.Location = new System.Drawing.Point(0, 64);
-            this.tabModel.Name = "tabModel";
-            this.tabModel.SelectedIndex = 0;
-            this.tabModel.Size = new System.Drawing.Size(548, 440);
-            this.tabModel.TabIndex = 6;
+            this.modelControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelControl.Location = new System.Drawing.Point(0, 40);
+            this.modelControl.ModelUpdated = true;
+            this.modelControl.Name = "modelControl";
+            this.modelControl.Size = new System.Drawing.Size(548, 424);
+            this.modelControl.TabIndex = 2;
             // 
-            // tTemplate
+            // pGenerateModel
             // 
-            this.tTemplate.Location = new System.Drawing.Point(4, 24);
-            this.tTemplate.Name = "tTemplate";
-            this.tTemplate.Padding = new System.Windows.Forms.Padding(3);
-            this.tTemplate.Size = new System.Drawing.Size(540, 412);
-            this.tTemplate.TabIndex = 0;
-            this.tTemplate.Text = "Template";
-            this.tTemplate.UseVisualStyleBackColor = true;
+            this.pGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pGenerateModel.Controls.Add(this.btnGenerateModel);
+            this.pGenerateModel.Controls.Add(this.linkLabel4);
+            this.pGenerateModel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pGenerateModel.Location = new System.Drawing.Point(0, 464);
+            this.pGenerateModel.Name = "pGenerateModel";
+            this.pGenerateModel.Size = new System.Drawing.Size(548, 40);
+            this.pGenerateModel.TabIndex = 4;
             // 
-            // tModel
+            // btnGenerateModel
             // 
-            this.tModel.Location = new System.Drawing.Point(4, 24);
-            this.tModel.Name = "tModel";
-            this.tModel.Padding = new System.Windows.Forms.Padding(3);
-            this.tModel.Size = new System.Drawing.Size(540, 412);
-            this.tModel.TabIndex = 1;
-            this.tModel.Text = "Model";
-            this.tModel.UseVisualStyleBackColor = true;
+            this.btnGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnGenerateModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnGenerateModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateModel.ForeColor = System.Drawing.Color.White;
+            this.btnGenerateModel.Location = new System.Drawing.Point(8, 8);
+            this.btnGenerateModel.Name = "btnGenerateModel";
+            this.btnGenerateModel.Size = new System.Drawing.Size(189, 23);
+            this.btnGenerateModel.TabIndex = 10;
+            this.btnGenerateModel.Text = "Generate Model from Template";
+            this.btnGenerateModel.UseVisualStyleBackColor = false;
+            this.btnGenerateModel.Click += new System.EventHandler(this.btnGenerateModel_Click);
             // 
-            // panel1
+            // linkLabel4
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.panel1.Controls.Add(this.linkGenerateRunningModel);
-            this.panel1.Controls.Add(this.linkLoadModel);
-            this.panel1.Controls.Add(this.lTitle);
-            this.panel1.Controls.Add(this.linkSaveModel);
-            this.panel1.Controls.Add(this.linkClearModel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(548, 64);
-            this.panel1.TabIndex = 5;
+            this.linkLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.ForeColor = System.Drawing.Color.White;
+            this.linkLabel4.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkLabel4.Location = new System.Drawing.Point(812, 11);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(71, 15);
+            this.linkLabel4.TabIndex = 5;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "Clear Model";
             // 
-            // linkGenerateRunningModel
+            // pModelControlTop
             // 
-            this.linkGenerateRunningModel.AutoSize = true;
-            this.linkGenerateRunningModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkGenerateRunningModel.Location = new System.Drawing.Point(12, 35);
-            this.linkGenerateRunningModel.Name = "linkGenerateRunningModel";
-            this.linkGenerateRunningModel.Size = new System.Drawing.Size(171, 15);
-            this.linkGenerateRunningModel.TabIndex = 6;
-            this.linkGenerateRunningModel.TabStop = true;
-            this.linkGenerateRunningModel.Text = "Generate Model from Template";
-            this.linkGenerateRunningModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkGenerateRunningModel_LinkClicked);
-            // 
-            // linkLoadModel
-            // 
-            this.linkLoadModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLoadModel.AutoSize = true;
-            this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadModel.Location = new System.Drawing.Point(401, 12);
-            this.linkLoadModel.Name = "linkLoadModel";
-            this.linkLoadModel.Size = new System.Drawing.Size(70, 15);
-            this.linkLoadModel.TabIndex = 4;
-            this.linkLoadModel.TabStop = true;
-            this.linkLoadModel.Text = "Load Model";
-            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadModel_LinkClicked);
-            // 
-            // lTitle
-            // 
-            this.lTitle.AutoSize = true;
-            this.lTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lTitle.Location = new System.Drawing.Point(12, 12);
-            this.lTitle.Name = "lTitle";
-            this.lTitle.Size = new System.Drawing.Size(109, 15);
-            this.lTitle.TabIndex = 0;
-            this.lTitle.Text = "Model Parameters";
-            // 
-            // linkSaveModel
-            // 
-            this.linkSaveModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkSaveModel.AutoSize = true;
-            this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveModel.Location = new System.Drawing.Point(477, 12);
-            this.linkSaveModel.Name = "linkSaveModel";
-            this.linkSaveModel.Size = new System.Drawing.Size(68, 15);
-            this.linkSaveModel.TabIndex = 3;
-            this.linkSaveModel.TabStop = true;
-            this.linkSaveModel.Text = "Save Model";
-            this.linkSaveModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModel_LinkClicked);
-            // 
-            // linkClearModel
-            // 
-            this.linkClearModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkClearModel.AutoSize = true;
-            this.linkClearModel.ForeColor = System.Drawing.Color.White;
-            this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearModel.Location = new System.Drawing.Point(474, 35);
-            this.linkClearModel.Name = "linkClearModel";
-            this.linkClearModel.Size = new System.Drawing.Size(71, 15);
-            this.linkClearModel.TabIndex = 5;
-            this.linkClearModel.TabStop = true;
-            this.linkClearModel.Text = "Clear Model";
-            this.linkClearModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearModel_LinkClicked);
+            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pModelControlTop.Controls.Add(this.linkLoadModel);
+            this.pModelControlTop.Controls.Add(this.linkSaveModel);
+            this.pModelControlTop.Controls.Add(this.linkClearModel);
+            this.pModelControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pModelControlTop.Location = new System.Drawing.Point(0, 0);
+            this.pModelControlTop.Name = "pModelControlTop";
+            this.pModelControlTop.Size = new System.Drawing.Size(548, 40);
+            this.pModelControlTop.TabIndex = 3;
             // 
             // pSimulation
             // 
@@ -506,6 +504,14 @@ namespace SiliFish.UI
             this.lRunParameters.TabIndex = 1;
             this.lRunParameters.Text = "Simulation Parameters";
             // 
+            // modelOutputControl
+            // 
+            this.modelOutputControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelOutputControl.Location = new System.Drawing.Point(0, 0);
+            this.modelOutputControl.Name = "modelOutputControl";
+            this.modelOutputControl.Size = new System.Drawing.Size(792, 669);
+            this.modelOutputControl.TabIndex = 0;
+            // 
             // timerRun
             // 
             this.timerRun.Interval = 1000;
@@ -552,11 +558,13 @@ namespace SiliFish.UI
             this.pTop.ResumeLayout(false);
             this.pTop.PerformLayout();
             this.splitMain.Panel1.ResumeLayout(false);
+            this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
-            this.tabModel.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pGenerateModel.ResumeLayout(false);
+            this.pGenerateModel.PerformLayout();
+            this.pModelControlTop.ResumeLayout(false);
+            this.pModelControlTop.PerformLayout();
             this.pSimulation.ResumeLayout(false);
             this.pSimulation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
@@ -599,16 +607,14 @@ namespace SiliFish.UI
         private Label ldtEuler;
         private NumericUpDown edtEuler;
         private Button btnAbout;
-        private Controls.ModelControl mcTemplate;
-        private Panel panel1;
         private LinkLabel linkLoadModel;
-        private Label lTitle;
         private LinkLabel linkSaveModel;
         private LinkLabel linkClearModel;
-        private TabControl tabModel;
-        private TabPage tTemplate;
-        private TabPage tModel;
-        private LinkLabel linkGenerateRunningModel;
-        private ModelControl mcRunningModel;
+        private ModelOutputControl modelOutputControl;
+        private ModelControl modelControl;
+        private Panel pModelControlTop;
+        private Panel pGenerateModel;
+        private LinkLabel linkLabel4;
+        private Button btnGenerateModel;
     }
 }

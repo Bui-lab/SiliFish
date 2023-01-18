@@ -15,17 +15,16 @@ using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Text.Json;
 using SiliFish.Repositories;
+using SiliFish.UI.Definitions;
 
 namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
         static string modelFileDefaultFolder;
-        bool templateUpdated = false;
-        bool runningModelUpdated = false;
 
-        ModelTemplate ModelTemplate = null;
-        RunningModel RunningModel = null;
+        private ModelTemplate ModelTemplate = null;
+        private RunningModel RunningModel = null;
 
         DateTime runStart;
 
@@ -34,15 +33,11 @@ namespace SiliFish.UI
             try
             {
                 InitializeComponent();
-                /*
-                 InitAsync()
-        Wait()*/
                 ModelTemplate = new();
                 ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
-                mcTemplate.SetModel(ModelTemplate);
-                AddTemplateTab();
-                RemoveModelTab();
+                modelControl.SetModel(ModelTemplate);
+                SetCurrentMode(RunMode.Template);
                 CurrentSettings.Settings = ModelTemplate.Settings;
                 if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
@@ -59,40 +54,18 @@ namespace SiliFish.UI
 
         #region Model selection
 
-        private void GetRunningModel()
+        public void SetRunningModel(RunningModel model)
         {
-            ModelTemplate = mcTemplate.GetModel() as ModelTemplate;
-            if (RunningModel == null)
-            {
-                RunningModel = new(ModelTemplate);
-                mcRunningModel.SetModel(RunningModel);
-            }
+            ModelTemplate = null;
+            RunningModel = model;
+            modelControl.SetModel(model);
+            modelOutputControl.SetRunningModel(model);
+            SetCurrentMode(RunMode.RunningModel);
         }
         private void RefreshModel()
         {
-            ModelTemplate = mcTemplate.GetModel() as ModelTemplate;
-            RunningModel = mcRunningModel.GetModel() as RunningModel;
-            if (ModelTemplate != null)
-            {
-                RunningModel = new(ModelTemplate);
-                mcRunningModel.SetModel(RunningModel);
-            }
-            templateUpdated = runningModelUpdated = false;
-        }
-
-        private void RefreshModelSafeMode(bool ask)
-        {
-            if (RunningModel == null)
-            {
-                RefreshModel();
-                return;
-            }
-            if (ask && (templateUpdated || runningModelUpdated))
-            {
-                string msg = "Do you want to regenerate the model using the modifications you have done in the UI?";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                    RefreshModel();
-            }
+            RunningModel = modelControl.GetModel() as RunningModel;
+            modelOutputControl.SetRunningModel(RunningModel);
         }
 
 
@@ -179,7 +152,6 @@ namespace SiliFish.UI
         {
             try
             {
-                RefreshModelSafeMode(false);
                 RunningModel.RunModel(0, (int)eRunNumber.Value);
             }
             catch (Exception ex)
@@ -206,6 +178,7 @@ namespace SiliFish.UI
 
             lRunTime.Text = $"Last run cancelled\r\n" +
                 $"Model: {RunningModel.ModelName}";
+            modelOutputControl.CancelRun();
         }
         private void CompleteRun()
         {
@@ -223,6 +196,7 @@ namespace SiliFish.UI
                 $"Duration: {Util.TimeSpanToString(ts)}\r\n" +
                 $"Model: {RunningModel.ModelName}";
 
+            modelOutputControl.CompleteRun();
         }
         private void btnRun_Click(object sender, EventArgs e)
         {
@@ -239,7 +213,7 @@ namespace SiliFish.UI
             progressBarRun.Visible = true;
             timerRun.Enabled = true;
 
-            RefreshModelSafeMode(true);
+            RefreshModel();
             if (RunningModel == null) return;
             RunningModel.RunParam = new()
             {
@@ -286,35 +260,11 @@ namespace SiliFish.UI
             frmControl.ShowDialog();
         }
 
-        private void AddModelTab()
+        private void SetCurrentMode(RunMode mode)
         {
-            if (!tabModel.TabPages.Contains(tModel))
-            {
-                tabModel.TabPages.Add(tModel);
-                mcRunningModel.Enabled = true;
-            }
-        }
-
-        private void RemoveModelTab()
-        {
-            if (tabModel.TabPages.Contains(tModel))
-                tabModel.TabPages.Remove(tModel);
-            mcRunningModel.SetModel(null);
-        }
-
-        private void AddTemplateTab()
-        {
-            if (!tabModel.TabPages.Contains(tTemplate))
-            {
-                tabModel.TabPages.Add(tTemplate);
-                mcTemplate.Enabled = true;
-            }
-        }
-        private void RemoveTemplateTab()
-        {
-            if (tabModel.TabPages.Contains(tTemplate))
-                tabModel.TabPages.Remove(tTemplate);
-            mcTemplate.SetModel(null);
+            splitMain.Panel2Collapsed = mode == RunMode.Template;
+            pSimulation.Visible = mode == RunMode.RunningModel;
+            pGenerateModel.Visible = mode == RunMode.Template;            
         }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -335,23 +285,19 @@ namespace SiliFish.UI
                     }
                     mb.BackwardCompatibility();
                     mb.LinkObjects();
-                    templateUpdated = false;
-                    runningModelUpdated = false;
                     if (mb is ModelTemplate)
                     {
                         ModelTemplate = mb as ModelTemplate;
-                        mcTemplate.SetModel(ModelTemplate);
+                        modelControl.SetModel(ModelTemplate);
                         RunningModel = null;
-                        AddTemplateTab();
-                        RemoveModelTab();
+                        SetCurrentMode(RunMode.Template);
                     }
                     else
                     {
                         RunningModel = mb as RunningModel;
-                        mcRunningModel.SetModel(RunningModel);
+                        modelControl.SetModel(RunningModel);
                         ModelTemplate = null;
-                        AddModelTab();
-                        RemoveTemplateTab();
+                        SetCurrentMode(RunMode.RunningModel);
                     }
                 }
             }
@@ -365,8 +311,7 @@ namespace SiliFish.UI
         {
             try
             {
-                ModelBase mb = tabModel.SelectedTab == tTemplate ? 
-                    mcTemplate.GetModel() : mcRunningModel.GetModel();
+                ModelBase mb = modelControl.GetModel();
 
                 if (!mb.CheckValues(out List<string> errors))
                 {
@@ -383,10 +328,6 @@ namespace SiliFish.UI
                     ModelFile.Save(saveFileJson.FileName, mb);
 
                     this.Text = $"SiliFish {mb.ModelName}";
-                    if (mb is ModelTemplate)
-                        templateUpdated = false;
-                    else
-                        runningModelUpdated = false;
                     return true;
                 }
                 return false;
@@ -407,50 +348,23 @@ namespace SiliFish.UI
             if (MessageBox.Show("Do you want to start from a brand new template? All changes you have made will be cleared.", "Warning",
                 MessageBoxButtons.OKCancel) != DialogResult.OK)
                 return;
-            ModelTemplate = new();
-            mcTemplate.SetModel(ModelTemplate);
-            RunningModel = null;
-            mcRunningModel.SetModel(RunningModel);
-            if (!tabModel.TabPages.Contains(tTemplate))
-            {
-                tabModel.TabPages.Add(tTemplate);
-                mcTemplate.Enabled = true;
-            }
-            if (tabModel.TabPages.Contains(tModel))
-                tabModel.TabPages.Remove(tModel);
+            if (ModelTemplate != null)
+                ModelTemplate = new();
+            else
+                RunningModel = new();
+            modelControl.SetModel(ModelTemplate);
         }
 
-        private void linkGenerateRunningModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnGenerateModel_Click(object sender, EventArgs e)
         {
             if (ModelTemplate == null)
             {
                 MessageBox.Show("There is no model template loaded.", "Error");
                 return;
             }
-            if (RunningModel != null)
-            {
-                string msg = $"Do you want to write over current model? the Once you make changes in the model, the changes will not transfer to the model template." +
-                    $"You will need to save the model independently.";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
-                    return;
-            }
-            RunningModel = new RunningModel(ModelTemplate);
-            mcRunningModel.SetModel(RunningModel);
-            if (!tabModel.TabPages.Contains(tModel))
-            {
-                tabModel.TabPages.Add(tModel);
-                mcRunningModel.Enabled = true;
-            }
-        }
-
-        private void mcRunningModel_ModelChanged(object sender, EventArgs e)
-        {
-            if (!runningModelUpdated && tabModel.TabPages.Contains(tTemplate))
-            {
-                MessageBox.Show("Model is updated, you cannot make any more changes to the template.");
-                mcTemplate.Enabled = false;
-            }
-            runningModelUpdated = true;
+            MainForm mf = new();
+            mf.SetRunningModel(new RunningModel(ModelTemplate));
+            mf.Show();
         }
     }
 }

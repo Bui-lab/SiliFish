@@ -55,6 +55,7 @@
             this.numMaxDescReach = new System.Windows.Forms.NumericUpDown();
             this.numMinDescReach = new System.Windows.Forms.NumericUpDown();
             this.gSynapse = new System.Windows.Forms.GroupBox();
+            this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
             this.cbActive = new System.Windows.Forms.CheckBox();
             this.numProbability = new System.Windows.Forms.NumericUpDown();
             this.lProbability = new System.Windows.Forms.Label();
@@ -75,8 +76,7 @@
             this.tTimeline = new System.Windows.Forms.TabPage();
             this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.tAttachments = new System.Windows.Forms.TabPage();
-            this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
-            this.attachmentListControl = new SiliFish.UI.Controls.AttachmentListControl();
+            this.attachmentList = new SiliFish.UI.Controls.AttachmentListControl();
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxIncoming)).BeginInit();
@@ -383,6 +383,16 @@
             this.gSynapse.TabStop = false;
             this.gSynapse.Text = "Synapse Parameters";
             // 
+            // synapseControl
+            // 
+            this.synapseControl.BackColor = System.Drawing.Color.White;
+            this.synapseControl.EReversal = 0D;
+            this.synapseControl.Location = new System.Drawing.Point(8, 22);
+            this.synapseControl.Name = "synapseControl";
+            this.synapseControl.Size = new System.Drawing.Size(152, 127);
+            this.synapseControl.TabIndex = 0;
+            this.synapseControl.VThreshold = 0D;
+            // 
             // cbActive
             // 
             this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -637,7 +647,7 @@
             // 
             // tAttachments
             // 
-            this.tAttachments.Controls.Add(this.attachmentListControl);
+            this.tAttachments.Controls.Add(this.attachmentList);
             this.tAttachments.Location = new System.Drawing.Point(4, 24);
             this.tAttachments.Name = "tAttachments";
             this.tAttachments.Size = new System.Drawing.Size(545, 531);
@@ -645,23 +655,13 @@
             this.tAttachments.Text = "Attachments";
             this.tAttachments.UseVisualStyleBackColor = true;
             // 
-            // synapseControl
+            // attachmentList
             // 
-            this.synapseControl.BackColor = System.Drawing.Color.White;
-            this.synapseControl.EReversal = 0D;
-            this.synapseControl.Location = new System.Drawing.Point(8, 22);
-            this.synapseControl.Name = "synapseControl";
-            this.synapseControl.Size = new System.Drawing.Size(152, 127);
-            this.synapseControl.TabIndex = 0;
-            this.synapseControl.VThreshold = 0D;
-            // 
-            // attachmentListControl
-            // 
-            this.attachmentListControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.attachmentListControl.Location = new System.Drawing.Point(0, 0);
-            this.attachmentListControl.Name = "attachmentListControl";
-            this.attachmentListControl.Size = new System.Drawing.Size(545, 531);
-            this.attachmentListControl.TabIndex = 0;
+            this.attachmentList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.attachmentList.Location = new System.Drawing.Point(0, 0);
+            this.attachmentList.Name = "attachmentList";
+            this.attachmentList.Size = new System.Drawing.Size(545, 531);
+            this.attachmentList.TabIndex = 0;
             // 
             // InterPoolControl
             // 
@@ -744,9 +744,8 @@
         private TabPage tDynamics;
         private TabPage tTimeline;
         private TabPage tAttachments;
-        private AttachmentListControl attachmentList;
         private TimeLineControl timeLineControl;
         private SynapseControl synapseControl;
-        private AttachmentListControl attachmentListControl;
+        private AttachmentListControl attachmentList;
     }
 }

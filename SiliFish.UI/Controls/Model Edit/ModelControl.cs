@@ -10,6 +10,7 @@ using SiliFish.Repositories;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using SiliFish.ModelUnits.Junction;
 using System.Text.Json;
+using SiliFish.UI.Definitions;
 
 namespace SiliFish.UI.Controls
 {
@@ -17,8 +18,7 @@ namespace SiliFish.UI.Controls
     {
         private event EventHandler modelChanged;
         public event EventHandler ModelChanged { add => modelChanged += value; remove => modelChanged -= value; }
-        enum Mode { Template, RunningModel };
-        Mode CurrentMode = Mode.Template;
+        RunMode CurrentMode = RunMode.Template;
 
         private ModelBase Model;
 
@@ -179,8 +179,8 @@ namespace SiliFish.UI.Controls
         public void SetModel(ModelBase model)
         {
             Model = model;
-            CurrentMode = Model is ModelTemplate ? Mode.Template : Mode.RunningModel;
-            splitCellPools.Panel2Collapsed = CurrentMode == Mode.Template;
+            CurrentMode = Model is ModelTemplate ? RunMode.Template : RunMode.RunningModel;
+            splitCellPools.Panel2Collapsed = CurrentMode == RunMode.Template;
             LoadModel();
         }
         public ModelBase GetModel()
@@ -249,7 +249,7 @@ namespace SiliFish.UI.Controls
 
         private void listCellPool_AddItem(object sender, EventArgs e)
         {
-            CellPoolTemplate newPool = OpenCellPoolDialog(CurrentMode == Mode.RunningModel ? new CellPool() : new CellPoolTemplate());
+            CellPoolTemplate newPool = OpenCellPoolDialog(CurrentMode == RunMode.RunningModel ? new CellPool() : new CellPoolTemplate());
             if (newPool != null)
             {
                 Model.AddCellPool(newPool);
@@ -259,7 +259,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_SelectItem(object sender, EventArgs e)
         {
-            if (CurrentMode != Mode.RunningModel) return;
+            if (CurrentMode != RunMode.RunningModel) return;
             listCells.ClearItems();
             if (sender is CellPool pool)
             {
@@ -308,7 +308,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPool_ViewItem(object sender, EventArgs e)
         {
-            if (CurrentMode == Mode.RunningModel) return;
+            if (CurrentMode == RunMode.RunningModel) return;
             if (listCellPools.SelectedItem is not CellPoolTemplate pool) return;
             string oldName = pool.CellGroup;
             pool = OpenCellPoolDialog(pool); //check modeltemplate's list
@@ -338,7 +338,7 @@ namespace SiliFish.UI.Controls
 
         private void listCells_SelectItem(object sender, EventArgs e)
         {
-            if (CurrentMode != Mode.RunningModel) return;
+            if (CurrentMode != RunMode.RunningModel) return;
             if (sender is Cell cell)
             {
                 SelectedCell = cell;
@@ -398,7 +398,7 @@ namespace SiliFish.UI.Controls
         private JunctionBase OpenConnectionDialog(JunctionBase interpool)
         {
             if (Model == null) return null;
-            if (CurrentMode == Mode.Template)
+            if (CurrentMode == RunMode.Template)
             {
                 ControlContainer frmControl = new();
                 InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0);
@@ -438,7 +438,7 @@ namespace SiliFish.UI.Controls
             if (Model == null) return ;
             if (listConnections.SelectedItem == null)
                 return;
-            if (CurrentMode == Mode.Template)
+            if (CurrentMode == RunMode.Template)
             {
                 InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
                 jnc = OpenConnectionDialog(jnc) as InterPoolTemplate;
@@ -490,7 +490,7 @@ namespace SiliFish.UI.Controls
                 SelectedCell.SortJunctions();
                 LoadProjections(SelectedCell);
             }
-            else if (CurrentMode == Mode.Template)
+            else if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctions();
                 LoadProjections();
@@ -499,7 +499,7 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_SortByType(object sender, EventArgs e)
         {
-            if (CurrentMode == Mode.Template)
+            if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctionsByType();
                 LoadProjections();
@@ -512,7 +512,7 @@ namespace SiliFish.UI.Controls
                 SelectedCell.SortJunctionsBySource();
                 LoadProjections(SelectedCell);
             }
-            else if (CurrentMode == Mode.Template)
+            else if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctionsBySource();
                 LoadProjections();
@@ -526,7 +526,7 @@ namespace SiliFish.UI.Controls
                 SelectedCell.SortJunctionsByTarget();
                 LoadProjections(SelectedCell);
             }
-            else if (CurrentMode == Mode.Template)
+            else if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctionsByTarget();
                 LoadProjections();
@@ -539,7 +539,7 @@ namespace SiliFish.UI.Controls
 
          private void LoadStimuli()
         {
-            if (CurrentMode != Mode.Template) return;
+            if (CurrentMode != RunMode.Template) return;
             listStimuli.ClearItems();
             if (Model == null) return;
             foreach (object stim in Model.GetStimuli())
@@ -553,7 +553,7 @@ namespace SiliFish.UI.Controls
             ControlContainer frmControl = new();
             StimulusTemplateControl sc = new();
 
-            if (CurrentMode==Mode.Template) 
+            if (CurrentMode==RunMode.Template) 
                 sc.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
             else
                 sc.SetStimulus((Model as RunningModel).CellPools, stim as Stimulus);
