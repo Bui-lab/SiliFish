@@ -76,7 +76,8 @@ namespace SiliFish.UI.Controls
             PopulatePlotPools();
             int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = NumberOfSomites > 0;
-            eKinematicsSomite.Maximum = NumberOfSomites > 0 ? NumberOfSomites : RunningModel.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
+            eKinematicsSomite.Maximum = NumberOfSomites > 0 || !RunningModel.CellPools.Any() ? 
+                NumberOfSomites : RunningModel.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
         }
 
         public void CompleteRun()
@@ -302,7 +303,7 @@ namespace SiliFish.UI.Controls
             string prevSelection = ddPlotPools.Text;
             ddPlotPools.Items.Clear();
             ddPlotPools.Text = "";
-            if (RunningModel == null) return;
+            if (RunningModel == null || !RunningModel.CellPools.Any()) return;
             List<string> itemList = new();
             itemList.AddRange(RunningModel.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
             itemList.Insert(0, "All");

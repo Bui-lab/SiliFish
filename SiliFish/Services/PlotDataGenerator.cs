@@ -175,8 +175,8 @@ namespace SiliFish.Services
             if (cells == null || !cells.Any())
                 return charts;
 
-            double yMin = cells.Min(c => c.MinStimulusValue);
-            double yMax = cells.Max(c => c.MaxStimulusValue);
+            double yMin = cells.Min(c => c.MinStimulusValue());
+            double yMax = cells.Max(c => c.MaxStimulusValue());
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
             IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);

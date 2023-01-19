@@ -157,8 +157,8 @@ namespace Services
 
             if (cells != null)
             {
-                double yMin = cells.Min(c => c.MinStimulusValue);
-                double yMax = cells.Max(c => c.MaxStimulusValue);
+                double yMin = cells.Min(c => c.MinStimulusValue());
+                double yMax = cells.Max(c => c.MaxStimulusValue());
                 foreach (Cell c in cells)
                 {
                     Color col = c.CellPool.Color;
@@ -170,8 +170,8 @@ namespace Services
             }
             if (pools != null)
             {
-                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinStimulusValue));
-                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxStimulusValue));
+                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinStimulusValue()));
+                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxStimulusValue()));
                 foreach (CellPool pool in pools)
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();

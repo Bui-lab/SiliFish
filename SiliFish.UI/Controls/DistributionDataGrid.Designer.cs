@@ -115,13 +115,13 @@
             dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
             this.colDistEditLink.DefaultCellStyle = dataGridViewCellStyle5;
             this.colDistEditLink.HeaderText = "";
-            this.colDistEditLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.colDistEditLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.colDistEditLink.Name = "colDistEditLink";
             this.colDistEditLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colDistEditLink.Text = "Edit";
             this.colDistEditLink.ToolTipText = "Edit distribution";
             this.colDistEditLink.UseColumnTextForLinkValue = true;
-            this.colDistEditLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.colDistEditLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.colDistEditLink.Width = 5;
             // 
             // DistributionDataGrid

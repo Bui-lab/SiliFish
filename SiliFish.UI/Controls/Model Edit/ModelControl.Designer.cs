@@ -109,10 +109,10 @@
             // 
             // propModelDimensions
             // 
-            this.propModelDimensions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.propModelDimensions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.propModelDimensions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propModelDimensions.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(144)))), ((int)(((byte)(156)))));
-            this.propModelDimensions.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.propModelDimensions.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(198)))), ((int)(((byte)(218)))));
+            this.propModelDimensions.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.propModelDimensions.Location = new System.Drawing.Point(0, 0);
             this.propModelDimensions.Name = "propModelDimensions";
             this.propModelDimensions.Size = new System.Drawing.Size(225, 476);
@@ -233,7 +233,7 @@
             // 
             // pCellsTop
             // 
-            this.pCellsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pCellsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pCellsTop.Controls.Add(this.panel2);
             this.pCellsTop.Controls.Add(this.lCellPoolsTitle);
             this.pCellsTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -263,7 +263,7 @@
             // 
             // pConnectionsTop
             // 
-            this.pConnectionsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pConnectionsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pConnectionsTop.Controls.Add(this.panel4);
             this.pConnectionsTop.Controls.Add(this.lConnectionsTitle);
             this.pConnectionsTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -396,10 +396,10 @@
             // 
             // propKinematics
             // 
-            this.propKinematics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.propKinematics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.propKinematics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propKinematics.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(144)))), ((int)(((byte)(156)))));
-            this.propKinematics.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.propKinematics.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(198)))), ((int)(((byte)(218)))));
+            this.propKinematics.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.propKinematics.Location = new System.Drawing.Point(0, 0);
             this.propKinematics.Name = "propKinematics";
             this.propKinematics.Size = new System.Drawing.Size(682, 515);
@@ -407,7 +407,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.textBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.textBox3.Dock = System.Windows.Forms.DockStyle.Top;
             this.textBox3.Location = new System.Drawing.Point(0, 0);
             this.textBox3.Multiline = true;
@@ -453,10 +453,10 @@
             // 
             // propSettings
             // 
-            this.propSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.propSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.propSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propSettings.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(144)))), ((int)(((byte)(156)))));
-            this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
+            this.propSettings.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(198)))), ((int)(((byte)(218)))));
+            this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.propSettings.Location = new System.Drawing.Point(0, 112);
             this.propSettings.Name = "propSettings";
             this.propSettings.Size = new System.Drawing.Size(682, 443);
@@ -608,7 +608,7 @@
             // 
             // pModelJSONTop
             // 
-            this.pModelJSONTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pModelJSONTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pModelJSONTop.Controls.Add(this.pLineModelJSON);
             this.pModelJSONTop.Controls.Add(this.linkSaveModelJSON);
             this.pModelJSONTop.Controls.Add(this.btnLoadModelJSON);
@@ -642,7 +642,7 @@
             // 
             // btnLoadModelJSON
             // 
-            this.btnLoadModelJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnLoadModelJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnLoadModelJSON.Enabled = false;
             this.btnLoadModelJSON.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnLoadModelJSON.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -657,7 +657,7 @@
             // 
             // btnDisplayModelJSON
             // 
-            this.btnDisplayModelJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDisplayModelJSON.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnDisplayModelJSON.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnDisplayModelJSON.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDisplayModelJSON.ForeColor = System.Drawing.Color.White;

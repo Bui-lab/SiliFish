@@ -21,6 +21,7 @@ namespace SiliFish.ModelUnits.Cells
 
         private readonly RunningModel Model;
 
+        [JsonPropertyOrder(2)]
         public List<Cell> Cells { get; set; }
         
 
@@ -229,7 +230,7 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         [JsonIgnore]
-        public IEnumerable<JunctionBase> LeavingProjections
+        public IEnumerable<JunctionBase> Projections
         {
             get
             {
@@ -237,8 +238,13 @@ namespace SiliFish.ModelUnits.Cells
                 foreach (Cell cell in Cells)
                 {
                     if (cell is Neuron neuron)
+                    {
                         jncs.AddRange(neuron.Terminals);
-                    jncs.AddRange(cell.GapJunctions.Where(gj => gj.Cell1 == cell).ToList());
+                        jncs.AddRange(neuron.Synapses);
+                    }
+                    else if (cell is MuscleCell muscleCell)
+                        jncs.AddRange(muscleCell.EndPlates);
+                    jncs.AddRange(cell.GapJunctions);
                 }
                 return jncs;
             }

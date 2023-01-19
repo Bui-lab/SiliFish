@@ -69,8 +69,9 @@ namespace SiliFish.Helpers
             }
             return prevLength!=json.Length;
         }
-        private static void FixDistributionJson(ref string json)//TODO convert to regex, and return bool
+        private static bool FixDistributionJson(ref string json)
         {
+            bool updated = false;
             Dictionary<string, string> dist = new()
             {
                 { "\"DistType\": \"SiliFish.DataTypes.UniformDistribution\",", "\"$type\": \"uniform\"," },
@@ -93,8 +94,10 @@ namespace SiliFish.Helpers
                     int curly = json.LastIndexOf("{", ind - 1);
                     json = json.Remove(ind, key.Length);
                     json = json.Insert(curly + 1, replace);
+                    updated = true;
                 }    
             }
+            return updated;
         }
 
         public static List<string> CheckJsonVersion(ref string json)
@@ -115,11 +118,11 @@ namespace SiliFish.Helpers
                 list.Add("Core types");
             }
             RemoveOldParameters(ref json);
-            FixDistributionJson(ref json);
-
+            if (FixDistributionJson(ref json))
+                list.Add("Spatial distributions");
+            json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
             return list;
         }
-
 
     }
 }

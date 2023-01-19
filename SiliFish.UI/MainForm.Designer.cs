@@ -88,6 +88,7 @@ namespace SiliFish.UI
             // 
             // pTop
             // 
+            this.pTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.pTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pTop.Controls.Add(this.btnAbout);
             this.pTop.Controls.Add(this.btnCellularDynamics);
@@ -116,7 +117,7 @@ namespace SiliFish.UI
             // btnCellularDynamics
             // 
             this.btnCellularDynamics.AutoSize = true;
-            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.btnCellularDynamics.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCellularDynamics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCellularDynamics.ForeColor = System.Drawing.Color.White;
@@ -161,7 +162,6 @@ namespace SiliFish.UI
             // 
             // linkLoadModel
             // 
-            this.linkLoadModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLoadModel.AutoSize = true;
             this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkLoadModel.Location = new System.Drawing.Point(11, 11);
@@ -188,7 +188,6 @@ namespace SiliFish.UI
             // 
             // linkSaveModel
             // 
-            this.linkSaveModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkSaveModel.AutoSize = true;
             this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.linkSaveModel.Location = new System.Drawing.Point(87, 11);
@@ -226,29 +225,31 @@ namespace SiliFish.UI
             this.modelControl.Location = new System.Drawing.Point(0, 40);
             this.modelControl.ModelUpdated = true;
             this.modelControl.Name = "modelControl";
-            this.modelControl.Size = new System.Drawing.Size(548, 424);
+            this.modelControl.Size = new System.Drawing.Size(548, 413);
             this.modelControl.TabIndex = 2;
+            this.modelControl.ModelChanged += new System.EventHandler(this.modelControl_ModelChanged);
             // 
             // pGenerateModel
             // 
-            this.pGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pGenerateModel.Controls.Add(this.btnGenerateModel);
             this.pGenerateModel.Controls.Add(this.linkLabel4);
             this.pGenerateModel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pGenerateModel.Location = new System.Drawing.Point(0, 464);
+            this.pGenerateModel.Location = new System.Drawing.Point(0, 453);
             this.pGenerateModel.Name = "pGenerateModel";
-            this.pGenerateModel.Size = new System.Drawing.Size(548, 40);
+            this.pGenerateModel.Size = new System.Drawing.Size(548, 51);
             this.pGenerateModel.TabIndex = 4;
             // 
             // btnGenerateModel
             // 
-            this.btnGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnGenerateModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnGenerateModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGenerateModel.ForeColor = System.Drawing.Color.White;
-            this.btnGenerateModel.Location = new System.Drawing.Point(8, 8);
+            this.btnGenerateModel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnGenerateModel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btnGenerateModel.ForeColor = System.Drawing.Color.Black;
+            this.btnGenerateModel.Location = new System.Drawing.Point(5, 5);
             this.btnGenerateModel.Name = "btnGenerateModel";
-            this.btnGenerateModel.Size = new System.Drawing.Size(189, 23);
+            this.btnGenerateModel.Size = new System.Drawing.Size(263, 39);
             this.btnGenerateModel.TabIndex = 10;
             this.btnGenerateModel.Text = "Generate Model from Template";
             this.btnGenerateModel.UseVisualStyleBackColor = false;
@@ -269,7 +270,7 @@ namespace SiliFish.UI
             // 
             // pModelControlTop
             // 
-            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pModelControlTop.Controls.Add(this.linkLoadModel);
             this.pModelControlTop.Controls.Add(this.linkSaveModel);
             this.pModelControlTop.Controls.Add(this.linkClearModel);
@@ -281,7 +282,7 @@ namespace SiliFish.UI
             // 
             // pSimulation
             // 
-            this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pSimulation.Controls.Add(this.ldtEuler);
             this.pSimulation.Controls.Add(this.edtEuler);
             this.pSimulation.Controls.Add(this.lRunCount);
@@ -473,7 +474,7 @@ namespace SiliFish.UI
             // 
             // btnRun
             // 
-            this.btnRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRun.ForeColor = System.Drawing.Color.White;
@@ -506,6 +507,7 @@ namespace SiliFish.UI
             // 
             // modelOutputControl
             // 
+            this.modelOutputControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.modelOutputControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.modelOutputControl.Location = new System.Drawing.Point(0, 0);
             this.modelOutputControl.Name = "modelOutputControl";
@@ -552,7 +554,6 @@ namespace SiliFish.UI
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "SiliFish";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.pTop.ResumeLayout(false);

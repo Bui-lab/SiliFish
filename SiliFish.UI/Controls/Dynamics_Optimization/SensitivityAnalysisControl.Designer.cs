@@ -123,7 +123,7 @@
             // 
             // btnRunAnalysis
             // 
-            this.btnRunAnalysis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnRunAnalysis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnRunAnalysis.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRunAnalysis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRunAnalysis.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);

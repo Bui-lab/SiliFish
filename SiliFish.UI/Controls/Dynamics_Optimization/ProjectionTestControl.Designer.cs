@@ -338,7 +338,7 @@
             // 
             // pCoreType
             // 
-            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pCoreType.Controls.Add(this.eSource);
             this.pCoreType.Controls.Add(this.pLineCoreType);
             this.pCoreType.Controls.Add(this.lSource);
@@ -388,7 +388,7 @@
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.panel2.Controls.Add(this.eTarget);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.lTarget);
@@ -482,7 +482,7 @@
             // 
             // btnDynamicsRun
             // 
-            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
             this.btnDynamicsRun.Location = new System.Drawing.Point(111, 189);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
@@ -532,7 +532,7 @@
             // 
             // pLoadSaveParams
             // 
-            this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
             this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -567,7 +567,7 @@
             // 
             // pBottomBottom
             // 
-            this.pBottomBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pBottomBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pBottomBottom.Controls.Add(this.linkUseUpdatedParams);
             this.pBottomBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pBottomBottom.Location = new System.Drawing.Point(3, 655);
@@ -619,7 +619,7 @@
             // 
             // pPlots
             // 
-            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pPlots.Controls.Add(this.panel1);
             this.pPlots.Controls.Add(this.grPlotSelection);
             this.pPlots.Dock = System.Windows.Forms.DockStyle.Top;

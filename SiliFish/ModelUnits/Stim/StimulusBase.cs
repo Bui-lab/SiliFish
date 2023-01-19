@@ -10,6 +10,7 @@ namespace SiliFish.ModelUnits.Stim
     {
         public StimulusSettings Settings { get; set; } = new();
 
+        public StimulusBase() { }
         public virtual StimulusBase CreateCopy() { throw new NotImplementedException(); }
 
     }

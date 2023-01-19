@@ -196,7 +196,8 @@ namespace SiliFish.UI.Controls
                 numConductance.SetValue(conductance);
                 double delay = junction is GapJunction gj2 ? gj2.Delay: (junction as ChemicalSynapse).Delay;
                 numDelay.SetValue(delay);
-                eFixedDuration.Text = junction.CellReach.FixedDuration_ms?.ToString() ?? "";
+                int duration = junction is GapJunction gj3 ? gj3.Duration: (junction as ChemicalSynapse).Duration;
+                eFixedDuration.Text = duration.ToString();
                 
                 cbActive.Checked = junction.Active;
                 timeLineControl.SetTimeLine(junction.TimeLine_ms);

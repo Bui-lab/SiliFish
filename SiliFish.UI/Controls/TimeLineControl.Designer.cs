@@ -135,7 +135,7 @@
             // 
             // pTimelineTop
             // 
-            this.pTimelineTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pTimelineTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pTimelineTop.Controls.Add(this.linkClearTimeline);
             this.pTimelineTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pTimelineTop.Location = new System.Drawing.Point(0, 0);

@@ -25,11 +25,7 @@ namespace SiliFish.UI.Controls
         private bool modelUpdated = false;
         public bool ModelUpdated {
             get => modelUpdated;
-            set 
-            {
-                modelUpdated = true;
-                modelChanged?.Invoke(this, EventArgs.Empty);
-            }
+            set => modelUpdated = value;
         }
 
         private CellPool SelectedPool; //valid if Mode == Mode.RunningModel
@@ -42,6 +38,12 @@ namespace SiliFish.UI.Controls
             listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
             listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
             tabModel.BackColor = Color.White;
+        }
+
+        private void ModelIsUpdated()
+        {
+            modelUpdated = true;
+            modelChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #region Read/Load Model and Parameters
@@ -182,6 +184,7 @@ namespace SiliFish.UI.Controls
             CurrentMode = Model is ModelTemplate ? RunMode.Template : RunMode.RunningModel;
             splitCellPools.Panel2Collapsed = CurrentMode == RunMode.Template;
             LoadModel();
+            modelUpdated = false;
         }
         public ModelBase GetModel()
         {
@@ -200,6 +203,8 @@ namespace SiliFish.UI.Controls
             }
         }
 
+
+
         #endregion
         #region Cell Pool
         private void LoadPools()
@@ -216,17 +221,26 @@ namespace SiliFish.UI.Controls
         }       
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
-            ControlContainer frmControl = new();
-            CellPoolControl cpl = new(Model.ModelDimensions.NumberOfSomites > 0);
-            cpl.LoadPool += Cpl_LoadPool;
-            cpl.SavePool += Cpl_SavePool;
+            if (Model == null) return null;
+            if (CurrentMode == RunMode.Template)
+            {
+                ControlContainer frmControl = new();
+                CellPoolControl cpl = new(Model.ModelDimensions.NumberOfSomites > 0);
+                cpl.LoadPool += Cpl_LoadPool;
+                cpl.SavePool += Cpl_SavePool;
 
-            cpl.PoolBase = pool;
-            frmControl.AddControl(cpl);
-            frmControl.Text = pool?.ToString() ?? "New Cell Pool";
+                cpl.PoolBase = pool;
+                frmControl.AddControl(cpl);
+                frmControl.Text = pool?.ToString() ?? "New Cell Pool";
 
-            if (frmControl.ShowDialog() == DialogResult.OK)
-                return cpl.PoolBase;
+                if (frmControl.ShowDialog() == DialogResult.OK)
+                    return cpl.PoolBase;
+            }
+            else
+            {
+                MessageBox.Show("Under implementation.", "Model Edit");
+                //MODEL EDIT 
+            }
             return null;
         }
         private void Cpl_SavePool(object sender, EventArgs e)
@@ -235,7 +249,7 @@ namespace SiliFish.UI.Controls
             {
                 CellPoolControl cpl = (CellPoolControl)sender;
                 FileUtil.SaveToFile(saveFileJson.FileName, cpl.JSONString);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void Cpl_LoadPool(object sender, EventArgs e)
@@ -254,7 +268,7 @@ namespace SiliFish.UI.Controls
             {
                 Model.AddCellPool(newPool);
                 listCellPools.AppendItem(newPool);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void listCellPools_SelectItem(object sender, EventArgs e)
@@ -287,7 +301,7 @@ namespace SiliFish.UI.Controls
                 Model.CopyConnectionsOfCellPool(pool, poolDuplicate);
                 listCellPools.AppendItem(poolDuplicate);
                 LoadProjections();
-                ModelUpdated = true;
+                ModelIsUpdated();    
             }
         }
         private void listCellPool_DeleteItem(object sender, EventArgs e)
@@ -302,19 +316,20 @@ namespace SiliFish.UI.Controls
                     listCellPools.RemoveItemAt(listCellPools.SelectedIndex);
                     LoadProjections();
                     LoadStimuli();
-                    ModelUpdated = true;
+                    ModelIsUpdated();
                 }
             }
         }
         private void listCellPool_ViewItem(object sender, EventArgs e)
         {
-            if (CurrentMode == RunMode.RunningModel) return;
+            if (listCellPools.SelectedItem == null)
+                return;
             if (listCellPools.SelectedItem is not CellPoolTemplate pool) return;
             string oldName = pool.CellGroup;
             pool = OpenCellPoolDialog(pool); //check modeltemplate's list
             if (pool != null)
             {
-                ModelUpdated = true;
+                ModelIsUpdated();
                 int ind = listCellPools.SelectedIndex;
                 listCellPools.RefreshItem(ind, pool);
                 if (oldName != pool.CellGroup)
@@ -327,7 +342,7 @@ namespace SiliFish.UI.Controls
 
         private void listCellPool_ActivateItem(object sender, EventArgs e)
         {
-            ModelUpdated = true;
+            ModelIsUpdated();
         }
 
         private void listCellPool_SortItems(object sender, EventArgs e)
@@ -352,6 +367,7 @@ namespace SiliFish.UI.Controls
         private void LoadProjections()
         {
             listConnections.ClearItems();
+            lConnectionsTitle.Text = "Connections";
             if (Model == null) return;
             foreach (object jnc in Model.GetProjections())
             {
@@ -366,8 +382,9 @@ namespace SiliFish.UI.Controls
                 LoadProjections();
                 return;
             }
+            lConnectionsTitle.Text = $"Connections of {cp.ID}";
             listConnections.ClearItems();
-            foreach (JunctionBase jnc in cp.LeavingProjections)
+            foreach (JunctionBase jnc in cp.Projections)
             {
                 listConnections.AppendItem(jnc);
             }
@@ -383,6 +400,7 @@ namespace SiliFish.UI.Controls
                 return;
             }
             listConnections.ClearItems();
+            lConnectionsTitle.Text = $"Connections of {cell.ID}";
             foreach (JunctionBase jnc in cell.GapJunctions)
             {
                 listConnections.AppendItem(jnc);
@@ -417,7 +435,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                MessageBox.Show("Under implementation.");
+                MessageBox.Show("Under implementation.", "Model Edit");
                 //MODEL EDIT JunctionControl jncControl = new();
             }
             return null;
@@ -430,7 +448,7 @@ namespace SiliFish.UI.Controls
             {
                 Model.AddJunction(newJnc);
                 listConnections.AppendItem(newJnc);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void listConnections_CopyItem(object sender, EventArgs e)
@@ -447,11 +465,11 @@ namespace SiliFish.UI.Controls
                     Model.AddJunction(jnc);
                     listConnections.AppendItem(jnc);
                 }
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
             else
             {
-                MessageBox.Show("Under implementation.");
+                MessageBox.Show("Under implementation.", "Model Edit");
                 //MODEL EDIT JunctionControl jncControl = new();
             }
         }
@@ -461,7 +479,7 @@ namespace SiliFish.UI.Controls
             {
                 Model.RemoveJunction(listConnections.SelectedItem as JunctionBase);
                 listConnections.RemoveItemAt(listConnections.SelectedIndex);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void listConnections_ViewItem(object sender, EventArgs e)
@@ -474,13 +492,13 @@ namespace SiliFish.UI.Controls
             {
                 int ind = listConnections.SelectedIndex;
                 listConnections.RefreshItem(ind, jnc);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
 
         private void listConnections_ActivateItem(object sender, EventArgs e)
         {
-            ModelUpdated = true;
+            ModelIsUpdated();
         }
 
         private void listConnections_SortItems(object sender, EventArgs e)
@@ -537,31 +555,39 @@ namespace SiliFish.UI.Controls
 
         #region Stimulus
 
-         private void LoadStimuli()
+        private void LoadStimuli()
         {
-            if (CurrentMode != RunMode.Template) return;
             listStimuli.ClearItems();
             if (Model == null) return;
             foreach (object stim in Model.GetStimuli())
             {
                 listStimuli.AppendItem(stim);
             }
-        }       
+        }
         
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
         {
-            ControlContainer frmControl = new();
-            StimulusTemplateControl sc = new();
+            if (Model == null) return null;
+            if (CurrentMode == RunMode.Template)
+            {
+                ControlContainer frmControl = new();
+                StimulusTemplateControl sc = new();
 
-            if (CurrentMode==RunMode.Template) 
-                sc.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
+                if (CurrentMode == RunMode.Template)
+                    sc.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
+                else
+                    sc.SetStimulus((Model as RunningModel).CellPools, stim as Stimulus);
+                frmControl.AddControl(sc);
+                frmControl.Text = stim?.ToString() ?? "New Stimulus";
+
+                if (frmControl.ShowDialog() == DialogResult.OK)
+                    return sc.GetStimulus();
+            }
             else
-                sc.SetStimulus((Model as RunningModel).CellPools, stim as Stimulus);
-            frmControl.AddControl(sc);
-            frmControl.Text = stim?.ToString() ?? "New Stimulus";
-
-            if (frmControl.ShowDialog() == DialogResult.OK)
-                return sc.GetStimulus();
+            {
+                MessageBox.Show("Under implementation.", "Model Edit");
+                //MODEL EDIT 
+            }
             return null;
         }
         private void listStimuli_AddItem(object sender, EventArgs e)
@@ -571,7 +597,7 @@ namespace SiliFish.UI.Controls
             {
                 Model.AddStimulus(stimulus);
                 listStimuli.AppendItem(stimulus);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void listStimuli_CopyItem(object sender, EventArgs e)
@@ -584,7 +610,7 @@ namespace SiliFish.UI.Controls
             {
                 Model.AddStimulus(stimulus);
                 listStimuli.AppendItem(stimulus);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void listStimuli_DeleteItem(object sender, EventArgs e)
@@ -594,7 +620,7 @@ namespace SiliFish.UI.Controls
                 StimulusBase stim = (StimulusBase)listStimuli.SelectedItem;
                 Model.RemoveStimulus(stim);
                 listStimuli.RemoveItemAt(listStimuli.SelectedIndex);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
         private void listStimuli_ViewItem(object sender, EventArgs e)
@@ -607,13 +633,13 @@ namespace SiliFish.UI.Controls
             {
                 int ind = listStimuli.SelectedIndex;
                 listStimuli.RefreshItem(ind, stimulus);
-                ModelUpdated = true;
+                ModelIsUpdated();
             }
         }
 
         private void listStimuli_ActivateItem(object sender, EventArgs e)
         {
-            ModelUpdated= true;
+            ModelIsUpdated();
         }
 
         #endregion
@@ -678,14 +704,14 @@ namespace SiliFish.UI.Controls
         {
             try
             {
-                /*TODO reload Model from JSON
-                 * if (JsonUtil.ToObject(typeof(ModelTemplate), eTemplateJSON.Text) is ModelTemplate temp)
-                {
-                    ModelTemplate = temp;
-                    ModelTemplate.LinkObjects();
-                    //TODO LoadModelTemplate();
-                    MessageBox.Show("Updated template is loaded.");
-                }*/
+                string json = eModelJSON.Text;
+                ModelBase mb;
+                if (json.Contains("\"ClassType\": \"RunningModel\","))
+                    mb = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
+                else
+                    mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
+                SetModel(mb);
+                MessageBox.Show("Updated JSON is loaded.");
             }
             catch (JsonException exc)
             {

@@ -17,6 +17,7 @@ namespace SiliFish.ModelUnits.Cells
     public class Neuron : Cell
     {
         //Writing only Terminal to JSON file is enough and prevents duplication
+        [JsonPropertyOrder(2)]
         public List<ChemicalSynapse> Terminals { get; set; } //keeps the list of all synapses the current cells extends to
         [JsonIgnore]
         public List<ChemicalSynapse> Synapses { get; set; } //keeps the list of all synapses targeting the current cell
@@ -24,7 +25,15 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
 
-
+        [JsonIgnore]
+        public override IEnumerable<JunctionBase> Projections
+        {
+            get
+            {
+                IEnumerable<JunctionBase> gapJunctions = base.Projections;
+                return Terminals.Union(Synapses).Union(gapJunctions);
+            }
+        }
         public Neuron()
         {
             GapJunctions = new List<GapJunction>();
@@ -60,26 +69,27 @@ namespace SiliFish.ModelUnits.Cells
                 jnc.LinkObjects(model);
             }
         }
-        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
+
+        #region Sort functions
+        public override void SortJunctions()
         {
-            double cur1 = base.MinCurrentValue(iStart, iEnd);
-            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            return Math.Min(Math.Min(cur1, cur2), cur3);
+            base.SortJunctions();
+            Terminals.Sort();
         }
-        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        public override void SortJunctionsBySource()
         {
-            double cur1 = base.MaxCurrentValue(iStart, iEnd);
-            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            return Math.Max(Math.Max(cur1, cur2), cur3);
+            base.SortJunctionsBySource();
+            Terminals = Terminals.OrderBy(jnc => jnc.PreNeuron.ID).ToList();
         }
 
-        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        public override void SortJunctionsByTarget()
         {
-            return V.GetPeakIndices(Core.Vmax, iStart, iEnd);
+            base.SortJunctionsByTarget();
+            Terminals = Terminals.OrderBy(jnc => jnc.PostCell.ID).ToList();
         }
+        #endregion
 
+        #region Connection functions
         public ChemicalSynapse CreateChemicalSynapse(Cell postCell, SynapseParameters param, double conductance, DistanceMode distanceMode)
         {
             ChemicalSynapse jnc = new(this, postCell, param, conductance, distanceMode);
@@ -102,7 +112,9 @@ namespace SiliFish.ModelUnits.Cells
         {
             Synapses.Add(jnc);
         }
+        #endregion
 
+        #region Runtime
         public override void InitDataVectors(int nmax)
         {
             base.InitDataVectors(nmax);
@@ -160,7 +172,28 @@ namespace SiliFish.ModelUnits.Cells
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
+        #endregion
 
+        #region Simulation Stats
+        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            double cur1 = base.MinCurrentValue(iStart, iEnd);
+            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Math.Min(Math.Min(cur1, cur2), cur3);
+        }
+        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            double cur1 = base.MaxCurrentValue(iStart, iEnd);
+            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Math.Max(Math.Max(cur1, cur2), cur3);
+        }
+
+        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        {
+            return V.GetPeakIndices(Core.Vmax, iStart, iEnd);
+        }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
             Dictionary<string, Color> colors = new();
@@ -183,23 +216,6 @@ namespace SiliFish.ModelUnits.Cells
             }
             return (colors, EfferentCurrents);
         }
-
-        public override void SortJunctions()
-        {
-            base.SortJunctions();
-            Terminals.Sort();
-        }
-        public override void SortJunctionsBySource()
-        {
-            base.SortJunctionsBySource();
-            Terminals = Terminals.OrderBy(jnc => jnc.PreNeuron.ID).ToList();
-        }
-
-        public override void SortJunctionsByTarget()
-        {
-            base.SortJunctionsByTarget();
-            Terminals = Terminals.OrderBy(jnc => jnc.PostCell.ID).ToList();
-        }
+        #endregion
     }
-
 }

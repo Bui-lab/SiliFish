@@ -161,7 +161,7 @@
             // 
             // btnRheobase
             // 
-            this.btnRheobase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnRheobase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnRheobase.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRheobase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRheobase.ForeColor = System.Drawing.Color.White;
@@ -540,7 +540,7 @@
             // 
             // btnDynamicsRun
             // 
-            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
             this.btnDynamicsRun.Location = new System.Drawing.Point(107, 282);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
@@ -671,7 +671,7 @@
             // 
             // pCoreType
             // 
-            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pCoreType.Controls.Add(this.pLineCoreType);
             this.pCoreType.Controls.Add(this.ddCoreType);
             this.pCoreType.Controls.Add(this.lCoreType);
@@ -822,7 +822,7 @@
             // 
             // pPlots
             // 
-            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
+            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pPlots.Controls.Add(this.panel1);
             this.pPlots.Controls.Add(this.grPlotSelection);
             this.pPlots.Controls.Add(this.linkSwitchToOptimization);

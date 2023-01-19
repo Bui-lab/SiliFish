@@ -18,14 +18,18 @@ namespace SiliFish.ModelUnits.Cells
     [JsonDerivedType(typeof(Cell), typeDiscriminator: "cell")]
     [JsonDerivedType(typeof(Neuron), typeDiscriminator: "neuron")]
     [JsonDerivedType(typeof(MuscleCell), typeDiscriminator: "musclecell")]
-    public class Cell: ModelUnitBase
+    public class Cell : ModelUnitBase
     {
         public CellCoreUnit Core { get; set; }
         public CellPool CellPool;
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
         public int Somite { get; set; } = -1;
+        
+        [JsonPropertyOrder(3)]
         public Stimuli Stimuli { get; set; } = new();
+
+        #region Position Members and Properties
         public FrontalPlane PositionDorsalVentral { get; set; } = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior { get; set; } = TransversePlane.NotSet;
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
@@ -34,7 +38,10 @@ namespace SiliFish.ModelUnits.Cells
         public double X { get => coordinate.X; set => coordinate.X = value; }
         public double Y { get => coordinate.Y; set => coordinate.Y = value; }
         public double Z { get => coordinate.Z; set => coordinate.Z = value; }
+        #endregion
 
+        #region Connection Properties
+        [JsonPropertyOrder(1)]
         public List<GapJunction> LeavingGapJunctions
         {
             get
@@ -47,13 +54,20 @@ namespace SiliFish.ModelUnits.Cells
         public List<GapJunction> GapJunctions { get; set; }
 
         [JsonIgnore]
+        public virtual IEnumerable<JunctionBase> Projections
+        {
+            get
+            {
+                return GapJunctions;
+            }
+        }
 
+        #endregion
+
+        #region Simulation Values
+        [JsonIgnore]
         public double[] V; //Membrane potential vector
-        [JsonIgnore]
-        public double MinStimulusValue { get { return Stimuli.MinValue; } }
-        [JsonIgnore]
-        public double MaxStimulusValue { get { return Stimuli.MaxValue; } }
-
+        #endregion
         [JsonIgnore]
         public virtual double RestingMembranePotential { get { throw new NotImplementedException(); } }
 
@@ -82,46 +96,6 @@ namespace SiliFish.ModelUnits.Cells
         public double ConductionVelocity { get; set; }
 
 
-        public double MinPotentialValue(int iStart = 0, int iEnd = -1)
-        {
-            return V?.MinValue(iStart, iEnd) ?? 0;
-        }
-        public double MaxPotentialValue(int iStart = 0, int iEnd = -1)
-        {
-            return V?.MaxValue(iStart, iEnd) ?? 0;
-        }      
-        public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
-        {
-            throw new NotImplementedException();
-        }
-        public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
-        {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-        }
-        public virtual double MaxCurrentValue(int iStart = 0, int iEnd = -1)
-        {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-        }
-
-        internal bool IsAlive(int timepoint)
-        {
-            double t_ms = RunParam.GetTimeOfIndex(timepoint);
-            return TimeLine_ms?.IsActive(t_ms) ?? true;
-        }
-        public double GetStimulus(int timeIndex, Random rand)
-        {
-            return Stimuli.GenerateStimulus(timeIndex, rand);
-        }
-
-        public void AddStimulus(Stimulus stim)
-        {
-            Stimuli.Add(stim);
-        }
-        public void RemoveStimulus(Stimulus stim)
-        {
-            Stimuli.Remove(stim);
-        }
-
         public Cell()
         {
         }
@@ -140,14 +114,40 @@ namespace SiliFish.ModelUnits.Cells
                 jnc.LinkObjects(model);
             }
         }
-        public virtual void InitDataVectors(int nmax)
+
+        #region Sort Functions
+        public virtual void SortJunctions()
         {
-            V = new double[nmax];
-            Stimuli.InitDataVectors(nmax);
-            foreach (GapJunction jnc in GapJunctions)
-                jnc.InitDataVectors(nmax);
+            GapJunctions.Sort();
+        }
+        public virtual void SortJunctionsBySource()
+        {
+            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell1.ID).ToList();
+        }
+        public virtual void SortJunctionsByTarget()
+        {
+            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell2.ID).ToList();
         }
 
+        #endregion              
+
+        #region Stimulus Functions
+        public double GetStimulus(int timeIndex, Random rand)
+        {
+            return Stimuli.GenerateStimulus(timeIndex, rand);
+        }
+
+        public void AddStimulus(Stimulus stim)
+        {
+            Stimuli.Add(stim);
+        }
+        public void RemoveStimulus(Stimulus stim)
+        {
+            Stimuli.Remove(stim);
+        }
+        #endregion
+
+        #region Connection Functions
         public GapJunction CreateGapJunction(Cell n2, double weight, DistanceMode distanceMode)
         {
             GapJunction jnc = new(weight, this, n2, distanceMode);
@@ -156,18 +156,34 @@ namespace SiliFish.ModelUnits.Cells
             n2.GapJunctions.Add(jnc);
             return jnc;
         }
-
         public virtual void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             throw (new NotImplementedException());
         }
-
         public virtual (double, double) GetConnectionRange()
         {
             double? maxWeight1 = GapJunctions.Select(j => j.Conductance).DefaultIfEmpty(0).Max();
             double? minWeight1 = GapJunctions.Where(j => j.Conductance > 0).Select(j => j.Conductance).DefaultIfEmpty(999).Min();
             return (minWeight1 ?? 0, maxWeight1 ?? 999);
         }
+
+
+        #endregion
+
+        #region RunTime
+        public virtual void InitDataVectors(int nmax)
+        {
+            V = new double[nmax];
+            Stimuli.InitDataVectors(nmax);
+            foreach (GapJunction jnc in GapJunctions)
+                jnc.InitDataVectors(nmax);
+        }
+        internal bool IsAlive(int timepoint)
+        {
+            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            return TimeLine_ms?.IsActive(t_ms) ?? true;
+        }
+
         public virtual void CalculateCellularOutputs(int t)
         {
             try
@@ -183,11 +199,34 @@ namespace SiliFish.ModelUnits.Cells
             }
 
         }
-
-
         public virtual void CalculateMembranePotential(int t)
         {
             throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Simulation Stats
+        public double MinStimulusValue() { return Stimuli.MinValue; }
+        public double MaxStimulusValue() { return Stimuli.MaxValue; }
+        public double MinPotentialValue(int iStart = 0, int iEnd = -1)
+        {
+            return V?.MinValue(iStart, iEnd) ?? 0;
+        }
+        public double MaxPotentialValue(int iStart = 0, int iEnd = -1)
+        {
+            return V?.MaxValue(iStart, iEnd) ?? 0;
+        }
+        public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+        }
+        public virtual double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
         }
 
         public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetGapCurrents()
@@ -206,7 +245,6 @@ namespace SiliFish.ModelUnits.Cells
             }
             return (colors, AffarentCurrents);
         }
-
         public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
             throw new NotImplementedException();
@@ -215,24 +253,6 @@ namespace SiliFish.ModelUnits.Cells
         {
             throw new NotImplementedException();
         }
-
-        public virtual void SortJunctions()
-        {
-            GapJunctions.Sort();
-        }
-        public virtual void SortJunctionsBySource()
-        {
-            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell1.ID).ToList();
-        }
-
-        public virtual void SortJunctionsByTarget()
-        {
-            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell2.ID).ToList();
-        }
-
+        #endregion
     }
-
-
-
-
 }

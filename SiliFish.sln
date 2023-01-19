@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{DF1638C5
 	ProjectSection(SolutionItems) = preProject
 		Notes\ModelNotes.txt = Notes\ModelNotes.txt
 		Notes\QuickNotes.txt = Notes\QuickNotes.txt
+		Themes.txt = Themes.txt
 		Notes\Todo.txt = Notes\Todo.txt
 	EndProjectSection
 EndProject

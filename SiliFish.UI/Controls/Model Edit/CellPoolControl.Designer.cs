@@ -400,7 +400,7 @@ namespace SiliFish.UI.Controls
             // 
             // pMainTop
             // 
-            this.pMainTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pMainTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pMainTop.Controls.Add(this.linkSavePool);
             this.pMainTop.Controls.Add(this.linkLoadPool);
             this.pMainTop.Dock = System.Windows.Forms.DockStyle.Top;
@@ -448,7 +448,7 @@ namespace SiliFish.UI.Controls
             // timeLineControl
             // 
             this.timeLineControl.AutoScroll = true;
-            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeLineControl.Location = new System.Drawing.Point(3, 3);
             this.timeLineControl.Name = "timeLineControl";
@@ -672,7 +672,7 @@ namespace SiliFish.UI.Controls
             // 
             // pDynamicsTops
             // 
-            this.pDynamicsTops.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pDynamicsTops.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pDynamicsTops.Controls.Add(this.linkLoadCoreUnit);
             this.pDynamicsTops.Controls.Add(this.linkTestDynamics);
             this.pDynamicsTops.Dock = System.Windows.Forms.DockStyle.Top;

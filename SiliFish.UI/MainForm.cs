@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.Text.Json;
 using SiliFish.Repositories;
 using SiliFish.UI.Definitions;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace SiliFish.UI
 {
@@ -27,12 +28,13 @@ namespace SiliFish.UI
         private RunningModel RunningModel = null;
 
         DateTime runStart;
-
+        private readonly bool displayAbout = false;
         public MainForm()
         {
             try
             {
                 InitializeComponent();
+                displayAbout = true;
                 ModelTemplate = new();
                 ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
@@ -51,26 +53,34 @@ namespace SiliFish.UI
             }
         }
 
-
-        #region Model selection
-
-        public void SetRunningModel(RunningModel model)
+        public MainForm(RunningModel model)
         {
-            ModelTemplate = null;
-            RunningModel = model;
-            modelControl.SetModel(model);
-            modelOutputControl.SetRunningModel(model);
-            SetCurrentMode(RunMode.RunningModel);
+            try
+            {
+                InitializeComponent();
+                displayAbout = false;
+                ModelTemplate = null;
+                RunningModel = model;
+                modelControl.SetModel(model);
+                modelOutputControl.SetRunningModel(model);
+                SetCurrentMode(RunMode.RunningModel);
+                CurrentSettings.Settings = RunningModel.Settings;
+                if (!Directory.Exists(RunningModel.Settings.TempFolder))
+                    Directory.CreateDirectory(RunningModel.Settings.TempFolder);
+                if (!Directory.Exists(RunningModel.Settings.OutputFolder))
+                    Directory.CreateDirectory(RunningModel.Settings.OutputFolder);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+            }
         }
         private void RefreshModel()
         {
             RunningModel = modelControl.GetModel() as RunningModel;
             modelOutputControl.SetRunningModel(RunningModel);
         }
-
-
-        #endregion
-
 
         
         #region Settings
@@ -105,43 +115,39 @@ namespace SiliFish.UI
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            About about = new();
-            about.SetTimer(2000);
-            about.ShowDialog();
+            if (displayAbout)
+            {
+                About about = new();
+                about.SetTimer(2000);
+                about.ShowDialog();
+            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
             {
-                if (ModelTemplate != null)
+                if (modelControl.ModelUpdated)
                 {
-                    //check whether the custom model has changed
-                    string jsonstring = JsonUtil.ToJson(ModelTemplate);
-                    //TODO if (jsonstring != lastSavedCustomModelJSON)
+                    DialogResult res = MessageBox.Show("The model/template has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
+                    if (res == DialogResult.Yes)
                     {
-                        DialogResult res = MessageBox.Show("The template has changed. Do you want to save the modifications?", "Model Template Save", MessageBoxButtons.YesNoCancel);
-                        if (res == DialogResult.Yes)
-                        {
-                            //TODO if (!SaveModelTemplate())
-                            {
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
-                        else if (res == DialogResult.Cancel)
+                        if (!SaveModel())
                         {
                             e.Cancel = true;
                             return;
                         }
                     }
+                    else if (res == DialogResult.Cancel)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
-
                 foreach (string f in CurrentSettings.Settings.TempFiles)
                 {
                     File.Delete(f);
                 }
-                    
             }
             catch { }
         }
@@ -262,9 +268,14 @@ namespace SiliFish.UI
 
         private void SetCurrentMode(RunMode mode)
         {
+            bool prevCollapsed = splitMain.Panel2Collapsed;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
             pSimulation.Visible = mode == RunMode.RunningModel;
-            pGenerateModel.Visible = mode == RunMode.Template;            
+            pGenerateModel.Visible = mode == RunMode.Template;
+            if (prevCollapsed != splitMain.Panel2Collapsed)
+                Width = splitMain.Panel2Collapsed ? Width / 2 : Width * 2;
+            pTop.BackColor = mode == RunMode.Template ? Color.White:
+                Color.FromArgb(0, 188, 212);
         }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -285,26 +296,33 @@ namespace SiliFish.UI
                     }
                     mb.BackwardCompatibility();
                     mb.LinkObjects();
-                    if (mb is ModelTemplate)
-                    {
-                        ModelTemplate = mb as ModelTemplate;
-                        modelControl.SetModel(ModelTemplate);
-                        RunningModel = null;
-                        SetCurrentMode(RunMode.Template);
-                    }
-                    else
-                    {
-                        RunningModel = mb as RunningModel;
-                        modelControl.SetModel(RunningModel);
-                        ModelTemplate = null;
-                        SetCurrentMode(RunMode.RunningModel);
-                    }
+                    SetModel(mb);
                 }
             }
             catch (Exception exc)
             {
                 MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+        }
+
+        private void SetModel(ModelBase mb, bool readFromControl = false)
+        {
+            if (mb is ModelTemplate)
+            {
+                ModelTemplate = mb as ModelTemplate;
+                if (!readFromControl) //to prevent recursive setting
+                    modelControl.SetModel(ModelTemplate);
+                RunningModel = null;
+                SetCurrentMode(RunMode.Template);
+            }
+            else
+            {
+                RunningModel = mb as RunningModel;
+                if (!readFromControl)
+                    modelControl.SetModel(RunningModel);
+                ModelTemplate = null;
+                SetCurrentMode(RunMode.RunningModel);
             }
         }
         private bool SaveModel()
@@ -328,6 +346,7 @@ namespace SiliFish.UI
                     ModelFile.Save(saveFileJson.FileName, mb);
 
                     this.Text = $"SiliFish {mb.ModelName}";
+                    modelControl.ModelUpdated = false;
                     return true;
                 }
                 return false;
@@ -362,9 +381,13 @@ namespace SiliFish.UI
                 MessageBox.Show("There is no model template loaded.", "Error");
                 return;
             }
-            MainForm mf = new();
-            mf.SetRunningModel(new RunningModel(ModelTemplate));
+            MainForm mf = new(new RunningModel(ModelTemplate));
             mf.Show();
+        }
+
+        private void modelControl_ModelChanged(object sender, EventArgs e)
+        {
+            SetModel(modelControl.GetModel(), true);
         }
     }
 }

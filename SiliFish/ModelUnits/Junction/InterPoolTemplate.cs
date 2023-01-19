@@ -8,6 +8,8 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class InterPoolTemplate : JunctionBase
     {
+        public CellReach CellReach { get; set; } = new();
+
         [JsonIgnore]
         public CellPoolTemplate linkedSource, linkedTarget;
         public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;

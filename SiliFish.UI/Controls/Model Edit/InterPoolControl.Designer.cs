@@ -638,7 +638,7 @@
             // timeLineControl
             // 
             this.timeLineControl.AutoScroll = true;
-            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.timeLineControl.Location = new System.Drawing.Point(3, 3);
             this.timeLineControl.Name = "timeLineControl";

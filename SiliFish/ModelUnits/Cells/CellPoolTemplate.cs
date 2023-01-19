@@ -27,6 +27,7 @@ namespace SiliFish.ModelUnits.Cells
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
 
         private Dictionary<string, object> parameters;
+        [JsonPropertyOrder(1)]
         public Dictionary<string, Distribution> Parameters
         {
             get
