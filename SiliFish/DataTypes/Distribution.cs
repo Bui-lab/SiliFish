@@ -1,6 +1,8 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -108,16 +110,23 @@ namespace SiliFish.DataTypes
             return null;
         }
 
-        public static double[] GenerateNRandomNumbers(int n, double range)
+        public static double[] GenerateNRandomNumbers(int n, double range, bool ordered)//TODO use ordered
         {
             Random ??= new Random();
             return Random.Uniform(0, range, n);
         }
-        public virtual double[] GenerateNNumbers(int n, double range)
+        public virtual double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = range;
             Random ??= new Random();
-            return Random.Uniform(LowerLimit, UpperLimit, n);
+            if (ordered)
+            {
+                List<double> numbers = Random.Uniform(LowerLimit, UpperLimit, n).ToList();
+                numbers.Sort();
+                return numbers.ToArray();
+            }
+            else
+                return Random.Uniform(LowerLimit, UpperLimit, n);
         }
 
         protected virtual void FlipOnYAxis()
@@ -202,7 +211,7 @@ namespace SiliFish.DataTypes
             return new Constant_NoDistribution(RangeStart, Absolute, Angular, NoiseStdDev);
         }
 
-        public override double[] GenerateNNumbers(int n, double range)
+        public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Random ??= new Random();
             Range = range;
@@ -241,11 +250,11 @@ namespace SiliFish.DataTypes
             return new SpacedDistribution(RangeStart, RangeEnd, NoiseMean, NoiseStdDev, Absolute, Angular);
         }
 
-        public override double[] GenerateNNumbers(int n, double range)
+        public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = range;
             Random ??= new Random();
-            return Random.Spaced(LowerLimit, UpperLimit, NoiseMean, NoiseStdDev, n);
+            return Random.Spaced(LowerLimit, UpperLimit, NoiseMean, NoiseStdDev, n, ordered);
         }
     }
     public class GaussianDistribution : Distribution
@@ -286,10 +295,10 @@ namespace SiliFish.DataTypes
         {
             return new GaussianDistribution(RangeStart, RangeEnd, Mean, Stddev, Absolute, Angular);
         }
-        public override double[] GenerateNNumbers(int n, double range)
+        public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = Absolute ? 100 : double.Parse(range.ToString());
-            Random ??= new Random();
+            Random ??= new Random();//TODO use ordered
             return Random.Gauss(Mean * Range / 100, Stddev * Range / 100, n, LowerLimit, UpperLimit);
         }
     }
@@ -333,7 +342,7 @@ namespace SiliFish.DataTypes
         {
             return new BimodalDistribution(RangeStart, RangeEnd, Mean, Stddev, Mean2, Stddev2, Mode1Weight, Absolute, Angular);
         }
-        public override double[] GenerateNNumbers(int n, double range)
+        public override double[] GenerateNNumbers(int n, double range, bool ordered)//TODO use ordered
         {
             Range = Absolute ? 100 : range;
             Random ??= new Random();
