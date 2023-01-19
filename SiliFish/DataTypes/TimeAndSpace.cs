@@ -60,16 +60,16 @@ namespace SiliFish.DataTypes
                     radius = Math.Sqrt(Math.Pow(modelDimensions.SupraSpinalMedialLateralDistance, 2) + Math.Pow(modelDimensions.SupraSpinalDorsalVentralDistance / 2, 2));
                     break;
             }
-            double[] x = XDistribution?.GenerateNNumbers(n, x_length) ?? Distribution.GenerateNRandomNumbers(n, x_length);
+            double[] x = XDistribution?.GenerateNNumbers(n, x_length, ordered: true) ?? Distribution.GenerateNRandomNumbers(n, x_length, ordered: true);
             double[] y = new double[n];
             double[] z = new double[n];
 
             if (Y_AngleDistribution != null && Y_AngleDistribution.Angular)
             {
                 //FUTURE_IMPROVEMENT radii and angles should be generated together to handle elliptic shapes
-                double[] angles = Y_AngleDistribution?.GenerateNNumbers(n, 180) ?? Distribution.GenerateNRandomNumbers(n, 180);
+                double[] angles = Y_AngleDistribution?.GenerateNNumbers(n, 180, ordered: false) ?? Distribution.GenerateNRandomNumbers(n, 180, ordered: false);
                 double centerZ = z_length / 2;
-                double[] radii = Z_RadiusDistribution?.GenerateNNumbers(n, radius) ?? Distribution.GenerateNRandomNumbers(n, radius);
+                double[] radii = Z_RadiusDistribution?.GenerateNNumbers(n, radius, ordered: false) ?? Distribution.GenerateNRandomNumbers(n, radius, ordered: false);
                 foreach (int i in Enumerable.Range(0, n))
                 {
                     double radian = angles[i] * Math.PI / 180;
@@ -79,8 +79,8 @@ namespace SiliFish.DataTypes
             }
             else
             {
-                y = Y_AngleDistribution?.GenerateNNumbers(n, y_length) ?? Distribution.GenerateNRandomNumbers(n, y_length);
-                z = Z_RadiusDistribution?.GenerateNNumbers(n, z_length) ?? Distribution.GenerateNRandomNumbers(n, z_length);
+                y = Y_AngleDistribution?.GenerateNNumbers(n, y_length, ordered: false) ?? Distribution.GenerateNRandomNumbers(n, y_length, ordered: false);
+                z = Z_RadiusDistribution?.GenerateNNumbers(n, z_length, ordered: false) ?? Distribution.GenerateNRandomNumbers(n, z_length, ordered: false);
             }
 
             foreach (int i in Enumerable.Range(0, n))

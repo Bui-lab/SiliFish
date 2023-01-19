@@ -38,8 +38,8 @@ namespace SiliFish.UI.Controls
             {
                 pOptions.Visible = true;
                 string mode = ddDistribution.Text;
-                pNoise.Visible = mode is "Constant" or "Equally Spaced";
-                pGaussian.Visible = mode is "Gaussian" or "Bimodal";
+                pNoise.Visible = mode is "Constant";
+                pGaussian.Visible = mode is "Gaussian" or "Bimodal" or "Equally Spaced";
                 pBimodal.Visible = mode == "Bimodal";
             }
             if (ddDistribution.Text == "Constant")
@@ -80,7 +80,8 @@ namespace SiliFish.UI.Controls
             if (dist is SpacedDistribution)
             {
                 ddDistribution.Text = "Equally Spaced";
-                eNoise.Text = (dist as SpacedDistribution).NoiseStdDev.ToString("0.###");
+                eMean1.Text = (dist as SpacedDistribution).NoiseMean.ToString("0.###");
+                eStdDev1.Text = (dist as SpacedDistribution).NoiseStdDev.ToString("0.###");
             }
             else if (dist is BimodalDistribution)
             {
@@ -131,7 +132,11 @@ namespace SiliFish.UI.Controls
                 case "Uniform":
                     return new UniformDistribution(start, end, absolute, Angular);
                 case "Equally Spaced":
-                    return new SpacedDistribution(start, end, noise, absolute, Angular);
+                    if (!double.TryParse(eMean1.Text, out double meanNoise))
+                        meanNoise = 1;
+                    if (!double.TryParse(eStdDev1.Text, out double stddevNoise))
+                        stddevNoise = 0;
+                    return new SpacedDistribution(start, end, meanNoise, stddevNoise, absolute, Angular);
                 case "Gaussian":
                     if (!double.TryParse(eMean1.Text, out double mean))
                         mean = 1;

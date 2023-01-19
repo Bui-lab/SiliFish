@@ -272,7 +272,7 @@ namespace SiliFish.ModelUnits.Cells
 
                 double defaultCV = CurrentSettings.Settings.cv;
                 double[] cv = template.ConductionVelocity != null ?
-                    ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0) :
+                    ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0, ordered: false) :
                     Enumerable.Repeat(defaultCV, n).ToArray();
 
                 foreach (int i in Enumerable.Range(0, n))

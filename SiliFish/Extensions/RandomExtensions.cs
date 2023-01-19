@@ -72,21 +72,22 @@ namespace SiliFish.Extensions
         /// <summary>
         /// Generate equally spaced numbers with noise
         /// </summary>
-        public static double[] Spaced(this Random rand, double start, double end, double noiseStdDev, int n, bool ordered = false)
+        public static double[] Spaced(this Random rand, double start, double end, 
+            double noisemean, double noiseStdDev, int n, bool ordered = false)
         {
             if (n <= 0) return null;
             double[] result = new double[n];
             if (n == 1)
             {
-                double noise = noiseStdDev > 0 ? rand.Gauss(1, noiseStdDev) : 1;
-                result[0] = noise * (end + start) / 2;
+                double noise = noiseStdDev > 0 ? rand.Gauss(noisemean, noiseStdDev) : noisemean;
+                result[0] = noise + (end + start) / 2;
                 return result;
             }
             double inc = (end - start) / (n - 1);
+            double[] noises = rand.Gauss(noisemean, noiseStdDev, n, noisemean - 10 * noiseStdDev, noisemean + 10 * noiseStdDev);
             foreach (int i in Enumerable.Range(0, n))
             {
-                double noise = noiseStdDev > 0 ? rand.Gauss(1, noiseStdDev) : 1;
-                result[i] = start + i * inc * noise;
+                result[i] = start + i * inc + noises[i];
                 if (result[i] < start) result[i] = start;
                 if (result[i] > end) result[i] = end;
             }

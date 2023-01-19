@@ -217,6 +217,7 @@ namespace SiliFish.DataTypes
     }
     public class SpacedDistribution : Distribution
     {
+        public double NoiseMean { get; set; } = 0;
         public double NoiseStdDev { get; set; } = 0;
         public override double UniqueValue
         {
@@ -224,26 +225,27 @@ namespace SiliFish.DataTypes
         }
         public override string ToString()
         {
-            return string.Format("{0}\r\nNoise: µ:1; SD:{1:0.#####}", base.ToString(), NoiseStdDev);
+            return $"{base.ToString()}\r\nNoise: µ:{NoiseMean:0.#####}; SD:{NoiseStdDev:0.#####}";
         }
         public SpacedDistribution()
         { }
-        public SpacedDistribution(double start, double end, double noiseStdDev, bool absolute, bool angular)
+        public SpacedDistribution(double start, double end, double noisemean, double noiseStdDev, bool absolute, bool angular)
             : base(start, end, absolute, angular)
         {
+            NoiseMean = noisemean;
             NoiseStdDev = noiseStdDev;
         }
 
         public override Distribution CreateCopy()
         {
-            return new SpacedDistribution(RangeStart, RangeEnd, NoiseStdDev, Absolute, Angular);
+            return new SpacedDistribution(RangeStart, RangeEnd, NoiseMean, NoiseStdDev, Absolute, Angular);
         }
 
         public override double[] GenerateNNumbers(int n, double range)
         {
             Range = range;
             Random ??= new Random();
-            return Random.Spaced(LowerLimit, UpperLimit, NoiseStdDev, n);
+            return Random.Spaced(LowerLimit, UpperLimit, NoiseMean, NoiseStdDev, n);
         }
     }
     public class GaussianDistribution : Distribution
