@@ -137,7 +137,7 @@ namespace SiliFish.UI.Controls
             {
                 precell = syn.PreNeuron;
                 postcell = syn.PostCell;
-                synapseControl.SetSynapseParameters(syn.SynapseParameters);
+                //TODO synapseControl.SetSynapseParameters(syn.Core.GetSynapseParameters);
             }
             if (newJunc)
             {

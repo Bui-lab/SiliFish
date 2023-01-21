@@ -49,8 +49,9 @@ namespace SiliFish.DynamicUnits
             };
             return paramDict;
         }
-
+        [JsonIgnore]
         public override string VThresholdParamName { get { return ""; } }
+        [JsonIgnore] 
         public override string VReversalParamName { get { return "Izhikevich_5P.V_r"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {

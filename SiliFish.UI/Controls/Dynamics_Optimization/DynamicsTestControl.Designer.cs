@@ -77,7 +77,7 @@
             this.pLoadSaveParams = new System.Windows.Forms.Panel();
             this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
             this.linkSaveCoreUnit = new System.Windows.Forms.LinkLabel();
-            this.pBottomBottom = new System.Windows.Forms.Panel();
+            this.pTop = new System.Windows.Forms.Panel();
             this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.splitGAAndPlots = new System.Windows.Forms.SplitContainer();
             this.pOptimize = new System.Windows.Forms.Panel();
@@ -97,6 +97,10 @@
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.pDistinguisherLeft = new System.Windows.Forms.Panel();
+            this.pDistinguisherTop = new System.Windows.Forms.Panel();
+            this.pDistinguisherBottom = new System.Windows.Forms.Panel();
+            this.pDistinguisherRight = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ePlotEndTime)).BeginInit();
@@ -117,7 +121,7 @@
             this.grRheoSens.SuspendLayout();
             this.pCoreType.SuspendLayout();
             this.pLoadSaveParams.SuspendLayout();
-            this.pBottomBottom.SuspendLayout();
+            this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitGAAndPlots)).BeginInit();
             this.splitGAAndPlots.Panel1.SuspendLayout();
             this.splitGAAndPlots.Panel2.SuspendLayout();
@@ -311,7 +315,7 @@
             this.grRheobase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grRheobase.Location = new System.Drawing.Point(0, 0);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(299, 124);
+            this.grRheobase.Size = new System.Drawing.Size(297, 124);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
@@ -435,7 +439,7 @@
             // 
             this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitMain.Location = new System.Drawing.Point(0, 0);
+            this.splitMain.Location = new System.Drawing.Point(4, 4);
             this.splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
@@ -445,15 +449,15 @@
             this.splitMain.Panel1.Controls.Add(this.tabAnalysis);
             this.splitMain.Panel1.Controls.Add(this.pCoreType);
             this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
-            this.splitMain.Panel1.Controls.Add(this.pBottomBottom);
+            this.splitMain.Panel1.Controls.Add(this.pTop);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // splitMain.Panel2
             // 
             this.splitMain.Panel2.Controls.Add(this.splitGAAndPlots);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
-            this.splitMain.Size = new System.Drawing.Size(1252, 683);
-            this.splitMain.SplitterDistance = 307;
+            this.splitMain.Size = new System.Drawing.Size(1244, 675);
+            this.splitMain.SplitterDistance = 305;
             this.splitMain.TabIndex = 17;
             // 
             // pfParams
@@ -461,18 +465,18 @@
             this.pfParams.AutoScroll = true;
             this.pfParams.AutoSize = true;
             this.pfParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pfParams.Location = new System.Drawing.Point(3, 43);
+            this.pfParams.Location = new System.Drawing.Point(3, 66);
             this.pfParams.Name = "pfParams";
-            this.pfParams.Size = new System.Drawing.Size(299, 118);
+            this.pfParams.Size = new System.Drawing.Size(297, 110);
             this.pfParams.TabIndex = 23;
             // 
             // pRheobase
             // 
             this.pRheobase.Controls.Add(this.grRheobase);
             this.pRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pRheobase.Location = new System.Drawing.Point(3, 161);
+            this.pRheobase.Location = new System.Drawing.Point(3, 176);
             this.pRheobase.Name = "pRheobase";
-            this.pRheobase.Size = new System.Drawing.Size(299, 124);
+            this.pRheobase.Size = new System.Drawing.Size(297, 124);
             this.pRheobase.TabIndex = 40;
             // 
             // tabAnalysis
@@ -480,10 +484,10 @@
             this.tabAnalysis.Controls.Add(this.tTest);
             this.tabAnalysis.Controls.Add(this.tSensitivityAnalysis);
             this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabAnalysis.Location = new System.Drawing.Point(3, 285);
+            this.tabAnalysis.Location = new System.Drawing.Point(3, 300);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(299, 339);
+            this.tabAnalysis.Size = new System.Drawing.Size(297, 339);
             this.tabAnalysis.TabIndex = 39;
             // 
             // tTest
@@ -628,7 +632,7 @@
             this.tSensitivityAnalysis.Location = new System.Drawing.Point(4, 24);
             this.tSensitivityAnalysis.Name = "tSensitivityAnalysis";
             this.tSensitivityAnalysis.Padding = new System.Windows.Forms.Padding(3);
-            this.tSensitivityAnalysis.Size = new System.Drawing.Size(291, 311);
+            this.tSensitivityAnalysis.Size = new System.Drawing.Size(289, 311);
             this.tSensitivityAnalysis.TabIndex = 1;
             this.tSensitivityAnalysis.Text = "Sensitivity Analysis";
             this.tSensitivityAnalysis.UseVisualStyleBackColor = true;
@@ -639,13 +643,14 @@
             this.grFiring.Dock = System.Windows.Forms.DockStyle.Top;
             this.grFiring.Location = new System.Drawing.Point(3, 147);
             this.grFiring.Name = "grFiring";
-            this.grFiring.Size = new System.Drawing.Size(285, 138);
+            this.grFiring.Size = new System.Drawing.Size(283, 138);
             this.grFiring.TabIndex = 19;
             this.grFiring.TabStop = false;
             this.grFiring.Text = "Firing Pattern";
             // 
             // sensitivityAnalysisFiring
             // 
+            this.sensitivityAnalysisFiring.BackColor = System.Drawing.Color.White;
             this.sensitivityAnalysisFiring.Location = new System.Drawing.Point(6, 18);
             this.sensitivityAnalysisFiring.Name = "sensitivityAnalysisFiring";
             this.sensitivityAnalysisFiring.Size = new System.Drawing.Size(215, 120);
@@ -657,13 +662,14 @@
             this.grRheoSens.Dock = System.Windows.Forms.DockStyle.Top;
             this.grRheoSens.Location = new System.Drawing.Point(3, 3);
             this.grRheoSens.Name = "grRheoSens";
-            this.grRheoSens.Size = new System.Drawing.Size(285, 144);
+            this.grRheoSens.Size = new System.Drawing.Size(283, 144);
             this.grRheoSens.TabIndex = 18;
             this.grRheoSens.TabStop = false;
             this.grRheoSens.Text = "Rheobase Sensitivity";
             // 
             // sensitivityAnalysisRheobase
             // 
+            this.sensitivityAnalysisRheobase.BackColor = System.Drawing.Color.White;
             this.sensitivityAnalysisRheobase.Location = new System.Drawing.Point(3, 22);
             this.sensitivityAnalysisRheobase.Name = "sensitivityAnalysisRheobase";
             this.sensitivityAnalysisRheobase.Size = new System.Drawing.Size(215, 120);
@@ -671,14 +677,14 @@
             // 
             // pCoreType
             // 
-            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pCoreType.Controls.Add(this.pLineCoreType);
             this.pCoreType.Controls.Add(this.ddCoreType);
             this.pCoreType.Controls.Add(this.lCoreType);
             this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pCoreType.Location = new System.Drawing.Point(3, 3);
+            this.pCoreType.Location = new System.Drawing.Point(3, 26);
             this.pCoreType.Name = "pCoreType";
-            this.pCoreType.Size = new System.Drawing.Size(299, 40);
+            this.pCoreType.Size = new System.Drawing.Size(297, 40);
             this.pCoreType.TabIndex = 21;
             // 
             // pLineCoreType
@@ -687,7 +693,7 @@
             this.pLineCoreType.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pLineCoreType.Location = new System.Drawing.Point(0, 39);
             this.pLineCoreType.Name = "pLineCoreType";
-            this.pLineCoreType.Size = new System.Drawing.Size(299, 1);
+            this.pLineCoreType.Size = new System.Drawing.Size(297, 1);
             this.pLineCoreType.TabIndex = 24;
             // 
             // ddCoreType
@@ -700,7 +706,7 @@
             this.ddCoreType.FormattingEnabled = true;
             this.ddCoreType.Location = new System.Drawing.Point(71, 9);
             this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(221, 23);
+            this.ddCoreType.Size = new System.Drawing.Size(219, 23);
             this.ddCoreType.TabIndex = 23;
             this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
             // 
@@ -715,12 +721,13 @@
             // 
             // pLoadSaveParams
             // 
+            this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
             this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 624);
+            this.pLoadSaveParams.Location = new System.Drawing.Point(3, 639);
             this.pLoadSaveParams.Name = "pLoadSaveParams";
-            this.pLoadSaveParams.Size = new System.Drawing.Size(299, 31);
+            this.pLoadSaveParams.Size = new System.Drawing.Size(297, 31);
             this.pLoadSaveParams.TabIndex = 20;
             // 
             // linkLoadCoreUnit
@@ -747,21 +754,21 @@
             this.linkSaveCoreUnit.Text = "Save Core Unit";
             this.linkSaveCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCoreUnit_LinkClicked);
             // 
-            // pBottomBottom
+            // pTop
             // 
-            this.pBottomBottom.Controls.Add(this.linkUseUpdatedParams);
-            this.pBottomBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottomBottom.Location = new System.Drawing.Point(3, 655);
-            this.pBottomBottom.Name = "pBottomBottom";
-            this.pBottomBottom.Size = new System.Drawing.Size(299, 23);
-            this.pBottomBottom.TabIndex = 24;
-            this.pBottomBottom.Visible = false;
+            this.pTop.Controls.Add(this.linkUseUpdatedParams);
+            this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pTop.Location = new System.Drawing.Point(3, 3);
+            this.pTop.Name = "pTop";
+            this.pTop.Size = new System.Drawing.Size(297, 23);
+            this.pTop.TabIndex = 24;
+            this.pTop.Visible = false;
             // 
             // linkUseUpdatedParams
             // 
             this.linkUseUpdatedParams.AutoSize = true;
             this.linkUseUpdatedParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkUseUpdatedParams.Location = new System.Drawing.Point(6, 5);
+            this.linkUseUpdatedParams.Location = new System.Drawing.Point(4, 3);
             this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
             this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
             this.linkUseUpdatedParams.TabIndex = 19;
@@ -784,8 +791,8 @@
             // splitGAAndPlots.Panel2
             // 
             this.splitGAAndPlots.Panel2.Controls.Add(this.webViewPlots);
-            this.splitGAAndPlots.Size = new System.Drawing.Size(941, 618);
-            this.splitGAAndPlots.SplitterDistance = 351;
+            this.splitGAAndPlots.Size = new System.Drawing.Size(935, 610);
+            this.splitGAAndPlots.SplitterDistance = 346;
             this.splitGAAndPlots.TabIndex = 2;
             // 
             // pOptimize
@@ -794,7 +801,7 @@
             this.pOptimize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pOptimize.Location = new System.Drawing.Point(0, 0);
             this.pOptimize.Name = "pOptimize";
-            this.pOptimize.Size = new System.Drawing.Size(939, 349);
+            this.pOptimize.Size = new System.Drawing.Size(933, 344);
             this.pOptimize.TabIndex = 39;
             // 
             // gaControl
@@ -804,7 +811,7 @@
             this.gaControl.Location = new System.Drawing.Point(0, 0);
             this.gaControl.Name = "gaControl";
             this.gaControl.Parameters = null;
-            this.gaControl.Size = new System.Drawing.Size(939, 349);
+            this.gaControl.Size = new System.Drawing.Size(933, 344);
             this.gaControl.TabIndex = 0;
             // 
             // webViewPlots
@@ -815,21 +822,20 @@
             this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlots.Location = new System.Drawing.Point(0, 0);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(939, 261);
+            this.webViewPlots.Size = new System.Drawing.Size(933, 258);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
             // 
             // pPlots
             // 
-            this.pPlots.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pPlots.Controls.Add(this.panel1);
             this.pPlots.Controls.Add(this.grPlotSelection);
             this.pPlots.Controls.Add(this.linkSwitchToOptimization);
             this.pPlots.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlots.Location = new System.Drawing.Point(0, 0);
             this.pPlots.Name = "pPlots";
-            this.pPlots.Size = new System.Drawing.Size(941, 65);
+            this.pPlots.Size = new System.Drawing.Size(935, 65);
             this.pPlots.TabIndex = 1;
             // 
             // panel1
@@ -838,7 +844,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 64);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(941, 1);
+            this.panel1.Size = new System.Drawing.Size(935, 1);
             this.panel1.TabIndex = 9;
             // 
             // grPlotSelection
@@ -959,12 +965,52 @@
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // pDistinguisherLeft
+            // 
+            this.pDistinguisherLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pDistinguisherLeft.Location = new System.Drawing.Point(0, 0);
+            this.pDistinguisherLeft.Name = "pDistinguisherLeft";
+            this.pDistinguisherLeft.Size = new System.Drawing.Size(4, 683);
+            this.pDistinguisherLeft.TabIndex = 18;
+            // 
+            // pDistinguisherTop
+            // 
+            this.pDistinguisherTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pDistinguisherTop.Location = new System.Drawing.Point(4, 0);
+            this.pDistinguisherTop.Name = "pDistinguisherTop";
+            this.pDistinguisherTop.Size = new System.Drawing.Size(1248, 4);
+            this.pDistinguisherTop.TabIndex = 19;
+            // 
+            // pDistinguisherBottom
+            // 
+            this.pDistinguisherBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pDistinguisherBottom.Location = new System.Drawing.Point(4, 679);
+            this.pDistinguisherBottom.Name = "pDistinguisherBottom";
+            this.pDistinguisherBottom.Size = new System.Drawing.Size(1248, 4);
+            this.pDistinguisherBottom.TabIndex = 20;
+            // 
+            // pDistinguisherRight
+            // 
+            this.pDistinguisherRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pDistinguisherRight.Location = new System.Drawing.Point(1248, 4);
+            this.pDistinguisherRight.Name = "pDistinguisherRight";
+            this.pDistinguisherRight.Size = new System.Drawing.Size(4, 675);
+            this.pDistinguisherRight.TabIndex = 21;
+            // 
             // DynamicsTestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.splitMain);
+            this.Controls.Add(this.pDistinguisherRight);
+            this.Controls.Add(this.pDistinguisherBottom);
+            this.Controls.Add(this.pDistinguisherTop);
+            this.Controls.Add(this.pDistinguisherLeft);
             this.Name = "DynamicsTestControl";
             this.Size = new System.Drawing.Size(1252, 683);
             this.Load += new System.EventHandler(this.DynamicsTestControl_Load);
@@ -993,8 +1039,8 @@
             this.pCoreType.PerformLayout();
             this.pLoadSaveParams.ResumeLayout(false);
             this.pLoadSaveParams.PerformLayout();
-            this.pBottomBottom.ResumeLayout(false);
-            this.pBottomBottom.PerformLayout();
+            this.pTop.ResumeLayout(false);
+            this.pTop.PerformLayout();
             this.splitGAAndPlots.Panel1.ResumeLayout(false);
             this.splitGAAndPlots.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitGAAndPlots)).EndInit();
@@ -1045,7 +1091,7 @@
         private CheckBox cbTauRise;
         private CheckBox cbSecondaryLists;
         private CheckBox cbV;
-        private Panel pBottomBottom;
+        private Panel pTop;
         private LinkLabel linkUseUpdatedParams;
         private ToolTip toolTip1;
         private LinkLabel linkSwitchToOptimization;
@@ -1078,5 +1124,9 @@
         private Panel pSep2;
         private Panel pSep1;
         private Button btnDynamicsRun;
+        private Panel pDistinguisherLeft;
+        private Panel pDistinguisherTop;
+        private Panel pDistinguisherBottom;
+        private Panel pDistinguisherRight;
     }
 }

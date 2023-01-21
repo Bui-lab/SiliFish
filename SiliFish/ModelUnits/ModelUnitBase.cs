@@ -14,7 +14,7 @@ namespace SiliFish.ModelUnits
         private bool _Active = true;
         public virtual bool Active { get => _Active; set => _Active = value; }
         public TimeLine TimeLine_ms { get; set; } = new TimeLine();
-        public List<string> Attachments { get; set; } = new();
+        
 
         public virtual int CompareTo(ModelUnitBase other)
         {

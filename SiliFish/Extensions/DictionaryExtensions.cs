@@ -63,7 +63,7 @@ namespace SiliFish.Extensions
                 {
                     if (val is Distribution valdt)
                     {
-                        val = valdt.GenerateNNumbers(1, valdt.Range)[0];
+                        val = valdt.GenerateNNumbers(1, valdt.Range, ordered: false)[0];
                     }
                     else if (val is JsonElement element)
                     {
@@ -88,7 +88,7 @@ namespace SiliFish.Extensions
             {
                 if (dictionary.TryGetValue(key, out var val))
                 {
-                        var v = val.GenerateNNumbers(1, val.Range)[0];
+                        var v = val.GenerateNNumbers(1, val.Range, ordered: false)[0];
                     return (T)Convert.ChangeType(v, typeof(T));
                 }
                 return defaultValue;
@@ -148,14 +148,14 @@ namespace SiliFish.Extensions
             {
                 object obj = dictionary[key];
                 if (obj is Distribution distribution)
-                    valuesArray.Add(key, distribution.GenerateNNumbers(1, distribution.Range)[0]);
+                    valuesArray.Add(key, distribution.GenerateNNumbers(1, distribution.Range, ordered: false)[0]);
                 else if (double.TryParse(obj.ToString(), out double d))
                     valuesArray.Add(key, d);
             }
             return valuesArray;
         }
 
-        public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, object> dictionary, int number)
+        public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, object> dictionary, int number, bool ordered)
         {
             Dictionary<string, double[]> valuesArray = new();
             if (dictionary == null)
@@ -164,14 +164,14 @@ namespace SiliFish.Extensions
             {
                 object obj = dictionary[key];
                 if (obj is Distribution distribution)
-                    valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range));
+                    valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range, ordered));
                 else if (double.TryParse(obj.ToString(), out double d))
                     valuesArray.Add(key, Enumerable.Repeat(d, number).ToArray());
             }
             return valuesArray;
         }
 
-        public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, Distribution> dictionary, int number)
+        public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, Distribution> dictionary, int number, bool ordered)
         {
             Dictionary<string, double[]> valuesArray = new();
             if (dictionary == null)
@@ -179,7 +179,7 @@ namespace SiliFish.Extensions
             foreach (string key in dictionary.Keys)
             {
                 Distribution distribution = dictionary[key];
-                valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range));
+                valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range, ordered));
             }
             return valuesArray;
         }

@@ -125,7 +125,7 @@ namespace SiliFish.UI.Controls
             FillCoreTypes(coreType);
             if (parameters != null)
                 Parameters = parameters;
-            pBottomBottom.Visible = !testMode;
+            pTop.Visible = !testMode;
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", CurrentSettings.Settings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
           
             splitGAAndPlots.Panel1Collapsed = true;
@@ -597,14 +597,19 @@ namespace SiliFish.UI.Controls
                 string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                CellCoreUnit core = CellCoreUnit.GetOfDerivedType(JSONString);
-                if (core != null)
+                //the core is saved as an array to benefit from $type tag added by the JsonSerializer
+                CellCoreUnit[] arr = (CellCoreUnit[])JsonUtil.ToObject(typeof(CellCoreUnit[]), JSONString);
+                if (arr != null && arr.Any())
                 {
-                    skipCoreTypeChange = true;
-                    ddCoreType.Text = core.CoreType;
-                    skipCoreTypeChange = false;
-                    CoreType = core.CoreType;
-                    Parameters = core.GetParameters();
+                    CellCoreUnit core = arr[0];
+                    if (core != null)
+                    {
+                        skipCoreTypeChange = true;
+                        ddCoreType.Text = core.CoreType;
+                        skipCoreTypeChange = false;
+                        CoreType = core.CoreType;
+                        Parameters = core.GetParameters();
+                    }
                 }
             }
         }
@@ -613,7 +618,9 @@ namespace SiliFish.UI.Controls
         {
             ReadParameters();
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
-            string JSONString = JsonUtil.ToJson(core);
+            CellCoreUnit[] arr = new CellCoreUnit[] { core };
+            //the core is saved as an array to benefit from $type tag added by the JsonSerializer
+            string JSONString = JsonUtil.ToJson(arr);
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {

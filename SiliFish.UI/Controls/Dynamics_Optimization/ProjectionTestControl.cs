@@ -319,9 +319,10 @@ namespace SiliFish.UI.Controls
             };
             useUpdatedParams?.Invoke(this, args);
         }
+        
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
+        /*    openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
@@ -329,7 +330,7 @@ namespace SiliFish.UI.Controls
                 string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                CellCoreUnit core = CellCoreUnit.GetOfDerivedType(JSONString);
+                CellCoreUnit core = CellCoreUnit.DON"T USE GetOfDerivedType(JSONString);
                 if (core != null)
                 {
                     skipCoreTypeChange = true;
@@ -338,12 +339,12 @@ namespace SiliFish.UI.Controls
                     CoreTypeSource = core.CoreType;
                     Parameters = core.GetParameters();
                 }
-            }
+            }*/
         }
 
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ReadParameters();
+            /*ReadParameters();
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreTypeSource, parameters);
             string JSONString = JsonUtil.ToJson(core);
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
@@ -351,7 +352,7 @@ namespace SiliFish.UI.Controls
             {
                 FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
-            }
+            }*/
         }
 
         #endregion

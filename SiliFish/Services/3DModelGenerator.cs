@@ -198,11 +198,11 @@ namespace SiliFish.Services
             html.Replace("__BRAIN_HEIGHT__", (brainHeight * XYZMult).ToString());
             html.Replace("__BRAIN_DEPTH__", (brainWidth * XYZMult).ToString());
 
-            string lateralHeadStr = Convert.ToBase64String(ReadEmbeddedBinary("SiliFish.Resources.LateralHead.png"));
+            string lateralHeadStr = Convert.ToBase64String(ReadEmbeddedBinary("SiliFish.UI.Resources.LateralHead.png"));
             string lateralHead = $"data:image/png;base64,{lateralHeadStr}";
             html.Replace("__LATERAL_HEAD__", lateralHead);
 
-            string dorsalHeadStr = Convert.ToBase64String(ReadEmbeddedBinary("SiliFish.Resources.DorsalHead.png"));
+            string dorsalHeadStr = Convert.ToBase64String(ReadEmbeddedBinary("SiliFish.UI.Resources.DorsalHead.png"));
             string dorsalHead = $"data:image/png;base64,{dorsalHeadStr}";
             html.Replace("__DORSAL_HEAD__", dorsalHead);
 

@@ -161,6 +161,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
         [Browsable(false)]
+        [JsonPropertyOrder(2)]
         public List<CellPool> NeuronPools
         {
             get
@@ -174,6 +175,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
         [Browsable(false)]
+        [JsonPropertyOrder(2)]
         public List<CellPool> MusclePools
         {
             get

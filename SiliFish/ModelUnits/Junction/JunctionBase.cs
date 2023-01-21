@@ -10,11 +10,6 @@ namespace SiliFish.ModelUnits.Junction
     public class JunctionBase: ModelUnitBase
     {
         
-        public SynapseParameters SynapseParameters { get; set; }
-        public bool IsChemical { get { return SynapseParameters != null; } set { } }
-
-
-
 
 
 

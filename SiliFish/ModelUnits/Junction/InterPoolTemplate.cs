@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
@@ -9,6 +10,7 @@ namespace SiliFish.ModelUnits.Junction
     public class InterPoolTemplate : JunctionBase
     {
         public CellReach CellReach { get; set; } = new();
+        public SynapseParameters SynapseParameters { get; set; }
 
         [JsonIgnore]
         public CellPoolTemplate linkedSource, linkedTarget;
@@ -76,6 +78,7 @@ namespace SiliFish.ModelUnits.Junction
             }
             set { base.Active = value; }
         }
+        public List<string> Attachments { get; set; } = new();
         public InterPoolTemplate()
         { }
 

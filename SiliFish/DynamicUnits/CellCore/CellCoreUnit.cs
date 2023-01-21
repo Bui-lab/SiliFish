@@ -38,17 +38,8 @@ namespace SiliFish.DynamicUnits
             set { SetParameters(value); }
         }
 
-        private string coreType;
-        public string CoreType 
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(coreType))
-                    coreType = this.GetType().Name;
-                return coreType;
-            }
-            set { coreType = value; } //for json
-        }
+        [JsonIgnore]
+        public string CoreType => GetType().Name;
 
         [JsonIgnore]
         public virtual string VThresholdParamName
@@ -71,13 +62,6 @@ namespace SiliFish.DynamicUnits
         public static List<string> GetCoreTypes()
         {
             return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
-        }
-        public static CellCoreUnit GetOfDerivedType(string json)//TODO test whether we still need this
-        {
-            CellCoreUnit core = JsonSerializer.Deserialize<CellCoreUnit>(json);
-            if (core != null)
-                return CreateCore(core.CoreType, core.Parameters);
-            return core;
         }
         public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters)
         {

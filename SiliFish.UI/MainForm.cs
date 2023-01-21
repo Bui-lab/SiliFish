@@ -202,6 +202,7 @@ namespace SiliFish.UI
                 $"Duration: {Util.TimeSpanToString(ts)}\r\n" +
                 $"Model: {RunningModel.ModelName}";
 
+            modelOutputControl.SetRunningModel(RunningModel);//TODO combine the two
             modelOutputControl.CompleteRun();
         }
         private void btnRun_Click(object sender, EventArgs e)
@@ -263,7 +264,7 @@ namespace SiliFish.UI
             frmControl.AddControl(dynControl);
             frmControl.Text = "Cellular Dynamics Test";
             frmControl.SaveVisible = false;
-            frmControl.ShowDialog();
+            frmControl.Show();
         }
 
         private void SetCurrentMode(RunMode mode)
@@ -274,8 +275,11 @@ namespace SiliFish.UI
             pGenerateModel.Visible = mode == RunMode.Template;
             if (prevCollapsed != splitMain.Panel2Collapsed)
                 Width = splitMain.Panel2Collapsed ? Width / 2 : Width * 2;
-            pTop.BackColor = mode == RunMode.Template ? Color.White:
-                Color.FromArgb(0, 188, 212);
+           pDistinguisher.BackColor = 
+                pDistinguisherTop.BackColor = pDistinguisherRight.BackColor=pDistinguisherBottom.BackColor
+                = mode == RunMode.Template ? Color.FromArgb(200,230, 201) :
+                Color.FromArgb(76, 175, 80);
+            
         }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -321,6 +325,7 @@ namespace SiliFish.UI
                 RunningModel = mb as RunningModel;
                 if (!readFromControl)
                     modelControl.SetModel(RunningModel);
+                modelOutputControl.SetRunningModel(RunningModel);
                 ModelTemplate = null;
                 SetCurrentMode(RunMode.RunningModel);
             }

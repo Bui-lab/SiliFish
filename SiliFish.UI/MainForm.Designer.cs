@@ -71,6 +71,10 @@ namespace SiliFish.UI
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.pDistinguisher = new System.Windows.Forms.Panel();
+            this.pDistinguisherTop = new System.Windows.Forms.Panel();
+            this.pDistinguisherRight = new System.Windows.Forms.Panel();
+            this.pDistinguisherBottom = new System.Windows.Forms.Panel();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -88,16 +92,15 @@ namespace SiliFish.UI
             // 
             // pTop
             // 
-            this.pTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.pTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pTop.Controls.Add(this.btnAbout);
             this.pTop.Controls.Add(this.btnCellularDynamics);
             this.pTop.Controls.Add(this.linkBrowseToTempFolder);
             this.pTop.Controls.Add(this.linkOpenOutputFolder);
             this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTop.Location = new System.Drawing.Point(0, 0);
+            this.pTop.Location = new System.Drawing.Point(4, 4);
             this.pTop.Name = "pTop";
-            this.pTop.Size = new System.Drawing.Size(1348, 40);
+            this.pTop.Size = new System.Drawing.Size(1340, 40);
             this.pTop.TabIndex = 3;
             // 
             // btnAbout
@@ -106,7 +109,7 @@ namespace SiliFish.UI
             this.btnAbout.AutoSize = true;
             this.btnAbout.BackColor = System.Drawing.Color.Transparent;
             this.btnAbout.Image = ((System.Drawing.Image)(resources.GetObject("btnAbout.Image")));
-            this.btnAbout.Location = new System.Drawing.Point(1302, 5);
+            this.btnAbout.Location = new System.Drawing.Point(1294, 5);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(33, 30);
             this.btnAbout.TabIndex = 24;
@@ -117,7 +120,7 @@ namespace SiliFish.UI
             // btnCellularDynamics
             // 
             this.btnCellularDynamics.AutoSize = true;
-            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
+            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
             this.btnCellularDynamics.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCellularDynamics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCellularDynamics.ForeColor = System.Drawing.Color.White;
@@ -135,7 +138,7 @@ namespace SiliFish.UI
             this.linkBrowseToTempFolder.AutoSize = true;
             this.linkBrowseToTempFolder.ForeColor = System.Drawing.Color.White;
             this.linkBrowseToTempFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1173, 12);
+            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1165, 12);
             this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
             this.linkBrowseToTempFolder.Size = new System.Drawing.Size(104, 15);
             this.linkBrowseToTempFolder.TabIndex = 7;
@@ -150,7 +153,7 @@ namespace SiliFish.UI
             this.linkOpenOutputFolder.AutoSize = true;
             this.linkOpenOutputFolder.ForeColor = System.Drawing.Color.White;
             this.linkOpenOutputFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1054, 12);
+            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1046, 12);
             this.linkOpenOutputFolder.Name = "linkOpenOutputFolder";
             this.linkOpenOutputFolder.Size = new System.Drawing.Size(113, 15);
             this.linkOpenOutputFolder.TabIndex = 6;
@@ -178,7 +181,7 @@ namespace SiliFish.UI
             this.linkClearModel.AutoSize = true;
             this.linkClearModel.ForeColor = System.Drawing.Color.White;
             this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearModel.Location = new System.Drawing.Point(464, 11);
+            this.linkClearModel.Location = new System.Drawing.Point(459, 11);
             this.linkClearModel.Name = "linkClearModel";
             this.linkClearModel.Size = new System.Drawing.Size(71, 15);
             this.linkClearModel.TabIndex = 5;
@@ -202,7 +205,7 @@ namespace SiliFish.UI
             // 
             this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitMain.Location = new System.Drawing.Point(0, 40);
+            this.splitMain.Location = new System.Drawing.Point(4, 44);
             this.splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
@@ -215,8 +218,8 @@ namespace SiliFish.UI
             // splitMain.Panel2
             // 
             this.splitMain.Panel2.Controls.Add(this.modelOutputControl);
-            this.splitMain.Size = new System.Drawing.Size(1348, 671);
-            this.splitMain.SplitterDistance = 550;
+            this.splitMain.Size = new System.Drawing.Size(1340, 663);
+            this.splitMain.SplitterDistance = 545;
             this.splitMain.TabIndex = 5;
             // 
             // modelControl
@@ -225,19 +228,18 @@ namespace SiliFish.UI
             this.modelControl.Location = new System.Drawing.Point(0, 40);
             this.modelControl.ModelUpdated = true;
             this.modelControl.Name = "modelControl";
-            this.modelControl.Size = new System.Drawing.Size(548, 413);
+            this.modelControl.Size = new System.Drawing.Size(543, 405);
             this.modelControl.TabIndex = 2;
             this.modelControl.ModelChanged += new System.EventHandler(this.modelControl_ModelChanged);
             // 
             // pGenerateModel
             // 
-            this.pGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.pGenerateModel.Controls.Add(this.btnGenerateModel);
             this.pGenerateModel.Controls.Add(this.linkLabel4);
             this.pGenerateModel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pGenerateModel.Location = new System.Drawing.Point(0, 453);
+            this.pGenerateModel.Location = new System.Drawing.Point(0, 445);
             this.pGenerateModel.Name = "pGenerateModel";
-            this.pGenerateModel.Size = new System.Drawing.Size(548, 51);
+            this.pGenerateModel.Size = new System.Drawing.Size(543, 51);
             this.pGenerateModel.TabIndex = 4;
             // 
             // btnGenerateModel
@@ -261,7 +263,7 @@ namespace SiliFish.UI
             this.linkLabel4.AutoSize = true;
             this.linkLabel4.ForeColor = System.Drawing.Color.White;
             this.linkLabel4.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLabel4.Location = new System.Drawing.Point(812, 11);
+            this.linkLabel4.Location = new System.Drawing.Point(807, 11);
             this.linkLabel4.Name = "linkLabel4";
             this.linkLabel4.Size = new System.Drawing.Size(71, 15);
             this.linkLabel4.TabIndex = 5;
@@ -270,14 +272,14 @@ namespace SiliFish.UI
             // 
             // pModelControlTop
             // 
-            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
+            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
             this.pModelControlTop.Controls.Add(this.linkLoadModel);
             this.pModelControlTop.Controls.Add(this.linkSaveModel);
             this.pModelControlTop.Controls.Add(this.linkClearModel);
             this.pModelControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pModelControlTop.Location = new System.Drawing.Point(0, 0);
             this.pModelControlTop.Name = "pModelControlTop";
-            this.pModelControlTop.Size = new System.Drawing.Size(548, 40);
+            this.pModelControlTop.Size = new System.Drawing.Size(543, 40);
             this.pModelControlTop.TabIndex = 3;
             // 
             // pSimulation
@@ -299,9 +301,9 @@ namespace SiliFish.UI
             this.pSimulation.Controls.Add(this.lTimeEnd);
             this.pSimulation.Controls.Add(this.lRunParameters);
             this.pSimulation.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pSimulation.Location = new System.Drawing.Point(0, 504);
+            this.pSimulation.Location = new System.Drawing.Point(0, 496);
             this.pSimulation.Name = "pSimulation";
-            this.pSimulation.Size = new System.Drawing.Size(548, 165);
+            this.pSimulation.Size = new System.Drawing.Size(543, 165);
             this.pSimulation.TabIndex = 1;
             // 
             // ldtEuler
@@ -447,7 +449,7 @@ namespace SiliFish.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lRunTime.Location = new System.Drawing.Point(302, 36);
             this.lRunTime.Name = "lRunTime";
-            this.lRunTime.Size = new System.Drawing.Size(224, 80);
+            this.lRunTime.Size = new System.Drawing.Size(219, 80);
             this.lRunTime.TabIndex = 31;
             // 
             // linkExportOutput
@@ -468,7 +470,7 @@ namespace SiliFish.UI
             this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.progressBarRun.Location = new System.Drawing.Point(0, 142);
             this.progressBarRun.Name = "progressBarRun";
-            this.progressBarRun.Size = new System.Drawing.Size(548, 23);
+            this.progressBarRun.Size = new System.Drawing.Size(543, 23);
             this.progressBarRun.TabIndex = 26;
             this.progressBarRun.Visible = false;
             // 
@@ -507,11 +509,10 @@ namespace SiliFish.UI
             // 
             // modelOutputControl
             // 
-            this.modelOutputControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
             this.modelOutputControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.modelOutputControl.Location = new System.Drawing.Point(0, 0);
             this.modelOutputControl.Name = "modelOutputControl";
-            this.modelOutputControl.Size = new System.Drawing.Size(792, 669);
+            this.modelOutputControl.Size = new System.Drawing.Size(789, 661);
             this.modelOutputControl.TabIndex = 0;
             // 
             // timerRun
@@ -543,6 +544,42 @@ namespace SiliFish.UI
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // pDistinguisher
+            // 
+            this.pDistinguisher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.pDistinguisher.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pDistinguisher.Location = new System.Drawing.Point(0, 0);
+            this.pDistinguisher.Name = "pDistinguisher";
+            this.pDistinguisher.Size = new System.Drawing.Size(4, 711);
+            this.pDistinguisher.TabIndex = 6;
+            // 
+            // pDistinguisherTop
+            // 
+            this.pDistinguisherTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.pDistinguisherTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pDistinguisherTop.Location = new System.Drawing.Point(4, 0);
+            this.pDistinguisherTop.Name = "pDistinguisherTop";
+            this.pDistinguisherTop.Size = new System.Drawing.Size(1344, 4);
+            this.pDistinguisherTop.TabIndex = 7;
+            // 
+            // pDistinguisherRight
+            // 
+            this.pDistinguisherRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.pDistinguisherRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pDistinguisherRight.Location = new System.Drawing.Point(1344, 4);
+            this.pDistinguisherRight.Name = "pDistinguisherRight";
+            this.pDistinguisherRight.Size = new System.Drawing.Size(4, 707);
+            this.pDistinguisherRight.TabIndex = 8;
+            // 
+            // pDistinguisherBottom
+            // 
+            this.pDistinguisherBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.pDistinguisherBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pDistinguisherBottom.Location = new System.Drawing.Point(4, 707);
+            this.pDistinguisherBottom.Name = "pDistinguisherBottom";
+            this.pDistinguisherBottom.Size = new System.Drawing.Size(1340, 4);
+            this.pDistinguisherBottom.TabIndex = 9;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -551,6 +588,10 @@ namespace SiliFish.UI
             this.ClientSize = new System.Drawing.Size(1348, 711);
             this.Controls.Add(this.splitMain);
             this.Controls.Add(this.pTop);
+            this.Controls.Add(this.pDistinguisherBottom);
+            this.Controls.Add(this.pDistinguisherRight);
+            this.Controls.Add(this.pDistinguisherTop);
+            this.Controls.Add(this.pDistinguisher);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "SiliFish";
@@ -617,5 +658,9 @@ namespace SiliFish.UI
         private Panel pGenerateModel;
         private LinkLabel linkLabel4;
         private Button btnGenerateModel;
+        private Panel pDistinguisher;
+        private Panel pDistinguisherTop;
+        private Panel pDistinguisherRight;
+        private Panel pDistinguisherBottom;
     }
 }

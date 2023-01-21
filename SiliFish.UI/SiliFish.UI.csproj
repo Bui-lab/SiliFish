@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\DorsalHead.png" />
+    <None Remove="Resources\LateralHead.png" />
     <None Remove="Resources\MinusSign.png" />
     <None Remove="Resources\PlusSign.png" />
   </ItemGroup>
@@ -26,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\DorsalHead.png" />
+    <EmbeddedResource Include="Resources\LateralHead.png" />
     <EmbeddedResource Include="Resources\MinusSign.png" />
     <EmbeddedResource Include="Resources\PlusSign.png" />
   </ItemGroup>

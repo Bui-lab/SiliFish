@@ -30,8 +30,9 @@ namespace SiliFish.ModelUnits.Cells
         public Stimuli Stimuli { get; set; } = new();
 
         #region Position Members and Properties
-        public FrontalPlane PositionDorsalVentral { get; set; } = FrontalPlane.NotSet;
+        /*public FrontalPlane PositionDorsalVentral { get; set; } = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior { get; set; } = TransversePlane.NotSet;
+        */
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
 
         public Coordinate coordinate;
@@ -85,10 +86,10 @@ namespace SiliFish.ModelUnits.Cells
             get
             {
                 string FTS =
-                    (PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
+                    /*(PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
                     (PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
-                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "")
-                    ;
+                    */
+                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "");
                 return FTS;
             }
         }

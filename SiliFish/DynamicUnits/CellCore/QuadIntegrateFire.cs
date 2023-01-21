@@ -1,6 +1,7 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
@@ -24,7 +25,9 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
+        [JsonIgnore]
         public override string VThresholdParamName { get { return ""; } }
+        [JsonIgnore]
         public override string VReversalParamName { get { return "QIF.Vr"; } }
 
         public override Dictionary<string, double> GetParameters()

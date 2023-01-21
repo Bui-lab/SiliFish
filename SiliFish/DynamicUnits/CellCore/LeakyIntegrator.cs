@@ -50,7 +50,9 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
+        [JsonIgnore]
         public override string VThresholdParamName { get { return ""; } }
+        [JsonIgnore]
         public override string VReversalParamName { get { return "Leaky_Integrator.Vr"; } }
 
         public override Dictionary<string, double> GetParameters()

@@ -178,13 +178,15 @@ namespace SiliFish.UI.Controls
             this.Text = $"SiliFish {Model?.ModelName}";
         }
 
-        public void SetModel(ModelBase model)
+        public void SetModel(ModelBase model, bool clearJson = true)
         {
             Model = model;
             CurrentMode = Model is ModelTemplate ? RunMode.Template : RunMode.RunningModel;
             splitCellPools.Panel2Collapsed = CurrentMode == RunMode.Template;
             LoadModel();
             modelUpdated = false;
+            if (clearJson)
+                eModelJSON.Text = "";
         }
         public ModelBase GetModel()
         {
@@ -710,7 +712,7 @@ namespace SiliFish.UI.Controls
                     mb = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
                 else
                     mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
-                SetModel(mb);
+                SetModel(mb, clearJson: false);
                 MessageBox.Show("Updated JSON is loaded.");
             }
             catch (JsonException exc)

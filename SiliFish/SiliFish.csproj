@@ -63,16 +63,12 @@
     <EmbeddedResource Include="Resources\3DModel.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
-    <EmbeddedResource Include="Resources\DorsalHead.png" />
     <EmbeddedResource Include="Resources\DyChartUnsync.html" />
     <EmbeddedResource Include="Resources\DyChart.js" />
     <EmbeddedResource Include="Resources\DyChartSync.html" />
     <EmbeddedResource Include="Resources\DyChartDiv.html" />
     <EmbeddedResource Include="Resources\force-graph.min.js" />
-    <EmbeddedResource Include="Resources\LateralHead.png" />
-    <EmbeddedResource Include="Resources\Logo.png" />
     <EmbeddedResource Include="Resources\DyStyleSheet.css" />
-    <EmbeddedResource Include="Resources\Name.png" />
     <EmbeddedResource Include="Resources\StyleSheet.css" />
     <EmbeddedResource Include="Resources\three.js" />
   </ItemGroup>

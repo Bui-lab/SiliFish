@@ -129,7 +129,7 @@ namespace SiliFish.ModelUnits.Cells
                 return null;
             }
         }
-
+        public List<string> Attachments { get; set; } = new();
         public override int CompareTo(ModelUnitBase otherbase)
         {
             CellPoolTemplate other = otherbase as CellPoolTemplate;

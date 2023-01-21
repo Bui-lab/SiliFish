@@ -1,14 +1,17 @@
-﻿using SiliFish.Helpers.JsonConverters;
+﻿using SiliFish.DynamicUnits;
+using SiliFish.Helpers.JsonConverters;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace SiliFish.Helpers
 {
+    
     public static class JsonUtil
     {
         public static string ToJson(object content)
@@ -100,6 +103,63 @@ namespace SiliFish.Helpers
             return updated;
         }
 
+        private static bool FixCellReachJson(ref string json)
+        {
+            bool updated = false;
+            Regex regex = new("\"CellReach\": {(\\s+.*[^}]*?)}");
+            Regex ascRegex = new("\"AscendingReach\":(.*),");
+            Regex descRegex = new("\"DescendingReach\":(.*),");
+            Regex minRegex = new("\"MinReach\":(.*),");
+            MatchCollection matchCollection = regex.Matches(json);
+            for (int i = matchCollection.Count - 1; i >= 0; i--)
+            {
+                Match match = matchCollection[i];
+                int index = match.Groups[1].Index;
+                string cellReach = match.Value;
+
+                Match m = minRegex.Match(cellReach);
+                double min = 0;
+                if (m.Success && m.Groups?.Count >= 2)
+                    double.TryParse(m.Groups[1].ToString(), out min);
+
+                m = ascRegex.Match(cellReach);
+                double asc = 0;
+                if (m.Success && m.Groups?.Count >= 2)
+                    double.TryParse(m.Groups[1].ToString(), out asc);
+                double minAscReach = asc > 0 ? min : 0;
+                string ascending = asc > 0 ? "true" : "false";
+
+                m = descRegex.Match(cellReach);
+                double desc = 0;
+                if (m.Success && m.Groups?.Count >= 2)
+                    double.TryParse(m.Groups[1].ToString(), out desc);
+                double minDescReach = desc > 0 ? min : 0;
+                string descending = desc > 0 ? "true" : "false";
+
+                string newJson = $"\"Ascending\": {ascending}," +
+                    $"\"Descending\": {descending}," +
+                    $"\"MinAscReach\": {minAscReach}," +
+                    $"\"MaxAscReach\": {asc}," +
+                    $"\"MinDescReach\": {minDescReach}," +
+                    $"\"MaxDescReach\": {desc},";
+                json = json.Insert(index, newJson);
+                updated = true;
+            }
+            return updated;
+        }
+
+
+        /*
+                 "AscendingReach": 3.5,
+        "DescendingReach": 3.5,
+        "MinReach": 0.2,
+        
+                 "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0,
+        "MaxAscReach": 100,
+        "MinDescReach": 0,
+        "MaxDescReach": 100,*/
         public static List<string> CheckJsonVersion(ref string json)
         {
             List<string> list = new();
@@ -120,6 +180,8 @@ namespace SiliFish.Helpers
             RemoveOldParameters(ref json);
             if (FixDistributionJson(ref json))
                 list.Add("Spatial distributions");
+            if (FixCellReachJson(ref json))
+                list.Add("connection ranges");
             json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
             return list;
         }

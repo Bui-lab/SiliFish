@@ -268,7 +268,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GenerateCoordinates(MD, n, somite);
-                Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n);
+                Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n, ordered: false);
 
                 double defaultCV = CurrentSettings.Settings.cv;
                 double[] cv = template.ConductionVelocity != null ?

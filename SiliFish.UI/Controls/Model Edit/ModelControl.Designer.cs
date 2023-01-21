@@ -111,8 +111,8 @@
             // 
             this.propModelDimensions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.propModelDimensions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propModelDimensions.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(198)))), ((int)(((byte)(218)))));
-            this.propModelDimensions.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
+            this.propModelDimensions.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
+            this.propModelDimensions.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(184)))), ((int)(((byte)(212)))));
             this.propModelDimensions.Location = new System.Drawing.Point(0, 0);
             this.propModelDimensions.Name = "propModelDimensions";
             this.propModelDimensions.Size = new System.Drawing.Size(225, 476);
@@ -398,8 +398,8 @@
             // 
             this.propKinematics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.propKinematics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propKinematics.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(198)))), ((int)(((byte)(218)))));
-            this.propKinematics.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
+            this.propKinematics.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
+            this.propKinematics.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(184)))), ((int)(((byte)(212)))));
             this.propKinematics.Location = new System.Drawing.Point(0, 0);
             this.propKinematics.Name = "propKinematics";
             this.propKinematics.Size = new System.Drawing.Size(682, 515);
@@ -455,8 +455,8 @@
             // 
             this.propSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
             this.propSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propSettings.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(198)))), ((int)(((byte)(218)))));
-            this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(96)))), ((int)(((byte)(100)))));
+            this.propSettings.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(178)))), ((int)(((byte)(235)))), ((int)(((byte)(242)))));
+            this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(184)))), ((int)(((byte)(212)))));
             this.propSettings.Location = new System.Drawing.Point(0, 112);
             this.propSettings.Name = "propSettings";
             this.propSettings.Size = new System.Drawing.Size(682, 443);

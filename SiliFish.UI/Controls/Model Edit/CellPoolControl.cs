@@ -251,15 +251,20 @@ namespace SiliFish.UI.Controls
                 string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                 if (string.IsNullOrEmpty(JSONString))
                     return;
-                CellCoreUnit core = CellCoreUnit.GetOfDerivedType(JSONString);
-                if (core != null)
+                //the core is saved as an array to benefit from $type tag added by the JsonSerializer
+                CellCoreUnit[] arr = (CellCoreUnit[])JsonUtil.ToObject(typeof(CellCoreUnit[]), JSONString);
+                if (arr != null && arr.Any())
                 {
-                    skipCoreTypeChange = true;
-                    ddCoreType.Text = core.CoreType;
-                    skipCoreTypeChange = false;
-                    ddCoreType.Text = poolBase.CoreType = core.CoreType;
-                    poolBase.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as  Distribution);
-                    ParamDictToGrid();
+                    CellCoreUnit core = arr[0];
+                    if (core != null)
+                    {
+                        skipCoreTypeChange = true;
+                        ddCoreType.Text = core.CoreType;
+                        skipCoreTypeChange = false;
+                        ddCoreType.Text = poolBase.CoreType = core.CoreType;
+                        poolBase.Parameters = core.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
+                        ParamDictToGrid();
+                    }
                 }
             }
         }
@@ -274,7 +279,7 @@ namespace SiliFish.UI.Controls
             frmControl.AddControl(dyncontrol);
             frmControl.Text = eGroupName.Text;
             frmControl.SaveVisible = false;
-            frmControl.ShowDialog();
+            frmControl.Show();
         }
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)

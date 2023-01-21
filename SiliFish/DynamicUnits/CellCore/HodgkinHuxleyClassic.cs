@@ -2,6 +2,7 @@
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
@@ -46,8 +47,8 @@ namespace SiliFish.DynamicUnits
         }
         public HodgkinHuxleyClassic(Dictionary<string, double> paramExternal)
         {
-            SetParameters(paramExternal);
             Initialize();
+            SetParameters(paramExternal);
         }
         protected override void Initialize()
         {
@@ -71,7 +72,9 @@ namespace SiliFish.DynamicUnits
             return paramDict;
         }
 
+        [JsonIgnore]
         public override string VThresholdParamName { get { return "HodgkinHuxley.V_t"; } }
+        [JsonIgnore]
         public override string VReversalParamName { get { return "HodgkinHuxley.V_r"; } }
         /* public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
          {
