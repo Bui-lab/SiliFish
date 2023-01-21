@@ -63,14 +63,18 @@ namespace SiliFish.Helpers
             {
                 "\"Dynamic.sigma_range\":.*",
                 "\"Dynamic.sigma_gap\":.*",
-                "\"Dynamic.sigma_chem\":.*"
+                "\"Dynamic.sigma_chem\":.*",
+                "\"Izhikevich_9P.V\": {(\\s+.*[^}]*?)}",
+                "\"Izhikevich_9P.u\": {(\\s+.*[^}]*?)}",
+                "\"Izhikevich_9P.U\": {(\\s+.*[^}]*?)}"
             };
             int prevLength = json.Length;
             foreach (string pattern in oldParamPatterns)
             {
+                json = Regex.Replace(json, pattern + ",", "");
                 json = Regex.Replace(json, pattern, "");
             }
-            return prevLength!=json.Length;
+            return prevLength !=json.Length;
         }
         private static bool FixDistributionJson(ref string json)
         {
@@ -148,18 +152,6 @@ namespace SiliFish.Helpers
             return updated;
         }
 
-
-        /*
-                 "AscendingReach": 3.5,
-        "DescendingReach": 3.5,
-        "MinReach": 0.2,
-        
-                 "Ascending": true,
-        "Descending": true,
-        "MinAscReach": 0,
-        "MaxAscReach": 100,
-        "MinDescReach": 0,
-        "MaxDescReach": 100,*/
         public static List<string> CheckJsonVersion(ref string json)
         {
             List<string> list = new();
@@ -183,6 +175,9 @@ namespace SiliFish.Helpers
             if (FixCellReachJson(ref json))
                 list.Add("connection ranges");
             json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
+            json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            json = Regex.Replace(json, "},[\\s]*}", "} }");
+
             return list;
         }
 

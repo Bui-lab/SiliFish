@@ -12,7 +12,7 @@ using System.Web;
 
 namespace SiliFish.Services
 {
-    public class DyChartGenerator : VisualsGenerator
+    public class DyChartGenerator : EmbeddedResourceReader
     {
 
         private static ChartDataStruct CreateLineChart(ChartDataStruct chartData)

@@ -10,7 +10,7 @@ using System.Web;
 
 namespace SiliFish.Services
 {
-    public class AnimationGenerator : VisualsGenerator
+    public class AnimationGenerator : EmbeddedResourceReader
     {
         private static string CreateSomiteDataPoint(string somite, double x, double y)
         {

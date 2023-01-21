@@ -28,8 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\DorsalHead.png" />
-    <EmbeddedResource Include="Resources\LateralHead.png" />
     <EmbeddedResource Include="Resources\MinusSign.png" />
     <EmbeddedResource Include="Resources\PlusSign.png" />
   </ItemGroup>

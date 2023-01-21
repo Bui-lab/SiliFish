@@ -12,7 +12,7 @@ using System.Web;
 
 namespace SiliFish.Services
 {
-    public class TwoDModelGenerator : VisualsGenerator
+    public class TwoDModelGenerator : EmbeddedResourceReader
     {
         double XMult, YMult;
         double XMin = double.MaxValue, YMin = double.MaxValue;

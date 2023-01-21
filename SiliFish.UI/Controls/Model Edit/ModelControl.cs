@@ -409,7 +409,14 @@ namespace SiliFish.UI.Controls
             }
             if (cell is Neuron neuron)
             {
-                foreach (JunctionBase jnc in neuron.Terminals)
+                foreach (JunctionBase jnc in neuron.Terminals.Union(neuron.Synapses))
+                {
+                    listConnections.AppendItem(jnc);
+                }
+            }
+            if (cell is MuscleCell muscleCell)
+            {
+                foreach (JunctionBase jnc in muscleCell.EndPlates)
                 {
                     listConnections.AppendItem(jnc);
                 }
