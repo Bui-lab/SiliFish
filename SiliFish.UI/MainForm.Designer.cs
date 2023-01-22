@@ -120,7 +120,7 @@ namespace SiliFish.UI
             // btnCellularDynamics
             // 
             this.btnCellularDynamics.AutoSize = true;
-            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnCellularDynamics.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCellularDynamics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCellularDynamics.ForeColor = System.Drawing.Color.White;
@@ -244,7 +244,7 @@ namespace SiliFish.UI
             // 
             // btnGenerateModel
             // 
-            this.btnGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnGenerateModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerateModel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnGenerateModel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -272,7 +272,7 @@ namespace SiliFish.UI
             // 
             // pModelControlTop
             // 
-            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pModelControlTop.Controls.Add(this.linkLoadModel);
             this.pModelControlTop.Controls.Add(this.linkSaveModel);
             this.pModelControlTop.Controls.Add(this.linkClearModel);
@@ -284,7 +284,7 @@ namespace SiliFish.UI
             // 
             // pSimulation
             // 
-            this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pSimulation.Controls.Add(this.ldtEuler);
             this.pSimulation.Controls.Add(this.edtEuler);
             this.pSimulation.Controls.Add(this.lRunCount);
@@ -476,7 +476,7 @@ namespace SiliFish.UI
             // 
             // btnRun
             // 
-            this.btnRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRun.ForeColor = System.Drawing.Color.White;
@@ -546,7 +546,7 @@ namespace SiliFish.UI
             // 
             // pDistinguisher
             // 
-            this.pDistinguisher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.pDistinguisher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.pDistinguisher.Dock = System.Windows.Forms.DockStyle.Left;
             this.pDistinguisher.Location = new System.Drawing.Point(0, 0);
             this.pDistinguisher.Name = "pDistinguisher";
@@ -555,7 +555,7 @@ namespace SiliFish.UI
             // 
             // pDistinguisherTop
             // 
-            this.pDistinguisherTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.pDistinguisherTop.BackColor = System.Drawing.Color.Blue;
             this.pDistinguisherTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pDistinguisherTop.Location = new System.Drawing.Point(4, 0);
             this.pDistinguisherTop.Name = "pDistinguisherTop";

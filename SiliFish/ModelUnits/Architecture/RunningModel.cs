@@ -10,6 +10,7 @@ using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -199,7 +200,79 @@ namespace SiliFish.ModelUnits.Architecture
                 return MNs.Distinct().ToList();
             }
         }
+        
+        /// <summary>
+        /// Brings a summary of gap junctions between cell pools
+        /// </summary>
+        [JsonIgnore]        
+        public List<InterPool> GapPoolConnections 
+        { 
+            get 
+            { 
+                List<InterPool> interPools= new List<InterPool>();
+                foreach (CellPool sourcePool in CellPools)
+                {
+                    string source = sourcePool.ID;
+                    foreach (CellPool targetPool in CellPools)
+                    {
+                        string target = targetPool.ID;
+                        IEnumerable<GapJunction> list = sourcePool.GetCells().SelectMany(c => c.GapJunctions.Where(jnc => jnc.Cell1.CellPool == sourcePool && jnc.Cell2.CellPool == targetPool));
+                        int count = list.Count();
+                        if (count > 0)
+                        {
+                            double minConductance = list.Min(c => c.Conductance);
+                            double maxConductance = list.Max(c => c.Conductance);
+                            interPools.Add(new InterPool()
+                            {
+                                SourcePool = source,
+                                TargetPool = target,
+                                CountJunctions = count,
+                                MinConductance = minConductance,
+                                MaxConductance = maxConductance
+                            });
+                        }
+                    }
+                }
+                return interPools;
+            } 
+        }
 
+        /// <summary>
+        /// Brings a summary of chem junctions between cell pools
+        /// </summary>
+        [JsonIgnore]
+        public List<InterPool> ChemPoolConnections
+        {
+            get
+            {
+                List<InterPool> interPools = new List<InterPool>();
+                foreach (CellPool sourcePool in NeuronPools)
+                {
+                    string source = sourcePool.ID;
+                    foreach (CellPool targetPool in CellPools)
+                    {
+                        string target = targetPool.ID;
+                        IEnumerable<ChemicalSynapse> list = sourcePool.GetCells().SelectMany(c => (c as Neuron).Terminals.Where(jnc => jnc.PreNeuron.CellPool == sourcePool && jnc.PostCell.CellPool == targetPool));
+                        int count = list.Count();
+                        if (count > 0)
+                        {
+                            double minConductance = list.Min(c => c.Conductance);
+                            double maxConductance = list.Max(c => c.Conductance);
+
+                            interPools.Add(new InterPool()
+                            {
+                                SourcePool = source,
+                                TargetPool = target,
+                                CountJunctions = count,
+                                MinConductance = minConductance,
+                                MaxConductance = maxConductance
+                            });
+                        }
+                    }
+                }
+                return interPools;
+            }
+        }
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
         {
             List<Cell> motoNeurons = MotoNeurons;

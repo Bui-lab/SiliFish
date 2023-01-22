@@ -165,7 +165,7 @@
             // 
             // btnRheobase
             // 
-            this.btnRheobase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnRheobase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnRheobase.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRheobase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRheobase.ForeColor = System.Drawing.Color.White;
@@ -517,7 +517,7 @@
             this.tTest.Location = new System.Drawing.Point(4, 24);
             this.tTest.Name = "tTest";
             this.tTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tTest.Size = new System.Drawing.Size(291, 311);
+            this.tTest.Size = new System.Drawing.Size(289, 311);
             this.tTest.TabIndex = 0;
             this.tTest.Text = "Test";
             this.tTest.UseVisualStyleBackColor = true;
@@ -529,7 +529,7 @@
             this.pSep2.BackColor = System.Drawing.Color.DimGray;
             this.pSep2.Location = new System.Drawing.Point(6, 167);
             this.pSep2.Name = "pSep2";
-            this.pSep2.Size = new System.Drawing.Size(279, 3);
+            this.pSep2.Size = new System.Drawing.Size(277, 3);
             this.pSep2.TabIndex = 37;
             // 
             // pSep1
@@ -539,12 +539,12 @@
             this.pSep1.BackColor = System.Drawing.Color.DimGray;
             this.pSep1.Location = new System.Drawing.Point(6, 115);
             this.pSep1.Name = "pSep1";
-            this.pSep1.Size = new System.Drawing.Size(279, 3);
+            this.pSep1.Size = new System.Drawing.Size(277, 3);
             this.pSep1.TabIndex = 36;
             // 
             // btnDynamicsRun
             // 
-            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
             this.btnDynamicsRun.Location = new System.Drawing.Point(107, 282);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
@@ -572,7 +572,7 @@
             this.eMultipleStimulus.Location = new System.Drawing.Point(8, 141);
             this.eMultipleStimulus.Name = "eMultipleStimulus";
             this.eMultipleStimulus.ReadOnly = true;
-            this.eMultipleStimulus.Size = new System.Drawing.Size(276, 23);
+            this.eMultipleStimulus.Size = new System.Drawing.Size(274, 23);
             this.eMultipleStimulus.TabIndex = 33;
             this.eMultipleStimulus.Text = "example: 1;10";
             this.toolTip1.SetToolTip(this.eMultipleStimulus, "Step stimulus with 0 noise");
@@ -677,7 +677,7 @@
             // 
             // pCoreType
             // 
-            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pCoreType.Controls.Add(this.pLineCoreType);
             this.pCoreType.Controls.Add(this.ddCoreType);
             this.pCoreType.Controls.Add(this.lCoreType);
@@ -721,7 +721,7 @@
             // 
             // pLoadSaveParams
             // 
-            this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pLoadSaveParams.Controls.Add(this.linkLoadCoreUnit);
             this.pLoadSaveParams.Controls.Add(this.linkSaveCoreUnit);
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -967,7 +967,7 @@
             // 
             // pDistinguisherLeft
             // 
-            this.pDistinguisherLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.pDistinguisherLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.pDistinguisherLeft.Location = new System.Drawing.Point(0, 0);
             this.pDistinguisherLeft.Name = "pDistinguisherLeft";
@@ -976,7 +976,7 @@
             // 
             // pDistinguisherTop
             // 
-            this.pDistinguisherTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.pDistinguisherTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pDistinguisherTop.Location = new System.Drawing.Point(4, 0);
             this.pDistinguisherTop.Name = "pDistinguisherTop";
@@ -985,7 +985,7 @@
             // 
             // pDistinguisherBottom
             // 
-            this.pDistinguisherBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.pDistinguisherBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pDistinguisherBottom.Location = new System.Drawing.Point(4, 679);
             this.pDistinguisherBottom.Name = "pDistinguisherBottom";
@@ -994,7 +994,7 @@
             // 
             // pDistinguisherRight
             // 
-            this.pDistinguisherRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
+            this.pDistinguisherRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.pDistinguisherRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.pDistinguisherRight.Location = new System.Drawing.Point(1248, 4);
             this.pDistinguisherRight.Name = "pDistinguisherRight";

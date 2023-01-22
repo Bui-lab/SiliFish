@@ -298,7 +298,7 @@
             // 
             // pPlot
             // 
-            this.pPlot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pPlot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pPlot.Controls.Add(this.linkExportPlotData);
             this.pPlot.Controls.Add(this.pLinePlots);
             this.pPlot.Controls.Add(this.ePlotHeight);
@@ -462,7 +462,7 @@
             // 
             // btnPlotWindows
             // 
-            this.btnPlotWindows.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnPlotWindows.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnPlotWindows.Enabled = false;
             this.btnPlotWindows.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnPlotWindows.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -501,7 +501,7 @@
             // 
             // btnPlotHTML
             // 
-            this.btnPlotHTML.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnPlotHTML.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnPlotHTML.Enabled = false;
             this.btnPlotHTML.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnPlotHTML.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -760,7 +760,7 @@
             // 
             // p2DModel
             // 
-            this.p2DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.p2DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.p2DModel.Controls.Add(this.pLine2D);
             this.p2DModel.Controls.Add(this.linkSaveHTML2D);
             this.p2DModel.Controls.Add(this.btnGenerate2DModel);
@@ -794,7 +794,7 @@
             // 
             // btnGenerate2DModel
             // 
-            this.btnGenerate2DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnGenerate2DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnGenerate2DModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerate2DModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGenerate2DModel.ForeColor = System.Drawing.Color.White;
@@ -944,7 +944,7 @@
             // 
             // p3DModel
             // 
-            this.p3DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.p3DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.p3DModel.Controls.Add(this.cb3DLegend);
             this.p3DModel.Controls.Add(this.cb3DGapJunc);
             this.p3DModel.Controls.Add(this.cb3DChemJunc);
@@ -1045,7 +1045,7 @@
             // 
             // btnGenerate3DModel
             // 
-            this.btnGenerate3DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnGenerate3DModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnGenerate3DModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerate3DModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGenerate3DModel.ForeColor = System.Drawing.Color.White;
@@ -1140,7 +1140,7 @@
             // 
             // pMNKinematicsTop
             // 
-            this.pMNKinematicsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pMNKinematicsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pMNKinematicsTop.Controls.Add(this.pLineMNKinematics);
             this.pMNKinematicsTop.Controls.Add(this.ePlotKinematicsHeight);
             this.pMNKinematicsTop.Controls.Add(this.ePlotKinematicsWidth);
@@ -1287,7 +1287,7 @@
             // 
             // btnGenerateEpisodes
             // 
-            this.btnGenerateEpisodes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnGenerateEpisodes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnGenerateEpisodes.Enabled = false;
             this.btnGenerateEpisodes.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerateEpisodes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -1335,7 +1335,7 @@
             // 
             // pAnimation
             // 
-            this.pAnimation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pAnimation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pAnimation.Controls.Add(this.pLineAnimation);
             this.pAnimation.Controls.Add(this.eAnimationdt);
             this.pAnimation.Controls.Add(this.lAnimationdt);
@@ -1470,7 +1470,7 @@
             // 
             // btnAnimate
             // 
-            this.btnAnimate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnAnimate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnAnimate.Enabled = false;
             this.btnAnimate.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnAnimate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;

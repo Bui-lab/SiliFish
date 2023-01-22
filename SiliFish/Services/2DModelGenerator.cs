@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using SiliFish.ModelUnits.Junction;
+using System.Xml.Serialization;
 
 namespace SiliFish.Services
 {
@@ -18,20 +20,22 @@ namespace SiliFish.Services
         double XMin = double.MaxValue, YMin = double.MaxValue;
         double XMax = double.MinValue, YMax = double.MinValue;
         double XOffset, YOffset;
-        double WeightMax;
         double WeightMult;
         Dictionary<string, (double, double)> PoolCoordinates;
-        /*TODO private string CreateLinkDataPoint(InterPool interPool)
+        private string CreateLinkDataPoint(InterPool interPool)
         {
-            string curvInfo = interPool.SourcePool.ID == interPool.TargetPool.ID ? ",curv: 0.7" : "";
-            string link = $"{{\"source\":\"{interPool.SourcePool.ID}\"," +
-                $"\"target\":\"{interPool.TargetPool.ID}\"," +
-                $"\"value\":{GetNewWeight(interPool.Reach.Weight):0.######}," +
-                $"\"conductance\":{interPool.Reach.Weight:0.######} " +
+            string curvInfo = interPool.SourcePool == interPool.TargetPool ? ",curv: 0.7" : "";
+            string conductance = interPool.MinConductance == interPool.MaxConductance ?
+                interPool.MinConductance.ToString("0.######") :
+                $"{interPool.MinConductance:0.######} -  {interPool.MaxConductance:0.######}";
+            string link = $"{{\"source\":\"{interPool.SourcePool}\"," +
+                $"\"target\":\"{interPool.TargetPool}\"," +
+                $"\"value\":{GetNewWeight(interPool.CountJunctions):0.######}," +
+                $"\"conductance\":\"{conductance}\"" +
                 $"{curvInfo} }}";
             ;
             return link;
-        }*/
+        }
 
         private void GetNewCoordinates(CellPool pool)
         {
@@ -86,8 +90,6 @@ namespace SiliFish.Services
             XOffset = 0;
             YOffset = 0;
 
-            (_, WeightMax) = model.GetConnectionRange();
-            WeightMult = 5 / WeightMax;
 
             pools.ForEach(pool => GetNewCoordinates(pool));
             //XMin, YMax etc set during node creation
@@ -104,15 +106,25 @@ namespace SiliFish.Services
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
 
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
-            /*
+
+            List<InterPool> gapInterPools = model.GapPoolConnections;
+            List<InterPool> chemInterPools = model.ChemPoolConnections;
+
+            int CountMax = 0;
+            if (gapInterPools.Any())
+                CountMax = gapInterPools.Max(ip => ip.CountJunctions);
+            if (chemInterPools.Any())
+                CountMax = Math.Max(CountMax, chemInterPools.Max(ip => ip.CountJunctions));
+            WeightMult = 5 / CountMax;
+
             List<string> gapLinks = new();
-            model.GapPoolConnections?.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
+            gapInterPools.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
 
             List<string> chemLinks = new();
-            model.ChemPoolConnections?.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
+            chemInterPools.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
             html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
-            */
+            
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));

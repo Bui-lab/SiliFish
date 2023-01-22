@@ -9,20 +9,14 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class InterPoolTemplate : JunctionBase
     {
-        public CellReach CellReach { get; set; } = new();
-        public SynapseParameters SynapseParameters { get; set; }
-
-        [JsonIgnore]
-        public CellPoolTemplate linkedSource, linkedTarget;
-        public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;
-        public ConnectionType ConnectionType { get; set; } = ConnectionType.NotSet;
-        public DistanceMode DistanceMode
-        {
-            get { return CellReach.DistanceMode; }
-            set { CellReach.DistanceMode = value; }
-        }
-
+        #region Private fields
         private string _Name;
+        private string poolSource, poolTarget;
+        #endregion
+
+        #region Properties
+        [JsonIgnore]
+        public override string ID => $"{GeneratedName()} [{ConnectionType}]/{AxonReachMode}";
         public string Name
         {
             get
@@ -33,7 +27,15 @@ namespace SiliFish.ModelUnits.Junction
             }
             set { _Name = value; }
         }
-        private string poolSource, poolTarget;
+
+        public string Description { get; set; }
+        public double Probability { get; set; } = 1;
+        public bool JncActive //does not check the active flags of the cell pools
+        {
+            get { return base.Active; }
+            set { base.Active = value; }
+        }
+
         public string PoolSource
         {
             get { return poolSource; }
@@ -54,17 +56,20 @@ namespace SiliFish.ModelUnits.Junction
                 if (rename) Name = GeneratedName();
             }
         }
-        public string GeneratedName()
-        {
-            return $"{(!string.IsNullOrEmpty(PoolSource) ? PoolSource : "__")}-->{(!string.IsNullOrEmpty(PoolTarget) ? PoolTarget : "__")}";
-        }
-        public string Description { get; set; }
+        [JsonPropertyOrder(2)]
+        public CellReach CellReach { get; set; } = new();
 
-        public double Probability { get; set; } = 1;
-        public bool JncActive //does not check the active flags of the cell pools
+        [JsonPropertyOrder(1)]
+        public SynapseParameters SynapseParameters { get; set; }
+
+        [JsonIgnore]
+        public CellPoolTemplate linkedSource, linkedTarget;
+        public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;
+        public ConnectionType ConnectionType { get; set; } = ConnectionType.NotSet;
+        public DistanceMode DistanceMode
         {
-            get { return base.Active; }
-            set { base.Active = value; }
+            get { return CellReach.DistanceMode; }
+            set { CellReach.DistanceMode = value; }
         }
 
         public override bool Active
@@ -78,36 +83,10 @@ namespace SiliFish.ModelUnits.Junction
             }
             set { base.Active = value; }
         }
+
+        [JsonPropertyOrder(3)]
         public List<string> Attachments { get; set; } = new();
-        public InterPoolTemplate()
-        { }
 
-        public InterPoolTemplate(InterPoolTemplate ipt)
-        {
-            Name = ipt.Name;
-            Description = ipt.Description;
-            PoolSource = ipt.PoolSource;
-            PoolTarget = ipt.PoolTarget;
-            CellReach = new CellReach(ipt.CellReach);
-            Probability = ipt.Probability;
-            AxonReachMode = ipt.AxonReachMode;
-            ConnectionType = ipt.ConnectionType;
-            SynapseParameters = new SynapseParameters(ipt.SynapseParameters);
-            Active = ipt.Active;
-            TimeLine_ms = new TimeLine(ipt.TimeLine_ms);
-        }
-
-        public override string ToString()
-        {
-            string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
-                JncActive ? " (timeline)" : " (inactive)";
-            return $"{Name} [{ConnectionType}]/{AxonReachMode}{activeStatus}";
-        }
-        [JsonIgnore]
-        public override string ID
-        {
-            get { return $"{GeneratedName()} [{ConnectionType}]/{AxonReachMode}"; }
-        }
         [JsonIgnore]
         public override string Tooltip
         {
@@ -126,6 +105,30 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
 
+        #endregion
+
+        public InterPoolTemplate()
+        { }
+        public InterPoolTemplate(InterPoolTemplate ipt)
+        {
+            Name = ipt.Name;
+            Description = ipt.Description;
+            PoolSource = ipt.PoolSource;
+            PoolTarget = ipt.PoolTarget;
+            CellReach = new CellReach(ipt.CellReach);
+            Probability = ipt.Probability;
+            AxonReachMode = ipt.AxonReachMode;
+            ConnectionType = ipt.ConnectionType;
+            SynapseParameters = new SynapseParameters(ipt.SynapseParameters);
+            Active = ipt.Active;
+            TimeLine_ms = new TimeLine(ipt.TimeLine_ms);
+        }
+        public override string ToString()
+        {
+            string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
+                JncActive ? " (timeline)" : " (inactive)";
+            return $"{Name} [{ConnectionType}]/{AxonReachMode}{activeStatus}";
+        }
         public override int CompareTo(ModelUnitBase otherbase)
         {
             InterPoolTemplate other = otherbase as InterPoolTemplate;
@@ -134,6 +137,10 @@ namespace SiliFish.ModelUnits.Junction
             c = this.PoolTarget.CompareTo(other.PoolTarget);
             if (c != 0) return c;
             return this.ConnectionType.CompareTo(other.ConnectionType);
+        }
+        public string GeneratedName()
+        {
+            return $"{(!string.IsNullOrEmpty(PoolSource) ? PoolSource : "__")}-->{(!string.IsNullOrEmpty(PoolTarget) ? PoolTarget : "__")}";
         }
     }
 

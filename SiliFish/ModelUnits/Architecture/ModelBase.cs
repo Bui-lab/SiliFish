@@ -15,24 +15,26 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
+        private Settings settings = new();
         public string ClassType => GetType().Name;
         public string ModelName { get; set; }
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; } = new();
+        public Settings Settings
+        {
+            get { return settings; }
+            set
+            {
+                CurrentSettings.Settings = settings = value;
+            }
+        }
+        [JsonPropertyOrder(2)]
         public RunParam RunParam { get; set; } = new();
+        [JsonPropertyOrder(2)]
         public KinemParam KinemParam { get; set; } = new();
 
-        private Settings settings = new();
-        public Settings Settings 
-        { 
-            get { return settings; }
-            set 
-            { 
-                CurrentSettings.Settings = settings = value; 
-            } 
-        }
-
+        [JsonPropertyOrder(2)]
         public Dictionary<string, object> Parameters { get; set; }
 
         public ModelBase()

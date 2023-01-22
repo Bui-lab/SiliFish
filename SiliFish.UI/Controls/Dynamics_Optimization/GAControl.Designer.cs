@@ -180,7 +180,7 @@
             // 
             // pMinMax
             // 
-            this.pMinMax.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pMinMax.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pMinMax.Controls.Add(this.linkSuggestMinMax);
             this.pMinMax.Dock = System.Windows.Forms.DockStyle.Top;
             this.pMinMax.Location = new System.Drawing.Point(0, 0);
@@ -227,7 +227,7 @@
             // 
             // pFitnessFunctions
             // 
-            this.pFitnessFunctions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(247)))), ((int)(((byte)(250)))));
+            this.pFitnessFunctions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pFitnessFunctions.Controls.Add(this.btnCalculateFitness);
             this.pFitnessFunctions.Controls.Add(this.pLineFitnessFunctions);
             this.pFitnessFunctions.Controls.Add(this.lFitnessFunctions);
@@ -240,7 +240,7 @@
             // btnCalculateFitness
             // 
             this.btnCalculateFitness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCalculateFitness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnCalculateFitness.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnCalculateFitness.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCalculateFitness.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCalculateFitness.ForeColor = System.Drawing.Color.White;
@@ -388,7 +388,7 @@
             // 
             // btnOptimize
             // 
-            this.btnOptimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(188)))), ((int)(((byte)(212)))));
+            this.btnOptimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnOptimize.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnOptimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOptimize.ForeColor = System.Drawing.Color.White;

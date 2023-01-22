@@ -25,5 +25,10 @@
             pMain.Controls.Add(ctrl);
             ctrl.Dock = DockStyle.Fill;
         }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

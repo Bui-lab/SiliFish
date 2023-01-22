@@ -7,13 +7,17 @@ using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Architecture
 {
     public class ModelTemplate : ModelBase
     {
+        [JsonPropertyOrder(1)]
         public List<CellPoolTemplate> CellPoolTemplates { get; set; } = new();
+        [JsonPropertyOrder(1)]
         public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
+        [JsonPropertyOrder(1)]
         public List<StimulusTemplate> AppliedStimuli { get; set; } = new();
 
         public ModelTemplate() { }

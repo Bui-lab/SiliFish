@@ -277,8 +277,8 @@ namespace SiliFish.UI
                 Width = splitMain.Panel2Collapsed ? Width / 2 : Width * 2;
            pDistinguisher.BackColor = 
                 pDistinguisherTop.BackColor = pDistinguisherRight.BackColor=pDistinguisherBottom.BackColor
-                = mode == RunMode.Template ? Color.FromArgb(200,230, 201) :
-                Color.FromArgb(76, 175, 80);
+                = mode == RunMode.Template ? Color.FromArgb(192, 192, 255) :
+                Color.Blue;
             
         }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
