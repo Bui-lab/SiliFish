@@ -43,7 +43,7 @@ namespace SiliFish.DataTypes
         {
             get
             {
-                return DistType == nameof(Constant_NoDistribution) && (this as Constant_NoDistribution).NoiseStdDev < CurrentSettings.Settings.Epsilon;
+                return DistType == nameof(Constant_NoDistribution) && (this as Constant_NoDistribution).NoiseStdDev < GlobalSettings.Epsilon;
             }
         }
         [JsonIgnore]

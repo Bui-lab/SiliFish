@@ -20,25 +20,52 @@ namespace SiliFish.ModelUnits.Cells
     [JsonDerivedType(typeof(MuscleCell), typeDiscriminator: "musclecell")]
     public class Cell : ModelUnitBase
     {
-        public CellCoreUnit Core { get; set; }
         public CellPool CellPool;
+        public Coordinate Coordinate;
+
+        [JsonIgnore]
+        public RunningModel Model { get; set; }
+        public CellCoreUnit Core { get; set; }
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
         public int Somite { get; set; } = -1;
+        public override string ID
+        {
+            get
+            {
+                string s = Somite > 0 ? "_" + Somite.ToString() : "";
+                return $"{Position}_{CellGroup}{s}_{Sequence}";
+            }
+        }
+
         
+        public double ConductionVelocity { get; set; }
+
         [JsonPropertyOrder(3)]
         public Stimuli Stimuli { get; set; } = new();
 
-        #region Position Members and Properties
+        #region Position Properties
         /*public FrontalPlane PositionDorsalVentral { get; set; } = FrontalPlane.NotSet;
         public TransversePlane PositionAnteriorPosterior { get; set; } = TransversePlane.NotSet;
         */
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
 
-        public Coordinate coordinate;
-        public double X { get => coordinate.X; set => coordinate.X = value; }
-        public double Y { get => coordinate.Y; set => coordinate.Y = value; }
-        public double Z { get => coordinate.Z; set => coordinate.Z = value; }
+        [JsonIgnore]
+        public string Position
+        {
+            get
+            {
+                string FTS =
+                    /*(PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
+                    (PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
+                    */
+                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "");
+                return FTS;
+            }
+        }
+        public double X { get => Coordinate.X; set => Coordinate.X = value; }
+        public double Y { get => Coordinate.Y; set => Coordinate.Y = value; }
+        public double Z { get => Coordinate.Z; set => Coordinate.Z = value; }
         #endregion
 
         #region Connection Properties
@@ -72,47 +99,36 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public virtual double RestingMembranePotential { get { throw new NotImplementedException(); } }
 
-        public string Name { get { return CellGroup + "_" + Sequence.ToString(); } set { } }
-        public override string ID
-        {
-            get
-            {
-                string s = Somite > 0 ? "_" + Somite.ToString() : "";
-                return $"{Position}_{CellGroup}{s}_{Sequence}";
-            }
-        }
-        public string Position
-        {
-            get
-            {
-                string FTS =
-                    /*(PositionDorsalVentral == FrontalPlane.Ventral ? "V" : PositionDorsalVentral == FrontalPlane.Dorsal ? "D" : "") +
-                    (PositionAnteriorPosterior == TransversePlane.Posterior ? "P" : PositionAnteriorPosterior == TransversePlane.Anterior ? "A" : PositionAnteriorPosterior == TransversePlane.Central ? "C" : "") +
-                    */
-                    (PositionLeftRight == SagittalPlane.Left ? "L" : PositionLeftRight == SagittalPlane.Right ? "R" : "");
-                return FTS;
-            }
-        }
-
-        public double ConductionVelocity { get; set; }
 
 
         public Cell()
         {
+            Stimuli = new();
         }
 
         public override string ToString()
         {
             return ID;
         }
+
+        public string GetTooltip()
+        {
+            return $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
+        }
+
         public virtual void LinkObjects(RunningModel model, CellPool pool)
         {
+            Model = model;
             CellPool = pool;
-            Core = CellCoreUnit.CreateCore(Core.CoreType, Core.Parameters);
+            Core = CellCoreUnit.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.dt, Model.RunParam.dtEuler);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;
                 jnc.LinkObjects(model);
+            }
+            foreach (Stimulus stim in Stimuli.ListOfStimulus)
+            {
+                stim.TargetCell = this;
             }
         }
 
@@ -181,7 +197,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         internal bool IsAlive(int timepoint)
         {
-            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            double t_ms = Model.RunParam.GetTimeOfIndex(timepoint);
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
 

@@ -21,8 +21,6 @@ namespace SiliFish.Definitions
             Category("Folder")]
         public string TempFolder { get; set; }
 
-        [JsonIgnore, Browsable(false)]
-        public List<string> TempFiles = new();
 
         [Browsable(false), 
             Description("The default folder that output files are saved under."),
@@ -30,25 +28,10 @@ namespace SiliFish.Definitions
             Category("Folder")]
         public string OutputFolder { get; set; }
 
-        [Description("Values smaller than epsilon will be ignored."), 
-            Category("Constant values")]
-        public double Epsilon { get; set; } = 0.00001;
-        
+       
         [Category("Constant values")]
         public UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;//Used from data structures that don't have direct access to the model
         
-        [Description(""), DisplayName("Number Format"), Category("Plotting")]
-        public string DecimalPointFormat { get; set; } = "0.0###";
-
-        [Description("In ms. The duration used to calculate rheobase values."), 
-            DisplayName("Rheobase Infinity"),
-            Category("Dynamics")]
-        public int RheobaseInfinity { get; set; } = 500;
-        [Description("The rheobase multipliers displayed on 'Test Dynamics' user interface."), 
-            DisplayName("Rheobase multipliers"),
-            Category("Dynamics")]
-        public double[] RheobaseTestMultipliers { get; set; } = new double[] { 1, 1.1, 1.5 };//, 2 };
-
         [Description("Valid for all parameters."), 
             DisplayName("Suggested Min Value"),
             Category("Genetic Algorithm")]

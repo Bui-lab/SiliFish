@@ -57,7 +57,7 @@ namespace SiliFish.DynamicUnits
     /// </summary>
     public class DynamicsStats
     {
-
+        private double dt;
 
         public Cluster BurstCluster;
         public Cluster InterBurstCluster;
@@ -114,7 +114,7 @@ namespace SiliFish.DynamicUnits
                     if (SpikeList.Count > 1)
                     {
                         foreach (int i in Enumerable.Range(0, SpikeList.Count - 1))
-                            intervals.Add(RunParam.static_dt * SpikeList[i], RunParam.static_dt * (SpikeList[i + 1] - SpikeList[i]));
+                            intervals.Add(dt * SpikeList[i], dt* (SpikeList[i + 1] - SpikeList[i]));
                     }
                 }
                 return intervals;
@@ -156,7 +156,7 @@ namespace SiliFish.DynamicUnits
                         int curStart = StimulusArray.ToList().FindIndex(i => i > 0);
                         int firstSpike = SpikeList.FirstOrDefault(s => s >= curStart, -1);
                         if (firstSpike < 0) spikeDelay = -1;
-                        else spikeDelay = (firstSpike - curStart) * RunParam.static_dt;
+                        else spikeDelay = (firstSpike - curStart) * dt;
                     }
                 }
                 return spikeDelay;
@@ -167,7 +167,7 @@ namespace SiliFish.DynamicUnits
             get 
             {
                 int curStart = StimulusArray.ToList().FindIndex(i => i > 0);
-                return curStart * RunParam.static_dt;
+                return curStart * dt;
             }
         }
         public double CurrentEndTime
@@ -175,7 +175,7 @@ namespace SiliFish.DynamicUnits
             get
             {
                 int curEnd = StimulusArray.ToList().FindLastIndex(i => i > 0);
-                return curEnd * RunParam.static_dt;
+                return curEnd * dt;
             }
         }
         public double SpikeCoverage(bool ignoreDelay)
@@ -194,8 +194,9 @@ namespace SiliFish.DynamicUnits
         }
         public DynamicsStats()
         { }
-        public DynamicsStats(double[] stimulus)
+        public DynamicsStats(double[] stimulus, double dt)
         {
+            this.dt= dt;
             int iMax = stimulus.Length;
             StimulusArray = stimulus;
             VList = new double[iMax];
@@ -317,11 +318,11 @@ namespace SiliFish.DynamicUnits
                 analyzed = true;
                 return;
             }
-            double firstStimulusTime = stimulusStart * RunParam.static_dt;
-            double firstSpikeTime = SpikeList[0] * RunParam.static_dt;
+            double firstStimulusTime = stimulusStart * dt;
+            double firstSpikeTime = SpikeList[0] * dt;
             firingDelay = firstSpikeTime - firstStimulusTime;
-            double lastStimulusTime = stimulusEnd * RunParam.static_dt;
-            double lastSpikeTime = SpikeList[^1] * RunParam.static_dt;
+            double lastStimulusTime = stimulusEnd * dt;
+            double lastSpikeTime = SpikeList[^1] * dt;
             double quiescence = CurrentSettings.Settings.TonicPadding;
             if (Intervals_ms.Values.Any())
                 quiescence = Intervals_ms.Values.Average();
@@ -345,19 +346,19 @@ namespace SiliFish.DynamicUnits
 
             BurstOrSpike burstOrSpike = new();
             burstsOrSpikes.Add(burstOrSpike);
-            double lastTime = SpikeList[0] * RunParam.static_dt;
+            double lastTime = SpikeList[0] * dt;
             burstOrSpike.SpikeTimeList.Add(lastTime);
             double lastInterval = double.NaN;
             bool spreadingOut = true;
             for (int spikeTimeIndex = 1; spikeTimeIndex < SpikeList.Count; spikeTimeIndex++)
             {
-                double curTime = SpikeList[spikeTimeIndex] * RunParam.static_dt;
+                double curTime = SpikeList[spikeTimeIndex] * dt;
                 double curInterval = curTime - lastTime;
-                if (lastInterval is not double.NaN && curInterval < lastInterval - CurrentSettings.Settings.Epsilon)
+                if (lastInterval is not double.NaN && curInterval < lastInterval - GlobalSettings.Epsilon)
                     spreadingOut = false;
                 if ((lastInterval is double.NaN && curInterval > MaxBurstInterval_LowerRange) ||
-                    (spreadingOut && curInterval >= MaxBurstInterval_UpperRange + CurrentSettings.Settings.Epsilon) ||
-                    (!spreadingOut && curInterval >= MaxBurstInterval_LowerRange + CurrentSettings.Settings.Epsilon))
+                    (spreadingOut && curInterval >= MaxBurstInterval_UpperRange + GlobalSettings.Epsilon) ||
+                    (!spreadingOut && curInterval >= MaxBurstInterval_LowerRange + GlobalSettings.Epsilon))
                 {
                     burstOrSpike = new();
                     burstsOrSpikes.Add(burstOrSpike);

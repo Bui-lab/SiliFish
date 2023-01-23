@@ -227,7 +227,7 @@ namespace SiliFish.UI.Controls
             if (CurrentMode == RunMode.Template)
             {
                 ControlContainer frmControl = new();
-                CellPoolControl cpl = new(Model.ModelDimensions.NumberOfSomites > 0);
+                CellPoolControl cpl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
                 cpl.LoadPool += Cpl_LoadPool;
                 cpl.SavePool += Cpl_SavePool;
 
@@ -428,7 +428,7 @@ namespace SiliFish.UI.Controls
             if (CurrentMode == RunMode.Template)
             {
                 ControlContainer frmControl = new();
-                InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0);
+                InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);

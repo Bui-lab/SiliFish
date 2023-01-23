@@ -43,20 +43,21 @@ namespace SiliFish.ModelUnits.Cells
         /// <summary>
         /// Used as a template
         /// </summary>
-        public Neuron(string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, double cv, TimeLine timeline = null)
+        public Neuron(RunningModel model, string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, double cv, TimeLine timeline = null)
         {
+            Model = model;
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCoreUnit.CreateCore(coreType, cellParams);
+            Core = CellCoreUnit.CreateCore(coreType, cellParams, model.RunParam.dt, model.RunParam.dtEuler);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
             TimeLine_ms = timeline;
             ConductionVelocity = cv;
         }
-        public Neuron(CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
-            : this(cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
+        public Neuron(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
+            : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
         {
         }
 

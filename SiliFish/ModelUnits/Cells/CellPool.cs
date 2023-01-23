@@ -290,10 +290,10 @@ namespace SiliFish.ModelUnits.Cells
                         }
                     }
                     Dictionary<string, double> cellParams = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
-                    Cell cell = neuron ? new Neuron(template, actualSomite, i + 1, cellParams, cv[i]) :
-                        new MuscleCell(template, actualSomite, i + 1, cellParams);
+                    Cell cell = neuron ? new Neuron(Model, template, actualSomite, i + 1, cellParams, cv[i]) :
+                        new MuscleCell(Model, template, actualSomite, i + 1, cellParams, cv[i]);
                     cell.PositionLeftRight = leftright;
-                    cell.coordinate = coordinates[i];
+                    cell.Coordinate = coordinates[i];
                     
                     AddCell(cell);
                 }

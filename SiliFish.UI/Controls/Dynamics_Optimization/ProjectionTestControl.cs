@@ -145,11 +145,6 @@ namespace SiliFish.UI.Controls
         {
             parameters = pfParamsSource.CreateDoubleDictionaryFromControls();
             double dt = (double)edt.Value;
-            RunParam.static_Skip = 0;
-            RunParam.static_dt = dt;
-            RunParam.static_dt_Euler = (double)edtEuler.Value;
-            if (dt < RunParam.static_dt_Euler)
-                RunParam.static_dt_Euler = dt;
         }
 
         #region Plotting
@@ -262,8 +257,6 @@ namespace SiliFish.UI.Controls
         private double[] GenerateStimulus()
         {
             decimal dt = edt.Value;
-            RunParam.static_Skip = 0;
-            RunParam.static_dt = (double)dt;
             int stimStart = (int)(eStepStartTime.Value / dt);
             int stimEnd = (int)(eStepEndTime.Value / dt);
             int plotEnd = (int)(ePlotEndTime.Value / dt);
@@ -284,23 +277,6 @@ namespace SiliFish.UI.Controls
         {
             ReadParameters();
 
-            decimal dt = edt.Value;
-
-            int stimStart = (int)(eStepStartTime.Value / dt);
-            int stimEnd = (int)(eStepEndTime.Value / dt);
-            int plotEnd = (int)(ePlotEndTime.Value / dt);
-            TimeArray = new double[plotEnd + 1];
-            TimeLine tl = new();
-            tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
-            foreach (int i in Enumerable.Range(0, plotEnd + 1))
-                TimeArray[i] = i * (double)dt;
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreTypeSource, parameters);
-            if (core != null)
-            {
-                double[] I = GenerateStimulus();
-                dynamics = core.DynamicsTest(I);
-                CreatePlots();
-            }
         }
         private void btnDynamicsRun_Click(object sender, EventArgs e)
         {

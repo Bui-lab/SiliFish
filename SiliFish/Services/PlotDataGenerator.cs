@@ -36,7 +36,7 @@ namespace SiliFish.Services
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.V?[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                        data[i] += cell.V?[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
                 }
                 string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new ChartDataStruct
@@ -90,7 +90,7 @@ namespace SiliFish.Services
                             gapTitle += "Gap: " + otherCell.ID + ",";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
                         }
                     }
                     if (includeChem)
@@ -104,7 +104,7 @@ namespace SiliFish.Services
                             synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
                         }
                         if (cell is Neuron neuron2)
                         {
@@ -114,7 +114,7 @@ namespace SiliFish.Services
                                 synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
                             }
                         }
                     }
@@ -192,7 +192,7 @@ namespace SiliFish.Services
                     title += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(GlobalSettings.DecimalPointFormat) + ",";
                 }
                 if (stimExists)
                 {
@@ -234,7 +234,7 @@ namespace SiliFish.Services
                     title += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += Tension[iStart + i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                        data[i] += Tension[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
                 }
                 string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new ChartDataStruct

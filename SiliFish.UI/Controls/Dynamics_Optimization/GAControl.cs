@@ -10,6 +10,22 @@ namespace SiliFish.UI.Controls
     {
         private static string GAFileDefaultFolder;
         private string coreType;
+        private List<FitnessFunctionControl> FitnessControls;
+        private CoreSolver Solver;
+        private CoreSolverOutput SolverOutput;
+        private Dictionary<string, double> minValues;
+        private Dictionary<string, double> maxValues;
+        private TargetRheobaseFunction targetRheobaseFunction;
+        private List<FitnessFunction> fitnessFunctions;//All fitness functions except the target rheobase
+        private ProgressForm optimizationProgress;
+
+        public event EventHandler OnCompleteOptimization;
+        public event EventHandler OnLoadParams;
+        public event EventHandler OnGetParams;
+
+        public double DeltaT { get; set; }
+        public double DeltaTEuler { get; set; }
+
         public string CoreType
         {
             get { return coreType; }
@@ -21,20 +37,6 @@ namespace SiliFish.UI.Controls
             }
         }
         public Dictionary<string, double> Parameters { get; set; }
-        private List<FitnessFunctionControl> FitnessControls;
-        private CoreSolver Solver;
-        private CoreSolverOutput SolverOutput;
-        private Dictionary<string, double> minValues;
-        private Dictionary<string, double> maxValues;
-        private TargetRheobaseFunction targetRheobaseFunction;
-        private List<FitnessFunction> fitnessFunctions;//All fitness functions except the target rheobase
-        private ProgressForm optimizationProgress;
-        private event EventHandler onCompleteOptimization;
-        public event EventHandler OnCompleteOptimization { add => onCompleteOptimization += value; remove => onCompleteOptimization -= value; }
-        private event EventHandler onLoadParams;
-        public event EventHandler OnLoadParams { add => onLoadParams += value; remove => onLoadParams -= value; }
-        private event EventHandler onGetParams;
-        public event EventHandler OnGetParams { add => onGetParams += value; remove => onGetParams -= value; }
 
         public GAControl()
         {
@@ -52,36 +54,6 @@ namespace SiliFish.UI.Controls
             FitnessControls = new();
         }
 
-        public void ResetParameters(Dictionary<string, double> parameters, Dictionary<string, double> MinValues = null, Dictionary<string, double> MaxValues = null)
-        {
-            Parameters = parameters;
-            dgMinMaxValues.Rows.Clear();
-            dgMinMaxValues.RowCount = parameters.Count;
-            int rowIndex = 0;
-            foreach (string key in parameters.Keys)
-            {
-                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
-                if (MinValues != null && MinValues.TryGetValue(key, out double minValue))
-                    dgMinMaxValues[colMinValue.Index, rowIndex].Value = minValue;
-                if (MaxValues != null && MaxValues.TryGetValue(key, out double maxValue))
-                    dgMinMaxValues[colMaxValue.Index, rowIndex].Value = maxValue;
-                rowIndex++;
-            }
-        }
-        public void ResetParameters(Dictionary<string, double> parameters, double[] MinValues, double[] MaxValues)
-        {
-            Parameters = parameters;
-            dgMinMaxValues.Rows.Clear();
-            dgMinMaxValues.RowCount = parameters.Count;
-            int rowIndex = 0;
-            foreach (string key in parameters.Keys)
-            {
-                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
-                dgMinMaxValues[colMinValue.Index, rowIndex].Value = MinValues[rowIndex];
-                dgMinMaxValues[colMaxValue.Index, rowIndex].Value = MaxValues[rowIndex];
-                rowIndex++;
-            }
-        }
         private void RunOptimize()
         {
             if (Solver == null) return;
@@ -98,11 +70,12 @@ namespace SiliFish.UI.Controls
             if (optimizationProgress != null && optimizationProgress.Visible)
                 optimizationProgress.Close();
             optimizationProgress = null;
-            onCompleteOptimization?.Invoke(this, EventArgs.Empty);
+            OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
             lOptimizationOutput.Text = $"Latest fitness: {SolverOutput.BestFitness}";
             if (!string.IsNullOrEmpty(SolverOutput.ErrorMessage))
                 lOptimizationOutput.Text += $"\r\nOptimization ran with errors: {SolverOutput.ErrorMessage}";
         }
+
         private void CreateSolver()
         {
             Solver = null;
@@ -123,6 +96,8 @@ namespace SiliFish.UI.Controls
 
             CoreSolverSettings settings = new()
             {
+                DeltaT = DeltaT,
+                DeltaTEuler = DeltaTEuler,
                 SelectionType = ddGASelection.Text,
                 CrossOverType = ddGACrossOver.Text,
                 MutationType = ddGAMutation.Text,
@@ -179,7 +154,7 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
 
             if (core == null) return;
 
@@ -302,7 +277,7 @@ namespace SiliFish.UI.Controls
                     MessageBox.Show("Selected file is not a valid Genetic Algorithm Parameters file.");
                     return;
                 }
-                onLoadParams?.Invoke(this, EventArgs.Empty);
+                OnLoadParams?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -320,9 +295,9 @@ namespace SiliFish.UI.Controls
 
         private void btnCalculateFitness_Click(object sender, EventArgs e)
         {
-            onGetParams.Invoke(this, EventArgs.Empty);
+            OnGetParams.Invoke(this, EventArgs.Empty);
             ReadFitnessFunctions();
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
             double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
         }
@@ -341,6 +316,39 @@ namespace SiliFish.UI.Controls
         {
             ddGATermination.Visible = lGATerminationParameter.Visible = eTerminationParameter.Visible =
                 cbCustomTermination.Checked;
+        }
+        public void ResetParameters(Dictionary<string, double> parameters, 
+        Dictionary<string, double> MinValues = null, Dictionary<string, double> MaxValues = null)
+        {
+            Parameters = parameters;
+            dgMinMaxValues.Rows.Clear();
+            if (Parameters == null) return;
+            dgMinMaxValues.RowCount = parameters.Count;
+            int rowIndex = 0;
+            foreach (string key in parameters.Keys)
+            {
+                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
+                if (MinValues != null && MinValues.TryGetValue(key, out double minValue))
+                    dgMinMaxValues[colMinValue.Index, rowIndex].Value = minValue;
+                if (MaxValues != null && MaxValues.TryGetValue(key, out double maxValue))
+                    dgMinMaxValues[colMaxValue.Index, rowIndex].Value = maxValue;
+                rowIndex++;
+            }
+        }
+        public void ResetParameters(Dictionary<string, double> parameters, double[] MinValues, double[] MaxValues)
+        {
+            Parameters = parameters;
+            dgMinMaxValues.Rows.Clear();
+            if (Parameters == null) return;
+            dgMinMaxValues.RowCount = parameters.Count;
+            int rowIndex = 0;
+            foreach (string key in parameters.Keys)
+            {
+                dgMinMaxValues[colParameter.Index, rowIndex].Value = key;
+                dgMinMaxValues[colMinValue.Index, rowIndex].Value = MinValues[rowIndex];
+                dgMinMaxValues[colMaxValue.Index, rowIndex].Value = MaxValues[rowIndex];
+                rowIndex++;
+            }
         }
     }
 }

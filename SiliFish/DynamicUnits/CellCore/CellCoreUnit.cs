@@ -23,6 +23,8 @@ namespace SiliFish.DynamicUnits
         .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
 
+        protected double dt_run, dt_euler;
+
         //the resting membrane potential
         public double Vr = -70;
         // vmax is the peak membrane potential of single action potentials
@@ -63,9 +65,12 @@ namespace SiliFish.DynamicUnits
         {
             return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
         }
-        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters)
+        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double dt_run, double dt_euler)
         {
-            return (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            core.dt_euler = dt_euler;
+            core.dt_run = dt_run;
+            return core;
         }
 
         /// <summary>
@@ -75,7 +80,7 @@ namespace SiliFish.DynamicUnits
         /// <returns></returns>
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
-            CellCoreUnit core = CreateCore(coreType, null);
+            CellCoreUnit core = CreateCore(coreType, null, 0, 0);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
 

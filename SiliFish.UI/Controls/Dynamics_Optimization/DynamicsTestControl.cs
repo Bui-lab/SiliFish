@@ -17,6 +17,10 @@ namespace SiliFish.UI.Controls
     {
         private static string coreUnitFileDefaultFolder;
         private string coreType;
+        private double deltaT, deltaTEuler;
+        public double DeltaT { get => deltaT; set { deltaT = value; gaControl.DeltaT = value; } }
+        public double DeltaTEuler { get => deltaTEuler; set { deltaTEuler = value; gaControl.DeltaTEuler = value; } }
+
         public string CoreType
         {
             get { return coreType; }
@@ -126,7 +130,7 @@ namespace SiliFish.UI.Controls
             if (parameters != null)
                 Parameters = parameters;
             pTop.Visible = !testMode;
-            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", CurrentSettings.Settings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
+            rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", GlobalSettings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
           
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
@@ -141,7 +145,7 @@ namespace SiliFish.UI.Controls
             List<ChartDataStruct> charts = new();
             ReadParameters();
             string param = sensitivityAnalysisFiring.SelectedParam;
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
             double[] I  = GenerateStimulus();
@@ -173,19 +177,18 @@ namespace SiliFish.UI.Controls
         {
             double limit = (double)eRheobaseLimit.Value;
             List<ChartDataStruct> charts = new();
-            double dt = (double)edt.Value;
             ReadParameters();
             Dictionary<string, double> paramToTest = parameters;
             string selectedParam = sensitivityAnalysisRheobase.SelectedParam;
             if (parameters.ContainsKey(selectedParam))
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == selectedParam).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, DeltaT, deltaTEuler);
 
             foreach (string param in paramToTest.Keys)//change one parameter at a time
             {
                 double[] values = sensitivityAnalysisRheobase.GetValues(parameters[param]);
 
-                double[] rheos = core.RheobaseSensitivityAnalysis(param, values, dt, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
+                double[] rheos = core.RheobaseSensitivityAnalysis(param, values, deltaT, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
                 charts.Add(new ChartDataStruct
                 {
                     Title = param,
@@ -267,12 +270,8 @@ namespace SiliFish.UI.Controls
         {
             parameters = pfParams.CreateDoubleDictionaryFromControls();
             gaControl.Parameters = parameters;
-            double dt = (double)edt.Value;
-            RunParam.static_Skip = 0;
-            RunParam.static_dt = dt;
-            RunParam.static_dt_Euler = (double)edtEuler.Value;
-            if (dt < RunParam.static_dt_Euler)
-                RunParam.static_dt_Euler = dt;
+            DeltaT = (double)edt.Value;
+            DeltaTEuler = (double)edtEuler.Value;
         }
 
         #region Plotting
@@ -440,19 +439,18 @@ namespace SiliFish.UI.Controls
 
         private double[] GenerateStimulus()
         {
-            decimal dt = edt.Value;
-            RunParam.static_Skip = 0;
-            RunParam.static_dt = (double)dt;
-            int stimStart = (int)(eStepStartTime.Value / dt);
-            int stimEnd = (int)(eStepEndTime.Value / dt);
-            int plotEnd = (int)(ePlotEndTime.Value / dt);
+            decimal ddt = edt.Value;
+            DeltaT = (double)ddt;
+            int stimStart = (int)(eStepStartTime.Value / ddt);
+            int stimEnd = (int)(eStepEndTime.Value / ddt);
+            int plotEnd = (int)(ePlotEndTime.Value / ddt);
             if (stimEnd > plotEnd)
                 stimEnd = plotEnd;
             TimeArray = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
-                TimeArray[i] = i * (double)dt;
+                TimeArray[i] = i * deltaT;
             Stimulus stim = new()
             {
                 Settings = stimulusControl1.GetStimulus(),
@@ -464,18 +462,16 @@ namespace SiliFish.UI.Controls
         private void DynamicsRun()
         {
             ReadParameters();
-
-            decimal dt = edt.Value;
-
-            int stimStart = (int)(eStepStartTime.Value / dt);
-            int stimEnd = (int)(eStepEndTime.Value / dt);
-            int plotEnd = (int)(ePlotEndTime.Value / dt);
+            decimal ddt = (decimal)deltaT;
+            int stimStart = (int)(eStepStartTime.Value / ddt);
+            int stimEnd = (int)(eStepEndTime.Value / ddt);
+            int plotEnd = (int)(ePlotEndTime.Value / ddt);
             TimeArray = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
-                TimeArray[i] = i * (double)dt;
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
+                TimeArray[i] = i * deltaT;
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             if (core != null)
             {
                 if (rbSingleEntryStimulus.Checked)
@@ -494,8 +490,8 @@ namespace SiliFish.UI.Controls
                     {
                         if (double.TryParse(eRheobase.Text, out double rheobase))
                         {
-                            stimValues = CurrentSettings.Settings.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
-                            columnNames.AddRange(CurrentSettings.Settings.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
+                            stimValues = GlobalSettings.RheobaseTestMultipliers.Select(m => m * rheobase).ToList();
+                            columnNames.AddRange(GlobalSettings.RheobaseTestMultipliers.Select(m => $"x {m:0.##}").ToList());
                         }
                     }
                     else //if (rbMultipleEntry.Checked)
@@ -544,12 +540,12 @@ namespace SiliFish.UI.Controls
         private void CalculateRheobase()
         {
             ReadParameters();
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
             {
-                eRheobase.Text = d.ToString(CurrentSettings.Settings.DecimalPointFormat);
+                eRheobase.Text = d.ToString(GlobalSettings.DecimalPointFormat);
                 lRheobaseWarning.Visible = false;
                 rbRheobaseBasedStimulus.ForeColor = Color.Black;
             }
@@ -617,7 +613,7 @@ namespace SiliFish.UI.Controls
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters);
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             CellCoreUnit[] arr = new CellCoreUnit[] { core };
             //the core is saved as an array to benefit from $type tag added by the JsonSerializer
             string JSONString = JsonUtil.ToJson(arr);

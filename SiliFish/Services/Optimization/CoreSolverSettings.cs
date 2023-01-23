@@ -10,8 +10,15 @@ namespace SiliFish.Services.Optimization
 
     public class CoreSolverSettings
     {
-        private List<FitnessFunction> fitnessFunctions;
 
+        private List<FitnessFunction> fitnessFunctions;
+        private double[] minValues = null;
+        private double[] maxValues = null;
+        private int[] numBits = null;
+        private int[] decimalDigits = null;
+
+        public double DeltaT { get; set; }
+        public double DeltaTEuler { get; set; }
         public string SelectionType { get; set; }
         public string CrossOverType { get; set; }
         public string MutationType { get; set; }
@@ -56,10 +63,6 @@ namespace SiliFish.Services.Optimization
         [JsonIgnore]
         public List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
 
-        private double[] minValues = null;
-        private double[] maxValues = null;
-        private int[] numBits = null;
-        private int[] decimalDigits = null;
         public double[] MinValues
         {
             get

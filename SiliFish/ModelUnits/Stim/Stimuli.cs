@@ -10,52 +10,51 @@ namespace SiliFish.ModelUnits.Stim
 {
     public class Stimuli
     {
-        public List<Stimulus> stimuli { get; set; }
+        public List<Stimulus> ListOfStimulus { get; set; } = new();
 
         public Stimuli()
         {
-            stimuli = new();
         }
 
         [JsonIgnore]
-        public double MinValue { get { return stimuli.Any() ? stimuli.Min(s => s.MinValue) : 0; } }
+        public double MinValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Min(s => s.MinValue) : 0; } }
         [JsonIgnore]
-        public double MaxValue { get { return stimuli.Any() ? stimuli.Max(s => s.MaxValue) : 0; } }
+        public double MaxValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Max(s => s.MaxValue) : 0; } }
         [JsonIgnore]
-        public bool HasStimulus { get { return stimuli.Any(); } }
+        public bool HasStimulus { get { return ListOfStimulus.Any(); } }
         public double GenerateStimulus(int timeIndex, Random rand)
         {
-            return stimuli.Any() ? stimuli.Sum(s => s.generateStimulus(timeIndex, rand)) : 0;
+            return ListOfStimulus.Any() ? ListOfStimulus.Sum(s => s.GenerateStimulus(timeIndex, rand)) : 0;
         }
 
         public double GetStimulus(int timeIndex)
         {
-            return stimuli.Any() ? stimuli.Sum(s => s[timeIndex]) : 0;
+            return ListOfStimulus.Any() ? ListOfStimulus.Sum(s => s[timeIndex]) : 0;
         }
 
         public double[] GetStimulusArray(int nmax)
         {
             double[] ret = new double[nmax];
-            foreach (Stimulus s in stimuli)
-                ret = ret.AddArray(s.getValues(nmax));
+            foreach (Stimulus s in ListOfStimulus)
+                ret = ret.AddArray(s.GetValues(nmax));
             return ret;
         }
         public virtual void InitDataVectors(int nmax)
         {
-            foreach (Stimulus s in stimuli)
+            foreach (Stimulus s in ListOfStimulus)
                 s.InitDataVectors(nmax);
         }
         public void Add(Stimulus stim)
         {
             if (stim == null)
                 return;
-            stimuli.Add(stim);
+            ListOfStimulus.Add(stim);
         }
         public void Remove(Stimulus stim)
         {
-            if (stim == null || !stimuli.Contains(stim))
+            if (stim == null || !ListOfStimulus.Contains(stim))
                 return;
-            stimuli.Remove(stim);
+            ListOfStimulus.Remove(stim);
         }
     }
 }

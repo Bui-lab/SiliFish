@@ -83,36 +83,7 @@ namespace SiliFish.UI
         }
 
         
-        #region Settings
-        private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.OutputFolder);
-            }
-            catch { }
-        }
-
-        private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", ModelTemplate.Settings.TempFolder);
-            }
-            catch { }
-        }
-
-
-
-
-        #endregion
-
-        #region General Form Functions
-        private void btnAbout_Click(object sender, EventArgs e)
-        {
-            About about = new();
-            about.ShowDialog();
-        }
+        
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (displayAbout)
@@ -144,12 +115,50 @@ namespace SiliFish.UI
                         return;
                     }
                 }
-                foreach (string f in CurrentSettings.Settings.TempFiles)
+                if (Program.MainForm == this)
                 {
-                    File.Delete(f);
+                    DialogResult dialogResult = MessageBox.Show("Do you want to exit SiliFish?", "SiliFish", MessageBoxButtons.OKCancel);
+                    if (dialogResult != DialogResult.OK)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
             }
             catch { }
+        }
+
+        #region Settings
+        private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                ModelBase mb = (ModelBase)ModelTemplate ?? RunningModel;
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", mb.Settings.OutputFolder);
+            }
+            catch { }
+        }
+
+        private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                ModelBase mb = (ModelBase)ModelTemplate ?? RunningModel;
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", mb.Settings.TempFolder);
+            }
+            catch { }
+        }
+
+
+
+
+        #endregion
+
+        #region General Form Functions
+        private void btnAbout_Click(object sender, EventArgs e)
+        {
+            About about = new();
+            about.ShowDialog();
         }
         #endregion
 
@@ -158,7 +167,7 @@ namespace SiliFish.UI
         {
             try
             {
-                RunningModel.RunModel(0, (int)eRunNumber.Value);
+                RunningModel.RunModel(0);
             }
             catch (Exception ex)
             {
@@ -237,12 +246,6 @@ namespace SiliFish.UI
         {
             if (RunningModel == null) return;
             progressBarRun.Value = (int)((RunningModel?.GetProgress() ?? 0) * progressBarRun.Maximum);
-            if (eRunNumber.Value > 1)
-            {
-                int? i = RunningModel?.GetRunCounter();
-                if (i != null)
-                    lRunTime.Text = $"Run number: {i}";
-            }
         }
         private void linkExportOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

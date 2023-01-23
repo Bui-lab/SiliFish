@@ -12,12 +12,10 @@ namespace SiliFish.UI.Controls
     public partial class CellPoolControl : UserControl
     {
         private static string coreUnitFileDefaultFolder;
-        private event EventHandler savePool;
-        public event EventHandler SavePool { add => savePool += value; remove => savePool -= value; }
-
-        private event EventHandler loadPool;
-        public event EventHandler LoadPool { add => loadPool += value; remove => loadPool -= value; }
-
+        private Settings settings;
+        
+        public event EventHandler SavePool;
+        public event EventHandler LoadPool;
         CellPoolTemplate poolBase;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -43,16 +41,17 @@ namespace SiliFish.UI.Controls
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
-        public CellPoolControl(bool somiteBased)
+        public CellPoolControl(bool somiteBased, Settings settings)
         {
             InitializeComponent();
+            this.settings = settings;
             SomiteBased = somiteBased;
             distConductionVelocity.AbsoluteEnforced = true;
             ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
-            distConductionVelocity.SetDistribution(new Constant_NoDistribution(CurrentSettings.Settings.cv));
+            distConductionVelocity.SetDistribution(new Constant_NoDistribution(settings.cv));
             if (SomiteBased)
             {
                 cbAllSomites.Visible = eSomiteRange.Visible = true;
@@ -75,12 +74,12 @@ namespace SiliFish.UI.Controls
                 if (ddNeuronClass.Items.Count > 0)
                     ddNeuronClass.SelectedIndex = 0;
                 lNeuronClass.Visible = ddNeuronClass.Visible = true;
-                ddCoreType.Text = CurrentSettings.Settings.DefaultNeuronCore.GetType().ToString();
+                ddCoreType.Text = settings.DefaultNeuronCore.GetType().ToString();
             }
             else
             {
                 lNeuronClass.Visible = ddNeuronClass.Visible = false;
-                ddCoreType.Text = CurrentSettings.Settings.DefaultMuscleCellCore.GetType().ToString();
+                ddCoreType.Text = settings.DefaultMuscleCellCore.GetType().ToString();
             }
         }
 
@@ -110,8 +109,8 @@ namespace SiliFish.UI.Controls
 
         private void linkLoadPool_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (loadPool == null) return;
-            loadPool.Invoke(this, new EventArgs());
+            if (LoadPool == null) return;
+            LoadPool.Invoke(this, new EventArgs());
             if (string.IsNullOrEmpty(JSONString))
                 return;
             try
@@ -128,10 +127,10 @@ namespace SiliFish.UI.Controls
 
         private void linkSavePool_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (savePool == null) return;
+            if (SavePool == null) return;
             ReadDataFromControl();
             JSONString = JsonUtil.ToJson(poolBase);
-            savePool.Invoke(this, new EventArgs());
+            SavePool.Invoke(this, new EventArgs());
         }
 
         private void ReadDataFromControl()

@@ -19,15 +19,8 @@ namespace SiliFish.ModelUnits.Parameters
         }
         [JsonIgnore]
         public int iMax { get { return Convert.ToInt32((tMax + tSkip_ms) / dt + 1); } }
-        [JsonIgnore]
-        public static double static_Skip { get; set; } = 0;//Used from data structures that don't have direct access to the model
-        [JsonIgnore]
-        public static double static_dt { get; set; } = 0.1;//Used from data structures that don't have direct access to the model
-        [JsonIgnore]
-        public static double static_dt_Euler { get; set; } = 0.1;//Used by the Euler method differential equation solutions
-
-        public static double GetTimeOfIndex(int index)
-        { return Math.Round(static_dt * index - static_Skip, 2); }
+        public double GetTimeOfIndex(int index)
+        { return Math.Round(dt * index - tSkip_ms, 2); }
         public RunParam() { }
     }
 }

@@ -43,18 +43,20 @@ namespace SiliFish.ModelUnits.Cells
         /// <summary>
         /// Used as a template
         /// </summary>
-        public MuscleCell(string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, TimeLine timeline = null)
+        public MuscleCell(RunningModel model, string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, double cv, TimeLine timeline = null)
         {
+            Model = model;
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCoreUnit.CreateCore(coreType, cellParams);
+            Core = CellCoreUnit.CreateCore(coreType, cellParams, model.RunParam.dt, model.RunParam.dtEuler);
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
+            ConductionVelocity = cv;
             TimeLine_ms = timeline;
         }
-        public MuscleCell(CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams)
-            : this(cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cellTemp.TimeLine_ms)
+        public MuscleCell(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
+            : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
         {
         }
 

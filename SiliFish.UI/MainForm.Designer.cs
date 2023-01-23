@@ -49,8 +49,6 @@ namespace SiliFish.UI
             this.pSimulation = new System.Windows.Forms.Panel();
             this.ldtEuler = new System.Windows.Forms.Label();
             this.edtEuler = new System.Windows.Forms.NumericUpDown();
-            this.lRunCount = new System.Windows.Forms.Label();
-            this.eRunNumber = new System.Windows.Forms.NumericUpDown();
             this.eSkip = new System.Windows.Forms.NumericUpDown();
             this.lSkip = new System.Windows.Forms.Label();
             this.edt = new System.Windows.Forms.NumericUpDown();
@@ -84,7 +82,6 @@ namespace SiliFish.UI
             this.pModelControlTop.SuspendLayout();
             this.pSimulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
@@ -248,7 +245,7 @@ namespace SiliFish.UI
             this.btnGenerateModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnGenerateModel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnGenerateModel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnGenerateModel.ForeColor = System.Drawing.Color.Black;
+            this.btnGenerateModel.ForeColor = System.Drawing.Color.White;
             this.btnGenerateModel.Location = new System.Drawing.Point(5, 5);
             this.btnGenerateModel.Name = "btnGenerateModel";
             this.btnGenerateModel.Size = new System.Drawing.Size(263, 39);
@@ -287,8 +284,6 @@ namespace SiliFish.UI
             this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
             this.pSimulation.Controls.Add(this.ldtEuler);
             this.pSimulation.Controls.Add(this.edtEuler);
-            this.pSimulation.Controls.Add(this.lRunCount);
-            this.pSimulation.Controls.Add(this.eRunNumber);
             this.pSimulation.Controls.Add(this.eSkip);
             this.pSimulation.Controls.Add(this.lSkip);
             this.pSimulation.Controls.Add(this.edt);
@@ -333,36 +328,6 @@ namespace SiliFish.UI
             0,
             0,
             65536});
-            // 
-            // lRunCount
-            // 
-            this.lRunCount.AutoSize = true;
-            this.lRunCount.Location = new System.Drawing.Point(156, 35);
-            this.lRunCount.Name = "lRunCount";
-            this.lRunCount.Size = new System.Drawing.Size(64, 15);
-            this.lRunCount.TabIndex = 37;
-            this.lRunCount.Text = "Run Count";
-            this.toolTip.SetToolTip(this.lRunCount, "If run count is greater than 1, the model details and episodes of each run are ex" +
-        "ported automatically.");
-            // 
-            // eRunNumber
-            // 
-            this.eRunNumber.Location = new System.Drawing.Point(226, 32);
-            this.eRunNumber.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.eRunNumber.Name = "eRunNumber";
-            this.eRunNumber.Size = new System.Drawing.Size(63, 23);
-            this.eRunNumber.TabIndex = 36;
-            this.toolTip.SetToolTip(this.eRunNumber, "Warning: depending on the complexity of the model, multiple runs can take a long " +
-        "time.");
-            this.eRunNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // eSkip
             // 
@@ -447,16 +412,16 @@ namespace SiliFish.UI
             // 
             this.lRunTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lRunTime.Location = new System.Drawing.Point(302, 36);
+            this.lRunTime.Location = new System.Drawing.Point(153, 36);
             this.lRunTime.Name = "lRunTime";
-            this.lRunTime.Size = new System.Drawing.Size(219, 80);
+            this.lRunTime.Size = new System.Drawing.Size(368, 66);
             this.lRunTime.TabIndex = 31;
             // 
             // linkExportOutput
             // 
             this.linkExportOutput.AutoSize = true;
             this.linkExportOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkExportOutput.Location = new System.Drawing.Point(212, 86);
+            this.linkExportOutput.Location = new System.Drawing.Point(222, 114);
             this.linkExportOutput.Name = "linkExportOutput";
             this.linkExportOutput.Size = new System.Drawing.Size(82, 15);
             this.linkExportOutput.TabIndex = 27;
@@ -480,7 +445,7 @@ namespace SiliFish.UI
             this.btnRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRun.ForeColor = System.Drawing.Color.White;
-            this.btnRun.Location = new System.Drawing.Point(226, 58);
+            this.btnRun.Location = new System.Drawing.Point(153, 110);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(63, 23);
             this.btnRun.TabIndex = 9;
@@ -610,7 +575,6 @@ namespace SiliFish.UI
             this.pSimulation.ResumeLayout(false);
             this.pSimulation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eRunNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
@@ -643,8 +607,6 @@ namespace SiliFish.UI
         private LinkLabel linkOpenOutputFolder;
         private LinkLabel linkBrowseToTempFolder;
         private SaveFileDialog saveFileImage;
-        private NumericUpDown eRunNumber;
-        private Label lRunCount;
         private Button btnCellularDynamics;
         private Label ldtEuler;
         private NumericUpDown edtEuler;

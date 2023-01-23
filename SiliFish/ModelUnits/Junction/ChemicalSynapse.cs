@@ -8,6 +8,7 @@ using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Drawing;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -33,7 +34,7 @@ namespace SiliFish.ModelUnits.Junction
         public double Conductance { get { return Core.Conductance; } }
         internal bool IsActive(int timepoint)
         {
-            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            double t_ms = PreNeuron.Model.RunParam.GetTimeOfIndex(timepoint);
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
 
@@ -41,11 +42,14 @@ namespace SiliFish.ModelUnits.Junction
         { }
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
         {
-            Core = new TwoExp_syn(param, conductance);
+            Core = new TwoExp_syn(param, conductance, preN.Model.RunParam.dt, preN.Model.RunParam.dtEuler);
             PreNeuron = preN;
             PostCell = postN;
-            double distance = Util.Distance(PreNeuron.coordinate, PostCell.coordinate, distmode);
-            Duration = Math.Max((int)(distance / (preN.ConductionVelocity * RunParam.static_dt)), 1);
+            double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, distmode);
+            if (preN.ConductionVelocity < GlobalSettings.Epsilon)
+                Duration = int.MaxValue;
+            else
+                Duration = Math.Max((int)(distance / (preN.ConductionVelocity * preN.Model.RunParam.dt)), 1);
         }
 
         public void LinkObjects(RunningModel model)
@@ -56,6 +60,8 @@ namespace SiliFish.ModelUnits.Junction
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
+            Core.DeltaTEuler = model.RunParam.dtEuler;
+            Core.DeltaT = model.RunParam.dt;
         }
         public override string ToString()
         {
@@ -70,11 +76,11 @@ namespace SiliFish.ModelUnits.Junction
 
         public void SetFixedDuration(double dur)
         {
-            Duration = (int)(dur / RunParam.static_dt);
+            Duration = (int)(dur / PreNeuron.Model.RunParam.dt);
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / RunParam.static_dt);
+            Delay = (int)(delay / PreNeuron.Model.RunParam.dt);
         }
         public void SetTimeLine(TimeLine span)
         {

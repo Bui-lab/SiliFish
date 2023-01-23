@@ -351,7 +351,7 @@ namespace SiliFish.ModelUnits.Architecture
             List<StimulusBase> listStimuli= new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
-                foreach (Stimulus stim in cell.Stimuli.stimuli)
+                foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)
                     listStimuli.Add(stim);
             }
             return listStimuli;
@@ -586,9 +586,6 @@ namespace SiliFish.ModelUnits.Architecture
                 model_run = false;
                 if (seed != null || rand == null)
                     rand = new Random(seed != null ? (int)seed : 0);
-                RunParam.static_dt = RunParam.dt;
-                RunParam.static_dt_Euler = RunParam.dtEuler;
-                RunParam.static_Skip = RunParam.tSkip_ms;
                 iMax = RunParam.iMax;
                 Stimulus.nMax = iMax;
 

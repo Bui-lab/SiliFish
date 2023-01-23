@@ -59,11 +59,10 @@ namespace SiliFish.DynamicUnits
 
         public override double GetNextVal(double Stim, ref bool spike)
         {
-            double dt = RunParam.static_dt_Euler;
             double dtTracker = 0;
-            while (dtTracker < RunParam.static_dt)
+            while (dtTracker < dt_run)
             {
-                dtTracker += dt;
+                dtTracker += dt_euler;
                 // ODE eqs
                 if (V >= Vmax)
                 {
@@ -74,7 +73,7 @@ namespace SiliFish.DynamicUnits
                 else
                 {
                     double dv = V * V + Stim;
-                    double vNew = V + dv * dt;
+                    double vNew = V + dv * dt_euler;
                     V = vNew;
                 }
             }
@@ -83,7 +82,7 @@ namespace SiliFish.DynamicUnits
         public override DynamicsStats SolveODE(double[] I)
         {
             int iMax = I.Length;
-            DynamicsStats dyn = new(I);
+            DynamicsStats dyn = new(I, dt_run);
             bool spike = false;
             for (int t = 0; t < iMax; t++)
             {

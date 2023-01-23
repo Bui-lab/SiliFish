@@ -50,7 +50,6 @@ namespace SiliFish.Services
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
                     double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    //khi is the damping coefficient: "Kinematics.Damping Coef"
                     double acc = -Math.Pow(kinemW0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
                     vel[k, i] = vel[k, i - 1] + acc * dt;
                     angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;

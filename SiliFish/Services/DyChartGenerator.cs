@@ -28,11 +28,11 @@ namespace SiliFish.Services
             Helpers.Util.SetYRange(ref yMin, ref yMax);
 
             string columnTitles = $"{chartData.xLabel},{chartData.yLabel}";
-            List<string> data = new(chartData.xData.Select(t => t.ToString(CurrentSettings.Settings.DecimalPointFormat) + ","));
+            List<string> data = new(chartData.xData.Select(t => t.ToString(GlobalSettings.DecimalPointFormat) + ","));
             if (chartData.yData != null)
             {
                 foreach (int i in Enumerable.Range(0, chartData.yData.Length))
-                    data[i] += chartData.yData[i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                    data[i] += chartData.yData[i].ToString(GlobalSettings.DecimalPointFormat) + ",";
             }
             else
             {
@@ -40,7 +40,7 @@ namespace SiliFish.Services
                 {
                     double[] singleyData = chartData.yMultiData[colIndex];
                     foreach (int i in Enumerable.Range(0, singleyData.Length))
-                        data[i] += singleyData[i].ToString(CurrentSettings.Settings.DecimalPointFormat) + ",";
+                        data[i] += singleyData[i].ToString(GlobalSettings.DecimalPointFormat) + ",";
                 }
             }
             string csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
@@ -101,10 +101,10 @@ namespace SiliFish.Services
                     chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
                     chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
                     chart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
-                    chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(CurrentSettings.Settings.DecimalPointFormat));
-                    chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(CurrentSettings.Settings.DecimalPointFormat));
-                    chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(CurrentSettings.Settings.DecimalPointFormat));
-                    chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(CurrentSettings.Settings.DecimalPointFormat));
+                    chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.DecimalPointFormat));
+                    chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.DecimalPointFormat));
+                    chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(GlobalSettings.DecimalPointFormat));
+                    chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(GlobalSettings.DecimalPointFormat));
                     chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
                     chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
                     chart.Replace("__DRAW_POINTS__", charts[chartIndex].drawPoints ? "true" : "false");

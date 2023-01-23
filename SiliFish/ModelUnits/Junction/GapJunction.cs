@@ -29,7 +29,7 @@ namespace SiliFish.ModelUnits.Junction
         int t_current = 0; //the time point  where the momentary values are kept for
         internal bool IsActive(int timepoint)
         {
-            double t_ms = RunParam.GetTimeOfIndex(timepoint);
+            double t_ms = Cell1.Model.RunParam.GetTimeOfIndex(timepoint);
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
 
@@ -45,8 +45,11 @@ namespace SiliFish.ModelUnits.Junction
             Conductance = conductance;
             Cell1 = c1;
             Cell2 = c2;
-            double distance = Util.Distance(c1.coordinate, c2.coordinate, mode);
-            Duration = Math.Max((int)(distance / (c1.ConductionVelocity * RunParam.static_dt)), 1);
+            double distance = Util.Distance(c1.Coordinate, c2.Coordinate, mode);
+            if (c1.ConductionVelocity < GlobalSettings.Epsilon)
+                Duration = int.MaxValue;
+            else
+                Duration = Math.Max((int)(distance / (c1.ConductionVelocity * Cell1.Model.RunParam.dt)), 1);
         }
 
         public void LinkObjects(RunningModel model)
@@ -72,7 +75,7 @@ namespace SiliFish.ModelUnits.Junction
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / RunParam.static_dt);
+            Delay = (int)(delay / Cell1.Model.RunParam.dt);
         }
         public void SetTimeSpan(TimeLine span)
         {

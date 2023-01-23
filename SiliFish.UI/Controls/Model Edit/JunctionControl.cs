@@ -9,8 +9,8 @@ namespace SiliFish.UI.Controls
 {
     public partial class JunctionControl : UserControl
     {
-        private event EventHandler junctionChanged;
-        public event EventHandler JunctionChanged { add => junctionChanged += value; remove => junctionChanged -= value; }
+        private Settings settings;
+        public event EventHandler JunctionChanged;
 
         private JunctionBase Junction;
         public override string ToString()
@@ -20,7 +20,7 @@ namespace SiliFish.UI.Controls
                 "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
-        public JunctionControl()
+        public JunctionControl(Settings settings)
         {
             InitializeComponent();
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
@@ -29,7 +29,7 @@ namespace SiliFish.UI.Controls
             ddConnectionType.Items.Add(ConnectionType.Gap);
             ddConnectionType.Items.Add(ConnectionType.Synapse);
             ddConnectionType.Items.Add(ConnectionType.NMJ);
-            
+            this.settings = settings;
         }
 
         private void FillConnectionTypes()
@@ -74,16 +74,16 @@ namespace SiliFish.UI.Controls
                     switch (pool.NTMode)
                     {
                        case NeuronClass.Glycinergic:
-                           synapseControl.EReversal = CurrentSettings.Settings.E_gly;
+                           synapseControl.EReversal = settings.E_gly;
                             break;
                         case NeuronClass.GABAergic:
-                            synapseControl.EReversal = CurrentSettings.Settings.E_gaba;
+                            synapseControl.EReversal = settings.E_gaba;
                             break;
                         case NeuronClass.Glutamatergic:
-                            synapseControl.EReversal = CurrentSettings.Settings.E_glu;
+                            synapseControl.EReversal = settings.E_glu;
                             break;
                         case NeuronClass.Cholinergic:
-                            synapseControl.EReversal = CurrentSettings.Settings.E_ach;
+                            synapseControl.EReversal = settings.E_ach;
                             break;
                         default:
                             break;
@@ -91,7 +91,7 @@ namespace SiliFish.UI.Controls
                 
             }
             //TODO junction.PoolSource = ddSourcePool.Text;
-            junctionChanged?.Invoke(this, EventArgs.Empty);
+            JunctionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
@@ -107,7 +107,7 @@ namespace SiliFish.UI.Controls
                 }
             }
             //TODO junction.PoolTarget = ddTargetPool.Text;
-            junctionChanged?.Invoke(this, EventArgs.Empty);
+            JunctionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
@@ -115,7 +115,7 @@ namespace SiliFish.UI.Controls
             gSynapse.Visible = ddConnectionType.Text != "Gap";
             //TODO if (junction == null || !ddConnectionType.Focused) return;
             //TODO junction.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
-            junctionChanged?.Invoke(this, EventArgs.Empty);
+            JunctionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetJunction(JunctionBase junction, RunningModel model, bool newJunc)
@@ -235,7 +235,7 @@ namespace SiliFish.UI.Controls
 
         private void cbActive_CheckedChanged(object sender, EventArgs e)
         {
-            junctionChanged?.Invoke(this, EventArgs.Empty);
+            JunctionChanged?.Invoke(this, EventArgs.Empty);
         }
 
     }

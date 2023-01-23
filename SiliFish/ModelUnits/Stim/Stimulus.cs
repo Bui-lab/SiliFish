@@ -13,14 +13,28 @@ namespace SiliFish.ModelUnits.Stim
 
     public class Stimulus: StimulusBase
     {
-        public static int nMax; //in time increments
-        public Cell TargetCell;
         private double tangent; //valid only if mode==Ramp
         private int iStart, iEnd;
         private double[] values = null;
         private bool initialized = false;
+
+        public static int nMax; //in time increments
+        public Cell TargetCell;
+        
+        [JsonIgnore]
         public double MinValue { get { return values?.Min() ?? 0; } }
+        [JsonIgnore]
         public double MaxValue { get { return values?.Max() ?? 0; } }
+
+        public double this[int index]
+        {
+            get
+            {
+                if (values?.Length > index)
+                    return values[index];
+                return 0;
+            }
+        }
 
         public Stimulus() { }
         public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
@@ -35,15 +49,6 @@ namespace SiliFish.ModelUnits.Stim
             return new Stimulus(Settings, TargetCell, TimeLine_ms);
         }
 
-        public double this[int index]
-        {
-            get
-            {
-                if (values?.Length > index)
-                    return values[index];
-                return 0;
-            }
-        }
         public override string ToString()
         {
             return TargetCell.ID + ": " +Settings.ToString();
@@ -58,10 +63,10 @@ namespace SiliFish.ModelUnits.Stim
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeLine_ms.End / RunParam.static_dt);
+            iEnd = (int)(TimeLine_ms.End / TargetCell.Model.RunParam.dt);
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeLine_ms.Start / RunParam.static_dt);
+            iStart = (int)(TimeLine_ms.Start / TargetCell.Model.RunParam.dt);
             if (Settings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (Settings.Value2 - Settings.Value1) / (iEnd - iStart);
@@ -78,16 +83,9 @@ namespace SiliFish.ModelUnits.Stim
             initialized = true;
         }
 
-        public double[] GenerateStimulus(int stimStart, int stimDuration, Random rand)
+        internal double GenerateStimulus(int tIndex, Random rand)
         {
-            double[] stim = new double[stimStart + stimDuration];
-            foreach (int i in Enumerable.Range(stimStart, stimDuration))
-                stim[i] = generateStimulus(i, rand);
-            return stim;
-        }
-        internal double generateStimulus(int tIndex, Random rand)
-        {
-            double t_ms = RunParam.GetTimeOfIndex(tIndex);
+            double t_ms = TargetCell.Model.RunParam.GetTimeOfIndex(tIndex);
             if (!TimeLine_ms.IsActive(t_ms))
                 return 0;
             if (!initialized)
@@ -134,8 +132,15 @@ namespace SiliFish.ModelUnits.Stim
             values[tIndex] = value;
             return value;
         }
-
-        public double[] getValues(int nMax)
+        public double[] GenerateStimulus(int stimStart, int stimDuration, Random rand)
+        {
+            double[] stim = new double[stimStart + stimDuration];
+            foreach (int i in Enumerable.Range(stimStart, stimDuration))
+                stim[i] = GenerateStimulus(i, rand);
+            return stim;
+        }
+        
+        public double[] GetValues(int nMax)
         {
             if (values?.Length < nMax)
             {

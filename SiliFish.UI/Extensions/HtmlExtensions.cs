@@ -13,7 +13,7 @@ namespace SiliFish.UI.Extensions
                 if (html.Length > 1000000 && !string.IsNullOrEmpty(tempFolder))
                 {
                     tempFile = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
-                    CurrentSettings.Settings.TempFiles.Add(tempFile);
+                    GlobalSettings.TempFiles.Add(tempFile);
                     File.WriteAllText(tempFile, html.ToString());
                     htmlContainer.CoreWebView2.Navigate(tempFile);
                 }

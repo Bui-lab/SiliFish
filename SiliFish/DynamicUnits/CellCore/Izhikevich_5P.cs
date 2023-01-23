@@ -101,19 +101,18 @@ namespace SiliFish.DynamicUnits
         {
             double vNew, uNew;
             spike = false;
-            double dt = RunParam.static_dt_Euler;
             double dtTracker = 0;
-            while (dtTracker < RunParam.static_dt)
+            while (dtTracker < dt_run)
             {
-                dtTracker += dt;
+                dtTracker += dt_euler;
                 if (V < Vmax)
                 {
                     // ODE eqs
                     // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
                     double Cdv = 0.04 * V * V + 5 * V + 140 - u + I;
-                    vNew = V + Cdv * dt;// / Cm;
+                    vNew = V + Cdv * dt_euler;// / Cm;
                     double du = a * (b * V - u);
-                    uNew = u + dt * du;
+                    uNew = u + dt_euler * du;
                     V = vNew;
                     u = uNew;
                 }
@@ -137,12 +136,11 @@ namespace SiliFish.DynamicUnits
             bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
             double decayStart = 0, riseStart = 0;
             int iMax = I.Length;
-            DynamicsStats dyn = new(I);
+            DynamicsStats dyn = new(I, dt_run);
             dyn.SecLists.Add("u", new double[I.Length]);
             double[] feedbackCurrent = dyn.SecLists["u"];
             
             bool spike = false;
-            double dt = RunParam.static_dt;
             for (int tIndex = 0; tIndex < iMax; tIndex++)
             {
                 GetNextVal(I[tIndex], ref spike);
@@ -152,14 +150,14 @@ namespace SiliFish.DynamicUnits
                 //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
                 if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * c)
                 {
-                    dyn.TauDecay.Add(dt * tIndex, dt * (tIndex - decayStart));
+                    dyn.TauDecay.Add(dt_run * tIndex, dt_run * (tIndex - decayStart));
                     tauDecaySet = true;
                 }
                 //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
                 //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
                 else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * Vmax + 0.37 * Vr)
                 {
-                    dyn.TauRise.Add(dt * tIndex, dt * (tIndex - riseStart));
+                    dyn.TauRise.Add(dt_run * tIndex, dt_run * (tIndex - riseStart));
                     tauRiseSet = true;
                     riseStart = 0;
                 }

@@ -77,11 +77,11 @@ namespace SiliFish.Extensions
             increasing = true;//skip the first intervalthisArray[1] > thisArray[0];
             for (int i = 2; i < thisArray.Length; i++)
             {
-                if (decreasing && thisArray[i] > thisArray[i - 1] + CurrentSettings.Settings.Epsilon)
+                if (decreasing && thisArray[i] > thisArray[i - 1] + GlobalSettings.Epsilon)
                 {
                     decreasing = false;
                 }
-                if (increasing && thisArray[i] < thisArray[i - 1] - CurrentSettings.Settings.Epsilon)
+                if (increasing && thisArray[i] < thisArray[i - 1] - GlobalSettings.Epsilon)
                 {
                     increasing = false; 
                 }

@@ -1,7 +1,14 @@
+using SiliFish.Definitions;
+using System.Configuration;
+
 namespace SiliFish.UI
 {
     internal static class Program
     {
+        /// <summary>
+        /// The pointer to the first form is kept to prevent accidental program exit
+        /// </summary>
+        public static MainForm MainForm { get; set; }
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -13,7 +20,12 @@ namespace SiliFish.UI
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+            MainForm = new MainForm();
+            Application.Run(MainForm);
+            foreach (string f in GlobalSettings.TempFiles)
+            {
+                File.Delete(f);
+            }
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
@@ -25,5 +37,7 @@ namespace SiliFish.UI
         {
             Console.WriteLine((e.ExceptionObject as Exception).Message);
         }
+
+        
     }
 }

@@ -12,6 +12,7 @@ namespace SiliFish.UI.Controls
         private event EventHandler interPoolChanged;
         public event EventHandler InterPoolChanged { add => interPoolChanged += value; remove => interPoolChanged -= value; }
 
+        private Settings settings;
         private bool autoGenerateName = true;
         private InterPoolTemplate interPoolTemplate;
         private Dictionary<string, object> Parameters;
@@ -23,7 +24,7 @@ namespace SiliFish.UI.Controls
                 "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
-        public InterPoolControl(bool somiteBased)
+        public InterPoolControl(bool somiteBased, Settings settings)
         {
             InitializeComponent();
             SomiteBased = somiteBased;
@@ -56,6 +57,8 @@ namespace SiliFish.UI.Controls
                 numMinAscReach.Increment = numMinDescReach.Increment =
                     numMaxAscReach.Increment = numMaxDescReach.Increment = (decimal)0.1;
             }
+
+            this.settings = settings;
         }
 
         private void FillConnectionTypes()
@@ -107,16 +110,16 @@ namespace SiliFish.UI.Controls
                     switch (pool.NTMode)
                     {
                        case NeuronClass.Glycinergic:
-                           synapseControl.EReversal = CurrentSettings.Settings.E_gly;
+                           synapseControl.EReversal = settings.E_gly;
                             break;
                         case NeuronClass.GABAergic:
-                            synapseControl.EReversal = CurrentSettings.Settings.E_gaba;
+                            synapseControl.EReversal = settings.E_gaba;
                             break;
                         case NeuronClass.Glutamatergic:
-                            synapseControl.EReversal = CurrentSettings.Settings.E_glu;
+                            synapseControl.EReversal = settings.E_glu;
                             break;
                         case NeuronClass.Cholinergic:
-                            synapseControl.EReversal = CurrentSettings.Settings.E_ach;
+                            synapseControl.EReversal = settings.E_ach;
                             break;
                         default:
                             break;
