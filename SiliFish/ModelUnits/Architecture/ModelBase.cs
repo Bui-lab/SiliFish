@@ -1,5 +1,4 @@
-﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits.Cells;
+﻿using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
@@ -15,13 +14,13 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
-        private Settings settings = new();
+        private ModelSettings settings = new();
         public string ClassType => GetType().Name;
         public string ModelName { get; set; }
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; } = new();
-        public Settings Settings
+        public ModelSettings Settings
         {
             get { return settings; }
             set
@@ -67,14 +66,14 @@ namespace SiliFish.ModelUnits.Architecture
         {
             if (Parameters == null || !Parameters.Any())
                 return;
-            if (Parameters.ContainsKey("General.Name"))
+            if (Parameters.TryGetValue("General.Name", out object value))
             {
-                ModelName = Parameters["General.Name"].ToString();
+                ModelName = value.ToString();
                 Parameters.Remove("General.Name");
             }
-            if (Parameters.ContainsKey("General.Description"))
+            if (Parameters.TryGetValue("General.Description", out value))
             {
-                ModelDescription = Parameters["General.Description"].ToString();
+                ModelDescription = value.ToString();
                 Parameters.Remove("General.Description");
             }
             Parameters = ModelDimensions.BackwardCompatibility(Parameters);

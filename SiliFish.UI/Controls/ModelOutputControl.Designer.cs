@@ -859,7 +859,7 @@
             this.btnZoomIn.Size = new System.Drawing.Size(32, 32);
             this.btnZoomIn.TabIndex = 48;
             this.btnZoomIn.UseVisualStyleBackColor = true;
-            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomOut_Click);
+            this.btnZoomIn.Click += new System.EventHandler(this.btnZoomIn_Click);
             // 
             // btnZoomOut
             // 
@@ -871,7 +871,7 @@
             this.btnZoomOut.Size = new System.Drawing.Size(32, 32);
             this.btnZoomOut.TabIndex = 47;
             this.btnZoomOut.UseVisualStyleBackColor = true;
-            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomIn_Click);
+            this.btnZoomOut.Click += new System.EventHandler(this.btnZoomOut_Click);
             // 
             // grLegend
             // 

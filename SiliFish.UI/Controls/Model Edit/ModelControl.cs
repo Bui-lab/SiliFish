@@ -16,8 +16,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class ModelControl : UserControl
     {
-        private event EventHandler modelChanged;
-        public event EventHandler ModelChanged { add => modelChanged += value; remove => modelChanged -= value; }
+        public event EventHandler ModelChanged;
         RunMode CurrentMode = RunMode.Template;
 
         private ModelBase Model;
@@ -43,7 +42,7 @@ namespace SiliFish.UI.Controls
         private void ModelIsUpdated()
         {
             modelUpdated = true;
-            modelChanged?.Invoke(this, EventArgs.Empty);
+            ModelChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #region Read/Load Model and Parameters

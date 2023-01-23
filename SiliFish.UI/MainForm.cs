@@ -2,7 +2,6 @@ using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 using Services;
 using SiliFish.DataTypes;
-using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
@@ -22,13 +21,19 @@ namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
-        static string modelFileDefaultFolder;
-
+        private DateTime runStart;
+        private readonly bool displayAbout = false;
+        private string modelFileDefaultFolder, lastFileName;
         private ModelTemplate ModelTemplate = null;
         private RunningModel RunningModel = null;
+        public ModelBase Model
+        {
+            get
+            {
+                return (ModelBase)ModelTemplate ?? RunningModel;
+            }
+        }
 
-        DateTime runStart;
-        private readonly bool displayAbout = false;
         public MainForm()
         {
             try
@@ -133,8 +138,7 @@ namespace SiliFish.UI
         {
             try
             {
-                ModelBase mb = (ModelBase)ModelTemplate ?? RunningModel;
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", mb.Settings.OutputFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Model.Settings.OutputFolder);
             }
             catch { }
         }
@@ -143,8 +147,7 @@ namespace SiliFish.UI
         {
             try
             {
-                ModelBase mb = (ModelBase)ModelTemplate ?? RunningModel;
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", mb.Settings.TempFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Model.Settings.TempFolder);
             }
             catch { }
         }
@@ -282,7 +285,7 @@ namespace SiliFish.UI
                 pDistinguisherTop.BackColor = pDistinguisherRight.BackColor=pDistinguisherBottom.BackColor
                 = mode == RunMode.Template ? Color.FromArgb(192, 192, 255) :
                 Color.Blue;
-            
+            Text = $"SiliFish [{mode} mode] - {Model.ModelName}";
         }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -295,6 +298,7 @@ namespace SiliFish.UI
                     try
                     {
                         mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
+                        lastFileName = openFileJson.FileName;
                     }
                     catch
                     {
@@ -344,15 +348,16 @@ namespace SiliFish.UI
                     MessageBox.Show(string.Join("\r\n", errors));
                     return false;
                 }
-                if (string.IsNullOrEmpty(saveFileJson.FileName))
+                if (!string.IsNullOrEmpty(lastFileName))
+                    saveFileJson.FileName = lastFileName;
+                else 
                     saveFileJson.FileName = mb.ModelName;
-                else
-                    saveFileJson.InitialDirectory = modelFileDefaultFolder;
+                saveFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
                     ModelFile.Save(saveFileJson.FileName, mb);
-
+                    lastFileName = saveFileJson.FileName;
                     this.Text = $"SiliFish {mb.ModelName}";
                     modelControl.ModelUpdated = false;
                     return true;

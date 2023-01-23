@@ -51,14 +51,14 @@ namespace SiliFish.ModelUnits.Cells
             PositionLeftRight = leftright;
             ColumnIndex2D = template.ColumnIndex2D;
             NumOfCells = template.NumOfCells;
-            XDistribution = (Distribution)template.XDistribution;
-            Y_AngleDistribution = ((Distribution)template.Y_AngleDistribution)?.CreateCopy();
+            XDistribution = template.XDistribution.Clone();
+            Y_AngleDistribution = template.Y_AngleDistribution?.Clone();
             Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
-            Z_RadiusDistribution = (Distribution)template.Z_RadiusDistribution;
+            Z_RadiusDistribution = template.Z_RadiusDistribution.Clone();
             Parameters = template.Parameters;
             PerSomiteOrTotal = template.PerSomiteOrTotal;
             SomiteRange = template.SomiteRange;
-            ConductionVelocity = template.ConductionVelocity?.CreateCopy();
+            ConductionVelocity = template.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(template.TimeLine_ms);
             Cells = new List<Cell>();
             GenerateCells(template, leftright);

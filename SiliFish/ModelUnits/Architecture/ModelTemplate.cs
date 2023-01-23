@@ -1,5 +1,5 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
@@ -176,7 +176,7 @@ namespace SiliFish.ModelUnits.Architecture
 
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
             {
-                cpt.ConductionVelocity ??= new Constant_NoDistribution(CurrentSettings.Settings.cv);
+                cpt.BackwardCompatibility();
             }
         }
 

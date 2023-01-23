@@ -9,11 +9,9 @@
 
         public SpatialDistribution()
         { }
-        public SpatialDistribution(SpatialDistribution sd)
+        public SpatialDistribution Clone()
         {
-            XDistribution = sd.XDistribution.CreateCopy();
-            Y_AngleDistribution = sd.Y_AngleDistribution.CreateCopy();
-            Z_RadiusDistribution = sd.Z_RadiusDistribution.CreateCopy();
+            return (SpatialDistribution)MemberwiseClone();
         }
         public string GetTooltip()
         {

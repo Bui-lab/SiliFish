@@ -66,10 +66,10 @@ namespace SiliFish.ModelUnits.Architecture
             if (swimmingModelTemplate == null) return;
 
             ModelName = swimmingModelTemplate.ModelName;
-            ModelDescription = swimmingModelTemplate.ModelDescription;
-            ModelDimensions = swimmingModelTemplate.ModelDimensions;
-            Settings = swimmingModelTemplate.Settings;
-            KinemParam = swimmingModelTemplate.KinemParam;
+            ModelDescription = $"Generated from {ModelName} on {DateTime.Now:g}\r\n{swimmingModelTemplate.ModelDescription}";
+            ModelDimensions = swimmingModelTemplate.ModelDimensions.Clone();
+            Settings = swimmingModelTemplate.Settings.Clone();
+            KinemParam = swimmingModelTemplate.KinemParam.Clone();
             SetParameters(swimmingModelTemplate.Parameters);
 
             #region Generate pools and cells

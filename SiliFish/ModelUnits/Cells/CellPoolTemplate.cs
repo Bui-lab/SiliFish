@@ -151,11 +151,22 @@ namespace SiliFish.ModelUnits.Cells
             NumOfCells = cpl.NumOfCells;
             PerSomiteOrTotal = cpl.PerSomiteOrTotal;
             SomiteRange = cpl.SomiteRange;
-            SpatialDistribution = new SpatialDistribution(cpl.SpatialDistribution);
-            ConductionVelocity = cpl.ConductionVelocity?.CreateCopy();
+            SpatialDistribution = cpl.SpatialDistribution.Clone();
+            ConductionVelocity = cpl.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
 
+        public void BackwardCompatibility()
+        {
+            ConductionVelocity ??= new Constant_NoDistribution(CurrentSettings.Settings.cv);
+
+            var currentParams = CellCoreUnit.GetParameters(CoreType);
+            foreach(var key in currentParams.Keys ) 
+            {
+                if (!parameters.ContainsKey(key))
+                    parameters.Add(key, currentParams[key]);
+            }
+        }
         public virtual CellPoolTemplate CreateCopy()
         {
             throw new NotImplementedException();

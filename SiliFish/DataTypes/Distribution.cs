@@ -74,9 +74,9 @@ namespace SiliFish.DataTypes
             distType = GetType().Name;
             //default values of 0 and 999 used
         }
-        public virtual Distribution CreateCopy()
+        public Distribution Clone()
         {
-            throw new NotImplementedException();
+            return (Distribution)this.MemberwiseClone();
         }
         public Distribution(double rangeStart, double rangeEnd, bool absolute, bool angular)
         {
@@ -174,10 +174,6 @@ namespace SiliFish.DataTypes
         {
         }
 
-        public override Distribution CreateCopy()
-        {
-            return new UniformDistribution(RangeStart, RangeEnd, Absolute, Angular);
-        }
     }
 
     public class Constant_NoDistribution : Distribution
@@ -206,10 +202,6 @@ namespace SiliFish.DataTypes
             NoiseStdDev = noiseStdDev;
         }
 
-        public override Distribution CreateCopy()
-        {
-            return new Constant_NoDistribution(RangeStart, Absolute, Angular, NoiseStdDev);
-        }
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
@@ -243,11 +235,6 @@ namespace SiliFish.DataTypes
         {
             NoiseMean = noisemean;
             NoiseStdDev = noiseStdDev;
-        }
-
-        public override Distribution CreateCopy()
-        {
-            return new SpacedDistribution(RangeStart, RangeEnd, NoiseMean, NoiseStdDev, Absolute, Angular);
         }
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
@@ -291,10 +278,6 @@ namespace SiliFish.DataTypes
             Stddev = stddev;
         }
 
-        public override Distribution CreateCopy()
-        {
-            return new GaussianDistribution(RangeStart, RangeEnd, Mean, Stddev, Absolute, Angular);
-        }
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = Absolute ? 100 : double.Parse(range.ToString());
@@ -338,10 +321,6 @@ namespace SiliFish.DataTypes
             Mode1Weight = mode1Weight;
         }
 
-        public override Distribution CreateCopy()
-        {
-            return new BimodalDistribution(RangeStart, RangeEnd, Mean, Stddev, Mean2, Stddev2, Mode1Weight, Absolute, Angular);
-        }
         public override double[] GenerateNNumbers(int n, double range, bool ordered)//TODO use ordered
         {
             Range = Absolute ? 100 : range;

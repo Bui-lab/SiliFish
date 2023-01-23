@@ -23,10 +23,10 @@ namespace SiliFish.ModelUnits.Parameters
         [Description("Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Conversion Coef"), Category("Animation")]
         public double ConvCoef { get; set; } = 0.1;
 
-        [Description("The distance considered as a move from the center line."), DisplayName("Boundary"), Category("Animation")]
+        [Description("The distance considered as a move from the center line."), DisplayName("Boundary"), Category("Swim Statistics")]
         public double Boundary { get; set; } = 0.5;
 
-        [Description("The time range that will be looked ahead to detect motion."), DisplayName("Delay"), Category("Animation")]
+        [Description("The time range that will be looked ahead to detect motion."), DisplayName("Delay"), Category("Swim Statistics")]
         public int Delay { get; set; } = 1000;
 
         [Description("In ms. The duration required considered to be a burst break."), DisplayName("Burst Break"), Category("MN based kinematics")]
@@ -35,7 +35,12 @@ namespace SiliFish.ModelUnits.Parameters
         [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("MN based kinematics")]
         public int EpisodeBreak { get; set; } = 100;
 
+        public KinemParam() { }
 
+        public KinemParam Clone()
+        {
+            return (KinemParam)MemberwiseClone();
+        }
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || !paramExternal.Keys.Any(k => k.StartsWith("Kinematics.")))

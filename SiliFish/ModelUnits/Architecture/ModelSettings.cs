@@ -1,4 +1,5 @@
-﻿using SiliFish.DynamicUnits;
+﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
@@ -7,32 +8,32 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.Definitions
+namespace SiliFish.ModelUnits.Architecture
 {
     public class CurrentSettings
     {
-        public static Settings Settings = new();
+        public static ModelSettings Settings = new();
     }
-    public class Settings
+    public class ModelSettings
     {
-        [Browsable(false), 
+        [Browsable(false),
             Description("Folder that temporary files are saved under. Will be cleared after the program exits."),
             DisplayName("Temporary Folder"),
             Category("Folder")]
         public string TempFolder { get; set; }
 
 
-        [Browsable(false), 
+        [Browsable(false),
             Description("The default folder that output files are saved under."),
             DisplayName("Output Folder"),
             Category("Folder")]
         public string OutputFolder { get; set; }
 
-       
+
         [Category("Constant values")]
         public UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;//Used from data structures that don't have direct access to the model
-        
-        [Description("Valid for all parameters."), 
+
+        [Description("Valid for all parameters."),
             DisplayName("Suggested Min Value"),
             Category("Genetic Algorithm")]
         public double GeneticAlgorithmMinValue { get; set; } = -100;
@@ -66,11 +67,11 @@ namespace SiliFish.Definitions
 
 
 
-        [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"), 
-            DisplayName ("Chattering Irregularity"),
+        [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"),
+            DisplayName("Chattering Irregularity"),
             Category("Dynamics")]
         public double ChatteringIrregularity { get; set; } = 0.1;
-        
+
         [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
             "Used if the interval within spikes are not increasing with time."),
             DisplayName("Max Burst Interval - no spread"),
@@ -85,16 +86,20 @@ namespace SiliFish.Definitions
 
 
         [Description("Centroid2 (average duration between bursts) < Centroid1 (average duration between spikes) * OneClusterMultiplier " +
-            "means there is only one cluster (all spikes are part of a burst)"), 
+            "means there is only one cluster (all spikes are part of a burst)"),
             DisplayName("One Cluster Multiplier"),
             Category("Dynamics")]
         public double OneClusterMultiplier { get; set; } = 2;
 
-        [Description("In ms, the range between the last spike and the end of current to be considered as tonic firing"), 
+        [Description("In ms, the range between the last spike and the end of current to be considered as tonic firing"),
             DisplayName("Tonic Padding"),
             Category("Dynamics")]
         public double TonicPadding { get; set; } = 1;
 
+        public ModelSettings Clone()
+        {
+            return (ModelSettings)MemberwiseClone();
+        }
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {
             if (string.IsNullOrEmpty(TempFolder))

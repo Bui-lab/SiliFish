@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Parameters
 {
-    public class RunParam
+    public struct RunParam
     {
         public int tSkip_ms { get; set; } = 0;
         public int tMax { get; set; } = 1000;

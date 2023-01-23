@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using System.ComponentModel;
 using static SiliFish.UI.Controls.DynamicsTestControl;
@@ -12,7 +13,7 @@ namespace SiliFish.UI.Controls
     public partial class CellPoolControl : UserControl
     {
         private static string coreUnitFileDefaultFolder;
-        private Settings settings;
+        private ModelSettings settings;
         
         public event EventHandler SavePool;
         public event EventHandler LoadPool;
@@ -41,7 +42,7 @@ namespace SiliFish.UI.Controls
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
-        public CellPoolControl(bool somiteBased, Settings settings)
+        public CellPoolControl(bool somiteBased, ModelSettings settings)
         {
             InitializeComponent();
             this.settings = settings;

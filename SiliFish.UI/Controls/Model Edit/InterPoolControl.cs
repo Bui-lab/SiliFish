@@ -12,7 +12,7 @@ namespace SiliFish.UI.Controls
         private event EventHandler interPoolChanged;
         public event EventHandler InterPoolChanged { add => interPoolChanged += value; remove => interPoolChanged -= value; }
 
-        private Settings settings;
+        private ModelSettings settings;
         private bool autoGenerateName = true;
         private InterPoolTemplate interPoolTemplate;
         private Dictionary<string, object> Parameters;
@@ -24,7 +24,7 @@ namespace SiliFish.UI.Controls
                 "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
-        public InterPoolControl(bool somiteBased, Settings settings)
+        public InterPoolControl(bool somiteBased, ModelSettings settings)
         {
             InitializeComponent();
             SomiteBased = somiteBased;

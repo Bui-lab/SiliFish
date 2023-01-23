@@ -37,6 +37,10 @@ namespace SiliFish.ModelUnits.Architecture
         [DisplayName("Dorsal-Ventral"), Category("Musculo-Skeletal")]
         public double BodyDorsalVentralDistance { get; set; }
 
+        public ModelDimensions Clone()
+        {
+            return (ModelDimensions) MemberwiseClone();
+        }
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {
             if (paramExternal == null || !paramExternal.Keys.Any(k => k.StartsWith("General.")))

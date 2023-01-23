@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.ModelUnits.Architecture;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,14 +11,19 @@ namespace SiliFish.Definitions
 {
     public class GlobalSettings
     {
+        [Description("The maximum value between two numbers to consider them equal."), Category("Const")]
         public static double Epsilon = 0.00001;
 
-        [Description(""), DisplayName("Number Format"), Category("Plotting")]
+        [Description("The format used on charts. Useful to shorten numbers with high number of digitals."), 
+            DisplayName("Number Format"), 
+            Category("Plotting")]
         public static string DecimalPointFormat { get; set; } = "0.0###";
+
         [Description("In ms. The duration used to calculate rheobase values."),
             DisplayName("Rheobase Infinity"),
             Category("Dynamics")]
         public static int RheobaseInfinity { get; set; } = 500;
+        
         [Description("The rheobase multipliers displayed on 'Test Dynamics' user interface."),
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]
@@ -26,6 +32,10 @@ namespace SiliFish.Definitions
         [JsonIgnore, Browsable(false)]
         public static List<string> TempFiles = new();
 
+        public GlobalSettings Clone()
+        {
+            return (GlobalSettings)MemberwiseClone();
+        }
     }
 
 }
