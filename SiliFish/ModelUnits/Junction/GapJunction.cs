@@ -49,7 +49,7 @@ namespace SiliFish.ModelUnits.Junction
             if (c1.ConductionVelocity < GlobalSettings.Epsilon)
                 Duration = int.MaxValue;
             else
-                Duration = Math.Max((int)(distance / (c1.ConductionVelocity * Cell1.Model.RunParam.dt)), 1);
+                Duration = Math.Max((int)(distance / (c1.ConductionVelocity * Cell1.Model.RunParam.DeltaT)), 1);
         }
 
         public void LinkObjects(RunningModel model)
@@ -75,7 +75,7 @@ namespace SiliFish.ModelUnits.Junction
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / Cell1.Model.RunParam.dt);
+            Delay = (int)(delay / Cell1.Model.RunParam.DeltaT);
         }
         public void SetTimeSpan(TimeLine span)
         {

@@ -42,14 +42,14 @@ namespace SiliFish.ModelUnits.Junction
         { }
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
         {
-            Core = new TwoExp_syn(param, conductance, preN.Model.RunParam.dt, preN.Model.RunParam.dtEuler);
+            Core = new TwoExp_syn(param, conductance, preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
             PreNeuron = preN;
             PostCell = postN;
             double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, distmode);
             if (preN.ConductionVelocity < GlobalSettings.Epsilon)
                 Duration = int.MaxValue;
             else
-                Duration = Math.Max((int)(distance / (preN.ConductionVelocity * preN.Model.RunParam.dt)), 1);
+                Duration = Math.Max((int)(distance / (preN.ConductionVelocity * preN.Model.RunParam.DeltaT)), 1);
         }
 
         public void LinkObjects(RunningModel model)
@@ -60,8 +60,8 @@ namespace SiliFish.ModelUnits.Junction
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
-            Core.DeltaTEuler = model.RunParam.dtEuler;
-            Core.DeltaT = model.RunParam.dt;
+            Core.DeltaTEuler = model.RunParam.DeltaTEuler;
+            Core.DeltaT = model.RunParam.DeltaT;
         }
         public override string ToString()
         {
@@ -76,11 +76,11 @@ namespace SiliFish.ModelUnits.Junction
 
         public void SetFixedDuration(double dur)
         {
-            Duration = (int)(dur / PreNeuron.Model.RunParam.dt);
+            Duration = (int)(dur / PreNeuron.Model.RunParam.DeltaT);
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / PreNeuron.Model.RunParam.dt);
+            Delay = (int)(delay / PreNeuron.Model.RunParam.DeltaT);
         }
         public void SetTimeLine(TimeLine span)
         {

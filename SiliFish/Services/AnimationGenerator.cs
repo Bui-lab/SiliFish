@@ -117,9 +117,9 @@ namespace SiliFish.Services
             if (model == null || !model.ModelRun)
                 return null;
 
-            int tMax = model.RunParam.tMax;
-            int tSkip = model.RunParam.tSkip_ms;
-            double dt = model.RunParam.dt;
+            int tMax = model.RunParam.MaxTime;
+            int tSkip = model.RunParam.SkipDuration;
+            double dt = model.RunParam.DeltaT;
 
             if (tEnd < tStart || tEnd > tMax)
                 tEnd = tMax;

@@ -28,8 +28,7 @@ namespace SiliFish.ModelUnits.Architecture
                 CurrentSettings.Settings = settings = value;
             }
         }
-        [JsonPropertyOrder(2)]
-        public RunParam RunParam { get; set; } = new();
+
         [JsonPropertyOrder(2)]
         public KinemParam KinemParam { get; set; } = new();
 
@@ -39,17 +38,6 @@ namespace SiliFish.ModelUnits.Architecture
         public ModelBase()
         {
         }
-        public ModelBase(ModelBase modelBase)
-        {
-            ModelName = modelBase.ModelName;
-            ModelDescription = modelBase.ModelDescription;
-            ModelDimensions = modelBase.ModelDimensions;
-            RunParam = modelBase.RunParam;
-            KinemParam= modelBase.KinemParam;
-            Settings= modelBase.Settings;
-            Parameters = modelBase.Parameters;
-        }
-
 
         public virtual bool CheckValues(out List<string> errors) 
         {

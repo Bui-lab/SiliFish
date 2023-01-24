@@ -63,10 +63,10 @@ namespace SiliFish.ModelUnits.Stim
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeLine_ms.End / TargetCell.Model.RunParam.dt);
+            iEnd = (int)(TimeLine_ms.End / TargetCell.Model.RunParam.DeltaT);
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeLine_ms.Start / TargetCell.Model.RunParam.dt);
+            iStart = (int)(TimeLine_ms.Start / TargetCell.Model.RunParam.DeltaT);
             if (Settings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (Settings.Value2 - Settings.Value1) / (iEnd - iStart);

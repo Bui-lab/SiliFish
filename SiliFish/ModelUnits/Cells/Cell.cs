@@ -120,7 +120,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCoreUnit.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.dt, Model.RunParam.dtEuler);
+            Core = CellCoreUnit.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.DeltaT, Model.RunParam.DeltaTEuler);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;

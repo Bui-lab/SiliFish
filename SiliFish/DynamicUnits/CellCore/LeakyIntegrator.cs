@@ -123,12 +123,12 @@ namespace SiliFish.DynamicUnits
         {
             double I = Stim;
             double dtTracker = 0;
-            while (dtTracker < dt_run)
+            while (dtTracker < deltaT)
             {
-                dtTracker += dt_euler;
+                dtTracker += deltaTEuler;
                 // ODE eqs
                 double dv = (-1 / (R * C)) * (V - Vr) + I / C;
-                double vNew = V + dv * dt_euler;
+                double vNew = V + dv * deltaTEuler;
                 V = vNew;
                 if (V >= Vmax) V = Vmax;
             }
@@ -137,7 +137,7 @@ namespace SiliFish.DynamicUnits
         public override DynamicsStats SolveODE(double[] I)
         {
             int iMax = I.Length;
-            DynamicsStats dyn = new(I, dt_run);
+            DynamicsStats dyn = new(I, deltaT);
             dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
             double[] tensionList = dyn.SecLists["Rel. Tension"];
             bool spike = false;

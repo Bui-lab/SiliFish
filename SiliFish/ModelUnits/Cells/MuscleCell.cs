@@ -49,7 +49,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCoreUnit.CreateCore(coreType, cellParams, model.RunParam.dt, model.RunParam.dtEuler);
+            Core = CellCoreUnit.CreateCore(coreType, cellParams, model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
             ConductionVelocity = cv;

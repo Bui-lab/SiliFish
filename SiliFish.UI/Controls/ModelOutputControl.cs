@@ -82,12 +82,12 @@ namespace SiliFish.UI.Controls
 
         public void CompleteRun()
         {
-            decimal dt = (decimal)RunningModel.RunParam.dt;
+            decimal dt = (decimal)RunningModel.RunParam.DeltaT;
             eAnimationdt.Minimum = dt;
             eAnimationdt.Increment = dt;
             eAnimationdt.Value = 10 * dt;
 
-            decimal tMax = (decimal)RunningModel.RunParam.tMax;
+            decimal tMax = (decimal)RunningModel.RunParam.MaxTime;
             ePlotEnd.Value = tMax;
             eAnimationEnd.Value = tMax;
 
@@ -335,8 +335,8 @@ namespace SiliFish.UI.Controls
 
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > RunningModel.RunParam.tMax)
-                tPlotEnd = RunningModel.RunParam.tMax;
+            if (tPlotEnd > RunningModel.RunParam.MaxTime)
+                tPlotEnd = RunningModel.RunParam.MaxTime;
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -728,11 +728,11 @@ namespace SiliFish.UI.Controls
 
             tAnimStart = (int)eAnimationStart.Value;
             tAnimEnd = (int)eAnimationEnd.Value;
-            if (tAnimStart > RunningModel.RunParam.tMax || tAnimStart < 0)
+            if (tAnimStart > RunningModel.RunParam.MaxTime || tAnimStart < 0)
                 tAnimStart = 0;
-            if (tAnimEnd > RunningModel.RunParam.tMax)
-                tAnimEnd = RunningModel.RunParam.tMax;
-            double dt = RunningModel.RunParam.dt;
+            if (tAnimEnd > RunningModel.RunParam.MaxTime)
+                tAnimEnd = RunningModel.RunParam.MaxTime;
+            double dt = RunningModel.RunParam.DeltaT;
             lastAnimationStartIndex = (int)(tAnimStart / dt);
             int lastAnimationEndIndex = (int)(tAnimEnd / dt);
             lastAnimationTimeArray = RunningModel.TimeArray;

@@ -23,7 +23,7 @@ namespace SiliFish.DynamicUnits
         .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
 
-        protected double dt_run, dt_euler;
+        protected double deltaT, deltaTEuler;
 
         //the resting membrane potential
         public double Vr = -70;
@@ -65,11 +65,12 @@ namespace SiliFish.DynamicUnits
         {
             return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
         }
+
         public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double dt_run, double dt_euler)
         {
             CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
-            core.dt_euler = dt_euler;
-            core.dt_run = dt_run;
+            core.deltaTEuler = dt_euler;
+            core.deltaT = dt_run;
             return core;
         }
 
@@ -94,7 +95,12 @@ namespace SiliFish.DynamicUnits
         {
             parametersObsolete = paramExternal;
         }
-
+        public virtual void Initialize(double deltaT, double deltaTEuler)
+        {
+            this.deltaT = deltaT;
+            this.deltaTEuler = deltaTEuler;
+            Initialize();
+        }
         protected virtual void Initialize()
         {
             throw new NotImplementedException();

@@ -9,13 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells
 {
     public class CellPool: CellPoolTemplate
     {
-        public static Func<double> gapWeightNoiseMultiplier;
+        public static Func<double> gapWeightNoiseMultiplier;//TODO incorporate noise
         public static Func<double> synWeightNoiseMultiplier;
         public static Func<double> rangeNoiseMultiplier;
 
@@ -23,8 +24,20 @@ namespace SiliFish.ModelUnits.Cells
 
         [JsonPropertyOrder(2)]
         public List<Cell> Cells { get; set; }
-        
 
+        public override bool Active
+        {
+            get => base.Active;
+            set
+            {
+                if (Cells != null)
+                {
+                    foreach (Cell c in Cells)
+                        c.Active = value;
+                }
+                base.Active = value;
+            }
+        }
         public CellPool()
         {
             Cells = new List<Cell>();
@@ -55,11 +68,12 @@ namespace SiliFish.ModelUnits.Cells
             Y_AngleDistribution = template.Y_AngleDistribution?.Clone();
             Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
             Z_RadiusDistribution = template.Z_RadiusDistribution.Clone();
-            Parameters = template.Parameters;
+            Parameters = template.Parameters.ToDictionary(entry => entry.Key, entry => entry.Value);
             PerSomiteOrTotal = template.PerSomiteOrTotal;
             SomiteRange = template.SomiteRange;
             ConductionVelocity = template.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(template.TimeLine_ms);
+            Active = template.Active;
             Cells = new List<Cell>();
             GenerateCells(template, leftright);
         }
@@ -300,21 +314,6 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public void FormKernel(double weight)
-        {
-            foreach (Neuron ic in GetCells().Cast<Neuron>())
-            {
-                //IC to IC kernel junctions
-                foreach (Neuron ic2 in GetCells().Where(c => c.Sequence > ic.Sequence).Cast<Neuron>()) //sequence check is added to prevent recursive or self junctions
-                {
-                    //no distance check as ICs form a kernel
-                    double mult = 1;
-                    if (CellPool.gapWeightNoiseMultiplier != null)
-                        mult = gapWeightNoiseMultiplier();
-                    ic.CreateGapJunction(ic2, weight * mult, DistanceMode.Euclidean);
-                }
-            }
-        }
         public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probability, DistanceMode distanceMode)
         {
             foreach (Cell pre in this.GetCells())

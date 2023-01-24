@@ -34,7 +34,7 @@ namespace SiliFish.DataTypes
         /// </summary>
         public double RangeEnd { get; set; } = 100;
         /// <summary>
-        /// Obsolote is Absolute is set to true
+        /// Obsolote if Absolute is set to true
         /// </summary>
         public double Range { get; set; } = 0;
 

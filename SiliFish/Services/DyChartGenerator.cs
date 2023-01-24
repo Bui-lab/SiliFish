@@ -134,9 +134,9 @@ namespace SiliFish.Services
         public static string PlotSummaryMembranePotentials(RunningModel model, List<Cell> Cells,
             int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
         {
-            double dt = model.RunParam.dt;
-            int iStart = (int)((tStart + model.RunParam.tSkip_ms) / dt);
-            int iEnd = (int)((tEnd + model.RunParam.tSkip_ms) / dt);
+            double dt = model.RunParam.DeltaT;
+            int iStart = (int)((tStart + model.RunParam.SkipDuration) / dt);
+            int iEnd = (int)((tEnd + model.RunParam.SkipDuration) / dt);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;
 

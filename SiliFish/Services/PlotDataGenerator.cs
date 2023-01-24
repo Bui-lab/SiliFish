@@ -409,10 +409,10 @@ namespace SiliFish.Services
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
-            double dt = model.RunParam.dt;
-            int tSkip = model.RunParam.tSkip_ms;
+            double dt = model.RunParam.DeltaT;
+            int tSkip = model.RunParam.SkipDuration;
             int iStart = (int)((tStart + tSkip) / dt);
-            if (tEnd < 0) tEnd = model.RunParam.tMax;
+            if (tEnd < 0) tEnd = model.RunParam.MaxTime;
             int iEnd = (int)((tEnd + tSkip) / dt);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;

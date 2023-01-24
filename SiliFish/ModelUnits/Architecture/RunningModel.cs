@@ -19,7 +19,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Architecture
 {
-    public class RunningModel: ModelBase
+    public class RunningModel : ModelBase
     {
         public static Random rand = new(0);
 
@@ -35,6 +35,9 @@ namespace SiliFish.ModelUnits.Architecture
 
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
+
+        [JsonPropertyOrder(2)]
+        public RunParam RunParam { get; set; } = new();
 
         [JsonIgnore]
         [Browsable(false)]
@@ -60,7 +63,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             neuronPools.Clear();
             musclePools.Clear();
-            
+
             initialized = false;
 
             if (swimmingModelTemplate == null) return;
@@ -200,16 +203,16 @@ namespace SiliFish.ModelUnits.Architecture
                 return MNs.Distinct().ToList();
             }
         }
-        
+
         /// <summary>
         /// Brings a summary of gap junctions between cell pools
         /// </summary>
-        [JsonIgnore]        
-        public List<InterPool> GapPoolConnections 
-        { 
-            get 
-            { 
-                List<InterPool> interPools= new List<InterPool>();
+        [JsonIgnore]
+        public List<InterPool> GapPoolConnections
+        {
+            get
+            {
+                List<InterPool> interPools = new List<InterPool>();
                 foreach (CellPool sourcePool in CellPools)
                 {
                     string source = sourcePool.ID;
@@ -234,7 +237,7 @@ namespace SiliFish.ModelUnits.Architecture
                     }
                 }
                 return interPools;
-            } 
+            }
         }
 
         /// <summary>
@@ -286,7 +289,7 @@ namespace SiliFish.ModelUnits.Architecture
                                                 || NumberOfSomites <= 0 && c.Sequence > maxSeq))
                                 .ToList();
             List<Cell> rightMNs = motoNeurons
-                                .Where(c => c.PositionLeftRight == SagittalPlane.Right && 
+                                .Where(c => c.PositionLeftRight == SagittalPlane.Right &&
                                         (NumberOfSomites > 0 && c.Somite > maxSeq
                                                 || NumberOfSomites <= 0 && c.Sequence > maxSeq))
                                 .ToList();
@@ -302,9 +305,9 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public override List<CellPoolTemplate> GetCellPools() 
-        { 
-            return CellPools.Select(cp=>(CellPoolTemplate)cp).ToList(); 
+        public override List<CellPoolTemplate> GetCellPools()
+        {
+            return CellPools.Select(cp => (CellPoolTemplate)cp).ToList();
         }
         public override bool AddCellPool(CellPoolTemplate cellPool)
         {
@@ -348,7 +351,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public override List<StimulusBase> GetStimuli()
         {
-            List<StimulusBase> listStimuli= new();
+            List<StimulusBase> listStimuli = new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)
@@ -528,6 +531,13 @@ namespace SiliFish.ModelUnits.Architecture
         {
             this.Time = new double[nmax];
             InitDataVectors(nmax);
+            foreach (CellPool cp in GetCellPools())
+            {
+                foreach (Cell c in cp.Cells)
+                {
+                    c.Core.Initialize(RunParam.DeltaT, RunParam.DeltaTEuler);
+                }
+            }
             if (!neuronPools.Any(p => p.GetCells().Any()) &&
                 !musclePools.Any(p => p.GetCells().Any()))
                 return;
@@ -593,7 +603,7 @@ namespace SiliFish.ModelUnits.Architecture
                 if (!initialized)
                     return;
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
-                Time[0] = Math.Round((double)-1 * RunParam.tSkip_ms, 2);
+                Time[0] = Math.Round((double)-1 * RunParam.SkipDuration, 2);
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;

@@ -277,8 +277,8 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             UnitOfMeasure uom = model.Settings.UoM;
-            double dt = model.RunParam.dt;
-            int tSkip = model.RunParam.tSkip_ms;
+            double dt = model.RunParam.DeltaT;
+            int tSkip = model.RunParam.SkipDuration;
             int iStart = (int)((tStart + tSkip) / dt);
             if (tEnd < 0)
                 tEnd = (int)model.TimeArray.Last();

@@ -67,7 +67,11 @@ namespace SiliFish.UI
                 ModelTemplate = null;
                 RunningModel = model;
                 modelControl.SetModel(model);
-                modelOutputControl.SetRunningModel(model);
+                modelOutputControl.SetRunningModel(model);//TODO cleanup the below code
+                edt.Value = (decimal)model.RunParam.DeltaT;
+                edtEuler.Value = (decimal)model.RunParam.DeltaTEuler;
+                eSkip.Value = (decimal)model.RunParam.SkipDuration;
+                eTimeEnd.Value = (decimal)model.RunParam.MaxTime;
                 SetCurrentMode(RunMode.RunningModel);
                 CurrentSettings.Settings = RunningModel.Settings;
                 if (!Directory.Exists(RunningModel.Settings.TempFolder))
@@ -236,10 +240,10 @@ namespace SiliFish.UI
             if (RunningModel == null) return;
             RunningModel.RunParam = new()
             {
-                tSkip_ms = (int)eSkip.Value,
-                tMax = (int)eTimeEnd.Value,
-                dt = (double)edt.Value,
-                dtEuler = (double)edtEuler.Value
+                SkipDuration = (int)eSkip.Value,
+                MaxTime = (int)eTimeEnd.Value,
+                DeltaT = (double)edt.Value,
+                DeltaTEuler = (double)edtEuler.Value
             };
             btnRun.Text = "Stop Run";
             Task.Run(RunModel);

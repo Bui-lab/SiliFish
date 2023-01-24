@@ -26,7 +26,7 @@ namespace SiliFish.Services
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = model.RunParam.dt;
+            double dt = model.RunParam.DeltaT;
             int k = 0;
 
             double kinemAlpha = model.KinemParam.Alpha;
@@ -75,7 +75,7 @@ namespace SiliFish.Services
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = model.RunParam.dt;
+            double dt = model.RunParam.DeltaT;
 
             double kinemAlpha = model.KinemParam.Alpha;
             double kinemBeta = model.KinemParam.Beta;
@@ -180,8 +180,8 @@ namespace SiliFish.Services
             const int LEFT = -1;
             const int RIGHT = 1;
             int nMax = model.TimeArray.Length;
-            double dt = model.RunParam.dt;
-            double offset = model.RunParam.tSkip_ms;
+            double dt = model.RunParam.DeltaT;
+            double offset = model.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.Delay / dt);
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
@@ -244,7 +244,7 @@ namespace SiliFish.Services
             double episodeBreak=model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();
-            int iSkip = (int)(model.RunParam.tSkip_ms / model.RunParam.dt);
+            int iSkip = (int)(model.RunParam.SkipDuration / model.RunParam.DeltaT);
             foreach (Cell c in leftMNs)
                 leftSpikes.AddRange(c.GetSpikeIndices(iSkip));
             foreach (Cell c in rightMNs)
