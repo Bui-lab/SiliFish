@@ -197,7 +197,6 @@
             this.tabOutputs.SelectedIndex = 0;
             this.tabOutputs.Size = new System.Drawing.Size(702, 795);
             this.tabOutputs.TabIndex = 2;
-            this.tabOutputs.Click += new System.EventHandler(this.btnGenerate3DModel_Click);
             // 
             // tPlot
             // 
@@ -1055,6 +1054,7 @@
             this.btnGenerate3DModel.TabIndex = 26;
             this.btnGenerate3DModel.Text = "Generate 3D Model";
             this.btnGenerate3DModel.UseVisualStyleBackColor = false;
+            this.btnGenerate3DModel.Click += new System.EventHandler(this.btnGenerate3DModel_Click);
             // 
             // tMNKinematics
             // 

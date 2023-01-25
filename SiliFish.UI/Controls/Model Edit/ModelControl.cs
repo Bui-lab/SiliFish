@@ -825,6 +825,7 @@ namespace SiliFish.UI.Controls
                 mb.BackwardCompatibility();
                 mb.LinkObjects();//TODO review where you are calling LinkObjects from. may need to group these functions
                 SetModel(mb, clearJson: false);
+                ModelIsUpdated();
                 MessageBox.Show("Updated JSON is loaded.");
             }
             catch (JsonException exc)
