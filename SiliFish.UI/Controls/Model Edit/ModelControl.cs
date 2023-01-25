@@ -182,6 +182,7 @@ namespace SiliFish.UI.Controls
             Model = model;
             CurrentMode = Model is ModelTemplate ? RunMode.Template : RunMode.RunningModel;
             splitCellPools.Panel2Collapsed = CurrentMode == RunMode.Template;
+            propModelDimensions.Enabled = propSettings.Enabled = CurrentMode == RunMode.Template;
             LoadModel();
             modelUpdated = false;
             if (clearJson)
@@ -239,7 +240,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                MessageBox.Show("Under implementation.", "Model Edit");
+                MessageBox.Show("Implementation in progress.", "Model Edit");
                 //MODEL EDIT 
             }
             return null;
@@ -262,7 +263,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listCellPool_AddItem(object sender, EventArgs e)
+        private void listCellPools_AddItem(object sender, EventArgs e)
         {
             CellPoolTemplate newPool = OpenCellPoolDialog(CurrentMode == RunMode.RunningModel ? new CellPool() : new CellPoolTemplate());
             if (newPool != null)
@@ -281,11 +282,10 @@ namespace SiliFish.UI.Controls
                 SelectedPool = pool;
                 SelectedCell = null;
                 LoadProjections(pool);
-                foreach (Cell c in pool.GetCells())
-                    listCells.AppendItem(c);
+                LoadCells();
             }
         }
-        private void listCellPool_CopyItem(object sender, EventArgs e)
+        private void listCellPools_CopyItem(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem is not CellPoolTemplate pool) return;
             CellPoolTemplate poolDuplicate = pool.CreateCopy();
@@ -305,11 +305,11 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();    
             }
         }
-        private void listCellPool_DeleteItem(object sender, EventArgs e)
+        private void listCellPools_DeleteItem(object sender, EventArgs e)
         {
             if (listCellPools.SelectedIndex >= 0)
             {
-                string msg = "Deleting a cell pool will remove all of its conections and applied stimuli as well. Do you want to continue?";
+                string msg = "Deleting a cell pool will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
                     CellPoolTemplate cpl = (CellPoolTemplate)listCellPools.SelectedItem;
@@ -321,7 +321,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private void listCellPool_ViewItem(object sender, EventArgs e)
+        private void listCellPools_ViewItem(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem == null)
                 return;
@@ -340,16 +340,56 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-
-        private void listCellPool_ActivateItem(object sender, EventArgs e)
+        private void listCellPools_ActivateItem(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
-
         private void listCellPool_SortItems(object sender, EventArgs e)
         {
             Model.SortCellPools();
             LoadPools();
+        }
+
+        private void LoadCells()
+        {
+            listCells.ClearItems();
+            if (SelectedPool == null) return;
+            foreach (Cell c in SelectedPool.GetCells())
+                listCells.AppendItem(c);
+            SelectedCell = null;
+        }
+        private Cell OpenCellDialog(Cell cell)
+        {
+            if (Model == null) return null;
+            if (CurrentMode == RunMode.Template) return null;
+            MessageBox.Show("Implementation in progress.", "Model Edit");
+            //MODEL EDIT 
+            /*
+            ControlContainer frmControl = new();
+            CellControl cc = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
+
+            cell.CellBase = cell;
+            frmControl.AddControl(cc);
+            frmControl.Text = cell?.ToString() ?? "New Cell";
+
+            if (frmControl.ShowDialog() == DialogResult.OK)
+                return cc.CellBase;*/
+            return null;
+        }
+
+        private void listCell_AddItem(object sender, EventArgs e)
+        {
+            if (SelectedPool == null) return;
+            //MODEL EDIT
+
+            Cell newCell = OpenCellDialog(null);// new Cell());
+            /*
+            if (newCell != null)
+            {
+                SelectedPool.AddCell(newCell);
+                listCells.AppendItem(newCell);
+                ModelIsUpdated();
+            }*/
         }
 
         private void listCells_SelectItem(object sender, EventArgs e)
@@ -360,6 +400,70 @@ namespace SiliFish.UI.Controls
                 SelectedCell = cell;
                 LoadProjections(cell);
             }
+        }
+
+        private void listCells_CopyItem(object sender, EventArgs e)
+        {
+            if (listCells.SelectedItem is not Cell cell) return;
+            //MODEL EDIT
+            /*Cell cellDuplicate = cell.CreateCopy();
+            cellDuplicate.Sequence = cell.CellPool.GetCells().Max(c=>c.Sequence) + 1; //TODO getMaxSeq
+            cellDuplicate = OpenCellDialog(cellDuplicate);
+            while (Model.GetCellPools().Any(p => p.CellGroup == cellDuplicate?.CellGroup))
+            {
+                MessageBox.Show("Cell pool group names have to be unique. Please enter a different name.");
+                cellDuplicate = OpenCellPoolDialog(cellDuplicate);
+            }
+            if (cellDuplicate != null)
+            {
+                cell.CellPool.AddCell(cellDuplicate);
+                Model.CopyConnectionsOfCell(cell, cellDuplicate);
+                listCells.AppendItem(cellDuplicate);
+                LoadProjections();
+                ModelIsUpdated();
+            }*/
+        }
+        private void listCells_DeleteItem(object sender, EventArgs e)
+        {
+            //MODEL EDIT
+            /*if (listCells.SelectedIndex >= 0)
+            {
+                string msg = "Deleting a cell will remove all of its connections and applied stimuli as well. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    Cell cell = (Cell)listCells.SelectedItem;
+                    cell.CellPool.RemoveCell(cell);
+                    listCells.RemoveItemAt(listCells.SelectedIndex);
+                    LoadProjections();
+                    LoadStimuli();
+                    ModelIsUpdated();
+                }
+            }*/
+        }
+        private void listCells_ViewItem(object sender, EventArgs e)
+        {
+            if (listCells.SelectedItem == null)
+                return;
+            if (listCells.SelectedItem is not Cell cell) return;
+            //MODEL EDIT
+            /*
+            int oldSeq = cell.Sequence;
+            cell = OpenCellDialog(cell); //check modeltemplate's list
+            if (cell != null)
+            {
+                ModelIsUpdated();
+                int ind = listCells.SelectedIndex;
+                listCells.RefreshItem(ind, cell);
+                if (oldSeq != cell.Sequence)
+                {
+                   //check seq uniqueness
+                    LoadProjections();
+                }
+            }*/
+        }
+        private void listCell_ActivateItem(object sender, EventArgs e)
+        {
+            ModelIsUpdated();
         }
 
         #endregion
@@ -443,7 +547,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                MessageBox.Show("Under implementation.", "Model Edit");
+                MessageBox.Show("Implementation in progress.", "Model Edit");
                 //MODEL EDIT JunctionControl jncControl = new();
             }
             return null;
@@ -477,7 +581,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                MessageBox.Show("Under implementation.", "Model Edit");
+                MessageBox.Show("Implementation in progress.", "Model Edit");
                 //MODEL EDIT JunctionControl jncControl = new();
             }
         }
@@ -593,7 +697,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                MessageBox.Show("Under implementation.", "Model Edit");
+                MessageBox.Show("Implementation in progress.", "Model Edit");
                 //MODEL EDIT 
             }
             return null;

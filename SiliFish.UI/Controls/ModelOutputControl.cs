@@ -305,7 +305,7 @@ namespace SiliFish.UI.Controls
             ddPlotPools.Text = "";
             if (RunningModel == null || !RunningModel.CellPools.Any()) return;
             List<string> itemList = new();
-            itemList.AddRange(RunningModel.CellPools.Select(p => p.CellGroup).OrderBy(p => p).ToArray());
+            itemList.AddRange(RunningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p).ToArray());
             itemList.Insert(0, "All");
 
             ddPlotPools.Items.AddRange(itemList.Distinct().ToArray());

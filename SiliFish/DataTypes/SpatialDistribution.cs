@@ -11,7 +11,12 @@
         { }
         public SpatialDistribution Clone()
         {
-            return (SpatialDistribution)MemberwiseClone();
+            return new SpatialDistribution()
+            {
+                XDistribution = XDistribution.Clone(),
+                Y_AngleDistribution = Y_AngleDistribution.Clone(),
+                Z_RadiusDistribution = Z_RadiusDistribution.Clone()
+            };
         }
         public string GetTooltip()
         {

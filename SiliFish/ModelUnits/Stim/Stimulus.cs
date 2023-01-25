@@ -51,7 +51,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public override string ToString()
         {
-            return TargetCell.ID + ": " +Settings.ToString();
+            return TargetCell.ID + ": " +Settings.ToString() + (Active ? "" : " (inactive)"); 
         }
 
         public string GetTooltip()

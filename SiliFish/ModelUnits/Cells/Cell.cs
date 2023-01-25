@@ -108,7 +108,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public override string ToString()
         {
-            return ID;
+            return ID + (Active ? "" : " (inactive)");
         }
 
         public string GetTooltip()
@@ -205,9 +205,10 @@ namespace SiliFish.ModelUnits.Cells
         {
             try
             {
-                foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this)) //to prevent double call
+                foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this && j.Active)) //to prevent double call
                 {
-                    jnc.NextStep(t);
+                    if (jnc.IsActive(t))
+                        jnc.NextStep(t);
                 }
             }
             catch (Exception ex)

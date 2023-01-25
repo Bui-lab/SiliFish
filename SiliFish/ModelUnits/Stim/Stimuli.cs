@@ -24,7 +24,7 @@ namespace SiliFish.ModelUnits.Stim
         public bool HasStimulus { get { return ListOfStimulus.Any(); } }
         public double GenerateStimulus(int timeIndex, Random rand)
         {
-            return ListOfStimulus.Any() ? ListOfStimulus.Sum(s => s.GenerateStimulus(timeIndex, rand)) : 0;
+            return ListOfStimulus.Any(s => s.Active) ? ListOfStimulus.Where(s => s.Active).Sum(s => s.GenerateStimulus(timeIndex, rand)) : 0;
         }
 
         public double GetStimulus(int timeIndex)

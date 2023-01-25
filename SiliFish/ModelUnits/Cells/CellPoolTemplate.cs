@@ -169,7 +169,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual CellPoolTemplate CreateCopy()
         {
-            throw new NotImplementedException();
+            return new CellPoolTemplate(this);
         }
 
         public Coordinate[] GenerateCoordinates(ModelDimensions modelDimensions, int n, int somite = -1)

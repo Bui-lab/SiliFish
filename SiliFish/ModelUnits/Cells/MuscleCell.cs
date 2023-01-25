@@ -83,7 +83,7 @@ namespace SiliFish.ModelUnits.Cells
         public override void InitDataVectors(int nmax)
         {
             base.InitDataVectors(nmax);
-            V[0] = Core.Vr;
+            V = Enumerable.Repeat(Core.Vr, nmax).ToArray();
             foreach (ChemicalSynapse jnc in this.EndPlates)
                 jnc.InitDataVectors(nmax);
         }

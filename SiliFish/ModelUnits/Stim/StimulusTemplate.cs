@@ -5,8 +5,8 @@ namespace SiliFish.ModelUnits.Stim
     public class StimulusTemplate : StimulusBase
     {
         public string TargetPool { get; set; }
-        public string TargetSomite { get; set; }
-        public string TargetCell { get; set; }
+        public string TargetSomite { get; set; } = "All";
+        public string TargetCell { get; set; } = "All";
 
         public string LeftRight { get; set; }
 

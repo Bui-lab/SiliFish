@@ -103,8 +103,8 @@
             .linkColor(l => selectedNode == null ? '#808080' ://medium gray
                 !showLink(l) ? '#DDD' ://light gray
                 l.type == 'gap'? '#333' ://dark gray
-               (l.source.g == selectedNode.g) ? '#C00' ://red - incoming0
-                '#0C0') //green - outgoing
+                        (l.source.g == selectedNode.g) ? '#0C0' ://green - outgoing
+                            '#C00') //red - incoming
             .linkOpacity(l => selectedNode == null ? 0.8 : showLink(l) ? 1 : 0)
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.001)) 

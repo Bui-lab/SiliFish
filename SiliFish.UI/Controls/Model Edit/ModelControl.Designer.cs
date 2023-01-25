@@ -321,11 +321,11 @@
             this.listCellPools.SelectedItem = null;
             this.listCellPools.Size = new System.Drawing.Size(315, 259);
             this.listCellPools.TabIndex = 7;
-            this.listCellPools.AddItem += new System.EventHandler(this.listCellPool_AddItem);
-            this.listCellPools.DeleteItem += new System.EventHandler(this.listCellPool_DeleteItem);
-            this.listCellPools.CopyItem += new System.EventHandler(this.listCellPool_CopyItem);
-            this.listCellPools.ViewItem += new System.EventHandler(this.listCellPool_ViewItem);
-            this.listCellPools.ActivateItem += new System.EventHandler(this.listCellPool_ActivateItem);
+            this.listCellPools.AddItem += new System.EventHandler(this.listCellPools_AddItem);
+            this.listCellPools.DeleteItem += new System.EventHandler(this.listCellPools_DeleteItem);
+            this.listCellPools.CopyItem += new System.EventHandler(this.listCellPools_CopyItem);
+            this.listCellPools.ViewItem += new System.EventHandler(this.listCellPools_ViewItem);
+            this.listCellPools.ActivateItem += new System.EventHandler(this.listCellPools_ActivateItem);
             this.listCellPools.SortItems += new System.EventHandler(this.listCellPool_SortItems);
             this.listCellPools.SelectItem += new System.EventHandler(this.listCellPools_SelectItem);
             // 
@@ -338,6 +338,11 @@
             this.listCells.SelectedItem = null;
             this.listCells.Size = new System.Drawing.Size(315, 258);
             this.listCells.TabIndex = 0;
+            this.listCells.AddItem += new System.EventHandler(this.listCell_AddItem);
+            this.listCells.DeleteItem += new System.EventHandler(this.listCells_DeleteItem);
+            this.listCells.CopyItem += new System.EventHandler(this.listCells_CopyItem);
+            this.listCells.ViewItem += new System.EventHandler(this.listCells_ViewItem);
+            this.listCells.ActivateItem += new System.EventHandler(this.listCell_ActivateItem);
             this.listCells.SelectItem += new System.EventHandler(this.listCells_SelectItem);
             // 
             // listConnections

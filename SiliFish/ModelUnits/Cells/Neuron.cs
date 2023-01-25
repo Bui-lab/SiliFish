@@ -119,7 +119,7 @@ namespace SiliFish.ModelUnits.Cells
         public override void InitDataVectors(int nmax)
         {
             base.InitDataVectors(nmax);
-            V[0] = Core.Vr;
+            V = Enumerable.Repeat(Core.Vr, nmax).ToArray();
             foreach (ChemicalSynapse jnc in this.Synapses)
                 jnc.InitDataVectors(nmax);
 
@@ -136,9 +136,10 @@ namespace SiliFish.ModelUnits.Cells
             try
             {
                 base.CalculateCellularOutputs(t);
-                foreach (ChemicalSynapse syn in Terminals)
+                foreach (ChemicalSynapse syn in Terminals.Where(t=>t.Active))
                 {
-                    syn.NextStep(t);
+                    if (syn.IsActive(t))
+                        syn.NextStep(t);
                 }
             }
             catch (Exception ex)
@@ -155,13 +156,15 @@ namespace SiliFish.ModelUnits.Cells
                 double ISyn = 0, IGap = 0, stim = 0;
                 if (IsAlive(timeIndex))
                 {
-                    foreach (ChemicalSynapse syn in Synapses)
+                    foreach (ChemicalSynapse syn in Synapses.Where(syn => syn.Active))
                     {
-                        ISyn += syn.GetSynapticCurrent(timeIndex);
+                        if (syn.IsActive(timeIndex))
+                            ISyn += syn.GetSynapticCurrent(timeIndex);
                     }
-                    foreach (GapJunction jnc in GapJunctions)
+                    foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {
-                        IGap += jnc.GetGapCurrent(this, timeIndex);
+                        if (jnc.IsActive(timeIndex))
+                            IGap += jnc.GetGapCurrent(this, timeIndex);
                     }
                     stim = GetStimulus(timeIndex, RunningModel.rand);
                 }

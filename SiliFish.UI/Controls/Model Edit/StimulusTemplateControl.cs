@@ -55,7 +55,7 @@ namespace SiliFish.UI.Controls
             ddTargetPool.Text = stim.TargetPool;
             if (ddTargetPool.Text == "")
                 ddTargetPool.Text = stim.TargetPool + " (inactive)";
-            if (stim.TargetSomite.StartsWith("All"))
+            if (string.IsNullOrEmpty(stim.TargetSomite) || stim.TargetSomite.StartsWith("All"))
             {
                 cbAllSomites.Checked = true;
             }
@@ -64,7 +64,7 @@ namespace SiliFish.UI.Controls
                 cbAllSomites.Checked = false;
                 eTargetSomites.Text = stim.TargetSomite;
             }
-            if (stim.TargetCell.StartsWith("All"))
+            if (string.IsNullOrEmpty(stim.TargetCell) || stim.TargetCell.StartsWith("All"))
             {
                 cbAllCells.Checked = true;
             }
