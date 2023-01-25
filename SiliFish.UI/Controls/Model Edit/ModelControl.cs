@@ -822,6 +822,8 @@ namespace SiliFish.UI.Controls
                     mb = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
                 else
                     mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
+                mb.BackwardCompatibility();
+                mb.LinkObjects();//TODO review where you are calling LinkObjects from. may need to group these functions
                 SetModel(mb, clearJson: false);
                 MessageBox.Show("Updated JSON is loaded.");
             }
