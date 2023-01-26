@@ -14,24 +14,37 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class ChemicalSynapse: JunctionBase
     {
-        private string target;//used to temporarily hold the target cell's id while reading the JSON files
-        public string Target { get => PostCell.ID; set => target = value; }
+        private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
+                              //calculated at InitForSimulation, and used only during simulation
+
+        private double ISynA = 0; //the momentary current value
+        private double ISynB = 0; //the momentary current value
+        private double ISyn { get { return ISynA - ISynB; } }
+
+        public override string Target { get => PostCell.ID; set => target = value; }
         public TwoExp_syn Core { get; set; }
+
+        [JsonIgnore]
+        public SynapseParameters SynapseParameters
+        {
+            get
+            {
+                if (Core == null) return null;
+                return new SynapseParameters()
+                {
+                    E_rev = Core.ERev,
+                    TauD = Core.TauD,
+                    TauR = Core.TauD,
+                    VTh = Core.Vth
+                };
+            }
+        }
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
-        public int Duration { get; set; } //The number of time units (dt) it will take for the current to travel from presynaptic to postsynaptic neuron
-        public int Delay { get; set; } = 0; //Extra number of time units (dt) to add to Duration
-        [JsonIgnore]
-        public double ISynA = 0; //the momentary current value
-        [JsonIgnore]
-        public double ISynB = 0; //the momentary current value
-        [JsonIgnore]
-        public double ISyn { get { return ISynA - ISynB; } }
+
         public double[] InputCurrent; //Current vector 
         [JsonIgnore]
-        public override string ID { get { return $"Syn: {PreNeuron.ID} -> {PostCell.ID}; Conductance: {Conductance:0.#####}"; } }
-        [JsonIgnore]
-        public double Conductance { get { return Core.Conductance; } }
+        public override string ID { get { return $"Syn: {PreNeuron.ID} -> {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
         internal bool IsActive(int timepoint)
         {
             double t_ms = PreNeuron.Model.RunParam.GetTimeOfIndex(timepoint);
@@ -45,11 +58,7 @@ namespace SiliFish.ModelUnits.Junction
             Core = new TwoExp_syn(param, conductance, preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
             PreNeuron = preN;
             PostCell = postN;
-            double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, distmode);
-            if (preN.ConductionVelocity < GlobalSettings.Epsilon)
-                Duration = int.MaxValue;
-            else
-                Duration = Math.Max((int)(distance / (preN.ConductionVelocity * preN.Model.RunParam.DeltaT)), 1);
+            DistanceMode= distmode;
         }
 
         public void LinkObjects(RunningModel model)
@@ -68,19 +77,33 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public void InitDataVectors(int nmax)
+        public void InitForSimulation(int nmax)
         {
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;
+            if (FixedDuration_ms != null)
+                duration = (int)(FixedDuration_ms / PreNeuron.Model.RunParam.DeltaT);
+            else
+            {
+                double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
+                int delay = (int)(Delay_ms / PreNeuron.Model.RunParam.DeltaT);
+                if (PreNeuron.ConductionVelocity < GlobalSettings.Epsilon)
+                    duration = int.MaxValue;
+                else
+                {
+                    duration = Math.Max((int)(distance / (PreNeuron.ConductionVelocity * PreNeuron.Model.RunParam.DeltaT)), 1);
+                    duration += delay;
+                }
+            }
         }
 
         public void SetFixedDuration(double dur)
         {
-            Duration = (int)(dur / PreNeuron.Model.RunParam.DeltaT);
+            FixedDuration_ms = dur;
         }
         public void SetDelay(double delay)
         {
-            Delay = (int)(delay / PreNeuron.Model.RunParam.DeltaT);
+            Delay_ms = delay;
         }
         public void SetTimeLine(TimeLine span)
         {
@@ -88,7 +111,7 @@ namespace SiliFish.ModelUnits.Junction
         }
         public void NextStep(int tIndex)
         {
-            int tt = Duration + Delay;
+            int tt = duration;
             double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : 0;
             (ISynA, ISynB) = Core.GetNextVal(vPre, vPost, ISynA, ISynB);

@@ -233,6 +233,7 @@
             this.ddSourceCell.Name = "ddSourceCell";
             this.ddSourceCell.Size = new System.Drawing.Size(128, 23);
             this.ddSourceCell.TabIndex = 31;
+            this.ddSourceCell.SelectedIndexChanged += new System.EventHandler(this.ddSourceCell_SelectedIndexChanged);
             // 
             // lTargetCell
             // 
@@ -253,6 +254,7 @@
             this.ddTargetCell.Name = "ddTargetCell";
             this.ddTargetCell.Size = new System.Drawing.Size(128, 23);
             this.ddTargetCell.TabIndex = 33;
+            this.ddTargetCell.SelectedIndexChanged += new System.EventHandler(this.ddTargetCell_SelectedIndexChanged);
             // 
             // ddTargetPool
             // 

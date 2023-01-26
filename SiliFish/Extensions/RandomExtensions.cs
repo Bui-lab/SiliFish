@@ -56,7 +56,7 @@ namespace SiliFish.Extensions
         /// <summary>
         /// Generate n numbers with uniform distribution
         /// </summary>
-        public static double[] Uniform(this Random rand, double start, double end, int n)
+        public static double[] Uniform(this Random rand, double start, double end, int n, bool ordered)
         {
             if (n <= 0) return null;
             double[] result = new double[n];
@@ -66,6 +66,8 @@ namespace SiliFish.Extensions
                 if (result[i] < start) result[i] = start;
                 if (result[i] > end) result[i] = end;
             }
+            if (ordered)
+                return result.Order().ToArray();
             return result;
         }
 

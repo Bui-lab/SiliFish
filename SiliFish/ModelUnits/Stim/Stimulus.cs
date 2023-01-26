@@ -164,7 +164,7 @@ namespace SiliFish.ModelUnits.Stim
             return values;
         }
 
-        public void InitDataVectors(int nmax)
+        public void InitForSimulation(int nmax)
         {
             values = new double[nmax];
         }

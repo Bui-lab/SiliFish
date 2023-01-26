@@ -39,10 +39,10 @@ namespace SiliFish.ModelUnits.Stim
                 ret = ret.AddArray(s.GetValues(nmax));
             return ret;
         }
-        public virtual void InitDataVectors(int nmax)
+        public virtual void InitForSimulation(int nmax)
         {
             foreach (Stimulus s in ListOfStimulus)
-                s.InitDataVectors(nmax);
+                s.InitForSimulation(nmax);
         }
         public void Add(Stimulus stim)
         {

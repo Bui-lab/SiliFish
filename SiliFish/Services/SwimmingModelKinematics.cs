@@ -17,8 +17,7 @@ namespace SiliFish.Services
             List<Cell> RightMuscleCells = model.MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Right).SelectMany(mp => mp.GetCells()).ToList();
 
             int nmax = endIndex - startIndex + 1;
-            //TODO: left and right muscle cell count can be different
-            int nMuscle = LeftMuscleCells.Count;
+            int nMuscle = Math.Min(LeftMuscleCells.Count, RightMuscleCells.Count);
             if (nMuscle == 0) return (null, null);
             // Allocating arrays for velocity and position
             double[,] vel = new double[nMuscle, nmax];

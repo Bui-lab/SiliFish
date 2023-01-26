@@ -212,7 +212,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             get
             {
-                List<InterPool> interPools = new List<InterPool>();
+                List<InterPool> interPools = new();
                 foreach (CellPool sourcePool in CellPools)
                 {
                     string source = sourcePool.ID;
@@ -223,8 +223,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Conductance);
-                            double maxConductance = list.Max(c => c.Conductance);
+                            double minConductance = list.Min(c => c.Weight);
+                            double maxConductance = list.Max(c => c.Weight);
                             interPools.Add(new InterPool()
                             {
                                 SourcePool = source,
@@ -248,7 +248,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             get
             {
-                List<InterPool> interPools = new List<InterPool>();
+                List<InterPool> interPools = new();
                 foreach (CellPool sourcePool in NeuronPools)
                 {
                     string source = sourcePool.ID;
@@ -259,8 +259,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Conductance);
-                            double maxConductance = list.Max(c => c.Conductance);
+                            double minConductance = list.Min(c => c.Weight);
+                            double maxConductance = list.Max(c => c.Weight);
 
                             interPools.Add(new InterPool()
                             {
@@ -333,7 +333,6 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {
-            //TODO
         }
         public override List<object> GetProjections()
         {
@@ -520,18 +519,18 @@ namespace SiliFish.ModelUnits.Architecture
         {
             foreach (CellPool neurons in neuronPools)
                 foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
-                    neuron.InitDataVectors(nmax);
+                    neuron.InitForSimulation(nmax);
 
             foreach (CellPool muscleCells in musclePools)
                 foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
-                    mc.InitDataVectors(nmax);
+                    mc.InitForSimulation(nmax);
         }
 
         protected virtual void InitStructures(int nmax)
         {
             this.Time = new double[nmax];
             InitDataVectors(nmax);
-            foreach (CellPool cp in GetCellPools())
+            foreach (CellPool cp in GetCellPools().Cast<CellPool>())
             {
                 foreach (Cell c in cp.Cells)
                 {
@@ -550,7 +549,7 @@ namespace SiliFish.ModelUnits.Architecture
             CellReach cr = template.CellReach;
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Probability, template.DistanceMode);
+            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Weight, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
@@ -560,7 +559,7 @@ namespace SiliFish.ModelUnits.Architecture
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Probability, template.DistanceMode);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, synParam, timeline, template.Weight, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         private void CalculateCellularOutputs(int t)

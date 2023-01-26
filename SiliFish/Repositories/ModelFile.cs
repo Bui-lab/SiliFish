@@ -65,6 +65,11 @@ namespace SiliFish.Repositories
         }
         private static bool FixCellReachJson(ref string json)
         {
+            /*
+            "DistanceMode": 0,
+        "FixedDuration_ms": null,
+        "Delay_ms": 0,
+        "Weight": 0.04,*/
             bool updated = false;
             Regex regex = new("\"CellReach\": {(\\s+.*[^}]*?)}");
             Regex ascRegex = new("\"AscendingReach\":(.*),");
@@ -105,6 +110,44 @@ namespace SiliFish.Repositories
                 json = json.Insert(index, newJson);
                 updated = true;
             }
+
+
+            MatchCollection matchCollection2 = regex.Matches(json);//move DistanceMode, FixedDuration_ms, Delay_ms and Weight outside
+            Regex distRegex = new("\"DistanceMode\":(.*),");
+            Regex durRegex = new("\"FixedDuration_ms\":(.*),");
+            Regex delayRegex = new("\"Delay_ms\":(.*),");
+            Regex weightRegex = new("\"Weight\":(.*),");
+
+            for (int i = matchCollection2.Count - 1; i >= 0; i--)
+            {
+                string newJson = "";
+                Match match = matchCollection2[i];
+                int index = match.Groups[1].Index;
+                string cellReach = match.Value;
+
+                Match m = distRegex.Match(cellReach);
+                if (m.Success && m.Groups?.Count >= 2)
+                    newJson += m.Value;
+
+                m = durRegex.Match(cellReach);
+                if (m.Success && m.Groups?.Count >= 2)
+                    newJson += m.Value;
+             
+                m = delayRegex.Match(cellReach);
+                if (m.Success && m.Groups?.Count >= 2)
+                    newJson += m.Value;
+
+                m = weightRegex.Match(cellReach);
+                if (m.Success && m.Groups?.Count >= 2)
+                    newJson += m.Value;
+
+                if (!string.IsNullOrEmpty(newJson))
+                {
+                    json = json.Insert(index, newJson);
+                    updated = true;
+                }
+            }
+            
             return updated;
         }
         public static List<string> CheckJSONVersion(ref string json)
@@ -144,11 +187,20 @@ namespace SiliFish.Repositories
         public static ModelBase Load(string fileName, out List<string> issues)
         {
             string json = FileUtil.ReadFromFile(fileName);
+            return ReadFromJson(json, out issues);
+        }
+
+        public static ModelBase ReadFromJson(string json, out List<string> issues)
+        {
             issues = CheckJSONVersion(ref json);
+            ModelBase mb;
             if (json.Contains("\"ClassType\": \"RunningModel\","))
-                return (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
+                mb = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
             else
-                return (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
+                mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
+            mb.BackwardCompatibility();
+            mb.LinkObjects();
+            return mb;
         }
     }
 }

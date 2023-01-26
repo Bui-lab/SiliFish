@@ -710,7 +710,7 @@ namespace SiliFish.UI.Controls
             try
             {
                 if (RunningModel == null || !RunningModel.ModelRun) return;
-                htmlAnimation = AnimationGenerator.GenerateAnimation(RunningModel, tAnimStart, tAnimEnd, (double)tAnimdt);
+                htmlAnimation = AnimationGenerator.GenerateAnimation(RunningModel, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
                 Invoke(CompleteAnimation);
             }
             catch { Invoke(CancelAnimation); }
@@ -745,9 +745,7 @@ namespace SiliFish.UI.Controls
             lastAnimationStartIndex = (int)(tAnimStart / dt);
             int lastAnimationEndIndex = (int)(tAnimEnd / dt);
             lastAnimationTimeArray = RunningModel.TimeArray;
-            //TODO generatespinecoordinates is called twice (once in generateanimation) - fix it
             RunningModel.SetAnimationParameters(RunningModel.KinemParam);
-            lastAnimationSpineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(RunningModel, lastAnimationStartIndex, lastAnimationEndIndex);
 
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);

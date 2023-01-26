@@ -112,8 +112,9 @@ namespace SiliFish.Services
 
 
 
-        public static string GenerateAnimation(RunningModel model, int tStart, int tEnd, double animdt)
+        public static string GenerateAnimation(RunningModel model, int tStart, int tEnd, double animdt, out Dictionary<string, Coordinate[]> spineCoordinates)
         {
+            spineCoordinates = null;
             if (model == null || !model.ModelRun)
                 return null;
 
@@ -128,9 +129,10 @@ namespace SiliFish.Services
             if (iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;
 
+            spineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(model, iStart, iEnd);
             return CreateTimeSeries(title: model.ModelName + "Animation.html",
                 model.KinemParam.GetAnimationDetails(),
-                SwimmingKinematics.GenerateSpineCoordinates(model, iStart, iEnd),
+                spineCoordinates,
                 model.TimeArray,
                 iStart,
                 iEnd,

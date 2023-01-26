@@ -66,13 +66,12 @@ namespace SiliFish.UI
                 displayAbout = false;
                 ModelTemplate = null;
                 RunningModel = model;
+
                 modelControl.SetModel(model);
-                modelOutputControl.SetRunningModel(model);//TODO cleanup the below code
-                edt.Value = (decimal)model.RunParam.DeltaT;
-                edtEuler.Value = (decimal)model.RunParam.DeltaTEuler;
-                eSkip.Value = (decimal)model.RunParam.SkipDuration;
-                eTimeEnd.Value = (decimal)model.RunParam.MaxTime;
+                modelOutputControl.SetRunningModel(model);
+                FillRunParams();
                 SetCurrentMode(RunMode.RunningModel);
+                
                 CurrentSettings.Settings = RunningModel.Settings;
                 if (!Directory.Exists(RunningModel.Settings.TempFolder))
                     Directory.CreateDirectory(RunningModel.Settings.TempFolder);
@@ -85,13 +84,20 @@ namespace SiliFish.UI
                 throw;
             }
         }
+
+        private void FillRunParams()
+        {
+            if (Model == null) return;
+            edt.Value = (decimal)RunningModel.RunParam.DeltaT;
+            edtEuler.Value = (decimal)RunningModel.RunParam.DeltaTEuler;
+            eSkip.Value = RunningModel.RunParam.SkipDuration;
+            eTimeEnd.Value = RunningModel.RunParam.MaxTime;
+        }
         private void RefreshModel()
         {
             RunningModel = modelControl.GetModel() as RunningModel;
             modelOutputControl.SetRunningModel(RunningModel);
-        }
-
-        
+        }       
         
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -218,7 +224,7 @@ namespace SiliFish.UI
                 $"Duration: {Util.TimeSpanToString(ts)}\r\n" +
                 $"Model: {RunningModel.ModelName}";
 
-            modelOutputControl.SetRunningModel(RunningModel);//TODO combine the two
+            modelOutputControl.SetRunningModel(RunningModel);
             modelOutputControl.CompleteRun();
         }
         private void btnRun_Click(object sender, EventArgs e)
@@ -277,6 +283,7 @@ namespace SiliFish.UI
             frmControl.Show();
         }
 
+
         private void SetCurrentMode(RunMode mode)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
@@ -309,8 +316,6 @@ namespace SiliFish.UI
                         MessageBox.Show("Selected file is not a valid Model or Template file.");
                         return;
                     }
-                    mb.BackwardCompatibility();
-                    mb.LinkObjects();
                     SetModel(mb);
                 }
             }

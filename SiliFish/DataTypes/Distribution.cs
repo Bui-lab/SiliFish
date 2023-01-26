@@ -110,23 +110,16 @@ namespace SiliFish.DataTypes
             return null;
         }
 
-        public static double[] GenerateNRandomNumbers(int n, double range, bool ordered)//TODO use ordered
+        public static double[] GenerateNRandomNumbers(int n, double range, bool ordered)
         {
             Random ??= new Random();
-            return Random.Uniform(0, range, n);
+            return Random.Uniform(0, range, n, ordered);
         }
         public virtual double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = range;
             Random ??= new Random();
-            if (ordered)
-            {
-                List<double> numbers = Random.Uniform(LowerLimit, UpperLimit, n).ToList();
-                numbers.Sort();
-                return numbers.ToArray();
-            }
-            else
-                return Random.Uniform(LowerLimit, UpperLimit, n);
+            return Random.Uniform(LowerLimit, UpperLimit, n, ordered);
         }
 
         protected virtual void FlipOnYAxis()
@@ -281,8 +274,11 @@ namespace SiliFish.DataTypes
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = Absolute ? 100 : double.Parse(range.ToString());
-            Random ??= new Random();//TODO use ordered
-            return Random.Gauss(Mean * Range / 100, Stddev * Range / 100, n, LowerLimit, UpperLimit);
+            Random ??= new Random();
+            double[] arr = Random.Gauss(Mean * Range / 100, Stddev * Range / 100, n, LowerLimit, UpperLimit);
+            if (ordered)
+                return arr.Order().ToArray();
+            return arr;
         }
     }
     public class BimodalDistribution : GaussianDistribution
@@ -321,11 +317,18 @@ namespace SiliFish.DataTypes
             Mode1Weight = mode1Weight;
         }
 
-        public override double[] GenerateNNumbers(int n, double range, bool ordered)//TODO use ordered
+        public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = Absolute ? 100 : range;
             Random ??= new Random();
-            return Random.Bimodal(Mean * Range / 100, Stddev * Range / 100, Mean2 * Range / 100, Stddev2 * Range / 100, Mode1Weight, n, LowerLimit, UpperLimit);
+            double mean1 = Mean * Range / 100;
+            double stdDev1 = Stddev * Range / 100;
+            double mean2 = Mean2 * Range / 100;
+            double stdDev2= Stddev2 * Range / 100;
+            double[] arr = Random.Bimodal(mean1, stdDev1, mean2, stdDev2, Mode1Weight, n, LowerLimit, UpperLimit);
+            if (ordered)
+                return arr.Order().ToArray();
+            return arr;
         }
     }
 }

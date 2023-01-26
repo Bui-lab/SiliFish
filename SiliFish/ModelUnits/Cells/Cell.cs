@@ -179,8 +179,8 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual (double, double) GetConnectionRange()
         {
-            double? maxWeight1 = GapJunctions.Select(j => j.Conductance).DefaultIfEmpty(0).Max();
-            double? minWeight1 = GapJunctions.Where(j => j.Conductance > 0).Select(j => j.Conductance).DefaultIfEmpty(999).Min();
+            double? maxWeight1 = GapJunctions.Select(j => j.Weight).DefaultIfEmpty(0).Max();
+            double? minWeight1 = GapJunctions.Where(j => j.Weight > 0).Select(j => j.Weight).DefaultIfEmpty(999).Min();
             return (minWeight1 ?? 0, maxWeight1 ?? 999);
         }
 
@@ -188,12 +188,12 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region RunTime
-        public virtual void InitDataVectors(int nmax)
+        public virtual void InitForSimulation(int nmax)
         {
             V = new double[nmax];
-            Stimuli.InitDataVectors(nmax);
+            Stimuli.InitForSimulation(nmax);
             foreach (GapJunction jnc in GapJunctions)
-                jnc.InitDataVectors(nmax);
+                jnc.InitForSimulation(nmax);
         }
         internal bool IsAlive(int timepoint)
         {

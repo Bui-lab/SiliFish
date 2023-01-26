@@ -27,8 +27,8 @@ namespace SiliFish.Services
             return $"{{\"source\":\"{jnc.Cell1.ID}\"," +
                 $"\"target\":\"{jnc.Cell2.ID}\"," +
                 $"\"type\":\"gap\"," +
-                $"\"value\":{GetNewWeight(jnc.Conductance):0.###}," +
-                $"\"conductance\":{jnc.Conductance:0.######}" +
+                $"\"value\":{GetNewWeight(jnc.Weight):0.###}," +
+                $"\"conductance\":{jnc.Weight:0.######}" +
                 $"{curvInfo} }}";
         }
         private string CreateLinkDataPoint(ChemicalSynapse jnc)
@@ -37,8 +37,8 @@ namespace SiliFish.Services
             return $"{{\"source\":\"{jnc.PreNeuron.ID}\"," +
                 $"\"target\":\"{jnc.PostCell.ID}\"," +
                 $"\"type\":\"chem\"," +
-                $"\"value\":{GetNewWeight(jnc.Conductance):0.###}," +
-                $"\"conductance\":{jnc.Conductance:0.######}" +
+                $"\"value\":{GetNewWeight(jnc.Weight):0.###}," +
+                $"\"conductance\":{jnc.Weight:0.######}" +
                 $"{curvInfo} }}";
         }
         private (double, double, double) GetNewCoordinates(double x, double y, double z, int columnIndex2D)

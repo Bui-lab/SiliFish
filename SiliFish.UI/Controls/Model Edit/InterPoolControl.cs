@@ -163,7 +163,7 @@ namespace SiliFish.UI.Controls
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SetDropDownValue(ComboBox dd, string value)
+        private static void SetDropDownValue(ComboBox dd, string value)
         {
             string inactive = value + " (inactive)";
             foreach (var v in dd.Items)
@@ -176,7 +176,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private string GetDropDownValue(ComboBox dd)
+        private static string GetDropDownValue(ComboBox dd)
         {
             return dd.Text.Replace(" (inactive)", "");
         }
@@ -217,9 +217,9 @@ namespace SiliFish.UI.Controls
                 numMaxIncoming.SetValue(interPoolTemplate.CellReach.MaxIncoming);
                 numMaxOutgoing.SetValue(interPoolTemplate.CellReach.MaxOutgoing);
 
-                numConductance.SetValue(interPoolTemplate.CellReach.Weight);
-                numDelay.SetValue(interPoolTemplate.CellReach.Delay_ms);
-                eFixedDuration.Text = interPoolTemplate.CellReach.FixedDuration_ms?.ToString() ?? "";
+                numConductance.SetValue(interPoolTemplate.Weight);
+                numDelay.SetValue(interPoolTemplate.Delay_ms);
+                eFixedDuration.Text = interPoolTemplate.FixedDuration_ms?.ToString() ?? "";
                 if (interPoolTemplate.SynapseParameters != null)
                 {
                     synapseControl.SetSynapseParameters(interPoolTemplate.SynapseParameters);
@@ -249,15 +249,15 @@ namespace SiliFish.UI.Controls
                 MinDescReach = (double)numMinDescReach.Value,
                 MaxDescReach = (double)numMaxDescReach.Value,
                 MaxIncoming = (int)numMaxIncoming.Value,
-                MaxOutgoing = (int)numMaxOutgoing.Value,
-                Weight = (double)numConductance.Value,
-                Delay_ms = (double)numDelay.Value,
-                FixedDuration_ms = fixedDuration
+                MaxOutgoing = (int)numMaxOutgoing.Value
             };
 
             interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
             interPoolTemplate.ConnectionType = ddConnectionType.SelectedItem != null ? (ConnectionType)ddConnectionType.SelectedItem : ConnectionType.NotSet;
             interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
+            interPoolTemplate.Weight = (double)numConductance.Value;
+            interPoolTemplate.Delay_ms = (double)numDelay.Value;
+            interPoolTemplate.FixedDuration_ms = fixedDuration;
             interPoolTemplate.Name = eName.Text;
             interPoolTemplate.Description = eDescription.Text;
             interPoolTemplate.Probability = (double)numProbability.Value;

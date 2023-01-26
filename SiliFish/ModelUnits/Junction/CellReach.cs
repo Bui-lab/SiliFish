@@ -29,11 +29,6 @@ namespace SiliFish.ModelUnits
         // MaxIncoming shows how many junctions the target cell can have
         public int MaxIncoming { get; set; } = 0;
 
-        public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
-        public double? FixedDuration_ms { get; set; } = null;// in ms
-        public double Delay_ms { get; set; } = 0;//in ms
-        public double Weight { get; set; }
-
         public bool Autapse { get; set; } = false;
         public bool SomiteBased { get; set; } = false;
 
@@ -47,9 +42,6 @@ namespace SiliFish.ModelUnits
             MaxDescReach = cr.MaxDescReach;
             MaxIncoming = cr.MaxIncoming;
             MaxOutgoing = cr.MaxOutgoing;
-            FixedDuration_ms = cr.FixedDuration_ms;
-            Delay_ms = cr.Delay_ms;
-            Weight = cr.Weight;
             Autapse = cr.Autapse;
             SomiteBased = cr.SomiteBased;
         }
@@ -61,9 +53,7 @@ namespace SiliFish.ModelUnits
             return reach +
                 (MaxIncoming > 0 ? $"Max in: {MaxIncoming:0}\r\n" : "") +
                 (MaxOutgoing > 0 ? $"Max out: {MaxOutgoing:0}\r\n" : "") +
-                $"Fixed Duration: {FixedDuration_ms: 0.###}\r\n" +
-                $"Delay: {Delay_ms: 0.###}\r\n" +
-                $"Weight: {Weight: 0.###}\r\n";
+                $"\r\n";
         }
 
         /// <summary>

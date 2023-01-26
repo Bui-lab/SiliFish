@@ -66,11 +66,6 @@ namespace SiliFish.ModelUnits.Junction
         public CellPoolTemplate linkedSource, linkedTarget;
         public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;
         public ConnectionType ConnectionType { get; set; } = ConnectionType.NotSet;
-        public DistanceMode DistanceMode
-        {
-            get { return CellReach.DistanceMode; }
-            set { CellReach.DistanceMode = value; }
-        }
 
         public override bool Active
         {
@@ -95,7 +90,10 @@ namespace SiliFish.ModelUnits.Junction
                 return $"{Name}\r\n" +
                     $"{Description}\r\n" +
                     $"From {PoolSource} to {PoolTarget}\r\n" +
+                    $"Weight:{Weight: 0.###}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
+                    $"Fixed Duration:{FixedDuration_ms: 0.###}\r\n" +
+                    $"Delay:{Delay_ms: 0.###}\r\n" +
                     $"Probability: {Probability}\r\n" +
                     $"Mode: {AxonReachMode}\r\n" +
                     $"Type: {ConnectionType}\r\n" +

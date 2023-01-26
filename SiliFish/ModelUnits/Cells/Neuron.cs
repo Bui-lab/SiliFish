@@ -103,8 +103,8 @@ namespace SiliFish.ModelUnits.Cells
         public override (double, double) GetConnectionRange()
         {
             (double minWeight1, double maxWeight1) = base.GetConnectionRange();
-            double maxWeight2 = Synapses.Select(j => j.Conductance).DefaultIfEmpty(0).Max();
-            double minWeight2 = Synapses.Where(j => j.Conductance > 0).Select(j => j.Conductance).DefaultIfEmpty(999).Min();
+            double maxWeight2 = Synapses.Select(j => j.Weight).DefaultIfEmpty(0).Max();
+            double minWeight2 = Synapses.Where(j => j.Weight > 0).Select(j => j.Weight).DefaultIfEmpty(999).Min();
             double maxWeight = Math.Max(maxWeight1, maxWeight2);
             double minWeight = Math.Min(minWeight1, minWeight2);
             return (minWeight, maxWeight);
@@ -116,12 +116,12 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Runtime
-        public override void InitDataVectors(int nmax)
+        public override void InitForSimulation(int nmax)
         {
-            base.InitDataVectors(nmax);
+            base.InitForSimulation(nmax);
             V = Enumerable.Repeat(Core.Vr, nmax).ToArray();
             foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitDataVectors(nmax);
+                jnc.InitForSimulation(nmax);
 
         }
 

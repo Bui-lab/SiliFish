@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.UI.Extensions;
+using System.Data;
 
 namespace SiliFish.UI.Controls
 {
@@ -12,7 +13,11 @@ namespace SiliFish.UI.Controls
         private ModelSettings settings;
         public event EventHandler JunctionChanged;
 
-        private JunctionBase Junction;
+        private JunctionBase junction;
+        private RunningModel Model;
+        private CellPool sourcePool, targetPool;
+        private Cell sourceCell;
+        public Cell TargetCell;
         public override string ToString()
         {
             string activeStatus = !cbActive.Checked ? " (inactive)" :
@@ -20,16 +25,25 @@ namespace SiliFish.UI.Controls
                 "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
-        public JunctionControl(ModelSettings settings)
+        public JunctionControl(RunningModel model)
         {
             InitializeComponent();
+            Model = model;
+
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
+
             //ddConnectionType is manually loaded as not all of them are displayed
-            ddConnectionType.Items.Clear();
             ddConnectionType.Items.Add(ConnectionType.Gap);
             ddConnectionType.Items.Add(ConnectionType.Synapse);
             ddConnectionType.Items.Add(ConnectionType.NMJ);
-            this.settings = settings;
+
+            ddSourcePool.Items.AddRange(Model.CellPools.ToArray());
+            ddSourcePool.SelectedIndex = -1;
+            ddSourceCell.SelectedIndex = -1;
+
+            ddTargetPool.Items.AddRange(Model.CellPools.ToArray());
+            ddTargetPool.SelectedIndex = -1;
+            ddTargetCell.SelectedIndex = -1;
         }
 
         private void FillConnectionTypes()
@@ -60,38 +74,56 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private static void FillCells(ComboBox dd, CellPool pool)
+        {
+            dd.Items.Clear();
+            if (pool.GetCells().Any())
+            {
+                dd.Items.AddRange(pool.GetCells().ToArray());
+                dd.SelectedIndex = 0;
+            }
+        }
         private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillConnectionTypes();
             if (!ddSourcePool.Focused)
                 return;
-            if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
+            if (ddSourcePool.SelectedItem is CellPool pool)
             {
+                sourcePool = pool;
+                sourceCell = null;
+                FillCells(ddSourceCell, sourcePool);
+
                 if (pool.VThreshold != null)
                 {
                     synapseControl.VThreshold = (double)pool.VThreshold;
                 }
-                    switch (pool.NTMode)
-                    {
-                       case NeuronClass.Glycinergic:
-                           synapseControl.EReversal = settings.E_gly;
-                            break;
-                        case NeuronClass.GABAergic:
-                            synapseControl.EReversal = settings.E_gaba;
-                            break;
-                        case NeuronClass.Glutamatergic:
-                            synapseControl.EReversal = settings.E_glu;
-                            break;
-                        case NeuronClass.Cholinergic:
-                            synapseControl.EReversal = settings.E_ach;
-                            break;
-                        default:
-                            break;
-                    }
-                
+                switch (pool.NTMode)//fill default values, based on the NT
+                {
+                    case NeuronClass.Glycinergic:
+                        synapseControl.EReversal = settings.E_gly;
+                        break;
+                    case NeuronClass.GABAergic:
+                        synapseControl.EReversal = settings.E_gaba;
+                        break;
+                    case NeuronClass.Glutamatergic:
+                        synapseControl.EReversal = settings.E_glu;
+                        break;
+                    case NeuronClass.Cholinergic:
+                        synapseControl.EReversal = settings.E_ach;
+                        break;
+                    default:
+                        break;
+                }
             }
-            //TODO junction.PoolSource = ddSourcePool.Text;
             JunctionChanged?.Invoke(this, EventArgs.Empty);
+        }
+        private void ddSourceCell_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddSourceCell.SelectedItem is Cell cell)
+                sourceCell = cell;
+            else
+                sourceCell = null;
         }
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
@@ -99,139 +131,130 @@ namespace SiliFish.UI.Controls
             FillConnectionTypes();
             if (!ddTargetPool.Focused)
                 return;
-            if (ddTargetPool.SelectedItem is CellPoolTemplate pool)
+            if (ddTargetPool.SelectedItem is CellPool pool)
             {
-                if (pool.VReversal != null)
+                targetPool = pool;
+                TargetCell = null;
+                FillCells(ddTargetCell, targetPool);
+                if (pool.VReversal != null)//update from the Vrev of the target
                 {
                     synapseControl.EReversal= (double)pool.VReversal;
                 }
             }
-            //TODO junction.PoolTarget = ddTargetPool.Text;
             JunctionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ddTargetCell_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddTargetCell.SelectedItem is Cell cell)
+                TargetCell = cell;
+            else
+                TargetCell = null;
         }
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
             gSynapse.Visible = ddConnectionType.Text != "Gap";
-            //TODO if (junction == null || !ddConnectionType.Focused) return;
-            //TODO junction.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+            if (junction == null || !ddConnectionType.Focused) return;
             JunctionChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetJunction(JunctionBase junction, RunningModel model, bool newJunc)
+        public void SetJunction(JunctionBase junction, bool newJunc)
         {
-            Junction = junction;
-            ddSourcePool.Items.Clear();
-            ddTargetPool.Items.Clear();
-            ddSourceCell.Items.Clear();
-            ddTargetCell.Items.Clear();
-
-            Cell precell =null;
-            Cell postcell=null;
+            this.junction = junction;
             if (junction is GapJunction gapJunction)
             {
-                precell = gapJunction.Cell1;
-                postcell = gapJunction.Cell2;
+                sourceCell = gapJunction.Cell1;
+                TargetCell = gapJunction.Cell2;
+                numConductance.SetValue(gapJunction.Weight);
+                numDelay.SetValue(gapJunction.Delay_ms);
+                eFixedDuration.Text = gapJunction.FixedDuration_ms.ToString();
+                ddConnectionType.SelectedItem = ConnectionType.Gap;
             }
             else if (junction is ChemicalSynapse syn)
             {
-                precell = syn.PreNeuron;
-                postcell = syn.PostCell;
-                //TODO synapseControl.SetSynapseParameters(syn.Core.GetSynapseParameters);
+                sourceCell = syn.PreNeuron;
+                TargetCell = syn.PostCell;
+                ddConnectionType.SelectedItem = TargetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
+                synapseControl.SetSynapseParameters(syn.SynapseParameters);
+                numConductance.SetValue(syn.Weight);
+                numDelay.SetValue(syn.Delay_ms);
+                eFixedDuration.Text = syn.FixedDuration_ms.ToString();
             }
+            if (this.junction != null)
+            {
+                sourcePool = sourceCell.CellPool;
+                targetPool = TargetCell.CellPool;
+
+                Cell backup = sourceCell;//cleared when dropdowns are reset
+                ddSourcePool.SelectedItem = sourcePool;
+                FillCells(ddSourceCell, sourcePool);
+                sourceCell = backup;
+                ddSourceCell.SelectedItem = sourceCell;
+                backup = TargetCell;
+                ddTargetPool.SelectedItem = targetPool;
+                FillCells(ddTargetCell, targetPool);
+                TargetCell = backup;
+                ddTargetCell.SelectedItem = TargetCell;
+                ddSourcePool.Enabled = false;
+            }
+            cbActive.Checked = junction.Active;
+            timeLineControl.SetTimeLine(junction.TimeLine_ms);
             if (newJunc)
             {
-                CellPool prepool = precell?.CellPool;
-                ddSourcePool.Items.AddRange(model.CellPools.Select(cp => cp.ID).ToArray());
-                if (precell != null)
-                    ddSourcePool.Text = precell.CellPool.ID;
-                else
-                {
-                    ddSourcePool.SelectedIndex = 0;
-                    prepool = model.CellPools.FirstOrDefault(cp => cp.ID == ddSourcePool.Text);
-                }
-                if (prepool != null)
-                {
-                    ddSourceCell.Items.AddRange(prepool.GetCells().Select(c => c.ID).ToArray());
-                }
-
-
-                CellPool postpool = postcell?.CellPool;
-                ddTargetPool.Items.AddRange(model.CellPools.Select(cp => cp.ID).ToArray());
-                if (postcell != null)
-                    ddTargetPool.Text = postcell.CellPool.ID;
-                else
-                {
-                    ddTargetPool.SelectedIndex = 0;
-                    postpool = model.CellPools.FirstOrDefault(cp => cp.ID == ddTargetPool.Text);
-                }
-                if (postpool != null)
-                {
-                    ddTargetCell.Items.AddRange(postpool.GetCells().Select(c => c.ID).ToArray());
-                }
+                this.junction = null;
             }
-            else if (Junction != null)
+            else
             {
-                CellPool prepool = precell.CellPool;
-                ddSourcePool.Items.Add(prepool.ID);
-                ddSourcePool.Enabled = false;
-                ddSourcePool.Text = precell.CellPool.ID;
                 ddSourceCell.Enabled = false;
-
-
-                CellPool postpool = postcell?.CellPool;
-                ddTargetPool.Items.AddRange(model.CellPools.Select(cp => cp.ID).ToArray());
-                if (postcell != null)
-                    ddTargetPool.Text = postcell.CellPool.ID;
-                else
-                {
-                    ddTargetPool.SelectedIndex = 0;
-                    postpool = model.CellPools.FirstOrDefault(cp => cp.ID == ddTargetPool.Text);
-                }
-                if (postpool != null)
-                {
-                    ddTargetCell.Items.AddRange(postpool.GetCells().Select(c => c.ID).ToArray());
-                }
-                double conductance = junction is GapJunction gj ? gj.Conductance : (junction as ChemicalSynapse).Conductance;
-                numConductance.SetValue(conductance);
-                double delay = junction is GapJunction gj2 ? gj2.Delay: (junction as ChemicalSynapse).Delay;
-                numDelay.SetValue(delay);
-                int duration = junction is GapJunction gj3 ? gj3.Duration: (junction as ChemicalSynapse).Duration;
-                eFixedDuration.Text = duration.ToString();
-                
-                cbActive.Checked = junction.Active;
-                timeLineControl.SetTimeLine(junction.TimeLine_ms);
+                ddTargetPool.Enabled = false;
+                ddTargetCell.Enabled = false;
+                ddConnectionType.Enabled = false;
             }
         }
 
         public JunctionBase GetJunction()
         {
-            /*junction.PoolSource = GetDropDownValue(ddSourcePool);
-            junction.PoolTarget = GetDropDownValue(ddTargetPool);
-
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;
-            junction.CellReach = new CellReach
+            double delay = (double)numDelay.Value;
+            double conductance = (double)numConductance.Value;
+            DistanceMode distanceMode = (DistanceMode)ddDistanceMode.SelectedItem;
+            if (junction == null)
             {
-                Weight = (double)numConductance.Value,
-                Delay_ms = (double)numDelay.Value,
-                FixedDuration_ms = fixedDuration
-            };
-
-            junction.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
-            junction.ConnectionType = ddConnectionType.SelectedItem != null ? (ConnectionType)ddConnectionType.SelectedItem : ConnectionType.NotSet;
-            
-            if (junction.ConnectionType != ConnectionType.Gap)
-            {
-                junction.SynapseParameters = synapseControl.GetSynapseParameters();
+                if ((ConnectionType)ddConnectionType.SelectedItem == ConnectionType.Gap)
+                {
+                    junction = new GapJunction(conductance, sourceCell, TargetCell, distanceMode)
+                    {
+                        Delay_ms = delay,
+                        FixedDuration_ms = fixedDuration
+                    };
+                }
+                else
+                {
+                    junction = new ChemicalSynapse(sourceCell as Neuron, TargetCell, synapseControl.GetSynapseParameters(), conductance, distanceMode)
+                    {
+                        Delay_ms = delay,
+                        FixedDuration_ms = fixedDuration
+                    };
+                }
             }
-            junction.JncActive = cbActive.Checked;
+            else if (junction is GapJunction gapJunction)
+            {
+                gapJunction.Delay_ms = delay;
+                gapJunction.FixedDuration_ms = fixedDuration;
+            }
+            else if (junction is ChemicalSynapse synapse)
+            {
+                synapse.Delay_ms = delay;
+                synapse.FixedDuration_ms = fixedDuration;
+            }
+            junction.Active = cbActive.Checked;
             junction.TimeLine_ms = timeLineControl.GetTimeLine();
-            junction.Attachments = attachmentList.GetAttachments();
-            */
-            return Junction;
+            return junction;
         }
+
 
         private void cbActive_CheckedChanged(object sender, EventArgs e)
         {

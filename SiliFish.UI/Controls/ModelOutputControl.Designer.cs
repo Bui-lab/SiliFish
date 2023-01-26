@@ -1174,7 +1174,7 @@
             0,
             0,
             0});
-            this.ePlotKinematicsHeight.Location = new System.Drawing.Point(208, 30);
+            this.ePlotKinematicsHeight.Location = new System.Drawing.Point(208, 31);
             this.ePlotKinematicsHeight.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -1202,7 +1202,7 @@
             0,
             0,
             0});
-            this.ePlotKinematicsWidth.Location = new System.Drawing.Point(208, 3);
+            this.ePlotKinematicsWidth.Location = new System.Drawing.Point(208, 4);
             this.ePlotKinematicsWidth.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -1226,7 +1226,7 @@
             // lPlotKinematicsWidth
             // 
             this.lPlotKinematicsWidth.AutoSize = true;
-            this.lPlotKinematicsWidth.Location = new System.Drawing.Point(163, 6);
+            this.lPlotKinematicsWidth.Location = new System.Drawing.Point(163, 8);
             this.lPlotKinematicsWidth.Name = "lPlotKinematicsWidth";
             this.lPlotKinematicsWidth.Size = new System.Drawing.Size(39, 15);
             this.lPlotKinematicsWidth.TabIndex = 60;
@@ -1244,7 +1244,7 @@
             // lPlotKinematicsHeight
             // 
             this.lPlotKinematicsHeight.AutoSize = true;
-            this.lPlotKinematicsHeight.Location = new System.Drawing.Point(163, 33);
+            this.lPlotKinematicsHeight.Location = new System.Drawing.Point(163, 34);
             this.lPlotKinematicsHeight.Name = "lPlotKinematicsHeight";
             this.lPlotKinematicsHeight.Size = new System.Drawing.Size(43, 15);
             this.lPlotKinematicsHeight.TabIndex = 62;
@@ -1262,7 +1262,7 @@
             // lSomitesNumMNDynamics
             // 
             this.lSomitesNumMNDynamics.AutoSize = true;
-            this.lSomitesNumMNDynamics.Location = new System.Drawing.Point(3, 8);
+            this.lSomitesNumMNDynamics.Location = new System.Drawing.Point(12, 8);
             this.lSomitesNumMNDynamics.Name = "lSomitesNumMNDynamics";
             this.lSomitesNumMNDynamics.Size = new System.Drawing.Size(54, 15);
             this.lSomitesNumMNDynamics.TabIndex = 43;

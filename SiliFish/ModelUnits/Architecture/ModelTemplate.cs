@@ -172,8 +172,6 @@ namespace SiliFish.ModelUnits.Architecture
         public override void BackwardCompatibility()
         {
             base.BackwardCompatibility();
-
-
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
             {
                 cpt.BackwardCompatibility();

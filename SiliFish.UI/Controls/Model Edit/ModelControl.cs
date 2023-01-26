@@ -299,7 +299,6 @@ namespace SiliFish.UI.Controls
             if (poolDuplicate != null)
             {
                 Model.AddCellPool(poolDuplicate);
-                Model.CopyConnectionsOfCellPool(pool, poolDuplicate);
                 listCellPools.AppendItem(poolDuplicate);
                 LoadProjections();
                 ModelIsUpdated();    
@@ -548,7 +547,20 @@ namespace SiliFish.UI.Controls
             else
             {
                 MessageBox.Show("Implementation in progress.", "Model Edit");
-                //MODEL EDIT JunctionControl jncControl = new();
+                //MODEL EDIT
+                ControlContainer frmControl = new();
+                JunctionControl jncControl = new(Model as RunningModel); 
+                jncControl.SetJunction(interpool, false);
+                frmControl.AddControl(jncControl);
+                frmControl.Text = interpool?.ToString() ?? "New Connection";
+
+                if (frmControl.ShowDialog() == DialogResult.OK)
+                {
+                    interpool = jncControl.GetJunction();
+                    //TODO modelTemplate.LinkObjects(interPoolTemplate);
+                    return interpool;
+                }
+                
             }
             return null;
         }
@@ -817,13 +829,7 @@ namespace SiliFish.UI.Controls
             try
             {
                 string json = eModelJSON.Text;
-                ModelBase mb;
-                if (json.Contains("\"ClassType\": \"RunningModel\","))
-                    mb = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
-                else
-                    mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
-                mb.BackwardCompatibility();
-                mb.LinkObjects();//TODO review where you are calling LinkObjects from. may need to group these functions
+                ModelBase mb = ModelFile.ReadFromJson(json, out List<string> issues);
                 SetModel(mb, clearJson: false);
                 ModelIsUpdated();
                 MessageBox.Show("Updated JSON is loaded.");

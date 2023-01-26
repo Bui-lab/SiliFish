@@ -314,7 +314,14 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public void ReachToCellPoolViaGapJunction(CellPool target, CellReach reach, TimeLine timeline, double probability, DistanceMode distanceMode)
+        public void ReachToCellPoolViaGapJunction(CellPool target, 
+            CellReach reach, 
+            TimeLine timeline, 
+            double weight,
+            double probability, 
+            DistanceMode distanceMode,
+            double delay_ms,
+            double? fixedduration_ms)
         {
             foreach (Cell pre in this.GetCells())
             {
@@ -332,17 +339,25 @@ namespace SiliFish.ModelUnits.Cells
                         mult = 1;
                         if (CellPool.gapWeightNoiseMultiplier != null)
                             mult = gapWeightNoiseMultiplier();
-                        GapJunction jnc = pre.CreateGapJunction(post, reach.Weight * mult, distanceMode);
-                        jnc.SetDelay(reach.Delay_ms);
+                        GapJunction jnc = pre.CreateGapJunction(post, weight * mult, distanceMode);
+                        jnc.SetDelay(delay_ms);
                         jnc.SetTimeSpan(timeline);
-                        if (reach.FixedDuration_ms != null)
-                            jnc.SetFixedDuration((int)reach.FixedDuration_ms);
+                        if (fixedduration_ms != null)
+                            jnc.SetFixedDuration((double)fixedduration_ms);
                     }
                 }
             }
         }
 
-        public void ReachToCellPoolViaChemSynapse(CellPool target, CellReach reach, SynapseParameters param, TimeLine timeline, double probability, DistanceMode distanceMode)
+        public void ReachToCellPoolViaChemSynapse(CellPool target, 
+            CellReach reach, 
+            SynapseParameters param, 
+            TimeLine timeline, 
+            double weight,
+            double probability, 
+            DistanceMode distanceMode, 
+            double delay_ms,
+            double? fixedduration_ms)
         {
             int maxIncoming = reach.MaxIncoming;
             int maxOutgoing = reach.MaxOutgoing;
@@ -388,10 +403,10 @@ namespace SiliFish.ModelUnits.Cells
                         mult = 1;
                         if (CellPool.synWeightNoiseMultiplier != null)
                             mult = synWeightNoiseMultiplier();
-                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, reach.Weight * mult, distanceMode);
-                        syn.SetDelay(reach.Delay_ms);
-                        if (reach.FixedDuration_ms != null)
-                            syn.SetFixedDuration((double)reach.FixedDuration_ms);
+                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, weight * mult, distanceMode);
+                        syn.SetDelay(delay_ms);
+                        if (fixedduration_ms != null)
+                            syn.SetFixedDuration((double)fixedduration_ms);
                         syn.SetTimeLine(timeline);
                         counter++;
                         if (maxOutgoing > 0 && counter >= maxOutgoing)
