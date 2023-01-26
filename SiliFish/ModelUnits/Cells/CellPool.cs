@@ -281,7 +281,7 @@ namespace SiliFish.ModelUnits.Cells
             }
             foreach (int somite in somites)
             {
-                Coordinate[] coordinates = GenerateCoordinates(MD, n, somite);
+                Coordinate[] coordinates = GenerateCoordinates(Model.rand, MD, n, somite);
                 Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n, ordered: false);
 
                 double defaultCV = CurrentSettings.Settings.cv;
@@ -322,7 +322,7 @@ namespace SiliFish.ModelUnits.Cells
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
                 foreach (Cell post in targetcells)
                 {
-                    if (probability < RunningModel.rand.Next(1))
+                    if (probability < Model.rand.Next(1))
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)
@@ -378,7 +378,7 @@ namespace SiliFish.ModelUnits.Cells
                                 continue;
                         }
                     }
-                    if (probability < RunningModel.rand.Next(1))
+                    if (probability < Model.rand.Next(1))
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)

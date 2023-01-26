@@ -55,7 +55,7 @@ namespace SiliFish.Repositories
                 while (json.Contains(key))
                 {
                     int ind = json.IndexOf(key);
-                    int curly = json.LastIndexOf("{", ind - 1);
+                    int curly = JsonUtil.FindOpeningBracket(json, ind);
                     json = json.Remove(ind, key.Length);
                     json = json.Insert(curly + 1, replace);
                     updated = true;

@@ -76,8 +76,17 @@ namespace SiliFish.UI.Controls
             PopulatePlotPools();
             int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = NumberOfSomites > 0;
-            eKinematicsSomite.Maximum = NumberOfSomites > 0 || !RunningModel.CellPools.Any() ? 
-                NumberOfSomites : RunningModel.CellPools.Max(p => p.Cells.Max(c => c.Sequence));
+            if (NumberOfSomites > 0)
+            {
+                eKinematicsSomite.Maximum = NumberOfSomites;
+                lSomitesNumMNDynamics.Text = "Somite #";
+            }
+            else
+            {
+                eKinematicsSomite.Maximum = RunningModel.CellPools.Any() ?
+                    RunningModel.CellPools.Max(p => p.Cells.Max(c => c.Sequence)) : 0;
+                lSomitesNumMNDynamics.Text = "Cell Seq.";
+            }
         }
 
         public void CompleteRun()

@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 namespace SiliFish.ModelUnits.Stim
 {
 
-    public class Stimulus: StimulusBase
+    public class Stimulus : StimulusBase
     {
         private double tangent; //valid only if mode==Ramp
         private int iStart, iEnd;
@@ -19,8 +19,21 @@ namespace SiliFish.ModelUnits.Stim
         private bool initialized = false;
 
         public static int nMax; //in time increments
-        public Cell TargetCell;
-        
+        private Cell targetCell;
+
+        [JsonIgnore]
+        public Cell TargetCell
+        {
+            get => targetCell;
+            set
+            {
+                targetCell = value;
+                RunParam = targetCell.Model.RunParam;
+            }
+        }
+
+        [JsonIgnore]
+        public RunParam RunParam { get; set; }
         [JsonIgnore]
         public double MinValue { get { return values?.Min() ?? 0; } }
         [JsonIgnore]
@@ -44,14 +57,14 @@ namespace SiliFish.ModelUnits.Stim
             TimeLine_ms = new(tl);
         }
 
-        public override StimulusBase CreateCopy() 
+        public override StimulusBase CreateCopy()
         {
             return new Stimulus(Settings, TargetCell, TimeLine_ms);
         }
 
         public override string ToString()
         {
-            return TargetCell.ID + ": " +Settings.ToString() + (Active ? "" : " (inactive)"); 
+            return TargetCell.ID + ": " + Settings.ToString() + (Active ? "" : " (inactive)");
         }
 
         public string GetTooltip()
@@ -63,10 +76,10 @@ namespace SiliFish.ModelUnits.Stim
             if (initialized)
                 return;
 
-            iEnd = (int)(TimeLine_ms.End / TargetCell.Model.RunParam.DeltaT);
+            iEnd = (int)(TimeLine_ms.End / RunParam.DeltaT);
             if (iEnd < 0)
                 iEnd = nMax;
-            iStart = (int)(TimeLine_ms.Start / TargetCell.Model.RunParam.DeltaT);
+            iStart = (int)(TimeLine_ms.Start / RunParam.DeltaT);
             if (Settings.Mode == StimulusMode.Ramp)
                 if (iEnd > iStart)
                     tangent = (Settings.Value2 - Settings.Value1) / (iEnd - iStart);
@@ -85,7 +98,7 @@ namespace SiliFish.ModelUnits.Stim
 
         internal double GenerateStimulus(int tIndex, Random rand)
         {
-            double t_ms = TargetCell.Model.RunParam.GetTimeOfIndex(tIndex);
+            double t_ms = RunParam.GetTimeOfIndex(tIndex);
             if (!TimeLine_ms.IsActive(t_ms))
                 return 0;
             if (!initialized)
@@ -139,7 +152,7 @@ namespace SiliFish.ModelUnits.Stim
                 stim[i] = GenerateStimulus(i, rand);
             return stim;
         }
-        
+
         public double[] GetValues(int nMax)
         {
             if (values?.Length < nMax)

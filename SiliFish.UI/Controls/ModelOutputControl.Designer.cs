@@ -112,7 +112,7 @@
             this.lpx3 = new System.Windows.Forms.Label();
             this.lPlotKinematicsHeight = new System.Windows.Forms.Label();
             this.lpx4 = new System.Windows.Forms.Label();
-            this.lNumOfSomitesMNDynamics = new System.Windows.Forms.Label();
+            this.lSomitesNumMNDynamics = new System.Windows.Forms.Label();
             this.eKinematicsSomite = new System.Windows.Forms.NumericUpDown();
             this.btnGenerateEpisodes = new System.Windows.Forms.Button();
             this.lKinematicsTimes = new System.Windows.Forms.Label();
@@ -1148,7 +1148,7 @@
             this.pMNKinematicsTop.Controls.Add(this.lpx3);
             this.pMNKinematicsTop.Controls.Add(this.lPlotKinematicsHeight);
             this.pMNKinematicsTop.Controls.Add(this.lpx4);
-            this.pMNKinematicsTop.Controls.Add(this.lNumOfSomitesMNDynamics);
+            this.pMNKinematicsTop.Controls.Add(this.lSomitesNumMNDynamics);
             this.pMNKinematicsTop.Controls.Add(this.eKinematicsSomite);
             this.pMNKinematicsTop.Controls.Add(this.btnGenerateEpisodes);
             this.pMNKinematicsTop.Controls.Add(this.lKinematicsTimes);
@@ -1259,14 +1259,14 @@
             this.lpx4.TabIndex = 63;
             this.lpx4.Text = "(px)";
             // 
-            // lNumOfSomitesMNDynamics
+            // lSomitesNumMNDynamics
             // 
-            this.lNumOfSomitesMNDynamics.AutoSize = true;
-            this.lNumOfSomitesMNDynamics.Location = new System.Drawing.Point(3, 8);
-            this.lNumOfSomitesMNDynamics.Name = "lNumOfSomitesMNDynamics";
-            this.lNumOfSomitesMNDynamics.Size = new System.Drawing.Size(73, 15);
-            this.lNumOfSomitesMNDynamics.TabIndex = 43;
-            this.lNumOfSomitesMNDynamics.Text = "# of Somites";
+            this.lSomitesNumMNDynamics.AutoSize = true;
+            this.lSomitesNumMNDynamics.Location = new System.Drawing.Point(3, 8);
+            this.lSomitesNumMNDynamics.Name = "lSomitesNumMNDynamics";
+            this.lSomitesNumMNDynamics.Size = new System.Drawing.Size(54, 15);
+            this.lSomitesNumMNDynamics.TabIndex = 43;
+            this.lSomitesNumMNDynamics.Text = "Somite #";
             // 
             // eKinematicsSomite
             // 
@@ -1687,7 +1687,7 @@
         private Label lpx3;
         private Label lPlotKinematicsHeight;
         private Label lpx4;
-        private Label lNumOfSomitesMNDynamics;
+        private Label lSomitesNumMNDynamics;
         private NumericUpDown eKinematicsSomite;
         private Button btnGenerateEpisodes;
         private Label lKinematicsTimes;

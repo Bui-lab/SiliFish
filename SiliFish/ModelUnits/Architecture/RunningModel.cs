@@ -21,7 +21,7 @@ namespace SiliFish.ModelUnits.Architecture
 {
     public class RunningModel : ModelBase
     {
-        public static Random rand = new(0);
+        
 
         private int iRunCounter = 0;
         private int iProgress = 0;

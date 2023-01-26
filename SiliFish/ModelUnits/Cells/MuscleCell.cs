@@ -105,7 +105,7 @@ namespace SiliFish.ModelUnits.Cells
                 {
                     IGap += jnc.GetGapCurrent(this, timeIndex);
                 }
-                stim = GetStimulus(timeIndex, RunningModel.rand);
+                stim = GetStimulus(timeIndex, Model.rand);
             }
             NextStep(timeIndex, stim + ISyn + IGap);
         }

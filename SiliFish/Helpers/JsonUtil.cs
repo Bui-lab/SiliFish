@@ -55,7 +55,24 @@ namespace SiliFish.Helpers
             return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
         }
 
-
+        public static int FindOpeningBracket(string json, int searchend)
+        {
+            int endCounter = 0;
+            char[] curlies = new char[] { '{', '}' };
+            while (searchend > 0)
+            {
+                int curly = json.LastIndexOfAny(curlies, searchend - 1);
+                if (curly < 0)
+                    return -1;
+                if (json[curly] == '}')
+                    endCounter++;
+                else if (endCounter == 0)
+                    return curly;
+                else endCounter--;
+                searchend = curly;
+            }
+            return -1;
+        }
 
     }
 }

@@ -172,9 +172,9 @@ namespace SiliFish.ModelUnits.Cells
             return new CellPoolTemplate(this);
         }
 
-        public Coordinate[] GenerateCoordinates(ModelDimensions modelDimensions, int n, int somite = -1)
+        public Coordinate[] GenerateCoordinates(Random random, ModelDimensions modelDimensions, int n, int somite = -1)
         {
-            return Coordinate.GenerateCoordinates(modelDimensions, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
+            return Coordinate.GenerateCoordinates(random, modelDimensions, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
         }
 
     }

@@ -8,6 +8,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Repositories;
 using SiliFish.Services;
 using SiliFish.UI.Extensions;
 
@@ -16,6 +17,7 @@ namespace SiliFish.UI.Controls
     public partial class DynamicsTestControl : UserControl
     {
         private static string coreUnitFileDefaultFolder;
+        private Random Random = new();
         private string coreType;
         private double deltaT, deltaTEuler;
         public double DeltaT { get => deltaT; set { deltaT = value; gaControl.DeltaT = value; } }
@@ -148,7 +150,7 @@ namespace SiliFish.UI.Controls
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
-            double[] I  = GenerateStimulus();
+            double[] I  = GenerateStimulus(stimulusControl1.GetStimulus());
             DynamicsStats[] stats = core.FiringAnalysis(param, values, I);
             for (int iter = 0; iter < values.Length; iter++)
             {
@@ -437,7 +439,7 @@ namespace SiliFish.UI.Controls
                 DynamicsRun();
         }
 
-        private double[] GenerateStimulus()
+        private double[] GenerateStimulus(StimulusSettings stimulusSettings)
         {
             decimal ddt = edt.Value;
             DeltaT = (double)ddt;
@@ -453,30 +455,23 @@ namespace SiliFish.UI.Controls
                 TimeArray[i] = i * deltaT;
             Stimulus stim = new()
             {
-                Settings = stimulusControl1.GetStimulus(),
-                TimeLine_ms = tl
+                Settings = stimulusSettings,
+                TimeLine_ms = tl,
+                RunParam = new() { DeltaT= DeltaT }
             };
-            double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
+            double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, Random).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
             return I;
         }
         private void DynamicsRun()
         {
             ReadParameters();
-            decimal ddt = (decimal)deltaT;
-            int stimStart = (int)(eStepStartTime.Value / ddt);
-            int stimEnd = (int)(eStepEndTime.Value / ddt);
-            int plotEnd = (int)(ePlotEndTime.Value / ddt);
-            TimeArray = new double[plotEnd + 1];
-            TimeLine tl = new();
-            tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
-            foreach (int i in Enumerable.Range(0, plotEnd + 1))
-                TimeArray[i] = i * deltaT;
+
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             if (core != null)
             {
                 if (rbSingleEntryStimulus.Checked)
                 {
-                    double[] I = GenerateStimulus();
+                    double[] I = GenerateStimulus(stimulusControl1.GetStimulus());
                     dynamics = core.DynamicsTest(I);
                     CreatePlots();
                 }
@@ -510,17 +505,13 @@ namespace SiliFish.UI.Controls
                         int iter = 0;
                         foreach (double stim in stimValues.Distinct())
                         {
-                            Stimulus stimulus = new()
+                            StimulusSettings stimulusSettings = new()
                             {
-                                Settings = new()
-                                {
-                                    Mode = StimulusMode.Step,
-                                    Value1 = stim,
-                                    Value2 = 0
-                                },
-                                TimeLine_ms = tl
+                                Mode = StimulusMode.Step,
+                                Value1 = stim,
+                                Value2 = 0
                             };
-                            I.Add(stimulus.GenerateStimulus(stimStart, stimEnd - stimStart, RunningModel.rand).Concat(new double[plotEnd + 1 - stimEnd]).ToArray());
+                            I.Add(GenerateStimulus(stimulusSettings));
                             dynamicsList.Add($"Stimulus: {stim:0.##}", core.DynamicsTest(I[iter++]));
                         }
                         CreatePlots(dynamicsList, columnNames, I);
@@ -590,37 +581,27 @@ namespace SiliFish.UI.Controls
             {
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
 
-                string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
-                if (string.IsNullOrEmpty(JSONString))
-                    return;
-                //the core is saved as an array to benefit from $type tag added by the JsonSerializer
-                CellCoreUnit[] arr = (CellCoreUnit[])JsonUtil.ToObject(typeof(CellCoreUnit[]), JSONString);
-                if (arr != null && arr.Any())
+                CellCoreUnit core = CellCoreUnitFile.Load(openFileJson.FileName);
+                if (core != null)
                 {
-                    CellCoreUnit core = arr[0];
-                    if (core != null)
-                    {
-                        skipCoreTypeChange = true;
-                        ddCoreType.Text = core.CoreType;
-                        skipCoreTypeChange = false;
-                        CoreType = core.CoreType;
-                        Parameters = core.GetParameters();
-                    }
+                    skipCoreTypeChange = true;
+                    ddCoreType.Text = core.CoreType;
+                    skipCoreTypeChange = false;
+                    CoreType = core.CoreType;
+                    Parameters = core.GetParameters();
                 }
             }
         }
+    
 
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
-            CellCoreUnit[] arr = new CellCoreUnit[] { core };
-            //the core is saved as an array to benefit from $type tag added by the JsonSerializer
-            string JSONString = JsonUtil.ToJson(arr);
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
-                FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
+                CellCoreUnitFile.Save(saveFileJson.FileName, core);
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
             }
         }

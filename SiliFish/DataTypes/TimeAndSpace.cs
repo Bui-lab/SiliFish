@@ -25,12 +25,12 @@ namespace SiliFish.DataTypes
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);
-        public static Coordinate[] GenerateCoordinates(ModelDimensions modelDimensions, BodyLocation BodyLocation,
+        public static Coordinate[] GenerateCoordinates(Random random,ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
         {
             if (n <= 0) return null;
             Coordinate[] coordinates = new Coordinate[n];
-            Distribution.Random = RunningModel.rand;
+            Distribution.Random = random;
 
             double x_length = 0, x_offset = 0;
             double y_length = 0, y_offset = 0;

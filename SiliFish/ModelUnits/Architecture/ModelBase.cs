@@ -15,6 +15,7 @@ namespace SiliFish.ModelUnits.Architecture
     public class ModelBase
     {
         private ModelSettings settings = new();
+        public Random rand = new(0);
         public string ClassType => GetType().Name;
         public string ModelName { get; set; }
         public string ModelDescription { get; set; }
