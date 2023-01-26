@@ -101,7 +101,7 @@ namespace SiliFish.Repositories
                 double minDescReach = desc > 0 ? min : 0;
                 string descending = desc > 0 ? "true" : "false";
 
-                string newJson = $"\"Ascending\": {ascending}," +
+                string newJson = $"\r\n\"Ascending\": {ascending}," +
                     $"\"Descending\": {descending}," +
                     $"\"MinAscReach\": {minAscReach}," +
                     $"\"MaxAscReach\": {asc}," +
@@ -122,7 +122,7 @@ namespace SiliFish.Repositories
             {
                 string newJson = "";
                 Match match = matchCollection2[i];
-                int index = match.Groups[1].Index;
+                int index = json.LastIndexOf("\"CellReach\"", match.Groups[1].Index);
                 string cellReach = match.Value;
 
                 Match m = distRegex.Match(cellReach);
