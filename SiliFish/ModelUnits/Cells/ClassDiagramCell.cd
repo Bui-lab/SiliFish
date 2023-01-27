@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SiliFish.DynamicUnits.Izhikevich_9P" Collapsed="true">
-    <Position X="7.5" Y="1.75" Width="1.5" />
+    <Position X="7.5" Y="1.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AIAAAACghAAAgSIAAAAIAAEEAAEEBBCkgQIQhEAACAA=</HashCode>
       <FileName>DynamicUnits\CellCore\Izhikevich_9P.cs</FileName>
@@ -45,49 +45,52 @@
   <Class Name="SiliFish.DynamicUnits.CellCoreUnit" Collapsed="true">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAIBAAAAAgAyAAABAIAAEEAAAEAAAEQIBAhMAwCCA=</HashCode>
+      <HashCode>AAgAIBAAAAAgISAAABAIAAEEAAAEAAAAQIBAhMAwCCA=</HashCode>
       <FileName>DynamicUnits\CellCore\CellCoreUnit.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.DynamicUnits.TwoExp_syn" Collapsed="true">
     <Position X="0.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAIgBAAAAAAAAABAACAAAACAAA=</HashCode>
+      <HashCode>QAAAAAAgAAAAAAAAAAAIABAAAAEAAgAAAACAAAAAgAA=</HashCode>
       <FileName>DynamicUnits\JncCore\TwoExp_Syn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.Cell" Collapsed="true">
     <Position X="5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQIAACKAAAIAggIgWAwgECYABAASAECYCBIAMAFw4AM=</HashCode>
+      <HashCode>BYIAACKCAAIAhgAkWAggECJAAAASIEAQCBoAMAFw4AM=</HashCode>
       <FileName>ModelUnits\Cells\Cell.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Core" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.CellPool" Collapsed="true">
-    <Position X="10.25" Y="3.25" Width="1.5" />
+    <Position X="10.25" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAAAnAAAAoAAAAEAAIUwQAABCAggAAAAAgAgQAAiAA=</HashCode>
+      <HashCode>QAAAAnAAAAoAAAAEAAIUwAAABCAAoAAgAAgAgQAAiAA=</HashCode>
       <FileName>ModelUnits\Cells\CellPool.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.CellPoolTemplate" Collapsed="true">
-    <Position X="7.75" Y="3.25" Width="2" />
+    <Position X="10" Y="3.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AIAAAgAgIAAgoBQkCAAAAAIAMBAACDMQCIAApACAAAA=</HashCode>
+      <HashCode>AIAAAgAgAAAgoBUkCAAAAAIAMBAACDMQCIAApECAAAA=</HashCode>
       <FileName>ModelUnits\Cells\CellPoolTemplate.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.MuscleCell" Collapsed="true">
     <Position X="3.25" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAACACAAAAAAAACAAAEIAAAAAQAACAEFAAEAAAgQA=</HashCode>
+      <HashCode>BAIAACACAAAAAAAACAAAEIAAAAAQIAAAEFAAEAAAgQA=</HashCode>
       <FileName>ModelUnits\Cells\MuscleCell.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.Neuron" Collapsed="true">
     <Position X="6.5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAACACAAABBAAACAAAEAAAAAAQAACAADAAEAAggAA=</HashCode>
+      <HashCode>BAIAACICAAABBAAACAAAEABAAAAQIAAAADAAEAAggAA=</HashCode>
       <FileName>ModelUnits\Cells\Neuron.cs</FileName>
     </TypeIdentifier>
   </Class>

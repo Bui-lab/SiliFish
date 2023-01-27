@@ -313,6 +313,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             if (cellPool is CellPool cp)
             {
+                cp.Model = this;
                 CellPools.Add(cp);
                 return true;
             }

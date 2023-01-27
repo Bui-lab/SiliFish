@@ -20,7 +20,8 @@ namespace SiliFish.ModelUnits.Cells
         public static Func<double> synWeightNoiseMultiplier;
         public static Func<double> rangeNoiseMultiplier;
 
-        private readonly RunningModel Model;
+        [JsonIgnore]
+        public RunningModel Model { get; set; }
 
         [JsonPropertyOrder(2)]
         public List<Cell> Cells { get; set; }
@@ -45,10 +46,12 @@ namespace SiliFish.ModelUnits.Cells
 
         public CellPool(CellPool cellPool):base(cellPool) 
         {
+            NumOfCells = 0;
+            Cells = new List<Cell>();
         }
         public override CellPoolTemplate CreateCopy()
         {
-            return new(this);
+            return new CellPool(this);
         }
 
         public CellPool(RunningModel model, CellPoolTemplate template, SagittalPlane leftright)
@@ -75,7 +78,7 @@ namespace SiliFish.ModelUnits.Cells
             TimeLine_ms = new TimeLine(template.TimeLine_ms);
             Active = template.Active;
             Cells = new List<Cell>();
-            GenerateCells(template, leftright);
+            GenerateCells();
         }
 
         /// <summary>
@@ -264,29 +267,29 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public void GenerateCells(CellPoolTemplate template, SagittalPlane leftright)
+        public void GenerateCells()
         {
-            int n = template.NumOfCells;
-            bool neuron = template.CellType == CellType.Neuron;
+            int n = NumOfCells;
+            bool neuron = CellType == CellType.Neuron;
             
             ModelDimensions MD = Model.ModelDimensions;
-            List<int> somites = template.PerSomiteOrTotal == CountingMode.PerSomite ? 
-                Util.ParseRange(template.SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
+            List<int> somites = PerSomiteOrTotal == CountingMode.PerSomite ? 
+                Util.ParseRange(SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
                 new List<int>() { -1 };
 
             double somiteLength = 0;
-            if (template.PerSomiteOrTotal == CountingMode.Total && MD.NumberOfSomites > 0)
+            if (PerSomiteOrTotal == CountingMode.Total && MD.NumberOfSomites > 0)
             {
                 somiteLength = MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
             }
             foreach (int somite in somites)
             {
                 Coordinate[] coordinates = GenerateCoordinates(Model.rand, MD, n, somite);
-                Dictionary<string, double[]> paramValues = template.Parameters.GenerateMultipleInstanceValues(n, ordered: false);
+                Dictionary<string, double[]> paramValues = Parameters.GenerateMultipleInstanceValues(n, ordered: false);
 
                 double defaultCV = CurrentSettings.Settings.cv;
-                double[] cv = template.ConductionVelocity != null ?
-                    ((Distribution)template.ConductionVelocity).GenerateNNumbers(n, 0, ordered: false) :
+                double[] cv = ConductionVelocity != null ?
+                    ((Distribution)ConductionVelocity).GenerateNNumbers(n, 0, ordered: false) :
                     Enumerable.Repeat(defaultCV, n).ToArray();
 
                 foreach (int i in Enumerable.Range(0, n))
@@ -304,9 +307,9 @@ namespace SiliFish.ModelUnits.Cells
                         }
                     }
                     Dictionary<string, double> cellParams = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
-                    Cell cell = neuron ? new Neuron(Model, template, actualSomite, i + 1, cellParams, cv[i]) :
-                        new MuscleCell(Model, template, actualSomite, i + 1, cellParams, cv[i]);
-                    cell.PositionLeftRight = leftright;
+                    Cell cell = neuron ? new Neuron(Model, this, actualSomite, i + 1, cellParams, cv[i]) :
+                        new MuscleCell(Model, this, actualSomite, i + 1, cellParams, cv[i]);
+                    cell.PositionLeftRight = PositionLeftRight;
                     cell.Coordinate = coordinates[i];
                     
                     AddCell(cell);

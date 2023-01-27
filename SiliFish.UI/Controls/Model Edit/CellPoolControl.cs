@@ -31,7 +31,15 @@ namespace SiliFish.UI.Controls
             }
             set
             {
-                eNumOfCells.Enabled = value == null || value is not CellPool;
+                bool createdCellPool = value is CellPool cp && cp.NumOfCells > 0;
+             
+                linkLoadPool.Enabled = !createdCellPool;
+                ((Control)tSpatialDist).Enabled = !createdCellPool;
+                ((Control)tDynamics).Enabled = !createdCellPool;
+                ((Control)tSpatialDist).Enabled = !createdCellPool;
+                pMainInfo.Enabled = !createdCellPool;
+                linkLoadPool.Enabled = !createdCellPool;
+
                 poolBase = value ?? new();
                 WriteDataToControl();
             }

@@ -11,6 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using SiliFish.ModelUnits.Junction;
 using System.Text.Json;
 using SiliFish.UI.Definitions;
+using SiliFish.Definitions;
 
 namespace SiliFish.UI.Controls
 {
@@ -209,6 +210,42 @@ namespace SiliFish.UI.Controls
 
         #endregion
         #region Cell Pool
+        private void AddCellPool(CellPoolTemplate newPool)
+        {
+            if (newPool != null)
+            {
+                if (newPool is CellPool cp)
+                {
+                    if (cp.PositionLeftRight == SagittalPlane.Both)
+                    {
+                        CellPool leftPool = cp;
+                        leftPool.PositionLeftRight = SagittalPlane.Left;
+                        CellPool rightPool = new CellPool(cp);
+                        rightPool.PositionLeftRight = SagittalPlane.Right;
+
+                        Model.AddCellPool(leftPool);
+                        leftPool.GenerateCells();
+                        listCellPools.AppendItem(leftPool);
+
+                        Model.AddCellPool(rightPool);
+                        rightPool.GenerateCells();
+                        listCellPools.AppendItem(rightPool);
+                    }
+                    else
+                    {
+                        Model.AddCellPool(cp);
+                        cp.GenerateCells();
+                        listCellPools.AppendItem(cp);
+                    }
+                }
+                else
+                {
+                    Model.AddCellPool(newPool);
+                    listCellPools.AppendItem(newPool);
+                }
+                ModelIsUpdated();
+            }
+        }
         private void LoadPools()
         {
             listCellPools.ClearItems();
@@ -224,25 +261,17 @@ namespace SiliFish.UI.Controls
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
             if (Model == null) return null;
-            if (CurrentMode == RunMode.Template)
-            {
-                ControlContainer frmControl = new();
-                CellPoolControl cpl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
-                cpl.LoadPool += Cpl_LoadPool;
-                cpl.SavePool += Cpl_SavePool;
+            ControlContainer frmControl = new();
+            CellPoolControl cpl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
+            cpl.LoadPool += Cpl_LoadPool;
+            cpl.SavePool += Cpl_SavePool;
 
-                cpl.PoolBase = pool;
-                frmControl.AddControl(cpl);
-                frmControl.Text = pool?.ToString() ?? "New Cell Pool";
+            cpl.PoolBase = pool;
+            frmControl.AddControl(cpl);
+            frmControl.Text = pool?.ToString() ?? "New Cell Pool";
 
-                if (frmControl.ShowDialog() == DialogResult.OK)
-                    return cpl.PoolBase;
-            }
-            else
-            {
-                MessageBox.Show("Implementation in progress.", "Model Edit");
-                //MODEL EDIT 
-            }
+            if (frmControl.ShowDialog() == DialogResult.OK)
+                return cpl.PoolBase;
             return null;
         }
         private void Cpl_SavePool(object sender, EventArgs e)
@@ -268,8 +297,7 @@ namespace SiliFish.UI.Controls
             CellPoolTemplate newPool = OpenCellPoolDialog(CurrentMode == RunMode.RunningModel ? new CellPool() : new CellPoolTemplate());
             if (newPool != null)
             {
-                Model.AddCellPool(newPool);
-                listCellPools.AppendItem(newPool);
+                AddCellPool(newPool);
                 ModelIsUpdated();
             }
         }
@@ -287,8 +315,10 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_CopyItem(object sender, EventArgs e)
         {
-            if (listCellPools.SelectedItem is not CellPoolTemplate pool) return;
-            CellPoolTemplate poolDuplicate = pool.CreateCopy();
+            if (listCellPools.SelectedItem is not CellPoolTemplate poolTemplate) return;
+            if (listCellPools.SelectedItem is not CellPool pool) return;
+
+            CellPoolTemplate poolDuplicate = pool?.CreateCopy() ?? poolTemplate.CreateCopy();
             poolDuplicate.CellGroup += " Copy";
             poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             while (Model.GetCellPools().Any(p => p.CellGroup == poolDuplicate?.CellGroup))
@@ -298,8 +328,7 @@ namespace SiliFish.UI.Controls
             }
             if (poolDuplicate != null)
             {
-                Model.AddCellPool(poolDuplicate);
-                listCellPools.AppendItem(poolDuplicate);
+                AddCellPool(poolDuplicate);
                 LoadProjections();
                 ModelIsUpdated();    
             }
@@ -559,8 +588,7 @@ namespace SiliFish.UI.Controls
                     interpool = jncControl.GetJunction();
                     //TODO modelTemplate.LinkObjects(interPoolTemplate);
                     return interpool;
-                }
-                
+                }                
             }
             return null;
         }
