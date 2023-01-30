@@ -294,7 +294,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listCellPools_AddItem(object sender, EventArgs e)
+        private void listCellPools_ItemAdd(object sender, EventArgs e)
         {
             CellPoolTemplate newPool = OpenCellPoolDialog(CurrentMode == RunMode.RunningModel ? new CellPool() : new CellPoolTemplate());
             if (newPool != null)
@@ -303,7 +303,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listCellPools_SelectItem(object sender, EventArgs e)
+        private void listCellPools_ItemSelect(object sender, EventArgs e)
         {
             if (CurrentMode == RunMode.RunningModel) 
                 listCells.ClearItems();
@@ -325,7 +325,7 @@ namespace SiliFish.UI.Controls
                 LoadProjections();//Full list
             }
         }
-        private void listCellPools_CopyItem(object sender, EventArgs e)
+        private void listCellPools_ItemCopy(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem is not CellPoolTemplate poolTemplate) return;
             if (listCellPools.SelectedItem is not CellPool pool) return;
@@ -345,7 +345,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();    
             }
         }
-        private void listCellPools_DeleteItem(object sender, EventArgs e)
+        private void listCellPools_ItemDelete(object sender, EventArgs e)
         {
             if (listCellPools.SelectedIndex >= 0)
             {
@@ -361,7 +361,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private void listCellPools_ViewItem(object sender, EventArgs e)
+        private void listCellPools_ItemView(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem == null)
                 return;
@@ -380,7 +380,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private void listCellPools_ActivateItem(object sender, EventArgs e)
+        private void listCellPools_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
@@ -417,7 +417,7 @@ namespace SiliFish.UI.Controls
             return null;
         }
 
-        private void listCell_AddItem(object sender, EventArgs e)
+        private void listCell_ItemAdd(object sender, EventArgs e)
         {
             if (SelectedPool == null) return;
             //MODEL EDIT
@@ -432,7 +432,7 @@ namespace SiliFish.UI.Controls
             }*/
         }
 
-        private void listCells_SelectItem(object sender, EventArgs e)
+        private void listCells_ItemSelect(object sender, EventArgs e)
         {
             if (CurrentMode != RunMode.RunningModel) return;
             if (sender is Cell cell)
@@ -442,7 +442,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listCells_CopyItem(object sender, EventArgs e)
+        private void listCells_ItemCopy(object sender, EventArgs e)
         {
             if (listCells.SelectedItem is not Cell cell) return;
             //MODEL EDIT
@@ -463,7 +463,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }*/
         }
-        private void listCells_DeleteItem(object sender, EventArgs e)
+        private void listCells_ItemDelete(object sender, EventArgs e)
         {
             //MODEL EDIT
             /*if (listCells.SelectedIndex >= 0)
@@ -480,7 +480,7 @@ namespace SiliFish.UI.Controls
                 }
             }*/
         }
-        private void listCells_ViewItem(object sender, EventArgs e)
+        private void listCells_ItemView(object sender, EventArgs e)
         {
             if (listCells.SelectedItem == null)
                 return;
@@ -500,8 +500,8 @@ namespace SiliFish.UI.Controls
                     LoadProjections();
                 }
             }*/
-        }
-        private void listCell_ActivateItem(object sender, EventArgs e)
+        } 
+        private void listCell_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
@@ -617,7 +617,7 @@ namespace SiliFish.UI.Controls
             return null;
         }
 
-        private void listConnections_AddItem(object sender, EventArgs e)
+        private void listConnections_ItemAdd(object sender, EventArgs e)
         {
             JunctionBase newJnc = OpenConnectionDialog(null);
             if (newJnc != null)
@@ -627,7 +627,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listConnections_CopyItem(object sender, EventArgs e)
+        private void listConnections_ItemCopy(object sender, EventArgs e)
         {
             if (Model == null) return ;
             if (listConnections.SelectedItem == null)
@@ -649,7 +649,7 @@ namespace SiliFish.UI.Controls
                 //MODEL EDIT JunctionControl jncControl = new();
             }
         }
-        private void listConnections_DeleteItem(object sender, EventArgs e)
+        private void listConnections_ItemDelete(object sender, EventArgs e)
         {
             if (listConnections.SelectedIndex >= 0)
             {
@@ -658,7 +658,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listConnections_ViewItem(object sender, EventArgs e)
+        private void listConnections_ItemView(object sender, EventArgs e)
         {
             if (listConnections.SelectedItem == null)
                 return;
@@ -672,7 +672,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_ActivateItem(object sender, EventArgs e)
+        private void listConnections_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
@@ -766,7 +766,7 @@ namespace SiliFish.UI.Controls
             }
             return null;
         }
-        private void listStimuli_AddItem(object sender, EventArgs e)
+        private void listStimuli_ItemAdd(object sender, EventArgs e)
         {
             StimulusBase stimulus = OpenStimulusDialog(null);
             if (stimulus != null)
@@ -776,7 +776,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listStimuli_CopyItem(object sender, EventArgs e)
+        private void listStimuli_ItemCopy(object sender, EventArgs e)
         {
             if (listStimuli.SelectedItem == null)
                 return;
@@ -789,7 +789,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listStimuli_DeleteItem(object sender, EventArgs e)
+        private void listStimuli_ItemDelete(object sender, EventArgs e)
         {
             if (listStimuli.SelectedIndex >= 0)
             {
@@ -799,7 +799,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listStimuli_ViewItem(object sender, EventArgs e)
+        private void listStimuli_ItemView(object sender, EventArgs e)
         {
             if (listStimuli.SelectedItem == null)
                 return;
@@ -812,8 +812,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-
-        private void listStimuli_ActivateItem(object sender, EventArgs e)
+        private void listStimuli_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }

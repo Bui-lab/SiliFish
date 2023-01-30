@@ -6,26 +6,13 @@ namespace SiliFish.UI.Controls
 
     public partial class ListBoxControl : UserControl
     {
-        private event EventHandler addItem;
-        public event EventHandler AddItem { add => addItem += value; remove => addItem -= value; }
-
-        private event EventHandler deleteItem;
-        public event EventHandler DeleteItem { add => deleteItem += value; remove => deleteItem -= value; }
-
-        private event EventHandler copyItem;
-        public event EventHandler CopyItem { add => copyItem += value; remove => copyItem -= value; }
-
-        private event EventHandler viewItem;
-        public event EventHandler ViewItem { add => viewItem += value; remove => viewItem -= value; }
-
-        private event EventHandler activateItem;
-        public event EventHandler ActivateItem { add => activateItem += value; remove => activateItem -= value; }
-
-        private event EventHandler sortItems;
-        public event EventHandler SortItems { add => sortItems += value; remove => sortItems -= value; }
-
-        private event EventHandler selectItem;
-        public event EventHandler SelectItem { add => selectItem += value; remove => selectItem -= value; }
+        public event EventHandler ItemAdd;
+        public event EventHandler ItemDelete;
+        public event EventHandler ItemCopy;
+        public event EventHandler ItemView;
+        public event EventHandler ItemToggleActive;
+        public event EventHandler ItemsSort;
+        public event EventHandler ItemSelect;
 
         private Dictionary<int, object> HiddenItems = new Dictionary<int, object>();
         public List<object> GetItems(bool includeHidden)
@@ -115,29 +102,29 @@ namespace SiliFish.UI.Controls
 
         private void miAddItem_Click(object sender, EventArgs e)
         {
-            addItem?.Invoke(this, new EventArgs());
+            ItemAdd?.Invoke(this, new EventArgs());
         }
 
         private void miDeleteItem_Click(object sender, EventArgs e)
         {
-            deleteItem?.Invoke(listBox.SelectedItem, new EventArgs());
+           ItemDelete?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
         private void miCreateCopy_Click(object sender, EventArgs e)
         {
-            copyItem?.Invoke(listBox.SelectedItem, new EventArgs());
+            ItemCopy?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
         private void miSortAlphabetically_Click(object sender, EventArgs e)
         {
-            sortItems?.Invoke(this, new EventArgs());
+            ItemsSort?.Invoke(this, new EventArgs());
         }
 
         private void SetActive(object item, int index, bool active)
         {
             item.SetPropertyValue("Active", active);
             listBox.Items[index] = item;//to refresh text
-            activateItem?.Invoke(item, new EventArgs());
+            ItemToggleActive?.Invoke(item, new EventArgs());
         }
         private void miActivate_Click(object sender, EventArgs e)
         {
@@ -164,13 +151,13 @@ namespace SiliFish.UI.Controls
         {
             (string tt, bool _) = listBox.SelectedItem?.GetPropertyValue("Tooltip", listBox.SelectedItem?.ToString()) ?? ("", false);
             toolTip.SetToolTip(listBox, tt);
-            selectItem?.Invoke(listBox.SelectedItem, new EventArgs());
+            ItemSelect?.Invoke(listBox.SelectedItem, new EventArgs());
         }
 
         private void listBox_DoubleClick(object sender, EventArgs e)
         {
             if (listBox.SelectedItem != null)
-                viewItem?.Invoke(listBox.SelectedItem, null);
+                ItemView?.Invoke(listBox.SelectedItem, null);
         }
 
         private void listBox_MouseClick(object sender, MouseEventArgs e)
@@ -183,7 +170,7 @@ namespace SiliFish.UI.Controls
         }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
-            miSortAlphabetically.Visible = sortItems != null;
+            miSortAlphabetically.Visible = ItemsSort != null;
 
             miActivate.Visible = miDeactivate.Visible = false;
             if (listBox.Items.Count == 0)

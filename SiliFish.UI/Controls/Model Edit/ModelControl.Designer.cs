@@ -321,13 +321,13 @@
             this.listCellPools.SelectedItem = null;
             this.listCellPools.Size = new System.Drawing.Size(315, 259);
             this.listCellPools.TabIndex = 7;
-            this.listCellPools.AddItem += new System.EventHandler(this.listCellPools_AddItem);
-            this.listCellPools.DeleteItem += new System.EventHandler(this.listCellPools_DeleteItem);
-            this.listCellPools.CopyItem += new System.EventHandler(this.listCellPools_CopyItem);
-            this.listCellPools.ViewItem += new System.EventHandler(this.listCellPools_ViewItem);
-            this.listCellPools.ActivateItem += new System.EventHandler(this.listCellPools_ActivateItem);
-            this.listCellPools.SortItems += new System.EventHandler(this.listCellPool_SortItems);
-            this.listCellPools.SelectItem += new System.EventHandler(this.listCellPools_SelectItem);
+            this.listCellPools.ItemAdd += new System.EventHandler(this.listCellPools_ItemAdd);
+            this.listCellPools.ItemDelete += new System.EventHandler(this.listCellPools_ItemDelete);
+            this.listCellPools.ItemCopy += new System.EventHandler(this.listCellPools_ItemCopy);
+            this.listCellPools.ItemView += new System.EventHandler(this.listCellPools_ItemView);
+            this.listCellPools.ItemToggleActive += new System.EventHandler(this.listCellPools_ItemToggleActive);
+            this.listCellPools.ItemsSort += new System.EventHandler(this.listCellPool_SortItems);
+            this.listCellPools.ItemSelect += new System.EventHandler(this.listCellPools_ItemSelect);
             // 
             // listCells
             // 
@@ -338,12 +338,12 @@
             this.listCells.SelectedItem = null;
             this.listCells.Size = new System.Drawing.Size(315, 258);
             this.listCells.TabIndex = 0;
-            this.listCells.AddItem += new System.EventHandler(this.listCell_AddItem);
-            this.listCells.DeleteItem += new System.EventHandler(this.listCells_DeleteItem);
-            this.listCells.CopyItem += new System.EventHandler(this.listCells_CopyItem);
-            this.listCells.ViewItem += new System.EventHandler(this.listCells_ViewItem);
-            this.listCells.ActivateItem += new System.EventHandler(this.listCell_ActivateItem);
-            this.listCells.SelectItem += new System.EventHandler(this.listCells_SelectItem);
+            this.listCells.ItemAdd += new System.EventHandler(this.listCell_ItemAdd);
+            this.listCells.ItemDelete += new System.EventHandler(this.listCells_ItemDelete);
+            this.listCells.ItemCopy += new System.EventHandler(this.listCells_ItemCopy);
+            this.listCells.ItemView += new System.EventHandler(this.listCells_ItemView);
+            this.listCells.ItemToggleActive += new System.EventHandler(this.listCell_ItemToggleActive);
+            this.listCells.ItemSelect += new System.EventHandler(this.listCells_ItemSelect);
             // 
             // listConnections
             // 
@@ -354,12 +354,12 @@
             this.listConnections.SelectedItem = null;
             this.listConnections.Size = new System.Drawing.Size(359, 521);
             this.listConnections.TabIndex = 8;
-            this.listConnections.AddItem += new System.EventHandler(this.listConnections_AddItem);
-            this.listConnections.DeleteItem += new System.EventHandler(this.listConnections_DeleteItem);
-            this.listConnections.CopyItem += new System.EventHandler(this.listConnections_CopyItem);
-            this.listConnections.ViewItem += new System.EventHandler(this.listConnections_ViewItem);
-            this.listConnections.ActivateItem += new System.EventHandler(this.listConnections_ActivateItem);
-            this.listConnections.SortItems += new System.EventHandler(this.listConnections_SortItems);
+            this.listConnections.ItemAdd += new System.EventHandler(this.listConnections_ItemAdd);
+            this.listConnections.ItemDelete += new System.EventHandler(this.listConnections_ItemDelete);
+            this.listConnections.ItemCopy += new System.EventHandler(this.listConnections_ItemCopy);
+            this.listConnections.ItemView += new System.EventHandler(this.listConnections_ItemView);
+            this.listConnections.ItemToggleActive += new System.EventHandler(this.listConnections_ItemToggleActive);
+            this.listConnections.ItemsSort += new System.EventHandler(this.listConnections_SortItems);
             // 
             // tCellPoolsJuncs
             // 
@@ -393,11 +393,11 @@
             this.listStimuli.SelectedItem = null;
             this.listStimuli.Size = new System.Drawing.Size(682, 555);
             this.listStimuli.TabIndex = 0;
-            this.listStimuli.AddItem += new System.EventHandler(this.listStimuli_AddItem);
-            this.listStimuli.DeleteItem += new System.EventHandler(this.listStimuli_DeleteItem);
-            this.listStimuli.CopyItem += new System.EventHandler(this.listStimuli_CopyItem);
-            this.listStimuli.ViewItem += new System.EventHandler(this.listStimuli_ViewItem);
-            this.listStimuli.ActivateItem += new System.EventHandler(this.listStimuli_ActivateItem);
+            this.listStimuli.ItemAdd += new System.EventHandler(this.listStimuli_ItemAdd);
+            this.listStimuli.ItemDelete += new System.EventHandler(this.listStimuli_ItemDelete);
+            this.listStimuli.ItemCopy += new System.EventHandler(this.listStimuli_ItemCopy);
+            this.listStimuli.ItemView += new System.EventHandler(this.listStimuli_ItemView);
+            this.listStimuli.ItemToggleActive += new System.EventHandler(this.listStimuli_ItemToggleActive);
             // 
             // propKinematics
             // 

@@ -126,7 +126,7 @@ namespace SiliFish.UI.Controls
                     }
                 }
             }
-            interPoolTemplate.PoolSource = ddSourcePool.Text;
+            interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is JunctionBase jnc ? jnc.ID : "";
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -143,7 +143,7 @@ namespace SiliFish.UI.Controls
                     synapseControl.EReversal= (double)pool.VReversal;
                 }
             }
-            interPoolTemplate.PoolTarget = ddTargetPool.Text;
+            interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is JunctionBase jnc ? jnc.ID : "";
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
