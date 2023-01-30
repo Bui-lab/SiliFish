@@ -126,7 +126,7 @@ namespace SiliFish.UI.Controls
                     }
                 }
             }
-            interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is JunctionBase jnc ? jnc.ID : "";
+            interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -143,7 +143,7 @@ namespace SiliFish.UI.Controls
                     synapseControl.EReversal= (double)pool.VReversal;
                 }
             }
-            interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is JunctionBase jnc ? jnc.ID : "";
+            interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
             interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
