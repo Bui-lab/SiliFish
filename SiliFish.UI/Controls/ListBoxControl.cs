@@ -173,6 +173,14 @@ namespace SiliFish.UI.Controls
                 viewItem?.Invoke(listBox.SelectedItem, null);
         }
 
+        private void listBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            int index = listBox.IndexFromPoint(e.Location);
+            if (index == ListBox.NoMatches)
+            {
+                listBox.SelectedItem = null;
+            }
+        }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
             miSortAlphabetically.Visible = sortItems != null;

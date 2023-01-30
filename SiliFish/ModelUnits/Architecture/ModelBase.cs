@@ -73,7 +73,7 @@ namespace SiliFish.ModelUnits.Architecture
         public virtual void LinkObjects() { }
 
         public virtual List<CellPoolTemplate> GetCellPools() { throw new NotImplementedException(); }
-        public virtual List<object> GetProjections() { throw new NotImplementedException(); }
+        public virtual List<JunctionBase> GetProjections() { throw new NotImplementedException(); }
         public virtual List<StimulusBase> GetStimuli() { throw new NotImplementedException(); }
         public virtual void AddStimulus(StimulusBase stim) { throw new NotImplementedException(); }
         public virtual void RemoveStimulus(StimulusBase stim) { throw new NotImplementedException(); }

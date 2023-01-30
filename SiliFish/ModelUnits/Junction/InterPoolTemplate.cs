@@ -105,9 +105,9 @@ namespace SiliFish.ModelUnits.Junction
 
         #endregion
 
-        public InterPoolTemplate()
+        public InterPoolTemplate():base()
         { }
-        public InterPoolTemplate(InterPoolTemplate ipt)
+        public InterPoolTemplate(InterPoolTemplate ipt):base (ipt)
         {
             Name = ipt.Name;
             Description = ipt.Description;

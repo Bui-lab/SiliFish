@@ -43,9 +43,9 @@ namespace SiliFish.ModelUnits.Architecture
             return CellPoolTemplates.Remove(cellPool);
         }
 
-        public override List<object> GetProjections()
+        public override List<JunctionBase> GetProjections()
         {
-            return InterPoolTemplates.Select(ip => (object)ip).ToList();
+            return InterPoolTemplates.Select(ip => (JunctionBase)ip).ToList();
         }
 
 

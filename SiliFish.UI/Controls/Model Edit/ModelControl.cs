@@ -28,7 +28,7 @@ namespace SiliFish.UI.Controls
             set => modelUpdated = value;
         }
 
-        private CellPool SelectedPool; //valid if Mode == Mode.RunningModel
+        private CellPool SelectedPool; 
         private Cell SelectedCell; //valid if Mode == Mode.RunningModel
 
         public ModelControl()
@@ -129,7 +129,7 @@ namespace SiliFish.UI.Controls
             LoadParams(Model?.Parameters);
         }
 
-        private void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
+        private static void ReadParamsFromTabPage(Dictionary<string, object> ParamDict, TabPage page)
         {
             if (page.Tag?.ToString() != "Param" || ParamDict == null)
                 return;
@@ -220,8 +220,10 @@ namespace SiliFish.UI.Controls
                     {
                         CellPool leftPool = cp;
                         leftPool.PositionLeftRight = SagittalPlane.Left;
-                        CellPool rightPool = new CellPool(cp);
-                        rightPool.PositionLeftRight = SagittalPlane.Right;
+                        CellPool rightPool = new(cp)
+                        {
+                            PositionLeftRight = SagittalPlane.Right
+                        };
 
                         Model.AddCellPool(leftPool);
                         leftPool.GenerateCells();
@@ -303,14 +305,24 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_SelectItem(object sender, EventArgs e)
         {
-            if (CurrentMode != RunMode.RunningModel) return;
-            listCells.ClearItems();
+            if (CurrentMode == RunMode.RunningModel) 
+                listCells.ClearItems();
             if (sender is CellPool pool)
             {
                 SelectedPool = pool;
                 SelectedCell = null;
                 LoadProjections(pool);
                 LoadCells();
+            }
+            else if (sender is CellPoolTemplate cpt)
+            {
+                LoadProjections(cpt.CellGroup);
+            }
+            else if (sender == null)
+            {
+                SelectedPool = null;
+                SelectedCell = null;
+                LoadProjections();//Full list
             }
         }
         private void listCellPools_CopyItem(object sender, EventArgs e)
@@ -508,6 +520,18 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void LoadProjections(string cellPoolID)
+        {
+            listConnections.ClearItems();
+            lConnectionsTitle.Text = $"Connections of {cellPoolID}";
+            if (Model == null || Model is not ModelTemplate) return;
+            foreach (InterPoolTemplate jnc in Model.GetProjections()
+                .Where(proj => ((InterPoolTemplate)proj).PoolSource == cellPoolID || ((InterPoolTemplate)proj).PoolTarget == cellPoolID)
+                .Cast<InterPoolTemplate>())
+            {
+                listConnections.AppendItem(jnc);
+            }
+        }
         private void LoadProjections(CellPool cp)
         {
             if (cp == null)

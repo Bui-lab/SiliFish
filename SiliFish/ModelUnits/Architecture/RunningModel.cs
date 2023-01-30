@@ -335,9 +335,9 @@ namespace SiliFish.ModelUnits.Architecture
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {
         }
-        public override List<object> GetProjections()
+        public override List<JunctionBase> GetProjections()
         {
-            List<object> listProjections = new();
+            List<JunctionBase> listProjections = new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
