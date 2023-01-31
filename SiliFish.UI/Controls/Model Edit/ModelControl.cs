@@ -214,31 +214,11 @@ namespace SiliFish.UI.Controls
         {
             if (newPool != null)
             {
-                if (newPool is CellPool cp)
+                if (CurrentMode == RunMode.RunningModel)
                 {
-                    if (cp.PositionLeftRight == SagittalPlane.Both)
-                    {
-                        CellPool leftPool = cp;
-                        leftPool.PositionLeftRight = SagittalPlane.Left;
-                        CellPool rightPool = new(cp)
-                        {
-                            PositionLeftRight = SagittalPlane.Right
-                        };
-
-                        Model.AddCellPool(leftPool);
-                        leftPool.GenerateCells();
-                        listCellPools.AppendItem(leftPool);
-
-                        Model.AddCellPool(rightPool);
-                        rightPool.GenerateCells();
-                        listCellPools.AppendItem(rightPool);
-                    }
-                    else
-                    {
-                        Model.AddCellPool(cp);
-                        cp.GenerateCells();
+                    List<CellPool> cellPools = (Model as RunningModel).GenerateCellPoolsFrom(newPool, generateCells: true);
+                    foreach (CellPool cp in cellPools)
                         listCellPools.AppendItem(cp);
-                    }
                 }
                 else
                 {
@@ -296,7 +276,8 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemAdd(object sender, EventArgs e)
         {
-            CellPoolTemplate newPool = OpenCellPoolDialog(CurrentMode == RunMode.RunningModel ? new CellPool() : new CellPoolTemplate());
+            //a new cell pool is always generated as a CellPoolTemplate
+            CellPoolTemplate newPool = OpenCellPoolDialog(new CellPoolTemplate());
             if (newPool != null)
             {
                 AddCellPool(newPool);
@@ -328,9 +309,9 @@ namespace SiliFish.UI.Controls
         private void listCellPools_ItemCopy(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem is not CellPoolTemplate poolTemplate) return;
-            if (listCellPools.SelectedItem is not CellPool pool) return;
+            CellPool pool = listCellPools.SelectedItem as CellPool;
 
-            CellPoolTemplate poolDuplicate = pool?.CreateCopy() ?? poolTemplate.CreateCopy();
+            CellPoolTemplate poolDuplicate = (pool as CellPoolTemplate)?.CreateCopy() ?? poolTemplate.CreateCopy();
             poolDuplicate.CellGroup += " Copy";
             poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             while (Model.GetCellPools().Any(p => p.CellGroup == poolDuplicate?.CellGroup))
@@ -355,7 +336,7 @@ namespace SiliFish.UI.Controls
                     CellPoolTemplate cpl = (CellPoolTemplate)listCellPools.SelectedItem;
                     Model.RemoveCellPool(cpl);
                     listCellPools.RemoveItemAt(listCellPools.SelectedIndex);
-                    LoadProjections();
+                    //Automatically loaded with SelectedIndexChangedEvent LoadProjections();
                     LoadStimuli();
                     ModelIsUpdated();
                 }

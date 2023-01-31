@@ -20,8 +20,7 @@ using System.Text.Json.Serialization;
 namespace SiliFish.ModelUnits.Architecture
 {
     public class RunningModel : ModelBase
-    {
-        
+    {      
 
         private int iRunCounter = 0;
         private int iProgress = 0;
@@ -36,125 +35,6 @@ namespace SiliFish.ModelUnits.Architecture
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
 
-        [JsonPropertyOrder(2)]
-        public RunParam RunParam { get; set; } = new();
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public double[] TimeArray { get { return Time; } }
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public bool ModelRun { get { return model_run; } }
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public bool CancelRun { get; set; } = false;
-        private bool CancelLoop { get; set; } = false;
-        public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
-        public int GetRunCounter() => iRunCounter;
-
-
-        public RunningModel()
-        {
-        }
-
-        public RunningModel(ModelTemplate swimmingModelTemplate)
-        {
-            neuronPools.Clear();
-            musclePools.Clear();
-
-            initialized = false;
-
-            if (swimmingModelTemplate == null) return;
-
-            ModelName = swimmingModelTemplate.ModelName;
-            ModelDescription = $"Generated from {ModelName} on {DateTime.Now:g}\r\n{swimmingModelTemplate.ModelDescription}";
-            ModelDimensions = swimmingModelTemplate.ModelDimensions.Clone();
-            Settings = swimmingModelTemplate.Settings.Clone();
-            KinemParam = swimmingModelTemplate.KinemParam.Clone();
-            SetParameters(swimmingModelTemplate.Parameters);
-
-            #region Generate pools and cells
-            foreach (CellPoolTemplate pool in swimmingModelTemplate.CellPoolTemplates.Where(cp => cp.Active))
-            {
-                if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Left)
-                {
-                    if (pool.CellType == CellType.Neuron)
-                        neuronPools.Add(new CellPool(this, pool, SagittalPlane.Left));
-                    else if (pool.CellType == CellType.MuscleCell)
-                        musclePools.Add(new CellPool(this, pool, SagittalPlane.Left));
-                }
-                if (pool.PositionLeftRight == SagittalPlane.Both || pool.PositionLeftRight == SagittalPlane.Right)
-                {
-                    if (pool.CellType == CellType.Neuron)
-                        neuronPools.Add(new CellPool(this, pool, SagittalPlane.Right));
-                    else if (pool.CellType == CellType.MuscleCell)
-                        musclePools.Add(new CellPool(this, pool, SagittalPlane.Right));
-                }
-            }
-            #endregion
-
-            #region Generate Gap Junctions and Chemical Synapses
-            foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
-            {
-                CellPool leftSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
-
-                CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
-
-                if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
-                {
-                    if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
-                    {
-                        PoolToPoolChemSynapse(leftSource, leftTarget, jncTemp);
-                        PoolToPoolChemSynapse(rightSource, rightTarget, jncTemp);
-                    }
-                    if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
-                    {
-                        PoolToPoolChemSynapse(leftSource, rightTarget, jncTemp);
-                        PoolToPoolChemSynapse(rightSource, leftTarget, jncTemp);
-                    }
-                }
-                else if (jncTemp.ConnectionType == ConnectionType.Gap)
-                {
-                    if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
-                    {
-                        PoolToPoolGapJunction(leftSource, leftTarget, jncTemp);
-                        PoolToPoolGapJunction(rightSource, rightTarget, jncTemp);
-                    }
-                    if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
-                    {
-                        PoolToPoolGapJunction(leftSource, rightTarget, jncTemp);
-                        PoolToPoolGapJunction(rightSource, leftTarget, jncTemp);
-                    }
-                }
-            }
-            #endregion
-
-            #region Generate Stimuli
-            if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
-            {
-                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
-                {
-                    if (stimulus.LeftRight.Contains("Left"))
-                    {
-                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
-                        target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
-                    }
-                    if (stimulus.LeftRight.Contains("Right"))
-                    {
-                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
-                        target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
-                    }
-                }
-            }
-            #endregion
-        }
-
-        public override void BackwardCompatibility()
-        { }
         [JsonIgnore]
         [Browsable(false)]
         public List<CellPool> CellPools
@@ -276,6 +156,140 @@ namespace SiliFish.ModelUnits.Architecture
                 return interPools;
             }
         }
+        [JsonPropertyOrder(2)]
+        public RunParam RunParam { get; set; } = new();
+
+        [JsonIgnore]
+        [Browsable(false)]
+        public double[] TimeArray { get { return Time; } }
+
+        [JsonIgnore]
+        [Browsable(false)]
+        public bool ModelRun { get { return model_run; } }
+
+        [JsonIgnore]
+        [Browsable(false)]
+        public bool CancelRun { get; set; } = false;
+        private bool CancelLoop { get; set; } = false;
+        public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
+        public int GetRunCounter() => iRunCounter;
+
+
+        public RunningModel()
+        {
+        }
+
+        public RunningModel(ModelTemplate swimmingModelTemplate)
+        {
+            neuronPools.Clear();
+            musclePools.Clear();
+
+            initialized = false;
+
+            if (swimmingModelTemplate == null) return;
+
+            ModelName = swimmingModelTemplate.ModelName;
+            ModelDescription = $"Generated from {ModelName} on {DateTime.Now:g}\r\n{swimmingModelTemplate.ModelDescription}";
+            ModelDimensions = swimmingModelTemplate.ModelDimensions.Clone();
+            Settings = swimmingModelTemplate.Settings.Clone();
+            KinemParam = swimmingModelTemplate.KinemParam.Clone();
+            SetParameters(swimmingModelTemplate.Parameters);
+
+            #region Generate pools and cells
+            foreach (CellPoolTemplate cellPoolTemplate in swimmingModelTemplate.CellPoolTemplates.Where(cp => cp.Active))
+            {
+                GenerateCellPoolsFrom(cellPoolTemplate);
+            }
+            #endregion
+
+            #region Generate Gap Junctions and Chemical Synapses
+            foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.Active))
+            {
+                CellPool leftSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
+
+                CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
+
+                if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
+                {
+                    if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolChemSynapse(leftSource, leftTarget, jncTemp);
+                        PoolToPoolChemSynapse(rightSource, rightTarget, jncTemp);
+                    }
+                    if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolChemSynapse(leftSource, rightTarget, jncTemp);
+                        PoolToPoolChemSynapse(rightSource, leftTarget, jncTemp);
+                    }
+                }
+                else if (jncTemp.ConnectionType == ConnectionType.Gap)
+                {
+                    if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolGapJunction(leftSource, leftTarget, jncTemp);
+                        PoolToPoolGapJunction(rightSource, rightTarget, jncTemp);
+                    }
+                    if (jncTemp.AxonReachMode == AxonReachMode.Contralateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
+                    {
+                        PoolToPoolGapJunction(leftSource, rightTarget, jncTemp);
+                        PoolToPoolGapJunction(rightSource, leftTarget, jncTemp);
+                    }
+                }
+            }
+            #endregion
+
+            #region Generate Stimuli
+            if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
+            {
+                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
+                {
+                    if (stimulus.LeftRight.Contains("Left"))
+                    {
+                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
+                        target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
+                    }
+                    if (stimulus.LeftRight.Contains("Right"))
+                    {
+                        CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
+                        target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
+                    }
+                }
+            }
+            #endregion
+        }
+
+        public List<CellPool> GenerateCellPoolsFrom(CellPoolTemplate cellPoolTemplate, bool generateCells = false)
+        {
+            List<CellPool> cellPoolList = new();
+            if (cellPoolTemplate.PositionLeftRight == SagittalPlane.Both || cellPoolTemplate.PositionLeftRight == SagittalPlane.Left)
+            {
+                CellPool pool = new(this, cellPoolTemplate, SagittalPlane.Left);
+                if (cellPoolTemplate.CellType == CellType.Neuron)
+                    neuronPools.Add(pool);
+                else if (cellPoolTemplate.CellType == CellType.MuscleCell)
+                    musclePools.Add(pool);
+                if (generateCells)
+                    pool.GenerateCells();
+                cellPoolList.Add(pool);
+            }
+            if (cellPoolTemplate.PositionLeftRight == SagittalPlane.Both || cellPoolTemplate.PositionLeftRight == SagittalPlane.Right)
+            {
+                CellPool pool = new(this, cellPoolTemplate, SagittalPlane.Right);
+                if (cellPoolTemplate.CellType == CellType.Neuron)
+                    neuronPools.Add(pool);
+                else if (cellPoolTemplate.CellType == CellType.MuscleCell)
+                    musclePools.Add(pool);
+                if (generateCells)
+                    pool.GenerateCells();
+                cellPoolList.Add(pool);
+            }
+            return cellPoolList;
+        }
+        public override void BackwardCompatibility()
+        { }
+
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
         {
             List<Cell> motoNeurons = MotoNeurons;

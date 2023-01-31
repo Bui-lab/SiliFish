@@ -1,9 +1,12 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.DynamicUnits;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace SiliFish.UI.Controls
 {
     public partial class DistributionControl : UserControl
     {
+        public bool NoneIncluded { get; set; } = false;
         public bool Angular { get; set; } = false;
         public bool AbsoluteEnforced
         {
@@ -25,6 +28,9 @@ namespace SiliFish.UI.Controls
         public DistributionControl()
         {
             InitializeComponent();
+            if (NoneIncluded)
+                ddDistribution.Items.Add("None");
+            ddDistribution.Items.AddRange(Distribution.GetDistributionTypes().ToArray());
             ddDistribution.SelectedIndex = 0;
             rbAbsolute.Checked = true;
         }

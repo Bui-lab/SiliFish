@@ -36,7 +36,7 @@ namespace SiliFish.UI.Controls
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     dist = distControl.GetDistribution();
-                    if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < GlobalSettings.Epsilon)
+                    if ((dist is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon)
                         WriteNoDistToRow(null, dist.UniqueValue, rowind);
                     else
                         WriteDistToRow(null, dist, rowind);
@@ -47,7 +47,7 @@ namespace SiliFish.UI.Controls
         {
             if (dgDistribution.Rows[e.RowIndex].Tag is Distribution dist)
             {
-                if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < GlobalSettings.Epsilon)
+                if ((dist is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon)
                     dgDistribution[colUniqueValue.Index, e.RowIndex].ReadOnly = false;
                 else
                     dgDistribution[colUniqueValue.Index, e.RowIndex].ReadOnly = true;
@@ -68,7 +68,7 @@ namespace SiliFish.UI.Controls
             dgDistribution.Rows[rowIndex].Tag = dist;
             dgDistribution[colUniqueValue.Index, rowIndex].Value = dist.UniqueValue.ToString("0.#####");
             dgDistribution[colRange.Index, rowIndex].Value = dist.RangeStr;
-            dgDistribution[colDistribution.Index, rowIndex].Value = dist.DistType;
+            dgDistribution[colDistribution.Index, rowIndex].Value = dist.Discriminator;
             dgDistribution[colDistDetails.Index, rowIndex].Value = dist.ToString();
         }
 
@@ -111,7 +111,7 @@ namespace SiliFish.UI.Controls
                 foreach (string key in parameters.Keys)
                 {
                     Distribution dist = parameters[key];
-                        if (dist.DistType == nameof(Constant_NoDistribution) && (dist as Constant_NoDistribution).NoiseStdDev < GlobalSettings.Epsilon)
+                        if ((dist is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon)
                             WriteNoDistToRow(key, dist.UniqueValue, rowIndex);
                         else
                             WriteDistToRow(key, dist, rowIndex);

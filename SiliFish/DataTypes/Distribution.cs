@@ -1,29 +1,33 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DataTypes
 {
-
     //Base class for all distributions
-    [JsonDerivedType(typeof(Distribution), typeDiscriminator: "distribution")]
-    [JsonDerivedType(typeof(UniformDistribution), typeDiscriminator: "uniform")]
-    [JsonDerivedType(typeof(Constant_NoDistribution), typeDiscriminator: "constant")]
-    [JsonDerivedType(typeof(SpacedDistribution), typeDiscriminator: "spaced")]
-    [JsonDerivedType(typeof(GaussianDistribution), typeDiscriminator: "gaussian")]
-    [JsonDerivedType(typeof(BimodalDistribution), typeDiscriminator: "bimodal")]
+    [JsonDerivedType(typeof(Distribution), typeDiscriminator: "None")]
+    [JsonDerivedType(typeof(UniformDistribution), typeDiscriminator: "Uniform")]
+    [JsonDerivedType(typeof(Constant_NoDistribution), typeDiscriminator: "Constant")]
+    [JsonDerivedType(typeof(SpacedDistribution), typeDiscriminator: "Equally Spaced")]
+    [JsonDerivedType(typeof(GaussianDistribution), typeDiscriminator: "Gaussian")]
+    [JsonDerivedType(typeof(BimodalDistribution), typeDiscriminator: "Bimodal")]
     public class Distribution
     {
+        private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
+            .Where(type => typeof(Distribution).IsAssignableFrom(type))
+            .ToDictionary(type => type.Name, type => type);
+
         public static Random Random = null;
         public bool Angular { get; set; } = false;
-        private string distType;
         
         [JsonIgnore]
-        public string DistType => distType;
+        public virtual string Discriminator => "None";
         public bool Absolute { get; set; } = true;
         /// <summary>
         /// Can be percentage or absolute value
@@ -43,7 +47,7 @@ namespace SiliFish.DataTypes
         {
             get
             {
-                return DistType == nameof(Constant_NoDistribution) && (this as Constant_NoDistribution).NoiseStdDev < GlobalSettings.Epsilon;
+                return (this is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon;
             }
         }
         [JsonIgnore]
@@ -64,14 +68,11 @@ namespace SiliFish.DataTypes
         public virtual double UniqueValue { get { return 666; } }// throw new NotImplementedException(); } }
         public override string ToString()
         {
-            int dot = DistType.LastIndexOf('.');
-            string displayedType = distType[(dot + 1)..];
-            return Absolute ? String.Format("{0}-{1} [{2}]", RangeStart, RangeEnd, displayedType) :
-                String.Format("%{0}-{1}; [{2}-{3}] [{4}]", RangeStart, RangeEnd, LowerLimit, UpperLimit, displayedType);
+            return Absolute ? String.Format("{0}-{1} [{2}]", RangeStart, RangeEnd, Discriminator) :
+                String.Format("%{0}-{1}; [{2}-{3}] [{4}]", RangeStart, RangeEnd, LowerLimit, UpperLimit, Discriminator);
         }
         public Distribution()
         {
-            distType = GetType().Name;
             //default values of 0 and 999 used
         }
         public Distribution Clone()
@@ -82,7 +83,6 @@ namespace SiliFish.DataTypes
         {
             Absolute = absolute;
             Angular = angular;
-            distType = GetType().Name;
             if (rangeStart < rangeEnd)
             {
                 RangeStart = rangeStart;
@@ -94,7 +94,10 @@ namespace SiliFish.DataTypes
                 RangeEnd = rangeStart;
             }
         }
-
+        public static List<string> GetDistributionTypes()
+        {
+            return typeMap.Keys.Where(k => k != nameof(Distribution)).ToList();
+        }
         public static Distribution CreateDistributionObject(object obj)
         {
             if (obj == null)
@@ -155,6 +158,8 @@ namespace SiliFish.DataTypes
 
     public class UniformDistribution : Distribution
     {
+        public override string Discriminator => "Uniform";
+
         public override double UniqueValue
         {
             get { return (RangeStart + RangeEnd) / 2; }
@@ -171,6 +176,8 @@ namespace SiliFish.DataTypes
 
     public class Constant_NoDistribution : Distribution
     {
+        public override string Discriminator => "Constant";
+
         public override double UniqueValue
         {
             get { return (RangeStart + RangeEnd) / 2; }
@@ -211,6 +218,8 @@ namespace SiliFish.DataTypes
     }
     public class SpacedDistribution : Distribution
     {
+        public override string Discriminator => "Equally Spaced";
+
         public double NoiseMean { get; set; } = 0;
         public double NoiseStdDev { get; set; } = 0;
         public override double UniqueValue
@@ -239,6 +248,8 @@ namespace SiliFish.DataTypes
     }
     public class GaussianDistribution : Distribution
     {
+        public override string Discriminator => "Gaussian";
+
         public double Mean { get; set; } = 0;
         public double Stddev { get; set; } = 0;
         public override double UniqueValue
@@ -283,6 +294,8 @@ namespace SiliFish.DataTypes
     }
     public class BimodalDistribution : GaussianDistribution
     {
+        public override string Discriminator => "Bimodal";
+
         public override double UniqueValue
         {
             get { return (Mean + Mean2) / 2; }

@@ -43,22 +43,23 @@ namespace SiliFish.UI.Controls
             this.pXAxis = new System.Windows.Forms.Panel();
             this.lXAxis = new System.Windows.Forms.Label();
             this.pMain = new System.Windows.Forms.Panel();
+            this.pMainInfo = new System.Windows.Forms.Panel();
             this.ddBodyPosition = new System.Windows.Forms.ComboBox();
             this.lBodyPosition = new System.Windows.Forms.Label();
             this.eSomiteRange = new System.Windows.Forms.TextBox();
             this.cbAllSomites = new System.Windows.Forms.CheckBox();
             this.ddCoreType = new System.Windows.Forms.ComboBox();
             this.lCoreType = new System.Windows.Forms.Label();
-            this.eDescription = new System.Windows.Forms.RichTextBox();
             this.ddSelection = new System.Windows.Forms.ComboBox();
+            this.cbActive = new System.Windows.Forms.CheckBox();
             this.ddNeuronClass = new System.Windows.Forms.ComboBox();
-            this.lNeuronClass = new System.Windows.Forms.Label();
-            this.lDescription = new System.Windows.Forms.Label();
             this.btnColor = new System.Windows.Forms.Button();
+            this.lNeuronClass = new System.Windows.Forms.Label();
+            this.eDescription = new System.Windows.Forms.RichTextBox();
+            this.lDescription = new System.Windows.Forms.Label();
             this.pMainTop = new System.Windows.Forms.Panel();
             this.linkSavePool = new System.Windows.Forms.LinkLabel();
             this.linkLoadPool = new System.Windows.Forms.LinkLabel();
-            this.cbActive = new System.Windows.Forms.CheckBox();
             this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
             this.lSagittalPosition = new System.Windows.Forms.Label();
             this.ddSagittalPosition = new System.Windows.Forms.ComboBox();
@@ -87,12 +88,12 @@ namespace SiliFish.UI.Controls
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
-            this.pMainInfo = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
             this.pZAxis.SuspendLayout();
             this.pXAxis.SuspendLayout();
             this.pMain.SuspendLayout();
+            this.pMainInfo.SuspendLayout();
             this.pMainTop.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -108,7 +109,6 @@ namespace SiliFish.UI.Controls
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-            this.pMainInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // lGroupName
@@ -258,6 +258,33 @@ namespace SiliFish.UI.Controls
             this.pMain.Size = new System.Drawing.Size(264, 721);
             this.pMain.TabIndex = 0;
             // 
+            // pMainInfo
+            // 
+            this.pMainInfo.Controls.Add(this.lGroupName);
+            this.pMainInfo.Controls.Add(this.ddBodyPosition);
+            this.pMainInfo.Controls.Add(this.eGroupName);
+            this.pMainInfo.Controls.Add(this.lBodyPosition);
+            this.pMainInfo.Controls.Add(this.l2DModelColumn);
+            this.pMainInfo.Controls.Add(this.eSomiteRange);
+            this.pMainInfo.Controls.Add(this.e2DColumn);
+            this.pMainInfo.Controls.Add(this.cbAllSomites);
+            this.pMainInfo.Controls.Add(this.eNumOfCells);
+            this.pMainInfo.Controls.Add(this.ddCoreType);
+            this.pMainInfo.Controls.Add(this.lCellType);
+            this.pMainInfo.Controls.Add(this.lCoreType);
+            this.pMainInfo.Controls.Add(this.ddCellType);
+            this.pMainInfo.Controls.Add(this.lNumOfCells);
+            this.pMainInfo.Controls.Add(this.ddSelection);
+            this.pMainInfo.Controls.Add(this.cbActive);
+            this.pMainInfo.Controls.Add(this.ddNeuronClass);
+            this.pMainInfo.Controls.Add(this.btnColor);
+            this.pMainInfo.Controls.Add(this.lNeuronClass);
+            this.pMainInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pMainInfo.Location = new System.Drawing.Point(0, 30);
+            this.pMainInfo.Name = "pMainInfo";
+            this.pMainInfo.Size = new System.Drawing.Size(264, 257);
+            this.pMainInfo.TabIndex = 29;
+            // 
             // ddBodyPosition
             // 
             this.ddBodyPosition.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -322,18 +349,6 @@ namespace SiliFish.UI.Controls
             this.lCoreType.TabIndex = 4;
             this.lCoreType.Text = "Core Type";
             // 
-            // eDescription
-            // 
-            this.eDescription.AcceptsTab = true;
-            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eDescription.Location = new System.Drawing.Point(5, 308);
-            this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(253, 409);
-            this.eDescription.TabIndex = 17;
-            this.eDescription.Text = "";
-            // 
             // ddSelection
             // 
             this.ddSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -342,6 +357,18 @@ namespace SiliFish.UI.Controls
             this.ddSelection.Name = "ddSelection";
             this.ddSelection.Size = new System.Drawing.Size(75, 23);
             this.ddSelection.TabIndex = 10;
+            // 
+            // cbActive
+            // 
+            this.cbActive.AutoSize = true;
+            this.cbActive.Checked = true;
+            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbActive.Location = new System.Drawing.Point(201, 225);
+            this.cbActive.Name = "cbActive";
+            this.cbActive.Size = new System.Drawing.Size(59, 19);
+            this.cbActive.TabIndex = 16;
+            this.cbActive.Text = "Active";
+            this.cbActive.UseVisualStyleBackColor = true;
             // 
             // ddNeuronClass
             // 
@@ -354,24 +381,6 @@ namespace SiliFish.UI.Controls
             this.ddNeuronClass.Size = new System.Drawing.Size(146, 23);
             this.ddNeuronClass.TabIndex = 7;
             // 
-            // lNeuronClass
-            // 
-            this.lNeuronClass.AutoSize = true;
-            this.lNeuronClass.Location = new System.Drawing.Point(7, 91);
-            this.lNeuronClass.Name = "lNeuronClass";
-            this.lNeuronClass.Size = new System.Drawing.Size(77, 15);
-            this.lNeuronClass.TabIndex = 6;
-            this.lNeuronClass.Text = "Neuron Class";
-            // 
-            // lDescription
-            // 
-            this.lDescription.AutoSize = true;
-            this.lDescription.Location = new System.Drawing.Point(3, 290);
-            this.lDescription.Name = "lDescription";
-            this.lDescription.Size = new System.Drawing.Size(67, 15);
-            this.lDescription.TabIndex = 26;
-            this.lDescription.Text = "Description";
-            // 
             // btnColor
             // 
             this.btnColor.Location = new System.Drawing.Point(185, 169);
@@ -381,6 +390,36 @@ namespace SiliFish.UI.Controls
             this.btnColor.Text = "Color";
             this.btnColor.UseVisualStyleBackColor = true;
             this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
+            // 
+            // lNeuronClass
+            // 
+            this.lNeuronClass.AutoSize = true;
+            this.lNeuronClass.Location = new System.Drawing.Point(7, 91);
+            this.lNeuronClass.Name = "lNeuronClass";
+            this.lNeuronClass.Size = new System.Drawing.Size(77, 15);
+            this.lNeuronClass.TabIndex = 6;
+            this.lNeuronClass.Text = "Neuron Class";
+            // 
+            // eDescription
+            // 
+            this.eDescription.AcceptsTab = true;
+            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eDescription.Location = new System.Drawing.Point(5, 308);
+            this.eDescription.Name = "eDescription";
+            this.eDescription.Size = new System.Drawing.Size(253, 409);
+            this.eDescription.TabIndex = 17;
+            this.eDescription.Text = "";
+            // 
+            // lDescription
+            // 
+            this.lDescription.AutoSize = true;
+            this.lDescription.Location = new System.Drawing.Point(3, 290);
+            this.lDescription.Name = "lDescription";
+            this.lDescription.Size = new System.Drawing.Size(67, 15);
+            this.lDescription.TabIndex = 26;
+            this.lDescription.Text = "Description";
             // 
             // pMainTop
             // 
@@ -416,18 +455,6 @@ namespace SiliFish.UI.Controls
             this.linkLoadPool.TabStop = true;
             this.linkLoadPool.Text = "Load Pool";
             this.linkLoadPool.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadPool_LinkClicked);
-            // 
-            // cbActive
-            // 
-            this.cbActive.AutoSize = true;
-            this.cbActive.Checked = true;
-            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(201, 225);
-            this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(59, 19);
-            this.cbActive.TabIndex = 16;
-            this.cbActive.Text = "Active";
-            this.cbActive.UseVisualStyleBackColor = true;
             // 
             // timeLineControl
             // 
@@ -489,6 +516,7 @@ namespace SiliFish.UI.Controls
             this.distributionX.Location = new System.Drawing.Point(3, 33);
             this.distributionX.MinimumSize = new System.Drawing.Size(204, 0);
             this.distributionX.Name = "distributionX";
+            this.distributionX.NoneIncluded = false;
             this.distributionX.Size = new System.Drawing.Size(211, 91);
             this.distributionX.TabIndex = 0;
             // 
@@ -561,6 +589,7 @@ namespace SiliFish.UI.Controls
             this.distributionY.Location = new System.Drawing.Point(3, 246);
             this.distributionY.MinimumSize = new System.Drawing.Size(204, 0);
             this.distributionY.Name = "distributionY";
+            this.distributionY.NoneIncluded = false;
             this.distributionY.Size = new System.Drawing.Size(211, 91);
             this.distributionY.TabIndex = 1;
             // 
@@ -576,6 +605,7 @@ namespace SiliFish.UI.Controls
             this.distributionZ.Location = new System.Drawing.Point(3, 373);
             this.distributionZ.MinimumSize = new System.Drawing.Size(204, 0);
             this.distributionZ.Name = "distributionZ";
+            this.distributionZ.NoneIncluded = false;
             this.distributionZ.Size = new System.Drawing.Size(211, 91);
             this.distributionZ.TabIndex = 2;
             // 
@@ -651,6 +681,7 @@ namespace SiliFish.UI.Controls
             this.distConductionVelocity.Location = new System.Drawing.Point(3, 19);
             this.distConductionVelocity.MinimumSize = new System.Drawing.Size(204, 0);
             this.distConductionVelocity.Name = "distConductionVelocity";
+            this.distConductionVelocity.NoneIncluded = true;
             this.distConductionVelocity.Size = new System.Drawing.Size(308, 91);
             this.distConductionVelocity.TabIndex = 0;
             // 
@@ -741,33 +772,6 @@ namespace SiliFish.UI.Controls
             // 
             this.openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
-            // pMainInfo
-            // 
-            this.pMainInfo.Controls.Add(this.lGroupName);
-            this.pMainInfo.Controls.Add(this.ddBodyPosition);
-            this.pMainInfo.Controls.Add(this.eGroupName);
-            this.pMainInfo.Controls.Add(this.lBodyPosition);
-            this.pMainInfo.Controls.Add(this.l2DModelColumn);
-            this.pMainInfo.Controls.Add(this.eSomiteRange);
-            this.pMainInfo.Controls.Add(this.e2DColumn);
-            this.pMainInfo.Controls.Add(this.cbAllSomites);
-            this.pMainInfo.Controls.Add(this.eNumOfCells);
-            this.pMainInfo.Controls.Add(this.ddCoreType);
-            this.pMainInfo.Controls.Add(this.lCellType);
-            this.pMainInfo.Controls.Add(this.lCoreType);
-            this.pMainInfo.Controls.Add(this.ddCellType);
-            this.pMainInfo.Controls.Add(this.lNumOfCells);
-            this.pMainInfo.Controls.Add(this.ddSelection);
-            this.pMainInfo.Controls.Add(this.cbActive);
-            this.pMainInfo.Controls.Add(this.ddNeuronClass);
-            this.pMainInfo.Controls.Add(this.btnColor);
-            this.pMainInfo.Controls.Add(this.lNeuronClass);
-            this.pMainInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMainInfo.Location = new System.Drawing.Point(0, 30);
-            this.pMainInfo.Name = "pMainInfo";
-            this.pMainInfo.Size = new System.Drawing.Size(264, 257);
-            this.pMainInfo.TabIndex = 29;
-            // 
             // CellPoolControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -785,6 +789,8 @@ namespace SiliFish.UI.Controls
             this.pXAxis.ResumeLayout(false);
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
+            this.pMainInfo.ResumeLayout(false);
+            this.pMainInfo.PerformLayout();
             this.pMainTop.ResumeLayout(false);
             this.pMainTop.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -807,8 +813,6 @@ namespace SiliFish.UI.Controls
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
-            this.pMainInfo.ResumeLayout(false);
-            this.pMainInfo.PerformLayout();
             this.ResumeLayout(false);
 
         }

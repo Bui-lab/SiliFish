@@ -35,19 +35,25 @@ namespace SiliFish.Repositories
         }
         private static bool FixDistributionJson(ref string json)
         {
+            json = json.Replace("\"$type\": \"uniform\"", "\"$type\": \"Uniform\"");
+            json = json.Replace("\"$type\": \"constant\"", "\"$type\": \"Constant\"");
+            json = json.Replace("\"$type\": \"spaced\"", "\"$type\": \"Equally Spaced\"");
+            json = json.Replace("\"$type\": \"gaussian\"", "\"$type\": \"Gaussian\"");
+            json = json.Replace("\"$type\": \"bimodal\"", "\"$type\": \"Bimodal\"");
+
             bool updated = false;
             Dictionary<string, string> dist = new()
             {
-                { "\"DistType\": \"SiliFish.DataTypes.UniformDistribution\",", "\"$type\": \"uniform\"," },
-                { "\"DistType\": \"SiliFish.DataTypes.Constant_NoDistribution\",", "\"$type\": \"constant\"," },
-                { "\"DistType\": \"SiliFish.DataTypes.SpacedDistribution\",", "\"$type\": \"spaced\"," },
-                { "\"DistType\": \"SiliFish.DataTypes.GaussianDistribution\",", "\"$type\": \"gaussian\"," },
-                { "\"DistType\": \"SiliFish.DataTypes.BimodalDistribution\",", "\"$type\": \"bimodal\"," },
-                { "\"DistType\": \"UniformDistribution\",", "\"$type\": \"uniform\"," },
-                { "\"DistType\": \"Constant_NoDistribution\",", "\"$type\": \"constant\"," },
-                { "\"DistType\": \"SpacedDistribution\",", "\"$type\": \"spaced\"," },
-                { "\"DistType\": \"GaussianDistribution\",", "\"$type\": \"gaussian\"," },
-                { "\"DistType\": \"BimodalDistribution\",", "\"$type\": \"bimodal\"," }
+                { "\"DistType\": \"SiliFish.DataTypes.UniformDistribution\",", "\"$type\": \"Uniform\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.Constant_NoDistribution\",", "\"$type\": \"Constant\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.SpacedDistribution\",", "\"$type\": \"Equally Spaced\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.GaussianDistribution\",", "\"$type\": \"Gaussian\"," },
+                { "\"DistType\": \"SiliFish.DataTypes.BimodalDistribution\",", "\"$type\": \"Bimodal\"," },
+                { "\"DistType\": \"UniformDistribution\",", "\"$type\": \"Uniform\"," },
+                { "\"DistType\": \"Constant_NoDistribution\",", "\"$type\": \"Constant\"," },
+                { "\"DistType\": \"SpacedDistribution\",", "\"$type\": \"Equally Spaced\"," },
+                { "\"DistType\": \"GaussianDistribution\",", "\"$type\": \"Gaussian\"," },
+                { "\"DistType\": \"BimodalDistribution\",", "\"$type\": \"Bimodal\"," }
             };
             foreach (string key in dist.Keys)
             {

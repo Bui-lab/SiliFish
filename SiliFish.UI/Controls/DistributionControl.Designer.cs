@@ -74,13 +74,6 @@
             this.ddDistribution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddDistribution.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddDistribution.FormattingEnabled = true;
-            this.ddDistribution.Items.AddRange(new object[] {
-            "None",
-            "Constant",
-            "Uniform",
-            "Equally Spaced",
-            "Gaussian",
-            "Bimodal"});
             this.ddDistribution.Location = new System.Drawing.Point(78, 4);
             this.ddDistribution.Name = "ddDistribution";
             this.ddDistribution.Size = new System.Drawing.Size(121, 23);
@@ -151,7 +144,7 @@
             this.pBimodal.Controls.Add(this.lMean2);
             this.pBimodal.Controls.Add(this.lStdDev2);
             this.pBimodal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pBimodal.Location = new System.Drawing.Point(0, 0);
+            this.pBimodal.Location = new System.Drawing.Point(0, 78);
             this.pBimodal.Margin = new System.Windows.Forms.Padding(0);
             this.pBimodal.Name = "pBimodal";
             this.pBimodal.Size = new System.Drawing.Size(204, 80);
@@ -212,7 +205,7 @@
             this.pGaussian.Controls.Add(this.lMean);
             this.pGaussian.Controls.Add(this.lStdDev);
             this.pGaussian.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pGaussian.Location = new System.Drawing.Point(0, 80);
+            this.pGaussian.Location = new System.Drawing.Point(0, 26);
             this.pGaussian.Margin = new System.Windows.Forms.Padding(0);
             this.pGaussian.Name = "pGaussian";
             this.pGaussian.Size = new System.Drawing.Size(204, 52);
@@ -237,7 +230,7 @@
             this.pNoise.Controls.Add(this.eNoise);
             this.pNoise.Controls.Add(this.lNoise);
             this.pNoise.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pNoise.Location = new System.Drawing.Point(0, 132);
+            this.pNoise.Location = new System.Drawing.Point(0, 0);
             this.pNoise.Margin = new System.Windows.Forms.Padding(0);
             this.pNoise.Name = "pNoise";
             this.pNoise.Size = new System.Drawing.Size(204, 26);
