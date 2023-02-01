@@ -41,14 +41,15 @@ namespace SiliFish.ModelUnits.Junction
             Weight = conductance;
             Cell1 = c1;
             Cell2 = c2;
+            Target = Cell2.ID;
             DistanceMode = distmode;
         }
 
         public void LinkObjects(RunningModel model)
         {
-            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == target)).FirstOrDefault();
+            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();
             if (cp is null) return;
-            Cell2 = cp.GetCell(target);
+            Cell2 = cp.GetCell(Target);
             Cell2.GapJunctions.Add(this);
         }
         public override string ToString()

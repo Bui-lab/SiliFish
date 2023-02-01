@@ -149,6 +149,8 @@ namespace SiliFish.UI.Controls
 
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listBox.Capture)//Click on empty space causes this function to be called twice. Skip the first one called from listBox_MouseClick
+                return;
             (string tt, bool _) = listBox.SelectedItem?.GetPropertyValue("Tooltip", listBox.SelectedItem?.ToString()) ?? ("", false);
             toolTip.SetToolTip(listBox, tt);
             ItemSelect?.Invoke(listBox.SelectedItem, new EventArgs());

@@ -11,21 +11,21 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class JunctionBase : ModelUnitBase
     {
-        protected string target;//used to temporarily hold the target cell's id while reading the JSON files
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms
         public double Delay_ms { get; set; } = 0;//in ms
         public double Weight { get; set; }
-        public virtual string Target
-        {
-            get => target;
-            set => target = value;
-        }
+
+        /// <summary>
+        /// used for JSON
+        /// </summary>
+        public string Target{ get; set; }
+
         public JunctionBase()
         { }
         public JunctionBase(JunctionBase jnc)
         {
-            target = jnc.Target;
+            Target = jnc.Target;
             DistanceMode = jnc.DistanceMode;
             FixedDuration_ms = jnc.FixedDuration_ms;
             Delay_ms = jnc.Delay_ms;

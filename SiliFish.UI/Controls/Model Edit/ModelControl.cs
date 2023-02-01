@@ -311,7 +311,7 @@ namespace SiliFish.UI.Controls
             if (listCellPools.SelectedItem is not CellPoolTemplate poolTemplate) return;
             CellPool pool = listCellPools.SelectedItem as CellPool;
 
-            CellPoolTemplate poolDuplicate = (pool as CellPoolTemplate)?.CreateCopy() ?? poolTemplate.CreateCopy();
+            CellPoolTemplate poolDuplicate = pool?.CreateTemplateCopy() ?? poolTemplate.CreateTemplateCopy();
             poolDuplicate.CellGroup += " Copy";
             poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             while (Model.GetCellPools().Any(p => p.CellGroup == poolDuplicate?.CellGroup))

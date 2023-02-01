@@ -21,7 +21,6 @@ namespace SiliFish.ModelUnits.Junction
         private double ISynB = 0; //the momentary current value
         private double ISyn { get { return ISynA - ISynB; } }
 
-        public override string Target { get => PostCell.ID; set => target = value; }
         public TwoExp_syn Core { get; set; }
 
         [JsonIgnore]
@@ -58,13 +57,14 @@ namespace SiliFish.ModelUnits.Junction
             Core = new TwoExp_syn(param, conductance, preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
             PreNeuron = preN;
             PostCell = postN;
+            Target = postN.ID;
             DistanceMode= distmode;
         }
 
         public void LinkObjects(RunningModel model)
         {
-            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == target)).FirstOrDefault();
-            PostCell = cp.GetCell(target);
+            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();
+            PostCell = cp.GetCell(Target);
             if (PostCell is Neuron n)
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)

@@ -167,7 +167,7 @@ namespace SiliFish.ModelUnits.Cells
                     parameters.Add(key, currentParams[key]);
             }
         }
-        public virtual CellPoolTemplate CreateCopy()
+        public virtual CellPoolTemplate CreateTemplateCopy()
         {
             return new CellPoolTemplate(this);
         }

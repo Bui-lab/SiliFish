@@ -113,7 +113,7 @@ namespace SiliFish.ModelUnits.Cells
             Cells = new List<Cell>();
         }
 
-        public override CellPoolTemplate CreateCopy()
+        public override CellPoolTemplate CreateTemplateCopy()
         {
             return new CellPoolTemplate(this);
         }
