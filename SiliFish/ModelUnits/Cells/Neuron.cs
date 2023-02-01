@@ -113,6 +113,39 @@ namespace SiliFish.ModelUnits.Cells
         {
             Synapses.Add(jnc);
         }
+
+        internal override bool RemoveJunction(JunctionBase junction)
+        {
+            if (base.RemoveJunction(junction))
+                return true;
+            if (junction is ChemicalSynapse syn)
+            {
+                if (Synapses.Remove(syn))
+                    return true;
+                if (Terminals.Remove(syn))
+                    return true;
+            }
+            return false;
+        }
+
+        protected override void DeleteJunctions()
+        {
+            base.DeleteJunctions();
+            while (Synapses.Any())
+            {
+                ChemicalSynapse jnc = Synapses.First();
+                jnc.PreNeuron.RemoveJunction(jnc);
+                Synapses.Remove(jnc);
+            }
+            while (Terminals.Any())
+            {
+                ChemicalSynapse jnc = Terminals.First();
+                jnc.PostCell.RemoveJunction(jnc);
+                Terminals.Remove(jnc);
+            }
+
+        }
+
         #endregion
 
         #region Runtime

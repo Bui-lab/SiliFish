@@ -47,6 +47,7 @@ namespace SiliFish.ModelUnits.Junction
         public void LinkObjects(RunningModel model)
         {
             CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == target)).FirstOrDefault();
+            if (cp is null) return;
             Cell2 = cp.GetCell(target);
             Cell2.GapJunctions.Add(this);
         }

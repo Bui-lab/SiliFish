@@ -260,7 +260,7 @@ namespace SiliFish.ModelUnits.Architecture
             #endregion
         }
 
-        public List<CellPool> GenerateCellPoolsFrom(CellPoolTemplate cellPoolTemplate, bool generateCells = false)
+        public List<CellPool> GenerateCellPoolsFrom(CellPoolTemplate cellPoolTemplate)
         {
             List<CellPool> cellPoolList = new();
             if (cellPoolTemplate.PositionLeftRight == SagittalPlane.Both || cellPoolTemplate.PositionLeftRight == SagittalPlane.Left)
@@ -270,8 +270,6 @@ namespace SiliFish.ModelUnits.Architecture
                     neuronPools.Add(pool);
                 else if (cellPoolTemplate.CellType == CellType.MuscleCell)
                     musclePools.Add(pool);
-                if (generateCells)
-                    pool.GenerateCells();
                 cellPoolList.Add(pool);
             }
             if (cellPoolTemplate.PositionLeftRight == SagittalPlane.Both || cellPoolTemplate.PositionLeftRight == SagittalPlane.Right)
@@ -281,8 +279,6 @@ namespace SiliFish.ModelUnits.Architecture
                     neuronPools.Add(pool);
                 else if (cellPoolTemplate.CellType == CellType.MuscleCell)
                     musclePools.Add(pool);
-                if (generateCells)
-                    pool.GenerateCells();
                 cellPoolList.Add(pool);
             }
             return cellPoolList;
@@ -328,7 +324,11 @@ namespace SiliFish.ModelUnits.Architecture
             if (cellPool is CellPool cp)
             {
                 cp.Model = this;
-                CellPools.Add(cp);
+                if (cellPool.CellType == CellType.Neuron)
+                    neuronPools.Add(cp);
+                else if (cellPool.CellType == CellType.MuscleCell)
+                    musclePools.Add(cp);
+                else return false;
                 return true;
             }
             return false;
@@ -337,9 +337,11 @@ namespace SiliFish.ModelUnits.Architecture
         public override bool RemoveCellPool(CellPoolTemplate cellPool)
         {
             if (cellPool is CellPool cp)
-            {
-                return CellPools.Remove(cp);
-            }
+                cp.DeleteCells();
+            if (cellPool.CellType == CellType.Neuron)
+                return neuronPools.RemoveAll(cp => cp.ID == cellPool.ID) > 0;
+            if (cellPool.CellType == CellType.MuscleCell)
+                return musclePools.RemoveAll(cp => cp.ID == cellPool.ID) > 0;
             return false;
         }
         public override void SortCellPools()

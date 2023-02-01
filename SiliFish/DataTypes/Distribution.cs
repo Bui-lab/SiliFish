@@ -96,7 +96,9 @@ namespace SiliFish.DataTypes
         }
         public static List<string> GetDistributionTypes()
         {
-            return typeMap.Keys.Where(k => k != nameof(Distribution)).ToList();
+            return typeMap.Keys
+                .Where(k => k != nameof(Distribution))
+                .Select(k => ((Distribution)Activator.CreateInstance(typeMap[k])).Discriminator).ToList();
         }
         public static Distribution CreateDistributionObject(object obj)
         {

@@ -216,7 +216,7 @@ namespace SiliFish.UI.Controls
             {
                 if (CurrentMode == RunMode.RunningModel)
                 {
-                    List<CellPool> cellPools = (Model as RunningModel).GenerateCellPoolsFrom(newPool, generateCells: true);
+                    List<CellPool> cellPools = (Model as RunningModel).GenerateCellPoolsFrom(newPool);
                     foreach (CellPool cp in cellPools)
                         listCellPools.AppendItem(cp);
                 }

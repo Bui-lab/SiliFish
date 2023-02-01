@@ -26,6 +26,27 @@ namespace SiliFish.ModelUnits.Cells
         [JsonPropertyOrder(2)]
         public List<Cell> Cells { get; set; }
 
+        [JsonIgnore]
+        public IEnumerable<JunctionBase> Projections
+        {
+            get
+            {
+                List<JunctionBase> jncs = new();
+                foreach (Cell cell in Cells)
+                {
+                    if (cell is Neuron neuron)
+                    {
+                        jncs.AddRange(neuron.Terminals);
+                        jncs.AddRange(neuron.Synapses);
+                    }
+                    else if (cell is MuscleCell muscleCell)
+                        jncs.AddRange(muscleCell.EndPlates);
+                    jncs.AddRange(cell.GapJunctions);
+                }
+                return jncs;
+            }
+        }
+
         public override bool Active
         {
             get => base.Active;
@@ -46,12 +67,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public CellPool(CellPool cellPool):base(cellPool) 
         {
-            NumOfCells = 0;
             Cells = new List<Cell>();
-        }
-        public override CellPoolTemplate CreateCopy()
-        {
-            return new CellPool(this);
         }
 
         public CellPool(RunningModel model, CellPoolTemplate template, SagittalPlane leftright)
@@ -97,6 +113,10 @@ namespace SiliFish.ModelUnits.Cells
             Cells = new List<Cell>();
         }
 
+        public override CellPoolTemplate CreateCopy()
+        {
+            return new CellPool(this);
+        }
 
         public void LinkObjects(RunningModel model)
         {
@@ -174,6 +194,8 @@ namespace SiliFish.ModelUnits.Cells
             }
             return (minWeight, maxWeight);
         }
+
+        #region Cell Functions
         public void AddCell(Cell c)
         {
             Cells.Add(c);
@@ -246,27 +268,7 @@ namespace SiliFish.ModelUnits.Cells
                 .AsEnumerable<Cell>();
         }
 
-        [JsonIgnore]
-        public IEnumerable<JunctionBase> Projections
-        {
-            get
-            {
-                List<JunctionBase> jncs = new();
-                foreach (Cell cell in Cells)
-                {
-                    if (cell is Neuron neuron)
-                    {
-                        jncs.AddRange(neuron.Terminals);
-                        jncs.AddRange(neuron.Synapses);
-                    }
-                    else if (cell is MuscleCell muscleCell)
-                        jncs.AddRange(muscleCell.EndPlates);
-                    jncs.AddRange(cell.GapJunctions);
-                }
-                return jncs;
-            }
-        }
-
+   
         public void GenerateCells()
         {
             int n = NumOfCells;
@@ -317,6 +319,32 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        public void DeleteCells()
+        {
+            while (Cells.Any())
+            {
+                Cell c = Cells.First();
+                c.ClearLinks();
+                Cells.Remove(c);
+            }
+        }
+        public int GetMaxCellSomite()
+        {
+            if (Cells != null && Cells.Any())
+                return Cells.Max(c => c.Somite);
+            return 0;
+        }
+
+        public int GetMaxCellSequence()
+        {
+            if (Cells != null && Cells.Any())
+                return Cells.Max(c => c.Sequence);
+            return 0;
+        }
+
+        #endregion
+
+        #region Projection Functions
         public void ReachToCellPoolViaGapJunction(CellPool target, 
             CellReach reach, 
             TimeLine timeline, 
@@ -418,7 +446,7 @@ namespace SiliFish.ModelUnits.Cells
                 }
             }
         }
-
+        #endregion
         public void ApplyStimulus(StimulusTemplate stimulus, string TargetSomite, string TargetCell)
         {
             if (stimulus == null)

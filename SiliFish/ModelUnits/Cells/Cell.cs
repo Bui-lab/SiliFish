@@ -132,6 +132,15 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        /// <summary>
+        /// Removes all stimuli, and incoming and outgoing connections
+        /// </summary>
+        public void ClearLinks()
+        {
+            DeleteStimuli();
+            DeleteJunctions();
+        }
+
         #region Sort Functions
         public virtual void SortJunctions()
         {
@@ -162,6 +171,11 @@ namespace SiliFish.ModelUnits.Cells
         {
             Stimuli.Remove(stim);
         }
+
+        public void DeleteStimuli()
+        {
+            Stimuli.ListOfStimulus.Clear();
+        }
         #endregion
 
         #region Connection Functions
@@ -184,6 +198,21 @@ namespace SiliFish.ModelUnits.Cells
             return (minWeight1 ?? 0, maxWeight1 ?? 999);
         }
 
+        internal virtual bool RemoveJunction(JunctionBase junction)
+        {
+            if (junction is GapJunction jnc)
+                return GapJunctions.Remove(jnc);
+            return false;
+        }
+        protected virtual void DeleteJunctions()
+        {
+            while (GapJunctions.Any())
+            {
+                GapJunction jnc = GapJunctions.First();
+                jnc.Cell2.RemoveJunction(jnc);
+                jnc.Cell1.RemoveJunction(jnc);
+            }
+        }
 
         #endregion
 
@@ -271,6 +300,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             throw new NotImplementedException();
         }
+
         #endregion
     }
 }

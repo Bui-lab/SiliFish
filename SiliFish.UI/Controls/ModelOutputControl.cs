@@ -84,7 +84,7 @@ namespace SiliFish.UI.Controls
             else
             {
                 eKinematicsSomite.Maximum = RunningModel.CellPools.Any() ?
-                    RunningModel.CellPools.Max(p => p.Cells.Max(c => c.Sequence)) : 0;
+                    RunningModel.CellPools.Max(p => p.GetMaxCellSequence()) : 0;
                 lSomitesNumMNDynamics.Text = "Cell Seq.";
             }
         }
@@ -236,8 +236,8 @@ namespace SiliFish.UI.Controls
             string pool = ddPlotPools.Text;
             SagittalPlane sagittal = ddPlotSagittal.Text.GetValueFromName<SagittalPlane>(SagittalPlane.Both);
             List<CellPool> pools = RunningModel.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
-            ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Somite)) ?? 0);
-            ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetCells().Max(c => c.Sequence)) ?? 0);
+            ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetMaxCellSomite()) ?? 0);
+            ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetMaxCellSequence()) ?? 0);
             if (ddPlotPools.Focused)
                 DisplayNumberOfPlots();
         }

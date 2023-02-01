@@ -77,6 +77,29 @@ namespace SiliFish.ModelUnits.Cells
             return (minWeight, maxWeight);
         }
 
+        internal override bool RemoveJunction(JunctionBase junction)
+        {
+            if (base.RemoveJunction(junction))
+                return true;
+            if (junction is ChemicalSynapse syn)
+            {
+                if (EndPlates.Remove(syn))
+                    return true;
+            }
+            return false;
+        }
+
+        protected override void DeleteJunctions()
+        {
+            base.DeleteJunctions();
+            while (EndPlates.Any())
+            {
+                ChemicalSynapse jnc = EndPlates.First();
+                jnc.PreNeuron.Terminals.Remove(jnc);
+                EndPlates.Remove(jnc);
+            }
+        }
+
         #endregion
 
         #region Runtime
