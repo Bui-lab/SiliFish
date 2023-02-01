@@ -115,7 +115,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public override CellPoolTemplate CreateCopy()
         {
-            return new CellPool(this);
+            return new CellPoolTemplate(this);
         }
 
         public void LinkObjects(RunningModel model)
