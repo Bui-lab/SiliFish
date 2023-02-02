@@ -25,8 +25,8 @@ namespace SiliFish.ModelUnits
 
         public virtual bool CheckValues(ref List<string> errors)
         {
-            errors = new();
-            return true;
+            errors ??= new();
+            return errors.Count == 0;
         }
     }
 }

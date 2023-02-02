@@ -160,6 +160,10 @@ namespace SiliFish.ModelUnits.Cells
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
+            int errorCount = errors.Count;
+            CellCoreUnit.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues());
+            if (errors.Count > errorCount)
+                errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;
         }
         public void BackwardCompatibility()

@@ -16,6 +16,7 @@ using System.Text.Json;
 using SiliFish.Repositories;
 using SiliFish.UI.Definitions;
 using Windows.ApplicationModel.VoiceCommands;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.UI
 {
@@ -244,6 +245,13 @@ namespace SiliFish.UI
 
             RefreshModel();
             if (RunningModel == null) return;
+            List<string> errors = new();
+            if (!RunningModel.CheckValues(ref errors))
+            {
+                MessageBox.Show($"There are errors in the model. Please correct them before running a simulation: \r\n" +
+                    $"{string.Join("\r\n", errors)}");
+                return;
+            }
             RunningModel.RunParam = new()
             {
                 SkipDuration = (int)eSkip.Value,
@@ -354,8 +362,9 @@ namespace SiliFish.UI
                 List<string> errors = new();
                 if (!mb.CheckValues(ref errors))
                 {
-                    MessageBox.Show(string.Join("\r\n", errors));
-                    return false;
+                    if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
+                        $"{string.Join("\r\n", errors)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return false;
                 }
                 if (!string.IsNullOrEmpty(lastFileName))
                     saveFileJson.FileName = lastFileName;
@@ -401,6 +410,13 @@ namespace SiliFish.UI
             if (ModelTemplate == null)
             {
                 MessageBox.Show("There is no model template loaded.", "Error");
+                return;
+            }
+            List<string> errors = new();
+            if (!ModelTemplate.CheckValues(ref errors))
+            {
+                MessageBox.Show($"There are errors in the template file. Please correct them before generating a model: \r\n" +
+                    $"{string.Join("\r\n", errors)}");
                 return;
             }
             MainForm mf = new(new RunningModel(ModelTemplate));

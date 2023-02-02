@@ -135,9 +135,13 @@ namespace SiliFish.ModelUnits.Cells
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
+
+            int errorCount = errors.Count;
             Core.CheckValues(ref errors);
-            foreach(GapJunction jnc in LeavingGapJunctions)
+            foreach (GapJunction jnc in LeavingGapJunctions)
                 jnc.CheckValues(ref errors);
+            if (errors.Count > errorCount)
+                errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;
         }
         /// <summary>

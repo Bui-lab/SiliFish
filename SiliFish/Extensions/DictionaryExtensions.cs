@@ -171,6 +171,18 @@ namespace SiliFish.Extensions
             return valuesArray;
         }
 
+        public static Dictionary<string, double> GenerateSingleInstanceValues(this Dictionary<string, Distribution> dictionary)
+        {
+            Dictionary<string, double> valuesArray = new();
+            foreach (string key in dictionary.Keys)
+            {
+                Distribution distribution = dictionary[key];
+                valuesArray.Add(key, distribution.GenerateNNumbers(1, distribution.Range, ordered: false)[0]);
+            }
+            return valuesArray;
+        }
+
+
         public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, Distribution> dictionary, int number, bool ordered)
         {
             Dictionary<string, double[]> valuesArray = new();

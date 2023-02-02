@@ -73,9 +73,12 @@ namespace SiliFish.ModelUnits.Cells
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
+            int errorCount = errors.Count;
             Core.CheckValues(ref errors);
             foreach (ChemicalSynapse syn in Terminals)
                 syn.CheckValues(ref errors);
+            if (errors.Count > errorCount)
+                errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;
         }
         #region Sort functions

@@ -140,8 +140,11 @@ namespace SiliFish.ModelUnits.Junction
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
+            int errorCount = errors.Count;
             if (ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ)
                 SynapseParameters.CheckValues(ref errors);
+            if (errors.Count > errorCount)
+                errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;
         }
         public string GeneratedName()

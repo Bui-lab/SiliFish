@@ -109,8 +109,16 @@ namespace SiliFish.DynamicUnits
         public virtual bool CheckValues(ref List<string> errors)
         {
             errors ??= new();
-            return true;
+            return errors.Count == 0;
         }
+        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
+        {
+            errors ??= new();
+            CellCoreUnit core = CreateCore(coreType, param, 0.1, 0.1);
+            return core.CheckValues(ref errors);
+        }
+
+
         public virtual void BackwardCompatibility(Dictionary<string, double> paramExternal)
         {
             throw new NotImplementedException();
