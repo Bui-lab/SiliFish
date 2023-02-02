@@ -40,9 +40,9 @@ namespace SiliFish.ModelUnits.Architecture
         {
         }
 
-        public virtual bool CheckValues(out List<string> errors) 
+        public virtual bool CheckValues(ref List<string> errors) 
         {
-            errors = new List<string>();
+            errors ??= new();
             if (!ModelDimensions.CheckConsistency(out string error))
             {
                 errors.Add(error);

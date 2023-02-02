@@ -351,8 +351,8 @@ namespace SiliFish.UI
             try
             {
                 ModelBase mb = modelControl.GetModel();
-
-                if (!mb.CheckValues(out List<string> errors))
+                List<string> errors = new();
+                if (!mb.CheckValues(ref errors))
                 {
                     MessageBox.Show(string.Join("\r\n", errors));
                     return false;

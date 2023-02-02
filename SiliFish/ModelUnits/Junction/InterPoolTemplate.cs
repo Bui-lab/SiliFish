@@ -136,6 +136,14 @@ namespace SiliFish.ModelUnits.Junction
             if (c != 0) return c;
             return this.ConnectionType.CompareTo(other.ConnectionType);
         }
+
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            if (ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ)
+                SynapseParameters.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
         public string GeneratedName()
         {
             return $"{(!string.IsNullOrEmpty(PoolSource) ? PoolSource : "__")}-->{(!string.IsNullOrEmpty(PoolTarget) ? PoolTarget : "__")}";

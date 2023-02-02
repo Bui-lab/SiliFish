@@ -1,4 +1,6 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -19,6 +21,12 @@ namespace SiliFish.ModelUnits
         public virtual int CompareTo(ModelUnitBase other)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual bool CheckValues(ref List<string> errors)
+        {
+            errors = new();
+            return true;
         }
     }
 }

@@ -188,7 +188,7 @@ namespace SiliFish.DataTypes
 
         public override string ToString()
         {
-            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:1; SD:{1:0.#####}" : "";
+            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:0; SD:{1:0.#####}" : "";
             return $"{UniqueValue}{noise}";
         }
         public Constant_NoDistribution()
@@ -222,22 +222,20 @@ namespace SiliFish.DataTypes
     {
         public override string Discriminator => "Equally Spaced";
 
-        public double NoiseMean { get; set; } = 0;
-        public double NoiseStdDev { get; set; } = 0;
+           public double NoiseStdDev { get; set; } = 0;
         public override double UniqueValue
         {
             get { return (RangeStart + RangeEnd) / 2; }
         }
         public override string ToString()
         {
-            return $"{base.ToString()}\r\nNoise: µ:{NoiseMean:0.#####}; SD:{NoiseStdDev:0.#####}";
+            return $"{base.ToString()}\r\nNoise: µ:0; SD:{NoiseStdDev:0.#####}";
         }
         public SpacedDistribution()
         { }
-        public SpacedDistribution(double start, double end, double noisemean, double noiseStdDev, bool absolute, bool angular)
+        public SpacedDistribution(double start, double end, double noiseStdDev, bool absolute, bool angular)
             : base(start, end, absolute, angular)
         {
-            NoiseMean = noisemean;
             NoiseStdDev = noiseStdDev;
         }
 
@@ -245,7 +243,7 @@ namespace SiliFish.DataTypes
         {
             Range = range;
             Random ??= new Random();
-            return Random.Spaced(LowerLimit, UpperLimit, NoiseMean, NoiseStdDev, n, ordered);
+            return Random.Spaced(LowerLimit, UpperLimit, noisemean: 0, NoiseStdDev, n, ordered);
         }
     }
     public class GaussianDistribution : Distribution

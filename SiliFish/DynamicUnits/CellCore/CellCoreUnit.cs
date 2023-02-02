@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using System;
 using System.Collections.Generic;
@@ -19,21 +20,45 @@ namespace SiliFish.DynamicUnits
     [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
     public class CellCoreUnit
     {
+        #region Static members and functions
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
         .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
+        public static List<string> GetCoreTypes()
+        {
+            return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
+        }
+
+        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double dt_run, double dt_euler)
+        {
+            CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            core.deltaTEuler = dt_euler;
+            core.deltaT = dt_run;
+            return core;
+        }
+
+        /// <summary>
+        /// static function to return dictionary of objects to keep the distributions
+        /// </summary>
+        /// <param name="coreType"></param>
+        /// <returns></returns>
+        public static Dictionary<string, Distribution> GetParameters(string coreType)
+        {
+            CellCoreUnit core = CreateCore(coreType, null, 0, 0);
+            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
+        }
+
+        #endregion
+        private Dictionary<string, double> parametersObsolete; //Used for json only
 
         protected double deltaT, deltaTEuler;
+        protected double V = -70;//Keeps the current value of V 
 
         //the resting membrane potential
         public double Vr = -70;
         // vmax is the peak membrane potential of single action potentials
         public double Vmax = 30;
 
-        [JsonIgnore]
-        protected double V = -70;//Keeps the current value of V 
-
-        private Dictionary<string, double> parametersObsolete; //Used for json only
         public Dictionary<string, double> Parameters
         {
             get { return GetParameters(); }
@@ -61,40 +86,6 @@ namespace SiliFish.DynamicUnits
             }
         }
 
-        public static List<string> GetCoreTypes()
-        {
-            return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
-        }
-
-        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double dt_run, double dt_euler)
-        {
-            CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
-            core.deltaTEuler = dt_euler;
-            core.deltaT = dt_run;
-            return core;
-        }
-
-        /// <summary>
-        /// static function to return dictionary of objects to keep the distributions
-        /// </summary>
-        /// <param name="coreType"></param>
-        /// <returns></returns>
-        public static Dictionary<string, Distribution> GetParameters(string coreType)
-        {
-            CellCoreUnit core = CreateCore(coreType, null, 0, 0);
-            return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
-        }
-
-
-        public virtual Dictionary<string, double> GetParameters()
-        {
-            return parametersObsolete;
-        }
-
-        public virtual void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            parametersObsolete = paramExternal;
-        }
         public virtual void Initialize(double deltaT, double deltaTEuler)
         {
             this.deltaT = deltaT;
@@ -106,6 +97,20 @@ namespace SiliFish.DynamicUnits
             throw new NotImplementedException();
         }
 
+        public virtual Dictionary<string, double> GetParameters()
+        {
+            return parametersObsolete;
+        }
+
+        public virtual void SetParameters(Dictionary<string, double> paramExternal)
+        {
+            parametersObsolete = paramExternal;
+        }
+        public virtual bool CheckValues(ref List<string> errors)
+        {
+            errors ??= new();
+            return true;
+        }
         public virtual void BackwardCompatibility(Dictionary<string, double> paramExternal)
         {
             throw new NotImplementedException();

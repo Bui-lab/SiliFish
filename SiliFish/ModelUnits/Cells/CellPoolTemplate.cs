@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -156,6 +157,11 @@ namespace SiliFish.ModelUnits.Cells
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
 
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
         public void BackwardCompatibility()
         {
             ConductionVelocity ??= new Constant_NoDistribution(CurrentSettings.Settings.cv);

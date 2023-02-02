@@ -1,6 +1,8 @@
-﻿using SiliFish.ModelUnits;
+﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
+using System.Collections.Generic;
 
 namespace SiliFish.DynamicUnits
 {
@@ -29,6 +31,15 @@ namespace SiliFish.DynamicUnits
             Conductance = conductance; //unitary conductance
         }
 
+        public bool CheckValues(ref List<string> errors)
+        {
+            errors ??= new();
+            if (TauD < GlobalSettings.Epsilon || taur < GlobalSettings.Epsilon)
+                errors.Add($"Chemical synapse: Tau has 0 value.");
+            if (Conductance < GlobalSettings.Epsilon)
+                errors.Add($"Chemical synapse: Conductance has 0 value.");
+            return errors.Count == 0;
+        }
         public (double, double) GetNextVal(double v1, double v2, double IsynA, double IsynB)
         {
             double IsynANew = IsynA, IsynBNew = IsynB;

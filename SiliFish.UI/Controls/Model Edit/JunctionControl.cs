@@ -10,7 +10,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class JunctionControl : UserControl
     {
-        private ModelSettings settings;
+        private readonly ModelSettings settings = null;
         public event EventHandler JunctionChanged;
 
         private JunctionBase junction;
@@ -29,6 +29,7 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             Model = model;
+            settings = model.Settings;
 
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
 

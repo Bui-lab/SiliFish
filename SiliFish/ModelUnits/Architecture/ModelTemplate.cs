@@ -121,13 +121,21 @@ namespace SiliFish.ModelUnits.Architecture
             jnc.linkedSource = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.PoolSource);
             jnc.linkedTarget = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.PoolTarget);
         }
-        public string CheckTemplate()
+
+        public override bool CheckValues(ref List<string> errors)
         {
-            if (CellPoolTemplates.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
-                return "Cell pool names have to be unique";
-            if (InterPoolTemplates.GroupBy(p => p.ToString()).Any(c => c.Count() > 1))
-                return "Gap junction and synapse names have to be unique";
-            return "";
+            base.CheckValues(ref errors);
+            var v = CellPoolTemplates.GroupBy(p => p.ToString()).Where(c => c.Count() > 1);
+            foreach (string cpt in v.Select(gr => gr.Key).Distinct())
+                errors.Add($"Cell pool names have to be unique: {cpt}");
+            var v2 = InterPoolTemplates.GroupBy(p => p.ToString()).Where(c => c.Count() > 1);
+            foreach (string ipt in v2.Select(gr => gr.Key).Distinct())
+                errors.Add($"Gap junction and synapse names have to be unique: {ipt}");
+            foreach (CellPoolTemplate cpt in CellPoolTemplates)
+                cpt.CheckValues(ref errors);
+            foreach (InterPoolTemplate ipt in InterPoolTemplates)
+                ipt.CheckValues(ref errors);
+            return errors.Count == 0;
         }
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {

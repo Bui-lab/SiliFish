@@ -260,6 +260,48 @@ namespace SiliFish.ModelUnits.Architecture
             #endregion
         }
 
+        /// <summary>
+        ///Needs to be run after created from JSON 
+        /// </summary>
+        public override void LinkObjects()
+        {
+            foreach (CellPool pool in CellPools)
+            {
+                pool.LinkObjects(this);
+            }
+        }        
+        public override void BackwardCompatibility()
+        { }
+
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            foreach (CellPool cp in CellPools)
+                cp.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
+        public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
+        {
+            List<Cell> motoNeurons = MotoNeurons;
+            int NumberOfSomites = ModelDimensions.NumberOfSomites;
+            int maxSeq = NumberOfSomites - numSomites;
+            if (NumberOfSomites <= 0)
+                maxSeq = CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
+            List<Cell> leftMNs = motoNeurons
+                                .Where(c => c.PositionLeftRight == SagittalPlane.Left &&
+                                        (NumberOfSomites > 0 && c.Somite > maxSeq
+                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
+                                .ToList();
+            List<Cell> rightMNs = motoNeurons
+                                .Where(c => c.PositionLeftRight == SagittalPlane.Right &&
+                                        (NumberOfSomites > 0 && c.Somite > maxSeq
+                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
+                                .ToList();
+            return (leftMNs, rightMNs);
+        }
+
+        #region Cell Pool
+
         public List<CellPool> GenerateCellPoolsFrom(CellPoolTemplate cellPoolTemplate)
         {
             List<CellPool> cellPoolList = new();
@@ -283,38 +325,6 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return cellPoolList;
         }
-        public override void BackwardCompatibility()
-        { }
-
-        public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
-        {
-            List<Cell> motoNeurons = MotoNeurons;
-            int NumberOfSomites = ModelDimensions.NumberOfSomites;
-            int maxSeq = NumberOfSomites - numSomites;
-            if (NumberOfSomites <= 0)
-                maxSeq = CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
-            List<Cell> leftMNs = motoNeurons
-                                .Where(c => c.PositionLeftRight == SagittalPlane.Left &&
-                                        (NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
-                                .ToList();
-            List<Cell> rightMNs = motoNeurons
-                                .Where(c => c.PositionLeftRight == SagittalPlane.Right &&
-                                        (NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
-                                .ToList();
-            return (leftMNs, rightMNs);
-        }
-
-        //Needs to be run after created from JSON
-        public override void LinkObjects()
-        {
-            foreach (CellPool pool in CellPools)
-            {
-                pool.LinkObjects(this);
-            }
-        }
-
         public override List<CellPoolTemplate> GetCellPools()
         {
             return CellPools.Select(cp => (CellPoolTemplate)cp).ToList();
@@ -351,6 +361,10 @@ namespace SiliFish.ModelUnits.Architecture
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {
         }
+        #endregion
+
+
+        #region Projections
         public override List<JunctionBase> GetProjections()
         {
             List<JunctionBase> listProjections = new();
@@ -364,7 +378,9 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return listProjections;
         }
+        #endregion
 
+        #region Stimuli
         public override List<StimulusBase> GetStimuli()
         {
             List<StimulusBase> listStimuli = new();
@@ -388,7 +404,7 @@ namespace SiliFish.ModelUnits.Architecture
             stimulus.TargetCell.Stimuli.Remove(stimulus);
         }
 
-
+        #endregion
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {
             double minX = 999;

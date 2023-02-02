@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace SiliFish.ModelUnits.Junction
             E_rev = sp.E_rev;
         }
 
+        public bool CheckValues(ref List<string> errors)
+        {
+            errors ??= new();
+            if (TauD < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
+                errors.Add($"Chemical synapse: Tau has 0 value.");
+            return errors.Count == 0;
+        }
         internal object GetTooltip()
         {
             return $"Tau D: {TauD:0.###}\r\n" +

@@ -1,4 +1,5 @@
-﻿using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,15 @@ namespace SiliFish.DynamicUnits
                 { "Leaky_Integrator.Vmax", Vmax }
             };
             return paramDict;
+        }
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            if (R < GlobalSettings.Epsilon)
+                errors.Add($"Leaky integrator: R has 0 value.");
+            if (C < GlobalSettings.Epsilon)
+                errors.Add($"Leaky integrator: C has 0 value.");
+            return errors.Count == 0;
         }
 
         public override void BackwardCompatibility(Dictionary<string, double> paramExternal)

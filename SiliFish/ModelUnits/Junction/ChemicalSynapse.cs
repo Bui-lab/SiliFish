@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -58,9 +59,15 @@ namespace SiliFish.ModelUnits.Junction
             PreNeuron = preN;
             PostCell = postN;
             Target = postN.ID;
-            DistanceMode= distmode;
+            DistanceMode = distmode;
         }
 
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            Core.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
         public void LinkObjects(RunningModel model)
         {
             CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();

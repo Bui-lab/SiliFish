@@ -132,6 +132,14 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            Core.CheckValues(ref errors);
+            foreach(GapJunction jnc in LeavingGapJunctions)
+                jnc.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
         /// <summary>
         /// Removes all stimuli, and incoming and outgoing connections
         /// </summary>

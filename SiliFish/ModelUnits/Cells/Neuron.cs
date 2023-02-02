@@ -70,7 +70,14 @@ namespace SiliFish.ModelUnits.Cells
                 jnc.LinkObjects(model);
             }
         }
-
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            Core.CheckValues(ref errors);
+            foreach (ChemicalSynapse syn in Terminals)
+                syn.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
         #region Sort functions
         public override void SortJunctions()
         {

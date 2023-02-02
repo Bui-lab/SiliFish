@@ -115,7 +115,7 @@
             this.lNoise.Size = new System.Drawing.Size(37, 15);
             this.lNoise.TabIndex = 0;
             this.lNoise.Text = "Noise";
-            this.toolTip.SetToolTip(this.lNoise, "Std Dev for noise multiplier (µ = 1)");
+            this.toolTip.SetToolTip(this.lNoise, "Std Dev for noise (µ = 0)");
             // 
             // lMean
             // 
@@ -242,7 +242,7 @@
             this.eNoise.Name = "eNoise";
             this.eNoise.Size = new System.Drawing.Size(52, 23);
             this.eNoise.TabIndex = 5;
-            this.toolTip.SetToolTip(this.eNoise, "Std Dev for noise multiplier (µ = 1)");
+            this.toolTip.SetToolTip(this.eNoise, "Std Dev for noise (µ = 0)");
             // 
             // pTop
             // 
@@ -275,7 +275,7 @@
             // lValue
             // 
             this.lValue.AutoSize = true;
-            this.lValue.Location = new System.Drawing.Point(5, 61);
+            this.lValue.Location = new System.Drawing.Point(5, 62);
             this.lValue.Name = "lValue";
             this.lValue.Size = new System.Drawing.Size(35, 15);
             this.lValue.TabIndex = 13;
@@ -283,7 +283,7 @@
             // 
             // eUniqueValue
             // 
-            this.eUniqueValue.Location = new System.Drawing.Point(78, 57);
+            this.eUniqueValue.Location = new System.Drawing.Point(78, 58);
             this.eUniqueValue.Name = "eUniqueValue";
             this.eUniqueValue.Size = new System.Drawing.Size(52, 23);
             this.eUniqueValue.TabIndex = 12;

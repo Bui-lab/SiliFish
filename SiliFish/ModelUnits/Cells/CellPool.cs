@@ -131,6 +131,13 @@ namespace SiliFish.ModelUnits.Cells
         {
             return ID + (Active ? "" : " (inactive)");
         }
+        public override bool CheckValues(ref List<string> errors)
+        {
+            base.CheckValues(ref errors);
+            foreach (Cell cell in Cells)
+                cell.CheckValues(ref errors);
+            return errors.Count == 0;
+        }
         public bool OnSide(SagittalPlane sagittal)
         {
             if (sagittal == SagittalPlane.Both)

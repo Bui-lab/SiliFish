@@ -31,8 +31,11 @@ namespace SiliFish.UI.Controls
             if (NoneIncluded)
                 ddDistribution.Items.Add("None");
             ddDistribution.Items.AddRange(Distribution.GetDistributionTypes().ToArray());
-            ddDistribution.SelectedIndex = 0;
-            rbAbsolute.Checked = true;
+            UniformDistribution ud = new();
+            ddDistribution.Text = ud.Discriminator;
+            eRangeStart.Text = "0";
+            eRangeEnd.Text = "100";
+            rbPerc.Checked = true;
         }
         private void ddDistribution_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -44,8 +47,8 @@ namespace SiliFish.UI.Controls
             {
                 pOptions.Visible = true;
                 string mode = ddDistribution.Text;
-                pNoise.Visible = mode is "Constant";
-                pGaussian.Visible = mode is "Gaussian" or "Bimodal" or "Equally Spaced";
+                pNoise.Visible = mode is "Constant" or "Equally Spaced";
+                pGaussian.Visible = mode is "Gaussian" or "Bimodal";
                 pBimodal.Visible = mode == "Bimodal";
             }
             if (ddDistribution.Text == "Constant")
@@ -83,26 +86,25 @@ namespace SiliFish.UI.Controls
             Angular = dist.Angular;
             if (Angular)
                 AbsoluteEnforced = true;
-            if (dist is SpacedDistribution)
+            ddDistribution.Text = dist.Discriminator;
+            if (dist is SpacedDistribution ds)
             {
-                ddDistribution.Text = "Equally Spaced";
-                eMean1.Text = (dist as SpacedDistribution).NoiseMean.ToString("0.###");
-                eStdDev1.Text = (dist as SpacedDistribution).NoiseStdDev.ToString("0.###");
+                eNoise.Text = ds.NoiseStdDev.ToString("0.###");
             }
-            else if (dist is BimodalDistribution)
+            else if (dist is BimodalDistribution bd)
             {
                 ddDistribution.Text = "Bimodal";
-                eMean1.Text = (dist as BimodalDistribution).Mean.ToString("0.###");
-                eStdDev1.Text = (dist as BimodalDistribution).Stddev.ToString("0.###");
-                eMean2.Text = (dist as BimodalDistribution).Mean2.ToString("0.###");
-                eStdDev2.Text = (dist as BimodalDistribution).Stddev2.ToString("0.###");
-                eMode1Weight.Text = (dist as BimodalDistribution).Mode1Weight.ToString("0.###");
+                eMean1.Text = bd.Mean.ToString("0.###");
+                eStdDev1.Text = bd.Stddev.ToString("0.###");
+                eMean2.Text = bd.Mean2.ToString("0.###");
+                eStdDev2.Text = bd.Stddev2.ToString("0.###");
+                eMode1Weight.Text = bd.Mode1Weight.ToString("0.###");
             }
-            else if (dist is GaussianDistribution)//Bimodal is also Gaussian - order of 'if's is important
+            else if (dist is GaussianDistribution gd)//Bimodal is also Gaussian - order of 'if's is important
             {
                 ddDistribution.Text = "Gaussian";
-                eMean1.Text = (dist as GaussianDistribution).Mean.ToString("0.###");
-                eStdDev1.Text = (dist as GaussianDistribution).Stddev.ToString("0.###");
+                eMean1.Text = gd.Mean.ToString("0.###");
+                eStdDev1.Text = gd.Stddev.ToString("0.###");
             }
             else if (dist is UniformDistribution)
                 ddDistribution.Text = "Uniform";
@@ -129,20 +131,18 @@ namespace SiliFish.UI.Controls
             if (Angular && end > 180) end = 180;
             else if (!Angular && !absolute && end > 100) end = 100;
 
-            if (!double.TryParse(eNoise.Text, out double noise))
-                noise = 0;
             switch (mode)
             {
                 case "Constant":
+                    if (!double.TryParse(eNoise.Text, out double noise))
+                        noise = 0;
                     return new Constant_NoDistribution(value, absolute, Angular, noise);
                 case "Uniform":
                     return new UniformDistribution(start, end, absolute, Angular);
                 case "Equally Spaced":
-                    if (!double.TryParse(eMean1.Text, out double meanNoise))
-                        meanNoise = 1;
-                    if (!double.TryParse(eStdDev1.Text, out double stddevNoise))
-                        stddevNoise = 0;
-                    return new SpacedDistribution(start, end, meanNoise, stddevNoise, absolute, Angular);
+                    if (!double.TryParse(eNoise.Text, out double noise2))
+                        noise2 = 0;
+                    return new SpacedDistribution(start, end, noise2, absolute, Angular);
                 case "Gaussian":
                     if (!double.TryParse(eMean1.Text, out double mean))
                         mean = 1;

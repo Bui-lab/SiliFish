@@ -13,7 +13,16 @@ namespace SiliFish.ModelUnits.Junction
     public class GapJunction: JunctionBase
     {
         //public bool Bidirectional = true;//TODO currently unidirectional or different conductance gap junctions are not handled
-          private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
+        /// <summary>
+        /// The number of time units (dt) it will take for the current to travel from cell1 to cell2
+        /// Calculated at the begining of simulation
+        /// </summary>
+        private int duration1;
+        /// <summary>
+        /// The number of time units (dt) it will take for the current to travel from cell2 to cell1
+        /// Calculated at the begining of simulation
+        /// </summary>
+        private int duration2; 
         private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
                                                 //
@@ -61,18 +70,26 @@ namespace SiliFish.ModelUnits.Junction
         {
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;
+            double deltaT = Cell1.Model.RunParam.DeltaT;
             if (FixedDuration_ms != null)
-                duration = (int)(FixedDuration_ms / Cell1.Model.RunParam.DeltaT);
+                duration1 = duration2 = (int)(FixedDuration_ms / Cell1.Model.RunParam.DeltaT);
             else
             {
                 double distance = Util.Distance(Cell1.Coordinate, Cell2.Coordinate, DistanceMode);
-                int delay = (int)(Delay_ms / Cell1.Model.RunParam.DeltaT);
+                int delay = (int)(Delay_ms / deltaT);
                 if (Cell1.ConductionVelocity < GlobalSettings.Epsilon)
-                    duration = int.MaxValue;
+                    duration1 = int.MaxValue;
                 else
                 {
-                    duration = Math.Max((int)(distance / (Cell1.ConductionVelocity * Cell1.Model.RunParam.DeltaT)), 1);
-                    duration += delay;
+                    duration1 = Math.Max((int)(distance / (Cell1.ConductionVelocity * deltaT)), 1);
+                    duration1 += delay;
+                }
+                if (Cell2.ConductionVelocity<GlobalSettings.Epsilon)
+                    duration2 = int.MaxValue;
+                else
+                {
+                    duration2 = Math.Max((int)(distance / (Cell2.ConductionVelocity * deltaT)), 1);
+                    duration2 += delay;
                 }
             }
         }
@@ -94,11 +111,10 @@ namespace SiliFish.ModelUnits.Junction
         {
             if (tIndex <= 0) return;
             t_current = tIndex;
-            int tt = duration;
-            double v1 = tt <= tIndex ? Cell1.V[tIndex - tt] : Cell1.RestingMembranePotential;
+            double v1 = duration1 <= tIndex ? Cell1.V[tIndex - duration1] : Cell1.RestingMembranePotential;
             double v2 = Cell2.V[tIndex - 1];
             VoltageDiffFrom1To2 = v1 - v2;
-            v2 = tt <= tIndex ? Cell2.V[tIndex - tt] : Cell2.RestingMembranePotential;
+            v2 = duration2 <= tIndex ? Cell2.V[tIndex - duration2] : Cell2.RestingMembranePotential;
             v1 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v2 - v1;
         }
