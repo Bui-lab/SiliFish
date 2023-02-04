@@ -20,7 +20,7 @@ namespace SiliFish.ModelUnits
 
         public virtual int CompareTo(ModelUnitBase other)
         {
-            throw new NotImplementedException();
+            return ID.CompareTo(other.ID);
         }
 
         public virtual bool CheckValues(ref List<string> errors)

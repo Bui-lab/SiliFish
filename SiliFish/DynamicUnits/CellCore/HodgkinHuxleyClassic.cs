@@ -133,6 +133,42 @@ namespace SiliFish.DynamicUnits
             paramExternal.TryGetValue("HodgkinHuxley.V_t", out Vt);
             paramExternal.TryGetValue("HodgkinHuxley.Cm", out Cm);
         }
+        public override void SetParameter(string name, double value)
+        {
+            switch (name)
+            {
+                case "HodgkinHuxley.g_K":
+                    g_K = value;
+                    break;
+                case "HodgkinHuxley.g_Na":
+                    g_Na = value;
+                    break;
+                case "HodgkinHuxley.g_L":
+                    g_L = value;
+                    break;
+                case "HodgkinHuxley.E_K":
+                    E_K = value;
+                    break;
+                case "HodgkinHuxley.E_Na":
+                    E_Na = value;
+                    break;
+                case "HodgkinHuxley.E_L":
+                    E_L = value;
+                    break;
+                case "HodgkinHuxley.V_max":
+                    Vmax = value;
+                    break;
+                case "HodgkinHuxley.V_r":
+                    Vr = value;
+                    break;
+                case "HodgkinHuxley.V_t":
+                    Vt = value;
+                    break;
+                case "HodgkinHuxley.Cm":
+                    Cm = value;
+                    break;
+            }
+        }
 
         public override double GetNextVal(double I, ref bool spike)
         {

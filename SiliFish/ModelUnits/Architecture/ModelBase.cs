@@ -77,6 +77,7 @@ namespace SiliFish.ModelUnits.Architecture
         public virtual List<StimulusBase> GetStimuli() { throw new NotImplementedException(); }
         public virtual void AddStimulus(StimulusBase stim) { throw new NotImplementedException(); }
         public virtual void RemoveStimulus(StimulusBase stim) { throw new NotImplementedException(); }
+        public virtual void UpdateStimulus(StimulusBase stim, StimulusBase stim2) { throw new NotImplementedException(); }
 
         public virtual bool AddCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
         public virtual bool RemoveCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }

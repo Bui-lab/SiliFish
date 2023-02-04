@@ -472,6 +472,17 @@ namespace SiliFish.ModelUnits.Cells
                 cell.Stimuli.Add(stimulus_ms);
             }
         }
+
+        public List<StimulusBase> GetStimuli()
+        {
+            List<StimulusBase> listStimuli = new();
+            foreach (Cell cell in Cells)
+            {
+                foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)
+                    listStimuli.Add(stim);
+            }
+            return listStimuli;
+        }
     }
 
 }

@@ -384,10 +384,9 @@ namespace SiliFish.ModelUnits.Architecture
         public override List<StimulusBase> GetStimuli()
         {
             List<StimulusBase> listStimuli = new();
-            foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
+            foreach (CellPool cellPool in CellPools)
             {
-                foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)
-                    listStimuli.Add(stim);
+                listStimuli.AddRange(cellPool.GetStimuli());
             }
             return listStimuli;
         }
@@ -404,6 +403,11 @@ namespace SiliFish.ModelUnits.Architecture
             stimulus.TargetCell.Stimuli.Remove(stimulus);
         }
 
+        public override void UpdateStimulus(StimulusBase stim, StimulusBase stim2)
+        {
+            RemoveStimulus(stim);
+            AddStimulus(stim2);
+        }
         #endregion
         public virtual ((double, double), (double, double), (double, double), int) GetSpatialRange()
         {

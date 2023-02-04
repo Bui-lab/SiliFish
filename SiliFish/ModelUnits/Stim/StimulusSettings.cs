@@ -25,6 +25,10 @@ namespace SiliFish.ModelUnits.Stim
             Value1 = value1;
             Value2 = value2;
         }
+        public StimulusSettings Clone()
+        {
+            return (StimulusSettings)MemberwiseClone();
+        }
         public override string ToString()
         {
             return Mode switch

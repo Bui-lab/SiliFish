@@ -49,7 +49,8 @@ namespace SiliFish.DynamicUnits
         }
 
         #endregion
-        private Dictionary<string, double> parametersObsolete; //Used for json only
+
+        private Dictionary<string, double> parameters; //Used for json and by DynamicsTest only
 
         protected double deltaT, deltaTEuler;
         protected double V = -70;//Keeps the current value of V 
@@ -99,12 +100,16 @@ namespace SiliFish.DynamicUnits
 
         public virtual Dictionary<string, double> GetParameters()
         {
-            return parametersObsolete;
+            return parameters;
         }
 
         public virtual void SetParameters(Dictionary<string, double> paramExternal)
         {
-            parametersObsolete = paramExternal;
+            parameters = paramExternal;
+        }
+        public virtual void SetParameter(string name, double value)
+        {
+            parameters[name] = value;
         }
         public virtual bool CheckValues(ref List<string> errors)
         {
@@ -201,35 +206,29 @@ namespace SiliFish.DynamicUnits
         public virtual double[] RheobaseSensitivityAnalysis(string param, double[] values,
                     double dt, double maxRheobase = 100, double sensitivity = 0.001, int infinity = 300)
         {
-            Dictionary<string, double> parameters = GetParameters();
-            double origValue = parameters[param];
+            double origValue = Parameters[param];
             double[] rheos = new double[values.Length];
             int counter = 0;
             foreach (double value in values)
             {
-                parameters[param] = value;
-                SetParameters(parameters);
+                SetParameter(param, value);
                 rheos[counter++] = CalculateRheoBase(maxRheobase, sensitivity, infinity, dt);
             }
-            parameters[param] = origValue;
-            SetParameters(parameters);
+            SetParameter(param, origValue);
             return rheos;
         }
 
         public DynamicsStats[] FiringAnalysis(string param, double[] values, double[] I)
         {
-            Dictionary<string, double> parameters = GetParameters();
-            double origValue = parameters[param];
+            double origValue = Parameters[param];
             DynamicsStats[] stats = new DynamicsStats[values.Length];
             int counter = 0;
             foreach (double value in values)
             {
-                parameters[param] = value;
-                SetParameters(parameters);
+                SetParameter(param, value);
                 stats[counter++] = DynamicsTest(I);
             }
-            parameters[param] = origValue;
-            SetParameters(parameters);
+            SetParameter(param, origValue);
             return stats;
         }
         public virtual (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()

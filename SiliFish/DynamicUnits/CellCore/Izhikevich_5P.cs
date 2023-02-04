@@ -97,6 +97,31 @@ namespace SiliFish.DynamicUnits
             paramExternal.TryGetValue("Izhikevich_5P.V_r", out Vr);
         }
 
+        public override void SetParameter(string name, double value)
+        {
+            switch (name)
+            {
+                case "Izhikevich_5P.a":
+                    a = value;
+                    break;
+                case "Izhikevich_5P.b":
+                    b = value;
+                    break;
+                case "Izhikevich_5P.c":
+                    c = value;
+                    break;
+                case "Izhikevich_5P.d":
+                    d = value;
+                    break;
+                case "Izhikevich_5P.V_max":
+                    Vmax = value;
+                    break;
+                case "Izhikevich_5P.V_r":
+                    Vr = value;
+                    break;
+            }
+        }
+
         public override double GetNextVal(double I, ref bool spike)
         {
             double vNew, uNew;

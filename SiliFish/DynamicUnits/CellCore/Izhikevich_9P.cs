@@ -46,7 +46,7 @@ namespace SiliFish.DynamicUnits
         protected override void Initialize()
         {
             V = Vr;
-            u = b * Vr;
+            u = 0; // b * Vr;
         }
 
         public override Dictionary<string, double> GetParameters()
@@ -125,6 +125,39 @@ namespace SiliFish.DynamicUnits
             paramExternal.TryGetValue("Izhikevich_9P.Cm", out Cm);
         }
 
+        public override void SetParameter(string name, double value)
+        {
+            switch (name)
+            {
+                case "Izhikevich_9P.a":
+                    a = value;
+                    break;
+                case "Izhikevich_9P.b":
+                    b = value;
+                    break;
+                case "Izhikevich_9P.c":
+                    c = value;
+                    break;
+                case "Izhikevich_9P.d":
+                    d = value;
+                    break;
+                case "Izhikevich_9P.V_max":
+                    Vmax = value;
+                    break;
+                case "Izhikevich_9P.V_r":
+                    Vr = value;
+                    break;
+                case "Izhikevich_9P.V_t":
+                    Vt = value;
+                    break;
+                case "Izhikevich_9P.k":
+                    k = value;
+                    break;
+                case "Izhikevich_9P.Cm":
+                    Cm = value;
+                    break;
+            }
+        }
         public override double GetNextVal(double I, ref bool spike)
         {
             double vNew, uNew;

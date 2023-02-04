@@ -83,9 +83,14 @@
         let somiteList = [__SOMITES__];
 
         function showLink(l) {
-            return selectedNode == null ||
-                (showSingleNodeLinks && (l.source == selectedNode || l.target == selectedNode)
-                    || !showSingleNodeLinks && (l.source.g == selectedNode.g || l.target.g == selectedNode.g));
+            let show = true;
+            if (selectedNode != null)
+                show = (showSingleNodeLinks && (l.source == selectedNode || l.target == selectedNode)
+                        ||
+                    !showSingleNodeLinks && (l.source.g == selectedNode.g || l.target.g == selectedNode.g));
+            if (show && somiteList.length > 0)
+                show = somiteList.includes(l.source.s) || somiteList.includes(l.target.s);
+            return show;
         }
         function showNode(n) {
             return n.s <= 0 || somiteList.length == 0 || somiteList.includes(n.s);

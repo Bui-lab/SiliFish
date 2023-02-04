@@ -100,6 +100,14 @@ namespace SiliFish.ModelUnits.Architecture
             AppliedStimuli.Remove(stim as StimulusTemplate);
         }
 
+        public override void UpdateStimulus(StimulusBase stim, StimulusBase stim2)
+        {
+            int ind = AppliedStimuli.IndexOf(stim as StimulusTemplate);
+            if (ind != -1)
+                AppliedStimuli[ind] = stim2 as StimulusTemplate;
+            else
+                AddStimulus(stim2);
+        }
         public void ClearLists()
         {
             CellPoolTemplates.Clear();

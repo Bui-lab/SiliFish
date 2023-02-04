@@ -293,17 +293,20 @@ namespace SiliFish.UI.Controls
                 SelectedPool = pool;
                 SelectedCell = null;
                 LoadProjections(pool);
+                LoadStimuli(pool);
                 LoadCells();
             }
             else if (sender is CellPoolTemplate cpt)
             {
                 LoadProjections(cpt.CellGroup);
+                LoadStimuli(cpt.CellGroup);
             }
             else if (sender == null)
             {
                 SelectedPool = null;
                 SelectedCell = null;
                 LoadProjections();//Full list
+                LoadStimuli();//Full list
             }
         }
         private void listCellPools_ItemCopy(object sender, EventArgs e)
@@ -365,7 +368,7 @@ namespace SiliFish.UI.Controls
         {
             ModelIsUpdated();
         }
-        private void listCellPool_SortItems(object sender, EventArgs e)
+        private void listCellPools_SortItems(object sender, EventArgs e)
         {
             Model.SortCellPools();
             LoadPools();
@@ -398,7 +401,7 @@ namespace SiliFish.UI.Controls
             return null;
         }
 
-        private void listCell_ItemAdd(object sender, EventArgs e)
+        private void listCells_ItemAdd(object sender, EventArgs e)
         {
             if (SelectedPool == null) return;
             //MODEL EDIT
@@ -420,6 +423,7 @@ namespace SiliFish.UI.Controls
             {
                 SelectedCell = cell;
                 LoadProjections(cell);
+                LoadStimuli(cell);
             }
         }
 
@@ -482,7 +486,7 @@ namespace SiliFish.UI.Controls
                 }
             }*/
         } 
-        private void listCell_ItemToggleActive(object sender, EventArgs e)
+        private void listCells_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
@@ -503,6 +507,11 @@ namespace SiliFish.UI.Controls
 
         private void LoadProjections(string cellPoolID)
         {
+            if (string.IsNullOrEmpty(cellPoolID))
+            {
+                LoadProjections();
+                return;
+            }
             listConnections.ClearItems();
             lConnectionsTitle.Text = $"Connections of {cellPoolID}";
             if (Model == null || Model is not ModelTemplate) return;
@@ -716,12 +725,56 @@ namespace SiliFish.UI.Controls
         {
             listStimuli.ClearItems();
             if (Model == null) return;
-            foreach (object stim in Model.GetStimuli())
+            foreach (StimulusBase stim in Model.GetStimuli())
             {
                 listStimuli.AppendItem(stim);
             }
         }
-        
+
+        private void LoadStimuli(string cellPoolID)
+        {
+            if (string.IsNullOrEmpty(cellPoolID))
+            {
+                LoadStimuli();
+                return;
+            }
+            lStimuliTitle.Text = $"Stimuli of {cellPoolID}";
+            listStimuli.ClearItems();
+            if (Model == null || Model is not ModelTemplate) return;
+            IEnumerable<StimulusTemplate> list = Model.GetStimuli().Cast<StimulusTemplate>().Where(st => st.TargetPool == cellPoolID);
+            foreach (StimulusTemplate stim in list)
+                listStimuli.AppendItem(stim);
+        }
+        private void LoadStimuli(CellPool cp)
+        {
+            if (cp == null)
+            {
+                LoadStimuli();
+                return;
+            }
+            lStimuliTitle.Text = $"Stimuli of {cp.ID}";
+            listStimuli.ClearItems();
+            foreach (Stimulus stim in cp.GetStimuli())
+                listStimuli.AppendItem(stim);
+        }
+        private void LoadStimuli(Cell cell)
+        {
+            if (cell == null)
+            {
+                if (SelectedPool != null)
+                    LoadStimuli(SelectedPool);
+                else
+                    LoadStimuli();
+                return;
+            }
+            lStimuliTitle.Text = $"Stimuli of {cell.ID}";
+            listStimuli.ClearItems();
+            foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)
+            {
+                listStimuli.AppendItem(stim);
+            }
+        }
+
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
         {
             if (Model == null) return null;
@@ -785,11 +838,12 @@ namespace SiliFish.UI.Controls
             if (listStimuli.SelectedItem == null)
                 return;
             StimulusBase stimulus = listStimuli.SelectedItem as StimulusTemplate;
-            stimulus = OpenStimulusDialog(stimulus); //check modeltemplate's list
-            if (stimulus != null)
+            StimulusBase stimulus2 = OpenStimulusDialog(stimulus); //check modeltemplate's list
+            if (stimulus2 != null)
             {
                 int ind = listStimuli.SelectedIndex;
-                listStimuli.RefreshItem(ind, stimulus);
+                Model.UpdateStimulus(stimulus, stimulus2);
+                listStimuli.RefreshItem(ind, stimulus2);
                 ModelIsUpdated();
             }
         }

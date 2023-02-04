@@ -28,8 +28,6 @@ namespace SiliFish.UI.Controls
         public DistributionControl()
         {
             InitializeComponent();
-            if (NoneIncluded)
-                ddDistribution.Items.Add("None");
             ddDistribution.Items.AddRange(Distribution.GetDistributionTypes().ToArray());
             UniformDistribution ud = new();
             ddDistribution.Text = ud.Discriminator;
@@ -76,8 +74,13 @@ namespace SiliFish.UI.Controls
 
         public void SetDistribution(Distribution dist)
         {
+            if (NoneIncluded && !ddDistribution.Items.Contains("None"))
+                ddDistribution.Items.Insert(0, "None");
             if (dist == null)
+            {
+                ddDistribution.Text = "None";
                 return;
+            }
             eUniqueValue.Text = dist.UniqueValue.ToString();
             eRangeStart.Text = dist.RangeStart.ToString();
             eRangeEnd.Text = dist.RangeEnd.ToString();

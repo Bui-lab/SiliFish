@@ -106,12 +106,40 @@ namespace SiliFish.DynamicUnits
             V = Vr;
         }
 
+        public override void SetParameter(string name, double value)
+        {
+            switch (name)
+            {
+                case "Leaky_Integrator.R":
+                    R = value;
+                    break;
+                case "Leaky_Integrator.C":
+                    C = value;
+                    break;
+                case "Leaky_Integrator.Vr":
+                    Vr = value;
+                    break;
+                case "Leaky_Integrator.Va":
+                    Va = value;
+                    break;
+                case "Leaky_Integrator.Tmax":
+                    Tmax = value;
+                    break;
+                case "Leaky_Integrator.ka":
+                    ka = value;
+                    break;
+                case "Leaky_Integrator.Vmax":
+                    Vmax = value;
+                    break;
+            }
+        }
+
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]
         public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used
         {
             //T_a = T_max / (1 + exp(V_a - V_m) / k_a
-            return 1 / (1 + Math.Exp((Va - (Vm ?? V)) / ka));
+            return 1000 / (1 + Math.Exp((Va - (Vm ?? V)) / ka));
         }
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]

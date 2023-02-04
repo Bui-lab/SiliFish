@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using SiliFish.DataTypes;
+using SiliFish.ModelUnits.Cells;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Stim
 {
@@ -19,7 +21,9 @@ namespace SiliFish.ModelUnits.Stim
                 TargetPool = TargetPool,
                 TargetSomite = TargetSomite,
                 TargetCell = TargetCell,
-                LeftRight = LeftRight
+                LeftRight = LeftRight,
+                Settings = Settings.Clone(),
+                TimeLine_ms = new(TimeLine_ms)
             };
             return stim;
         }

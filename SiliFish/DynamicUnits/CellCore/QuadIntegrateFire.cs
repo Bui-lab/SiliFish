@@ -56,7 +56,18 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
-
+        public override void SetParameter(string name, double value)
+        {
+            switch (name)
+            {
+                case "QIF.Vr":
+                    Vr = value;
+                    break;
+                case "QIF.Vmax":
+                    Vmax = value;
+                    break;
+            }
+        }
         public override double GetNextVal(double Stim, ref bool spike)
         {
             double dtTracker = 0;

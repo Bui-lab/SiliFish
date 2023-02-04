@@ -60,6 +60,7 @@ namespace SiliFish.ModelUnits.Junction
             PostCell = postN;
             Target = postN.ID;
             DistanceMode = distmode;
+            Weight = conductance;
         }
 
         public override bool CheckValues(ref List<string> errors)
