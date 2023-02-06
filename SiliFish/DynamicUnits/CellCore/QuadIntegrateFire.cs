@@ -93,7 +93,7 @@ namespace SiliFish.DynamicUnits
         public override DynamicsStats SolveODE(double[] I)
         {
             int iMax = I.Length;
-            DynamicsStats dyn = new(I, deltaT);
+            DynamicsStats dyn = new(null, I, deltaT);
             bool spike = false;
             for (int t = 0; t < iMax; t++)
             {

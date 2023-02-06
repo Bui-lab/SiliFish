@@ -14,49 +14,11 @@ namespace SiliFish.Services
 
     public class PlotDataGenerator
     {
-        public static List<ChartDataStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
-            int iStart, int iEnd)
-        {
-            List<ChartDataStruct> charts = new();
-            if (cells == null || !cells.Any())
-                return charts;
-
-            double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));
-            double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
-            Helpers.Util.SetYRange(ref yMin, ref yMax);
-
-            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
-            foreach (IGrouping<string, Cell> cellGroup in cellGroups)
-            {
-                string columnTitles = "Time,";
-                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> colorPerChart = new();
-                foreach (Cell cell in cellGroup)
-                {
-                    columnTitles += cell.ID + ",";
-                    colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
-                    foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.V?[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
-                }
-                string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                charts.Add(new ChartDataStruct
-                {
-                    CsvData = csvData,
-                    Color = string.Join(',', colorPerChart),
-                    Title = $"`{cellGroup.Key} Membrane Potential`",
-                    yLabel = "`Memb. Potential (mV)`",
-                    yMin = yMin,
-                    yMax = yMax,
-                    xMin = TimeArray[iStart],
-                    xMax = (TimeArray[iEnd] + 1)
-                });
-            }
-            return charts;
-        }
-
-
-        private static List<ChartDataStruct> CreateCurrentCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
-            int iStart, int iEnd, bool includeGap = true, bool includeChem = true)
+        private static List<ChartDataStruct> CreateCurrentCharts(double[] TimeArray, 
+            List<Cell> cells, bool groupByPool,
+            int iStart, int iEnd, 
+            UnitOfMeasure UoM, 
+            bool includeGap = true, bool includeChem = true)
         {
             List<ChartDataStruct> gapCharts = new();
             List<ChartDataStruct> synCharts = new();
@@ -127,7 +89,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerGapChart),
                         Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -142,7 +104,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerInSynChart),
                         Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -157,7 +119,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerOutSynChart),
                         Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -169,7 +131,7 @@ namespace SiliFish.Services
         }
 
         private static List<ChartDataStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
-            int iStart, int iEnd)
+            int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<ChartDataStruct> charts = new();
             if (cells == null || !cells.Any())
@@ -202,7 +164,7 @@ namespace SiliFish.Services
                         CsvData = csvData,
                         Color = string.Join(',', colorPerChart),
                         Title = $"`{cellGroup.Key} Applied Stimuli`",
-                        yLabel = $"`Stimulus ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})`",
+                        yLabel = $"`Stimulus ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
@@ -253,12 +215,12 @@ namespace SiliFish.Services
         }
 
         private static List<ChartDataStruct> CreateFullDynamicsCharts(double[] TimeOffset, List<Cell> cells, bool groupByPool,
-            int iStart, int iEnd)
+            int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<ChartDataStruct> charts = new();
             charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
-            charts.AddRange(CreateCurrentCharts(TimeOffset, cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: true));
-            charts.AddRange(CreateStimuliCharts(TimeOffset, cells, groupByPool, iStart, iEnd));
+            charts.AddRange(CreateCurrentCharts(TimeOffset, cells, groupByPool, iStart, iEnd, UoM, includeGap: true, includeChem: true));
+            charts.AddRange(CreateStimuliCharts(TimeOffset, cells, groupByPool, iStart, iEnd, UoM));
             List<MuscleCell> muscleCells = cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
             if (muscleCells.Any())
                 charts.AddRange(CreateTensionCharts(TimeOffset, muscleCells, groupByPool, iStart, iEnd));
@@ -416,7 +378,8 @@ namespace SiliFish.Services
             int iEnd = (int)((tEnd + tSkip) / dt);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;
-
+            
+            UnitOfMeasure UoM = model.Settings.UoM;
             bool groupByPool = false;
             if (Cells == null || !Cells.Any())
             {
@@ -433,23 +396,23 @@ namespace SiliFish.Services
                     break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
-                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: true);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM,  includeGap: true, includeChem: true);
                     break;
                 case PlotType.GapCurrent:
                     Title = "Incoming Gap Currents";
-                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, includeGap: true, includeChem: false);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM, includeGap: true, includeChem: false);
                     break;
                 case PlotType.ChemCurrent:
                     Title = "Incoming Synaptic Currents";
-                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, includeGap: false, includeChem: true);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM, includeGap: false, includeChem: true);
                     break;
                 case PlotType.Stimuli:
                     Title = "Applied Stimulus";
-                    charts = CreateStimuliCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd);
+                    charts = CreateStimuliCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM);
                     break;
                 case PlotType.FullDyn:
                     Title = "Full Dynamics";
-                    charts = CreateFullDynamicsCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd);
+                    charts = CreateFullDynamicsCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM);
                     break;
                 case PlotType.Episodes:
                     Title = "Tail Beat Episodes";
@@ -458,6 +421,46 @@ namespace SiliFish.Services
             }
             return (Title, charts);
         }
+        public static List<ChartDataStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, bool groupByPool,
+            int iStart, int iEnd)
+        {
+            List<ChartDataStruct> charts = new();
+            if (cells == null || !cells.Any())
+                return charts;
+
+            double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));
+            double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
+            Helpers.Util.SetYRange(ref yMin, ref yMax);
+
+            IEnumerable<IGrouping<string, Cell>> cellGroups = cells.GroupBy(c => groupByPool ? c.CellPool.ID : c.ID);
+            foreach (IGrouping<string, Cell> cellGroup in cellGroups)
+            {
+                string columnTitles = "Time,";
+                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> colorPerChart = new();
+                foreach (Cell cell in cellGroup)
+                {
+                    columnTitles += cell.ID + ",";
+                    colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
+                    foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                        data[i] += cell.V?[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                }
+                string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                charts.Add(new ChartDataStruct
+                {
+                    CsvData = csvData,
+                    Color = string.Join(',', colorPerChart),
+                    Title = $"`{cellGroup.Key} Membrane Potential`",
+                    yLabel = "`Memb. Potential (mV)`",
+                    yMin = yMin,
+                    yMax = yMax,
+                    xMin = TimeArray[iStart],
+                    xMax = (TimeArray[iEnd] + 1)
+                });
+            }
+            return charts;
+        }
+
 
     }
 }

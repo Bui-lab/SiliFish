@@ -23,17 +23,6 @@ namespace SiliFish.Helpers
             s = '`' + s + '`';
             return s;
         }
-        public static int NumOfDigits(double val)
-        {
-            int digits = 0;
-            val = Math.Abs(val);
-            while (val >= 1)
-            {
-                digits++;
-                val /= 10;
-            }
-            return digits;
-        }
         public static int NumOfDecimalDigits(double val)
         {
             return NumOfDecimalDigits((decimal)val);
@@ -46,30 +35,6 @@ namespace SiliFish.Helpers
             return decPoints;
         }
 
-        /// <summary>
-        /// Currently not used
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private (double, double) CalculateRange(double value)
-        {
-            if (value == 0)
-                return (CurrentSettings.Settings.GeneticAlgorithmMinValue, CurrentSettings.Settings.GeneticAlgorithmMaxValue);
-            int numDigit = Util.NumOfDigits(value);
-            int numDecimal = Util.NumOfDecimalDigits((decimal)value);
-            if (numDigit == 0)
-                numDigit = 1;
-
-            double minValue = value - 10 * numDigit;
-            if (value > 0 && minValue <= 0)
-                minValue = Math.Pow(10, -numDecimal);
-
-            double maxValue = value + 10 * numDigit;
-            if (value < 0 && maxValue >= 0)
-                maxValue = -Math.Pow(10, -numDecimal);
-
-            return (minValue, maxValue);
-        }
         public static bool CheckOnlineStatus()
         {
             using var httpClient = new HttpClient();
@@ -186,11 +151,14 @@ namespace SiliFish.Helpers
                 case Measure.Voltage:
                     return "mV";
                 case Measure.Current:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "pA" : "nA";
+                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" : "nA";
                 case Measure.Resistance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "GΩ" : "MΩ";
+                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "GΩ" : "MΩ";
                 case Measure.Capacitance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad ? "pF" : "nF";
+                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pF" : "nF";
+                case Measure.Conductance:
+                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "nS" : "µS";
+
             }
             return "";
         }

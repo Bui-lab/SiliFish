@@ -10,12 +10,13 @@ namespace SiliFish.Services.Optimization
 
     public class CoreSolverSettings
     {
-
         private List<FitnessFunction> fitnessFunctions;
         private double[] minValues = null;
         private double[] maxValues = null;
         private int[] numBits = null;
         private int[] decimalDigits = null;
+        public double GeneticAlgorithmMinValue { get; set; } = -100;
+        public double GeneticAlgorithmMaxValue { get; set; } = 100;
 
         public double DeltaT { get; set; }
         public double DeltaTEuler { get; set; }
@@ -74,7 +75,7 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    minValues[iter++] = MinValueDictionary?.GetValueOrDefault(key, CurrentSettings.Settings.GeneticAlgorithmMinValue) ?? CurrentSettings.Settings.GeneticAlgorithmMinValue;
+                    minValues[iter++] = MinValueDictionary?.GetValueOrDefault(key, GeneticAlgorithmMinValue) ?? GeneticAlgorithmMinValue;
                 }
                 return minValues;
             }
@@ -91,7 +92,7 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    maxValues[iter++] = MaxValueDictionary?.GetValueOrDefault(key, CurrentSettings.Settings.GeneticAlgorithmMinValue) ?? CurrentSettings.Settings.GeneticAlgorithmMinValue;
+                    maxValues[iter++] = MaxValueDictionary?.GetValueOrDefault(key, GeneticAlgorithmMaxValue) ?? GeneticAlgorithmMaxValue;
                 }
                 return maxValues;
             }

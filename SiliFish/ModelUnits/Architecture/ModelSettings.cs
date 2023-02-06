@@ -10,12 +10,12 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Architecture
 {
-    public class CurrentSettings
-    {
-        public static ModelSettings Settings = new();
-    }
     public class ModelSettings
     {
+        [Description("The seed to initialize the random number generator."), DisplayName("Random Seed"), Category("Randomization")]
+        public int Seed { get; set; } = 0;
+
+
         [Browsable(false),
             Description("Folder that temporary files are saved under. Will be cleared after the program exits."),
             DisplayName("Temporary Folder"),
@@ -31,16 +31,7 @@ namespace SiliFish.ModelUnits.Architecture
 
 
         [Category("Constant values")]
-        public UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad;//Used from data structures that don't have direct access to the model
-
-        [Description("Valid for all parameters."),
-            DisplayName("Suggested Min Value"),
-            Category("Genetic Algorithm")]
-        public double GeneticAlgorithmMinValue { get; set; } = -100;
-        [Description("Valid for all parameters."),
-            DisplayName("Suggested Max Value"),
-            Category("Genetic Algorithm")]
-        public double GeneticAlgorithmMaxValue { get; set; } = 100;
+        public UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens;//Used from data structures that don't have direct access to the model
 
         [Browsable(false), Category("Default values")]
         public string DefaultNeuronCore { get; set; } = typeof(Izhikevich_9P).Name;
@@ -64,8 +55,6 @@ namespace SiliFish.ModelUnits.Architecture
         [Description("Default reversal potential of ACh."),
             Category("Default Values")]
         public double E_ach { get; set; } = 120; //reversal potential for ACh receptors
-
-
 
         [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"),
             DisplayName("Chattering Irregularity"),

@@ -47,7 +47,6 @@
             // 
             this.dgDistribution.AllowUserToAddRows = false;
             this.dgDistribution.AllowUserToDeleteRows = false;
-            this.dgDistribution.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgDistribution.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgDistribution.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colField,
@@ -65,6 +64,7 @@
             this.dgDistribution.TabIndex = 10;
             this.dgDistribution.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellClick);
             this.dgDistribution.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
+            this.dgDistribution.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDistribution_CellDoubleClick);
             this.dgDistribution.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellEndEdit);
             // 
             // colField

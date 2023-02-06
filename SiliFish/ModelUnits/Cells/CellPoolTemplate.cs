@@ -168,8 +168,6 @@ namespace SiliFish.ModelUnits.Cells
         }
         public void BackwardCompatibility()
         {
-            ConductionVelocity ??= new Constant_NoDistribution(CurrentSettings.Settings.cv);
-
             var currentParams = CellCoreUnit.GetParameters(CoreType);
             foreach(var key in currentParams.Keys ) 
             {

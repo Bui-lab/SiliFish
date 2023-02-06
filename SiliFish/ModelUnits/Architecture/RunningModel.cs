@@ -624,14 +624,13 @@ namespace SiliFish.ModelUnits.Architecture
                     cell.CalculateMembranePotential(timeIndex);
             }
         }
-        protected virtual void RunModelLoop(int? seed)
+        protected virtual void RunModelLoop()
         {
             try
             {
                 iProgress = 0;
                 model_run = false;
-                if (seed != null || rand == null)
-                    rand = new Random(seed != null ? (int)seed : 0);
+                rand ??= new Random(Settings.Seed);
                 iMax = RunParam.iMax;
                 Stimulus.nMax = iMax;
 
@@ -661,7 +660,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public void RunModel(int? seed, int count = 1)
+        public void RunModel(int count = 1)
         {
             string filename = $"{ModelName}_{DateTime.Now:yyMMdd-HHmm}";
             string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
@@ -674,16 +673,15 @@ namespace SiliFish.ModelUnits.Architecture
                     CancelLoop = false;
                     return;
                 }
-                RunModelLoop(seed);
+                RunModelLoop();
                 if (count > 1 && ModelRun)
                 {
                     (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(this);
                     string runfilename = $"{filename}_Run{iRunCounter}";
                     runfilename = Path.Combine(outputFolder, runfilename);
-                    //Util.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
+                    FileUtil.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
                     FileUtil.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
                     JsonUtil.SaveToJsonFile(runfilename + ".json", this);
-                    seed = null;
                 }
                 if (CancelLoop)
                 {

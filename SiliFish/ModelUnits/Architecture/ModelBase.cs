@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -14,21 +15,14 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
-        private ModelSettings settings = new();
         public Random rand = new(0);
+
         public string ClassType => GetType().Name;
         public string ModelName { get; set; }
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; } = new();
-        public ModelSettings Settings
-        {
-            get { return settings; }
-            set
-            {
-                CurrentSettings.Settings = settings = value;
-            }
-        }
+        public ModelSettings Settings { get; set; } = new();
 
         [JsonPropertyOrder(2)]
         public KinemParam KinemParam { get; set; } = new();
@@ -67,7 +61,6 @@ namespace SiliFish.ModelUnits.Architecture
             }
             Parameters = ModelDimensions.BackwardCompatibility(Parameters);
             Settings.BackwardCompatibility(Parameters);
-            CurrentSettings.Settings = Settings;
             KinemParam.BackwardCompatibility(Parameters);
         }
         public virtual void LinkObjects() { }

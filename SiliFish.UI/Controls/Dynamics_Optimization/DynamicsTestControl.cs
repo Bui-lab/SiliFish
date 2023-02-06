@@ -11,6 +11,7 @@ using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services;
 using SiliFish.UI.Extensions;
+using System.ComponentModel;
 
 namespace SiliFish.UI.Controls
 {
@@ -20,6 +21,8 @@ namespace SiliFish.UI.Controls
         private Random Random = new();
         private string coreType;
         private double deltaT, deltaTEuler;
+        private string tempFolder;
+        private string outputFolder;
         public double DeltaT { get => deltaT; set { deltaT = value; gaControl.DeltaT = value; } }
         public double DeltaTEuler { get => deltaTEuler; set { deltaTEuler = value; gaControl.DeltaTEuler = value; } }
 
@@ -46,8 +49,6 @@ namespace SiliFish.UI.Controls
         private event EventHandler useUpdatedParams;
         public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
         private Dictionary<string, double> parameters;
-
-
         private bool OptimizationMode
         {
             get { return linkSwitchToOptimization.Text != "Optimization Mode"; }
@@ -140,6 +141,10 @@ namespace SiliFish.UI.Controls
             gaControl.OnGetParams += GaControl_OnGetParams;
             sensitivityAnalysisRheobase.RunAnalysis += SensitivityAnalysisRheobase_RunAnalysis;
             sensitivityAnalysisFiring.RunAnalysis += SensitivityAnalysisFiring_RunAnalysis;
+            if (string.IsNullOrEmpty(tempFolder))
+                tempFolder = Path.GetTempPath() + "SiliFish";
+            if (string.IsNullOrEmpty(outputFolder))
+                outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         }
 
         private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
@@ -172,7 +177,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
         }
 
         private void SensitivityAnalysisRheobase_RunAnalysis(object sender, EventArgs e)
@@ -210,7 +215,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
         }
 
         private void GaControl_OnLoadParams(object sender, EventArgs e)
@@ -374,7 +379,7 @@ namespace SiliFish.UI.Controls
                     Color = Color.Red.ToRGBQuoted(),
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
-                    yLabel = $"I ({Util.GetUoM(CurrentSettings.Settings.UoM, Measure.Current)})"
+                    yLabel = $"I ({Util.GetUoM(UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens, Measure.Current)})"
                 });
             }
             int numCharts = charts.Any() ? charts.Count : 1;
@@ -383,7 +388,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
         }
         private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
@@ -417,7 +422,7 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, CurrentSettings.Settings.TempFolder, ref tempFile);
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
         }
 
         private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)

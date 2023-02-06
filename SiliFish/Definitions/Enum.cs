@@ -54,8 +54,12 @@ namespace SiliFish.Definitions
 
     public enum UnitOfMeasure
     {
-        [Display(Name = "mV/pA/GΩ/pF"), Description("Voltage: mV; Current: pA; Resistance: GΩ; Capacitance: pF")] milliVolt_picoAmpere_GigaOhm_picoFarad,
-        [Display(Name = "mV/nA/MΩ/nF"), Description("Voltage: mV; Current: nA; Resistance: MΩ; Capacitance: nF")] milliVolt_nanoAmpere_MegaOhm_nanoFarad
+        [Display(Name = "mV/pA/GΩ/pF/nS"), 
+            Description("Voltage: mV; Current: pA; Resistance: GΩ; Capacitance: pF; Conductance: nS")] 
+        milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens,
+        [Display(Name = "mV/nA/MΩ/nF/µS"), 
+            Description("Voltage: mV; Current: nA; Resistance: MΩ; Capacitance: nF; Conductance: µS")] 
+        milliVolt_nanoAmpere_MegaOhm_nanoFarad_microSiemens
     }
 
     public enum Measure
@@ -63,6 +67,7 @@ namespace SiliFish.Definitions
         Voltage,
         Current,
         Resistance,
-        Capacitance
+        Capacitance,
+        Conductance
     }
 }

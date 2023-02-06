@@ -197,7 +197,7 @@ namespace SiliFish.DynamicUnits
             bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
             double decayStart = 0, riseStart = 0;
             int iMax = I.Length;
-            DynamicsStats dyn = new(I, deltaT);
+            DynamicsStats dyn = new(null, I, deltaT);
             dyn.SecLists.Add("u", new double[I.Length]);
             double[] feedbackCurrent = dyn.SecLists["u"];
 

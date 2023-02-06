@@ -1,5 +1,6 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
@@ -175,7 +176,7 @@ namespace SiliFish.DynamicUnits
         public override DynamicsStats SolveODE(double[] I)
         {
             int iMax = I.Length;
-            DynamicsStats dyn = new(I, deltaT);
+            DynamicsStats dyn = new(null, I, deltaT);
             dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
             double[] tensionList = dyn.SecLists["Rel. Tension"];
             bool spike = false;

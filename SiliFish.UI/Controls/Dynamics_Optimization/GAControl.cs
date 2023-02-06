@@ -1,6 +1,7 @@
 ﻿using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services.Optimization;
 using System.Data;
 
@@ -113,7 +114,9 @@ namespace SiliFish.UI.Controls
                 FitnessFunctions = fitnessFunctions.Select(ff => ff as FitnessFunction).ToList(),
                 ParamValues = Parameters,
                 MinValueDictionary = minValues,
-                MaxValueDictionary = maxValues
+                MaxValueDictionary = maxValues,
+                GeneticAlgorithmMinValue = -100,
+                GeneticAlgorithmMaxValue = 100
             };
             Solver = new() { Settings = settings };
         }

@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Services;
 using SiliFish.UI.Extensions;
 
+
 namespace SiliFish.UI.Controls
 {
     public partial class DistributionDataGrid : UserControl
@@ -12,39 +13,53 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
         }
 
+        private void ResizeColumns()
+        {
+            dgDistribution.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            int[]colWidths = new int[dgDistribution.ColumnCount];
+            for (int colind = 0; colind<dgDistribution.ColumnCount; colind++)
+                colWidths[colind] = dgDistribution.Columns[colind].Width;
+            dgDistribution.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            for (int colind = 0; colind < dgDistribution.ColumnCount; colind++)
+                dgDistribution.Columns[colind].Width = colWidths[colind];
+        }
+        private void OpenDistributionDialog(int rowind)
+        {
+            DistributionControl distControl = new()
+            {
+                AbsoluteEnforced = true
+            };
+            ControlContainer frmControl = new();
+            frmControl.AddControl(distControl);
+            frmControl.Text = dgDistribution[colField.Index, rowind].Value.ToString();
+            if (dgDistribution.Rows[rowind].Tag is Distribution dist)
+                distControl.SetDistribution(dist);
+            else
+            {
+                double val = double.Parse(dgDistribution[colUniqueValue.Index, rowind].Tag?.ToString() ?? dgDistribution[colUniqueValue.Index, rowind].Value?.ToString());
+                dist = new Constant_NoDistribution(val);
+                distControl.SetDistribution(dist);
+            }
+            if (frmControl.ShowDialog() == DialogResult.OK)
+            {
+                dist = distControl.GetDistribution();
+                if ((dist is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon)
+                    WriteNoDistToRow(null, dist.UniqueValue, rowind);
+                else
+                    WriteDistToRow(null, dist, rowind);
+            }
+        }
         private void dgDynamics_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-            int rowind = e.RowIndex;
             if (e.ColumnIndex == colDistEditLink.Index)
             {
-                DistributionControl distControl = new()
-                {
-                    AbsoluteEnforced = true
-                };
-                ControlContainer frmControl = new();
-                frmControl.AddControl(distControl);
-                frmControl.Text = dgDistribution[colField.Index, e.RowIndex].Value.ToString();
-                if (dgDistribution.Rows[e.RowIndex].Tag is Distribution dist)
-                    distControl.SetDistribution(dist);
-                else
-                {
-                    double val = double.Parse(dgDistribution[colUniqueValue.Index, e.RowIndex].Tag?.ToString() ?? dgDistribution[colUniqueValue.Index, e.RowIndex].Value?.ToString());
-                    dist = new Constant_NoDistribution(val);
-                    distControl.SetDistribution(dist);
-                }
-                if (frmControl.ShowDialog() == DialogResult.OK)
-                {
-                    dist = distControl.GetDistribution();
-                    if ((dist is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon)
-                        WriteNoDistToRow(null, dist.UniqueValue, rowind);
-                    else
-                        WriteDistToRow(null, dist, rowind);
-                }
+                OpenDistributionDialog(e.RowIndex);
             }
         }
         private void dgDynamics_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0) return;
             if (dgDistribution.Rows[e.RowIndex].Tag is Distribution dist)
             {
                 if ((dist is Constant_NoDistribution constant_NoDistribution) && constant_NoDistribution.NoiseStdDev < GlobalSettings.Epsilon)
@@ -58,6 +73,15 @@ namespace SiliFish.UI.Controls
         private void dgDynamics_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             dgDistribution.Rows[e.RowIndex].Tag = null;
+        }
+        private void dgDistribution_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                ResizeColumns();
+                return;
+            }
+            OpenDistributionDialog(e.RowIndex);
         }
 
         private void WriteDistToRow(string key, Distribution dist, int rowIndex)

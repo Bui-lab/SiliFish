@@ -95,8 +95,7 @@ namespace SiliFish.Extensions
             }
             if (!ordered)
             {
-                Random rnd = new();
-                rnd.Shuffle(result);
+                rand.Shuffle(result);
             }
             return result;
         }

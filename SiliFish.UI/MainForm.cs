@@ -46,7 +46,6 @@ namespace SiliFish.UI
                 ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
                 modelControl.SetModel(ModelTemplate);
                 SetCurrentMode(RunMode.Template);
-                CurrentSettings.Settings = ModelTemplate.Settings;
                 if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
                     Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
                 if (!Directory.Exists(ModelTemplate.Settings.OutputFolder))
@@ -73,7 +72,6 @@ namespace SiliFish.UI
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel);
                 
-                CurrentSettings.Settings = RunningModel.Settings;
                 if (!Directory.Exists(RunningModel.Settings.TempFolder))
                     Directory.CreateDirectory(RunningModel.Settings.TempFolder);
                 if (!Directory.Exists(RunningModel.Settings.OutputFolder))
@@ -181,7 +179,7 @@ namespace SiliFish.UI
         {
             try
             {
-                RunningModel.RunModel(0);
+                RunningModel.RunModel();
             }
             catch (Exception ex)
             {

@@ -296,7 +296,7 @@ namespace SiliFish.ModelUnits.Cells
                 Coordinate[] coordinates = GenerateCoordinates(Model.rand, MD, n, somite);
                 Dictionary<string, double[]> paramValues = Parameters.GenerateMultipleInstanceValues(n, ordered: false);
 
-                double defaultCV = CurrentSettings.Settings.cv;
+                double defaultCV = Model.Settings.cv;
                 double[] cv = ConductionVelocity != null ?
                     ((Distribution)ConductionVelocity).GenerateNNumbers(n, 0, ordered: false) :
                     Enumerable.Repeat(defaultCV, n).ToArray();
