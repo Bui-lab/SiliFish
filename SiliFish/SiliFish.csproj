@@ -100,10 +100,6 @@
   </Target>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="F:\Projects\BuiLab\SiliFish\SiliFish\PredefinedModels\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\DySynchronizer.js" />
   </ItemGroup>
 

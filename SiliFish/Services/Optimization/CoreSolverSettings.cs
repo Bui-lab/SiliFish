@@ -1,4 +1,5 @@
-﻿using SiliFish.Helpers;
+﻿using SiliFish.Definitions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,7 @@ namespace SiliFish.Services.Optimization
         private double[] maxValues = null;
         private int[] numBits = null;
         private int[] decimalDigits = null;
-        public double GeneticAlgorithmMinValue { get; set; } = -100;
-        public double GeneticAlgorithmMaxValue { get; set; } = 100;
+
 
         public double DeltaT { get; set; }
         public double DeltaTEuler { get; set; }
@@ -75,7 +75,7 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    minValues[iter++] = MinValueDictionary?.GetValueOrDefault(key, GeneticAlgorithmMinValue) ?? GeneticAlgorithmMinValue;
+                    minValues[iter++] = MinValueDictionary?.GetValueOrDefault(key, GlobalSettings.GeneticAlgorithmMinValue) ?? GlobalSettings.GeneticAlgorithmMinValue;
                 }
                 return minValues;
             }
@@ -92,7 +92,7 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    maxValues[iter++] = MaxValueDictionary?.GetValueOrDefault(key, GeneticAlgorithmMaxValue) ?? GeneticAlgorithmMaxValue;
+                    maxValues[iter++] = MaxValueDictionary?.GetValueOrDefault(key, GlobalSettings.GeneticAlgorithmMaxValue) ?? GlobalSettings.GeneticAlgorithmMaxValue;
                 }
                 return maxValues;
             }

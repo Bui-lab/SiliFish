@@ -14,54 +14,6 @@ namespace SiliFish.Services
 {
     public class DyChartGenerator : EmbeddedResourceReader
     {
-
-        private static ChartDataStruct CreateLineChart(ChartDataStruct chartData)
-        {
-            ChartDataStruct chart = new();
-            if (chartData.xData?.Length != chartData.yData?.Length && chartData.xData?.Length != chartData.yMultiData?.FirstOrDefault().Length)
-                return chart;
-
-            double yMin = chartData.yMin;
-            double yMax = chartData.yMax;
-            double xMin = chartData.xMin;
-            double xMax = chartData.xMax;
-            Helpers.Util.SetYRange(ref yMin, ref yMax);
-
-            string columnTitles = $"{chartData.xLabel},{chartData.yLabel}";
-            List<string> data = new(chartData.xData.Select(t => t.ToString(GlobalSettings.DecimalPointFormat) + ","));
-            if (chartData.yData != null)
-            {
-                foreach (int i in Enumerable.Range(0, chartData.yData.Length))
-                    data[i] += chartData.yData[i].ToString(GlobalSettings.DecimalPointFormat) + ",";
-            }
-            else
-            {
-                for (int colIndex = 0; colIndex < chartData.yMultiData.Count; colIndex++)
-                {
-                    double[] singleyData = chartData.yMultiData[colIndex];
-                    foreach (int i in Enumerable.Range(0, singleyData.Length))
-                        data[i] += singleyData[i].ToString(GlobalSettings.DecimalPointFormat) + ",";
-                }
-            }
-            string csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-            chart = new ChartDataStruct
-            {
-                CsvData = csvData,
-                Color = $"`{chartData.Color}`",
-                Title = $"`{chartData.Title}`",
-                xLabel = $"`{chartData.xLabel}`",
-                yLabel = $"`{chartData.yLabel}`",
-                xMin = xMin,
-                xMax = xMax,
-                yMin = yMin,
-                yMax = yMax,
-                drawPoints = chartData.drawPoints,
-                logScale = chartData.logScale
-            };
-
-            return chart;
-        }
-
         public static string PlotCharts(string title, List<ChartDataStruct> charts, bool synchronized, int width, int height)
         {
             try
@@ -152,7 +104,7 @@ namespace SiliFish.Services
             List<ChartDataStruct> charts = new();
             foreach (ChartDataStruct chartData in chartsData)
             {
-                charts.Add(chartData);// CreateLineChart(chartData));
+                charts.Add(chartData);
             }
             string PlotHTML = PlotCharts(title: mainTitle, charts, synchronized, width, height);
             return PlotHTML;

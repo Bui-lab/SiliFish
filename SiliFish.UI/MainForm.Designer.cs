@@ -73,6 +73,7 @@ namespace SiliFish.UI
             this.pDistinguisherTop = new System.Windows.Forms.Panel();
             this.pDistinguisherRight = new System.Windows.Forms.Panel();
             this.pDistinguisherBottom = new System.Windows.Forms.Panel();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -90,6 +91,7 @@ namespace SiliFish.UI
             // pTop
             // 
             this.pTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pTop.Controls.Add(this.btnSettings);
             this.pTop.Controls.Add(this.btnAbout);
             this.pTop.Controls.Add(this.btnCellularDynamics);
             this.pTop.Controls.Add(this.linkBrowseToTempFolder);
@@ -135,7 +137,7 @@ namespace SiliFish.UI
             this.linkBrowseToTempFolder.AutoSize = true;
             this.linkBrowseToTempFolder.ForeColor = System.Drawing.Color.White;
             this.linkBrowseToTempFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1165, 12);
+            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1081, 13);
             this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
             this.linkBrowseToTempFolder.Size = new System.Drawing.Size(104, 15);
             this.linkBrowseToTempFolder.TabIndex = 7;
@@ -150,7 +152,7 @@ namespace SiliFish.UI
             this.linkOpenOutputFolder.AutoSize = true;
             this.linkOpenOutputFolder.ForeColor = System.Drawing.Color.White;
             this.linkOpenOutputFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkOpenOutputFolder.Location = new System.Drawing.Point(1046, 12);
+            this.linkOpenOutputFolder.Location = new System.Drawing.Point(962, 13);
             this.linkOpenOutputFolder.Name = "linkOpenOutputFolder";
             this.linkOpenOutputFolder.Size = new System.Drawing.Size(113, 15);
             this.linkOpenOutputFolder.TabIndex = 6;
@@ -545,6 +547,22 @@ namespace SiliFish.UI
             this.pDistinguisherBottom.Size = new System.Drawing.Size(1340, 4);
             this.pDistinguisherBottom.TabIndex = 9;
             // 
+            // btnSettings
+            // 
+            this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSettings.AutoSize = true;
+            this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnSettings.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.ForeColor = System.Drawing.Color.White;
+            this.btnSettings.Location = new System.Drawing.Point(1200, 6);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(88, 27);
+            this.btnSettings.TabIndex = 25;
+            this.btnSettings.Text = "Settings";
+            this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -624,5 +642,6 @@ namespace SiliFish.UI
         private Panel pDistinguisherTop;
         private Panel pDistinguisherRight;
         private Panel pDistinguisherBottom;
+        private Button btnSettings;
     }
 }

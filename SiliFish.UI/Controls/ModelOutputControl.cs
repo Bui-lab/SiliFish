@@ -68,6 +68,10 @@ namespace SiliFish.UI.Controls
             pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
 
             dd3DViewpoint.SelectedIndex = 0;
+
+            ePlotWidth.Value = GlobalSettings.DefaultPlotWidth;
+            ePlotHeight.Value = GlobalSettings.DefaultPlotHeight;
+
         }
 
         public void SetRunningModel(RunningModel model)

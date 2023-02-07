@@ -24,6 +24,7 @@ namespace SiliFish.DataTypes
             .ToDictionary(type => type.Name, type => type);
 
         public static Random Random = null;
+
         public bool Angular { get; set; } = false;
         
         [JsonIgnore]

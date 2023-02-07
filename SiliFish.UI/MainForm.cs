@@ -17,6 +17,8 @@ using SiliFish.Repositories;
 using SiliFish.UI.Definitions;
 using Windows.ApplicationModel.VoiceCommands;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static SiliFish.UI.Controls.DynamicsTestControl;
+using SiliFish.Definitions;
 
 namespace SiliFish.UI
 {
@@ -172,6 +174,20 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            ControlContainer controlContainer = new();
+            PropertyGrid propSettings = new();
+            GlobalSettingsProperties gs = new();
+            propSettings.SelectedObject = gs;
+            controlContainer.AddControl(propSettings);
+            if (controlContainer.ShowDialog() == DialogResult.OK)
+                gs.Save();//save to global.settings 
+            else 
+                gs = GlobalSettingsProperties.Load();//reload from global.settings
+        }        
+        
         #endregion
 
         #region Simulation
@@ -279,16 +295,23 @@ namespace SiliFish.UI
 
         #endregion
 
+        ControlContainer frmDynamics;
         private void btnCellularDynamics_Click(object sender, EventArgs e)
         {
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
-            ControlContainer frmControl = new();
-            frmControl.AddControl(dynControl);
-            frmControl.Text = "Cellular Dynamics Test";
-            frmControl.SaveVisible = false;
-            frmControl.Show();
+            dynControl.CoreChanged += DynControl_CoreChanged;
+            frmDynamics = new();
+            frmDynamics.AddControl(dynControl);
+            frmDynamics.Text = "Cellular Dynamics Test";
+            frmDynamics.SaveVisible = false;
+            frmDynamics.Show();
         }
 
+        private void DynControl_CoreChanged(object sender, EventArgs e)
+        {
+            if (frmDynamics!=null)
+            frmDynamics.Text = $"Cellular Dynamics Test - {(e as CoreChangedEventArgs).CoreName}";
+        }
 
         private void SetCurrentMode(RunMode mode)
         {
@@ -420,6 +443,7 @@ namespace SiliFish.UI
             MainForm mf = new(new RunningModel(ModelTemplate));
             mf.Show();
         }
+
 
         private void modelControl_ModelChanged(object sender, EventArgs e)
         {

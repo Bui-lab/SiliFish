@@ -21,6 +21,8 @@ namespace SiliFish.UI
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             MainForm = new MainForm();
+            GlobalSettingsProperties gs = new();
+            gs = GlobalSettingsProperties.Load();//reload from global.settings
             Application.Run(MainForm);
             foreach (string f in GlobalSettings.TempFiles)
             {

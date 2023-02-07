@@ -40,14 +40,20 @@ namespace SiliFish.UI.Controls
         DynamicsStats dynamics;
         private double[] TimeArray;
 
+        internal class CoreChangedEventArgs : EventArgs
+        {
+            internal string CoreName;
+        }
+
+        public event EventHandler CoreChanged;
         internal class UpdatedParamsEventArgs : EventArgs
         {
             internal string CoreType;
             internal Dictionary<string, Distribution> ParamsAsDistribution;
             internal Dictionary<string, double> ParamsAsDouble;
         }
-        private event EventHandler useUpdatedParams;
-        public event EventHandler UseUpdatedParams { add => useUpdatedParams += value; remove => useUpdatedParams -= value; }
+
+        public event EventHandler UseUpdatedParametersRequested;
         private Dictionary<string, double> parameters;
         private bool OptimizationMode
         {
@@ -133,6 +139,7 @@ namespace SiliFish.UI.Controls
             if (parameters != null)
                 Parameters = parameters;
             pTop.Visible = !testMode;
+            
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", GlobalSettings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
           
             splitGAAndPlots.Panel1Collapsed = true;
@@ -470,7 +477,6 @@ namespace SiliFish.UI.Controls
         private void DynamicsRun()
         {
             ReadParameters();
-
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             if (core != null)
             {
@@ -577,16 +583,16 @@ namespace SiliFish.UI.Controls
                 ParamsAsDistribution = Parameters.ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution),
                 ParamsAsDouble = Parameters
             };
-            useUpdatedParams?.Invoke(this, args);
+            UseUpdatedParametersRequested?.Invoke(this, args);
         }
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
-                coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
-
-                CellCoreUnit core = CellCoreUnitFile.Load(openFileJson.FileName);
+                string fileName = openFileJson.FileName;
+                coreUnitFileDefaultFolder = Path.GetDirectoryName(fileName);
+                CellCoreUnit core = CellCoreUnitFile.Load(fileName);
                 if (core != null)
                 {
                     skipCoreTypeChange = true;
@@ -594,6 +600,9 @@ namespace SiliFish.UI.Controls
                     skipCoreTypeChange = false;
                     CoreType = core.CoreType;
                     Parameters = core.GetParameters();
+                    CoreChangedEventArgs args = new() 
+                    { CoreName=Path.GetFileNameWithoutExtension(fileName) };
+                    CoreChanged?.Invoke(this, args);
                 }
             }
         }
@@ -606,8 +615,12 @@ namespace SiliFish.UI.Controls
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
-                CellCoreUnitFile.Save(saveFileJson.FileName, core);
-                coreUnitFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
+                string fileName = saveFileJson.FileName;
+                CellCoreUnitFile.Save(fileName, core);
+                coreUnitFileDefaultFolder = Path.GetDirectoryName(fileName);
+                CoreChangedEventArgs args = new()
+                { CoreName = Path.GetFileNameWithoutExtension(fileName) };
+                CoreChanged?.Invoke(this, args);
             }
         }
 

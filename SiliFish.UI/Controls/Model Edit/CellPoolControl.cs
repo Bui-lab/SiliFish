@@ -20,7 +20,8 @@ namespace SiliFish.UI.Controls
         CellPoolTemplate poolBase;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        private DynamicsTestControl dyncontrol = null;
+        private ControlContainer frmDynamicControl;
+            
         private bool SomiteBased = false;
         public CellPoolTemplate PoolBase
         {
@@ -281,13 +282,20 @@ namespace SiliFish.UI.Controls
         {
             Dictionary<string, double> dparams = poolBase.Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
             poolBase.CoreType = ddCoreType.Text;
-            dyncontrol = new(poolBase.CoreType, dparams, testMode: false);
-            dyncontrol.UseUpdatedParams += Dyncontrol_UseUpdatedParams;
-            ControlContainer frmControl = new();
-            frmControl.AddControl(dyncontrol);
-            frmControl.Text = eGroupName.Text;
-            frmControl.SaveVisible = false;
-            frmControl.Show();
+            DynamicsTestControl dynControl = new(poolBase.CoreType, dparams, testMode: false);
+            dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
+            dynControl.CoreChanged += DynControl_CoreChanged;
+            frmDynamicControl = new();
+            frmDynamicControl.AddControl(dynControl);
+            frmDynamicControl.Text = eGroupName.Text;
+            frmDynamicControl.SaveVisible = false;
+            frmDynamicControl.Show();
+        }
+
+        private void DynControl_CoreChanged(object sender, EventArgs e)
+        {
+            if (frmDynamicControl != null)
+                frmDynamicControl.Text = (e as CoreChangedEventArgs).CoreName;
         }
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)
