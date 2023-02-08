@@ -97,7 +97,12 @@ namespace SiliFish.ModelUnits.Cells
         public double[] V; //Membrane potential vector
         #endregion
         [JsonIgnore]
-        public virtual double RestingMembranePotential { get { throw new NotImplementedException(); } }
+        public virtual double RestingMembranePotential { get {
+                Exception exception = new NotImplementedException();
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+                throw exception;
+            }
+        }
 
 
 
@@ -260,7 +265,10 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual void CalculateMembranePotential(int t)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+
         }
         #endregion
 
@@ -277,7 +285,10 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+
         }
         public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
@@ -306,11 +317,16 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+
         }
         public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetOutgoingSynapticCurrents()
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
 
         #endregion

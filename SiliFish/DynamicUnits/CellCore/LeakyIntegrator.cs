@@ -162,7 +162,7 @@ namespace SiliFish.DynamicUnits
         {
             double I = Stim;
             double dtTracker = 0;
-            while (dtTracker < deltaT)
+             while (dtTracker < deltaT)
             {
                 dtTracker += deltaTEuler;
                 // ODE eqs

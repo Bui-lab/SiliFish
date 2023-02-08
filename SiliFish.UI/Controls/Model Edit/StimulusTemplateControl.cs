@@ -1,6 +1,8 @@
-﻿using SiliFish.ModelUnits;
+﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 
 namespace SiliFish.UI.Controls
 {
@@ -119,6 +121,13 @@ namespace SiliFish.UI.Controls
         }
         public StimulusBase GetStimulus()
         {
+            SagittalPlane sagPlane = SagittalPlane.Both;
+            if (ddSagittalPosition.Text == "Left")
+                sagPlane = SagittalPlane.Left;
+            else if (ddSagittalPosition.Text == "Right")
+                sagPlane = SagittalPlane.Right;
+            else if (ddSagittalPosition.Text == "Left/Right")
+                sagPlane = SagittalPlane.Both;
             if (Stimulus is StimulusTemplate)
             {
                 Stimulus = new StimulusTemplate()
@@ -127,7 +136,7 @@ namespace SiliFish.UI.Controls
                     TargetPool = ddTargetPool.Text,
                     TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
                     TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
-                    LeftRight = ddSagittalPosition.Text,
+                    LeftRight = sagPlane.ToString(),
                     TimeLine_ms = timeLineControl.GetTimeLine(),
                     Active = cbActive.Checked
                 };
@@ -158,16 +167,22 @@ namespace SiliFish.UI.Controls
         private void cbAllSomites_CheckedChanged(object sender, EventArgs e)
         {
             eTargetSomites.ReadOnly = cbAllSomites.Checked;
+            eTargetSomites.Visible = !cbAllSomites.Checked;
+            lRange.Visible = !cbAllSomites.Checked || !cbAllCells.Checked;
         }
 
         private void cbAllCells_CheckedChanged(object sender, EventArgs e)
         {
             eTargetCells.ReadOnly = cbAllCells.Checked;
+            eTargetCells.Visible = !cbAllCells.Checked;
+            lRange.Visible = !cbAllSomites.Checked || !cbAllCells.Checked;
         }
 
         internal void SetStimulus(object cellPoolTemplates, StimulusTemplate stim)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
     }
 }

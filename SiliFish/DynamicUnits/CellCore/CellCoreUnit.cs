@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +75,9 @@ namespace SiliFish.DynamicUnits
         {
             get
             {
-                throw new NotImplementedException();
+                Exception exception = new NotImplementedException();
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+                throw exception;
             }
         }
 
@@ -83,7 +86,9 @@ namespace SiliFish.DynamicUnits
         {
             get
             {
-                throw new NotImplementedException();
+                Exception exception = new NotImplementedException();
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
+                throw exception;
             }
         }
 
@@ -95,7 +100,9 @@ namespace SiliFish.DynamicUnits
         }
         protected virtual void Initialize()
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
 
         public virtual Dictionary<string, double> GetParameters()
@@ -126,7 +133,9 @@ namespace SiliFish.DynamicUnits
 
         public virtual void BackwardCompatibility(Dictionary<string, double> paramExternal)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
         protected virtual bool DoesSpike(double[] I, int warmup)
         {
@@ -180,11 +189,15 @@ namespace SiliFish.DynamicUnits
 
         public virtual double GetNextVal(double I, ref bool spike)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
         public virtual DynamicsStats SolveODE(double[] I)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
 
         public virtual DynamicsStats DynamicsTest(double[] I)
@@ -233,7 +246,10 @@ namespace SiliFish.DynamicUnits
         }
         public virtual (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+
         }
 
     }

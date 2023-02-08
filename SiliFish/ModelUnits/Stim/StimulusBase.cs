@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,11 @@ namespace SiliFish.ModelUnits.Stim
         public StimulusSettings Settings { get; set; } = new();
 
         public StimulusBase() { }
-        public virtual StimulusBase CreateCopy() { throw new NotImplementedException(); }
+        public virtual StimulusBase CreateCopy() {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
 
     }
 }

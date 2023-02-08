@@ -2,6 +2,7 @@
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -65,27 +66,104 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual void LinkObjects() { }
 
-        public virtual List<CellPoolTemplate> GetCellPools() { throw new NotImplementedException(); }
-        public virtual List<JunctionBase> GetProjections() { throw new NotImplementedException(); }
-        public virtual List<StimulusBase> GetStimuli() { throw new NotImplementedException(); }
-        public virtual void AddStimulus(StimulusBase stim) { throw new NotImplementedException(); }
-        public virtual void RemoveStimulus(StimulusBase stim) { throw new NotImplementedException(); }
-        public virtual void UpdateStimulus(StimulusBase stim, StimulusBase stim2) { throw new NotImplementedException(); }
+        public virtual List<CellPoolTemplate> GetCellPools()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual List<JunctionBase> GetProjections()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual List<StimulusBase> GetStimuli()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void AddStimulus(StimulusBase stim)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void RemoveStimulus(StimulusBase stim)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void UpdateStimulus(StimulusBase stim, StimulusBase stim2)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
 
-        public virtual bool AddCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
-        public virtual bool RemoveCellPool(CellPoolTemplate cellPool) { throw new NotImplementedException(); }
-        public virtual void SortCellPools() { throw new NotImplementedException(); }
+        public virtual bool AddCellPool(CellPoolTemplate cellPool)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual bool RemoveCellPool(CellPoolTemplate cellPool)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void SortCellPools()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
 
-        public virtual bool AddJunction(JunctionBase jnc) { throw new NotImplementedException(); }
-        public virtual bool RemoveJunction(JunctionBase jnc) { throw new NotImplementedException(); }
-        public virtual void SortJunctions() { throw new NotImplementedException(); }
-        public virtual void SortJunctionsByType() { throw new NotImplementedException(); }
-        public virtual void SortJunctionsBySource() { throw new NotImplementedException(); }
-        public virtual void SortJunctionsByTarget() { throw new NotImplementedException(); }
+        public virtual bool AddJunction(JunctionBase jnc)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual bool RemoveJunction(JunctionBase jnc)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void SortJunctions()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void SortJunctionsByType()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void SortJunctionsBySource()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void SortJunctionsByTarget()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
 
         public virtual void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolTarget)
         {
-            throw new NotImplementedException();
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
 
     }

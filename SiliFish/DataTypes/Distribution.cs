@@ -69,8 +69,8 @@ namespace SiliFish.DataTypes
         public virtual double UniqueValue { get { return 666; } }// throw new NotImplementedException(); } }
         public override string ToString()
         {
-            return Absolute ? String.Format("{0}-{1} [{2}]", RangeStart, RangeEnd, Discriminator) :
-                String.Format("%{0}-{1}; [{2}-{3}] [{4}]", RangeStart, RangeEnd, LowerLimit, UpperLimit, Discriminator);
+            return Absolute ? $"{RangeStart}-{RangeEnd} [{Discriminator}]" :
+                $"%{RangeStart}-{RangeEnd}; [{LowerLimit}-{UpperLimit}] [{Discriminator}]";
         }
         public Distribution()
         {

@@ -14,15 +14,16 @@ namespace SiliFish.UI.Controls
     {
         private static string coreUnitFileDefaultFolder;
         private ModelSettings settings;
-        
-        public event EventHandler SavePool;
-        public event EventHandler LoadPool;
-        CellPoolTemplate poolBase;
+         CellPoolTemplate poolBase;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private ControlContainer frmDynamicControl;
             
-        private bool SomiteBased = false;
+        private bool SomiteBased = false;       
+
+        public event EventHandler SavePool;
+        public event EventHandler LoadPool;
+
         public CellPoolTemplate PoolBase
         {
             get
@@ -318,8 +319,7 @@ namespace SiliFish.UI.Controls
         private void cbAllSomites_CheckedChanged(object sender, EventArgs e)
         {
             eSomiteRange.ReadOnly = cbAllSomites.Checked;
-            if (!cbAllSomites.Checked && eSomiteRange.Text == toolTip1.GetToolTip(eSomiteRange))
-                eSomiteRange.Text = "";
+            eSomiteRange.Visible = !cbAllSomites.Checked;
         }
 
 
