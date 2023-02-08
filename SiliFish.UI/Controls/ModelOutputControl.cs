@@ -91,8 +91,35 @@ namespace SiliFish.UI.Controls
                     RunningModel.CellPools.Max(p => p.GetMaxCellSequence()) : 0;
                 lSomitesNumMNDynamics.Text = "Cell Seq.";
             }
+            GetLastPlotSettings();
         }
-
+        private void SaveLastPlotSettings()
+        {
+            GlobalSettings.LastPlotSettings[ddPlot.Name] = ddPlot.Text;
+            GlobalSettings.LastPlotSettings[ddPlotSagittal.Name] = ddPlotSagittal.Text;
+            GlobalSettings.LastPlotSettings[ddPlotPools.Name] = ddPlotPools.Text;
+            GlobalSettings.LastPlotSettings[ddPlotSomiteSelection.Name] = ddPlotSomiteSelection.Text;
+            GlobalSettings.LastPlotSettings[ddPlotCellSelection.Name] = ddPlotCellSelection.Text;
+            GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name] = ePlotSomiteSelection.Value.ToString();
+            GlobalSettings.LastPlotSettings[ePlotCellSelection.Name] = ePlotCellSelection.Value.ToString();
+        }
+        private void GetLastPlotSettings()
+        {
+            if (GlobalSettings.LastPlotSettings.Any())
+            {
+                try
+                {
+                    ddPlot.Text = GlobalSettings.LastPlotSettings[ddPlot.Name];
+                    ddPlotSagittal.Text = GlobalSettings.LastPlotSettings[ddPlotSagittal.Name];
+                    ddPlotPools.Text = GlobalSettings.LastPlotSettings[ddPlotPools.Name];
+                    ddPlotSomiteSelection.Text = GlobalSettings.LastPlotSettings[ddPlotSomiteSelection.Name];
+                    ddPlotCellSelection.Text = GlobalSettings.LastPlotSettings[ddPlotCellSelection.Name];
+                    ePlotSomiteSelection.Value = decimal.Parse(GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name]);
+                    ePlotCellSelection.Value = decimal.Parse(GlobalSettings.LastPlotSettings[ePlotCellSelection.Name]);
+                }
+                catch { }
+            }
+        }
         public void CompleteRun()
         {
             decimal dt = (decimal)RunningModel.RunParam.DeltaT;
@@ -193,10 +220,10 @@ namespace SiliFish.UI.Controls
                 {
                     string target = (sender as CoreWebView2).DocumentTitle;
                     string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(RunningModel.Settings.OutputFolder, prefix + ".html");
+                    target = Path.Combine(GlobalSettings.OutputFolder, prefix + ".html");
                     int suffix = 0;
                     while (File.Exists(target))
-                        target = Path.Combine(RunningModel.Settings.OutputFolder, prefix + (suffix++).ToString() + ".html");
+                        target = Path.Combine(GlobalSettings.OutputFolder, prefix + (suffix++).ToString() + ".html");
                     File.Copy(tempFile, target);
                     RegenerateWebview(sender as WebView2);
                     Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
@@ -395,6 +422,7 @@ namespace SiliFish.UI.Controls
         private void btnPlotHTML_Click(object sender, EventArgs e)
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
+            SaveLastPlotSettings();
 
             GetPlotSubset();
             if (PlotType == PlotType.Episodes)
@@ -409,7 +437,7 @@ namespace SiliFish.UI.Controls
         }
         private void CompletePlotHTML()
         {
-            webViewPlot.NavigateTo(htmlPlot, RunningModel.Settings.TempFolder, ref tempFile);
+            webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile);
             UseWaitCursor = false;
             btnPlotWindows.Enabled = true;
             btnPlotHTML.Enabled = true;
@@ -460,6 +488,7 @@ namespace SiliFish.UI.Controls
             try
             {
                 if (RunningModel == null || !RunningModel.ModelRun) return;
+                SaveLastPlotSettings();
 
                 GetPlotSubset();
                 if (PlotType == PlotType.Episodes)
@@ -559,7 +588,7 @@ namespace SiliFish.UI.Controls
             if (RunningModel == null) return;
             TwoDModelGenerator modelGenerator = new();
             string html = modelGenerator.Create2DModel(false, RunningModel, RunningModel.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
-            webView2DModel.NavigateTo(html, RunningModel.Settings.TempFolder, ref tempFile);
+            webView2DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
 
         }
         private void btnGenerate2DModel_Click(object sender, EventArgs e)
@@ -596,7 +625,7 @@ namespace SiliFish.UI.Controls
                 string html = threeDModelGenerator.Create3DModel(saveFile: false, RunningModel, RunningModel.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
-                webView3DModel.NavigateTo(html, RunningModel.Settings.TempFolder, ref tempFile);
+                webView3DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             }
             catch (Exception ex)
             {
@@ -721,7 +750,7 @@ namespace SiliFish.UI.Controls
         }
         private void CompleteAnimation()
         {
-            webViewAnimation.NavigateTo(htmlAnimation, RunningModel.Settings.TempFolder, ref tempFile);
+            webViewAnimation.NavigateTo(htmlAnimation, GlobalSettings.TempFolder, ref tempFile);
             linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
             lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
             btnAnimate.Enabled = true;
@@ -785,7 +814,7 @@ namespace SiliFish.UI.Controls
                 SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
             string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, LeftMNs.Union(RightMNs).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
-            webViewSummaryV.NavigateTo(html, RunningModel.Settings.TempFolder, ref tempFile);
+            webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             eEpisodesLeft.Text = "";
             eEpisodesRight.Text = "";
             foreach (SwimmingEpisode episode in episodesLeft)

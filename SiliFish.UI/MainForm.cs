@@ -19,6 +19,7 @@ using Windows.ApplicationModel.VoiceCommands;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static SiliFish.UI.Controls.DynamicsTestControl;
 using SiliFish.Definitions;
+using Controls;
 
 namespace SiliFish.UI
 {
@@ -44,14 +45,8 @@ namespace SiliFish.UI
                 InitializeComponent();
                 displayAbout = true;
                 ModelTemplate = new();
-                ModelTemplate.Settings.TempFolder = Path.GetTempPath() + "SiliFish";
-                ModelTemplate.Settings.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
                 modelControl.SetModel(ModelTemplate);
                 SetCurrentMode(RunMode.Template);
-                if (!Directory.Exists(ModelTemplate.Settings.TempFolder))
-                    Directory.CreateDirectory(ModelTemplate.Settings.TempFolder);
-                if (!Directory.Exists(ModelTemplate.Settings.OutputFolder))
-                    Directory.CreateDirectory(ModelTemplate.Settings.OutputFolder);
             }
             catch (Exception ex)
             {
@@ -73,12 +68,7 @@ namespace SiliFish.UI
                 modelOutputControl.SetRunningModel(model);
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel);
-                
-                if (!Directory.Exists(RunningModel.Settings.TempFolder))
-                    Directory.CreateDirectory(RunningModel.Settings.TempFolder);
-                if (!Directory.Exists(RunningModel.Settings.OutputFolder))
-                    Directory.CreateDirectory(RunningModel.Settings.OutputFolder);
-            }
+              }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
@@ -149,7 +139,7 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Model.Settings.OutputFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", GlobalSettings.OutputFolder);
             }
             catch { }
         }
@@ -158,13 +148,10 @@ namespace SiliFish.UI
         {
             try
             {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", Model.Settings.TempFolder);
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", GlobalSettings.TempFolder);
             }
             catch { }
         }
-
-
-
 
         #endregion
 
@@ -178,14 +165,13 @@ namespace SiliFish.UI
         private void btnSettings_Click(object sender, EventArgs e)
         {
             ControlContainer controlContainer = new();
-            PropertyGrid propSettings = new();
-            GlobalSettingsProperties gs = new();
-            propSettings.SelectedObject = gs;
-            controlContainer.AddControl(propSettings);
+            controlContainer.Text = "Settings";
+            GlobalSettingsControl gsc = new(new GlobalSettingsProperties());
+            controlContainer.AddControl(gsc);
             if (controlContainer.ShowDialog() == DialogResult.OK)
-                gs.Save();//save to global.settings 
+                gsc.GSProperties.Save();//save to global.settings 
             else 
-                gs = GlobalSettingsProperties.Load();//reload from global.settings
+                _ = GlobalSettingsProperties.Load();//reload from global.settings
         }        
         
         #endregion

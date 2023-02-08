@@ -122,8 +122,6 @@ namespace SiliFish.UI.Controls
             if (ddDefaultMuscleCellCore.Items.Count == 0)
                 ddDefaultMuscleCellCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
             ddDefaultMuscleCellCore.Text = Model?.Settings.DefaultMuscleCellCore;
-            eTemporaryFolder.Text = Model?.Settings.TempFolder;
-            eOutputFolder.Text = Model?.Settings.OutputFolder;
             propSettings.SelectedObject = Model?.Settings;
             propKinematics.SelectedObject = Model?.KinemParam;
             LoadParams(Model?.Parameters);
@@ -867,25 +865,6 @@ namespace SiliFish.UI.Controls
             Model.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
         }
         
-        private void eOutputFolder_Click(object sender, EventArgs e)
-        {
-            browseFolder.InitialDirectory = eOutputFolder.Text;
-            if (browseFolder.ShowDialog() == DialogResult.OK)
-            {
-               Model.Settings.OutputFolder =
-                    eOutputFolder.Text = browseFolder.SelectedPath;
-            }
-        }
-
-        private void eTemporaryFolder_Click(object sender, EventArgs e)
-        {
-            browseFolder.InitialDirectory = eTemporaryFolder.Text;
-            if (browseFolder.ShowDialog() == DialogResult.OK)
-            {
-                Model.Settings.TempFolder =
-                    eTemporaryFolder.Text = browseFolder.SelectedPath;
-            }
-        }
 
 
         #endregion

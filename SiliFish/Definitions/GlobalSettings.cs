@@ -14,6 +14,8 @@ namespace SiliFish.Definitions
 {
     public class GlobalSettings
     {
+        public static string TempFolder;
+        public static string OutputFolder;
         public static double Epsilon = 0.00001;
 
         public static string DecimalPointFormat = "0.0###";
@@ -32,10 +34,25 @@ namespace SiliFish.Definitions
         [JsonIgnore, Browsable(false)]
         public static List<string> TempFiles = new();
 
+        [JsonIgnore, Browsable(false)]
+        public static Dictionary<string, string> LastPlotSettings = new();
 
     }
     public class GlobalSettingsProperties
     {
+        [Browsable(false),
+            Description("Folder that temporary files are saved under. Will be cleared after the program exits."),
+            DisplayName("Temporary Folder"),
+            Category("Folder")]
+        public string TempFolder { get { return GlobalSettings.TempFolder; } set { GlobalSettings.TempFolder = value; } }
+
+
+        [Browsable(false),
+            Description("The default folder that output files are saved under."),
+            DisplayName("Output Folder"),
+            Category("Folder")]
+        public string OutputFolder { get { return GlobalSettings.OutputFolder; } set { GlobalSettings.OutputFolder = value; } }
+
 
         [Description("The maximum value between two numbers to consider them equal."), Category("Const")]
         public double Epsilon { get { return GlobalSettings.Epsilon; } set { GlobalSettings.Epsilon = value; } }
@@ -90,7 +107,28 @@ namespace SiliFish.Definitions
         public static GlobalSettingsProperties Load()
         {
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\global.settings";
-            return (GlobalSettingsProperties)JsonUtil.ToObject(typeof(GlobalSettingsProperties), FileUtil.ReadFromFile(fileName));
+            GlobalSettingsProperties gsp = (GlobalSettingsProperties)JsonUtil.ToObject(typeof(GlobalSettingsProperties), FileUtil.ReadFromFile(fileName));
+            if (string.IsNullOrEmpty(gsp.TempFolder))
+                gsp.TempFolder = Path.GetTempPath() + "SiliFish";
+            if (!Directory.Exists(gsp.TempFolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(gsp.TempFolder);
+                }
+                catch { gsp.TempFolder = ""; }
+            }
+            if (string.IsNullOrEmpty(gsp.OutputFolder))
+                gsp.OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+            if (!Directory.Exists(gsp.OutputFolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(gsp.OutputFolder);
+                }
+                catch { gsp.OutputFolder = ""; }
+            }
+            return gsp;
         }
 
     }

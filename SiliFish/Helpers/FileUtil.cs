@@ -100,32 +100,7 @@ namespace SiliFish.Helpers
                 epiCounter++;
             }
         }
-        public static Dictionary<string, double[]> ReadFromCSV(string filename)
-        {
-            if (filename == null)
-                return null;
-            Dictionary<string, double[]> data = new();
-            Dictionary<string, List<double>> tempdata = new();
-            using StreamReader sr = new(filename);
-            string line = sr.ReadLine();
-            if (line == null) return null;
-            string[] columns = line.Split(",");
-            foreach (string column in columns)
-                tempdata.Add(column, new List<double>());
-            int counter = 0;
-            while ((line = sr.ReadLine()) != null)
-            {
-                string[] values = line.Split(",");
-                for (int i = 0; i < values.Length; i++)
-                    tempdata[columns[i]].Add(double.Parse(values[i]));
-                counter++;
-                //if (counter > 10000) break;
-            }
-            foreach (string column in columns)
-                data.Add(column, tempdata[column].ToArray());
-
-            return data;
-        }
+        
         public static void SaveAnimation(string filename, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, int startIndex)
         {
             using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);

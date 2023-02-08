@@ -16,20 +16,6 @@ namespace SiliFish.ModelUnits.Architecture
         public int Seed { get; set; } = 0;
 
 
-        [Browsable(false),
-            Description("Folder that temporary files are saved under. Will be cleared after the program exits."),
-            DisplayName("Temporary Folder"),
-            Category("Folder")]
-        public string TempFolder { get; set; }
-
-
-        [Browsable(false),
-            Description("The default folder that output files are saved under."),
-            DisplayName("Output Folder"),
-            Category("Folder")]
-        public string OutputFolder { get; set; }
-
-
         [Category("Constant values")]
         public UnitOfMeasure UoM { get; set; } = UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens;//Used from data structures that don't have direct access to the model
 
@@ -91,11 +77,6 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public Dictionary<string, object> BackwardCompatibility(Dictionary<string, object> paramExternal)
         {
-            if (string.IsNullOrEmpty(TempFolder))
-                TempFolder = Path.GetTempPath() + "SiliFish";
-            if (string.IsNullOrEmpty(OutputFolder))
-                OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
-
             if (paramExternal == null || !paramExternal.Keys.Any(k => k.StartsWith("Dynamic.")))
                 return paramExternal;
 
