@@ -141,36 +141,6 @@ namespace SiliFish.Extensions
             return true;
         }
 
-        public static Dictionary<string, double> GenerateSingleInstanceValues(this Dictionary<string, object> dictionary)
-        {
-            Dictionary<string, double> valuesArray = new();
-            foreach (string key in dictionary.Keys)
-            {
-                object obj = dictionary[key];
-                if (obj is Distribution distribution)
-                    valuesArray.Add(key, distribution.GenerateNNumbers(1, distribution.Range, ordered: false)[0]);
-                else if (double.TryParse(obj.ToString(), out double d))
-                    valuesArray.Add(key, d);
-            }
-            return valuesArray;
-        }
-
-        public static Dictionary<string, double[]> GenerateMultipleInstanceValues(this Dictionary<string, object> dictionary, int number, bool ordered)
-        {
-            Dictionary<string, double[]> valuesArray = new();
-            if (dictionary == null)
-                return valuesArray;
-            foreach (string key in dictionary.Keys)
-            {
-                object obj = dictionary[key];
-                if (obj is Distribution distribution)
-                    valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range, ordered));
-                else if (double.TryParse(obj.ToString(), out double d))
-                    valuesArray.Add(key, Enumerable.Repeat(d, number).ToArray());
-            }
-            return valuesArray;
-        }
-
         public static Dictionary<string, double> GenerateSingleInstanceValues(this Dictionary<string, Distribution> dictionary)
         {
             Dictionary<string, double> valuesArray = new();

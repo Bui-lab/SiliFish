@@ -419,6 +419,8 @@
             this.numProbability.Name = "numProbability";
             this.numProbability.Size = new System.Drawing.Size(66, 23);
             this.numProbability.TabIndex = 17;
+            this.toolTip1.SetToolTip(this.numProbability, "The probability of whether there will be a connection between the source and targ" +
+        "et cell.");
             this.numProbability.Value = new decimal(new int[] {
             1,
             0,
@@ -433,6 +435,8 @@
             this.lProbability.Size = new System.Drawing.Size(64, 15);
             this.lProbability.TabIndex = 16;
             this.lProbability.Text = "Probability";
+            this.toolTip1.SetToolTip(this.lProbability, "The probability of whether there will be a connection between the source and targ" +
+        "et cell.");
             // 
             // lName
             // 

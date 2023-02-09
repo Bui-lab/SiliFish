@@ -1,4 +1,5 @@
 using SiliFish.Definitions;
+using SiliFish.Services;
 using System.Configuration;
 
 namespace SiliFish.UI
@@ -28,6 +29,7 @@ namespace SiliFish.UI
             {
                 File.Delete(f);
             }
+            ExceptionHandler.CompleteLogging();
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

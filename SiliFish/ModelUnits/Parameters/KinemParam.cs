@@ -14,13 +14,22 @@ namespace SiliFish.ModelUnits.Parameters
         [Description("Natural oscillation frequency"), DisplayName("w0"), Category("Animation")]
         public double w0 { get; set; } = 2.5; //20Hz = 125.6
 
-        [Description("If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), DisplayName("Alpha"), Category("Animation")]
+        [Description("If set to false, membrane potential values are used for animation.") , 
+            DisplayName("Use Muscle Tension"), Category("Animation")]
+        public bool UseMuscleTension { get; set; } = false;
+
+        [Description("Obsolete if 'Tension' values are used for animation." +
+            "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
+            DisplayName("Alpha"), Category("Animation")]
         public double Alpha { get; set; } = 0;
 
-        [Description("If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), DisplayName("Beta"), Category("Animation")]
+        [Description("Obsolete if 'Tension' values are used for animation." +
+            "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
+            DisplayName("Beta"), Category("Animation")]
         public double Beta { get; set; } = 0;
 
-        [Description("Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Conversion Coef"), Category("Animation")]
+        [Description("Obsolete if 'Tension' values are used for animation." +
+            "Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Conversion Coef"), Category("Animation")]
         public double ConvCoef { get; set; } = 0.1;
 
         [Description("The distance considered as a move from the center line."), DisplayName("Boundary"), Category("Swim Statistics")]

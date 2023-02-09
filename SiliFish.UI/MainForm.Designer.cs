@@ -143,7 +143,7 @@ namespace SiliFish.UI
             this.linkBrowseToTempFolder.TabIndex = 7;
             this.linkBrowseToTempFolder.TabStop = true;
             this.linkBrowseToTempFolder.Text = "Open Temp Folder";
-            this.toolTip.SetToolTip(this.linkBrowseToTempFolder, "The contents of the temp folder is cleared at exit.");
+            this.toolTip.SetToolTip(this.linkBrowseToTempFolder, "The contents saved to the temp folder will be cleared on exit.");
             this.linkBrowseToTempFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenTempFolder_LinkClicked);
             // 
             // linkOpenOutputFolder

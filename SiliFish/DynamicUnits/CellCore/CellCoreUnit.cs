@@ -76,7 +76,7 @@ namespace SiliFish.DynamicUnits
             get
             {
                 Exception exception = new NotImplementedException();
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
                 throw exception;
             }
         }

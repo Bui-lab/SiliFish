@@ -1,7 +1,5 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,7 +138,8 @@ namespace SiliFish.DynamicUnits
         public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used
         {
             //T_a = T_max / (1 + exp(V_a - V_m) / k_a
-            return 1000 / (1 + Math.Exp((Va - (Vm ?? V)) / ka));
+            double dv = Va - (Vm ?? V);
+            return 1 / (1 + Math.Exp(dv / ka));
         }
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]

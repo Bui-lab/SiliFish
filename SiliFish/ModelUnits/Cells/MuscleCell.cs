@@ -15,12 +15,21 @@ namespace SiliFish.ModelUnits.Cells
     public class MuscleCell : Cell
     {
         //TODO muscle cell assumed to be LeakyIntegrator
+        private double[] tension = null;
+
         [JsonIgnore]
         public double R { get { return (Core as Leaky_Integrator).R; } set { } }
         [JsonIgnore]
         public double[] RelativeTension { get { return (Core as Leaky_Integrator).CalculateRelativeTension(V); } }
         [JsonIgnore]
-        public double[] Tension { get { return (Core as Leaky_Integrator).CalculateTension(V); } }
+        public double[] Tension 
+        { 
+            get 
+            { 
+                tension ??= (Core as Leaky_Integrator).CalculateTension(V);
+                return tension;
+            } 
+        }
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
 
         [JsonIgnore]
@@ -106,6 +115,7 @@ namespace SiliFish.ModelUnits.Cells
         public override void InitForSimulation(int nmax)
         {
             base.InitForSimulation(nmax);
+            tension = null;
             V = Enumerable.Repeat(Core.Vr, nmax).ToArray();
             foreach (ChemicalSynapse jnc in this.EndPlates)
                 jnc.InitForSimulation(nmax);

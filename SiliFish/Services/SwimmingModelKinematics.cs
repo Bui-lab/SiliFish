@@ -5,6 +5,7 @@ using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.Services
 {
@@ -64,6 +65,7 @@ namespace SiliFish.Services
             if (!model.ModelRun) return (null, null);
             if (model.ModelDimensions.NumberOfSomites <= 0)
                 return GenerateSpineVelAndAngleNoSomite(model, startIndex, endIndex);
+            bool useMuscleTension = model.KinemParam.UseMuscleTension;
 
             int nmax = endIndex - startIndex + 1;
             int nSomite = model.ModelDimensions.NumberOfSomites;
@@ -84,13 +86,13 @@ namespace SiliFish.Services
 
             for (int somite = 0; somite < nSomite; somite++)
             {
-                List<Cell> LeftMuscleCells = model.MusclePools
+                List<MuscleCell> LeftMuscleCells = model.MusclePools
                     .Where(mp => mp.PositionLeftRight == SagittalPlane.Left)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
-                List<Cell> RightMuscleCells = model.MusclePools
+                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).Cast<MuscleCell>().ToList();
+                List<MuscleCell> RightMuscleCells = model.MusclePools
                     .Where(mp => mp.PositionLeftRight == SagittalPlane.Right)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).ToList();
-                double R = LeftMuscleCells.Sum(c => (c as MuscleCell).R) + RightMuscleCells.Sum(c => (c as MuscleCell).R);
+                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).Cast<MuscleCell>().ToList();
+                double R = LeftMuscleCells.Sum(c => c.R) + RightMuscleCells.Sum(c => c.R);
                 R /= LeftMuscleCells.Count + RightMuscleCells.Count;
                 double coef = kinemAlpha + kinemBeta * R;
                 if (Math.Abs(coef) < 0.0001)
@@ -100,8 +102,11 @@ namespace SiliFish.Services
                 angle[nSomite - 1, 0] = 0.0;
                 foreach (var i in Enumerable.Range(1, nmax - 1))
                 {
-                    double voltDiff = RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
-                    double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
+                    double tensDiff =
+                        useMuscleTension?                        
+                        RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1]):
+                        coef * RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
+                    double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + tensDiff; 
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;
                     angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;
                 }

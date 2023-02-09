@@ -75,12 +75,14 @@
             this.colField.HeaderText = "Field";
             this.colField.Name = "colField";
             this.colField.ReadOnly = true;
+            this.colField.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colField.Width = 57;
             // 
             // colUniqueValue
             // 
             this.colUniqueValue.HeaderText = "Unique Value";
             this.colUniqueValue.Name = "colUniqueValue";
+            this.colUniqueValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colUniqueValue.Width = 101;
             // 
             // colRange
@@ -90,6 +92,7 @@
             this.colRange.HeaderText = "Range";
             this.colRange.Name = "colRange";
             this.colRange.ReadOnly = true;
+            this.colRange.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colRange.Width = 65;
             // 
             // colDistribution
@@ -99,6 +102,7 @@
             this.colDistribution.HeaderText = "Distribution";
             this.colDistribution.Name = "colDistribution";
             this.colDistribution.ReadOnly = true;
+            this.colDistribution.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colDistribution.Width = 94;
             // 
             // colDistDetails
@@ -108,6 +112,7 @@
             this.colDistDetails.HeaderText = "Details";
             this.colDistDetails.Name = "colDistDetails";
             this.colDistDetails.ReadOnly = true;
+            this.colDistDetails.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.colDistDetails.Width = 67;
             // 
             // colDistEditLink
@@ -116,13 +121,14 @@
             this.colDistEditLink.DefaultCellStyle = dataGridViewCellStyle5;
             this.colDistEditLink.HeaderText = "";
             this.colDistEditLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.colDistEditLink.MinimumWidth = 50;
             this.colDistEditLink.Name = "colDistEditLink";
             this.colDistEditLink.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.colDistEditLink.Text = "Edit";
             this.colDistEditLink.ToolTipText = "Edit distribution";
             this.colDistEditLink.UseColumnTextForLinkValue = true;
             this.colDistEditLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(50)))), ((int)(((byte)(56)))));
-            this.colDistEditLink.Width = 5;
+            this.colDistEditLink.Width = 50;
             // 
             // DistributionDataGrid
             // 
