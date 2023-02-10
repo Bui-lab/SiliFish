@@ -6,6 +6,7 @@ using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Stim
@@ -96,61 +97,14 @@ namespace SiliFish.ModelUnits.Stim
             initialized = true;
         }
 
-        internal double GenerateStimulus(int tIndex, Random rand)
-        {
-            double t_ms = RunParam.GetTimeOfIndex(tIndex);
-            if (!TimeLine_ms.IsActive(t_ms))
-                return 0;
-            if (!initialized)
-                Initialize();
-            if (values.Length <= tIndex)
-            {
-                double[] copyArr = new double[nMax];
-                values.CopyTo(copyArr, 0);
-                values = copyArr;
-            }
-            double value = 0;
-            switch (Settings.Mode)
-            {
-                case StimulusMode.Step:
-                    double noise = Settings.Value2 > 0 ? rand.Gauss(1, Settings.Value2) : 1;
-                    value = Settings.Value1 * noise;
-                    break;
-                case StimulusMode.Ramp:
-                    double ramp = (tIndex - iStart) * tangent;
-                    value = Settings.Value1 + ramp;
-                    break;
-                case StimulusMode.Gaussian:
-                    value = rand.Gauss(Settings.Value1, Settings.Value2, Settings.Value1 - 3 * Settings.Value2, Settings.Value1 + 3 * Settings.Value2); // µ ± 3SD range
-                    break;
-                case StimulusMode.Sinusoidal:
-                    double sinValue = Math.Sin(2 * Math.PI * Settings.Value2 * (t_ms - TimeLine_ms.StartOf(t_ms)));
-                    value = Settings.Value1 * sinValue;
-                    break;
-                case StimulusMode.Pulse:
-                    value = 0;
-                    if (Settings.Value2 > 0)//Value2 is the number of pulses
-                    {
-                        double timeRange = TimeLine_ms.End > 0 ? TimeLine_ms.End - TimeLine_ms.Start : 1000;
-                        double period = timeRange / Settings.Value2;
-                        double t = t_ms - TimeLine_ms.Start; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
-                        while (t > period)
-                            t -= period;
-                        if (t <= period / 2)
-                            value = Settings.Value1;
-                    }
-                    break;
-            }
-
-            values[tIndex] = value;
-            return value;
-        }
         public double[] GenerateStimulus(int stimStart, int stimDuration, Random rand)
         {
-            double[] stim = new double[stimStart + stimDuration];
-            foreach (int i in Enumerable.Range(stimStart, stimDuration))
-                stim[i] = GenerateStimulus(i, rand);
-            return stim;
+            List<(int start, int end)> periods = new();
+            nMax = stimStart + stimDuration;
+            values = new double[nMax];
+            periods.Add(((int start, int end))(stimStart, RunParam.GetTimeOfIndex(nMax)));
+            GenerateStimulus(periods, rand);
+            return values;
         }
 
         public double[] GetValues(int nMax)
@@ -164,9 +118,131 @@ namespace SiliFish.ModelUnits.Stim
             return values;
         }
 
-        public void InitForSimulation(int nmax)
+        private void GenerateStepStimulus(List<(int start, int end)> periods, Random rand)//TODO implement functions for other stimulus types and generate values at the beginning
+        {
+            foreach (var (start, end) in periods)
+            {
+                int iStart = RunParam.iIndex(start);
+                int iEnd = RunParam.iIndex(end);
+                for (int ind = iStart; ind < iEnd; ind++)
+                {
+                    double noise = Settings.Value2 > 0 ? rand.Gauss(1, Settings.Value2) : 1;
+                    values[ind] = Settings.Value1 * noise;//TODO is noise multipler or a deviation?
+                }
+            }
+        }
+
+        private void GenerateRampStimulus(List<(int start, int end)> periods, Random rand)
+        {
+            int firstStart = periods[0].start;
+            int lastEnd = periods[periods.Count() - 1].end;
+
+            if (lastEnd > firstStart)
+                tangent = (Settings.Value2 - Settings.Value1) / ((lastEnd - firstStart) / RunParam.DeltaT);
+            else tangent = 0;
+
+            foreach (var (start, end) in periods)
+            {
+                int iStart = RunParam.iIndex(start);
+                int iEnd = RunParam.iIndex(end);
+                for (int ind = iStart; ind < iEnd; ind++)
+                {
+                    double ramp = (ind - iStart) * tangent;
+                    values[ind] = Settings.Value1 + ramp;
+                }
+            }
+        }
+
+        private void GenerateGaussianStimulus(List<(int start, int end)> periods, Random rand)
+        {
+            foreach (var (start, end) in periods)
+            {
+                int iStart = RunParam.iIndex(start);
+                int iEnd = RunParam.iIndex(end);
+                for (int ind = iStart; ind < iEnd; ind++)
+                {
+                    values[ind] = rand.Gauss(Settings.Value1, Settings.Value2, Settings.Value1 - 3 * Settings.Value2, Settings.Value1 + 3 * Settings.Value2); // µ ± 3SD range
+                }
+            }
+        }
+        private void GenerateSinusoidalStimulus(List<(int start, int end)> periods, Random rand)//TODO 
+        {
+            if (Settings.Value2 <= 0) return;
+            //for sinusoidal, the number of full cycles occur for each period
+            foreach (var (start, end) in periods)
+            {
+                int iStart = RunParam.iIndex(start);
+                int iEnd = RunParam.iIndex(end);
+                //the period of the sin wave
+                int sinCycle = (int)((iEnd - iStart) / Settings.Value2);
+                for (int ind = iStart; ind < iEnd; ind++)
+                {
+                    Math.DivRem((ind-iStart), sinCycle, out int rem);
+                    double sinValue = Math.Sin(2 * Math.PI * rem/sinCycle);
+                    values[ind] = Settings.Value1 * sinValue;
+                }
+            }
+        }
+        private void GeneratePulseStimulus(List<(int start, int end)> periods, Random rand)
+        {
+            int firstStart = periods[0].start;
+            int lastEnd = periods[periods.Count() - 1].end;
+            foreach (var (start, end) in periods)
+            {
+                int iStart = RunParam.iIndex(start);
+                int iEnd = RunParam.iIndex(end);
+                for (int ind = iStart; ind < iEnd; ind++)
+                {
+                    if (Settings.Value2 > 0)//Value2 is the number of pulses
+                    {
+                        double t_ms = RunParam.GetTimeOfIndex(ind);
+                        double timeRange = lastEnd > 0 ? lastEnd - firstStart : 1000;
+                        double period = timeRange / Settings.Value2;
+                        double t = t_ms - firstStart; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
+                        while (t > period)
+                            t -= period;
+                        if (t <= period / 2)
+                            values[ind] = Settings.Value1;
+                    }
+                }
+            }
+        }
+        private void GenerateStimulus(List<(int start, int end)> periods, Random rand)
+        {
+            switch (Settings.Mode)
+            {
+                case StimulusMode.Step:
+                    GenerateStepStimulus(periods, rand);
+                    break;
+                case StimulusMode.Ramp:
+                    GenerateRampStimulus(periods, rand);
+                    break;
+                case StimulusMode.Gaussian:
+                    GenerateGaussianStimulus(periods, rand);
+                    break;
+                case StimulusMode.Sinusoidal:
+                    GenerateSinusoidalStimulus(periods, rand);
+                    break;
+                case StimulusMode.Pulse:
+                    GeneratePulseStimulus(periods, rand);
+                    break;
+            }
+        }
+        public void InitForSimulation(int nmax, Random rand)
         {
             values = new double[nmax];
+            List<(int start, int end)> periods = TimeLine_ms.GetTimeLine();
+            if (!periods.Any())
+            {
+                int nMax = values.Length;
+                periods.Add(((int start, int end))(0, RunParam.GetTimeOfIndex(nMax)));
+            }
+            for (int i = 0; i < periods.Count; i++)
+            {
+                if (periods[i].end < 0)
+                    periods[i] = (periods[i].start, (int)RunParam.GetTimeOfIndex(nMax));
+            }
+            GenerateStimulus(periods, rand);
         }
     }
 

@@ -175,9 +175,9 @@ namespace SiliFish.ModelUnits.Cells
         #endregion              
 
         #region Stimulus Functions
-        public double GetStimulus(int timeIndex, Random rand)
+        public double GetStimulus(int timeIndex)
         {
-            return Stimuli.GenerateStimulus(timeIndex, rand);
+            return Stimuli.GetStimulus(timeIndex);
         }
 
         public void AddStimulus(Stimulus stim)
@@ -237,7 +237,7 @@ namespace SiliFish.ModelUnits.Cells
         public virtual void InitForSimulation(int nmax)
         {
             V = new double[nmax];
-            Stimuli.InitForSimulation(nmax);
+            Stimuli.InitForSimulation(nmax, Model.rand);
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitForSimulation(nmax);
         }
@@ -261,7 +261,6 @@ namespace SiliFish.ModelUnits.Cells
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
-
         }
         public virtual void CalculateMembranePotential(int t)
         {

@@ -209,7 +209,7 @@ namespace SiliFish.ModelUnits.Cells
                         if (jnc.IsActive(timeIndex))
                             IGap += jnc.GetGapCurrent(this, timeIndex);
                     }
-                    stim = GetStimulus(timeIndex, Model.rand);
+                    stim = GetStimulus(timeIndex);
                 }
 
                 NextStep(timeIndex, stim + ISyn + IGap);

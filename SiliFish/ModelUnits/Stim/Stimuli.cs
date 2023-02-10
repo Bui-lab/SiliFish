@@ -22,10 +22,6 @@ namespace SiliFish.ModelUnits.Stim
         public double MaxValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Max(s => s.MaxValue) : 0; } }
         [JsonIgnore]
         public bool HasStimulus { get { return ListOfStimulus.Any(); } }
-        public double GenerateStimulus(int timeIndex, Random rand)
-        {
-            return ListOfStimulus.Any(s => s.Active) ? ListOfStimulus.Where(s => s.Active).Sum(s => s.GenerateStimulus(timeIndex, rand)) : 0;
-        }
 
         public double GetStimulus(int timeIndex)
         {
@@ -39,10 +35,10 @@ namespace SiliFish.ModelUnits.Stim
                 ret = ret.AddArray(s.GetValues(nmax));
             return ret;
         }
-        public virtual void InitForSimulation(int nmax)
+        public virtual void InitForSimulation(int nmax, Random rand)
         {
             foreach (Stimulus s in ListOfStimulus)
-                s.InitForSimulation(nmax);
+                s.InitForSimulation(nmax, rand);
         }
         public void Add(Stimulus stim)
         {

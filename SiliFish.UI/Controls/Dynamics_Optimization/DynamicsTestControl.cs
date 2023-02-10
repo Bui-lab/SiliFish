@@ -455,11 +455,7 @@ namespace SiliFish.UI.Controls
         {
             decimal ddt = edt.Value;
             DeltaT = (double)ddt;
-            int stimStart = (int)(eStepStartTime.Value / ddt);
-            int stimEnd = (int)(eStepEndTime.Value / ddt);
             int plotEnd = (int)(ePlotEndTime.Value / ddt);
-            if (stimEnd > plotEnd)
-                stimEnd = plotEnd;
             TimeArray = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
@@ -471,7 +467,8 @@ namespace SiliFish.UI.Controls
                 TimeLine_ms = tl,
                 RunParam = new() { DeltaT= DeltaT }
             };
-            double[] I = stim.GenerateStimulus(stimStart, stimEnd - stimStart, Random).Concat(new double[plotEnd+1 - stimEnd]).ToArray();
+            stim.InitForSimulation(plotEnd, Random);
+            double[] I = stim.GetValues(plotEnd);
             return I;
         }
         private void DynamicsRun()
