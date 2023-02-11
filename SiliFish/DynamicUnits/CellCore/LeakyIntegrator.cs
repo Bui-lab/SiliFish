@@ -2,26 +2,36 @@
 using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
     public class Leaky_Integrator : CellCoreUnit
     {
-        public double R; //resustance
-        public double C;//capacitance
-        public double Va; //Vm when tension is half of Tmax/2
-        public double Tmax; //maximum tension
-        public double ka; //slope factor [Dulhunty 1992 (Prog. Biophys)]
-        
+        [Description("Resistance")]
+        public double R { get; set; } 
+
+        [Description("Capacitance")]
+        public double C { get; set; }
+
+        [Description("Vm when tension is half of Tmax/2")]
+        public double Va { get; set; }
+
+        [Description("Maximum tension")]
+        public double Tmax { get; set; }
+
+        [Description("Slope factor")]// [Dulhunty 1992 (Prog. Biophys)]
+        public double ka { get; set; }
+
         [JsonIgnore]
         public double TimeConstant { get { return R * C; } }
         protected override void Initialize()
         {
             V = Vr;
         }
-        //private double Vmax; //the possible maximum membrane potential 
         public Leaky_Integrator(double R, double C, double Vr)
         {
             this.R = R;
@@ -95,13 +105,20 @@ namespace SiliFish.DynamicUnits
                 return;
             BackwardCompatibility(paramExternal);
 
-            paramExternal.TryGetValue("Leaky_Integrator.R", out R);
-            paramExternal.TryGetValue("Leaky_Integrator.C", out C);
-            paramExternal.TryGetValue("Leaky_Integrator.Vr", out Vr);
-            paramExternal.TryGetValue("Leaky_Integrator.Va", out Va);
-            paramExternal.TryGetValue("Leaky_Integrator.Tmax", out Tmax);
-            paramExternal.TryGetValue("Leaky_Integrator.ka", out ka);
-            paramExternal.TryGetValue("Leaky_Integrator.Vmax", out Vmax);
+            if (paramExternal.TryGetValue("Leaky_Integrator.R", out double R2))
+                R= (double)R2;
+            if (paramExternal.TryGetValue("Leaky_Integrator.C", out double C2))
+                C= (double)C2;
+            if (paramExternal.TryGetValue("Leaky_Integrator.Vr", out double Vr2))
+                Vr= (double)Vr2;
+            if (paramExternal.TryGetValue("Leaky_Integrator.Va", out double Va2))
+                Va= (double)Va2;
+            if (paramExternal.TryGetValue("Leaky_Integrator.Tmax", out double Tmax2))
+                Tmax= (double)Tmax2;
+            if (paramExternal.TryGetValue("Leaky_Integrator.ka", out double ka2))
+                ka= (double)ka2;
+            if (paramExternal.TryGetValue("Leaky_Integrator.Vmax", out double Vmax2))
+                Vmax= (double)Vmax2;
             V = Vr;
         }
 

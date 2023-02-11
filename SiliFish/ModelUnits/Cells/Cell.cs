@@ -234,12 +234,13 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region RunTime
-        public virtual void InitForSimulation(int nmax)
+        public virtual void InitForSimulation(RunParam runParam)
         {
-            V = new double[nmax];
-            Stimuli.InitForSimulation(nmax, Model.rand);
+            V = new double[runParam.iMax];
+            Core.Initialize(runParam.DeltaT, runParam.DeltaTEuler);
+            Stimuli.InitForSimulation(Model.RunParam, Model.rand);
             foreach (GapJunction jnc in GapJunctions)
-                jnc.InitForSimulation(nmax);
+                jnc.InitForSimulation(runParam.iMax);
         }
         internal bool IsAlive(int timepoint)
         {

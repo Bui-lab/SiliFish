@@ -14,8 +14,8 @@ namespace SiliFish.Definitions
 {
     public class GlobalSettings
     {
-        public static string TempFolder;
-        public static string OutputFolder;
+        public static string TempFolder = Path.GetTempPath() + "SiliFish";
+        public static string OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         public static double Epsilon = 0.00001;
 
         public static string DecimalPointFormat = "0.0###";

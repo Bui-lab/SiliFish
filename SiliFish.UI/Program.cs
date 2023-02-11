@@ -34,12 +34,12 @@ namespace SiliFish.UI
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            Console.WriteLine(e.Exception.Message);
+            ExceptionHandler.ExceptionHandling("Uncaught exception", e.Exception);
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Console.WriteLine((e.ExceptionObject as Exception).Message);
+            ExceptionHandler.ExceptionHandling("Unhandled exception", e.ExceptionObject as Exception);
         }
 
         

@@ -4,6 +4,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
@@ -159,12 +160,12 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Runtime
-        public override void InitForSimulation(int nmax)
+        public override void InitForSimulation(RunParam runParam)
         {
-            base.InitForSimulation(nmax);
-            V = Enumerable.Repeat(Core.Vr, nmax).ToArray();
+            base.InitForSimulation(runParam);
+            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitForSimulation(nmax);
+                jnc.InitForSimulation(runParam.iMax);
 
         }
 

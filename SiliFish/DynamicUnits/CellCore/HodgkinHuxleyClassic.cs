@@ -3,22 +3,36 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
     public class HodgkinHuxleyClassic: CellCoreUnit
     {
-        public double g_K = 36;
-        public double g_Na = 120;
-        public double g_L = 0.3;
-        public double E_K = -12;
-        public double E_Na = 120;
-        public double E_L = 10.6;
+        [Description("K channel conductance.")]
+        public double g_K { get; set; } = 36;
 
-        // threshold membrane potential 
-        public double Vt = -57;
-        public double Cm = 10; //the membrane capacitance
+        [Description("Na channel conductance.")]
+        public double g_Na { get; set; } = 120;
+
+        [Description("Leak channel conductance.")]
+        public double g_L { get; set; } = 0.3;
+
+        [Description("K equilibrium potential.")]
+        public double E_K { get; set; } = -12;
+
+        [Description("Na equilibrium potential.")]
+        public double E_Na { get; set; } = 120;
+
+        [Description("Leak equilibrium potential.")]
+        public double E_L { get; set; } = 10.6;
+
+        [Description("Threshold membrane potential.")]
+        public double Vt { get; set; } = -57;
+
+        [Description("The membrane capacitance.")]
+        public double Cm { get; set; } = 10; 
 
         //keeps the current value of n, m, and h
         protected double n = 0;
@@ -123,16 +137,26 @@ namespace SiliFish.DynamicUnits
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             BackwardCompatibility(paramExternal);
-            paramExternal.TryGetValue("HodgkinHuxley.g_K", out g_K);
-            paramExternal.TryGetValue("HodgkinHuxley.g_Na", out g_Na);
-            paramExternal.TryGetValue("HodgkinHuxley.g_L", out g_L);
-            paramExternal.TryGetValue("HodgkinHuxley.E_K", out E_K);
-            paramExternal.TryGetValue("HodgkinHuxley.E_Na", out E_Na);
-            paramExternal.TryGetValue("HodgkinHuxley.E_L", out E_L);
-            paramExternal.TryGetValue("HodgkinHuxley.V_max", out Vmax);
-            paramExternal.TryGetValue("HodgkinHuxley.V_r", out Vr);
-            paramExternal.TryGetValue("HodgkinHuxley.V_t", out Vt);
-            paramExternal.TryGetValue("HodgkinHuxley.Cm", out Cm);
+            if (paramExternal.TryGetValue("HodgkinHuxley.g_K", out double g_K2))
+                g_K = (double)g_K2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.g_Na", out double g_Na2))
+                g_Na = g_Na2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.g_L", out double g_L2))
+                g_L = g_L2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.E_K", out double E_K2))
+                E_K= (double)E_K2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.E_Na", out double E_Na2))
+                E_Na = E_Na2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.E_L", out double E_L2))
+                E_L = E_L2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.V_max", out double Vmax2))
+                Vmax= (double)Vmax2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.V_r", out double Vr2))
+                Vr = (double)Vr2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.V_t", out double Vt2))
+                Vt = (double)Vt2;
+            if (paramExternal.TryGetValue("HodgkinHuxley.Cm", out double Cm2))
+                Cm = (double)Cm2;
         }
         public override void SetParameter(string name, double value)
         {

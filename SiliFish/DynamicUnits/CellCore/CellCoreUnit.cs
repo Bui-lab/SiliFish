@@ -5,6 +5,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -56,11 +57,13 @@ namespace SiliFish.DynamicUnits
         protected double deltaT, deltaTEuler;
         protected double V = -70;//Keeps the current value of V 
 
-        //the resting membrane potential
-        public double Vr = -70;
-        // vmax is the peak membrane potential of single action potentials
-        public double Vmax = 30;
+        [Description("The resting membrane potential.")]
+        public double Vr { get; set; } = -70;
+        
+        [Description("The peak membrane potential of single spike.")]
+        public double Vmax { get; set; } = 30;
 
+        [JsonIgnore]
         public Dictionary<string, double> Parameters
         {
             get { return GetParameters(); }

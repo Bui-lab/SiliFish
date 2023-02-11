@@ -15,24 +15,11 @@ namespace SiliFish.ModelUnits.Stim
     public class Stimulus : StimulusBase
     {
         private double tangent; //valid only if mode==Ramp
-        private int iStart, iEnd;
         private double[] values = null;
-        private bool initialized = false;
-
-        public static int nMax; //in time increments
-        private Cell targetCell;
 
         [JsonIgnore]
-        public Cell TargetCell
-        {
-            get => targetCell;
-            set
-            {
-                targetCell = value;
-                RunParam = targetCell.Model.RunParam;
-            }
-        }
-
+        public Cell TargetCell { get; set; }
+        
         [JsonIgnore]
         public RunParam RunParam { get; set; }
         [JsonIgnore]
@@ -72,40 +59,6 @@ namespace SiliFish.ModelUnits.Stim
         {
             return $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
         }
-        private void Initialize()
-        {
-            if (initialized)
-                return;
-
-            iEnd = (int)(TimeLine_ms.End / RunParam.DeltaT);
-            if (iEnd < 0)
-                iEnd = nMax;
-            iStart = (int)(TimeLine_ms.Start / RunParam.DeltaT);
-            if (Settings.Mode == StimulusMode.Ramp)
-                if (iEnd > iStart)
-                    tangent = (Settings.Value2 - Settings.Value1) / (iEnd - iStart);
-                else tangent = 0;
-
-            if (values != null && values.Length < iEnd)
-            {
-                double[] copyArr = new double[values.Length];
-                values.CopyTo(copyArr, 0);
-                values = new double[iEnd];
-                copyArr.CopyTo(values, 0);
-            }
-            else values ??= new double[iEnd];
-            initialized = true;
-        }
-
-        public double[] GenerateStimulus(int stimStart, int stimDuration, Random rand)
-        {
-            List<(int start, int end)> periods = new();
-            nMax = stimStart + stimDuration;
-            values = new double[nMax];
-            periods.Add(((int start, int end))(stimStart, RunParam.GetTimeOfIndex(nMax)));
-            GenerateStimulus(periods, rand);
-            return values;
-        }
 
         public double[] GetValues(int nMax)
         {
@@ -118,7 +71,8 @@ namespace SiliFish.ModelUnits.Stim
             return values;
         }
 
-        private void GenerateStepStimulus(List<(int start, int end)> periods, Random rand)//TODO implement functions for other stimulus types and generate values at the beginning
+        #region Generate different modes of stimuli
+        private void GenerateStepStimulus(List<(int start, int end)> periods, Random rand)
         {
             foreach (var (start, end) in periods)
             {
@@ -165,7 +119,7 @@ namespace SiliFish.ModelUnits.Stim
                 }
             }
         }
-        private void GenerateSinusoidalStimulus(List<(int start, int end)> periods, Random rand)//TODO 
+        private void GenerateSinusoidalStimulus(List<(int start, int end)> periods, Random rand)
         {
             if (Settings.Value2 <= 0) return;
             //for sinusoidal, the number of full cycles occur for each period
@@ -228,19 +182,20 @@ namespace SiliFish.ModelUnits.Stim
                     break;
             }
         }
-        public void InitForSimulation(int nmax, Random rand)
+        #endregion
+        public void InitForSimulation(RunParam runParam, Random rand)
         {
-            values = new double[nmax];
-            List<(int start, int end)> periods = TimeLine_ms.GetTimeLine();
+            RunParam = runParam;
+            values = new double[RunParam.iMax];
+            List<(int start, int end)> periods =new((TimeLine_ms.GetTimeLine()));
             if (!periods.Any())
             {
-                int nMax = values.Length;
-                periods.Add(((int start, int end))(0, RunParam.GetTimeOfIndex(nMax)));
+                periods.Add((0, RunParam.MaxTime));
             }
             for (int i = 0; i < periods.Count; i++)
             {
                 if (periods[i].end < 0)
-                    periods[i] = (periods[i].start, (int)RunParam.GetTimeOfIndex(nMax));
+                    periods[i] = (periods[i].start, RunParam.MaxTime);
             }
             GenerateStimulus(periods, rand);
         }

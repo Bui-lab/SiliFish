@@ -386,16 +386,14 @@ namespace SiliFish.UI.Controls
             if (CurrentMode == RunMode.Template) return null;
             MessageBox.Show("Implementation in progress.", "Model Edit");
             //MODEL EDIT 
-            /*
             ControlContainer frmControl = new();
-            CellControl cc = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
-
-            cell.CellBase = cell;
+            CellControl cc = new(Model as RunningModel);
+            cc.Cell = cell;
             frmControl.AddControl(cc);
             frmControl.Text = cell?.ToString() ?? "New Cell";
 
             if (frmControl.ShowDialog() == DialogResult.OK)
-                return cc.CellBase;*/
+                return cc.Cell;
             return null;
         }
 

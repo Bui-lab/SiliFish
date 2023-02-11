@@ -1,8 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SiliFish.Definitions
 {
+    //To convert string to enum:
+    //ex: CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
     public enum CellType { Neuron, MuscleCell }
     public enum FiringRhythm { NoSpike, Phasic, Tonic }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }

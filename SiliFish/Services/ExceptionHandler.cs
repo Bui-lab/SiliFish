@@ -31,7 +31,7 @@ namespace SiliFish.Services
             logFile = $"{logpath}\\SiliFish.log";
             if (!File.Exists(logFile))
                 File.Create(logFile) ;
-            string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}";
+            string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}\r\n";
             File.AppendAllText(logFile, logMsg);
         }
 

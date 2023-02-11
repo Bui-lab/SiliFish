@@ -1,4 +1,5 @@
-﻿using SiliFish.Helpers;
+﻿using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
@@ -156,37 +157,86 @@ namespace SiliFish.Repositories
             
             return updated;
         }
-        public static List<string> CheckJSONVersion(ref string json)
+
+        private static bool FixCoreTypeJson(ref string json)
         {
-            List<string> list = new();
-            //Compare to Version 0.1
-            if (json.Contains("\"TimeLine\""))
-            {
-                //created by old version 
-                json = json.Replace("\"TimeLine\"", "\"TimeLine_ms\"");
-                list.Add("Stimulus parameters");
-            }
+            bool updated = false;
             if (json.Contains("\"CoreType\": 0") || json.Contains("\"CoreType\": 1") || json.Contains("\"CoreType\": 2"))
             {
                 json = json.Replace("\"CoreType\": 0", "\"CoreType\": \"Izhikevich_5P\"")
                 .Replace("\"CoreType\": 1", "\"CoreType\": \"Izhikevich_9P\"")
                 .Replace("\"CoreType\": 2", "\"CoreType\": \"Leaky_Integrator\"");
-                list.Add("Core types");
+                updated = true;
             }
-            RemoveOldParameters(ref json);
-            if (FixDistributionJson(ref json))
-                list.Add("Spatial distributions");
-            if (FixCellReachJson(ref json))
-                list.Add("connection ranges");
-            json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
-            json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            json = Regex.Replace(json, "},[\\s]*}", "} }");
+            return updated;
+        }
+        private static bool FixCoreParametersJson(ref string json)
+        {
+            bool updated = false;
 
+            if (json.Contains("\"ClassType\": \"RunningModel\""))
+            {
+                Regex coreRegex = new("\"Core\": {(\\s+.*[^}]*?)}");
+                MatchCollection matchCollection = coreRegex.Matches(json);
+                for (int i = matchCollection.Count - 1; i >= 0; i--)
+                {
+                    Match match = matchCollection[i];
+                    int index = match.Groups[0].Index;
+                    string core = match.Value;
+                    Regex paramRegex = new("\"Parameters\": {(\\s+.*[^}]*?)}");
+                    Match parMatch = paramRegex.Match(core);
+                    if (parMatch.Success)
+                    {
+                        string newJson = "";
+                        Regex singleRegex = new("\"(.*\\.)(.*\":.*,)");
+                        MatchCollection singleMatch = singleRegex.Matches(parMatch.Value);
+                        for (int j = 0; j< singleMatch.Count ; j++)
+                        {
+                            Match singleParam = singleMatch[j];
+                            newJson += $"\"{singleParam.Groups[2]}\r\n";
+                        }
+                        json = json.Remove(index + parMatch.Index, parMatch.Value.Length);
+                        newJson = newJson.Replace("V_", "V");//change V_r, V_t, V_max to Vr, Vt, Vmax
+                        json = json.Insert(index + parMatch.Index, newJson);
+                    }                    
+                    updated = true;
+                }
+            }
+
+            return updated;
+        }
+        public static List<string> CheckJSONVersion(ref string json)
+        {
+            Regex versionRegex = new("\"Version\": (.*),");
+            Match version = versionRegex.Match(json);
+            List<string> list = new();
+            if (!version.Success)//Version is added on 2.2.3
+            {                
+                //Compare to Version 0.1
+                if (json.Contains("\"TimeLine\""))
+                {
+                    //created by old version 
+                    json = json.Replace("\"TimeLine\"", "\"TimeLine_ms\"");
+                    list.Add("Stimulus parameters");
+                }
+                if (FixCoreTypeJson(ref json))
+                    list.Add("Cell core parameters");
+                FixCoreParametersJson(ref json);
+                RemoveOldParameters(ref json);
+                if (FixDistributionJson(ref json))
+                    list.Add("Spatial distributions");
+                if (FixCellReachJson(ref json))
+                    list.Add("connection ranges");
+                json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
+                json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+                json = Regex.Replace(json, ",[\\s]*}", " }");
+            }
             return list;
         }
 
         public static void Save(string fileName, ModelBase model)
         {
+            model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             JsonUtil.SaveToJsonFile(fileName, model);
         }
 

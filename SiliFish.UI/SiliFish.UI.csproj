@@ -6,7 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-	<Version>2.2.2</Version>
+	<Version>2.2.3</Version>
 	<PackageIcon>fishbone2BlueBG.png</PackageIcon>
 	<ApplicationIcon>Resources\fishbone2BlueBG.ico</ApplicationIcon>
 	<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
@@ -59,6 +59,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\JunctionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Controls\Model Edit\CellControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Controls\ProjectionTestControl.cs">

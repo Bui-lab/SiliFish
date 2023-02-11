@@ -552,31 +552,20 @@ namespace SiliFish.ModelUnits.Architecture
             JsonUtil.SaveToJsonFile(filenamejson, GetParameters());
         }
 
-        protected virtual void InitDataVectors(int nmax)
+        protected virtual void InitForSimulation()
         {
+            if (RunParam.iMax <= 0) return;
+            if (!neuronPools.Any(p => p.GetCells().Any()) &&
+                !musclePools.Any(p => p.GetCells().Any())) //No cells
+                return;
+            Time = new double[RunParam.iMax];
             foreach (CellPool neurons in neuronPools)
                 foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
-                    neuron.InitForSimulation(nmax);
+                    neuron.InitForSimulation(RunParam);
 
             foreach (CellPool muscleCells in musclePools)
                 foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
-                    mc.InitForSimulation(nmax);
-        }
-
-        protected virtual void InitStructures(int nmax)
-        {
-            this.Time = new double[nmax];
-            InitDataVectors(nmax);
-            foreach (CellPool cp in GetCellPools().Cast<CellPool>())
-            {
-                foreach (Cell c in cp.Cells)
-                {
-                    c.Core.Initialize(RunParam.DeltaT, RunParam.DeltaTEuler);
-                }
-            }
-            if (!neuronPools.Any(p => p.GetCells().Any()) &&
-                !musclePools.Any(p => p.GetCells().Any()))
-                return;
+                    mc.InitForSimulation(RunParam);
             initialized = true;
         }
 
@@ -632,9 +621,8 @@ namespace SiliFish.ModelUnits.Architecture
                 model_run = false;
                 rand ??= new Random(Settings.Seed);
                 iMax = RunParam.iMax;
-                Stimulus.nMax = iMax;
 
-                InitStructures(iMax);
+                InitForSimulation();
                 if (!initialized)
                     return;
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
@@ -656,14 +644,14 @@ namespace SiliFish.ModelUnits.Architecture
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
         public void RunModel(int count = 1)
         {
             string filename = $"{ModelName}_{DateTime.Now:yyMMdd-HHmm}";
-            string outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+            string outputFolder = GlobalSettings.OutputFolder;
             filename = Path.Combine(outputFolder, filename);
             for (int i = 0; i < count; i++)
             {

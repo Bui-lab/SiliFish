@@ -51,8 +51,11 @@ namespace SiliFish.DynamicUnits
                 return;
             BackwardCompatibility(paramExternal);
 
-            paramExternal.TryGetValue("QIF.Vr", out Vr);
-            paramExternal.TryGetValue("QIF.Vmax", out Vmax);
+            if (paramExternal.TryGetValue("QIF.Vmax", out double Vmax2))
+                Vmax = (double)Vmax2;
+            if (paramExternal.TryGetValue("QIF.Vr", out double Vr2))
+                Vr = (double)Vr2;
+
             Initialize();
         }
 

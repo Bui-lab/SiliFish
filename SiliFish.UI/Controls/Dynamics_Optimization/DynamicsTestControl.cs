@@ -455,19 +455,25 @@ namespace SiliFish.UI.Controls
         {
             decimal ddt = edt.Value;
             DeltaT = (double)ddt;
-            int plotEnd = (int)(ePlotEndTime.Value / ddt);
+            int plotEnd_ms = (int)ePlotEndTime.Value;
+            int plotEnd = (int)(plotEnd_ms / ddt);
             TimeArray = new double[plotEnd + 1];
             TimeLine tl = new();
             tl.AddTimeRange((int)eStepStartTime.Value, (int)eStepEndTime.Value);
             foreach (int i in Enumerable.Range(0, plotEnd + 1))
                 TimeArray[i] = i * deltaT;
+            RunParam runParam = new()
+            {
+                MaxTime = plotEnd_ms,
+                DeltaT = DeltaT,
+                DeltaTEuler = DeltaT
+            };
             Stimulus stim = new()
             {
                 Settings = stimulusSettings,
-                TimeLine_ms = tl,
-                RunParam = new() { DeltaT= DeltaT }
+                TimeLine_ms = tl
             };
-            stim.InitForSimulation(plotEnd, Random);
+            stim.InitForSimulation(runParam, Random);
             double[] I = stim.GetValues(plotEnd);
             return I;
         }

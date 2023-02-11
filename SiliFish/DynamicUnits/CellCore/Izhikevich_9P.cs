@@ -1,6 +1,7 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
@@ -20,16 +21,23 @@ namespace SiliFish.DynamicUnits
 
         //a, b, c, d, are the parameters for the membrane potential dynamics
         //Default values are taken from Izhikevich 2003 (IEEE)
-        public double a = 0.02;
-        public double b = 0.2;
-        public double c = -65;
-        public double d = 2;
 
-        // threshold membrane potential 
-        public double Vt = -57;
+        [Description("The time scale of the recovery variable, u.")]
+        public double a { get; set; } = 0.02;
+        [Description("The sensitivity of the recovery variable, u.")]
+        public double b { get; set; } = 0.2;
+        [Description("The membrane potential V resets to value c (in mV) after a spike.")]
+        public double c { get; set; } = -65;
+        [Description("The recovery variable u is incremented by the value d after a spike.")]
+        public double d { get; set; } = 2;
+
+        [Description("The threshold membrane potential for a spike.")]
+        public double Vt { get; set; } = -57;
         // k is a coefficient of the quadratic polynomial 
-        public double k = 1;
-        public double Cm = 10; //the membrane capacitance
+        [Description("An approximation of the subthreshold region of the fast component of the I-V relationship of the neuron.")]
+        public double k { get; set; } = 1;
+        [Description("The membrane capacitance.")]
+        public double Cm { get; set; } = 10; //the membrane capacitance
 
         [JsonIgnore]
         double u = 0;//Keeps the current value of u
@@ -114,15 +122,26 @@ namespace SiliFish.DynamicUnits
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
             BackwardCompatibility(paramExternal);
-            paramExternal.TryGetValue("Izhikevich_9P.a", out a);
-            paramExternal.TryGetValue("Izhikevich_9P.b", out b);
-            paramExternal.TryGetValue("Izhikevich_9P.c", out c);
-            paramExternal.TryGetValue("Izhikevich_9P.d", out d);
-            paramExternal.TryGetValue("Izhikevich_9P.V_max", out Vmax);
-            paramExternal.TryGetValue("Izhikevich_9P.V_r", out Vr);
-            paramExternal.TryGetValue("Izhikevich_9P.V_t", out Vt);
-            paramExternal.TryGetValue("Izhikevich_9P.k", out k);
-            paramExternal.TryGetValue("Izhikevich_9P.Cm", out Cm);
+
+            if (paramExternal.TryGetValue("Izhikevich_9P.a", out double a2))
+                a = (double)a2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.b", out double b2))
+                b = (double)b2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.c", out double c2))
+                c = (double)c2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.d", out double d2))
+                d = (double)d2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.V_max", out double Vmax2))
+                Vmax = (double)Vmax2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.V_r", out double Vr2))
+                Vr = (double)Vr2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.V_t", out double Vt2))
+                Vt = (double)Vt2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.k", out double k2))
+                k = (double)k2;
+            if (paramExternal.TryGetValue("Izhikevich_9P.Cm", out double Cm2))
+                Cm = (double)Cm2;
+
         }
 
         public override void SetParameter(string name, double value)

@@ -221,7 +221,7 @@ namespace SiliFish.UI.Controls
                 fixedDuration = fd;
             double delay = (double)numDelay.Value;
             double conductance = (double)numConductance.Value;
-            DistanceMode distanceMode = (DistanceMode)ddDistanceMode.SelectedItem;
+            DistanceMode distanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             if (junction == null)
             {
                 if ((ConnectionType)ddConnectionType.SelectedItem == ConnectionType.Gap)

@@ -1,4 +1,5 @@
 ﻿using SiliFish.Extensions;
+using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,10 +36,10 @@ namespace SiliFish.ModelUnits.Stim
                 ret = ret.AddArray(s.GetValues(nmax));
             return ret;
         }
-        public virtual void InitForSimulation(int nmax, Random rand)
+        public virtual void InitForSimulation(RunParam runParam, Random rand)
         {
             foreach (Stimulus s in ListOfStimulus)
-                s.InitForSimulation(nmax, rand);
+                s.InitForSimulation(runParam, rand);
         }
         public void Add(Stimulus stim)
         {
