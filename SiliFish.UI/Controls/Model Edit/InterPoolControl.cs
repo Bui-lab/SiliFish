@@ -31,7 +31,9 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
             if (ddDistanceMode.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Distance mode is not selected.");
-            checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
+            ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+            if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
+                checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
         }
         private void FillConnectionTypes()
         {
