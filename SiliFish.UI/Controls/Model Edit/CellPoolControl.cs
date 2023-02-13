@@ -52,30 +52,6 @@ namespace SiliFish.UI.Controls
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
-        public CellPoolControl(bool somiteBased, ModelSettings settings)
-        {
-            InitializeComponent();
-            this.settings = settings;
-            SomiteBased = somiteBased;
-            distConductionVelocity.AbsoluteEnforced = true;
-            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
-            ddCellType.DataSource = Enum.GetNames(typeof(CellType));
-            ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
-            ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
-            distConductionVelocity.SetDistribution(new Constant_NoDistribution(settings.cv));
-            if (SomiteBased)
-            {
-                cbAllSomites.Visible = eSomiteRange.Visible = true;
-                ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
-            }
-            else
-            {
-                cbAllSomites.Visible = eSomiteRange.Visible = false;
-                ddSelection.Items.Clear();
-                ddSelection.Items.Add(CountingMode.Total.ToString());
-            }
-        }
-
         private void ddCellType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (skipCellTypeChange) return;
@@ -322,6 +298,45 @@ namespace SiliFish.UI.Controls
             eSomiteRange.Visible = !cbAllSomites.Checked;
         }
 
+        public CellPoolControl(bool somiteBased, ModelSettings settings)
+        {
+            InitializeComponent();
+            this.settings = settings;
+            SomiteBased = somiteBased;
+            distConductionVelocity.AbsoluteEnforced = true;
+            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
+            ddCellType.DataSource = Enum.GetNames(typeof(CellType));
+            ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
+            ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
+            distConductionVelocity.SetDistribution(new Constant_NoDistribution(settings.cv));
+            if (SomiteBased)
+            {
+                cbAllSomites.Visible = eSomiteRange.Visible = true;
+                ddSelection.DataSource = Enum.GetNames(typeof(CountingMode));
+            }
+            else
+            {
+                cbAllSomites.Visible = eSomiteRange.Visible = false;
+                ddSelection.Items.Clear();
+                ddSelection.Items.Add(CountingMode.Total.ToString());
+            }
+        }
+
+        public void CheckValues(object sender, EventArgs args)
+        {
+            CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
+            checkValuesArgs.Errors = new();
+            if (ddCellType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Cell type not defined.");
+            if (ddCoreType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Core type not defined.");
+            if (ddBodyPosition.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Body position not defined.");
+            if (ddSagittalPosition.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Sagittal position not defined.");
+            if ((int)eNumOfCells.Value < GlobalSettings.Epsilon)
+                checkValuesArgs.Errors.Add("Number of cells is 0. To disable a cell pool, use the Active field instead.");
+        }
 
     }
 }

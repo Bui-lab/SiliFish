@@ -14,7 +14,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public StimulusTemplate() { }
 
-        public override StimulusBase CreateCopy()
+        public override ModelUnitBase CreateCopy()
         {
             StimulusTemplate stim = new()
             {

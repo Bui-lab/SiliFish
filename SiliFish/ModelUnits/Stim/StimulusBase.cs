@@ -12,11 +12,6 @@ namespace SiliFish.ModelUnits.Stim
         public StimulusSettings Settings { get; set; } = new();
 
         public StimulusBase() { }
-        public virtual StimulusBase CreateCopy() {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
 
     }
 }

@@ -39,6 +39,13 @@ namespace SiliFish.DynamicUnits
             return core;
         }
 
+        public static CellCoreUnit CreateCore(CellCoreUnit copyFrom)
+        {
+            CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[copyFrom.CoreType], copyFrom.Parameters ?? new Dictionary<string, double>());
+            core.deltaTEuler = copyFrom.deltaTEuler;
+            core.deltaT = copyFrom.deltaT;
+            return core;
+        }
         /// <summary>
         /// static function to return dictionary of objects to keep the distributions
         /// </summary>

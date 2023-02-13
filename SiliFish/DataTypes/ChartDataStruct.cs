@@ -20,7 +20,7 @@ namespace SiliFish.DataTypes
         }
 
         public string Title = "", xLabel = "Time (ms)", yLabel = "";
-        public string Color = "red";
+        public string Color = System.Drawing.Color.Red.ToRGBQuoted();
         public double[] xData = null;
         public double[] yData = null;
         //If multiple lines are plotted on the same chart, yMultiData is used instead of yData

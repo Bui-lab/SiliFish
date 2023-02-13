@@ -18,34 +18,6 @@ namespace SiliFish.UI.Controls
         private CellPool sourcePool, targetPool;
         private Cell sourceCell;
         public Cell TargetCell;
-        public override string ToString()
-        {
-            string activeStatus = !cbActive.Checked ? " (inactive)" :
-                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
-                "";
-            return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
-        }
-        public JunctionControl(RunningModel model)
-        {
-            InitializeComponent();
-            Model = model;
-            settings = model.Settings;
-
-            ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
-
-            //ddConnectionType is manually loaded as not all of them are displayed
-            ddConnectionType.Items.Add(ConnectionType.Gap);
-            ddConnectionType.Items.Add(ConnectionType.Synapse);
-            ddConnectionType.Items.Add(ConnectionType.NMJ);
-
-            ddSourcePool.Items.AddRange(Model.CellPools.ToArray());
-            ddSourcePool.SelectedIndex = -1;
-            ddSourceCell.SelectedIndex = -1;
-
-            ddTargetPool.Items.AddRange(Model.CellPools.ToArray());
-            ddTargetPool.SelectedIndex = -1;
-            ddTargetCell.SelectedIndex = -1;
-        }
 
         private void FillConnectionTypes()
         {
@@ -199,8 +171,8 @@ namespace SiliFish.UI.Controls
                 ddTargetCell.SelectedItem = TargetCell;
                 ddSourcePool.Enabled = false;
             }
-            cbActive.Checked = junction.Active;
-            timeLineControl.SetTimeLine(junction.TimeLine_ms);
+            cbActive.Checked = junction?.Active ?? true;
+            timeLineControl.SetTimeLine(junction?.TimeLine_ms);
             if (newJunc)
             {
                 this.junction = null;
@@ -214,6 +186,61 @@ namespace SiliFish.UI.Controls
             }
         }
 
+
+
+
+        private void cbActive_CheckedChanged(object sender, EventArgs e)
+        {
+            JunctionChanged?.Invoke(this, EventArgs.Empty);
+        }
+                public override string ToString()
+        {
+            string activeStatus = !cbActive.Checked ? " (inactive)" :
+                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
+                "";
+            return $"{ddSourcePool.Text}-->{ddTargetPool.Text} [{ddConnectionType.Text}]{activeStatus}";
+        }
+        public JunctionControl(RunningModel model)
+        {
+            InitializeComponent();
+            Model = model;
+            settings = model.Settings;
+
+            ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
+
+            //ddConnectionType is manually loaded as not all of them are displayed
+            ddConnectionType.Items.Add(ConnectionType.Gap);
+            ddConnectionType.Items.Add(ConnectionType.Synapse);
+            ddConnectionType.Items.Add(ConnectionType.NMJ);
+
+            ddSourcePool.Items.AddRange(Model.CellPools.ToArray());
+            ddSourcePool.SelectedIndex = -1;
+            ddSourceCell.SelectedIndex = -1;
+
+            ddTargetPool.Items.AddRange(Model.CellPools.ToArray());
+            ddTargetPool.SelectedIndex = -1;
+            ddTargetCell.SelectedIndex = -1;
+        }
+        internal void CheckValues(object sender, EventArgs args)
+        {
+            CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
+            checkValuesArgs.Errors = new();
+            if (ddSourcePool.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No source pool selected.");
+            else if (ddSourceCell.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No source cell selected.");
+            if (ddTargetPool.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No target pool selected.");
+            else if (ddTargetCell.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No target cell selected.");
+            if (ddConnectionType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Connection type not defined.");
+            if ((double)numConductance.Value < GlobalSettings.Epsilon)
+                checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
+            if (ddDistanceMode.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Distance mode is not selected.");
+            checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
+        }
         public JunctionBase GetJunction()
         {
             double? fixedDuration = null;
@@ -255,12 +282,5 @@ namespace SiliFish.UI.Controls
             junction.TimeLine_ms = timeLineControl.GetTimeLine();
             return junction;
         }
-
-
-        private void cbActive_CheckedChanged(object sender, EventArgs e)
-        {
-            JunctionChanged?.Invoke(this, EventArgs.Empty);
-        }
-
     }
 }

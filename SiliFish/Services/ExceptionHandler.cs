@@ -13,24 +13,29 @@ namespace SiliFish.Services
         public static void CompleteLogging()
         {
             if (logFile == null) return;
-            string newFileName = logFile.Replace(".log", $"{DateTime.Now:s}.log");
-            File.Move(logFile, newFileName);
+            string newFileName = logFile.Replace(".log", $"_{DateTime.Now.ToString("yyMMdd_HHmm")}.log");
+            File.Copy(logFile, newFileName);
         }
 
         private static void LogException(string name, Exception ex)
         {
-            string logpath = Path.GetTempPath() + "SiliFish";
-            if (!Directory.Exists(logpath))
+            if (string.IsNullOrEmpty(logFile))
             {
-                try
+                string logpath = Path.GetTempPath() + "SiliFish";
+                if (!Directory.Exists(logpath))
                 {
-                    Directory.CreateDirectory(logpath);
+                    try
+                    {
+                        Directory.CreateDirectory(logpath);
+                    }
+                    catch { logpath = ""; }
                 }
-                catch { logpath = ""; }
+                logFile = $"{logpath}\\SiliFish.log";
+                if (!File.Exists(logFile))
+                    File.Create(logFile);
+                else
+                    File.WriteAllText(logFile, string.Empty);
             }
-            logFile = $"{logpath}\\SiliFish.log";
-            if (!File.Exists(logFile))
-                File.Create(logFile) ;
             string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}\r\n";
             File.AppendAllText(logFile, logMsg);
         }

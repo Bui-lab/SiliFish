@@ -5,6 +5,7 @@ using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -68,6 +69,23 @@ namespace SiliFish.ModelUnits.Cells
         public MuscleCell(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
             : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
         {
+        }
+        public override ModelUnitBase CreateCopy()
+        {
+            MuscleCell muscleCell= new()
+            {
+                CellPool = CellPool,
+                CellGroup = CellGroup,
+                Core = CellCoreUnit.CreateCore(this.Core),
+                Coordinate = Coordinate,
+                Model=Model,
+                ConductionVelocity=ConductionVelocity,
+                Somite=Somite,
+                Sequence=CellPool.GetMaxCellSequence(Somite) + 1,
+                PositionLeftRight=PositionLeftRight,
+                TimeLine_ms = new(TimeLine_ms)
+            };
+            return muscleCell;
         }
 
         #region Connection functions

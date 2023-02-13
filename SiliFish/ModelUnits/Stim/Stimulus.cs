@@ -45,7 +45,7 @@ namespace SiliFish.ModelUnits.Stim
             TimeLine_ms = new(tl);
         }
 
-        public override StimulusBase CreateCopy()
+        public override ModelUnitBase CreateCopy()
         {
             return new Stimulus(Settings, TargetCell, TimeLine_ms);
         }

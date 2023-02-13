@@ -59,7 +59,7 @@ namespace SiliFish.Services
                     chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(GlobalSettings.DecimalPointFormat));
                     chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
                     chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
-                    chart.Replace("__DRAW_POINTS__", charts[chartIndex].drawPoints ? "true" : "false");
+                    chart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
                     chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
                     chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
                     chartHTML.Add(chart.ToString());

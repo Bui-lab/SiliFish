@@ -71,7 +71,6 @@
             this.ddTargetPool.Name = "ddTargetPool";
             this.ddTargetPool.Size = new System.Drawing.Size(132, 23);
             this.ddTargetPool.TabIndex = 7;
-            this.ddTargetPool.SelectedIndexChanged += new System.EventHandler(this.ddTargetPool_SelectedIndexChanged);
             // 
             // lTargetPool
             // 
@@ -105,7 +104,6 @@
             this.ddSagittalPosition.Name = "ddSagittalPosition";
             this.ddSagittalPosition.Size = new System.Drawing.Size(132, 23);
             this.ddSagittalPosition.TabIndex = 13;
-            this.ddSagittalPosition.SelectedIndexChanged += new System.EventHandler(this.ddSagittalPosition_SelectedIndexChanged);
             // 
             // cbActive
             // 
@@ -236,7 +234,7 @@
             this.pActive.Size = new System.Drawing.Size(243, 32);
             this.pActive.TabIndex = 37;
             // 
-            // AppliedStimulusControl
+            // StimulusTemplateControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -245,7 +243,7 @@
             this.Controls.Add(this.pActive);
             this.Controls.Add(this.pTargetPool);
             this.Controls.Add(this.stimControl);
-            this.Name = "AppliedStimulusControl";
+            this.Name = "StimulusTemplateControl";
             this.Size = new System.Drawing.Size(243, 446);
             this.pTargetPool.ResumeLayout(false);
             this.pTargetPool.PerformLayout();

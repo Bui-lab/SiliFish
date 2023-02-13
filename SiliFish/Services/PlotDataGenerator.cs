@@ -309,7 +309,9 @@ namespace SiliFish.Services
                 Title = $"`Tail Movement`",
                 yLabel = "`Y-Coordinate`",
                 xMin = Time[0],
-                xMax = (Time[^1] + 1)
+                xMax = (Time[^1] + 1),
+                yMin = yValues.Min() -1,
+                yMax = yValues.Max() + 1
             });
 
             if (episodes.Any())
@@ -317,7 +319,7 @@ namespace SiliFish.Services
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
                 title = "Time,Episode Duration";
-                data = new string[iEnd - iStart + 2];
+                data = new string[episodes.Count];
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -328,7 +330,9 @@ namespace SiliFish.Services
                     yLabel = "`Duration (ms)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1)
+                    xMax = (Time[^1] + 1),
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
                 });
 
 
@@ -337,7 +341,7 @@ namespace SiliFish.Services
                     xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
                     yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
                     title = "Time,Episode Intervals";
-                    data = new string[iEnd - iStart + 2];
+                    data = new string[episodes.Count];
                     foreach (int i in Enumerable.Range(0, episodes.Count - 1))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -348,14 +352,16 @@ namespace SiliFish.Services
                         yLabel = "`Interval (ms)`",
                         ScatterPlot = true,
                         xMin = Time[0],
-                        xMax = (Time[^1] + 1)
+                        xMax = (Time[^1] + 1),
+                        yMin = 0,
+                        yMax = yValues.Max() + 1
                     });
                 }
 
                 xValues = episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
                 title = "Time,Instant. Freq.";
-                data = new string[iEnd - iStart + 2];
+                data = new string[xValues.Length];
                 foreach (int i in Enumerable.Range(0, xValues.Length))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -366,13 +372,15 @@ namespace SiliFish.Services
                     yLabel = "`Freq (Hz)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1)
+                    xMax = (Time[^1] + 1),
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
                 });
 
                 xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
                 title = "Time,Instant. Freq.";
-                data = new string[iEnd - iStart + 2];
+                data = new string[xValues.Length];
                 foreach (int i in Enumerable.Range(0, xValues.Length))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -383,13 +391,15 @@ namespace SiliFish.Services
                     yLabel = "`Freq (Hz)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1)
+                    xMax = (Time[^1] + 1),
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
                 });
 
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.BeatFrequency).ToArray();
                 title = "Time,Tail Beat Freq.";
-                data = new string[iEnd - iStart + 2];
+                data = new string[episodes.Count];
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -400,13 +410,15 @@ namespace SiliFish.Services
                     yLabel = "`Freq (Hz)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1)
+                    xMax = (Time[^1] + 1),
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
                 });
 
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
                 title = "Time,Tail Beat/Episode";
-                data = new string[iEnd - iStart + 2];
+                data = new string[episodes.Count];
                 foreach (int i in Enumerable.Range(0, episodes.Count))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
@@ -417,7 +429,9 @@ namespace SiliFish.Services
                     yLabel = "`Count`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1)
+                    xMax = (Time[^1] + 1),
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
                 });
             }
 

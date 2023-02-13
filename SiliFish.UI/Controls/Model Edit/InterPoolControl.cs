@@ -9,58 +9,30 @@ namespace SiliFish.UI.Controls
 {
     public partial class InterPoolControl : UserControl
     {
-        private event EventHandler interPoolChanged;
-        public event EventHandler InterPoolChanged { add => interPoolChanged += value; remove => interPoolChanged -= value; }
-
         private ModelSettings settings;
         private bool autoGenerateName = true;
         private InterPoolTemplate interPoolTemplate;
         private Dictionary<string, object> Parameters;
         private bool SomiteBased = false;
-        public override string ToString()
-        {
-            string activeStatus = !cbActive.Checked ? " (inactive)" :
-                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
-                "";
-            return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
-        }
-        public InterPoolControl(bool somiteBased, ModelSettings settings)
-        {
-            InitializeComponent();
-            SomiteBased = somiteBased;
-            ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
-            ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
-            //ddConnectionType is manually loaded as not all of them are displayed
-            ddConnectionType.Items.Clear();
-            ddConnectionType.Items.Add(ConnectionType.Gap);
-            ddConnectionType.Items.Add(ConnectionType.Synapse);
-            ddConnectionType.Items.Add(ConnectionType.NMJ);
-            if (SomiteBased)
-            {
-                lUoD1.Text = lUoD2.Text = "somites";
-                toolTip1.SetToolTip(numMinAscReach, "Set 0 for within somite projections");
-                toolTip1.SetToolTip(numMinDescReach, "Set 0 for within somite projections");
-                toolTip1.SetToolTip(lMinReach, "Set 0 for within somite projections");
-                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
-                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 0;
-                numMinAscReach.Increment = numMinDescReach.Increment =
-                    numMaxAscReach.Increment = numMaxDescReach.Increment = 1;
-            }
-            else
-            {
-                lUoD1.Text = lUoD2.Text = "";
-                toolTip1.SetToolTip(numMinAscReach, "");
-                toolTip1.SetToolTip(numMinDescReach, "");
-                toolTip1.SetToolTip(lMinReach, "");
-                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
-                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 3;
-                numMinAscReach.Increment = numMinDescReach.Increment =
-                    numMaxAscReach.Increment = numMaxDescReach.Increment = (decimal)0.1;
-            }
 
-            this.settings = settings;
+        public void CheckValues(object sender, EventArgs args)
+        {
+            CheckValuesArgs checkValuesArgs=args as CheckValuesArgs;
+            checkValuesArgs.Errors = new();
+            if (ddSourcePool.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No source pool selected.");
+            if (ddTargetPool.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No target pool selected.");
+            if (ddAxonReachMode.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Axon reach mode not defined.");
+            if (ddConnectionType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Connection type not defined.");
+            if ((double)numConductance.Value < GlobalSettings.Epsilon)
+                checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
+            if (ddDistanceMode.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Distance mode is not selected.");
+            checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
         }
-
         private void FillConnectionTypes()
         {
             if (ddSourcePool.SelectedItem is CellPoolTemplate source
@@ -128,7 +100,6 @@ namespace SiliFish.UI.Controls
             }
             interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
-            interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
@@ -145,7 +116,6 @@ namespace SiliFish.UI.Controls
             }
             interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
-            interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
@@ -154,13 +124,11 @@ namespace SiliFish.UI.Controls
             if (interPoolTemplate == null || !ddConnectionType.Focused) return;
             interPoolTemplate.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
             UpdateName();
-            interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ddAxonReachMode_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateName();
-            interPoolChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private static void SetDropDownValue(ComboBox dd, string value)
@@ -181,6 +149,65 @@ namespace SiliFish.UI.Controls
             return dd.Text.Replace(" (inactive)", "");
         }
 
+        private void eName_Leave(object sender, EventArgs e)
+        {
+            autoGenerateName = string.IsNullOrEmpty(eName.Text) || eName.Text == interPoolTemplate.GeneratedName();
+        }
+
+        private void cbAscending_CheckedChanged(object sender, EventArgs e)
+        {
+            numMinAscReach.Enabled = numMaxAscReach.Enabled = cbAscending.Checked;
+        }
+
+        private void cbDescending_CheckedChanged(object sender, EventArgs e)
+        {
+            numMinDescReach.Enabled = numMaxDescReach.Enabled = cbDescending.Checked;
+        }
+
+        public InterPoolControl(bool somiteBased, ModelSettings settings)
+        {
+            InitializeComponent();
+            SomiteBased = somiteBased;
+            ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
+            ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
+            //ddConnectionType is manually loaded as not all of them are displayed
+            ddConnectionType.Items.Clear();
+            ddConnectionType.Items.Add(ConnectionType.Gap);
+            ddConnectionType.Items.Add(ConnectionType.Synapse);
+            ddConnectionType.Items.Add(ConnectionType.NMJ);
+            if (SomiteBased)
+            {
+                lUoD1.Text = lUoD2.Text = "somites";
+                toolTip1.SetToolTip(numMinAscReach, "Set 0 for within somite projections");
+                toolTip1.SetToolTip(numMinDescReach, "Set 0 for within somite projections");
+                toolTip1.SetToolTip(lMinReach, "Set 0 for within somite projections");
+                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 0;
+                numMinAscReach.Increment = numMinDescReach.Increment =
+                    numMaxAscReach.Increment = numMaxDescReach.Increment = 1;
+            }
+            else
+            {
+                lUoD1.Text = lUoD2.Text = "";
+                toolTip1.SetToolTip(numMinAscReach, "");
+                toolTip1.SetToolTip(numMinDescReach, "");
+                toolTip1.SetToolTip(lMinReach, "");
+                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 3;
+                numMinAscReach.Increment = numMinDescReach.Increment =
+                    numMaxAscReach.Increment = numMaxDescReach.Increment = (decimal)0.1;
+            }
+
+            this.settings = settings;
+        }
+
+        public override string ToString()
+        {
+            string activeStatus = !cbActive.Checked ? " (inactive)" :
+                !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
+                "";
+            return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
+        }
         public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
         {
             Parameters = modelTemplate.Parameters;
@@ -206,7 +233,7 @@ namespace SiliFish.UI.Controls
                 autoGenerateName = name == interPoolTemplate.Name;
                 eName.Text = interPoolTemplate.Name;
                 eDescription.Text = interPoolTemplate.Description;
-               
+
                 numProbability.SetValue(interPoolTemplate.Probability);
                 cbAscending.Checked = interPoolTemplate.CellReach.Ascending;
                 cbDescending.Checked = interPoolTemplate.CellReach.Descending;
@@ -273,24 +300,5 @@ namespace SiliFish.UI.Controls
             return interPoolTemplate;
         }
 
-        private void eName_Leave(object sender, EventArgs e)
-        {
-            autoGenerateName = string.IsNullOrEmpty(eName.Text) || eName.Text == interPoolTemplate.GeneratedName();
-        }
-
-        private void cbActive_CheckedChanged(object sender, EventArgs e)
-        {
-            interPoolChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void cbAscending_CheckedChanged(object sender, EventArgs e)
-        {
-            numMinAscReach.Enabled = numMaxAscReach.Enabled = cbAscending.Checked;
-        }
-
-        private void cbDescending_CheckedChanged(object sender, EventArgs e)
-        {
-            numMinDescReach.Enabled = numMaxDescReach.Enabled = cbDescending.Checked;
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SiliFish.ModelUnits;
+﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Junction;
 
 namespace SiliFish.UI.Controls
@@ -40,5 +41,14 @@ namespace SiliFish.UI.Controls
             };
         }
 
+        internal List<string> CheckValues()
+        {
+            List<string> errors = new();
+            if ((double)numTauD.Value < GlobalSettings.Epsilon)
+                errors.Add("Decay tau is 0.");
+            if ((double)numTauR.Value < GlobalSettings.Epsilon)
+                errors.Add("Rise tau is 0.");
+            return errors;
+        }
     }
 }

@@ -19,7 +19,6 @@ namespace SiliFish.UI.Controls
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private ControlContainer frmDynamicControl;
- 
 
         public event EventHandler SaveCell;
         public event EventHandler LoadCell;
@@ -42,16 +41,6 @@ namespace SiliFish.UI.Controls
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
-        public CellControl(RunningModel model)
-        {
-            InitializeComponent();
-            this.model = model;
-            ddCellPool.Items.AddRange(model.CellPools.ToArray());
-            ddCellPool.Enabled = false;//MODEL EDIT
-            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
-            ddCellType.DataSource = Enum.GetNames(typeof(CellType));
-            ddCellType.Enabled = false;//It has to be linked to the cell pool, always disabled
-        }
 
         private void ddCellType_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -70,7 +59,6 @@ namespace SiliFish.UI.Controls
             CellCoreUnit core = CellCoreUnit.CreateCore(coreType, null, 0, 0);
             propCore.SelectedObject = core;
         }
-
         private void linkLoadCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (LoadCell == null) return;
@@ -88,7 +76,6 @@ namespace SiliFish.UI.Controls
             }
             WriteDataToControl();
         }
-
         private void linkSavePool_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (SaveCell == null) return;
@@ -102,25 +89,26 @@ namespace SiliFish.UI.Controls
             if (cell == null || cell.Core.CoreType != ddCoreType.Text)
                 cell = ddCellType.Text == CellType.Neuron.ToString() ? new Neuron(model, ddCoreType.Text, ddCellPool.Text, -1, -1, null, 0) :
                             new MuscleCell(model, ddCoreType.Text, ddCellPool.Text, -1, -1, null, 0);
-
+            if (ddCellPool.Enabled)
+                cell.CellPool = ddCellPool.SelectedItem as CellPool;
             if (double.TryParse(eConductionVelocity.Text, out double cv))
                 cell.ConductionVelocity = cv;
-            double.TryParse(eX.Text, out double x);
-            double.TryParse(eY.Text, out double y);
-            double.TryParse(eZ.Text, out double z);
-            cell.Coordinate = new Coordinate(x, y, z);
-            cell.CellGroup = ddCellPool.Text;
-            cell.PositionLeftRight = y < 0 ? SagittalPlane.Left : SagittalPlane.Right;
+            cell.Coordinate = new Coordinate(double.Parse(eX.Text), double.Parse(eY.Text), double.Parse(eZ.Text));
+            cell.CellGroup = (ddCellPool.SelectedItem as CellPool).CellGroup;
+            cell.PositionLeftRight = cell.CellPool.PositionLeftRight;
             cell.Somite = (int)eSomite.Value;
             cell.Sequence = (int)eSequence.Value;
             cell.Active = cbActive.Checked;
             cell.TimeLine_ms = timeLineControl.GetTimeLine();
         }
 
-
         private void WriteDataToControl()
         {
-            if (cell == null) return;
+            if (cell == null)
+            {
+                ddCellPool.Enabled = true;
+                return;
+            }
 
             ddCellPool.SelectedItem = cell.CellPool;
             skipCellTypeChange = true;
@@ -131,6 +119,11 @@ namespace SiliFish.UI.Controls
             skipCoreTypeChange = false;
             eSequence.Value = cell.Sequence;
             eSomite.Value = cell.Somite;
+            eX.Text = cell.X.ToString();
+            eY.Text = cell.Y.ToString();
+            eZ.Text = cell.Z.ToString();
+            propCore.SelectedObject = cell.Core;
+            eConductionVelocity.Text = cell.ConductionVelocity.ToString();
         }
 
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -188,6 +181,35 @@ namespace SiliFish.UI.Controls
             MessageBox.Show($"Parameters are carried to {cell.ID}", "SiliFish");
         }
 
-
+        public CellControl(RunningModel model)
+        {
+            InitializeComponent();
+            this.model = model;
+            ddCellPool.Items.AddRange(model.CellPools.ToArray());
+            ddCellPool.Enabled = false;
+            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
+            ddCellType.DataSource = Enum.GetNames(typeof(CellType));
+            ddCellType.Enabled = false;//It has to be linked to the cell pool, always disabled
+        }
+        internal void CheckValues(object sender, EventArgs args)
+        {
+            CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
+            checkValuesArgs.Errors = new();
+            if (ddCellType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Cell type not defined.");
+            if (ddCoreType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Core type not defined.");
+            if (!double.TryParse(eX.Text, out double _) ||
+                !double.TryParse(eY.Text, out double _) ||
+                !double.TryParse(eZ.Text, out double _))
+                checkValuesArgs.Errors.Add("Invalid coordinate values.");
+            if (!double.TryParse(eConductionVelocity.Text, out double cv) || cv < GlobalSettings.Epsilon)
+                checkValuesArgs.Errors.Add("Conduction velocity is 0. To disable a cell, use the Active field instead.");
+            int somite = (int)eSomite.Value;
+            int seq = (int)eSequence.Value;
+            CellPool cp = ddCellPool.SelectedItem as CellPool;
+            if (cp.Cells.Any(c => c != cell && c.Somite == somite && c.Sequence == seq))
+                checkValuesArgs.Errors.Add("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence/somite.");
+        }
     }
 }

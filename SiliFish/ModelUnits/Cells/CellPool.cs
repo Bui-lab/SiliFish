@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
@@ -118,6 +119,10 @@ namespace SiliFish.ModelUnits.Cells
             return new CellPoolTemplate(this);
         }
 
+        public override ModelUnitBase CreateCopy()
+        {
+            return new CellPool(Model, CellType, BodyLocation, CellGroup, PositionLeftRight, ColumnIndex2D, Color);
+        }
         public void LinkObjects(RunningModel model)
         {
             foreach (Cell cell in Cells)
@@ -207,6 +212,11 @@ namespace SiliFish.ModelUnits.Cells
         {
             Cells.Add(c);
             c.CellPool = this;
+        }
+
+        public void RemoveCell(Cell c)
+        {
+            Cells.Remove(c);
         }
 
         public Cell GetCell(string id)
@@ -346,6 +356,17 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (Cells != null && Cells.Any())
                 return Cells.Max(c => c.Sequence);
+            return 0;
+        }
+
+        public int GetMaxCellSequence(int somite)
+        {
+            if (Cells != null && Cells.Any())
+            {
+                if (Model.ModelDimensions.NumberOfSomites <= 0)
+                    return Cells.Max(c => c.Sequence);
+                return Cells.Where(c => c.Somite == somite).Max(c => c.Sequence);
+            }
             return 0;
         }
 

@@ -48,7 +48,18 @@ namespace SiliFish.UI.Controls
                 stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetStimulus(StimulusSettings stim)
+          private void eValue1_TextChanged(object sender, EventArgs e)
+        {
+            if (eValue1.Focused)
+                stimulusChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void eValue2_TextChanged(object sender, EventArgs e)
+        {
+            if (eValue2.Focused)
+                stimulusChanged?.Invoke(this, EventArgs.Empty);
+        }
+      public void SetStimulus(StimulusSettings stim)
         {
             if (stim == null)
                 stim = new();
@@ -75,17 +86,12 @@ namespace SiliFish.UI.Controls
             };
             return stim;
         }
-
-        private void eValue1_TextChanged(object sender, EventArgs e)
+        internal List<string> CheckValues()
         {
-            if (eValue1.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void eValue2_TextChanged(object sender, EventArgs e)
-        {
-            if (eValue2.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
+            List<string> errors = new();
+            if (ddStimulusMode.SelectedIndex < 0)
+                errors.Add("Stimulus mode not defined.");
+            return errors;
         }
 
     }

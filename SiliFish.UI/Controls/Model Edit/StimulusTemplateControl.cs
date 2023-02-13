@@ -8,30 +8,10 @@ namespace SiliFish.UI.Controls
 {
     public partial class StimulusTemplateControl : UserControl
     {
-        private event EventHandler stimulusChanged;
-        public event EventHandler StimulusChanged
-        {
-            add
-            {
-                stimulusChanged += value;
-                stimControl.StimulusChanged += value;
-            }
-            remove
-            {
-                stimulusChanged -= value;
-                stimControl.StimulusChanged -= value;
-            }
-        }
         private StimulusBase Stimulus;
         public StimulusTemplateControl()
         {
             InitializeComponent();
-            timeLineControl.TimeLineChanged += TimeLineControl_TimeLineChanged;
-        }
-
-        private void TimeLineControl_TimeLineChanged(object sender, EventArgs e)
-        {
-            stimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public override string ToString()
@@ -150,20 +130,6 @@ namespace SiliFish.UI.Controls
             return Stimulus;
         }
 
-        private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddTargetPool.Focused)
-            {
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-        private void ddSagittalPosition_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddSagittalPosition.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
-
-        }
-
         private void cbAllSomites_CheckedChanged(object sender, EventArgs e)
         {
             eTargetSomites.ReadOnly = cbAllSomites.Checked;
@@ -178,6 +144,16 @@ namespace SiliFish.UI.Controls
             lRange.Visible = !cbAllSomites.Checked || !cbAllCells.Checked;
         }
 
+        internal void CheckValues(object sender, EventArgs args)
+        {
+            CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
+            checkValuesArgs.Errors = new();
+            if (ddTargetPool.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("No target pool selected.");
+            if (ddSagittalPosition.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Sagittal position not defined.");
+            checkValuesArgs.Errors.AddRange(stimControl.CheckValues());
+        }
         internal void SetStimulus(object cellPoolTemplates, StimulusTemplate stim)
         {
             Exception exception = new NotImplementedException();

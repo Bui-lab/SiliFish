@@ -1,6 +1,8 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -27,6 +29,13 @@ namespace SiliFish.ModelUnits
         {
             errors ??= new();
             return errors.Count == 0;
+        }
+
+        public virtual ModelUnitBase CreateCopy()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
     }
 }

@@ -62,6 +62,23 @@ namespace SiliFish.ModelUnits.Cells
         {
         }
 
+        public override ModelUnitBase CreateCopy()
+        {
+            Neuron neuron = new()
+            {
+                CellPool = CellPool,
+                CellGroup = CellGroup,
+                Core = CellCoreUnit.CreateCore(this.Core),
+                Coordinate = Coordinate,
+                Model = Model,
+                ConductionVelocity = ConductionVelocity,
+                Somite = Somite,
+                Sequence = CellPool.GetMaxCellSequence(Somite) + 1,
+                PositionLeftRight = PositionLeftRight,
+                TimeLine_ms = new(TimeLine_ms)
+            };
+            return neuron;
+        }
         public override void LinkObjects(RunningModel model, CellPool pool)
         {
             base.LinkObjects(model, pool);

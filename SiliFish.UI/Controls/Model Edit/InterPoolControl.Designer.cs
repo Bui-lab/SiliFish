@@ -54,11 +54,11 @@
             this.numMaxAscReach = new System.Windows.Forms.NumericUpDown();
             this.numMaxDescReach = new System.Windows.Forms.NumericUpDown();
             this.numMinDescReach = new System.Windows.Forms.NumericUpDown();
+            this.numProbability = new System.Windows.Forms.NumericUpDown();
+            this.lProbability = new System.Windows.Forms.Label();
             this.gSynapse = new System.Windows.Forms.GroupBox();
             this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
             this.cbActive = new System.Windows.Forms.CheckBox();
-            this.numProbability = new System.Windows.Forms.NumericUpDown();
-            this.lProbability = new System.Windows.Forms.Label();
             this.lName = new System.Windows.Forms.Label();
             this.lDescription = new System.Windows.Forms.Label();
             this.eName = new System.Windows.Forms.TextBox();
@@ -85,8 +85,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).BeginInit();
-            this.gSynapse.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numProbability)).BeginInit();
+            this.gSynapse.SuspendLayout();
             this.grReach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -373,6 +373,37 @@
             this.toolTip1.SetToolTip(this.numMinDescReach, "The number of maximum connections the target cell can have from the same source p" +
         "ool.\r\nEnter 0 if there is no such limit.");
             // 
+            // numProbability
+            // 
+            this.numProbability.DecimalPlaces = 2;
+            this.numProbability.Location = new System.Drawing.Point(109, 162);
+            this.numProbability.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numProbability.Name = "numProbability";
+            this.numProbability.Size = new System.Drawing.Size(66, 23);
+            this.numProbability.TabIndex = 17;
+            this.toolTip1.SetToolTip(this.numProbability, "The probability of whether there will be a connection between the source and targ" +
+        "et cell.");
+            this.numProbability.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lProbability
+            // 
+            this.lProbability.AutoSize = true;
+            this.lProbability.Location = new System.Drawing.Point(13, 165);
+            this.lProbability.Name = "lProbability";
+            this.lProbability.Size = new System.Drawing.Size(64, 15);
+            this.lProbability.TabIndex = 16;
+            this.lProbability.Text = "Probability";
+            this.toolTip1.SetToolTip(this.lProbability, "The probability of whether there will be a connection between the source and targ" +
+        "et cell.");
+            // 
             // gSynapse
             // 
             this.gSynapse.Controls.Add(this.synapseControl);
@@ -405,38 +436,6 @@
             this.cbActive.TabIndex = 0;
             this.cbActive.Text = "Active";
             this.cbActive.UseVisualStyleBackColor = true;
-            this.cbActive.CheckedChanged += new System.EventHandler(this.cbActive_CheckedChanged);
-            // 
-            // numProbability
-            // 
-            this.numProbability.DecimalPlaces = 2;
-            this.numProbability.Location = new System.Drawing.Point(109, 162);
-            this.numProbability.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numProbability.Name = "numProbability";
-            this.numProbability.Size = new System.Drawing.Size(66, 23);
-            this.numProbability.TabIndex = 17;
-            this.toolTip1.SetToolTip(this.numProbability, "The probability of whether there will be a connection between the source and targ" +
-        "et cell.");
-            this.numProbability.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // lProbability
-            // 
-            this.lProbability.AutoSize = true;
-            this.lProbability.Location = new System.Drawing.Point(13, 165);
-            this.lProbability.Name = "lProbability";
-            this.lProbability.Size = new System.Drawing.Size(64, 15);
-            this.lProbability.TabIndex = 16;
-            this.lProbability.Text = "Probability";
-            this.toolTip1.SetToolTip(this.lProbability, "The probability of whether there will be a connection between the source and targ" +
-        "et cell.");
             // 
             // lName
             // 
@@ -684,8 +683,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).EndInit();
-            this.gSynapse.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numProbability)).EndInit();
+            this.gSynapse.ResumeLayout(false);
             this.grReach.ResumeLayout(false);
             this.grReach.PerformLayout();
             this.splitContainerMain.Panel1.ResumeLayout(false);
