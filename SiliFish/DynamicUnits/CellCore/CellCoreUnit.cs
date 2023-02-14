@@ -31,11 +31,13 @@ namespace SiliFish.DynamicUnits
             return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
         }
 
-        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double dt_run, double dt_euler)
+        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)
         {
             CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
-            core.deltaTEuler = dt_euler;
-            core.deltaT = dt_run;
+            if (dt_euler != null) 
+                core.deltaTEuler = (double)dt_euler;
+            if (dt_run != null)
+                core.deltaT = (double)dt_run;
             return core;
         }
 
@@ -53,7 +55,7 @@ namespace SiliFish.DynamicUnits
         /// <returns></returns>
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
-            CellCoreUnit core = CreateCore(coreType, null, 0, 0);
+            CellCoreUnit core = CreateCore(coreType, null);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
 
@@ -136,7 +138,7 @@ namespace SiliFish.DynamicUnits
         public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
             errors ??= new();
-            CellCoreUnit core = CreateCore(coreType, param, 0.1, 0.1);
+            CellCoreUnit core = CreateCore(coreType, param);
             return core.CheckValues(ref errors);
         }
 

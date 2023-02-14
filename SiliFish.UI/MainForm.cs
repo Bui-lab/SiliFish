@@ -167,7 +167,7 @@ namespace SiliFish.UI
             ControlContainer controlContainer = new();
             controlContainer.Text = "Settings";
             GlobalSettingsControl gsc = new(new GlobalSettingsProperties());
-            controlContainer.AddControl(gsc);
+            controlContainer.AddControl(gsc, null);
             if (controlContainer.ShowDialog() == DialogResult.OK)
                 gsc.GSProperties.Save();//save to global.settings 
             else 
@@ -287,7 +287,7 @@ namespace SiliFish.UI
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
             dynControl.CoreChanged += DynControl_CoreChanged;
             frmDynamics = new();
-            frmDynamics.AddControl(dynControl);
+            frmDynamics.AddControl(dynControl, null);
             frmDynamics.Text = "Cellular Dynamics Test";
             frmDynamics.SaveVisible = false;
             frmDynamics.Show();

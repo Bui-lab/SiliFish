@@ -269,7 +269,8 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 pool.LinkObjects(this);
             }
-        }        
+        }
+
         public override void BackwardCompatibility()
         { }
 

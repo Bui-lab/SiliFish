@@ -7,6 +7,9 @@ using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
+using SiliFish.Services;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -54,6 +57,22 @@ namespace SiliFish.ModelUnits.Junction
             DistanceMode = distmode;
         }
 
+        public GapJunction(GapJunction gapJunction) : base(gapJunction)
+        {
+            Cell1 = gapJunction.Cell1;
+            Cell2 = gapJunction.Cell2;
+        }
+
+        public override void LinkObjects()
+        {
+            Cell1.GapJunctions.Add(this);
+            Cell2.GapJunctions.Add(this);
+        }
+        public override void UnlinkObjects()
+        {
+            Cell1.GapJunctions.Remove(this);
+            Cell2.GapJunctions.Remove(this);
+        }
         public void LinkObjects(RunningModel model)
         {
             CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();

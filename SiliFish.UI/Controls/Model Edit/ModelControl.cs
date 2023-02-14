@@ -248,8 +248,7 @@ namespace SiliFish.UI.Controls
             cplControl.SavePool += Cpl_SavePool;
 
             cplControl.PoolBase = pool;
-            frmControl.AddControl(cplControl);
-            frmControl.CheckValues += cplControl.CheckValues;
+            frmControl.AddControl(cplControl, cplControl.CheckValues);
 
             frmControl.Text = pool?.ToString() ?? "New Cell Pool";
 
@@ -387,14 +386,12 @@ namespace SiliFish.UI.Controls
         {
             if (Model == null) return null;
             if (CurrentMode == RunMode.Template) return null;
-            //MODEL EDIT 
             ControlContainer frmControl = new();
             CellControl cellControl = new(Model as RunningModel)
             {
                 Cell = cell
             };
-            frmControl.AddControl(cellControl);
-            frmControl.CheckValues += cellControl.CheckValues;
+            frmControl.AddControl(cellControl, cellControl.CheckValues);
 
             frmControl.Text = cell?.ToString() ?? "New Cell";
 
@@ -568,7 +565,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private JunctionBase OpenConnectionDialog(JunctionBase interpool, bool newJunc)
+        private List<JunctionBase> OpenConnectionDialog(JunctionBase interpool, bool newJunc)
         {
             if (Model == null) return null;
             if (CurrentMode == RunMode.Template)
@@ -578,32 +575,27 @@ namespace SiliFish.UI.Controls
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
-                frmControl.AddControl(ipControl);
+                frmControl.AddControl(ipControl, ipControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
-                frmControl.CheckValues += ipControl.CheckValues;
 
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     interPoolTemplate = ipControl.GetInterPoolTemplate();
                     modelTemplate.LinkObjects(interPoolTemplate);
-                    return interPoolTemplate;
+                    return new List<JunctionBase> { interPoolTemplate };
                 }
             }
             else
             {
-                //MODEL EDIT
                 ControlContainer frmControl = new();
                 JunctionControl jncControl = new(Model as RunningModel); 
                 jncControl.SetJunction(interpool, newJunc);
-                frmControl.AddControl(jncControl);
+                frmControl.AddControl(jncControl, jncControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
-                frmControl.CheckValues += jncControl.CheckValues;
 
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
-                    interpool = jncControl.GetJunction();
-                    //TODO modelTemplate.LinkObjects(interPoolTemplate);
-                    return interpool;
+                    return jncControl.GetJunctions();
                 }                
             }
             return null;
@@ -611,41 +603,53 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_ItemAdd(object sender, EventArgs e)
         {
-            JunctionBase newJnc = OpenConnectionDialog(null, true);
-            if (newJnc != null)
+            List<JunctionBase> jncs = OpenConnectionDialog(null, true);
+            if (jncs != null && jncs.Any())
             {
-                Model.AddJunction(newJnc);
-                listConnections.AppendItem(newJnc);
+                foreach (JunctionBase jb in jncs)
+                {
+                    if (jb is InterPoolTemplate)
+                        Model.AddJunction((InterPoolTemplate)jb);
+                    else
+                        jb.LinkObjects();
+                    listConnections.AppendItem(jb);
+                }
                 ModelIsUpdated();
             }
         }
         private void listConnections_ItemCopy(object sender, EventArgs e)
         {
-            if (Model == null) return ;
+            if (Model == null) return;
             if (listConnections.SelectedItem == null)
                 return;
-            if (CurrentMode == RunMode.Template)
+            JunctionBase jnc = null;
+            if (listConnections.SelectedItem is GapJunction gapJunction)
+                jnc = new GapJunction(gapJunction);
+            else if (listConnections.SelectedItem is ChemicalSynapse synapse)
+                jnc = new ChemicalSynapse(synapse);
+            List<JunctionBase> jncs = OpenConnectionDialog(jnc, true);
+            if (jncs != null && jncs.Any())
             {
-                InterPoolTemplate jnc = new(listConnections.SelectedItem as InterPoolTemplate);
-                jnc = OpenConnectionDialog(jnc, true) as InterPoolTemplate;
-                if (jnc != null)
+                foreach (JunctionBase jb in jncs)
                 {
-                    Model.AddJunction(jnc);
-                    listConnections.AppendItem(jnc);
+                    if (jb is InterPoolTemplate)
+                        Model.AddJunction((InterPoolTemplate)jb);
+                    else
+                        jb.LinkObjects();
+                    listConnections.AppendItem(jb);
                 }
                 ModelIsUpdated();
-            }
-            else
-            {
-                MessageBox.Show("Implementation in progress.", "Model Edit");
-                //MODEL EDIT JunctionControl jncControl = new();
             }
         }
         private void listConnections_ItemDelete(object sender, EventArgs e)
         {
             if (listConnections.SelectedIndex >= 0)
             {
-                Model.RemoveJunction(listConnections.SelectedItem as JunctionBase);
+                if (listConnections.SelectedItem is InterPoolTemplate ipt)
+                    Model.RemoveJunction(ipt);
+                else if (listConnections.SelectedItem is JunctionBase jb)
+                    jb.UnlinkObjects();
+
                 listConnections.RemoveItemAt(listConnections.SelectedIndex);
                 ModelIsUpdated();
             }
@@ -655,8 +659,8 @@ namespace SiliFish.UI.Controls
             if (listConnections.SelectedItem == null)
                 return;
             JunctionBase jnc = listConnections.SelectedItem as JunctionBase;
-            jnc = OpenConnectionDialog(jnc, false); //check modeltemplate's list
-            if (jnc != null)
+            List<JunctionBase> jncs = OpenConnectionDialog(jnc, false);
+            if (jncs != null && jncs.Any())
             {
                 int ind = listConnections.SelectedIndex;
                 listConnections.RefreshItem(ind, jnc);
@@ -789,8 +793,7 @@ namespace SiliFish.UI.Controls
                     stimControl.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
                 else
                     stimControl.SetStimulus((Model as RunningModel).CellPools, stim as Stimulus);
-                frmControl.AddControl(stimControl);
-                frmControl.CheckValues += stimControl.CheckValues;
+                frmControl.AddControl(stimControl, stimControl.CheckValues);
 
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
 

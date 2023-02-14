@@ -263,7 +263,7 @@ namespace SiliFish.UI.Controls
             dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
             dynControl.CoreChanged += DynControl_CoreChanged;
             frmDynamicControl = new();
-            frmDynamicControl.AddControl(dynControl);
+            frmDynamicControl.AddControl(dynControl, null);
             frmDynamicControl.Text = eGroupName.Text;
             frmDynamicControl.SaveVisible = false;
             frmDynamicControl.Show();

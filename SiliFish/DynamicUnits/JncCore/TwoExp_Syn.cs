@@ -10,7 +10,7 @@ namespace SiliFish.DynamicUnits
     {
         public double DeltaT, DeltaTEuler;
 
-        public double taur{ get; set; }
+        public double TauR{ get; set; }
         public double TauD{ get; set; }
         public double Vth{ get; set; }
         public double ERev { get; set; }
@@ -25,16 +25,29 @@ namespace SiliFish.DynamicUnits
             DeltaTEuler = eulerdt;
             //Set synapse constants.
             TauD = param.TauD;
-            taur = param.TauR;
+            TauR = param.TauR;
             Vth = param.VTh;
             ERev = param.E_rev;
             Conductance = conductance; //unitary conductance
         }
 
+        public TwoExp_syn(TwoExp_syn copyFrom)
+        {
+            DeltaT = copyFrom.DeltaT;
+            DeltaTEuler = copyFrom.DeltaTEuler;
+            //Set synapse constants.
+            TauD = copyFrom.TauD;
+            TauR = copyFrom.TauR;
+            Vth = copyFrom.Vth;
+            ERev = copyFrom.ERev;
+            Conductance = copyFrom.Conductance; //unitary conductance
+        }
+
+
         public bool CheckValues(ref List<string> errors)
         {
             errors ??= new();
-            if (TauD < GlobalSettings.Epsilon || taur < GlobalSettings.Epsilon)
+            if (TauD < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             if (Conductance < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
@@ -53,7 +66,7 @@ namespace SiliFish.DynamicUnits
                     IsynA += (ERev - v2) * Conductance;
                     IsynB += (ERev - v2) * Conductance;
                     double dIsynA = -1 / TauD * IsynA;
-                    double dIsynB = -1 / taur * IsynB;
+                    double dIsynB = -1 / TauR * IsynB;
                     IsynANew = IsynA + DeltaTEuler * dIsynA;
                     IsynBNew = IsynB + DeltaTEuler * dIsynB;
                     break;
@@ -62,7 +75,7 @@ namespace SiliFish.DynamicUnits
                 {
                     // no synaptic event
                     double dIsynA = -1 / TauD * IsynA;
-                    double dIsynB = -1 / taur * IsynB;
+                    double dIsynB = -1 / TauR * IsynB;
                     IsynANew = IsynA + DeltaTEuler * dIsynA;
                     IsynBNew = IsynB + DeltaTEuler * dIsynB;
                 }

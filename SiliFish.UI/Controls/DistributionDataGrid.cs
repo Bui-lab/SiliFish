@@ -30,7 +30,7 @@ namespace SiliFish.UI.Controls
                 AbsoluteEnforced = true
             };
             ControlContainer frmControl = new();
-            frmControl.AddControl(distControl);
+            frmControl.AddControl(distControl, null);
             frmControl.Text = dgDistribution[colField.Index, rowind].Value.ToString();
             if (dgDistribution.Rows[rowind].Tag is Distribution dist)
                 distControl.SetDistribution(dist);

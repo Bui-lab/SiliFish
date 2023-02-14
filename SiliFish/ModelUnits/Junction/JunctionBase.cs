@@ -1,8 +1,13 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -31,5 +36,20 @@ namespace SiliFish.ModelUnits.Junction
             Delay_ms = jnc.Delay_ms;
             Weight = jnc.Weight;
         }
+
+        public virtual void LinkObjects()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void UnlinkObjects()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+
+
     }
 }

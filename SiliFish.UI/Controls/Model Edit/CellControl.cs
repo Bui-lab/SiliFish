@@ -6,6 +6,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.Repositories;
 using System.ComponentModel;
 using static SiliFish.UI.Controls.DynamicsTestControl;
 
@@ -56,7 +57,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            CellCoreUnit core = CellCoreUnit.CreateCore(coreType, null, 0, 0);
+            CellCoreUnit core = CellCoreUnit.CreateCore(coreType, null);
             propCore.SelectedObject = core;
         }
         private void linkLoadCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -133,21 +134,13 @@ namespace SiliFish.UI.Controls
             {
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
 
-                string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
-                if (string.IsNullOrEmpty(JSONString))
-                    return;
-                //the core is saved as an array to benefit from $type tag added by the JsonSerializer
-                CellCoreUnit[] arr = (CellCoreUnit[])JsonUtil.ToObject(typeof(CellCoreUnit[]), JSONString);
-                if (arr != null && arr.Any())
+                CellCoreUnit core = CellCoreUnitFile.Load(openFileJson.FileName);
+                if (core != null)
                 {
-                    CellCoreUnit core = arr[0];
-                    if (core != null)
-                    {
-                        skipCoreTypeChange = true;
-                        ddCoreType.Text = core.CoreType;
-                        skipCoreTypeChange = false;
-                        //MODEL EDIT
-                    }
+                    skipCoreTypeChange = true;
+                    ddCoreType.Text = core.CoreType;
+                    propCore.SelectedObject = core;
+                    skipCoreTypeChange = false;
                 }
             }
         }
@@ -159,7 +152,7 @@ namespace SiliFish.UI.Controls
             dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
             dynControl.CoreChanged += DynControl_CoreChanged;
             frmDynamicControl = new();
-            frmDynamicControl.AddControl(dynControl);
+            frmDynamicControl.AddControl(dynControl, null);
             frmDynamicControl.Text = cell.ID;
             frmDynamicControl.SaveVisible = false;
             frmDynamicControl.Show();
@@ -175,9 +168,12 @@ namespace SiliFish.UI.Controls
         {
             if (e is not UpdatedParamsEventArgs args || args.ParamsAsDistribution == null)
                 return;
-            cell.Core.Parameters = args.ParamsAsDouble;
-            //MODEL EDIT cell.Core.CoreType = args.CoreType;
+            if (args.CoreType != cell.Core.CoreType)
+                cell.Core = CellCoreUnit.CreateCore(args.CoreType, args.ParamsAsDouble);
+            else
+                cell.Core.Parameters = args.ParamsAsDouble;
             ddCoreType.Text = cell.Core.CoreType.ToString();
+            propCore.SelectedObject = cell.Core;
             MessageBox.Show($"Parameters are carried to {cell.ID}", "SiliFish");
         }
 

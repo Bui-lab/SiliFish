@@ -112,7 +112,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             get
             {
-                string Threshold_property = CellCoreUnit.CreateCore(CoreType, null, 0, 0)?.VThresholdParamName;
+                string Threshold_property = CellCoreUnit.CreateCore(CoreType, null)?.VThresholdParamName;
                 if (Parameters.ContainsKey(Threshold_property))
                     return Parameters.ReadDouble(Threshold_property);
                 return null;
@@ -123,7 +123,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             get
             {
-                string Reversal_property = CellCoreUnit.CreateCore(CoreType, null, 0, 0)?.VReversalParamName;
+                string Reversal_property = CellCoreUnit.CreateCore(CoreType, null)?.VReversalParamName;
 
                 if (Parameters.ContainsKey(Reversal_property))
                     return Parameters.ReadDouble(Reversal_property);

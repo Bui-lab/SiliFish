@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,15 +37,22 @@ namespace SiliFish.Services
                 else
                     File.WriteAllText(logFile, string.Empty);
             }
-            string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}\r\n";
+            string stackTrace = "";
+            try
+            {
+                stackTrace = (new StackTrace(ex, true)).ToString();
+            }
+            catch { }
+            string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}\r\n{stackTrace}";
             File.AppendAllText(logFile, logMsg);
         }
 
+        /// <summary>
+        ///ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex); 
+        /// </summary>
         public static void ExceptionHandling(string name, Exception ex)
         {
             LogException(name, ex);
         }
-
-        //ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
     }
 }

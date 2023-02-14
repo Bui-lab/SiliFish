@@ -190,7 +190,6 @@
             this.cbActive.TabIndex = 0;
             this.cbActive.Text = "Active";
             this.cbActive.UseVisualStyleBackColor = true;
-            this.cbActive.CheckedChanged += new System.EventHandler(this.cbActive_CheckedChanged);
             // 
             // timeLineControl
             // 

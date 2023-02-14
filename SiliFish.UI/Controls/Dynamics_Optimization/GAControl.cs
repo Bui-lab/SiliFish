@@ -184,6 +184,11 @@ namespace SiliFish.UI.Controls
             if (fitnessFunction != null)
             {
                 fitness.SetFitnessFunction(fitnessFunction);
+                dgFitnessFunctions.Rows.Add();
+                int rowInd = dgFitnessFunctions.RowCount - 1;
+                dgFitnessFunctions[colFFMode.Index, rowInd].Value = fitnessFunction.FitnessFunctionType;
+                dgFitnessFunctions[colFFWeight.Index, rowInd].Value = fitnessFunction.Weight;
+                dgFitnessFunctions[colFFFunction.Index, rowInd].Value = fitnessFunction.ToString();
             }
         }
         private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -203,6 +208,7 @@ namespace SiliFish.UI.Controls
             foreach (Control ctrl in FitnessControls)
                 pfGAParams.Controls.Remove(ctrl);
             FitnessControls.Clear();
+            dgFitnessFunctions.Rows.Clear();
         }
 
         private void LoadFitnessControls()

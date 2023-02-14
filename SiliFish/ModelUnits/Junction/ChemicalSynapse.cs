@@ -34,9 +34,17 @@ namespace SiliFish.ModelUnits.Junction
                 {
                     E_rev = Core.ERev,
                     TauD = Core.TauD,
-                    TauR = Core.TauD,
+                    TauR = Core.TauR,
                     VTh = Core.Vth
                 };
+            }
+            set
+            {
+                if (Core == null) return;
+                Core.ERev = value.E_rev;
+                Core.TauD = value.TauD;
+                Core.TauR = value.TauR;
+                Core.Vth = value.VTh;
             }
         }
         public Neuron PreNeuron;
@@ -63,12 +71,37 @@ namespace SiliFish.ModelUnits.Junction
             Weight = conductance;
         }
 
+
+        public ChemicalSynapse(ChemicalSynapse syn): base(syn)
+        {
+            Core = new TwoExp_syn(syn.Core as TwoExp_syn);
+            PreNeuron = syn.PreNeuron;
+            PostCell = syn.PostCell;
+        }
+
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
             Core.CheckValues(ref errors);
             return errors.Count == 0;
         }
+        public override void LinkObjects()
+        {
+            PreNeuron.Terminals.Add(this);
+            if (PostCell is MuscleCell mc)
+                mc.EndPlates.Add(this);
+            else if (PostCell is Neuron n)
+                n.Synapses.Add(this);
+        }
+        public override void UnlinkObjects()
+        {
+            PreNeuron.Terminals.Remove(this);
+            if (PostCell is MuscleCell mc)
+                mc.EndPlates.Remove(this);
+            else if (PostCell is Neuron n)
+                n.Synapses.Remove(this);
+        }
+
         public void LinkObjects(RunningModel model)
         {
             CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();

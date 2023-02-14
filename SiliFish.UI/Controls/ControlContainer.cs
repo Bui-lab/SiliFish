@@ -2,7 +2,7 @@
 {
     public partial class ControlContainer : Form
     {
-        public event EventHandler CheckValues;
+        private event EventHandler CheckValues;
         public ControlContainer()
         {
             InitializeComponent();
@@ -21,10 +21,12 @@
                 }
             }
         }
-        public void AddControl(Control ctrl)
+        public void AddControl(Control ctrl, EventHandler eventHandler)
         {
             pMain.Controls.Add(ctrl);
             ctrl.Dock = DockStyle.Fill;
+            if (eventHandler != null)
+                CheckValues += eventHandler;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
