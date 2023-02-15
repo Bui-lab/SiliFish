@@ -190,7 +190,7 @@ namespace SiliFish.Repositories
                         string newJson = "";
                         Regex singleRegex = new("\"(.*\\.)(.*\":.*,)");
                         MatchCollection singleMatch = singleRegex.Matches(parMatch.Value);
-                        for (int j = 0; j< singleMatch.Count ; j++)
+                        for (int j = 0; j < singleMatch.Count; j++)
                         {
                             Match singleParam = singleMatch[j];
                             newJson += $"\"{singleParam.Groups[2]}\r\n";
@@ -198,7 +198,15 @@ namespace SiliFish.Repositories
                         json = json.Remove(index + parMatch.Index, parMatch.Value.Length);
                         newJson = newJson.Replace("V_", "V");//change V_r, V_t, V_max to Vr, Vt, Vmax
                         json = json.Insert(index + parMatch.Index, newJson);
-                    }                    
+                    }
+                    updated = true;
+                }
+            }
+            else
+            {
+                if (json.Contains(".V_"))
+                {
+                    json = json.Replace("V_", "V");
                     updated = true;
                 }
             }
@@ -221,7 +229,8 @@ namespace SiliFish.Repositories
                 }
                 if (FixCoreTypeJson(ref json))
                     list.Add("Cell core parameters");
-                FixCoreParametersJson(ref json);
+                if (FixCoreParametersJson(ref json))
+                    list.Add("Cell core parameters");
                 RemoveOldParameters(ref json);
                 if (FixDistributionJson(ref json))
                     list.Add("Spatial distributions");

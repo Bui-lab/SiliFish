@@ -179,6 +179,7 @@ namespace SiliFish.DataTypes
 
     public class Constant_NoDistribution : Distribution
     {
+        [JsonIgnore]
         public override string Discriminator => "Constant";
 
         public override double UniqueValue
@@ -221,6 +222,7 @@ namespace SiliFish.DataTypes
     }
     public class SpacedDistribution : Distribution
     {
+        [JsonIgnore]
         public override string Discriminator => "Equally Spaced";
 
            public double NoiseStdDev { get; set; } = 0;
@@ -249,6 +251,7 @@ namespace SiliFish.DataTypes
     }
     public class GaussianDistribution : Distribution
     {
+        [JsonIgnore]
         public override string Discriminator => "Gaussian";
 
         public double Mean { get; set; } = 0;
@@ -295,6 +298,7 @@ namespace SiliFish.DataTypes
     }
     public class BimodalDistribution : GaussianDistribution
     {
+        [JsonIgnore]
         public override string Discriminator => "Bimodal";
 
         public override double UniqueValue

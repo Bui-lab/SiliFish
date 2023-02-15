@@ -28,49 +28,8 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore]
         public override string VThresholdParamName { get { return ""; } }
         [JsonIgnore]
-        public override string VReversalParamName { get { return "QIF.Vr"; } }
+        public override string VReversalParamName { get { return GetType().Name+".Vr"; } }
 
-        public override Dictionary<string, double> GetParameters()
-        {
-            Dictionary<string, double> paramDict = new()
-            {
-                { "QIF.Vr", Vr },
-                { "QIF.Vmax", Vmax }
-            };
-            return paramDict;
-        }
-
-        public override void BackwardCompatibility (Dictionary<string, double> paramExternal)
-        {
-            paramExternal.AddObject("QIF.Vr", Vr, skipIfExists: true);
-            paramExternal.AddObject("QIF.Vmax", Vmax, skipIfExists: true);
-        }
-        public override void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            BackwardCompatibility(paramExternal);
-
-            if (paramExternal.TryGetValue("QIF.Vmax", out double Vmax2))
-                Vmax = (double)Vmax2;
-            if (paramExternal.TryGetValue("QIF.Vr", out double Vr2))
-                Vr = (double)Vr2;
-
-            Initialize();
-        }
-
-        public override void SetParameter(string name, double value)
-        {
-            switch (name)
-            {
-                case "QIF.Vr":
-                    Vr = value;
-                    break;
-                case "QIF.Vmax":
-                    Vmax = value;
-                    break;
-            }
-        }
         public override double GetNextVal(double Stim, ref bool spike)
         {
             double dtTracker = 0;

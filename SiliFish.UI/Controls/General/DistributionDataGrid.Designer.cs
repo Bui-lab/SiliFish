@@ -62,10 +62,10 @@
             this.dgDistribution.RowTemplate.Height = 25;
             this.dgDistribution.Size = new System.Drawing.Size(100, 100);
             this.dgDistribution.TabIndex = 10;
-            this.dgDistribution.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellClick);
-            this.dgDistribution.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellContentClick);
+            this.dgDistribution.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDistribution_CellClick);
+            this.dgDistribution.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDistribution_CellContentClick);
             this.dgDistribution.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDistribution_CellDoubleClick);
-            this.dgDistribution.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDynamics_CellEndEdit);
+            this.dgDistribution.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDistribution_CellEndEdit);
             // 
             // colField
             // 

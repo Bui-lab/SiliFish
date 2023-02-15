@@ -1,7 +1,10 @@
-﻿using SiliFish.DynamicUnits;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.Repositories;
 using SiliFish.Services.Optimization;
 using System.Data;
 
@@ -11,7 +14,6 @@ namespace SiliFish.UI.Controls
     {
         private static string GAFileDefaultFolder;
         private string coreType;
-        private List<FitnessFunctionControl> FitnessControls;
         private CoreSolver Solver;
         private CoreSolverOutput SolverOutput;
         private Dictionary<string, double> minValues;
@@ -52,7 +54,6 @@ namespace SiliFish.UI.Controls
             ddGAReinsertion.SelectedIndex = 0;
             ddGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
             ddGATermination.SelectedIndex = 0;
-            FitnessControls = new();
         }
 
         private void RunOptimize()
@@ -140,10 +141,14 @@ namespace SiliFish.UI.Controls
 
         private void ReadFitnessFunctions()
         {
-            List<FitnessFunction> ff = FitnessControls.Select(fc => fc.GetFitnessFunction()).ToList();
-            targetRheobaseFunction = ff.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
-            ff.RemoveAll(fc => fc is TargetRheobaseFunction);
-            fitnessFunctions = ff;
+            List<FitnessFunction> fitnessFunctions =new();
+            for (int rowind=0; rowind<dgFitnessFunctions.RowCount; rowind++)
+            {
+                fitnessFunctions.Add(dgFitnessFunctions.Rows[rowind].Tag as FitnessFunction);
+            }
+            targetRheobaseFunction = fitnessFunctions.FirstOrDefault(fc => fc is TargetRheobaseFunction) as TargetRheobaseFunction;
+            fitnessFunctions.RemoveAll(fc => fc is TargetRheobaseFunction);
+            this.fitnessFunctions = fitnessFunctions;
         }
 
         private void ProgressForm_StopRunClicked(object sender, EventArgs e)
@@ -171,55 +176,76 @@ namespace SiliFish.UI.Controls
             optimizationProgress.ProgressText = progress;
         }
 
-        private void AddFitnessFunction(FitnessFunction fitnessFunction = null)
+        private void FitnessFunctionToGrid(int rowInd, FitnessFunction fitnessFunction)
         {
-            FitnessFunctionControl fitness = new()
-            {
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            pfGAParams.Controls.Add(fitness);
-            pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
-            fitness.RemoveClicked += Fitness_RemoveClicked;
-            FitnessControls.Add(fitness);
-            if (fitnessFunction != null)
-            {
-                fitness.SetFitnessFunction(fitnessFunction);
-                dgFitnessFunctions.Rows.Add();
-                int rowInd = dgFitnessFunctions.RowCount - 1;
-                dgFitnessFunctions[colFFMode.Index, rowInd].Value = fitnessFunction.FitnessFunctionType;
-                dgFitnessFunctions[colFFWeight.Index, rowInd].Value = fitnessFunction.Weight;
-                dgFitnessFunctions[colFFFunction.Index, rowInd].Value = fitnessFunction.ToString();
-            }
+            if (rowInd >= dgFitnessFunctions.RowCount || fitnessFunction == null) return;
+            dgFitnessFunctions.Rows[rowInd].Tag = fitnessFunction;
+            dgFitnessFunctions[colFFMode.Index, rowInd].Value = fitnessFunction.FitnessFunctionType;
+            dgFitnessFunctions[colFFWeight.Index, rowInd].Value = fitnessFunction.Weight;
+            dgFitnessFunctions[colFFFunction.Index, rowInd].Value = fitnessFunction.Details;
         }
-        private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void AddFitnessFunctionRow(FitnessFunction fitnessFunction = null)
         {
-            AddFitnessFunction();
+            if (fitnessFunction == null) return;
+            dgFitnessFunctions.Rows.Add();
+            int rowInd = dgFitnessFunctions.RowCount - 1;
+            FitnessFunctionToGrid(rowInd, fitnessFunction);
         }
 
-        private void Fitness_RemoveClicked(object sender, EventArgs e)
+        private void linkAddFitnessFunction_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            pfGAParams.Controls.Remove(sender as FitnessFunctionControl);
-            pfGAParams.Controls.SetChildIndex(linkAddFitnessFunction, pfGAParams.Controls.Count - 1);
-            FitnessControls.Remove(sender as FitnessFunctionControl);
+            AddFitnessFunctionRow(OpenFitnessFunctionDialog(null));
         }
 
         private void ClearFitnessControls()
         {
-            foreach (Control ctrl in FitnessControls)
-                pfGAParams.Controls.Remove(ctrl);
-            FitnessControls.Clear();
             dgFitnessFunctions.Rows.Clear();
         }
 
-        private void LoadFitnessControls()
+        private void LoadFitnessFunctions()
         {
             ClearFitnessControls();
             if (Solver.Settings.TargetRheobaseFunction!=null)
-                AddFitnessFunction(Solver.Settings.TargetRheobaseFunction);
+                AddFitnessFunctionRow(Solver.Settings.TargetRheobaseFunction);
             foreach (FitnessFunction fitnessFunction in Solver.Settings.FitnessFunctions)
-                AddFitnessFunction(fitnessFunction);
+                AddFitnessFunctionRow(fitnessFunction);
         }
 
+        private FitnessFunction OpenFitnessFunctionDialog(FitnessFunction fitnessFunction)
+        {
+            FitnessFunctionControl fitnessControl = new();
+            fitnessControl.SetFitnessFunction(fitnessFunction);
+            ControlContainer frmControl = new();
+            frmControl.AddControl(fitnessControl, null);
+            frmControl.Text = fitnessFunction?.FitnessFunctionType;
+            if (frmControl.ShowDialog() == DialogResult.OK)
+            {
+                fitnessFunction = fitnessControl.GetFitnessFunction();
+                return fitnessFunction;
+            }
+            return null;
+        }
+        private void dgFitnessFunctions_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (e.ColumnIndex == colFFEdit.Index)
+            {
+                FitnessFunction fitnessFunction = dgFitnessFunctions.Rows[e.RowIndex].Tag as FitnessFunction;
+                FitnessFunctionToGrid(e.RowIndex, OpenFitnessFunctionDialog(fitnessFunction));
+            } 
+            else if (e.ColumnIndex == colFFDelete.Index)
+                dgFitnessFunctions.Rows.RemoveAt(e.RowIndex);
+        }
+        private void dgFitnessFunctions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                dgFitnessFunctions.AutoResizeColumns();
+                return;
+            }
+            FitnessFunction fitnessFunction = dgFitnessFunctions.Rows[e.RowIndex].Tag as FitnessFunction;
+            FitnessFunctionToGrid(e.RowIndex, OpenFitnessFunctionDialog(fitnessFunction));
+        }
         private void ddGATermination_SelectedIndexChanged(object sender, EventArgs e)
         {
             toolTip.SetToolTip(lGATerminationParameter, GeneticAlgorithmExtension.GetTerminationParameter(ddGATermination.Text));
@@ -251,22 +277,18 @@ namespace SiliFish.UI.Controls
             openFileJson.InitialDirectory = GAFileDefaultFolder;
             if (openFileJson.ShowDialog() == DialogResult.OK)
             {
-                string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
-                if (string.IsNullOrEmpty(JSONString))
-                    return;
                 try
                 {
                     Solver = new()
                     {
-                        Settings = (CoreSolverSettings)JsonUtil.ToObject(typeof(CoreSolverSettings), JSONString)
+                        Settings = GeneticAlgorithmFile.Load(openFileJson.FileName)
                     };
-
 
                     coreType = Solver.Settings.CoreType;
                     eMinChromosome.Text = Solver.Settings.MinPopulationSize.ToString();
                     eMaxChromosome.Text = Solver.Settings.MaxPopulationSize.ToString();
                     ResetParameters(Solver.Settings.ParamValues, Solver.Settings.MinValues, Solver.Settings.MaxValues);
-                    LoadFitnessControls();
+                    LoadFitnessFunctions();
                     ddGASelection.Text = Solver.Settings.SelectionType;
                     ddGACrossOver.Text = Solver.Settings.CrossOverType;
                     ddGAMutation.Text = Solver.Settings.MutationType;
@@ -291,11 +313,10 @@ namespace SiliFish.UI.Controls
         private void linkSaveGAParams_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             CreateSolver();
-            string JSONString = JsonUtil.ToJson(Solver.Settings);
             saveFileJson.InitialDirectory = GAFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {
-                FileUtil.SaveToFile(saveFileJson.FileName, JSONString);
+                GeneticAlgorithmFile.Save(saveFileJson.FileName, Solver.Settings);
                 GAFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
             }
         }

@@ -59,6 +59,7 @@ namespace SiliFish.UI.Controls
         }
         public void SetFitnessFunction(FitnessFunction fitnessFunction)
         {
+            if (fitnessFunction == null) return;
             ddFitnessFunction.Text = fitnessFunction.GetType().Name;
             eFitnessWeight.Text = fitnessFunction.Weight.ToString();
             eMinValue.Text = fitnessFunction.ValueMin.ToString();

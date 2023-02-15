@@ -38,10 +38,6 @@
             this.pMinMax = new System.Windows.Forms.Panel();
             this.linkSuggestMinMax = new System.Windows.Forms.LinkLabel();
             this.dgFitnessFunctions = new System.Windows.Forms.DataGridView();
-            this.colFFMode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFFWeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFFFunction = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pfGAParams = new System.Windows.Forms.FlowLayoutPanel();
             this.linkAddFitnessFunction = new System.Windows.Forms.LinkLabel();
             this.pFitnessFunctions = new System.Windows.Forms.Panel();
             this.btnCalculateFitness = new System.Windows.Forms.Button();
@@ -76,6 +72,11 @@
             this.openFileJson = new System.Windows.Forms.OpenFileDialog();
             this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.colFFMode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFFWeight = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFFFunction = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFFEdit = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.colFFDelete = new System.Windows.Forms.DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitGA)).BeginInit();
             this.splitGA.Panel1.SuspendLayout();
             this.splitGA.Panel2.SuspendLayout();
@@ -87,7 +88,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgMinMaxValues)).BeginInit();
             this.pMinMax.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgFitnessFunctions)).BeginInit();
-            this.pfGAParams.SuspendLayout();
             this.pFitnessFunctions.SuspendLayout();
             this.grTermination.SuspendLayout();
             this.SuspendLayout();
@@ -142,7 +142,6 @@
             // splitGAParams.Panel2
             // 
             this.splitGAParams.Panel2.Controls.Add(this.dgFitnessFunctions);
-            this.splitGAParams.Panel2.Controls.Add(this.pfGAParams);
             this.splitGAParams.Panel2.Controls.Add(this.pFitnessFunctions);
             this.splitGAParams.Size = new System.Drawing.Size(697, 476);
             this.splitGAParams.SplitterDistance = 214;
@@ -209,55 +208,31 @@
             // dgFitnessFunctions
             // 
             this.dgFitnessFunctions.AllowUserToAddRows = false;
+            this.dgFitnessFunctions.AllowUserToDeleteRows = false;
             this.dgFitnessFunctions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgFitnessFunctions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFFMode,
             this.colFFWeight,
-            this.colFFFunction});
+            this.colFFFunction,
+            this.colFFEdit,
+            this.colFFDelete});
             this.dgFitnessFunctions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgFitnessFunctions.Location = new System.Drawing.Point(0, 249);
+            this.dgFitnessFunctions.Location = new System.Drawing.Point(0, 29);
             this.dgFitnessFunctions.Name = "dgFitnessFunctions";
+            this.dgFitnessFunctions.RowHeadersVisible = false;
             this.dgFitnessFunctions.RowTemplate.Height = 25;
-            this.dgFitnessFunctions.Size = new System.Drawing.Size(477, 225);
+            this.dgFitnessFunctions.Size = new System.Drawing.Size(477, 445);
             this.dgFitnessFunctions.TabIndex = 30;
-            // 
-            // colFFMode
-            // 
-            this.colFFMode.HeaderText = "Mode";
-            this.colFFMode.Name = "colFFMode";
-            this.colFFMode.ReadOnly = true;
-            // 
-            // colFFWeight
-            // 
-            this.colFFWeight.HeaderText = "Weight";
-            this.colFFWeight.Name = "colFFWeight";
-            // 
-            // colFFFunction
-            // 
-            this.colFFFunction.HeaderText = "Function";
-            this.colFFFunction.Name = "colFFFunction";
-            this.colFFFunction.ReadOnly = true;
-            // 
-            // pfGAParams
-            // 
-            this.pfGAParams.AutoScroll = true;
-            this.pfGAParams.BackColor = System.Drawing.Color.White;
-            this.pfGAParams.Controls.Add(this.linkAddFitnessFunction);
-            this.pfGAParams.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pfGAParams.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.pfGAParams.Location = new System.Drawing.Point(0, 29);
-            this.pfGAParams.Name = "pfGAParams";
-            this.pfGAParams.Size = new System.Drawing.Size(477, 220);
-            this.pfGAParams.TabIndex = 0;
+            this.dgFitnessFunctions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgFitnessFunctions_CellContentClick);
+            this.dgFitnessFunctions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgFitnessFunctions_CellDoubleClick);
             // 
             // linkAddFitnessFunction
             // 
             this.linkAddFitnessFunction.AutoSize = true;
             this.linkAddFitnessFunction.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkAddFitnessFunction.Location = new System.Drawing.Point(3, 0);
+            this.linkAddFitnessFunction.Location = new System.Drawing.Point(129, 6);
             this.linkAddFitnessFunction.Name = "linkAddFitnessFunction";
-            this.linkAddFitnessFunction.Padding = new System.Windows.Forms.Padding(10);
-            this.linkAddFitnessFunction.Size = new System.Drawing.Size(138, 35);
+            this.linkAddFitnessFunction.Size = new System.Drawing.Size(118, 15);
             this.linkAddFitnessFunction.TabIndex = 1;
             this.linkAddFitnessFunction.TabStop = true;
             this.linkAddFitnessFunction.Text = "Add Fitness Function";
@@ -266,6 +241,7 @@
             // pFitnessFunctions
             // 
             this.pFitnessFunctions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pFitnessFunctions.Controls.Add(this.linkAddFitnessFunction);
             this.pFitnessFunctions.Controls.Add(this.btnCalculateFitness);
             this.pFitnessFunctions.Controls.Add(this.pLineFitnessFunctions);
             this.pFitnessFunctions.Controls.Add(this.lFitnessFunctions);
@@ -596,6 +572,39 @@
             // 
             this.saveFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // colFFMode
+            // 
+            this.colFFMode.HeaderText = "Mode";
+            this.colFFMode.Name = "colFFMode";
+            this.colFFMode.ReadOnly = true;
+            // 
+            // colFFWeight
+            // 
+            this.colFFWeight.HeaderText = "Weight";
+            this.colFFWeight.Name = "colFFWeight";
+            // 
+            // colFFFunction
+            // 
+            this.colFFFunction.HeaderText = "Function";
+            this.colFFFunction.Name = "colFFFunction";
+            this.colFFFunction.ReadOnly = true;
+            // 
+            // colFFEdit
+            // 
+            this.colFFEdit.HeaderText = "";
+            this.colFFEdit.MinimumWidth = 50;
+            this.colFFEdit.Name = "colFFEdit";
+            this.colFFEdit.Text = "Edit";
+            this.colFFEdit.UseColumnTextForLinkValue = true;
+            // 
+            // colFFDelete
+            // 
+            this.colFFDelete.HeaderText = "";
+            this.colFFDelete.MinimumWidth = 50;
+            this.colFFDelete.Name = "colFFDelete";
+            this.colFFDelete.Text = "Delete";
+            this.colFFDelete.UseColumnTextForLinkValue = true;
+            // 
             // GAControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -616,8 +625,6 @@
             this.pMinMax.ResumeLayout(false);
             this.pMinMax.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgFitnessFunctions)).EndInit();
-            this.pfGAParams.ResumeLayout(false);
-            this.pfGAParams.PerformLayout();
             this.pFitnessFunctions.ResumeLayout(false);
             this.pFitnessFunctions.PerformLayout();
             this.grTermination.ResumeLayout(false);
@@ -636,7 +643,6 @@
         private DataGridViewTextBoxColumn colMaxValue;
         private Panel pMinMax;
         private LinkLabel linkSuggestMinMax;
-        private FlowLayoutPanel pfGAParams;
         private LinkLabel linkAddFitnessFunction;
         private Panel pFitnessFunctions;
         private Panel pLineFitnessFunctions;
@@ -675,5 +681,7 @@
         private DataGridViewTextBoxColumn colFFMode;
         private DataGridViewTextBoxColumn colFFWeight;
         private DataGridViewTextBoxColumn colFFFunction;
+        private DataGridViewLinkColumn colFFEdit;
+        private DataGridViewLinkColumn colFFDelete;
     }
 }

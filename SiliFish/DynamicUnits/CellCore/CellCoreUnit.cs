@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
@@ -61,8 +62,6 @@ namespace SiliFish.DynamicUnits
 
         #endregion
 
-        private Dictionary<string, double> parameters; //Used for json and by DynamicsTest only
-
         protected double deltaT, deltaTEuler;
         protected double V = -70;//Keeps the current value of V 
 
@@ -119,16 +118,30 @@ namespace SiliFish.DynamicUnits
 
         public virtual Dictionary<string, double> GetParameters()
         {
-            return parameters;
+            Dictionary<string, double> paramDict = new();
+
+            foreach (var prop in GetType().GetProperties())
+            {
+                if (prop.PropertyType.Name != typeof(double).Name)
+                    continue;
+                paramDict.Add(this.GetType().Name + "." + prop.Name, (double)prop.GetValue(this));
+            }
+            return paramDict;
         }
 
         public virtual void SetParameters(Dictionary<string, double> paramExternal)
         {
-            parameters = paramExternal;
+            if (paramExternal == null || paramExternal.Count == 0)
+                return;
+            foreach (string key in paramExternal.Keys)
+            {
+                SetParameter(key, paramExternal[key]);
+            }
         }
         public virtual void SetParameter(string name, double value)
         {
-            parameters[name] = value;
+            name = name.Replace(GetType().Name + ".", "");
+            this.SetPropertyValue(name, value);
         }
         public virtual bool CheckValues(ref List<string> errors)
         {

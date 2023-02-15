@@ -10,6 +10,15 @@ namespace SiliFish.DynamicUnits
     /// </summary>
     public class HodgkinHuxley : HodgkinHuxleyClassic
     {
+        private static double g_Na_suggestedMinHH = 30;
+        private static double g_Na_suggestedMaxHH = 50;
+        private static double E_K_suggestedMinHH = -80;
+        private static double E_K_suggestedMaxHH = -70;
+        private static double E_Na_suggestedMinHH = 50;
+        private static double E_Na_suggestedMaxHH = 60;
+        private static double E_L_suggestedMinHH = -70;
+        private static double E_L_suggestedMaxHH = -60;
+
         /*protected override double alpha_n { get { return 0.01 * (V + 55) / (1 - Math.Exp((V + 55) / 10)); } }
         protected override double beta_n { get { return 0.125 * Math.Exp(- (V + 65) / 80); } }
         protected override double alpha_m { get { return 0.1 * (V + 40) / (1 - Math.Exp((V + 40) / 10)); } }
@@ -40,12 +49,24 @@ namespace SiliFish.DynamicUnits
             E_K = -77;
             E_Na = 55;
             E_L = -65;
-
             // threshold membrane potential 
             Vt = -57;
             Cm = 1; //the membrane capacitance
-
             V = Vr = -65;
+    }
+        public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
+        {
+            (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = base.GetSuggestedMinMaxValues();
+            string type = GetType().Name;
+            MinValues[type + ".g_Na"] = g_Na_suggestedMinHH;
+            MaxValues[type + ".g_Na"] = g_Na_suggestedMaxHH;
+            MinValues[type + ".E_K"] = E_K_suggestedMinHH;
+            MaxValues[type + ".E_K"] = E_K_suggestedMaxHH;
+            MinValues[type + ".E_Na"] = E_Na_suggestedMinHH;
+            MaxValues[type + ".E_Na"] = E_Na_suggestedMaxHH;
+            MinValues[type + ".E_L"] = E_L_suggestedMinHH;
+            MaxValues[type + ".E_L"] = E_L_suggestedMaxHH;
+            return (MinValues, MaxValues);
         }
 
     }

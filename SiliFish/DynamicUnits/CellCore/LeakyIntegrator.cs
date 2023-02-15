@@ -63,7 +63,7 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore]
         public override string VThresholdParamName { get { return ""; } }
         [JsonIgnore]
-        public override string VReversalParamName { get { return "Leaky_Integrator.Vr"; } }
+        public override string VReversalParamName { get { return GetType().Name + ".Vr"; } }
 
         public override Dictionary<string, double> GetParameters()
         {
@@ -88,68 +88,6 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Leaky integrator: C has 0 value.");
             return errors.Count == 0;
         }
-
-        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
-        {
-            paramExternal.AddObject("Leaky_Integrator.R", R, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.C", C, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Vr", Vr, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Va", Va, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Tmax", Tmax, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.ka", ka, skipIfExists: true);
-            paramExternal.AddObject("Leaky_Integrator.Vmax", Vmax, skipIfExists: true);
-        }
-        public override void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            BackwardCompatibility(paramExternal);
-
-            if (paramExternal.TryGetValue("Leaky_Integrator.R", out double R2))
-                R= (double)R2;
-            if (paramExternal.TryGetValue("Leaky_Integrator.C", out double C2))
-                C= (double)C2;
-            if (paramExternal.TryGetValue("Leaky_Integrator.Vr", out double Vr2))
-                Vr= (double)Vr2;
-            if (paramExternal.TryGetValue("Leaky_Integrator.Va", out double Va2))
-                Va= (double)Va2;
-            if (paramExternal.TryGetValue("Leaky_Integrator.Tmax", out double Tmax2))
-                Tmax= (double)Tmax2;
-            if (paramExternal.TryGetValue("Leaky_Integrator.ka", out double ka2))
-                ka= (double)ka2;
-            if (paramExternal.TryGetValue("Leaky_Integrator.Vmax", out double Vmax2))
-                Vmax= (double)Vmax2;
-            V = Vr;
-        }
-
-        public override void SetParameter(string name, double value)
-        {
-            switch (name)
-            {
-                case "Leaky_Integrator.R":
-                    R = value;
-                    break;
-                case "Leaky_Integrator.C":
-                    C = value;
-                    break;
-                case "Leaky_Integrator.Vr":
-                    Vr = value;
-                    break;
-                case "Leaky_Integrator.Va":
-                    Va = value;
-                    break;
-                case "Leaky_Integrator.Tmax":
-                    Tmax = value;
-                    break;
-                case "Leaky_Integrator.ka":
-                    ka = value;
-                    break;
-                case "Leaky_Integrator.Vmax":
-                    Vmax = value;
-                    break;
-            }
-        }
-
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]
         public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used

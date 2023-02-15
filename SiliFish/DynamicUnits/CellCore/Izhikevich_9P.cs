@@ -1,5 +1,6 @@
 ﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
@@ -57,34 +58,17 @@ namespace SiliFish.DynamicUnits
             u = 0; // b * Vr;
         }
 
-        public override Dictionary<string, double> GetParameters()
-        {
-            Dictionary<string, double> paramDict = new()
-            {
-                { "Izhikevich_9P.a", a },
-                { "Izhikevich_9P.b", b },
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.d", d },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
-                { "Izhikevich_9P.k", k },
-                { "Izhikevich_9P.Cm", Cm }
-            };
-            return paramDict;
-        }
-
         [JsonIgnore]
-        public override string VThresholdParamName { get { return "Izhikevich_9P.V_t"; } } 
+        public override string VThresholdParamName { get { return "Izhikevich_9P.Vt"; } } 
         [JsonIgnore]
-        public override string VReversalParamName { get { return "Izhikevich_9P.V_r"; } }
+        public override string VReversalParamName { get { return "Izhikevich_9P.Vr"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {
                 { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
+                { "Izhikevich_9P.Vmax", Vmax },
+                { "Izhikevich_9P.Vr", Vr },
+                { "Izhikevich_9P.Vt", Vt },
                 { "Izhikevich_9P.a", a_suggestedMin },
                 { "Izhikevich_9P.b", b_suggestedMin },
                 { "Izhikevich_9P.d", d_suggestedMin },
@@ -93,9 +77,9 @@ namespace SiliFish.DynamicUnits
             };
             Dictionary<string, double> MaxValues = new() {
                 { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.V_max", Vmax },
-                { "Izhikevich_9P.V_r", Vr },
-                { "Izhikevich_9P.V_t", Vt },
+                { "Izhikevich_9P.Vmax", Vmax },
+                { "Izhikevich_9P.Vr", Vr },
+                { "Izhikevich_9P.Vt", Vt },
                 { "Izhikevich_9P.a", a_suggestedMax },
                 { "Izhikevich_9P.b", b_suggestedMax },
                 { "Izhikevich_9P.d", d_suggestedMax },
@@ -105,78 +89,8 @@ namespace SiliFish.DynamicUnits
 
             return (MinValues, MaxValues);
         }
-        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
-        {
-            paramExternal.AddObject("Izhikevich_9P.a",a, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.b",b, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.c",c, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.d",d, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.V_max",Vmax, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.V_r",Vr, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.V_t",Vt, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.k",k, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_9P.Cm",Cm, skipIfExists: true);
-        }
-        public override void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            BackwardCompatibility(paramExternal);
 
-            if (paramExternal.TryGetValue("Izhikevich_9P.a", out double a2))
-                a = (double)a2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.b", out double b2))
-                b = (double)b2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.c", out double c2))
-                c = (double)c2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.d", out double d2))
-                d = (double)d2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.V_max", out double Vmax2))
-                Vmax = (double)Vmax2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.V_r", out double Vr2))
-                Vr = (double)Vr2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.V_t", out double Vt2))
-                Vt = (double)Vt2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.k", out double k2))
-                k = (double)k2;
-            if (paramExternal.TryGetValue("Izhikevich_9P.Cm", out double Cm2))
-                Cm = (double)Cm2;
 
-        }
-
-        public override void SetParameter(string name, double value)
-        {
-            switch (name)
-            {
-                case "Izhikevich_9P.a":
-                    a = value;
-                    break;
-                case "Izhikevich_9P.b":
-                    b = value;
-                    break;
-                case "Izhikevich_9P.c":
-                    c = value;
-                    break;
-                case "Izhikevich_9P.d":
-                    d = value;
-                    break;
-                case "Izhikevich_9P.V_max":
-                    Vmax = value;
-                    break;
-                case "Izhikevich_9P.V_r":
-                    Vr = value;
-                    break;
-                case "Izhikevich_9P.V_t":
-                    Vt = value;
-                    break;
-                case "Izhikevich_9P.k":
-                    k = value;
-                    break;
-                case "Izhikevich_9P.Cm":
-                    Cm = value;
-                    break;
-            }
-        }
         public override double GetNextVal(double I, ref bool spike)
         {
             double vNew, uNew;

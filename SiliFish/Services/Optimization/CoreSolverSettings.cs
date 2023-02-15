@@ -17,7 +17,7 @@ namespace SiliFish.Services.Optimization
         private int[] numBits = null;
         private int[] decimalDigits = null;
 
-
+        public string Version { get; set; }
         public double DeltaT { get; set; }
         public double DeltaTEuler { get; set; }
         public string SelectionType { get; set; }

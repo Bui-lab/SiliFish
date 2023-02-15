@@ -43,96 +43,33 @@ namespace SiliFish.DynamicUnits
             SetParameters(paramExternal);
             Initialize();
         }
-        public override Dictionary<string, double> GetParameters()
-        {
-            Dictionary<string, double> paramDict = new()
-            {
-                { "Izhikevich_5P.a", a },
-                { "Izhikevich_5P.b", b },
-                { "Izhikevich_5P.c", c },
-                { "Izhikevich_5P.d", d },
-                { "Izhikevich_5P.V_max", Vmax },
-                { "Izhikevich_5P.V_r", Vr }
-            };
-            return paramDict;
-        }
+
         [JsonIgnore]
         public override string VThresholdParamName { get { return ""; } }
         [JsonIgnore] 
-        public override string VReversalParamName { get { return "Izhikevich_5P.V_r"; } }
+        public override string VReversalParamName { get { return GetType().Name + ".Vr"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
+            string type = GetType().Name;
+
             Dictionary<string, double> MinValues = new() {
-                { "Izhikevich_5P.c", c },
-                { "Izhikevich_5P.V_max", Vmax },
-                { "Izhikevich_5P.V_r", Vr },
-                { "Izhikevich_5P.a", a_suggestedMin },
-                { "Izhikevich_5P.b", b_suggestedMin },
-                { "Izhikevich_5P.d", d_suggestedMin }
+                { type+".c", c },
+                { type+".Vmax", Vmax },
+                { type+".Vr", Vr },
+                { type+".a", a_suggestedMin },
+                { type+".b", b_suggestedMin },
+                { type+".d", d_suggestedMin }
             };
             Dictionary<string, double> MaxValues = new() {
-                { "Izhikevich_5P.c", c },
-                { "Izhikevich_5P.V_max", Vmax },
-                { "Izhikevich_5P.V_r", Vr },
-                { "Izhikevich_5P.a", a_suggestedMax },
-                { "Izhikevich_5P.b", b_suggestedMax },
-                { "Izhikevich_5P.d", d_suggestedMax }
+                { type+".c", c },
+                { type+".Vmax", Vmax },
+                { type+".Vr", Vr },
+                { type+".a", a_suggestedMax },
+                { type+".b", b_suggestedMax },
+                { type+".d", d_suggestedMax }
             };
 
             return (MinValues, MaxValues);
-        }
-
-        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
-        {
-            paramExternal.AddObject("Izhikevich_5P.a", a, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_5P.b", b, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_5P.c", c, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_5P.d", d, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_5P.V_max", Vmax, skipIfExists: true);
-            paramExternal.AddObject("Izhikevich_5P.V_r", Vr, skipIfExists: true);
-        }
-        public override void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            BackwardCompatibility(paramExternal);
-            if (paramExternal.TryGetValue("Izhikevich_5P.a", out double a2))
-                a = (double)a2;
-            if (paramExternal.TryGetValue("Izhikevich_5P.b", out double b2))
-                b = (double)b2;
-            if (paramExternal.TryGetValue("Izhikevich_5P.c", out double c2))
-                c = (double)c2;
-            if (paramExternal.TryGetValue("Izhikevich_5P.d", out double d2))
-                d = (double)d2;
-            if (paramExternal.TryGetValue("Izhikevich_5P.V_max", out double Vmax2))
-                Vmax = (double)Vmax2;
-            if (paramExternal.TryGetValue("Izhikevich_5P.V_r", out double Vr2))
-                Vr = (double)Vr2;
-        }
-
-        public override void SetParameter(string name, double value)
-        {
-            switch (name)
-            {
-                case "Izhikevich_5P.a":
-                    a = value;
-                    break;
-                case "Izhikevich_5P.b":
-                    b = value;
-                    break;
-                case "Izhikevich_5P.c":
-                    c = value;
-                    break;
-                case "Izhikevich_5P.d":
-                    d = value;
-                    break;
-                case "Izhikevich_5P.V_max":
-                    Vmax = value;
-                    break;
-                case "Izhikevich_5P.V_r":
-                    Vr = value;
-                    break;
-            }
         }
 
         public override double GetNextVal(double I, ref bool spike)

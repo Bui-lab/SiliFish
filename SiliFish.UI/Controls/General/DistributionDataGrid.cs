@@ -13,16 +13,6 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
         }
 
-        private void ResizeColumns()
-        {
-            dgDistribution.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            int[]colWidths = new int[dgDistribution.ColumnCount];
-            for (int colind = 0; colind<dgDistribution.ColumnCount; colind++)
-                colWidths[colind] = dgDistribution.Columns[colind].Width;
-            dgDistribution.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-            for (int colind = 0; colind < dgDistribution.ColumnCount; colind++)
-                dgDistribution.Columns[colind].Width = colWidths[colind];
-        }
         private void OpenDistributionDialog(int rowind)
         {
             DistributionControl distControl = new()
@@ -49,7 +39,7 @@ namespace SiliFish.UI.Controls
                     WriteDistToRow(null, dist, rowind);
             }
         }
-        private void dgDynamics_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dgDistribution_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
             if (e.ColumnIndex == colDistEditLink.Index)
@@ -57,7 +47,7 @@ namespace SiliFish.UI.Controls
                 OpenDistributionDialog(e.RowIndex);
             }
         }
-        private void dgDynamics_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgDistribution_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
             if (dgDistribution.Rows[e.RowIndex].Tag is Distribution dist)
@@ -70,7 +60,7 @@ namespace SiliFish.UI.Controls
             else
                 dgDistribution[colUniqueValue.Index, e.RowIndex].ReadOnly = false;
         }
-        private void dgDynamics_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void dgDistribution_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             dgDistribution.Rows[e.RowIndex].Tag = null;
         }
@@ -78,7 +68,7 @@ namespace SiliFish.UI.Controls
         {
             if (e.RowIndex < 0)
             {
-                ResizeColumns();
+                dgDistribution.AutoResizeColumns();
                 return;
             }
             OpenDistributionDialog(e.RowIndex);

@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.Services.Optimization
 {
@@ -25,7 +27,17 @@ namespace SiliFish.Services.Optimization
 
         public bool RheobaseBased { get; set; }//valid only if CurrentRequired = true
         public double CurrentValueOrRheobaseMultiplier { get; set; }//valid only if CurrentRequired = true
-
+        [JsonIgnore]
+        public virtual string Details
+        {
+            get
+            {
+                string minmaxInfo = MinMaxExists ? $"[{ValueMin:0.###}-{ValueMax:0.###}];" : "";
+                string rheobaseMult = CurrentRequired && RheobaseBased ? " Rheobase x " : "";
+                string currentInfo = CurrentRequired ? $"Current: {rheobaseMult}{CurrentValueOrRheobaseMultiplier:0.###};" : "";
+                return $"{minmaxInfo} {currentInfo}";
+            }
+        }
         public virtual double CalculateFitness(DynamicsStats stat)
         {
             Exception exception = new NotImplementedException();
@@ -92,6 +104,14 @@ namespace SiliFish.Services.Optimization
     public class FiringRhythmFunction : FitnessFunction
     {
         public FiringRhythm TargetRhythm { get; set; }
+        [JsonIgnore]
+        public override string Details
+        {
+            get
+            {
+                return $"{base.Details} Target Rhythm: {TargetRhythm}";
+            }
+        }
         public FiringRhythmFunction()
         {
             MinMaxExists = false;
@@ -129,6 +149,15 @@ namespace SiliFish.Services.Optimization
     {
         public FiringPattern TargetPattern { get; set; }
 
+        [JsonIgnore]
+        public override string Details
+        {
+            get
+            {
+                return $"{base.Details} Target Pattern: {TargetPattern}";
+            }
+        }
+
         public FiringPatternFunction()
         {
             MinMaxExists = false;
@@ -147,22 +176,20 @@ namespace SiliFish.Services.Optimization
             if (stat.FiringPattern == FiringPattern.NoSpike)
                 return 0;
             double irregularity = stat.Irregularity;
-            
-            switch (TargetPattern)
-            {
-                case FiringPattern.NoSpike:
-                    return 0;
-                case FiringPattern.Spiking://the lower irregularity should give a higher fitness value
-                    return Weight * Math.Max(0, (1 - irregularity));
-                case FiringPattern.Bursting://the higher irregularity should give a higher fitness value
-                    return Weight * Math.Min(1, irregularity);
-                case FiringPattern.Chattering://the higher irregularity should give a higher fitness value
-                    return Weight * Math.Min(1, irregularity);
-                case FiringPattern.Mixed://the higher irregularity should give a higher fitness value
-                    return Weight * Math.Min(1, irregularity);
-            }
 
-            return 0;
+            return TargetPattern switch
+            {
+                FiringPattern.NoSpike => 0,
+                //the lower irregularity should give a higher fitness value
+                FiringPattern.Spiking => Weight * Math.Max(0, (1 - irregularity)),
+                //the higher irregularity should give a higher fitness value
+                FiringPattern.Bursting => Weight * Math.Min(1, irregularity),
+                //the higher irregularity should give a higher fitness value
+                FiringPattern.Chattering => Weight * Math.Min(1, irregularity),
+                //the higher irregularity should give a higher fitness value
+                FiringPattern.Mixed => Weight * Math.Min(1, irregularity),
+                _ => 0,
+            };
         }
     }
 

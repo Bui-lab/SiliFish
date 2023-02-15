@@ -10,6 +10,27 @@ namespace SiliFish.DynamicUnits
 {
     public class HodgkinHuxleyClassic: CellCoreUnit
     {
+        protected static double g_K_suggestedMin = 30;
+        protected static double g_K_suggestedMax = 40;
+        protected static double g_Na_suggestedMin = 100;
+        protected static double g_Na_suggestedMax = 150;
+        protected static double g_L_suggestedMin = 0.1;
+        protected static double g_L_suggestedMax = 0.5;
+        protected static double E_K_suggestedMin = -15;
+        protected static double E_K_suggestedMax = -10;
+        protected static double E_Na_suggestedMin = 100;
+        protected static double E_Na_suggestedMax = 150;
+        protected static double E_L_suggestedMin = 10;
+        protected static double E_L_suggestedMax = 11;
+        protected static double Vt_suggestedMin = -60;
+        protected static double Vt_suggestedMax = -55;
+        protected static double Vmax_suggestedMin = 10;
+        protected static double Vmax_suggestedMax = 50;
+        protected static double Vr_suggestedMin = -80;
+        protected static double Vr_suggestedMax = -50;
+        protected static double Cm_suggestedMin = 1;
+        protected static double Cm_suggestedMax = 20;
+
         [Description("K channel conductance.")]
         public double g_K { get; set; } = 36;
 
@@ -62,138 +83,48 @@ namespace SiliFish.DynamicUnits
         }
         public HodgkinHuxleyClassic(Dictionary<string, double> paramExternal)
         {
-            Initialize();
             SetParameters(paramExternal);
+            Initialize();
         }
         protected override void Initialize()
         {
             V = Vr = 0;
         }
-        public override Dictionary<string, double> GetParameters()
-        {
-            Dictionary<string, double> paramDict = new()
-            {
-                { "HodgkinHuxley.g_K",  g_K},
-                { "HodgkinHuxley.g_Na",  g_Na},
-                { "HodgkinHuxley.g_L",  g_L},
-                { "HodgkinHuxley.E_K",  E_K},
-                { "HodgkinHuxley.E_Na",  E_Na},
-                { "HodgkinHuxley.E_L",  E_L},
-                { "HodgkinHuxley.V_max", Vmax },
-                { "HodgkinHuxley.V_r", Vr },
-                { "HodgkinHuxley.V_t", Vt },
-                { "HodgkinHuxley.Cm", Cm }
-            };
-            return paramDict;
-        }
 
         [JsonIgnore]
-        public override string VThresholdParamName { get { return "HodgkinHuxley.V_t"; } }
+        public override string VThresholdParamName { get { return GetType().Name+".Vt"; } }
         [JsonIgnore]
-        public override string VReversalParamName { get { return "HodgkinHuxley.V_r"; } }
-        /* public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
+        public override string VReversalParamName { get { return GetType().Name+".Vr"; } }
+        public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
          {
+            string type= GetType().Name;
              Dictionary<string, double> MinValues = new() {
-                 { "HodgkinHuxley.c", c },
-                 { "HodgkinHuxley.V_max", Vmax },
-                 { "HodgkinHuxley.V_r", Vr },
-                 { "HodgkinHuxley.V_t", Vt },
-                 { "HodgkinHuxley.a", a_suggestedMin },
-                 { "HodgkinHuxley.b", b_suggestedMin },
-                 { "HodgkinHuxley.d", d_suggestedMin },
-                 { "HodgkinHuxley.k", k_suggestedMin },
-                 { "HodgkinHuxley.Cm", Cm_suggestedMin }
+                { type+".g_K",  g_K_suggestedMin},
+                { type+".g_Na",  g_Na_suggestedMin},
+                { type+".g_L",  g_L_suggestedMin},
+                { type+".E_K",  E_K_suggestedMin},
+                { type+".E_Na",  E_Na_suggestedMin},
+                { type+".E_L",  E_L_suggestedMin},
+                { type+".Vmax", Vmax_suggestedMin},
+                { type+".Vr", Vr_suggestedMin},
+                { type+".Vt", Vt_suggestedMin},
+                { type+".Cm", Cm_suggestedMin}
              };
              Dictionary<string, double> MaxValues = new() {
-                 { "HodgkinHuxley.c", c },
-                 { "HodgkinHuxley.V_max", Vmax },
-                 { "HodgkinHuxley.V_r", Vr },
-                 { "HodgkinHuxley.V_t", Vt },
-                 { "HodgkinHuxley.a", a_suggestedMax },
-                 { "HodgkinHuxley.b", b_suggestedMax },
-                 { "HodgkinHuxley.d", d_suggestedMax },
-                 { "HodgkinHuxley.k", k_suggestedMax },
-                 { "HodgkinHuxley.Cm", Cm_suggestedMax }
+                { type+".g_K",  g_K_suggestedMax},
+                { type+".g_Na",  g_Na_suggestedMax},
+                { type+".g_L",  g_L_suggestedMax},
+                { type+".E_K",  E_K_suggestedMax},
+                { type+".E_Na",  E_Na_suggestedMax},
+                { type+".E_L",  E_L_suggestedMax},
+                { type+".Vmax", Vmax_suggestedMax},
+                { type+".Vr", Vr_suggestedMax},
+                { type+".Vt", Vt_suggestedMax},
+                { type+".Cm", Cm_suggestedMax}
              };
 
              return (MinValues, MaxValues);
-         }*/
-
-        public override void BackwardCompatibility(Dictionary<string, double> paramExternal)
-        {
-            paramExternal.AddObject("HodgkinHuxley.g_K", g_K, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.g_Na", g_Na, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.g_L", g_L, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.E_K", E_K, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.E_Na", E_Na, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.E_L", E_L, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.V_max", Vmax, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.V_r", Vr, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.V_t", Vt, skipIfExists: true);
-            paramExternal.AddObject("HodgkinHuxley.Cm", Cm, skipIfExists: true);
-        }
-        public override void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
-            BackwardCompatibility(paramExternal);
-            if (paramExternal.TryGetValue("HodgkinHuxley.g_K", out double g_K2))
-                g_K = (double)g_K2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.g_Na", out double g_Na2))
-                g_Na = g_Na2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.g_L", out double g_L2))
-                g_L = g_L2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.E_K", out double E_K2))
-                E_K= (double)E_K2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.E_Na", out double E_Na2))
-                E_Na = E_Na2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.E_L", out double E_L2))
-                E_L = E_L2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.V_max", out double Vmax2))
-                Vmax= (double)Vmax2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.V_r", out double Vr2))
-                Vr = (double)Vr2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.V_t", out double Vt2))
-                Vt = (double)Vt2;
-            if (paramExternal.TryGetValue("HodgkinHuxley.Cm", out double Cm2))
-                Cm = (double)Cm2;
-        }
-        public override void SetParameter(string name, double value)
-        {
-            switch (name)
-            {
-                case "HodgkinHuxley.g_K":
-                    g_K = value;
-                    break;
-                case "HodgkinHuxley.g_Na":
-                    g_Na = value;
-                    break;
-                case "HodgkinHuxley.g_L":
-                    g_L = value;
-                    break;
-                case "HodgkinHuxley.E_K":
-                    E_K = value;
-                    break;
-                case "HodgkinHuxley.E_Na":
-                    E_Na = value;
-                    break;
-                case "HodgkinHuxley.E_L":
-                    E_L = value;
-                    break;
-                case "HodgkinHuxley.V_max":
-                    Vmax = value;
-                    break;
-                case "HodgkinHuxley.V_r":
-                    Vr = value;
-                    break;
-                case "HodgkinHuxley.V_t":
-                    Vt = value;
-                    break;
-                case "HodgkinHuxley.Cm":
-                    Cm = value;
-                    break;
-            }
-        }
+         }
 
         public override double GetNextVal(double I, ref bool spike)
         {

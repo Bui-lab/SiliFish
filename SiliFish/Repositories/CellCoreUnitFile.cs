@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -68,16 +69,15 @@ namespace SiliFish.Repositories
         {
             List<string> list = new();
             //Compare to Version 0.1
-            if (json.Contains("\"CoreType\":"))
-                FixCoreTypeJson(ref json);
-            if (json.Contains("\"Parameters\":"))
-                FixParametersJson(ref json);
+            if (json.Contains("\"CoreType\":") && FixCoreTypeJson(ref json))
+                list.Add("Core type");
+            if (json.Contains("\"Parameters\":") && FixParametersJson(ref json))
+                list.Add("Cell parameters");
             if (!json.StartsWith("["))
                 json = $"[\r\n{json}\r\n]";
             json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
             json = Regex.Replace(json, ",[\\s]*,", " ,");
             json = Regex.Replace(json, ",[\\s]*}", " }");
-
             return list;
         }
 
