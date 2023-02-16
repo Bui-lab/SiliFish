@@ -5,8 +5,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class StimulusSettingsControl : UserControl
     {
-        private event EventHandler stimulusChanged;
-        public event EventHandler StimulusChanged { add => stimulusChanged += value; remove => stimulusChanged -= value; }
+        public event EventHandler StimulusChanged;
 
         public StimulusSettingsControl()
         {
@@ -17,7 +16,7 @@ namespace SiliFish.UI.Controls
         {
             if (DesignMode)
                 return base.ToString();
-            return GetStimulus().ToString();
+            return GetStimulusSettings().ToString();
         }
         private void ddStimulusMode_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -45,21 +44,21 @@ namespace SiliFish.UI.Controls
                     break;
             }
             if (ddStimulusMode.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
+                StimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
-          private void eValue1_TextChanged(object sender, EventArgs e)
+        private void eValue1_TextChanged(object sender, EventArgs e)
         {
             if (eValue1.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
+                StimulusChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void eValue2_TextChanged(object sender, EventArgs e)
         {
             if (eValue2.Focused)
-                stimulusChanged?.Invoke(this, EventArgs.Empty);
+                StimulusChanged?.Invoke(this, EventArgs.Empty);
         }
-      public void SetStimulus(StimulusSettings stim)
+        public void SetStimulusSettings(StimulusSettings stim)
         {
             if (stim == null)
                 stim = new();
@@ -69,7 +68,7 @@ namespace SiliFish.UI.Controls
             eValue2.Text = stim.Value2.ToString();
         }
 
-        public StimulusSettings GetStimulus()
+        public StimulusSettings GetStimulusSettings()
         {
             StimulusMode stimMode = (StimulusMode)Enum.Parse(typeof(StimulusMode), ddStimulusMode.Text);
 

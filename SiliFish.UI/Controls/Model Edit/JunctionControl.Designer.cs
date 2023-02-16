@@ -118,18 +118,22 @@
             // 
             // ddSourcePool
             // 
+            this.ddSourcePool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddSourcePool.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddSourcePool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddSourcePool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddSourcePool.FormattingEnabled = true;
             this.ddSourcePool.Location = new System.Drawing.Point(120, 10);
             this.ddSourcePool.Name = "ddSourcePool";
-            this.ddSourcePool.Size = new System.Drawing.Size(128, 23);
+            this.ddSourcePool.Size = new System.Drawing.Size(129, 23);
             this.ddSourcePool.TabIndex = 5;
             this.ddSourcePool.SelectedIndexChanged += new System.EventHandler(this.ddSourcePool_SelectedIndexChanged);
             // 
             // ddConnectionType
             // 
+            this.ddConnectionType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddConnectionType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddConnectionType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -140,7 +144,7 @@
             "NMJ"});
             this.ddConnectionType.Location = new System.Drawing.Point(120, 114);
             this.ddConnectionType.Name = "ddConnectionType";
-            this.ddConnectionType.Size = new System.Drawing.Size(128, 23);
+            this.ddConnectionType.Size = new System.Drawing.Size(129, 23);
             this.ddConnectionType.TabIndex = 11;
             this.ddConnectionType.SelectedIndexChanged += new System.EventHandler(this.ddConnectionType_SelectedIndexChanged);
             // 
@@ -193,20 +197,25 @@
             // 
             // timeLineControl
             // 
-            this.timeLineControl.Location = new System.Drawing.Point(9, 437);
+            this.timeLineControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.timeLineControl.Location = new System.Drawing.Point(3, 437);
             this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(259, 120);
+            this.timeLineControl.Size = new System.Drawing.Size(245, 125);
             this.timeLineControl.TabIndex = 0;
             // 
             // ddDistanceMode
             // 
+            this.ddDistanceMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddDistanceMode.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddDistanceMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddDistanceMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddDistanceMode.FormattingEnabled = true;
             this.ddDistanceMode.Location = new System.Drawing.Point(120, 140);
             this.ddDistanceMode.Name = "ddDistanceMode";
-            this.ddDistanceMode.Size = new System.Drawing.Size(128, 23);
+            this.ddDistanceMode.Size = new System.Drawing.Size(129, 23);
             this.ddDistanceMode.TabIndex = 29;
             // 
             // lDistanceMode
@@ -229,13 +238,15 @@
             // 
             // ddSourceCell
             // 
+            this.ddSourceCell.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddSourceCell.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddSourceCell.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddSourceCell.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddSourceCell.FormattingEnabled = true;
             this.ddSourceCell.Location = new System.Drawing.Point(120, 36);
             this.ddSourceCell.Name = "ddSourceCell";
-            this.ddSourceCell.Size = new System.Drawing.Size(128, 23);
+            this.ddSourceCell.Size = new System.Drawing.Size(129, 23);
             this.ddSourceCell.TabIndex = 31;
             this.ddSourceCell.SelectedIndexChanged += new System.EventHandler(this.ddSourceCell_SelectedIndexChanged);
             // 
@@ -250,25 +261,29 @@
             // 
             // ddTargetCell
             // 
+            this.ddTargetCell.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddTargetCell.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddTargetCell.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddTargetCell.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddTargetCell.FormattingEnabled = true;
             this.ddTargetCell.Location = new System.Drawing.Point(120, 88);
             this.ddTargetCell.Name = "ddTargetCell";
-            this.ddTargetCell.Size = new System.Drawing.Size(128, 23);
+            this.ddTargetCell.Size = new System.Drawing.Size(129, 23);
             this.ddTargetCell.TabIndex = 33;
             this.ddTargetCell.SelectedIndexChanged += new System.EventHandler(this.ddTargetCell_SelectedIndexChanged);
             // 
             // ddTargetPool
             // 
+            this.ddTargetPool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddTargetPool.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddTargetPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddTargetPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddTargetPool.FormattingEnabled = true;
             this.ddTargetPool.Location = new System.Drawing.Point(120, 62);
             this.ddTargetPool.Name = "ddTargetPool";
-            this.ddTargetPool.Size = new System.Drawing.Size(128, 23);
+            this.ddTargetPool.Size = new System.Drawing.Size(129, 23);
             this.ddTargetPool.TabIndex = 7;
             this.ddTargetPool.SelectedIndexChanged += new System.EventHandler(this.ddTargetPool_SelectedIndexChanged);
             // 
@@ -320,7 +335,7 @@
             this.Controls.Add(this.lFixedDuration);
             this.Controls.Add(this.lWeight);
             this.Name = "JunctionControl";
-            this.Size = new System.Drawing.Size(274, 562);
+            this.Size = new System.Drawing.Size(254, 562);
             ((System.ComponentModel.ISupportInitialize)(this.numConductance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             this.gSynapse.ResumeLayout(false);

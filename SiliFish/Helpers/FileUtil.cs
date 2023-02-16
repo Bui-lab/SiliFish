@@ -1,4 +1,7 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
+using SiliFish.ModelUnits.Architecture;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,7 +17,16 @@ namespace SiliFish.Helpers
 
         public static void SaveToFile(string path, string content)
         {
+            path = string.Join("_", path.Split(Path.GetInvalidPathChars()));
             File.WriteAllText(path, content);
+        }
+
+        public static string SaveToTempFolder(string filename, string content)
+        {
+            filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+            string path = $"{GlobalSettings.TempFolder}\\{filename}";
+            File.WriteAllText(path, content);
+            return path;
         }
 
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)

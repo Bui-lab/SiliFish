@@ -240,7 +240,7 @@ namespace SiliFish.UI.Controls
         }
 
         /// <summary>
-        /// if a new junctino is created, it can be for all cells in the target or source pool
+        /// if a new junction is created, it can be for all cells in the target or source pool
         /// </summary>
         /// <returns></returns>
         public List<JunctionBase> GetJunctions()

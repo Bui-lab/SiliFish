@@ -64,6 +64,9 @@
     <Compile Update="Controls\Model Edit\CellControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\Model Edit\StimulusControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\ProjectionTestControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

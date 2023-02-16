@@ -13,6 +13,9 @@ using System.Text.Json;
 using SiliFish.UI.Definitions;
 using SiliFish.Definitions;
 using System.Windows.Forms;
+using SiliFish.UI.Extensions;
+using System.Diagnostics;
+using System.IO;
 
 namespace SiliFish.UI.Controls
 {
@@ -39,6 +42,7 @@ namespace SiliFish.UI.Controls
             listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
             listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
             tabModel.BackColor = Color.White;
+            eModelJSON.AddContextMenu();
         }
 
         private void ModelIsUpdated()
@@ -608,8 +612,8 @@ namespace SiliFish.UI.Controls
             {
                 foreach (JunctionBase jb in jncs)
                 {
-                    if (jb is InterPoolTemplate)
-                        Model.AddJunction((InterPoolTemplate)jb);
+                    if (jb is InterPoolTemplate template)
+                        Model.AddJunction(template);
                     else
                         jb.LinkObjects();
                     listConnections.AppendItem(jb);
@@ -632,8 +636,8 @@ namespace SiliFish.UI.Controls
             {
                 foreach (JunctionBase jb in jncs)
                 {
-                    if (jb is InterPoolTemplate)
-                        Model.AddJunction((InterPoolTemplate)jb);
+                    if (jb is InterPoolTemplate template)
+                        Model.AddJunction(template);
                     else
                         jb.LinkObjects();
                     listConnections.AppendItem(jb);
@@ -784,15 +788,11 @@ namespace SiliFish.UI.Controls
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
         {
             if (Model == null) return null;
-            if (CurrentMode == RunMode.Template)
+            ControlContainer frmControl = new();
+            if (CurrentMode == RunMode.Template || stim==null)
             {
-                ControlContainer frmControl = new();
                 StimulusTemplateControl stimControl = new();
-
-                if (CurrentMode == RunMode.Template)
-                    stimControl.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
-                else
-                    stimControl.SetStimulus((Model as RunningModel).CellPools, stim as Stimulus);
+                stimControl.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
                 frmControl.AddControl(stimControl, stimControl.CheckValues);
 
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
@@ -802,8 +802,12 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                MessageBox.Show("Implementation in progress.", "Model Edit");
-                //MODEL EDIT 
+                StimulusControl stimControl = new();
+                stimControl.SetStimulus(stim as Stimulus);
+                frmControl.AddControl(stimControl, stimControl.CheckValues);
+                frmControl.Text = stim?.ToString() ?? "New Stimulus";
+                if (frmControl.ShowDialog() == DialogResult.OK)
+                    return stimControl.GetStimulus();
             }
             return null;
         }
@@ -844,7 +848,7 @@ namespace SiliFish.UI.Controls
         {
             if (listStimuli.SelectedItem == null)
                 return;
-            StimulusBase stimulus = listStimuli.SelectedItem as StimulusTemplate;
+            StimulusBase stimulus = listStimuli.SelectedItem as StimulusBase;
             StimulusBase stimulus2 = OpenStimulusDialog(stimulus); //check modeltemplate's list
             if (stimulus2 != null)
             {
@@ -917,6 +921,24 @@ namespace SiliFish.UI.Controls
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
 
+        }
+
+        private void linkOpenJsonViewer_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string modelName = Model.ModelName ?? "JsonView";
+            string filename = $"{modelName}_{DateTime.Now:yyMMdd-HHmm}.json";
+            string json = eModelJSON.Text;
+            if (string.IsNullOrEmpty(json))
+                json = JsonUtil.ToJson(Model);
+            string fullPath = FileUtil.SaveToTempFolder(filename, json);
+            Process p = new()
+            {
+                StartInfo = new ProcessStartInfo(fullPath)
+                {
+                    UseShellExecute = true
+                }
+            };
+            p.Start();
         }
     }
 }

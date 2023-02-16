@@ -25,6 +25,7 @@ namespace SiliFish.UI.Controls
         public event EventHandler OnCompleteOptimization;
         public event EventHandler OnLoadParams;
         public event EventHandler OnGetParams;
+        public event EventHandler ContentChanged;
 
         public double DeltaT { get; set; }
         public double DeltaTEuler { get; set; }
@@ -211,7 +212,7 @@ namespace SiliFish.UI.Controls
                 AddFitnessFunctionRow(fitnessFunction);
         }
 
-        private FitnessFunction OpenFitnessFunctionDialog(FitnessFunction fitnessFunction)
+        private static FitnessFunction OpenFitnessFunctionDialog(FitnessFunction fitnessFunction)
         {
             FitnessFunctionControl fitnessControl = new();
             fitnessControl.SetFitnessFunction(fitnessFunction);
@@ -300,6 +301,9 @@ namespace SiliFish.UI.Controls
                     cbCustomTermination.Checked = !string.IsNullOrEmpty(Solver.Settings.TerminationType);
                     ddGATermination.Text = Solver.Settings.TerminationType;
                     eTerminationParameter.Text = Solver.Settings.TerminationParam;
+                    ContentChangedArgs args = new()
+                    { Caption = $"GA File: {Path.GetFileNameWithoutExtension(openFileJson.FileName)}" };
+                    ContentChanged?.Invoke(this, args);
                 }
                 catch
                 {

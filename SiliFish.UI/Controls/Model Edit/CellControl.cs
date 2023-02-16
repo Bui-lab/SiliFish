@@ -150,18 +150,12 @@ namespace SiliFish.UI.Controls
             Dictionary<string, double> dparams = cell.Core.GetParameters();
             DynamicsTestControl dynControl = new(cell.Core.CoreType, dparams, testMode: false);
             dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
-            dynControl.CoreChanged += DynControl_CoreChanged;
+            dynControl.ContentChanged += frmDynamicControl.ChangeCaption;
             frmDynamicControl = new();
             frmDynamicControl.AddControl(dynControl, null);
             frmDynamicControl.Text = cell.ID;
             frmDynamicControl.SaveVisible = false;
             frmDynamicControl.Show();
-        }
-
-        private void DynControl_CoreChanged(object sender, EventArgs e)
-        {
-            if (frmDynamicControl != null)
-                frmDynamicControl.Text = (e as CoreChangedEventArgs).CoreName;
         }
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)

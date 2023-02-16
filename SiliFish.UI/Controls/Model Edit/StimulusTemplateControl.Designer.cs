@@ -96,10 +96,6 @@
             this.ddSagittalPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddSagittalPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddSagittalPosition.FormattingEnabled = true;
-            this.ddSagittalPosition.Items.AddRange(new object[] {
-            "Left/Right",
-            "Left",
-            "Right"});
             this.ddSagittalPosition.Location = new System.Drawing.Point(102, 104);
             this.ddSagittalPosition.Name = "ddSagittalPosition";
             this.ddSagittalPosition.Size = new System.Drawing.Size(132, 23);

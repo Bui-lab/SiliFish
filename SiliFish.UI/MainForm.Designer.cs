@@ -33,6 +33,7 @@ namespace SiliFish.UI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pTop = new System.Windows.Forms.Panel();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.btnAbout = new System.Windows.Forms.Button();
             this.btnCellularDynamics = new System.Windows.Forms.Button();
             this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
@@ -73,7 +74,6 @@ namespace SiliFish.UI
             this.pDistinguisherTop = new System.Windows.Forms.Panel();
             this.pDistinguisherRight = new System.Windows.Forms.Panel();
             this.pDistinguisherBottom = new System.Windows.Forms.Panel();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -101,6 +101,22 @@ namespace SiliFish.UI
             this.pTop.Name = "pTop";
             this.pTop.Size = new System.Drawing.Size(1340, 40);
             this.pTop.TabIndex = 3;
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSettings.AutoSize = true;
+            this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnSettings.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.ForeColor = System.Drawing.Color.White;
+            this.btnSettings.Location = new System.Drawing.Point(1200, 6);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(88, 27);
+            this.btnSettings.TabIndex = 25;
+            this.btnSettings.Text = "Settings";
+            this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // btnAbout
             // 
@@ -546,22 +562,6 @@ namespace SiliFish.UI
             this.pDistinguisherBottom.Name = "pDistinguisherBottom";
             this.pDistinguisherBottom.Size = new System.Drawing.Size(1340, 4);
             this.pDistinguisherBottom.TabIndex = 9;
-            // 
-            // btnSettings
-            // 
-            this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSettings.AutoSize = true;
-            this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
-            this.btnSettings.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSettings.Location = new System.Drawing.Point(1200, 6);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(88, 27);
-            this.btnSettings.TabIndex = 25;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.UseVisualStyleBackColor = false;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // MainForm
             // 

@@ -1,4 +1,5 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Stim;
@@ -8,10 +9,11 @@ namespace SiliFish.UI.Controls
 {
     public partial class StimulusTemplateControl : UserControl
     {
-        private StimulusBase Stimulus;
+        private StimulusTemplate Stimulus;
         public StimulusTemplateControl()
         {
             InitializeComponent();
+            ddSagittalPosition.DataSource = Enum.GetNames(typeof(SagittalPlane));
         }
 
         public override string ToString()
@@ -28,11 +30,10 @@ namespace SiliFish.UI.Controls
 
             if (pools == null || pools.Count == 0) return;
 
-            if (stim == null)
-                stim = new();
+            stim ??= new();
             Stimulus = stim;
 
-            stimControl.SetStimulus(Stimulus.Settings);
+            stimControl.SetStimulusSettings(Stimulus.Settings);
             ddTargetPool.Items.AddRange(pools.ToArray());
             ddTargetPool.Text = stim.TargetPool;
             if (ddTargetPool.Text == "")
@@ -55,51 +56,20 @@ namespace SiliFish.UI.Controls
                 cbAllCells.Checked = false;
                 eTargetCells.Text = stim.TargetCell;
             }
-            ddSagittalPosition.Text = stim.LeftRight;
-            cbActive.Checked = stim.Active;
-
-            if (stim.TimeLine_ms != null)
-                timeLineControl.SetTimeLine(stim.TimeLine_ms);
-        }
-
-        public void SetStimulus(List<CellPool> pools, Stimulus stim)
-        {
-
-            if (stim == null)
-                stim = new();
-            Stimulus = stim;
-
-            ddTargetPool.Items.Clear();
-
-            if (pools == null || pools.Count == 0) return;
-            Stimulus = stim;
-            stimControl.SetStimulus(Stimulus.Settings);
-
-            if (stim == null)
-            {
-                stim = new();
-                ddTargetPool.Items.AddRange(pools.ToArray());
-                cbAllSomites.Checked = true;
-                cbAllCells.Checked = true;
-            }
+            if (Enum.TryParse(typeof(SagittalPlane), stim.LeftRight, out object sp))
+                ddSagittalPosition.Text = sp.ToString();
             else
             {
-                ddTargetPool.Items.Add(stim.TargetCell.CellPool);
-                ddTargetPool.SelectedIndex = 0;
-                ddTargetPool.Enabled = false;
-                cbAllSomites.Checked = false;
-                eTargetSomites.Text = stim.TargetCell.Somite.ToString();
-                cbAllCells.Checked = false;
-                eTargetCells.Text = stim.TargetCell.Sequence.ToString(); ;
+                SagittalPlane sagittal = stim.LeftRight.GetValueFromName(SagittalPlane.Both);
+                ddSagittalPosition.Text = sagittal.ToString();
             }
-            ddSagittalPosition.Text = stim.TargetCell.PositionLeftRight.ToString();
-
             cbActive.Checked = stim.Active;
 
             if (stim.TimeLine_ms != null)
                 timeLineControl.SetTimeLine(stim.TimeLine_ms);
         }
-        public StimulusBase GetStimulus()
+
+        public StimulusTemplate GetStimulus()
         {
             SagittalPlane sagPlane = SagittalPlane.Both;
             if (ddSagittalPosition.Text == "Left")
@@ -108,25 +78,16 @@ namespace SiliFish.UI.Controls
                 sagPlane = SagittalPlane.Right;
             else if (ddSagittalPosition.Text == "Left/Right")
                 sagPlane = SagittalPlane.Both;
-            if (Stimulus is StimulusTemplate)
+            Stimulus = new StimulusTemplate()
             {
-                Stimulus = new StimulusTemplate()
-                {
-                    Settings = stimControl.GetStimulus(),
-                    TargetPool = ddTargetPool.Text,
-                    TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
-                    TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
-                    LeftRight = sagPlane.ToString(),
-                    TimeLine_ms = timeLineControl.GetTimeLine(),
-                    Active = cbActive.Checked
-                };
-            }
-            else
-            {
-                Stimulus.Settings = stimControl.GetStimulus();
-                Stimulus.TimeLine_ms = timeLineControl.GetTimeLine();
-                Stimulus.Active = cbActive.Checked;
-            }
+                Settings = stimControl.GetStimulusSettings(),
+                TargetPool = ddTargetPool.Text,
+                TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
+                TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
+                LeftRight = sagPlane.ToString(),
+                TimeLine_ms = timeLineControl.GetTimeLine(),
+                Active = cbActive.Checked
+            };
             return Stimulus;
         }
 
@@ -153,12 +114,6 @@ namespace SiliFish.UI.Controls
             if (ddSagittalPosition.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Sagittal position not defined.");
             checkValuesArgs.Errors.AddRange(stimControl.CheckValues());
-        }
-        internal void SetStimulus(object cellPoolTemplates, StimulusTemplate stim)
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
         }
     }
 }

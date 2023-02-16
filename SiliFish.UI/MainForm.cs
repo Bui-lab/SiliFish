@@ -46,7 +46,7 @@ namespace SiliFish.UI
                 displayAbout = true;
                 ModelTemplate = new();
                 modelControl.SetModel(ModelTemplate);
-                SetCurrentMode(RunMode.Template);
+                SetCurrentMode(RunMode.Template, null);
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace SiliFish.UI
                 modelControl.SetModel(model);
                 modelOutputControl.SetRunningModel(model);
                 FillRunParams();
-                SetCurrentMode(RunMode.RunningModel);
+                SetCurrentMode(RunMode.RunningModel, null);
               }
             catch (Exception ex)
             {
@@ -164,8 +164,10 @@ namespace SiliFish.UI
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            ControlContainer controlContainer = new();
-            controlContainer.Text = "Settings";
+            ControlContainer controlContainer = new()
+            {
+                Text = "Settings"
+            };
             GlobalSettingsControl gsc = new(new GlobalSettingsProperties());
             controlContainer.AddControl(gsc, null);
             if (controlContainer.ShowDialog() == DialogResult.OK)
@@ -285,21 +287,16 @@ namespace SiliFish.UI
         private void btnCellularDynamics_Click(object sender, EventArgs e)
         {
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
-            dynControl.CoreChanged += DynControl_CoreChanged;
             frmDynamics = new();
             frmDynamics.AddControl(dynControl, null);
+            dynControl.ContentChanged += frmDynamics.ChangeCaption;
             frmDynamics.Text = "Cellular Dynamics Test";
             frmDynamics.SaveVisible = false;
             frmDynamics.Show();
         }
 
-        private void DynControl_CoreChanged(object sender, EventArgs e)
-        {
-            if (frmDynamics!=null)
-            frmDynamics.Text = $"Cellular Dynamics Test - {(e as CoreChangedEventArgs).CoreName}";
-        }
 
-        private void SetCurrentMode(RunMode mode)
+        private void SetCurrentMode(RunMode mode, string name)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
@@ -307,11 +304,11 @@ namespace SiliFish.UI
             pGenerateModel.Visible = mode == RunMode.Template;
             if (prevCollapsed != splitMain.Panel2Collapsed)
                 Width = splitMain.Panel2Collapsed ? Width / 2 : Width * 2;
-           pDistinguisher.BackColor = 
-                pDistinguisherTop.BackColor = pDistinguisherRight.BackColor=pDistinguisherBottom.BackColor
-                = mode == RunMode.Template ? Color.FromArgb(192, 192, 255) :
-                Color.Blue;
-            Text = $"SiliFish [{mode} mode] - {Model.ModelName}";
+            pDistinguisher.BackColor =
+                 pDistinguisherTop.BackColor = pDistinguisherRight.BackColor = pDistinguisherBottom.BackColor
+                 = mode == RunMode.Template ? Color.FromArgb(192, 192, 255) :
+                 Color.Blue;
+            Text = $"SiliFish [{mode} mode] - {name ?? Model.ModelName}";
         }
         private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -325,13 +322,13 @@ namespace SiliFish.UI
                     {
                         mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
                         lastFileName = openFileJson.FileName;
+                        SetModel(mb, Path.GetFileNameWithoutExtension(openFileJson.FileName));
                     }
                     catch
                     {
                         MessageBox.Show("Selected file is not a valid Model or Template file.");
                         return;
                     }
-                    SetModel(mb);
                 }
             }
             catch (Exception exc)
@@ -341,7 +338,7 @@ namespace SiliFish.UI
             }
         }
 
-        private void SetModel(ModelBase mb, bool readFromControl = false)
+        private void SetModel(ModelBase mb, string name, bool readFromControl = false)
         {
             if (mb is ModelTemplate)
             {
@@ -349,7 +346,7 @@ namespace SiliFish.UI
                 if (!readFromControl) //to prevent recursive setting
                     modelControl.SetModel(ModelTemplate);
                 RunningModel = null;
-                SetCurrentMode(RunMode.Template);
+                SetCurrentMode(RunMode.Template, name);
             }
             else
             {
@@ -358,7 +355,7 @@ namespace SiliFish.UI
                     modelControl.SetModel(RunningModel);
                 modelOutputControl.SetRunningModel(RunningModel);
                 ModelTemplate = null;
-                SetCurrentMode(RunMode.RunningModel);
+                SetCurrentMode(RunMode.RunningModel, name);
             }
         }
         private bool SaveModel()
@@ -383,7 +380,7 @@ namespace SiliFish.UI
                     modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
                     ModelFile.Save(saveFileJson.FileName, mb);
                     lastFileName = saveFileJson.FileName;
-                    this.Text = $"SiliFish {mb.ModelName}";
+                    this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileJson.FileName)}";
                     modelControl.ModelUpdated = false;
                     return true;
                 }
@@ -433,7 +430,7 @@ namespace SiliFish.UI
 
         private void modelControl_ModelChanged(object sender, EventArgs e)
         {
-            SetModel(modelControl.GetModel(), true);
+            SetModel(modelControl.GetModel(), null, true);
         }
     }
 }

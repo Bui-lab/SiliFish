@@ -17,7 +17,7 @@ namespace SiliFish.Repositories
         {
             if (json == null)
                 return false;
-            List<string> oldParamPatterns = new List<string>
+            List<string> oldParamPatterns = new()
             {
                 "\"Dynamic.sigma_range\":.*",
                 "\"Dynamic.sigma_gap\":.*",
@@ -173,6 +173,7 @@ namespace SiliFish.Repositories
         private static bool FixCoreParametersJson(ref string json)
         {
             bool updated = false;
+            bool checkTau = false;
 
             if (json.Contains("\"ClassType\": \"RunningModel\""))
             {
@@ -199,6 +200,10 @@ namespace SiliFish.Repositories
                         newJson = newJson.Replace("V_", "V");//change V_r, V_t, V_max to Vr, Vt, Vmax
                         json = json.Insert(index + parMatch.Index, newJson);
                     }
+                    else 
+                    {
+                        checkTau = true;
+                    }
                     updated = true;
                 }
             }
@@ -209,6 +214,11 @@ namespace SiliFish.Repositories
                     json = json.Replace("V_", "V");
                     updated = true;
                 }
+            }
+            if (checkTau && json.Contains("\"taur\"")) 
+            {
+                json = json.Replace("\"taur\"", "\"TauR\"");
+                updated = true;
             }
 
             return updated;

@@ -40,35 +40,35 @@
             this.btnDisplayModelJSON = new System.Windows.Forms.Button();
             this.tSettings = new System.Windows.Forms.TabPage();
             this.propSettings = new System.Windows.Forms.PropertyGrid();
-            this.panel8 = new System.Windows.Forms.Panel();
+            this.pSettingsTop = new System.Windows.Forms.Panel();
             this.ddDefaultMuscleCellCore = new System.Windows.Forms.ComboBox();
             this.lDefaultMuscleCore = new System.Windows.Forms.Label();
             this.ddDefaultNeuronCore = new System.Windows.Forms.ComboBox();
             this.lDefaultNeuronCore = new System.Windows.Forms.Label();
             this.tKinematics = new System.Windows.Forms.TabPage();
             this.propKinematics = new System.Windows.Forms.PropertyGrid();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.pKinematicsDescription = new System.Windows.Forms.Panel();
+            this.eKinematicsDescription = new System.Windows.Forms.TextBox();
+            this.pKinemSep = new System.Windows.Forms.Panel();
             this.tArchitecture = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitCellPools = new System.Windows.Forms.SplitContainer();
             this.listCellPools = new SiliFish.UI.Controls.ListBoxControl();
             this.listCells = new SiliFish.UI.Controls.ListBoxControl();
             this.pCellsTop = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
+            this.pCellsSep = new System.Windows.Forms.Panel();
             this.lCellsTitle = new System.Windows.Forms.Label();
             this.pCellPoolsTop = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pCellPoolsSep = new System.Windows.Forms.Panel();
             this.lCellPoolsTitle = new System.Windows.Forms.Label();
             this.splitConnectionsStimuli = new System.Windows.Forms.SplitContainer();
             this.listConnections = new SiliFish.UI.Controls.ListBoxControl();
             this.pConnectionsTop = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.pConnectionsSep = new System.Windows.Forms.Panel();
             this.lConnectionsTitle = new System.Windows.Forms.Label();
             this.listStimuli = new SiliFish.UI.Controls.ListBoxControl();
             this.pStimuliTop = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.pStimuliSep = new System.Windows.Forms.Panel();
             this.lStimuliTitle = new System.Windows.Forms.Label();
             this.tGeneral = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -80,12 +80,13 @@
             this.lDescription = new System.Windows.Forms.Label();
             this.lModelName = new System.Windows.Forms.Label();
             this.tabModel = new System.Windows.Forms.TabControl();
+            this.linkOpenJsonViewer = new System.Windows.Forms.LinkLabel();
             this.tJson.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
             this.tSettings.SuspendLayout();
-            this.panel8.SuspendLayout();
+            this.pSettingsTop.SuspendLayout();
             this.tKinematics.SuspendLayout();
-            this.panel7.SuspendLayout();
+            this.pKinematicsDescription.SuspendLayout();
             this.tArchitecture.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -146,6 +147,7 @@
             // pModelJSONTop
             // 
             this.pModelJSONTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pModelJSONTop.Controls.Add(this.linkOpenJsonViewer);
             this.pModelJSONTop.Controls.Add(this.pLineModelJSON);
             this.pModelJSONTop.Controls.Add(this.linkSaveModelJSON);
             this.pModelJSONTop.Controls.Add(this.btnLoadModelJSON);
@@ -209,7 +211,7 @@
             // tSettings
             // 
             this.tSettings.Controls.Add(this.propSettings);
-            this.tSettings.Controls.Add(this.panel8);
+            this.tSettings.Controls.Add(this.pSettingsTop);
             this.tSettings.Location = new System.Drawing.Point(4, 24);
             this.tSettings.Name = "tSettings";
             this.tSettings.Size = new System.Drawing.Size(682, 555);
@@ -229,17 +231,17 @@
             this.propSettings.Size = new System.Drawing.Size(682, 485);
             this.propSettings.TabIndex = 0;
             // 
-            // panel8
+            // pSettingsTop
             // 
-            this.panel8.Controls.Add(this.ddDefaultMuscleCellCore);
-            this.panel8.Controls.Add(this.lDefaultMuscleCore);
-            this.panel8.Controls.Add(this.ddDefaultNeuronCore);
-            this.panel8.Controls.Add(this.lDefaultNeuronCore);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(682, 70);
-            this.panel8.TabIndex = 1;
+            this.pSettingsTop.Controls.Add(this.ddDefaultMuscleCellCore);
+            this.pSettingsTop.Controls.Add(this.lDefaultMuscleCore);
+            this.pSettingsTop.Controls.Add(this.ddDefaultNeuronCore);
+            this.pSettingsTop.Controls.Add(this.lDefaultNeuronCore);
+            this.pSettingsTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pSettingsTop.Location = new System.Drawing.Point(0, 0);
+            this.pSettingsTop.Name = "pSettingsTop";
+            this.pSettingsTop.Size = new System.Drawing.Size(682, 70);
+            this.pSettingsTop.TabIndex = 1;
             // 
             // ddDefaultMuscleCellCore
             // 
@@ -282,7 +284,7 @@
             // tKinematics
             // 
             this.tKinematics.Controls.Add(this.propKinematics);
-            this.tKinematics.Controls.Add(this.panel7);
+            this.tKinematics.Controls.Add(this.pKinematicsDescription);
             this.tKinematics.Location = new System.Drawing.Point(4, 24);
             this.tKinematics.Name = "tKinematics";
             this.tKinematics.Size = new System.Drawing.Size(682, 555);
@@ -302,39 +304,39 @@
             this.propKinematics.Size = new System.Drawing.Size(682, 515);
             this.propKinematics.TabIndex = 1;
             // 
-            // panel7
+            // pKinematicsDescription
             // 
-            this.panel7.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel7.Controls.Add(this.textBox3);
-            this.panel7.Controls.Add(this.panel6);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel7.Location = new System.Drawing.Point(0, 515);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(682, 40);
-            this.panel7.TabIndex = 7;
+            this.pKinematicsDescription.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pKinematicsDescription.Controls.Add(this.eKinematicsDescription);
+            this.pKinematicsDescription.Controls.Add(this.pKinemSep);
+            this.pKinematicsDescription.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pKinematicsDescription.Location = new System.Drawing.Point(0, 515);
+            this.pKinematicsDescription.Name = "pKinematicsDescription";
+            this.pKinematicsDescription.Size = new System.Drawing.Size(682, 40);
+            this.pKinematicsDescription.TabIndex = 7;
             // 
-            // textBox3
+            // eKinematicsDescription
             // 
-            this.textBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.textBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox3.Location = new System.Drawing.Point(0, 0);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(682, 39);
-            this.textBox3.TabIndex = 26;
-            this.textBox3.Text = "Kinematics parameters are used in generating the animations and motoneuron based " +
+            this.eKinematicsDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.eKinematicsDescription.Dock = System.Windows.Forms.DockStyle.Top;
+            this.eKinematicsDescription.Location = new System.Drawing.Point(0, 0);
+            this.eKinematicsDescription.Multiline = true;
+            this.eKinematicsDescription.Name = "eKinematicsDescription";
+            this.eKinematicsDescription.ReadOnly = true;
+            this.eKinematicsDescription.Size = new System.Drawing.Size(682, 39);
+            this.eKinematicsDescription.TabIndex = 26;
+            this.eKinematicsDescription.Text = "Kinematics parameters are used in generating the animations and motoneuron based " +
     "statistics.\r\nThey do not effect the how the model behaves and can be modified af" +
     "ter the simulation.";
             // 
-            // panel6
+            // pKinemSep
             // 
-            this.panel6.BackColor = System.Drawing.Color.LightGray;
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel6.Location = new System.Drawing.Point(0, 39);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(682, 1);
-            this.panel6.TabIndex = 25;
+            this.pKinemSep.BackColor = System.Drawing.Color.LightGray;
+            this.pKinemSep.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pKinemSep.Location = new System.Drawing.Point(0, 39);
+            this.pKinemSep.Name = "pKinemSep";
+            this.pKinemSep.Size = new System.Drawing.Size(682, 1);
+            this.pKinemSep.TabIndex = 25;
             // 
             // tArchitecture
             // 
@@ -426,7 +428,7 @@
             // pCellsTop
             // 
             this.pCellsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.pCellsTop.Controls.Add(this.panel5);
+            this.pCellsTop.Controls.Add(this.pCellsSep);
             this.pCellsTop.Controls.Add(this.lCellsTitle);
             this.pCellsTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pCellsTop.Location = new System.Drawing.Point(0, 0);
@@ -434,14 +436,14 @@
             this.pCellsTop.Size = new System.Drawing.Size(314, 32);
             this.pCellsTop.TabIndex = 7;
             // 
-            // panel5
+            // pCellsSep
             // 
-            this.panel5.BackColor = System.Drawing.Color.LightGray;
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 31);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(314, 1);
-            this.panel5.TabIndex = 25;
+            this.pCellsSep.BackColor = System.Drawing.Color.LightGray;
+            this.pCellsSep.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pCellsSep.Location = new System.Drawing.Point(0, 31);
+            this.pCellsSep.Name = "pCellsSep";
+            this.pCellsSep.Size = new System.Drawing.Size(314, 1);
+            this.pCellsSep.TabIndex = 25;
             // 
             // lCellsTitle
             // 
@@ -449,14 +451,14 @@
             this.lCellsTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lCellsTitle.Location = new System.Drawing.Point(8, 6);
             this.lCellsTitle.Name = "lCellsTitle";
-            this.lCellsTitle.Size = new System.Drawing.Size(59, 15);
+            this.lCellsTitle.Size = new System.Drawing.Size(32, 15);
             this.lCellsTitle.TabIndex = 0;
-            this.lCellsTitle.Text = "Cell Pools";
+            this.lCellsTitle.Text = "Cells";
             // 
             // pCellPoolsTop
             // 
             this.pCellPoolsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.pCellPoolsTop.Controls.Add(this.panel2);
+            this.pCellPoolsTop.Controls.Add(this.pCellPoolsSep);
             this.pCellPoolsTop.Controls.Add(this.lCellPoolsTitle);
             this.pCellPoolsTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pCellPoolsTop.Location = new System.Drawing.Point(0, 0);
@@ -464,14 +466,14 @@
             this.pCellPoolsTop.Size = new System.Drawing.Size(314, 32);
             this.pCellPoolsTop.TabIndex = 6;
             // 
-            // panel2
+            // pCellPoolsSep
             // 
-            this.panel2.BackColor = System.Drawing.Color.LightGray;
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 31);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(314, 1);
-            this.panel2.TabIndex = 25;
+            this.pCellPoolsSep.BackColor = System.Drawing.Color.LightGray;
+            this.pCellPoolsSep.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pCellPoolsSep.Location = new System.Drawing.Point(0, 31);
+            this.pCellPoolsSep.Name = "pCellPoolsSep";
+            this.pCellPoolsSep.Size = new System.Drawing.Size(314, 1);
+            this.pCellPoolsSep.TabIndex = 25;
             // 
             // lCellPoolsTitle
             // 
@@ -523,7 +525,7 @@
             // pConnectionsTop
             // 
             this.pConnectionsTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.pConnectionsTop.Controls.Add(this.panel4);
+            this.pConnectionsTop.Controls.Add(this.pConnectionsSep);
             this.pConnectionsTop.Controls.Add(this.lConnectionsTitle);
             this.pConnectionsTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pConnectionsTop.Location = new System.Drawing.Point(0, 0);
@@ -531,14 +533,14 @@
             this.pConnectionsTop.Size = new System.Drawing.Size(360, 26);
             this.pConnectionsTop.TabIndex = 7;
             // 
-            // panel4
+            // pConnectionsSep
             // 
-            this.panel4.BackColor = System.Drawing.Color.LightGray;
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel4.Location = new System.Drawing.Point(0, 25);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(360, 1);
-            this.panel4.TabIndex = 25;
+            this.pConnectionsSep.BackColor = System.Drawing.Color.LightGray;
+            this.pConnectionsSep.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pConnectionsSep.Location = new System.Drawing.Point(0, 25);
+            this.pConnectionsSep.Name = "pConnectionsSep";
+            this.pConnectionsSep.Size = new System.Drawing.Size(360, 1);
+            this.pConnectionsSep.TabIndex = 25;
             // 
             // lConnectionsTitle
             // 
@@ -569,7 +571,7 @@
             // pStimuliTop
             // 
             this.pStimuliTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.pStimuliTop.Controls.Add(this.panel3);
+            this.pStimuliTop.Controls.Add(this.pStimuliSep);
             this.pStimuliTop.Controls.Add(this.lStimuliTitle);
             this.pStimuliTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pStimuliTop.Location = new System.Drawing.Point(0, 0);
@@ -577,14 +579,14 @@
             this.pStimuliTop.Size = new System.Drawing.Size(360, 26);
             this.pStimuliTop.TabIndex = 8;
             // 
-            // panel3
+            // pStimuliSep
             // 
-            this.panel3.BackColor = System.Drawing.Color.LightGray;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 25);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(360, 1);
-            this.panel3.TabIndex = 25;
+            this.pStimuliSep.BackColor = System.Drawing.Color.LightGray;
+            this.pStimuliSep.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pStimuliSep.Location = new System.Drawing.Point(0, 25);
+            this.pStimuliSep.Name = "pStimuliSep";
+            this.pStimuliSep.Size = new System.Drawing.Size(360, 1);
+            this.pStimuliSep.TabIndex = 25;
             // 
             // lStimuliTitle
             // 
@@ -716,6 +718,17 @@
             this.tabModel.TabIndex = 2;
             this.tabModel.Tag = "";
             // 
+            // linkOpenJsonViewer
+            // 
+            this.linkOpenJsonViewer.AutoSize = true;
+            this.linkOpenJsonViewer.Location = new System.Drawing.Point(179, 13);
+            this.linkOpenJsonViewer.Name = "linkOpenJsonViewer";
+            this.linkOpenJsonViewer.Size = new System.Drawing.Size(118, 15);
+            this.linkOpenJsonViewer.TabIndex = 26;
+            this.linkOpenJsonViewer.TabStop = true;
+            this.linkOpenJsonViewer.Text = "Open in JSON Viewer";
+            this.linkOpenJsonViewer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenJsonViewer_LinkClicked);
+            // 
             // ModelControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -725,12 +738,13 @@
             this.Size = new System.Drawing.Size(690, 583);
             this.tJson.ResumeLayout(false);
             this.pModelJSONTop.ResumeLayout(false);
+            this.pModelJSONTop.PerformLayout();
             this.tSettings.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
+            this.pSettingsTop.ResumeLayout(false);
+            this.pSettingsTop.PerformLayout();
             this.tKinematics.ResumeLayout(false);
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
+            this.pKinematicsDescription.ResumeLayout(false);
+            this.pKinematicsDescription.PerformLayout();
             this.tArchitecture.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -777,35 +791,35 @@
         private Button btnDisplayModelJSON;
         private TabPage tSettings;
         private PropertyGrid propSettings;
-        private Panel panel8;
+        private Panel pSettingsTop;
         private ComboBox ddDefaultMuscleCellCore;
         private Label lDefaultMuscleCore;
         private ComboBox ddDefaultNeuronCore;
         private Label lDefaultNeuronCore;
         private TabPage tKinematics;
         private PropertyGrid propKinematics;
-        private Panel panel7;
-        private TextBox textBox3;
-        private Panel panel6;
+        private Panel pKinematicsDescription;
+        private TextBox eKinematicsDescription;
+        private Panel pKinemSep;
         private TabPage tArchitecture;
         private SplitContainer splitContainer2;
         private SplitContainer splitCellPools;
         private ListBoxControl listCellPools;
         private ListBoxControl listCells;
         private Panel pCellsTop;
-        private Panel panel5;
+        private Panel pCellsSep;
         private Label lCellsTitle;
         private Panel pCellPoolsTop;
-        private Panel panel2;
+        private Panel pCellPoolsSep;
         private Label lCellPoolsTitle;
         private SplitContainer splitConnectionsStimuli;
         private ListBoxControl listConnections;
         private Panel pConnectionsTop;
-        private Panel panel4;
+        private Panel pConnectionsSep;
         private Label lConnectionsTitle;
         private ListBoxControl listStimuli;
         private Panel pStimuliTop;
-        private Panel panel3;
+        private Panel pStimuliSep;
         private Label lStimuliTitle;
         private TabPage tGeneral;
         private SplitContainer splitContainer1;
@@ -817,5 +831,6 @@
         private Label lDescription;
         private Label lModelName;
         private TabControl tabModel;
+        private LinkLabel linkOpenJsonViewer;
     }
 }

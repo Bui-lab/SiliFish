@@ -1,4 +1,6 @@
-﻿namespace SiliFish.UI
+﻿using SiliFish.Definitions;
+
+namespace SiliFish.UI
 {
     public partial class ControlContainer : Form
     {
@@ -21,14 +23,19 @@
                 }
             }
         }
-        public void AddControl(Control ctrl, EventHandler eventHandler)
+        public void AddControl(Control ctrl, EventHandler checkValues)
         {
             pMain.Controls.Add(ctrl);
             ctrl.Dock = DockStyle.Fill;
-            if (eventHandler != null)
-                CheckValues += eventHandler;
+            if (checkValues != null)
+                CheckValues += checkValues;
         }
 
+        public void ChangeCaption(object sender, EventArgs args)
+        {
+            ContentChangedArgs ccargs = args as ContentChangedArgs;
+            Text= ccargs.Caption;
+        }
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();

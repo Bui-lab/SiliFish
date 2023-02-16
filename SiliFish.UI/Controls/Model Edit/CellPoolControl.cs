@@ -14,7 +14,7 @@ namespace SiliFish.UI.Controls
     {
         private static string coreUnitFileDefaultFolder;
         private ModelSettings settings;
-         CellPoolTemplate poolBase;
+        CellPoolTemplate poolBase;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private ControlContainer frmDynamicControl;
@@ -47,8 +47,6 @@ namespace SiliFish.UI.Controls
             }
         }
         public string JSONString;
-
-        public string CellName { get { return eGroupName.Text; } set { eGroupName.Text = value; } }
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
@@ -153,8 +151,7 @@ namespace SiliFish.UI.Controls
 
             poolBase.Attachments = attachmentList.GetAttachments();
         }
-
-
+        
         private void WriteDataToControl()
         {
             if (poolBase == null) return;
@@ -203,7 +200,7 @@ namespace SiliFish.UI.Controls
 
             attachmentList.SetAttachments(poolBase.Attachments);
         }
-
+        
         private void rbYZAngular_CheckedChanged(object sender, EventArgs e)
         {
             if (rbYZAngular.Checked)
@@ -219,6 +216,7 @@ namespace SiliFish.UI.Controls
                 lZAxis.Text = "Z - Axis (Dorsal->Ventral)";
             }
         }
+        
         private void btnColor_Click(object sender, EventArgs e)
         {
             colorDialog.Color = btnColor.BackColor;
@@ -227,6 +225,7 @@ namespace SiliFish.UI.Controls
                 btnColor.BackColor = colorDialog.Color;
             }
         }
+        
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
@@ -261,18 +260,12 @@ namespace SiliFish.UI.Controls
             poolBase.CoreType = ddCoreType.Text;
             DynamicsTestControl dynControl = new(poolBase.CoreType, dparams, testMode: false);
             dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
-            dynControl.CoreChanged += DynControl_CoreChanged;
             frmDynamicControl = new();
             frmDynamicControl.AddControl(dynControl, null);
+            dynControl.ContentChanged += frmDynamicControl.ChangeCaption;
             frmDynamicControl.Text = eGroupName.Text;
             frmDynamicControl.SaveVisible = false;
             frmDynamicControl.Show();
-        }
-
-        private void DynControl_CoreChanged(object sender, EventArgs e)
-        {
-            if (frmDynamicControl != null)
-                frmDynamicControl.Text = (e as CoreChangedEventArgs).CoreName;
         }
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)
@@ -320,6 +313,7 @@ namespace SiliFish.UI.Controls
                 ddSelection.Items.Clear();
                 ddSelection.Items.Add(CountingMode.Total.ToString());
             }
+            ddSagittalPosition.DataSource = Enum.GetNames(typeof(SagittalPlane));
         }
 
         public void CheckValues(object sender, EventArgs args)

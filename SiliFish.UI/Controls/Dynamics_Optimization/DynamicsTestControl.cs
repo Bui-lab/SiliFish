@@ -23,6 +23,7 @@ namespace SiliFish.UI.Controls
         private double deltaT, deltaTEuler;
         private string tempFolder;
         private string outputFolder;
+        private event EventHandler contentChanged;
         public double DeltaT { get => deltaT; set { deltaT = value; gaControl.DeltaT = value; } }
         public double DeltaTEuler { get => deltaTEuler; set { deltaTEuler = value; gaControl.DeltaTEuler = value; } }
 
@@ -40,12 +41,19 @@ namespace SiliFish.UI.Controls
         DynamicsStats dynamics;
         private double[] TimeArray;
 
-        internal class CoreChangedEventArgs : EventArgs
+        public event EventHandler ContentChanged
         {
-            internal string CoreName;
+            add
+            {
+                contentChanged += value;
+                gaControl.ContentChanged += value;
+            }
+            remove
+            {
+                contentChanged -= value;
+                gaControl.ContentChanged -= value;
+            }
         }
-
-        public event EventHandler CoreChanged;
         internal class UpdatedParamsEventArgs : EventArgs
         {
             internal string CoreType;
@@ -162,7 +170,7 @@ namespace SiliFish.UI.Controls
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
-            double[] I  = GenerateStimulus(stimulusControl1.GetStimulus());
+            double[] I  = GenerateStimulus(stimulusControl1.GetStimulusSettings());
             DynamicsStats[] stats = core.FiringAnalysis(param, values, I);
             for (int iter = 0; iter < values.Length; iter++)
             {
@@ -250,11 +258,11 @@ namespace SiliFish.UI.Controls
             if (parameters != null)
             {
                 CalculateRheobase();
-                StimulusSettings stim = stimulusControl1.GetStimulus();
+                StimulusSettings stim = stimulusControl1.GetStimulusSettings();
                 if (double.TryParse(eRheobase.Text, out double d))
                 {
                     stim.Value1 = d;
-                    stimulusControl1.SetStimulus(stim);
+                    stimulusControl1.SetStimulusSettings(stim);
                 }
                 DynamicsRun();
             }
@@ -485,7 +493,7 @@ namespace SiliFish.UI.Controls
             {
                 if (rbSingleEntryStimulus.Checked)
                 {
-                    double[] I = GenerateStimulus(stimulusControl1.GetStimulus());
+                    double[] I = GenerateStimulus(stimulusControl1.GetStimulusSettings());
                     dynamics = core.DynamicsTest(I);
                     CreatePlots();
                 }
@@ -603,9 +611,9 @@ namespace SiliFish.UI.Controls
                     skipCoreTypeChange = false;
                     CoreType = core.CoreType;
                     Parameters = core.GetParameters();
-                    CoreChangedEventArgs args = new() 
-                    { CoreName=Path.GetFileNameWithoutExtension(fileName) };
-                    CoreChanged?.Invoke(this, args);
+                    ContentChangedArgs args = new()
+                    { Caption = $"Core File: {Path.GetFileNameWithoutExtension(fileName)}" };
+                    contentChanged?.Invoke(this, args);
                 }
             }
         }
@@ -621,9 +629,9 @@ namespace SiliFish.UI.Controls
                 string fileName = saveFileJson.FileName;
                 CellCoreUnitFile.Save(fileName, core);
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(fileName);
-                CoreChangedEventArgs args = new()
-                { CoreName = Path.GetFileNameWithoutExtension(fileName) };
-                CoreChanged?.Invoke(this, args);
+                ContentChangedArgs args = new()
+                { Caption = $"Core File: {Path.GetFileNameWithoutExtension(fileName)}" };
+                contentChanged?.Invoke(this, args);
             }
         }
 

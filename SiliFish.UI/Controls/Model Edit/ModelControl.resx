@@ -67,7 +67,7 @@
   <data name="pbDrawing.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABmMAAAmHCAYAAAB/w2iRAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAy
-        twAAMrcBXj2IkwAA/7JJREFUeF7snQeYY2XZhkEQRcCCCNhAsSCKBVDEir8U12V3JgtbKDYUsSIoKgho
+        tgAAMrYBjHpqdwAA/7JJREFUeF7snQeYY2XZhkEQRcCCCNhAsSCKBVDEir8U12V3JgtbKDYUsSIoKgho
         dpLM7sK2SZmczO7CAiLo2lHEjoAFBaSoIFZUBBFQikjd5H/vTM768XFOcjKTzGRmn/u6niszyen9fM/3
         vu8mQgghxk5t3rzNanvt9dhaOv2YxldCCCGEEEIIIYQQQgghhBCiE1RnzHhita/v5Oohh5xhn0c2vhZC
         CCGEEEIIIYQQQgghhBCdoDZz5o7VVOrXtcMPr1X7+89tfC2EEEIIIYQQQgghhBBCCCE6QXX27B2qqdTl
@@ -6011,4 +6011,7 @@
         d93peaVc223eTwAA4CfaBt21PXr77NKuu7Tbvz/z1Wr1ANUo32P28IpNAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>40</value>
+  </metadata>
 </root>

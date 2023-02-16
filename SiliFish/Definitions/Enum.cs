@@ -6,6 +6,9 @@ namespace SiliFish.Definitions
 {
     //To convert string to enum:
     //ex: CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
+    
+    //To fill dropdown with enum:
+    //ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
     public enum CellType { Neuron, MuscleCell }
     public enum FiringRhythm { NoSpike, Phasic, Tonic }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }

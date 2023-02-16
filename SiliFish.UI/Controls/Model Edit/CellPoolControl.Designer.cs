@@ -479,10 +479,6 @@ namespace SiliFish.UI.Controls
             // 
             this.ddSagittalPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddSagittalPosition.FormattingEnabled = true;
-            this.ddSagittalPosition.Items.AddRange(new object[] {
-            "Left/Right",
-            "Left",
-            "Right"});
             this.ddSagittalPosition.Location = new System.Drawing.Point(84, 47);
             this.ddSagittalPosition.Name = "ddSagittalPosition";
             this.ddSagittalPosition.Size = new System.Drawing.Size(121, 23);

@@ -245,12 +245,12 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
                 {
-                    if (stimulus.LeftRight.Contains("Left"))
+                    if (stimulus.LeftRight.Contains("Left") || stimulus.LeftRight == "Both")
                     {
                         CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
                         target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);
                     }
-                    if (stimulus.LeftRight.Contains("Right"))
+                    if (stimulus.LeftRight.Contains("Right") || stimulus.LeftRight == "Both")
                     {
                         CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Right);
                         target?.ApplyStimulus(stimulus, stimulus.TargetSomite, stimulus.TargetCell);

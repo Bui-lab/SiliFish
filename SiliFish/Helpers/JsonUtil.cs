@@ -42,7 +42,7 @@ namespace SiliFish.Helpers
                 WriteIndented = true
             };
             string jsonstring = JsonSerializer.Serialize(content, options);
-            File.WriteAllText(path, jsonstring);
+            FileUtil.SaveToFile(path, jsonstring);
         }
 
         public static Dictionary<string, object> ReadDictionaryFromJsonFile(string path)
