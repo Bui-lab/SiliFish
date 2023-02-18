@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiliFish.UI
+namespace SiliFish.UI.EventArguments
 {
     internal class CheckValuesArgs : EventArgs
     {

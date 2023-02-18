@@ -82,7 +82,7 @@ namespace SiliFish.Definitions
             Category("Dynamics")]
         public int RheobaseInfinity { get { return GlobalSettings.RheobaseInfinity; } set { GlobalSettings.RheobaseInfinity = value; } }
 
-        [Description("The rheobase multipliers displayed on 'Test Dynamics' user interface."),
+        [Description("The rheobase multipliers displayed on 'Cellular Dynamics' user interface."),
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]
         public double[] RheobaseTestMultipliers { get { return GlobalSettings.RheobaseTestMultipliers; } set { GlobalSettings.RheobaseTestMultipliers = value; } }

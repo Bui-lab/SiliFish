@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -56,3 +57,7 @@ namespace SiliFish.Services
         }
     }
 }
+
+//Exception exception = new NotImplementedException();
+//ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+//throw exception;

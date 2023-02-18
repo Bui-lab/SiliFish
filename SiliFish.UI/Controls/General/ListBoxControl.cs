@@ -1,11 +1,14 @@
 ﻿using SiliFish.Extensions;
 using System.ComponentModel;
+using Windows.Devices.SmartCards;
 
 namespace SiliFish.UI.Controls
 {
 
     public partial class ListBoxControl : UserControl
     {
+        private Dictionary<int, object> HiddenItems = new Dictionary<int, object>();
+        
         public event EventHandler ItemAdd;
         public event EventHandler ItemDelete;
         public event EventHandler ItemCopy;
@@ -13,47 +16,7 @@ namespace SiliFish.UI.Controls
         public event EventHandler ItemToggleActive;
         public event EventHandler ItemsSort;
         public event EventHandler ItemSelect;
-
-        private Dictionary<int, object> HiddenItems = new Dictionary<int, object>();
-        public List<object> GetItems(bool includeHidden)
-        {
-            if (!includeHidden || !HiddenItems.Any())
-                return listBox.Items.Cast<object>().ToList();
-            List<object> fullList = new();
-            fullList.AddRange(listBox.Items.Cast<object>().ToList());
-            foreach (int index in HiddenItems.Keys.OrderBy(k => k))
-            {
-                fullList.Insert(index, HiddenItems[index]);
-            }
-            return fullList;
-        }
-
-        public void ClearItems()
-        {
-            listBox.Items.Clear();
-            HiddenItems.Clear();
-        }
-
-        public void AppendItem(object obj)
-        {
-            listBox.Items.Add(obj);
-        }
-        public void InsertItem(int ind, object obj)
-        {
-            listBox.Items.Insert(ind, obj);
-        }
-
-        public void RemoveItemAt(int ind)
-        {
-            listBox.Items.RemoveAt(ind);
-        }
-
-        public void RefreshItem(int ind, object obj)
-        {
-            listBox.Items.RemoveAt(ind);
-            listBox.Items.Insert(ind, obj);
-            listBox.SelectedIndex = ind;
-        }
+        public event EventHandler ItemPlot;
 
         public int SelectedIndex
         {
@@ -65,35 +28,23 @@ namespace SiliFish.UI.Controls
             get { return listBox.SelectedItem; }
             set { listBox.SelectedItem = value; }
         }
-        public ListBoxControl()
+
+        #region Private Functions
+        private void EditItem()
         {
-            InitializeComponent();
+            if (listBox.SelectedItem != null)
+                ItemView?.Invoke(listBox.SelectedItem, null);
         }
 
-        public void AddContextMenu(string label, EventHandler func)
+        private void AddItem()
         {
-            ToolStripItem mi = contextMenuListBox.Items[label];
-            if (mi != null)
-            {
-                mi.Visible = true;
-                mi.Enabled = true;
-            }
-            else
-            {
-                mi = contextMenuListBox.Items.Add(label);
-                mi.Click += miCustomSort_Click;
-                mi.Tag = func;
-            }
+            ItemAdd?.Invoke(this, new EventArgs());
         }
-        public void ChangeContextMenuAccess(string label, bool visible, bool enabled = true)
+        private void DeleteItem()
         {
-            ToolStripItem mi = contextMenuListBox.Items[label];
-            if (mi != null)
-            {
-                mi.Visible = visible;
-                mi.Enabled = enabled;
-            }
+            ItemDelete?.Invoke(listBox.SelectedItem, new EventArgs());
         }
+
         private void miCustomSort_Click(object sender, EventArgs e)
         {
             if ((sender as ToolStripItem).Tag is EventHandler eh)
@@ -102,12 +53,12 @@ namespace SiliFish.UI.Controls
 
         private void miAddItem_Click(object sender, EventArgs e)
         {
-            ItemAdd?.Invoke(this, new EventArgs());
+            AddItem();
         }
 
         private void miDeleteItem_Click(object sender, EventArgs e)
         {
-           ItemDelete?.Invoke(listBox.SelectedItem, new EventArgs());
+            DeleteItem();
         }
 
         private void miCreateCopy_Click(object sender, EventArgs e)
@@ -158,8 +109,7 @@ namespace SiliFish.UI.Controls
 
         private void listBox_DoubleClick(object sender, EventArgs e)
         {
-            if (listBox.SelectedItem != null)
-                ItemView?.Invoke(listBox.SelectedItem, null);
+            EditItem();
         }
 
         private void listBox_MouseClick(object sender, MouseEventArgs e)
@@ -169,6 +119,31 @@ namespace SiliFish.UI.Controls
             {
                 listBox.SelectedItem = null;
             }
+        }
+        private void miPlot_Click(object sender, EventArgs e)
+        {
+            ItemPlot?.Invoke(listBox.SelectedItem, new EventArgs());
+        }
+
+        private void miHideInactive_Click(object sender, EventArgs e)
+        {
+            for (int ind = listBox.Items.Count - 1; ind >= 0; ind--)
+            {
+                object obj = listBox.Items[ind];
+                var (active, exists) = obj.GetPropertyValue("Active", true);
+                if (exists && !active)
+                {
+                    listBox.Items.RemoveAt(ind);
+                    HiddenItems.Add(ind, obj);
+                }
+            }
+        }
+
+        private void miShowAll_Click(object sender, EventArgs e)
+        {
+            foreach (int ind in HiddenItems.Keys.OrderBy(k => k))
+                listBox.Items.Insert(ind, HiddenItems[ind]);
+            HiddenItems.Clear();
         }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
@@ -195,28 +170,78 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-
-        private void miHideInactive_Click(object sender, EventArgs e)
+        private void listBox_KeyDown(object sender, KeyEventArgs e)
         {
-            for (int ind = listBox.Items.Count - 1; ind >= 0; ind--)
+            if (e.KeyCode == Keys.Enter && miEditItem.Enabled)
+                EditItem();
+            else if (e.KeyCode == Keys.Insert && miAddItem.Enabled)
+                AddItem();
+            else if (e.KeyCode == Keys.Delete && miDeleteItem.Enabled)
+                DeleteItem();
+        }
+        #endregion
+
+        public List<object> GetItems(bool includeHidden)
+        {
+            if (!includeHidden || !HiddenItems.Any())
+                return listBox.Items.Cast<object>().ToList();
+            List<object> fullList = new();
+            fullList.AddRange(listBox.Items.Cast<object>().ToList());
+            foreach (int index in HiddenItems.Keys.OrderBy(k => k))
             {
-                object obj = listBox.Items[ind];
-                var (active, exists) = obj.GetPropertyValue("Active", true);
-                if (exists && !active)
-                {
-                    listBox.Items.RemoveAt(ind);
-                    HiddenItems.Add(ind, obj);
-                }
+                fullList.Insert(index, HiddenItems[index]);
             }
+            return fullList;
         }
 
-        private void miShowAll_Click(object sender, EventArgs e)
+        public void ClearItems()
         {
-            foreach (int ind in HiddenItems.Keys.OrderBy(k => k))
-                listBox.Items.Insert(ind, HiddenItems[ind]);
+            listBox.Items.Clear();
             HiddenItems.Clear();
         }
 
+        public void AppendItem(object obj)
+        {
+            listBox.Items.Add(obj);
+        }
+        public void InsertItem(int ind, object obj)
+        {
+            listBox.Items.Insert(ind, obj);
+        }
 
+        public void RemoveItemAt(int ind)
+        {
+            listBox.Items.RemoveAt(ind);
+        }
+
+        public void RefreshItem(int ind, object obj)
+        {
+            listBox.Items.RemoveAt(ind);
+            listBox.Items.Insert(ind, obj);
+            listBox.SelectedIndex = ind;
+        }
+
+        public ListBoxControl()
+        {
+            InitializeComponent();
+        }
+
+        public void AddSortContextMenu(string label, EventHandler func)
+        {
+            ToolStripItem mi = contextMenuListBox.Items[label];
+            if (mi != null)
+            {
+                mi.Visible = true;
+                mi.Enabled = true;
+            }
+            else
+            {
+                int ind = sepSort.MergeIndex;
+                mi = new ToolStripMenuItem(label);
+                contextMenuListBox.Items.Insert(ind + 1, mi);
+                mi.Click += miCustomSort_Click;
+                mi.Tag = func;
+            }
+        }
     }
 }

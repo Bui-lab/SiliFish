@@ -172,6 +172,11 @@ namespace SiliFish.ModelUnits.Cells
             GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell2.ID).ToList();
         }
 
+        public virtual void SortStimuli()
+        {
+            Stimuli.Sort();
+        }
+
         #endregion              
 
         #region Stimulus Functions
@@ -290,13 +295,49 @@ namespace SiliFish.ModelUnits.Cells
             throw exception;
 
         }
+
         public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return MinGapCurrentValue(iStart, iEnd) + MinSynInCurrentValue(iStart, iEnd) + MinSynOutCurrentValue(iStart, iEnd);
         }
         public virtual double MaxCurrentValue(int iStart = 0, int iEnd = -1)
         {
+            return MaxGapCurrentValue(iStart, iEnd) + MaxSynInCurrentValue(iStart, iEnd) + MaxSynOutCurrentValue(iStart, iEnd);
+        }
+
+        public virtual double MinGapCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+        }
+        public virtual double MaxGapCurrentValue(int iStart = 0, int iEnd = -1)
+        {
             return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+        }
+
+        public virtual double MinSynInCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual double MaxSynInCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+
+        public virtual double MinSynOutCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual double MaxSynOutCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
         }
 
         public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetGapCurrents()

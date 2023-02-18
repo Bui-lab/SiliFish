@@ -240,19 +240,23 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Simulation Stats
-        public override double MinCurrentValue(int iStart = 0, int iEnd = -1)
+
+        public override double MinSynInCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            double cur1 = base.MinCurrentValue(iStart, iEnd);
-            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
-            return Math.Min(Math.Min(cur1, cur2), cur3);
+            return Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
         }
-        public override double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        public override double MaxSynInCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            double cur1 = base.MaxCurrentValue(iStart, iEnd);
-            double cur2 = Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            double cur3 = Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
-            return Math.Max(Math.Max(cur1, cur2), cur3);
+            return Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+        }
+
+        public override double MinSynOutCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+        }
+        public override double MaxSynOutCurrentValue(int iStart = 0, int iEnd = -1)
+        {
+            return Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
         }
 
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)

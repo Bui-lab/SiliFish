@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.listBox = new System.Windows.Forms.ListBox();
             this.contextMenuListBox = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miEditItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miAddItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miDeleteItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miCreateCopy = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +46,8 @@
             this.sepSort = new System.Windows.Forms.ToolStripSeparator();
             this.miSortAlphabetically = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.sepPlot = new System.Windows.Forms.ToolStripSeparator();
+            this.miPlot = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuListBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,10 +64,12 @@
             this.listBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBox_MouseClick);
             this.listBox.SelectedIndexChanged += new System.EventHandler(this.listBox_SelectedIndexChanged);
             this.listBox.DoubleClick += new System.EventHandler(this.listBox_DoubleClick);
+            this.listBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox_KeyDown);
             // 
             // contextMenuListBox
             // 
             this.contextMenuListBox.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miEditItem,
             this.miAddItem,
             this.miDeleteItem,
             this.miCreateCopy,
@@ -77,93 +82,102 @@
             this.miHideInactive,
             this.miShowAll,
             this.sepSort,
-            this.miSortAlphabetically});
+            this.miSortAlphabetically,
+            this.sepPlot,
+            this.miPlot});
             this.contextMenuListBox.Name = "contextMenuListBox";
-            this.contextMenuListBox.Size = new System.Drawing.Size(174, 242);
+            this.contextMenuListBox.Size = new System.Drawing.Size(181, 314);
             this.contextMenuListBox.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuListBox_Opening);
+            // 
+            // miEditItem
+            // 
+            this.miEditItem.Name = "miEditItem";
+            this.miEditItem.Size = new System.Drawing.Size(180, 22);
+            this.miEditItem.Text = "Edit Item";
+            this.miEditItem.Click += new System.EventHandler(this.listBox_DoubleClick);
             // 
             // miAddItem
             // 
             this.miAddItem.Name = "miAddItem";
-            this.miAddItem.Size = new System.Drawing.Size(173, 22);
+            this.miAddItem.Size = new System.Drawing.Size(180, 22);
             this.miAddItem.Text = "Add Item";
             this.miAddItem.Click += new System.EventHandler(this.miAddItem_Click);
             // 
             // miDeleteItem
             // 
             this.miDeleteItem.Name = "miDeleteItem";
-            this.miDeleteItem.Size = new System.Drawing.Size(173, 22);
+            this.miDeleteItem.Size = new System.Drawing.Size(180, 22);
             this.miDeleteItem.Text = "Delete Item";
             this.miDeleteItem.Click += new System.EventHandler(this.miDeleteItem_Click);
             // 
             // miCreateCopy
             // 
             this.miCreateCopy.Name = "miCreateCopy";
-            this.miCreateCopy.Size = new System.Drawing.Size(173, 22);
+            this.miCreateCopy.Size = new System.Drawing.Size(180, 22);
             this.miCreateCopy.Text = "Create a Copy";
             this.miCreateCopy.Click += new System.EventHandler(this.miCreateCopy_Click);
             // 
             // sepActive
             // 
             this.sepActive.Name = "sepActive";
-            this.sepActive.Size = new System.Drawing.Size(170, 6);
+            this.sepActive.Size = new System.Drawing.Size(177, 6);
             // 
             // miActivate
             // 
             this.miActivate.Name = "miActivate";
-            this.miActivate.Size = new System.Drawing.Size(173, 22);
+            this.miActivate.Size = new System.Drawing.Size(180, 22);
             this.miActivate.Text = "Activate";
             this.miActivate.Click += new System.EventHandler(this.miActivate_Click);
             // 
             // miDeactivate
             // 
             this.miDeactivate.Name = "miDeactivate";
-            this.miDeactivate.Size = new System.Drawing.Size(173, 22);
+            this.miDeactivate.Size = new System.Drawing.Size(180, 22);
             this.miDeactivate.Text = "Deactivate";
             this.miDeactivate.Click += new System.EventHandler(this.miDeactivate_Click);
             // 
             // miActivateAll
             // 
             this.miActivateAll.Name = "miActivateAll";
-            this.miActivateAll.Size = new System.Drawing.Size(173, 22);
+            this.miActivateAll.Size = new System.Drawing.Size(180, 22);
             this.miActivateAll.Text = "Activate All";
             this.miActivateAll.Click += new System.EventHandler(this.miActivateAll_Click);
             // 
             // miDeactivateAll
             // 
             this.miDeactivateAll.Name = "miDeactivateAll";
-            this.miDeactivateAll.Size = new System.Drawing.Size(173, 22);
+            this.miDeactivateAll.Size = new System.Drawing.Size(180, 22);
             this.miDeactivateAll.Text = "Deactivate All";
             this.miDeactivateAll.Click += new System.EventHandler(this.miDeactivateAll_Click);
             // 
             // sepShow
             // 
             this.sepShow.Name = "sepShow";
-            this.sepShow.Size = new System.Drawing.Size(170, 6);
+            this.sepShow.Size = new System.Drawing.Size(177, 6);
             // 
             // miHideInactive
             // 
             this.miHideInactive.Name = "miHideInactive";
-            this.miHideInactive.Size = new System.Drawing.Size(173, 22);
+            this.miHideInactive.Size = new System.Drawing.Size(180, 22);
             this.miHideInactive.Text = "Hide Inactive";
             this.miHideInactive.Click += new System.EventHandler(this.miHideInactive_Click);
             // 
             // miShowAll
             // 
             this.miShowAll.Name = "miShowAll";
-            this.miShowAll.Size = new System.Drawing.Size(173, 22);
+            this.miShowAll.Size = new System.Drawing.Size(180, 22);
             this.miShowAll.Text = "Show All";
             this.miShowAll.Click += new System.EventHandler(this.miShowAll_Click);
             // 
             // sepSort
             // 
             this.sepSort.Name = "sepSort";
-            this.sepSort.Size = new System.Drawing.Size(170, 6);
+            this.sepSort.Size = new System.Drawing.Size(177, 6);
             // 
             // miSortAlphabetically
             // 
             this.miSortAlphabetically.Name = "miSortAlphabetically";
-            this.miSortAlphabetically.Size = new System.Drawing.Size(173, 22);
+            this.miSortAlphabetically.Size = new System.Drawing.Size(180, 22);
             this.miSortAlphabetically.Text = "Sort Alphabetically";
             this.miSortAlphabetically.Click += new System.EventHandler(this.miSortAlphabetically_Click);
             // 
@@ -172,6 +186,18 @@
             this.toolTip.AutoPopDelay = 1000;
             this.toolTip.InitialDelay = 500;
             this.toolTip.ReshowDelay = 100;
+            // 
+            // sepPlot
+            // 
+            this.sepPlot.Name = "sepPlot";
+            this.sepPlot.Size = new System.Drawing.Size(177, 6);
+            // 
+            // miPlot
+            // 
+            this.miPlot.Name = "miPlot";
+            this.miPlot.Size = new System.Drawing.Size(180, 22);
+            this.miPlot.Text = "Plot";
+            this.miPlot.Click += new System.EventHandler(this.miPlot_Click);
             // 
             // ListBoxControl
             // 
@@ -203,5 +229,8 @@
         private ToolStripMenuItem miActivateAll;
         private ToolStripMenuItem miDeactivateAll;
         private ToolStripSeparator sepShow;
+        private ToolStripMenuItem miEditItem;
+        private ToolStripSeparator sepPlot;
+        private ToolStripMenuItem miPlot;
     }
 }

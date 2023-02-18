@@ -66,11 +66,8 @@ namespace SiliFish.ModelUnits.Parameters
 
         public string GetAnimationDetails()
         {
-            string details = $"Damping coef: {Zeta}\r\n" +
-                $"w0: {w0:0.###}\r\n" +
-                $"Conv. Coef: {ConvCoef:0.###}\r\n" +
-                $"Alpha {Alpha:0.###}\r\n" +
-                $"Beta {Beta:0.###}";
+            string details = $"Damping coef: {Zeta}; Natural Oscillation Freq: {w0:0.###}\r\n" +
+                (UseMuscleTension ? "" : $"Conv. Coef: {ConvCoef:0.###}; Alpha {Alpha:0.###}; Beta {Beta:0.###}");
             return details;
         }
     }

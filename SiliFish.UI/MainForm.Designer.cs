@@ -246,6 +246,7 @@ namespace SiliFish.UI
             this.modelControl.Size = new System.Drawing.Size(543, 405);
             this.modelControl.TabIndex = 2;
             this.modelControl.ModelChanged += new System.EventHandler(this.modelControl_ModelChanged);
+            this.modelControl.PlotRequested += new System.EventHandler(this.modelControl_PlotRequested);
             // 
             // pGenerateModel
             // 

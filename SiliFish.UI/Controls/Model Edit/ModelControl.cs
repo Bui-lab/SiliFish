@@ -16,12 +16,14 @@ using System.Windows.Forms;
 using SiliFish.UI.Extensions;
 using System.Diagnostics;
 using System.IO;
+using SiliFish.UI.EventArguments;
 
 namespace SiliFish.UI.Controls
 {
     public partial class ModelControl : UserControl
     {
         public event EventHandler ModelChanged;
+        public event EventHandler PlotRequested;
         RunMode CurrentMode = RunMode.Template;
 
         private ModelBase Model;
@@ -32,15 +34,17 @@ namespace SiliFish.UI.Controls
             set => modelUpdated = value;
         }
 
-        private CellPool SelectedPool; 
+        private CellPoolTemplate SelectedPoolTemplate;
+        private CellPool SelectedPool;
         private Cell SelectedCell; //valid if Mode == Mode.RunningModel
-
+        private JunctionBase SelectedJunction;
+        private StimulusBase SelectedStimulus;
         public ModelControl()
         {
             InitializeComponent();
-            listConnections.AddContextMenu("Sort by Type", listConnections_SortByType);
-            listConnections.AddContextMenu("Sort by Source", listConnections_SortBySource);
-            listConnections.AddContextMenu("Sort by Target", listConnections_SortByTarget);
+            listConnections.AddSortContextMenu("Sort by Type", listConnections_SortByType);
+            listConnections.AddSortContextMenu("Sort by Source", listConnections_SortBySource);
+            listConnections.AddSortContextMenu("Sort by Target", listConnections_SortByTarget);
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
         }
@@ -240,6 +244,7 @@ namespace SiliFish.UI.Controls
             {
                 listCellPools.AppendItem(cp);
             }
+            SelectedPoolTemplate = null;
             SelectedPool = null;
             SelectedCell = null;
         }       
@@ -302,6 +307,7 @@ namespace SiliFish.UI.Controls
             }
             else if (sender is CellPoolTemplate cpt)
             {
+                SelectedPoolTemplate = cpt;
                 LoadProjections(cpt.CellGroup);
                 LoadStimuli(cpt.CellGroup);
             }
@@ -368,11 +374,16 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
+        private void listCellPools_ItemPlot(object sender, EventArgs e)
+        {
+            PlotRequestArgs args = new() { unitToPlot = SelectedPool };
+            PlotRequested?.Invoke(this, args);
+        }
         private void listCellPools_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
-        private void listCellPools_SortItems(object sender, EventArgs e)
+        private void listCellPools_ItemsSort(object sender, EventArgs e)
         {
             Model.SortCellPools();
             LoadPools();
@@ -488,6 +499,20 @@ namespace SiliFish.UI.Controls
                 listCells.RefreshItem(ind, cell);
             }
         } 
+
+
+        private void listCells_ItemPlot(object sender, EventArgs e)
+        {
+            PlotRequestArgs args = new() { unitToPlot = SelectedCell };
+            PlotRequested?.Invoke(this, args);
+        }
+
+        private void listCells_ItemsSort(object sender, EventArgs e)
+        {
+            if (SelectedPool == null) return;
+            SelectedPool.Cells.Sort();
+            LoadCells();
+        }
         private void listCells_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
@@ -498,6 +523,7 @@ namespace SiliFish.UI.Controls
         #region Connection
         private void LoadProjections()
         {
+            SelectedJunction = null;
             listConnections.ClearItems();
             lConnectionsTitle.Text = "Connections";
             if (Model == null) return;
@@ -677,6 +703,19 @@ namespace SiliFish.UI.Controls
             ModelIsUpdated();
         }
 
+        private void listConnections_ItemPlot(object sender, EventArgs e)
+        {
+            PlotRequestArgs args = new() { unitToPlot = SelectedJunction };
+            PlotRequested?.Invoke(this, args);
+        }
+
+        private void listConnections_ItemSelect(object sender, EventArgs e)
+        {
+            if (sender is JunctionBase jnc)
+            {
+                SelectedJunction = jnc;
+            }
+        }      
         private void listConnections_SortItems(object sender, EventArgs e)
         {
             if (SelectedCell != null)
@@ -734,6 +773,7 @@ namespace SiliFish.UI.Controls
         private void LoadStimuli()
         {
             listStimuli.ClearItems();
+            SelectedStimulus = null;
             if (Model == null) return;
             foreach (StimulusBase stim in Model.GetStimuli())
             {
@@ -858,6 +898,41 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
+        private void listStimuli_ItemPlot(object sender, EventArgs e)
+        {
+            PlotRequestArgs args = new() { unitToPlot = SelectedStimulus };
+            PlotRequested?.Invoke(this, args);
+        }
+
+        private void listStimuli_ItemSelect(object sender, EventArgs e)
+        {
+            if (sender is StimulusBase stim)
+            {
+                SelectedStimulus = stim;
+            }
+        }
+
+        private void listStimuli_ItemsSort(object sender, EventArgs e)
+        {
+            if (SelectedPool == null) return;
+            if (SelectedCell != null)
+            {
+                SelectedCell.SortStimuli();
+                LoadStimuli(SelectedCell);
+            }
+            else if (SelectedPool != null)
+            {
+                foreach (Cell c in SelectedPool.Cells)
+                    c.SortStimuli();
+                LoadStimuli(SelectedPool);
+            }
+            else if (Model is ModelTemplate mt)
+            {
+                mt.AppliedStimuli.Sort();
+                LoadStimuli(SelectedPoolTemplate?.CellGroup);
+            }
+
+        }
         private void listStimuli_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
@@ -940,5 +1015,9 @@ namespace SiliFish.UI.Controls
             };
             p.Start();
         }
+
+
+
+
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SiliFish.ModelUnits.Cells
 {
-    public struct CellSelectionStruct
+    public struct CellSelectionStruct: ModelUnitInterface
     {
         public string Pools = "All";
         public SagittalPlane SagittalPlane = SagittalPlane.Both;

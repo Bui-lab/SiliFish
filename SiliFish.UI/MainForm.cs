@@ -1,25 +1,14 @@
-using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
-using Services;
-using SiliFish.DataTypes;
-using SiliFish.Extensions;
+using Controls;
+using System.Diagnostics;
+
+using SiliFish.Definitions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Parameters;
+using SiliFish.Repositories;
 using SiliFish.Services;
 using SiliFish.UI.Controls;
-using SiliFish.UI.Extensions;
-using System.Diagnostics;
-using System.Drawing.Imaging;
-using System.Text.Json;
-using SiliFish.Repositories;
 using SiliFish.UI.Definitions;
-using Windows.ApplicationModel.VoiceCommands;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static SiliFish.UI.Controls.DynamicsTestControl;
-using SiliFish.Definitions;
-using Controls;
+using SiliFish.UI.EventArguments;
 
 namespace SiliFish.UI
 {
@@ -427,6 +416,10 @@ namespace SiliFish.UI
             mf.Show();
         }
 
+        private void modelControl_PlotRequested(object sender, EventArgs e)
+        {
+            modelOutputControl.Plot((e as PlotRequestArgs).unitToPlot);
+        }
 
         private void modelControl_ModelChanged(object sender, EventArgs e)
         {

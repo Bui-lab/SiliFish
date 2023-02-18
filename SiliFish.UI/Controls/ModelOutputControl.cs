@@ -20,6 +20,9 @@ using System.Text.Json;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Drawing.Imaging;
+using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Stim;
+using SiliFish.ModelUnits.Junction;
 
 namespace SiliFish.UI.Controls
 {
@@ -34,7 +37,7 @@ namespace SiliFish.UI.Controls
         int tPlotStart = 0;
         int tPlotEnd = 0;
         PlotType PlotType = PlotType.MembPotential;
-        CellSelectionStruct plotCellSelection;
+        ModelUnitInterface plotCellSelection;
         private string tempFile;
         List<ChartDataStruct> LastPlottedCharts;
         RunningModel RunningModel = null;
@@ -239,8 +242,13 @@ namespace SiliFish.UI.Controls
         private void DisplayNumberOfPlots()
         {
             if (RunningModel == null) return;
+            if (plotCellSelection.GetType() == typeof(JunctionSelectionStruct))
+            {
+                lNumberOfPlots.Visible = false;
+                return;
+            }
             GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (CellSelectionStruct)plotCellSelection);
             int count = Cells?.Count ?? 0 + Pools?.Count ?? 0;
             if (count > 0)
             {
@@ -412,7 +420,9 @@ namespace SiliFish.UI.Controls
             if (RunningModel == null) return;
             htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = 
+                plotCellSelection.GetType() == typeof(JunctionSelectionStruct) ? (null, null) :
+                RunningModel.GetSubsetCellsAndPools(PlotSubset, (CellSelectionStruct)plotCellSelection);
             (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, RunningModel, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd);
 
             htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts,
@@ -459,6 +469,73 @@ namespace SiliFish.UI.Controls
                 MessageBox.Show("There is a problem in saving the file:" + exc.Message);
             }
         }
+
+        private void SelectPlotSelectionOfCellPool(CellPool pool)
+        {
+            ddPlotPools.SelectedItem = pool.CellGroup;
+            ddPlotSagittal.SelectedItem = pool.PositionLeftRight.ToString();
+            ddPlotSomiteSelection.SelectedItem = "All";
+            if (!Equals(ddPlotCellSelection.SelectedItem,"All"))
+                ddPlotCellSelection.SelectedItem = "Summary";
+        }
+        private void SelectPlotSelectionOfCell(Cell cell)
+        {
+            ddPlotPools.SelectedItem = cell.CellGroup;
+            ddPlotSagittal.SelectedItem = cell.CellPool.PositionLeftRight.ToString();
+            ddPlotSomiteSelection.SelectedItem = "Single";
+            ePlotSomiteSelection.Value = cell.Somite;
+            ddPlotCellSelection.SelectedItem = "Single";
+            ePlotCellSelection.Value = cell.Sequence;
+        }
+        internal void Plot(ModelUnitBase unitToPlot)
+        {
+            if (RunningModel == null || !RunningModel.ModelRun) return;
+            if (unitToPlot == null) return;
+            JunctionBase jnc = unitToPlot as JunctionBase;
+            if (jnc != null)
+            {
+                ddPlot.SelectedItem = PlotType.Junction.GetDisplayName();
+                PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
+                PlotSubset = ddPlotPools.Text;
+                plotCellSelection = new JunctionSelectionStruct()
+                {
+                    Junction = jnc
+                };
+
+                tPlotStart = (int)ePlotStart.Value;
+                tPlotEnd = (int)ePlotEnd.Value;
+                if (tPlotEnd > RunningModel.RunParam.MaxTime)
+                    tPlotEnd = RunningModel.RunParam.MaxTime;
+            }
+            else
+            {
+                if (unitToPlot is Stimulus stim)
+                {
+                    ddPlot.SelectedItem = PlotType.Stimuli.GetDisplayName();
+                    SelectPlotSelectionOfCell(stim.TargetCell);
+                }
+                else if (unitToPlot is CellPool pool)
+                {
+                    if (ddPlot.Text.GetValueFromName(PlotType.NotSet) == PlotType.Episodes)
+                        ddPlot.SelectedItem = PlotType.MembPotential.GetDisplayName();
+                    SelectPlotSelectionOfCellPool(pool);
+                }
+                else if (unitToPlot is Cell cell)
+                {
+                    ddPlot.SelectedItem = PlotType.FullDyn.GetDisplayName();
+                    SelectPlotSelectionOfCell(cell);
+                }
+                SaveLastPlotSettings();
+                GetPlotSubset();
+            }
+            tabOutputs.SelectedTab = tPlot;
+            tabPlotSub.SelectedTab = tPlotHTML;
+            UseWaitCursor = true;
+            btnPlotWindows.Enabled = false;
+            btnPlotHTML.Enabled = false;
+
+            Task.Run(PlotHTML);
+        }
         #endregion
 
         #region Windows Plot
@@ -499,9 +576,9 @@ namespace SiliFish.UI.Controls
                 btnPlotWindows.Enabled = false;
                 btnPlotHTML.Enabled = false;
 
-                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotCellSelection);
+                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (CellSelectionStruct)plotCellSelection);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, plotCellSelection,
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (CellSelectionStruct)plotCellSelection,
                     tPlotStart, tPlotEnd);
 
                 leftImages?.RemoveAll(img => img == null);
@@ -827,6 +904,8 @@ namespace SiliFish.UI.Controls
         {
             eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
         }
+
+
 
         #endregion
 

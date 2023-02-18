@@ -5,6 +5,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.UI.EventArguments;
 using SiliFish.UI.Extensions;
 using System.Data;
 using Windows.Devices.HumanInterfaceDevice;

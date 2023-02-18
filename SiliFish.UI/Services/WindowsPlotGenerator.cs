@@ -13,8 +13,8 @@ namespace Services
 {
     public class WindowsPlotGenerator
     {
-private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> cellPools,
-            CellSelectionStruct cellSelection, int iStart, int iEnd)
+        private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> cellPools,
+                    CellSelectionStruct cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -25,6 +25,12 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                 double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
                 foreach (Cell c in cells)
                 {
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = c.MinPotentialValue(iStart, iEnd);
+                        yMax = c.MaxPotentialValue(iStart, iEnd);
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
                         leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
@@ -40,7 +46,12 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
                     double[,] voltageArray = new double[poolcells.Count, timeArray.Length];
-
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = poolcells.Min(c => c.MinCurrentValue(iStart, iEnd));
+                        yMax = poolcells.Max(c => c.MaxCurrentValue(iStart, iEnd));
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
                     int i = 0;
                     foreach (Cell c in poolcells)
                         voltageArray.UpdateRow(i++, c.V);
@@ -89,28 +100,7 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
             }
             return (leftImages, rightImages);
         }
-        private static (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticsCurrentsOfCell(Cell cell)
-        {
-            Dictionary<string, Color> colors = new();
-            Dictionary<string, List<double>> AffarentCurrents = new();
-            if (cell is Neuron neuron)
-            {
-                foreach (ChemicalSynapse jnc in neuron.Synapses)
-                {
-                    colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
-                    AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                }
-            }
-            else if (cell is MuscleCell muscle)
-            {
-                foreach (ChemicalSynapse jnc in muscle.EndPlates)
-                {
-                    colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
-                    AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
-                }
-            }
-            return (colors, AffarentCurrents);
-        }
+
         private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
             int iStart, int iEnd,
             bool gap, bool chem, UnitOfMeasure UoM)
@@ -123,6 +113,17 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                 double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
                 foreach (Cell c in cells)
                 {
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = gap && !chem ? c.MinGapCurrentValue(iStart, iEnd) :
+                            !gap && chem ? c.MinSynInCurrentValue(iStart, iEnd) + c.MinSynOutCurrentValue(iStart, iEnd) :
+                            c.MinCurrentValue(iStart, iEnd);
+                        yMax = gap && !chem ? c.MaxGapCurrentValue(iStart, iEnd) :
+                            !gap && chem ? c.MaxSynInCurrentValue(iStart, iEnd) + c.MaxSynOutCurrentValue(iStart, iEnd) :
+                            c.MaxCurrentValue(iStart, iEnd);
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
+
                     (List<Image> subLeftImages, List < Image > subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chem, UoM);
                     leftImages.AddRange(subLeftImages);
                     rightImages.AddRange(subRightImages);
@@ -139,6 +140,16 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                     IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
                     foreach (Cell c in sampleCells)
                     {
+                        if (!GlobalSettings.SameYAxis)
+                        {
+                            yMin = gap && !chem ? c.MinGapCurrentValue(iStart, iEnd) :
+                                !gap && chem ? c.MinSynInCurrentValue(iStart, iEnd) + c.MinSynOutCurrentValue(iStart, iEnd) :
+                                c.MinCurrentValue(iStart, iEnd);
+                            yMax = gap && !chem ? c.MaxGapCurrentValue(iStart, iEnd) :
+                                !gap && chem ? c.MaxSynInCurrentValue(iStart, iEnd) + c.MaxSynOutCurrentValue(iStart, iEnd) :
+                                c.MaxCurrentValue(iStart, iEnd);
+                            Util.SetYRange(ref yMin, ref yMax);
+                        }
                         (List<Image> subLeftImages, List<Image> subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chem, UoM);
                         leftImages.AddRange(subLeftImages);
                         rightImages.AddRange(subRightImages);
@@ -161,6 +172,12 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                 double yMax = cells.Max(c => c.MaxStimulusValue());
                 foreach (Cell c in cells)
                 {
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = c.MinStimulusValue();
+                        yMax = c.MaxStimulusValue();
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
                         leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
@@ -175,6 +192,12 @@ private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeAr
                 foreach (CellPool pool in pools)
                 {
                     List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = poolcells.Min(c => c.MinStimulusValue());
+                        yMax = poolcells.Max(c => c.MaxStimulusValue());
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
                     double[,] stimArray = new double[poolcells.Count, timeArray.Length];
 
                     int i = 0;

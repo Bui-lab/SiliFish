@@ -10,6 +10,7 @@ using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services;
+using SiliFish.UI.EventArguments;
 using SiliFish.UI.Extensions;
 using System.ComponentModel;
 

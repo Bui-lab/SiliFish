@@ -34,6 +34,7 @@
             this.tJson = new System.Windows.Forms.TabPage();
             this.eModelJSON = new System.Windows.Forms.RichTextBox();
             this.pModelJSONTop = new System.Windows.Forms.Panel();
+            this.linkOpenJsonViewer = new System.Windows.Forms.LinkLabel();
             this.pLineModelJSON = new System.Windows.Forms.Panel();
             this.linkSaveModelJSON = new System.Windows.Forms.LinkLabel();
             this.btnLoadModelJSON = new System.Windows.Forms.Button();
@@ -80,7 +81,6 @@
             this.lDescription = new System.Windows.Forms.Label();
             this.lModelName = new System.Windows.Forms.Label();
             this.tabModel = new System.Windows.Forms.TabControl();
-            this.linkOpenJsonViewer = new System.Windows.Forms.LinkLabel();
             this.tJson.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
             this.tSettings.SuspendLayout();
@@ -157,6 +157,17 @@
             this.pModelJSONTop.Name = "pModelJSONTop";
             this.pModelJSONTop.Size = new System.Drawing.Size(682, 40);
             this.pModelJSONTop.TabIndex = 4;
+            // 
+            // linkOpenJsonViewer
+            // 
+            this.linkOpenJsonViewer.AutoSize = true;
+            this.linkOpenJsonViewer.Location = new System.Drawing.Point(179, 13);
+            this.linkOpenJsonViewer.Name = "linkOpenJsonViewer";
+            this.linkOpenJsonViewer.Size = new System.Drawing.Size(118, 15);
+            this.linkOpenJsonViewer.TabIndex = 26;
+            this.linkOpenJsonViewer.TabStop = true;
+            this.linkOpenJsonViewer.Text = "Open in JSON Viewer";
+            this.linkOpenJsonViewer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenJsonViewer_LinkClicked);
             // 
             // pLineModelJSON
             // 
@@ -405,8 +416,9 @@
             this.listCellPools.ItemCopy += new System.EventHandler(this.listCellPools_ItemCopy);
             this.listCellPools.ItemView += new System.EventHandler(this.listCellPools_ItemView);
             this.listCellPools.ItemToggleActive += new System.EventHandler(this.listCellPools_ItemToggleActive);
-            this.listCellPools.ItemsSort += new System.EventHandler(this.listCellPools_SortItems);
+            this.listCellPools.ItemsSort += new System.EventHandler(this.listCellPools_ItemsSort);
             this.listCellPools.ItemSelect += new System.EventHandler(this.listCellPools_ItemSelect);
+            this.listCellPools.ItemPlot += new System.EventHandler(this.listCellPools_ItemPlot);
             // 
             // listCells
             // 
@@ -423,7 +435,9 @@
             this.listCells.ItemCopy += new System.EventHandler(this.listCells_ItemCopy);
             this.listCells.ItemView += new System.EventHandler(this.listCells_ItemView);
             this.listCells.ItemToggleActive += new System.EventHandler(this.listCells_ItemToggleActive);
+            this.listCells.ItemsSort += new System.EventHandler(this.listCells_ItemsSort);
             this.listCells.ItemSelect += new System.EventHandler(this.listCells_ItemSelect);
+            this.listCells.ItemPlot += new System.EventHandler(this.listCells_ItemPlot);
             // 
             // pCellsTop
             // 
@@ -521,6 +535,8 @@
             this.listConnections.ItemView += new System.EventHandler(this.listConnections_ItemView);
             this.listConnections.ItemToggleActive += new System.EventHandler(this.listConnections_ItemToggleActive);
             this.listConnections.ItemsSort += new System.EventHandler(this.listConnections_SortItems);
+            this.listConnections.ItemSelect += new System.EventHandler(this.listConnections_ItemSelect);
+            this.listConnections.ItemPlot += new System.EventHandler(this.listConnections_ItemPlot);
             // 
             // pConnectionsTop
             // 
@@ -567,6 +583,9 @@
             this.listStimuli.ItemCopy += new System.EventHandler(this.listStimuli_ItemCopy);
             this.listStimuli.ItemView += new System.EventHandler(this.listStimuli_ItemView);
             this.listStimuli.ItemToggleActive += new System.EventHandler(this.listStimuli_ItemToggleActive);
+            this.listStimuli.ItemsSort += new System.EventHandler(this.listStimuli_ItemsSort);
+            this.listStimuli.ItemSelect += new System.EventHandler(this.listStimuli_ItemSelect);
+            this.listStimuli.ItemPlot += new System.EventHandler(this.listStimuli_ItemPlot);
             // 
             // pStimuliTop
             // 
@@ -717,17 +736,6 @@
             this.tabModel.Size = new System.Drawing.Size(690, 583);
             this.tabModel.TabIndex = 2;
             this.tabModel.Tag = "";
-            // 
-            // linkOpenJsonViewer
-            // 
-            this.linkOpenJsonViewer.AutoSize = true;
-            this.linkOpenJsonViewer.Location = new System.Drawing.Point(179, 13);
-            this.linkOpenJsonViewer.Name = "linkOpenJsonViewer";
-            this.linkOpenJsonViewer.Size = new System.Drawing.Size(118, 15);
-            this.linkOpenJsonViewer.TabIndex = 26;
-            this.linkOpenJsonViewer.TabStop = true;
-            this.linkOpenJsonViewer.Text = "Open in JSON Viewer";
-            this.linkOpenJsonViewer.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenJsonViewer_LinkClicked);
             // 
             // ModelControl
             // 

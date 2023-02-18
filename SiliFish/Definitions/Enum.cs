@@ -39,7 +39,7 @@ namespace SiliFish.Definitions
         [Display(Name = "Synaptic Current")] ChemCurrent,
         [Display(Name = "Stimuli")] Stimuli,
         [Display(Name = "Full Dynamics")] FullDyn,
-        //[Display(Name = "Body Angle Heat Map")] BodyAngleHeatMap,
+        [Display(Name = "Junction")] Junction,
         [Display(Name = "Episodes")] Episodes
     }
 
