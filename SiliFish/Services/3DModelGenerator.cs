@@ -104,11 +104,10 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string Create3DModel(bool saveFile, RunningModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
+        public string Create3DModel(RunningModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
         {
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DModel.html"));
 
-            string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 3D Model";
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
@@ -210,8 +209,6 @@ namespace SiliFish.Services
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
-            if (!string.IsNullOrEmpty(filename))
-                File.WriteAllText(filename, html.ToString());
             return html.ToString();
         }
     }

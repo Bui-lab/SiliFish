@@ -24,7 +24,9 @@ namespace SiliFish.Helpers
         public static string SaveToTempFolder(string filename, string content)
         {
             filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+            filename = string.Concat("~", filename.AsSpan(1));
             string path = $"{GlobalSettings.TempFolder}\\{filename}";
+            GlobalSettings.TempFiles.Add(path) ;
             File.WriteAllText(path, content);
             return path;
         }

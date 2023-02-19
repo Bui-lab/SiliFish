@@ -58,9 +58,8 @@ namespace SiliFish.Services
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 
-        public string Create2DModel(bool saveFile, RunningModel model, List<CellPool> pools, int width, int height)
+        public string Create2DModel(RunningModel model, List<CellPool> pools, int width, int height)
         {
-            string filename = saveFile ? model.ModelName + "Model.html" : "";
             string title = model.ModelName + " 2D Model";
 
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.2DModel.html"));
@@ -134,8 +133,6 @@ namespace SiliFish.Services
             pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
             html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
-            if (!string.IsNullOrEmpty(filename))
-                File.WriteAllText(filename, html.ToString());
             return html.ToString();
         }
 

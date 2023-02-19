@@ -676,7 +676,7 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null) return;
             TwoDModelGenerator modelGenerator = new();
-            string html = modelGenerator.Create2DModel(false, RunningModel, RunningModel.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
+            string html = modelGenerator.Create2DModel(RunningModel, RunningModel.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
             webView2DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
 
         }
@@ -711,7 +711,7 @@ namespace SiliFish.UI.Controls
             try
             {
                 ThreeDModelGenerator threeDModelGenerator = new();
-                string html = threeDModelGenerator.Create3DModel(saveFile: false, RunningModel, RunningModel.CellPools,
+                string html = threeDModelGenerator.Create3DModel(RunningModel, RunningModel.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 webView3DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
