@@ -285,9 +285,9 @@ namespace SiliFish.UI.Controls
 
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotType plotType = ddPlot.SelectedText.GetValueFromName<PlotType>(PlotType.NotSet);
+            PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
             pPlotSelection.Visible = PlotType != PlotType.Junction;
-            if (plotType == PlotType.Episodes)
+            if (PlotType == PlotType.Episodes)
             {
                 ddPlotSomiteSelection.SelectedIndex =
                     ddPlotCellSelection.SelectedIndex =
@@ -309,7 +309,7 @@ namespace SiliFish.UI.Controls
                     ddPlotSagittal.Enabled =
                     ddPlotPools.Enabled = true;
             }
-            toolTip.SetToolTip(ddPlot, plotType.GetDescription());
+            toolTip.SetToolTip(ddPlot, PlotType.GetDescription());
             if (ddPlot.Focused)
                 DisplayNumberOfPlots();
         }
