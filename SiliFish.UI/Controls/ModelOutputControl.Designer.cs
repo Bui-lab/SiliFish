@@ -139,6 +139,7 @@
             this.saveFileText = new System.Windows.Forms.SaveFileDialog();
             this.saveFileCSV = new System.Windows.Forms.SaveFileDialog();
             this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
+            this.pPlotSelection = new System.Windows.Forms.Panel();
             this.tabOutputs.SuspendLayout();
             this.tPlot.SuspendLayout();
             this.tabPlotSub.SuspendLayout();
@@ -182,6 +183,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationdt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).BeginInit();
+            this.pPlotSelection.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabOutputs
@@ -298,6 +300,7 @@
             // pPlot
             // 
             this.pPlot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pPlot.Controls.Add(this.pPlotSelection);
             this.pPlot.Controls.Add(this.linkExportPlotData);
             this.pPlot.Controls.Add(this.pLinePlots);
             this.pPlot.Controls.Add(this.ePlotHeight);
@@ -308,21 +311,11 @@
             this.pPlot.Controls.Add(this.lpx2);
             this.pPlot.Controls.Add(this.lNumberOfPlots);
             this.pPlot.Controls.Add(this.btnPlotWindows);
-            this.pPlot.Controls.Add(this.ddPlotSagittal);
             this.pPlot.Controls.Add(this.linkSavePlots);
             this.pPlot.Controls.Add(this.btnPlotHTML);
-            this.pPlot.Controls.Add(this.ddPlotCellSelection);
-            this.pPlot.Controls.Add(this.lPlotCells);
-            this.pPlot.Controls.Add(this.ePlotCellSelection);
             this.pPlot.Controls.Add(this.linkSaveHTMLPlots);
-            this.pPlot.Controls.Add(this.ddPlotSomiteSelection);
-            this.pPlot.Controls.Add(this.lPlotSomites);
             this.pPlot.Controls.Add(this.ePlotEnd);
             this.pPlot.Controls.Add(this.ePlotStart);
-            this.pPlot.Controls.Add(this.lSagittal);
-            this.pPlot.Controls.Add(this.ePlotSomiteSelection);
-            this.pPlot.Controls.Add(this.lPlotPool);
-            this.pPlot.Controls.Add(this.ddPlotPools);
             this.pPlot.Controls.Add(this.lPlotStart);
             this.pPlot.Controls.Add(this.lms1);
             this.pPlot.Controls.Add(this.lPlotEnd);
@@ -480,7 +473,7 @@
             this.ddPlotSagittal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotSagittal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotSagittal.FormattingEnabled = true;
-            this.ddPlotSagittal.Location = new System.Drawing.Point(280, 32);
+            this.ddPlotSagittal.Location = new System.Drawing.Point(66, 4);
             this.ddPlotSagittal.Name = "ddPlotSagittal";
             this.ddPlotSagittal.Size = new System.Drawing.Size(160, 23);
             this.ddPlotSagittal.TabIndex = 35;
@@ -519,7 +512,7 @@
             this.ddPlotCellSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotCellSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotCellSelection.FormattingEnabled = true;
-            this.ddPlotCellSelection.Location = new System.Drawing.Point(280, 110);
+            this.ddPlotCellSelection.Location = new System.Drawing.Point(66, 82);
             this.ddPlotCellSelection.Name = "ddPlotCellSelection";
             this.ddPlotCellSelection.Size = new System.Drawing.Size(113, 23);
             this.ddPlotCellSelection.TabIndex = 41;
@@ -528,7 +521,7 @@
             // lPlotCells
             // 
             this.lPlotCells.AutoSize = true;
-            this.lPlotCells.Location = new System.Drawing.Point(217, 112);
+            this.lPlotCells.Location = new System.Drawing.Point(3, 84);
             this.lPlotCells.Name = "lPlotCells";
             this.lPlotCells.Size = new System.Drawing.Size(32, 15);
             this.lPlotCells.TabIndex = 45;
@@ -536,7 +529,7 @@
             // 
             // ePlotCellSelection
             // 
-            this.ePlotCellSelection.Location = new System.Drawing.Point(397, 110);
+            this.ePlotCellSelection.Location = new System.Drawing.Point(183, 82);
             this.ePlotCellSelection.Minimum = new decimal(new int[] {
             1,
             0,
@@ -570,7 +563,7 @@
             this.ddPlotSomiteSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotSomiteSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotSomiteSelection.FormattingEnabled = true;
-            this.ddPlotSomiteSelection.Location = new System.Drawing.Point(280, 84);
+            this.ddPlotSomiteSelection.Location = new System.Drawing.Point(66, 56);
             this.ddPlotSomiteSelection.Name = "ddPlotSomiteSelection";
             this.ddPlotSomiteSelection.Size = new System.Drawing.Size(113, 23);
             this.ddPlotSomiteSelection.TabIndex = 37;
@@ -579,7 +572,7 @@
             // lPlotSomites
             // 
             this.lPlotSomites.AutoSize = true;
-            this.lPlotSomites.Location = new System.Drawing.Point(217, 86);
+            this.lPlotSomites.Location = new System.Drawing.Point(3, 58);
             this.lPlotSomites.Name = "lPlotSomites";
             this.lPlotSomites.Size = new System.Drawing.Size(49, 15);
             this.lPlotSomites.TabIndex = 42;
@@ -629,7 +622,7 @@
             // lSagittal
             // 
             this.lSagittal.AutoSize = true;
-            this.lSagittal.Location = new System.Drawing.Point(217, 34);
+            this.lSagittal.Location = new System.Drawing.Point(3, 6);
             this.lSagittal.Name = "lSagittal";
             this.lSagittal.Size = new System.Drawing.Size(46, 15);
             this.lSagittal.TabIndex = 34;
@@ -637,7 +630,7 @@
             // 
             // ePlotSomiteSelection
             // 
-            this.ePlotSomiteSelection.Location = new System.Drawing.Point(397, 84);
+            this.ePlotSomiteSelection.Location = new System.Drawing.Point(183, 56);
             this.ePlotSomiteSelection.Minimum = new decimal(new int[] {
             1,
             0,
@@ -656,7 +649,7 @@
             // lPlotPool
             // 
             this.lPlotPool.AutoSize = true;
-            this.lPlotPool.Location = new System.Drawing.Point(217, 60);
+            this.lPlotPool.Location = new System.Drawing.Point(3, 32);
             this.lPlotPool.Name = "lPlotPool";
             this.lPlotPool.Size = new System.Drawing.Size(31, 15);
             this.lPlotPool.TabIndex = 26;
@@ -668,7 +661,7 @@
             this.ddPlotPools.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddPlotPools.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ddPlotPools.FormattingEnabled = true;
-            this.ddPlotPools.Location = new System.Drawing.Point(280, 58);
+            this.ddPlotPools.Location = new System.Drawing.Point(66, 30);
             this.ddPlotPools.Name = "ddPlotPools";
             this.ddPlotPools.Size = new System.Drawing.Size(160, 23);
             this.ddPlotPools.TabIndex = 36;
@@ -729,6 +722,7 @@
             this.ddPlot.Name = "ddPlot";
             this.ddPlot.Size = new System.Drawing.Size(160, 23);
             this.ddPlot.TabIndex = 34;
+            this.ddPlot.DropDown += new System.EventHandler(this.ddPlot_DropDown);
             this.ddPlot.SelectedIndexChanged += new System.EventHandler(this.ddPlot_SelectedIndexChanged);
             // 
             // t2DModel
@@ -1543,6 +1537,23 @@
             // 
             this.saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // pPlotSelection
+            // 
+            this.pPlotSelection.Controls.Add(this.lSagittal);
+            this.pPlotSelection.Controls.Add(this.ddPlotPools);
+            this.pPlotSelection.Controls.Add(this.lPlotPool);
+            this.pPlotSelection.Controls.Add(this.ePlotSomiteSelection);
+            this.pPlotSelection.Controls.Add(this.lPlotSomites);
+            this.pPlotSelection.Controls.Add(this.ddPlotSomiteSelection);
+            this.pPlotSelection.Controls.Add(this.ePlotCellSelection);
+            this.pPlotSelection.Controls.Add(this.lPlotCells);
+            this.pPlotSelection.Controls.Add(this.ddPlotCellSelection);
+            this.pPlotSelection.Controls.Add(this.ddPlotSagittal);
+            this.pPlotSelection.Location = new System.Drawing.Point(214, 31);
+            this.pPlotSelection.Name = "pPlotSelection";
+            this.pPlotSelection.Size = new System.Drawing.Size(226, 106);
+            this.pPlotSelection.TabIndex = 60;
+            // 
             // ModelOutputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1599,6 +1610,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationdt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationEnd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eAnimationStart)).EndInit();
+            this.pPlotSelection.ResumeLayout(false);
+            this.pPlotSelection.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1714,5 +1727,6 @@
         private SaveFileDialog saveFileText;
         private SaveFileDialog saveFileCSV;
         private SaveFileDialog saveFileImage;
+        private Panel pPlotSelection;
     }
 }

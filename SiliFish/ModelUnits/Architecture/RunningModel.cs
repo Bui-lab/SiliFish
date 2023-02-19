@@ -7,6 +7,7 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
+using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -281,6 +282,14 @@ namespace SiliFish.ModelUnits.Architecture
                 cp.CheckValues(ref errors);
             return errors.Count == 0;
         }
+
+        public List<Cell> GetCells()
+        {
+            List<Cell> MuscleCells = MusclePools.SelectMany(mp => mp.GetCells()).ToList();
+            List<Cell> Neurons = NeuronPools.SelectMany(np => np.GetCells()).ToList();
+            return MuscleCells.Union(Neurons).ToList();
+
+        }
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
         {
             List<Cell> motoNeurons = MotoNeurons;
@@ -499,7 +508,7 @@ namespace SiliFish.ModelUnits.Architecture
             FillMissingParameters(paramExternal);
         }
 
-        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, CellSelectionStruct cellSelection)
+        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionMultiCells cellSelection)
         {
             List<CellPool> pools = neuronPools.Union(musclePools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
                             && p.OnSide(cellSelection.SagittalPlane)).ToList();

@@ -11,7 +11,7 @@ using SiliFish.ModelUnits.Junction;
 using System;
 using System.Runtime.InteropServices;
 
-namespace SiliFish.Services
+namespace SiliFish.Services.Plotting
 {
 
     public class PlotDataGenerator
@@ -57,7 +57,7 @@ namespace SiliFish.Services
                     yMin = yMin,
                     yMax = yMax,
                     xMin = TimeArray[iStart],
-                    xMax = (TimeArray[iEnd] + 1)
+                    xMax = TimeArray[iEnd] + 1
                 });
             }
             return charts;
@@ -149,7 +149,7 @@ namespace SiliFish.Services
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
-                        xMax = (TimeArray[iEnd] + 1)
+                        xMax = TimeArray[iEnd] + 1
                     });
                 }
                 if (synInExists)
@@ -171,7 +171,7 @@ namespace SiliFish.Services
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
-                        xMax = (TimeArray[iEnd] + 1)
+                        xMax = TimeArray[iEnd] + 1
                     });
                 }
                 if (synOutExists)
@@ -193,7 +193,7 @@ namespace SiliFish.Services
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
-                        xMax = (TimeArray[iEnd] + 1)
+                        xMax = TimeArray[iEnd] + 1
                     });
                 }
             }
@@ -223,6 +223,7 @@ namespace SiliFish.Services
 
             string columnTitles = "Time,";
             List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+            
             foreach (GapJunction jnc in gapJunctions)
             {
                 columnTitles += jnc.ID + ",";
@@ -238,15 +239,17 @@ namespace SiliFish.Services
 
             string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
             List<ChartDataStruct> charts = new();
+            string ampere = UoM == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" :
+                UoM == UnitOfMeasure.milliVolt_nanoAmpere_MegaOhm_nanoFarad_microSiemens ? "nA" : "";
             charts.Add(new ChartDataStruct
             {
                 CsvData = csvData,
-                Title = $"`Junction`",//TODO
-                yLabel = "`Memb. Potential (mV)`",//TODO use UoM and Current?
+                Title = $"`Junction:{columnTitles[5..]}`",
+                yLabel =  $"`Current ({ampere})`",
                 yMin = yMin,
                 yMax = yMax,
                 xMin = TimeArray[iStart],
-                xMax = (TimeArray[iEnd] + 1)
+                xMax = TimeArray[iEnd] + 1
             });
             return charts;
         }
@@ -296,7 +299,7 @@ namespace SiliFish.Services
                         yMin = yMin,
                         yMax = yMax,
                         xMin = TimeArray[iStart],
-                        xMax = (TimeArray[iEnd] + 1)
+                        xMax = TimeArray[iEnd] + 1
                     });
                 }
             }
@@ -336,7 +339,7 @@ namespace SiliFish.Services
                     yMin = yMin,
                     yMax = yMax,
                     xMin = TimeArray[iStart],
-                    xMax = (TimeArray[iEnd] + 1)
+                    xMax = TimeArray[iEnd] + 1
                 });
             }
             return charts;
@@ -359,7 +362,7 @@ namespace SiliFish.Services
         {
             List<ChartDataStruct> charts = new();
             List<Cell> cells = new();
-            List<GapJunction> gapJunctions= new();
+            List<GapJunction> gapJunctions = new();
             List<ChemicalSynapse> synapses = new();
             if (jnc is GapJunction gj)
             {
@@ -373,7 +376,7 @@ namespace SiliFish.Services
                 cells.Add(syn.PostCell);
                 synapses.Add(syn);
             }
-            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool:false, iStart, iEnd));
+            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool: false, iStart, iEnd));
             charts.AddRange(CreateCurrentCharts(TimeOffset, gapJunctions, synapses, iStart, iEnd, UoM));
             return charts;
         }
@@ -400,8 +403,8 @@ namespace SiliFish.Services
                 Title = $"`Tail Movement`",
                 yLabel = "`Y-Coordinate`",
                 xMin = Time[0],
-                xMax = (Time[^1] + 1),
-                yMin = yValues.Min() -1,
+                xMax = Time[^1] + 1,
+                yMin = yValues.Min() - 1,
                 yMax = yValues.Max() + 1
             });
 
@@ -421,7 +424,7 @@ namespace SiliFish.Services
                     yLabel = "`Duration (ms)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1),
+                    xMax = Time[^1] + 1,
                     yMin = 0,
                     yMax = yValues.Max() + 1
                 });
@@ -443,7 +446,7 @@ namespace SiliFish.Services
                         yLabel = "`Interval (ms)`",
                         ScatterPlot = true,
                         xMin = Time[0],
-                        xMax = (Time[^1] + 1),
+                        xMax = Time[^1] + 1,
                         yMin = 0,
                         yMax = yValues.Max() + 1
                     });
@@ -463,7 +466,7 @@ namespace SiliFish.Services
                     yLabel = "`Freq (Hz)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1),
+                    xMax = Time[^1] + 1,
                     yMin = 0,
                     yMax = yValues.Max() + 1
                 });
@@ -482,7 +485,7 @@ namespace SiliFish.Services
                     yLabel = "`Freq (Hz)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1),
+                    xMax = Time[^1] + 1,
                     yMin = 0,
                     yMax = yValues.Max() + 1
                 });
@@ -501,7 +504,7 @@ namespace SiliFish.Services
                     yLabel = "`Freq (Hz)`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1),
+                    xMax = Time[^1] + 1,
                     yMin = 0,
                     yMax = yValues.Max() + 1
                 });
@@ -520,7 +523,7 @@ namespace SiliFish.Services
                     yLabel = "`Count`",
                     ScatterPlot = true,
                     xMin = Time[0],
-                    xMax = (Time[^1] + 1),
+                    xMax = Time[^1] + 1,
                     yMin = 0,
                     yMax = yValues.Max() + 1
                 });
@@ -530,7 +533,7 @@ namespace SiliFish.Services
         }
 
         public static (string, List<ChartDataStruct>) GetPlotData(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-             ModelUnitInterface inter, int tStart = 0, int tEnd = -1)
+             PlotSelectionInterface inter, int tStart = 0, int tEnd = -1)
         {
             List<ChartDataStruct> charts;
             double dt = model.RunParam.DeltaT;
@@ -542,14 +545,14 @@ namespace SiliFish.Services
                 iEnd = model.TimeArray.Length - 1;
 
             UnitOfMeasure UoM = model.Settings.UoM;
-            if (inter.GetType() == typeof(JunctionSelectionStruct))
+            if (inter.GetType() == typeof(PlotSelectionJunction))
             {
-                JunctionSelectionStruct jncSelection = (JunctionSelectionStruct)inter;
+                PlotSelectionJunction jncSelection = (PlotSelectionJunction)inter;
                 charts = CreateJunctionCharts(model.TimeArray, jncSelection.Junction, iStart, iEnd, UoM);
                 return ("Junction", charts);
             }
 
-            CellSelectionStruct cellSelection = (CellSelectionStruct)inter;
+            PlotSelectionMultiCells cellSelection = (PlotSelectionMultiCells)inter;
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
@@ -592,7 +595,7 @@ namespace SiliFish.Services
                     charts = CreateEpisodeCharts(model, iStart, iEnd);
                     break;
                 default:
-                    charts= null;
+                    charts = null;
                     break;
             }
             return (Title, charts);
@@ -601,11 +604,11 @@ namespace SiliFish.Services
 
         public static (string, List<ChartDataStruct>) GetPlotDataOfJunction(JunctionBase junction, int tStart = 0, int tEnd = -1)
         {
-            if (junction==null)
+            if (junction == null)
                 return (null, null);
             GapJunction gapJunc = junction as GapJunction;
-            ChemicalSynapse synapse= junction as ChemicalSynapse;
-            RunningModel model = gapJunc?.Cell1.Model?? synapse?.PreNeuron.Model;
+            ChemicalSynapse synapse = junction as ChemicalSynapse;
+            RunningModel model = gapJunc?.Cell1.Model ?? synapse?.PreNeuron.Model;
             if (model == null) return (null, null);
             Cell preCell = gapJunc?.Cell1 ?? synapse?.PreNeuron;
             Cell postCell = gapJunc?.Cell2 ?? synapse?.PostCell;
@@ -620,10 +623,10 @@ namespace SiliFish.Services
 
             UnitOfMeasure UoM = model.Settings.UoM;
             bool groupByPool = false;
-            List<Cell> Cells=new() { preCell, postCell };
+            List<Cell> Cells = new() { preCell, postCell };
             List<ChartDataStruct> charts = CreateMembranePotentialCharts(model.TimeArray, Cells, false, iStart, iEnd);
 
-            charts.AddRange(CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM, includeGap: gapJunc!=null, includeChem: synapse!=null));
+            charts.AddRange(CreateCurrentCharts(model.TimeArray, Cells, groupByPool, iStart, iEnd, UoM, includeGap: gapJunc != null, includeChem: synapse != null));
             return ("Junction plot", charts);
         }
 

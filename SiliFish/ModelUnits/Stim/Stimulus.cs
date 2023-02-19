@@ -81,7 +81,7 @@ namespace SiliFish.ModelUnits.Stim
                 for (int ind = iStart; ind < iEnd; ind++)
                 {
                     double noise = Settings.Value2 > 0 ? rand.Gauss(1, Settings.Value2) : 1;
-                    values[ind] = Settings.Value1 * noise;//TODO is noise multipler or a deviation?
+                    values[ind] = Settings.Value1 * noise;
                 }
             }
         }

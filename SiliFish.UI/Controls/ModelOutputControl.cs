@@ -23,6 +23,7 @@ using System.Drawing.Imaging;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.Services.Plotting;
 
 namespace SiliFish.UI.Controls
 {
@@ -37,7 +38,7 @@ namespace SiliFish.UI.Controls
         int tPlotStart = 0;
         int tPlotEnd = 0;
         PlotType PlotType = PlotType.MembPotential;
-        ModelUnitInterface plotCellSelection;
+        PlotSelectionInterface plotCellSelection;
         private string tempFile;
         List<ChartDataStruct> LastPlottedCharts;
         RunningModel RunningModel = null;
@@ -50,6 +51,7 @@ namespace SiliFish.UI.Controls
 
             foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
             {
+                if (pt == PlotType.Junction) continue;
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
 
@@ -242,13 +244,13 @@ namespace SiliFish.UI.Controls
         private void DisplayNumberOfPlots()
         {
             if (RunningModel == null) return;
-            if (plotCellSelection.GetType() == typeof(JunctionSelectionStruct))
+            if (plotCellSelection?.GetType() == typeof(PlotSelectionJunction))
             {
                 lNumberOfPlots.Visible = false;
                 return;
             }
             GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (CellSelectionStruct)plotCellSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
             int count = Cells?.Count ?? 0 + Pools?.Count ?? 0;
             if (count > 0)
             {
@@ -283,7 +285,8 @@ namespace SiliFish.UI.Controls
 
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotType plotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
+            PlotType plotType = ddPlot.SelectedText.GetValueFromName<PlotType>(PlotType.NotSet);
+            pPlotSelection.Visible = PlotType != PlotType.Junction;
             if (plotType == PlotType.Episodes)
             {
                 ddPlotSomiteSelection.SelectedIndex =
@@ -309,6 +312,13 @@ namespace SiliFish.UI.Controls
             toolTip.SetToolTip(ddPlot, plotType.GetDescription());
             if (ddPlot.Focused)
                 DisplayNumberOfPlots();
+        }
+
+        private void ddPlot_DropDown(object sender, EventArgs e)
+        {
+            if (ddPlot.Items.Contains(PlotType.Junction.GetDisplayName()))
+                ddPlot.Items.Remove(PlotType.Junction.GetDisplayName());
+
         }
 
         private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
@@ -371,7 +381,7 @@ namespace SiliFish.UI.Controls
 
             if (PlotType != PlotType.Episodes)
             {
-                plotCellSelection = new CellSelectionStruct()
+                plotCellSelection = new PlotSelectionMultiCells()
                 {
                     SagittalPlane = ddPlotSagittal.Text.GetValueFromName(SagittalPlane.Both),
                     somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSelection.All),
@@ -421,8 +431,8 @@ namespace SiliFish.UI.Controls
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = 
-                plotCellSelection.GetType() == typeof(JunctionSelectionStruct) ? (null, null) :
-                RunningModel.GetSubsetCellsAndPools(PlotSubset, (CellSelectionStruct)plotCellSelection);
+                plotCellSelection.GetType() == typeof(PlotSelectionJunction) ? (null, null) :
+                RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
             (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, RunningModel, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd);
 
             htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts,
@@ -494,10 +504,12 @@ namespace SiliFish.UI.Controls
             JunctionBase jnc = unitToPlot as JunctionBase;
             if (jnc != null)
             {
+                if (!ddPlot.Items.Contains(PlotType.Junction.GetDisplayName()))
+                    ddPlot.Items.Add(PlotType.Junction.GetDisplayName());
                 ddPlot.SelectedItem = PlotType.Junction.GetDisplayName();
-                PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
+                PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
                 PlotSubset = ddPlotPools.Text;
-                plotCellSelection = new JunctionSelectionStruct()
+                plotCellSelection = new PlotSelectionJunction()
                 {
                     Junction = jnc
                 };
@@ -576,9 +588,9 @@ namespace SiliFish.UI.Controls
                 btnPlotWindows.Enabled = false;
                 btnPlotHTML.Enabled = false;
 
-                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (CellSelectionStruct)plotCellSelection);
+                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (CellSelectionStruct)plotCellSelection,
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotCellSelection,
                     tPlotStart, tPlotEnd);
 
                 leftImages?.RemoveAll(img => img == null);

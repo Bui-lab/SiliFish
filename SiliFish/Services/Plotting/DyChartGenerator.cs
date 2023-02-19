@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace SiliFish.Services
+namespace SiliFish.Services.Plotting
 {
     public class DyChartGenerator : EmbeddedResourceReader
     {

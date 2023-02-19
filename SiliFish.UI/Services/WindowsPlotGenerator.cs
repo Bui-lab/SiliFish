@@ -8,13 +8,14 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using SiliFish.UI;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.Services.Plotting;
 
 namespace Services
 {
     public class WindowsPlotGenerator
     {
         private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> cellPools,
-                    CellSelectionStruct cellSelection, int iStart, int iEnd)
+                    PlotSelectionMultiCells cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -101,7 +102,7 @@ namespace Services
             return (leftImages, rightImages);
         }
 
-        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, CellSelectionStruct cellSelection,
+        private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, PlotSelectionMultiCells cellSelection,
             int iStart, int iEnd,
             bool gap, bool chem, UnitOfMeasure UoM)
         {
@@ -160,7 +161,7 @@ namespace Services
         }
 
         private static (List<Image>, List<Image>) PlotStimuli(double[] timeArray, List<Cell> cells, List<CellPool> pools,
-            CellSelectionStruct cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
+            PlotSelectionMultiCells cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -214,7 +215,7 @@ namespace Services
             return (leftImages, rightImages);
         }
         private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools, 
-            CellSelectionStruct cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
+            PlotSelectionMultiCells cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -293,7 +294,7 @@ namespace Services
         }
 
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-            CellSelectionStruct cellSelection, int tStart = 0, int tEnd = -1)
+            PlotSelectionMultiCells cellSelection, int tStart = 0, int tEnd = -1)
         {
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SiliFish.ModelUnits
+namespace SiliFish.Services.Plotting
 {
-    public interface ModelUnitInterface
+    public interface PlotSelectionInterface
     {
     }
 }

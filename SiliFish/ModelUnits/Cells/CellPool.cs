@@ -6,6 +6,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -229,7 +230,7 @@ namespace SiliFish.ModelUnits.Cells
             return Cells.AsEnumerable();
         }
 
-        public IEnumerable<Cell> GetCells(CellSelectionStruct cellSelection)
+        public IEnumerable<Cell> GetCells(PlotSelectionMultiCells cellSelection)
         {
             if (cellSelection.somiteSelection == PlotSelection.All && cellSelection.cellSelection == PlotSelection.All)
                 return Cells.AsEnumerable<Cell>();

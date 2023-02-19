@@ -180,6 +180,8 @@ namespace SiliFish.UI.Controls
         {
             LoadParamsAndSettings();
             LoadPools();
+            if (Model is RunningModel)
+                LoadCells();
             LoadProjections();
             LoadStimuli();
             this.Text = $"SiliFish {Model?.ModelName}";
@@ -247,7 +249,7 @@ namespace SiliFish.UI.Controls
             SelectedPoolTemplate = null;
             SelectedPool = null;
             SelectedCell = null;
-        }       
+        }
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
             if (Model == null) return null;
@@ -295,15 +297,15 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_ItemSelect(object sender, EventArgs e)
         {
-            if (CurrentMode == RunMode.RunningModel) 
+            if (CurrentMode == RunMode.RunningModel)
                 listCells.ClearItems();
             if (sender is CellPool pool)
             {
                 SelectedPool = pool;
                 SelectedCell = null;
+                LoadCells();
                 LoadProjections(pool);
                 LoadStimuli(pool);
-                LoadCells();
             }
             else if (sender is CellPoolTemplate cpt)
             {
@@ -315,6 +317,7 @@ namespace SiliFish.UI.Controls
             {
                 SelectedPool = null;
                 SelectedCell = null;
+                LoadCells();//Full list
                 LoadProjections();//Full list
                 LoadStimuli();//Full list
             }
@@ -336,7 +339,7 @@ namespace SiliFish.UI.Controls
             {
                 AddCellPool(poolDuplicate);
                 LoadProjections();
-                ModelIsUpdated();    
+                ModelIsUpdated();
             }
         }
         private void listCellPools_ItemDelete(object sender, EventArgs e)
@@ -392,11 +395,14 @@ namespace SiliFish.UI.Controls
         private void LoadCells()
         {
             listCells.ClearItems();
-            if (SelectedPool == null) return;
-            foreach (Cell c in SelectedPool.GetCells())
-                listCells.AppendItem(c);
+            lCellsTitle.Text = SelectedPool != null ? $"Cells of {SelectedPool.ID}" : "Cells";
+
+            List<Cell> Cells = (List<Cell>)(SelectedPool?.GetCells() ?? (Model as RunningModel).GetCells());
+            foreach (Cell cell in Cells)
+                listCells.AppendItem(cell);
             SelectedCell = null;
-        }
+        } 
+        
         private Cell OpenCellDialog(Cell cell)
         {
             if (Model == null) return null;

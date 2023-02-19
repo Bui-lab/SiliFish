@@ -1,8 +1,8 @@
 ﻿using SiliFish.Definitions;
 
-namespace SiliFish.ModelUnits.Cells
+namespace SiliFish.Services.Plotting
 {
-    public struct CellSelectionStruct: ModelUnitInterface
+    public struct PlotSelectionMultiCells : PlotSelectionInterface
     {
         public string Pools = "All";
         public SagittalPlane SagittalPlane = SagittalPlane.Both;
@@ -10,7 +10,7 @@ namespace SiliFish.ModelUnits.Cells
         public int nSomite = -1;
         public PlotSelection cellSelection = PlotSelection.All;
         public int nCell = -1;
-        public CellSelectionStruct()
+        public PlotSelectionMultiCells()
         {
         }
     }
