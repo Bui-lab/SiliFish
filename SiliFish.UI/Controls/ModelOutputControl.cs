@@ -37,12 +37,28 @@ namespace SiliFish.UI.Controls
         int tAnimEnd = 0;
         int tPlotStart = 0;
         int tPlotEnd = 0;
+        int numOfPlots = 0;
         PlotType PlotType = PlotType.MembPotential;
         PlotSelectionInterface plotCellSelection;
         private string tempFile;
         List<ChartDataStruct> LastPlottedCharts;
         RunningModel RunningModel = null;
 
+        private bool PlotSelectionVisible
+        {
+            get 
+            {
+                if (pPlotSelection.Tag is bool visible)
+                    return visible;
+                return true;
+            }
+            set
+            {
+                pPlotSelection.Visible = value;
+                pPlotSelection.Tag = value;
+                //The visible property can return false if the form is not in the visible field, regardless of this value. So use the tag field instead
+            }
+        }
         public ModelOutputControl()
         {
             InitializeComponent();
@@ -55,6 +71,7 @@ namespace SiliFish.UI.Controls
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
 
+            PlotSelectionVisible = true;
             foreach (PlotSelection ps in Enum.GetValues(typeof(PlotSelection)))
             {
                 if (ps != PlotSelection.Summary)
@@ -241,74 +258,61 @@ namespace SiliFish.UI.Controls
         #region Outputs
 
         #region HTML and Windows Plots - Common Functions
+
+        private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
+        {
+            numOfPlots = Cells?.Count ?? 0 + Pools?.Count ?? 0;
+            if (numOfPlots > 0)
+            {
+                if (PlotType == PlotType.FullDyn)
+                    numOfPlots *= 5;
+                else if (PlotType == PlotType.Current)
+                    numOfPlots *= 3;
+                else if (PlotType == PlotType.ChemCurrent)
+                    numOfPlots *= 2;
+                if (PlotType == PlotType.Stimuli)
+                    lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + numOfPlots.ToString();
+                else
+                    lNumberOfPlots.Text = lNumberOfPlots.Tag + numOfPlots.ToString();
+                lNumberOfPlots.Visible = true;
+            }
+            else
+                lNumberOfPlots.Visible = false;
+        }
         private void DisplayNumberOfPlots()
         {
             if (RunningModel == null) return;
             if (plotCellSelection?.GetType() == typeof(PlotSelectionJunction))
             {
+                numOfPlots = 3;
                 lNumberOfPlots.Visible = false;
                 return;
             }
             GetPlotSubset();
             (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
-            int count = Cells?.Count ?? 0 + Pools?.Count ?? 0;
-            if (count > 0)
-            {
-                if (PlotType == PlotType.FullDyn)
-                    count *= 5;
-                else if (PlotType == PlotType.Current)
-                    count *= 3;
-                else if (PlotType == PlotType.ChemCurrent)
-                    count *= 2;
-                if (PlotType == PlotType.Stimuli)
-                    lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + count.ToString();
-                else
-                    lNumberOfPlots.Text = lNumberOfPlots.Tag + count.ToString();
-                lNumberOfPlots.Visible = true;
-            }
-            else
-                lNumberOfPlots.Visible = false;
-
+            DisplayNumberOfPlots(Cells, Pools);
         }
         private void ddPlotPools_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddPlotPools.SelectedIndex < 0 || ddPlotSagittal.SelectedIndex < 0)
                 return;
-            string pool = ddPlotPools.Text;
-            SagittalPlane sagittal = ddPlotSagittal.Text.GetValueFromName<SagittalPlane>(SagittalPlane.Both);
-            List<CellPool> pools = RunningModel.CellPools.Where(cp => (pool == "All" || cp.CellGroup == pool) && cp.OnSide(sagittal)).ToList();
-            ePlotSomiteSelection.Maximum = (decimal)(pools?.Max(p => p.GetMaxCellSomite()) ?? 0);
-            ePlotCellSelection.Maximum = (decimal)(pools?.Max(p => p.GetMaxCellSequence()) ?? 0);
+            GetPlotSubset();
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
+            ePlotSomiteSelection.Maximum =
+                Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSomite()) :
+                Cells != null && Cells.Any() ? Cells.Max(c => c.Somite) : 0;
+            ePlotCellSelection.Maximum =
+                Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSequence()) :
+                Cells != null && Cells.Any() ? Cells.Max(c => c.Sequence) : 0;
             if (ddPlotPools.Focused)
-                DisplayNumberOfPlots();
+                DisplayNumberOfPlots(Cells, Pools);
         }
 
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
-            pPlotSelection.Visible = PlotType != PlotType.Junction;
-            if (PlotType == PlotType.Episodes)
-            {
-                ddPlotSomiteSelection.SelectedIndex =
-                    ddPlotCellSelection.SelectedIndex =
-                    ddPlotSagittal.SelectedIndex =
-                    ddPlotPools.SelectedIndex = -1;
-                ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled =
-                    ddPlotCellSelection.Enabled =
-                    ePlotCellSelection.Enabled =
-                    ddPlotSagittal.Enabled =
-                    ddPlotPools.Enabled = false;
-            }
-            else
-            {
-                ddPlotSomiteSelection.Enabled =
-                    ePlotSomiteSelection.Enabled = RunningModel?.ModelDimensions.NumberOfSomites > 0;
-                ddPlotCellSelection.Enabled =
-                    ePlotCellSelection.Enabled =
-                    ddPlotSagittal.Enabled =
-                    ddPlotPools.Enabled = true;
-            }
+            PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
+            PlotSelectionVisible = PlotType != PlotType.Junction && PlotType != PlotType.Episodes;
+
             toolTip.SetToolTip(ddPlot, PlotType.GetDescription());
             if (ddPlot.Focused)
                 DisplayNumberOfPlots();
@@ -362,9 +366,15 @@ namespace SiliFish.UI.Controls
             ddPlotPools.Items.Clear();
             ddPlotPools.Text = "";
             if (RunningModel == null || !RunningModel.CellPools.Any()) return;
-            List<string> itemList = new();
+            List<string> itemList = new()
+            {
+                Const.AllPools,
+                Const.AllMuscleCells,
+                Const.AllMotoneurons,
+                Const.AllInterneurons,
+                Const.AllNeurons
+            };
             itemList.AddRange(RunningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p).ToArray());
-            itemList.Insert(0, "All");
 
             ddPlotPools.Items.AddRange(itemList.Distinct().ToArray());
             if (ddPlotPools.Items?.Count > 0)
@@ -379,7 +389,7 @@ namespace SiliFish.UI.Controls
             PlotType = ddPlot.Text.GetValueFromName<PlotType>(PlotType.NotSet);
             PlotSubset = ddPlotPools.Text;
 
-            if (PlotType != PlotType.Episodes)
+            if (PlotSelectionVisible)
             {
                 plotCellSelection = new PlotSelectionMultiCells()
                 {
@@ -445,6 +455,12 @@ namespace SiliFish.UI.Controls
             SaveLastPlotSettings();
 
             GetPlotSubset();
+            if (numOfPlots > GlobalSettings.PlotWarningNumber)
+            {
+                string msg = $"Plotting {numOfPlots} charts will use a lot of resources. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
             if (PlotType == PlotType.Episodes)
                 RunningModel.SetAnimationParameters(RunningModel.KinemParam);
             tabOutputs.SelectedTab = tPlot;
@@ -501,8 +517,7 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
             if (unitToPlot == null) return;
-            JunctionBase jnc = unitToPlot as JunctionBase;
-            if (jnc != null)
+            if (unitToPlot is JunctionBase jnc)
             {
                 if (!ddPlot.Items.Contains(PlotType.Junction.GetDisplayName()))
                     ddPlot.Items.Add(PlotType.Junction.GetDisplayName());

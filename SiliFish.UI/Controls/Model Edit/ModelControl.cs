@@ -394,6 +394,7 @@ namespace SiliFish.UI.Controls
 
         private void LoadCells()
         {
+            if (Model is ModelTemplate) return;
             listCells.ClearItems();
             lCellsTitle.Text = SelectedPool != null ? $"Cells of {SelectedPool.ID}" : "Cells";
 
@@ -920,7 +921,6 @@ namespace SiliFish.UI.Controls
 
         private void listStimuli_ItemsSort(object sender, EventArgs e)
         {
-            if (SelectedPool == null) return;
             if (SelectedCell != null)
             {
                 SelectedCell.SortStimuli();

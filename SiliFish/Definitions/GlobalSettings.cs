@@ -18,6 +18,7 @@ namespace SiliFish.Definitions
         public static string OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         public static double Epsilon = 0.00001;
 
+        public static int PlotWarningNumber = 10;
         public static string DecimalPointFormat = "0.0###";
 
         public static bool SameYAxis = true;
@@ -61,6 +62,11 @@ namespace SiliFish.Definitions
             DisplayName("Number Format"),
             Category("Plotting")]
         public string DecimalPointFormat { get { return GlobalSettings.DecimalPointFormat; } set { GlobalSettings.DecimalPointFormat = value; } }
+
+        [Description("If there are more plots to be drawn than the 'Max # of Plots', the user will be warned to prevent unwanted resource usages."),
+            DisplayName("Max # of Plots"),
+            Category("Plotting")]
+        public int PlotWarningNumber { get { return GlobalSettings.PlotWarningNumber; } set { GlobalSettings.PlotWarningNumber = value; } }
 
         [Description("Valid for HTML plots. Whether the graphs of the same types will be plotted using the same y-axis."),
             DisplayName("Use the same y-axis"),

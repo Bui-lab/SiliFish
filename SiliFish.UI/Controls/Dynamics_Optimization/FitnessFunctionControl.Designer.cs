@@ -66,6 +66,8 @@
             // 
             // ddFitnessFunction
             // 
+            this.ddFitnessFunction.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddFitnessFunction.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddFitnessFunction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddFitnessFunction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -86,7 +88,7 @@
             this.pFitnessFunction.Dock = System.Windows.Forms.DockStyle.Top;
             this.pFitnessFunction.Location = new System.Drawing.Point(0, 0);
             this.pFitnessFunction.Name = "pFitnessFunction";
-            this.pFitnessFunction.Size = new System.Drawing.Size(245, 64);
+            this.pFitnessFunction.Size = new System.Drawing.Size(238, 64);
             this.pFitnessFunction.TabIndex = 4;
             // 
             // eFitnessWeight
@@ -118,7 +120,7 @@
             this.pMinMax.Location = new System.Drawing.Point(0, 158);
             this.pMinMax.MinimumSize = new System.Drawing.Size(240, 32);
             this.pMinMax.Name = "pMinMax";
-            this.pMinMax.Size = new System.Drawing.Size(245, 32);
+            this.pMinMax.Size = new System.Drawing.Size(240, 32);
             this.pMinMax.TabIndex = 5;
             // 
             // lSeperator
@@ -162,7 +164,7 @@
             this.pCurrentRequired.Dock = System.Windows.Forms.DockStyle.Top;
             this.pCurrentRequired.Location = new System.Drawing.Point(0, 64);
             this.pCurrentRequired.Name = "pCurrentRequired";
-            this.pCurrentRequired.Size = new System.Drawing.Size(245, 59);
+            this.pCurrentRequired.Size = new System.Drawing.Size(238, 59);
             this.pCurrentRequired.TabIndex = 6;
             // 
             // eCurrentApplied
@@ -196,6 +198,8 @@
             // 
             // ddCurrentSelection
             // 
+            this.ddCurrentSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCurrentSelection.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCurrentSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCurrentSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -211,6 +215,8 @@
             // 
             // ddFiringOption
             // 
+            this.ddFiringOption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddFiringOption.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddFiringOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddFiringOption.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -234,11 +240,10 @@
             // 
             // linkRemove
             // 
-            this.linkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkRemove.AutoSize = true;
             this.linkRemove.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkRemove.Location = new System.Drawing.Point(189, 197);
+            this.linkRemove.Location = new System.Drawing.Point(3, 196);
             this.linkRemove.Name = "linkRemove";
             this.linkRemove.Size = new System.Drawing.Size(50, 15);
             this.linkRemove.TabIndex = 7;
@@ -253,7 +258,7 @@
             this.pFiringOption.Dock = System.Windows.Forms.DockStyle.Top;
             this.pFiringOption.Location = new System.Drawing.Point(0, 123);
             this.pFiringOption.Name = "pFiringOption";
-            this.pFiringOption.Size = new System.Drawing.Size(245, 35);
+            this.pFiringOption.Size = new System.Drawing.Size(238, 35);
             this.pFiringOption.TabIndex = 8;
             // 
             // FitnessFunctionControl
@@ -263,11 +268,12 @@
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.pMinMax);
             this.Controls.Add(this.pFiringOption);
-            this.Controls.Add(this.linkRemove);
             this.Controls.Add(this.pCurrentRequired);
             this.Controls.Add(this.pFitnessFunction);
+            this.Controls.Add(this.linkRemove);
+            this.MinimumSize = new System.Drawing.Size(238, 121);
             this.Name = "FitnessFunctionControl";
-            this.Size = new System.Drawing.Size(245, 222);
+            this.Size = new System.Drawing.Size(238, 220);
             this.pFitnessFunction.ResumeLayout(false);
             this.pFitnessFunction.PerformLayout();
             this.pMinMax.ResumeLayout(false);

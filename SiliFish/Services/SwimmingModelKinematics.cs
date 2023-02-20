@@ -245,7 +245,7 @@ namespace SiliFish.Services
         public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs)
         { 
             double burstBreak = model.KinemParam.BurstBreak;
-            double episodeBreak=model.KinemParam.EpisodeBreak;
+            double episodeBreak = model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();
             int iSkip = (int)(model.RunParam.SkipDuration / model.RunParam.DeltaT);

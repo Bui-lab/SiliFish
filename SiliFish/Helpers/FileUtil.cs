@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +26,20 @@ namespace SiliFish.Helpers
         {
             filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
             filename = string.Concat("~", filename.AsSpan(1));
+            if (!Directory.Exists(GlobalSettings.TempFolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(GlobalSettings.TempFolder);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    throw;
+                }
+            }
             string path = $"{GlobalSettings.TempFolder}\\{filename}";
-            GlobalSettings.TempFiles.Add(path) ;
+            GlobalSettings.TempFiles.Add(path);
             File.WriteAllText(path, content);
             return path;
         }

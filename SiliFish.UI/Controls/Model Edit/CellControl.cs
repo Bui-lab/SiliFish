@@ -150,13 +150,13 @@ namespace SiliFish.UI.Controls
         {
             Dictionary<string, double> dparams = cell.Core.GetParameters();
             DynamicsTestControl dynControl = new(cell.Core.CoreType, dparams, testMode: false);
-            dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
-            dynControl.ContentChanged += frmDynamicControl.ChangeCaption;
             frmDynamicControl = new();
             frmDynamicControl.AddControl(dynControl, null);
             frmDynamicControl.Text = cell.ID;
             frmDynamicControl.SaveVisible = false;
             frmDynamicControl.Show();
+            dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
+            dynControl.ContentChanged += frmDynamicControl.ChangeCaption;
         }
 
         private void Dyncontrol_UseUpdatedParams(object sender, EventArgs e)

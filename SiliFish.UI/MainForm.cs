@@ -14,8 +14,8 @@ namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
+        private static bool showAboutForm = true;
         private DateTime runStart;
-        private readonly bool displayAbout = false;
         private string modelFileDefaultFolder, lastFileName;
         private ModelTemplate ModelTemplate = null;
         private RunningModel RunningModel = null;
@@ -32,7 +32,6 @@ namespace SiliFish.UI
             try
             {
                 InitializeComponent();
-                displayAbout = true;
                 ModelTemplate = new();
                 modelControl.SetModel(ModelTemplate);
                 SetCurrentMode(RunMode.Template, null);
@@ -49,7 +48,6 @@ namespace SiliFish.UI
             try
             {
                 InitializeComponent();
-                displayAbout = false;
                 ModelTemplate = null;
                 RunningModel = model;
 
@@ -81,11 +79,12 @@ namespace SiliFish.UI
         
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (displayAbout)
+            if (showAboutForm)
             {
                 About about = new();
                 about.SetTimer(2000);
                 about.ShowDialog();
+                showAboutForm = false;
             }
         }
 
@@ -386,6 +385,12 @@ namespace SiliFish.UI
             SaveModel();
         }
 
+
+        private void linkNewModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MainForm mf = new();
+            mf.Show();
+        }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (MessageBox.Show("Do you want to start from a brand new template? All changes you have made will be cleared.", "Warning",
@@ -420,6 +425,7 @@ namespace SiliFish.UI
         {
             modelOutputControl.Plot((e as PlotRequestArgs).unitToPlot);
         }
+
 
         private void modelControl_ModelChanged(object sender, EventArgs e)
         {

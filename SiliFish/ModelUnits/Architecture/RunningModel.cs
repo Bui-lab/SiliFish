@@ -73,6 +73,24 @@ namespace SiliFish.ModelUnits.Architecture
                 musclePools = value;
             }
         }
+        [Browsable(false)]
+        [JsonIgnore]
+        public List<CellPool> MotoNeuronPools //TODO add sensory neurons
+        {
+            get
+            {
+                return MotoNeurons.Select(c=>c.CellPool).Distinct().ToList();
+            }
+        }
+        [Browsable(false)]
+        [JsonIgnore]
+        public List<CellPool> InterNeuronPools //TODO handle sensory neurons
+        {
+            get
+            {
+                return neuronPools.Except(MotoNeuronPools).ToList();
+            }
+        }
         [JsonIgnore]
         [Browsable(false)]
         public List<Cell> MotoNeurons //MotoNeurons are the neurons projecting to the muscle cells
@@ -290,22 +308,19 @@ namespace SiliFish.ModelUnits.Architecture
             return MuscleCells.Union(Neurons).ToList();
 
         }
-        public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int numSomites)
+        public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int SomiteSeq)
         {
             List<Cell> motoNeurons = MotoNeurons;
             int NumberOfSomites = ModelDimensions.NumberOfSomites;
-            int maxSeq = NumberOfSomites - numSomites;
-            if (NumberOfSomites <= 0)
-                maxSeq = CellPools.Max(cp => cp.GetCells().Max(c => c.Sequence)) - numSomites;
             List<Cell> leftMNs = motoNeurons
                                 .Where(c => c.PositionLeftRight == SagittalPlane.Left &&
-                                        (NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
+                                        (NumberOfSomites > 0 && c.Somite == SomiteSeq
+                                                || NumberOfSomites <= 0 && c.Sequence == SomiteSeq))
                                 .ToList();
             List<Cell> rightMNs = motoNeurons
                                 .Where(c => c.PositionLeftRight == SagittalPlane.Right &&
-                                        (NumberOfSomites > 0 && c.Somite > maxSeq
-                                                || NumberOfSomites <= 0 && c.Sequence > maxSeq))
+                                        (NumberOfSomites > 0 && c.Somite == SomiteSeq
+                                                || NumberOfSomites <= 0 && c.Sequence == SomiteSeq))
                                 .ToList();
             return (leftMNs, rightMNs);
         }
@@ -510,8 +525,21 @@ namespace SiliFish.ModelUnits.Architecture
 
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionMultiCells cellSelection)
         {
-            List<CellPool> pools = neuronPools.Union(musclePools).Where(p => (poolIdentifier == "All" || p.CellGroup == poolIdentifier)
-                            && p.OnSide(cellSelection.SagittalPlane)).ToList();
+            List<CellPool> pools = null;
+            if (poolIdentifier == Const.AllPools)
+                pools = neuronPools.Union(musclePools).Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.AllNeurons)
+                pools = neuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.AllMuscleCells)
+                pools = musclePools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.AllMotoneurons)
+                pools = MotoNeuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.AllInterneurons)
+                pools = InterNeuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else
+                pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
+                                && p.OnSide(cellSelection.SagittalPlane)).ToList();
+
             if (cellSelection.cellSelection == PlotSelection.Summary)
                 return (null, pools);
             List<Cell> cells = pools.SelectMany(p => p.GetCells(cellSelection)).ToList();

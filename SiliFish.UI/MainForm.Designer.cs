@@ -74,6 +74,7 @@ namespace SiliFish.UI
             this.pDistinguisherTop = new System.Windows.Forms.Panel();
             this.pDistinguisherRight = new System.Windows.Forms.Panel();
             this.pDistinguisherBottom = new System.Windows.Forms.Panel();
+            this.linkNewModel = new System.Windows.Forms.LinkLabel();
             this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
             this.splitMain.Panel1.SuspendLayout();
@@ -289,6 +290,7 @@ namespace SiliFish.UI
             // pModelControlTop
             // 
             this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pModelControlTop.Controls.Add(this.linkNewModel);
             this.pModelControlTop.Controls.Add(this.linkLoadModel);
             this.pModelControlTop.Controls.Add(this.linkSaveModel);
             this.pModelControlTop.Controls.Add(this.linkClearModel);
@@ -564,6 +566,20 @@ namespace SiliFish.UI
             this.pDistinguisherBottom.Size = new System.Drawing.Size(1340, 4);
             this.pDistinguisherBottom.TabIndex = 9;
             // 
+            // linkNewModel
+            // 
+            this.linkNewModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkNewModel.AutoSize = true;
+            this.linkNewModel.ForeColor = System.Drawing.Color.White;
+            this.linkNewModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkNewModel.Location = new System.Drawing.Point(382, 11);
+            this.linkNewModel.Name = "linkNewModel";
+            this.linkNewModel.Size = new System.Drawing.Size(68, 15);
+            this.linkNewModel.TabIndex = 6;
+            this.linkNewModel.TabStop = true;
+            this.linkNewModel.Text = "New Model";
+            this.linkNewModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkNewModel_LinkClicked);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -644,5 +660,6 @@ namespace SiliFish.UI
         private Panel pDistinguisherRight;
         private Panel pDistinguisherBottom;
         private Button btnSettings;
+        private LinkLabel linkNewModel;
     }
 }

@@ -45,24 +45,27 @@ namespace SiliFish.Services.Plotting
                 html.Replace("__HEIGHT_PX__", height.ToString());
                 string chartDivs = "";
                 List<string> chartHTML = new();
-                foreach (int chartIndex in Enumerable.Range(0, charts.Count))
+                if (charts != null)
                 {
-                    chartDivs += chartDiv.Replace("__CHART_INDEX__", chartIndex.ToString());
-                    StringBuilder chart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
-                    chart.Replace("__CHART_INDEX__", chartIndex.ToString());
-                    chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
-                    chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
-                    chart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
-                    chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.DecimalPointFormat));
-                    chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.DecimalPointFormat));
-                    chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(GlobalSettings.DecimalPointFormat));
-                    chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(GlobalSettings.DecimalPointFormat));
-                    chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
-                    chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
-                    chart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
-                    chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
-                    chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
-                    chartHTML.Add(chart.ToString());
+                    foreach (int chartIndex in Enumerable.Range(0, charts.Count))
+                    {
+                        chartDivs += chartDiv.Replace("__CHART_INDEX__", chartIndex.ToString());
+                        StringBuilder chart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
+                        chart.Replace("__CHART_INDEX__", chartIndex.ToString());
+                        chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
+                        chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
+                        chart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
+                        chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.DecimalPointFormat));
+                        chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.DecimalPointFormat));
+                        chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(GlobalSettings.DecimalPointFormat));
+                        chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(GlobalSettings.DecimalPointFormat));
+                        chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
+                        chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
+                        chart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
+                        chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
+                        chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
+                        chartHTML.Add(chart.ToString());
+                    }
                 }
                 html.Replace("__CHART_DIVS__", chartDivs);
                 html.Replace("__CHARTS__", string.Join('\n', chartHTML));

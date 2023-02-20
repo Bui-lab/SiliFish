@@ -4,7 +4,7 @@ namespace SiliFish.Services.Plotting
 {
     public struct PlotSelectionMultiCells : PlotSelectionInterface
     {
-        public string Pools = "All";
+        public string Pools = Const.AllPools;
         public SagittalPlane SagittalPlane = SagittalPlane.Both;
         public PlotSelection somiteSelection = PlotSelection.All;
         public int nSomite = -1;
