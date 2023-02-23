@@ -6,6 +6,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Repositories;
 using SiliFish.Services;
 using SiliFish.Services.Plotting;
 using System;
@@ -337,6 +338,14 @@ namespace SiliFish.ModelUnits.Architecture
             return MuscleCells.Union(Neurons).ToList();
 
         }
+
+        public Cell GetCell(string id)
+        {
+            Cell cell = (Cell)MusclePools.Select(mp => mp.GetCell(id));
+            if (cell != null)
+                cell = (Cell)NeuronPools.Select(np => np.GetCell(id));
+            return cell;
+        }
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int SomiteSeq)
         {
             List<Cell> motoNeurons = MotoNeurons;
@@ -443,6 +452,14 @@ namespace SiliFish.ModelUnits.Architecture
                 listStimuli.AddRange(cellPool.GetStimuli());
             }
             return listStimuli;
+        }
+
+        public void ClearStimuli()
+        {
+            foreach (CellPool cellPool in CellPools)
+            {
+                cellPool.ClearStimuli();
+            }
         }
 
         public override void AddStimulus(StimulusBase stim)
@@ -613,9 +630,9 @@ namespace SiliFish.ModelUnits.Architecture
                 }
 
             }
-            FileUtil.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
-            FileUtil.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
-            FileUtil.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
+            ModelFile.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
+            ModelFile.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
+            ModelFile.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
             JsonUtil.SaveToJsonFile(filenamejson, GetParameters());
         }
 
@@ -734,8 +751,8 @@ namespace SiliFish.ModelUnits.Architecture
                     (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(this);
                     string runfilename = $"{filename}_Run{iRunCounter}";
                     runfilename = Path.Combine(outputFolder, runfilename);
-                    FileUtil.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
-                    FileUtil.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
+                    ModelFile.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
+                    ModelFile.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
                     JsonUtil.SaveToJsonFile(runfilename + ".json", this);
                 }
                 if (CancelLoop)

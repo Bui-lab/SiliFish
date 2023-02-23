@@ -17,6 +17,7 @@ using SiliFish.UI.Extensions;
 using System.Diagnostics;
 using System.IO;
 using SiliFish.UI.EventArguments;
+using OxyPlot;
 
 namespace SiliFish.UI.Controls
 {
@@ -45,6 +46,7 @@ namespace SiliFish.UI.Controls
             listConnections.AddSortContextMenu("Sort by Type", listConnections_SortByType);
             listConnections.AddSortContextMenu("Sort by Source", listConnections_SortBySource);
             listConnections.AddSortContextMenu("Sort by Target", listConnections_SortByTarget);
+            listStimuli.EnableImportExport();
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
         }
@@ -858,6 +860,18 @@ namespace SiliFish.UI.Controls
             }
             return null;
         }
+        private void listStimuli_ItemSelect(object sender, EventArgs e)
+        {
+            if (sender is StimulusBase stim)
+            {
+                SelectedStimulus = stim;
+            }
+        }
+
+        private void listStimuli_ItemToggleActive(object sender, EventArgs e)
+        {
+            ModelIsUpdated();
+        }
         private void listStimuli_ItemAdd(object sender, EventArgs e)
         {
             StimulusBase stimulus = OpenStimulusDialog(null);
@@ -905,20 +919,6 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listStimuli_ItemPlot(object sender, EventArgs e)
-        {
-            PlotRequestArgs args = new() { unitToPlot = SelectedStimulus };
-            PlotRequested?.Invoke(this, args);
-        }
-
-        private void listStimuli_ItemSelect(object sender, EventArgs e)
-        {
-            if (sender is StimulusBase stim)
-            {
-                SelectedStimulus = stim;
-            }
-        }
-
         private void listStimuli_ItemsSort(object sender, EventArgs e)
         {
             if (SelectedCell != null)
@@ -939,10 +939,57 @@ namespace SiliFish.UI.Controls
             }
 
         }
-        private void listStimuli_ItemToggleActive(object sender, EventArgs e)
+        private void listStimuli_ItemsExport(object sender, EventArgs e)
         {
-            ModelIsUpdated();
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model))
+                    MessageBox.Show($"The stimulus information is exported to {saveFileCSV.FileName}.");
+                else
+                    MessageBox.Show("There is a problem with saving the csv file. Please check whether you have writing access to the folder selected");
+            }
         }
+
+        private void listStimuli_ItemsImport(object sender, EventArgs e)
+        {
+            if (openFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                string selection = SelectedCell != null ? SelectedCell.ID :
+                    SelectedPool != null ? SelectedPool.ID :
+                    SelectedPoolTemplate != null ? SelectedPoolTemplate.ID :
+                    "the model";
+                string msg = $"Do you want to remove all existing stimuli of {selection} and replace it with the data in {openFileCSV.FileName}";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    string filename = openFileCSV.FileName;
+                    if (SelectedCell != null)
+                    {
+                        //TODO import stimuli
+                        LoadStimuli(SelectedCell);
+                    }
+                    else if (SelectedPoolTemplate != null)
+                    {
+                        //TODO import stimuli
+                    }
+                    else if (SelectedPool != null)
+                    {
+                        //TODO import stimuli
+                    }
+                    else 
+                    {
+                        ModelFile.ReadStimulusFromCSV(filename, Model);
+                        LoadStimuli();
+                    }
+                }
+            }
+        }
+
+        private void listStimuli_ItemPlot(object sender, EventArgs e)
+        {
+            PlotRequestArgs args = new() { unitToPlot = SelectedStimulus };
+            PlotRequested?.Invoke(this, args);
+        }
+
 
         #endregion
 
@@ -1021,9 +1068,6 @@ namespace SiliFish.UI.Controls
             };
             p.Start();
         }
-
-
-
 
     }
 }

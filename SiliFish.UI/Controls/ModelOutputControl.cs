@@ -24,6 +24,7 @@ using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.Services.Plotting;
+using SiliFish.Repositories;
 
 namespace SiliFish.UI.Controls
 {
@@ -902,7 +903,7 @@ namespace SiliFish.UI.Controls
             if (saveFileCSV.ShowDialog() != DialogResult.OK)
                 return;
 
-            FileUtil.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
+            ModelFile.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
         }
 
         #endregion

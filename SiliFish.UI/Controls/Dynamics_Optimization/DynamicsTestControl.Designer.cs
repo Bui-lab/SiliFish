@@ -51,34 +51,38 @@
             this.rbSingleEntryStimulus = new System.Windows.Forms.RadioButton();
             this.rbRheobaseBasedStimulus = new System.Windows.Forms.RadioButton();
             this.splitMain = new System.Windows.Forms.SplitContainer();
+            this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.pfParams = new System.Windows.Forms.FlowLayoutPanel();
+            this.pCoreType = new System.Windows.Forms.Panel();
+            this.pLineCoreType = new System.Windows.Forms.Panel();
+            this.ddCoreType = new System.Windows.Forms.ComboBox();
+            this.lCoreType = new System.Windows.Forms.Label();
             this.pRheobase = new System.Windows.Forms.Panel();
+            this.pTop = new System.Windows.Forms.Panel();
+            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.tabAnalysis = new System.Windows.Forms.TabControl();
             this.tTest = new System.Windows.Forms.TabPage();
-            this.pSep2 = new System.Windows.Forms.Panel();
+            this.pFlow = new System.Windows.Forms.FlowLayoutPanel();
+            this.pFlow1 = new System.Windows.Forms.Panel();
             this.pSep1 = new System.Windows.Forms.Panel();
+            this.lms = new System.Windows.Forms.Label();
+            this.lms2 = new System.Windows.Forms.Label();
+            this.lEulerdt = new System.Windows.Forms.Label();
+            this.pFlow2 = new System.Windows.Forms.Panel();
+            this.eMultipleStimulus = new System.Windows.Forms.TextBox();
+            this.rbMultipleEntry = new System.Windows.Forms.RadioButton();
+            this.lMultipleEntryNote = new System.Windows.Forms.Label();
+            this.pFlow5 = new System.Windows.Forms.Panel();
             this.btnDynamicsRun = new System.Windows.Forms.Button();
             this.cbAutoDrawPlots = new System.Windows.Forms.CheckBox();
-            this.eMultipleStimulus = new System.Windows.Forms.TextBox();
-            this.lMultipleEntryNote = new System.Windows.Forms.Label();
-            this.rbMultipleEntry = new System.Windows.Forms.RadioButton();
-            this.lEulerdt = new System.Windows.Forms.Label();
-            this.lms2 = new System.Windows.Forms.Label();
-            this.lms = new System.Windows.Forms.Label();
             this.tSensitivityAnalysis = new System.Windows.Forms.TabPage();
             this.grFiring = new System.Windows.Forms.GroupBox();
             this.sensitivityAnalysisFiring = new SiliFish.UI.Controls.SensitivityAnalysisControl();
             this.grRheoSens = new System.Windows.Forms.GroupBox();
             this.sensitivityAnalysisRheobase = new SiliFish.UI.Controls.SensitivityAnalysisControl();
-            this.pCoreType = new System.Windows.Forms.Panel();
-            this.pLineCoreType = new System.Windows.Forms.Panel();
-            this.ddCoreType = new System.Windows.Forms.ComboBox();
-            this.lCoreType = new System.Windows.Forms.Label();
             this.pLoadSaveParams = new System.Windows.Forms.Panel();
             this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
             this.linkSaveCoreUnit = new System.Windows.Forms.LinkLabel();
-            this.pTop = new System.Windows.Forms.Panel();
-            this.linkUseUpdatedParams = new System.Windows.Forms.LinkLabel();
             this.splitGAAndPlots = new System.Windows.Forms.SplitContainer();
             this.pOptimize = new System.Windows.Forms.Panel();
             this.gaControl = new SiliFish.UI.Controls.GAControl();
@@ -113,15 +117,23 @@
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
+            this.splitLeft.Panel1.SuspendLayout();
+            this.splitLeft.Panel2.SuspendLayout();
+            this.splitLeft.SuspendLayout();
+            this.pCoreType.SuspendLayout();
             this.pRheobase.SuspendLayout();
+            this.pTop.SuspendLayout();
             this.tabAnalysis.SuspendLayout();
             this.tTest.SuspendLayout();
+            this.pFlow.SuspendLayout();
+            this.pFlow1.SuspendLayout();
+            this.pFlow2.SuspendLayout();
+            this.pFlow5.SuspendLayout();
             this.tSensitivityAnalysis.SuspendLayout();
             this.grFiring.SuspendLayout();
             this.grRheoSens.SuspendLayout();
-            this.pCoreType.SuspendLayout();
             this.pLoadSaveParams.SuspendLayout();
-            this.pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitGAAndPlots)).BeginInit();
             this.splitGAAndPlots.Panel1.SuspendLayout();
             this.splitGAAndPlots.Panel2.SuspendLayout();
@@ -171,7 +183,7 @@
             this.btnRheobase.ForeColor = System.Drawing.Color.White;
             this.btnRheobase.Location = new System.Drawing.Point(128, 22);
             this.btnRheobase.Name = "btnRheobase";
-            this.btnRheobase.Size = new System.Drawing.Size(66, 23);
+            this.btnRheobase.Size = new System.Drawing.Size(76, 25);
             this.btnRheobase.TabIndex = 13;
             this.btnRheobase.Text = "Calculate";
             this.btnRheobase.UseVisualStyleBackColor = false;
@@ -180,7 +192,7 @@
             // lPlotdt
             // 
             this.lPlotdt.AutoSize = true;
-            this.lPlotdt.Location = new System.Drawing.Point(6, 69);
+            this.lPlotdt.Location = new System.Drawing.Point(4, 66);
             this.lPlotdt.Name = "lPlotdt";
             this.lPlotdt.Size = new System.Drawing.Size(43, 15);
             this.lPlotdt.TabIndex = 10;
@@ -194,7 +206,7 @@
             0,
             0,
             65536});
-            this.edt.Location = new System.Drawing.Point(69, 65);
+            this.edt.Location = new System.Drawing.Point(67, 62);
             this.edt.Minimum = new decimal(new int[] {
             1,
             0,
@@ -216,7 +228,7 @@
             0,
             0,
             0});
-            this.ePlotEndTime.Location = new System.Drawing.Point(69, 38);
+            this.ePlotEndTime.Location = new System.Drawing.Point(67, 35);
             this.ePlotEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -238,7 +250,7 @@
             0,
             0,
             0});
-            this.eStepEndTime.Location = new System.Drawing.Point(172, 9);
+            this.eStepEndTime.Location = new System.Drawing.Point(170, 6);
             this.eStepEndTime.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -256,7 +268,7 @@
             // lStepStartTime
             // 
             this.lStepStartTime.AutoSize = true;
-            this.lStepStartTime.Location = new System.Drawing.Point(6, 13);
+            this.lStepStartTime.Location = new System.Drawing.Point(4, 10);
             this.lStepStartTime.Name = "lStepStartTime";
             this.lStepStartTime.Size = new System.Drawing.Size(61, 15);
             this.lStepStartTime.TabIndex = 4;
@@ -269,7 +281,7 @@
             0,
             0,
             0});
-            this.eStepStartTime.Location = new System.Drawing.Point(69, 9);
+            this.eStepStartTime.Location = new System.Drawing.Point(67, 6);
             this.eStepStartTime.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -287,7 +299,7 @@
             // lStepEndTime
             // 
             this.lStepEndTime.AutoSize = true;
-            this.lStepEndTime.Location = new System.Drawing.Point(141, 13);
+            this.lStepEndTime.Location = new System.Drawing.Point(139, 10);
             this.lStepEndTime.Name = "lStepEndTime";
             this.lStepEndTime.Size = new System.Drawing.Size(27, 15);
             this.lStepEndTime.TabIndex = 5;
@@ -296,7 +308,7 @@
             // lPlotEndTime
             // 
             this.lPlotEndTime.AutoSize = true;
-            this.lPlotEndTime.Location = new System.Drawing.Point(6, 40);
+            this.lPlotEndTime.Location = new System.Drawing.Point(4, 37);
             this.lPlotEndTime.Name = "lPlotEndTime";
             this.lPlotEndTime.Size = new System.Drawing.Size(51, 15);
             this.lPlotEndTime.TabIndex = 6;
@@ -315,7 +327,7 @@
             this.grRheobase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grRheobase.Location = new System.Drawing.Point(0, 0);
             this.grRheobase.Name = "grRheobase";
-            this.grRheobase.Size = new System.Drawing.Size(297, 124);
+            this.grRheobase.Size = new System.Drawing.Size(328, 108);
             this.grRheobase.TabIndex = 16;
             this.grRheobase.TabStop = false;
             this.grRheobase.Text = "Rheobase";
@@ -387,7 +399,7 @@
             0,
             0,
             65536});
-            this.edtEuler.Location = new System.Drawing.Point(195, 65);
+            this.edtEuler.Location = new System.Drawing.Point(193, 62);
             this.edtEuler.Minimum = new decimal(new int[] {
             1,
             0,
@@ -404,12 +416,14 @@
             // 
             // stimulusControl1
             // 
-            this.stimulusControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stimulusControl1.BackColor = System.Drawing.Color.White;
-            this.stimulusControl1.Location = new System.Drawing.Point(6, 174);
+            this.stimulusControl1.AutoSize = true;
+            this.stimulusControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stimulusControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.stimulusControl1.Location = new System.Drawing.Point(3, 203);
+            this.stimulusControl1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+            this.stimulusControl1.MinimumSize = new System.Drawing.Size(200, 100);
             this.stimulusControl1.Name = "stimulusControl1";
-            this.stimulusControl1.Size = new System.Drawing.Size(273, 117);
+            this.stimulusControl1.Size = new System.Drawing.Size(231, 105);
             this.stimulusControl1.TabIndex = 25;
             this.stimulusControl1.StimulusChanged += new System.EventHandler(this.stimulusControl1_StimulusChanged);
             // 
@@ -417,7 +431,7 @@
             // 
             this.rbSingleEntryStimulus.AutoSize = true;
             this.rbSingleEntryStimulus.Checked = true;
-            this.rbSingleEntryStimulus.Location = new System.Drawing.Point(6, 174);
+            this.rbSingleEntryStimulus.Location = new System.Drawing.Point(7, 74);
             this.rbSingleEntryStimulus.Name = "rbSingleEntryStimulus";
             this.rbSingleEntryStimulus.Size = new System.Drawing.Size(87, 19);
             this.rbSingleEntryStimulus.TabIndex = 12;
@@ -429,7 +443,7 @@
             // rbRheobaseBasedStimulus
             // 
             this.rbRheobaseBasedStimulus.AutoSize = true;
-            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(6, 94);
+            this.rbRheobaseBasedStimulus.Location = new System.Drawing.Point(7, 3);
             this.rbRheobaseBasedStimulus.Name = "rbRheobaseBasedStimulus";
             this.rbRheobaseBasedStimulus.Size = new System.Drawing.Size(187, 19);
             this.rbRheobaseBasedStimulus.TabIndex = 13;
@@ -446,12 +460,8 @@
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.pfParams);
-            this.splitMain.Panel1.Controls.Add(this.pRheobase);
-            this.splitMain.Panel1.Controls.Add(this.tabAnalysis);
-            this.splitMain.Panel1.Controls.Add(this.pCoreType);
+            this.splitMain.Panel1.Controls.Add(this.splitLeft);
             this.splitMain.Panel1.Controls.Add(this.pLoadSaveParams);
-            this.splitMain.Panel1.Controls.Add(this.pTop);
             this.splitMain.Panel1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // splitMain.Panel2
@@ -459,99 +469,270 @@
             this.splitMain.Panel2.Controls.Add(this.splitGAAndPlots);
             this.splitMain.Panel2.Controls.Add(this.pPlots);
             this.splitMain.Size = new System.Drawing.Size(1244, 675);
-            this.splitMain.SplitterDistance = 305;
+            this.splitMain.SplitterDistance = 336;
             this.splitMain.TabIndex = 17;
+            // 
+            // splitLeft
+            // 
+            this.splitLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitLeft.Location = new System.Drawing.Point(3, 3);
+            this.splitLeft.Name = "splitLeft";
+            this.splitLeft.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitLeft.Panel1
+            // 
+            this.splitLeft.Panel1.Controls.Add(this.pfParams);
+            this.splitLeft.Panel1.Controls.Add(this.pCoreType);
+            this.splitLeft.Panel1.Controls.Add(this.pRheobase);
+            this.splitLeft.Panel1.Controls.Add(this.pTop);
+            // 
+            // splitLeft.Panel2
+            // 
+            this.splitLeft.Panel2.Controls.Add(this.tabAnalysis);
+            this.splitLeft.Size = new System.Drawing.Size(328, 636);
+            this.splitLeft.SplitterDistance = 229;
+            this.splitLeft.TabIndex = 39;
             // 
             // pfParams
             // 
             this.pfParams.AutoScroll = true;
-            this.pfParams.AutoSize = true;
             this.pfParams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pfParams.Location = new System.Drawing.Point(3, 66);
+            this.pfParams.Location = new System.Drawing.Point(0, 63);
             this.pfParams.Name = "pfParams";
-            this.pfParams.Size = new System.Drawing.Size(297, 104);
+            this.pfParams.Size = new System.Drawing.Size(328, 58);
             this.pfParams.TabIndex = 23;
+            // 
+            // pCoreType
+            // 
+            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
+            this.pCoreType.Controls.Add(this.pLineCoreType);
+            this.pCoreType.Controls.Add(this.ddCoreType);
+            this.pCoreType.Controls.Add(this.lCoreType);
+            this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pCoreType.Location = new System.Drawing.Point(0, 23);
+            this.pCoreType.Name = "pCoreType";
+            this.pCoreType.Size = new System.Drawing.Size(328, 40);
+            this.pCoreType.TabIndex = 21;
+            // 
+            // pLineCoreType
+            // 
+            this.pLineCoreType.BackColor = System.Drawing.Color.LightGray;
+            this.pLineCoreType.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pLineCoreType.Location = new System.Drawing.Point(0, 39);
+            this.pLineCoreType.Name = "pLineCoreType";
+            this.pLineCoreType.Size = new System.Drawing.Size(328, 1);
+            this.pLineCoreType.TabIndex = 24;
+            // 
+            // ddCoreType
+            // 
+            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddCoreType.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ddCoreType.FormattingEnabled = true;
+            this.ddCoreType.Location = new System.Drawing.Point(71, 9);
+            this.ddCoreType.Name = "ddCoreType";
+            this.ddCoreType.Size = new System.Drawing.Size(246, 23);
+            this.ddCoreType.TabIndex = 23;
+            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
+            // 
+            // lCoreType
+            // 
+            this.lCoreType.AutoSize = true;
+            this.lCoreType.Location = new System.Drawing.Point(6, 12);
+            this.lCoreType.Name = "lCoreType";
+            this.lCoreType.Size = new System.Drawing.Size(59, 15);
+            this.lCoreType.TabIndex = 22;
+            this.lCoreType.Text = "Core Type";
             // 
             // pRheobase
             // 
             this.pRheobase.Controls.Add(this.grRheobase);
             this.pRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pRheobase.Location = new System.Drawing.Point(3, 170);
+            this.pRheobase.Location = new System.Drawing.Point(0, 121);
             this.pRheobase.Name = "pRheobase";
-            this.pRheobase.Size = new System.Drawing.Size(297, 124);
+            this.pRheobase.Size = new System.Drawing.Size(328, 108);
             this.pRheobase.TabIndex = 40;
+            // 
+            // pTop
+            // 
+            this.pTop.Controls.Add(this.linkUseUpdatedParams);
+            this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pTop.Location = new System.Drawing.Point(0, 0);
+            this.pTop.Name = "pTop";
+            this.pTop.Size = new System.Drawing.Size(328, 23);
+            this.pTop.TabIndex = 24;
+            this.pTop.Visible = false;
+            // 
+            // linkUseUpdatedParams
+            // 
+            this.linkUseUpdatedParams.AutoSize = true;
+            this.linkUseUpdatedParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.linkUseUpdatedParams.Location = new System.Drawing.Point(4, 3);
+            this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
+            this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
+            this.linkUseUpdatedParams.TabIndex = 19;
+            this.linkUseUpdatedParams.TabStop = true;
+            this.linkUseUpdatedParams.Text = "Use Updated Parameters";
+            this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
             // 
             // tabAnalysis
             // 
             this.tabAnalysis.Controls.Add(this.tTest);
             this.tabAnalysis.Controls.Add(this.tSensitivityAnalysis);
-            this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabAnalysis.Location = new System.Drawing.Point(3, 294);
+            this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabAnalysis.Location = new System.Drawing.Point(0, 0);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(297, 345);
+            this.tabAnalysis.Size = new System.Drawing.Size(328, 403);
             this.tabAnalysis.TabIndex = 39;
             // 
             // tTest
             // 
-            this.tTest.Controls.Add(this.pSep2);
-            this.tTest.Controls.Add(this.pSep1);
-            this.tTest.Controls.Add(this.btnDynamicsRun);
-            this.tTest.Controls.Add(this.cbAutoDrawPlots);
-            this.tTest.Controls.Add(this.eMultipleStimulus);
-            this.tTest.Controls.Add(this.lMultipleEntryNote);
-            this.tTest.Controls.Add(this.rbRheobaseBasedStimulus);
-            this.tTest.Controls.Add(this.rbMultipleEntry);
-            this.tTest.Controls.Add(this.lPlotdt);
-            this.tTest.Controls.Add(this.lEulerdt);
-            this.tTest.Controls.Add(this.eStepEndTime);
-            this.tTest.Controls.Add(this.lms2);
-            this.tTest.Controls.Add(this.lStepStartTime);
-            this.tTest.Controls.Add(this.lms);
-            this.tTest.Controls.Add(this.ePlotEndTime);
-            this.tTest.Controls.Add(this.edtEuler);
-            this.tTest.Controls.Add(this.eStepStartTime);
-            this.tTest.Controls.Add(this.stimulusControl1);
-            this.tTest.Controls.Add(this.lStepEndTime);
-            this.tTest.Controls.Add(this.lPlotEndTime);
-            this.tTest.Controls.Add(this.rbSingleEntryStimulus);
-            this.tTest.Controls.Add(this.edt);
+            this.tTest.Controls.Add(this.pFlow);
             this.tTest.Location = new System.Drawing.Point(4, 24);
             this.tTest.Name = "tTest";
             this.tTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tTest.Size = new System.Drawing.Size(289, 317);
+            this.tTest.Size = new System.Drawing.Size(320, 375);
             this.tTest.TabIndex = 0;
             this.tTest.Text = "Test";
             this.tTest.UseVisualStyleBackColor = true;
             // 
-            // pSep2
+            // pFlow
             // 
-            this.pSep2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pSep2.BackColor = System.Drawing.Color.DimGray;
-            this.pSep2.Location = new System.Drawing.Point(6, 167);
-            this.pSep2.Name = "pSep2";
-            this.pSep2.Size = new System.Drawing.Size(277, 3);
-            this.pSep2.TabIndex = 37;
+            this.pFlow.AutoScroll = true;
+            this.pFlow.Controls.Add(this.pFlow1);
+            this.pFlow.Controls.Add(this.pFlow2);
+            this.pFlow.Controls.Add(this.stimulusControl1);
+            this.pFlow.Controls.Add(this.pFlow5);
+            this.pFlow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pFlow.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.pFlow.Location = new System.Drawing.Point(3, 3);
+            this.pFlow.Name = "pFlow";
+            this.pFlow.Size = new System.Drawing.Size(314, 369);
+            this.pFlow.TabIndex = 38;
+            this.pFlow.WrapContents = false;
+            // 
+            // pFlow1
+            // 
+            this.pFlow1.Controls.Add(this.lStepStartTime);
+            this.pFlow1.Controls.Add(this.pSep1);
+            this.pFlow1.Controls.Add(this.edt);
+            this.pFlow1.Controls.Add(this.lPlotEndTime);
+            this.pFlow1.Controls.Add(this.lStepEndTime);
+            this.pFlow1.Controls.Add(this.eStepStartTime);
+            this.pFlow1.Controls.Add(this.edtEuler);
+            this.pFlow1.Controls.Add(this.ePlotEndTime);
+            this.pFlow1.Controls.Add(this.lms);
+            this.pFlow1.Controls.Add(this.lms2);
+            this.pFlow1.Controls.Add(this.lPlotdt);
+            this.pFlow1.Controls.Add(this.eStepEndTime);
+            this.pFlow1.Controls.Add(this.lEulerdt);
+            this.pFlow1.Location = new System.Drawing.Point(3, 3);
+            this.pFlow1.Name = "pFlow1";
+            this.pFlow1.Size = new System.Drawing.Size(277, 96);
+            this.pFlow1.TabIndex = 0;
             // 
             // pSep1
             // 
-            this.pSep1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pSep1.BackColor = System.Drawing.Color.DimGray;
-            this.pSep1.Location = new System.Drawing.Point(6, 115);
+            this.pSep1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pSep1.Location = new System.Drawing.Point(0, 93);
             this.pSep1.Name = "pSep1";
             this.pSep1.Size = new System.Drawing.Size(277, 3);
             this.pSep1.TabIndex = 36;
+            // 
+            // lms
+            // 
+            this.lms.AutoSize = true;
+            this.lms.Location = new System.Drawing.Point(242, 10);
+            this.lms.Name = "lms";
+            this.lms.Size = new System.Drawing.Size(31, 15);
+            this.lms.TabIndex = 27;
+            this.lms.Text = "(ms)";
+            // 
+            // lms2
+            // 
+            this.lms2.AutoSize = true;
+            this.lms2.Location = new System.Drawing.Point(140, 37);
+            this.lms2.Name = "lms2";
+            this.lms2.Size = new System.Drawing.Size(31, 15);
+            this.lms2.TabIndex = 28;
+            this.lms2.Text = "(ms)";
+            // 
+            // lEulerdt
+            // 
+            this.lEulerdt.AutoSize = true;
+            this.lEulerdt.Location = new System.Drawing.Point(139, 66);
+            this.lEulerdt.Name = "lEulerdt";
+            this.lEulerdt.Size = new System.Drawing.Size(48, 15);
+            this.lEulerdt.TabIndex = 30;
+            this.lEulerdt.Text = "Euler Δt";
+            // 
+            // pFlow2
+            // 
+            this.pFlow2.Controls.Add(this.rbSingleEntryStimulus);
+            this.pFlow2.Controls.Add(this.eMultipleStimulus);
+            this.pFlow2.Controls.Add(this.rbMultipleEntry);
+            this.pFlow2.Controls.Add(this.lMultipleEntryNote);
+            this.pFlow2.Controls.Add(this.rbRheobaseBasedStimulus);
+            this.pFlow2.Location = new System.Drawing.Point(3, 105);
+            this.pFlow2.Name = "pFlow2";
+            this.pFlow2.Size = new System.Drawing.Size(277, 95);
+            this.pFlow2.TabIndex = 37;
+            // 
+            // eMultipleStimulus
+            // 
+            this.eMultipleStimulus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eMultipleStimulus.Location = new System.Drawing.Point(28, 45);
+            this.eMultipleStimulus.Name = "eMultipleStimulus";
+            this.eMultipleStimulus.ReadOnly = true;
+            this.eMultipleStimulus.Size = new System.Drawing.Size(245, 23);
+            this.eMultipleStimulus.TabIndex = 33;
+            this.eMultipleStimulus.Text = "example: 1;10";
+            this.toolTip1.SetToolTip(this.eMultipleStimulus, "Step stimulus with 0 noise");
+            // 
+            // rbMultipleEntry
+            // 
+            this.rbMultipleEntry.AutoSize = true;
+            this.rbMultipleEntry.Location = new System.Drawing.Point(7, 25);
+            this.rbMultipleEntry.Name = "rbMultipleEntry";
+            this.rbMultipleEntry.Size = new System.Drawing.Size(99, 19);
+            this.rbMultipleEntry.TabIndex = 31;
+            this.rbMultipleEntry.Text = "Multiple Entry";
+            this.toolTip1.SetToolTip(this.rbMultipleEntry, "Step stimulus with 0 noise");
+            this.rbMultipleEntry.UseVisualStyleBackColor = true;
+            this.rbMultipleEntry.CheckedChanged += new System.EventHandler(this.rbMultipleEntry_CheckedChanged);
+            // 
+            // lMultipleEntryNote
+            // 
+            this.lMultipleEntryNote.AutoSize = true;
+            this.lMultipleEntryNote.Location = new System.Drawing.Point(102, 27);
+            this.lMultipleEntryNote.Name = "lMultipleEntryNote";
+            this.lMultipleEntryNote.Size = new System.Drawing.Size(174, 15);
+            this.lMultipleEntryNote.TabIndex = 32;
+            this.lMultipleEntryNote.Text = "(enter values seperated with \";\")";
+            // 
+            // pFlow5
+            // 
+            this.pFlow5.Controls.Add(this.btnDynamicsRun);
+            this.pFlow5.Controls.Add(this.cbAutoDrawPlots);
+            this.pFlow5.Location = new System.Drawing.Point(3, 314);
+            this.pFlow5.Name = "pFlow5";
+            this.pFlow5.Size = new System.Drawing.Size(273, 30);
+            this.pFlow5.TabIndex = 39;
             // 
             // btnDynamicsRun
             // 
             this.btnDynamicsRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
+            this.btnDynamicsRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
-            this.btnDynamicsRun.Location = new System.Drawing.Point(107, 291);
+            this.btnDynamicsRun.Location = new System.Drawing.Point(118, 2);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
-            this.btnDynamicsRun.Size = new System.Drawing.Size(66, 23);
+            this.btnDynamicsRun.Size = new System.Drawing.Size(76, 25);
             this.btnDynamicsRun.TabIndex = 35;
             this.btnDynamicsRun.Text = "Run";
             this.btnDynamicsRun.UseVisualStyleBackColor = false;
@@ -561,73 +742,13 @@
             // 
             this.cbAutoDrawPlots.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbAutoDrawPlots.AutoSize = true;
-            this.cbAutoDrawPlots.Location = new System.Drawing.Point(9, 295);
+            this.cbAutoDrawPlots.Location = new System.Drawing.Point(7, 6);
             this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
             this.cbAutoDrawPlots.Size = new System.Drawing.Size(82, 19);
             this.cbAutoDrawPlots.TabIndex = 34;
             this.cbAutoDrawPlots.Text = "Auto Draw";
             this.cbAutoDrawPlots.UseVisualStyleBackColor = true;
             this.cbAutoDrawPlots.CheckedChanged += new System.EventHandler(this.cbAutoDrawPlots_CheckedChanged);
-            // 
-            // eMultipleStimulus
-            // 
-            this.eMultipleStimulus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eMultipleStimulus.Location = new System.Drawing.Point(8, 141);
-            this.eMultipleStimulus.Name = "eMultipleStimulus";
-            this.eMultipleStimulus.ReadOnly = true;
-            this.eMultipleStimulus.Size = new System.Drawing.Size(274, 23);
-            this.eMultipleStimulus.TabIndex = 33;
-            this.eMultipleStimulus.Text = "example: 1;10";
-            this.toolTip1.SetToolTip(this.eMultipleStimulus, "Step stimulus with 0 noise");
-            // 
-            // lMultipleEntryNote
-            // 
-            this.lMultipleEntryNote.AutoSize = true;
-            this.lMultipleEntryNote.Location = new System.Drawing.Point(105, 121);
-            this.lMultipleEntryNote.Name = "lMultipleEntryNote";
-            this.lMultipleEntryNote.Size = new System.Drawing.Size(174, 15);
-            this.lMultipleEntryNote.TabIndex = 32;
-            this.lMultipleEntryNote.Text = "(enter values seperated with \";\")";
-            // 
-            // rbMultipleEntry
-            // 
-            this.rbMultipleEntry.AutoSize = true;
-            this.rbMultipleEntry.Location = new System.Drawing.Point(6, 119);
-            this.rbMultipleEntry.Name = "rbMultipleEntry";
-            this.rbMultipleEntry.Size = new System.Drawing.Size(99, 19);
-            this.rbMultipleEntry.TabIndex = 31;
-            this.rbMultipleEntry.Text = "Multiple Entry";
-            this.toolTip1.SetToolTip(this.rbMultipleEntry, "Step stimulus with 0 noise");
-            this.rbMultipleEntry.UseVisualStyleBackColor = true;
-            this.rbMultipleEntry.CheckedChanged += new System.EventHandler(this.rbMultipleEntry_CheckedChanged);
-            // 
-            // lEulerdt
-            // 
-            this.lEulerdt.AutoSize = true;
-            this.lEulerdt.Location = new System.Drawing.Point(141, 69);
-            this.lEulerdt.Name = "lEulerdt";
-            this.lEulerdt.Size = new System.Drawing.Size(48, 15);
-            this.lEulerdt.TabIndex = 30;
-            this.lEulerdt.Text = "Euler Δt";
-            // 
-            // lms2
-            // 
-            this.lms2.AutoSize = true;
-            this.lms2.Location = new System.Drawing.Point(142, 40);
-            this.lms2.Name = "lms2";
-            this.lms2.Size = new System.Drawing.Size(31, 15);
-            this.lms2.TabIndex = 28;
-            this.lms2.Text = "(ms)";
-            // 
-            // lms
-            // 
-            this.lms.AutoSize = true;
-            this.lms.Location = new System.Drawing.Point(248, 13);
-            this.lms.Name = "lms";
-            this.lms.Size = new System.Drawing.Size(31, 15);
-            this.lms.TabIndex = 27;
-            this.lms.Text = "(ms)";
             // 
             // tSensitivityAnalysis
             // 
@@ -636,7 +757,7 @@
             this.tSensitivityAnalysis.Location = new System.Drawing.Point(4, 24);
             this.tSensitivityAnalysis.Name = "tSensitivityAnalysis";
             this.tSensitivityAnalysis.Padding = new System.Windows.Forms.Padding(3);
-            this.tSensitivityAnalysis.Size = new System.Drawing.Size(289, 311);
+            this.tSensitivityAnalysis.Size = new System.Drawing.Size(320, 375);
             this.tSensitivityAnalysis.TabIndex = 1;
             this.tSensitivityAnalysis.Text = "Sensitivity Analysis";
             this.tSensitivityAnalysis.UseVisualStyleBackColor = true;
@@ -647,7 +768,7 @@
             this.grFiring.Dock = System.Windows.Forms.DockStyle.Top;
             this.grFiring.Location = new System.Drawing.Point(3, 147);
             this.grFiring.Name = "grFiring";
-            this.grFiring.Size = new System.Drawing.Size(283, 138);
+            this.grFiring.Size = new System.Drawing.Size(314, 138);
             this.grFiring.TabIndex = 19;
             this.grFiring.TabStop = false;
             this.grFiring.Text = "Firing Pattern";
@@ -666,7 +787,7 @@
             this.grRheoSens.Dock = System.Windows.Forms.DockStyle.Top;
             this.grRheoSens.Location = new System.Drawing.Point(3, 3);
             this.grRheoSens.Name = "grRheoSens";
-            this.grRheoSens.Size = new System.Drawing.Size(283, 144);
+            this.grRheoSens.Size = new System.Drawing.Size(314, 144);
             this.grRheoSens.TabIndex = 18;
             this.grRheoSens.TabStop = false;
             this.grRheoSens.Text = "Rheobase Sensitivity";
@@ -679,50 +800,6 @@
             this.sensitivityAnalysisRheobase.Size = new System.Drawing.Size(215, 120);
             this.sensitivityAnalysisRheobase.TabIndex = 0;
             // 
-            // pCoreType
-            // 
-            this.pCoreType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pCoreType.Controls.Add(this.pLineCoreType);
-            this.pCoreType.Controls.Add(this.ddCoreType);
-            this.pCoreType.Controls.Add(this.lCoreType);
-            this.pCoreType.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pCoreType.Location = new System.Drawing.Point(3, 26);
-            this.pCoreType.Name = "pCoreType";
-            this.pCoreType.Size = new System.Drawing.Size(297, 40);
-            this.pCoreType.TabIndex = 21;
-            // 
-            // pLineCoreType
-            // 
-            this.pLineCoreType.BackColor = System.Drawing.Color.LightGray;
-            this.pLineCoreType.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pLineCoreType.Location = new System.Drawing.Point(0, 39);
-            this.pLineCoreType.Name = "pLineCoreType";
-            this.pLineCoreType.Size = new System.Drawing.Size(297, 1);
-            this.pLineCoreType.TabIndex = 24;
-            // 
-            // ddCoreType
-            // 
-            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCoreType.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(71, 9);
-            this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(219, 23);
-            this.ddCoreType.TabIndex = 23;
-            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
-            // 
-            // lCoreType
-            // 
-            this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(6, 12);
-            this.lCoreType.Name = "lCoreType";
-            this.lCoreType.Size = new System.Drawing.Size(59, 15);
-            this.lCoreType.TabIndex = 22;
-            this.lCoreType.Text = "Core Type";
-            // 
             // pLoadSaveParams
             // 
             this.pLoadSaveParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
@@ -731,7 +808,7 @@
             this.pLoadSaveParams.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pLoadSaveParams.Location = new System.Drawing.Point(3, 639);
             this.pLoadSaveParams.Name = "pLoadSaveParams";
-            this.pLoadSaveParams.Size = new System.Drawing.Size(297, 31);
+            this.pLoadSaveParams.Size = new System.Drawing.Size(328, 31);
             this.pLoadSaveParams.TabIndex = 20;
             // 
             // linkLoadCoreUnit
@@ -758,28 +835,6 @@
             this.linkSaveCoreUnit.Text = "Save Core Unit";
             this.linkSaveCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveCoreUnit_LinkClicked);
             // 
-            // pTop
-            // 
-            this.pTop.Controls.Add(this.linkUseUpdatedParams);
-            this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTop.Location = new System.Drawing.Point(3, 3);
-            this.pTop.Name = "pTop";
-            this.pTop.Size = new System.Drawing.Size(297, 23);
-            this.pTop.TabIndex = 24;
-            this.pTop.Visible = false;
-            // 
-            // linkUseUpdatedParams
-            // 
-            this.linkUseUpdatedParams.AutoSize = true;
-            this.linkUseUpdatedParams.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkUseUpdatedParams.Location = new System.Drawing.Point(4, 3);
-            this.linkUseUpdatedParams.Name = "linkUseUpdatedParams";
-            this.linkUseUpdatedParams.Size = new System.Drawing.Size(136, 15);
-            this.linkUseUpdatedParams.TabIndex = 19;
-            this.linkUseUpdatedParams.TabStop = true;
-            this.linkUseUpdatedParams.Text = "Use Updated Parameters";
-            this.linkUseUpdatedParams.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkUseUpdatedParams_LinkClicked);
-            // 
             // splitGAAndPlots
             // 
             this.splitGAAndPlots.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -795,7 +850,7 @@
             // splitGAAndPlots.Panel2
             // 
             this.splitGAAndPlots.Panel2.Controls.Add(this.webViewPlots);
-            this.splitGAAndPlots.Size = new System.Drawing.Size(935, 610);
+            this.splitGAAndPlots.Size = new System.Drawing.Size(904, 610);
             this.splitGAAndPlots.SplitterDistance = 346;
             this.splitGAAndPlots.TabIndex = 2;
             // 
@@ -805,7 +860,7 @@
             this.pOptimize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pOptimize.Location = new System.Drawing.Point(0, 0);
             this.pOptimize.Name = "pOptimize";
-            this.pOptimize.Size = new System.Drawing.Size(933, 344);
+            this.pOptimize.Size = new System.Drawing.Size(902, 344);
             this.pOptimize.TabIndex = 39;
             // 
             // gaControl
@@ -817,7 +872,7 @@
             this.gaControl.Location = new System.Drawing.Point(0, 0);
             this.gaControl.Name = "gaControl";
             this.gaControl.Parameters = null;
-            this.gaControl.Size = new System.Drawing.Size(933, 344);
+            this.gaControl.Size = new System.Drawing.Size(902, 344);
             this.gaControl.TabIndex = 0;
             // 
             // webViewPlots
@@ -828,7 +883,7 @@
             this.webViewPlots.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webViewPlots.Location = new System.Drawing.Point(0, 0);
             this.webViewPlots.Name = "webViewPlots";
-            this.webViewPlots.Size = new System.Drawing.Size(933, 258);
+            this.webViewPlots.Size = new System.Drawing.Size(902, 258);
             this.webViewPlots.TabIndex = 0;
             this.webViewPlots.ZoomFactor = 1D;
             this.webViewPlots.CoreWebView2InitializationCompleted += new System.EventHandler<Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs>(this.webViewPlots_CoreWebView2InitializationCompleted);
@@ -841,7 +896,7 @@
             this.pPlots.Dock = System.Windows.Forms.DockStyle.Top;
             this.pPlots.Location = new System.Drawing.Point(0, 0);
             this.pPlots.Name = "pPlots";
-            this.pPlots.Size = new System.Drawing.Size(935, 65);
+            this.pPlots.Size = new System.Drawing.Size(904, 65);
             this.pPlots.TabIndex = 1;
             // 
             // panel1
@@ -850,7 +905,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 64);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(935, 1);
+            this.panel1.Size = new System.Drawing.Size(904, 1);
             this.panel1.TabIndex = 9;
             // 
             // grPlotSelection
@@ -1030,23 +1085,33 @@
             ((System.ComponentModel.ISupportInitialize)(this.eRheobaseDuration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
             this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel1.PerformLayout();
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
             this.splitMain.ResumeLayout(false);
+            this.splitLeft.Panel1.ResumeLayout(false);
+            this.splitLeft.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
+            this.splitLeft.ResumeLayout(false);
+            this.pCoreType.ResumeLayout(false);
+            this.pCoreType.PerformLayout();
             this.pRheobase.ResumeLayout(false);
+            this.pTop.ResumeLayout(false);
+            this.pTop.PerformLayout();
             this.tabAnalysis.ResumeLayout(false);
             this.tTest.ResumeLayout(false);
-            this.tTest.PerformLayout();
+            this.pFlow.ResumeLayout(false);
+            this.pFlow.PerformLayout();
+            this.pFlow1.ResumeLayout(false);
+            this.pFlow1.PerformLayout();
+            this.pFlow2.ResumeLayout(false);
+            this.pFlow2.PerformLayout();
+            this.pFlow5.ResumeLayout(false);
+            this.pFlow5.PerformLayout();
             this.tSensitivityAnalysis.ResumeLayout(false);
             this.grFiring.ResumeLayout(false);
             this.grRheoSens.ResumeLayout(false);
-            this.pCoreType.ResumeLayout(false);
-            this.pCoreType.PerformLayout();
             this.pLoadSaveParams.ResumeLayout(false);
             this.pLoadSaveParams.PerformLayout();
-            this.pTop.ResumeLayout(false);
-            this.pTop.PerformLayout();
             this.splitGAAndPlots.Panel1.ResumeLayout(false);
             this.splitGAAndPlots.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitGAAndPlots)).EndInit();
@@ -1127,12 +1192,16 @@
         private Label lMultipleEntryNote;
         private RadioButton rbMultipleEntry;
         private CheckBox cbAutoDrawPlots;
-        private Panel pSep2;
-        private Panel pSep1;
         private Button btnDynamicsRun;
         private Panel pDistinguisherLeft;
         private Panel pDistinguisherTop;
         private Panel pDistinguisherBottom;
         private Panel pDistinguisherRight;
+        private FlowLayoutPanel pFlow;
+        private Panel pFlow1;
+        private Panel pSep1;
+        private Panel pFlow2;
+        private Panel pFlow5;
+        private SplitContainer splitLeft;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
 using System;
@@ -37,6 +38,15 @@ namespace SiliFish.ModelUnits.Stim
             }
         }
 
+
+        [JsonIgnore]
+        public static string CSVExportColumnNames => $"TargetPool,TargetCell,{StimulusSettings.CSVExportColumnNames},{TimeLine.CSVExportColumnNames}";
+
+        [JsonIgnore]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore]
+        public string CSVExportValues=>$"{TargetCell.CellPool.ID},{TargetCell.ID},{Settings.CSVExportValues},{TimeLine_ms.CSVExportValues}";
+ 
         public Stimulus() { }
         public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
         {
@@ -45,6 +55,14 @@ namespace SiliFish.ModelUnits.Stim
             TimeLine_ms = new(tl);
         }
 
+        public void GenerateFromCSVRow(RunningModel Model, string row)
+        {
+            string[] values = row.Split(',');
+            if (values.Length != CSVExportColumCount) return;
+            TargetCell = Model.GetCell(values[1]);
+            Settings.CSVExportValues = string.Join(",", values[2..(StimulusSettings.CSVExportColumCount + 1)]);
+            TimeLine_ms.CSVExportValues = string.Join(",", values[(StimulusSettings.CSVExportColumCount + 2)..]);
+        }
         public override ModelUnitBase CreateCopy()
         {
             return new Stimulus(Settings, TargetCell, TimeLine_ms);

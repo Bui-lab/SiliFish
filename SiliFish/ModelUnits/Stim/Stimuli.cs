@@ -54,6 +54,11 @@ namespace SiliFish.ModelUnits.Stim
             ListOfStimulus.Remove(stim);
         }
 
+        public void Clear()
+        {
+            ListOfStimulus?.Clear();
+        }
+
         internal void Sort()
         {
             ListOfStimulus.Sort();

@@ -35,6 +35,10 @@
             this.lTargetCell = new System.Windows.Forms.Label();
             this.stimControl = new SiliFish.UI.Controls.StimulusSettingsControl();
             this.eTargetCell = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbActive
@@ -43,7 +47,7 @@
             this.cbActive.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cbActive.Checked = true;
             this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(3, 145);
+            this.cbActive.Location = new System.Drawing.Point(7, 29);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(59, 19);
             this.cbActive.TabIndex = 0;
@@ -52,18 +56,17 @@
             // 
             // timeLineControl
             // 
-            this.timeLineControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.timeLineControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.timeLineControl.Location = new System.Drawing.Point(3, 174);
+            this.timeLineControl.Location = new System.Drawing.Point(3, 168);
             this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(259, 230);
+            this.timeLineControl.Size = new System.Drawing.Size(221, 211);
             this.timeLineControl.TabIndex = 0;
             // 
             // lTargetCell
             // 
             this.lTargetCell.AutoSize = true;
-            this.lTargetCell.Location = new System.Drawing.Point(3, 122);
+            this.lTargetCell.Location = new System.Drawing.Point(7, 6);
             this.lTargetCell.Name = "lTargetCell";
             this.lTargetCell.Size = new System.Drawing.Size(62, 15);
             this.lTargetCell.TabIndex = 32;
@@ -71,22 +74,54 @@
             // 
             // stimControl
             // 
-            this.stimControl.BackColor = System.Drawing.Color.White;
-            this.stimControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.stimControl.Location = new System.Drawing.Point(0, 0);
+            this.stimControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stimControl.AutoSize = true;
+            this.stimControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stimControl.Location = new System.Drawing.Point(3, 3);
+            this.stimControl.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.stimControl.MinimumSize = new System.Drawing.Size(200, 100);
             this.stimControl.Name = "stimControl";
-            this.stimControl.Size = new System.Drawing.Size(265, 113);
+            this.stimControl.Size = new System.Drawing.Size(221, 100);
             this.stimControl.TabIndex = 34;
             // 
             // eTargetCell
             // 
             this.eTargetCell.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTargetCell.Location = new System.Drawing.Point(101, 119);
+            this.eTargetCell.Location = new System.Drawing.Point(105, 3);
             this.eTargetCell.Name = "eTargetCell";
             this.eTargetCell.ReadOnly = true;
-            this.eTargetCell.Size = new System.Drawing.Size(161, 23);
+            this.eTargetCell.Size = new System.Drawing.Size(113, 23);
             this.eTargetCell.TabIndex = 36;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.flowLayoutPanel1.Controls.Add(this.stimControl);
+            this.flowLayoutPanel1.Controls.Add(this.panel1);
+            this.flowLayoutPanel1.Controls.Add(this.timeLineControl);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(283, 394);
+            this.flowLayoutPanel1.TabIndex = 37;
+            this.flowLayoutPanel1.WrapContents = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.eTargetCell);
+            this.panel1.Controls.Add(this.cbActive);
+            this.panel1.Controls.Add(this.lTargetCell);
+            this.panel1.Location = new System.Drawing.Point(3, 106);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(221, 56);
+            this.panel1.TabIndex = 35;
             // 
             // StimulusControl
             // 
@@ -94,13 +129,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.eTargetCell);
-            this.Controls.Add(this.stimControl);
-            this.Controls.Add(this.timeLineControl);
-            this.Controls.Add(this.lTargetCell);
-            this.Controls.Add(this.cbActive);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "StimulusControl";
-            this.Size = new System.Drawing.Size(265, 408);
+            this.Size = new System.Drawing.Size(283, 394);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -113,5 +148,7 @@
         private Label lTargetCell;
         private StimulusSettingsControl stimControl;
         private TextBox eTargetCell;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private Panel panel1;
     }
 }

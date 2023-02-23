@@ -656,6 +656,11 @@ namespace SiliFish.UI.Controls
                 DynamicsRun();
         }
 
+        private void grRheobase_Enter(object sender, EventArgs e)
+        {
+
+        }
+
         private void rbMultipleEntry_CheckedChanged(object sender, EventArgs e)
         {
             eMultipleStimulus.ReadOnly = !rbMultipleEntry.Checked;

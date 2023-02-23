@@ -1,10 +1,15 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits.Stim;
+using System.Windows.Forms;
 
 namespace SiliFish.UI.Controls
 {
     public partial class StimulusSettingsControl : UserControl
     {
+        //rowMode = 0;
+        //rowValue1 = 1;
+        private static readonly int rowValue2 = 2;
+        private static readonly int rowFreq = 3;
         public event EventHandler StimulusChanged;
 
         public StimulusSettingsControl()
@@ -18,6 +23,17 @@ namespace SiliFish.UI.Controls
                 return base.ToString();
             return GetStimulusSettings().ToString();
         }
+
+        private void SetRowVisibility(int row, bool visible)
+        {
+            if (visible)
+                pLayout.RowStyles[row].SizeType = SizeType.AutoSize;
+            else
+            {
+                pLayout.RowStyles[row].SizeType = SizeType.Absolute;
+                pLayout.RowStyles[row].Height= 0;
+            }
+        }
         private void ddStimulusMode_SelectedIndexChanged(object sender, EventArgs e)
         {
             StimulusMode mode = (StimulusMode)Enum.Parse(typeof(StimulusMode), ddStimulusMode.Text);
@@ -26,31 +42,31 @@ namespace SiliFish.UI.Controls
                 case StimulusMode.Gaussian:
                     lValue1.Text = "Mean";
                     lValue2.Text = "StdDev";
-                    lValue2.Visible = eValue2.Visible = true;
-                    lFrequency.Visible = eFrequency.Visible = false;
+                    SetRowVisibility(rowValue2, true);
+                    SetRowVisibility(rowFreq, false);
                     break;
                 case StimulusMode.Ramp:
                     lValue1.Text = "Start Value";
                     lValue2.Text = "End Value";
-                    lValue2.Visible = eValue2.Visible = true;
-                    lFrequency.Visible = eFrequency.Visible = false;
+                    SetRowVisibility(rowValue2, true);
+                    SetRowVisibility(rowFreq, false);
                     break;
                 case StimulusMode.Step:
                     lValue1.Text = "Value";
                     lValue2.Text = "Noise";
-                    lValue2.Visible = eValue2.Visible = true;
-                    lFrequency.Visible = eFrequency.Visible = false;
+                    SetRowVisibility(rowValue2, true);
+                    SetRowVisibility(rowFreq, false);
                     break;
                 case StimulusMode.Sinusoidal:
                     lValue1.Text = "Amplitude";
-                    lValue2.Visible = eValue2.Visible = false;
-                    lFrequency.Visible = eFrequency.Visible = true;
+                    SetRowVisibility(rowValue2, false);
+                    SetRowVisibility(rowFreq, true);
                     break;
                 case StimulusMode.Pulse:
                     lValue1.Text = "Amplitude";
                     lValue2.Text = "Duration";
-                    lValue2.Visible = eValue2.Visible = true;
-                    lFrequency.Visible = eFrequency.Visible = true;
+                    SetRowVisibility(rowValue2, true);
+                    SetRowVisibility(rowFreq, true);
                     break;
                 default:
                     break;
@@ -78,8 +94,7 @@ namespace SiliFish.UI.Controls
 
         public void SetStimulusSettings(StimulusSettings stim)
         {
-            if (stim == null)
-                stim = new();
+            stim ??= new();
 
             ddStimulusMode.Text = stim.Mode.ToString();
             eValue1.Text = stim.Value1.ToString();

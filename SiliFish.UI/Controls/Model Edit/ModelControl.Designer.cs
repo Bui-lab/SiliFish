@@ -81,6 +81,8 @@
             this.lDescription = new System.Windows.Forms.Label();
             this.lModelName = new System.Windows.Forms.Label();
             this.tabModel = new System.Windows.Forms.TabControl();
+            this.saveFileCSV = new System.Windows.Forms.SaveFileDialog();
+            this.openFileCSV = new System.Windows.Forms.OpenFileDialog();
             this.tJson.SuspendLayout();
             this.pModelJSONTop.SuspendLayout();
             this.tSettings.SuspendLayout();
@@ -586,6 +588,8 @@
             this.listStimuli.ItemsSort += new System.EventHandler(this.listStimuli_ItemsSort);
             this.listStimuli.ItemSelect += new System.EventHandler(this.listStimuli_ItemSelect);
             this.listStimuli.ItemPlot += new System.EventHandler(this.listStimuli_ItemPlot);
+            this.listStimuli.ItemsExport += new System.EventHandler(this.listStimuli_ItemsExport);
+            this.listStimuli.ItemsImport += new System.EventHandler(this.listStimuli_ItemsImport);
             // 
             // pStimuliTop
             // 
@@ -737,6 +741,14 @@
             this.tabModel.TabIndex = 2;
             this.tabModel.Tag = "";
             // 
+            // saveFileCSV
+            // 
+            this.saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
+            // openFileCSV
+            // 
+            this.openFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
             // ModelControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -840,5 +852,7 @@
         private Label lModelName;
         private TabControl tabModel;
         private LinkLabel linkOpenJsonViewer;
+        private SaveFileDialog saveFileCSV;
+        private OpenFileDialog openFileCSV;
     }
 }

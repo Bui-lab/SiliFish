@@ -7,7 +7,7 @@ namespace SiliFish.UI.Controls
 
     public partial class ListBoxControl : UserControl
     {
-        private Dictionary<int, object> HiddenItems = new Dictionary<int, object>();
+        private Dictionary<int, object> HiddenItems = new();
         
         public event EventHandler ItemAdd;
         public event EventHandler ItemDelete;
@@ -17,6 +17,8 @@ namespace SiliFish.UI.Controls
         public event EventHandler ItemsSort;
         public event EventHandler ItemSelect;
         public event EventHandler ItemPlot;
+        public event EventHandler ItemsExport;
+        public event EventHandler ItemsImport;
 
         public int SelectedIndex
         {
@@ -27,6 +29,11 @@ namespace SiliFish.UI.Controls
         {
             get { return listBox.SelectedItem; }
             set { listBox.SelectedItem = value; }
+        }
+
+        public void EnableImportExport()
+        {
+            miExport.Enabled = miImport.Enabled = true;
         }
 
         #region Private Functions
@@ -120,10 +127,6 @@ namespace SiliFish.UI.Controls
                 listBox.SelectedItem = null;
             }
         }
-        private void miPlot_Click(object sender, EventArgs e)
-        {
-            ItemPlot?.Invoke(listBox.SelectedItem, new EventArgs());
-        }
 
         private void miHideInactive_Click(object sender, EventArgs e)
         {
@@ -144,6 +147,19 @@ namespace SiliFish.UI.Controls
             foreach (int ind in HiddenItems.Keys.OrderBy(k => k))
                 listBox.Items.Insert(ind, HiddenItems[ind]);
             HiddenItems.Clear();
+        }
+        private void miExport_Click(object sender, EventArgs e)
+        {
+            ItemsExport?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void miImport_Click(object sender, EventArgs e)
+        {
+            ItemsImport?.Invoke(this, EventArgs.Empty);
+        }
+        private void miPlot_Click(object sender, EventArgs e)
+        {
+            ItemPlot?.Invoke(listBox.SelectedItem, new EventArgs());
         }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
@@ -243,5 +259,7 @@ namespace SiliFish.UI.Controls
                 mi.Tag = func;
             }
         }
+
+
     }
 }

@@ -9,6 +9,7 @@ using SiliFish.Services;
 using SiliFish.UI;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.Services.Plotting;
+using SiliFish.Repositories;
 
 namespace Services
 {
@@ -288,7 +289,7 @@ namespace Services
                     Color.Red));
             }
 
-            FileUtil.SaveEpisodesToCSV("Episodes.csv", 1, episodes);
+            ModelFile.SaveEpisodesToCSV("Episodes.csv", 1, episodes);
 
             return (leftImages, null);
         }

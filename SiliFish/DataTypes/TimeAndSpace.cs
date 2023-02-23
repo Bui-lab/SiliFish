@@ -1,5 +1,6 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -122,6 +123,18 @@ namespace SiliFish.DataTypes
         public int Start { get { return Periods.Count > 0 ? Periods.Min(tr => tr.start) : 0; } }
         [JsonIgnore]
         public int End { get { return Periods.Count > 0 ? Periods.Max(tr => tr.end) : -1; } set { } }
+
+        [JsonIgnore]
+        public static string CSVExportColumnNames => $"Periods";
+
+        [JsonIgnore]
+        public string CSVExportValues
+        {
+            get => $"{string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))}";
+            set 
+            {
+            }
+        }
 
         public TimeLine()
         { }

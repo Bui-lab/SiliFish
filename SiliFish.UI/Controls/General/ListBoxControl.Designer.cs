@@ -45,9 +45,12 @@
             this.miShowAll = new System.Windows.Forms.ToolStripMenuItem();
             this.sepSort = new System.Windows.Forms.ToolStripSeparator();
             this.miSortAlphabetically = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.sepPlot = new System.Windows.Forms.ToolStripSeparator();
             this.miPlot = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.miExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitExport = new System.Windows.Forms.ToolStripSeparator();
+            this.miImport = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuListBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,10 +86,13 @@
             this.miShowAll,
             this.sepSort,
             this.miSortAlphabetically,
+            this.splitExport,
+            this.miExport,
+            this.miImport,
             this.sepPlot,
             this.miPlot});
             this.contextMenuListBox.Name = "contextMenuListBox";
-            this.contextMenuListBox.Size = new System.Drawing.Size(181, 314);
+            this.contextMenuListBox.Size = new System.Drawing.Size(181, 364);
             this.contextMenuListBox.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuListBox_Opening);
             // 
             // miEditItem
@@ -181,12 +187,6 @@
             this.miSortAlphabetically.Text = "Sort Alphabetically";
             this.miSortAlphabetically.Click += new System.EventHandler(this.miSortAlphabetically_Click);
             // 
-            // toolTip
-            // 
-            this.toolTip.AutoPopDelay = 1000;
-            this.toolTip.InitialDelay = 500;
-            this.toolTip.ReshowDelay = 100;
-            // 
             // sepPlot
             // 
             this.sepPlot.Name = "sepPlot";
@@ -198,6 +198,33 @@
             this.miPlot.Size = new System.Drawing.Size(180, 22);
             this.miPlot.Text = "Plot";
             this.miPlot.Click += new System.EventHandler(this.miPlot_Click);
+            // 
+            // toolTip
+            // 
+            this.toolTip.AutoPopDelay = 1000;
+            this.toolTip.InitialDelay = 500;
+            this.toolTip.ReshowDelay = 100;
+            // 
+            // miExport
+            // 
+            this.miExport.Enabled = false;
+            this.miExport.Name = "miExport";
+            this.miExport.Size = new System.Drawing.Size(180, 22);
+            this.miExport.Text = "Export";
+            this.miExport.Click += new System.EventHandler(this.miExport_Click);
+            // 
+            // splitExport
+            // 
+            this.splitExport.Name = "splitExport";
+            this.splitExport.Size = new System.Drawing.Size(177, 6);
+            // 
+            // miImport
+            // 
+            this.miImport.Enabled = false;
+            this.miImport.Name = "miImport";
+            this.miImport.Size = new System.Drawing.Size(180, 22);
+            this.miImport.Text = "Import";
+            this.miImport.Click += new System.EventHandler(this.miImport_Click);
             // 
             // ListBoxControl
             // 
@@ -232,5 +259,8 @@
         private ToolStripMenuItem miEditItem;
         private ToolStripSeparator sepPlot;
         private ToolStripMenuItem miPlot;
+        private ToolStripMenuItem miExport;
+        private ToolStripMenuItem miImport;
+        private ToolStripSeparator splitExport;
     }
 }

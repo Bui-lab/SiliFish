@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "<Pending>", Scope = "member", Target = "~M:SiliFish.Repositories.ModelFile.FixCellReachJson(System.String@)~System.Boolean")]
 [assembly: SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "<Pending>", Scope = "member", Target = "~M:SiliFish.Repositories.ModelFile.CheckJSONVersion(System.String@)~System.Collections.Generic.List{System.String}")]
+[assembly: SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "<Pending>", Scope = "member", Target = "~M:SiliFish.Repositories.ModelFile.FixCoreParametersJson(System.String@)~System.Boolean")]

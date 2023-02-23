@@ -154,7 +154,7 @@ namespace SiliFish.ModelUnits.Cells
         /// </summary>
         public void ClearLinks()
         {
-            DeleteStimuli();
+            ClearStimuli();
             DeleteJunctions();
         }
 
@@ -180,6 +180,12 @@ namespace SiliFish.ModelUnits.Cells
         #endregion              
 
         #region Stimulus Functions
+
+        public void ClearStimuli()
+        {
+            Stimuli.Clear();
+            Stimuli = new();
+        }
         public double GetStimulus(int timeIndex)
         {
             return Stimuli.GetStimulus(timeIndex);
@@ -194,10 +200,6 @@ namespace SiliFish.ModelUnits.Cells
             Stimuli.Remove(stim);
         }
 
-        public void DeleteStimuli()
-        {
-            Stimuli.ListOfStimulus.Clear();
-        }
         #endregion
 
         #region Connection Functions

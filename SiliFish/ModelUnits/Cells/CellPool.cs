@@ -505,6 +505,14 @@ namespace SiliFish.ModelUnits.Cells
             }
             return listStimuli;
         }
+
+        public void ClearStimuli()
+        {
+            foreach (Cell cell in Cells)
+            {
+                cell.ClearStimuli();
+            }
+        }
     }
 
 }
