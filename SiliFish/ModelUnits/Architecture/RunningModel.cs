@@ -290,8 +290,37 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
+        public override void BackwardCompatibility_Stimulus()
+        {
+            try
+            {
+                foreach(Cell cell in GetCells().Where(c=>c.Stimuli!=null && c.Stimuli.HasStimulus))
+                {
+                    List<Stimulus> stimList = cell.Stimuli.ListOfStimulus.Where(s => s.Settings.Mode is StimulusMode.Sinusoidal or StimulusMode.Pulse).ToList();
+                    foreach (Stimulus stim in stimList)
+                    {
+                        if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
+                        {
+                            stim.Settings.Frequency = stim.Settings.Value2;
+                            if (stim.Settings.Mode == StimulusMode.Pulse)
+                                stim.Settings.Value2 = 1;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+            }
+        }
         public override void BackwardCompatibility()
-        { }
+        {
+            if (string.Compare(Version, "2.2.4") < 0)//frequency to stimulus is added on 2.2.4
+            {
+                BackwardCompatibility_Stimulus();
+            }
+        }
 
         public override bool CheckValues(ref List<string> errors)
         {

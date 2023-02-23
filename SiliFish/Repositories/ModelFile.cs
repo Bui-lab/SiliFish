@@ -223,13 +223,20 @@ namespace SiliFish.Repositories
 
             return updated;
         }
+
+        private static bool FixStimulusJson(ref string json)
+        {
+            bool updated = false;
+
+            return updated;
+        }
         public static List<string> CheckJSONVersion(ref string json)
         {
             Regex versionRegex = new("\"Version\": (.*),");
             Match version = versionRegex.Match(json);
             List<string> list = new();
             if (!version.Success)//Version is added on 2.2.3
-            {                
+            {
                 //Compare to Version 0.1
                 if (json.Contains("\"TimeLine\""))
                 {

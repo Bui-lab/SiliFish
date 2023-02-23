@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,34 @@ namespace SiliFish.ModelUnits.Architecture
 
         public ModelTemplate() { }
 
+        public override void BackwardCompatibility_Stimulus()
+        {
+            try
+            {
+                if (AppliedStimuli == null) return;
+                foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.Settings.Mode == Definitions.StimulusMode.Sinusoidal))
+                {
+                    if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
+                    { 
+                        stim.Settings.Frequency = stim.Settings.Value2;
+                        stim.Settings.Value2 = 0;
+                    } 
+                }
+                foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.Settings.Mode == Definitions.StimulusMode.Pulse))
+                {
+                    if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
+                    {
+                        stim.Settings.Frequency = stim.Settings.Value2;
+                        stim.Settings.Value2 = 1;//set to 1 by default
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+            }
+        }
         public override List<CellPoolTemplate> GetCellPools()
         {
             return CellPoolTemplates.Select(cp => (CellPoolTemplate)cp).ToList();
@@ -47,7 +76,6 @@ namespace SiliFish.ModelUnits.Architecture
         {
             return InterPoolTemplates.Select(ip => (JunctionBase)ip).ToList();
         }
-
 
         public override bool AddJunction(JunctionBase jnc) 
         {

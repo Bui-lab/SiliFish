@@ -26,19 +26,31 @@ namespace SiliFish.UI.Controls
                 case StimulusMode.Gaussian:
                     lValue1.Text = "Mean";
                     lValue2.Text = "StdDev";
+                    lValue2.Visible = eValue2.Visible = true;
+                    lFrequency.Visible = eFrequency.Visible = false;
                     break;
                 case StimulusMode.Ramp:
                     lValue1.Text = "Start Value";
                     lValue2.Text = "End Value";
+                    lValue2.Visible = eValue2.Visible = true;
+                    lFrequency.Visible = eFrequency.Visible = false;
                     break;
                 case StimulusMode.Step:
                     lValue1.Text = "Value";
                     lValue2.Text = "Noise";
+                    lValue2.Visible = eValue2.Visible = true;
+                    lFrequency.Visible = eFrequency.Visible = false;
                     break;
                 case StimulusMode.Sinusoidal:
+                    lValue1.Text = "Amplitude";
+                    lValue2.Visible = eValue2.Visible = false;
+                    lFrequency.Visible = eFrequency.Visible = true;
+                    break;
                 case StimulusMode.Pulse:
                     lValue1.Text = "Amplitude";
-                    lValue2.Text = "# of Pulse";
+                    lValue2.Text = "Duration";
+                    lValue2.Visible = eValue2.Visible = true;
+                    lFrequency.Visible = eFrequency.Visible = true;
                     break;
                 default:
                     break;
@@ -58,6 +70,12 @@ namespace SiliFish.UI.Controls
             if (eValue2.Focused)
                 StimulusChanged?.Invoke(this, EventArgs.Empty);
         }
+        private void eFrequency_TextChanged(object sender, EventArgs e)
+        {
+            if (eFrequency.Focused)
+                StimulusChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public void SetStimulusSettings(StimulusSettings stim)
         {
             if (stim == null)
@@ -66,6 +84,7 @@ namespace SiliFish.UI.Controls
             ddStimulusMode.Text = stim.Mode.ToString();
             eValue1.Text = stim.Value1.ToString();
             eValue2.Text = stim.Value2.ToString();
+            eFrequency.Text = stim.Frequency.ToString();
         }
 
         public StimulusSettings GetStimulusSettings()
@@ -76,12 +95,15 @@ namespace SiliFish.UI.Controls
                 value1 = 0;
             if (!double.TryParse(eValue2.Text, out double value2))
                 value2 = 0;
+            if (!double.TryParse(eFrequency.Text, out double freq))
+                freq = 0;
 
             StimulusSettings stim = new()
             {
                 Mode = stimMode,
                 Value1 = value1,
-                Value2 = value2
+                Value2 = value2,
+                Frequency = freq
             };
             return stim;
         }
@@ -92,6 +114,7 @@ namespace SiliFish.UI.Controls
                 errors.Add("Stimulus mode not defined.");
             return errors;
         }
+
 
     }
 }

@@ -56,9 +56,9 @@
             // 
             this.timeLineControl.BackColor = System.Drawing.Color.WhiteSmoke;
             this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeLineControl.Location = new System.Drawing.Point(0, 261);
+            this.timeLineControl.Location = new System.Drawing.Point(0, 296);
             this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(243, 185);
+            this.timeLineControl.Size = new System.Drawing.Size(243, 150);
             this.timeLineControl.TabIndex = 15;
             // 
             // ddTargetPool
@@ -142,7 +142,7 @@
             this.stimControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.stimControl.Location = new System.Drawing.Point(0, 0);
             this.stimControl.Name = "stimControl";
-            this.stimControl.Size = new System.Drawing.Size(243, 90);
+            this.stimControl.Size = new System.Drawing.Size(243, 125);
             this.stimControl.TabIndex = 16;
             // 
             // lAll
@@ -216,7 +216,7 @@
             this.pTargetPool.Controls.Add(this.cbAllSomites);
             this.pTargetPool.Controls.Add(this.lAll);
             this.pTargetPool.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTargetPool.Location = new System.Drawing.Point(0, 90);
+            this.pTargetPool.Location = new System.Drawing.Point(0, 125);
             this.pTargetPool.Name = "pTargetPool";
             this.pTargetPool.Size = new System.Drawing.Size(243, 139);
             this.pTargetPool.TabIndex = 36;
@@ -225,7 +225,7 @@
             // 
             this.pActive.Controls.Add(this.cbActive);
             this.pActive.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pActive.Location = new System.Drawing.Point(0, 229);
+            this.pActive.Location = new System.Drawing.Point(0, 264);
             this.pActive.Name = "pActive";
             this.pActive.Size = new System.Drawing.Size(243, 32);
             this.pActive.TabIndex = 37;

@@ -72,9 +72,9 @@ namespace SiliFish.ModelUnits.Stim
         }
 
         #region Generate different modes of stimuli
-        private void GenerateStepStimulus(List<(int start, int end)> periods, Random rand)
+        private void GenerateStepStimulus(List<(int start, int end)> timeRanges, Random rand)
         {
-            foreach (var (start, end) in periods)
+            foreach (var (start, end) in timeRanges)
             {
                 int iStart = RunParam.iIndex(start);
                 int iEnd = RunParam.iIndex(end);
@@ -86,16 +86,16 @@ namespace SiliFish.ModelUnits.Stim
             }
         }
 
-        private void GenerateRampStimulus(List<(int start, int end)> periods, Random rand)
+        private void GenerateRampStimulus(List<(int start, int end)> timeRanges)
         {
-            int firstStart = periods[0].start;
-            int lastEnd = periods[periods.Count() - 1].end;
+            int firstStart = timeRanges[0].start;
+            int lastEnd = timeRanges[timeRanges.Count() - 1].end;
 
             if (lastEnd > firstStart)
                 tangent = (Settings.Value2 - Settings.Value1) / ((lastEnd - firstStart) / RunParam.DeltaT);
             else tangent = 0;
 
-            foreach (var (start, end) in periods)
+            foreach (var (start, end) in timeRanges)
             {
                 int iStart = RunParam.iIndex(start);
                 int iEnd = RunParam.iIndex(end);
@@ -107,9 +107,9 @@ namespace SiliFish.ModelUnits.Stim
             }
         }
 
-        private void GenerateGaussianStimulus(List<(int start, int end)> periods, Random rand)
+        private void GenerateGaussianStimulus(List<(int start, int end)> timeRanges, Random rand)
         {
-            foreach (var (start, end) in periods)
+            foreach (var (start, end) in timeRanges)
             {
                 int iStart = RunParam.iIndex(start);
                 int iEnd = RunParam.iIndex(end);
@@ -119,66 +119,73 @@ namespace SiliFish.ModelUnits.Stim
                 }
             }
         }
-        private void GenerateSinusoidalStimulus(List<(int start, int end)> periods, Random rand)
+        private void GenerateSinusoidalStimulus(List<(int start, int end)> timeRanges)
         {
-            if (Settings.Value2 <= 0) return;
+            if (Settings.Frequency is null ||  Settings.Frequency <= 0) return;
+            double sinCycle = 1000 / (double)Settings.Frequency;//the period of the sin wave (period in ms)
+            double dt = RunParam.DeltaT;
             //for sinusoidal, the number of full cycles occur for each period
-            foreach (var (start, end) in periods)
+            foreach (var (start, end) in timeRanges)
             {
                 int iStart = RunParam.iIndex(start);
                 int iEnd = RunParam.iIndex(end);
-                //the period of the sin wave
-                int sinCycle = (int)((iEnd - iStart) / Settings.Value2);
                 for (int ind = iStart; ind < iEnd; ind++)
                 {
-                    Math.DivRem((ind-iStart), sinCycle, out int rem);
-                    double sinValue = Math.Sin(2 * Math.PI * rem/sinCycle);
+                    double sinValue = Math.Sin(2 * Math.PI * dt * (ind - iStart) / sinCycle);
                     values[ind] = Settings.Value1 * sinValue;
                 }
             }
         }
-        private void GeneratePulseStimulus(List<(int start, int end)> periods, Random rand)
+        private void GeneratePulseStimulus(List<(int start, int end)> timeRanges)
         {
-            int firstStart = periods[0].start;
-            int lastEnd = periods[periods.Count() - 1].end;
-            foreach (var (start, end) in periods)
+            if (Settings.Frequency is null || Settings.Frequency <= 0) return;
+            if (Settings.Value2 <= GlobalSettings.Epsilon) return;
+            double period = 1000 / (double)Settings.Frequency;//the period of each on+off (period in ms)
+            foreach (var (tStart, tEnd) in timeRanges)
             {
-                int iStart = RunParam.iIndex(start);
-                int iEnd = RunParam.iIndex(end);
-                for (int ind = iStart; ind < iEnd; ind++)
+                int ind = RunParam.iIndex(tStart);
+                int iEnd = RunParam.iIndex(tEnd);
+                double tPeriodStart = tStart;
+                while (ind < iEnd-1)
                 {
-                    if (Settings.Value2 > 0)//Value2 is the number of pulses
+                    int iPeriodStart = RunParam.iIndex(tPeriodStart);
+                    double tPeriodEnd = Math.Min(tPeriodStart + period, tEnd);
+                    int iPeriodEnd = RunParam.iIndex(tPeriodEnd);
+                    double tPulseEnd = Math.Min(Math.Min(tEnd, tPeriodStart + Settings.Value2), tPeriodEnd);
+                    int iPulseEnd = RunParam.iIndex(tPulseEnd);
+                    foreach (int i in Enumerable.Range(iPeriodStart, iPulseEnd - iPeriodStart))
                     {
-                        double t_ms = RunParam.GetTimeOfIndex(ind);
-                        double timeRange = lastEnd > 0 ? lastEnd - firstStart : 1000;
-                        double period = timeRange / Settings.Value2;
-                        double t = t_ms - firstStart; //check only start and finish times of the full timeline - TimeSpan_ms.IsActive(t_ms) at the beginning of the function takes care of the filtering
-                        while (t > period)
-                            t -= period;
-                        if (t <= period / 2)
-                            values[ind] = Settings.Value1;
+                        values[i] = Settings.Value1;
+                        ind = i;
                     }
+                    foreach (int i in Enumerable.Range(iPulseEnd, iPeriodEnd - iPulseEnd))
+                    {
+                        values[i] = 0;
+                        ind = i;
+                    }
+                    tPeriodStart = tPeriodEnd;
                 }
+
             }
         }
-        private void GenerateStimulus(List<(int start, int end)> periods, Random rand)
+        private void GenerateStimulus(List<(int start, int end)> timeRanges, Random rand)
         {
             switch (Settings.Mode)
             {
                 case StimulusMode.Step:
-                    GenerateStepStimulus(periods, rand);
+                    GenerateStepStimulus(timeRanges, rand);
                     break;
                 case StimulusMode.Ramp:
-                    GenerateRampStimulus(periods, rand);
+                    GenerateRampStimulus(timeRanges);
                     break;
                 case StimulusMode.Gaussian:
-                    GenerateGaussianStimulus(periods, rand);
+                    GenerateGaussianStimulus(timeRanges, rand);
                     break;
                 case StimulusMode.Sinusoidal:
-                    GenerateSinusoidalStimulus(periods, rand);
+                    GenerateSinusoidalStimulus(timeRanges);
                     break;
                 case StimulusMode.Pulse:
-                    GeneratePulseStimulus(periods, rand);
+                    GeneratePulseStimulus(timeRanges);
                     break;
             }
         }
@@ -187,18 +194,17 @@ namespace SiliFish.ModelUnits.Stim
         {
             RunParam = runParam;
             values = new double[RunParam.iMax];
-            List<(int start, int end)> periods =new((TimeLine_ms.GetTimeLine()));
-            if (!periods.Any())
+            List<(int start, int end)> timeRanges = new(TimeLine_ms.GetTimeLine());
+            if (!timeRanges.Any())
             {
-                periods.Add((0, RunParam.MaxTime));
+                timeRanges.Add((0, RunParam.MaxTime));
             }
-            for (int i = 0; i < periods.Count; i++)
+            for (int i = 0; i < timeRanges.Count; i++)
             {
-                if (periods[i].end < 0)
-                    periods[i] = (periods[i].start, RunParam.MaxTime);
+                if (timeRanges[i].end < 0)
+                    timeRanges[i] = (timeRanges[i].start, RunParam.MaxTime);
             }
-            GenerateStimulus(periods, rand);
+            GenerateStimulus(timeRanges, rand);
         }
     }
-
 }

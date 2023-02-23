@@ -47,8 +47,19 @@ namespace SiliFish.ModelUnits.Architecture
             return true;
         }
 
+        public virtual void BackwardCompatibility_Stimulus()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
         public virtual void BackwardCompatibility()
         {
+            if (string.Compare(Version, "2.2.4") < 0)//frequency to stimulus is added on 2.2.4
+            {
+                BackwardCompatibility_Stimulus();
+            }
+
             if (Parameters == null || !Parameters.Any())
                 return;
             if (Parameters.TryGetValue("General.Name", out object value))

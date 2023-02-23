@@ -34,6 +34,8 @@
             this.lValue2 = new System.Windows.Forms.Label();
             this.lStimulus = new System.Windows.Forms.Label();
             this.ddStimulusMode = new System.Windows.Forms.ComboBox();
+            this.eFrequency = new System.Windows.Forms.TextBox();
+            this.lFrequency = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // eValue2
@@ -55,7 +57,7 @@
             // lValue1
             // 
             this.lValue1.AutoSize = true;
-            this.lValue1.Location = new System.Drawing.Point(3, 39);
+            this.lValue1.Location = new System.Drawing.Point(3, 40);
             this.lValue1.Name = "lValue1";
             this.lValue1.Size = new System.Drawing.Size(37, 15);
             this.lValue1.TabIndex = 8;
@@ -64,7 +66,7 @@
             // lValue2
             // 
             this.lValue2.AutoSize = true;
-            this.lValue2.Location = new System.Drawing.Point(3, 65);
+            this.lValue2.Location = new System.Drawing.Point(3, 66);
             this.lValue2.Name = "lValue2";
             this.lValue2.Size = new System.Drawing.Size(47, 15);
             this.lValue2.TabIndex = 10;
@@ -89,23 +91,42 @@
             this.ddStimulusMode.FormattingEnabled = true;
             this.ddStimulusMode.Location = new System.Drawing.Point(100, 10);
             this.ddStimulusMode.Name = "ddStimulusMode";
-            this.ddStimulusMode.Size = new System.Drawing.Size(68, 23);
+            this.ddStimulusMode.Size = new System.Drawing.Size(95, 23);
             this.ddStimulusMode.TabIndex = 7;
             this.ddStimulusMode.SelectedIndexChanged += new System.EventHandler(this.ddStimulusMode_SelectedIndexChanged);
             // 
-            // StimulusControl
+            // eFrequency
+            // 
+            this.eFrequency.Location = new System.Drawing.Point(100, 89);
+            this.eFrequency.Name = "eFrequency";
+            this.eFrequency.Size = new System.Drawing.Size(52, 23);
+            this.eFrequency.TabIndex = 13;
+            this.eFrequency.TextChanged += new System.EventHandler(this.eFrequency_TextChanged);
+            // 
+            // lFrequency
+            // 
+            this.lFrequency.AutoSize = true;
+            this.lFrequency.Location = new System.Drawing.Point(3, 93);
+            this.lFrequency.Name = "lFrequency";
+            this.lFrequency.Size = new System.Drawing.Size(62, 15);
+            this.lFrequency.TabIndex = 12;
+            this.lFrequency.Text = "Frequency";
+            // 
+            // StimulusSettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.eFrequency);
+            this.Controls.Add(this.lFrequency);
             this.Controls.Add(this.eValue2);
             this.Controls.Add(this.eValue1);
             this.Controls.Add(this.lValue1);
             this.Controls.Add(this.lValue2);
             this.Controls.Add(this.lStimulus);
             this.Controls.Add(this.ddStimulusMode);
-            this.Name = "StimulusControl";
-            this.Size = new System.Drawing.Size(176, 93);
+            this.Name = "StimulusSettingsControl";
+            this.Size = new System.Drawing.Size(203, 122);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -119,5 +140,7 @@
         private Label lValue2;
         private Label lStimulus;
         private ComboBox ddStimulusMode;
+        private TextBox eFrequency;
+        private Label lFrequency;
     }
 }

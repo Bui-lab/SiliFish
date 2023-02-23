@@ -404,10 +404,12 @@
             // 
             // stimulusControl1
             // 
+            this.stimulusControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.stimulusControl1.BackColor = System.Drawing.Color.White;
-            this.stimulusControl1.Location = new System.Drawing.Point(6, 191);
+            this.stimulusControl1.Location = new System.Drawing.Point(6, 174);
             this.stimulusControl1.Name = "stimulusControl1";
-            this.stimulusControl1.Size = new System.Drawing.Size(176, 93);
+            this.stimulusControl1.Size = new System.Drawing.Size(273, 117);
             this.stimulusControl1.TabIndex = 25;
             this.stimulusControl1.StimulusChanged += new System.EventHandler(this.stimulusControl1_StimulusChanged);
             // 
@@ -467,14 +469,14 @@
             this.pfParams.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pfParams.Location = new System.Drawing.Point(3, 66);
             this.pfParams.Name = "pfParams";
-            this.pfParams.Size = new System.Drawing.Size(297, 110);
+            this.pfParams.Size = new System.Drawing.Size(297, 104);
             this.pfParams.TabIndex = 23;
             // 
             // pRheobase
             // 
             this.pRheobase.Controls.Add(this.grRheobase);
             this.pRheobase.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pRheobase.Location = new System.Drawing.Point(3, 176);
+            this.pRheobase.Location = new System.Drawing.Point(3, 170);
             this.pRheobase.Name = "pRheobase";
             this.pRheobase.Size = new System.Drawing.Size(297, 124);
             this.pRheobase.TabIndex = 40;
@@ -484,10 +486,10 @@
             this.tabAnalysis.Controls.Add(this.tTest);
             this.tabAnalysis.Controls.Add(this.tSensitivityAnalysis);
             this.tabAnalysis.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabAnalysis.Location = new System.Drawing.Point(3, 300);
+            this.tabAnalysis.Location = new System.Drawing.Point(3, 294);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(297, 339);
+            this.tabAnalysis.Size = new System.Drawing.Size(297, 345);
             this.tabAnalysis.TabIndex = 39;
             // 
             // tTest
@@ -517,7 +519,7 @@
             this.tTest.Location = new System.Drawing.Point(4, 24);
             this.tTest.Name = "tTest";
             this.tTest.Padding = new System.Windows.Forms.Padding(3);
-            this.tTest.Size = new System.Drawing.Size(289, 311);
+            this.tTest.Size = new System.Drawing.Size(289, 317);
             this.tTest.TabIndex = 0;
             this.tTest.Text = "Test";
             this.tTest.UseVisualStyleBackColor = true;
@@ -544,9 +546,10 @@
             // 
             // btnDynamicsRun
             // 
+            this.btnDynamicsRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDynamicsRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
             this.btnDynamicsRun.ForeColor = System.Drawing.Color.White;
-            this.btnDynamicsRun.Location = new System.Drawing.Point(107, 282);
+            this.btnDynamicsRun.Location = new System.Drawing.Point(107, 291);
             this.btnDynamicsRun.Name = "btnDynamicsRun";
             this.btnDynamicsRun.Size = new System.Drawing.Size(66, 23);
             this.btnDynamicsRun.TabIndex = 35;
@@ -556,8 +559,9 @@
             // 
             // cbAutoDrawPlots
             // 
+            this.cbAutoDrawPlots.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbAutoDrawPlots.AutoSize = true;
-            this.cbAutoDrawPlots.Location = new System.Drawing.Point(9, 286);
+            this.cbAutoDrawPlots.Location = new System.Drawing.Point(9, 295);
             this.cbAutoDrawPlots.Name = "cbAutoDrawPlots";
             this.cbAutoDrawPlots.Size = new System.Drawing.Size(82, 19);
             this.cbAutoDrawPlots.TabIndex = 34;
@@ -807,6 +811,8 @@
             // gaControl
             // 
             this.gaControl.CoreType = null;
+            this.gaControl.DeltaT = 0D;
+            this.gaControl.DeltaTEuler = 0D;
             this.gaControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gaControl.Location = new System.Drawing.Point(0, 0);
             this.gaControl.Name = "gaControl";

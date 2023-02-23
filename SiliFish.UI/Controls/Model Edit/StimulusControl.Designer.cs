@@ -43,7 +43,7 @@
             this.cbActive.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cbActive.Checked = true;
             this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(3, 116);
+            this.cbActive.Location = new System.Drawing.Point(3, 145);
             this.cbActive.Name = "cbActive";
             this.cbActive.Size = new System.Drawing.Size(59, 19);
             this.cbActive.TabIndex = 0;
@@ -55,15 +55,15 @@
             this.timeLineControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.timeLineControl.Location = new System.Drawing.Point(3, 141);
+            this.timeLineControl.Location = new System.Drawing.Point(3, 174);
             this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(259, 212);
+            this.timeLineControl.Size = new System.Drawing.Size(259, 230);
             this.timeLineControl.TabIndex = 0;
             // 
             // lTargetCell
             // 
             this.lTargetCell.AutoSize = true;
-            this.lTargetCell.Location = new System.Drawing.Point(3, 93);
+            this.lTargetCell.Location = new System.Drawing.Point(3, 122);
             this.lTargetCell.Name = "lTargetCell";
             this.lTargetCell.Size = new System.Drawing.Size(62, 15);
             this.lTargetCell.TabIndex = 32;
@@ -75,14 +75,14 @@
             this.stimControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.stimControl.Location = new System.Drawing.Point(0, 0);
             this.stimControl.Name = "stimControl";
-            this.stimControl.Size = new System.Drawing.Size(265, 90);
+            this.stimControl.Size = new System.Drawing.Size(265, 113);
             this.stimControl.TabIndex = 34;
             // 
             // eTargetCell
             // 
             this.eTargetCell.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTargetCell.Location = new System.Drawing.Point(101, 90);
+            this.eTargetCell.Location = new System.Drawing.Point(101, 119);
             this.eTargetCell.Name = "eTargetCell";
             this.eTargetCell.ReadOnly = true;
             this.eTargetCell.Size = new System.Drawing.Size(161, 23);
@@ -100,7 +100,7 @@
             this.Controls.Add(this.lTargetCell);
             this.Controls.Add(this.cbActive);
             this.Name = "StimulusControl";
-            this.Size = new System.Drawing.Size(265, 357);
+            this.Size = new System.Drawing.Size(265, 408);
             this.ResumeLayout(false);
             this.PerformLayout();
 
