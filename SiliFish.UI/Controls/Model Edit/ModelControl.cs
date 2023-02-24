@@ -856,7 +856,7 @@ namespace SiliFish.UI.Controls
         {
             if (Model == null) return null;
             ControlContainer frmControl = new();
-            if (CurrentMode == RunMode.Template || stim==null)
+            if (CurrentMode == RunMode.Template)
             {
                 StimulusTemplateControl stimControl = new();
                 stimControl.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
@@ -976,12 +976,7 @@ namespace SiliFish.UI.Controls
         private void listStimuli_ItemsExport(object sender, EventArgs e)
         {
             ModelUnitBase selectedUnit = SelectedUnit;
-            if (UnitHasStimulus(SelectedUnit))
-            {
-                string msg = $"Importing will remove all existing stimuli of {selectedUnit.ID}. Do you want to continue?";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
-            }
-            else
+            if (!UnitHasStimulus(SelectedUnit))
             {
                 MessageBox.Show("There are no stimuli to be exported.");
                 return;
@@ -1000,7 +995,10 @@ namespace SiliFish.UI.Controls
             ModelUnitBase selectedUnit = SelectedUnit;
             if (UnitHasStimulus(SelectedUnit))
             {
-                string msg = $"Importing will remove all existing stimuli of {selectedUnit.ID}. Do you want to continue?";
+                string unit = selectedUnit?.ID ?? "the model";
+                if (selectedUnit is CellPoolTemplate cpt)
+                    unit = cpt.CellGroup;
+                string msg = $"Importing will remove all existing stimuli of {unit}. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
             if (openFileCSV.ShowDialog() == DialogResult.OK)
