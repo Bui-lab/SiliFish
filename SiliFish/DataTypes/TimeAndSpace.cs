@@ -133,6 +133,28 @@ namespace SiliFish.DataTypes
             get => $"{string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))}";
             set 
             {
+                string[] periods = value.Split(';');
+                foreach (string period in periods)
+                {
+                    if (string.IsNullOrEmpty(period))
+                        continue;
+                    int sep = period.IndexOf(" - ");
+                    if (sep == -1)
+                    {
+                        if (int.TryParse(period, out int i))
+                        {
+                            Periods.Add((i, -1));
+                            continue;
+                        }
+                    }
+                    if (int.TryParse(period.AsSpan(0, sep), out int j))
+                    {
+                        if (int.TryParse(period.AsSpan(sep + 3), out int k))
+                            Periods.Add((j, k));
+                        else
+                            Periods.Add((j, -1));
+                    }
+                }
             }
         }
 

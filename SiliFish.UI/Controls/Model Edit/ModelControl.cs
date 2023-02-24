@@ -40,6 +40,10 @@ namespace SiliFish.UI.Controls
         private Cell SelectedCell; //valid if Mode == Mode.RunningModel
         private JunctionBase SelectedJunction;
         private StimulusBase SelectedStimulus;
+
+        private ModelUnitBase SelectedUnit => (ModelUnitBase)SelectedCell ?? SelectedPool ?? SelectedPoolTemplate;
+        
+
         public ModelControl()
         {
             InitializeComponent();
@@ -313,10 +317,11 @@ namespace SiliFish.UI.Controls
             {
                 SelectedPoolTemplate = cpt;
                 LoadProjections(cpt.CellGroup);
-                LoadStimuli(cpt.CellGroup);
+                LoadStimuli(cpt);
             }
             else if (sender == null)
             {
+                SelectedPoolTemplate = null;
                 SelectedPool = null;
                 SelectedCell = null;
                 LoadCells();//Full list
@@ -790,17 +795,30 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void LoadStimuli(string cellPoolID)
+        private void LoadStimuli(ModelUnitBase unit)
         {
-            if (string.IsNullOrEmpty(cellPoolID))
+            if (unit is null)
+                LoadStimuli();
+            else if (unit is Cell cell)
+                LoadStimuli(cell);
+            else if (unit is CellPool cellPool)
+                LoadStimuli(cellPool);
+            else if (unit is CellPoolTemplate poolTemplate)
+                LoadStimuli(poolTemplate);
+        }
+
+
+        private void LoadStimuli(CellPoolTemplate cellPoolTemplate)
+        {
+            if (cellPoolTemplate is null)
             {
                 LoadStimuli();
                 return;
             }
-            lStimuliTitle.Text = $"Stimuli of {cellPoolID}";
+            lStimuliTitle.Text = $"Stimuli of {cellPoolTemplate.CellGroup}";
             listStimuli.ClearItems();
             if (Model == null || Model is not ModelTemplate) return;
-            IEnumerable<StimulusTemplate> list = Model.GetStimuli().Cast<StimulusTemplate>().Where(st => st.TargetPool == cellPoolID);
+            IEnumerable<StimulusTemplate> list = Model.GetStimuli().Cast<StimulusTemplate>().Where(st => st.TargetPool == cellPoolTemplate.CellGroup);
             foreach (StimulusTemplate stim in list)
                 listStimuli.AppendItem(stim);
         }
@@ -935,52 +953,63 @@ namespace SiliFish.UI.Controls
             else if (Model is ModelTemplate mt)
             {
                 mt.AppliedStimuli.Sort();
-                LoadStimuli(SelectedPoolTemplate?.CellGroup);
+                LoadStimuli(SelectedPoolTemplate);
             }
 
         }
+        private bool UnitHasStimulus(ModelUnitBase unit)
+        {
+            if (unit == null)
+            {
+                if (Model is ModelTemplate mt)
+                    return mt.HasStimulus();
+                return (Model as RunningModel).HasStimulus();
+            }
+            if (unit is Cell cell)
+                return cell.Stimuli.HasStimulus;
+            if (unit is CellPool cellPool)
+                return cellPool.GetStimuli().Any();
+            if (unit is CellPoolTemplate cellPoolTemplate)
+                return (Model as ModelTemplate).AppliedStimuli.FirstOrDefault(stim => stim.TargetPool == cellPoolTemplate.CellGroup) != null;
+            return false;
+        }
         private void listStimuli_ItemsExport(object sender, EventArgs e)
         {
+            ModelUnitBase selectedUnit = SelectedUnit;
+            if (UnitHasStimulus(SelectedUnit))
+            {
+                string msg = $"Importing will remove all existing stimuli of {selectedUnit.ID}. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            }
+            else
+            {
+                MessageBox.Show("There are no stimuli to be exported.");
+                return;
+            }
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model))
-                    MessageBox.Show($"The stimulus information is exported to {saveFileCSV.FileName}.");
+                if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnit))
+                    MessageBox.Show($"The stimulus information of the model is exported to {saveFileCSV.FileName}.");
                 else
-                    MessageBox.Show("There is a problem with saving the csv file. Please check whether you have writing access to the folder selected");
+                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
             }
         }
 
         private void listStimuli_ItemsImport(object sender, EventArgs e)
         {
+            ModelUnitBase selectedUnit = SelectedUnit;
+            if (UnitHasStimulus(SelectedUnit))
+            {
+                string msg = $"Importing will remove all existing stimuli of {selectedUnit.ID}. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            }
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
-                string selection = SelectedCell != null ? SelectedCell.ID :
-                    SelectedPool != null ? SelectedPool.ID :
-                    SelectedPoolTemplate != null ? SelectedPoolTemplate.ID :
-                    "the model";
-                string msg = $"Do you want to remove all existing stimuli of {selection} and replace it with the data in {openFileCSV.FileName}";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                {
-                    string filename = openFileCSV.FileName;
-                    if (SelectedCell != null)
-                    {
-                        //TODO import stimuli
-                        LoadStimuli(SelectedCell);
-                    }
-                    else if (SelectedPoolTemplate != null)
-                    {
-                        //TODO import stimuli
-                    }
-                    else if (SelectedPool != null)
-                    {
-                        //TODO import stimuli
-                    }
-                    else 
-                    {
-                        ModelFile.ReadStimulusFromCSV(filename, Model);
-                        LoadStimuli();
-                    }
-                }
+                string filename = openFileCSV.FileName;
+                if (ModelFile.ReadStimulusFromCSV(filename, Model, selectedUnit))
+                    LoadStimuli(selectedUnit);
+                else
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
         }
 

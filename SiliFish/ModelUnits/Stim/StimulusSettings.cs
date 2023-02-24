@@ -34,10 +34,11 @@ namespace SiliFish.ModelUnits.Stim
             {
                 string[] values = value.Split(',');
                 if (values.Length != CSVExportColumCount) return;
-                Mode = (StimulusMode)int.Parse(values[0]);
+                Mode = (StimulusMode)Enum.Parse(typeof(StimulusMode), values[0]); 
                 Value1 = double.Parse(values[1]);
                 Value2 = double.Parse(values[2]);
-                Frequency = double.Parse(values[3]);
+                if (double.TryParse(values[3], out double f))
+                    Frequency = f;
             }
         }
         

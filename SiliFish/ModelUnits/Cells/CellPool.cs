@@ -476,6 +476,13 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
         #endregion
+
+        #region Stimulus functions
+
+        public override bool HasStimulus()
+        {
+            return Cells.Any(c => c.HasStimulus());
+        }
         public void ApplyStimulus(StimulusTemplate stimulus, string TargetSomite, string TargetCell)
         {
             if (stimulus == null)
@@ -513,6 +520,8 @@ namespace SiliFish.ModelUnits.Cells
                 cell.ClearStimuli();
             }
         }
+
+        #endregion
     }
 
 }

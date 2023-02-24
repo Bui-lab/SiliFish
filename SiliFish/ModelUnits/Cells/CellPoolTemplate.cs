@@ -4,6 +4,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

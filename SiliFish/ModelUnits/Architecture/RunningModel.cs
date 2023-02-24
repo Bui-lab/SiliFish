@@ -341,9 +341,9 @@ namespace SiliFish.ModelUnits.Architecture
 
         public Cell GetCell(string id)
         {
-            Cell cell = (Cell)MusclePools.Select(mp => mp.GetCell(id));
+            Cell cell = MusclePools.FirstOrDefault(mp => mp.GetCell(id) != null).GetCell(id);
             if (cell != null)
-                cell = (Cell)NeuronPools.Select(np => np.GetCell(id));
+                cell = NeuronPools.FirstOrDefault(np => np.GetCell(id) != null).GetCell(id);
             return cell;
         }
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int SomiteSeq)
@@ -444,6 +444,11 @@ namespace SiliFish.ModelUnits.Architecture
         #endregion
 
         #region Stimuli
+
+        public bool HasStimulus()
+        {
+            return GetCells().Any(c => c.HasStimulus());
+        }
         public override List<StimulusBase> GetStimuli()
         {
             List<StimulusBase> listStimuli = new();

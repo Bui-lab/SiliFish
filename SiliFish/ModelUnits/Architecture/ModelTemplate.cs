@@ -51,6 +51,8 @@ namespace SiliFish.ModelUnits.Architecture
                 throw;
             }
         }
+
+        #region CellPools
         public override List<CellPoolTemplate> GetCellPools()
         {
             return CellPoolTemplates.Select(cp => (CellPoolTemplate)cp).ToList();
@@ -71,7 +73,9 @@ namespace SiliFish.ModelUnits.Architecture
             AppliedStimuli.RemoveAll(s => s.TargetPool == cellPool.CellGroup);
             return CellPoolTemplates.Remove(cellPool);
         }
+        #endregion
 
+        #region Projections
         public override List<JunctionBase> GetProjections()
         {
             return InterPoolTemplates.Select(ip => (JunctionBase)ip).ToList();
@@ -112,7 +116,13 @@ namespace SiliFish.ModelUnits.Architecture
         {
             InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.PoolTarget).ToList();
         }
+        #endregion
 
+        #region Stimulus
+        public bool HasStimulus()
+        {
+            return AppliedStimuli.Any();
+        }
         public override List<StimulusBase> GetStimuli()
         {
             return AppliedStimuli.Select(stim => (StimulusBase)stim).ToList();
@@ -136,6 +146,17 @@ namespace SiliFish.ModelUnits.Architecture
             else
                 AddStimulus(stim2);
         }
+
+        public void ClearStimuli()
+        {
+            AppliedStimuli.Clear();
+        }
+
+        public void ClearStimuli(string cellPool)
+        {
+            AppliedStimuli.RemoveAll(stim => stim.TargetPool == cellPool);
+        }
+        #endregion
         public void ClearLists()
         {
             CellPoolTemplates.Clear();

@@ -1,7 +1,10 @@
-﻿using SiliFish.DataTypes;
+﻿using GeneticSharp;
+using SiliFish.DataTypes;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
@@ -383,7 +386,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static bool SaveStimulusToCSV(string filename, ModelBase model)
+        public static bool SaveStimulusToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit)
         {
             if (filename == null || model == null)
                 return false;
@@ -394,18 +397,28 @@ namespace SiliFish.Repositories
                 using StreamWriter sw = new(fs);
                 if (model is ModelTemplate mt)
                 {
+                    List<StimulusTemplate> stimulusTemplates =
+                        (selectedUnit is CellPoolTemplate cellPoolTemplate) ?
+                        mt.AppliedStimuli.Where(stim => stim.TargetPool == cellPoolTemplate.CellGroup).ToList() :
+                        mt.AppliedStimuli;
                     sw.WriteLine(StimulusTemplate.CSVExportColumnNames);
-                    foreach (StimulusTemplate stim in mt.AppliedStimuli)
+                    foreach (StimulusTemplate stim in stimulusTemplates)
                     {
                         sw.WriteLine(stim.CSVExportValues);
                     }
                 }
                 else if (model is RunningModel rm)
                 {
+                    List<Stimulus> stimuli =
+                        (List<Stimulus>)((selectedUnit is CellPool cellPool) ?
+                            cellPool.GetStimuli().Select(stim => stim as Stimulus) :
+                        (selectedUnit is Cell cell) ?
+                            cell.Stimuli.ListOfStimulus :
+                        rm.GetStimuli().Select(stim => stim as Stimulus));
                     sw.WriteLine(Stimulus.CSVExportColumnNames);
-                    foreach (StimulusBase stim in rm.GetStimuli())
+                    foreach (Stimulus stim in stimuli)
                     {
-                        sw.WriteLine((stim as Stimulus).CSVExportValues);
+                        sw.WriteLine(stim.CSVExportValues);
                     }
                 }
                 return true;
@@ -417,7 +430,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static bool ReadStimulusFromCSV(string filename, ModelBase model)
+        private static bool ReadStimulusFromCSV(string filename, ModelBase model)
         {
             if (filename == null || model == null)
                 return false;
@@ -431,8 +444,8 @@ namespace SiliFish.Repositories
                 {
                     if (columns != StimulusTemplate.CSVExportColumnNames)
                         return false;
-                    mt.AppliedStimuli.Clear();
-                    while (iter < columns.Length)
+                    mt.ClearStimuli();
+                    while (iter < contents.Length)
                     {
                         StimulusTemplate stim = new()
                         {
@@ -450,6 +463,68 @@ namespace SiliFish.Repositories
                     {
                         Stimulus stim = new();
                         stim.GenerateFromCSVRow(rm, contents[iter++]);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public static bool ReadStimulusFromCSV(string filename, ModelBase model, ModelUnitBase SelectedUnit)
+        {
+            if (filename == null || model == null)
+                return false;
+            if (SelectedUnit is null)
+                return ReadStimulusFromCSV(filename, model);
+            try
+            {
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                int iter = 1;
+                if (SelectedUnit is Cell cell)
+                {
+                    if (columns != Stimulus.CSVExportColumnNames)
+                        return false;
+                    cell.ClearStimuli();
+                    while (iter < contents.Length)
+                    {
+                        Stimulus stim = new();
+                        stim.GenerateFromCSVRow(model as RunningModel, contents[iter++]);
+                        if (stim.TargetCell == cell)
+                            cell.AddStimulus(stim);
+                    }
+                }
+                else if (SelectedUnit is CellPool cellPool)
+                {
+                    if (columns != Stimulus.CSVExportColumnNames)
+                        return false;
+                    cellPool.ClearStimuli();
+                    while (iter < contents.Length)
+                    {
+                        Stimulus stim = new();
+                        stim.GenerateFromCSVRow(model as RunningModel, contents[iter++]);
+                        if (stim.TargetCell.CellPool == cellPool)
+                            stim.TargetCell.AddStimulus(stim);
+                    }
+                }
+                else if (SelectedUnit is CellPoolTemplate cellPoolTemp)
+                {
+                    ModelTemplate mt = model as ModelTemplate;
+                    if (columns != StimulusTemplate.CSVExportColumnNames)
+                        return false;
+                    mt.ClearStimuli(cellPoolTemp.CellGroup);
+                    while (iter < contents.Length)
+                    {
+                        StimulusTemplate stim = new()
+                        {
+                            CSVExportValues = contents[iter++]
+                        };
+                        if (stim.TargetPool == cellPoolTemp.CellGroup)
+                            mt.AppliedStimuli.Add(stim);
                     }
                 }
                 return true;

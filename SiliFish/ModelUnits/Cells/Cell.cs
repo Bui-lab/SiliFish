@@ -177,10 +177,14 @@ namespace SiliFish.ModelUnits.Cells
             Stimuli.Sort();
         }
 
-        #endregion              
+        #endregion
 
         #region Stimulus Functions
 
+        public override bool HasStimulus()
+        {
+            return Stimuli.HasStimulus;
+        }
         public void ClearStimuli()
         {
             Stimuli.Clear();

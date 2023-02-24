@@ -60,8 +60,9 @@ namespace SiliFish.ModelUnits.Stim
                 TargetSomite = values[1];
                 TargetCell = values[2];
                 LeftRight = values[3];
-                Settings.CSVExportValues = string.Join(",", values[4..(StimulusSettings.CSVExportColumCount + 3)]);
-                TimeLine_ms.CSVExportValues = string.Join(",", values[(StimulusSettings.CSVExportColumCount + 4)..]);
+                int lastSettingsCol = StimulusSettings.CSVExportColumCount + 4;
+                Settings.CSVExportValues = string.Join(",", values[4..lastSettingsCol]);
+                TimeLine_ms.CSVExportValues = string.Join(",", values[lastSettingsCol..]);
             }
         }
     }
