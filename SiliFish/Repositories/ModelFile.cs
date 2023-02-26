@@ -411,10 +411,10 @@ namespace SiliFish.Repositories
                 {
                     List<Stimulus> stimuli =
                         (List<Stimulus>)((selectedUnit is CellPool cellPool) ?
-                            cellPool.GetStimuli().Select(stim => stim as Stimulus) :
+                            cellPool.GetStimuli().Select(stim => stim as Stimulus).ToList() :
                         (selectedUnit is Cell cell) ?
                             cell.Stimuli.ListOfStimulus :
-                        rm.GetStimuli().Select(stim => stim as Stimulus));
+                        rm.GetStimuli().Select(stim => stim as Stimulus)).ToList();
                     sw.WriteLine(Stimulus.CSVExportColumnNames);
                     foreach (Stimulus stim in stimuli)
                     {
