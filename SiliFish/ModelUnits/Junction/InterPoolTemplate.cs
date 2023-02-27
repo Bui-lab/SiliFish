@@ -30,9 +30,14 @@ namespace SiliFish.ModelUnits.Junction
 
         public string Description { get; set; }
         public double Probability { get; set; } = 1;
-        public bool JncActive //does not check the active flags of the cell pools
+        public bool JncActive //to be used in creating the model
         {
-            get { return base.Active; }
+            get
+            {
+                if (linkedSource != null && !linkedSource.Active ||
+                    linkedTarget != null && !linkedTarget.Active)
+                    return false;
+                return base.Active; }
             set { base.Active = value; }
         }
 
@@ -71,9 +76,6 @@ namespace SiliFish.ModelUnits.Junction
         {
             get
             {
-                if (linkedSource != null && !linkedSource.Active ||
-                    linkedTarget != null && !linkedTarget.Active)
-                    return false;
                 return base.Active;
             }
             set { base.Active = value; }
@@ -123,8 +125,8 @@ namespace SiliFish.ModelUnits.Junction
         }
         public override string ToString()
         {
-            string activeStatus = JncActive && TimeLine_ms.IsBlank() ? "" :
-                JncActive ? " (timeline)" : " (inactive)";
+            string activeStatus = Active && TimeLine_ms.IsBlank() ? "" :
+                Active ? " (timeline)" : " (inactive)";
             return $"{Name} [{ConnectionType}]/{AxonReachMode}{activeStatus}";
         }
         public override int CompareTo(ModelUnitBase otherbase)

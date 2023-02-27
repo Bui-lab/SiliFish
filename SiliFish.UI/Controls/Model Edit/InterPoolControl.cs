@@ -254,7 +254,7 @@ namespace SiliFish.UI.Controls
                 {
                     synapseControl.SetSynapseParameters(interPoolTemplate.SynapseParameters);
                 }
-                cbActive.Checked = interPoolTemplate.JncActive;
+                cbActive.Checked = interPoolTemplate.Active;
                 timeLineControl.SetTimeLine(interPoolTemplate.TimeLine_ms);
             }
             else
@@ -296,7 +296,7 @@ namespace SiliFish.UI.Controls
             {
                 interPoolTemplate.SynapseParameters = synapseControl.GetSynapseParameters();
             }
-            interPoolTemplate.JncActive = cbActive.Checked;
+            interPoolTemplate.Active = cbActive.Checked;
             interPoolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
             interPoolTemplate.Attachments = attachmentList.GetAttachments();
 

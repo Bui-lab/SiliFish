@@ -294,8 +294,31 @@ namespace Services
             return (leftImages, null);
         }
 
+        private static List<Image> PlotJunctionCharts(double[] TimeOffset, JunctionBase jnc, int iStart, int iEnd, UnitOfMeasure UoM)
+        {
+            /*TODO List<ChartDataStruct> charts = new();
+             List<Cell> cells = new();
+             List<GapJunction> gapJunctions = new();
+             List<ChemicalSynapse> synapses = new();
+             if (jnc is GapJunction gj)
+             {
+                 cells.Add(gj.Cell1);
+                 cells.Add(gj.Cell2);
+                 gapJunctions.Add(gj);
+             }
+             else if (jnc is ChemicalSynapse syn)
+             {
+                 cells.Add(syn.PreNeuron);
+                 cells.Add(syn.PostCell);
+                 synapses.Add(syn);
+             }
+             charts.AddRange(PlotMembranePotentials(TimeOffset, cells, null, null, iStart, iEnd));
+             charts.AddRange(PlotCurrents(TimeOffset, gapJunctions, synapses, iStart, iEnd, UoM));
+             return charts;*/
+            return null;
+        }
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-            PlotSelectionMultiCells cellSelection, int tStart = 0, int tEnd = -1)
+            PlotSelectionInterface cellSelectionInterface, int tStart = 0, int tEnd = -1)
         {
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
@@ -312,24 +335,27 @@ namespace Services
             if (iEnd < iStart || iEnd >= TimeArray.Length)
                 iEnd = TimeArray.Length - 1;
 
-            switch (PlotType)
+            if (cellSelectionInterface is PlotSelectionMultiCells cellSelection)
             {
-                case PlotType.MembPotential:
-                    return PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
-                case PlotType.Current:
-                    return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: true, uom);
-                case PlotType.GapCurrent:
-                    return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: false, uom);
-                case PlotType.ChemCurrent:
-                    return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chem: true, uom);
-                case PlotType.Stimuli:
-                    return PlotStimuli(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
-                case PlotType.FullDyn:
-                    return PlotFullDynamics(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
-                case PlotType.Episodes:
-                    return PlotEpisodes(model, tStart, tEnd);
-                default:
-                    break;
+                switch (PlotType)
+                {
+                    case PlotType.MembPotential:
+                        return PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
+                    case PlotType.Current:
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: true, uom);
+                    case PlotType.GapCurrent:
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: false, uom);
+                    case PlotType.ChemCurrent:
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chem: true, uom);
+                    case PlotType.Stimuli:
+                        return PlotStimuli(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
+                    case PlotType.FullDyn:
+                        return PlotFullDynamics(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
+                    case PlotType.Episodes:
+                        return PlotEpisodes(model, tStart, tEnd);
+                    default:
+                        break;
+                }
             }
             return (null, null);
         }

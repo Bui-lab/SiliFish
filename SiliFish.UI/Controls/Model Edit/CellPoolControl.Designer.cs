@@ -185,6 +185,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddCellType
             // 
+            this.ddCellType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCellType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCellType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCellType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -287,6 +289,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddBodyPosition
             // 
+            this.ddBodyPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddBodyPosition.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddBodyPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddBodyPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -307,6 +311,8 @@ namespace SiliFish.UI.Controls
             // 
             // eSomiteRange
             // 
+            this.eSomiteRange.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.eSomiteRange.Location = new System.Drawing.Point(114, 196);
             this.eSomiteRange.Name = "eSomiteRange";
             this.eSomiteRange.ReadOnly = true;
@@ -330,6 +336,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddCoreType
             // 
+            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCoreType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -351,6 +359,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddSelection
             // 
+            this.ddSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddSelection.FormattingEnabled = true;
             this.ddSelection.Location = new System.Drawing.Point(185, 141);
@@ -372,6 +382,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddNeuronClass
             // 
+            this.ddNeuronClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddNeuronClass.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddNeuronClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddNeuronClass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;

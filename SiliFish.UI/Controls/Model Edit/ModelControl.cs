@@ -671,6 +671,8 @@ namespace SiliFish.UI.Controls
                 jnc = new GapJunction(gapJunction);
             else if (listConnections.SelectedItem is ChemicalSynapse synapse)
                 jnc = new ChemicalSynapse(synapse);
+            else if (listConnections.SelectedItem is InterPoolTemplate ipt)
+                jnc = new InterPoolTemplate(ipt);
             List<JunctionBase> jncs = OpenConnectionDialog(jnc, true);
             if (jncs != null && jncs.Any())
             {

@@ -185,6 +185,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddCellPool
             // 
+            this.ddCellPool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCellPool.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCellPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCellPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -196,6 +198,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddCoreType
             // 
+            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCoreType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -208,6 +212,8 @@ namespace SiliFish.UI.Controls
             // 
             // ddCellType
             // 
+            this.ddCellType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddCellType.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ddCellType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddCellType.Enabled = false;

@@ -77,7 +77,7 @@ namespace SiliFish.UI.Controls
                 sagPlane = SagittalPlane.Left;
             else if (ddSagittalPosition.Text == "Right")
                 sagPlane = SagittalPlane.Right;
-            else if (ddSagittalPosition.Text == "Left/Right")
+            else if (ddSagittalPosition.Text is "Left/Right" or "Both")
                 sagPlane = SagittalPlane.Both;
             Stimulus = new StimulusTemplate()
             {

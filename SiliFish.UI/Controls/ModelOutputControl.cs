@@ -297,16 +297,22 @@ namespace SiliFish.UI.Controls
         {
             if (ddPlotPools.SelectedIndex < 0 || ddPlotSagittal.SelectedIndex < 0)
                 return;
-            GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
-            ePlotSomiteSelection.Maximum =
-                Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSomite()) :
-                Cells != null && Cells.Any() ? Cells.Max(c => c.Somite) : 0;
-            ePlotCellSelection.Maximum =
-                Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSequence()) :
-                Cells != null && Cells.Any() ? Cells.Max(c => c.Sequence) : 0;
-            if (ddPlotPools.Focused)
-                DisplayNumberOfPlots(Cells, Pools);
+            if (plotCellSelection is PlotSelectionMultiCells multiCells)
+            {
+                GetPlotSubset();
+                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, multiCells);
+                ePlotSomiteSelection.Maximum =
+                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSomite()) :
+                    Cells != null && Cells.Any() ? Cells.Max(c => c.Somite) : 0;
+                ePlotCellSelection.Maximum =
+                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSequence()) :
+                    Cells != null && Cells.Any() ? Cells.Max(c => c.Sequence) : 0;
+                if (ddPlotPools.Focused)
+                    DisplayNumberOfPlots(Cells, Pools);
+            }
+            else if (ddPlotPools.Focused)
+                DisplayNumberOfPlots();
+
         }
 
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
@@ -604,11 +610,14 @@ namespace SiliFish.UI.Controls
                 btnPlotWindows.Enabled = false;
                 btnPlotHTML.Enabled = false;
 
+                if (plotCellSelection is not PlotSelectionMultiCells)
+                    return;
+                
                 (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
 
                 (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotCellSelection,
                     tPlotStart, tPlotEnd);
-
+                
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 

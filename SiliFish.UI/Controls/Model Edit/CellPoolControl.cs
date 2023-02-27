@@ -168,12 +168,7 @@ namespace SiliFish.UI.Controls
             ddBodyPosition.Text = poolBase.BodyLocation.ToString();
             lNeuronClass.Visible = ddNeuronClass.Visible = poolBase.CellType == CellType.Neuron;
             ddNeuronClass.Text = poolBase.NTMode.ToString();
-            if (poolBase.PositionLeftRight == SagittalPlane.Both)
-                ddSagittalPosition.Text = "Left/Right";
-            else if (poolBase.PositionLeftRight == SagittalPlane.Left)
-                ddSagittalPosition.Text = "Left";
-            else if (poolBase.PositionLeftRight == SagittalPlane.Right)
-                ddSagittalPosition.Text = "Right";
+            ddSagittalPosition.Text = poolBase.PositionLeftRight.ToString();
             e2DColumn.Value = Math.Max(poolBase.ColumnIndex2D, e2DColumn.Minimum);
             eNumOfCells.Value = poolBase.NumOfCells;
             ddSelection.Text = poolBase.PerSomiteOrTotal.ToString();
