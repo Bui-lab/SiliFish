@@ -62,6 +62,7 @@ namespace SiliFish.ModelUnits.Stim
             TargetCell = Model.GetCell(values[1]);
             Settings.CSVExportValues = string.Join(",", values[2..(StimulusSettings.CSVExportColumCount + 1)]);
             TimeLine_ms.CSVExportValues = string.Join(",", values[(StimulusSettings.CSVExportColumCount + 2)..]);
+            TargetCell.AddStimulus(this);
         }
         public override ModelUnitBase CreateCopy()
         {

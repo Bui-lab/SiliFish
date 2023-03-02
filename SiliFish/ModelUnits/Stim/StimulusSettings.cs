@@ -33,10 +33,11 @@ namespace SiliFish.ModelUnits.Stim
             set
             {
                 string[] values = value.Split(',');
-                if (values.Length != CSVExportColumCount) return;
+                if (values.Length < CSVExportColumCount - 1) return;//Frequency can be null and not included in the incoming string
                 Mode = (StimulusMode)Enum.Parse(typeof(StimulusMode), values[0]); 
                 Value1 = double.Parse(values[1]);
                 Value2 = double.Parse(values[2]);
+                if (values.Length < 4) return;
                 if (double.TryParse(values[3], out double f))
                     Frequency = f;
             }

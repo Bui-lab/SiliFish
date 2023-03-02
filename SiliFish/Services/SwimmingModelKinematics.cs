@@ -88,10 +88,10 @@ namespace SiliFish.Services
             {
                 List<MuscleCell> LeftMuscleCells = model.MusclePools
                     .Where(mp => mp.PositionLeftRight == SagittalPlane.Left)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).Cast<MuscleCell>().ToList();
+                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite+1)).Cast<MuscleCell>().ToList();
                 List<MuscleCell> RightMuscleCells = model.MusclePools
                     .Where(mp => mp.PositionLeftRight == SagittalPlane.Right)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite)).Cast<MuscleCell>().ToList();
+                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite+1)).Cast<MuscleCell>().ToList();
                 double R = LeftMuscleCells.Sum(c => c.R) + RightMuscleCells.Sum(c => c.R);
                 R /= LeftMuscleCells.Count + RightMuscleCells.Count;
                 double coef = kinemAlpha + kinemBeta * R;
@@ -105,7 +105,7 @@ namespace SiliFish.Services
                     double tensDiff =
                         useMuscleTension?                        
                         RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1]):
-                        coef * RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]);
+                        coef * (RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]));
                     double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + tensDiff; 
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;
                     angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;

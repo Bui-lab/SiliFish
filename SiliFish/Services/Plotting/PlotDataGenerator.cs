@@ -533,7 +533,7 @@ namespace SiliFish.Services.Plotting
         }
 
         public static (string, List<ChartDataStruct>) GetPlotData(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-             PlotSelectionInterface inter, int tStart = 0, int tEnd = -1)
+             PlotSelectionInterface selection, int tStart = 0, int tEnd = -1)
         {
             List<ChartDataStruct> charts;
             double dt = model.RunParam.DeltaT;
@@ -545,23 +545,24 @@ namespace SiliFish.Services.Plotting
                 iEnd = model.TimeArray.Length - 1;
 
             UnitOfMeasure UoM = model.Settings.UoM;
-            if (inter.GetType() == typeof(PlotSelectionJunction))
+            if (selection is PlotSelectionJunction jncSelection)
             {
-                PlotSelectionJunction jncSelection = (PlotSelectionJunction)inter;
                 charts = CreateJunctionCharts(model.TimeArray, jncSelection.Junction, iStart, iEnd, UoM);
                 return ("Junction", charts);
             }
 
-            PlotSelectionMultiCells cellSelection = (PlotSelectionMultiCells)inter;
             if (PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             bool groupByPool = false;
-            if (Cells == null || !Cells.Any())
+            if (selection is PlotSelectionMultiCells cellSelection)
             {
-                Cells = Pools.OrderBy(p => p.ID).SelectMany(p => p.GetCells(cellSelection)).ToList();
-                groupByPool = true;
+                if (Pools != null && (Cells == null || !Cells.Any()))
+                {
+                    Cells = Pools.OrderBy(p => p.ID).SelectMany(p => p.GetCells(cellSelection)).ToList();
+                    groupByPool = true;
+                }
             }
             string Title = "";
             switch (PlotType)
@@ -599,7 +600,6 @@ namespace SiliFish.Services.Plotting
                     break;
             }
             return (Title, charts);
-
         }
 
         public static (string, List<ChartDataStruct>) GetPlotDataOfJunction(JunctionBase junction, int tStart = 0, int tEnd = -1)

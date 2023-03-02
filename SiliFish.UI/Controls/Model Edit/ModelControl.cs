@@ -986,7 +986,16 @@ namespace SiliFish.UI.Controls
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnit))
-                    MessageBox.Show($"The stimulus information of the model is exported to {saveFileCSV.FileName}.");
+                {
+                    Process p = new()
+                    {
+                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
+                        {
+                            UseShellExecute = true
+                        }
+                    };
+                    p.Start();
+                }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
             }

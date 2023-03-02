@@ -283,10 +283,16 @@ namespace SiliFish.UI.Controls
         private void DisplayNumberOfPlots()
         {
             if (RunningModel == null) return;
-            if (plotCellSelection?.GetType() == typeof(PlotSelectionJunction))
+            if (PlotType == PlotType.Junction)
             {
                 numOfPlots = 3;
-                lNumberOfPlots.Visible = false;
+                lNumberOfPlots.Text = lNumberOfPlots.Tag + numOfPlots.ToString();
+                return;
+            }
+            if (PlotType == PlotType.Episodes)
+            {
+                numOfPlots = 7;
+                lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + numOfPlots.ToString();
                 return;
             }
             GetPlotSubset();
@@ -448,7 +454,7 @@ namespace SiliFish.UI.Controls
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = 
-                plotCellSelection.GetType() == typeof(PlotSelectionJunction) ? (null, null) :
+                !PlotSelectionVisible ? (null, null) :
                 RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
             (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, RunningModel, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd);
 

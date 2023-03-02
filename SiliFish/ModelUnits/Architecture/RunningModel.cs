@@ -341,9 +341,8 @@ namespace SiliFish.ModelUnits.Architecture
 
         public Cell GetCell(string id)
         {
-            Cell cell = MusclePools.FirstOrDefault(mp => mp.GetCell(id) != null).GetCell(id);
-            if (cell != null)
-                cell = NeuronPools.FirstOrDefault(np => np.GetCell(id) != null).GetCell(id);
+            Cell cell = MusclePools.FirstOrDefault(mp => mp.GetCell(id) != null)?.GetCell(id);
+            cell ??= NeuronPools.FirstOrDefault(np => np.GetCell(id) != null)?.GetCell(id);
             return cell;
         }
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int SomiteSeq)

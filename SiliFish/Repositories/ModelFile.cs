@@ -459,7 +459,7 @@ namespace SiliFish.Repositories
                     if (columns != Stimulus.CSVExportColumnNames)
                         return false;
                     rm.ClearStimuli();
-                    while (iter < columns.Length)
+                    while (iter < contents.Length)
                     {
                         Stimulus stim = new();
                         stim.GenerateFromCSVRow(rm, contents[iter++]);
