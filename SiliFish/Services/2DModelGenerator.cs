@@ -40,10 +40,6 @@ namespace SiliFish.Services
         private void GetNewCoordinates(CellPool pool)
         {
             (double x, double y, double _) = pool.XYZMiddle();
-            if (x < XMin) XMin = x;
-            if (y < YMin) YMin = y;
-            if (x > XMax) XMax = x;
-            if (y > YMax) YMax = y;
             PoolCoordinates.Add(pool.ID, (x, y));
         }
         private double GetNewWeight(double d)
@@ -56,6 +52,125 @@ namespace SiliFish.Services
             (double origX, double origY) = PoolCoordinates[pool.ID];
             (double newX, double newY) = (origX * XMult + XOffset, origY * -1 * YMult + YOffset);
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
+        }
+
+        private List<string> CreatePoolNodes(List<CellPool> pools, int width, int height)
+        {
+            PoolCoordinates = new();
+            XMult = 1;
+            YMult = 1;
+            XOffset = 0;
+            YOffset = 0;
+
+            pools.ForEach(GetNewCoordinates);
+            Dictionary<string, (double, double)> spreadedPools = new();
+
+            Dictionary<string, (double, double)> posPools = PoolCoordinates
+                .Where(v => v.Value.Item1 >= 0)
+                .OrderBy(v => Math.Abs(v.Value.Item1)).ToDictionary(t => t.Key, t => t.Value);
+            Dictionary<string, (double, double)> negPools = PoolCoordinates
+                .Where(v => v.Value.Item1 < 0)
+                .OrderBy(v => Math.Abs(v.Value.Item1)).ToDictionary(t => t.Key, t => t.Value);
+            double inc, curX, curY;
+
+            if (posPools.Any())
+            {
+                XMin = posPools.Min(v => Math.Abs(v.Value.Item1));
+                XMax = posPools.Max(v => Math.Abs(v.Value.Item1));
+                inc = (XMax - XMin) / (posPools.Count - 1);
+                if (Math.Abs(inc) < 1)
+                    inc /= Math.Abs(inc);
+                curX = XMin;
+                foreach (var v in posPools)
+                {
+                    if (Math.Abs(v.Value.Item1) >= Math.Abs(curX))
+                        curX = v.Value.Item1;
+                    spreadedPools.Add(v.Key, (curX, v.Value.Item2));
+                    curX += inc;
+                }
+            }
+            if (negPools.Any())
+            {
+                XMin = negPools.Min(v => Math.Abs(v.Value.Item1));
+                XMax = negPools.Max(v => Math.Abs(v.Value.Item1));
+                inc = (XMax - XMin) / (posPools.Count - 1);
+                if (Math.Abs(inc) < 1)
+                    inc /= Math.Abs(inc);
+                curX = XMin;
+                foreach (var v in negPools)
+                {
+                    if (Math.Abs(v.Value.Item1) >= Math.Abs(curX))
+                        curX = v.Value.Item1;
+                    spreadedPools.Add(v.Key, (curX, v.Value.Item2));
+                    curX += inc;
+                }
+            }
+
+
+            posPools = spreadedPools
+                .Where(v => v.Value.Item2 >= 0)
+                .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
+            negPools = spreadedPools
+                .Where(v => v.Value.Item2 < 0)
+                .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
+            spreadedPools.Clear();
+
+            if (posPools.Any())
+            {
+                YMin = posPools.Min(v => Math.Abs(v.Value.Item2));
+                YMax = posPools.Max(v => Math.Abs(v.Value.Item2));
+                inc = (YMax - YMin) / (posPools.Count - 1);
+                if (Math.Abs(inc) < 1)
+                    inc /= Math.Abs(inc);
+                curY = YMin;
+                foreach (var v in posPools)
+                {
+                    if (Math.Abs(v.Value.Item2) >= Math.Abs(curY))
+                        curY = v.Value.Item2;
+                    spreadedPools.Add(v.Key, (v.Value.Item1, curY));
+                    curY += inc;
+                }
+            }
+
+            if (negPools.Any())
+            {
+
+
+                YMin = PoolCoordinates.Min(v => Math.Abs(v.Value.Item2));
+                YMax = PoolCoordinates.Max(v => Math.Abs(v.Value.Item2));
+                inc = (YMax - YMin) / (PoolCoordinates.Count - 1);
+                if (Math.Abs(inc) < 1)
+                    inc /= Math.Abs(inc);
+
+                curY = YMin;
+                foreach (var v in negPools)
+                {
+                    if (Math.Abs(v.Value.Item1) >= Math.Abs(curY))
+                        curY = v.Value.Item1;
+                    spreadedPools.Add(v.Key, (v.Value.Item1, curY));
+                    curY += inc;
+                }
+            }
+
+            PoolCoordinates = spreadedPools;
+
+            XMin = PoolCoordinates.Min(v => v.Value.Item1);
+            XMax = PoolCoordinates.Max(v => v.Value.Item1);
+            YMin = PoolCoordinates.Min(v => v.Value.Item2);
+            YMax = PoolCoordinates.Max(v => v.Value.Item2);
+
+            if (this.XMax > this.XMin)
+            {
+                XMult = width / (this.XMax - this.XMin) / 5;
+                XOffset = -this.XMin * XMult + 10;
+            }
+            if (this.YMax > this.YMin)
+            {
+                YMult = height / (this.YMax - this.YMin) / 2;
+            }
+            List<string> nodes = new();
+            pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
+            return nodes;
         }
 
         public string Create2DModel(RunningModel model, List<CellPool> pools, int width, int height)
@@ -82,27 +197,8 @@ namespace SiliFish.Services
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
             html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chemical Jnc"));
+            List<string> nodes = CreatePoolNodes(pools, width, height);
 
-            PoolCoordinates = new();
-            XMult = 1;
-            YMult = 1;
-            XOffset = 0;
-            YOffset = 0;
-
-
-            pools.ForEach(pool => GetNewCoordinates(pool));
-            //XMin, YMax etc set during node creation
-            if (XMax > XMin)
-            {
-                XMult = width / (XMax - XMin) / 5;
-                XOffset = -XMin * XMult + 10;
-            }
-            if (YMax > YMin)
-            {
-                YMult = height / (YMax - YMin) / 2;
-            }
-            List<string> nodes = new();
-            pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
 
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
 

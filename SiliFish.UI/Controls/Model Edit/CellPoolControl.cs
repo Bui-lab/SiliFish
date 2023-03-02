@@ -38,8 +38,14 @@ namespace SiliFish.UI.Controls
              
                 linkLoadPool.Enabled = !createdCellPool;
                 ((Control)tSpatialDist).Enabled = !createdCellPool;
-                ((Control)tDynamics).Enabled = !createdCellPool;
-                ((Control)tSpatialDist).Enabled = !createdCellPool;
+                
+                //The lone below also disables Test Dynamics Test
+                //((Control)tDynamics).Enabled = !createdCellPool;
+                //Disable all other controls individually 
+                dgDynamics.Enabled = !createdCellPool;
+                grConductionVelocity.Enabled = !createdCellPool;
+                linkLoadCoreUnit.Enabled = !createdCellPool;
+                
                 pMainInfo.Enabled = !createdCellPool;
                 linkLoadPool.Enabled = !createdCellPool;
 
