@@ -68,6 +68,7 @@ namespace SiliFish.Services.Plotting
              UnitOfMeasure UoM,
              bool includeGap = true, bool includeChem = true)
         {
+            if (cells==null || !cells.Any()) return new List<ChartDataStruct>();
             List<ChartDataStruct> gapCharts = new();
             List<ChartDataStruct> synCharts = new();
             double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));

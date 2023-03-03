@@ -233,10 +233,10 @@ namespace SiliFish.ModelUnits.Cells
         public IEnumerable<Cell> GetCells(PlotSelectionMultiCells cellSelection)
         {
             if (cellSelection.somiteSelection == PlotSelection.All && cellSelection.cellSelection == PlotSelection.All)
-                return Cells.AsEnumerable<Cell>();
+                return Cells.AsEnumerable();
 
             if (!Cells.Any())
-                return Cells.AsEnumerable<Cell>();
+                return Cells.AsEnumerable();
 
             Random random = new();
             List<int> som = new();
@@ -251,7 +251,7 @@ namespace SiliFish.ModelUnits.Cells
                 int maxSom = Cells.Select(c => c.Somite).Max();
                 som.Add(minSom);
                 som.Add(maxSom);
-                som.Add((int)((minSom + maxSom) / 2));
+                som.Add((minSom + maxSom) / 2);
             }
             else if (cellSelection.somiteSelection == PlotSelection.Random)
             {
@@ -270,7 +270,7 @@ namespace SiliFish.ModelUnits.Cells
                 int maxSeq = Cells.Select(c => c.Sequence).Max();
                 seq.Add(minSeq);
                 seq.Add(maxSeq);
-                seq.Add((int)((minSeq + maxSeq) / 2));
+                seq.Add((minSeq + maxSeq) / 2);
             }
             else if (cellSelection.cellSelection == PlotSelection.Random)
             {
@@ -519,6 +519,27 @@ namespace SiliFish.ModelUnits.Cells
             {
                 cell.ClearStimuli();
             }
+        }
+
+        #endregion
+
+        #region Sort Functions
+        public virtual void SortJunctions()
+        {
+            Cells.ForEach(c => c.SortJunctions());
+        }
+        public virtual void SortJunctionsBySource()
+        {
+            Cells.ForEach(c => c.SortJunctionsBySource());
+        }
+        public virtual void SortJunctionsByTarget()
+        {
+            Cells.ForEach(c => c.SortJunctionsByTarget());
+        }
+
+        public virtual void SortStimuli()
+        {
+            Cells.ForEach(c => c.SortStimuli());
         }
 
         #endregion

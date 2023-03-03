@@ -154,7 +154,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             int tt = duration;
             double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
-            double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : 0;
+            double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
             (ISynA, ISynB) = Core.GetNextVal(vPre, vPost, ISynA, ISynB);
         }
         public double GetSynapticCurrent(int tIndex)

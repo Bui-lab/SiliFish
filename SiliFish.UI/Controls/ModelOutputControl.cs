@@ -137,8 +137,8 @@ namespace SiliFish.UI.Controls
                     ddPlotPools.Text = GlobalSettings.LastPlotSettings[ddPlotPools.Name];
                     ddPlotSomiteSelection.Text = GlobalSettings.LastPlotSettings[ddPlotSomiteSelection.Name];
                     ddPlotCellSelection.Text = GlobalSettings.LastPlotSettings[ddPlotCellSelection.Name];
-                    ePlotSomiteSelection.Value = decimal.Parse(GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name]);
-                    ePlotCellSelection.Value = decimal.Parse(GlobalSettings.LastPlotSettings[ePlotCellSelection.Name]);
+                    ePlotSomiteSelection.SetValue (double.Parse(GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name]));
+                    ePlotCellSelection.SetValue(double.Parse(GlobalSettings.LastPlotSettings[ePlotCellSelection.Name]));
                 }
                 catch { }
             }
@@ -522,9 +522,9 @@ namespace SiliFish.UI.Controls
             ddPlotPools.SelectedItem = cell.CellGroup;
             ddPlotSagittal.SelectedItem = cell.CellPool.PositionLeftRight.ToString();
             ddPlotSomiteSelection.SelectedItem = "Single";
-            ePlotSomiteSelection.Value = cell.Somite;
+            ePlotSomiteSelection.SetValue(cell.Somite);
             ddPlotCellSelection.SelectedItem = "Single";
-            ePlotCellSelection.Value = cell.Sequence;
+            ePlotCellSelection.SetValue(cell.Sequence);
         }
         internal void Plot(ModelUnitBase unitToPlot)
         {

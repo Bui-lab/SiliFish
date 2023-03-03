@@ -53,18 +53,18 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
             return errors.Count == 0;
         }
-        public (double, double) GetNextVal(double v1, double v2, double IsynA, double IsynB)
+        public (double, double) GetNextVal(double vPre, double vPost, double IsynA, double IsynB)
         {
             double IsynANew = IsynA, IsynBNew = IsynB;
             double dtTracker = 0;
             while (dtTracker < DeltaT)
             {
                 dtTracker += DeltaTEuler;
-                if (v1 > Vth)//pre-synaptic neuron spikes
+                if (vPre > Vth)//pre-synaptic neuron spikes
                 {
                     // mEPSC
-                    IsynA += (ERev - v2) * Conductance;
-                    IsynB += (ERev - v2) * Conductance;
+                    IsynA += (ERev - vPost) * Conductance;
+                    IsynB += (ERev - vPost) * Conductance;
                     double dIsynA = -1 / TauD * IsynA;
                     double dIsynB = -1 / TauR * IsynB;
                     IsynANew = IsynA + DeltaTEuler * dIsynA;

@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace SiliFish.DynamicUnits
         public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)
         {
             CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
-            if (dt_euler != null) 
+            if (dt_euler != null)
                 core.deltaTEuler = (double)dt_euler;
             if (dt_run != null)
                 core.deltaT = (double)dt_run;
@@ -67,7 +68,7 @@ namespace SiliFish.DynamicUnits
 
         [Description("The resting membrane potential.")]
         public double Vr { get; set; } = -70;
-        
+
         [Description("The peak membrane potential of single spike.")]
         public double Vmax { get; set; } = 30;
 
@@ -100,6 +101,32 @@ namespace SiliFish.DynamicUnits
                 Exception exception = new NotImplementedException();
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
                 throw exception;
+            }
+        }
+
+        [JsonIgnore]
+        public static string CSVExportColumnNames => $"Core Type, Core Values";
+
+        [JsonIgnore]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore]
+        public virtual string CSVExportValues
+        {
+            get
+            {
+                return $"{CoreType}," + string.Join(',', GetParameters().Select(kvp => $"{kvp.Key}:{kvp.Value}").ToList());
+            }
+            set
+            {
+                string[] values = value.Split(',');
+                Dictionary<string, double> parameters=new();
+                foreach (string v in values[1..])
+                {
+                    string[] parameter = v.Split(':');
+                    if (parameter.Length == 2 && double.TryParse(parameter[1], out double d))
+                        parameters.Add(parameter[0], d);
+                }
+                SetParameters(parameters);
             }
         }
 

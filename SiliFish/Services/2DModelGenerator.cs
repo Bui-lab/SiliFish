@@ -159,14 +159,15 @@ namespace SiliFish.Services
             YMin = PoolCoordinates.Min(v => v.Value.Item2);
             YMax = PoolCoordinates.Max(v => v.Value.Item2);
 
-            if (this.XMax > this.XMin)
+            if (XMax > XMin)
             {
-                XMult = width / (this.XMax - this.XMin) / 5;
-                XOffset = -this.XMin * XMult + 10;
+                XMult = width / (XMax - XMin) / 5;
+                XOffset = 10 * XMult;
             }
-            if (this.YMax > this.YMin)
+            if (YMax > YMin)
             {
-                YMult = height / (this.YMax - this.YMin) / 2;
+                YMult = height / (YMax - YMin) / 2;
+                YOffset = 25 * YMult;
             }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));

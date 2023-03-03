@@ -26,6 +26,13 @@ namespace SiliFish.DataTypes
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);
+        [JsonIgnore]
+        public static string CSVExportColumnNames => $"X,Y,Z";
+
+        [JsonIgnore]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore]
+        public string CSVExportValues => $"{X},{Y},{Z}";
         public static Coordinate[] GenerateCoordinates(Random random,ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
         {

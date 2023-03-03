@@ -104,7 +104,13 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        [JsonIgnore]
+        public static string CSVExportColumnNames => $"CellGroup, Somite, Sequence, Conduction Velocity, {CellCoreUnit.CSVExportColumnNames}, {Coordinate.CSVExportColumnNames},{TimeLine.CSVExportColumnNames}";
 
+        [JsonIgnore]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore]
+        public virtual string CSVExportValues => $"{CellGroup},{Somite}, {Sequence}, {ConductionVelocity}, {Core.CSVExportValues},{Coordinate.CSVExportValues},{TimeLine_ms.CSVExportValues}";
 
         public Cell()
         {

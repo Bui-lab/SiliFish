@@ -307,6 +307,7 @@ namespace SiliFish.UI.Controls
                 listCells.ClearItems();
             if (sender is CellPool pool)
             {
+                listConnections.SetEnabledContextMenu("Sort by Type", false);
                 SelectedPool = pool;
                 SelectedCell = null;
                 LoadCells();
@@ -315,12 +316,14 @@ namespace SiliFish.UI.Controls
             }
             else if (sender is CellPoolTemplate cpt)
             {
+                listConnections.SetEnabledContextMenu("Sort by Type", false);
                 SelectedPoolTemplate = cpt;
                 LoadProjections(cpt.CellGroup);
                 LoadStimuli(cpt);
             }
             else if (sender == null)
             {
+                listConnections.SetEnabledContextMenu("Sort by Type", true);
                 SelectedPoolTemplate = null;
                 SelectedPool = null;
                 SelectedCell = null;
@@ -449,6 +452,7 @@ namespace SiliFish.UI.Controls
             if (CurrentMode != RunMode.RunningModel) return;
             if (sender is Cell cell)
             {
+                listConnections.SetEnabledContextMenu("Sort by Type", false);
                 SelectedCell = cell;
                 LoadProjections(cell);
                 LoadStimuli(cell);
@@ -573,7 +577,11 @@ namespace SiliFish.UI.Controls
             }
             lConnectionsTitle.Text = $"Connections of {cp.ID}";
             listConnections.ClearItems();
-            foreach (JunctionBase jnc in cp.Projections)
+            foreach (JunctionBase jnc in cp.Projections.Where(j => j is GapJunction))
+            {
+                listConnections.AppendItem(jnc);
+            }
+            foreach (JunctionBase jnc in cp.Projections.Where(j => j is not GapJunction))
             {
                 listConnections.AppendItem(jnc);
             }
@@ -761,6 +769,11 @@ namespace SiliFish.UI.Controls
                 SelectedCell.SortJunctionsBySource();
                 LoadProjections(SelectedCell);
             }
+            else if (SelectedPool != null)
+            {
+                SelectedPool.SortJunctionsBySource();
+                LoadProjections(SelectedPool);
+            }
             else if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctionsBySource();
@@ -774,6 +787,11 @@ namespace SiliFish.UI.Controls
             {
                 SelectedCell.SortJunctionsByTarget();
                 LoadProjections(SelectedCell);
+            }
+            else if (SelectedPool != null)
+            {
+                SelectedPool.SortJunctionsByTarget();
+                LoadProjections(SelectedPool);
             }
             else if (CurrentMode == RunMode.Template)
             {

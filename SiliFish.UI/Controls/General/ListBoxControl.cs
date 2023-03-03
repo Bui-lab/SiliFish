@@ -259,6 +259,14 @@ namespace SiliFish.UI.Controls
                 mi.Tag = func;
             }
         }
+        public void SetEnabledContextMenu(string label, bool enabled)
+        {
+            ToolStripItem mi = contextMenuListBox.Items[label];
+            if (mi != null)
+            {
+                mi.Enabled = enabled;
+            }
+        }
 
 
     }

@@ -535,5 +535,89 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
+
+        public static bool SaveCellsToCSV(string filename, RunningModel model, CellPool cellPool)
+        {
+            if (filename == null || model == null)
+                return false;
+
+            try
+            {
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                List<Cell> cells =
+                        cellPool?.GetCells().ToList() ??
+                        model.GetCells();
+                sw.WriteLine(Cell.CSVExportColumnNames);
+                foreach (Cell cell in cells)
+                {
+                    sw.WriteLine(cell.CSVExportValues);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        private static bool ReadCellsFromCSV(string filename, RunningModel model)
+        {
+            if (filename == null || model == null)
+                return false;
+            try
+            {
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                int iter = 1;
+                if (columns != Cell.CSVExportColumnNames)
+                        return false;
+                /*TODO cell csv export model.ClearCells();
+                 while (iter < contents.Length)
+                 {
+                     Stimulus stim = new();
+                     stim.GenerateFromCSVRow(rm, contents[iter++]);
+                 }*/
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public static bool ReadCellsFromCSV(string filename, RunningModel model, CellPool cellPool)
+        {
+            if (filename == null || model == null)
+                return false;
+            if (cellPool is null)
+                return ReadCellsFromCSV(filename, model);
+            try
+            {
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                int iter = 1;
+                 if (columns != Cell.CSVExportColumnNames)
+                        return false;
+                /*TODO cell csv export    cellPool.ClearStimuli();
+                    while (iter < contents.Length)
+                    {
+                        Stimulus stim = new();
+                        stim.GenerateFromCSVRow(model as RunningModel, contents[iter++]);
+                        if (stim.TargetCell.CellPool == cellPool)
+                            stim.TargetCell.AddStimulus(stim);
+                    }*/
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
     }
 }
