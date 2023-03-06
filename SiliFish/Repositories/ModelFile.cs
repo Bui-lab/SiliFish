@@ -571,7 +571,7 @@ namespace SiliFish.Repositories
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
-                int iter = 1;
+                //int iter = 1;
                 if (columns != Cell.CSVExportColumnNames)
                         return false;
                 /*TODO cell csv export model.ClearCells();
@@ -600,7 +600,7 @@ namespace SiliFish.Repositories
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
-                int iter = 1;
+                //int iter = 1;
                  if (columns != Cell.CSVExportColumnNames)
                         return false;
                 /*TODO cell csv export    cellPool.ClearStimuli();

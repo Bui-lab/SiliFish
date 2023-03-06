@@ -3,6 +3,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
@@ -44,8 +45,6 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
-        [JsonIgnore]
-        public override string VThresholdParamName { get { return ""; } }
         [JsonIgnore] 
         public override string VReversalParamName { get { return GetType().Name + ".Vr"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()

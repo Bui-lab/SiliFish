@@ -430,7 +430,6 @@
             this.synapseControl.Name = "synapseControl";
             this.synapseControl.Size = new System.Drawing.Size(152, 127);
             this.synapseControl.TabIndex = 0;
-            this.synapseControl.VThreshold = 0D;
             // 
             // cbActive
             // 

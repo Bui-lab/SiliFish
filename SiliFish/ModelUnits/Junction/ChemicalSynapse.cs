@@ -34,8 +34,7 @@ namespace SiliFish.ModelUnits.Junction
                 {
                     E_rev = Core.ERev,
                     TauD = Core.TauD,
-                    TauR = Core.TauR,
-                    VTh = Core.Vth
+                    TauR = Core.TauR
                 };
             }
             set
@@ -44,7 +43,6 @@ namespace SiliFish.ModelUnits.Junction
                 Core.ERev = value.E_rev;
                 Core.TauD = value.TauD;
                 Core.TauR = value.TauR;
-                Core.Vth = value.VTh;
             }
         }
         public Neuron PreNeuron;
@@ -155,7 +153,7 @@ namespace SiliFish.ModelUnits.Junction
             int tt = duration;
             double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
-            (ISynA, ISynB) = Core.GetNextVal(vPre, vPost, ISynA, ISynB);
+            (ISynA, ISynB) = Core.GetNextVal(vPre > PreNeuron.Core.Vthreshold, vPost, ISynA, ISynB);
         }
         public double GetSynapticCurrent(int tIndex)
         {
