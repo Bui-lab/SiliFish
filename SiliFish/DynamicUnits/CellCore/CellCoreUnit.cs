@@ -95,12 +95,12 @@ namespace SiliFish.DynamicUnits
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"Core Type, Core Values";
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public virtual string CSVExportValues
         {
             get

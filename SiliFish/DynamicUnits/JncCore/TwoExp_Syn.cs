@@ -40,7 +40,6 @@ namespace SiliFish.DynamicUnits
             Conductance = copyFrom.Conductance; //unitary conductance
         }
 
-
         public bool CheckValues(ref List<string> errors)
         {
             errors ??= new();
