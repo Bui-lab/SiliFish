@@ -73,6 +73,8 @@ namespace SiliFish.DynamicUnits
         public double Vmax { get; set; } = 30;
 
         [JsonIgnore]
+        public virtual double Vthreshold { get; set; }
+        [JsonIgnore]
         public Dictionary<string, double> Parameters
         {
             get { return GetParameters(); }
@@ -81,17 +83,6 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore]
         public string CoreType => GetType().Name;
-
-        [JsonIgnore]
-        public virtual string VThresholdParamName
-        {
-            get
-            {
-                Exception exception = new NotImplementedException();
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
-                throw exception;
-            }
-        }
 
         [JsonIgnore]
         public virtual string VReversalParamName
@@ -104,12 +95,12 @@ namespace SiliFish.DynamicUnits
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"Core Type, Core Values";
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public virtual string CSVExportValues
         {
             get

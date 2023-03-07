@@ -69,10 +69,6 @@ namespace SiliFish.UI.Controls
                 sourceCell = null;
                 FillCells(ddSourceCell, sourcePool);
 
-                if (pool.VThreshold != null)
-                {
-                    synapseControl.VThreshold = (double)pool.VThreshold;
-                }
                 switch (pool.NTMode)//fill default values, based on the NT
                 {
                     case NeuronClass.Glycinergic:

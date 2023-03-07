@@ -9,6 +9,7 @@ using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -104,12 +105,12 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"CellGroup, Somite, Sequence, Conduction Velocity, {CellCoreUnit.CSVExportColumnNames}, {Coordinate.CSVExportColumnNames},{TimeLine.CSVExportColumnNames}";
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public virtual string CSVExportValues => $"{CellGroup},{Somite}, {Sequence}, {ConductionVelocity}, {Core.CSVExportValues},{Coordinate.CSVExportValues},{TimeLine_ms.CSVExportValues}";
 
         public Cell()

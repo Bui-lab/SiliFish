@@ -76,10 +76,6 @@ namespace SiliFish.UI.Controls
                 return;
             if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
-                if (pool.VThreshold != null)
-                {
-                    synapseControl.VThreshold = (double)pool.VThreshold;
-                }
                 if (Parameters != null && Parameters.Any())
                 {
                     switch (pool.NTMode)

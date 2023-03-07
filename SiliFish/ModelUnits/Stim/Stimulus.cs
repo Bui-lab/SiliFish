@@ -6,6 +6,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -39,10 +40,10 @@ namespace SiliFish.ModelUnits.Stim
         }
 
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"TargetPool,TargetCell,{StimulusSettings.CSVExportColumnNames},{TimeLine.CSVExportColumnNames}";
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
         [JsonIgnore]
         public string CSVExportValues=>$"{TargetCell.CellPool.ID},{TargetCell.ID},{Settings.CSVExportValues},{TimeLine_ms.CSVExportValues}";

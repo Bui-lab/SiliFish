@@ -3,6 +3,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -22,16 +23,16 @@ namespace SiliFish.DataTypes
         }
         public override string ToString()
         {
-            return String.Format("[{0:0.##}, {1:0.##}, {2:0.##}]", X, Y, Z);
+            return string.Format("[{0:0.##}, {1:0.##}, {2:0.##}]", X, Y, Z);
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"X,Y,Z";
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public string CSVExportValues => $"{X},{Y},{Z}";
         public static Coordinate[] GenerateCoordinates(Random random,ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
@@ -131,10 +132,10 @@ namespace SiliFish.DataTypes
         [JsonIgnore]
         public int End { get { return Periods.Count > 0 ? Periods.Max(tr => tr.end) : -1; } set { } }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)   ]
         public static string CSVExportColumnNames => $"Periods";
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public string CSVExportValues
         {
             get => $"{string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))}";

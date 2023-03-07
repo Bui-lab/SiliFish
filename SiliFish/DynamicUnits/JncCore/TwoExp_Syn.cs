@@ -12,7 +12,6 @@ namespace SiliFish.DynamicUnits
 
         public double TauR{ get; set; }
         public double TauD{ get; set; }
-        public double Vth{ get; set; }
         public double ERev { get; set; }
         
         public double Conductance { get; set; }
@@ -26,7 +25,6 @@ namespace SiliFish.DynamicUnits
             //Set synapse constants.
             TauD = param.TauD;
             TauR = param.TauR;
-            Vth = param.VTh;
             ERev = param.E_rev;
             Conductance = conductance; //unitary conductance
         }
@@ -38,11 +36,9 @@ namespace SiliFish.DynamicUnits
             //Set synapse constants.
             TauD = copyFrom.TauD;
             TauR = copyFrom.TauR;
-            Vth = copyFrom.Vth;
             ERev = copyFrom.ERev;
             Conductance = copyFrom.Conductance; //unitary conductance
         }
-
 
         public bool CheckValues(ref List<string> errors)
         {
@@ -53,14 +49,14 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
             return errors.Count == 0;
         }
-        public (double, double) GetNextVal(double vPre, double vPost, double IsynA, double IsynB)
+        public (double, double) GetNextVal(bool spike, double vPost, double IsynA, double IsynB)
         {
             double IsynANew = IsynA, IsynBNew = IsynB;
             double dtTracker = 0;
             while (dtTracker < DeltaT)
             {
                 dtTracker += DeltaTEuler;
-                if (vPre > Vth)//pre-synaptic neuron spikes
+                if (spike)//pre-synaptic neuron spikes
                 {
                     // mEPSC
                     IsynA += (ERev - vPost) * Conductance;

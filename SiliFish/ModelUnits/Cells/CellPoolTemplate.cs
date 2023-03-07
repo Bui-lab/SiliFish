@@ -109,17 +109,6 @@ namespace SiliFish.ModelUnits.Cells
         public override string ID { get { return Position + "_" + CellGroup; }  }
 
         [JsonIgnore]
-        public double? VThreshold
-        {
-            get
-            {
-                string Threshold_property = CellCoreUnit.CreateCore(CoreType, null)?.VThresholdParamName;
-                if (Parameters.ContainsKey(Threshold_property))
-                    return Parameters.ReadDouble(Threshold_property);
-                return null;
-            }
-        }
-        [JsonIgnore]
         public double? VReversal
         {
             get

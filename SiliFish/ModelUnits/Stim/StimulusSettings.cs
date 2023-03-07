@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -22,11 +23,11 @@ namespace SiliFish.ModelUnits.Stim
         public double Value2 { get; set; }
         public double? Frequency { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"Mode,Value1,Value2,Frequency";
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public string CSVExportValues
         {
             get => $"{Mode},{Value1},{Value2},{Frequency}";

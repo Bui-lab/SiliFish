@@ -61,8 +61,6 @@ namespace SiliFish.DynamicUnits
         }
 
         [JsonIgnore]
-        public override string VThresholdParamName { get { return ""; } }
-        [JsonIgnore]
         public override string VReversalParamName { get { return GetType().Name + ".Vr"; } }
 
         public override Dictionary<string, double> GetParameters()
