@@ -112,7 +112,13 @@ namespace SiliFish.Definitions
 
         public static GlobalSettingsProperties Load()
         {
+            string userSiliFishFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish";
+            if (!Directory.Exists(userSiliFishFolder))
+            {
+                Directory.CreateDirectory(userSiliFishFolder);
+            }
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\global.settings";
+            if (!File.Exists(fileName)) { return new GlobalSettingsProperties(); }
             GlobalSettingsProperties gsp = (GlobalSettingsProperties)JsonUtil.ToObject(typeof(GlobalSettingsProperties), FileUtil.ReadFromFile(fileName));
             if (string.IsNullOrEmpty(gsp.TempFolder))
                 gsp.TempFolder = Path.GetTempPath() + "SiliFish";
