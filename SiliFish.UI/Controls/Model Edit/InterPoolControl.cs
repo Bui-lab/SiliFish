@@ -76,25 +76,22 @@ namespace SiliFish.UI.Controls
                 return;
             if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
-                if (Parameters != null && Parameters.Any())
+                switch (pool.NTMode)
                 {
-                    switch (pool.NTMode)
-                    {
-                       case NeuronClass.Glycinergic:
-                           synapseControl.EReversal = settings.E_gly;
-                            break;
-                        case NeuronClass.GABAergic:
-                            synapseControl.EReversal = settings.E_gaba;
-                            break;
-                        case NeuronClass.Glutamatergic:
-                            synapseControl.EReversal = settings.E_glu;
-                            break;
-                        case NeuronClass.Cholinergic:
-                            synapseControl.EReversal = settings.E_ach;
-                            break;
-                        default:
-                            break;
-                    }
+                    case NeuronClass.Glycinergic:
+                        synapseControl.EReversal = settings.E_gly;
+                        break;
+                    case NeuronClass.GABAergic:
+                        synapseControl.EReversal = settings.E_gaba;
+                        break;
+                    case NeuronClass.Glutamatergic:
+                        synapseControl.EReversal = settings.E_glu;
+                        break;
+                    case NeuronClass.Cholinergic:
+                        synapseControl.EReversal = settings.E_ach;
+                        break;
+                    default:
+                        break;
                 }
             }
             interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
@@ -106,13 +103,6 @@ namespace SiliFish.UI.Controls
             FillConnectionTypes();
             if (!ddTargetPool.Focused)
                 return;
-            if (ddTargetPool.SelectedItem is CellPoolTemplate pool)
-            {
-                if (pool.VReversal != null)
-                {
-                    synapseControl.EReversal= (double)pool.VReversal;
-                }
-            }
             interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
         }

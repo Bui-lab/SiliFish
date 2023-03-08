@@ -153,13 +153,9 @@ namespace SiliFish.ModelUnits.Junction
         public void NextStep(int tIndex)
         {
             int tt = duration;
-            double vPreAtSpike = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;//Considers V is the same across the whole cell
-            double vPreSynapse = tIndex < 0 ? PreNeuron.V[tIndex - 1] : PreNeuron.RestingMembranePotential;
+            double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
-            int t0 = PreNeuron.GetSpikeStart(tIndex);
-            double timeFromSpike = (tIndex - t0) * Core.DeltaT;
-            (ISynA, ISynB) = Core.GetNextVal(vPreAtSpike > PreNeuron.Core.Vthreshold,/*TODO vPreSynapse*/vPreAtSpike, vPost, ISynA, ISynB);
-            //Core.GetNextVal(vPreCell > PreNeuron.Core.Vthreshold, vPreSynapse, vPost, timeFromSpike);
+            (ISynA, ISynB) = Core.GetNextVal(vPreSynapse, vPost, ISynA, ISynB);
         }
         public double GetSynapticCurrent(int tIndex)
         {
