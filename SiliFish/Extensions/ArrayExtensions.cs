@@ -107,11 +107,21 @@ namespace SiliFish.Extensions
                 while (ind < iEnd - 1 && thisArray[ind + 1] > thisArray[ind]) //find the peak
                     ind++;
                 indices.Add(ind);
-                while (ind < iEnd - 1 && thisArray[ind + 1] > threshold) //continue to ierate until it falls below threshold value
+                while (ind < iEnd - 1 && thisArray[ind + 1] > threshold) //continue to iterate until it falls below threshold value
                     ind++;
                 iStart = ind + 1;
             }
             return indices;
+        }
+
+        public static int GetPeakStart(this double[] thisArray, double threshold, int tIndex)
+        {
+            List<int> indices = new();
+            if (tIndex < 0) return tIndex;
+            if (tIndex >= thisArray.Length)
+                tIndex = thisArray.Length - 1;
+
+            return Array.FindLastIndex(thisArray, tIndex, value => value <= threshold);
         }
     }
 }

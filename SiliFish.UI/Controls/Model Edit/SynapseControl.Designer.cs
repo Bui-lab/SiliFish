@@ -29,12 +29,15 @@
         private void InitializeComponent()
         {
             this.numEReversal = new System.Windows.Forms.NumericUpDown();
+            this.numVthreshold = new System.Windows.Forms.NumericUpDown();
             this.numTauR = new System.Windows.Forms.NumericUpDown();
             this.numTauD = new System.Windows.Forms.NumericUpDown();
             this.lEReversal = new System.Windows.Forms.Label();
+            this.lVThreshold = new System.Windows.Forms.Label();
             this.lTauR = new System.Windows.Forms.Label();
             this.lTauD = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numEReversal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numVthreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTauR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTauD)).BeginInit();
             this.SuspendLayout();
@@ -47,7 +50,7 @@
             0,
             0,
             0});
-            this.numEReversal.Location = new System.Drawing.Point(75, 66);
+            this.numEReversal.Location = new System.Drawing.Point(75, 95);
             this.numEReversal.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -61,6 +64,24 @@
             this.numEReversal.Name = "numEReversal";
             this.numEReversal.Size = new System.Drawing.Size(67, 23);
             this.numEReversal.TabIndex = 15;
+            // 
+            // numVthreshold
+            // 
+            this.numVthreshold.DecimalPlaces = 3;
+            this.numVthreshold.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numVthreshold.Location = new System.Drawing.Point(75, 66);
+            this.numVthreshold.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.numVthreshold.Name = "numVthreshold";
+            this.numVthreshold.Size = new System.Drawing.Size(67, 23);
+            this.numVthreshold.TabIndex = 13;
             // 
             // numTauR
             // 
@@ -86,11 +107,20 @@
             // lEReversal
             // 
             this.lEReversal.AutoSize = true;
-            this.lEReversal.Location = new System.Drawing.Point(0, 68);
+            this.lEReversal.Location = new System.Drawing.Point(3, 97);
             this.lEReversal.Name = "lEReversal";
             this.lEReversal.Size = new System.Drawing.Size(32, 15);
             this.lEReversal.TabIndex = 14;
             this.lEReversal.Text = "E rev";
+            // 
+            // lVThreshold
+            // 
+            this.lVThreshold.AutoSize = true;
+            this.lVThreshold.Location = new System.Drawing.Point(3, 68);
+            this.lVThreshold.Name = "lVThreshold";
+            this.lVThreshold.Size = new System.Drawing.Size(69, 15);
+            this.lVThreshold.TabIndex = 12;
+            this.lVThreshold.Text = "Threshold V";
             // 
             // lTauR
             // 
@@ -116,14 +146,17 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.numEReversal);
+            this.Controls.Add(this.numVthreshold);
             this.Controls.Add(this.numTauR);
             this.Controls.Add(this.numTauD);
             this.Controls.Add(this.lEReversal);
+            this.Controls.Add(this.lVThreshold);
             this.Controls.Add(this.lTauR);
             this.Controls.Add(this.lTauD);
             this.Name = "SynapseControl";
-            this.Size = new System.Drawing.Size(152, 99);
+            this.Size = new System.Drawing.Size(152, 127);
             ((System.ComponentModel.ISupportInitialize)(this.numEReversal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numVthreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTauR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTauD)).EndInit();
             this.ResumeLayout(false);
@@ -134,9 +167,11 @@
         #endregion
 
         private NumericUpDown numEReversal;
+        private NumericUpDown numVthreshold;
         private NumericUpDown numTauR;
         private NumericUpDown numTauD;
         private Label lEReversal;
+        private Label lVThreshold;
         private Label lTauR;
         private Label lTauD;
     }

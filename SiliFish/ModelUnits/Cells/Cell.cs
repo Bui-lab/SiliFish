@@ -306,7 +306,11 @@ namespace SiliFish.ModelUnits.Cells
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
+        }
 
+        public int GetSpikeStart(int tIndex)
+        {
+            return V?.GetPeakStart(Core.Vthreshold, tIndex) ?? -1;
         }
 
         public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)

@@ -34,7 +34,8 @@ namespace SiliFish.ModelUnits.Junction
                 {
                     E_rev = Core.ERev,
                     TauD = Core.TauD,
-                    TauR = Core.TauR
+                    TauR = Core.TauR,
+                    VTh = Core.Vth
                 };
             }
             set
@@ -43,6 +44,7 @@ namespace SiliFish.ModelUnits.Junction
                 Core.ERev = value.E_rev;
                 Core.TauD = value.TauD;
                 Core.TauR = value.TauR;
+                Core.Vth = value.VTh;
             }
         }
         public Neuron PreNeuron;
@@ -151,9 +153,13 @@ namespace SiliFish.ModelUnits.Junction
         public void NextStep(int tIndex)
         {
             int tt = duration;
-            double vPre = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
+            double vPreAtSpike = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;//Considers V is the same across the whole cell
+            double vPreSynapse = tIndex < 0 ? PreNeuron.V[tIndex - 1] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
-            (ISynA, ISynB) = Core.GetNextVal(vPre > PreNeuron.Core.Vthreshold, vPost, ISynA, ISynB);
+            int t0 = PreNeuron.GetSpikeStart(tIndex);
+            double timeFromSpike = (tIndex - t0) * Core.DeltaT;
+            (ISynA, ISynB) = Core.GetNextVal(vPreAtSpike > PreNeuron.Core.Vthreshold,/*TODO vPreSynapse*/vPreAtSpike, vPost, ISynA, ISynB);
+            //Core.GetNextVal(vPreCell > PreNeuron.Core.Vthreshold, vPreSynapse, vPost, timeFromSpike);
         }
         public double GetSynapticCurrent(int tIndex)
         {
