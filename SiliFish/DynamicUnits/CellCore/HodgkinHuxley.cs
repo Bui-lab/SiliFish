@@ -57,15 +57,14 @@ namespace SiliFish.DynamicUnits
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) = base.GetSuggestedMinMaxValues();
-            string type = GetType().Name;
-            MinValues[type + ".g_Na"] = g_Na_suggestedMinHH;
-            MaxValues[type + ".g_Na"] = g_Na_suggestedMaxHH;
-            MinValues[type + ".E_K"] = E_K_suggestedMinHH;
-            MaxValues[type + ".E_K"] = E_K_suggestedMaxHH;
-            MinValues[type + ".E_Na"] = E_Na_suggestedMinHH;
-            MaxValues[type + ".E_Na"] = E_Na_suggestedMaxHH;
-            MinValues[type + ".E_L"] = E_L_suggestedMinHH;
-            MaxValues[type + ".E_L"] = E_L_suggestedMaxHH;
+            MinValues["g_Na"] = g_Na_suggestedMinHH;
+            MaxValues["g_Na"] = g_Na_suggestedMaxHH;
+            MinValues["E_K"] = E_K_suggestedMinHH;
+            MaxValues["E_K"] = E_K_suggestedMaxHH;
+            MinValues["E_Na"] = E_Na_suggestedMinHH;
+            MaxValues["E_Na"] = E_Na_suggestedMaxHH;
+            MinValues["E_L"] = E_L_suggestedMinHH;
+            MaxValues["E_L"] = E_L_suggestedMaxHH;
             return (MinValues, MaxValues);
         }
 

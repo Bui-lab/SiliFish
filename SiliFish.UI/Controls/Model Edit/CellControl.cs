@@ -76,6 +76,11 @@ namespace SiliFish.UI.Controls
                 MessageBox.Show("Selected file is not a valid Cell file.");
                 return;
             }
+            if (cell == null)
+            {
+                MessageBox.Show("Selected file is not a valid Cell file.");
+                return;
+            }
             WriteDataToControl();
         }
         private void linkSavePool_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -142,6 +147,10 @@ namespace SiliFish.UI.Controls
                     ddCoreType.Text = core.CoreType;
                     propCore.SelectedObject = core;
                     skipCoreTypeChange = false;
+                }
+                else
+                {
+                    MessageBox.Show("Selected file is not a valid Core file.");
                 }
             }
         }

@@ -26,19 +26,19 @@ namespace SiliFish.ModelUnits.Stim
 
         public double GetStimulus(int timeIndex)
         {
-            return ListOfStimulus.Any() ? ListOfStimulus.Sum(s => s[timeIndex]) : 0;
+            return ListOfStimulus.Where(s => s.Active).Any() ? ListOfStimulus.Where(s => s.Active).Sum(s => s[timeIndex]) : 0;
         }
 
         public double[] GetStimulusArray(int nmax)
         {
             double[] ret = new double[nmax];
-            foreach (Stimulus s in ListOfStimulus)
+            foreach (Stimulus s in ListOfStimulus.Where(s => s.Active))
                 ret = ret.AddArray(s.GetValues(nmax));
             return ret;
         }
         public virtual void InitForSimulation(RunParam runParam, Random rand)
         {
-            foreach (Stimulus s in ListOfStimulus)
+            foreach (Stimulus s in ListOfStimulus.Where(s => s.Active))
                 s.InitForSimulation(runParam, rand);
         }
         public void Add(Stimulus stim)

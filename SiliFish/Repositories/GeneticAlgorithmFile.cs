@@ -23,7 +23,24 @@ namespace SiliFish.Repositories
             Match version = versionRegex.Match(json);
             if (!version.Success)//Version is added on 2.2.3
             {
-                json= json.Replace("V_", "V");//change V_r, V_t, V_max to Vr, Vt, Vmax
+                json = json.Replace("V_", "V");;//change V_r, V_t, V_max to Vr, Vt, Vmax
+            }
+            Regex paramRegex = new("\"ParamValues\": {(\\s+.*[^}]*?)}");
+            MatchCollection parMatch = paramRegex.Matches(json);
+            if (parMatch.Count > 0)
+            {
+                string newJson = "\"ParamValues\": {";
+                Regex singleRegex = new("\"(.*\\.)(.*\":.*,)");
+                MatchCollection singleMatch = singleRegex.Matches(parMatch[0].Value);
+                for (int j = 0; j < singleMatch.Count; j++)
+                {
+                    Match singleParam = singleMatch[j];
+                    newJson += $"\"{singleParam.Groups[2]}\r\n";
+                }
+                newJson += "}";
+                json = json.Remove(parMatch[0].Index, parMatch[0].Value.Length);
+                json = json.Insert(parMatch[0].Index, newJson);
+                json = JsonUtil.CleanUp(json);
             }
             return list;
         }

@@ -72,28 +72,17 @@ namespace SiliFish.DynamicUnits
         [Description("The peak membrane potential of single spike.")]
         public double Vmax { get; set; } = 30;
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public virtual double Vthreshold { get; set; }
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public Dictionary<string, double> Parameters
         {
             get { return GetParameters(); }
             set { SetParameters(value); }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public string CoreType => GetType().Name;
-
-        [JsonIgnore]
-        public virtual string VReversalParamName
-        {
-            get
-            {
-                Exception exception = new NotImplementedException();
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
-                throw exception;
-            }
-        }
 
         [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"Core Type, Core Values";
@@ -138,11 +127,13 @@ namespace SiliFish.DynamicUnits
         {
             Dictionary<string, double> paramDict = new();
 
-            foreach (var prop in GetType().GetProperties())
+            foreach (PropertyInfo prop in GetType().GetProperties())
             {
+                if (prop.GetCustomAttribute<BrowsableAttribute>()?.Equals(BrowsableAttribute.No) ?? false)
+                    continue;
                 if (prop.PropertyType.Name != typeof(double).Name)
                     continue;
-                paramDict.Add(this.GetType().Name + "." + prop.Name, (double)prop.GetValue(this));
+                paramDict.Add(prop.Name, (double)prop.GetValue(this));
             }
             return paramDict;
         }
@@ -158,7 +149,7 @@ namespace SiliFish.DynamicUnits
         }
         public virtual void SetParameter(string name, double value)
         {
-            name = name.Replace(GetType().Name + ".", "");
+            name = name.Replace(GetType().Name + ".", "");//TODO temporary replacement - version 2.2.4
             this.SetPropertyValue(name, value);
         }
         public virtual bool CheckValues(ref List<string> errors)

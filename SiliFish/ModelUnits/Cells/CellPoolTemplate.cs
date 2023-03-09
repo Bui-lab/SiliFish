@@ -108,18 +108,6 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public override string ID { get { return Position + "_" + CellGroup; }  }
 
-        [JsonIgnore]
-        public double? VReversal
-        {
-            get
-            {
-                string Reversal_property = CellCoreUnit.CreateCore(CoreType, null)?.VReversalParamName;
-
-                if (Parameters.ContainsKey(Reversal_property))
-                    return Parameters.ReadDouble(Reversal_property);
-                return null;
-            }
-        }
         public List<string> Attachments { get; set; } = new();
         public override int CompareTo(ModelUnitBase otherbase)
         {
@@ -159,6 +147,13 @@ namespace SiliFish.ModelUnits.Cells
         public void BackwardCompatibility()
         {
             var currentParams = CellCoreUnit.GetParameters(CoreType);
+            while (parameters.Keys.FirstOrDefault(k => k.StartsWith($"{CoreType}."))!=null)
+            {
+                string key = parameters.Keys.FirstOrDefault(k => k.StartsWith($"{CoreType}."));
+                object value = parameters[key];
+                parameters.Remove(key);
+                parameters.Add(key.Replace($"{CoreType}.",""), value);
+            }
             foreach(var key in currentParams.Keys ) 
             {
                 if (!parameters.ContainsKey(key))

@@ -307,12 +307,21 @@ namespace SiliFish.UI.Controls
             {
                 GetPlotSubset();
                 (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, multiCells);
+                PlotSelectionMultiCells selForMaxNumbers = new()
+                {
+                    Pools = multiCells.Pools,
+                    SagittalPlane = multiCells.SagittalPlane,
+                    cellSelection = PlotSelection.All,
+                    somiteSelection = PlotSelection.All
+                };
+                (List<Cell> CellsFull, List<CellPool> PoolsFull) = RunningModel.GetSubsetCellsAndPools(PlotSubset, selForMaxNumbers);
+
                 ePlotSomiteSelection.Maximum =
-                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSomite()) :
-                    Cells != null && Cells.Any() ? Cells.Max(c => c.Somite) : 0;
+                    PoolsFull != null && PoolsFull.Any() ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
+                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Somite) : 0;
                 ePlotCellSelection.Maximum =
-                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSequence()) :
-                    Cells != null && Cells.Any() ? Cells.Max(c => c.Sequence) : 0;
+                    PoolsFull != null && PoolsFull.Any() ? PoolsFull.Max(p => p.GetMaxCellSequence()) :
+                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Sequence) : 0;
                 if (ddPlotPools.Focused)
                     DisplayNumberOfPlots(Cells, Pools);
             }

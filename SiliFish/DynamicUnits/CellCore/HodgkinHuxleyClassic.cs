@@ -91,37 +91,34 @@ namespace SiliFish.DynamicUnits
             V = Vr = 0;
         }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)] 
         public override double Vthreshold { get => Vt; set => Vt = value; }
 
-        [JsonIgnore]
-        public override string VReversalParamName { get { return GetType().Name+".Vr"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
          {
-            string type= GetType().Name;
              Dictionary<string, double> MinValues = new() {
-                { type+".g_K",  g_K_suggestedMin},
-                { type+".g_Na",  g_Na_suggestedMin},
-                { type+".g_L",  g_L_suggestedMin},
-                { type+".E_K",  E_K_suggestedMin},
-                { type+".E_Na",  E_Na_suggestedMin},
-                { type+".E_L",  E_L_suggestedMin},
-                { type+".Vmax", Vmax_suggestedMin},
-                { type+".Vr", Vr_suggestedMin},
-                { type+".Vt", Vt_suggestedMin},
-                { type+".Cm", Cm_suggestedMin}
+                { "g_K",  g_K_suggestedMin},
+                { "g_Na",  g_Na_suggestedMin},
+                { "g_L",  g_L_suggestedMin},
+                { "E_K",  E_K_suggestedMin},
+                { "E_Na",  E_Na_suggestedMin},
+                { "E_L",  E_L_suggestedMin},
+                { "Vmax", Vmax_suggestedMin},
+                { "Vr", Vr_suggestedMin},
+                { "Vt", Vt_suggestedMin},
+                { "Cm", Cm_suggestedMin}
              };
              Dictionary<string, double> MaxValues = new() {
-                { type+".g_K",  g_K_suggestedMax},
-                { type+".g_Na",  g_Na_suggestedMax},
-                { type+".g_L",  g_L_suggestedMax},
-                { type+".E_K",  E_K_suggestedMax},
-                { type+".E_Na",  E_Na_suggestedMax},
-                { type+".E_L",  E_L_suggestedMax},
-                { type+".Vmax", Vmax_suggestedMax},
-                { type+".Vr", Vr_suggestedMax},
-                { type+".Vt", Vt_suggestedMax},
-                { type+".Cm", Cm_suggestedMax}
+                { "g_K",  g_K_suggestedMax},
+                { "g_Na",  g_Na_suggestedMax},
+                { "g_L",  g_L_suggestedMax},
+                { "E_K",  E_K_suggestedMax},
+                { "E_Na",  E_Na_suggestedMax},
+                { "E_L",  E_L_suggestedMax},
+                { "Vmax", Vmax_suggestedMax},
+                { "Vr", Vr_suggestedMax},
+                { "Vt", Vt_suggestedMax},
+                { "Cm", Cm_suggestedMax}
              };
 
              return (MinValues, MaxValues);

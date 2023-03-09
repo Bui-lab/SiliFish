@@ -616,6 +616,10 @@ namespace SiliFish.UI.Controls
                     { Caption = $"Core File: {Path.GetFileNameWithoutExtension(fileName)}" };
                     contentChanged?.Invoke(this, args);
                 }
+                else 
+                {
+                    MessageBox.Show("Selected file is not a valid Core file.");
+                }
             }
         }
     

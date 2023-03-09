@@ -75,9 +75,7 @@ namespace SiliFish.Repositories
                 list.Add("Cell parameters");
             if (!json.StartsWith("["))
                 json = $"[\r\n{json}\r\n]";
-            json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            json = Regex.Replace(json, ",[\\s]*,", " ,");
-            json = Regex.Replace(json, ",[\\s]*}", " }");
+            json = JsonUtil.CleanUp(json);
             return list;
         }
 

@@ -86,6 +86,9 @@ namespace SiliFish.UI
                 about.ShowDialog();
                 showAboutForm = false;
             }
+            else
+                GetLastRunSettings();
+
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -122,6 +125,27 @@ namespace SiliFish.UI
             catch { }
         }
 
+        private void SaveLastRunSettings()
+        {
+            GlobalSettings.LastRunSettings[lTimeEnd.Name] = eTimeEnd.Text;
+            GlobalSettings.LastRunSettings[lSkip.Name] = eSkip.Text;
+            GlobalSettings.LastRunSettings[ldt.Name] = edt.Text;
+            GlobalSettings.LastRunSettings[ldtEuler.Name] = edtEuler.Text;
+        }
+        private void GetLastRunSettings()
+        {
+            if (GlobalSettings.LastRunSettings.Any())
+            {
+                try
+                {
+                    eTimeEnd.Text = GlobalSettings.LastRunSettings[lTimeEnd.Name];
+                    eSkip.Text = GlobalSettings.LastRunSettings[lSkip.Name];
+                    edt.Text = GlobalSettings.LastRunSettings[ldt.Name];
+                    edtEuler.Text = GlobalSettings.LastRunSettings[ldtEuler.Name];
+                }
+                catch { }
+            }
+        }
         #region Settings
         private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -226,6 +250,7 @@ namespace SiliFish.UI
                     RunningModel.CancelRun = true;
                 return;
             }
+            SaveLastRunSettings();
             runStart = DateTime.Now;
             lRunTime.Text = "";
             UseWaitCursor = true;

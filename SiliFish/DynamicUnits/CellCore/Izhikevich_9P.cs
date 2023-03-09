@@ -58,34 +58,32 @@ namespace SiliFish.DynamicUnits
             u = 0; // b * Vr;
         }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public override double Vthreshold { get => Vt; set => Vt = value; }
 
-        [JsonIgnore]
-        public override string VReversalParamName { get { return "Izhikevich_9P.Vr"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Dictionary<string, double> MinValues = new() {
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.Vmax", Vmax },
-                { "Izhikevich_9P.Vr", Vr },
-                { "Izhikevich_9P.Vt", Vt },
-                { "Izhikevich_9P.a", a_suggestedMin },
-                { "Izhikevich_9P.b", b_suggestedMin },
-                { "Izhikevich_9P.d", d_suggestedMin },
-                { "Izhikevich_9P.k", k_suggestedMin },
-                { "Izhikevich_9P.Cm", Cm_suggestedMin }
+                { "c", c },
+                { "Vmax", Vmax },
+                { "Vr", Vr },
+                { "Vt", Vt },
+                { "a", a_suggestedMin },
+                { "b", b_suggestedMin },
+                { "d", d_suggestedMin },
+                { "k", k_suggestedMin },
+                { "Cm", Cm_suggestedMin }
             };
             Dictionary<string, double> MaxValues = new() {
-                { "Izhikevich_9P.c", c },
-                { "Izhikevich_9P.Vmax", Vmax },
-                { "Izhikevich_9P.Vr", Vr },
-                { "Izhikevich_9P.Vt", Vt },
-                { "Izhikevich_9P.a", a_suggestedMax },
-                { "Izhikevich_9P.b", b_suggestedMax },
-                { "Izhikevich_9P.d", d_suggestedMax },
-                { "Izhikevich_9P.k", k_suggestedMax },
-                { "Izhikevich_9P.Cm", Cm_suggestedMax }
+                { "c", c },
+                { "Vmax", Vmax },
+                { "Vr", Vr },
+                { "Vt", Vt },
+                { "a", a_suggestedMax },
+                { "b", b_suggestedMax },
+                { "d", d_suggestedMax },
+                { "k", k_suggestedMax },
+                { "Cm", Cm_suggestedMax }
             };
 
             return (MinValues, MaxValues);

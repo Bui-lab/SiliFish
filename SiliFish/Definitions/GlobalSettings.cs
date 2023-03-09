@@ -37,6 +37,8 @@ namespace SiliFish.Definitions
 
         [JsonIgnore, Browsable(false)]
         public static Dictionary<string, string> LastPlotSettings = new();
+        [JsonIgnore, Browsable(false)]
+        public static Dictionary<string, string> LastRunSettings = new();
 
     }
     public class GlobalSettingsProperties
@@ -120,6 +122,7 @@ namespace SiliFish.Definitions
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\global.settings";
             if (!File.Exists(fileName)) { return new GlobalSettingsProperties(); }
             GlobalSettingsProperties gsp = (GlobalSettingsProperties)JsonUtil.ToObject(typeof(GlobalSettingsProperties), FileUtil.ReadFromFile(fileName));
+            gsp ??= new GlobalSettingsProperties();
             if (string.IsNullOrEmpty(gsp.TempFolder))
                 gsp.TempFolder = Path.GetTempPath() + "SiliFish";
             if (!Directory.Exists(gsp.TempFolder))

@@ -106,10 +106,6 @@ namespace SiliFish.UI.Controls
                 targetPool = pool;
                 targetCell = null;
                 FillCells(ddTargetCell, targetPool);
-                if (pool.VReversal != null)//update from the Vrev of the target
-                {
-                    synapseControl.EReversal= (double)pool.VReversal;
-                }
             }
         }
 

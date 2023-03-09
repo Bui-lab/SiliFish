@@ -26,7 +26,7 @@ namespace SiliFish.DynamicUnits
         [Description("Slope factor")]// [Dulhunty 1992 (Prog. Biophys)]
         public double ka { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public double TimeConstant { get { return R * C; } }
         protected override void Initialize()
         {
@@ -60,23 +60,7 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
-        [JsonIgnore]
-        public override string VReversalParamName { get { return GetType().Name + ".Vr"; } }
 
-        public override Dictionary<string, double> GetParameters()
-        {
-            Dictionary<string, double> paramDict = new()
-            {
-                { "Leaky_Integrator.R", R },
-                { "Leaky_Integrator.C", C },
-                { "Leaky_Integrator.Vr", Vr },
-                { "Leaky_Integrator.Va", Va },
-                { "Leaky_Integrator.Tmax", Tmax },
-                { "Leaky_Integrator.ka", ka },
-                { "Leaky_Integrator.Vmax", Vmax }
-            };
-            return paramDict;
-        }
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);

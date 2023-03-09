@@ -25,9 +25,6 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
-        [JsonIgnore]
-        public override string VReversalParamName { get { return GetType().Name+".Vr"; } }
-
         public override double GetNextVal(double Stim, ref bool spike)
         {
             double dtTracker = 0;

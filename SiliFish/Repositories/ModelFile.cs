@@ -282,8 +282,8 @@ namespace SiliFish.Repositories
                 mb = (RunningModel)JsonUtil.ToObject(typeof(RunningModel), json);
             else
                 mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
-            mb.BackwardCompatibility();
-            mb.LinkObjects();
+            mb?.BackwardCompatibility();
+            mb?.LinkObjects();
             return mb;
         }
 

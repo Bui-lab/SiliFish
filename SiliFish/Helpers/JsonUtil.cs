@@ -26,11 +26,18 @@ namespace SiliFish.Helpers
         }
         public static object ToObject(Type content, string jsonstring)
         {
-            var options = new JsonSerializerOptions()
+            try
             {
-                Converters = { new ColorJsonConverter() }
-            };
-            return JsonSerializer.Deserialize(jsonstring, content, options);
+                var options = new JsonSerializerOptions()
+                {
+                    Converters = { new ColorJsonConverter() }
+                };
+                return JsonSerializer.Deserialize(jsonstring, content, options);
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
 
         public static void SaveToJsonFile(string path, object content)
@@ -74,5 +81,12 @@ namespace SiliFish.Helpers
             return -1;
         }
 
+        public static string CleanUp(string json)
+        {
+            json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            json = Regex.Replace(json, ",[\\s]*,", " ,");//remove consecutive commas
+            json = Regex.Replace(json, ",[\\s]*}", " }");//remove commas before curly bracket end
+            return json;
+        }
     }
 }

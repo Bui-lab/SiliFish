@@ -45,27 +45,23 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
-        [JsonIgnore] 
-        public override string VReversalParamName { get { return GetType().Name + ".Vr"; } }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
-            string type = GetType().Name;
-
             Dictionary<string, double> MinValues = new() {
-                { type+".c", c },
-                { type+".Vmax", Vmax },
-                { type+".Vr", Vr },
-                { type+".a", a_suggestedMin },
-                { type+".b", b_suggestedMin },
-                { type+".d", d_suggestedMin }
+                { "c", c },
+                { "Vmax", Vmax },
+                { "Vr", Vr },
+                { "a", a_suggestedMin },
+                { "b", b_suggestedMin },
+                { "d", d_suggestedMin }
             };
             Dictionary<string, double> MaxValues = new() {
-                { type+".c", c },
-                { type+".Vmax", Vmax },
-                { type+".Vr", Vr },
-                { type+".a", a_suggestedMax },
-                { type+".b", b_suggestedMax },
-                { type+".d", d_suggestedMax }
+                { "c", c },
+                { "Vmax", Vmax },
+                { "Vr", Vr },
+                { "a", a_suggestedMax },
+                { "b", b_suggestedMax },
+                { "d", d_suggestedMax }
             };
 
             return (MinValues, MaxValues);
