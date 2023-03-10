@@ -1,4 +1,5 @@
 ﻿using SiliFish.Extensions;
+using System;
 using System.ComponentModel;
 using Windows.Devices.SmartCards;
 
@@ -252,7 +253,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                int ind = sepSort.MergeIndex;
+                int ind = contextMenuListBox.Items.IndexOf(sepSort);
                 mi = new ToolStripMenuItem(label);
                 contextMenuListBox.Items.Insert(ind + 1, mi);
                 mi.Click += miCustomSort_Click;

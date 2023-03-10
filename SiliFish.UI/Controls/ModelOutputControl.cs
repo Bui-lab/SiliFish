@@ -47,7 +47,7 @@ namespace SiliFish.UI.Controls
 
         private bool PlotSelectionVisible
         {
-            get 
+            get
             {
                 if (pPlotSelection.Tag is bool visible)
                     return visible;
@@ -137,7 +137,7 @@ namespace SiliFish.UI.Controls
                     ddPlotPools.Text = GlobalSettings.LastPlotSettings[ddPlotPools.Name];
                     ddPlotSomiteSelection.Text = GlobalSettings.LastPlotSettings[ddPlotSomiteSelection.Name];
                     ddPlotCellSelection.Text = GlobalSettings.LastPlotSettings[ddPlotCellSelection.Name];
-                    ePlotSomiteSelection.SetValue (double.Parse(GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name]));
+                    ePlotSomiteSelection.SetValue(double.Parse(GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name]));
                     ePlotCellSelection.SetValue(double.Parse(GlobalSettings.LastPlotSettings[ePlotCellSelection.Name]));
                 }
                 catch { }
@@ -462,7 +462,7 @@ namespace SiliFish.UI.Controls
             if (RunningModel == null) return;
             htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) = 
+            (List<Cell> Cells, List<CellPool> Pools) =
                 !PlotSelectionVisible ? (null, null) :
                 RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
             (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(PlotType, RunningModel, Cells, Pools, plotCellSelection, tPlotStart, tPlotEnd);
@@ -523,7 +523,7 @@ namespace SiliFish.UI.Controls
             ddPlotPools.SelectedItem = pool.CellGroup;
             ddPlotSagittal.SelectedItem = pool.PositionLeftRight.ToString();
             ddPlotSomiteSelection.SelectedItem = "All";
-            if (!Equals(ddPlotCellSelection.SelectedItem,"All"))
+            if (!Equals(ddPlotCellSelection.SelectedItem, "All"))
                 ddPlotCellSelection.SelectedItem = "Summary";
         }
         private void SelectPlotSelectionOfCell(Cell cell)
@@ -627,12 +627,12 @@ namespace SiliFish.UI.Controls
 
                 if (plotCellSelection is not PlotSelectionMultiCells)
                     return;
-                
+
                 (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
 
                 (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotCellSelection,
                     tPlotStart, tPlotEnd);
-                
+
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 
@@ -716,7 +716,8 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null) return;
             TwoDModelGenerator modelGenerator = new();
-            string html = modelGenerator.Create2DModel(RunningModel, RunningModel.CellPools, (int)webView2DModel.Width / 2, webView2DModel.Height);
+            string html = modelGenerator.Create2DModel(RunningModel, RunningModel.CellPools, (int)webView2DModel.Width, webView2DModel.Height,
+                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
             webView2DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
 
         }
@@ -741,6 +742,26 @@ namespace SiliFish.UI.Controls
             {
                 MessageBox.Show("There is a problem in saving the file:" + exc.Message);
             }
+        }
+
+        private async void cb2DChemJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb2DChemJunc.Checked)
+                await webView2DModel.ExecuteScriptAsync("ShowChemJunc();");
+            else
+                await webView2DModel.ExecuteScriptAsync("HideChemJunc();");
+        }
+
+        private async void cb2DGapJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb2DGapJunc.Checked)
+                await webView2DModel.ExecuteScriptAsync("ShowGapJunc();");
+            else
+                await webView2DModel.ExecuteScriptAsync("HideGapJunc();");
+        }
+        private void cb2DLegend_CheckedChanged(object sender, EventArgs e)
+        {
+            gr2DLegend.Visible = cb2DLegend.Checked;
         }
         #endregion
 
@@ -830,7 +851,7 @@ namespace SiliFish.UI.Controls
         }
         private void cb3DLegend_CheckedChanged(object sender, EventArgs e)
         {
-            grLegend.Visible = cb3DLegend.Checked;
+            gr3DLegend.Visible = cb3DLegend.Checked;
         }
 
         private async void dd3DViewpoint_SelectedIndexChanged(object sender, EventArgs e)

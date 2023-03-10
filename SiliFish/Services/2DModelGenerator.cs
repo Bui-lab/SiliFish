@@ -22,7 +22,7 @@ namespace SiliFish.Services
         double XOffset, YOffset;
         double WeightMult;
         Dictionary<string, (double, double)> PoolCoordinates;
-        private string CreateLinkDataPoint(InterPool interPool)
+        private string CreateLinkDataPoint(InterPool interPool, bool gap)
         {
             string curvInfo = interPool.SourcePool == interPool.TargetPool ? ",curv: 0.7" : "";
             string conductance = interPool.MinConductance == interPool.MaxConductance ?
@@ -30,10 +30,10 @@ namespace SiliFish.Services
                 $"{interPool.MinConductance:0.######} -  {interPool.MaxConductance:0.######}";
             string link = $"{{\"source\":\"{interPool.SourcePool}\"," +
                 $"\"target\":\"{interPool.TargetPool}\"," +
+                $"\"type\":" +( gap?"\"gap\",":"\"chem\",")+
                 $"\"value\":{GetNewWeight(interPool.CountJunctions):0.######}," +
                 $"\"conductance\":\"{conductance}\"" +
                 $"{curvInfo} }}";
-            ;
             return link;
         }
 
@@ -54,6 +54,37 @@ namespace SiliFish.Services
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
         }
 
+        private Dictionary<string, (double, double)> SpreadPools(Dictionary<string, (double, double)> pools, bool item2 = false, bool neg = false)
+        {
+            Dictionary<string, (double, double)> spreadedPools = new();
+            if (pools.Any())
+            {
+                double xyMin = item2? pools.Min(v => v.Value.Item2): pools.Min(v => v.Value.Item1);
+                double xyMax = item2? pools.Max(v => v.Value.Item2): pools.Max(v => v.Value.Item1);
+                double inc = (xyMax - xyMin) / (pools.Count - 1);
+                if (inc < 1)
+                    inc = 1;
+                double curXY = xyMin;
+                foreach (var v in pools)
+                {
+                    if (!item2)
+                    {
+                        if (Math.Abs(v.Value.Item1) >= Math.Abs(curXY))
+                            curXY = v.Value.Item1;
+                        spreadedPools.Add(v.Key, (curXY, v.Value.Item2));
+                        curXY += inc * (neg?-1:1);
+                    }
+                    else
+                    {
+                        if (Math.Abs(v.Value.Item2) >= Math.Abs(curXY))
+                            curXY = v.Value.Item2;
+                        spreadedPools.Add(v.Key, (v.Value.Item1, curXY));
+                        curXY += inc * (neg ? -1 : 1);
+                    }
+                }
+            }
+            return spreadedPools;
+        }
         private List<string> CreatePoolNodes(List<CellPool> pools, int width, int height)
         {
             PoolCoordinates = new();
@@ -63,7 +94,6 @@ namespace SiliFish.Services
             YOffset = 0;
 
             pools.ForEach(GetNewCoordinates);
-            Dictionary<string, (double, double)> spreadedPools = new();
 
             Dictionary<string, (double, double)> posPools = PoolCoordinates
                 .Where(v => v.Value.Item1 >= 0)
@@ -71,88 +101,21 @@ namespace SiliFish.Services
             Dictionary<string, (double, double)> negPools = PoolCoordinates
                 .Where(v => v.Value.Item1 < 0)
                 .OrderBy(v => Math.Abs(v.Value.Item1)).ToDictionary(t => t.Key, t => t.Value);
-            double inc, curX, curY;
 
-            if (posPools.Any())
-            {
-                XMin = posPools.Min(v => Math.Abs(v.Value.Item1));
-                XMax = posPools.Max(v => Math.Abs(v.Value.Item1));
-                inc = (XMax - XMin) / (posPools.Count - 1);
-                if (Math.Abs(inc) < 1)
-                    inc /= Math.Abs(inc);
-                curX = XMin;
-                foreach (var v in posPools)
-                {
-                    if (Math.Abs(v.Value.Item1) >= Math.Abs(curX))
-                        curX = v.Value.Item1;
-                    spreadedPools.Add(v.Key, (curX, v.Value.Item2));
-                    curX += inc;
-                }
-            }
-            if (negPools.Any())
-            {
-                XMin = negPools.Min(v => Math.Abs(v.Value.Item1));
-                XMax = negPools.Max(v => Math.Abs(v.Value.Item1));
-                inc = (XMax - XMin) / (posPools.Count - 1);
-                if (Math.Abs(inc) < 1)
-                    inc /= Math.Abs(inc);
-                curX = XMin;
-                foreach (var v in negPools)
-                {
-                    if (Math.Abs(v.Value.Item1) >= Math.Abs(curX))
-                        curX = v.Value.Item1;
-                    spreadedPools.Add(v.Key, (curX, v.Value.Item2));
-                    curX += inc;
-                }
-            }
+            Dictionary<string, (double, double)> spreadedPools = SpreadPools(posPools);
+            Dictionary<string, (double, double)> spreadedPools2 = SpreadPools(negPools, false, true);
 
-
+            spreadedPools = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
             posPools = spreadedPools
                 .Where(v => v.Value.Item2 >= 0)
                 .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
             negPools = spreadedPools
                 .Where(v => v.Value.Item2 < 0)
                 .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
-            spreadedPools.Clear();
 
-            if (posPools.Any())
-            {
-                YMin = posPools.Min(v => Math.Abs(v.Value.Item2));
-                YMax = posPools.Max(v => Math.Abs(v.Value.Item2));
-                inc = (YMax - YMin) / (posPools.Count - 1);
-                if (Math.Abs(inc) < 1)
-                    inc /= Math.Abs(inc);
-                curY = YMin;
-                foreach (var v in posPools)
-                {
-                    if (Math.Abs(v.Value.Item2) >= Math.Abs(curY))
-                        curY = v.Value.Item2;
-                    spreadedPools.Add(v.Key, (v.Value.Item1, curY));
-                    curY += inc;
-                }
-            }
-
-            if (negPools.Any())
-            {
-
-
-                YMin = PoolCoordinates.Min(v => Math.Abs(v.Value.Item2));
-                YMax = PoolCoordinates.Max(v => Math.Abs(v.Value.Item2));
-                inc = (YMax - YMin) / (PoolCoordinates.Count - 1);
-                if (Math.Abs(inc) < 1)
-                    inc /= Math.Abs(inc);
-
-                curY = YMin;
-                foreach (var v in negPools)
-                {
-                    if (Math.Abs(v.Value.Item1) >= Math.Abs(curY))
-                        curY = v.Value.Item1;
-                    spreadedPools.Add(v.Key, (v.Value.Item1, curY));
-                    curY += inc;
-                }
-            }
-
-            PoolCoordinates = spreadedPools;
+            spreadedPools = SpreadPools(posPools, true);
+            spreadedPools2 = SpreadPools(negPools, true, true);
+            PoolCoordinates = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
 
             XMin = PoolCoordinates.Min(v => v.Value.Item1);
             XMax = PoolCoordinates.Max(v => v.Value.Item1);
@@ -161,26 +124,28 @@ namespace SiliFish.Services
 
             if (XMax > XMin)
             {
-                XMult = width / (XMax - XMin) / 5;
-                XOffset = 10 * XMult;
+                XMult = width / (XMax - XMin) / 2;
+                XOffset = -10 *XMult;
             }
             if (YMax > YMin)
             {
                 YMult = height / (YMax - YMin) / 2;
-                YOffset = 25 * YMult;
+                YOffset = 0;// 30 * YMult;
             }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
             return nodes;
         }
 
-        public string Create2DModel(RunningModel model, List<CellPool> pools, int width, int height)
+        public string Create2DModel(RunningModel model, List<CellPool> pools, int width, int height, bool showGap, bool showChem)
         {
             string title = model.ModelName + " 2D Model";
 
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.2DModel.html"));
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
+            html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
+            html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
             if (Util.CheckOnlineStatus())
             {
@@ -196,11 +161,9 @@ namespace SiliFish.Services
             }
 
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
-            html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title + " - Gap Jnc"));
-            html.Replace("__RIGHT_HEADER__", HttpUtility.HtmlEncode(title + " - Chemical Jnc"));
+            html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title));
+
             List<string> nodes = CreatePoolNodes(pools, width, height);
-
-
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
 
             List<InterPool> gapInterPools = model.GapPoolConnections;
@@ -213,19 +176,15 @@ namespace SiliFish.Services
                 CountMax = Math.Max(CountMax, chemInterPools.Max(ip => ip.CountJunctions));
             WeightMult = 5 / CountMax;
 
-            List<string> gapLinks = new();
-            gapInterPools.ForEach(con => gapLinks.Add(CreateLinkDataPoint(con)));
-            html.Replace("__GAP_LINKS__", string.Join(",", gapLinks.Where(s => !String.IsNullOrEmpty(s))));
+            List<string> gapChemLinks = new();
+            gapInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con, true)));
+            chemInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con, false)));
+            html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
 
-            List<string> chemLinks = new();
-            chemInterPools.ForEach(con => chemLinks.Add(CreateLinkDataPoint(con)));
-            html.Replace("__CHEM_LINKS__", string.Join(",", chemLinks.Where(s => !String.IsNullOrEmpty(s))));
-            
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
-            //FUTURE_IMPROVEMENT custom shapes
             List<string> shapes = new();
             pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
             html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !String.IsNullOrEmpty(s))));
