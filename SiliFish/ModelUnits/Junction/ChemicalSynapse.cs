@@ -32,19 +32,19 @@ namespace SiliFish.ModelUnits.Junction
                 if (Core == null) return null;
                 return new SynapseParameters()
                 {
-                    E_rev = Core.ERev,
+                    Erev = Core.ERev,
                     TauD = Core.TauD,
                     TauR = Core.TauR,
-                    VTh = Core.Vth
+                    Vth = Core.Vth
                 };
             }
             set
             {
                 if (Core == null) return;
-                Core.ERev = value.E_rev;
+                Core.ERev = value.Erev;
                 Core.TauD = value.TauD;
                 Core.TauR = value.TauR;
-                Core.Vth = value.VTh;
+                Core.Vth = value.Vth;
             }
         }
         public Neuron PreNeuron;

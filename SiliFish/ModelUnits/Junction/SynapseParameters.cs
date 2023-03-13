@@ -11,8 +11,8 @@ namespace SiliFish.ModelUnits.Junction
     {
         public double TauD { get; set; }
         public double TauR { get; set; }
-        public double VTh { get; set; }
-        public double E_rev { get; set; }
+        public double Vth { get; set; }
+        public double Erev { get; set; }
 
         public SynapseParameters() { }
         public SynapseParameters(SynapseParameters sp)
@@ -20,8 +20,8 @@ namespace SiliFish.ModelUnits.Junction
             if (sp == null) return;
             TauD = sp.TauD;
             TauR = sp.TauR;
-            VTh = sp.VTh;
-            E_rev = sp.E_rev;
+            Vth = sp.Vth;
+            Erev = sp.Erev;
         }
 
         public bool CheckValues(ref List<string> errors)
@@ -35,8 +35,8 @@ namespace SiliFish.ModelUnits.Junction
         {
             return $"Tau D: {TauD:0.###}\r\n" +
                 $"Tau R: {TauR:0.###}\r\n" +
-                $"V thresh: {VTh:0.###}\r\n" +
-                $"E rev: {E_rev:0.###}";
+                $"V thresh: {Vth:0.###}\r\n" +
+                $"E rev: {Erev:0.###}";
         }
     }
 

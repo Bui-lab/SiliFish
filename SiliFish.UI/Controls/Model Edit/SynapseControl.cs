@@ -24,10 +24,10 @@ namespace SiliFish.UI.Controls
         public void SetSynapseParameters(SynapseParameters synparam)
         {
             if (synparam == null) return;
-            numEReversal.Value = (decimal)synparam.E_rev;
+            numEReversal.Value = (decimal)synparam.Erev;
             numTauD.Value = (decimal)synparam.TauD;
             numTauR.Value = (decimal)synparam.TauR;
-            numVthreshold.Value = (decimal)synparam.VTh;
+            numVthreshold.Value = (decimal)synparam.Vth;
         }
 
         public SynapseParameters GetSynapseParameters()
@@ -36,8 +36,8 @@ namespace SiliFish.UI.Controls
             {
                 TauD = (double)numTauD.Value,
                 TauR = (double)numTauR.Value,
-                VTh = (double)numVthreshold.Value,
-                E_rev = (double)numEReversal.Value,
+                Vth = (double)numVthreshold.Value,
+                Erev = (double)numEReversal.Value,
             };
         }
 

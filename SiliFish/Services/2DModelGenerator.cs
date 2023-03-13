@@ -125,12 +125,12 @@ namespace SiliFish.Services
             if (XMax > XMin)
             {
                 XMult = width / (XMax - XMin) / 2;
-                XOffset = -10 *XMult;
+                XOffset = -width / 1;
             }
             if (YMax > YMin)
             {
                 YMult = height / (YMax - YMin) / 2;
-                YOffset = 0;// 30 * YMult;
+                YOffset = -50;
             }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));

@@ -27,8 +27,8 @@ namespace SiliFish.DynamicUnits
             //Set synapse constants.
             TauD = param.TauD;
             TauR = param.TauR;
-            Vth = param.VTh;
-            ERev = param.E_rev;
+            Vth = param.Vth;
+            ERev = param.Erev;
             Conductance = conductance; //unitary conductance
         }
 
