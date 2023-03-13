@@ -15,81 +15,117 @@
 </head>
 
 <body>
-    <div id="left-panel" style="width:50%; float:left">
+    <div id="left-panel" style="width:100%">
         <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
-        <div id="graph-gap"></div>
-    </div>
-    <div id="seperator" class="vertical"></div>
-    <div id="right-panel" style="width:50%; float:right">
-        <div id="right-title" class="titleDiv">__RIGHT_HEADER__</div>
-        <div id="graph-chem"></div>
+        <div id="2D-graph"></div>
     </div>
     <script>
         __OFFLINE_2D_SCRIPT__
     </script>
 
     <script>
-        const gapGraph = ForceGraph()
-            (document.getElementById("graph-gap"));
-        const chemGraph = ForceGraph()
-            (document.getElementById("graph-chem"));
+        const gapChemGraph = ForceGraph()
+            (document.getElementById("2D-graph"));
 
         const shapeSet = { __SHAPE_SET__ };
         const colorSet = { __COLOR_SET__ };
 
+        const gapChemData = {
+            "nodes": [__POOLS__],
+            "links": [__GAP_CHEM_LINKS__]
+        };
 
-        function nodePaint({ id, g, x, y }, color, ctx) {
+        let selectedNode = null;
+        let showChemJnc = __SHOW_CHEM__;
+        let showGapJnc = __SHOW_GAP__;
+
+        //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
+        var linkedByID = {};
+        gapChemData.links.forEach(function (d) {
+            linkedByID[d.source + "," + d.target] = 1;
+        });
+        function neighboring(a, b) {
+            return linkedByID[a.id + "," + b.id];
+        }
+
+        function nodePaint(node, color, ctx) {
+            if (selectedNode != null && selectedNode.id != node.id
+                && !neighboring(selectedNode, node)
+                && !neighboring(node, selectedNode))
+                color = '#EEE';
             ctx.fillStyle = color;
             ctx.beginPath();
-            ctx.arc(x, y, 3, 0, 2 * Math.PI, false); //circle
+            ctx.arc(node.x, node.y, 10, 0, 2 * Math.PI, false); //circle
             ctx.fillStyle = color;
             ctx.fill();
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.textSize = 10;
             ctx.fillStyle = 'black';
-            ctx.fillText(id, x, y);
+            ctx.fillText(node.id, node.x, node.y);
+        }
+        function showLink(l) {
+            let show = true;
+            if (selectedNode != null)
+                show = l.source.id == selectedNode.id || l.target.id == selectedNode.id;
+            return show;
         }
 
-        const gapData = {
-            "nodes": [__POOLS__],
-            "links": [__GAP_LINKS__]
-        };
-        const chemData = {
-            "nodes": [__POOLS__],
-            "links": [__CHEM_LINKS__]
-        };
-
-        const gapDataSet = gapGraph
+        const gapChemDataSet = gapChemGraph
             .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
             .nodePointerAreaPaint(nodePaint)
             .nodeLabel(`id`)
-            .graphData(gapData)
+            .graphData(gapChemData)
             .enableNodeDrag(true)
-            .linkColor(() => '#333')
+            .linkColor(l => selectedNode == null ? '#808080' ://medium gray
+                !showLink(l) ? '#DDD' ://light gray
+                    l.type == 'gap' ? '#333' ://dark gray
+                        (l.source.g == selectedNode.g) ? '#0C0' ://green - outgoing
+                            '#C00') //red - incoming
             .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
+            .linkVisibility(l => (l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
+            .onNodeClick(node => {
+                selectedNode = node;
+                updateHighlight();
+            })
+            .onBackgroundClick(() => {
+                selectedNode = null;
+                updateHighlight();
+            })
             .backgroundColor('white')
-            .width(document.body.offsetWidth / 2);
+            .width(document.body.offsetWidth);
 
-        const chemDataSet = chemGraph
-            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
-            .nodePointerAreaPaint(nodePaint)
-            .nodeLabel(`id`)
-            .graphData(chemData)
-            .linkDirectionalArrowRelPos(1)
-            .linkDirectionalArrowLength(5)
-            .enableNodeDrag(true)
-            .linkColor(() => '#333')
-            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.5))
-            .linkCurvature('curv')
-            .backgroundColor('white')
-            .width(document.body.offsetWidth / 2);
+        function ShowGapJunc() {
+            showGapJnc = true;
+            gapChemGraph.refresh();
+        }
+        function HideGapJunc() {
+            showGapJnc = false;
+            gapChemGraph.refresh();
+        }
+        function ShowChemJunc() {
+            showChemJnc = true;
+            gapChemGraph.refresh();
+        }
+        function HideChemJunc() {
+            showChemJnc = false;
+            gapChemGraph.refresh();
+        }
 
-        gapData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
-        chemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
+        function SetSomites(somites) {
+            somiteList = somites;
+            gapChemGraph.refresh();
+        }
+
+        function updateHighlight() {
+            // trigger update of highlighted objects in scene
+            gapChemGraph
+                .nodeColor(gapChemGraph.nodeColor())
+                .linkColor(gapChemGraph.linkColor())
+        }
+        gapChemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
     </script>
 
 </body>
