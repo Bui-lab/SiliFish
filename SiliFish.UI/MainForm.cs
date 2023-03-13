@@ -55,7 +55,7 @@ namespace SiliFish.UI
                 modelOutputControl.SetRunningModel(model);
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
-              }
+            }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
@@ -75,8 +75,8 @@ namespace SiliFish.UI
         {
             RunningModel = modelControl.GetModel() as RunningModel;
             modelOutputControl.SetRunningModel(RunningModel);
-        }       
-        
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (showAboutForm)
@@ -184,10 +184,10 @@ namespace SiliFish.UI
             controlContainer.AddControl(gsc, null);
             if (controlContainer.ShowDialog() == DialogResult.OK)
                 gsc.GSProperties.Save();//save to global.settings 
-            else 
+            else
                 _ = GlobalSettingsProperties.Load();//reload from global.settings
-        }        
-        
+        }
+
         #endregion
 
         #region Simulation
@@ -232,7 +232,7 @@ namespace SiliFish.UI
             btnRun.Text = "Run";
 
             linkExportOutput.Visible = true;
-            
+
             TimeSpan ts = DateTime.Now - runStart;
 
             lRunTime.Text = $"Last run: {runStart:t}\r\n" +
@@ -385,7 +385,7 @@ namespace SiliFish.UI
                 }
                 if (!string.IsNullOrEmpty(lastFileName))
                     saveFileJson.FileName = lastFileName;
-                else 
+                else
                     saveFileJson.FileName = mb.ModelName;
                 saveFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (saveFileJson.ShowDialog() == DialogResult.OK)

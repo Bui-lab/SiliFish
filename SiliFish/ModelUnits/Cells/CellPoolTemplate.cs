@@ -103,7 +103,7 @@ namespace SiliFish.ModelUnits.Cells
             set { SpatialDistribution.Z_RadiusDistribution = value; }
         }
 
-        public int ColumnIndex2D { get; set; } = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D model
+        public int ColumnIndex2D { get; set; } = 1; //the multiplier to differentiate the positions of different cellpools while plotting 2D rendering
 
         [JsonIgnore]
         public override string ID { get { return Position + "_" + CellGroup; }  }

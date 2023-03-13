@@ -14,8 +14,9 @@ using System.Xml.Serialization;
 
 namespace SiliFish.Services
 {
-    public class TwoDModelGenerator : EmbeddedResourceReader
+    public class TwoDRenderer : EmbeddedResourceReader
     {
+        private const string Resource = "SiliFish.Resources.2DRender.html";
         double XMult, YMult;
         double XMin = double.MaxValue, YMin = double.MaxValue;
         double XMax = double.MinValue, YMax = double.MinValue;
@@ -125,7 +126,7 @@ namespace SiliFish.Services
             if (XMax > XMin)
             {
                 XMult = width / (XMax - XMin) / 2;
-                XOffset = -10 *XMult;
+                XOffset = -(XMax + XMin) * XMult / 2;
             }
             if (YMax > YMin)
             {
@@ -137,11 +138,11 @@ namespace SiliFish.Services
             return nodes;
         }
 
-        public string Create2DModel(RunningModel model, List<CellPool> pools, int width, int height, bool showGap, bool showChem)
+        public string Create2DRendering(RunningModel model, List<CellPool> pools, int width, int height, bool showGap, bool showChem)
         {
-            string title = model.ModelName + " 2D Model";
+            string title = model.ModelName + " 2D Rendering";
 
-            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.2DModel.html"));
+            StringBuilder html = new(ReadEmbeddedText(Resource));
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());

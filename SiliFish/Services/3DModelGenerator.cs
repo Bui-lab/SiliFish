@@ -13,7 +13,7 @@ using SiliFish.ModelUnits.Junction;
 
 namespace SiliFish.Services
 {
-    public class ThreeDModelGenerator : EmbeddedResourceReader
+    public class ThreeDRenderer : EmbeddedResourceReader
     {
         bool SingleDimension = false;
         double XYZMult;
@@ -104,11 +104,11 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string Create3DModel(RunningModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
+        public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
         {
-            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DModel.html"));
+            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DRender.html"));
 
-            string title = model.ModelName + " 3D Model";
+            string title = model.ModelName + " 3D Rendering";
 
             html.Replace("__STYLE_SHEET__", ReadEmbeddedText("SiliFish.Resources.StyleSheet.css"));
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());

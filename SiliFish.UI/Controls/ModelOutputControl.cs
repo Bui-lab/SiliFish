@@ -172,8 +172,8 @@ namespace SiliFish.UI.Controls
         {
             InitAsync();
             Wait();
-            webView2DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-            webView3DModel.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+            webView2DRender.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+            webView3DRender.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewSummaryV.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
@@ -181,8 +181,8 @@ namespace SiliFish.UI.Controls
         private async void InitAsync()
         {
             await webViewPlot.EnsureCoreWebView2Async();
-            await webView2DModel.EnsureCoreWebView2Async();
-            await webView3DModel.EnsureCoreWebView2Async();
+            await webView2DRender.EnsureCoreWebView2Async();
+            await webView3DRender.EnsureCoreWebView2Async();
             await webViewAnimation.EnsureCoreWebView2Async();
             await webViewSummaryV.EnsureCoreWebView2Async();
         }
@@ -190,7 +190,7 @@ namespace SiliFish.UI.Controls
         private void Wait()
         {
             while (webViewPlot.Tag == null ||
-                webView2DModel.Tag == null || webView3DModel.Tag == null ||
+                webView2DRender.Tag == null || webView3DRender.Tag == null ||
                 webViewAnimation.Tag == null || webViewSummaryV.Tag == null)
                 Application.DoEvents();
         }
@@ -711,19 +711,19 @@ namespace SiliFish.UI.Controls
 
         #endregion
 
-        #region 2D Model
-        private void Generate2DModel()
+        #region 2D Rendering
+        private void RenderIn2D()
         {
             if (RunningModel == null) return;
-            TwoDModelGenerator modelGenerator = new();
-            string html = modelGenerator.Create2DModel(RunningModel, RunningModel.CellPools, (int)webView2DModel.Width, webView2DModel.Height,
+            TwoDRenderer modelGenerator = new();
+            string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
-            webView2DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+            webView2DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
 
         }
-        private void btnGenerate2DModel_Click(object sender, EventArgs e)
+        private void btn2DRender_Click(object sender, EventArgs e)
         {
-            Generate2DModel();
+            RenderIn2D();
         }
 
         private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -732,8 +732,8 @@ namespace SiliFish.UI.Controls
             {
                 if (saveFileHTML.ShowDialog() == DialogResult.OK)
                 {
-                    string htmlHead = JsonSerializer.Deserialize<string>(await webView2DModel.ExecuteScriptAsync("document.head.outerHTML"));
-                    string htmlBody = JsonSerializer.Deserialize<string>(await webView2DModel.ExecuteScriptAsync("document.body.outerHTML"));
+                    string htmlHead = JsonSerializer.Deserialize<string>(await webView2DRender.ExecuteScriptAsync("document.head.outerHTML"));
+                    string htmlBody = JsonSerializer.Deserialize<string>(await webView2DRender.ExecuteScriptAsync("document.body.outerHTML"));
                     string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
                     File.WriteAllText(saveFileHTML.FileName, html);
                 }
@@ -747,17 +747,17 @@ namespace SiliFish.UI.Controls
         private async void cb2DChemJunc_CheckedChanged(object sender, EventArgs e)
         {
             if (cb2DChemJunc.Checked)
-                await webView2DModel.ExecuteScriptAsync("ShowChemJunc();");
+                await webView2DRender.ExecuteScriptAsync("ShowChemJunc();");
             else
-                await webView2DModel.ExecuteScriptAsync("HideChemJunc();");
+                await webView2DRender.ExecuteScriptAsync("HideChemJunc();");
         }
 
         private async void cb2DGapJunc_CheckedChanged(object sender, EventArgs e)
         {
             if (cb2DGapJunc.Checked)
-                await webView2DModel.ExecuteScriptAsync("ShowGapJunc();");
+                await webView2DRender.ExecuteScriptAsync("ShowGapJunc();");
             else
-                await webView2DModel.ExecuteScriptAsync("HideGapJunc();");
+                await webView2DRender.ExecuteScriptAsync("HideGapJunc();");
         }
         private void cb2DLegend_CheckedChanged(object sender, EventArgs e)
         {
@@ -765,17 +765,17 @@ namespace SiliFish.UI.Controls
         }
         #endregion
 
-        #region 3D Model
+        #region 3D Rendering
 
-        private void Generate3DModel()
+        private void RenderIn3D()
         {
             try
             {
-                ThreeDModelGenerator threeDModelGenerator = new();
-                string html = threeDModelGenerator.Create3DModel(RunningModel, RunningModel.CellPools,
+                ThreeDRenderer threeDRenderer = new();
+                string html = threeDRenderer.RenderIn3D(RunningModel, RunningModel.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
-                webView3DModel.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+                webView3DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             }
             catch (Exception ex)
             {
@@ -783,9 +783,9 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void btnGenerate3DModel_Click(object sender, EventArgs e)
+        private void btn3DRender_Click(object sender, EventArgs e)
         {
-            Generate3DModel();
+            RenderIn3D();
         }
         private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
         {
@@ -797,7 +797,7 @@ namespace SiliFish.UI.Controls
                 List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
                 func = $"SetSomites([{string.Join(',', somites)}]);";
             }
-            await webView3DModel.ExecuteScriptAsync(func);
+            await webView3DRender.ExecuteScriptAsync(func);
         }
 
         private string lastSomiteSelection;
@@ -813,7 +813,7 @@ namespace SiliFish.UI.Controls
             {
                 List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
                 string func = $"SetSomites([{string.Join(',', somites)}]);";
-                await webView3DModel.ExecuteScriptAsync(func);
+                await webView3DRender.ExecuteScriptAsync(func);
             }
         }
         private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -822,8 +822,8 @@ namespace SiliFish.UI.Controls
             {
                 if (saveFileHTML.ShowDialog() == DialogResult.OK)
                 {
-                    string htmlHead = JsonSerializer.Deserialize<string>(await webView3DModel.ExecuteScriptAsync("document.head.outerHTML"));
-                    string htmlBody = JsonSerializer.Deserialize<string>(await webView3DModel.ExecuteScriptAsync("document.body.outerHTML"));
+                    string htmlHead = JsonSerializer.Deserialize<string>(await webView3DRender.ExecuteScriptAsync("document.head.outerHTML"));
+                    string htmlBody = JsonSerializer.Deserialize<string>(await webView3DRender.ExecuteScriptAsync("document.body.outerHTML"));
                     string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
                     File.WriteAllText(saveFileHTML.FileName, html);
                 }
@@ -837,17 +837,17 @@ namespace SiliFish.UI.Controls
         private async void cb3DChemJunc_CheckedChanged(object sender, EventArgs e)
         {
             if (cb3DChemJunc.Checked)
-                await webView3DModel.ExecuteScriptAsync("ShowChemJunc();");
+                await webView3DRender.ExecuteScriptAsync("ShowChemJunc();");
             else
-                await webView3DModel.ExecuteScriptAsync("HideChemJunc();");
+                await webView3DRender.ExecuteScriptAsync("HideChemJunc();");
         }
 
         private async void cb3DGapJunc_CheckedChanged(object sender, EventArgs e)
         {
             if (cb3DGapJunc.Checked)
-                await webView3DModel.ExecuteScriptAsync("ShowGapJunc();");
+                await webView3DRender.ExecuteScriptAsync("ShowGapJunc();");
             else
-                await webView3DModel.ExecuteScriptAsync("HideGapJunc();");
+                await webView3DRender.ExecuteScriptAsync("HideGapJunc();");
         }
         private void cb3DLegend_CheckedChanged(object sender, EventArgs e)
         {
@@ -857,29 +857,29 @@ namespace SiliFish.UI.Controls
         private async void dd3DViewpoint_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dd3DViewpoint.Text == "Dorsal view")
-                await webView3DModel.ExecuteScriptAsync("DorsalView();");
+                await webView3DRender.ExecuteScriptAsync("DorsalView();");
             else if (dd3DViewpoint.Text == "Ventral view")
-                await webView3DModel.ExecuteScriptAsync("VentralView();");
+                await webView3DRender.ExecuteScriptAsync("VentralView();");
             else if (dd3DViewpoint.Text == "Rostral view")
-                await webView3DModel.ExecuteScriptAsync("RostralView();");
+                await webView3DRender.ExecuteScriptAsync("RostralView();");
             else if (dd3DViewpoint.Text == "Caudal view")
-                await webView3DModel.ExecuteScriptAsync("CaudalView();");
+                await webView3DRender.ExecuteScriptAsync("CaudalView();");
             else if (dd3DViewpoint.Text == "Lateral view (left)")
-                await webView3DModel.ExecuteScriptAsync("LateralLeftView();");
+                await webView3DRender.ExecuteScriptAsync("LateralLeftView();");
             else if (dd3DViewpoint.Text == "Lateral view (right)")
-                await webView3DModel.ExecuteScriptAsync("LateralRightView();");
+                await webView3DRender.ExecuteScriptAsync("LateralRightView();");
             else
-                await webView3DModel.ExecuteScriptAsync("FreeView();");
+                await webView3DRender.ExecuteScriptAsync("FreeView();");
         }
 
         private async void btnZoomOut_Click(object sender, EventArgs e)
         {
-            await webView3DModel.ExecuteScriptAsync("ZoomOut();");
+            await webView3DRender.ExecuteScriptAsync("ZoomOut();");
         }
 
         private async void btnZoomIn_Click(object sender, EventArgs e)
         {
-            await webView3DModel.ExecuteScriptAsync("ZoomIn();");
+            await webView3DRender.ExecuteScriptAsync("ZoomIn();");
         }
         #endregion
 

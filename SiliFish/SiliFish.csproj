@@ -31,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\2DModel.html" />
-    <None Remove="Resources\3DModel.html" />
+    <None Remove="Resources\2DRender.html" />
     <None Remove="Resources\3DModel2.html" />
+    <None Remove="Resources\3DRender.html" />
     <None Remove="Resources\Animation.html" />
     <None Remove="Resources\Animation.TimePoint.js" />
     <None Remove="Resources\Animation.TimeSeries.js" />
@@ -58,9 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\2DModel.html" />
+    <EmbeddedResource Include="Resources\2DRender.html" />
     <EmbeddedResource Include="Resources\3d-force-graph.min.js" />
-    <EmbeddedResource Include="Resources\3DModel.html" />
+    <EmbeddedResource Include="Resources\3DRender.html" />
     <EmbeddedResource Include="Resources\Animation.html" />
     <EmbeddedResource Include="Resources\d3-dsv.min.js" />
     <EmbeddedResource Include="Resources\DorsalHead.png" />

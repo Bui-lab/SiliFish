@@ -18,11 +18,11 @@ namespace SiliFish.UI
             //lVersionWindows.Text = string.Format("UI version: {0}.{1}, built on {2}", versionUI.Major, versionUI.Minor, dateUI.ToString("d"));
             Version versionEngine = typeof(RunningModel).Assembly.GetName().Version;
             lVersionEngine.Text = string.Format("Engine version: {0}.{1}, built on {2}", versionEngine.Major, versionEngine.Minor, dateEngine.ToString("d"));
-            eCredits.Rtf = @"{\rtf1\pc \i Sili\i0 Fish uses some 3rd party tools. Corresponding licences are below:"+
+            eCredits.Rtf = @"{\rtf1\pc \i Sili\i0 Fish uses some 3rd party tools. Corresponding licences are below:" +
                             @"\par" +
                             @"\par \b GeneticSharp \b0 (genetic algorithms in ‘Cellular Dynamics’ tool)" +
-                            @"\par https://github.com/giacomelli/GeneticSharp/blob/master/LICENSE"+
-                            @"\par"+
+                            @"\par https://github.com/giacomelli/GeneticSharp/blob/master/LICENSE" +
+                            @"\par" +
                             @"\par \b 3d-force-graph \b0(generating 3D models)" +
                             @"\par https://github.com/vasturiano/3d-force-graph/blob/master/LICENSE" +
                             @"\par" +
@@ -52,7 +52,7 @@ namespace SiliFish.UI
                             @"\par \b Lateral brain view in 3D models modified from:\b0" +
                             @"\par https://www.flickr.com/photos/zeissmicro/22984668685" +
                             @"\par \b Dorsal brain view in 3D models modified from:\b0" +
-                            @"\par https://www.flickr.com/photos/nihgov/25413283437}"; 
+                            @"\par https://www.flickr.com/photos/nihgov/25413283437}";
         }
         public void SetTimer(int ms)
         {

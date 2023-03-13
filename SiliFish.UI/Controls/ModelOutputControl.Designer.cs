@@ -72,21 +72,21 @@
             lms2 = new Label();
             lPlotPlot = new Label();
             ddPlot = new ComboBox();
-            t2DModel = new TabPage();
+            t2DRender = new TabPage();
             gr2DLegend = new GroupBox();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            webView2DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
-            p2DModel = new Panel();
+            webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
+            p2DRender = new Panel();
             cb2DLegend = new CheckBox();
             cb2DGapJunc = new CheckBox();
             cb2DChemJunc = new CheckBox();
             pLine2D = new Panel();
             linkSaveHTML2D = new LinkLabel();
-            btnGenerate2DModel = new Button();
-            t3DModel = new TabPage();
+            btn2DRender = new Button();
+            t3DRender = new TabPage();
             p3DViewing = new Panel();
             dd3DViewpoint = new ComboBox();
             btnZoomIn = new Button();
@@ -96,8 +96,8 @@
             legendOutgoing = new Label();
             legendGap = new Label();
             legendIncoming = new Label();
-            webView3DModel = new Microsoft.Web.WebView2.WinForms.WebView2();
-            p3DModel = new Panel();
+            webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
+            p3DRender = new Panel();
             cb3DLegend = new CheckBox();
             cb3DGapJunc = new CheckBox();
             cb3DChemJunc = new CheckBox();
@@ -105,7 +105,7 @@
             cb3DAllSomites = new CheckBox();
             pLine3D = new Panel();
             linkSaveHTML3D = new LinkLabel();
-            btnGenerate3DModel = new Button();
+            btn3DRender = new Button();
             tMNKinematics = new TabPage();
             splitKinematics = new SplitContainer();
             webViewSummaryV = new Microsoft.Web.WebView2.WinForms.WebView2();
@@ -168,15 +168,15 @@
             ((System.ComponentModel.ISupportInitialize)ePlotWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).BeginInit();
-            t2DModel.SuspendLayout();
+            t2DRender.SuspendLayout();
             gr2DLegend.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView2DModel).BeginInit();
-            p2DModel.SuspendLayout();
-            t3DModel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
+            p2DRender.SuspendLayout();
+            t3DRender.SuspendLayout();
             p3DViewing.SuspendLayout();
             gr3DLegend.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView3DModel).BeginInit();
-            p3DModel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView3DRender).BeginInit();
+            p3DRender.SuspendLayout();
             tMNKinematics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitKinematics).BeginInit();
             splitKinematics.Panel1.SuspendLayout();
@@ -198,8 +198,8 @@
             // tabOutputs
             // 
             tabOutputs.Controls.Add(tPlot);
-            tabOutputs.Controls.Add(t2DModel);
-            tabOutputs.Controls.Add(t3DModel);
+            tabOutputs.Controls.Add(t2DRender);
+            tabOutputs.Controls.Add(t3DRender);
             tabOutputs.Controls.Add(tMNKinematics);
             tabOutputs.Controls.Add(tAnimation);
             tabOutputs.Dock = DockStyle.Fill;
@@ -683,17 +683,17 @@
             ddPlot.DropDown += ddPlot_DropDown;
             ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
             // 
-            // t2DModel
+            // t2DRender
             // 
-            t2DModel.Controls.Add(gr2DLegend);
-            t2DModel.Controls.Add(webView2DModel);
-            t2DModel.Controls.Add(p2DModel);
-            t2DModel.Location = new Point(4, 24);
-            t2DModel.Name = "t2DModel";
-            t2DModel.Size = new Size(694, 767);
-            t2DModel.TabIndex = 2;
-            t2DModel.Text = "2D Model";
-            t2DModel.UseVisualStyleBackColor = true;
+            t2DRender.Controls.Add(gr2DLegend);
+            t2DRender.Controls.Add(webView2DRender);
+            t2DRender.Controls.Add(p2DRender);
+            t2DRender.Location = new Point(4, 24);
+            t2DRender.Name = "t2DRender";
+            t2DRender.Size = new Size(694, 767);
+            t2DRender.TabIndex = 2;
+            t2DRender.Text = "2D Rendering";
+            t2DRender.UseVisualStyleBackColor = true;
             // 
             // gr2DLegend
             // 
@@ -749,35 +749,35 @@
             label4.TabIndex = 51;
             label4.Text = "Incoming Projections";
             // 
-            // webView2DModel
+            // webView2DRender
             // 
-            webView2DModel.AllowExternalDrop = true;
-            webView2DModel.BackColor = Color.White;
-            webView2DModel.CreationProperties = null;
-            webView2DModel.DefaultBackgroundColor = Color.White;
-            webView2DModel.Dock = DockStyle.Fill;
-            webView2DModel.Location = new Point(0, 40);
-            webView2DModel.Name = "webView2DModel";
-            webView2DModel.Padding = new Padding(10);
-            webView2DModel.Size = new Size(694, 727);
-            webView2DModel.TabIndex = 1;
-            webView2DModel.ZoomFactor = 1D;
-            webView2DModel.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
+            webView2DRender.AllowExternalDrop = true;
+            webView2DRender.BackColor = Color.White;
+            webView2DRender.CreationProperties = null;
+            webView2DRender.DefaultBackgroundColor = Color.White;
+            webView2DRender.Dock = DockStyle.Fill;
+            webView2DRender.Location = new Point(0, 40);
+            webView2DRender.Name = "webView2DRender";
+            webView2DRender.Padding = new Padding(10);
+            webView2DRender.Size = new Size(694, 727);
+            webView2DRender.TabIndex = 1;
+            webView2DRender.ZoomFactor = 1D;
+            webView2DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
-            // p2DModel
+            // p2DRender
             // 
-            p2DModel.BackColor = Color.FromArgb(236, 239, 241);
-            p2DModel.Controls.Add(cb2DLegend);
-            p2DModel.Controls.Add(cb2DGapJunc);
-            p2DModel.Controls.Add(cb2DChemJunc);
-            p2DModel.Controls.Add(pLine2D);
-            p2DModel.Controls.Add(linkSaveHTML2D);
-            p2DModel.Controls.Add(btnGenerate2DModel);
-            p2DModel.Dock = DockStyle.Top;
-            p2DModel.Location = new Point(0, 0);
-            p2DModel.Name = "p2DModel";
-            p2DModel.Size = new Size(694, 40);
-            p2DModel.TabIndex = 2;
+            p2DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p2DRender.Controls.Add(cb2DLegend);
+            p2DRender.Controls.Add(cb2DGapJunc);
+            p2DRender.Controls.Add(cb2DChemJunc);
+            p2DRender.Controls.Add(pLine2D);
+            p2DRender.Controls.Add(linkSaveHTML2D);
+            p2DRender.Controls.Add(btn2DRender);
+            p2DRender.Dock = DockStyle.Top;
+            p2DRender.Location = new Point(0, 0);
+            p2DRender.Name = "p2DRender";
+            p2DRender.Size = new Size(694, 40);
+            p2DRender.TabIndex = 2;
             // 
             // cb2DLegend
             // 
@@ -839,32 +839,32 @@
             linkSaveHTML2D.TextAlign = ContentAlignment.MiddleRight;
             linkSaveHTML2D.LinkClicked += linkSaveHTML2D_LinkClicked;
             // 
-            // btnGenerate2DModel
+            // btn2DRender
             // 
-            btnGenerate2DModel.BackColor = Color.FromArgb(96, 125, 139);
-            btnGenerate2DModel.FlatAppearance.BorderColor = Color.LightGray;
-            btnGenerate2DModel.FlatStyle = FlatStyle.Flat;
-            btnGenerate2DModel.ForeColor = Color.White;
-            btnGenerate2DModel.Location = new Point(8, 8);
-            btnGenerate2DModel.Name = "btnGenerate2DModel";
-            btnGenerate2DModel.Size = new Size(120, 24);
-            btnGenerate2DModel.TabIndex = 22;
-            btnGenerate2DModel.Text = "Generate 2D Model";
-            btnGenerate2DModel.UseVisualStyleBackColor = false;
-            btnGenerate2DModel.Click += btnGenerate2DModel_Click;
+            btn2DRender.BackColor = Color.FromArgb(96, 125, 139);
+            btn2DRender.FlatAppearance.BorderColor = Color.LightGray;
+            btn2DRender.FlatStyle = FlatStyle.Flat;
+            btn2DRender.ForeColor = Color.White;
+            btn2DRender.Location = new Point(8, 8);
+            btn2DRender.Name = "btn2DRender";
+            btn2DRender.Size = new Size(120, 24);
+            btn2DRender.TabIndex = 22;
+            btn2DRender.Text = "Render";
+            btn2DRender.UseVisualStyleBackColor = false;
+            btn2DRender.Click += btn2DRender_Click;
             // 
-            // t3DModel
+            // t3DRender
             // 
-            t3DModel.Controls.Add(p3DViewing);
-            t3DModel.Controls.Add(gr3DLegend);
-            t3DModel.Controls.Add(webView3DModel);
-            t3DModel.Controls.Add(p3DModel);
-            t3DModel.Location = new Point(4, 24);
-            t3DModel.Name = "t3DModel";
-            t3DModel.Size = new Size(694, 767);
-            t3DModel.TabIndex = 0;
-            t3DModel.Text = "3D Model";
-            t3DModel.UseVisualStyleBackColor = true;
+            t3DRender.Controls.Add(p3DViewing);
+            t3DRender.Controls.Add(gr3DLegend);
+            t3DRender.Controls.Add(webView3DRender);
+            t3DRender.Controls.Add(p3DRender);
+            t3DRender.Location = new Point(4, 24);
+            t3DRender.Name = "t3DRender";
+            t3DRender.Size = new Size(694, 767);
+            t3DRender.TabIndex = 0;
+            t3DRender.Text = "3D Rendering";
+            t3DRender.UseVisualStyleBackColor = true;
             // 
             // p3DViewing
             // 
@@ -967,38 +967,38 @@
             legendIncoming.TabIndex = 51;
             legendIncoming.Text = "Incoming Projections";
             // 
-            // webView3DModel
+            // webView3DRender
             // 
-            webView3DModel.AllowExternalDrop = true;
-            webView3DModel.BackColor = Color.White;
-            webView3DModel.CreationProperties = null;
-            webView3DModel.DefaultBackgroundColor = Color.White;
-            webView3DModel.Dock = DockStyle.Fill;
-            webView3DModel.Location = new Point(0, 40);
-            webView3DModel.Name = "webView3DModel";
-            webView3DModel.Padding = new Padding(10);
-            webView3DModel.Size = new Size(694, 727);
-            webView3DModel.TabIndex = 0;
-            webView3DModel.ZoomFactor = 1D;
-            webView3DModel.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
+            webView3DRender.AllowExternalDrop = true;
+            webView3DRender.BackColor = Color.White;
+            webView3DRender.CreationProperties = null;
+            webView3DRender.DefaultBackgroundColor = Color.White;
+            webView3DRender.Dock = DockStyle.Fill;
+            webView3DRender.Location = new Point(0, 40);
+            webView3DRender.Name = "webView3DRender";
+            webView3DRender.Padding = new Padding(10);
+            webView3DRender.Size = new Size(694, 727);
+            webView3DRender.TabIndex = 0;
+            webView3DRender.ZoomFactor = 1D;
+            webView3DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
-            // p3DModel
+            // p3DRender
             // 
-            p3DModel.BackColor = Color.FromArgb(236, 239, 241);
-            p3DModel.Controls.Add(cb3DLegend);
-            p3DModel.Controls.Add(cb3DGapJunc);
-            p3DModel.Controls.Add(cb3DChemJunc);
-            p3DModel.Controls.Add(e3DSomiteRange);
-            p3DModel.Controls.Add(cb3DAllSomites);
-            p3DModel.Controls.Add(pLine3D);
-            p3DModel.Controls.Add(linkSaveHTML3D);
-            p3DModel.Controls.Add(btnGenerate3DModel);
-            p3DModel.Dock = DockStyle.Top;
-            p3DModel.Location = new Point(0, 0);
-            p3DModel.Name = "p3DModel";
-            p3DModel.Padding = new Padding(0, 0, 5, 0);
-            p3DModel.Size = new Size(694, 40);
-            p3DModel.TabIndex = 3;
+            p3DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p3DRender.Controls.Add(cb3DLegend);
+            p3DRender.Controls.Add(cb3DGapJunc);
+            p3DRender.Controls.Add(cb3DChemJunc);
+            p3DRender.Controls.Add(e3DSomiteRange);
+            p3DRender.Controls.Add(cb3DAllSomites);
+            p3DRender.Controls.Add(pLine3D);
+            p3DRender.Controls.Add(linkSaveHTML3D);
+            p3DRender.Controls.Add(btn3DRender);
+            p3DRender.Dock = DockStyle.Top;
+            p3DRender.Location = new Point(0, 0);
+            p3DRender.Name = "p3DRender";
+            p3DRender.Padding = new Padding(0, 0, 5, 0);
+            p3DRender.Size = new Size(694, 40);
+            p3DRender.TabIndex = 3;
             // 
             // cb3DLegend
             // 
@@ -1083,19 +1083,19 @@
             linkSaveHTML3D.TextAlign = ContentAlignment.MiddleRight;
             linkSaveHTML3D.LinkClicked += linkSaveHTML3D_LinkClicked;
             // 
-            // btnGenerate3DModel
+            // btn3DRender
             // 
-            btnGenerate3DModel.BackColor = Color.FromArgb(96, 125, 139);
-            btnGenerate3DModel.FlatAppearance.BorderColor = Color.LightGray;
-            btnGenerate3DModel.FlatStyle = FlatStyle.Flat;
-            btnGenerate3DModel.ForeColor = Color.White;
-            btnGenerate3DModel.Location = new Point(8, 8);
-            btnGenerate3DModel.Name = "btnGenerate3DModel";
-            btnGenerate3DModel.Size = new Size(120, 24);
-            btnGenerate3DModel.TabIndex = 26;
-            btnGenerate3DModel.Text = "Generate 3D Model";
-            btnGenerate3DModel.UseVisualStyleBackColor = false;
-            btnGenerate3DModel.Click += btnGenerate3DModel_Click;
+            btn3DRender.BackColor = Color.FromArgb(96, 125, 139);
+            btn3DRender.FlatAppearance.BorderColor = Color.LightGray;
+            btn3DRender.FlatStyle = FlatStyle.Flat;
+            btn3DRender.ForeColor = Color.White;
+            btn3DRender.Location = new Point(8, 8);
+            btn3DRender.Name = "btn3DRender";
+            btn3DRender.Size = new Size(120, 24);
+            btn3DRender.TabIndex = 26;
+            btn3DRender.Text = "Render";
+            btn3DRender.UseVisualStyleBackColor = false;
+            btn3DRender.Click += btn3DRender_Click;
             // 
             // tMNKinematics
             // 
@@ -1547,17 +1547,17 @@
             ((System.ComponentModel.ISupportInitialize)ePlotWidth).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).EndInit();
-            t2DModel.ResumeLayout(false);
+            t2DRender.ResumeLayout(false);
             gr2DLegend.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView2DModel).EndInit();
-            p2DModel.ResumeLayout(false);
-            p2DModel.PerformLayout();
-            t3DModel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webView2DRender).EndInit();
+            p2DRender.ResumeLayout(false);
+            p2DRender.PerformLayout();
+            t3DRender.ResumeLayout(false);
             p3DViewing.ResumeLayout(false);
             gr3DLegend.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView3DModel).EndInit();
-            p3DModel.ResumeLayout(false);
-            p3DModel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)webView3DRender).EndInit();
+            p3DRender.ResumeLayout(false);
+            p3DRender.PerformLayout();
             tMNKinematics.ResumeLayout(false);
             splitKinematics.Panel1.ResumeLayout(false);
             splitKinematics.Panel2.ResumeLayout(false);
@@ -1622,13 +1622,13 @@
         private Label lms2;
         private Label lPlotPlot;
         private ComboBox ddPlot;
-        private TabPage t2DModel;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView2DModel;
-        private Panel p2DModel;
+        private TabPage t2DRender;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView2DRender;
+        private Panel p2DRender;
         private Panel pLine2D;
         private LinkLabel linkSaveHTML2D;
-        private Button btnGenerate2DModel;
-        private TabPage t3DModel;
+        private Button btn2DRender;
+        private TabPage t3DRender;
         private Panel p3DViewing;
         private ComboBox dd3DViewpoint;
         private Button btnZoomIn;
@@ -1638,8 +1638,8 @@
         private Label legendOutgoing;
         private Label legendGap;
         private Label legendIncoming;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView3DModel;
-        private Panel p3DModel;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView3DRender;
+        private Panel p3DRender;
         private CheckBox cb3DLegend;
         private CheckBox cb3DGapJunc;
         private CheckBox cb3DChemJunc;
@@ -1647,7 +1647,7 @@
         private CheckBox cb3DAllSomites;
         private Panel pLine3D;
         private LinkLabel linkSaveHTML3D;
-        private Button btnGenerate3DModel;
+        private Button btn3DRender;
         private TabPage tMNKinematics;
         private SplitContainer splitKinematics;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewSummaryV;

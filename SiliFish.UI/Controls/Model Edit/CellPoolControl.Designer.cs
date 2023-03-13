@@ -34,7 +34,7 @@ namespace SiliFish.UI.Controls
             this.eGroupName = new System.Windows.Forms.TextBox();
             this.lNumOfCells = new System.Windows.Forms.Label();
             this.eNumOfCells = new System.Windows.Forms.NumericUpDown();
-            this.l2DModelColumn = new System.Windows.Forms.Label();
+            this.l2DRenderColumn = new System.Windows.Forms.Label();
             this.e2DColumn = new System.Windows.Forms.NumericUpDown();
             this.ddCellType = new System.Windows.Forms.ComboBox();
             this.lCellType = new System.Windows.Forms.Label();
@@ -156,14 +156,14 @@ namespace SiliFish.UI.Controls
             0,
             0});
             // 
-            // l2DModelColumn
+            // l2DRenderColumn
             // 
-            this.l2DModelColumn.AutoSize = true;
-            this.l2DModelColumn.Location = new System.Drawing.Point(7, 172);
-            this.l2DModelColumn.Name = "l2DModelColumn";
-            this.l2DModelColumn.Size = new System.Drawing.Size(104, 15);
-            this.l2DModelColumn.TabIndex = 13;
-            this.l2DModelColumn.Text = "2D Model Column";
+            this.l2DRenderColumn.AutoSize = true;
+            this.l2DRenderColumn.Location = new System.Drawing.Point(7, 172);
+            this.l2DRenderColumn.Name = "l2DRenderColumn";
+            this.l2DRenderColumn.Size = new System.Drawing.Size(104, 15);
+            this.l2DRenderColumn.TabIndex = 13;
+            this.l2DRenderColumn.Text = "2D Rendering Column";
             // 
             // e2DColumn
             // 
@@ -176,7 +176,7 @@ namespace SiliFish.UI.Controls
             this.e2DColumn.Name = "e2DColumn";
             this.e2DColumn.Size = new System.Drawing.Size(64, 23);
             this.e2DColumn.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.e2DColumn, "Used for 2D models or predefined 3D models");
+            this.toolTip1.SetToolTip(this.e2DColumn, "Used for 2D renderings or predefined 3D models");
             this.e2DColumn.Value = new decimal(new int[] {
             1,
             0,
@@ -266,7 +266,7 @@ namespace SiliFish.UI.Controls
             this.pMainInfo.Controls.Add(this.ddBodyPosition);
             this.pMainInfo.Controls.Add(this.eGroupName);
             this.pMainInfo.Controls.Add(this.lBodyPosition);
-            this.pMainInfo.Controls.Add(this.l2DModelColumn);
+            this.pMainInfo.Controls.Add(this.l2DRenderColumn);
             this.pMainInfo.Controls.Add(this.eSomiteRange);
             this.pMainInfo.Controls.Add(this.e2DColumn);
             this.pMainInfo.Controls.Add(this.cbAllSomites);
@@ -831,7 +831,7 @@ namespace SiliFish.UI.Controls
         private TextBox eGroupName;
         private Label lNumOfCells;
         private NumericUpDown eNumOfCells;
-        private Label l2DModelColumn;
+        private Label l2DRenderColumn;
         private NumericUpDown e2DColumn;
         private ComboBox ddCellType;
         private Label lCellType;

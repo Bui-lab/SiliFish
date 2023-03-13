@@ -30,591 +30,552 @@ namespace SiliFish.UI
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.pTop = new System.Windows.Forms.Panel();
-            this.btnSettings = new System.Windows.Forms.Button();
-            this.btnAbout = new System.Windows.Forms.Button();
-            this.btnCellularDynamics = new System.Windows.Forms.Button();
-            this.linkBrowseToTempFolder = new System.Windows.Forms.LinkLabel();
-            this.linkOpenOutputFolder = new System.Windows.Forms.LinkLabel();
-            this.linkLoadModel = new System.Windows.Forms.LinkLabel();
-            this.linkClearModel = new System.Windows.Forms.LinkLabel();
-            this.linkSaveModel = new System.Windows.Forms.LinkLabel();
-            this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.modelControl = new SiliFish.UI.Controls.ModelControl();
-            this.pGenerateModel = new System.Windows.Forms.Panel();
-            this.btnGenerateModel = new System.Windows.Forms.Button();
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-            this.pModelControlTop = new System.Windows.Forms.Panel();
-            this.pSimulation = new System.Windows.Forms.Panel();
-            this.ldtEuler = new System.Windows.Forms.Label();
-            this.edtEuler = new System.Windows.Forms.NumericUpDown();
-            this.eSkip = new System.Windows.Forms.NumericUpDown();
-            this.lSkip = new System.Windows.Forms.Label();
-            this.edt = new System.Windows.Forms.NumericUpDown();
-            this.eTimeEnd = new System.Windows.Forms.NumericUpDown();
-            this.ldt = new System.Windows.Forms.Label();
-            this.lRunTime = new System.Windows.Forms.Label();
-            this.linkExportOutput = new System.Windows.Forms.LinkLabel();
-            this.progressBarRun = new System.Windows.Forms.ProgressBar();
-            this.btnRun = new System.Windows.Forms.Button();
-            this.lTimeEnd = new System.Windows.Forms.Label();
-            this.lRunParameters = new System.Windows.Forms.Label();
-            this.modelOutputControl = new SiliFish.UI.Controls.ModelOutputControl();
-            this.timerRun = new System.Windows.Forms.Timer(this.components);
-            this.saveFileHTML = new System.Windows.Forms.SaveFileDialog();
-            this.saveFileJson = new System.Windows.Forms.SaveFileDialog();
-            this.openFileJson = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileCSV = new System.Windows.Forms.SaveFileDialog();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.saveFileText = new System.Windows.Forms.SaveFileDialog();
-            this.saveFileImage = new System.Windows.Forms.SaveFileDialog();
-            this.pDistinguisher = new System.Windows.Forms.Panel();
-            this.pDistinguisherTop = new System.Windows.Forms.Panel();
-            this.pDistinguisherRight = new System.Windows.Forms.Panel();
-            this.pDistinguisherBottom = new System.Windows.Forms.Panel();
-            this.linkNewModel = new System.Windows.Forms.LinkLabel();
-            this.pTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
-            this.splitMain.Panel1.SuspendLayout();
-            this.splitMain.Panel2.SuspendLayout();
-            this.splitMain.SuspendLayout();
-            this.pGenerateModel.SuspendLayout();
-            this.pModelControlTop.SuspendLayout();
-            this.pSimulation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSkip)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).BeginInit();
-            this.SuspendLayout();
+            pTop = new Panel();
+            btnSettings = new Button();
+            btnAbout = new Button();
+            btnCellularDynamics = new Button();
+            linkBrowseToTempFolder = new LinkLabel();
+            linkOpenOutputFolder = new LinkLabel();
+            linkLoadModel = new LinkLabel();
+            linkClearModel = new LinkLabel();
+            linkSaveModel = new LinkLabel();
+            splitMain = new SplitContainer();
+            modelControl = new ModelControl();
+            pGenerateModel = new Panel();
+            btnGenerateModel = new Button();
+            linkLabel4 = new LinkLabel();
+            pModelControlTop = new Panel();
+            linkNewModel = new LinkLabel();
+            pSimulation = new Panel();
+            ldtEuler = new Label();
+            edtEuler = new NumericUpDown();
+            eSkip = new NumericUpDown();
+            lSkip = new Label();
+            edt = new NumericUpDown();
+            eTimeEnd = new NumericUpDown();
+            ldt = new Label();
+            lRunTime = new Label();
+            linkExportOutput = new LinkLabel();
+            progressBarRun = new ProgressBar();
+            btnRun = new Button();
+            lTimeEnd = new Label();
+            lRunParameters = new Label();
+            modelOutputControl = new ModelOutputControl();
+            timerRun = new System.Windows.Forms.Timer(components);
+            saveFileHTML = new SaveFileDialog();
+            saveFileJson = new SaveFileDialog();
+            openFileJson = new OpenFileDialog();
+            saveFileCSV = new SaveFileDialog();
+            toolTip = new ToolTip(components);
+            saveFileText = new SaveFileDialog();
+            saveFileImage = new SaveFileDialog();
+            pDistinguisher = new Panel();
+            pDistinguisherTop = new Panel();
+            pDistinguisherRight = new Panel();
+            pDistinguisherBottom = new Panel();
+            pTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
+            splitMain.Panel1.SuspendLayout();
+            splitMain.Panel2.SuspendLayout();
+            splitMain.SuspendLayout();
+            pGenerateModel.SuspendLayout();
+            pModelControlTop.SuspendLayout();
+            pSimulation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)edtEuler).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)eSkip).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)edt).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)eTimeEnd).BeginInit();
+            SuspendLayout();
             // 
             // pTop
             // 
-            this.pTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pTop.Controls.Add(this.btnSettings);
-            this.pTop.Controls.Add(this.btnAbout);
-            this.pTop.Controls.Add(this.btnCellularDynamics);
-            this.pTop.Controls.Add(this.linkBrowseToTempFolder);
-            this.pTop.Controls.Add(this.linkOpenOutputFolder);
-            this.pTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pTop.Location = new System.Drawing.Point(4, 4);
-            this.pTop.Name = "pTop";
-            this.pTop.Size = new System.Drawing.Size(1340, 40);
-            this.pTop.TabIndex = 3;
+            pTop.BorderStyle = BorderStyle.FixedSingle;
+            pTop.Controls.Add(btnSettings);
+            pTop.Controls.Add(btnAbout);
+            pTop.Controls.Add(btnCellularDynamics);
+            pTop.Controls.Add(linkBrowseToTempFolder);
+            pTop.Controls.Add(linkOpenOutputFolder);
+            pTop.Dock = DockStyle.Top;
+            pTop.Location = new Point(4, 4);
+            pTop.Name = "pTop";
+            pTop.Size = new Size(1340, 40);
+            pTop.TabIndex = 3;
             // 
             // btnSettings
             // 
-            this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSettings.AutoSize = true;
-            this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
-            this.btnSettings.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSettings.Location = new System.Drawing.Point(1200, 6);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(88, 27);
-            this.btnSettings.TabIndex = 25;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.UseVisualStyleBackColor = false;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            btnSettings.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSettings.AutoSize = true;
+            btnSettings.BackColor = Color.FromArgb(96, 125, 139);
+            btnSettings.FlatAppearance.BorderColor = Color.LightGray;
+            btnSettings.FlatStyle = FlatStyle.Flat;
+            btnSettings.ForeColor = Color.White;
+            btnSettings.Location = new Point(1200, 6);
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(88, 27);
+            btnSettings.TabIndex = 25;
+            btnSettings.Text = "Settings";
+            btnSettings.UseVisualStyleBackColor = false;
+            btnSettings.Click += btnSettings_Click;
             // 
             // btnAbout
             // 
-            this.btnAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAbout.AutoSize = true;
-            this.btnAbout.BackColor = System.Drawing.Color.Transparent;
-            this.btnAbout.Image = ((System.Drawing.Image)(resources.GetObject("btnAbout.Image")));
-            this.btnAbout.Location = new System.Drawing.Point(1294, 5);
-            this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(33, 30);
-            this.btnAbout.TabIndex = 24;
-            this.toolTip.SetToolTip(this.btnAbout, "About");
-            this.btnAbout.UseVisualStyleBackColor = false;
-            this.btnAbout.Click += new System.EventHandler(this.btnAbout_Click);
+            btnAbout.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnAbout.AutoSize = true;
+            btnAbout.BackColor = Color.Transparent;
+            btnAbout.Image = (Image)resources.GetObject("btnAbout.Image");
+            btnAbout.Location = new Point(1294, 5);
+            btnAbout.Name = "btnAbout";
+            btnAbout.Size = new Size(33, 30);
+            btnAbout.TabIndex = 24;
+            toolTip.SetToolTip(btnAbout, "About");
+            btnAbout.UseVisualStyleBackColor = false;
+            btnAbout.Click += btnAbout_Click;
             // 
             // btnCellularDynamics
             // 
-            this.btnCellularDynamics.AutoSize = true;
-            this.btnCellularDynamics.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
-            this.btnCellularDynamics.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnCellularDynamics.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCellularDynamics.ForeColor = System.Drawing.Color.White;
-            this.btnCellularDynamics.Location = new System.Drawing.Point(4, 6);
-            this.btnCellularDynamics.Name = "btnCellularDynamics";
-            this.btnCellularDynamics.Size = new System.Drawing.Size(120, 27);
-            this.btnCellularDynamics.TabIndex = 23;
-            this.btnCellularDynamics.Text = "Cellular Dynamics";
-            this.btnCellularDynamics.UseVisualStyleBackColor = false;
-            this.btnCellularDynamics.Click += new System.EventHandler(this.btnCellularDynamics_Click);
+            btnCellularDynamics.AutoSize = true;
+            btnCellularDynamics.BackColor = Color.FromArgb(96, 125, 139);
+            btnCellularDynamics.FlatAppearance.BorderColor = Color.LightGray;
+            btnCellularDynamics.FlatStyle = FlatStyle.Flat;
+            btnCellularDynamics.ForeColor = Color.White;
+            btnCellularDynamics.Location = new Point(4, 6);
+            btnCellularDynamics.Name = "btnCellularDynamics";
+            btnCellularDynamics.Size = new Size(120, 27);
+            btnCellularDynamics.TabIndex = 23;
+            btnCellularDynamics.Text = "Cellular Dynamics";
+            btnCellularDynamics.UseVisualStyleBackColor = false;
+            btnCellularDynamics.Click += btnCellularDynamics_Click;
             // 
             // linkBrowseToTempFolder
             // 
-            this.linkBrowseToTempFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkBrowseToTempFolder.AutoSize = true;
-            this.linkBrowseToTempFolder.ForeColor = System.Drawing.Color.White;
-            this.linkBrowseToTempFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkBrowseToTempFolder.Location = new System.Drawing.Point(1081, 13);
-            this.linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
-            this.linkBrowseToTempFolder.Size = new System.Drawing.Size(104, 15);
-            this.linkBrowseToTempFolder.TabIndex = 7;
-            this.linkBrowseToTempFolder.TabStop = true;
-            this.linkBrowseToTempFolder.Text = "Open Temp Folder";
-            this.toolTip.SetToolTip(this.linkBrowseToTempFolder, "The contents saved to the temp folder will be cleared on exit.");
-            this.linkBrowseToTempFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenTempFolder_LinkClicked);
+            linkBrowseToTempFolder.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkBrowseToTempFolder.AutoSize = true;
+            linkBrowseToTempFolder.ForeColor = Color.White;
+            linkBrowseToTempFolder.LinkColor = Color.FromArgb(64, 64, 64);
+            linkBrowseToTempFolder.Location = new Point(1081, 13);
+            linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
+            linkBrowseToTempFolder.Size = new Size(104, 15);
+            linkBrowseToTempFolder.TabIndex = 7;
+            linkBrowseToTempFolder.TabStop = true;
+            linkBrowseToTempFolder.Text = "Open Temp Folder";
+            toolTip.SetToolTip(linkBrowseToTempFolder, "The contents saved to the temp folder will be cleared on exit.");
+            linkBrowseToTempFolder.LinkClicked += linkOpenTempFolder_LinkClicked;
             // 
             // linkOpenOutputFolder
             // 
-            this.linkOpenOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkOpenOutputFolder.AutoSize = true;
-            this.linkOpenOutputFolder.ForeColor = System.Drawing.Color.White;
-            this.linkOpenOutputFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkOpenOutputFolder.Location = new System.Drawing.Point(962, 13);
-            this.linkOpenOutputFolder.Name = "linkOpenOutputFolder";
-            this.linkOpenOutputFolder.Size = new System.Drawing.Size(113, 15);
-            this.linkOpenOutputFolder.TabIndex = 6;
-            this.linkOpenOutputFolder.TabStop = true;
-            this.linkOpenOutputFolder.Text = "Open Output Folder";
-            this.toolTip.SetToolTip(this.linkOpenOutputFolder, "If there is a problem in creating html files, they will be saved in this folder.\r" +
-        "\n");
-            this.linkOpenOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkOpenOutputFolder_LinkClicked);
+            linkOpenOutputFolder.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkOpenOutputFolder.AutoSize = true;
+            linkOpenOutputFolder.ForeColor = Color.White;
+            linkOpenOutputFolder.LinkColor = Color.FromArgb(64, 64, 64);
+            linkOpenOutputFolder.Location = new Point(962, 13);
+            linkOpenOutputFolder.Name = "linkOpenOutputFolder";
+            linkOpenOutputFolder.Size = new Size(113, 15);
+            linkOpenOutputFolder.TabIndex = 6;
+            linkOpenOutputFolder.TabStop = true;
+            linkOpenOutputFolder.Text = "Open Output Folder";
+            toolTip.SetToolTip(linkOpenOutputFolder, "If there is a problem in creating html files, they will be saved in this folder.\r\n");
+            linkOpenOutputFolder.LinkClicked += linkOpenOutputFolder_LinkClicked;
             // 
             // linkLoadModel
             // 
-            this.linkLoadModel.AutoSize = true;
-            this.linkLoadModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadModel.Location = new System.Drawing.Point(11, 11);
-            this.linkLoadModel.Name = "linkLoadModel";
-            this.linkLoadModel.Size = new System.Drawing.Size(70, 15);
-            this.linkLoadModel.TabIndex = 4;
-            this.linkLoadModel.TabStop = true;
-            this.linkLoadModel.Text = "Load Model";
-            this.linkLoadModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadModel_LinkClicked);
+            linkLoadModel.AutoSize = true;
+            linkLoadModel.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLoadModel.Location = new Point(11, 11);
+            linkLoadModel.Name = "linkLoadModel";
+            linkLoadModel.Size = new Size(70, 15);
+            linkLoadModel.TabIndex = 4;
+            linkLoadModel.TabStop = true;
+            linkLoadModel.Text = "Load Model";
+            linkLoadModel.LinkClicked += linkLoadModel_LinkClicked;
             // 
             // linkClearModel
             // 
-            this.linkClearModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkClearModel.AutoSize = true;
-            this.linkClearModel.ForeColor = System.Drawing.Color.White;
-            this.linkClearModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkClearModel.Location = new System.Drawing.Point(459, 11);
-            this.linkClearModel.Name = "linkClearModel";
-            this.linkClearModel.Size = new System.Drawing.Size(71, 15);
-            this.linkClearModel.TabIndex = 5;
-            this.linkClearModel.TabStop = true;
-            this.linkClearModel.Text = "Clear Model";
-            this.linkClearModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkClearModel_LinkClicked);
+            linkClearModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkClearModel.AutoSize = true;
+            linkClearModel.ForeColor = Color.White;
+            linkClearModel.LinkColor = Color.FromArgb(64, 64, 64);
+            linkClearModel.Location = new Point(459, 11);
+            linkClearModel.Name = "linkClearModel";
+            linkClearModel.Size = new Size(71, 15);
+            linkClearModel.TabIndex = 5;
+            linkClearModel.TabStop = true;
+            linkClearModel.Text = "Clear Model";
+            linkClearModel.LinkClicked += linkClearModel_LinkClicked;
             // 
             // linkSaveModel
             // 
-            this.linkSaveModel.AutoSize = true;
-            this.linkSaveModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveModel.Location = new System.Drawing.Point(87, 11);
-            this.linkSaveModel.Name = "linkSaveModel";
-            this.linkSaveModel.Size = new System.Drawing.Size(68, 15);
-            this.linkSaveModel.TabIndex = 3;
-            this.linkSaveModel.TabStop = true;
-            this.linkSaveModel.Text = "Save Model";
-            this.linkSaveModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSaveModel_LinkClicked);
+            linkSaveModel.AutoSize = true;
+            linkSaveModel.LinkColor = Color.FromArgb(64, 64, 64);
+            linkSaveModel.Location = new Point(87, 11);
+            linkSaveModel.Name = "linkSaveModel";
+            linkSaveModel.Size = new Size(68, 15);
+            linkSaveModel.TabIndex = 3;
+            linkSaveModel.TabStop = true;
+            linkSaveModel.Text = "Save Model";
+            linkSaveModel.LinkClicked += linkSaveModel_LinkClicked;
             // 
             // splitMain
             // 
-            this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitMain.Location = new System.Drawing.Point(4, 44);
-            this.splitMain.Name = "splitMain";
+            splitMain.BorderStyle = BorderStyle.FixedSingle;
+            splitMain.Dock = DockStyle.Fill;
+            splitMain.Location = new Point(4, 44);
+            splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.modelControl);
-            this.splitMain.Panel1.Controls.Add(this.pGenerateModel);
-            this.splitMain.Panel1.Controls.Add(this.pModelControlTop);
-            this.splitMain.Panel1.Controls.Add(this.pSimulation);
+            splitMain.Panel1.Controls.Add(modelControl);
+            splitMain.Panel1.Controls.Add(pGenerateModel);
+            splitMain.Panel1.Controls.Add(pModelControlTop);
+            splitMain.Panel1.Controls.Add(pSimulation);
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.modelOutputControl);
-            this.splitMain.Size = new System.Drawing.Size(1340, 663);
-            this.splitMain.SplitterDistance = 545;
-            this.splitMain.TabIndex = 5;
+            splitMain.Panel2.Controls.Add(modelOutputControl);
+            splitMain.Size = new Size(1340, 663);
+            splitMain.SplitterDistance = 545;
+            splitMain.TabIndex = 5;
             // 
             // modelControl
             // 
-            this.modelControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.modelControl.Location = new System.Drawing.Point(0, 40);
-            this.modelControl.ModelUpdated = true;
-            this.modelControl.Name = "modelControl";
-            this.modelControl.Size = new System.Drawing.Size(543, 405);
-            this.modelControl.TabIndex = 2;
-            this.modelControl.ModelChanged += new System.EventHandler(this.modelControl_ModelChanged);
-            this.modelControl.PlotRequested += new System.EventHandler(this.modelControl_PlotRequested);
+            modelControl.Dock = DockStyle.Fill;
+            modelControl.Location = new Point(0, 40);
+            modelControl.ModelUpdated = true;
+            modelControl.Name = "modelControl";
+            modelControl.Size = new Size(543, 405);
+            modelControl.TabIndex = 2;
+            modelControl.ModelChanged += modelControl_ModelChanged;
+            modelControl.PlotRequested += modelControl_PlotRequested;
             // 
             // pGenerateModel
             // 
-            this.pGenerateModel.Controls.Add(this.btnGenerateModel);
-            this.pGenerateModel.Controls.Add(this.linkLabel4);
-            this.pGenerateModel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pGenerateModel.Location = new System.Drawing.Point(0, 445);
-            this.pGenerateModel.Name = "pGenerateModel";
-            this.pGenerateModel.Size = new System.Drawing.Size(543, 51);
-            this.pGenerateModel.TabIndex = 4;
+            pGenerateModel.Controls.Add(btnGenerateModel);
+            pGenerateModel.Controls.Add(linkLabel4);
+            pGenerateModel.Dock = DockStyle.Bottom;
+            pGenerateModel.Location = new Point(0, 445);
+            pGenerateModel.Name = "pGenerateModel";
+            pGenerateModel.Size = new Size(543, 51);
+            pGenerateModel.TabIndex = 4;
             // 
             // btnGenerateModel
             // 
-            this.btnGenerateModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
-            this.btnGenerateModel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnGenerateModel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnGenerateModel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnGenerateModel.ForeColor = System.Drawing.Color.White;
-            this.btnGenerateModel.Location = new System.Drawing.Point(5, 5);
-            this.btnGenerateModel.Name = "btnGenerateModel";
-            this.btnGenerateModel.Size = new System.Drawing.Size(263, 39);
-            this.btnGenerateModel.TabIndex = 10;
-            this.btnGenerateModel.Text = "Generate Model from Template";
-            this.btnGenerateModel.UseVisualStyleBackColor = false;
-            this.btnGenerateModel.Click += new System.EventHandler(this.btnGenerateModel_Click);
+            btnGenerateModel.BackColor = Color.FromArgb(96, 125, 139);
+            btnGenerateModel.FlatAppearance.BorderColor = Color.LightGray;
+            btnGenerateModel.FlatStyle = FlatStyle.Popup;
+            btnGenerateModel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btnGenerateModel.ForeColor = Color.White;
+            btnGenerateModel.Location = new Point(5, 5);
+            btnGenerateModel.Name = "btnGenerateModel";
+            btnGenerateModel.Size = new Size(263, 39);
+            btnGenerateModel.TabIndex = 10;
+            btnGenerateModel.Text = "Generate Model from Template";
+            btnGenerateModel.UseVisualStyleBackColor = false;
+            btnGenerateModel.Click += btnGenerateModel_Click;
             // 
             // linkLabel4
             // 
-            this.linkLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.ForeColor = System.Drawing.Color.White;
-            this.linkLabel4.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLabel4.Location = new System.Drawing.Point(807, 11);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(71, 15);
-            this.linkLabel4.TabIndex = 5;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "Clear Model";
+            linkLabel4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkLabel4.AutoSize = true;
+            linkLabel4.ForeColor = Color.White;
+            linkLabel4.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabel4.Location = new Point(807, 11);
+            linkLabel4.Name = "linkLabel4";
+            linkLabel4.Size = new Size(71, 15);
+            linkLabel4.TabIndex = 5;
+            linkLabel4.TabStop = true;
+            linkLabel4.Text = "Clear Model";
             // 
             // pModelControlTop
             // 
-            this.pModelControlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pModelControlTop.Controls.Add(this.linkNewModel);
-            this.pModelControlTop.Controls.Add(this.linkLoadModel);
-            this.pModelControlTop.Controls.Add(this.linkSaveModel);
-            this.pModelControlTop.Controls.Add(this.linkClearModel);
-            this.pModelControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pModelControlTop.Location = new System.Drawing.Point(0, 0);
-            this.pModelControlTop.Name = "pModelControlTop";
-            this.pModelControlTop.Size = new System.Drawing.Size(543, 40);
-            this.pModelControlTop.TabIndex = 3;
-            // 
-            // pSimulation
-            // 
-            this.pSimulation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pSimulation.Controls.Add(this.ldtEuler);
-            this.pSimulation.Controls.Add(this.edtEuler);
-            this.pSimulation.Controls.Add(this.eSkip);
-            this.pSimulation.Controls.Add(this.lSkip);
-            this.pSimulation.Controls.Add(this.edt);
-            this.pSimulation.Controls.Add(this.eTimeEnd);
-            this.pSimulation.Controls.Add(this.ldt);
-            this.pSimulation.Controls.Add(this.lRunTime);
-            this.pSimulation.Controls.Add(this.linkExportOutput);
-            this.pSimulation.Controls.Add(this.progressBarRun);
-            this.pSimulation.Controls.Add(this.btnRun);
-            this.pSimulation.Controls.Add(this.lTimeEnd);
-            this.pSimulation.Controls.Add(this.lRunParameters);
-            this.pSimulation.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pSimulation.Location = new System.Drawing.Point(0, 496);
-            this.pSimulation.Name = "pSimulation";
-            this.pSimulation.Size = new System.Drawing.Size(543, 165);
-            this.pSimulation.TabIndex = 1;
-            // 
-            // ldtEuler
-            // 
-            this.ldtEuler.AutoSize = true;
-            this.ldtEuler.Location = new System.Drawing.Point(10, 113);
-            this.ldtEuler.Name = "ldtEuler";
-            this.ldtEuler.Size = new System.Drawing.Size(48, 15);
-            this.ldtEuler.TabIndex = 39;
-            this.ldtEuler.Text = "Δt Euler";
-            // 
-            // edtEuler
-            // 
-            this.edtEuler.DecimalPlaces = 3;
-            this.edtEuler.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.edtEuler.Location = new System.Drawing.Point(71, 110);
-            this.edtEuler.Name = "edtEuler";
-            this.edtEuler.Size = new System.Drawing.Size(76, 23);
-            this.edtEuler.TabIndex = 38;
-            this.toolTip.SetToolTip(this.edtEuler, "(in milliseconds)");
-            this.edtEuler.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            // 
-            // eSkip
-            // 
-            this.eSkip.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.eSkip.Location = new System.Drawing.Point(71, 58);
-            this.eSkip.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.eSkip.Name = "eSkip";
-            this.eSkip.Size = new System.Drawing.Size(76, 23);
-            this.eSkip.TabIndex = 34;
-            this.toolTip.SetToolTip(this.eSkip, "(in milliseconds)");
-            // 
-            // lSkip
-            // 
-            this.lSkip.AutoSize = true;
-            this.lSkip.Location = new System.Drawing.Point(11, 61);
-            this.lSkip.Name = "lSkip";
-            this.lSkip.Size = new System.Drawing.Size(29, 15);
-            this.lSkip.TabIndex = 6;
-            this.lSkip.Text = "Skip";
-            // 
-            // edt
-            // 
-            this.edt.DecimalPlaces = 2;
-            this.edt.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.edt.Location = new System.Drawing.Point(71, 84);
-            this.edt.Name = "edt";
-            this.edt.Size = new System.Drawing.Size(76, 23);
-            this.edt.TabIndex = 35;
-            this.toolTip.SetToolTip(this.edt, "(in milliseconds)");
-            this.edt.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            // 
-            // eTimeEnd
-            // 
-            this.eTimeEnd.Increment = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eTimeEnd.Location = new System.Drawing.Point(71, 32);
-            this.eTimeEnd.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.eTimeEnd.Name = "eTimeEnd";
-            this.eTimeEnd.Size = new System.Drawing.Size(76, 23);
-            this.eTimeEnd.TabIndex = 33;
-            this.eTimeEnd.ThousandsSeparator = true;
-            this.toolTip.SetToolTip(this.eTimeEnd, "(in milliseconds)");
-            this.eTimeEnd.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            // 
-            // ldt
-            // 
-            this.ldt.AutoSize = true;
-            this.ldt.Location = new System.Drawing.Point(10, 87);
-            this.ldt.Name = "ldt";
-            this.ldt.Size = new System.Drawing.Size(60, 15);
-            this.ldt.TabIndex = 32;
-            this.ldt.Text = "Δt Output";
-            // 
-            // lRunTime
-            // 
-            this.lRunTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lRunTime.Location = new System.Drawing.Point(153, 36);
-            this.lRunTime.Name = "lRunTime";
-            this.lRunTime.Size = new System.Drawing.Size(368, 66);
-            this.lRunTime.TabIndex = 31;
-            // 
-            // linkExportOutput
-            // 
-            this.linkExportOutput.AutoSize = true;
-            this.linkExportOutput.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkExportOutput.Location = new System.Drawing.Point(222, 114);
-            this.linkExportOutput.Name = "linkExportOutput";
-            this.linkExportOutput.Size = new System.Drawing.Size(82, 15);
-            this.linkExportOutput.TabIndex = 27;
-            this.linkExportOutput.TabStop = true;
-            this.linkExportOutput.Text = "Export Output";
-            this.linkExportOutput.Visible = false;
-            this.linkExportOutput.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkExportOutput_LinkClicked);
-            // 
-            // progressBarRun
-            // 
-            this.progressBarRun.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBarRun.Location = new System.Drawing.Point(0, 142);
-            this.progressBarRun.Name = "progressBarRun";
-            this.progressBarRun.Size = new System.Drawing.Size(543, 23);
-            this.progressBarRun.TabIndex = 26;
-            this.progressBarRun.Visible = false;
-            // 
-            // btnRun
-            // 
-            this.btnRun.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
-            this.btnRun.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRun.ForeColor = System.Drawing.Color.White;
-            this.btnRun.Location = new System.Drawing.Point(153, 110);
-            this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(63, 23);
-            this.btnRun.TabIndex = 9;
-            this.btnRun.Text = "Run";
-            this.btnRun.UseVisualStyleBackColor = false;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
-            // 
-            // lTimeEnd
-            // 
-            this.lTimeEnd.AutoSize = true;
-            this.lTimeEnd.Location = new System.Drawing.Point(10, 35);
-            this.lTimeEnd.Name = "lTimeEnd";
-            this.lTimeEnd.Size = new System.Drawing.Size(56, 15);
-            this.lTimeEnd.TabIndex = 3;
-            this.lTimeEnd.Text = "Time End";
-            // 
-            // lRunParameters
-            // 
-            this.lRunParameters.AutoSize = true;
-            this.lRunParameters.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lRunParameters.Location = new System.Drawing.Point(8, 8);
-            this.lRunParameters.Name = "lRunParameters";
-            this.lRunParameters.Size = new System.Drawing.Size(133, 15);
-            this.lRunParameters.TabIndex = 1;
-            this.lRunParameters.Text = "Simulation Parameters";
-            // 
-            // modelOutputControl
-            // 
-            this.modelOutputControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.modelOutputControl.Location = new System.Drawing.Point(0, 0);
-            this.modelOutputControl.Name = "modelOutputControl";
-            this.modelOutputControl.Size = new System.Drawing.Size(789, 661);
-            this.modelOutputControl.TabIndex = 0;
-            // 
-            // timerRun
-            // 
-            this.timerRun.Interval = 1000;
-            this.timerRun.Tick += new System.EventHandler(this.timerRun_Tick);
-            // 
-            // saveFileHTML
-            // 
-            this.saveFileHTML.Filter = "HTML files(*.html)|*.html";
-            // 
-            // saveFileJson
-            // 
-            this.saveFileJson.Filter = "JSON files(*.json)|*.json";
-            // 
-            // openFileJson
-            // 
-            this.openFileJson.Filter = "JSON files(*.json)|*.json";
-            // 
-            // saveFileCSV
-            // 
-            this.saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
-            // 
-            // saveFileText
-            // 
-            this.saveFileText.Filter = "Text files(*.txt)|*.txt";
-            // 
-            // saveFileImage
-            // 
-            this.saveFileImage.Filter = "Image files(*.png)|*.png";
-            // 
-            // pDistinguisher
-            // 
-            this.pDistinguisher.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.pDistinguisher.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pDistinguisher.Location = new System.Drawing.Point(0, 0);
-            this.pDistinguisher.Name = "pDistinguisher";
-            this.pDistinguisher.Size = new System.Drawing.Size(4, 711);
-            this.pDistinguisher.TabIndex = 6;
-            // 
-            // pDistinguisherTop
-            // 
-            this.pDistinguisherTop.BackColor = System.Drawing.Color.Blue;
-            this.pDistinguisherTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pDistinguisherTop.Location = new System.Drawing.Point(4, 0);
-            this.pDistinguisherTop.Name = "pDistinguisherTop";
-            this.pDistinguisherTop.Size = new System.Drawing.Size(1344, 4);
-            this.pDistinguisherTop.TabIndex = 7;
-            // 
-            // pDistinguisherRight
-            // 
-            this.pDistinguisherRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
-            this.pDistinguisherRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pDistinguisherRight.Location = new System.Drawing.Point(1344, 4);
-            this.pDistinguisherRight.Name = "pDistinguisherRight";
-            this.pDistinguisherRight.Size = new System.Drawing.Size(4, 707);
-            this.pDistinguisherRight.TabIndex = 8;
-            // 
-            // pDistinguisherBottom
-            // 
-            this.pDistinguisherBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
-            this.pDistinguisherBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pDistinguisherBottom.Location = new System.Drawing.Point(4, 707);
-            this.pDistinguisherBottom.Name = "pDistinguisherBottom";
-            this.pDistinguisherBottom.Size = new System.Drawing.Size(1340, 4);
-            this.pDistinguisherBottom.TabIndex = 9;
+            pModelControlTop.BackColor = Color.FromArgb(236, 239, 241);
+            pModelControlTop.Controls.Add(linkNewModel);
+            pModelControlTop.Controls.Add(linkLoadModel);
+            pModelControlTop.Controls.Add(linkSaveModel);
+            pModelControlTop.Controls.Add(linkClearModel);
+            pModelControlTop.Dock = DockStyle.Top;
+            pModelControlTop.Location = new Point(0, 0);
+            pModelControlTop.Name = "pModelControlTop";
+            pModelControlTop.Size = new Size(543, 40);
+            pModelControlTop.TabIndex = 3;
             // 
             // linkNewModel
             // 
-            this.linkNewModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkNewModel.AutoSize = true;
-            this.linkNewModel.ForeColor = System.Drawing.Color.White;
-            this.linkNewModel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkNewModel.Location = new System.Drawing.Point(382, 11);
-            this.linkNewModel.Name = "linkNewModel";
-            this.linkNewModel.Size = new System.Drawing.Size(68, 15);
-            this.linkNewModel.TabIndex = 6;
-            this.linkNewModel.TabStop = true;
-            this.linkNewModel.Text = "New Model";
-            this.linkNewModel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkNewModel_LinkClicked);
+            linkNewModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkNewModel.AutoSize = true;
+            linkNewModel.ForeColor = Color.White;
+            linkNewModel.LinkColor = Color.FromArgb(64, 64, 64);
+            linkNewModel.Location = new Point(382, 11);
+            linkNewModel.Name = "linkNewModel";
+            linkNewModel.Size = new Size(68, 15);
+            linkNewModel.TabIndex = 6;
+            linkNewModel.TabStop = true;
+            linkNewModel.Text = "New Model";
+            linkNewModel.LinkClicked += linkNewModel_LinkClicked;
+            // 
+            // pSimulation
+            // 
+            pSimulation.BackColor = Color.FromArgb(236, 239, 241);
+            pSimulation.Controls.Add(ldtEuler);
+            pSimulation.Controls.Add(edtEuler);
+            pSimulation.Controls.Add(eSkip);
+            pSimulation.Controls.Add(lSkip);
+            pSimulation.Controls.Add(edt);
+            pSimulation.Controls.Add(eTimeEnd);
+            pSimulation.Controls.Add(ldt);
+            pSimulation.Controls.Add(lRunTime);
+            pSimulation.Controls.Add(linkExportOutput);
+            pSimulation.Controls.Add(progressBarRun);
+            pSimulation.Controls.Add(btnRun);
+            pSimulation.Controls.Add(lTimeEnd);
+            pSimulation.Controls.Add(lRunParameters);
+            pSimulation.Dock = DockStyle.Bottom;
+            pSimulation.Location = new Point(0, 496);
+            pSimulation.Name = "pSimulation";
+            pSimulation.Size = new Size(543, 165);
+            pSimulation.TabIndex = 1;
+            // 
+            // ldtEuler
+            // 
+            ldtEuler.AutoSize = true;
+            ldtEuler.Location = new Point(10, 113);
+            ldtEuler.Name = "ldtEuler";
+            ldtEuler.Size = new Size(48, 15);
+            ldtEuler.TabIndex = 39;
+            ldtEuler.Text = "Δt Euler";
+            // 
+            // edtEuler
+            // 
+            edtEuler.DecimalPlaces = 3;
+            edtEuler.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            edtEuler.Location = new Point(71, 110);
+            edtEuler.Name = "edtEuler";
+            edtEuler.Size = new Size(76, 23);
+            edtEuler.TabIndex = 38;
+            toolTip.SetToolTip(edtEuler, "(in milliseconds)");
+            edtEuler.Value = new decimal(new int[] { 1, 0, 0, 65536 });
+            // 
+            // eSkip
+            // 
+            eSkip.Increment = new decimal(new int[] { 100, 0, 0, 0 });
+            eSkip.Location = new Point(71, 58);
+            eSkip.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            eSkip.Name = "eSkip";
+            eSkip.Size = new Size(76, 23);
+            eSkip.TabIndex = 34;
+            toolTip.SetToolTip(eSkip, "(in milliseconds)");
+            // 
+            // lSkip
+            // 
+            lSkip.AutoSize = true;
+            lSkip.Location = new Point(11, 61);
+            lSkip.Name = "lSkip";
+            lSkip.Size = new Size(29, 15);
+            lSkip.TabIndex = 6;
+            lSkip.Text = "Skip";
+            // 
+            // edt
+            // 
+            edt.DecimalPlaces = 2;
+            edt.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            edt.Location = new Point(71, 84);
+            edt.Name = "edt";
+            edt.Size = new Size(76, 23);
+            edt.TabIndex = 35;
+            toolTip.SetToolTip(edt, "(in milliseconds)");
+            edt.Value = new decimal(new int[] { 1, 0, 0, 65536 });
+            // 
+            // eTimeEnd
+            // 
+            eTimeEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
+            eTimeEnd.Location = new Point(71, 32);
+            eTimeEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            eTimeEnd.Name = "eTimeEnd";
+            eTimeEnd.Size = new Size(76, 23);
+            eTimeEnd.TabIndex = 33;
+            eTimeEnd.ThousandsSeparator = true;
+            toolTip.SetToolTip(eTimeEnd, "(in milliseconds)");
+            eTimeEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // ldt
+            // 
+            ldt.AutoSize = true;
+            ldt.Location = new Point(10, 87);
+            ldt.Name = "ldt";
+            ldt.Size = new Size(60, 15);
+            ldt.TabIndex = 32;
+            ldt.Text = "Δt Output";
+            // 
+            // lRunTime
+            // 
+            lRunTime.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lRunTime.Location = new Point(153, 36);
+            lRunTime.Name = "lRunTime";
+            lRunTime.Size = new Size(368, 66);
+            lRunTime.TabIndex = 31;
+            // 
+            // linkExportOutput
+            // 
+            linkExportOutput.AutoSize = true;
+            linkExportOutput.LinkColor = Color.FromArgb(64, 64, 64);
+            linkExportOutput.Location = new Point(222, 114);
+            linkExportOutput.Name = "linkExportOutput";
+            linkExportOutput.Size = new Size(82, 15);
+            linkExportOutput.TabIndex = 27;
+            linkExportOutput.TabStop = true;
+            linkExportOutput.Text = "Export Output";
+            linkExportOutput.Visible = false;
+            linkExportOutput.LinkClicked += linkExportOutput_LinkClicked;
+            // 
+            // progressBarRun
+            // 
+            progressBarRun.Dock = DockStyle.Bottom;
+            progressBarRun.Location = new Point(0, 142);
+            progressBarRun.Name = "progressBarRun";
+            progressBarRun.Size = new Size(543, 23);
+            progressBarRun.TabIndex = 26;
+            progressBarRun.Visible = false;
+            // 
+            // btnRun
+            // 
+            btnRun.BackColor = Color.FromArgb(96, 125, 139);
+            btnRun.FlatAppearance.BorderColor = Color.LightGray;
+            btnRun.FlatStyle = FlatStyle.Flat;
+            btnRun.ForeColor = Color.White;
+            btnRun.Location = new Point(153, 110);
+            btnRun.Name = "btnRun";
+            btnRun.Size = new Size(63, 23);
+            btnRun.TabIndex = 9;
+            btnRun.Text = "Run";
+            btnRun.UseVisualStyleBackColor = false;
+            btnRun.Click += btnRun_Click;
+            // 
+            // lTimeEnd
+            // 
+            lTimeEnd.AutoSize = true;
+            lTimeEnd.Location = new Point(10, 35);
+            lTimeEnd.Name = "lTimeEnd";
+            lTimeEnd.Size = new Size(56, 15);
+            lTimeEnd.TabIndex = 3;
+            lTimeEnd.Text = "Time End";
+            // 
+            // lRunParameters
+            // 
+            lRunParameters.AutoSize = true;
+            lRunParameters.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lRunParameters.Location = new Point(8, 8);
+            lRunParameters.Name = "lRunParameters";
+            lRunParameters.Size = new Size(133, 15);
+            lRunParameters.TabIndex = 1;
+            lRunParameters.Text = "Simulation Parameters";
+            // 
+            // modelOutputControl
+            // 
+            modelOutputControl.Dock = DockStyle.Fill;
+            modelOutputControl.Location = new Point(0, 0);
+            modelOutputControl.Name = "modelOutputControl";
+            modelOutputControl.Size = new Size(789, 661);
+            modelOutputControl.TabIndex = 0;
+            // 
+            // timerRun
+            // 
+            timerRun.Interval = 1000;
+            timerRun.Tick += timerRun_Tick;
+            // 
+            // saveFileHTML
+            // 
+            saveFileHTML.Filter = "HTML files(*.html)|*.html";
+            // 
+            // saveFileJson
+            // 
+            saveFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // openFileJson
+            // 
+            openFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // saveFileCSV
+            // 
+            saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
+            // saveFileText
+            // 
+            saveFileText.Filter = "Text files(*.txt)|*.txt";
+            // 
+            // saveFileImage
+            // 
+            saveFileImage.Filter = "Image files(*.png)|*.png";
+            // 
+            // pDistinguisher
+            // 
+            pDistinguisher.BackColor = Color.FromArgb(192, 192, 255);
+            pDistinguisher.Dock = DockStyle.Left;
+            pDistinguisher.Location = new Point(0, 0);
+            pDistinguisher.Name = "pDistinguisher";
+            pDistinguisher.Size = new Size(4, 711);
+            pDistinguisher.TabIndex = 6;
+            // 
+            // pDistinguisherTop
+            // 
+            pDistinguisherTop.BackColor = Color.Blue;
+            pDistinguisherTop.Dock = DockStyle.Top;
+            pDistinguisherTop.Location = new Point(4, 0);
+            pDistinguisherTop.Name = "pDistinguisherTop";
+            pDistinguisherTop.Size = new Size(1344, 4);
+            pDistinguisherTop.TabIndex = 7;
+            // 
+            // pDistinguisherRight
+            // 
+            pDistinguisherRight.BackColor = Color.FromArgb(76, 175, 80);
+            pDistinguisherRight.Dock = DockStyle.Right;
+            pDistinguisherRight.Location = new Point(1344, 4);
+            pDistinguisherRight.Name = "pDistinguisherRight";
+            pDistinguisherRight.Size = new Size(4, 707);
+            pDistinguisherRight.TabIndex = 8;
+            // 
+            // pDistinguisherBottom
+            // 
+            pDistinguisherBottom.BackColor = Color.FromArgb(76, 175, 80);
+            pDistinguisherBottom.Dock = DockStyle.Bottom;
+            pDistinguisherBottom.Location = new Point(4, 707);
+            pDistinguisherBottom.Name = "pDistinguisherBottom";
+            pDistinguisherBottom.Size = new Size(1340, 4);
+            pDistinguisherBottom.TabIndex = 9;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1348, 711);
-            this.Controls.Add(this.splitMain);
-            this.Controls.Add(this.pTop);
-            this.Controls.Add(this.pDistinguisherBottom);
-            this.Controls.Add(this.pDistinguisherRight);
-            this.Controls.Add(this.pDistinguisherTop);
-            this.Controls.Add(this.pDistinguisher);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "MainForm";
-            this.Text = "SiliFish";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.pTop.ResumeLayout(false);
-            this.pTop.PerformLayout();
-            this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
-            this.splitMain.ResumeLayout(false);
-            this.pGenerateModel.ResumeLayout(false);
-            this.pGenerateModel.PerformLayout();
-            this.pModelControlTop.ResumeLayout(false);
-            this.pModelControlTop.PerformLayout();
-            this.pSimulation.ResumeLayout(false);
-            this.pSimulation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEuler)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSkip)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eTimeEnd)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = Color.White;
+            ClientSize = new Size(1348, 711);
+            Controls.Add(splitMain);
+            Controls.Add(pTop);
+            Controls.Add(pDistinguisherBottom);
+            Controls.Add(pDistinguisherRight);
+            Controls.Add(pDistinguisherTop);
+            Controls.Add(pDistinguisher);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "MainForm";
+            Text = "SiliFish";
+            FormClosing += MainForm_FormClosing;
+            Load += MainForm_Load;
+            pTop.ResumeLayout(false);
+            pTop.PerformLayout();
+            splitMain.Panel1.ResumeLayout(false);
+            splitMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
+            splitMain.ResumeLayout(false);
+            pGenerateModel.ResumeLayout(false);
+            pGenerateModel.PerformLayout();
+            pModelControlTop.ResumeLayout(false);
+            pModelControlTop.PerformLayout();
+            pSimulation.ResumeLayout(false);
+            pSimulation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)edtEuler).EndInit();
+            ((System.ComponentModel.ISupportInitialize)eSkip).EndInit();
+            ((System.ComponentModel.ISupportInitialize)edt).EndInit();
+            ((System.ComponentModel.ISupportInitialize)eTimeEnd).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion

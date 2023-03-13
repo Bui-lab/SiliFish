@@ -48,13 +48,13 @@ External stimuli applied to a specific cell pool can be defined.
 Please refer to https://github.com/Bui-lab/SiliFish/blob/main/3rd%20PARTY%20LICENSE for the licence information.)
 
 ## Outputs
-### 2D and 3D Models
+### 2D and 3D Renderings
 
 It is possible to check the accuracy of the model generated visually by the 2D and 3D outputs of the generated model.
 
 <img src="https://raw.githubusercontent.com/Bui-lab/SiliFish/main/Snapshots/3DModel.png">
 
-(2D and 3D models use force-graph (https://github.com/vasturiano/force-graph) and 3d-force-graph (https://github.com/vasturiano/3d-force-graph) libraries.
+(2D and 3D renderings use force-graph (https://github.com/vasturiano/force-graph) and 3d-force-graph (https://github.com/vasturiano/3d-force-graph) libraries.
 Please refer to https://github.com/Bui-lab/SiliFish/blob/main/3rd%20PARTY%20LICENSE for the licence information.)
 
 

@@ -137,7 +137,7 @@ namespace SiliFish.UI.Controls
             this.eSequence.Name = "eSequence";
             this.eSequence.Size = new System.Drawing.Size(64, 23);
             this.eSequence.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.eSequence, "Used for 2D models or predefined 3D models");
+            this.toolTip1.SetToolTip(this.eSequence, "Used for 2D renderings or predefined 3D renderings");
             this.eSequence.Value = new decimal(new int[] {
             1,
             0,
