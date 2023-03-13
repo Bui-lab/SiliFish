@@ -226,6 +226,9 @@ namespace SiliFish.Repositories
             if (checkTau && json.Contains("\"taur\""))
             {
                 json = json.Replace("\"taur\"", "\"TauR\"");
+                json = json.Replace("\"taud\"", "\"TauD\"");
+                json = json.Replace("\"vth\"", "\"Vth\"");
+                json = json.Replace("\"E_rev\"", "\"Erev\"");
                 updated = true;
             }
 
@@ -256,8 +259,7 @@ namespace SiliFish.Repositories
                 if (FixCellReachJson(ref json))
                     list.Add("connection ranges");
                 json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
-                json = Regex.Replace(json, @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-                json = Regex.Replace(json, ",[\\s]*}", " }");
+                json = JsonUtil.CleanUp(json);
             }
             return list;
         }

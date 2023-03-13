@@ -85,7 +85,7 @@ namespace SiliFish.ModelUnits.Cells
             PositionLeftRight = leftright;
             ColumnIndex2D = template.ColumnIndex2D;
             NumOfCells = template.NumOfCells;
-            XDistribution = template.XDistribution.Clone();
+            XDistribution = template.XDistribution?.Clone();
             Y_AngleDistribution = template.Y_AngleDistribution?.Clone();
             Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
             Z_RadiusDistribution = template.Z_RadiusDistribution?.Clone();

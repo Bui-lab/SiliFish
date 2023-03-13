@@ -32,8 +32,6 @@ namespace SiliFish.ModelUnits.Architecture
         protected bool initialized = false;
         protected double[] Time;
 
-        protected double taur, taud, vth; //synapse parameters
-
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
 
