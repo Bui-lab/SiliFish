@@ -99,6 +99,7 @@ namespace SiliFish.UI.Controls
 
         public void SetRunningModel(RunningModel model)
         {
+            if (model == null) return;
             RunningModel = model;
             PopulatePlotPools();
             int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
@@ -774,6 +775,7 @@ namespace SiliFish.UI.Controls
                 ThreeDRenderer threeDRenderer = new();
                 string html = threeDRenderer.RenderIn3D(RunningModel, RunningModel.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
+                    webView3DRender.Width, webView3DRender.Height,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 webView3DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             }

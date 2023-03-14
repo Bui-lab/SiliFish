@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using SiliFish.ModelUnits.Junction;
+using System.CodeDom.Compiler;
 
 namespace SiliFish.Services
 {
@@ -104,7 +105,9 @@ namespace SiliFish.Services
             return string.Join(",", links);
         }
 
-        public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, bool showGap, bool showChem)
+        public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, 
+            int width, int height, 
+            bool showGap, bool showChem)
         {
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DRender.html"));
 
@@ -144,7 +147,6 @@ namespace SiliFish.Services
                 yRange = 2 * YRange1D;
             }
             double range = Math.Max(xRange, Math.Max(yRange, zRange));
-            int width = 400;
             XYZMult = width / range;
             XOffset = width / 2; //The center of the window is 0 - so half width is removed from all X values
 

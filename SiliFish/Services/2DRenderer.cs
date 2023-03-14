@@ -131,7 +131,7 @@ namespace SiliFish.Services
             if (YMax > YMin)
             {
                 YMult = height / (YMax - YMin) / 2;
-                YOffset = 0;// 30 * YMult;
+                YOffset = 0;
             }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
