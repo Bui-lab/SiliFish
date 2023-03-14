@@ -99,24 +99,23 @@
 
         function ShowGapJunc() {
             showGapJnc = true;
-            gapChemGraph.refresh();
+            gapChemGraph
+                .linkVisibility(gapChemGraph.linkVisibility())
         }
         function HideGapJunc() {
             showGapJnc = false;
-            gapChemGraph.refresh();
+            gapChemGraph
+                .linkVisibility(gapChemGraph.linkVisibility())
         }
         function ShowChemJunc() {
             showChemJnc = true;
-            gapChemGraph.refresh();
+            gapChemGraph
+                .linkVisibility(gapChemGraph.linkVisibility())
         }
         function HideChemJunc() {
             showChemJnc = false;
-            gapChemGraph.refresh();
-        }
-
-        function SetSomites(somites) {
-            somiteList = somites;
-            gapChemGraph.refresh();
+            gapChemGraph
+                .linkVisibility(gapChemGraph.linkVisibility())
         }
 
         function updateHighlight() {
