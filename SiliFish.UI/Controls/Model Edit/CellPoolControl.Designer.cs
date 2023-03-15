@@ -29,800 +29,774 @@ namespace SiliFish.UI.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.lGroupName = new System.Windows.Forms.Label();
-            this.eGroupName = new System.Windows.Forms.TextBox();
-            this.lNumOfCells = new System.Windows.Forms.Label();
-            this.eNumOfCells = new System.Windows.Forms.NumericUpDown();
-            this.l2DRenderColumn = new System.Windows.Forms.Label();
-            this.e2DColumn = new System.Windows.Forms.NumericUpDown();
-            this.ddCellType = new System.Windows.Forms.ComboBox();
-            this.lCellType = new System.Windows.Forms.Label();
-            this.pZAxis = new System.Windows.Forms.Panel();
-            this.lZAxis = new System.Windows.Forms.Label();
-            this.pXAxis = new System.Windows.Forms.Panel();
-            this.lXAxis = new System.Windows.Forms.Label();
-            this.pMain = new System.Windows.Forms.Panel();
-            this.pMainInfo = new System.Windows.Forms.Panel();
-            this.ddBodyPosition = new System.Windows.Forms.ComboBox();
-            this.lBodyPosition = new System.Windows.Forms.Label();
-            this.eSomiteRange = new System.Windows.Forms.TextBox();
-            this.cbAllSomites = new System.Windows.Forms.CheckBox();
-            this.ddCoreType = new System.Windows.Forms.ComboBox();
-            this.lCoreType = new System.Windows.Forms.Label();
-            this.ddSelection = new System.Windows.Forms.ComboBox();
-            this.cbActive = new System.Windows.Forms.CheckBox();
-            this.ddNeuronClass = new System.Windows.Forms.ComboBox();
-            this.btnColor = new System.Windows.Forms.Button();
-            this.lNeuronClass = new System.Windows.Forms.Label();
-            this.eDescription = new System.Windows.Forms.RichTextBox();
-            this.lDescription = new System.Windows.Forms.Label();
-            this.pMainTop = new System.Windows.Forms.Panel();
-            this.linkSavePool = new System.Windows.Forms.LinkLabel();
-            this.linkLoadPool = new System.Windows.Forms.LinkLabel();
-            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
-            this.lSagittalPosition = new System.Windows.Forms.Label();
-            this.ddSagittalPosition = new System.Windows.Forms.ComboBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.distributionX = new SiliFish.UI.Controls.DistributionControl();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbYZLinear = new System.Windows.Forms.RadioButton();
-            this.rbYZAngular = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.lYAxis = new System.Windows.Forms.Label();
-            this.distributionY = new SiliFish.UI.Controls.DistributionControl();
-            this.distributionZ = new SiliFish.UI.Controls.DistributionControl();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabCellPool = new System.Windows.Forms.TabControl();
-            this.tSpatialDist = new System.Windows.Forms.TabPage();
-            this.tDynamics = new System.Windows.Forms.TabPage();
-            this.dgDynamics = new SiliFish.UI.Controls.DistributionDataGrid();
-            this.grConductionVelocity = new System.Windows.Forms.GroupBox();
-            this.distConductionVelocity = new SiliFish.UI.Controls.DistributionControl();
-            this.pDynamicsTops = new System.Windows.Forms.Panel();
-            this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
-            this.linkTestDynamics = new System.Windows.Forms.LinkLabel();
-            this.tTimeline = new System.Windows.Forms.TabPage();
-            this.tAttachments = new System.Windows.Forms.TabPage();
-            this.attachmentList = new SiliFish.UI.Controls.AttachmentListControl();
-            this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.openFileJson = new System.Windows.Forms.OpenFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).BeginInit();
-            this.pZAxis.SuspendLayout();
-            this.pXAxis.SuspendLayout();
-            this.pMain.SuspendLayout();
-            this.pMainInfo.SuspendLayout();
-            this.pMainTop.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.tabCellPool.SuspendLayout();
-            this.tSpatialDist.SuspendLayout();
-            this.tDynamics.SuspendLayout();
-            this.grConductionVelocity.SuspendLayout();
-            this.pDynamicsTops.SuspendLayout();
-            this.tTimeline.SuspendLayout();
-            this.tAttachments.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
-            this.splitMain.Panel1.SuspendLayout();
-            this.splitMain.Panel2.SuspendLayout();
-            this.splitMain.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            lGroupName = new Label();
+            eGroupName = new TextBox();
+            lNumOfCells = new Label();
+            eNumOfCells = new NumericUpDown();
+            l2DRenderColumn = new Label();
+            e2DColumn = new NumericUpDown();
+            ddCellType = new ComboBox();
+            lCellType = new Label();
+            pZAxis = new Panel();
+            lZAxis = new Label();
+            pXAxis = new Panel();
+            lXAxis = new Label();
+            pMain = new Panel();
+            pMainInfo = new Panel();
+            ddBodyPosition = new ComboBox();
+            lBodyPosition = new Label();
+            eSomiteRange = new TextBox();
+            cbAllSomites = new CheckBox();
+            ddCoreType = new ComboBox();
+            lCoreType = new Label();
+            ddSelection = new ComboBox();
+            cbActive = new CheckBox();
+            ddNeuronClass = new ComboBox();
+            btnColor = new Button();
+            lNeuronClass = new Label();
+            eDescription = new RichTextBox();
+            lDescription = new Label();
+            pMainTop = new Panel();
+            linkSavePool = new LinkLabel();
+            linkLoadPool = new LinkLabel();
+            timeLineControl = new TimeLineControl();
+            lSagittalPosition = new Label();
+            ddSagittalPosition = new ComboBox();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            distributionX = new DistributionControl();
+            groupBox1 = new GroupBox();
+            rbYZLinear = new RadioButton();
+            rbYZAngular = new RadioButton();
+            panel1 = new Panel();
+            lYAxis = new Label();
+            distributionY = new DistributionControl();
+            distributionZ = new DistributionControl();
+            toolTip1 = new ToolTip(components);
+            tabCellPool = new TabControl();
+            tSpatialDist = new TabPage();
+            tDynamics = new TabPage();
+            dgDynamics = new DistributionDataGrid();
+            grConductionVelocity = new GroupBox();
+            distConductionVelocity = new DistributionControl();
+            pDynamicsTops = new Panel();
+            linkLoadCoreUnit = new LinkLabel();
+            linkTestDynamics = new LinkLabel();
+            tTimeline = new TabPage();
+            tAttachments = new TabPage();
+            attachmentList = new AttachmentListControl();
+            splitMain = new SplitContainer();
+            colorDialog = new ColorDialog();
+            openFileJson = new OpenFileDialog();
+            ((System.ComponentModel.ISupportInitialize)eNumOfCells).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)e2DColumn).BeginInit();
+            pZAxis.SuspendLayout();
+            pXAxis.SuspendLayout();
+            pMain.SuspendLayout();
+            pMainInfo.SuspendLayout();
+            pMainTop.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            panel1.SuspendLayout();
+            tabCellPool.SuspendLayout();
+            tSpatialDist.SuspendLayout();
+            tDynamics.SuspendLayout();
+            grConductionVelocity.SuspendLayout();
+            pDynamicsTops.SuspendLayout();
+            tTimeline.SuspendLayout();
+            tAttachments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
+            splitMain.Panel1.SuspendLayout();
+            splitMain.Panel2.SuspendLayout();
+            splitMain.SuspendLayout();
+            SuspendLayout();
             // 
             // lGroupName
             // 
-            this.lGroupName.AutoSize = true;
-            this.lGroupName.Location = new System.Drawing.Point(7, 10);
-            this.lGroupName.Name = "lGroupName";
-            this.lGroupName.Size = new System.Drawing.Size(75, 15);
-            this.lGroupName.TabIndex = 0;
-            this.lGroupName.Text = "Group Name";
+            lGroupName.AutoSize = true;
+            lGroupName.Location = new Point(7, 10);
+            lGroupName.Name = "lGroupName";
+            lGroupName.Size = new Size(75, 15);
+            lGroupName.TabIndex = 0;
+            lGroupName.Text = "Group Name";
             // 
             // eGroupName
             // 
-            this.eGroupName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eGroupName.Location = new System.Drawing.Point(114, 7);
-            this.eGroupName.Name = "eGroupName";
-            this.eGroupName.Size = new System.Drawing.Size(146, 23);
-            this.eGroupName.TabIndex = 1;
-            this.eGroupName.TextChanged += new System.EventHandler(this.eGroupName_TextChanged);
+            eGroupName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eGroupName.Location = new Point(114, 7);
+            eGroupName.Name = "eGroupName";
+            eGroupName.Size = new Size(146, 23);
+            eGroupName.TabIndex = 1;
+            eGroupName.TextChanged += eGroupName_TextChanged;
             // 
             // lNumOfCells
             // 
-            this.lNumOfCells.AutoSize = true;
-            this.lNumOfCells.Location = new System.Drawing.Point(7, 145);
-            this.lNumOfCells.Name = "lNumOfCells";
-            this.lNumOfCells.Size = new System.Drawing.Size(56, 15);
-            this.lNumOfCells.TabIndex = 8;
-            this.lNumOfCells.Text = "# of Cells";
+            lNumOfCells.AutoSize = true;
+            lNumOfCells.Location = new Point(7, 145);
+            lNumOfCells.Name = "lNumOfCells";
+            lNumOfCells.Size = new Size(56, 15);
+            lNumOfCells.TabIndex = 8;
+            lNumOfCells.Text = "# of Cells";
             // 
             // eNumOfCells
             // 
-            this.eNumOfCells.Location = new System.Drawing.Point(114, 142);
-            this.eNumOfCells.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eNumOfCells.Name = "eNumOfCells";
-            this.eNumOfCells.Size = new System.Drawing.Size(64, 23);
-            this.eNumOfCells.TabIndex = 9;
-            this.eNumOfCells.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            eNumOfCells.Location = new Point(114, 142);
+            eNumOfCells.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            eNumOfCells.Name = "eNumOfCells";
+            eNumOfCells.Size = new Size(64, 23);
+            eNumOfCells.TabIndex = 9;
+            eNumOfCells.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // l2DRenderColumn
             // 
-            this.l2DRenderColumn.AutoSize = true;
-            this.l2DRenderColumn.Location = new System.Drawing.Point(7, 172);
-            this.l2DRenderColumn.Name = "l2DRenderColumn";
-            this.l2DRenderColumn.Size = new System.Drawing.Size(104, 15);
-            this.l2DRenderColumn.TabIndex = 13;
-            this.l2DRenderColumn.Text = "2D Rendering Column";
+            l2DRenderColumn.AutoSize = true;
+            l2DRenderColumn.Location = new Point(7, 172);
+            l2DRenderColumn.Name = "l2DRenderColumn";
+            l2DRenderColumn.Size = new Size(100, 15);
+            l2DRenderColumn.TabIndex = 13;
+            l2DRenderColumn.Text = "2D Rend. Column";
             // 
             // e2DColumn
             // 
-            this.e2DColumn.Location = new System.Drawing.Point(114, 169);
-            this.e2DColumn.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.e2DColumn.Name = "e2DColumn";
-            this.e2DColumn.Size = new System.Drawing.Size(64, 23);
-            this.e2DColumn.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.e2DColumn, "Used for 2D renderings or predefined 3D models");
-            this.e2DColumn.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            e2DColumn.Location = new Point(114, 169);
+            e2DColumn.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            e2DColumn.Name = "e2DColumn";
+            e2DColumn.Size = new Size(64, 23);
+            e2DColumn.TabIndex = 14;
+            toolTip1.SetToolTip(e2DColumn, "Used for 2D renderings or predefined 3D models");
+            e2DColumn.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // ddCellType
             // 
-            this.ddCellType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCellType.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddCellType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCellType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddCellType.FormattingEnabled = true;
-            this.ddCellType.Location = new System.Drawing.Point(114, 34);
-            this.ddCellType.Name = "ddCellType";
-            this.ddCellType.Size = new System.Drawing.Size(146, 23);
-            this.ddCellType.TabIndex = 3;
-            this.ddCellType.SelectedIndexChanged += new System.EventHandler(this.ddCellType_SelectedIndexChanged);
+            ddCellType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddCellType.BackColor = Color.WhiteSmoke;
+            ddCellType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCellType.FlatStyle = FlatStyle.Flat;
+            ddCellType.FormattingEnabled = true;
+            ddCellType.Location = new Point(114, 34);
+            ddCellType.Name = "ddCellType";
+            ddCellType.Size = new Size(146, 23);
+            ddCellType.TabIndex = 3;
+            ddCellType.SelectedIndexChanged += ddCellType_SelectedIndexChanged;
             // 
             // lCellType
             // 
-            this.lCellType.AutoSize = true;
-            this.lCellType.Location = new System.Drawing.Point(7, 37);
-            this.lCellType.Name = "lCellType";
-            this.lCellType.Size = new System.Drawing.Size(54, 15);
-            this.lCellType.TabIndex = 2;
-            this.lCellType.Text = "Cell Type";
+            lCellType.AutoSize = true;
+            lCellType.Location = new Point(7, 37);
+            lCellType.Name = "lCellType";
+            lCellType.Size = new Size(54, 15);
+            lCellType.TabIndex = 2;
+            lCellType.Text = "Cell Type";
             // 
             // pZAxis
             // 
-            this.pZAxis.Controls.Add(this.lZAxis);
-            this.pZAxis.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pZAxis.Location = new System.Drawing.Point(0, 340);
-            this.pZAxis.Margin = new System.Windows.Forms.Padding(0);
-            this.pZAxis.Name = "pZAxis";
-            this.pZAxis.Size = new System.Drawing.Size(211, 30);
-            this.pZAxis.TabIndex = 17;
+            pZAxis.Controls.Add(lZAxis);
+            pZAxis.Dock = DockStyle.Top;
+            pZAxis.Location = new Point(0, 340);
+            pZAxis.Margin = new Padding(0);
+            pZAxis.Name = "pZAxis";
+            pZAxis.Size = new Size(211, 30);
+            pZAxis.TabIndex = 17;
             // 
             // lZAxis
             // 
-            this.lZAxis.AutoSize = true;
-            this.lZAxis.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lZAxis.Location = new System.Drawing.Point(18, 8);
-            this.lZAxis.Name = "lZAxis";
-            this.lZAxis.Size = new System.Drawing.Size(147, 15);
-            this.lZAxis.TabIndex = 0;
-            this.lZAxis.Text = "Z-Axis (Dorsal -> Ventral)";
+            lZAxis.AutoSize = true;
+            lZAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lZAxis.Location = new Point(18, 8);
+            lZAxis.Name = "lZAxis";
+            lZAxis.Size = new Size(147, 15);
+            lZAxis.TabIndex = 0;
+            lZAxis.Text = "Z-Axis (Dorsal -> Ventral)";
             // 
             // pXAxis
             // 
-            this.pXAxis.Controls.Add(this.lXAxis);
-            this.pXAxis.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pXAxis.Location = new System.Drawing.Point(0, 0);
-            this.pXAxis.Margin = new System.Windows.Forms.Padding(0);
-            this.pXAxis.Name = "pXAxis";
-            this.pXAxis.Size = new System.Drawing.Size(211, 30);
-            this.pXAxis.TabIndex = 13;
+            pXAxis.Controls.Add(lXAxis);
+            pXAxis.Dock = DockStyle.Top;
+            pXAxis.Location = new Point(0, 0);
+            pXAxis.Margin = new Padding(0);
+            pXAxis.Name = "pXAxis";
+            pXAxis.Size = new Size(211, 30);
+            pXAxis.TabIndex = 13;
             // 
             // lXAxis
             // 
-            this.lXAxis.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lXAxis.Location = new System.Drawing.Point(18, 8);
-            this.lXAxis.Name = "lXAxis";
-            this.lXAxis.Size = new System.Drawing.Size(171, 15);
-            this.lXAxis.TabIndex = 0;
-            this.lXAxis.Text = "X-Axis (Rostral -> Caudal)";
+            lXAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lXAxis.Location = new Point(18, 8);
+            lXAxis.Name = "lXAxis";
+            lXAxis.Size = new Size(171, 15);
+            lXAxis.TabIndex = 0;
+            lXAxis.Text = "X-Axis (Rostral -> Caudal)";
             // 
             // pMain
             // 
-            this.pMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pMain.Controls.Add(this.pMainInfo);
-            this.pMain.Controls.Add(this.eDescription);
-            this.pMain.Controls.Add(this.lDescription);
-            this.pMain.Controls.Add(this.pMainTop);
-            this.pMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pMain.Location = new System.Drawing.Point(0, 0);
-            this.pMain.MaximumSize = new System.Drawing.Size(400, 0);
-            this.pMain.MinimumSize = new System.Drawing.Size(244, 0);
-            this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(264, 721);
-            this.pMain.TabIndex = 0;
+            pMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            pMain.Controls.Add(pMainInfo);
+            pMain.Controls.Add(eDescription);
+            pMain.Controls.Add(lDescription);
+            pMain.Controls.Add(pMainTop);
+            pMain.Dock = DockStyle.Fill;
+            pMain.Location = new Point(0, 0);
+            pMain.MaximumSize = new Size(400, 0);
+            pMain.MinimumSize = new Size(244, 0);
+            pMain.Name = "pMain";
+            pMain.Size = new Size(264, 521);
+            pMain.TabIndex = 0;
             // 
             // pMainInfo
             // 
-            this.pMainInfo.Controls.Add(this.lGroupName);
-            this.pMainInfo.Controls.Add(this.ddBodyPosition);
-            this.pMainInfo.Controls.Add(this.eGroupName);
-            this.pMainInfo.Controls.Add(this.lBodyPosition);
-            this.pMainInfo.Controls.Add(this.l2DRenderColumn);
-            this.pMainInfo.Controls.Add(this.eSomiteRange);
-            this.pMainInfo.Controls.Add(this.e2DColumn);
-            this.pMainInfo.Controls.Add(this.cbAllSomites);
-            this.pMainInfo.Controls.Add(this.eNumOfCells);
-            this.pMainInfo.Controls.Add(this.ddCoreType);
-            this.pMainInfo.Controls.Add(this.lCellType);
-            this.pMainInfo.Controls.Add(this.lCoreType);
-            this.pMainInfo.Controls.Add(this.ddCellType);
-            this.pMainInfo.Controls.Add(this.lNumOfCells);
-            this.pMainInfo.Controls.Add(this.ddSelection);
-            this.pMainInfo.Controls.Add(this.cbActive);
-            this.pMainInfo.Controls.Add(this.ddNeuronClass);
-            this.pMainInfo.Controls.Add(this.btnColor);
-            this.pMainInfo.Controls.Add(this.lNeuronClass);
-            this.pMainInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMainInfo.Location = new System.Drawing.Point(0, 30);
-            this.pMainInfo.Name = "pMainInfo";
-            this.pMainInfo.Size = new System.Drawing.Size(264, 257);
-            this.pMainInfo.TabIndex = 29;
+            pMainInfo.Controls.Add(lGroupName);
+            pMainInfo.Controls.Add(ddBodyPosition);
+            pMainInfo.Controls.Add(eGroupName);
+            pMainInfo.Controls.Add(lBodyPosition);
+            pMainInfo.Controls.Add(l2DRenderColumn);
+            pMainInfo.Controls.Add(eSomiteRange);
+            pMainInfo.Controls.Add(e2DColumn);
+            pMainInfo.Controls.Add(cbAllSomites);
+            pMainInfo.Controls.Add(eNumOfCells);
+            pMainInfo.Controls.Add(ddCoreType);
+            pMainInfo.Controls.Add(lCellType);
+            pMainInfo.Controls.Add(lCoreType);
+            pMainInfo.Controls.Add(ddCellType);
+            pMainInfo.Controls.Add(lNumOfCells);
+            pMainInfo.Controls.Add(ddSelection);
+            pMainInfo.Controls.Add(cbActive);
+            pMainInfo.Controls.Add(ddNeuronClass);
+            pMainInfo.Controls.Add(btnColor);
+            pMainInfo.Controls.Add(lNeuronClass);
+            pMainInfo.Dock = DockStyle.Top;
+            pMainInfo.Location = new Point(0, 30);
+            pMainInfo.Name = "pMainInfo";
+            pMainInfo.Size = new Size(264, 257);
+            pMainInfo.TabIndex = 29;
             // 
             // ddBodyPosition
             // 
-            this.ddBodyPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddBodyPosition.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddBodyPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddBodyPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddBodyPosition.FormattingEnabled = true;
-            this.ddBodyPosition.Location = new System.Drawing.Point(114, 115);
-            this.ddBodyPosition.Name = "ddBodyPosition";
-            this.ddBodyPosition.Size = new System.Drawing.Size(146, 23);
-            this.ddBodyPosition.TabIndex = 28;
+            ddBodyPosition.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddBodyPosition.BackColor = Color.WhiteSmoke;
+            ddBodyPosition.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddBodyPosition.FlatStyle = FlatStyle.Flat;
+            ddBodyPosition.FormattingEnabled = true;
+            ddBodyPosition.Location = new Point(114, 115);
+            ddBodyPosition.Name = "ddBodyPosition";
+            ddBodyPosition.Size = new Size(146, 23);
+            ddBodyPosition.TabIndex = 28;
             // 
             // lBodyPosition
             // 
-            this.lBodyPosition.AutoSize = true;
-            this.lBodyPosition.Location = new System.Drawing.Point(7, 118);
-            this.lBodyPosition.Name = "lBodyPosition";
-            this.lBodyPosition.Size = new System.Drawing.Size(80, 15);
-            this.lBodyPosition.TabIndex = 27;
-            this.lBodyPosition.Text = "Body Position";
+            lBodyPosition.AutoSize = true;
+            lBodyPosition.Location = new Point(7, 118);
+            lBodyPosition.Name = "lBodyPosition";
+            lBodyPosition.Size = new Size(80, 15);
+            lBodyPosition.TabIndex = 27;
+            lBodyPosition.Text = "Body Position";
             // 
             // eSomiteRange
             // 
-            this.eSomiteRange.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eSomiteRange.Location = new System.Drawing.Point(114, 196);
-            this.eSomiteRange.Name = "eSomiteRange";
-            this.eSomiteRange.ReadOnly = true;
-            this.eSomiteRange.Size = new System.Drawing.Size(146, 23);
-            this.eSomiteRange.TabIndex = 12;
-            this.eSomiteRange.Text = "Enter a range. Ex: 1, 3-5";
-            this.toolTip1.SetToolTip(this.eSomiteRange, "Enter a range. Ex: 1, 3-5");
+            eSomiteRange.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eSomiteRange.Location = new Point(114, 196);
+            eSomiteRange.Name = "eSomiteRange";
+            eSomiteRange.ReadOnly = true;
+            eSomiteRange.Size = new Size(146, 23);
+            eSomiteRange.TabIndex = 12;
+            eSomiteRange.Text = "Enter a range. Ex: 1, 3-5";
+            toolTip1.SetToolTip(eSomiteRange, "Enter a range. Ex: 1, 3-5");
             // 
             // cbAllSomites
             // 
-            this.cbAllSomites.AutoSize = true;
-            this.cbAllSomites.Checked = true;
-            this.cbAllSomites.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAllSomites.Location = new System.Drawing.Point(7, 199);
-            this.cbAllSomites.Name = "cbAllSomites";
-            this.cbAllSomites.Size = new System.Drawing.Size(85, 19);
-            this.cbAllSomites.TabIndex = 11;
-            this.cbAllSomites.Text = "All Somites";
-            this.cbAllSomites.UseVisualStyleBackColor = true;
-            this.cbAllSomites.CheckedChanged += new System.EventHandler(this.cbAllSomites_CheckedChanged);
+            cbAllSomites.AutoSize = true;
+            cbAllSomites.Checked = true;
+            cbAllSomites.CheckState = CheckState.Checked;
+            cbAllSomites.Location = new Point(7, 199);
+            cbAllSomites.Name = "cbAllSomites";
+            cbAllSomites.Size = new Size(85, 19);
+            cbAllSomites.TabIndex = 11;
+            cbAllSomites.Text = "All Somites";
+            cbAllSomites.UseVisualStyleBackColor = true;
+            cbAllSomites.CheckedChanged += cbAllSomites_CheckedChanged;
             // 
             // ddCoreType
             // 
-            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCoreType.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(114, 61);
-            this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(146, 23);
-            this.ddCoreType.TabIndex = 5;
-            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
+            ddCoreType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddCoreType.BackColor = Color.WhiteSmoke;
+            ddCoreType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCoreType.FlatStyle = FlatStyle.Flat;
+            ddCoreType.FormattingEnabled = true;
+            ddCoreType.Location = new Point(114, 61);
+            ddCoreType.Name = "ddCoreType";
+            ddCoreType.Size = new Size(146, 23);
+            ddCoreType.TabIndex = 5;
+            ddCoreType.SelectedIndexChanged += ddCoreType_SelectedIndexChanged;
             // 
             // lCoreType
             // 
-            this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(7, 64);
-            this.lCoreType.Name = "lCoreType";
-            this.lCoreType.Size = new System.Drawing.Size(59, 15);
-            this.lCoreType.TabIndex = 4;
-            this.lCoreType.Text = "Core Type";
+            lCoreType.AutoSize = true;
+            lCoreType.Location = new Point(7, 64);
+            lCoreType.Name = "lCoreType";
+            lCoreType.Size = new Size(59, 15);
+            lCoreType.TabIndex = 4;
+            lCoreType.Text = "Core Type";
             // 
             // ddSelection
             // 
-            this.ddSelection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddSelection.FormattingEnabled = true;
-            this.ddSelection.Location = new System.Drawing.Point(185, 141);
-            this.ddSelection.Name = "ddSelection";
-            this.ddSelection.Size = new System.Drawing.Size(75, 23);
-            this.ddSelection.TabIndex = 10;
+            ddSelection.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddSelection.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddSelection.FormattingEnabled = true;
+            ddSelection.Location = new Point(185, 141);
+            ddSelection.Name = "ddSelection";
+            ddSelection.Size = new Size(75, 23);
+            ddSelection.TabIndex = 10;
             // 
             // cbActive
             // 
-            this.cbActive.AutoSize = true;
-            this.cbActive.Checked = true;
-            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(201, 225);
-            this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(59, 19);
-            this.cbActive.TabIndex = 16;
-            this.cbActive.Text = "Active";
-            this.cbActive.UseVisualStyleBackColor = true;
+            cbActive.AutoSize = true;
+            cbActive.Checked = true;
+            cbActive.CheckState = CheckState.Checked;
+            cbActive.Location = new Point(201, 225);
+            cbActive.Name = "cbActive";
+            cbActive.Size = new Size(59, 19);
+            cbActive.TabIndex = 16;
+            cbActive.Text = "Active";
+            cbActive.UseVisualStyleBackColor = true;
             // 
             // ddNeuronClass
             // 
-            this.ddNeuronClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddNeuronClass.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddNeuronClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddNeuronClass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddNeuronClass.FormattingEnabled = true;
-            this.ddNeuronClass.Location = new System.Drawing.Point(114, 88);
-            this.ddNeuronClass.Name = "ddNeuronClass";
-            this.ddNeuronClass.Size = new System.Drawing.Size(146, 23);
-            this.ddNeuronClass.TabIndex = 7;
+            ddNeuronClass.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddNeuronClass.BackColor = Color.WhiteSmoke;
+            ddNeuronClass.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddNeuronClass.FlatStyle = FlatStyle.Flat;
+            ddNeuronClass.FormattingEnabled = true;
+            ddNeuronClass.Location = new Point(114, 88);
+            ddNeuronClass.Name = "ddNeuronClass";
+            ddNeuronClass.Size = new Size(146, 23);
+            ddNeuronClass.TabIndex = 7;
             // 
             // btnColor
             // 
-            this.btnColor.Location = new System.Drawing.Point(185, 169);
-            this.btnColor.Name = "btnColor";
-            this.btnColor.Size = new System.Drawing.Size(75, 23);
-            this.btnColor.TabIndex = 15;
-            this.btnColor.Text = "Color";
-            this.btnColor.UseVisualStyleBackColor = true;
-            this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
+            btnColor.Location = new Point(185, 169);
+            btnColor.Name = "btnColor";
+            btnColor.Size = new Size(75, 23);
+            btnColor.TabIndex = 15;
+            btnColor.Text = "Color";
+            btnColor.UseVisualStyleBackColor = true;
+            btnColor.Click += btnColor_Click;
             // 
             // lNeuronClass
             // 
-            this.lNeuronClass.AutoSize = true;
-            this.lNeuronClass.Location = new System.Drawing.Point(7, 91);
-            this.lNeuronClass.Name = "lNeuronClass";
-            this.lNeuronClass.Size = new System.Drawing.Size(77, 15);
-            this.lNeuronClass.TabIndex = 6;
-            this.lNeuronClass.Text = "Neuron Class";
+            lNeuronClass.AutoSize = true;
+            lNeuronClass.Location = new Point(7, 91);
+            lNeuronClass.Name = "lNeuronClass";
+            lNeuronClass.Size = new Size(77, 15);
+            lNeuronClass.TabIndex = 6;
+            lNeuronClass.Text = "Neuron Class";
             // 
             // eDescription
             // 
-            this.eDescription.AcceptsTab = true;
-            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eDescription.Location = new System.Drawing.Point(5, 308);
-            this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(253, 409);
-            this.eDescription.TabIndex = 17;
-            this.eDescription.Text = "";
+            eDescription.AcceptsTab = true;
+            eDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eDescription.Location = new Point(5, 308);
+            eDescription.Name = "eDescription";
+            eDescription.Size = new Size(253, 209);
+            eDescription.TabIndex = 17;
+            eDescription.Text = "";
             // 
             // lDescription
             // 
-            this.lDescription.AutoSize = true;
-            this.lDescription.Location = new System.Drawing.Point(3, 290);
-            this.lDescription.Name = "lDescription";
-            this.lDescription.Size = new System.Drawing.Size(67, 15);
-            this.lDescription.TabIndex = 26;
-            this.lDescription.Text = "Description";
+            lDescription.AutoSize = true;
+            lDescription.Location = new Point(3, 290);
+            lDescription.Name = "lDescription";
+            lDescription.Size = new Size(67, 15);
+            lDescription.TabIndex = 26;
+            lDescription.Text = "Description";
             // 
             // pMainTop
             // 
-            this.pMainTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pMainTop.Controls.Add(this.linkSavePool);
-            this.pMainTop.Controls.Add(this.linkLoadPool);
-            this.pMainTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMainTop.Location = new System.Drawing.Point(0, 0);
-            this.pMainTop.Name = "pMainTop";
-            this.pMainTop.Size = new System.Drawing.Size(264, 30);
-            this.pMainTop.TabIndex = 10;
+            pMainTop.BackColor = Color.FromArgb(236, 239, 241);
+            pMainTop.Controls.Add(linkSavePool);
+            pMainTop.Controls.Add(linkLoadPool);
+            pMainTop.Dock = DockStyle.Top;
+            pMainTop.Location = new Point(0, 0);
+            pMainTop.Name = "pMainTop";
+            pMainTop.Size = new Size(264, 30);
+            pMainTop.TabIndex = 10;
             // 
             // linkSavePool
             // 
-            this.linkSavePool.AutoSize = true;
-            this.linkSavePool.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSavePool.Location = new System.Drawing.Point(72, 9);
-            this.linkSavePool.Name = "linkSavePool";
-            this.linkSavePool.Size = new System.Drawing.Size(58, 15);
-            this.linkSavePool.TabIndex = 9;
-            this.linkSavePool.TabStop = true;
-            this.linkSavePool.Text = "Save Pool";
-            this.linkSavePool.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSavePool_LinkClicked);
+            linkSavePool.AutoSize = true;
+            linkSavePool.LinkColor = Color.FromArgb(64, 64, 64);
+            linkSavePool.Location = new Point(72, 9);
+            linkSavePool.Name = "linkSavePool";
+            linkSavePool.Size = new Size(58, 15);
+            linkSavePool.TabIndex = 9;
+            linkSavePool.TabStop = true;
+            linkSavePool.Text = "Save Pool";
+            linkSavePool.LinkClicked += linkSavePool_LinkClicked;
             // 
             // linkLoadPool
             // 
-            this.linkLoadPool.AutoSize = true;
-            this.linkLoadPool.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadPool.Location = new System.Drawing.Point(6, 9);
-            this.linkLoadPool.Name = "linkLoadPool";
-            this.linkLoadPool.Size = new System.Drawing.Size(60, 15);
-            this.linkLoadPool.TabIndex = 8;
-            this.linkLoadPool.TabStop = true;
-            this.linkLoadPool.Text = "Load Pool";
-            this.linkLoadPool.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadPool_LinkClicked);
+            linkLoadPool.AutoSize = true;
+            linkLoadPool.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLoadPool.Location = new Point(6, 9);
+            linkLoadPool.Name = "linkLoadPool";
+            linkLoadPool.Size = new Size(60, 15);
+            linkLoadPool.TabIndex = 8;
+            linkLoadPool.TabStop = true;
+            linkLoadPool.Text = "Load Pool";
+            linkLoadPool.LinkClicked += linkLoadPool_LinkClicked;
             // 
             // timeLineControl
             // 
-            this.timeLineControl.AutoScroll = true;
-            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeLineControl.Location = new System.Drawing.Point(3, 3);
-            this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(314, 687);
-            this.timeLineControl.TabIndex = 23;
+            timeLineControl.AutoScroll = true;
+            timeLineControl.BackColor = Color.FromArgb(236, 239, 241);
+            timeLineControl.Dock = DockStyle.Fill;
+            timeLineControl.Location = new Point(3, 3);
+            timeLineControl.Name = "timeLineControl";
+            timeLineControl.Size = new Size(314, 487);
+            timeLineControl.TabIndex = 23;
             // 
             // lSagittalPosition
             // 
-            this.lSagittalPosition.AutoSize = true;
-            this.lSagittalPosition.Location = new System.Drawing.Point(0, 51);
-            this.lSagittalPosition.Name = "lSagittalPosition";
-            this.lSagittalPosition.Size = new System.Drawing.Size(71, 15);
-            this.lSagittalPosition.TabIndex = 10;
-            this.lSagittalPosition.Text = "Sagittal Pos.";
+            lSagittalPosition.AutoSize = true;
+            lSagittalPosition.Location = new Point(0, 51);
+            lSagittalPosition.Name = "lSagittalPosition";
+            lSagittalPosition.Size = new Size(71, 15);
+            lSagittalPosition.TabIndex = 10;
+            lSagittalPosition.Text = "Sagittal Pos.";
             // 
             // ddSagittalPosition
             // 
-            this.ddSagittalPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddSagittalPosition.FormattingEnabled = true;
-            this.ddSagittalPosition.Location = new System.Drawing.Point(84, 47);
-            this.ddSagittalPosition.Name = "ddSagittalPosition";
-            this.ddSagittalPosition.Size = new System.Drawing.Size(121, 23);
-            this.ddSagittalPosition.TabIndex = 2;
+            ddSagittalPosition.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddSagittalPosition.FormattingEnabled = true;
+            ddSagittalPosition.Location = new Point(84, 47);
+            ddSagittalPosition.Name = "ddSagittalPosition";
+            ddSagittalPosition.Size = new Size(121, 23);
+            ddSagittalPosition.TabIndex = 2;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.pXAxis);
-            this.flowLayoutPanel1.Controls.Add(this.distributionX);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox1);
-            this.flowLayoutPanel1.Controls.Add(this.panel1);
-            this.flowLayoutPanel1.Controls.Add(this.distributionY);
-            this.flowLayoutPanel1.Controls.Add(this.pZAxis);
-            this.flowLayoutPanel1.Controls.Add(this.distributionZ);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(217, 687);
-            this.flowLayoutPanel1.TabIndex = 8;
+            flowLayoutPanel1.Controls.Add(pXAxis);
+            flowLayoutPanel1.Controls.Add(distributionX);
+            flowLayoutPanel1.Controls.Add(groupBox1);
+            flowLayoutPanel1.Controls.Add(panel1);
+            flowLayoutPanel1.Controls.Add(distributionY);
+            flowLayoutPanel1.Controls.Add(pZAxis);
+            flowLayoutPanel1.Controls.Add(distributionZ);
+            flowLayoutPanel1.Dock = DockStyle.Left;
+            flowLayoutPanel1.Location = new Point(3, 3);
+            flowLayoutPanel1.Margin = new Padding(0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(217, 487);
+            flowLayoutPanel1.TabIndex = 8;
             // 
             // distributionX
             // 
-            this.distributionX.Angular = false;
-            this.distributionX.AutoSize = true;
-            this.distributionX.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.distributionX.BackColor = System.Drawing.Color.White;
-            this.distributionX.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.distributionX.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.SetFlowBreak(this.distributionX, true);
-            this.distributionX.Location = new System.Drawing.Point(3, 33);
-            this.distributionX.MinimumSize = new System.Drawing.Size(204, 0);
-            this.distributionX.Name = "distributionX";
-            this.distributionX.NoneIncluded = false;
-            this.distributionX.Size = new System.Drawing.Size(211, 91);
-            this.distributionX.TabIndex = 0;
+            distributionX.Angular = false;
+            distributionX.AutoSize = true;
+            distributionX.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            distributionX.BackColor = Color.White;
+            distributionX.BorderStyle = BorderStyle.Fixed3D;
+            distributionX.Dock = DockStyle.Top;
+            flowLayoutPanel1.SetFlowBreak(distributionX, true);
+            distributionX.Location = new Point(3, 33);
+            distributionX.MinimumSize = new Size(204, 0);
+            distributionX.Name = "distributionX";
+            distributionX.NoneIncluded = false;
+            distributionX.Size = new Size(211, 91);
+            distributionX.TabIndex = 0;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.rbYZLinear);
-            this.groupBox1.Controls.Add(this.rbYZAngular);
-            this.groupBox1.Controls.Add(this.ddSagittalPosition);
-            this.groupBox1.Controls.Add(this.lSagittalPosition);
-            this.flowLayoutPanel1.SetFlowBreak(this.groupBox1, true);
-            this.groupBox1.Location = new System.Drawing.Point(3, 130);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(211, 80);
-            this.groupBox1.TabIndex = 22;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Y-Z Distribution";
+            groupBox1.Controls.Add(rbYZLinear);
+            groupBox1.Controls.Add(rbYZAngular);
+            groupBox1.Controls.Add(ddSagittalPosition);
+            groupBox1.Controls.Add(lSagittalPosition);
+            flowLayoutPanel1.SetFlowBreak(groupBox1, true);
+            groupBox1.Location = new Point(3, 130);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(211, 80);
+            groupBox1.TabIndex = 22;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Y-Z Distribution";
             // 
             // rbYZLinear
             // 
-            this.rbYZLinear.AutoSize = true;
-            this.rbYZLinear.Checked = true;
-            this.rbYZLinear.Location = new System.Drawing.Point(6, 22);
-            this.rbYZLinear.Name = "rbYZLinear";
-            this.rbYZLinear.Size = new System.Drawing.Size(57, 19);
-            this.rbYZLinear.TabIndex = 0;
-            this.rbYZLinear.TabStop = true;
-            this.rbYZLinear.Text = "Linear";
-            this.rbYZLinear.UseVisualStyleBackColor = true;
+            rbYZLinear.AutoSize = true;
+            rbYZLinear.Checked = true;
+            rbYZLinear.Location = new Point(6, 22);
+            rbYZLinear.Name = "rbYZLinear";
+            rbYZLinear.Size = new Size(57, 19);
+            rbYZLinear.TabIndex = 0;
+            rbYZLinear.TabStop = true;
+            rbYZLinear.Text = "Linear";
+            rbYZLinear.UseVisualStyleBackColor = true;
             // 
             // rbYZAngular
             // 
-            this.rbYZAngular.AutoSize = true;
-            this.rbYZAngular.Location = new System.Drawing.Point(95, 22);
-            this.rbYZAngular.Name = "rbYZAngular";
-            this.rbYZAngular.Size = new System.Drawing.Size(67, 19);
-            this.rbYZAngular.TabIndex = 1;
-            this.rbYZAngular.Text = "Angular";
-            this.rbYZAngular.UseVisualStyleBackColor = true;
-            this.rbYZAngular.CheckedChanged += new System.EventHandler(this.rbYZAngular_CheckedChanged);
+            rbYZAngular.AutoSize = true;
+            rbYZAngular.Location = new Point(95, 22);
+            rbYZAngular.Name = "rbYZAngular";
+            rbYZAngular.Size = new Size(67, 19);
+            rbYZAngular.TabIndex = 1;
+            rbYZAngular.Text = "Angular";
+            rbYZAngular.UseVisualStyleBackColor = true;
+            rbYZAngular.CheckedChanged += rbYZAngular_CheckedChanged;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lYAxis);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 213);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(211, 30);
-            this.panel1.TabIndex = 23;
+            panel1.Controls.Add(lYAxis);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 213);
+            panel1.Margin = new Padding(0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(211, 30);
+            panel1.TabIndex = 23;
             // 
             // lYAxis
             // 
-            this.lYAxis.AutoSize = true;
-            this.lYAxis.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lYAxis.Location = new System.Drawing.Point(18, 8);
-            this.lYAxis.Name = "lYAxis";
-            this.lYAxis.Size = new System.Drawing.Size(147, 15);
-            this.lYAxis.TabIndex = 0;
-            this.lYAxis.Text = "Y-Axis (Medial -> Lateral)";
+            lYAxis.AutoSize = true;
+            lYAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lYAxis.Location = new Point(18, 8);
+            lYAxis.Name = "lYAxis";
+            lYAxis.Size = new Size(147, 15);
+            lYAxis.TabIndex = 0;
+            lYAxis.Text = "Y-Axis (Medial -> Lateral)";
             // 
             // distributionY
             // 
-            this.distributionY.Angular = false;
-            this.distributionY.AutoSize = true;
-            this.distributionY.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.distributionY.BackColor = System.Drawing.Color.White;
-            this.distributionY.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.distributionY.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.SetFlowBreak(this.distributionY, true);
-            this.distributionY.Location = new System.Drawing.Point(3, 246);
-            this.distributionY.MinimumSize = new System.Drawing.Size(204, 0);
-            this.distributionY.Name = "distributionY";
-            this.distributionY.NoneIncluded = false;
-            this.distributionY.Size = new System.Drawing.Size(211, 91);
-            this.distributionY.TabIndex = 1;
+            distributionY.Angular = false;
+            distributionY.AutoSize = true;
+            distributionY.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            distributionY.BackColor = Color.White;
+            distributionY.BorderStyle = BorderStyle.Fixed3D;
+            distributionY.Dock = DockStyle.Top;
+            flowLayoutPanel1.SetFlowBreak(distributionY, true);
+            distributionY.Location = new Point(3, 246);
+            distributionY.MinimumSize = new Size(204, 0);
+            distributionY.Name = "distributionY";
+            distributionY.NoneIncluded = false;
+            distributionY.Size = new Size(211, 91);
+            distributionY.TabIndex = 1;
             // 
             // distributionZ
             // 
-            this.distributionZ.Angular = false;
-            this.distributionZ.AutoSize = true;
-            this.distributionZ.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.distributionZ.BackColor = System.Drawing.Color.White;
-            this.distributionZ.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.distributionZ.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.SetFlowBreak(this.distributionZ, true);
-            this.distributionZ.Location = new System.Drawing.Point(3, 373);
-            this.distributionZ.MinimumSize = new System.Drawing.Size(204, 0);
-            this.distributionZ.Name = "distributionZ";
-            this.distributionZ.NoneIncluded = false;
-            this.distributionZ.Size = new System.Drawing.Size(211, 91);
-            this.distributionZ.TabIndex = 2;
+            distributionZ.Angular = false;
+            distributionZ.AutoSize = true;
+            distributionZ.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            distributionZ.BackColor = Color.White;
+            distributionZ.BorderStyle = BorderStyle.Fixed3D;
+            distributionZ.Dock = DockStyle.Top;
+            flowLayoutPanel1.SetFlowBreak(distributionZ, true);
+            distributionZ.Location = new Point(3, 373);
+            distributionZ.MinimumSize = new Size(204, 0);
+            distributionZ.Name = "distributionZ";
+            distributionZ.NoneIncluded = false;
+            distributionZ.Size = new Size(211, 91);
+            distributionZ.TabIndex = 2;
             // 
             // tabCellPool
             // 
-            this.tabCellPool.Controls.Add(this.tSpatialDist);
-            this.tabCellPool.Controls.Add(this.tDynamics);
-            this.tabCellPool.Controls.Add(this.tTimeline);
-            this.tabCellPool.Controls.Add(this.tAttachments);
-            this.tabCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabCellPool.Location = new System.Drawing.Point(0, 0);
-            this.tabCellPool.Name = "tabCellPool";
-            this.tabCellPool.SelectedIndex = 0;
-            this.tabCellPool.Size = new System.Drawing.Size(328, 721);
-            this.tabCellPool.TabIndex = 15;
+            tabCellPool.Controls.Add(tSpatialDist);
+            tabCellPool.Controls.Add(tDynamics);
+            tabCellPool.Controls.Add(tTimeline);
+            tabCellPool.Controls.Add(tAttachments);
+            tabCellPool.Dock = DockStyle.Fill;
+            tabCellPool.Location = new Point(0, 0);
+            tabCellPool.Name = "tabCellPool";
+            tabCellPool.SelectedIndex = 0;
+            tabCellPool.Size = new Size(328, 521);
+            tabCellPool.TabIndex = 15;
             // 
             // tSpatialDist
             // 
-            this.tSpatialDist.Controls.Add(this.flowLayoutPanel1);
-            this.tSpatialDist.Location = new System.Drawing.Point(4, 24);
-            this.tSpatialDist.Name = "tSpatialDist";
-            this.tSpatialDist.Padding = new System.Windows.Forms.Padding(3);
-            this.tSpatialDist.Size = new System.Drawing.Size(320, 693);
-            this.tSpatialDist.TabIndex = 0;
-            this.tSpatialDist.Text = "Spatial Distribution";
-            this.tSpatialDist.UseVisualStyleBackColor = true;
+            tSpatialDist.Controls.Add(flowLayoutPanel1);
+            tSpatialDist.Location = new Point(4, 24);
+            tSpatialDist.Name = "tSpatialDist";
+            tSpatialDist.Padding = new Padding(3);
+            tSpatialDist.Size = new Size(320, 493);
+            tSpatialDist.TabIndex = 0;
+            tSpatialDist.Text = "Spatial Distribution";
+            tSpatialDist.UseVisualStyleBackColor = true;
             // 
             // tDynamics
             // 
-            this.tDynamics.Controls.Add(this.dgDynamics);
-            this.tDynamics.Controls.Add(this.grConductionVelocity);
-            this.tDynamics.Controls.Add(this.pDynamicsTops);
-            this.tDynamics.Location = new System.Drawing.Point(4, 24);
-            this.tDynamics.Name = "tDynamics";
-            this.tDynamics.Padding = new System.Windows.Forms.Padding(3);
-            this.tDynamics.Size = new System.Drawing.Size(320, 693);
-            this.tDynamics.TabIndex = 1;
-            this.tDynamics.Text = "Dynamics";
-            this.tDynamics.UseVisualStyleBackColor = true;
+            tDynamics.Controls.Add(dgDynamics);
+            tDynamics.Controls.Add(grConductionVelocity);
+            tDynamics.Controls.Add(pDynamicsTops);
+            tDynamics.Location = new Point(4, 24);
+            tDynamics.Name = "tDynamics";
+            tDynamics.Padding = new Padding(3);
+            tDynamics.Size = new Size(320, 493);
+            tDynamics.TabIndex = 1;
+            tDynamics.Text = "Dynamics";
+            tDynamics.UseVisualStyleBackColor = true;
             // 
             // dgDynamics
             // 
-            this.dgDynamics.AutoSize = true;
-            this.dgDynamics.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.dgDynamics.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.dgDynamics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgDynamics.Location = new System.Drawing.Point(3, 146);
-            this.dgDynamics.MinimumSize = new System.Drawing.Size(100, 100);
-            this.dgDynamics.Name = "dgDynamics";
-            this.dgDynamics.Size = new System.Drawing.Size(314, 544);
-            this.dgDynamics.TabIndex = 3;
+            dgDynamics.AutoSize = true;
+            dgDynamics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            dgDynamics.BackColor = Color.WhiteSmoke;
+            dgDynamics.Dock = DockStyle.Fill;
+            dgDynamics.Location = new Point(3, 146);
+            dgDynamics.MinimumSize = new Size(100, 100);
+            dgDynamics.Name = "dgDynamics";
+            dgDynamics.Size = new Size(314, 344);
+            dgDynamics.TabIndex = 3;
             // 
             // grConductionVelocity
             // 
-            this.grConductionVelocity.AutoSize = true;
-            this.grConductionVelocity.Controls.Add(this.distConductionVelocity);
-            this.grConductionVelocity.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grConductionVelocity.Location = new System.Drawing.Point(3, 33);
-            this.grConductionVelocity.Name = "grConductionVelocity";
-            this.grConductionVelocity.Size = new System.Drawing.Size(314, 113);
-            this.grConductionVelocity.TabIndex = 2;
-            this.grConductionVelocity.TabStop = false;
-            this.grConductionVelocity.Text = "ConductionVelocity";
+            grConductionVelocity.AutoSize = true;
+            grConductionVelocity.Controls.Add(distConductionVelocity);
+            grConductionVelocity.Dock = DockStyle.Top;
+            grConductionVelocity.Location = new Point(3, 33);
+            grConductionVelocity.Name = "grConductionVelocity";
+            grConductionVelocity.Size = new Size(314, 113);
+            grConductionVelocity.TabIndex = 2;
+            grConductionVelocity.TabStop = false;
+            grConductionVelocity.Text = "ConductionVelocity";
             // 
             // distConductionVelocity
             // 
-            this.distConductionVelocity.Angular = false;
-            this.distConductionVelocity.AutoSize = true;
-            this.distConductionVelocity.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.distConductionVelocity.BackColor = System.Drawing.Color.White;
-            this.distConductionVelocity.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.distConductionVelocity.Dock = System.Windows.Forms.DockStyle.Top;
-            this.distConductionVelocity.Location = new System.Drawing.Point(3, 19);
-            this.distConductionVelocity.MinimumSize = new System.Drawing.Size(204, 0);
-            this.distConductionVelocity.Name = "distConductionVelocity";
-            this.distConductionVelocity.NoneIncluded = true;
-            this.distConductionVelocity.Size = new System.Drawing.Size(308, 91);
-            this.distConductionVelocity.TabIndex = 0;
+            distConductionVelocity.Angular = false;
+            distConductionVelocity.AutoSize = true;
+            distConductionVelocity.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            distConductionVelocity.BackColor = Color.White;
+            distConductionVelocity.BorderStyle = BorderStyle.Fixed3D;
+            distConductionVelocity.Dock = DockStyle.Top;
+            distConductionVelocity.Location = new Point(3, 19);
+            distConductionVelocity.MinimumSize = new Size(204, 0);
+            distConductionVelocity.Name = "distConductionVelocity";
+            distConductionVelocity.NoneIncluded = true;
+            distConductionVelocity.Size = new Size(308, 91);
+            distConductionVelocity.TabIndex = 0;
             // 
             // pDynamicsTops
             // 
-            this.pDynamicsTops.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pDynamicsTops.Controls.Add(this.linkLoadCoreUnit);
-            this.pDynamicsTops.Controls.Add(this.linkTestDynamics);
-            this.pDynamicsTops.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pDynamicsTops.Location = new System.Drawing.Point(3, 3);
-            this.pDynamicsTops.Name = "pDynamicsTops";
-            this.pDynamicsTops.Size = new System.Drawing.Size(314, 30);
-            this.pDynamicsTops.TabIndex = 0;
+            pDynamicsTops.BackColor = Color.FromArgb(236, 239, 241);
+            pDynamicsTops.Controls.Add(linkLoadCoreUnit);
+            pDynamicsTops.Controls.Add(linkTestDynamics);
+            pDynamicsTops.Dock = DockStyle.Top;
+            pDynamicsTops.Location = new Point(3, 3);
+            pDynamicsTops.Name = "pDynamicsTops";
+            pDynamicsTops.Size = new Size(314, 30);
+            pDynamicsTops.TabIndex = 0;
             // 
             // linkLoadCoreUnit
             // 
-            this.linkLoadCoreUnit.AutoSize = true;
-            this.linkLoadCoreUnit.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadCoreUnit.Location = new System.Drawing.Point(94, 9);
-            this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
-            this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
-            this.linkLoadCoreUnit.TabIndex = 22;
-            this.linkLoadCoreUnit.TabStop = true;
-            this.linkLoadCoreUnit.Text = "Load Core Unit";
-            this.linkLoadCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCoreUnit_LinkClicked);
+            linkLoadCoreUnit.AutoSize = true;
+            linkLoadCoreUnit.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLoadCoreUnit.Location = new Point(94, 9);
+            linkLoadCoreUnit.Name = "linkLoadCoreUnit";
+            linkLoadCoreUnit.Size = new Size(86, 15);
+            linkLoadCoreUnit.TabIndex = 22;
+            linkLoadCoreUnit.TabStop = true;
+            linkLoadCoreUnit.Text = "Load Core Unit";
+            linkLoadCoreUnit.LinkClicked += linkLoadCoreUnit_LinkClicked;
             // 
             // linkTestDynamics
             // 
-            this.linkTestDynamics.AutoSize = true;
-            this.linkTestDynamics.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkTestDynamics.Location = new System.Drawing.Point(6, 9);
-            this.linkTestDynamics.Name = "linkTestDynamics";
-            this.linkTestDynamics.Size = new System.Drawing.Size(82, 15);
-            this.linkTestDynamics.TabIndex = 9;
-            this.linkTestDynamics.TabStop = true;
-            this.linkTestDynamics.Text = "Test Dynamics";
-            this.linkTestDynamics.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTestDynamics_LinkClicked);
+            linkTestDynamics.AutoSize = true;
+            linkTestDynamics.LinkColor = Color.FromArgb(64, 64, 64);
+            linkTestDynamics.Location = new Point(6, 9);
+            linkTestDynamics.Name = "linkTestDynamics";
+            linkTestDynamics.Size = new Size(82, 15);
+            linkTestDynamics.TabIndex = 9;
+            linkTestDynamics.TabStop = true;
+            linkTestDynamics.Text = "Test Dynamics";
+            linkTestDynamics.LinkClicked += linkTestDynamics_LinkClicked;
             // 
             // tTimeline
             // 
-            this.tTimeline.Controls.Add(this.timeLineControl);
-            this.tTimeline.Location = new System.Drawing.Point(4, 24);
-            this.tTimeline.Name = "tTimeline";
-            this.tTimeline.Padding = new System.Windows.Forms.Padding(3);
-            this.tTimeline.Size = new System.Drawing.Size(320, 693);
-            this.tTimeline.TabIndex = 2;
-            this.tTimeline.Text = "Timeline";
-            this.tTimeline.UseVisualStyleBackColor = true;
+            tTimeline.Controls.Add(timeLineControl);
+            tTimeline.Location = new Point(4, 24);
+            tTimeline.Name = "tTimeline";
+            tTimeline.Padding = new Padding(3);
+            tTimeline.Size = new Size(320, 493);
+            tTimeline.TabIndex = 2;
+            tTimeline.Text = "Timeline";
+            tTimeline.UseVisualStyleBackColor = true;
             // 
             // tAttachments
             // 
-            this.tAttachments.Controls.Add(this.attachmentList);
-            this.tAttachments.Location = new System.Drawing.Point(4, 24);
-            this.tAttachments.Name = "tAttachments";
-            this.tAttachments.Size = new System.Drawing.Size(320, 693);
-            this.tAttachments.TabIndex = 3;
-            this.tAttachments.Text = "Attachments";
-            this.tAttachments.UseVisualStyleBackColor = true;
+            tAttachments.Controls.Add(attachmentList);
+            tAttachments.Location = new Point(4, 24);
+            tAttachments.Name = "tAttachments";
+            tAttachments.Size = new Size(320, 493);
+            tAttachments.TabIndex = 3;
+            tAttachments.Text = "Attachments";
+            tAttachments.UseVisualStyleBackColor = true;
             // 
             // attachmentList
             // 
-            this.attachmentList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.attachmentList.Location = new System.Drawing.Point(0, 0);
-            this.attachmentList.Name = "attachmentList";
-            this.attachmentList.Size = new System.Drawing.Size(320, 693);
-            this.attachmentList.TabIndex = 0;
+            attachmentList.Dock = DockStyle.Fill;
+            attachmentList.Location = new Point(0, 0);
+            attachmentList.Name = "attachmentList";
+            attachmentList.Size = new Size(320, 493);
+            attachmentList.TabIndex = 0;
             // 
             // splitMain
             // 
-            this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitMain.Location = new System.Drawing.Point(0, 0);
-            this.splitMain.Name = "splitMain";
+            splitMain.BorderStyle = BorderStyle.FixedSingle;
+            splitMain.Dock = DockStyle.Fill;
+            splitMain.Location = new Point(0, 0);
+            splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.pMain);
-            this.splitMain.Panel1MinSize = 260;
+            splitMain.Panel1.Controls.Add(pMain);
+            splitMain.Panel1MinSize = 260;
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.tabCellPool);
-            this.splitMain.Size = new System.Drawing.Size(600, 723);
-            this.splitMain.SplitterDistance = 266;
-            this.splitMain.TabIndex = 16;
+            splitMain.Panel2.Controls.Add(tabCellPool);
+            splitMain.Size = new Size(600, 523);
+            splitMain.SplitterDistance = 266;
+            splitMain.TabIndex = 16;
             // 
             // openFileJson
             // 
-            this.openFileJson.Filter = "JSON files(*.json)|*.json";
+            openFileJson.Filter = "JSON files(*.json)|*.json";
             // 
             // CellPoolControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.splitMain);
-            this.MinimumSize = new System.Drawing.Size(480, 200);
-            this.Name = "CellPoolControl";
-            this.Size = new System.Drawing.Size(600, 723);
-            ((System.ComponentModel.ISupportInitialize)(this.eNumOfCells)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.e2DColumn)).EndInit();
-            this.pZAxis.ResumeLayout(false);
-            this.pZAxis.PerformLayout();
-            this.pXAxis.ResumeLayout(false);
-            this.pMain.ResumeLayout(false);
-            this.pMain.PerformLayout();
-            this.pMainInfo.ResumeLayout(false);
-            this.pMainInfo.PerformLayout();
-            this.pMainTop.ResumeLayout(false);
-            this.pMainTop.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.tabCellPool.ResumeLayout(false);
-            this.tSpatialDist.ResumeLayout(false);
-            this.tDynamics.ResumeLayout(false);
-            this.tDynamics.PerformLayout();
-            this.grConductionVelocity.ResumeLayout(false);
-            this.grConductionVelocity.PerformLayout();
-            this.pDynamicsTops.ResumeLayout(false);
-            this.pDynamicsTops.PerformLayout();
-            this.tTimeline.ResumeLayout(false);
-            this.tAttachments.ResumeLayout(false);
-            this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
-            this.splitMain.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            BackColor = Color.White;
+            Controls.Add(splitMain);
+            MinimumSize = new Size(480, 200);
+            Name = "CellPoolControl";
+            Size = new Size(600, 523);
+            ((System.ComponentModel.ISupportInitialize)eNumOfCells).EndInit();
+            ((System.ComponentModel.ISupportInitialize)e2DColumn).EndInit();
+            pZAxis.ResumeLayout(false);
+            pZAxis.PerformLayout();
+            pXAxis.ResumeLayout(false);
+            pMain.ResumeLayout(false);
+            pMain.PerformLayout();
+            pMainInfo.ResumeLayout(false);
+            pMainInfo.PerformLayout();
+            pMainTop.ResumeLayout(false);
+            pMainTop.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            tabCellPool.ResumeLayout(false);
+            tSpatialDist.ResumeLayout(false);
+            tDynamics.ResumeLayout(false);
+            tDynamics.PerformLayout();
+            grConductionVelocity.ResumeLayout(false);
+            grConductionVelocity.PerformLayout();
+            pDynamicsTops.ResumeLayout(false);
+            pDynamicsTops.PerformLayout();
+            tTimeline.ResumeLayout(false);
+            tAttachments.ResumeLayout(false);
+            splitMain.Panel1.ResumeLayout(false);
+            splitMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
+            splitMain.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

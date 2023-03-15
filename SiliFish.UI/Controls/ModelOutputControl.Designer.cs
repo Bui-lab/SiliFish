@@ -223,8 +223,8 @@
             // 
             // tabPlotSub
             // 
-            tabPlotSub.Controls.Add(tPlotWindows);
             tabPlotSub.Controls.Add(tPlotHTML);
+            tabPlotSub.Controls.Add(tPlotWindows);
             tabPlotSub.Dock = DockStyle.Fill;
             tabPlotSub.Location = new Point(3, 143);
             tabPlotSub.Name = "tabPlotSub";

@@ -28,683 +28,627 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.lSourcePool = new System.Windows.Forms.Label();
-            this.lTargetPool = new System.Windows.Forms.Label();
-            this.lAxonReachMode = new System.Windows.Forms.Label();
-            this.lConnectionType = new System.Windows.Forms.Label();
-            this.lMinReach = new System.Windows.Forms.Label();
-            this.lWeight = new System.Windows.Forms.Label();
-            this.lFixedDuration = new System.Windows.Forms.Label();
-            this.lDelay = new System.Windows.Forms.Label();
-            this.ddSourcePool = new System.Windows.Forms.ComboBox();
-            this.ddTargetPool = new System.Windows.Forms.ComboBox();
-            this.ddAxonReachMode = new System.Windows.Forms.ComboBox();
-            this.ddConnectionType = new System.Windows.Forms.ComboBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.numConductance = new System.Windows.Forms.NumericUpDown();
-            this.numDelay = new System.Windows.Forms.NumericUpDown();
-            this.eFixedDuration = new System.Windows.Forms.TextBox();
-            this.lMaxReach = new System.Windows.Forms.Label();
-            this.lMaxIncoming = new System.Windows.Forms.Label();
-            this.numMaxIncoming = new System.Windows.Forms.NumericUpDown();
-            this.lMaxOutgoing = new System.Windows.Forms.Label();
-            this.numMaxOutgoing = new System.Windows.Forms.NumericUpDown();
-            this.numMinAscReach = new System.Windows.Forms.NumericUpDown();
-            this.numMaxAscReach = new System.Windows.Forms.NumericUpDown();
-            this.numMaxDescReach = new System.Windows.Forms.NumericUpDown();
-            this.numMinDescReach = new System.Windows.Forms.NumericUpDown();
-            this.numProbability = new System.Windows.Forms.NumericUpDown();
-            this.lProbability = new System.Windows.Forms.Label();
-            this.gSynapse = new System.Windows.Forms.GroupBox();
-            this.synapseControl = new SiliFish.UI.Controls.SynapseControl();
-            this.cbActive = new System.Windows.Forms.CheckBox();
-            this.lName = new System.Windows.Forms.Label();
-            this.lDescription = new System.Windows.Forms.Label();
-            this.eName = new System.Windows.Forms.TextBox();
-            this.ddDistanceMode = new System.Windows.Forms.ComboBox();
-            this.lDistanceMode = new System.Windows.Forms.Label();
-            this.eDescription = new System.Windows.Forms.RichTextBox();
-            this.grReach = new System.Windows.Forms.GroupBox();
-            this.cbDescending = new System.Windows.Forms.CheckBox();
-            this.cbAscending = new System.Windows.Forms.CheckBox();
-            this.lUoD2 = new System.Windows.Forms.Label();
-            this.lUoD1 = new System.Windows.Forms.Label();
-            this.splitContainerMain = new System.Windows.Forms.SplitContainer();
-            this.tabInterPool = new System.Windows.Forms.TabControl();
-            this.tDynamics = new System.Windows.Forms.TabPage();
-            this.tTimeline = new System.Windows.Forms.TabPage();
-            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
-            this.tAttachments = new System.Windows.Forms.TabPage();
-            this.attachmentList = new SiliFish.UI.Controls.AttachmentListControl();
-            ((System.ComponentModel.ISupportInitialize)(this.numConductance)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxIncoming)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxOutgoing)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinAscReach)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numProbability)).BeginInit();
-            this.gSynapse.SuspendLayout();
-            this.grReach.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
-            this.splitContainerMain.Panel1.SuspendLayout();
-            this.splitContainerMain.Panel2.SuspendLayout();
-            this.splitContainerMain.SuspendLayout();
-            this.tabInterPool.SuspendLayout();
-            this.tDynamics.SuspendLayout();
-            this.tTimeline.SuspendLayout();
-            this.tAttachments.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            lSourcePool = new Label();
+            lTargetPool = new Label();
+            lAxonReachMode = new Label();
+            lConnectionType = new Label();
+            lMinReach = new Label();
+            lWeight = new Label();
+            lFixedDuration = new Label();
+            lDelay = new Label();
+            ddSourcePool = new ComboBox();
+            ddTargetPool = new ComboBox();
+            ddAxonReachMode = new ComboBox();
+            ddConnectionType = new ComboBox();
+            toolTip1 = new ToolTip(components);
+            numConductance = new NumericUpDown();
+            numDelay = new NumericUpDown();
+            eFixedDuration = new TextBox();
+            lMaxReach = new Label();
+            lMaxIncoming = new Label();
+            numMaxIncoming = new NumericUpDown();
+            lMaxOutgoing = new Label();
+            numMaxOutgoing = new NumericUpDown();
+            numMinAscReach = new NumericUpDown();
+            numMaxAscReach = new NumericUpDown();
+            numMaxDescReach = new NumericUpDown();
+            numMinDescReach = new NumericUpDown();
+            numProbability = new NumericUpDown();
+            lProbability = new Label();
+            gSynapse = new GroupBox();
+            synapseControl = new SynapseControl();
+            cbActive = new CheckBox();
+            lName = new Label();
+            lDescription = new Label();
+            eName = new TextBox();
+            ddDistanceMode = new ComboBox();
+            lDistanceMode = new Label();
+            eDescription = new RichTextBox();
+            grReach = new GroupBox();
+            cbDescending = new CheckBox();
+            cbAscending = new CheckBox();
+            lUoD2 = new Label();
+            lUoD1 = new Label();
+            splitContainerMain = new SplitContainer();
+            tabInterPool = new TabControl();
+            tDynamics = new TabPage();
+            tTimeline = new TabPage();
+            timeLineControl = new TimeLineControl();
+            tAttachments = new TabPage();
+            attachmentList = new AttachmentListControl();
+            ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numDelay).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMinAscReach).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxAscReach).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxDescReach).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMinDescReach).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numProbability).BeginInit();
+            gSynapse.SuspendLayout();
+            grReach.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerMain).BeginInit();
+            splitContainerMain.Panel1.SuspendLayout();
+            splitContainerMain.Panel2.SuspendLayout();
+            splitContainerMain.SuspendLayout();
+            tabInterPool.SuspendLayout();
+            tDynamics.SuspendLayout();
+            tTimeline.SuspendLayout();
+            tAttachments.SuspendLayout();
+            SuspendLayout();
             // 
             // lSourcePool
             // 
-            this.lSourcePool.AutoSize = true;
-            this.lSourcePool.Location = new System.Drawing.Point(13, 9);
-            this.lSourcePool.Name = "lSourcePool";
-            this.lSourcePool.Size = new System.Drawing.Size(70, 15);
-            this.lSourcePool.TabIndex = 4;
-            this.lSourcePool.Text = "Source Pool";
+            lSourcePool.AutoSize = true;
+            lSourcePool.Location = new Point(13, 9);
+            lSourcePool.Name = "lSourcePool";
+            lSourcePool.Size = new Size(70, 15);
+            lSourcePool.TabIndex = 4;
+            lSourcePool.Text = "Source Pool";
             // 
             // lTargetPool
             // 
-            this.lTargetPool.AutoSize = true;
-            this.lTargetPool.Location = new System.Drawing.Point(13, 35);
-            this.lTargetPool.Name = "lTargetPool";
-            this.lTargetPool.Size = new System.Drawing.Size(66, 15);
-            this.lTargetPool.TabIndex = 6;
-            this.lTargetPool.Text = "Target Pool";
+            lTargetPool.AutoSize = true;
+            lTargetPool.Location = new Point(13, 35);
+            lTargetPool.Name = "lTargetPool";
+            lTargetPool.Size = new Size(66, 15);
+            lTargetPool.TabIndex = 6;
+            lTargetPool.Text = "Target Pool";
             // 
             // lAxonReachMode
             // 
-            this.lAxonReachMode.AutoSize = true;
-            this.lAxonReachMode.Location = new System.Drawing.Point(13, 61);
-            this.lAxonReachMode.Name = "lAxonReachMode";
-            this.lAxonReachMode.Size = new System.Drawing.Size(70, 15);
-            this.lAxonReachMode.TabIndex = 8;
-            this.lAxonReachMode.Text = "Axon Reach";
+            lAxonReachMode.AutoSize = true;
+            lAxonReachMode.Location = new Point(13, 61);
+            lAxonReachMode.Name = "lAxonReachMode";
+            lAxonReachMode.Size = new Size(70, 15);
+            lAxonReachMode.TabIndex = 8;
+            lAxonReachMode.Text = "Axon Reach";
             // 
             // lConnectionType
             // 
-            this.lConnectionType.AutoSize = true;
-            this.lConnectionType.Location = new System.Drawing.Point(13, 87);
-            this.lConnectionType.Name = "lConnectionType";
-            this.lConnectionType.Size = new System.Drawing.Size(96, 15);
-            this.lConnectionType.TabIndex = 10;
-            this.lConnectionType.Text = "Connection Type";
+            lConnectionType.AutoSize = true;
+            lConnectionType.Location = new Point(13, 87);
+            lConnectionType.Name = "lConnectionType";
+            lConnectionType.Size = new Size(96, 15);
+            lConnectionType.TabIndex = 10;
+            lConnectionType.Text = "Connection Type";
             // 
             // lMinReach
             // 
-            this.lMinReach.AutoSize = true;
-            this.lMinReach.Location = new System.Drawing.Point(100, 45);
-            this.lMinReach.Name = "lMinReach";
-            this.lMinReach.Size = new System.Drawing.Size(28, 15);
-            this.lMinReach.TabIndex = 2;
-            this.lMinReach.Text = "Min";
-            this.toolTip1.SetToolTip(this.lMinReach, "The distance in 3-D, calculated according to the selected \'distance mode\'");
+            lMinReach.AutoSize = true;
+            lMinReach.Location = new Point(100, 45);
+            lMinReach.Name = "lMinReach";
+            lMinReach.Size = new Size(28, 15);
+            lMinReach.TabIndex = 2;
+            lMinReach.Text = "Min";
+            toolTip1.SetToolTip(lMinReach, "The distance in 3-D, calculated according to the selected 'distance mode'");
             // 
             // lWeight
             // 
-            this.lWeight.AutoSize = true;
-            this.lWeight.Location = new System.Drawing.Point(13, 191);
-            this.lWeight.Name = "lWeight";
-            this.lWeight.Size = new System.Drawing.Size(45, 15);
-            this.lWeight.TabIndex = 18;
-            this.lWeight.Text = "Weight";
-            this.toolTip1.SetToolTip(this.lWeight, "Maximum conductance");
+            lWeight.AutoSize = true;
+            lWeight.Location = new Point(13, 191);
+            lWeight.Name = "lWeight";
+            lWeight.Size = new Size(45, 15);
+            lWeight.TabIndex = 18;
+            lWeight.Text = "Weight";
+            toolTip1.SetToolTip(lWeight, "Maximum conductance");
             // 
             // lFixedDuration
             // 
-            this.lFixedDuration.AutoSize = true;
-            this.lFixedDuration.Location = new System.Drawing.Point(13, 219);
-            this.lFixedDuration.Name = "lFixedDuration";
-            this.lFixedDuration.Size = new System.Drawing.Size(60, 15);
-            this.lFixedDuration.TabIndex = 20;
-            this.lFixedDuration.Text = "Fixed Dur.";
-            this.toolTip1.SetToolTip(this.lFixedDuration, "(in ms) - if entered, distance/speed will not be used to calculate duration.");
+            lFixedDuration.AutoSize = true;
+            lFixedDuration.Location = new Point(13, 219);
+            lFixedDuration.Name = "lFixedDuration";
+            lFixedDuration.Size = new Size(60, 15);
+            lFixedDuration.TabIndex = 20;
+            lFixedDuration.Text = "Fixed Dur.";
+            toolTip1.SetToolTip(lFixedDuration, "(in ms) - if entered, distance/speed will not be used to calculate duration.");
             // 
             // lDelay
             // 
-            this.lDelay.AutoSize = true;
-            this.lDelay.Location = new System.Drawing.Point(13, 245);
-            this.lDelay.Name = "lDelay";
-            this.lDelay.Size = new System.Drawing.Size(36, 15);
-            this.lDelay.TabIndex = 22;
-            this.lDelay.Text = "Delay";
-            this.toolTip1.SetToolTip(this.lDelay, "in ms");
+            lDelay.AutoSize = true;
+            lDelay.Location = new Point(13, 245);
+            lDelay.Name = "lDelay";
+            lDelay.Size = new Size(36, 15);
+            lDelay.TabIndex = 22;
+            lDelay.Text = "Delay";
+            toolTip1.SetToolTip(lDelay, "in ms");
             // 
             // ddSourcePool
             // 
-            this.ddSourcePool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddSourcePool.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddSourcePool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddSourcePool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddSourcePool.FormattingEnabled = true;
-            this.ddSourcePool.Location = new System.Drawing.Point(109, 6);
-            this.ddSourcePool.Name = "ddSourcePool";
-            this.ddSourcePool.Size = new System.Drawing.Size(166, 23);
-            this.ddSourcePool.TabIndex = 5;
-            this.ddSourcePool.SelectedIndexChanged += new System.EventHandler(this.ddSourcePool_SelectedIndexChanged);
+            ddSourcePool.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddSourcePool.BackColor = Color.WhiteSmoke;
+            ddSourcePool.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddSourcePool.FlatStyle = FlatStyle.Flat;
+            ddSourcePool.FormattingEnabled = true;
+            ddSourcePool.Location = new Point(109, 6);
+            ddSourcePool.Name = "ddSourcePool";
+            ddSourcePool.Size = new Size(106, 23);
+            ddSourcePool.TabIndex = 5;
+            ddSourcePool.SelectedIndexChanged += ddSourcePool_SelectedIndexChanged;
             // 
             // ddTargetPool
             // 
-            this.ddTargetPool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddTargetPool.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddTargetPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddTargetPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddTargetPool.FormattingEnabled = true;
-            this.ddTargetPool.Location = new System.Drawing.Point(109, 32);
-            this.ddTargetPool.Name = "ddTargetPool";
-            this.ddTargetPool.Size = new System.Drawing.Size(166, 23);
-            this.ddTargetPool.TabIndex = 7;
-            this.ddTargetPool.SelectedIndexChanged += new System.EventHandler(this.ddTargetPool_SelectedIndexChanged);
+            ddTargetPool.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddTargetPool.BackColor = Color.WhiteSmoke;
+            ddTargetPool.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddTargetPool.FlatStyle = FlatStyle.Flat;
+            ddTargetPool.FormattingEnabled = true;
+            ddTargetPool.Location = new Point(109, 32);
+            ddTargetPool.Name = "ddTargetPool";
+            ddTargetPool.Size = new Size(106, 23);
+            ddTargetPool.TabIndex = 7;
+            ddTargetPool.SelectedIndexChanged += ddTargetPool_SelectedIndexChanged;
             // 
             // ddAxonReachMode
             // 
-            this.ddAxonReachMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddAxonReachMode.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddAxonReachMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddAxonReachMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddAxonReachMode.FormattingEnabled = true;
-            this.ddAxonReachMode.Location = new System.Drawing.Point(109, 58);
-            this.ddAxonReachMode.Name = "ddAxonReachMode";
-            this.ddAxonReachMode.Size = new System.Drawing.Size(166, 23);
-            this.ddAxonReachMode.TabIndex = 9;
-            this.ddAxonReachMode.SelectedIndexChanged += new System.EventHandler(this.ddAxonReachMode_SelectedIndexChanged);
+            ddAxonReachMode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddAxonReachMode.BackColor = Color.WhiteSmoke;
+            ddAxonReachMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddAxonReachMode.FlatStyle = FlatStyle.Flat;
+            ddAxonReachMode.FormattingEnabled = true;
+            ddAxonReachMode.Location = new Point(109, 58);
+            ddAxonReachMode.Name = "ddAxonReachMode";
+            ddAxonReachMode.Size = new Size(106, 23);
+            ddAxonReachMode.TabIndex = 9;
+            ddAxonReachMode.SelectedIndexChanged += ddAxonReachMode_SelectedIndexChanged;
             // 
             // ddConnectionType
             // 
-            this.ddConnectionType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddConnectionType.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddConnectionType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddConnectionType.FormattingEnabled = true;
-            this.ddConnectionType.Items.AddRange(new object[] {
-            "Synapse",
-            "Gap",
-            "NMJ"});
-            this.ddConnectionType.Location = new System.Drawing.Point(109, 84);
-            this.ddConnectionType.Name = "ddConnectionType";
-            this.ddConnectionType.Size = new System.Drawing.Size(166, 23);
-            this.ddConnectionType.TabIndex = 11;
-            this.ddConnectionType.SelectedIndexChanged += new System.EventHandler(this.ddConnectionType_SelectedIndexChanged);
+            ddConnectionType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddConnectionType.BackColor = Color.WhiteSmoke;
+            ddConnectionType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddConnectionType.FlatStyle = FlatStyle.Flat;
+            ddConnectionType.FormattingEnabled = true;
+            ddConnectionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
+            ddConnectionType.Location = new Point(109, 84);
+            ddConnectionType.Name = "ddConnectionType";
+            ddConnectionType.Size = new Size(106, 23);
+            ddConnectionType.TabIndex = 11;
+            ddConnectionType.SelectedIndexChanged += ddConnectionType_SelectedIndexChanged;
             // 
             // numConductance
             // 
-            this.numConductance.DecimalPlaces = 6;
-            this.numConductance.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.numConductance.Location = new System.Drawing.Point(109, 188);
-            this.numConductance.Name = "numConductance";
-            this.numConductance.Size = new System.Drawing.Size(66, 23);
-            this.numConductance.TabIndex = 19;
-            this.toolTip1.SetToolTip(this.numConductance, "Maximum conductance");
+            numConductance.DecimalPlaces = 6;
+            numConductance.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            numConductance.Location = new Point(109, 188);
+            numConductance.Name = "numConductance";
+            numConductance.Size = new Size(66, 23);
+            numConductance.TabIndex = 19;
+            toolTip1.SetToolTip(numConductance, "Maximum conductance");
             // 
             // numDelay
             // 
-            this.numDelay.DecimalPlaces = 2;
-            this.numDelay.Location = new System.Drawing.Point(109, 240);
-            this.numDelay.Name = "numDelay";
-            this.numDelay.Size = new System.Drawing.Size(66, 23);
-            this.numDelay.TabIndex = 23;
-            this.toolTip1.SetToolTip(this.numDelay, "in ms");
+            numDelay.DecimalPlaces = 2;
+            numDelay.Location = new Point(109, 240);
+            numDelay.Name = "numDelay";
+            numDelay.Size = new Size(66, 23);
+            numDelay.TabIndex = 23;
+            toolTip1.SetToolTip(numDelay, "in ms");
             // 
             // eFixedDuration
             // 
-            this.eFixedDuration.Location = new System.Drawing.Point(109, 214);
-            this.eFixedDuration.Name = "eFixedDuration";
-            this.eFixedDuration.Size = new System.Drawing.Size(66, 23);
-            this.eFixedDuration.TabIndex = 21;
-            this.toolTip1.SetToolTip(this.eFixedDuration, "(in ms) - if entered, distance/speed will not be used to calculate duration.\r\n");
+            eFixedDuration.Location = new Point(109, 214);
+            eFixedDuration.Name = "eFixedDuration";
+            eFixedDuration.Size = new Size(66, 23);
+            eFixedDuration.TabIndex = 21;
+            toolTip1.SetToolTip(eFixedDuration, "(in ms) - if entered, distance/speed will not be used to calculate duration.\r\n");
             // 
             // lMaxReach
             // 
-            this.lMaxReach.AutoSize = true;
-            this.lMaxReach.Location = new System.Drawing.Point(155, 42);
-            this.lMaxReach.Name = "lMaxReach";
-            this.lMaxReach.Size = new System.Drawing.Size(30, 15);
-            this.lMaxReach.TabIndex = 4;
-            this.lMaxReach.Text = "Max";
-            this.toolTip1.SetToolTip(this.lMaxReach, "The distance in 3-D, calculated according to the selected \'distance mode\'");
+            lMaxReach.AutoSize = true;
+            lMaxReach.Location = new Point(155, 42);
+            lMaxReach.Name = "lMaxReach";
+            lMaxReach.Size = new Size(30, 15);
+            lMaxReach.TabIndex = 4;
+            lMaxReach.Text = "Max";
+            toolTip1.SetToolTip(lMaxReach, "The distance in 3-D, calculated according to the selected 'distance mode'");
             // 
             // lMaxIncoming
             // 
-            this.lMaxIncoming.AutoSize = true;
-            this.lMaxIncoming.Location = new System.Drawing.Point(13, 113);
-            this.lMaxIncoming.Name = "lMaxIncoming";
-            this.lMaxIncoming.Size = new System.Drawing.Size(84, 15);
-            this.lMaxIncoming.TabIndex = 12;
-            this.lMaxIncoming.Text = "Max Incoming";
-            this.toolTip1.SetToolTip(this.lMaxIncoming, "The number of maximum connections the target cell can have from the same source p" +
-        "ool.\r\nEnter 0 if there is no such limit.\r\n");
+            lMaxIncoming.AutoSize = true;
+            lMaxIncoming.Location = new Point(13, 113);
+            lMaxIncoming.Name = "lMaxIncoming";
+            lMaxIncoming.Size = new Size(84, 15);
+            lMaxIncoming.TabIndex = 12;
+            lMaxIncoming.Text = "Max Incoming";
+            toolTip1.SetToolTip(lMaxIncoming, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMaxIncoming
             // 
-            this.numMaxIncoming.Location = new System.Drawing.Point(109, 110);
-            this.numMaxIncoming.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numMaxIncoming.Name = "numMaxIncoming";
-            this.numMaxIncoming.Size = new System.Drawing.Size(66, 23);
-            this.numMaxIncoming.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.numMaxIncoming, "The number of maximum connections the target cell can have from the same source p" +
-        "ool.\r\nEnter 0 if there is no such limit.");
+            numMaxIncoming.Location = new Point(109, 110);
+            numMaxIncoming.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numMaxIncoming.Name = "numMaxIncoming";
+            numMaxIncoming.Size = new Size(66, 23);
+            numMaxIncoming.TabIndex = 13;
+            toolTip1.SetToolTip(numMaxIncoming, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // lMaxOutgoing
             // 
-            this.lMaxOutgoing.AutoSize = true;
-            this.lMaxOutgoing.Location = new System.Drawing.Point(13, 139);
-            this.lMaxOutgoing.Name = "lMaxOutgoing";
-            this.lMaxOutgoing.Size = new System.Drawing.Size(84, 15);
-            this.lMaxOutgoing.TabIndex = 14;
-            this.lMaxOutgoing.Text = "Max Outgoing";
-            this.toolTip1.SetToolTip(this.lMaxOutgoing, "The number of maximum connections the source cell can have to the same target poo" +
-        "l.\r\nEnter 0 if there is no such limit.\r\n");
+            lMaxOutgoing.AutoSize = true;
+            lMaxOutgoing.Location = new Point(13, 139);
+            lMaxOutgoing.Name = "lMaxOutgoing";
+            lMaxOutgoing.Size = new Size(84, 15);
+            lMaxOutgoing.TabIndex = 14;
+            lMaxOutgoing.Text = "Max Outgoing";
+            toolTip1.SetToolTip(lMaxOutgoing, "The number of maximum connections the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMaxOutgoing
             // 
-            this.numMaxOutgoing.Location = new System.Drawing.Point(109, 136);
-            this.numMaxOutgoing.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numMaxOutgoing.Name = "numMaxOutgoing";
-            this.numMaxOutgoing.Size = new System.Drawing.Size(66, 23);
-            this.numMaxOutgoing.TabIndex = 15;
-            this.toolTip1.SetToolTip(this.numMaxOutgoing, "The number of maximum connections the source cell can have to the same target poo" +
-        "l.\r\nEnter 0 if there is no such limit.\r\n");
+            numMaxOutgoing.Location = new Point(109, 136);
+            numMaxOutgoing.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numMaxOutgoing.Name = "numMaxOutgoing";
+            numMaxOutgoing.Size = new Size(66, 23);
+            numMaxOutgoing.TabIndex = 15;
+            toolTip1.SetToolTip(numMaxOutgoing, "The number of maximum connections the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMinAscReach
             // 
-            this.numMinAscReach.Location = new System.Drawing.Point(100, 62);
-            this.numMinAscReach.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numMinAscReach.Name = "numMinAscReach";
-            this.numMinAscReach.Size = new System.Drawing.Size(50, 23);
-            this.numMinAscReach.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.numMinAscReach, "The number of maximum connections the target cell can have from the same source p" +
-        "ool.\r\nEnter 0 if there is no such limit.");
+            numMinAscReach.Location = new Point(100, 62);
+            numMinAscReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numMinAscReach.Name = "numMinAscReach";
+            numMinAscReach.Size = new Size(50, 23);
+            numMinAscReach.TabIndex = 14;
+            toolTip1.SetToolTip(numMinAscReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMaxAscReach
             // 
-            this.numMaxAscReach.Location = new System.Drawing.Point(155, 62);
-            this.numMaxAscReach.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numMaxAscReach.Name = "numMaxAscReach";
-            this.numMaxAscReach.Size = new System.Drawing.Size(50, 23);
-            this.numMaxAscReach.TabIndex = 15;
-            this.toolTip1.SetToolTip(this.numMaxAscReach, "The number of maximum connections the target cell can have from the same source p" +
-        "ool.\r\nEnter 0 if there is no such limit.");
+            numMaxAscReach.Location = new Point(155, 62);
+            numMaxAscReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numMaxAscReach.Name = "numMaxAscReach";
+            numMaxAscReach.Size = new Size(50, 23);
+            numMaxAscReach.TabIndex = 15;
+            toolTip1.SetToolTip(numMaxAscReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMaxDescReach
             // 
-            this.numMaxDescReach.Location = new System.Drawing.Point(155, 89);
-            this.numMaxDescReach.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numMaxDescReach.Name = "numMaxDescReach";
-            this.numMaxDescReach.Size = new System.Drawing.Size(50, 23);
-            this.numMaxDescReach.TabIndex = 17;
-            this.toolTip1.SetToolTip(this.numMaxDescReach, "The number of maximum connections the target cell can have from the same source p" +
-        "ool.\r\nEnter 0 if there is no such limit.");
+            numMaxDescReach.Location = new Point(155, 89);
+            numMaxDescReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numMaxDescReach.Name = "numMaxDescReach";
+            numMaxDescReach.Size = new Size(50, 23);
+            numMaxDescReach.TabIndex = 17;
+            toolTip1.SetToolTip(numMaxDescReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMinDescReach
             // 
-            this.numMinDescReach.Location = new System.Drawing.Point(100, 89);
-            this.numMinDescReach.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numMinDescReach.Name = "numMinDescReach";
-            this.numMinDescReach.Size = new System.Drawing.Size(50, 23);
-            this.numMinDescReach.TabIndex = 16;
-            this.toolTip1.SetToolTip(this.numMinDescReach, "The number of maximum connections the target cell can have from the same source p" +
-        "ool.\r\nEnter 0 if there is no such limit.");
+            numMinDescReach.Location = new Point(100, 89);
+            numMinDescReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numMinDescReach.Name = "numMinDescReach";
+            numMinDescReach.Size = new Size(50, 23);
+            numMinDescReach.TabIndex = 16;
+            toolTip1.SetToolTip(numMinDescReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numProbability
             // 
-            this.numProbability.DecimalPlaces = 2;
-            this.numProbability.Location = new System.Drawing.Point(109, 162);
-            this.numProbability.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numProbability.Name = "numProbability";
-            this.numProbability.Size = new System.Drawing.Size(66, 23);
-            this.numProbability.TabIndex = 17;
-            this.toolTip1.SetToolTip(this.numProbability, "The probability of whether there will be a connection between the source and targ" +
-        "et cell.");
-            this.numProbability.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numProbability.DecimalPlaces = 2;
+            numProbability.Location = new Point(109, 162);
+            numProbability.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+            numProbability.Name = "numProbability";
+            numProbability.Size = new Size(66, 23);
+            numProbability.TabIndex = 17;
+            toolTip1.SetToolTip(numProbability, "The probability of whether there will be a connection between the source and target cell.");
+            numProbability.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // lProbability
             // 
-            this.lProbability.AutoSize = true;
-            this.lProbability.Location = new System.Drawing.Point(13, 165);
-            this.lProbability.Name = "lProbability";
-            this.lProbability.Size = new System.Drawing.Size(64, 15);
-            this.lProbability.TabIndex = 16;
-            this.lProbability.Text = "Probability";
-            this.toolTip1.SetToolTip(this.lProbability, "The probability of whether there will be a connection between the source and targ" +
-        "et cell.");
+            lProbability.AutoSize = true;
+            lProbability.Location = new Point(13, 165);
+            lProbability.Name = "lProbability";
+            lProbability.Size = new Size(64, 15);
+            lProbability.TabIndex = 16;
+            lProbability.Text = "Probability";
+            toolTip1.SetToolTip(lProbability, "The probability of whether there will be a connection between the source and target cell.");
             // 
             // gSynapse
             // 
-            this.gSynapse.Controls.Add(this.synapseControl);
-            this.gSynapse.Location = new System.Drawing.Point(10, 128);
-            this.gSynapse.Name = "gSynapse";
-            this.gSynapse.Size = new System.Drawing.Size(239, 157);
-            this.gSynapse.TabIndex = 2;
-            this.gSynapse.TabStop = false;
-            this.gSynapse.Text = "Synapse Parameters";
+            gSynapse.Controls.Add(synapseControl);
+            gSynapse.Location = new Point(10, 128);
+            gSynapse.Name = "gSynapse";
+            gSynapse.Size = new Size(239, 157);
+            gSynapse.TabIndex = 2;
+            gSynapse.TabStop = false;
+            gSynapse.Text = "Synapse Parameters";
             // 
             // synapseControl
             // 
-            this.synapseControl.BackColor = System.Drawing.Color.White;
-            this.synapseControl.EReversal = 0D;
-            this.synapseControl.Location = new System.Drawing.Point(8, 22);
-            this.synapseControl.Name = "synapseControl";
-            this.synapseControl.Size = new System.Drawing.Size(152, 127);
-            this.synapseControl.TabIndex = 0;
+            synapseControl.BackColor = Color.White;
+            synapseControl.EReversal = 0D;
+            synapseControl.Location = new Point(8, 22);
+            synapseControl.Name = "synapseControl";
+            synapseControl.Size = new Size(152, 127);
+            synapseControl.TabIndex = 0;
+            synapseControl.VThreshold = 0D;
             // 
             // cbActive
             // 
-            this.cbActive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cbActive.AutoSize = true;
-            this.cbActive.Checked = true;
-            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(205, 296);
-            this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(59, 19);
-            this.cbActive.TabIndex = 0;
-            this.cbActive.Text = "Active";
-            this.cbActive.UseVisualStyleBackColor = true;
+            cbActive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbActive.AutoSize = true;
+            cbActive.Checked = true;
+            cbActive.CheckState = CheckState.Checked;
+            cbActive.Location = new Point(156, 296);
+            cbActive.Name = "cbActive";
+            cbActive.Size = new Size(59, 19);
+            cbActive.TabIndex = 0;
+            cbActive.Text = "Active";
+            cbActive.UseVisualStyleBackColor = true;
             // 
             // lName
             // 
-            this.lName.AutoSize = true;
-            this.lName.Location = new System.Drawing.Point(13, 271);
-            this.lName.Name = "lName";
-            this.lName.Size = new System.Drawing.Size(39, 15);
-            this.lName.TabIndex = 24;
-            this.lName.Text = "Name";
+            lName.AutoSize = true;
+            lName.Location = new Point(13, 271);
+            lName.Name = "lName";
+            lName.Size = new Size(39, 15);
+            lName.TabIndex = 24;
+            lName.Text = "Name";
             // 
             // lDescription
             // 
-            this.lDescription.AutoSize = true;
-            this.lDescription.Location = new System.Drawing.Point(16, 300);
-            this.lDescription.Name = "lDescription";
-            this.lDescription.Size = new System.Drawing.Size(67, 15);
-            this.lDescription.TabIndex = 26;
-            this.lDescription.Text = "Description";
+            lDescription.AutoSize = true;
+            lDescription.Location = new Point(16, 300);
+            lDescription.Name = "lDescription";
+            lDescription.Size = new Size(67, 15);
+            lDescription.TabIndex = 26;
+            lDescription.Text = "Description";
             // 
             // eName
             // 
-            this.eName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eName.Location = new System.Drawing.Point(109, 268);
-            this.eName.Name = "eName";
-            this.eName.Size = new System.Drawing.Size(166, 23);
-            this.eName.TabIndex = 25;
-            this.eName.Leave += new System.EventHandler(this.eName_Leave);
+            eName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eName.Location = new Point(109, 268);
+            eName.Name = "eName";
+            eName.Size = new Size(106, 23);
+            eName.TabIndex = 25;
+            eName.Leave += eName_Leave;
             // 
             // ddDistanceMode
             // 
-            this.ddDistanceMode.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddDistanceMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddDistanceMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddDistanceMode.FormattingEnabled = true;
-            this.ddDistanceMode.Location = new System.Drawing.Point(100, 16);
-            this.ddDistanceMode.Name = "ddDistanceMode";
-            this.ddDistanceMode.Size = new System.Drawing.Size(157, 23);
-            this.ddDistanceMode.TabIndex = 1;
+            ddDistanceMode.BackColor = Color.WhiteSmoke;
+            ddDistanceMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddDistanceMode.FlatStyle = FlatStyle.Flat;
+            ddDistanceMode.FormattingEnabled = true;
+            ddDistanceMode.Location = new Point(100, 16);
+            ddDistanceMode.Name = "ddDistanceMode";
+            ddDistanceMode.Size = new Size(157, 23);
+            ddDistanceMode.TabIndex = 1;
             // 
             // lDistanceMode
             // 
-            this.lDistanceMode.AutoSize = true;
-            this.lDistanceMode.Location = new System.Drawing.Point(4, 22);
-            this.lDistanceMode.Name = "lDistanceMode";
-            this.lDistanceMode.Size = new System.Drawing.Size(86, 15);
-            this.lDistanceMode.TabIndex = 0;
-            this.lDistanceMode.Text = "Distance Mode";
+            lDistanceMode.AutoSize = true;
+            lDistanceMode.Location = new Point(4, 22);
+            lDistanceMode.Name = "lDistanceMode";
+            lDistanceMode.Size = new Size(86, 15);
+            lDistanceMode.TabIndex = 0;
+            lDistanceMode.Text = "Distance Mode";
             // 
             // eDescription
             // 
-            this.eDescription.AcceptsTab = true;
-            this.eDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eDescription.Location = new System.Drawing.Point(13, 321);
-            this.eDescription.Name = "eDescription";
-            this.eDescription.Size = new System.Drawing.Size(262, 234);
-            this.eDescription.TabIndex = 27;
-            this.eDescription.Text = "";
+            eDescription.AcceptsTab = true;
+            eDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eDescription.Location = new Point(13, 321);
+            eDescription.Name = "eDescription";
+            eDescription.Size = new Size(202, 234);
+            eDescription.TabIndex = 27;
+            eDescription.Text = "";
             // 
             // grReach
             // 
-            this.grReach.Controls.Add(this.cbDescending);
-            this.grReach.Controls.Add(this.cbAscending);
-            this.grReach.Controls.Add(this.lUoD2);
-            this.grReach.Controls.Add(this.lUoD1);
-            this.grReach.Controls.Add(this.numMaxDescReach);
-            this.grReach.Controls.Add(this.numMinDescReach);
-            this.grReach.Controls.Add(this.numMaxAscReach);
-            this.grReach.Controls.Add(this.numMinAscReach);
-            this.grReach.Controls.Add(this.ddDistanceMode);
-            this.grReach.Controls.Add(this.lDistanceMode);
-            this.grReach.Controls.Add(this.lMinReach);
-            this.grReach.Controls.Add(this.lMaxReach);
-            this.grReach.Location = new System.Drawing.Point(10, 3);
-            this.grReach.Name = "grReach";
-            this.grReach.Size = new System.Drawing.Size(263, 124);
-            this.grReach.TabIndex = 1;
-            this.grReach.TabStop = false;
-            this.grReach.Text = "Reach";
+            grReach.Controls.Add(cbDescending);
+            grReach.Controls.Add(cbAscending);
+            grReach.Controls.Add(lUoD2);
+            grReach.Controls.Add(lUoD1);
+            grReach.Controls.Add(numMaxDescReach);
+            grReach.Controls.Add(numMinDescReach);
+            grReach.Controls.Add(numMaxAscReach);
+            grReach.Controls.Add(numMinAscReach);
+            grReach.Controls.Add(ddDistanceMode);
+            grReach.Controls.Add(lDistanceMode);
+            grReach.Controls.Add(lMinReach);
+            grReach.Controls.Add(lMaxReach);
+            grReach.Location = new Point(10, 3);
+            grReach.Name = "grReach";
+            grReach.Size = new Size(263, 124);
+            grReach.TabIndex = 1;
+            grReach.TabStop = false;
+            grReach.Text = "Reach";
             // 
             // cbDescending
             // 
-            this.cbDescending.AutoSize = true;
-            this.cbDescending.Checked = true;
-            this.cbDescending.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbDescending.Location = new System.Drawing.Point(8, 89);
-            this.cbDescending.Name = "cbDescending";
-            this.cbDescending.Size = new System.Drawing.Size(88, 19);
-            this.cbDescending.TabIndex = 26;
-            this.cbDescending.Text = "Descending";
-            this.cbDescending.UseVisualStyleBackColor = true;
-            this.cbDescending.CheckedChanged += new System.EventHandler(this.cbDescending_CheckedChanged);
+            cbDescending.AutoSize = true;
+            cbDescending.Checked = true;
+            cbDescending.CheckState = CheckState.Checked;
+            cbDescending.Location = new Point(8, 89);
+            cbDescending.Name = "cbDescending";
+            cbDescending.Size = new Size(88, 19);
+            cbDescending.TabIndex = 26;
+            cbDescending.Text = "Descending";
+            cbDescending.UseVisualStyleBackColor = true;
+            cbDescending.CheckedChanged += cbDescending_CheckedChanged;
             // 
             // cbAscending
             // 
-            this.cbAscending.AutoSize = true;
-            this.cbAscending.Checked = true;
-            this.cbAscending.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAscending.Location = new System.Drawing.Point(8, 66);
-            this.cbAscending.Name = "cbAscending";
-            this.cbAscending.Size = new System.Drawing.Size(82, 19);
-            this.cbAscending.TabIndex = 25;
-            this.cbAscending.Text = "Ascending";
-            this.cbAscending.UseVisualStyleBackColor = true;
-            this.cbAscending.CheckedChanged += new System.EventHandler(this.cbAscending_CheckedChanged);
+            cbAscending.AutoSize = true;
+            cbAscending.Checked = true;
+            cbAscending.CheckState = CheckState.Checked;
+            cbAscending.Location = new Point(8, 66);
+            cbAscending.Name = "cbAscending";
+            cbAscending.Size = new Size(82, 19);
+            cbAscending.TabIndex = 25;
+            cbAscending.Text = "Ascending";
+            cbAscending.UseVisualStyleBackColor = true;
+            cbAscending.CheckedChanged += cbAscending_CheckedChanged;
             // 
             // lUoD2
             // 
-            this.lUoD2.AutoSize = true;
-            this.lUoD2.Location = new System.Drawing.Point(211, 91);
-            this.lUoD2.Name = "lUoD2";
-            this.lUoD2.Size = new System.Drawing.Size(48, 15);
-            this.lUoD2.TabIndex = 24;
-            this.lUoD2.Text = "somites";
+            lUoD2.AutoSize = true;
+            lUoD2.Location = new Point(211, 91);
+            lUoD2.Name = "lUoD2";
+            lUoD2.Size = new Size(48, 15);
+            lUoD2.TabIndex = 24;
+            lUoD2.Text = "somites";
             // 
             // lUoD1
             // 
-            this.lUoD1.AutoSize = true;
-            this.lUoD1.Location = new System.Drawing.Point(211, 67);
-            this.lUoD1.Name = "lUoD1";
-            this.lUoD1.Size = new System.Drawing.Size(48, 15);
-            this.lUoD1.TabIndex = 23;
-            this.lUoD1.Text = "somites";
+            lUoD1.AutoSize = true;
+            lUoD1.Location = new Point(211, 67);
+            lUoD1.Name = "lUoD1";
+            lUoD1.Size = new Size(48, 15);
+            lUoD1.TabIndex = 23;
+            lUoD1.Text = "somites";
             // 
             // splitContainerMain
             // 
-            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerMain.Name = "splitContainerMain";
+            splitContainerMain.Dock = DockStyle.Fill;
+            splitContainerMain.Location = new Point(0, 0);
+            splitContainerMain.Name = "splitContainerMain";
             // 
             // splitContainerMain.Panel1
             // 
-            this.splitContainerMain.Panel1.Controls.Add(this.lSourcePool);
-            this.splitContainerMain.Panel1.Controls.Add(this.lMaxOutgoing);
-            this.splitContainerMain.Panel1.Controls.Add(this.lTargetPool);
-            this.splitContainerMain.Panel1.Controls.Add(this.numMaxOutgoing);
-            this.splitContainerMain.Panel1.Controls.Add(this.lAxonReachMode);
-            this.splitContainerMain.Panel1.Controls.Add(this.lMaxIncoming);
-            this.splitContainerMain.Panel1.Controls.Add(this.lConnectionType);
-            this.splitContainerMain.Panel1.Controls.Add(this.numMaxIncoming);
-            this.splitContainerMain.Panel1.Controls.Add(this.lWeight);
-            this.splitContainerMain.Panel1.Controls.Add(this.eDescription);
-            this.splitContainerMain.Panel1.Controls.Add(this.lFixedDuration);
-            this.splitContainerMain.Panel1.Controls.Add(this.eName);
-            this.splitContainerMain.Panel1.Controls.Add(this.lDelay);
-            this.splitContainerMain.Panel1.Controls.Add(this.lDescription);
-            this.splitContainerMain.Panel1.Controls.Add(this.ddSourcePool);
-            this.splitContainerMain.Panel1.Controls.Add(this.lName);
-            this.splitContainerMain.Panel1.Controls.Add(this.ddTargetPool);
-            this.splitContainerMain.Panel1.Controls.Add(this.lProbability);
-            this.splitContainerMain.Panel1.Controls.Add(this.ddAxonReachMode);
-            this.splitContainerMain.Panel1.Controls.Add(this.numProbability);
-            this.splitContainerMain.Panel1.Controls.Add(this.ddConnectionType);
-            this.splitContainerMain.Panel1.Controls.Add(this.cbActive);
-            this.splitContainerMain.Panel1.Controls.Add(this.numConductance);
-            this.splitContainerMain.Panel1.Controls.Add(this.eFixedDuration);
-            this.splitContainerMain.Panel1.Controls.Add(this.numDelay);
+            splitContainerMain.Panel1.Controls.Add(lSourcePool);
+            splitContainerMain.Panel1.Controls.Add(lMaxOutgoing);
+            splitContainerMain.Panel1.Controls.Add(lTargetPool);
+            splitContainerMain.Panel1.Controls.Add(numMaxOutgoing);
+            splitContainerMain.Panel1.Controls.Add(lAxonReachMode);
+            splitContainerMain.Panel1.Controls.Add(lMaxIncoming);
+            splitContainerMain.Panel1.Controls.Add(lConnectionType);
+            splitContainerMain.Panel1.Controls.Add(numMaxIncoming);
+            splitContainerMain.Panel1.Controls.Add(lWeight);
+            splitContainerMain.Panel1.Controls.Add(eDescription);
+            splitContainerMain.Panel1.Controls.Add(lFixedDuration);
+            splitContainerMain.Panel1.Controls.Add(eName);
+            splitContainerMain.Panel1.Controls.Add(lDelay);
+            splitContainerMain.Panel1.Controls.Add(lDescription);
+            splitContainerMain.Panel1.Controls.Add(ddSourcePool);
+            splitContainerMain.Panel1.Controls.Add(lName);
+            splitContainerMain.Panel1.Controls.Add(ddTargetPool);
+            splitContainerMain.Panel1.Controls.Add(lProbability);
+            splitContainerMain.Panel1.Controls.Add(ddAxonReachMode);
+            splitContainerMain.Panel1.Controls.Add(numProbability);
+            splitContainerMain.Panel1.Controls.Add(ddConnectionType);
+            splitContainerMain.Panel1.Controls.Add(cbActive);
+            splitContainerMain.Panel1.Controls.Add(numConductance);
+            splitContainerMain.Panel1.Controls.Add(eFixedDuration);
+            splitContainerMain.Panel1.Controls.Add(numDelay);
             // 
             // splitContainerMain.Panel2
             // 
-            this.splitContainerMain.Panel2.Controls.Add(this.tabInterPool);
-            this.splitContainerMain.Size = new System.Drawing.Size(835, 559);
-            this.splitContainerMain.SplitterDistance = 278;
-            this.splitContainerMain.TabIndex = 28;
+            splitContainerMain.Panel2.Controls.Add(tabInterPool);
+            splitContainerMain.Size = new Size(510, 559);
+            splitContainerMain.SplitterDistance = 218;
+            splitContainerMain.TabIndex = 28;
             // 
             // tabInterPool
             // 
-            this.tabInterPool.Controls.Add(this.tDynamics);
-            this.tabInterPool.Controls.Add(this.tTimeline);
-            this.tabInterPool.Controls.Add(this.tAttachments);
-            this.tabInterPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabInterPool.Location = new System.Drawing.Point(0, 0);
-            this.tabInterPool.Name = "tabInterPool";
-            this.tabInterPool.SelectedIndex = 0;
-            this.tabInterPool.Size = new System.Drawing.Size(553, 559);
-            this.tabInterPool.TabIndex = 0;
+            tabInterPool.Controls.Add(tDynamics);
+            tabInterPool.Controls.Add(tTimeline);
+            tabInterPool.Controls.Add(tAttachments);
+            tabInterPool.Dock = DockStyle.Fill;
+            tabInterPool.Location = new Point(0, 0);
+            tabInterPool.Name = "tabInterPool";
+            tabInterPool.SelectedIndex = 0;
+            tabInterPool.Size = new Size(288, 559);
+            tabInterPool.TabIndex = 0;
             // 
             // tDynamics
             // 
-            this.tDynamics.Controls.Add(this.grReach);
-            this.tDynamics.Controls.Add(this.gSynapse);
-            this.tDynamics.Location = new System.Drawing.Point(4, 24);
-            this.tDynamics.Name = "tDynamics";
-            this.tDynamics.Padding = new System.Windows.Forms.Padding(3);
-            this.tDynamics.Size = new System.Drawing.Size(545, 531);
-            this.tDynamics.TabIndex = 0;
-            this.tDynamics.Text = "Dynamics";
-            this.tDynamics.UseVisualStyleBackColor = true;
+            tDynamics.Controls.Add(grReach);
+            tDynamics.Controls.Add(gSynapse);
+            tDynamics.Location = new Point(4, 24);
+            tDynamics.Name = "tDynamics";
+            tDynamics.Padding = new Padding(3);
+            tDynamics.Size = new Size(280, 531);
+            tDynamics.TabIndex = 0;
+            tDynamics.Text = "Dynamics";
+            tDynamics.UseVisualStyleBackColor = true;
             // 
             // tTimeline
             // 
-            this.tTimeline.Controls.Add(this.timeLineControl);
-            this.tTimeline.Location = new System.Drawing.Point(4, 24);
-            this.tTimeline.Name = "tTimeline";
-            this.tTimeline.Padding = new System.Windows.Forms.Padding(3);
-            this.tTimeline.Size = new System.Drawing.Size(545, 531);
-            this.tTimeline.TabIndex = 1;
-            this.tTimeline.Text = "Timeline";
-            this.tTimeline.UseVisualStyleBackColor = true;
+            tTimeline.Controls.Add(timeLineControl);
+            tTimeline.Location = new Point(4, 24);
+            tTimeline.Name = "tTimeline";
+            tTimeline.Padding = new Padding(3);
+            tTimeline.Size = new Size(545, 531);
+            tTimeline.TabIndex = 1;
+            tTimeline.Text = "Timeline";
+            tTimeline.UseVisualStyleBackColor = true;
             // 
             // timeLineControl
             // 
-            this.timeLineControl.AutoScroll = true;
-            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeLineControl.Location = new System.Drawing.Point(3, 3);
-            this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(539, 525);
-            this.timeLineControl.TabIndex = 24;
+            timeLineControl.AutoScroll = true;
+            timeLineControl.BackColor = Color.FromArgb(236, 239, 241);
+            timeLineControl.Dock = DockStyle.Fill;
+            timeLineControl.Location = new Point(3, 3);
+            timeLineControl.Name = "timeLineControl";
+            timeLineControl.Size = new Size(539, 525);
+            timeLineControl.TabIndex = 24;
             // 
             // tAttachments
             // 
-            this.tAttachments.Controls.Add(this.attachmentList);
-            this.tAttachments.Location = new System.Drawing.Point(4, 24);
-            this.tAttachments.Name = "tAttachments";
-            this.tAttachments.Size = new System.Drawing.Size(545, 531);
-            this.tAttachments.TabIndex = 2;
-            this.tAttachments.Text = "Attachments";
-            this.tAttachments.UseVisualStyleBackColor = true;
+            tAttachments.Controls.Add(attachmentList);
+            tAttachments.Location = new Point(4, 24);
+            tAttachments.Name = "tAttachments";
+            tAttachments.Size = new Size(545, 531);
+            tAttachments.TabIndex = 2;
+            tAttachments.Text = "Attachments";
+            tAttachments.UseVisualStyleBackColor = true;
             // 
             // attachmentList
             // 
-            this.attachmentList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.attachmentList.Location = new System.Drawing.Point(0, 0);
-            this.attachmentList.Name = "attachmentList";
-            this.attachmentList.Size = new System.Drawing.Size(545, 531);
-            this.attachmentList.TabIndex = 0;
+            attachmentList.Dock = DockStyle.Fill;
+            attachmentList.Location = new Point(0, 0);
+            attachmentList.Name = "attachmentList";
+            attachmentList.Size = new Size(545, 531);
+            attachmentList.TabIndex = 0;
             // 
             // InterPoolControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.splitContainerMain);
-            this.Name = "InterPoolControl";
-            this.Size = new System.Drawing.Size(835, 559);
-            ((System.ComponentModel.ISupportInitialize)(this.numConductance)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxIncoming)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxOutgoing)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinAscReach)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxAscReach)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxDescReach)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinDescReach)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numProbability)).EndInit();
-            this.gSynapse.ResumeLayout(false);
-            this.grReach.ResumeLayout(false);
-            this.grReach.PerformLayout();
-            this.splitContainerMain.Panel1.ResumeLayout(false);
-            this.splitContainerMain.Panel1.PerformLayout();
-            this.splitContainerMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
-            this.splitContainerMain.ResumeLayout(false);
-            this.tabInterPool.ResumeLayout(false);
-            this.tDynamics.ResumeLayout(false);
-            this.tTimeline.ResumeLayout(false);
-            this.tAttachments.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            BackColor = Color.White;
+            Controls.Add(splitContainerMain);
+            Name = "InterPoolControl";
+            Size = new Size(510, 559);
+            ((System.ComponentModel.ISupportInitialize)numConductance).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numDelay).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxIncoming).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMinAscReach).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxAscReach).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMaxDescReach).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMinDescReach).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numProbability).EndInit();
+            gSynapse.ResumeLayout(false);
+            grReach.ResumeLayout(false);
+            grReach.PerformLayout();
+            splitContainerMain.Panel1.ResumeLayout(false);
+            splitContainerMain.Panel1.PerformLayout();
+            splitContainerMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerMain).EndInit();
+            splitContainerMain.ResumeLayout(false);
+            tabInterPool.ResumeLayout(false);
+            tDynamics.ResumeLayout(false);
+            tTimeline.ResumeLayout(false);
+            tAttachments.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

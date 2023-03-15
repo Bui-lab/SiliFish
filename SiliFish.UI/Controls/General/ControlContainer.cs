@@ -11,6 +11,13 @@ namespace SiliFish.UI
             InitializeComponent();
         }
 
+        public ControlContainer(Point parentCorner)
+        {
+            InitializeComponent();
+            StartPosition = FormStartPosition.Manual;
+            Location = new Point(parentCorner.X + 10, parentCorner.Y + 10);
+        }
+
         public bool SaveVisible
         {
             get { return btnSave.Visible; }

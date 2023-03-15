@@ -149,7 +149,7 @@ namespace SiliFish.UI.Controls
             decimal dt = (decimal)RunningModel.RunParam.DeltaT;
             eAnimationdt.Minimum = dt;
             eAnimationdt.Increment = dt;
-            eAnimationdt.Value = 10 * dt;
+            eAnimationdt.Value = dt; //10 * dt;
 
             decimal tMax = (decimal)RunningModel.RunParam.MaxTime;
             ePlotEnd.Value = tMax;

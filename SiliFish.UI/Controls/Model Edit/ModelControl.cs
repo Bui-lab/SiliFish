@@ -259,7 +259,7 @@ namespace SiliFish.UI.Controls
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
             if (Model == null) return null;
-            ControlContainer frmControl = new();
+            ControlContainer frmControl = new(ParentForm.Location);
             CellPoolControl cplControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
             cplControl.LoadPool += Cpl_LoadPool;
             cplControl.SavePool += Cpl_SavePool;
@@ -268,7 +268,6 @@ namespace SiliFish.UI.Controls
             frmControl.AddControl(cplControl, cplControl.CheckValues);
 
             frmControl.Text = pool?.ToString() ?? "New Cell Pool";
-
             if (frmControl.ShowDialog() == DialogResult.OK)
                 return cplControl.PoolBase;
             return null;
@@ -418,7 +417,7 @@ namespace SiliFish.UI.Controls
         {
             if (Model == null) return null;
             if (CurrentMode == RunMode.Template) return null;
-            ControlContainer frmControl = new();
+            ControlContainer frmControl = new(ParentForm.Location);
             CellControl cellControl = new(Model as RunningModel)
             {
                 Cell = cell
@@ -622,7 +621,7 @@ namespace SiliFish.UI.Controls
             if (Model == null) return null;
             if (CurrentMode == RunMode.Template)
             {
-                ControlContainer frmControl = new();
+                ControlContainer frmControl = new(ParentForm.Location);
                 InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
@@ -639,7 +638,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                ControlContainer frmControl = new();
+                ControlContainer frmControl = new(ParentForm.Location);
                 JunctionControl jncControl = new(Model as RunningModel); 
                 jncControl.SetJunction(interpool, newJunc);
                 frmControl.AddControl(jncControl, jncControl.CheckValues);
@@ -875,7 +874,7 @@ namespace SiliFish.UI.Controls
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
         {
             if (Model == null) return null;
-            ControlContainer frmControl = new();
+            ControlContainer frmControl = new(ParentForm.Location);
             if (CurrentMode == RunMode.Template)
             {
                 StimulusTemplateControl stimControl = new();

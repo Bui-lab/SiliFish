@@ -18,7 +18,7 @@ namespace SiliFish.UI.Controls
 
         public void CheckValues(object sender, EventArgs args)
         {
-            CheckValuesArgs checkValuesArgs=args as CheckValuesArgs;
+            CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
             checkValuesArgs.Errors = new();
             if (ddSourcePool.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("No source pool selected.");

@@ -19,8 +19,8 @@ namespace SiliFish.UI.Controls
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private ControlContainer frmDynamicControl;
-            
-        private bool SomiteBased = false;       
+
+        private bool SomiteBased = false;
 
         public event EventHandler SavePool;
         public event EventHandler LoadPool;
@@ -35,17 +35,17 @@ namespace SiliFish.UI.Controls
             set
             {
                 bool createdCellPool = value is CellPool cp && cp.NumOfCells > 0;
-             
+
                 linkLoadPool.Enabled = !createdCellPool;
                 ((Control)tSpatialDist).Enabled = !createdCellPool;
-                
+
                 //The lone below also disables Test Dynamics Test
                 //((Control)tDynamics).Enabled = !createdCellPool;
                 //Disable all other controls individually 
                 dgDynamics.Enabled = !createdCellPool;
                 grConductionVelocity.Enabled = !createdCellPool;
                 linkLoadCoreUnit.Enabled = !createdCellPool;
-                
+
                 pMainInfo.Enabled = !createdCellPool;
                 linkLoadPool.Enabled = !createdCellPool;
 
@@ -143,7 +143,7 @@ namespace SiliFish.UI.Controls
             poolBase ??= new CellPoolTemplate();
             poolBase.CellGroup = groupName;
             poolBase.Description = eDescription.Text;
-            poolBase.BodyLocation= (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text);
+            poolBase.BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), ddBodyPosition.Text);
             poolBase.PositionLeftRight = sagPlane;
             poolBase.ColumnIndex2D = (int)e2DColumn.Value;
             poolBase.NumOfCells = (int)eNumOfCells.Value;
@@ -163,7 +163,7 @@ namespace SiliFish.UI.Controls
 
             poolBase.Attachments = attachmentList.GetAttachments();
         }
-        
+
         private void WriteDataToControl()
         {
             if (poolBase == null) return;
@@ -207,7 +207,7 @@ namespace SiliFish.UI.Controls
 
             attachmentList.SetAttachments(poolBase.Attachments);
         }
-        
+
         private void rbYZAngular_CheckedChanged(object sender, EventArgs e)
         {
             if (rbYZAngular.Checked)
@@ -223,7 +223,7 @@ namespace SiliFish.UI.Controls
                 lZAxis.Text = "Z - Axis (Dorsal->Ventral)";
             }
         }
-        
+
         private void btnColor_Click(object sender, EventArgs e)
         {
             colorDialog.Color = btnColor.BackColor;
@@ -232,7 +232,7 @@ namespace SiliFish.UI.Controls
                 btnColor.BackColor = colorDialog.Color;
             }
         }
-        
+
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             openFileJson.InitialDirectory = coreUnitFileDefaultFolder;
@@ -338,6 +338,5 @@ namespace SiliFish.UI.Controls
             if ((int)eNumOfCells.Value < GlobalSettings.Epsilon)
                 checkValuesArgs.Errors.Add("Number of cells is 0. To disable a cell pool, use the Active field instead.");
         }
-
     }
 }

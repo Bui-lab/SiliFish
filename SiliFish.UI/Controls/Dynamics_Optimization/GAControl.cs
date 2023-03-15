@@ -8,6 +8,7 @@ using SiliFish.Repositories;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.EventArguments;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace SiliFish.UI.Controls
 {

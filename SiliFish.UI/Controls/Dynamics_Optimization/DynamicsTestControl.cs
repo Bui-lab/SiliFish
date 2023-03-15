@@ -31,8 +31,8 @@ namespace SiliFish.UI.Controls
         public string CoreType
         {
             get { return coreType; }
-            set 
-            { 
+            set
+            {
                 coreType = value;
                 gaControl.CoreType = coreType;
             }
@@ -148,9 +148,9 @@ namespace SiliFish.UI.Controls
             if (parameters != null)
                 Parameters = parameters;
             pTop.Visible = !testMode;
-            
+
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", GlobalSettings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
-          
+
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
             gaControl.OnLoadParams += GaControl_OnLoadParams;
@@ -171,7 +171,7 @@ namespace SiliFish.UI.Controls
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
-            double[] I  = GenerateStimulus(stimulusControl1.GetStimulusSettings());
+            double[] I = GenerateStimulus(stimulusControl1.GetStimulusSettings());
             DynamicsStats[] stats = core.FiringAnalysis(param, values, I);
             for (int iter = 0; iter < values.Length; iter++)
             {
@@ -519,7 +519,7 @@ namespace SiliFish.UI.Controls
                             if (double.TryParse(s, out double d))
                             {
                                 stimValues.Add(d);
-                                columnNames.Add($"Stim_{columnNames.Count+1}");
+                                columnNames.Add($"Stim_{columnNames.Count + 1}");
                             }
                     }
                     if (stimValues.Any())
@@ -616,13 +616,13 @@ namespace SiliFish.UI.Controls
                     { Caption = $"Core File: {Path.GetFileNameWithoutExtension(fileName)}" };
                     contentChanged?.Invoke(this, args);
                 }
-                else 
+                else
                 {
                     MessageBox.Show("Selected file is not a valid Core file.");
                 }
             }
         }
-    
+
 
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
