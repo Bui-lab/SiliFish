@@ -1,0 +1,1941 @@
+{
+  "Version": "2.2.4.0",
+  "ClassType": "ModelTemplate",
+  "ModelName": "Beat and Glide Replicate",
+  "ModelDescription": "",
+  "ModelDimensions": {
+    "NumberOfSomites": 0,
+    "SupraSpinalRostralCaudalDistance": 0,
+    "SupraSpinalDorsalVentralDistance": 0,
+    "SupraSpinalMedialLateralDistance": 0,
+    "SpinalRostralCaudalDistance": 30,
+    "SpinalDorsalVentralDistance": 5,
+    "SpinalMedialLateralDistance": 3,
+    "SpinalBodyPosition": 10,
+    "BodyMedialLateralDistance": 7,
+    "BodyDorsalVentralDistance": 20
+  },
+  "Settings": {
+    "Seed": 0,
+    "UoM": 0,
+    "DefaultNeuronCore": "Izhikevich_9P",
+    "DefaultMuscleCellCore": "Leaky_Integrator",
+    "cv": 0.8,
+    "E_glu": 0,
+    "E_gly": -70,
+    "E_gaba": -70,
+    "E_ach": 120,
+    "ChatteringIrregularity": 0.1,
+    "MaxBurstInterval_DefaultLowerRange": 5,
+    "MaxBurstInterval_DefaultUpperRange": 30,
+    "OneClusterMultiplier": 2,
+    "TonicPadding": 1
+  },
+  "CellPoolTemplates": [
+    {
+      "CellGroup": "dI6",
+      "CellType": 0,
+      "Description": "",
+      "CoreType": "Izhikevich_9P",
+      "BodyLocation": 0,
+      "Color": "#00FF00",
+      "PositionLeftRight": 2,
+      "NTMode": 1,
+      "NumOfCells": 15,
+      "PerSomiteOrTotal": 1,
+      "SomiteRange": null,
+      "ConductionVelocity": {
+        "$type": "Constant",
+        "UniqueValue": 0.8,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.8,
+        "RangeEnd": 0.8,
+        "Range": 0
+      },
+      "XDistribution": {
+        "$type": "Equally Spaced",
+        "NoiseStdDev": 0.01,
+        "UniqueValue": 17.1,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 5.1,
+        "RangeEnd": 29.1,
+        "Range": 30
+      },
+      "Y_AngleDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 1,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 1,
+        "RangeEnd": 1,
+        "Range": 0
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0,
+        "Range": 0
+      },
+      "ColumnIndex2D": 1,
+      "Attachments": [],
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "a": {
+          "$type": "Constant",
+          "UniqueValue": 0.1,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.1,
+          "RangeEnd": 0.1,
+          "Range": 0
+        },
+        "b": {
+          "$type": "Constant",
+          "UniqueValue": 0.002,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.002,
+          "RangeEnd": 0.002,
+          "Range": 0
+        },
+        "c": {
+          "$type": "Constant",
+          "UniqueValue": -55,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -55,
+          "RangeEnd": -55,
+          "Range": 0
+        },
+        "d": {
+          "$type": "Constant",
+          "UniqueValue": 4,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 4,
+          "RangeEnd": 4,
+          "Range": 0
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -60,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -60,
+          "RangeEnd": -60,
+          "Range": 0
+        },
+        "Vt": {
+          "$type": "Constant",
+          "UniqueValue": -54,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -54,
+          "RangeEnd": -54,
+          "Range": 0
+        },
+        "k": {
+          "$type": "Constant",
+          "UniqueValue": 0.3,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.3,
+          "RangeEnd": 0.3,
+          "Range": 0
+        },
+        "Cm": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        }
+      }
+    },
+    {
+      "CellGroup": "Muscle",
+      "CellType": 1,
+      "Description": "",
+      "CoreType": "Leaky_Integrator",
+      "BodyLocation": 1,
+      "Color": "#FF00ff",
+      "PositionLeftRight": 2,
+      "NTMode": 0,
+      "NumOfCells": 15,
+      "PerSomiteOrTotal": 1,
+      "SomiteRange": "",
+      "ConductionVelocity": {
+        "$type": "Constant",
+        "UniqueValue": 0.8,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.8,
+        "RangeEnd": 0.8,
+        "Range": 0
+      },
+      "XDistribution": {
+        "$type": "Equally Spaced",
+        "NoiseStdDev": 0.01,
+        "UniqueValue": 17,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 5,
+        "RangeEnd": 29,
+        "Range": 0
+      },
+      "Y_AngleDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 1,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 1,
+        "RangeEnd": 1,
+        "Range": 0
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 10,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 10,
+        "RangeEnd": 10,
+        "Range": 0
+      },
+      "ColumnIndex2D": 6,
+      "Attachments": [],
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "R": {
+          "$type": "Constant",
+          "UniqueValue": 1,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 1,
+          "RangeEnd": 1,
+          "Range": 0
+        },
+        "C": {
+          "$type": "Constant",
+          "UniqueValue": 3,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 3,
+          "RangeEnd": 3,
+          "Range": 0
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -90,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -90,
+          "RangeEnd": -90,
+          "Range": 0
+        },
+        "Va": {
+          "$type": "Constant",
+          "UniqueValue": -70,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -70,
+          "RangeEnd": -70,
+          "Range": 0
+        },
+        "Tmax": {
+          "$type": "Constant",
+          "UniqueValue": 15,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 15,
+          "RangeEnd": 15,
+          "Range": 0
+        },
+        "ka": {
+          "$type": "Constant",
+          "UniqueValue": 6,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 6,
+          "RangeEnd": 6,
+          "Range": 0
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 30,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 30,
+          "RangeEnd": 30,
+          "Range": 0
+        }
+      }
+    },
+    {
+      "CellGroup": "MN",
+      "CellType": 0,
+      "Description": "Motoneurons",
+      "CoreType": "Izhikevich_9P",
+      "BodyLocation": 0,
+      "Color": "#FF0000",
+      "PositionLeftRight": 2,
+      "NTMode": 4,
+      "NumOfCells": 15,
+      "PerSomiteOrTotal": 1,
+      "SomiteRange": null,
+      "ConductionVelocity": {
+        "$type": "Constant",
+        "UniqueValue": 0.8,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.8,
+        "RangeEnd": 0.8,
+        "Range": 0
+      },
+      "XDistribution": {
+        "$type": "Equally Spaced",
+        "NoiseStdDev": 0.01,
+        "UniqueValue": 17,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 5,
+        "RangeEnd": 29,
+        "Range": 30
+      },
+      "Y_AngleDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 1,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 1,
+        "RangeEnd": 1,
+        "Range": 0
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0,
+        "Range": 0
+      },
+      "ColumnIndex2D": 5,
+      "Attachments": [],
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "a": {
+          "$type": "Constant",
+          "UniqueValue": 0.5,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.5,
+          "RangeEnd": 0.5,
+          "Range": 0
+        },
+        "b": {
+          "$type": "Constant",
+          "UniqueValue": 0.01,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.01,
+          "RangeEnd": 0.01,
+          "Range": 0
+        },
+        "c": {
+          "$type": "Constant",
+          "UniqueValue": -55,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -55,
+          "RangeEnd": -55,
+          "Range": 0
+        },
+        "d": {
+          "$type": "Constant",
+          "UniqueValue": 100,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 100,
+          "RangeEnd": 100,
+          "Range": 0
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -65,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -65,
+          "RangeEnd": -65,
+          "Range": 0
+        },
+        "Vt": {
+          "$type": "Constant",
+          "UniqueValue": -58,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -58,
+          "RangeEnd": -58,
+          "Range": 0
+        },
+        "k": {
+          "$type": "Constant",
+          "UniqueValue": 0.5,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.5,
+          "RangeEnd": 0.5,
+          "Range": 0
+        },
+        "Cm": {
+          "$type": "Constant",
+          "UniqueValue": 20,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 20,
+          "RangeEnd": 20,
+          "Range": 0
+        }
+      }
+    },
+    {
+      "CellGroup": "V0v",
+      "CellType": 0,
+      "Description": "",
+      "CoreType": "Izhikevich_9P",
+      "BodyLocation": 0,
+      "Color": "#00FFff",
+      "PositionLeftRight": 2,
+      "NTMode": 3,
+      "NumOfCells": 15,
+      "PerSomiteOrTotal": 1,
+      "SomiteRange": "",
+      "ConductionVelocity": {
+        "$type": "Constant",
+        "UniqueValue": 0.8,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.8,
+        "RangeEnd": 0.8,
+        "Range": 0
+      },
+      "XDistribution": {
+        "$type": "Equally Spaced",
+        "NoiseStdDev": 0.01,
+        "UniqueValue": 17.1,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 5.1,
+        "RangeEnd": 29.1,
+        "Range": 0
+      },
+      "Y_AngleDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 1,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 1,
+        "RangeEnd": 1,
+        "Range": 0
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0,
+        "Range": 0
+      },
+      "ColumnIndex2D": 2,
+      "Attachments": [],
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "a": {
+          "$type": "Constant",
+          "UniqueValue": 0.01,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.01,
+          "RangeEnd": 0.01,
+          "Range": 0
+        },
+        "b": {
+          "$type": "Constant",
+          "UniqueValue": 0.002,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.002,
+          "RangeEnd": 0.002,
+          "Range": 0
+        },
+        "c": {
+          "$type": "Constant",
+          "UniqueValue": -55,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -55,
+          "RangeEnd": -55,
+          "Range": 0
+        },
+        "d": {
+          "$type": "Constant",
+          "UniqueValue": 2,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 2,
+          "RangeEnd": 2,
+          "Range": 0
+        },
+        "Vt": {
+          "$type": "Constant",
+          "UniqueValue": -54,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -54,
+          "RangeEnd": -54,
+          "Range": 0
+        },
+        "k": {
+          "$type": "Constant",
+          "UniqueValue": 0.3,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.3,
+          "RangeEnd": 0.3,
+          "Range": 0
+        },
+        "Cm": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -60,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -60,
+          "RangeEnd": -60,
+          "Range": 0
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 8,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 8,
+          "RangeEnd": 8,
+          "Range": 0
+        }
+      }
+    },
+    {
+      "CellGroup": "V1",
+      "CellType": 0,
+      "Description": "",
+      "CoreType": "Izhikevich_9P",
+      "BodyLocation": 0,
+      "Color": "#FF8040",
+      "PositionLeftRight": 2,
+      "NTMode": 1,
+      "NumOfCells": 15,
+      "PerSomiteOrTotal": 1,
+      "SomiteRange": "",
+      "ConductionVelocity": {
+        "$type": "Constant",
+        "UniqueValue": 0.8,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.8,
+        "RangeEnd": 0.8,
+        "Range": 0
+      },
+      "XDistribution": {
+        "$type": "Equally Spaced",
+        "NoiseStdDev": 0.01,
+        "UniqueValue": 19.1,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 7.1,
+        "RangeEnd": 31.1,
+        "Range": 0
+      },
+      "Y_AngleDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 1,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 1,
+        "RangeEnd": 1,
+        "Range": 0
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0,
+        "Range": 0
+      },
+      "ColumnIndex2D": 4,
+      "Attachments": [],
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "a": {
+          "$type": "Constant",
+          "UniqueValue": 0.1,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.1,
+          "RangeEnd": 0.1,
+          "Range": 0
+        },
+        "b": {
+          "$type": "Constant",
+          "UniqueValue": 0.002,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.002,
+          "RangeEnd": 0.002,
+          "Range": 0
+        },
+        "c": {
+          "$type": "Constant",
+          "UniqueValue": -55,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -55,
+          "RangeEnd": -55,
+          "Range": 0
+        },
+        "d": {
+          "$type": "Constant",
+          "UniqueValue": 4,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 4,
+          "RangeEnd": 4,
+          "Range": 0
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -60,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -60,
+          "RangeEnd": -60,
+          "Range": 0
+        },
+        "Vt": {
+          "$type": "Constant",
+          "UniqueValue": -54,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -54,
+          "RangeEnd": -54,
+          "Range": 0
+        },
+        "k": {
+          "$type": "Constant",
+          "UniqueValue": 0.3,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.3,
+          "RangeEnd": 0.3,
+          "Range": 0
+        },
+        "Cm": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        }
+      }
+    },
+    {
+      "CellGroup": "V2a",
+      "CellType": 0,
+      "Description": "Excitatory ipsilateral",
+      "CoreType": "Izhikevich_9P",
+      "BodyLocation": 0,
+      "Color": "#800080",
+      "PositionLeftRight": 2,
+      "NTMode": 3,
+      "NumOfCells": 15,
+      "PerSomiteOrTotal": 1,
+      "SomiteRange": null,
+      "ConductionVelocity": {
+        "$type": "Constant",
+        "UniqueValue": 0.8,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0.8,
+        "RangeEnd": 0.8,
+        "Range": 0
+      },
+      "XDistribution": {
+        "$type": "Equally Spaced",
+        "NoiseStdDev": 0.01,
+        "UniqueValue": 17.1,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 5.1,
+        "RangeEnd": 29.1,
+        "Range": 30
+      },
+      "Y_AngleDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 1,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 1,
+        "RangeEnd": 1,
+        "Range": 0
+      },
+      "Z_RadiusDistribution": {
+        "$type": "Constant",
+        "UniqueValue": 0,
+        "NoiseStdDev": 0,
+        "Angular": false,
+        "Absolute": true,
+        "RangeStart": 0,
+        "RangeEnd": 0,
+        "Range": 0
+      },
+      "ColumnIndex2D": 3,
+      "Attachments": [],
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "Parameters": {
+        "a": {
+          "$type": "Constant",
+          "UniqueValue": 0.1,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.1,
+          "RangeEnd": 0.1,
+          "Range": 0
+        },
+        "b": {
+          "$type": "Constant",
+          "UniqueValue": 0.002,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.002,
+          "RangeEnd": 0.002,
+          "Range": 0
+        },
+        "c": {
+          "$type": "Constant",
+          "UniqueValue": -55,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -55,
+          "RangeEnd": -55,
+          "Range": 0
+        },
+        "d": {
+          "$type": "Constant",
+          "UniqueValue": 4,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 4,
+          "RangeEnd": 4,
+          "Range": 0
+        },
+        "Vmax": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        },
+        "Vr": {
+          "$type": "Constant",
+          "UniqueValue": -60,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -60,
+          "RangeEnd": -60,
+          "Range": 0
+        },
+        "Vt": {
+          "$type": "Constant",
+          "UniqueValue": -54,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": -54,
+          "RangeEnd": -54,
+          "Range": 0
+        },
+        "k": {
+          "$type": "Constant",
+          "UniqueValue": 0.3,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 0.3,
+          "RangeEnd": 0.3,
+          "Range": 0
+        },
+        "Cm": {
+          "$type": "Constant",
+          "UniqueValue": 10,
+          "NoiseStdDev": 0,
+          "Angular": false,
+          "Absolute": true,
+          "RangeStart": 10,
+          "RangeEnd": 10,
+          "Range": 0
+        }
+      }
+    }
+  ],
+  "InterPoolTemplates": [
+    {
+      "Name": "dI6--\u003EdI6",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "dI6",
+      "PoolTarget": "dI6",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.04,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": null,
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 3.5,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 3.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "MN--\u003EdI6",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "MN",
+      "PoolTarget": "dI6",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.0001,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": null,
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": -1,
+        "MaxAscReach": 1.5,
+        "MinDescReach": -1,
+        "MaxDescReach": 1.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "MN--\u003EMN",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "MN",
+      "PoolTarget": "MN",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.005,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0,
+        "Vth": 0,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 4.5,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 4.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "MN--\u003EV0v",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "MN",
+      "PoolTarget": "V0v",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.005,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": null,
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": -1,
+        "MaxAscReach": 1.5,
+        "MinDescReach": -1,
+        "MaxDescReach": 1.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V0v--\u003EV0v",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V0v",
+      "PoolTarget": "V0v",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.05,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": null,
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 3.5,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 3.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EMN",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "MN",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.005,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 0,
+        "TauR": 0,
+        "Vth": 0,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 3.5,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 3.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EV2a",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "V2a",
+      "AxonReachMode": 1,
+      "ConnectionType": 2,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.005,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 0,
+        "TauR": 0,
+        "Vth": 0,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 3.5,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 3.5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "MN--\u003EMuscle",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "MN",
+      "PoolTarget": "Muscle",
+      "AxonReachMode": 1,
+      "ConnectionType": 3,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": 10,
+      "Delay_ms": 0,
+      "Weight": 0.1,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 120
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": -1,
+        "MaxAscReach": 1,
+        "MinDescReach": -1,
+        "MaxDescReach": 1,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EdI6",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "dI6",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.5,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": false,
+        "Descending": true,
+        "MinAscReach": 0,
+        "MaxAscReach": 0,
+        "MinDescReach": -1,
+        "MaxDescReach": 10,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EMN",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "MN",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.5,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 4,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 10,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EV0v",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "V0v",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.3,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 4,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 10,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EV1",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "V1",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.5,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": false,
+        "Descending": true,
+        "MinAscReach": 0,
+        "MaxAscReach": 0,
+        "MinDescReach": -1,
+        "MaxDescReach": 10,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V2a--\u003EV2a",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V2a",
+      "PoolTarget": "V2a",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.3,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": false,
+        "Descending": true,
+        "MinAscReach": 0,
+        "MaxAscReach": 0,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 10,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V1--\u003EMN",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V1",
+      "PoolTarget": "MN",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 1,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": false,
+        "MinAscReach": -1,
+        "MaxAscReach": 4,
+        "MinDescReach": 0,
+        "MaxDescReach": 0,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V1--\u003EV2a",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V1",
+      "PoolTarget": "V2a",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.5,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": false,
+        "MinAscReach": -1,
+        "MaxAscReach": 4,
+        "MinDescReach": 0,
+        "MaxDescReach": 0,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V1--\u003EV0v",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V1",
+      "PoolTarget": "V0v",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.1,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": false,
+        "MinAscReach": -1,
+        "MaxAscReach": 4,
+        "MinDescReach": 0,
+        "MaxDescReach": 0,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V1--\u003EdI6",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V1",
+      "PoolTarget": "dI6",
+      "AxonReachMode": 1,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.2,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": false,
+        "MinAscReach": -1,
+        "MaxAscReach": 4,
+        "MinDescReach": 0,
+        "MaxDescReach": 0,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "dI6--\u003EMN",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "dI6",
+      "PoolTarget": "MN",
+      "AxonReachMode": 2,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 1.5,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 2,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "dI6--\u003EV2a",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "dI6",
+      "PoolTarget": "V2a",
+      "AxonReachMode": 2,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 1.5,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 2,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "dI6--\u003EdI6",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "dI6",
+      "PoolTarget": "dI6",
+      "AxonReachMode": 2,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.25,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": -70
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 2,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    },
+    {
+      "Name": "V0v--\u003EV2a",
+      "Description": "",
+      "Probability": 1,
+      "JncActive": true,
+      "PoolSource": "V0v",
+      "PoolTarget": "V2a",
+      "AxonReachMode": 2,
+      "ConnectionType": 1,
+      "Active": true,
+      "DistanceMode": 0,
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "Weight": 0.4,
+      "Target": null,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+      "SynapseParameters": {
+        "TauD": 1,
+        "TauR": 0.5,
+        "Vth": -15,
+        "Erev": 0
+      },
+      "CellReach": {
+        "Ascending": true,
+        "Descending": true,
+        "MinAscReach": 0.2,
+        "MaxAscReach": 2,
+        "MinDescReach": 0.2,
+        "MaxDescReach": 5,
+        "MaxOutgoing": 0,
+        "MaxIncoming": 0,
+        "Autapse": false,
+        "SomiteBased": false
+      },
+      "Attachments": []
+    }
+  ],
+  "AppliedStimuli": [
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "1",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "232:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "2",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "264:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "3",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "296:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "4",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "328:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "5",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "360:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "6",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "392:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "7",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "424:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "8",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "456:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "9",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "488:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "10",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "520:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "11",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "552:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "12",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "584:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "13",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "616:-1"
+      }
+    },
+    {
+      "TargetPool": "V2a",
+      "TargetSomite": "All Somites",
+      "TargetCell": "14",
+      "LeftRight": "Left/Right",
+      "Settings": {
+        "Mode": 0,
+        "Value1": 2.89,
+        "Value2": 0,
+        "Frequency": null
+      },
+      "Active": true,
+      "TimeLine_ms": {
+        "PeriodsJSON": "648:-1"
+      }
+    }
+  ],
+  "KinemParam": {
+    "Zeta": 3,
+    "w0": 2.5,
+    "UseMuscleTension": false,
+    "Alpha": 0,
+    "Beta": 0,
+    "ConvCoef": 0.1,
+    "Boundary": 0.5,
+    "Delay": 1000,
+    "BurstBreak": 10,
+    "EpisodeBreak": 100
+  },
+  "Parameters": {}
+}
