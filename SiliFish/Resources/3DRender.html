@@ -92,6 +92,21 @@
                 show = somiteList.includes(l.source.s) || somiteList.includes(l.target.s);
             return show;
         }
+        function linkColor(l) {
+            if (selectedNode == null)
+                return '#808080';//medium gray
+            if (!showLink(l))
+                return '#DDD'; //light gray
+            if (l.type == 'gap')
+                return '#333'; //dark gray
+            if (showSingleNodeLinks && l.source == selectedNode
+                || !showSingleNodeLinks && l.source.g == selectedNode.g)
+                return '#0C0';//green - outgoing
+            if (showSingleNodeLinks && l.target== selectedNode
+                || !showSingleNodeLinks && l.target.g == selectedNode.g)
+                return '#C00';//red - incoming
+            return '#808080';
+        }
         function showNode(n) {
             return n.s <= 0 || somiteList.length == 0 || somiteList.includes(n.s);
         }
@@ -105,11 +120,7 @@
             .nodeRelSize(__NODE_SIZE__)
             .nodeVisibility(n => showNode(n))
             .graphData(gapChemData)
-            .linkColor(l => selectedNode == null ? '#808080' ://medium gray
-                !showLink(l) ? '#DDD' ://light gray
-                l.type == 'gap'? '#333' ://dark gray
-                        (l.source.g == selectedNode.g) ? '#0C0' ://green - outgoing
-                            '#C00') //red - incoming
+            .linkColor(l => linkColor(l))
             .linkOpacity(l => selectedNode == null ? 0.8 : showLink(l) ? 1 : 0)
             .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.001)) 

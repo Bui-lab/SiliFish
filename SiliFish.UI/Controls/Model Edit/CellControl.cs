@@ -8,6 +8,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Repositories;
 using SiliFish.UI.EventArguments;
+using SiliFish.UI.Extensions;
 using System.ComponentModel;
 using static SiliFish.UI.Controls.DynamicsTestControl;
 
@@ -125,7 +126,7 @@ namespace SiliFish.UI.Controls
             ddCoreType.Text = cell.Core.CoreType.ToString();
             skipCoreTypeChange = false;
             eSequence.Value = cell.Sequence;
-            eSomite.Value = cell.Somite;
+            eSomite.SetValue(cell.Somite);
             eX.Text = cell.X.ToString();
             eY.Text = cell.Y.ToString();
             eZ.Text = cell.Z.ToString();

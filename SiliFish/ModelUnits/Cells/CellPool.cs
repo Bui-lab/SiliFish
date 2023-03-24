@@ -386,7 +386,8 @@ namespace SiliFish.ModelUnits.Cells
             foreach (Cell pre in this.GetCells())
             {
                 //To prevent recursive gap junctions in self projecting pools
-                IEnumerable<Cell> targetcells = this == target ? target.GetCells().Where(c => c.Somite != pre.Somite || c.Sequence > pre.Sequence) : target.GetCells();
+                IEnumerable<Cell> targetcells = this == target ? target.GetCells()
+                    .Where(c => c.Somite > pre.Somite || (c.Somite == pre.Somite && c.Sequence > pre.Sequence)) : target.GetCells();
                 foreach (Cell post in targetcells)
                 {
                     if (probability < Model.rand.Next(1))

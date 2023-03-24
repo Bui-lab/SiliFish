@@ -30,7 +30,8 @@ namespace SiliFish.UI.Controls
         private ModelBase Model;
 
         private bool modelUpdated = false;
-        public bool ModelUpdated {
+        public bool ModelUpdated
+        {
             get => modelUpdated;
             set => modelUpdated = value;
         }
@@ -42,7 +43,7 @@ namespace SiliFish.UI.Controls
         private StimulusBase SelectedStimulus;
 
         private ModelUnitBase SelectedUnit => (ModelUnitBase)SelectedCell ?? SelectedPool ?? SelectedPoolTemplate;
-        
+
 
         public ModelControl()
         {
@@ -411,8 +412,8 @@ namespace SiliFish.UI.Controls
             foreach (Cell cell in Cells)
                 listCells.AppendItem(cell);
             SelectedCell = null;
-        } 
-        
+        }
+
         private Cell OpenCellDialog(Cell cell)
         {
             if (Model == null) return null;
@@ -462,7 +463,7 @@ namespace SiliFish.UI.Controls
         {
             if (listCells.SelectedItem is not Cell cell) return;
             Cell cellDuplicate = (Cell)cell.CreateCopy();
-            cellDuplicate.Sequence = cell.CellPool.GetMaxCellSequence(cell.Somite) + 1; 
+            cellDuplicate.Sequence = cell.CellPool.GetMaxCellSequence(cell.Somite) + 1;
             cellDuplicate = OpenCellDialog(cellDuplicate);
             while (cellDuplicate != null && cell.CellPool.Cells.Any(c => c.ID == cellDuplicate.ID))
             {
@@ -508,14 +509,14 @@ namespace SiliFish.UI.Controls
             {
                 MessageBox.Show("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence.");
                 cell = OpenCellDialog(cell);
-            }            
+            }
             if (cell != null)
             {
                 ModelIsUpdated();
                 int ind = listCells.SelectedIndex;
                 listCells.RefreshItem(ind, cell);
             }
-        } 
+        }
 
 
         private void listCells_ItemPlot(object sender, EventArgs e)
@@ -639,7 +640,7 @@ namespace SiliFish.UI.Controls
             else
             {
                 ControlContainer frmControl = new(ParentForm.Location);
-                JunctionControl jncControl = new(Model as RunningModel); 
+                JunctionControl jncControl = new(Model as RunningModel);
                 jncControl.SetJunction(interpool, newJunc);
                 frmControl.AddControl(jncControl, jncControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
@@ -647,7 +648,7 @@ namespace SiliFish.UI.Controls
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
                     return jncControl.GetJunctions();
-                }                
+                }
             }
             return null;
         }
@@ -738,7 +739,7 @@ namespace SiliFish.UI.Controls
             {
                 SelectedJunction = jnc;
             }
-        }      
+        }
         private void listConnections_SortItems(object sender, EventArgs e)
         {
             if (SelectedCell != null)
@@ -1060,7 +1061,7 @@ namespace SiliFish.UI.Controls
             if (Model == null) return;
             Model.Settings.DefaultMuscleCellCore = ddDefaultMuscleCellCore.Text;
         }
-        
+
 
 
         #endregion
