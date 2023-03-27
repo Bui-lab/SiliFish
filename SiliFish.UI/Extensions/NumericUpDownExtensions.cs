@@ -6,7 +6,7 @@
         {
             try
             {
-                decimal dec = (decimal)d;
+                decimal dec = (decimal)Math.Round(d, eNum.DecimalPlaces);
                 if (dec < eNum.Minimum)
                     eNum.Minimum = dec;
                 if (dec > eNum.Maximum)
