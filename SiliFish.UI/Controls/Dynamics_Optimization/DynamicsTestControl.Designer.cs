@@ -72,9 +72,6 @@
             eMultipleStimulus = new TextBox();
             rbMultipleEntry = new RadioButton();
             lMultipleEntryNote = new Label();
-            pFlow5 = new Panel();
-            btnDynamicsRun = new Button();
-            cbAutoDrawPlots = new CheckBox();
             tSensitivityAnalysis = new TabPage();
             grFiring = new GroupBox();
             sensitivityAnalysisFiring = new SensitivityAnalysisControl();
@@ -105,6 +102,9 @@
             pDistinguisherTop = new Panel();
             pDistinguisherBottom = new Panel();
             pDistinguisherRight = new Panel();
+            pFlow5 = new Panel();
+            btnDynamicsRun = new Button();
+            cbAutoDrawPlots = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)eRheobaseLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)edt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotEndTime).BeginInit();
@@ -129,7 +129,6 @@
             pFlow.SuspendLayout();
             pFlow1.SuspendLayout();
             pFlow2.SuspendLayout();
-            pFlow5.SuspendLayout();
             tSensitivityAnalysis.SuspendLayout();
             grFiring.SuspendLayout();
             grRheoSens.SuspendLayout();
@@ -142,6 +141,7 @@
             ((System.ComponentModel.ISupportInitialize)webViewPlots).BeginInit();
             pPlots.SuspendLayout();
             grPlotSelection.SuspendLayout();
+            pFlow5.SuspendLayout();
             SuspendLayout();
             // 
             // eRheobaseLimit
@@ -354,7 +354,7 @@
             rbSingleEntryStimulus.TabStop = true;
             rbSingleEntryStimulus.Text = "Single Entry";
             rbSingleEntryStimulus.UseVisualStyleBackColor = true;
-            rbSingleEntryStimulus.CheckedChanged += rbManualEntryStimulus_CheckedChanged;
+            rbSingleEntryStimulus.CheckedChanged += rbSingleEntryStimulus_CheckedChanged;
             // 
             // rbRheobaseBasedStimulus
             // 
@@ -366,6 +366,7 @@
             rbRheobaseBasedStimulus.Text = "Rheobase based (x1, x1.1, x1.5)";
             toolTip1.SetToolTip(rbRheobaseBasedStimulus, "Step stimulus with 0 noise");
             rbRheobaseBasedStimulus.UseVisualStyleBackColor = true;
+            rbRheobaseBasedStimulus.CheckedChanged += rbRheobaseBasedStimulus_CheckedChanged;
             // 
             // splitMain
             // 
@@ -406,7 +407,7 @@
             // 
             splitLeft.Panel2.Controls.Add(tabAnalysis);
             splitLeft.Size = new Size(328, 636);
-            splitLeft.SplitterDistance = 229;
+            splitLeft.SplitterDistance = 188;
             splitLeft.TabIndex = 39;
             // 
             // pfParams
@@ -415,7 +416,7 @@
             pfParams.Dock = DockStyle.Fill;
             pfParams.Location = new Point(0, 63);
             pfParams.Name = "pfParams";
-            pfParams.Size = new Size(328, 58);
+            pfParams.Size = new Size(328, 17);
             pfParams.TabIndex = 23;
             // 
             // pCoreType
@@ -465,7 +466,7 @@
             // 
             pRheobase.Controls.Add(grRheobase);
             pRheobase.Dock = DockStyle.Bottom;
-            pRheobase.Location = new Point(0, 121);
+            pRheobase.Location = new Point(0, 80);
             pRheobase.Name = "pRheobase";
             pRheobase.Size = new Size(328, 108);
             pRheobase.TabIndex = 40;
@@ -500,16 +501,17 @@
             tabAnalysis.Location = new Point(0, 0);
             tabAnalysis.Name = "tabAnalysis";
             tabAnalysis.SelectedIndex = 0;
-            tabAnalysis.Size = new Size(328, 403);
+            tabAnalysis.Size = new Size(328, 444);
             tabAnalysis.TabIndex = 39;
             // 
             // tTest
             // 
             tTest.Controls.Add(pFlow);
+            tTest.Controls.Add(pFlow5);
             tTest.Location = new Point(4, 24);
             tTest.Name = "tTest";
             tTest.Padding = new Padding(3);
-            tTest.Size = new Size(320, 375);
+            tTest.Size = new Size(320, 416);
             tTest.TabIndex = 0;
             tTest.Text = "Test";
             tTest.UseVisualStyleBackColor = true;
@@ -520,12 +522,11 @@
             pFlow.Controls.Add(pFlow1);
             pFlow.Controls.Add(pFlow2);
             pFlow.Controls.Add(stimulusControl1);
-            pFlow.Controls.Add(pFlow5);
             pFlow.Dock = DockStyle.Fill;
             pFlow.FlowDirection = FlowDirection.TopDown;
             pFlow.Location = new Point(3, 3);
             pFlow.Name = "pFlow";
-            pFlow.Size = new Size(314, 369);
+            pFlow.Size = new Size(314, 380);
             pFlow.TabIndex = 38;
             pFlow.WrapContents = false;
             // 
@@ -607,6 +608,8 @@
             eMultipleStimulus.TabIndex = 33;
             eMultipleStimulus.Text = "example: 1;10";
             toolTip1.SetToolTip(eMultipleStimulus, "Step stimulus with 0 noise");
+            eMultipleStimulus.Enter += eMultipleStimulus_Enter;
+            eMultipleStimulus.Leave += eMultipleStimulus_Leave;
             // 
             // rbMultipleEntry
             // 
@@ -629,41 +632,6 @@
             lMultipleEntryNote.TabIndex = 32;
             lMultipleEntryNote.Text = "(enter values seperated with \";\")";
             // 
-            // pFlow5
-            // 
-            pFlow5.Controls.Add(btnDynamicsRun);
-            pFlow5.Controls.Add(cbAutoDrawPlots);
-            pFlow5.Location = new Point(3, 309);
-            pFlow5.Name = "pFlow5";
-            pFlow5.Size = new Size(273, 30);
-            pFlow5.TabIndex = 39;
-            // 
-            // btnDynamicsRun
-            // 
-            btnDynamicsRun.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnDynamicsRun.BackColor = Color.FromArgb(96, 125, 139);
-            btnDynamicsRun.FlatStyle = FlatStyle.Flat;
-            btnDynamicsRun.ForeColor = Color.White;
-            btnDynamicsRun.Location = new Point(118, 2);
-            btnDynamicsRun.Name = "btnDynamicsRun";
-            btnDynamicsRun.Size = new Size(76, 25);
-            btnDynamicsRun.TabIndex = 35;
-            btnDynamicsRun.Text = "Run";
-            btnDynamicsRun.UseVisualStyleBackColor = false;
-            btnDynamicsRun.Click += btnDynamicsRun_Click;
-            // 
-            // cbAutoDrawPlots
-            // 
-            cbAutoDrawPlots.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            cbAutoDrawPlots.AutoSize = true;
-            cbAutoDrawPlots.Location = new Point(7, 6);
-            cbAutoDrawPlots.Name = "cbAutoDrawPlots";
-            cbAutoDrawPlots.Size = new Size(82, 19);
-            cbAutoDrawPlots.TabIndex = 34;
-            cbAutoDrawPlots.Text = "Auto Draw";
-            cbAutoDrawPlots.UseVisualStyleBackColor = true;
-            cbAutoDrawPlots.CheckedChanged += cbAutoDrawPlots_CheckedChanged;
-            // 
             // tSensitivityAnalysis
             // 
             tSensitivityAnalysis.Controls.Add(grFiring);
@@ -671,7 +639,7 @@
             tSensitivityAnalysis.Location = new Point(4, 24);
             tSensitivityAnalysis.Name = "tSensitivityAnalysis";
             tSensitivityAnalysis.Padding = new Padding(3);
-            tSensitivityAnalysis.Size = new Size(320, 375);
+            tSensitivityAnalysis.Size = new Size(320, 342);
             tSensitivityAnalysis.TabIndex = 1;
             tSensitivityAnalysis.Text = "Sensitivity Analysis";
             tSensitivityAnalysis.UseVisualStyleBackColor = true;
@@ -975,6 +943,42 @@
             pDistinguisherRight.Size = new Size(4, 675);
             pDistinguisherRight.TabIndex = 21;
             // 
+            // pFlow5
+            // 
+            pFlow5.Controls.Add(btnDynamicsRun);
+            pFlow5.Controls.Add(cbAutoDrawPlots);
+            pFlow5.Dock = DockStyle.Bottom;
+            pFlow5.Location = new Point(3, 383);
+            pFlow5.Name = "pFlow5";
+            pFlow5.Size = new Size(314, 30);
+            pFlow5.TabIndex = 40;
+            // 
+            // btnDynamicsRun
+            // 
+            btnDynamicsRun.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnDynamicsRun.BackColor = Color.FromArgb(96, 125, 139);
+            btnDynamicsRun.FlatStyle = FlatStyle.Flat;
+            btnDynamicsRun.ForeColor = Color.White;
+            btnDynamicsRun.Location = new Point(105, 2);
+            btnDynamicsRun.Name = "btnDynamicsRun";
+            btnDynamicsRun.Size = new Size(76, 25);
+            btnDynamicsRun.TabIndex = 35;
+            btnDynamicsRun.Text = "Run";
+            btnDynamicsRun.UseVisualStyleBackColor = false;
+            btnDynamicsRun.Click += btnDynamicsRun_Click;
+            // 
+            // cbAutoDrawPlots
+            // 
+            cbAutoDrawPlots.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            cbAutoDrawPlots.AutoSize = true;
+            cbAutoDrawPlots.Location = new Point(3, 8);
+            cbAutoDrawPlots.Name = "cbAutoDrawPlots";
+            cbAutoDrawPlots.Size = new Size(82, 19);
+            cbAutoDrawPlots.TabIndex = 34;
+            cbAutoDrawPlots.Text = "Auto Draw";
+            cbAutoDrawPlots.UseVisualStyleBackColor = true;
+            cbAutoDrawPlots.CheckedChanged += cbAutoDrawPlots_CheckedChanged;
+            // 
             // DynamicsTestControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1018,8 +1022,6 @@
             pFlow1.PerformLayout();
             pFlow2.ResumeLayout(false);
             pFlow2.PerformLayout();
-            pFlow5.ResumeLayout(false);
-            pFlow5.PerformLayout();
             tSensitivityAnalysis.ResumeLayout(false);
             grFiring.ResumeLayout(false);
             grRheoSens.ResumeLayout(false);
@@ -1035,6 +1037,8 @@
             pPlots.PerformLayout();
             grPlotSelection.ResumeLayout(false);
             grPlotSelection.PerformLayout();
+            pFlow5.ResumeLayout(false);
+            pFlow5.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1103,8 +1107,6 @@
         private TextBox eMultipleStimulus;
         private Label lMultipleEntryNote;
         private RadioButton rbMultipleEntry;
-        private CheckBox cbAutoDrawPlots;
-        private Button btnDynamicsRun;
         private Panel pDistinguisherLeft;
         private Panel pDistinguisherTop;
         private Panel pDistinguisherBottom;
@@ -1113,7 +1115,9 @@
         private Panel pFlow1;
         private Panel pSep1;
         private Panel pFlow2;
-        private Panel pFlow5;
         private SplitContainer splitLeft;
+        private Panel pFlow5;
+        private Button btnDynamicsRun;
+        private CheckBox cbAutoDrawPlots;
     }
 }
