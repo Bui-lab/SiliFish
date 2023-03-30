@@ -535,7 +535,7 @@ namespace SiliFish.UI.Controls
                                 Value2 = 0
                             };
                             I.Add(GenerateStimulus(stimulusSettings));
-                            dynamicsList.Add($"Stimulus: {stim:0.##}", core.DynamicsTest(I[iter++]));
+                            dynamicsList.Add($"Stimulus: {stim:0.#####}", core.DynamicsTest(I[iter++]));
                         }
                         CreatePlots(dynamicsList, columnNames, I);
                     }
@@ -575,13 +575,34 @@ namespace SiliFish.UI.Controls
             CalculateRheobase();
         }
 
-
-
-        private void rbManualEntryStimulus_CheckedChanged(object sender, EventArgs e)
+        private void rbSingleEntryStimulus_CheckedChanged(object sender, EventArgs e)
         {
             stimulusControl1.Enabled = rbSingleEntryStimulus.Checked;
             grPlotSelection.Enabled = rbSingleEntryStimulus.Checked && !OptimizationMode;
-            if (cbAutoDrawPlots.Checked)
+            if (rbSingleEntryStimulus.Checked && cbAutoDrawPlots.Checked)
+                DynamicsRun();
+        }
+
+        private void rbMultipleEntry_CheckedChanged(object sender, EventArgs e)
+        {
+            eMultipleStimulus.ReadOnly = !rbMultipleEntry.Checked;
+        }
+
+        private void rbRheobaseBasedStimulus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbRheobaseBasedStimulus.Checked && cbAutoDrawPlots.Checked)
+                DynamicsRun();
+        }
+
+        private string lastMultipleStimulus = null;
+        private void eMultipleStimulus_Enter(object sender, EventArgs e)
+        {
+            lastMultipleStimulus = eMultipleStimulus.Text;
+        }
+
+        private void eMultipleStimulus_Leave(object sender, EventArgs e)
+        {
+            if (lastMultipleStimulus != eMultipleStimulus.Text && cbAutoDrawPlots.Checked)
                 DynamicsRun();
         }
 
@@ -660,14 +681,6 @@ namespace SiliFish.UI.Controls
                 DynamicsRun();
         }
 
-        private void grRheobase_Enter(object sender, EventArgs e)
-        {
 
-        }
-
-        private void rbMultipleEntry_CheckedChanged(object sender, EventArgs e)
-        {
-            eMultipleStimulus.ReadOnly = !rbMultipleEntry.Checked;
-        }
     }
 }
