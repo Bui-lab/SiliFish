@@ -72,17 +72,17 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override ModelUnitBase CreateCopy()
         {
-            MuscleCell muscleCell= new()
+            MuscleCell muscleCell = new()
             {
                 CellPool = CellPool,
                 CellGroup = CellGroup,
                 Core = CellCoreUnit.CreateCore(this.Core),
                 Coordinate = Coordinate,
-                Model=Model,
-                ConductionVelocity=ConductionVelocity,
-                Somite=Somite,
-                Sequence=CellPool.GetMaxCellSequence(Somite) + 1,
-                PositionLeftRight=PositionLeftRight,
+                Model = Model,
+                ConductionVelocity = ConductionVelocity,
+                Somite = Somite,
+                Sequence = CellPool.GetMaxCellSequence(Somite) + 1,
+                PositionLeftRight = PositionLeftRight,
                 TimeLine_ms = new(TimeLine_ms)
             };
             return muscleCell;

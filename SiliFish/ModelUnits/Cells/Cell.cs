@@ -254,6 +254,8 @@ namespace SiliFish.ModelUnits.Cells
         #region RunTime
         public virtual void InitForSimulation(RunParam runParam)
         {
+            if (ConductionVelocity < GlobalSettings.Epsilon)
+                ConductionVelocity = Model.Settings.cv;
             V = new double[runParam.iMax];
             Core.Initialize(runParam.DeltaT, runParam.DeltaTEuler);
             Stimuli.InitForSimulation(Model.RunParam, Model.rand);

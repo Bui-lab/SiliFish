@@ -96,20 +96,10 @@ namespace SiliFish.ModelUnits.Junction
             {
                 double distance = Util.Distance(Cell1.Coordinate, Cell2.Coordinate, DistanceMode);
                 int delay = (int)(Delay_ms / deltaT);
-                if (Cell1.ConductionVelocity < GlobalSettings.Epsilon)
-                    duration1 = int.MaxValue;
-                else
-                {
-                    duration1 = Math.Max((int)(distance / (Cell1.ConductionVelocity * deltaT)), 1);
-                    duration1 += delay;
-                }
-                if (Cell2.ConductionVelocity<GlobalSettings.Epsilon)
-                    duration2 = int.MaxValue;
-                else
-                {
-                    duration2 = Math.Max((int)(distance / (Cell2.ConductionVelocity * deltaT)), 1);
-                    duration2 += delay;
-                }
+                duration1 = Math.Max((int)(distance / (Cell1.ConductionVelocity * deltaT)), 1);
+                duration1 += delay;
+                duration2 = Math.Max((int)(distance / (Cell2.ConductionVelocity * deltaT)), 1);
+                duration2 += delay;
             }
         }
 

@@ -128,13 +128,8 @@ namespace SiliFish.ModelUnits.Junction
             {
                 double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
                 int delay = (int)(Delay_ms / PreNeuron.Model.RunParam.DeltaT);
-                if (PreNeuron.ConductionVelocity < GlobalSettings.Epsilon)
-                    duration = int.MaxValue;
-                else
-                {
-                    duration = Math.Max((int)(distance / (PreNeuron.ConductionVelocity * PreNeuron.Model.RunParam.DeltaT)), 1);
-                    duration += delay;
-                }
+                duration = Math.Max((int)(distance / (PreNeuron.ConductionVelocity * PreNeuron.Model.RunParam.DeltaT)), 1);
+                duration += delay;
             }
         }
 

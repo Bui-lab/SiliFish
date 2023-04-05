@@ -94,7 +94,8 @@ namespace SiliFish.UI.Controls
 
             ePlotWidth.Value = GlobalSettings.DefaultPlotWidth;
             ePlotHeight.Value = GlobalSettings.DefaultPlotHeight;
-
+            try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
+            catch { }
         }
 
         public void SetRunningModel(RunningModel model)
