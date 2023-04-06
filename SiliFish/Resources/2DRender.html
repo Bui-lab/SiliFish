@@ -82,7 +82,9 @@
                     l.type == 'gap' ? '#333' ://dark gray
                         (l.source.g == selectedNode.g) ? '#0C0' ://green - outgoing
                             '#C00') //red - incoming
-            .linkLabel(l => `${l.source.id} &lt--&gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkLabel(l => l.type == 'gap' ?
+                `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` :
+                `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.5))
             .linkCurvature('curv')
             .linkVisibility(l => (l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))

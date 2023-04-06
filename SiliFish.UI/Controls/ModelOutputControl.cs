@@ -481,7 +481,8 @@ namespace SiliFish.UI.Controls
             GetPlotSubset();
             if (numOfPlots > GlobalSettings.PlotWarningNumber)
             {
-                string msg = $"Plotting {numOfPlots} charts will use a lot of resources. Do you want to continue?";
+                string msg = $"Plotting {numOfPlots} charts will use a lot of resources. Do you want to continue?\r\n" +
+                    $"(You can set the number of plots that triggers this warning through the 'Settings' button above)";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }

@@ -11,6 +11,7 @@ using System.Text;
 using System.Web;
 using SiliFish.ModelUnits.Junction;
 using System.Xml.Serialization;
+using SiliFish.Definitions;
 
 namespace SiliFish.Services
 {
@@ -38,10 +39,14 @@ namespace SiliFish.Services
             return link;
         }
 
+        /// <summary>
+        ///the x coordinate corresponds to y in the model (medial/lateral axis)
+        ///the y coordinate corresponds to z in the model (dorsal/ventral axis)
+        /// </summary>
         private void GetNewCoordinates(CellPool pool)
         {
-            (double x, double y, double _) = pool.XYZMiddle();
-            PoolCoordinates.Add(pool.ID, (x, y));
+            (double x, double y, double z) = pool.XYZMiddle();
+            PoolCoordinates.Add(pool.ID, (y, z));
         }
         private double GetNewWeight(double d)
         {
@@ -52,7 +57,7 @@ namespace SiliFish.Services
         {
             (double origX, double origY) = PoolCoordinates[pool.ID];
             (double newX, double newY) = (origX * XMult + XOffset, origY * -1 * YMult + YOffset);
-            return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX:0.##},y:{newY:0.##} }}";
+            return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX.ToString(GlobalSettings.CoordinateFormat)},y:{newY.ToString(GlobalSettings.CoordinateFormat)} }}";
         }
 
         private Dictionary<string, (double, double)> SpreadPools(Dictionary<string, (double, double)> pools, bool item2 = false, bool neg = false)
@@ -131,7 +136,7 @@ namespace SiliFish.Services
             if (YMax > YMin)
             {
                 YMult = height / (YMax - YMin) / 2;
-                YOffset = 0;
+                YOffset = (YMax + YMin) * YMult / 2;
             }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));

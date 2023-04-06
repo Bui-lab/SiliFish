@@ -11,6 +11,8 @@ using System.Text;
 using System.Web;
 using SiliFish.ModelUnits.Junction;
 using System.CodeDom.Compiler;
+using System.Runtime.CompilerServices;
+using SiliFish.Definitions;
 
 namespace SiliFish.Services
 {
@@ -60,7 +62,10 @@ namespace SiliFish.Services
         private string CreateNodeDataPoint(Cell cell)
         {
             (double newX, double newY, double newZ) = GetNewCoordinates(cell.X, cell.Y, cell.Z, cell.CellPool.ColumnIndex2D);
-            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"s\":{cell.Somite},\"crd\":\"{cell.Coordinate}\",fx:{newX:0.##},fy:{newY:0.##},fz:{newZ:0.##}  }}";
+            string sX = newX.ToString(GlobalSettings.CoordinateFormat);
+            string sY = newY.ToString(GlobalSettings.CoordinateFormat);
+            string sZ = newZ.ToString(GlobalSettings.CoordinateFormat);
+            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"s\":{cell.Somite},\"crd\":\"{cell.Coordinate}\",fx:{sX},fy:{sY},fz:{sZ}  }}";
         }
         private string CreateNodeDataPoints(CellPool pool, int minSomite, int maxSomite)
         {

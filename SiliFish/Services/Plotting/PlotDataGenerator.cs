@@ -32,14 +32,14 @@ namespace SiliFish.Services.Plotting
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string columnTitles = "Time,";
-                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
                 List<string> colorPerChart = new();
                 foreach (Cell cell in cellGroup)
                 {
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.V?[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                        data[i] += cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
                 if (!GlobalSettings.SameYAxis)
                 {
@@ -81,9 +81,9 @@ namespace SiliFish.Services.Plotting
                 string gapTitle = "Time,";
                 string synInTitle = "Time,";
                 string synOutTitle = "Time,";
-                List<string> gapData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> synInData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
-                List<string> synOutData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> gapData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
+                List<string> synInData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
+                List<string> synOutData = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
                 List<string> colorPerGapChart = new();
                 List<string> colorPerInSynChart = new();
                 List<string> colorPerOutSynChart = new();
@@ -102,7 +102,7 @@ namespace SiliFish.Services.Plotting
                             gapTitle += "Gap: " + otherCell.ID + ",";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                         }
                     }
                     if (includeChem)
@@ -116,7 +116,7 @@ namespace SiliFish.Services.Plotting
                             synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                         }
                         if (cell is Neuron neuron2)
                         {
@@ -126,7 +126,7 @@ namespace SiliFish.Services.Plotting
                                 synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                             }
                         }
                     }
@@ -223,19 +223,19 @@ namespace SiliFish.Services.Plotting
             Util.SetYRange(ref yMin, ref yMax);
 
             string columnTitles = "Time,";
-            List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+            List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
             
             foreach (GapJunction jnc in gapJunctions)
             {
                 columnTitles += jnc.ID + ",";
                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                    data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                    data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
             }
             foreach (ChemicalSynapse jnc in synapses)
             {
                 columnTitles += jnc.ID + ",";
                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                    data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                    data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
             }
 
             string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
@@ -270,7 +270,7 @@ namespace SiliFish.Services.Plotting
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string title = "Time,";
-                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
                 List<string> colorPerChart = new();
                 bool stimExists = false;
                 if (!GlobalSettings.SameYAxis)
@@ -286,7 +286,7 @@ namespace SiliFish.Services.Plotting
                     title += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(GlobalSettings.DecimalPointFormat) + ",";
+                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
                 if (stimExists)
                 {
@@ -320,7 +320,7 @@ namespace SiliFish.Services.Plotting
             foreach (IGrouping<string, MuscleCell> cellGroup in cellGroups)
             {
                 string title = "Time,";
-                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString("0.0#") + ","));
+                List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
                 List<string> colorPerChart = new();
                 foreach (MuscleCell cell in cellGroup)
                 {
@@ -328,7 +328,7 @@ namespace SiliFish.Services.Plotting
                     title += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += Tension[iStart + i].ToString(GlobalSettings.DecimalPointFormat) + ",";
+                        data[i] += Tension[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
                 string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 charts.Add(new ChartDataStruct

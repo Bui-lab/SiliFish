@@ -23,7 +23,7 @@ namespace SiliFish.DataTypes
         }
         public override string ToString()
         {
-            return string.Format("[{0:0.##}, {1:0.##}, {2:0.##}]", X, Y, Z);
+            return $"[{X.ToString(GlobalSettings.CoordinateFormat)}, {Y.ToString(GlobalSettings.CoordinateFormat)}, {Z.ToString(GlobalSettings.CoordinateFormat)}]";
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);

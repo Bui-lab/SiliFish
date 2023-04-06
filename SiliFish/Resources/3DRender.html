@@ -122,7 +122,9 @@
             .graphData(gapChemData)
             .linkColor(l => linkColor(l))
             .linkOpacity(l => selectedNode == null ? 0.8 : showLink(l) ? 1 : 0)
-            .linkLabel(l => `${l.source.id} &gt; ${l.target.id} [ ${l.conductance}]`)
+            .linkLabel(l => l.type == 'gap' ?
+                `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` :
+                `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`)
             .linkWidth(l => Math.max(l.value, 0.001)) 
             .linkCurvature('curv')
             .linkVisibility(l => (l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))

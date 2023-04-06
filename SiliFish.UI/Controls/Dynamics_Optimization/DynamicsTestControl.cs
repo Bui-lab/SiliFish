@@ -559,7 +559,7 @@ namespace SiliFish.UI.Controls
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
             {
-                eRheobase.Text = d.ToString(GlobalSettings.DecimalPointFormat);
+                eRheobase.Text = d.ToString(GlobalSettings.PlotDataFormat);
                 lRheobaseWarning.Visible = false;
                 rbRheobaseBasedStimulus.ForeColor = Color.Black;
             }

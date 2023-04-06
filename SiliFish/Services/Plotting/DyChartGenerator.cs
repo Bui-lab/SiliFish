@@ -55,10 +55,10 @@ namespace SiliFish.Services.Plotting
                         chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
                         chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
                         chart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
-                        chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.DecimalPointFormat));
-                        chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.DecimalPointFormat));
-                        chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(GlobalSettings.DecimalPointFormat));
-                        chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(GlobalSettings.DecimalPointFormat));
+                        chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.PlotDataFormat));
+                        chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.PlotDataFormat));
+                        chart.Replace("__Y_MIN__", charts[chartIndex].yMin.ToString(GlobalSettings.PlotDataFormat));
+                        chart.Replace("__Y_MAX__", charts[chartIndex].yMax.ToString(GlobalSettings.PlotDataFormat));
                         chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
                         chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
                         chart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
