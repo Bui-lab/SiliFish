@@ -33,12 +33,12 @@
             tabOutputs = new TabControl();
             tPlot = new TabPage();
             tabPlotSub = new TabControl();
+            tPlotHTML = new TabPage();
+            webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             tPlotWindows = new TabPage();
             splitPlotWindows = new SplitContainer();
             pictureBoxLeft = new PictureBox();
             pictureBoxRight = new PictureBox();
-            tPlotHTML = new TabPage();
-            webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             pPlot = new Panel();
             pPlotSelection = new Panel();
             lSagittal = new Label();
@@ -60,9 +60,9 @@
             lPlotHeight = new Label();
             lpx2 = new Label();
             lNumberOfPlots = new Label();
-            btnPlotWindows = new Button();
-            linkSavePlots = new LinkLabel();
             btnPlotHTML = new Button();
+            cmPlot = new ContextMenuStrip(components);
+            cmiNonInteractivePlot = new ToolStripMenuItem();
             linkSaveHTMLPlots = new LinkLabel();
             ePlotEnd = new NumericUpDown();
             ePlotStart = new NumericUpDown();
@@ -148,9 +148,13 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            cmPlotImageSave = new ContextMenuStrip(components);
+            cmiPlotImageSave = new ToolStripMenuItem();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
+            tPlotHTML.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webViewPlot).BeginInit();
             tPlotWindows.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitPlotWindows).BeginInit();
             splitPlotWindows.Panel1.SuspendLayout();
@@ -158,14 +162,13 @@
             splitPlotWindows.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxRight).BeginInit();
-            tPlotHTML.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewPlot).BeginInit();
             pPlot.SuspendLayout();
             pPlotSelection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ePlotSomiteSelection).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotCellSelection).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotWidth).BeginInit();
+            cmPlot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).BeginInit();
             t2DRender.SuspendLayout();
@@ -193,6 +196,7 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).BeginInit();
+            cmPlotImageSave.SuspendLayout();
             SuspendLayout();
             // 
             // tabOutputs
@@ -232,6 +236,31 @@
             tabPlotSub.Size = new Size(688, 621);
             tabPlotSub.TabIndex = 6;
             // 
+            // tPlotHTML
+            // 
+            tPlotHTML.Controls.Add(webViewPlot);
+            tPlotHTML.Location = new Point(4, 24);
+            tPlotHTML.Name = "tPlotHTML";
+            tPlotHTML.Padding = new Padding(3);
+            tPlotHTML.Size = new Size(680, 593);
+            tPlotHTML.TabIndex = 1;
+            tPlotHTML.Text = "HTML Plots";
+            tPlotHTML.UseVisualStyleBackColor = true;
+            // 
+            // webViewPlot
+            // 
+            webViewPlot.AllowExternalDrop = true;
+            webViewPlot.BackColor = Color.White;
+            webViewPlot.CreationProperties = null;
+            webViewPlot.DefaultBackgroundColor = Color.White;
+            webViewPlot.Dock = DockStyle.Fill;
+            webViewPlot.Location = new Point(3, 3);
+            webViewPlot.Name = "webViewPlot";
+            webViewPlot.Size = new Size(674, 587);
+            webViewPlot.TabIndex = 1;
+            webViewPlot.ZoomFactor = 1D;
+            webViewPlot.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
+            // 
             // tPlotWindows
             // 
             tPlotWindows.Controls.Add(splitPlotWindows);
@@ -265,46 +294,25 @@
             // 
             // pictureBoxLeft
             // 
+            pictureBoxLeft.ContextMenuStrip = cmPlotImageSave;
+            pictureBoxLeft.Dock = DockStyle.Fill;
             pictureBoxLeft.Location = new Point(0, 0);
             pictureBoxLeft.Name = "pictureBoxLeft";
-            pictureBoxLeft.Size = new Size(361, 412);
+            pictureBoxLeft.Size = new Size(310, 585);
             pictureBoxLeft.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBoxLeft.TabIndex = 0;
             pictureBoxLeft.TabStop = false;
             // 
             // pictureBoxRight
             // 
+            pictureBoxRight.ContextMenuStrip = cmPlotImageSave;
+            pictureBoxRight.Dock = DockStyle.Fill;
             pictureBoxRight.Location = new Point(0, 0);
             pictureBoxRight.Name = "pictureBoxRight";
-            pictureBoxRight.Size = new Size(411, 412);
+            pictureBoxRight.Size = new Size(356, 585);
             pictureBoxRight.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBoxRight.TabIndex = 0;
             pictureBoxRight.TabStop = false;
-            // 
-            // tPlotHTML
-            // 
-            tPlotHTML.Controls.Add(webViewPlot);
-            tPlotHTML.Location = new Point(4, 24);
-            tPlotHTML.Name = "tPlotHTML";
-            tPlotHTML.Padding = new Padding(3);
-            tPlotHTML.Size = new Size(680, 593);
-            tPlotHTML.TabIndex = 1;
-            tPlotHTML.Text = "HTML Plots";
-            tPlotHTML.UseVisualStyleBackColor = true;
-            // 
-            // webViewPlot
-            // 
-            webViewPlot.AllowExternalDrop = true;
-            webViewPlot.BackColor = Color.White;
-            webViewPlot.CreationProperties = null;
-            webViewPlot.DefaultBackgroundColor = Color.White;
-            webViewPlot.Dock = DockStyle.Fill;
-            webViewPlot.Location = new Point(3, 3);
-            webViewPlot.Name = "webViewPlot";
-            webViewPlot.Size = new Size(674, 587);
-            webViewPlot.TabIndex = 1;
-            webViewPlot.ZoomFactor = 1D;
-            webViewPlot.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
             // pPlot
             // 
@@ -319,8 +327,6 @@
             pPlot.Controls.Add(lPlotHeight);
             pPlot.Controls.Add(lpx2);
             pPlot.Controls.Add(lNumberOfPlots);
-            pPlot.Controls.Add(btnPlotWindows);
-            pPlot.Controls.Add(linkSavePlots);
             pPlot.Controls.Add(btnPlotHTML);
             pPlot.Controls.Add(linkSaveHTMLPlots);
             pPlot.Controls.Add(ePlotEnd);
@@ -462,7 +468,7 @@
             // 
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(524, 88);
+            linkExportPlotData.Location = new Point(524, 64);
             linkExportPlotData.Name = "linkExportPlotData";
             linkExportPlotData.Size = new Size(103, 16);
             linkExportPlotData.TabIndex = 59;
@@ -550,58 +556,45 @@
             lNumberOfPlots.Text = "# of plots: ";
             lNumberOfPlots.Visible = false;
             // 
-            // btnPlotWindows
-            // 
-            btnPlotWindows.BackColor = Color.FromArgb(96, 125, 139);
-            btnPlotWindows.Enabled = false;
-            btnPlotWindows.FlatAppearance.BorderColor = Color.LightGray;
-            btnPlotWindows.FlatStyle = FlatStyle.Flat;
-            btnPlotWindows.ForeColor = Color.White;
-            btnPlotWindows.Location = new Point(446, 31);
-            btnPlotWindows.Name = "btnPlotWindows";
-            btnPlotWindows.Size = new Size(75, 24);
-            btnPlotWindows.TabIndex = 50;
-            btnPlotWindows.Text = "Plot";
-            btnPlotWindows.UseVisualStyleBackColor = false;
-            btnPlotWindows.Click += btnPlotWindows_Click;
-            // 
-            // linkSavePlots
-            // 
-            linkSavePlots.Enabled = false;
-            linkSavePlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSavePlots.Location = new Point(524, 36);
-            linkSavePlots.Name = "linkSavePlots";
-            linkSavePlots.Size = new Size(103, 16);
-            linkSavePlots.TabIndex = 51;
-            linkSavePlots.TabStop = true;
-            linkSavePlots.Text = "Save Plot Images";
-            linkSavePlots.LinkClicked += linkSavePlots_LinkClicked;
-            // 
             // btnPlotHTML
             // 
             btnPlotHTML.BackColor = Color.FromArgb(96, 125, 139);
+            btnPlotHTML.ContextMenuStrip = cmPlot;
             btnPlotHTML.Enabled = false;
             btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
             btnPlotHTML.FlatStyle = FlatStyle.Flat;
             btnPlotHTML.ForeColor = Color.White;
-            btnPlotHTML.Location = new Point(446, 58);
+            btnPlotHTML.Location = new Point(446, 34);
             btnPlotHTML.Name = "btnPlotHTML";
             btnPlotHTML.Size = new Size(75, 24);
             btnPlotHTML.TabIndex = 52;
-            btnPlotHTML.Text = "Plot HTML";
+            btnPlotHTML.Text = "Plot";
             btnPlotHTML.UseVisualStyleBackColor = false;
             btnPlotHTML.Click += btnPlotHTML_Click;
+            // 
+            // cmPlot
+            // 
+            cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot });
+            cmPlot.Name = "cmPlot";
+            cmPlot.Size = new Size(182, 26);
+            // 
+            // cmiNonInteractivePlot
+            // 
+            cmiNonInteractivePlot.Name = "cmiNonInteractivePlot";
+            cmiNonInteractivePlot.Size = new Size(181, 22);
+            cmiNonInteractivePlot.Text = "Non-interactive plot";
+            cmiNonInteractivePlot.Click += cmiNonInteractivePlot_Click;
             // 
             // linkSaveHTMLPlots
             // 
             linkSaveHTMLPlots.Enabled = false;
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTMLPlots.Location = new Point(524, 62);
+            linkSaveHTMLPlots.Location = new Point(524, 42);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
             linkSaveHTMLPlots.Size = new Size(103, 16);
             linkSaveHTMLPlots.TabIndex = 53;
             linkSaveHTMLPlots.TabStop = true;
-            linkSaveHTMLPlots.Text = "Save HTML";
+            linkSaveHTMLPlots.Text = "Save Plot HTML";
             linkSaveHTMLPlots.LinkClicked += linkSaveHTMLPlots_LinkClicked;
             // 
             // ePlotEnd
@@ -1516,6 +1509,19 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // cmPlotImageSave
+            // 
+            cmPlotImageSave.Items.AddRange(new ToolStripItem[] { cmiPlotImageSave });
+            cmPlotImageSave.Name = "cmImageSave";
+            cmPlotImageSave.Size = new Size(135, 26);
+            // 
+            // cmiPlotImageSave
+            // 
+            cmiPlotImageSave.Name = "cmiPlotImageSave";
+            cmiPlotImageSave.Size = new Size(134, 22);
+            cmiPlotImageSave.Text = "Save Image";
+            cmiPlotImageSave.Click += cmiPlotImageSave_Click;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1526,6 +1532,8 @@
             tabOutputs.ResumeLayout(false);
             tPlot.ResumeLayout(false);
             tabPlotSub.ResumeLayout(false);
+            tPlotHTML.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webViewPlot).EndInit();
             tPlotWindows.ResumeLayout(false);
             splitPlotWindows.Panel1.ResumeLayout(false);
             splitPlotWindows.Panel1.PerformLayout();
@@ -1535,8 +1543,6 @@
             splitPlotWindows.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBoxLeft).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxRight).EndInit();
-            tPlotHTML.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webViewPlot).EndInit();
             pPlot.ResumeLayout(false);
             pPlot.PerformLayout();
             pPlotSelection.ResumeLayout(false);
@@ -1545,6 +1551,7 @@
             ((System.ComponentModel.ISupportInitialize)ePlotCellSelection).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotHeight).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotWidth).EndInit();
+            cmPlot.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).EndInit();
             t2DRender.ResumeLayout(false);
@@ -1576,6 +1583,7 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).EndInit();
+            cmPlotImageSave.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1600,9 +1608,7 @@
         private Label lPlotHeight;
         private Label lpx2;
         private Label lNumberOfPlots;
-        private Button btnPlotWindows;
         private ComboBox ddPlotSagittal;
-        private LinkLabel linkSavePlots;
         private Button btnPlotHTML;
         private ComboBox ddPlotCellSelection;
         private Label lPlotCells;
@@ -1699,5 +1705,9 @@
         private Label label2;
         private Label label3;
         private Label label4;
+        private ContextMenuStrip cmPlot;
+        private ToolStripMenuItem cmiNonInteractivePlot;
+        private ContextMenuStrip cmPlotImageSave;
+        private ToolStripMenuItem cmiPlotImageSave;
     }
 }

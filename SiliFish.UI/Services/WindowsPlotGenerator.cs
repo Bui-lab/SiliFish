@@ -35,9 +35,9 @@ namespace Services
                     }
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Potentials", c.V, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             if (cellPools != null)
@@ -60,9 +60,9 @@ namespace Services
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Potentials", voltageArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             return (leftImages, rightImages);
@@ -82,23 +82,23 @@ namespace Services
             {
                 (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = c.GetGapCurrents();
                 if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                 else
-                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
             }
             if (chem)
             {
                 (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = c.GetIncomingSynapticCurrents();
                 if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                 else
-                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
 
                 (colors, Dictionary<string, List<double>> EfferentCurrents) = c.GetOutgoingSynapticCurrents();
                 if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                 else
-                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1));
+                    rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
             }
             return (leftImages, rightImages);
         }
@@ -182,9 +182,9 @@ namespace Services
                     }
                     Color col = c.CellPool.Color;
                     if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot(c.ID + " Stimulus", c.Stimuli.GetStimulusArray(timeArray.Length), timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             if (pools != null)
@@ -208,9 +208,9 @@ namespace Services
 
                     Color col = pool.Color;
                     if (pool.PositionLeftRight == SagittalPlane.Left)
-                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        leftImages.Add(UtilWindows.CreateLinePlot("Left " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                     else
-                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax * 1.1, col));
+                        rightImages.Add(UtilWindows.CreateLinePlot("Right " + pool.CellGroup + " Stimulus", stimArray, timeArray, iStart, iEnd, yAxis, yMin, yMax, col));
                 }
             }
             return (leftImages, rightImages);

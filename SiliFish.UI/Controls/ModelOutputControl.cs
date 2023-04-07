@@ -96,6 +96,8 @@ namespace SiliFish.UI.Controls
             ePlotHeight.Value = GlobalSettings.DefaultPlotHeight;
             try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
             catch { }
+            if (tabPlotSub.TabPages.Contains(tPlotWindows))
+                tabPlotSub.TabPages.Remove(tPlotWindows);
         }
 
         public void SetRunningModel(RunningModel model)
@@ -156,7 +158,7 @@ namespace SiliFish.UI.Controls
             ePlotEnd.Value = tMax;
             eAnimationEnd.Value = tMax;
 
-            btnPlotWindows.Enabled =
+            cmPlot.Enabled =
                 btnPlotHTML.Enabled =
                 btnAnimate.Enabled =
                 btnGenerateEpisodes.Enabled = true;
@@ -164,7 +166,7 @@ namespace SiliFish.UI.Controls
 
         public void CancelRun()
         {
-            btnPlotWindows.Enabled =
+            cmPlot.Enabled =
                 btnPlotHTML.Enabled =
                 btnAnimate.Enabled =
                 btnGenerateEpisodes.Enabled = false;
@@ -491,7 +493,7 @@ namespace SiliFish.UI.Controls
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
-            btnPlotWindows.Enabled = false;
+            cmPlot.Enabled = false;
             btnPlotHTML.Enabled = false;
 
             Task.Run(PlotHTML);
@@ -500,7 +502,7 @@ namespace SiliFish.UI.Controls
         {
             webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile);
             UseWaitCursor = false;
-            btnPlotWindows.Enabled = true;
+            cmPlot.Enabled = true;
             btnPlotHTML.Enabled = true;
             linkSaveHTMLPlots.Enabled = true;
             linkExportPlotData.Enabled = true;
@@ -583,7 +585,7 @@ namespace SiliFish.UI.Controls
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
-            btnPlotWindows.Enabled = false;
+            cmPlot.Enabled = false;
             btnPlotHTML.Enabled = false;
 
             Task.Run(PlotHTML);
@@ -625,7 +627,7 @@ namespace SiliFish.UI.Controls
                 tabOutputs.SelectedTab = tPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
-                btnPlotWindows.Enabled = false;
+                cmPlot.Enabled = false;
                 btnPlotHTML.Enabled = false;
 
                 if (plotCellSelection is not PlotSelectionMultiCells)
@@ -667,12 +669,16 @@ namespace SiliFish.UI.Controls
                 }
                 pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
                 pictureBoxRight.Tag = null;//for proper zooming it has to be reset
-                toolTip.SetToolTip(btnPlotWindows, $"Last plot: {DateTime.Now:t}");
+                toolTip.SetToolTip(cmPlot, $"Last plot: {DateTime.Now:t}");
+                toolTip.SetToolTip(pictureBoxLeft, $"Last plot: {DateTime.Now:t}");
+                toolTip.SetToolTip(pictureBoxRight, $"Last plot: {DateTime.Now:t}");
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = false;
-                btnPlotWindows.Enabled = true;
+                cmPlot.Enabled = true;
                 btnPlotHTML.Enabled = true;
-                linkSavePlots.Enabled = true;
+                cmiPlotImageSave.Enabled = true;
+                if (!tabPlotSub.TabPages.Contains(tPlotWindows))
+                    tabPlotSub.TabPages.Add(tPlotWindows);
             }
             catch (Exception ex)
             {
@@ -684,7 +690,18 @@ namespace SiliFish.UI.Controls
             PlotWindows();
         }
 
+        private void cmiNonInteractivePlot_Click(object sender, EventArgs e)
+        {
+            PlotWindows();
+        }
+
+
         private void linkSavePlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+        private void cmiPlotImageSave_Click(object sender, EventArgs e)
         {
             try
             {
@@ -982,10 +999,7 @@ namespace SiliFish.UI.Controls
             eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
         }
 
-
-
         #endregion
-
         #endregion
 
     }

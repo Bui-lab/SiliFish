@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SiliFish.Helpers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.UI
 {
@@ -49,6 +50,7 @@ namespace SiliFish.UI
             int width = 1024, int height = 480,
             bool absoluteYRange = false)
         {
+            Util.SetYRange(ref yMin, ref yMax);
             List<string> sources = AffarentCurrents.Keys.ToList();
             PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, yMin, yMax, absoluteYRange);
             foreach (string source in sources)
@@ -120,6 +122,8 @@ namespace SiliFish.UI
             if (values == null)
                 return null;
 
+            Util.SetYRange(ref yMin, ref yMax);
+
             PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, yMin, yMax, absoluteYRange);
 
             OxyColor col = color.ToOxyColor();
@@ -155,15 +159,17 @@ namespace SiliFish.UI
             if (data == null)
                 return null;
 
-            yMin ??= data.Min();
-            yMax ??= data.Max();
-            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, (double)yMin, (double)yMax, absoluteYRange);
-
+            double dMin = yMin ?? data.Min();
+            double dMax = yMax ?? data.Max();
+            Util.SetYRange(ref dMin, ref dMax);
+            PlotModel model = CreateModel(title, Time[iStart], Time[iEnd], yAxis, dMin, dMax, absoluteYRange);
 
             OxyColor col = color.ToOxyColor();
-            byte a = (byte)255;
-            LineSeries ls = new();
-            ls.Color = OxyColor.FromAColor(a, OxyColor.FromRgb(col.R, col.G, col.B));
+            byte a = 255;
+            LineSeries ls = new()
+            {
+                Color = OxyColor.FromAColor(a, OxyColor.FromRgb(col.R, col.G, col.B))
+            };
             ls.Points.AddRange(Enumerable
                 .Range(iStart, iEnd - iStart)
                 .Select(i => new DataPoint(Time[i], data[i])));
