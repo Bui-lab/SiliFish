@@ -144,8 +144,8 @@ namespace SiliFish.UI.Controls
 
         private void ReadFitnessFunctions()
         {
-            List<FitnessFunction> fitnessFunctions =new();
-            for (int rowind=0; rowind<dgFitnessFunctions.RowCount; rowind++)
+            List<FitnessFunction> fitnessFunctions = new();
+            for (int rowind = 0; rowind < dgFitnessFunctions.RowCount; rowind++)
             {
                 fitnessFunctions.Add(dgFitnessFunctions.Rows[rowind].Tag as FitnessFunction);
             }
@@ -208,7 +208,7 @@ namespace SiliFish.UI.Controls
         private void LoadFitnessFunctions()
         {
             ClearFitnessControls();
-            if (Solver.Settings.TargetRheobaseFunction!=null)
+            if (Solver.Settings.TargetRheobaseFunction != null)
                 AddFitnessFunctionRow(Solver.Settings.TargetRheobaseFunction);
             foreach (FitnessFunction fitnessFunction in Solver.Settings.FitnessFunctions)
                 AddFitnessFunctionRow(fitnessFunction);
@@ -235,7 +235,7 @@ namespace SiliFish.UI.Controls
             {
                 FitnessFunction fitnessFunction = dgFitnessFunctions.Rows[e.RowIndex].Tag as FitnessFunction;
                 FitnessFunctionToGrid(e.RowIndex, OpenFitnessFunctionDialog(fitnessFunction));
-            } 
+            }
             else if (e.ColumnIndex == colFFDelete.Index)
                 dgFitnessFunctions.Rows.RemoveAt(e.RowIndex);
         }
@@ -249,6 +249,20 @@ namespace SiliFish.UI.Controls
             FitnessFunction fitnessFunction = dgFitnessFunctions.Rows[e.RowIndex].Tag as FitnessFunction;
             FitnessFunctionToGrid(e.RowIndex, OpenFitnessFunctionDialog(fitnessFunction));
         }
+
+        private void dgFitnessFunctions_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            //weight can be directly editted on the grid
+            if (e.RowIndex < 0 || e.ColumnIndex != colFFWeight.Index)
+                return;
+            FitnessFunction fitnessFunction = dgFitnessFunctions.Rows[e.RowIndex].Tag as FitnessFunction;
+            if (double.TryParse(dgFitnessFunctions[colFFWeight.Index, e.RowIndex].Value?.ToString(), out double d))
+            {
+                fitnessFunction.Weight = d;
+                dgFitnessFunctions.Rows[e.RowIndex].Tag = fitnessFunction;
+            }
+        }
+
         private void ddGATermination_SelectedIndexChanged(object sender, EventArgs e)
         {
             toolTip.SetToolTip(lGATerminationParameter, GeneticAlgorithmExtension.GetTerminationParameter(ddGATermination.Text));
@@ -351,7 +365,7 @@ namespace SiliFish.UI.Controls
             ddGATermination.Visible = lGATerminationParameter.Visible = eTerminationParameter.Visible =
                 cbCustomTermination.Checked;
         }
-        public void ResetParameters(Dictionary<string, double> parameters, 
+        public void ResetParameters(Dictionary<string, double> parameters,
         Dictionary<string, double> MinValues = null, Dictionary<string, double> MaxValues = null)
         {
             Parameters = parameters;
@@ -384,5 +398,6 @@ namespace SiliFish.UI.Controls
                 rowIndex++;
             }
         }
+
     }
 }

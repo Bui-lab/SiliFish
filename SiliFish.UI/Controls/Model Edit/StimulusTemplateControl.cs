@@ -116,5 +116,10 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Sagittal position not defined.");
             checkValuesArgs.Errors.AddRange(stimControl.CheckValues());
         }
+
+        internal void SetSourcePool(CellPoolTemplate selectedPoolTemplate)
+        {
+            ddTargetPool.SelectedItem = selectedPoolTemplate;
+        }
     }
 }

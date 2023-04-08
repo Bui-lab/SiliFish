@@ -627,6 +627,8 @@ namespace SiliFish.UI.Controls
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
+                if (interPoolTemplate == null && SelectedPoolTemplate != null)
+                    ipControl.SetSourcePool(SelectedPoolTemplate);
                 frmControl.AddControl(ipControl, ipControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
 
@@ -642,6 +644,11 @@ namespace SiliFish.UI.Controls
                 ControlContainer frmControl = new(ParentForm.Location);
                 JunctionControl jncControl = new(Model as RunningModel);
                 jncControl.SetJunction(interpool, newJunc);
+                if (interpool == null && SelectedCell != null)
+                    jncControl.SetSourceCell(SelectedCell);
+                else if (interpool == null && SelectedPool != null)
+                    jncControl.SetSourcePool(SelectedPool);
+
                 frmControl.AddControl(jncControl, jncControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
 
@@ -881,6 +888,8 @@ namespace SiliFish.UI.Controls
                 StimulusTemplateControl stimControl = new();
                 stimControl.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
                 frmControl.AddControl(stimControl, stimControl.CheckValues);
+                if (stim == null && SelectedPoolTemplate != null)
+                    stimControl.SetSourcePool(SelectedPoolTemplate);
 
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
 
@@ -893,6 +902,8 @@ namespace SiliFish.UI.Controls
                 stimControl.SetStimulus(stim as Stimulus);
                 frmControl.AddControl(stimControl, stimControl.CheckValues);
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
+                if (stim == null && SelectedCell != null)
+                    stimControl.SetTargetCell(SelectedCell);
                 if (frmControl.ShowDialog() == DialogResult.OK)
                     return stimControl.GetStimulus();
             }

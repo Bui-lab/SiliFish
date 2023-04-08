@@ -58,11 +58,9 @@ namespace SiliFish.UI.Controls
                 dd.SelectedIndex = 0;
             }
         }
-        private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void LoadSelectedSourceValues()
         {
-            FillConnectionTypes();
-            if (!ddSourcePool.Focused)
-                return;
             if (ddSourcePool.SelectedItem is CellPool pool)
             {
                 sourcePool = pool;
@@ -87,6 +85,13 @@ namespace SiliFish.UI.Controls
                         break;
                 }
             }
+        }
+        private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillConnectionTypes();
+            if (!ddSourcePool.Focused)
+                return;
+            LoadSelectedSourceValues();
         }
         private void ddSourceCell_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -175,6 +180,17 @@ namespace SiliFish.UI.Controls
                 ddTargetCell.Enabled = false;
                 ddConnectionType.Enabled = false;
             }
+        }
+        internal void SetSourcePool(CellPool selectedPool)
+        {
+            ddSourcePool.SelectedItem = selectedPool;
+            LoadSelectedSourceValues();
+        }
+
+        internal void SetSourceCell(Cell selectedCell)
+        {
+            SetSourcePool(selectedCell.CellPool);
+            ddSourceCell.SelectedItem = selectedCell;
         }
 
         public override string ToString()
@@ -288,5 +304,7 @@ namespace SiliFish.UI.Controls
                 }
             return junctions;
         }
+
+
     }
 }

@@ -31,12 +31,15 @@ namespace SiliFish.UI.Controls
         public void SetStimulus(Stimulus stim)
         {
             Stimulus = stim;
-            eTargetCell.Text = stim.TargetCell.ID;
-            stimControl.SetStimulusSettings(stim.Settings);
-            cbActive.Checked = stim.Active;
+            if (stim != null)
+            {
+                eTargetCell.Text = stim.TargetCell.ID;
+                stimControl.SetStimulusSettings(stim.Settings);
+                cbActive.Checked = stim.Active;
 
-            if (stim.TimeLine_ms != null)
-                timeLineControl.SetTimeLine(stim.TimeLine_ms);
+                if (stim.TimeLine_ms != null)
+                    timeLineControl.SetTimeLine(stim.TimeLine_ms);
+            }
         }
         public Stimulus GetStimulus()
         {
@@ -55,6 +58,11 @@ namespace SiliFish.UI.Controls
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
             checkValuesArgs.Errors = new();
             checkValuesArgs.Errors.AddRange(stimControl.CheckValues());
+        }
+
+        internal void SetTargetCell(Cell selectedCell)
+        {
+            eTargetCell.Text= selectedCell.ID;
         }
     }
 }

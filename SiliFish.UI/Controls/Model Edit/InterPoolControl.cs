@@ -69,11 +69,9 @@ namespace SiliFish.UI.Controls
             if (autoGenerateName)
                 eName.Text = interPoolTemplate.GeneratedName();
         }
-        private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void LoadSelectedSourceValues()
         {
-            FillConnectionTypes();
-            if (!ddSourcePool.Focused)
-                return;
             if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
                 switch (pool.NTMode)
@@ -96,6 +94,13 @@ namespace SiliFish.UI.Controls
             }
             interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
+        }
+        private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillConnectionTypes();
+            if (!ddSourcePool.Focused)
+                return;
+            LoadSelectedSourceValues();
         }
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
@@ -196,6 +201,12 @@ namespace SiliFish.UI.Controls
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
             return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
+        }
+
+        public void SetSourcePool(CellPoolTemplate pool)
+        {
+            SetDropDownValue(ddSourcePool, pool.CellGroup);
+            LoadSelectedSourceValues();
         }
         public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
         {
