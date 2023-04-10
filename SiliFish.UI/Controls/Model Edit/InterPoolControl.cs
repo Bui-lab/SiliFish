@@ -28,13 +28,16 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Axon reach mode not defined.");
             if (ddConnectionType.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Connection type not defined.");
+            else
+            {
+                ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+                if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
+                    checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
+            }
             if ((double)numConductance.Value < GlobalSettings.Epsilon)
                 checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
             if (ddDistanceMode.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Distance mode is not selected.");
-            ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
-            if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
-                checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
         }
         private void FillConnectionTypes()
         {
@@ -103,13 +106,18 @@ namespace SiliFish.UI.Controls
             LoadSelectedSourceValues();
         }
 
+        private void LoadSelectedTargetValues()
+        {
+            interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
+            UpdateName();
+        }
+
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillConnectionTypes();
             if (!ddTargetPool.Focused)
                 return;
-            interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
-            UpdateName();
+            LoadSelectedTargetValues();
         }
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
@@ -207,6 +215,17 @@ namespace SiliFish.UI.Controls
         {
             SetDropDownValue(ddSourcePool, pool.CellGroup);
             LoadSelectedSourceValues();
+        }
+        public void SetTargetPool(CellPoolTemplate pool)
+        {
+            SetDropDownValue(ddTargetPool, pool.CellGroup);
+            LoadSelectedTargetValues();
+        }
+
+        public void SetAsGapJunction()
+        {
+            try { ddConnectionType.SelectedItem = ConnectionType.Gap; }
+            catch { }
         }
         public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
         {

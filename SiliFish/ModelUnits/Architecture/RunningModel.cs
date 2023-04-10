@@ -425,19 +425,47 @@ namespace SiliFish.ModelUnits.Architecture
 
 
         #region Projections
-        public override List<JunctionBase> GetProjections()
+        public override List<JunctionBase> GetGapProjections()
         {
             List<JunctionBase> listProjections = new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
                     listProjections.Add(jnc);
+            }
+            return listProjections;
+        }
+        public override List<JunctionBase> GetChemicalProjections()
+        {
+            return GetIncomingProjections();
+        }
+        public override List<JunctionBase> GetOutgoingProjections()
+        {
+            List<JunctionBase> listProjections = new();
+            foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
+            {
                 if (cell is Neuron neuron)
-                    foreach (ChemicalSynapse syn in neuron.Terminals.Where(j => j.PreNeuron == cell))
+                    foreach (ChemicalSynapse syn in neuron.Terminals)
                         listProjections.Add(syn);
             }
             return listProjections;
         }
+        public override List<JunctionBase> GetIncomingProjections()
+        {
+            List<JunctionBase> listProjections = new();
+            foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
+            {
+                if (cell is Neuron neuron)
+                    foreach (ChemicalSynapse syn in neuron.Synapses)
+                        listProjections.Add(syn);
+                else if (cell is MuscleCell muscle)
+                    foreach (ChemicalSynapse nmj in muscle.EndPlates)
+                        listProjections.Add(nmj);
+            }
+            return listProjections;
+        }
+
+
         #endregion
 
         #region Stimuli

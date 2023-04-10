@@ -13,12 +13,7 @@ namespace SiliFish.DynamicUnits
         }
         public QuadraticIntegrateAndFire()
         { }
-        public QuadraticIntegrateAndFire(double Vr, double Vmax)
-        {
-            this.Vr = Vr;
-            this.Vmax = Vmax;
-            V = Vr;
-        }
+
         public QuadraticIntegrateAndFire(Dictionary<string, double> paramExternal)
         {
             SetParameters(paramExternal);
@@ -32,7 +27,13 @@ namespace SiliFish.DynamicUnits
             {
                 dtTracker += deltaTEuler;
                 // ODE eqs
-                if (V >= Vmax)
+                if (V >= Vthreshold && V < Vmax)
+                {
+                    spike = true;
+                    V = Vmax;
+                    break;
+                }
+                else if (V >= Vmax)
                 {
                     spike = true;
                     V = Vr;

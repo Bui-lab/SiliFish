@@ -340,6 +340,7 @@ namespace SiliFish.UI.Controls
                     xData = dynamics.TauRise.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
+                    yMin = 0,
                     yData = dynamics.TauRise.Values.ToArray(),
                     yLabel = "Tau (ms)",
                     drawPoints = true
@@ -354,6 +355,7 @@ namespace SiliFish.UI.Controls
                     xData = dynamics.TauDecay.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
+                    yMin = 0,
                     yData = dynamics.TauDecay.Values.ToArray(),
                     yLabel = "Tau (ms)",
                     drawPoints = true
@@ -368,6 +370,7 @@ namespace SiliFish.UI.Controls
                     xData = dynamics.Intervals_ms.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
+                    yMin = 0,
                     yData = dynamics.Intervals_ms.Values.ToArray(),
                     yLabel = "Interval (ms)",
                     drawPoints = true
@@ -382,6 +385,7 @@ namespace SiliFish.UI.Controls
                     xData = dynamics.FiringFrequency.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
+                    yMin = 0,
                     yData = dynamics.FiringFrequency.Values.ToArray(),
                     yLabel = "Freq (Hz)",
                     drawPoints = true

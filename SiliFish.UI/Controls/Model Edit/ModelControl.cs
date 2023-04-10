@@ -48,9 +48,6 @@ namespace SiliFish.UI.Controls
         public ModelControl()
         {
             InitializeComponent();
-            listConnections.AddSortContextMenu("Sort by Type", listConnections_SortByType);
-            listConnections.AddSortContextMenu("Sort by Source", listConnections_SortBySource);
-            listConnections.AddSortContextMenu("Sort by Target", listConnections_SortByTarget);
             listStimuli.EnableImportExport();
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
@@ -198,7 +195,7 @@ namespace SiliFish.UI.Controls
         {
             Model = model;
             CurrentMode = Model is ModelTemplate ? RunMode.Template : RunMode.RunningModel;
-            splitCellPools.Panel2Collapsed = CurrentMode == RunMode.Template;
+            splitCellPoolsAndCells.Panel2Collapsed = CurrentMode == RunMode.Template;
             propModelDimensions.Enabled = propSettings.Enabled = CurrentMode == RunMode.Template;
             LoadModel();
             modelUpdated = false;
@@ -307,7 +304,6 @@ namespace SiliFish.UI.Controls
                 listCells.ClearItems();
             if (sender is CellPool pool)
             {
-                listConnections.SetEnabledContextMenu("Sort by Type", false);
                 SelectedPool = pool;
                 SelectedCell = null;
                 LoadCells();
@@ -316,14 +312,12 @@ namespace SiliFish.UI.Controls
             }
             else if (sender is CellPoolTemplate cpt)
             {
-                listConnections.SetEnabledContextMenu("Sort by Type", false);
                 SelectedPoolTemplate = cpt;
                 LoadProjections(cpt.CellGroup);
                 LoadStimuli(cpt);
             }
             else if (sender == null)
             {
-                listConnections.SetEnabledContextMenu("Sort by Type", true);
                 SelectedPoolTemplate = null;
                 SelectedPool = null;
                 SelectedCell = null;
@@ -452,7 +446,6 @@ namespace SiliFish.UI.Controls
             if (CurrentMode != RunMode.RunningModel) return;
             if (sender is Cell cell)
             {
-                listConnections.SetEnabledContextMenu("Sort by Type", false);
                 SelectedCell = cell;
                 LoadProjections(cell);
                 LoadStimuli(cell);
@@ -539,15 +532,39 @@ namespace SiliFish.UI.Controls
         #endregion
 
         #region Connection
+        private void ClearProjections()
+        {
+            listIncoming.ClearItems();
+            listOutgoing.ClearItems();
+            listGap.ClearItems();
+        }
+
+        private void RefreshProjections()
+        {
+            if (SelectedCell != null)
+                LoadProjections(SelectedCell);
+            else if (SelectedPool != null)
+                LoadProjections(SelectedPool);
+            else if (SelectedPoolTemplate != null)
+                LoadProjections(SelectedPoolTemplate.CellGroup);
+            else
+                LoadProjections();
+        }
         private void LoadProjections()
         {
             SelectedJunction = null;
-            listConnections.ClearItems();
-            lConnectionsTitle.Text = "Connections";
+            ClearProjections();
+            lOutgoingTitle.Text = "Synaptic Connections";
+            lGapTitle.Text = "Gap Junctions";
+            splitChemicalJunctions.Panel1Collapsed = true;
             if (Model == null) return;
-            foreach (object jnc in Model.GetProjections())
+            foreach (object jnc in Model.GetChemicalProjections())
             {
-                listConnections.AppendItem(jnc);
+                listOutgoing.AppendItem(jnc);
+            }
+            foreach (object jnc in Model.GetGapProjections())
+            {
+                listGap.AppendItem(jnc);
             }
         }
 
@@ -558,14 +575,32 @@ namespace SiliFish.UI.Controls
                 LoadProjections();
                 return;
             }
-            listConnections.ClearItems();
-            lConnectionsTitle.Text = $"Connections of {cellPoolID}";
+            ClearProjections();
+            lIncomingTitle.Text = $"Incoming Connections of {cellPoolID}";
+            lOutgoingTitle.Text = $"Outgoing Connections of {cellPoolID}";
+            lGapTitle.Text = $"Gap Junctions of {cellPoolID}";
+            splitChemicalJunctions.Panel1Collapsed = false;
             if (Model == null || Model is not ModelTemplate) return;
-            foreach (InterPoolTemplate jnc in Model.GetProjections()
+            foreach (InterPoolTemplate jnc in Model.GetChemicalProjections()
+                .Where(proj => ((InterPoolTemplate)proj).PoolSource == cellPoolID)
+                .Cast<InterPoolTemplate>())
+
+            {
+                listOutgoing.AppendItem(jnc);
+            }
+            foreach (InterPoolTemplate jnc in Model.GetChemicalProjections()
+                .Where(proj => ((InterPoolTemplate)proj).PoolTarget == cellPoolID)
+                .Cast<InterPoolTemplate>())
+
+            {
+                listIncoming.AppendItem(jnc);
+            }
+            foreach (InterPoolTemplate jnc in Model.GetGapProjections()
                 .Where(proj => ((InterPoolTemplate)proj).PoolSource == cellPoolID || ((InterPoolTemplate)proj).PoolTarget == cellPoolID)
                 .Cast<InterPoolTemplate>())
+
             {
-                listConnections.AppendItem(jnc);
+                listGap.AppendItem(jnc);
             }
         }
         private void LoadProjections(CellPool cp)
@@ -575,15 +610,22 @@ namespace SiliFish.UI.Controls
                 LoadProjections();
                 return;
             }
-            lConnectionsTitle.Text = $"Connections of {cp.ID}";
-            listConnections.ClearItems();
+            lIncomingTitle.Text = $"Incoming Connections of {cp.ID}";
+            lOutgoingTitle.Text = $"Outgoing Connections of {cp.ID}";
+            lGapTitle.Text = $"Gap Junctions of {cp.ID}";
+            splitChemicalJunctions.Panel1Collapsed = false;
+            ClearProjections();
             foreach (JunctionBase jnc in cp.Projections.Where(j => j is GapJunction))
             {
-                listConnections.AppendItem(jnc);
+                listGap.AppendItem(jnc);
             }
             foreach (JunctionBase jnc in cp.Projections.Where(j => j is not GapJunction))
             {
-                listConnections.AppendItem(jnc);
+                ChemicalSynapse syn = jnc as ChemicalSynapse;
+                if (syn.PreNeuron.CellPool == cp)
+                    listOutgoing.AppendItem(jnc);
+                if (syn.PostCell.CellPool == cp)
+                    listIncoming.AppendItem(jnc);
             }
         }
         private void LoadProjections(Cell cell)
@@ -596,28 +638,35 @@ namespace SiliFish.UI.Controls
                     LoadProjections();
                 return;
             }
-            listConnections.ClearItems();
-            lConnectionsTitle.Text = $"Connections of {cell.ID}";
+            ClearProjections();
+            lIncomingTitle.Text = $"Incoming Connections of {cell.ID}";
+            lOutgoingTitle.Text = $"Outgoing Connections of {cell.ID}";
+            lGapTitle.Text = $"Gap Junctions of {cell.ID}";
             foreach (JunctionBase jnc in cell.GapJunctions)
             {
-                listConnections.AppendItem(jnc);
+                listGap.AppendItem(jnc);
             }
             if (cell is Neuron neuron)
             {
-                foreach (JunctionBase jnc in neuron.Terminals.Union(neuron.Synapses))
+                foreach (JunctionBase jnc in neuron.Synapses)
                 {
-                    listConnections.AppendItem(jnc);
+                    listIncoming.AppendItem(jnc);
+                }
+                foreach (JunctionBase jnc in neuron.Terminals)
+                {
+                    listOutgoing.AppendItem(jnc);
                 }
             }
             if (cell is MuscleCell muscleCell)
             {
                 foreach (JunctionBase jnc in muscleCell.EndPlates)
                 {
-                    listConnections.AppendItem(jnc);
+                    listIncoming.AppendItem(jnc);
                 }
             }
         }
-        private List<JunctionBase> OpenConnectionDialog(JunctionBase interpool, bool newJunc)
+        private List<JunctionBase> OpenConnectionDialog(JunctionBase interpool, bool newJunc, 
+            bool setSource = false, bool setTarget = false, bool setGap = false)
         {
             if (Model == null) return null;
             if (CurrentMode == RunMode.Template)
@@ -627,8 +676,12 @@ namespace SiliFish.UI.Controls
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
-                if (interPoolTemplate == null && SelectedPoolTemplate != null)
+                if (setSource && SelectedPoolTemplate != null)
                     ipControl.SetSourcePool(SelectedPoolTemplate);
+                if (setTarget && SelectedPoolTemplate != null)
+                    ipControl.SetTargetPool(SelectedPoolTemplate);
+                if (setGap)
+                    ipControl.SetAsGapJunction();
                 frmControl.AddControl(ipControl, ipControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
 
@@ -644,11 +697,22 @@ namespace SiliFish.UI.Controls
                 ControlContainer frmControl = new(ParentForm.Location);
                 JunctionControl jncControl = new(Model as RunningModel);
                 jncControl.SetJunction(interpool, newJunc);
-                if (interpool == null && SelectedCell != null)
-                    jncControl.SetSourceCell(SelectedCell);
-                else if (interpool == null && SelectedPool != null)
-                    jncControl.SetSourcePool(SelectedPool);
-
+                if (setSource)
+                {
+                    if (SelectedCell != null)
+                        jncControl.SetSourceCell(SelectedCell);
+                    else if (SelectedPool != null)
+                        jncControl.SetSourcePool(SelectedPool);
+                }
+                if (setTarget)
+                {
+                    if (SelectedCell != null)
+                        jncControl.SetTargetCell(SelectedCell);
+                    else if (SelectedPool != null)
+                        jncControl.SetTargetPool(SelectedPool);
+                }
+                if (setGap)
+                    jncControl.SetAsGapJunction();
                 frmControl.AddControl(jncControl, jncControl.CheckValues);
                 frmControl.Text = interpool?.ToString() ?? "New Connection";
 
@@ -662,7 +726,13 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_ItemAdd(object sender, EventArgs e)
         {
-            List<JunctionBase> jncs = OpenConnectionDialog(null, true);
+            ListBoxControl lbc = sender as ListBoxControl;
+            List<JunctionBase> jncs =
+                lbc == listIncoming ? OpenConnectionDialog(null, true, setTarget: true) :
+                lbc == listOutgoing ? OpenConnectionDialog(null, true, setSource: true) :
+                lbc == listGap? OpenConnectionDialog(null, true, setGap: true) :
+                OpenConnectionDialog(null, true);
+
             if (jncs != null && jncs.Any())
             {
                 foreach (JunctionBase jb in jncs)
@@ -671,7 +741,7 @@ namespace SiliFish.UI.Controls
                         Model.AddJunction(template);
                     else
                         jb.LinkObjects();
-                    listConnections.AppendItem(jb);
+                    RefreshProjections();
                 }
                 ModelIsUpdated();
             }
@@ -679,14 +749,12 @@ namespace SiliFish.UI.Controls
         private void listConnections_ItemCopy(object sender, EventArgs e)
         {
             if (Model == null) return;
-            if (listConnections.SelectedItem == null)
-                return;
             JunctionBase jnc = null;
-            if (listConnections.SelectedItem is GapJunction gapJunction)
+            if (sender is GapJunction gapJunction)
                 jnc = new GapJunction(gapJunction);
-            else if (listConnections.SelectedItem is ChemicalSynapse synapse)
+            else if (sender is ChemicalSynapse synapse)
                 jnc = new ChemicalSynapse(synapse);
-            else if (listConnections.SelectedItem is InterPoolTemplate ipt)
+            else if (sender is InterPoolTemplate ipt)
                 jnc = new InterPoolTemplate(ipt);
             List<JunctionBase> jncs = OpenConnectionDialog(jnc, true);
             if (jncs != null && jncs.Any())
@@ -697,34 +765,32 @@ namespace SiliFish.UI.Controls
                         Model.AddJunction(template);
                     else
                         jb.LinkObjects();
-                    listConnections.AppendItem(jb);
                 }
+                RefreshProjections();
                 ModelIsUpdated();
             }
         }
         private void listConnections_ItemDelete(object sender, EventArgs e)
         {
-            if (listConnections.SelectedIndex >= 0)
+            ListBoxControl lbc = sender as ListBoxControl;
+            if (lbc.SelectedIndex >= 0)
             {
-                if (listConnections.SelectedItem is InterPoolTemplate ipt)
+                if (lbc.SelectedItem is InterPoolTemplate ipt)
                     Model.RemoveJunction(ipt);
-                else if (listConnections.SelectedItem is JunctionBase jb)
+                else if (lbc.SelectedItem is JunctionBase jb)
                     jb.UnlinkObjects();
 
-                listConnections.RemoveItemAt(listConnections.SelectedIndex);
+                lbc.RemoveItemAt(lbc.SelectedIndex);
                 ModelIsUpdated();
             }
         }
         private void listConnections_ItemView(object sender, EventArgs e)
         {
-            if (listConnections.SelectedItem == null)
-                return;
-            JunctionBase jnc = listConnections.SelectedItem as JunctionBase;
+            JunctionBase jnc = sender as JunctionBase;
             List<JunctionBase> jncs = OpenConnectionDialog(jnc, false);
             if (jncs != null && jncs.Any())
             {
-                int ind = listConnections.SelectedIndex;
-                listConnections.RefreshItem(ind, jnc);
+                RefreshProjections();
                 ModelIsUpdated();
             }
         }
@@ -747,7 +813,7 @@ namespace SiliFish.UI.Controls
                 SelectedJunction = jnc;
             }
         }
-        private void listConnections_SortItems(object sender, EventArgs e)
+        private void listConnections_ItemsSort(object sender, EventArgs e)
         {
             if (SelectedCell != null)
             {
@@ -761,50 +827,14 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_SortByType(object sender, EventArgs e)
-        {
-            if (CurrentMode == RunMode.Template)
-            {
-                Model.SortJunctionsByType();
-                LoadProjections();
-            }
-        }
-        private void listConnections_SortBySource(object sender, EventArgs e)
-        {
-            if (SelectedCell != null)
-            {
-                SelectedCell.SortJunctionsBySource();
-                LoadProjections(SelectedCell);
-            }
-            else if (SelectedPool != null)
-            {
-                SelectedPool.SortJunctionsBySource();
-                LoadProjections(SelectedPool);
-            }
-            else if (CurrentMode == RunMode.Template)
-            {
-                Model.SortJunctionsBySource();
-                LoadProjections();
-            }
+        private void listConnections_ItemsExport(object sender, EventArgs e)
+        {//TODO connection export
+
         }
 
-        private void listConnections_SortByTarget(object sender, EventArgs e)
-        {
-            if (SelectedCell != null)
-            {
-                SelectedCell.SortJunctionsByTarget();
-                LoadProjections(SelectedCell);
-            }
-            else if (SelectedPool != null)
-            {
-                SelectedPool.SortJunctionsByTarget();
-                LoadProjections(SelectedPool);
-            }
-            else if (CurrentMode == RunMode.Template)
-            {
-                Model.SortJunctionsByTarget();
-                LoadProjections();
-            }
+        private void listConnections_ItemsImport(object sender, EventArgs e)
+        {//TODO connection import
+
         }
 
         #endregion
@@ -1135,6 +1165,7 @@ namespace SiliFish.UI.Controls
             };
             p.Start();
         }
+
 
     }
 }

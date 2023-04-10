@@ -22,6 +22,7 @@ namespace SiliFish.DynamicUnits
     [JsonDerivedType(typeof(Izhikevich_9P), typeDiscriminator: "izhikevich9p")]
     [JsonDerivedType(typeof(Leaky_Integrator), typeDiscriminator: "leakyintegrator")]
     [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
+    [JsonDerivedType(typeof(LeakyIntegrateAndFire), typeDiscriminator: "leakyintegratefire")]
     public class CellCoreUnit
     {
         #region Static members and functions

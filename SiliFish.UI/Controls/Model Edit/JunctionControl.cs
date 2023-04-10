@@ -20,6 +20,28 @@ namespace SiliFish.UI.Controls
         private Cell sourceCell;
         private Cell targetCell;
 
+        public JunctionControl(RunningModel model)
+        {
+            InitializeComponent();
+            Model = model;
+            settings = model.Settings;
+
+            ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
+
+            //ddConnectionType is manually loaded as not all of them are displayed
+            ddConnectionType.Items.Add(ConnectionType.Gap);
+            ddConnectionType.Items.Add(ConnectionType.Synapse);
+            ddConnectionType.Items.Add(ConnectionType.NMJ);
+
+            ddSourcePool.Items.AddRange(Model.CellPools.ToArray());
+            ddSourcePool.SelectedIndex = -1;
+            ddSourceCell.SelectedIndex = -1;
+
+            ddTargetPool.Items.AddRange(Model.CellPools.ToArray());
+            ddTargetPool.SelectedIndex = -1;
+            ddTargetCell.SelectedIndex = -1;
+        }
+
         private void FillConnectionTypes()
         {
             if (ddSourcePool.SelectedItem is CellPoolTemplate source
@@ -100,18 +122,22 @@ namespace SiliFish.UI.Controls
             else
                 sourceCell = null;
         }
-
-        private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
+        private void LoadSelectedTargetValues()
         {
-            FillConnectionTypes();
-            if (!ddTargetPool.Focused)
-                return;
             if (ddTargetPool.SelectedItem is CellPool pool)
             {
                 targetPool = pool;
                 targetCell = null;
                 FillCells(ddTargetCell, targetPool);
             }
+        }
+
+        private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillConnectionTypes();
+            if (!ddTargetPool.Focused)
+                return;
+            LoadSelectedTargetValues();
         }
 
         private void ddTargetCell_SelectedIndexChanged(object sender, EventArgs e)
@@ -193,33 +219,29 @@ namespace SiliFish.UI.Controls
             ddSourceCell.SelectedItem = selectedCell;
         }
 
+        internal void SetTargetPool(CellPool selectedPool)
+        {
+            ddTargetPool.SelectedItem = selectedPool;
+            LoadSelectedTargetValues();
+        }
+
+        internal void SetTargetCell(Cell selectedCell)
+        {
+            SetTargetPool(selectedCell.CellPool);
+            ddTargetCell.SelectedItem = selectedCell;
+        }
+
+        public void SetAsGapJunction()
+        {
+            try { ddConnectionType.SelectedItem = ConnectionType.Gap; }
+            catch { }
+        }
         public override string ToString()
         {
             string activeStatus = !cbActive.Checked ? " (inactive)" :
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
             return $"{ddSourcePool.Text}-->{ddTargetPool.Text} [{ddConnectionType.Text}]{activeStatus}";
-        }
-        public JunctionControl(RunningModel model)
-        {
-            InitializeComponent();
-            Model = model;
-            settings = model.Settings;
-
-            ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
-
-            //ddConnectionType is manually loaded as not all of them are displayed
-            ddConnectionType.Items.Add(ConnectionType.Gap);
-            ddConnectionType.Items.Add(ConnectionType.Synapse);
-            ddConnectionType.Items.Add(ConnectionType.NMJ);
-
-            ddSourcePool.Items.AddRange(Model.CellPools.ToArray());
-            ddSourcePool.SelectedIndex = -1;
-            ddSourceCell.SelectedIndex = -1;
-
-            ddTargetPool.Items.AddRange(Model.CellPools.ToArray());
-            ddTargetPool.SelectedIndex = -1;
-            ddTargetCell.SelectedIndex = -1;
         }
         internal void CheckValues(object sender, EventArgs args)
         {

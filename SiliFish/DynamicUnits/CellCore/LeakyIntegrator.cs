@@ -9,22 +9,13 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class Leaky_Integrator : CellCoreUnit
+    public class Leaky_Integrator : ContractibleCellCoreUnit
     {
         [Description("Resistance")]
         public double R { get; set; } 
 
         [Description("Capacitance")]
         public double C { get; set; }
-
-        [Description("Vm when tension is half of Tmax/2")]
-        public double Va { get; set; }
-
-        [Description("Maximum tension")]
-        public double Tmax { get; set; }
-
-        [Description("Slope factor")]// [Dulhunty 1992 (Prog. Biophys)]
-        public double ka { get; set; }
 
         [JsonIgnore, Browsable(false)]
         public double TimeConstant { get { return R * C; } }
@@ -69,29 +60,6 @@ namespace SiliFish.DynamicUnits
             if (C < GlobalSettings.Epsilon)
                 errors.Add($"Leaky integrator: C has 0 value.");
             return errors.Count == 0;
-        }
-
-        //formula from [Dulhunty 1992 (Prog. Biophys)]
-        public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used
-        {
-            //T_a = T_max / (1 + exp(V_a - V_m) / k_a
-            double dv = Va - (Vm ?? V);
-            return 1 / (1 + Math.Exp(dv / ka));
-        }
-
-        //formula from [Dulhunty 1992 (Prog. Biophys)]
-        public double CalculateTension(double? Vm = null) //if Vm is null, current V value is used
-        {
-            return Tmax * CalculateRelativeTension(Vm);
-        }
-
-        public double[] CalculateRelativeTension(double[] V)
-        {
-            return V.Select(v => CalculateRelativeTension(v)).ToArray();
-        }
-        public double[] CalculateTension(double[] V)
-        {
-            return V.Select(v => CalculateTension(v)).ToArray();
         }
 
         public override double GetNextVal(double Stim, ref bool spike)

@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
@@ -76,11 +77,20 @@ namespace SiliFish.ModelUnits.Architecture
         #endregion
 
         #region Projections
-        public override List<JunctionBase> GetProjections()
+
+        public override List<JunctionBase> GetChemicalProjections()
         {
-            return InterPoolTemplates.Select(ip => (JunctionBase)ip).ToList();
+            return InterPoolTemplates
+                .Where(ip => ip.ConnectionType is ConnectionType.Synapse or ConnectionType.NMJ)
+                .Select(ip => (JunctionBase)ip).ToList();
         }
 
+        public override List<JunctionBase> GetGapProjections()
+        {
+            return InterPoolTemplates
+                .Where(ip => ip.ConnectionType is ConnectionType.Gap)
+                .Select(ip => (JunctionBase)ip).ToList();
+        }
         public override bool AddJunction(JunctionBase jnc) 
         {
             if (jnc is InterPoolTemplate ipt && !InterPoolTemplates.Contains(ipt))
