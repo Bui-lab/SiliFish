@@ -38,6 +38,8 @@
             tPlotWindows = new TabPage();
             splitPlotWindows = new SplitContainer();
             pictureBoxLeft = new PictureBox();
+            cmPlotImageSave = new ContextMenuStrip(components);
+            cmiPlotImageSave = new ToolStripMenuItem();
             pictureBoxRight = new PictureBox();
             pPlot = new Panel();
             pPlotSelection = new Panel();
@@ -148,8 +150,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            cmPlotImageSave = new ContextMenuStrip(components);
-            cmiPlotImageSave = new ToolStripMenuItem();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -161,6 +161,7 @@
             splitPlotWindows.Panel2.SuspendLayout();
             splitPlotWindows.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxLeft).BeginInit();
+            cmPlotImageSave.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxRight).BeginInit();
             pPlot.SuspendLayout();
             pPlotSelection.SuspendLayout();
@@ -196,7 +197,6 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).BeginInit();
-            cmPlotImageSave.SuspendLayout();
             SuspendLayout();
             // 
             // tabOutputs
@@ -273,7 +273,7 @@
             // 
             // splitPlotWindows
             // 
-            splitPlotWindows.BackColor = Color.White;
+            splitPlotWindows.BackColor = Color.Gray;
             splitPlotWindows.BorderStyle = BorderStyle.FixedSingle;
             splitPlotWindows.Dock = DockStyle.Fill;
             splitPlotWindows.Location = new Point(3, 3);
@@ -282,14 +282,17 @@
             // splitPlotWindows.Panel1
             // 
             splitPlotWindows.Panel1.AutoScroll = true;
+            splitPlotWindows.Panel1.BackColor = Color.White;
             splitPlotWindows.Panel1.Controls.Add(pictureBoxLeft);
             // 
             // splitPlotWindows.Panel2
             // 
             splitPlotWindows.Panel2.AutoScroll = true;
+            splitPlotWindows.Panel2.BackColor = Color.White;
             splitPlotWindows.Panel2.Controls.Add(pictureBoxRight);
             splitPlotWindows.Size = new Size(674, 587);
             splitPlotWindows.SplitterDistance = 312;
+            splitPlotWindows.SplitterWidth = 2;
             splitPlotWindows.TabIndex = 0;
             // 
             // pictureBoxLeft
@@ -303,13 +306,26 @@
             pictureBoxLeft.TabIndex = 0;
             pictureBoxLeft.TabStop = false;
             // 
+            // cmPlotImageSave
+            // 
+            cmPlotImageSave.Items.AddRange(new ToolStripItem[] { cmiPlotImageSave });
+            cmPlotImageSave.Name = "cmImageSave";
+            cmPlotImageSave.Size = new Size(135, 26);
+            // 
+            // cmiPlotImageSave
+            // 
+            cmiPlotImageSave.Name = "cmiPlotImageSave";
+            cmiPlotImageSave.Size = new Size(134, 22);
+            cmiPlotImageSave.Text = "Save Image";
+            cmiPlotImageSave.Click += cmiPlotImageSave_Click;
+            // 
             // pictureBoxRight
             // 
             pictureBoxRight.ContextMenuStrip = cmPlotImageSave;
             pictureBoxRight.Dock = DockStyle.Fill;
             pictureBoxRight.Location = new Point(0, 0);
             pictureBoxRight.Name = "pictureBoxRight";
-            pictureBoxRight.Size = new Size(356, 585);
+            pictureBoxRight.Size = new Size(358, 585);
             pictureBoxRight.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBoxRight.TabIndex = 0;
             pictureBoxRight.TabStop = false;
@@ -1103,23 +1119,27 @@
             // 
             // splitKinematics
             // 
+            splitKinematics.BackColor = Color.DarkGray;
             splitKinematics.Dock = DockStyle.Fill;
             splitKinematics.Location = new Point(0, 64);
             splitKinematics.Name = "splitKinematics";
             // 
             // splitKinematics.Panel1
             // 
+            splitKinematics.Panel1.BackColor = Color.White;
             splitKinematics.Panel1.Controls.Add(webViewSummaryV);
             splitKinematics.Panel1.Controls.Add(pLineMNKinematicsRight);
             // 
             // splitKinematics.Panel2
             // 
+            splitKinematics.Panel2.BackColor = Color.White;
             splitKinematics.Panel2.Controls.Add(eEpisodesRight);
             splitKinematics.Panel2.Controls.Add(eEpisodesLeft);
             splitKinematics.Panel2.Controls.Add(pLineMNKinematicsLeft);
             splitKinematics.Panel2.SizeChanged += splitKinematics_Panel2_SizeChanged;
             splitKinematics.Size = new Size(694, 703);
             splitKinematics.SplitterDistance = 471;
+            splitKinematics.SplitterWidth = 2;
             splitKinematics.TabIndex = 8;
             // 
             // webViewSummaryV
@@ -1150,7 +1170,7 @@
             eEpisodesRight.Dock = DockStyle.Fill;
             eEpisodesRight.Location = new Point(115, 0);
             eEpisodesRight.Name = "eEpisodesRight";
-            eEpisodesRight.Size = new Size(104, 703);
+            eEpisodesRight.Size = new Size(106, 703);
             eEpisodesRight.TabIndex = 1;
             eEpisodesRight.Text = "";
             // 
@@ -1509,19 +1529,6 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // cmPlotImageSave
-            // 
-            cmPlotImageSave.Items.AddRange(new ToolStripItem[] { cmiPlotImageSave });
-            cmPlotImageSave.Name = "cmImageSave";
-            cmPlotImageSave.Size = new Size(135, 26);
-            // 
-            // cmiPlotImageSave
-            // 
-            cmiPlotImageSave.Name = "cmiPlotImageSave";
-            cmiPlotImageSave.Size = new Size(134, 22);
-            cmiPlotImageSave.Text = "Save Image";
-            cmiPlotImageSave.Click += cmiPlotImageSave_Click;
-            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1542,6 +1549,7 @@
             ((System.ComponentModel.ISupportInitialize)splitPlotWindows).EndInit();
             splitPlotWindows.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBoxLeft).EndInit();
+            cmPlotImageSave.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBoxRight).EndInit();
             pPlot.ResumeLayout(false);
             pPlot.PerformLayout();
@@ -1583,7 +1591,6 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).EndInit();
-            cmPlotImageSave.ResumeLayout(false);
             ResumeLayout(false);
         }
 

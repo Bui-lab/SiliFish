@@ -218,6 +218,7 @@ namespace SiliFish.UI
             // 
             // splitMain
             // 
+            splitMain.BackColor = Color.Gray;
             splitMain.BorderStyle = BorderStyle.FixedSingle;
             splitMain.Dock = DockStyle.Fill;
             splitMain.Location = new Point(4, 44);
@@ -225,6 +226,7 @@ namespace SiliFish.UI
             // 
             // splitMain.Panel1
             // 
+            splitMain.Panel1.BackColor = Color.White;
             splitMain.Panel1.Controls.Add(modelControl);
             splitMain.Panel1.Controls.Add(pGenerateModel);
             splitMain.Panel1.Controls.Add(pModelControlTop);
@@ -232,9 +234,11 @@ namespace SiliFish.UI
             // 
             // splitMain.Panel2
             // 
+            splitMain.Panel2.BackColor = Color.White;
             splitMain.Panel2.Controls.Add(modelOutputControl);
             splitMain.Size = new Size(1340, 663);
             splitMain.SplitterDistance = 545;
+            splitMain.SplitterWidth = 2;
             splitMain.TabIndex = 5;
             // 
             // modelControl
@@ -474,7 +478,7 @@ namespace SiliFish.UI
             modelOutputControl.Dock = DockStyle.Fill;
             modelOutputControl.Location = new Point(0, 0);
             modelOutputControl.Name = "modelOutputControl";
-            modelOutputControl.Size = new Size(789, 661);
+            modelOutputControl.Size = new Size(791, 661);
             modelOutputControl.TabIndex = 0;
             // 
             // timerRun

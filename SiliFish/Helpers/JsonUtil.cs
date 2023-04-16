@@ -51,17 +51,6 @@ namespace SiliFish.Helpers
             string jsonstring = JsonSerializer.Serialize(content, options);
             FileUtil.SaveToFile(path, jsonstring);
         }
-
-        public static Dictionary<string, object> ReadDictionaryFromJsonFile(string path)
-        {
-            string jsonstring = File.ReadAllText(path);
-            var options = new JsonSerializerOptions()
-            {
-                Converters = { new ColorJsonConverter() }
-            };
-            return (Dictionary<string, object>)JsonSerializer.Deserialize(jsonstring, typeof(Dictionary<string, object>), options);
-        }
-
         public static int FindOpeningBracket(string json, int searchend)
         {
             int endCounter = 0;

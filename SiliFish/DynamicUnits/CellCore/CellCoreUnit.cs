@@ -31,7 +31,7 @@ namespace SiliFish.DynamicUnits
         .ToDictionary(type => type.Name, type => type);
         public static List<string> GetCoreTypes()
         {
-            return typeMap.Keys.Where(k => k != nameof(CellCoreUnit)).ToList();
+            return typeMap.Keys.Where(k => k != nameof(CellCoreUnit) && k!=nameof(ContractibleCellCoreUnit)).ToList();
         }
 
         public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)

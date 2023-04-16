@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,15 +33,18 @@ namespace SiliFish.Repositories
                 string newJson = "\"ParamValues\": {";
                 Regex singleRegex = new("\"(.*\\.)(.*\":.*,)");
                 MatchCollection singleMatch = singleRegex.Matches(parMatch[0].Value);
-                for (int j = 0; j < singleMatch.Count; j++)
+                if (singleMatch.Count > 0)
                 {
-                    Match singleParam = singleMatch[j];
-                    newJson += $"\"{singleParam.Groups[2]}\r\n";
+                    for (int j = 0; j < singleMatch.Count; j++)
+                    {
+                        Match singleParam = singleMatch[j];
+                        newJson += $"\"{singleParam.Groups[2]}\r\n";
+                    }
+                    newJson += "}";
+                    json = json.Remove(parMatch[0].Index, parMatch[0].Value.Length);
+                    json = json.Insert(parMatch[0].Index, newJson);
+                    json = JsonUtil.CleanUp(json);
                 }
-                newJson += "}";
-                json = json.Remove(parMatch[0].Index, parMatch[0].Value.Length);
-                json = json.Insert(parMatch[0].Index, newJson);
-                json = JsonUtil.CleanUp(json);
             }
             return list;
         }
@@ -58,7 +62,8 @@ namespace SiliFish.Repositories
             if (string.IsNullOrEmpty(JSONString))
                 return null;
             CheckJSONVersion(ref JSONString);
-            return (CoreSolverSettings)JsonUtil.ToObject(typeof(CoreSolverSettings), JSONString);
+            CoreSolverSettings css = (CoreSolverSettings)JsonUtil.ToObject(typeof(CoreSolverSettings), JSONString);
+            return css;
         }
     }
 }
