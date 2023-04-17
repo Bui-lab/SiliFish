@@ -14,7 +14,7 @@ namespace SiliFish.Services.Optimization
         {
             double spikeDelay = stat.SpikeDelay;
             if (spikeDelay < 0) return 0;
-            if (ValueMin <= spikeDelay && ValueMax >= spikeDelay)
+            if (ValueMin <= spikeDelay && ValueMax + 1 > spikeDelay)
                 return Weight;
             if (spikeDelay < ValueMin)
                 return Weight / (ValueMin - spikeDelay);

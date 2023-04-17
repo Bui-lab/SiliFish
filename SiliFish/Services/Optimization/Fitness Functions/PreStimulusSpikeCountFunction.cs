@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.Services.Optimization
 {
-    public class PostStimulusSpikeCountFunction : FitnessFunction
+    public class PreStimulusSpikeCountFunction : FitnessFunction
     {
         public FiringPattern TargetPattern { get; set; }
 
@@ -19,12 +19,12 @@ namespace SiliFish.Services.Optimization
             }
         }
 
-        public PostStimulusSpikeCountFunction()
+        public PreStimulusSpikeCountFunction()
         {
             MinMaxExists = true;
             CurrentRequired = true;
             ModeExists = false;
-            PostStimulus = true;
+            PreStimulus = true;
         }
 
         public override string[] GetFiringOptions()
@@ -33,7 +33,7 @@ namespace SiliFish.Services.Optimization
         }
         public override double CalculateFitness(DynamicsStats stat)
         {
-            int spikeCount = stat.PostStimulusSpikeList.Count;
+            int spikeCount = stat.PreStimulusSpikeList.Count;
             if (ValueMin <= spikeCount && ValueMax + 1 > spikeCount)
                 return Weight;
             if (spikeCount < ValueMin)

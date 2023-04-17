@@ -240,14 +240,24 @@ namespace SiliFish.DynamicUnits
             return SolveODE(I);
         }
 
-        public virtual DynamicsStats DynamicsTest(double IValue, int infinity, double dt, int warmup = 100)
+        public virtual DynamicsStats DynamicsTest(double IValue, int infinity, double dt, int? warmup = 100, bool includePostStimulus = false)
         {
             infinity = (int)(infinity / dt);
+            warmup ??= 0;
             warmup = (int)(warmup / dt);
-            int tmax = infinity + warmup + 10;
+            int tmax = (includePostStimulus ? 2 : 1) * infinity + (int)warmup + 10;
             double[] I = new double[tmax];
-            foreach (int i in Enumerable.Range(warmup, infinity))
+            foreach (int i in Enumerable.Range((int)warmup, infinity))
+            {
                 I[i] = IValue;
+            }
+
+            if (includePostStimulus)
+                foreach (int i in Enumerable.Range((int)warmup + infinity, infinity))
+                {
+                    I[i] = 0;
+                }
+
             return DynamicsTest(I);
         }
 

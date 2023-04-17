@@ -21,6 +21,7 @@ namespace SiliFish.Services.Optimization
         public string FitnessFunctionType { get { return fitnessFunctionType; } set { fitnessFunctionType = value; } }
         public double Weight { get; set; }
         public bool MinMaxExists, CurrentRequired, ModeExists;//no need to save in JSON - they are class based parameters
+        public bool PreStimulus = false, PostStimulus = false;
 
         public double ValueMin { get; set; }//valid only if MinMaxExists = true
         public double ValueMax { get; set; }//valid only if MinMaxExists = true

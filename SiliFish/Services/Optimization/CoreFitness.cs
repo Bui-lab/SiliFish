@@ -29,8 +29,11 @@ namespace SiliFish.Services.Optimization
             if (core == null)
                 return 0;
 
+            bool includePreStimulus = fitnessFunctions.Any(ff => ff.PreStimulus);
+            bool includePostStimulus = fitnessFunctions.Any(ff => ff.PostStimulus);
             double fitness = 0;
             double rheobase = 0;
+            int? warmup = includePreStimulus ? GlobalSettings.RheobaseInfinity : null;
             if (targetRheobaseFunction != null)
             {
                 fitness += targetRheobaseFunction.CalculateFitness(core, out rheobase);
@@ -47,7 +50,7 @@ namespace SiliFish.Services.Optimization
             Dictionary<double, DynamicsStats> stats = new();
             foreach (double current in currentValues)
             {
-                DynamicsStats stat = core.DynamicsTest(current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1);
+                DynamicsStats stat = core.DynamicsTest(current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1, warmup:warmup, includePostStimulus: includePostStimulus);
                 stats.Add(current, stat);
             }
 

@@ -16,7 +16,7 @@ namespace SiliFish.Services.Optimization
             if (stat.BurstsOrSpikes.Count == 0)
                 return 0;
             double avgSpikePerBurst = stat.BurstsOrSpikes.Average(bs => bs.SpikeCount);
-            if (ValueMin <= avgSpikePerBurst && ValueMax >= avgSpikePerBurst)
+            if (ValueMin <= avgSpikePerBurst && ValueMax + 1 > avgSpikePerBurst)
                 return Weight;
             if (avgSpikePerBurst < ValueMin)
                 return Weight / (ValueMin - avgSpikePerBurst);
