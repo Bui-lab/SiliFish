@@ -111,22 +111,25 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<string> Attachments { get; set; } = new();
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"CellGroup, CellType, CoreType, " +
+        public static string CSVExportColumnNames => $"CellGroup, CellType, " +
             $"BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange, " +
-            $"Conduction Velocity, " +
             $"{SpatialDistribution.CSVExportColumnNames}," +
-            $"{TimeLine.CSVExportColumnNames}, " +
-            $"{string.Join(',', Enumerable.Range(1,10).Select(i=>$"Param{i},Value{i}"))} ";
+            $"Conduction Velocity, " +
+            $"CoreType, " +
+            $"{string.Join(',', Enumerable.Range(1, 10).Select(i => $"Param{i},Value{i}"))}, " +
+            $"{TimeLine.CSVExportColumnNames}";
 
         [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
         [JsonIgnore, Browsable(false)]
-        public virtual string CSVExportValues => $"{CellGroup}, {CellType}, {CoreType}, " +
+        public virtual string CSVExportValues => $"{CellGroup}, {CellType}, " +
             $"{BodyLocation}, {PositionLeftRight}, {NumOfCells}, {PerSomiteOrTotal}, {SomiteRange}, " +
-            $"{ConductionVelocity?.UniqueValue}, " +
             $"{SpatialDistribution.CSVExportValues}," +
-            $"{TimeLine_ms.CSVExportValues}," +
-            $"{string.Join(",", Parameters.Select(kv=>$"{kv.Key},{kv.Value.UniqueValue}"))}";
+            $"{ConductionVelocity?.UniqueValue}, " +
+            $"{CoreType}, " +
+            $"{string.Join(",", Parameters.OrderBy(kv=>kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}," +
+            $"{TimeLine_ms.CSVExportValues}";
+
 
         public CellPoolTemplate() { }
         public CellPoolTemplate(CellPoolTemplate cpl)
