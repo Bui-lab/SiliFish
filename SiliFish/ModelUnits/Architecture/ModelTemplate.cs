@@ -78,6 +78,11 @@ namespace SiliFish.ModelUnits.Architecture
 
         #region Projections
 
+        public bool HasConnections()
+        {
+            return InterPoolTemplates.Any();
+        }
+
         public override List<JunctionBase> GetChemicalProjections()
         {
             return InterPoolTemplates

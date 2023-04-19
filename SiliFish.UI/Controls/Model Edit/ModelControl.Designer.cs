@@ -462,6 +462,8 @@
             listCellPools.ItemsSort += listCellPools_ItemsSort;
             listCellPools.ItemSelect += listCellPools_ItemSelect;
             listCellPools.ItemPlot += listCellPools_ItemPlot;
+            listCellPools.ItemsExport += listCellPools_ItemsExport;
+            listCellPools.ItemsImport += listCellPools_ItemsImport;
             // 
             // pCellPoolsTop
             // 
@@ -510,6 +512,8 @@
             listCells.ItemsSort += listCells_ItemsSort;
             listCells.ItemSelect += listCells_ItemSelect;
             listCells.ItemPlot += listCells_ItemPlot;
+            listCells.ItemsExport += listCells_ItemsExport;
+            listCells.ItemsImport += listCells_ItemsImport;
             // 
             // pCellsTop
             // 
@@ -696,7 +700,7 @@
             listOutgoing.ItemToggleActive += listConnections_ItemToggleActive;
             listOutgoing.ItemsSort += listConnections_ItemsSort;
             listOutgoing.ItemSelect += listConnections_ItemSelect;
-            listOutgoing.ItemPlot += listCells_ItemPlot;
+            listOutgoing.ItemPlot += listConnections_ItemPlot;
             listOutgoing.ItemsExport += listConnections_ItemsExport;
             listOutgoing.ItemsImport += listConnections_ItemsImport;
             // 

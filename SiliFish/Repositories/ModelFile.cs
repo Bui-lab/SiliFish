@@ -21,6 +21,7 @@ namespace SiliFish.Repositories
 {
     public static class ModelFile
     {
+        #region JSON related functions
         private static bool RemoveOldParameters(ref string json)
         {
             if (json == null)
@@ -263,7 +264,6 @@ namespace SiliFish.Repositories
             }
             return list;
         }
-
         public static void Save(string fileName, ModelBase model)
         {
             model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -288,6 +288,7 @@ namespace SiliFish.Repositories
             mb?.LinkObjects();
             return mb;
         }
+        #endregion
 
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
@@ -605,6 +606,90 @@ namespace SiliFish.Repositories
                 //int iter = 1;
                  if (columns != Cell.CSVExportColumnNames)
                         return false;
+                /*TODO cell csv export    cellPool.ClearStimuli();
+                    while (iter < contents.Length)
+                    {
+                        Stimulus stim = new();
+                        stim.GenerateFromCSVRow(model as RunningModel, contents[iter++]);
+                        if (stim.TargetCell.CellPool == cellPool)
+                            stim.TargetCell.AddStimulus(stim);
+                    }*/
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        public static bool SaveCellPoolsToCSV(string filename, ModelBase model)
+        {
+            if (filename == null || model == null)
+                return false;
+
+            try
+            {
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
+                        model is RunningModel modelRunning ? modelRunning.GetCellPools() : new();
+                sw.WriteLine(CellPoolTemplate.CSVExportColumnNames);
+                foreach (CellPoolTemplate cpt in cellPools)
+                {
+                    sw.WriteLine(cpt.CSVExportValues);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        private static bool ReadCellPoolsFromCSV(string filename, RunningModel model)
+        {
+            if (filename == null || model == null)
+                return false;
+            try
+            {
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                //int iter = 1;
+                if (columns != Cell.CSVExportColumnNames)
+                    return false;
+                /*TODO cell csv export model.ClearCells();
+                 while (iter < contents.Length)
+                 {
+                     Stimulus stim = new();
+                     stim.GenerateFromCSVRow(rm, contents[iter++]);
+                 }*/
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public static bool ReadCellPoolsFromCSV(string filename, RunningModel model, CellPool cellPool)
+        {
+            if (filename == null || model == null)
+                return false;
+            if (cellPool is null)
+                return ReadCellPoolsFromCSV(filename, model);
+            try
+            {
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                //int iter = 1;
+                if (columns != Cell.CSVExportColumnNames)
+                    return false;
                 /*TODO cell csv export    cellPool.ClearStimuli();
                     while (iter < contents.Length)
                     {

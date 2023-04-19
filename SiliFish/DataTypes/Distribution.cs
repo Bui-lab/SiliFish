@@ -3,6 +3,7 @@ using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -19,6 +20,7 @@ namespace SiliFish.DataTypes
     [JsonDerivedType(typeof(BimodalDistribution), typeDiscriminator: "Bimodal")]
     public class Distribution
     {
+        protected static int csvExportFieldNumber = 5;
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
             .Where(type => typeof(Distribution).IsAssignableFrom(type))
             .ToDictionary(type => type.Name, type => type);
@@ -72,6 +74,13 @@ namespace SiliFish.DataTypes
             return Absolute ? $"{RangeStart}-{RangeEnd} [{Discriminator}]" :
                 $"%{RangeStart}-{RangeEnd}; [{LowerLimit}-{UpperLimit}] [{Discriminator}]";
         }
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportColumnNames => $"Distribution,Angular,Absolute,RangeStart,RangeEnd,Range,{string.Join(",", Enumerable.Range(1, csvExportFieldNumber).Select(i => $"Field{i},Value{i}"))}";
+
+        [JsonIgnore, Browsable(false)]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore, Browsable(false)]
+        public virtual string CSVExportValues => $"{Discriminator},{Angular},{Absolute},{RangeStart},{RangeEnd},{Range}";
         public Distribution()
         {
             //default values of 0 and 999 used
@@ -168,6 +177,8 @@ namespace SiliFish.DataTypes
             get { return (RangeStart + RangeEnd) / 2; }
         }
 
+        public override string CSVExportValues => base.CSVExportValues + "," +string.Join(",", Enumerable.Range(1, csvExportFieldNumber).Select(i => $" , "));
+
         public UniformDistribution()
         { }
         public UniformDistribution(double rangeStart, double rangeEnd, bool absolute, bool angular)
@@ -193,6 +204,10 @@ namespace SiliFish.DataTypes
             string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:0; SD:{1:0.#####}" : "";
             return $"{UniqueValue}{noise}";
         }
+        public override string CSVExportValues => $"{base.CSVExportValues},NoiseStdDev,{NoiseStdDev}"+
+                            "," + string.Join(",", Enumerable.Range(1, csvExportFieldNumber - 1).Select(i => $" , "));
+
+
         public Constant_NoDistribution()
         { }
         public Constant_NoDistribution(double val)
@@ -234,6 +249,10 @@ namespace SiliFish.DataTypes
         {
             return $"{base.ToString()}\r\nNoise: µ:0; SD:{NoiseStdDev:0.#####}";
         }
+
+        public override string CSVExportValues => $"{base.CSVExportValues},NoiseStdDev,{NoiseStdDev}" +
+                            "," + string.Join(",", Enumerable.Range(1, csvExportFieldNumber - 1).Select(i => $" , "));
+
         public SpacedDistribution()
         { }
         public SpacedDistribution(double start, double end, double noiseStdDev, bool absolute, bool angular)
@@ -256,20 +275,10 @@ namespace SiliFish.DataTypes
 
         public double Mean { get; set; } = 0;
         public double Stddev { get; set; } = 0;
-        public override double UniqueValue
-        {
-            get { return Mean; }
-        }
-        public override string ToString()
-        {
-            return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
-        }
 
-        protected override void FlipOnYAxis()
-        {
-            base.FlipOnYAxis();
-            Mean = -Mean;
-        }
+        public override string CSVExportValues => $"{base.CSVExportValues},Mean,{Mean},StdDev,{Stddev}" +
+                            "," + string.Join(",", Enumerable.Range(1, csvExportFieldNumber - 2).Select(i => $" , "));
+
         public GaussianDistribution()
         { }
 
@@ -285,7 +294,20 @@ namespace SiliFish.DataTypes
             Mean = mean;
             Stddev = stddev;
         }
+        public override double UniqueValue
+        {
+            get { return Mean; }
+        }
+        public override string ToString()
+        {
+            return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
+        }
 
+        protected override void FlipOnYAxis()
+        {
+            base.FlipOnYAxis();
+            Mean = -Mean;
+        }
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = Absolute ? 100 : double.Parse(range.ToString());
@@ -308,16 +330,8 @@ namespace SiliFish.DataTypes
         public double Mean2 { get; set; } = 1;
         public double Stddev2 { get; set; } = 0;
         public double Mode1Weight { get; set; } = 1;
-        public override string ToString()
-        {
-            return String.Format("{0}\r\nµ2:{1:0.#####}; SD2:{2:0.#####}\r\nMode 1 Weight{3:0.##}", base.ToString(), Mean2, Stddev2, Mode1Weight);
-        }
+        public override string CSVExportValues => $"{base.CSVExportValues},Mean,{Mean},StdDev,{Stddev},Mean2,{Mean2},StdDev2,{Stddev2},Mode1Weight,{Mode1Weight}";
 
-        protected override void FlipOnYAxis()
-        {
-            base.FlipOnYAxis();
-            Mean2 = -Mean2;
-        }
         public BimodalDistribution()
         { }
         public BimodalDistribution(double start, double end, double mean, double stddev, double mean2, double stddev2, double mode1Weight, bool absolute, bool angular)
@@ -334,7 +348,16 @@ namespace SiliFish.DataTypes
             Stddev2 = stddev2;
             Mode1Weight = mode1Weight;
         }
+        public override string ToString()
+        {
+            return String.Format("{0}\r\nµ2:{1:0.#####}; SD2:{2:0.#####}\r\nMode 1 Weight{3:0.##}", base.ToString(), Mean2, Stddev2, Mode1Weight);
+        }
 
+        protected override void FlipOnYAxis()
+        {
+            base.FlipOnYAxis();
+            Mean2 = -Mean2;
+        }
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
             Range = Absolute ? 100 : range;

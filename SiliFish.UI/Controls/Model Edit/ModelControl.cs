@@ -49,6 +49,11 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             listStimuli.EnableImportExport();
+            listCellPools.EnableImportExport();
+            listCells.EnableImportExport();
+            listIncoming.EnableImportExport();
+            listOutgoing.EnableImportExport();
+            listGap.EnableImportExport();
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
         }
@@ -396,6 +401,37 @@ namespace SiliFish.UI.Controls
             LoadPools();
         }
 
+        private void listCellPools_ItemsExport(object sender, EventArgs e)
+        {
+            ModelUnitBase selectedUnit = SelectedUnit;
+            if (!Model.GetCellPools().Any()) 
+            {
+                MessageBox.Show("There are no cell pools to be exported.");
+                return;
+            }
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model))
+                {
+                    Process p = new()
+                    {
+                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
+                        {
+                            UseShellExecute = true
+                        }
+                    };
+                    p.Start();
+                }
+                else
+                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+            }
+        }
+
+        private void listCellPools_ItemsImport(object sender, EventArgs e)
+        {
+            //TODO cell pool import
+            MessageBox.Show("Under implementation");
+        }
         private void LoadCells()
         {
             if (Model is ModelTemplate) return;
@@ -528,6 +564,30 @@ namespace SiliFish.UI.Controls
         {
             ModelIsUpdated();
         }
+        private bool UnitHasCell(ModelUnitBase unit)
+        {
+            if (Model is not RunningModel) return false;
+            if (unit == null)
+                return (Model as RunningModel).GetCells().Any();
+            if (unit is Cell)
+                return true;
+            if (unit is CellPool cellPool)
+                return cellPool.Cells.Any();
+            return false;
+        }
+        private void listCells_ItemsExport(object sender, EventArgs e)
+        {
+            //TODO cell export
+            MessageBox.Show("Under implementation");
+        }
+
+        private void listCells_ItemsImport(object sender, EventArgs e)
+        {
+            //TODO cell import
+            MessageBox.Show("Under implementation");
+        }
+
+
 
         #endregion
 
@@ -665,7 +725,7 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private List<JunctionBase> OpenConnectionDialog(JunctionBase interpool, bool newJunc, 
+        private List<JunctionBase> OpenConnectionDialog(JunctionBase interpool, bool newJunc,
             bool setSource = false, bool setTarget = false, bool setGap = false)
         {
             if (Model == null) return null;
@@ -730,7 +790,7 @@ namespace SiliFish.UI.Controls
             List<JunctionBase> jncs =
                 lbc == listIncoming ? OpenConnectionDialog(null, true, setTarget: true) :
                 lbc == listOutgoing ? OpenConnectionDialog(null, true, setSource: true) :
-                lbc == listGap? OpenConnectionDialog(null, true, setGap: true) :
+                lbc == listGap ? OpenConnectionDialog(null, true, setGap: true) :
                 OpenConnectionDialog(null, true);
 
             if (jncs != null && jncs.Any())
@@ -827,9 +887,25 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private bool UnitHasConnections(ModelUnitBase unit)
+        {/*TODO
+            if (unit == null)
+            {
+                if (Model is ModelTemplate mt)
+                    return mt.HasConnections();
+                return (Model as RunningModel).HasConnections();
+            }
+            if (unit is Cell cell)
+                return cell.Stimuli.HasStimulus;
+            if (unit is CellPool cellPool)
+                return cellPool.GetStimuli().Any();
+            if (unit is CellPoolTemplate cellPoolTemplate)
+                return (Model as ModelTemplate).AppliedStimuli.FirstOrDefault(stim => stim.TargetPool == cellPoolTemplate.CellGroup) != null;*/
+            return false;
+        }
         private void listConnections_ItemsExport(object sender, EventArgs e)
         {//TODO connection export
-
+            MessageBox.Show("Under implementation");
         }
 
         private void listConnections_ItemsImport(object sender, EventArgs e)
@@ -1165,7 +1241,6 @@ namespace SiliFish.UI.Controls
             };
             p.Start();
         }
-
 
     }
 }

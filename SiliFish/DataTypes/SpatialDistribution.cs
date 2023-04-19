@@ -1,4 +1,7 @@
-﻿namespace SiliFish.DataTypes
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
+
+namespace SiliFish.DataTypes
 {
 
     public class SpatialDistribution
@@ -6,6 +9,14 @@
         public Distribution XDistribution { get; set; }
         public Distribution Y_AngleDistribution { get; set; }
         public Distribution Z_RadiusDistribution { get; set; }
+
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportColumnNames => $"X{Distribution.CSVExportColumnNames},Y{Distribution.CSVExportColumnNames},Z{Distribution.CSVExportColumnNames}";
+
+        [JsonIgnore, Browsable(false)]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore, Browsable(false)]
+        public string CSVExportValues => $"{XDistribution.CSVExportValues},{Y_AngleDistribution.CSVExportValues},{Z_RadiusDistribution.CSVExportValues}";
 
         public SpatialDistribution()
         { }

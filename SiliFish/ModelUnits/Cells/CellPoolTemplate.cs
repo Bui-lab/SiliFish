@@ -7,6 +7,7 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -109,11 +110,24 @@ namespace SiliFish.ModelUnits.Cells
         public override string ID { get { return Position + "_" + CellGroup; }  }
 
         public List<string> Attachments { get; set; } = new();
-        public override int CompareTo(ModelUnitBase otherbase)
-        {
-            CellPoolTemplate other = otherbase as CellPoolTemplate;
-            return CellGroup.CompareTo(other.CellGroup);
-        }
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportColumnNames => $"CellGroup, CellType, CoreType, " +
+            $"BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange, " +
+            $"Conduction Velocity, " +
+            $"{SpatialDistribution.CSVExportColumnNames}," +
+            $"{TimeLine.CSVExportColumnNames}, " +
+            $"{string.Join(',', Enumerable.Range(1,10).Select(i=>$"Param{i},Value{i}"))} ";
+
+        [JsonIgnore, Browsable(false)]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore, Browsable(false)]
+        public virtual string CSVExportValues => $"{CellGroup}, {CellType}, {CoreType}, " +
+            $"{BodyLocation}, {PositionLeftRight}, {NumOfCells}, {PerSomiteOrTotal}, {SomiteRange}, " +
+            $"{ConductionVelocity?.UniqueValue}, " +
+            $"{SpatialDistribution.CSVExportValues}," +
+            $"{TimeLine_ms.CSVExportValues}," +
+            $"{string.Join(",", Parameters.Select(kv=>$"{kv.Key},{kv.Value.UniqueValue}"))}";
+
         public CellPoolTemplate() { }
         public CellPoolTemplate(CellPoolTemplate cpl)
         {
@@ -133,6 +147,11 @@ namespace SiliFish.ModelUnits.Cells
             SpatialDistribution = cpl.SpatialDistribution.Clone();
             ConductionVelocity = cpl.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
+        }
+        public override int CompareTo(ModelUnitBase otherbase)
+        {
+            CellPoolTemplate other = otherbase as CellPoolTemplate;
+            return CellGroup.CompareTo(other.CellGroup);
         }
 
         public override bool CheckValues(ref List<string> errors)
