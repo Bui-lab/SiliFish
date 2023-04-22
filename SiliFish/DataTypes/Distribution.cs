@@ -146,7 +146,15 @@ namespace SiliFish.DataTypes
         }
         public static Distribution CreateDistributionObjectFromCSVCell(string cellContents)
         {
+            if (string.IsNullOrEmpty(cellContents)) return null;
             string[] values = cellContents.Split(';');
+            if (values.Length == 0) return null;
+            if (values.Length == 1)
+            {
+                if (double.TryParse(values[0], out var value))
+                    return new Constant_NoDistribution(value);
+                else return null;
+            }
             Dictionary<string, string> keyValuePairs = new();
             foreach (string value in values) 
             {

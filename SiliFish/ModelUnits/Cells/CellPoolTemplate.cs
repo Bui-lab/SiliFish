@@ -150,12 +150,17 @@ namespace SiliFish.ModelUnits.Cells
                 iter += SpatialDistribution.CSVExportColumCount;
                 ConductionVelocity = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
                 CoreType = values[iter++];
-                Parameters.Clear();
+                Parameters = new();
                 for (int i = 1; i <= csvExportParamCount; i++)
                 {
-                    Parameters.Add(values[iter++], Distribution.CreateDistributionObjectFromCSVCell(values[iter++]));
+                    if (iter > values.Length - 2) break;
+                    string paramkey = values[iter++];
+                    string paramvalue = values[iter++];
+                    if (!string.IsNullOrEmpty(paramkey)) 
+                        Parameters.Add(paramkey, Distribution.CreateDistributionObjectFromCSVCell(paramvalue));
                 }
-                TimeLine_ms.CSVExportValues = values[iter++];
+                if (iter < values.Length) 
+                    TimeLine_ms.CSVExportValues = values[iter++];
             }
         }
 
@@ -182,12 +187,6 @@ namespace SiliFish.ModelUnits.Cells
         public void GenerateFromCSVRow(ModelTemplate Model, string row)
         {
             CSVExportValues = row;
-            string[] values = row.Split(',');
-            if (values.Length != CSVExportColumCount) return;
-            /*TODO TargetCell = Model.GetCell(values[1]);
-            Settings.CSVExportValues = string.Join(",", values[2..(StimulusSettings.CSVExportColumCount + 1)]);
-            TimeLine_ms.CSVExportValues = string.Join(",", values[(StimulusSettings.CSVExportColumCount + 2)..]);
-            TargetCell.AddStimulus(this);*/
         }
         public override int CompareTo(ModelUnitBase otherbase)
         {
