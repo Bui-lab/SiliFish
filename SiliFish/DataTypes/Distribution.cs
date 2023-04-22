@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,26 @@ namespace SiliFish.DataTypes
             .Where(type => typeof(Distribution).IsAssignableFrom(type))
             .ToDictionary(type => type.Name, type => type);
 
+        private static Type GetTypeOfDiscriminator(string discriminator)
+        {
+            switch (discriminator)
+            {
+                case "None":
+                    return typeof(Distribution);
+                case "Uniform":
+                    return typeof(UniformDistribution);
+                case "Constant":
+                    return typeof(Constant_NoDistribution);
+                case "Equally Spaced":
+                    return typeof(SpacedDistribution);
+                case "Gaussian":
+                    return typeof(GaussianDistribution);
+                case "Bimodal":
+                    return typeof(BimodalDistribution);
+                default:
+                    return typeof(Distribution);
+            }
+        }
         public static Random Random = null;
 
         public bool Angular { get; set; } = false;
@@ -68,13 +89,17 @@ namespace SiliFish.DataTypes
 
         [JsonIgnore]
         public virtual double UniqueValue { get { return 666; } }// throw new NotImplementedException(); } }
-        public override string ToString()
-        {
-            return Absolute ? $"{RangeStart}-{RangeEnd} [{Discriminator}]" :
-                $"%{RangeStart}-{RangeEnd}; [{LowerLimit}-{UpperLimit}] [{Discriminator}]";
-        }
+
         [JsonIgnore, Browsable(false)]
-        public virtual string CSVCellExportValues => ToString().Replace(",", ";").Replace("\r\n", ";").Replace("\n", ";");
+        public virtual string CSVCellExportValues
+        {
+            get => string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value))
+                .Replace(",", ";").Replace("\r\n", ";").Replace("\n", ";");
+            set 
+            {
+                
+            }
+        }
         public Distribution()
         {
             //default values of 0 and 999 used
@@ -97,6 +122,45 @@ namespace SiliFish.DataTypes
                 RangeStart = rangeEnd;
                 RangeEnd = rangeStart;
             }
+        }
+        public override string ToString()
+        {
+            return Absolute ? $"{RangeStart}-{RangeEnd} [{Discriminator}]" :
+                $"%{RangeStart}-{RangeEnd}; [{LowerLimit}-{UpperLimit}] [{Discriminator}]";
+        }
+
+        /// <summary>
+        /// Used for CSV cell contents
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Dictionary<string, string> ConvertToDictionary()
+        {
+            Dictionary<string, string> keyValuePairs = new();
+            foreach (PropertyInfo prop in GetType().GetProperties())
+            {
+                if (prop.GetCustomAttribute<BrowsableAttribute>()?.Equals(BrowsableAttribute.No) ?? false)
+                    continue;
+                keyValuePairs.Add(prop.Name, prop.GetValue(this).ToString());
+            }
+            return keyValuePairs;
+        }
+        public static Distribution CreateDistributionObjectFromCSVCell(string cellContents)
+        {
+            string[] values = cellContents.Split(';');
+            Dictionary<string, string> keyValuePairs = new();
+            foreach (string value in values) 
+            {
+                string[] keyAndValue = value.Split(':');
+                if (keyAndValue.Length != 2) throw new Exception("Distribution Cell CSV invalid format");
+                keyValuePairs.Add(keyAndValue[0].Trim(), keyAndValue[1].Trim());  
+            }
+            string discriminator = keyValuePairs["Discriminator"];
+            Distribution dist = (Distribution)Activator.CreateInstance(GetTypeOfDiscriminator(discriminator));
+            foreach (string key in keyValuePairs.Keys)
+            {
+                dist.SetPropertyValue(key, keyValuePairs[key]);
+            }
+            return dist;
         }
         public static List<string> GetDistributionTypes()
         {

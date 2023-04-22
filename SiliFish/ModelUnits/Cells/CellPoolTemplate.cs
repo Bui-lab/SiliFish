@@ -113,38 +113,50 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<string> Attachments { get; set; } = new();
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"CellGroup, CellType, CoreType, " +
+        public static string CSVExportColumnNames => $"CellGroup, CellType, " +
             $"BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange, " +
-            $"Conduction Velocity, " +
             $"{SpatialDistribution.CSVExportColumnNames}," +
-            $"{TimeLine.CSVExportColumnNames}, " +
-            $"{string.Join(',', Enumerable.Range(1,csvExportParamCount).Select(i=>$"Param{i},Value{i}"))} ";
+            $"Conduction Velocity, " +
+            $"CoreType, " +
+            $"{string.Join(',', Enumerable.Range(1, csvExportParamCount).Select(i => $"Param{i},Value{i}"))}, " +
+            $"{TimeLine.CSVExportColumnNames}";
 
         [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
         [JsonIgnore, Browsable(false)]
         public virtual string CSVExportValues
         {
-            get => $"{CellGroup}, {CellType}, {CoreType}, " +
+            get => $"{CellGroup}, {CellType}, " +
                 $"{BodyLocation}, {PositionLeftRight}, {NumOfCells}, {PerSomiteOrTotal}, {SomiteRange}, " +
-                $"{ConductionVelocity?.UniqueValue}, " +
                 $"{SpatialDistribution.CSVExportValues}," +
-                $"{TimeLine_ms.CSVExportValues}," +
-                $"{string.Join(",", Parameters.Select(kv => $"{kv.Key},{kv.Value.UniqueValue}"))}";
+                $"{ConductionVelocity?.CSVCellExportValues}, " +
+                $"{CoreType}, " +
+                $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}," +
+                $"{TimeLine_ms.CSVExportValues}";
             set
             {
+                int iter = 0;
                 string[] values = value.Split(',');
                 if (values.Length < CSVExportColumCount - csvExportParamCount) return;
-                CellGroup = values[0];
-                CellType = (CellType)Enum.Parse(typeof(CellType), values[1]); 
-                CoreType = values[2];
-                BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), values[3]);
-                PositionLeftRight = (SagittalPlane)Enum.Parse(typeof(SagittalPlane), values[4]);
-                NumOfCells = int.Parse(values[5]);
-                PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), values[6]);
-                SomiteRange = values[7];
-                //TODO
-        }
+                CellGroup = values[iter++];
+                CellType = (CellType)Enum.Parse(typeof(CellType), values[iter++]);
+                BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), values[iter++]);
+                PositionLeftRight = (SagittalPlane)Enum.Parse(typeof(SagittalPlane), values[iter++]);
+                NumOfCells = int.Parse(values[iter++]);
+                PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), values[iter++]);
+                SomiteRange = values[iter++];
+                string spatialDistString = string.Join(',',values[iter..(iter+SpatialDistribution.CSVExportColumCount)]);
+                SpatialDistribution.CSVExportValues = spatialDistString;
+                iter += SpatialDistribution.CSVExportColumCount;
+                ConductionVelocity = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
+                CoreType = values[iter++];
+                Parameters.Clear();
+                for (int i = 1; i <= csvExportParamCount; i++)
+                {
+                    Parameters.Add(values[iter++], Distribution.CreateDistributionObjectFromCSVCell(values[iter++]));
+                }
+                TimeLine_ms.CSVExportValues = values[iter++];
+            }
         }
 
         public CellPoolTemplate() { }
@@ -169,6 +181,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public void GenerateFromCSVRow(ModelTemplate Model, string row)
         {
+            CSVExportValues = row;
             string[] values = row.Split(',');
             if (values.Length != CSVExportColumCount) return;
             /*TODO TargetCell = Model.GetCell(values[1]);

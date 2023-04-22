@@ -649,7 +649,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        private static bool ReadCellPoolsFromCSV(string filename, RunningModel model)
+        public static bool ReadCellPoolsFromCSV(string filename, ModelBase model)
         {
             if (filename == null || model == null)
                 return false;
@@ -658,46 +658,19 @@ namespace SiliFish.Repositories
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
-                //int iter = 1;
-                if (columns != Cell.CSVExportColumnNames)
+                int iter = 1;
+                if (columns != CellPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
                     return false;
-                /*TODO cell csv export model.ClearCells();
-                 while (iter < contents.Length)
-                 {
-                     Stimulus stim = new();
-                     stim.GenerateFromCSVRow(rm, contents[iter++]);
-                 }*/
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-        public static bool ReadCellPoolsFromCSV(string filename, RunningModel model, CellPool cellPool)
-        {
-            if (filename == null || model == null)
-                return false;
-            if (cellPool is null)
-                return ReadCellPoolsFromCSV(filename, model);
-            try
-            {
-                string[] contents = FileUtil.ReadLinesFromFile(filename);
-                if (contents.Length <= 1) return false;
-                string columns = contents[0];
-                //int iter = 1;
-                if (columns != Cell.CSVExportColumnNames)
-                    return false;
-                /*TODO cell csv export    cellPool.ClearStimuli();
+                if (model is ModelTemplate modelTemplate)
+                {
+                    modelTemplate.CellPoolTemplates.Clear();
                     while (iter < contents.Length)
                     {
-                        Stimulus stim = new();
-                        stim.GenerateFromCSVRow(model as RunningModel, contents[iter++]);
-                        if (stim.TargetCell.CellPool == cellPool)
-                            stim.TargetCell.AddStimulus(stim);
-                    }*/
+                        CellPoolTemplate cpt = new();
+                        cpt.GenerateFromCSVRow(modelTemplate, contents[iter++]);
+                        modelTemplate.AddCellPool(cpt);
+                    }
+                }
                 return true;
             }
             catch (Exception ex)

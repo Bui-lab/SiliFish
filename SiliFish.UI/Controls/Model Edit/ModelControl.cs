@@ -403,7 +403,6 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemsExport(object sender, EventArgs e)
         {
-            ModelUnitBase selectedUnit = SelectedUnit;
             if (!Model.GetCellPools().Any()) 
             {
                 MessageBox.Show("There are no cell pools to be exported.");
@@ -429,8 +428,16 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemsImport(object sender, EventArgs e)
         {
-            //TODO cell pool import
-            MessageBox.Show("Under implementation");
+            string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
+            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            if (openFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                string filename = openFileCSV.FileName;
+                if (ModelFile.ReadCellPoolsFromCSV(filename, Model))
+                    LoadPools();
+                else
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+            }
         }
         private void LoadCells()
         {

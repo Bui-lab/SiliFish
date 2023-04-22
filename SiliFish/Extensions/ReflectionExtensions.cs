@@ -8,7 +8,9 @@ namespace SiliFish.Extensions
         public static void SetPropertyValue<T>(this object obj, string propertyName, T value)
         {
             PropertyInfo pi = obj.GetType().GetProperty(propertyName);
-            pi?.SetValue(obj, value);
+            if (pi == null) return;
+            if (pi.SetMethod == null) return;
+            pi.SetValue(obj, Convert.ChangeType(value, pi.PropertyType));
         }
 
         public static (T value, bool exists) GetPropertyValue<T>(this object obj, string propertyName, T defValue = default)

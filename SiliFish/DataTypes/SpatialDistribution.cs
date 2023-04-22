@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace SiliFish.DataTypes
 {
@@ -14,7 +15,20 @@ namespace SiliFish.DataTypes
         public static string CSVExportColumnNames => $"XDistribution,YDistribution,ZDistribution";
 
         [JsonIgnore, Browsable(false)]
-        public string CSVExportValues => $"{XDistribution.CSVCellExportValues},{Y_AngleDistribution.CSVCellExportValues},{Z_RadiusDistribution.CSVCellExportValues}";
+        internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore, Browsable(false)]
+        public string CSVExportValues
+        {
+            get => $"{XDistribution.CSVCellExportValues},{Y_AngleDistribution.CSVCellExportValues},{Z_RadiusDistribution.CSVCellExportValues}";
+            set 
+            {
+                string[] values = value.Split(',');
+                if (values.Length != CSVExportColumCount) return;
+                XDistribution = Distribution.CreateDistributionObjectFromCSVCell(values[0]);
+                Y_AngleDistribution= Distribution.CreateDistributionObjectFromCSVCell(values[1]);
+                Z_RadiusDistribution= Distribution.CreateDistributionObjectFromCSVCell(values[2]);
+            }
+        }
 
         public SpatialDistribution()
         { }
