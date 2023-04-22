@@ -95,7 +95,7 @@ namespace SiliFish.DynamicUnits
         {
             get
             {
-                return $"{CoreType}," + string.Join(',', GetParameters().Select(kvp => $"{kvp.Key}:{kvp.Value}").ToList());
+                return $"{CoreType}," + string.Join(',', GetParameters().OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}:{kvp.Value}").ToList());
             }
             set
             {
