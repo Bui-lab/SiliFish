@@ -35,6 +35,8 @@ namespace SiliFish.ModelUnits.Cells
                 return Terminals.Union(Synapses).Union(gapJunctions);
             }
         }
+        protected override string Discriminator => "neuron";
+
         public Neuron()
         {
             GapJunctions = new List<GapJunction>();

@@ -29,6 +29,9 @@ namespace SiliFish.DynamicUnits
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
         .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
+
+        public static int CoreParamMaxCount = 10;
+
         public static List<string> GetCoreTypes()
         {
             return typeMap.Keys.Where(k => k != nameof(CellCoreUnit) && k!=nameof(ContractibleCellCoreUnit)).ToList();
@@ -90,12 +93,26 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+
+        [JsonIgnore, Browsable(false)]
+        public string CSVExportParamValues
+        {
+            get
+            {
+                if (Parameters.Count > CoreParamMaxCount)
+                    return $"{string.Join(",", Parameters.Take(CoreParamMaxCount).OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
+                string paramValues = $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
+                for (int i = Parameters.Count; i < CoreParamMaxCount; i++)
+                    paramValues += ", , ";
+                return paramValues;
+            }
+        }
         [JsonIgnore, Browsable(false)]
         public virtual string CSVExportValues
         {
             get
             {
-                return $"{CoreType}," + string.Join(',', GetParameters().OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}:{kvp.Value}").ToList());
+                return CSVExportParamValues;
             }
             set
             {

@@ -46,6 +46,8 @@ namespace SiliFish.ModelUnits.Cells
                 return EndPlates.Union(gapJunctions);
             }
         }
+        protected override string Discriminator => "musclecell";
+
         public MuscleCell()
         {
             GapJunctions = new();

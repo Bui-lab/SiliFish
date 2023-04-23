@@ -33,7 +33,18 @@ namespace SiliFish.DataTypes
         [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
         [JsonIgnore, Browsable(false)]
-        public string CSVExportValues => $"{X},{Y},{Z}";
+        public string CSVExportValues
+        {
+            get => $"{X},{Y},{Z}";
+            set 
+            {
+                string[] values = value.Split(',');
+                if (values.Length < 3) return;
+                X = double.Parse(values[0]);
+                Y = double.Parse(values[1]);
+                Z = double.Parse(values[2]);
+            }
+        }
         public static Coordinate[] GenerateCoordinates(Random random,ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
         {

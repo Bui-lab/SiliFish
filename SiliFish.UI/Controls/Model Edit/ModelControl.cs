@@ -584,14 +584,45 @@ namespace SiliFish.UI.Controls
         }
         private void listCells_ItemsExport(object sender, EventArgs e)
         {
-            //TODO cell export
-            MessageBox.Show("Under implementation");
+            if (Model is RunningModel runningModel)
+            {
+                if (!runningModel.GetCells().Any() || (SelectedPool != null && !SelectedPool.Cells.Any()))
+                {
+                    MessageBox.Show("There are no cells to be exported.");
+                    return;
+                }
+                if (saveFileCSV.ShowDialog() == DialogResult.OK)
+                {
+                    if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPool))
+                    {
+                        Process p = new()
+                        {
+                            StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
+                            {
+                                UseShellExecute = true
+                            }
+                        };
+                        p.Start();
+                    }
+                    else
+                        MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+                }
+            }
         }
 
         private void listCells_ItemsImport(object sender, EventArgs e)
         {
-            //TODO cell import
-            MessageBox.Show("Under implementation");
+            string unit = SelectedPool != null ? " of " + SelectedPool.ID : "";
+            string msg = $"Importing will remove all existing cells{unit}. Do you want to continue?";
+            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            if (openFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                string filename = openFileCSV.FileName;
+                if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPool))
+                    LoadCells();
+                else
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+            }
         }
 
 

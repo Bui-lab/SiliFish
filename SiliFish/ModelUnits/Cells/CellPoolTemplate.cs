@@ -18,11 +18,19 @@ namespace SiliFish.ModelUnits.Cells
 {
     public class CellPoolTemplate: ModelUnitBase 
     {
-        private static int csvExportParamCount = 10;
+        private string coreType;
         public string CellGroup { get; set; }
         public CellType CellType { get; set; }
         public string Description { get; set; }
-        public string CoreType { get; set; }
+        public string CoreType { 
+            get => coreType;
+            set
+            {
+                if (value.Trim() != value)
+                { }
+                coreType = value;
+            }
+        }
 
         public BodyLocation BodyLocation { get; set; }
         public Color Color { get; set; } = Color.Red;
@@ -118,11 +126,25 @@ namespace SiliFish.ModelUnits.Cells
             $"{SpatialDistribution.CSVExportColumnNames}," +
             $"Conduction Velocity, " +
             $"CoreType, " +
-            $"{string.Join(',', Enumerable.Range(1, csvExportParamCount).Select(i => $"Param{i},Value{i}"))}, " +
+            $"{string.Join(',', Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).Select(i => $"Param{i},Value{i}"))}, " +
             $"{TimeLine.CSVExportColumnNames}";
 
         [JsonIgnore, Browsable(false)]
         private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+
+        [JsonIgnore, Browsable(false)]
+        private string csvExportParamValues
+        {
+            get
+            {
+                if (Parameters.Count > CellCoreUnit.CoreParamMaxCount)
+                    return $"{string.Join(",", Parameters.Take(CellCoreUnit.CoreParamMaxCount).OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}";
+                string paramValues = $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}";
+                for (int i = parameters.Count; i < CellCoreUnit.CoreParamMaxCount; i++)
+                    paramValues += ", , ";
+                return paramValues;
+            }
+        }
         [JsonIgnore, Browsable(false)]
         public virtual string CSVExportValues
         {
@@ -131,13 +153,13 @@ namespace SiliFish.ModelUnits.Cells
                 $"{SpatialDistribution.CSVExportValues}," +
                 $"{ConductionVelocity?.CSVCellExportValues}, " +
                 $"{CoreType}, " +
-                $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}," +
+                $"{csvExportParamValues}," +
                 $"{TimeLine_ms.CSVExportValues}";
             set
             {
                 int iter = 0;
                 string[] values = value.Split(',');
-                if (values.Length < CSVExportColumCount - csvExportParamCount) return;
+                if (values.Length < CSVExportColumCount - CellCoreUnit.CoreParamMaxCount) return;
                 CellGroup = values[iter++];
                 CellType = (CellType)Enum.Parse(typeof(CellType), values[iter++]);
                 BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), values[iter++]);
@@ -149,15 +171,17 @@ namespace SiliFish.ModelUnits.Cells
                 SpatialDistribution.CSVExportValues = spatialDistString;
                 iter += SpatialDistribution.CSVExportColumCount;
                 ConductionVelocity = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
-                CoreType = values[iter++];
-                Parameters = new();
-                for (int i = 1; i <= csvExportParamCount; i++)
+                CoreType = values[iter++].Trim();
+                parameters = new();
+                for (int i = 1; i <= CellCoreUnit.CoreParamMaxCount; i++)
                 {
                     if (iter > values.Length - 2) break;
-                    string paramkey = values[iter++];
+                    string paramkey = values[iter++].Trim();
                     string paramvalue = values[iter++];
-                    if (!string.IsNullOrEmpty(paramkey)) 
-                        Parameters.Add(paramkey, Distribution.CreateDistributionObjectFromCSVCell(paramvalue));
+                    if (!string.IsNullOrEmpty(paramkey))
+                    {
+                        parameters.Add (paramkey, Distribution.CreateDistributionObjectFromCSVCell(paramvalue));
+                    }
                 }
                 if (iter < values.Length) 
                     TimeLine_ms.CSVExportValues = values[iter++];
@@ -184,7 +208,7 @@ namespace SiliFish.ModelUnits.Cells
             ConductionVelocity = cpl.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
-        public void GenerateFromCSVRow(ModelTemplate Model, string row)
+        public void GenerateFromCSVRow(string row)
         {
             CSVExportValues = row;
         }

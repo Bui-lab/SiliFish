@@ -574,9 +574,15 @@ namespace SiliFish.Repositories
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
-                //int iter = 1;
+                int iter = 1;
                 if (columns != Cell.CSVExportColumnNames)
                         return false;
+                model.ClearCells();
+                while (iter < contents.Length)
+                {
+                    Cell cell = Cell.GenerateFromCSVRow(contents[iter++]);
+                    model.AddCell(cell);
+                }
                 /*TODO cell csv export model.ClearCells();
                  while (iter < contents.Length)
                  {
@@ -603,17 +609,16 @@ namespace SiliFish.Repositories
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
-                //int iter = 1;
-                 if (columns != Cell.CSVExportColumnNames)
-                        return false;
-                /*TODO cell csv export    cellPool.ClearStimuli();
-                    while (iter < contents.Length)
-                    {
-                        Stimulus stim = new();
-                        stim.GenerateFromCSVRow(model as RunningModel, contents[iter++]);
-                        if (stim.TargetCell.CellPool == cellPool)
-                            stim.TargetCell.AddStimulus(stim);
-                    }*/
+                int iter = 1;
+                if (columns != Cell.CSVExportColumnNames)
+                    return false;
+                cellPool.Cells.Clear();
+                while (iter < contents.Length)
+                {
+                    Cell cell = Cell.GenerateFromCSVRow(contents[iter++]);
+                    if (cell.CellGroup == cellPool.ID)
+                        cellPool.AddCell(cell);
+                }
                 return true;
             }
             catch (Exception ex)
@@ -667,8 +672,18 @@ namespace SiliFish.Repositories
                     while (iter < contents.Length)
                     {
                         CellPoolTemplate cpt = new();
-                        cpt.GenerateFromCSVRow(modelTemplate, contents[iter++]);
+                        cpt.GenerateFromCSVRow(contents[iter++]);
                         modelTemplate.AddCellPool(cpt);
+                    }
+                }
+                else if (model is RunningModel modelRun)
+                {
+                    modelRun.CellPools.Clear();
+                    while (iter < contents.Length)
+                    {
+                        CellPool cp = new();
+                        cp.GenerateFromCSVRow(contents[iter++]);
+                        modelRun.AddCellPool(cp);
                     }
                 }
                 return true;

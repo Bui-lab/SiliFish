@@ -213,6 +213,8 @@ namespace SiliFish.ModelUnits.Cells
         {
             Cells.Add(c);
             c.CellPool = this;
+            c.CellGroup = CellGroup;//as cell group holds the ID until the link is created
+            c.PositionLeftRight = PositionLeftRight;
         }
 
         public void RemoveCell(Cell c)

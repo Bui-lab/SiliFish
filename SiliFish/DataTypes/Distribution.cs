@@ -95,10 +95,6 @@ namespace SiliFish.DataTypes
         {
             get => string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value))
                 .Replace(",", ";").Replace("\r\n", ";").Replace("\n", ";");
-            set 
-            {
-                
-            }
         }
         public Distribution()
         {
@@ -263,12 +259,10 @@ namespace SiliFish.DataTypes
         }
         public double NoiseStdDev { get; set; } = 0;
 
-        public override string ToString()
+        public override string CSVCellExportValues
         {
-            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:0; SD:{1:0.#####}" : "";
-            return $"{UniqueValue}{noise}";
+            get => UniqueValue.ToString();
         }
-
         public Constant_NoDistribution()
         { }
         public Constant_NoDistribution(double val)
@@ -282,6 +276,11 @@ namespace SiliFish.DataTypes
             NoiseStdDev = noiseStdDev;
         }
 
+        public override string ToString()
+        {
+            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:0; SD:{1:0.#####}" : "";
+            return $"{UniqueValue}{noise}";
+        }
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
@@ -306,17 +305,16 @@ namespace SiliFish.DataTypes
         {
             get { return (RangeStart + RangeEnd) / 2; }
         }
-        public override string ToString()
-        {
-            return $"{base.ToString()}\r\nNoise: µ:0; SD:{NoiseStdDev:0.#####}";
-        }
-
         public SpacedDistribution()
         { }
         public SpacedDistribution(double start, double end, double noiseStdDev, bool absolute, bool angular)
             : base(start, end, absolute, angular)
         {
             NoiseStdDev = noiseStdDev;
+        }
+        public override string ToString()
+        {
+            return $"{base.ToString()}\r\nNoise: µ:0; SD:{NoiseStdDev:0.#####}";
         }
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
@@ -334,6 +332,10 @@ namespace SiliFish.DataTypes
         public double Mean { get; set; } = 0;
         public double Stddev { get; set; } = 0;
 
+        public override double UniqueValue
+        {
+            get { return Mean; }
+        }       
         public GaussianDistribution()
         { }
 
@@ -349,10 +351,7 @@ namespace SiliFish.DataTypes
             Mean = mean;
             Stddev = stddev;
         }
-        public override double UniqueValue
-        {
-            get { return Mean; }
-        }
+
         public override string ToString()
         {
             return String.Format("µ:{0:0.#####}; SD:{1:0.#####}; {2}\r\n", Mean, Stddev, base.ToString());
@@ -385,8 +384,6 @@ namespace SiliFish.DataTypes
         public double Mean2 { get; set; } = 1;
         public double Stddev2 { get; set; } = 0;
         public double Mode1Weight { get; set; } = 1;
-        public override string CSVCellExportValues => $"{base.CSVCellExportValues};Mean:{Mean};StdDev:{Stddev};Mean2:{Mean2};StdDev2:{Stddev2};Mode1Weight:{Mode1Weight}";
-
         public BimodalDistribution()
         { }
         public BimodalDistribution(double start, double end, double mean, double stddev, double mean2, double stddev2, double mode1Weight, bool absolute, bool angular)

@@ -329,6 +329,7 @@ namespace SiliFish.ModelUnits.Architecture
             return errors.Count == 0;
         }
 
+        #region Cells
         public List<Cell> GetCells()
         {
             List<Cell> MuscleCells = MusclePools.SelectMany(mp => mp.GetCells()).ToList();
@@ -359,7 +360,22 @@ namespace SiliFish.ModelUnits.Architecture
                                 .ToList();
             return (leftMNs, rightMNs);
         }
+        public void ClearCells()
+        {
+            foreach (CellPool cellPool in CellPools)
+            {
+                cellPool.Cells.Clear();
+            }
+        }
 
+        public bool AddCell(Cell cell)
+        {
+            CellPool cellPool = CellPools.FirstOrDefault(cp => cp.ID == cell.CellGroup);
+            if (cellPool == null) return false;
+            cellPool.AddCell(cell);
+            return true;
+        }
+        #endregion
         #region Cell Pool
 
         public List<CellPool> GenerateCellPoolsFrom(CellPoolTemplate cellPoolTemplate)
@@ -422,7 +438,6 @@ namespace SiliFish.ModelUnits.Architecture
         {
         }
         #endregion
-
 
         #region Projections
         public override List<JunctionBase> GetGapProjections()
