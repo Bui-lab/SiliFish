@@ -104,7 +104,7 @@ namespace SiliFish.DynamicUnits
                 string paramValues = $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
                 for (int i = Parameters.Count; i < CoreParamMaxCount; i++)
                     paramValues += ", , ";
-                return paramValues;
+                return paramValues;//URGENT
             }
         }
         [JsonIgnore, Browsable(false)]

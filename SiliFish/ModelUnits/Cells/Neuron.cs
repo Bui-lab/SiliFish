@@ -176,6 +176,13 @@ namespace SiliFish.ModelUnits.Cells
 
         }
 
+        public override bool HasConnections(bool gap, bool chemin, bool chemout)
+        {
+            return gap && GapJunctions.Any() ||
+                chemin && Synapses.Any() ||
+                chemout && Terminals.Any();
+        }
+
         #endregion
 
         #region Runtime

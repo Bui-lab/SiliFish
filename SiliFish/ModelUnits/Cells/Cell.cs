@@ -328,7 +328,10 @@ namespace SiliFish.ModelUnits.Cells
                 jnc.Cell1.RemoveJunction(jnc);
             }
         }
-
+        public virtual bool HasConnections(bool gap, bool chemin, bool chemout)
+        {
+            return gap && GapJunctions.Any();
+        }
         #endregion
 
         #region RunTime

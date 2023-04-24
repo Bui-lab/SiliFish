@@ -375,6 +375,11 @@ namespace SiliFish.ModelUnits.Architecture
             cellPool.AddCell(cell);
             return true;
         }
+
+        public bool HasCells()
+        {
+            return GetCells().Any();
+        }
         #endregion
         #region Cell Pool
 
@@ -440,6 +445,10 @@ namespace SiliFish.ModelUnits.Architecture
         #endregion
 
         #region Projections
+        public bool HasConnections()
+        {
+            return CellPools.Any(cp => cp.HasConnections());
+        }
         public override List<JunctionBase> GetGapProjections()
         {
             List<JunctionBase> listProjections = new();

@@ -3,42 +3,47 @@
   <Class Name="SiliFish.DynamicUnits.TwoExp_syn" Collapsed="true">
     <Position X="0.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAIgBAAAAAAAAABAACAAAACAAA=</HashCode>
+      <HashCode>QAAAAAAgAEAAAAAAAAAIABAAgAEAAgAAAAAAAAAAgAA=</HashCode>
       <FileName>DynamicUnits\JncCore\TwoExp_Syn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.GapJunction" Collapsed="true">
-    <Position X="6.5" Y="4.5" Width="1.5" />
+    <Position X="7" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AgAAACACAAASgAIFMAEgADAAAAAKAECAAIAAgACAAAA=</HashCode>
+      <HashCode>BgAAACICAAAQgAIFEAEgAAAAAAACAEAAAIAQgACAAAA=</HashCode>
       <FileName>ModelUnits\Junction\GapJunction.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.JunctionBase" Collapsed="true">
     <Position X="7.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAAABAAAAEAAAIBQAAAJAAAAAAAACAAEAAAA=</HashCode>
+      <HashCode>AAAAgCAIAAAAAAAAAAAAACAAACAAAAAAAAAQAAAEAAA=</HashCode>
       <FileName>ModelUnits\Junction\JunctionBase.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.ChemicalSynapse" Collapsed="true">
     <Position X="4.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgABACACAAACgAAFcAGgADAIAAAIAACEAAIAAAAAAAA=</HashCode>
+      <HashCode>BgABACICAEAAgAAFUAGgAAAIAAIAAAAEAAIQAAAAAAA=</HashCode>
       <FileName>ModelUnits\Junction\ChemicalSynapse.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.InterPoolTemplate" Collapsed="true">
     <Position X="9" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAIIBAgAAQECEAAAIAIBAAAAAAgAAAAIAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAFAhgAUEGEAAIpQIDAJAAAAhAAAAIAEAAAA=</HashCode>
       <FileName>ModelUnits\Junction\InterPoolTemplate.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Architecture.ModelTemplate" Collapsed="true">
-    <Position X="9" Y="6.5" Width="1.5" />
+    <Position X="10.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAACAAABEAAQAIQAAAoClAAAAgAAAEGAAAAEBAAAI=</HashCode>
+      <HashCode>wAAAQCICAFMAARAAQAAApCFAAAAgAAAEGAAAAEBAAII=</HashCode>
       <FileName>ModelUnits\Architecture\ModelTemplate.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -48,7 +53,7 @@
   <Class Name="SiliFish.ModelUnits.Cells.Cell" Collapsed="true">
     <Position X="6.25" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQIAACKAAAIAggIgWAwgECYABAASAECYCBIAMAFw4AM=</HashCode>
+      <HashCode>FcIASCKKAEIAhhBkWAghEiJBCAFSIFAZWBqAMAFw4AM=</HashCode>
       <FileName>ModelUnits\Cells\Cell.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -58,18 +63,18 @@
   <Class Name="SiliFish.ModelUnits.Cells.Neuron" Collapsed="true">
     <Position X="3.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAACACAAABBAAACAAAEAAAAAAQAACAADAAEAAggAA=</HashCode>
+      <HashCode>FAIAQiIKAEABBAAACAABECBAAAEAIAAAADCAEAAggAA=</HashCode>
       <FileName>ModelUnits\Cells\Neuron.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="Synapses" />
       <Property Name="Terminals" />
+      <Property Name="Synapses" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.MuscleCell" Collapsed="true">
     <Position X="5" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAACACAAAAAAAACAAAEIAAAAAQAACAEFAAEAAAgQA=</HashCode>
+      <HashCode>FAIAQiAKAAAAAAAACAABEKAAAAGAIAAAEFCAEAAAgQA=</HashCode>
       <FileName>ModelUnits\Cells\MuscleCell.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>

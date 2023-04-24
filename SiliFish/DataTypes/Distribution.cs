@@ -93,8 +93,7 @@ namespace SiliFish.DataTypes
         [JsonIgnore, Browsable(false)]
         public virtual string CSVCellExportValues
         {
-            get => string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value))
-                .Replace(",", ";").Replace("\r\n", ";").Replace("\n", ";");
+            get => Util.CSVEncode(string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value)));
         }
         public Distribution()
         {

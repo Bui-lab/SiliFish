@@ -1,8 +1,13 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
@@ -102,6 +107,72 @@ namespace SiliFish.ModelUnits.Junction
                     $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +
                     $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
+            }
+        }
+
+        [JsonIgnore, Browsable(false)]
+              /*"
+      "FixedDuration_ms": null,
+      "Delay_ms": 0,
+      "TimeLine_ms": {
+        "PeriodsJSON": ""
+      },
+
+*/
+        public static string CSVExportColumnNames => $"Name,Source,Target," +
+                $"Axon Reach Mode,Connection Type,Distance Mode," +
+                $"{CellReach.CSVExportColumnNames}," +
+                $"{SynapseParameters.CSVExportColumnNames}," +
+                $"Probability,Weight,Fixed Duration (ms),Delay (ms)," +
+                $"Active," +
+                $"{TimeLine.CSVExportColumnNames}";
+
+        [JsonIgnore, Browsable(false)]
+        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+
+        [JsonIgnore, Browsable(false)]
+        public virtual string CSVExportValues
+        {
+            get => $"{Util.CSVEncode(Name)},{PoolSource},{PoolTarget} " +
+                $"{AxonReachMode}, {ConnectionType}, {DistanceMode}, " +
+                $"{CellReach.CSVExportValues}," +
+                $"{SynapseParameters?.CSVExportValues}," +
+                $"{Probability},{Weight},{FixedDuration_ms},{Delay_ms}" +
+                $"{Active}," +
+                $"{TimeLine_ms?.CSVExportValues}";
+            set
+            {
+                try
+                {
+                    int iter = 0;
+                    string[] values = value.Split(',');
+                    if (values.Length < CSVExportColumCount - TimeLine.CSVExportColumnNames.Count()) return;
+                    Name = values[iter++].Trim();
+                    PoolSource = values[iter++].Trim();
+                    PoolTarget = values[iter++].Trim();
+
+                    AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
+                    ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
+                    DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
+                    string cellReachString = string.Join(',', values[iter..(iter + CellReach.CSVExportColumCount)]);
+                    CellReach.CSVExportValues = cellReachString;
+                    iter += CellReach.CSVExportColumCount;
+                    string synapseString = string.Join(',', values[iter..(iter + SynapseParameters.CSVExportColumCount)]);
+                    SynapseParameters.CSVExportValues = synapseString;
+                    iter += SynapseParameters.CSVExportColumCount;
+                    Probability = double.Parse(values[iter++]);
+                    Weight = double.Parse(values[iter++]);
+                    FixedDuration_ms = double.Parse(values[iter++]);
+                    Delay_ms = double.Parse(values[iter++]);
+                    Active = bool.Parse(values[iter++]);
+                    if (iter < values.Length)
+                        TimeLine_ms.CSVExportValues = values[iter++];
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    throw;
+                }
             }
         }
 

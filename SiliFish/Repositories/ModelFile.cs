@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
@@ -694,5 +695,71 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
+
+        public static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model)
+        {
+            if (filename == null || model == null)
+                return false;
+
+            try
+            {
+                if (!(model is ModelTemplate modelTemplate)) return false;
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                sw.WriteLine(InterPoolTemplate.CSVExportColumnNames);
+                foreach (InterPoolTemplate ipt in modelTemplate.InterPoolTemplates)
+                {
+                    sw.WriteLine(ipt.CSVExportValues);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        /*
+        public static bool ReadCellPoolsFromCSV(string filename, ModelBase model)
+        {
+            if (filename == null || model == null)
+                return false;
+            try
+            {
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                int iter = 1;
+                if (columns != CellPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
+                    return false;
+                if (model is ModelTemplate modelTemplate)
+                {
+                    modelTemplate.CellPoolTemplates.Clear();
+                    while (iter < contents.Length)
+                    {
+                        CellPoolTemplate cpt = new();
+                        cpt.GenerateFromCSVRow(contents[iter++]);
+                        modelTemplate.AddCellPool(cpt);
+                    }
+                }
+                else if (model is RunningModel modelRun)
+                {
+                    modelRun.CellPools.Clear();
+                    while (iter < contents.Length)
+                    {
+                        CellPool cp = new();
+                        cp.GenerateFromCSVRow(contents[iter++]);
+                        modelRun.AddCellPool(cp);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }*/
     }
 }

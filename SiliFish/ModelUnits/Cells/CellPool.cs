@@ -373,6 +373,10 @@ namespace SiliFish.ModelUnits.Cells
             return 0;
         }
 
+        public bool HasCells()
+        {
+            return Cells != null && Cells.Any();
+        }
         #endregion
 
         #region Projection Functions
@@ -477,6 +481,12 @@ namespace SiliFish.ModelUnits.Cells
                     }
                 }
             }
+        }
+
+        public bool HasConnections(bool gap = true, bool chemin = true, bool chemout = true)
+        {
+            if (!HasCells()) return false;
+            return Cells.Any(c=>c.HasConnections(gap, chemin, chemout));
         }
         #endregion
 

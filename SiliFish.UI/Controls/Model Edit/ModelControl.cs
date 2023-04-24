@@ -403,11 +403,6 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemsExport(object sender, EventArgs e)
         {
-            if (!Model.GetCellPools().Any()) 
-            {
-                MessageBox.Show("There are no cell pools to be exported.");
-                return;
-            }
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model))
@@ -571,26 +566,17 @@ namespace SiliFish.UI.Controls
         {
             ModelIsUpdated();
         }
-        private bool UnitHasCell(ModelUnitBase unit)
+        private bool SelectedUnitHasCell()
         {
-            if (Model is not RunningModel) return false;
-            if (unit == null)
-                return (Model as RunningModel).GetCells().Any();
-            if (unit is Cell)
+            if (SelectedPool != null && SelectedPool.HasCells()
+                || SelectedPool == null && (Model as RunningModel).HasCells())
                 return true;
-            if (unit is CellPool cellPool)
-                return cellPool.Cells.Any();
             return false;
         }
         private void listCells_ItemsExport(object sender, EventArgs e)
         {
             if (Model is RunningModel runningModel)
             {
-                if (!runningModel.GetCells().Any() || (SelectedPool != null && !SelectedPool.Cells.Any()))
-                {
-                    MessageBox.Show("There are no cells to be exported.");
-                    return;
-                }
                 if (saveFileCSV.ShowDialog() == DialogResult.OK)
                 {
                     if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPool))
@@ -612,9 +598,12 @@ namespace SiliFish.UI.Controls
 
         private void listCells_ItemsImport(object sender, EventArgs e)
         {
-            string unit = SelectedPool != null ? " of " + SelectedPool.ID : "";
-            string msg = $"Importing will remove all existing cells{unit}. Do you want to continue?";
-            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            if (SelectedUnitHasCell())
+            {
+                string unit = SelectedPool != null ? " of " + SelectedPool.ID : "";
+                string msg = $"Importing will remove all existing cells{unit}. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            }
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
@@ -925,8 +914,9 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private bool UnitHasConnections(ModelUnitBase unit)
-        {/*TODO
+        private bool SelectedUnitHasConnections(bool gap, bool chemin, bool chemout)
+        {
+            ModelUnitBase unit = SelectedUnit;
             if (unit == null)
             {
                 if (Model is ModelTemplate mt)
@@ -934,16 +924,31 @@ namespace SiliFish.UI.Controls
                 return (Model as RunningModel).HasConnections();
             }
             if (unit is Cell cell)
-                return cell.Stimuli.HasStimulus;
+                return cell.HasConnections(gap, chemin, chemout);
             if (unit is CellPool cellPool)
-                return cellPool.GetStimuli().Any();
-            if (unit is CellPoolTemplate cellPoolTemplate)
-                return (Model as ModelTemplate).AppliedStimuli.FirstOrDefault(stim => stim.TargetPool == cellPoolTemplate.CellGroup) != null;*/
-            return false;
-        }
+                return cellPool.HasConnections(gap, chemin, chemout);
+            //if (unit is CellPoolTemplate cellPoolTemplate)
+              //  return cellPoolTemplate.HasConnections(gap, chemin, chemout);
+            return (Model as ModelTemplate).HasConnections();
+           }
         private void listConnections_ItemsExport(object sender, EventArgs e)
-        {//TODO connection export
-            MessageBox.Show("Under implementation");
+        {
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                if (ModelFile.SaveInterPoolTemplatesToCSV(saveFileCSV.FileName, Model))
+                {
+                    Process p = new()
+                    {
+                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
+                        {
+                            UseShellExecute = true
+                        }
+                    };
+                    p.Start();
+                }
+                else
+                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+            }
         }
 
         private void listConnections_ItemsImport(object sender, EventArgs e)
@@ -1132,7 +1137,7 @@ namespace SiliFish.UI.Controls
             }
 
         }
-        private bool UnitHasStimulus(ModelUnitBase unit)
+        private bool SelectedUnitHasStimulus(ModelUnitBase unit)
         {
             if (unit == null)
             {
@@ -1151,11 +1156,6 @@ namespace SiliFish.UI.Controls
         private void listStimuli_ItemsExport(object sender, EventArgs e)
         {
             ModelUnitBase selectedUnit = SelectedUnit;
-            if (!UnitHasStimulus(SelectedUnit))
-            {
-                MessageBox.Show("There are no stimuli to be exported.");
-                return;
-            }
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnit))
@@ -1177,7 +1177,7 @@ namespace SiliFish.UI.Controls
         private void listStimuli_ItemsImport(object sender, EventArgs e)
         {
             ModelUnitBase selectedUnit = SelectedUnit;
-            if (UnitHasStimulus(SelectedUnit))
+            if (SelectedUnitHasStimulus(SelectedUnit))
             {
                 string unit = selectedUnit?.ID ?? "the model";
                 if (selectedUnit is CellPoolTemplate cpt)

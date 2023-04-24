@@ -1,8 +1,12 @@
-﻿using SiliFish.Definitions;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SiliFish.ModelUnits.Junction
@@ -14,6 +18,33 @@ namespace SiliFish.ModelUnits.Junction
         public double Vth { get; set; }
         public double Erev { get; set; }
 
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportColumnNames => $"Tau Decay,Tau Rise, V Threshold, Reversal Potential";
+
+        [JsonIgnore, Browsable(false)]
+        internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore, Browsable(false)]
+        public string CSVExportValues
+        {
+            get => $"{TauD},{TauR},{Vth},{Erev}";
+            set
+            {
+                string[] values = value.Split(',');
+                if (values.Length != CSVExportColumCount) return;
+                try
+                {
+                    TauD = double.Parse(values[0]);
+                    TauR = double.Parse(values[1]);
+                    Vth = double.Parse(values[2]);
+                    Erev = double.Parse(values[3]);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    throw;
+                }
+            }
+        }
         public SynapseParameters() { }
         public SynapseParameters(SynapseParameters sp)
         {

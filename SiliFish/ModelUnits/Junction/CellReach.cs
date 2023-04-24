@@ -3,7 +3,10 @@ using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.Services;
 using System;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits
 {
@@ -33,6 +36,44 @@ namespace SiliFish.ModelUnits
         public bool SomiteBased { get; set; } = false;
 
         #endregion
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportColumnNames => $"Ascending, Min Ascending Reach, Max Ascending Reach," +
+            $" Descending, Min Descending Reach, Max Descending Reach, " +
+            $"Max Outgoing, Max Incoming, Autapse, Somite Based";
+
+        [JsonIgnore, Browsable(false)]
+        internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        [JsonIgnore, Browsable(false)]
+        public string CSVExportValues
+        {
+            get => $"{Ascending},{MinAscReach},{MaxAscReach}," +
+                $"{Descending},{MinDescReach}, {MaxDescReach}," +
+                $"{MaxOutgoing}, {MaxIncoming}, {Autapse}, {SomiteBased}";
+            set
+            {
+                string[] values = value.Split(',');
+                if (values.Length != CSVExportColumCount) return;
+                try
+                {
+                    int iter = 0;
+                    Ascending = bool.Parse(values[iter++]);
+                    MinAscReach = double.Parse(values[iter++]);
+                    MaxAscReach = double.Parse(values[iter++]);
+                    Descending = bool.Parse(values[iter++]);
+                    MinDescReach = double.Parse(values[iter++]);
+                    MaxDescReach = double.Parse(values[iter++]);
+                    MaxOutgoing = int.Parse(values[iter++]);
+                    MaxIncoming = int.Parse(values[iter++]);
+                    Autapse = bool.Parse(values[iter++]);
+                    SomiteBased = bool.Parse(values[iter++]);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    throw;
+                }
+            }
+        }
         public CellReach() { }
         public CellReach(CellReach cr)
         {

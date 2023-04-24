@@ -129,6 +129,11 @@ namespace SiliFish.ModelUnits.Cells
                 EndPlates.Remove(jnc);
             }
         }
+        public override bool HasConnections(bool gap, bool chemin, bool chemout)
+        {
+            return gap && GapJunctions.Any() ||
+                chemin && EndPlates.Any();
+        }
 
         #endregion
 
