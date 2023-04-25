@@ -1,14 +1,18 @@
-﻿using SiliFish.Definitions;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -25,6 +29,25 @@ namespace SiliFish.ModelUnits.Junction
         /// used for JSON
         /// </summary>
         public string Target{ get; set; }
+
+
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportColumnNames => $"Connection Type,Source,Target," +
+                $"Distance Mode," +
+                $"{SynapseParameters.CSVExportColumnNames}," +
+                $"Weight,Fixed Duration (ms),Delay (ms)," +
+                $"Active," +
+                $"{TimeLine.CSVExportColumnNames}";
+
+        [JsonIgnore, Browsable(false)]
+        protected static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+
+        [JsonIgnore, Browsable(false)]
+        public virtual string CSVExportValues
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
 
         public JunctionBase()
         { }

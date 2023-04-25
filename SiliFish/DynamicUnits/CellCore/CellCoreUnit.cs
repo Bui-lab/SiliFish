@@ -88,46 +88,6 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore, Browsable(false)]
         public string CoreType => GetType().Name;
 
-        [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Core Type, Core Values";
-
-        [JsonIgnore, Browsable(false)]
-        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-
-        [JsonIgnore, Browsable(false)]
-        public string CSVExportParamValues
-        {
-            get
-            {
-                if (Parameters.Count > CoreParamMaxCount)
-                    return $"{string.Join(",", Parameters.Take(CoreParamMaxCount).OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
-                string paramValues = $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
-                for (int i = Parameters.Count; i < CoreParamMaxCount; i++)
-                    paramValues += ", , ";
-                return paramValues;//URGENT
-            }
-        }
-        [JsonIgnore, Browsable(false)]
-        public virtual string CSVExportValues
-        {
-            get
-            {
-                return CSVExportParamValues;
-            }
-            set
-            {
-                string[] values = value.Split(',');
-                Dictionary<string, double> parameters=new();
-                foreach (string v in values[1..])
-                {
-                    string[] parameter = v.Split(':');
-                    if (parameter.Length == 2 && double.TryParse(parameter[1], out double d))
-                        parameters.Add(parameter[0], d);
-                }
-                SetParameters(parameters);
-            }
-        }
-
         public virtual void Initialize(double deltaT, double deltaTEuler)
         {
             this.deltaT = deltaT;

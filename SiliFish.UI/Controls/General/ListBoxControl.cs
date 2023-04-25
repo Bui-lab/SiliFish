@@ -9,7 +9,7 @@ namespace SiliFish.UI.Controls
     public partial class ListBoxControl : UserControl
     {
         private Dictionary<int, object> HiddenItems = new();
-        
+
         public event EventHandler ItemAdd;
         public event EventHandler ItemDelete;
         public event EventHandler ItemCopy;

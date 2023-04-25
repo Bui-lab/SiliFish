@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Drawing;
 using System.Collections.Generic;
+using SiliFish.Services;
+using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -53,12 +55,28 @@ namespace SiliFish.ModelUnits.Junction
         public double[] InputCurrent; //Current vector 
         [JsonIgnore]
         public override string ID { get { return $"Syn: {PreNeuron.ID} -> {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
-        internal bool IsActive(int timepoint)
-        {
-            double t_ms = PreNeuron.Model.RunParam.GetTimeOfIndex(timepoint);
-            return TimeLine_ms?.IsActive(t_ms) ?? true;
-        }
 
+        public override string CSVExportValues
+        {
+            get => $"{ConnectionType.Synapse},{PreNeuron.ID},{PostCell.ID}, " +
+                $"{DistanceMode}, " +
+                $"{SynapseParameters.CSVExportValues}," +
+                $"{Weight},{FixedDuration_ms},{Delay_ms}," +
+                $"{Active}," +
+                $"{TimeLine_ms?.CSVExportValues}";
+            set
+            {
+                try
+                {
+//TODO
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    throw;
+                }
+            }
+        }
         public ChemicalSynapse()
         { }
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)
@@ -78,6 +96,13 @@ namespace SiliFish.ModelUnits.Junction
             PreNeuron = syn.PreNeuron;
             PostCell = syn.PostCell;
         }
+
+        internal bool IsActive(int timepoint)
+        {
+            double t_ms = PreNeuron.Model.RunParam.GetTimeOfIndex(timepoint);
+            return TimeLine_ms?.IsActive(t_ms) ?? true;
+        }
+
 
         public override bool CheckValues(ref List<string> errors)
         {

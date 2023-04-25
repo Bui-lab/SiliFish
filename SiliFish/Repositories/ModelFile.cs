@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -695,23 +696,43 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
-
-        public static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model)
+        public static bool SaveConnectionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemout, bool chemin)
+        {
+            if (model is ModelTemplate)
+                return SaveInterPoolTemplatesToCSV(filename, model, selectedUnit, gap, chemout, chemin);
+            else if (model is RunningModel)
+                return SaveJunctionsToCSV(filename, model, selectedUnit, gap, chemout, chemin);
+            return false;
+        }
+        private static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemout, bool chemin)
         {
             if (filename == null || model == null)
                 return false;
 
             try
             {
-                if (!(model is ModelTemplate modelTemplate)) return false;
+                if (model is not ModelTemplate modelTemplate) return false;
                 using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
                 using StreamWriter sw = new(fs);
                 sw.WriteLine(InterPoolTemplate.CSVExportColumnNames);
-                foreach (InterPoolTemplate ipt in modelTemplate.InterPoolTemplates)
+                List<InterPoolTemplate> list;
+                if (selectedUnit is CellPoolTemplate cpt)
+                    list = modelTemplate.InterPoolTemplates.Where(jnc =>
+                        (gap && jnc.ConnectionType == Definitions.ConnectionType.Gap && (jnc.PoolSource == cpt.CellGroup || jnc.PoolTarget == cpt.CellGroup)) ||
+                        (chemout && jnc.ConnectionType != Definitions.ConnectionType.Gap && jnc.PoolSource == cpt.CellGroup) ||
+                        (chemin && jnc.ConnectionType != Definitions.ConnectionType.Gap && jnc.PoolTarget == cpt.CellGroup))
+                        .ToList();
+                else
+                {
+                    list = modelTemplate.InterPoolTemplates.Where(ipt =>
+                        gap && ipt.ConnectionType == Definitions.ConnectionType.Gap ||
+                        (chemout || chemin) && (ipt.ConnectionType == Definitions.ConnectionType.Synapse || ipt.ConnectionType == Definitions.ConnectionType.NMJ))
+                        .ToList();
+                }
+                foreach (InterPoolTemplate ipt in list)
                 {
                     sw.WriteLine(ipt.CSVExportValues);
                 }
-
                 return true;
             }
             catch (Exception ex)
@@ -720,38 +741,26 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
-        /*
-        public static bool ReadCellPoolsFromCSV(string filename, ModelBase model)
+        
+        public static bool ReadInterPoolTemplatesToCSV(string filename, ModelBase model)
         {
             if (filename == null || model == null)
                 return false;
             try
             {
+                if (model is not ModelTemplate modelTemplate) return false;
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
                 int iter = 1;
-                if (columns != CellPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
+                if (columns != InterPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
                     return false;
-                if (model is ModelTemplate modelTemplate)
+                modelTemplate.InterPoolTemplates.Clear();
+                while (iter < contents.Length)
                 {
-                    modelTemplate.CellPoolTemplates.Clear();
-                    while (iter < contents.Length)
-                    {
-                        CellPoolTemplate cpt = new();
-                        cpt.GenerateFromCSVRow(contents[iter++]);
-                        modelTemplate.AddCellPool(cpt);
-                    }
-                }
-                else if (model is RunningModel modelRun)
-                {
-                    modelRun.CellPools.Clear();
-                    while (iter < contents.Length)
-                    {
-                        CellPool cp = new();
-                        cp.GenerateFromCSVRow(contents[iter++]);
-                        modelRun.AddCellPool(cp);
-                    }
+                    InterPoolTemplate ipt = new();
+                    ipt.CSVExportValues = contents[iter++];
+                    modelTemplate.AddJunction(ipt);
                 }
                 return true;
             }
@@ -760,6 +769,84 @@ namespace SiliFish.Repositories
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 return false;
             }
-        }*/
+        }
+
+        private static bool SaveJunctionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemout, bool chemin)
+        {
+            if (filename == null || model == null)
+                return false;
+
+            try
+            {
+                if (model is not RunningModel runningModel) return false;
+                bool chem = chemout || chemin;
+                if (!gap && !chem) return false;
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                sw.WriteLine(JunctionBase.CSVExportColumnNames);
+                List<JunctionBase> list;
+
+                if (selectedUnit is CellPool cp)
+                    list = cp.Projections.Where(jnc =>
+                        gap && jnc is GapJunction ||
+                        (chemout && jnc is ChemicalSynapse syn && syn.PreNeuron.CellGroup == cp.CellGroup) ||
+                        (chemin && jnc is ChemicalSynapse syn2 && syn2.PostCell.CellGroup == cp.CellGroup))
+                        .ToList();
+                else if (selectedUnit is Cell cell)
+                    list = cell.Projections.Where(jnc =>
+                        gap && jnc is GapJunction ||
+                        (chemout && jnc is ChemicalSynapse syn && syn.PreNeuron.CellGroup == cell.CellGroup) ||
+                        (chemin && jnc is ChemicalSynapse syn2 && syn2.PostCell.CellGroup == cell.CellGroup))
+                        .ToList();
+                else
+                {
+                    if (gap && chem)
+                        list = runningModel.GetChemicalProjections().Union(runningModel.GetGapProjections()).ToList();
+                    else if (gap)
+                        list = runningModel.GetGapProjections().ToList();
+                    else
+                        list = runningModel.GetChemicalProjections().ToList();
+                }
+                foreach (JunctionBase jnc in list)
+                {
+                    sw.WriteLine(jnc.CSVExportValues);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        public static bool ReadJunctionsToCSV(string filename, ModelBase model)
+        {
+            if (filename == null || model == null)
+                return false;
+            try
+            {
+                /*TODO if (model is not ModelTemplate modelTemplate) return false;
+                string[] contents = FileUtil.ReadLinesFromFile(filename);
+                if (contents.Length <= 1) return false;
+                string columns = contents[0];
+                int iter = 1;
+                if (columns != InterPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
+                    return false;
+                modelTemplate.InterPoolTemplates.Clear();
+                while (iter < contents.Length)
+                {
+                    InterPoolTemplate ipt = new();
+                    ipt.CSVExportValues = contents[iter++];
+                    modelTemplate.AddJunction(ipt);
+                }*/
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
     }
 }

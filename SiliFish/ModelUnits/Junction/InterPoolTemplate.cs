@@ -111,15 +111,7 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         [JsonIgnore, Browsable(false)]
-              /*"
-      "FixedDuration_ms": null,
-      "Delay_ms": 0,
-      "TimeLine_ms": {
-        "PeriodsJSON": ""
-      },
-
-*/
-        public static string CSVExportColumnNames => $"Name,Source,Target," +
+        public static new string CSVExportColumnNames => $"Name,Source,Target," +
                 $"Axon Reach Mode,Connection Type,Distance Mode," +
                 $"{CellReach.CSVExportColumnNames}," +
                 $"{SynapseParameters.CSVExportColumnNames}," +
@@ -128,16 +120,16 @@ namespace SiliFish.ModelUnits.Junction
                 $"{TimeLine.CSVExportColumnNames}";
 
         [JsonIgnore, Browsable(false)]
-        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
+        private static new int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
 
         [JsonIgnore, Browsable(false)]
-        public virtual string CSVExportValues
+        public override string CSVExportValues
         {
-            get => $"{Util.CSVEncode(Name)},{PoolSource},{PoolTarget} " +
+            get => $"{Util.CSVEncode(Name)},{PoolSource},{PoolTarget}, " +
                 $"{AxonReachMode}, {ConnectionType}, {DistanceMode}, " +
                 $"{CellReach.CSVExportValues}," +
-                $"{SynapseParameters?.CSVExportValues}," +
-                $"{Probability},{Weight},{FixedDuration_ms},{Delay_ms}" +
+                $"{SynapseParameters?.CSVExportValues ?? SynapseParameters.CSVExportBlankValues}," +
+                $"{Probability},{Weight},{FixedDuration_ms},{Delay_ms}," +
                 $"{Active}," +
                 $"{TimeLine_ms?.CSVExportValues}";
             set
@@ -146,7 +138,7 @@ namespace SiliFish.ModelUnits.Junction
                 {
                     int iter = 0;
                     string[] values = value.Split(',');
-                    if (values.Length < CSVExportColumCount - TimeLine.CSVExportColumnNames.Count()) return;
+                    if (values.Length < CSVExportColumCount - TimeLine.CSVExportColumnNames.Length) return;
                     Name = values[iter++].Trim();
                     PoolSource = values[iter++].Trim();
                     PoolTarget = values[iter++].Trim();
@@ -158,11 +150,18 @@ namespace SiliFish.ModelUnits.Junction
                     CellReach.CSVExportValues = cellReachString;
                     iter += CellReach.CSVExportColumCount;
                     string synapseString = string.Join(',', values[iter..(iter + SynapseParameters.CSVExportColumCount)]);
-                    SynapseParameters.CSVExportValues = synapseString;
+                    if (!string.IsNullOrEmpty(synapseString.Replace(',', ' ').Trim()))
+                    {
+                        SynapseParameters = new()
+                        {
+                            CSVExportValues = synapseString
+                        };
+                    }
                     iter += SynapseParameters.CSVExportColumCount;
                     Probability = double.Parse(values[iter++]);
                     Weight = double.Parse(values[iter++]);
-                    FixedDuration_ms = double.Parse(values[iter++]);
+                    if (double.TryParse(values[iter++], out double d))
+                        FixedDuration_ms = d;
                     Delay_ms = double.Parse(values[iter++]);
                     Active = bool.Parse(values[iter++]);
                     if (iter < values.Length)

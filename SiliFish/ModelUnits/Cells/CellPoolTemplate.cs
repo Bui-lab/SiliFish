@@ -141,7 +141,7 @@ namespace SiliFish.ModelUnits.Cells
                     return $"{string.Join(",", Parameters.Take(CellCoreUnit.CoreParamMaxCount).OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}";
                 string paramValues = $"{string.Join(",", Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value.CSVCellExportValues}"))}";
                 for (int i = parameters.Count; i < CellCoreUnit.CoreParamMaxCount; i++)
-                    paramValues += ", , ";
+                    paramValues += ", , ";//two blank fields for for field name and value
                 return paramValues;
             }
         }

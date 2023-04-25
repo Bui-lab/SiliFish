@@ -90,18 +90,6 @@ namespace SiliFish.ModelUnits.Architecture
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual List<JunctionBase> GetIncomingProjections()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
-        public virtual List<JunctionBase> GetOutgoingProjections()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
         public virtual List<JunctionBase> GetChemicalProjections()
         {
             Exception exception = new NotImplementedException();

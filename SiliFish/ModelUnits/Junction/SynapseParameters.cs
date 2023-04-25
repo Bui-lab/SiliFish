@@ -20,6 +20,8 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         public static string CSVExportColumnNames => $"Tau Decay,Tau Rise, V Threshold, Reversal Potential";
+        [JsonIgnore, Browsable(false)]
+        public static string CSVExportBlankValues => $" , , , ";
 
         [JsonIgnore, Browsable(false)]
         internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;

@@ -46,6 +46,56 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore]
         public override string ID { get { return $"Gap: {Cell1.ID} -> {Cell2.ID}; Conductance: {Weight:0.#####}"; } }
 
+        public override string CSVExportValues
+        {
+            get => $"{ConnectionType.Gap},{Cell1.ID},{Cell2.ID}, " +
+                $"{DistanceMode}, " +
+                $"{SynapseParameters.CSVExportBlankValues}," +
+                $"{Weight},{FixedDuration_ms},{Delay_ms}," +
+                $"{Active}," +
+                $"{TimeLine_ms?.CSVExportValues}";
+            set
+            {
+                try
+                {
+                    int iter = 1;//junction type is already read before junction creation
+                    string[] values = value.Split(',');
+                    if (values.Length < CSVExportColumCount - TimeLine.CSVExportColumnNames.Length) return;
+                    /*PoolSource = values[iter++].Trim();
+                    PoolTarget = values[iter++].Trim();
+
+                    AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
+                    ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
+                    DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
+                    string cellReachString = string.Join(',', values[iter..(iter + CellReach.CSVExportColumCount)]);
+                    CellReach.CSVExportValues = cellReachString;
+                    iter += CellReach.CSVExportColumCount;
+                    string synapseString = string.Join(',', values[iter..(iter + SynapseParameters.CSVExportColumCount)]);
+                    if (!string.IsNullOrEmpty(synapseString.Replace(',', ' ').Trim()))
+                    {
+                        SynapseParameters = new()
+                        {
+                            CSVExportValues = synapseString
+                        };
+                    }
+                    iter += SynapseParameters.CSVExportColumCount;
+                    Probability = double.Parse(values[iter++]);
+                    Weight = double.Parse(values[iter++]);
+                    if (double.TryParse(values[iter++], out double d))
+                        FixedDuration_ms = d;
+                    Delay_ms = double.Parse(values[iter++]);
+                    Active = bool.Parse(values[iter++]);
+                    if (iter < values.Length)
+                        TimeLine_ms.CSVExportValues = values[iter++];*/
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    throw;
+                }
+            }
+        }
+
         public GapJunction()
         { }
         public GapJunction(double conductance, Cell c1, Cell c2, DistanceMode distmode)

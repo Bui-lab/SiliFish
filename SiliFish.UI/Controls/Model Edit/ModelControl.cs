@@ -18,6 +18,8 @@ using System.Diagnostics;
 using System.IO;
 using SiliFish.UI.EventArguments;
 using OxyPlot;
+using SiliFish.Services.Optimization;
+using SiliFish.UI.Controls.Model_Edit;
 
 namespace SiliFish.UI.Controls
 {
@@ -423,8 +425,12 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemsImport(object sender, EventArgs e)
         {
-            string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
-            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            if (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Any() ||
+                Model is RunningModel runningModel && runningModel.CellPools.Any())
+            {
+                string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            }
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
@@ -933,9 +939,24 @@ namespace SiliFish.UI.Controls
            }
         private void listConnections_ItemsExport(object sender, EventArgs e)
         {
+            ConnectionSelectionControl selectionControl = new()
+            {
+                GapJunctions = sender == listGap,
+                CheminalIncoming = sender == listIncoming,
+                ChemicalOutgoing = sender == listOutgoing
+            };
+            ControlContainer frmControl = new();
+            frmControl.AddControl(selectionControl, null);
+            frmControl.Text = "Please select the junctions to be exported.";
+            if (frmControl.ShowDialog() != DialogResult.OK) return;
+
+            ModelUnitBase unit = SelectedUnit;
+            bool gap = selectionControl.GapJunctions;
+            bool chemin = selectionControl.CheminalIncoming;
+            bool chemout = selectionControl.ChemicalOutgoing;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveInterPoolTemplatesToCSV(saveFileCSV.FileName, Model))
+                if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, unit, gap, chemout, chemin))
                 {
                     Process p = new()
                     {
@@ -952,8 +973,21 @@ namespace SiliFish.UI.Controls
         }
 
         private void listConnections_ItemsImport(object sender, EventArgs e)
-        {//TODO connection import
-
+        {
+            if (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
+                Model is RunningModel runningModel && runningModel.HasConnections())
+            {
+                string msg = $"Importing will remove all cell pool connections and create from the CSV file. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
+            }
+            if (openFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                string filename = openFileCSV.FileName;
+                if (ModelFile.ReadInterPoolTemplatesToCSV(filename, Model))
+                    LoadProjections();
+                else
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+            }
         }
 
         #endregion

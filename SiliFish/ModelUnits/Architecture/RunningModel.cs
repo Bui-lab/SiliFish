@@ -461,30 +461,12 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override List<JunctionBase> GetChemicalProjections()
         {
-            return GetIncomingProjections();
-        }
-        public override List<JunctionBase> GetOutgoingProjections()
-        {
             List<JunctionBase> listProjections = new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 if (cell is Neuron neuron)
                     foreach (ChemicalSynapse syn in neuron.Terminals)
                         listProjections.Add(syn);
-            }
-            return listProjections;
-        }
-        public override List<JunctionBase> GetIncomingProjections()
-        {
-            List<JunctionBase> listProjections = new();
-            foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
-            {
-                if (cell is Neuron neuron)
-                    foreach (ChemicalSynapse syn in neuron.Synapses)
-                        listProjections.Add(syn);
-                else if (cell is MuscleCell muscle)
-                    foreach (ChemicalSynapse nmj in muscle.EndPlates)
-                        listProjections.Add(nmj);
             }
             return listProjections;
         }

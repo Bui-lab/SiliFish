@@ -45,7 +45,11 @@ namespace SiliFish.Services
             }
             catch { }
             string logMsg = $"{DateTime.Now:g}:{name}/{ex.Message}\r\n{stackTrace}";
-            File.AppendAllText(logFile, logMsg);
+            try
+            {
+                File.AppendAllText(logFile, logMsg);
+            }
+            catch { }
         }
 
         /// <summary>
