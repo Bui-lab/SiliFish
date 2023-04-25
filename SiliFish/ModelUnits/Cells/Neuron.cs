@@ -158,20 +158,26 @@ namespace SiliFish.ModelUnits.Cells
             return false;
         }
 
-        protected override void DeleteJunctions()
+        public override void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
-            base.DeleteJunctions();
-            while (Synapses.Any())
+            base.DeleteJunctions(gap, chemin, chemout);
+            if (chemin)
             {
-                ChemicalSynapse jnc = Synapses.First();
-                jnc.PreNeuron.RemoveJunction(jnc);
-                Synapses.Remove(jnc);
+                while (Synapses.Any())
+                {
+                    ChemicalSynapse jnc = Synapses.First();
+                    jnc.PreNeuron.RemoveJunction(jnc);
+                    Synapses.Remove(jnc);
+                }
             }
-            while (Terminals.Any())
+            if (chemout)
             {
-                ChemicalSynapse jnc = Terminals.First();
-                jnc.PostCell.RemoveJunction(jnc);
-                Terminals.Remove(jnc);
+                while (Terminals.Any())
+                {
+                    ChemicalSynapse jnc = Terminals.First();
+                    jnc.PostCell.RemoveJunction(jnc);
+                    Terminals.Remove(jnc);
+                }
             }
 
         }

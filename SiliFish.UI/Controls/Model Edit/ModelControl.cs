@@ -956,7 +956,7 @@ namespace SiliFish.UI.Controls
             bool chemout = selectionControl.ChemicalOutgoing;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, unit, gap, chemout, chemin))
+                if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, unit, gap, chemin, chemout))
                 {
                     Process p = new()
                     {
@@ -980,10 +980,26 @@ namespace SiliFish.UI.Controls
                 string msg = $"Importing will remove all cell pool connections and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
+            ConnectionSelectionControl selectionControl = new()
+            {
+                GapJunctions = sender == listGap,
+                CheminalIncoming = sender == listIncoming,
+                ChemicalOutgoing = sender == listOutgoing
+            };
+            ControlContainer frmControl = new();
+            frmControl.AddControl(selectionControl, null);
+            frmControl.Text = "Please select the junctions to be imported.";
+            if (frmControl.ShowDialog() != DialogResult.OK) return;
+
+            ModelUnitBase unit = SelectedUnit;
+            bool gap = selectionControl.GapJunctions;
+            bool chemin = selectionControl.CheminalIncoming;
+            bool chemout = selectionControl.ChemicalOutgoing;
+
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadInterPoolTemplatesToCSV(filename, Model))
+                if (ModelFile.ReadInterPoolTemplatesFromCSV(filename, Model, unit, gap, chemin, chemout))
                     LoadProjections();
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");

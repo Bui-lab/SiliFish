@@ -119,9 +119,10 @@ namespace SiliFish.ModelUnits.Cells
             return false;
         }
 
-        protected override void DeleteJunctions()
+        public override void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
-            base.DeleteJunctions();
+            base.DeleteJunctions(gap, chemin, chemout);
+            if (!chemin) return;
             while (EndPlates.Any())
             {
                 ChemicalSynapse jnc = EndPlates.First();

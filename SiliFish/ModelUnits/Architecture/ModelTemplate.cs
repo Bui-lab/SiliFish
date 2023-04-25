@@ -131,6 +131,36 @@ namespace SiliFish.ModelUnits.Architecture
         {
             InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.PoolTarget).ToList();
         }
+
+        public void RemoveJunctions(bool gap, bool chem)
+        {
+            if (gap && chem)
+            {
+                InterPoolTemplates.Clear();
+                return;
+            }
+            else if (gap)
+                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType == ConnectionType.Gap);
+            else if (chem)
+                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap);
+        }
+        public void RemoveJunctionsOf(CellPoolTemplate cpt, bool gap, bool chemin, bool chemout)
+        {
+            if (cpt == null)
+            {
+                RemoveJunctions(gap, chemin || chemout);
+                return;
+            }
+            if (gap)
+                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType == ConnectionType.Gap &&
+                    (jnc.PoolTarget == cpt.CellGroup || jnc.PoolSource == cpt.CellGroup));
+            if (chemin)
+                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap &&
+                    jnc.PoolTarget == cpt.CellGroup);
+            if (chemout)
+                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap &&
+                    jnc.PoolSource == cpt.CellGroup);
+        }
         #endregion
 
         #region Stimulus

@@ -1,5 +1,6 @@
 ﻿using GeneticSharp;
 using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -696,15 +697,24 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
-        public static bool SaveConnectionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemout, bool chemin)
+        public static bool SaveConnectionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemin, bool chemout)
         {
             if (model is ModelTemplate)
-                return SaveInterPoolTemplatesToCSV(filename, model, selectedUnit, gap, chemout, chemin);
+                return SaveInterPoolTemplatesToCSV(filename, model, selectedUnit, gap, chemin, chemout);
             else if (model is RunningModel)
-                return SaveJunctionsToCSV(filename, model, selectedUnit, gap, chemout, chemin);
+                return SaveJunctionsToCSV(filename, model, selectedUnit, gap, chemin, chemout);
             return false;
         }
-        private static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemout, bool chemin)
+
+        public static bool ReadConnectionsFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemin, bool chemout)
+        {
+            if (model is ModelTemplate)
+                return ReadInterPoolTemplatesFromCSV(filename, model, selectedUnit, gap, chemin, chemout);
+            else if (model is RunningModel)
+                return ReadJunctionsFromCSV(filename, model, selectedUnit, gap, chemin, chemout);
+            return false;
+        }
+        private static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -742,7 +752,7 @@ namespace SiliFish.Repositories
             }
         }
         
-        public static bool ReadInterPoolTemplatesToCSV(string filename, ModelBase model)
+        public static bool ReadInterPoolTemplatesFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -755,12 +765,23 @@ namespace SiliFish.Repositories
                 int iter = 1;
                 if (columns != InterPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
                     return false;
-                modelTemplate.InterPoolTemplates.Clear();
+                CellPoolTemplate cpt = selectedUnit as CellPoolTemplate;
+                modelTemplate.RemoveJunctionsOf(cpt, gap, chemin, chemout);
                 while (iter < contents.Length)
                 {
                     InterPoolTemplate ipt = new();
                     ipt.CSVExportValues = contents[iter++];
-                    modelTemplate.AddJunction(ipt);
+                    //check whether it is part of what 
+                    bool jncCheck = gap && ipt.ConnectionType== ConnectionType.Gap &&
+                            (cpt==null || ipt.PoolSource == cpt.CellGroup || ipt.PoolTarget==cpt.CellGroup);
+                    if (!jncCheck)
+                        jncCheck = chemout && ipt.ConnectionType != ConnectionType.Gap &&
+                            (cpt == null || ipt.PoolSource == cpt.CellGroup);
+                    if (!jncCheck)
+                        jncCheck = chemin && ipt.ConnectionType != ConnectionType.Gap &&
+                            (cpt == null || ipt.PoolTarget == cpt.CellGroup);
+                    if (jncCheck)
+                        modelTemplate.AddJunction(ipt);
                 }
                 return true;
             }
@@ -771,7 +792,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        private static bool SaveJunctionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemout, bool chemin)
+        private static bool SaveJunctionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -820,26 +841,60 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static bool ReadJunctionsToCSV(string filename, ModelBase model)
+        public static bool ReadJunctionsFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
             try
             {
-                /*TODO if (model is not ModelTemplate modelTemplate) return false;
+                if (model is not RunningModel runningModel) return false;
                 string[] contents = FileUtil.ReadLinesFromFile(filename);
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
                 int iter = 1;
-                if (columns != InterPoolTemplate.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
+                if (columns != JunctionBase.CSVExportColumnNames)//same columns are used for cell pool templates and cell pools
                     return false;
-                modelTemplate.InterPoolTemplates.Clear();
+                CellPool cellPool = selectedUnit as CellPool;
+                Cell cell= selectedUnit as Cell;
+                runningModel.RemoveJunctionsOf(cellPool, cell, gap, chemin, chemout);
                 while (iter < contents.Length)
                 {
-                    InterPoolTemplate ipt = new();
-                    ipt.CSVExportValues = contents[iter++];
-                    modelTemplate.AddJunction(ipt);
-                }*/
+                    string line = contents[iter++];
+                    string[] csvCells = line.Split(',');
+                    if (csvCells.Length <= 0) continue;
+                    JunctionBase jb = null;
+                    if (csvCells[0] == ConnectionType.Gap.ToString())
+                    {
+                        if (gap)
+                            jb = new GapJunction();
+                    }
+                    else
+                    {
+                        if (chemin || chemout)
+                            jb = new ChemicalSynapse();
+                    }
+                    if (jb == null) continue;
+                    jb.CSVExportValues = line;
+                    //check whether it is part of what needs to be imported
+                    bool jncCheck = gap && jb is GapJunction gapjnc &&
+                            (cellPool != null && (gapjnc.Cell1.CellGroup == cellPool.CellGroup || gapjnc.Cell2.CellGroup == cellPool.CellGroup) ||
+                             cell != null && (gapjnc.Cell1.ID == cell.ID || gapjnc.Cell2.ID == cell.ID) ||
+                             cellPool == null && cell == null);
+                    if (!jncCheck && jb is ChemicalSynapse syn)
+                    {
+                        jncCheck = chemout &&
+                           (cellPool != null && syn.PreNeuron.CellGroup == cellPool.CellGroup ||
+                             cell != null && syn.PreNeuron.ID == cell.ID ||
+                             cellPool == null && cell == null);
+                        if (!jncCheck)
+                            jncCheck = chemin &&
+                               (cellPool != null && syn.PostCell.CellGroup == cellPool.CellGroup ||
+                                 cell != null && syn.PostCell.ID == cell.ID ||
+                                 cellPool == null && cell == null);
+                    }
+                    if (jncCheck)
+                        runningModel.AddJunction(jb);
+                }
                 return true;
             }
             catch (Exception ex)

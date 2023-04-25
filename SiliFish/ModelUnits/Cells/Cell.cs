@@ -319,8 +319,9 @@ namespace SiliFish.ModelUnits.Cells
                 return GapJunctions.Remove(jnc);
             return false;
         }
-        protected virtual void DeleteJunctions()
+        public virtual void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
+            if (!gap) return;
             while (GapJunctions.Any())
             {
                 GapJunction jnc = GapJunctions.First();

@@ -471,6 +471,18 @@ namespace SiliFish.ModelUnits.Architecture
             return listProjections;
         }
 
+        public void RemoveJunctionsOf(CellPool cp, Cell cell, bool gap, bool chemin, bool chemout)
+        {
+            cp?.DeleteJunctions(gap, chemin, chemout);
+            cell?.DeleteJunctions(gap, chemin, chemout);
+            if (cp == null && cell == null)
+            {
+                foreach(CellPool cellPool in CellPools)
+                {
+                    cellPool.DeleteJunctions(gap, chemin, chemout);
+                }
+            }
+        }
 
         #endregion
 

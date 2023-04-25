@@ -488,6 +488,13 @@ namespace SiliFish.ModelUnits.Cells
             if (!HasCells()) return false;
             return Cells.Any(c=>c.HasConnections(gap, chemin, chemout));
         }
+
+        public void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
+        {
+            foreach (Cell c in  Cells)
+                c.DeleteJunctions(gap, chemin, chemout);
+        }
+
         #endregion
 
         #region Stimulus functions
