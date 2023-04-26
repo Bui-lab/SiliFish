@@ -258,6 +258,14 @@ namespace SiliFish.UI.Controls
             }
             catch { }
         }
+        private async void ClearBrowserCache(WebView2 webView)
+        {
+            await webView.CoreWebView2.Profile.ClearBrowsingDataAsync();
+        }
+        private void cmiAnimationClearCache_Click(object sender, EventArgs e)
+        {
+            ClearBrowserCache(webViewAnimation);
+        }        
         #endregion
 
         #region Outputs
@@ -1001,6 +1009,7 @@ namespace SiliFish.UI.Controls
 
         #endregion
         #endregion
+
 
     }
 

@@ -139,6 +139,8 @@
             eAnimationStart = new NumericUpDown();
             linkSaveAnimationHTML = new LinkLabel();
             btnAnimate = new Button();
+            cmAnimation = new ContextMenuStrip(components);
+            cmiAnimationClearCache = new ToolStripMenuItem();
             lAnimationStart = new Label();
             lms3 = new Label();
             lAnimationEnd = new Label();
@@ -197,6 +199,7 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).BeginInit();
+            cmAnimation.SuspendLayout();
             SuspendLayout();
             // 
             // tabOutputs
@@ -1457,6 +1460,7 @@
             // btnAnimate
             // 
             btnAnimate.BackColor = Color.FromArgb(96, 125, 139);
+            btnAnimate.ContextMenuStrip = cmAnimation;
             btnAnimate.Enabled = false;
             btnAnimate.FlatAppearance.BorderColor = Color.LightGray;
             btnAnimate.FlatStyle = FlatStyle.Flat;
@@ -1468,6 +1472,19 @@
             btnAnimate.Text = "Animate";
             btnAnimate.UseVisualStyleBackColor = false;
             btnAnimate.Click += btnAnimate_Click;
+            // 
+            // cmAnimation
+            // 
+            cmAnimation.Items.AddRange(new ToolStripItem[] { cmiAnimationClearCache });
+            cmAnimation.Name = "cmWebView";
+            cmAnimation.Size = new Size(181, 48);
+            // 
+            // cmiAnimationClearCache
+            // 
+            cmiAnimationClearCache.Name = "cmiAnimationClearCache";
+            cmiAnimationClearCache.Size = new Size(180, 22);
+            cmiAnimationClearCache.Text = "Clear Cache";
+            cmiAnimationClearCache.Click += cmiAnimationClearCache_Click;
             // 
             // lAnimationStart
             // 
@@ -1591,6 +1608,7 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).EndInit();
+            cmAnimation.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1716,5 +1734,7 @@
         private ToolStripMenuItem cmiNonInteractivePlot;
         private ContextMenuStrip cmPlotImageSave;
         private ToolStripMenuItem cmiPlotImageSave;
+        private ContextMenuStrip cmAnimation;
+        private ToolStripMenuItem cmiAnimationClearCache;
     }
 }
