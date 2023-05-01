@@ -6,9 +6,9 @@ using System.Text;
 
 namespace SiliFish.UI.EventArguments
 {
-    internal class PlotRequestArgs : EventArgs
+    internal class SelectedUnitArgs : EventArgs
     {
-        internal ModelUnitBase unitToPlot;
+        internal ModelUnitBase unitSelected;
     }
 
 }

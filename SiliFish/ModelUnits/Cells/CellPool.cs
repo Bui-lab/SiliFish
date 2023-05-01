@@ -9,6 +9,7 @@ using SiliFish.ModelUnits.Stim;
 using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
@@ -389,13 +390,35 @@ namespace SiliFish.ModelUnits.Cells
             double delay_ms,
             double? fixedduration_ms)
         {
+            int maxIncoming = reach.MaxIncoming;
+            int maxOutgoing = reach.MaxOutgoing;
+            if (maxIncoming > 0 && maxOutgoing == 0)
+            {//if target pool has a limit, prevent the scenario where one source cell fulfills that limit
+                int numSource = this.GetCells().Count();
+                int numTarget = target.GetCells().Count();
+                maxOutgoing = (int)Math.Ceiling((double)maxIncoming * numTarget / numSource);
+            }
+            else if (maxIncoming == 0 && maxOutgoing > 0)
+            {//if the source pool has a limit, prevent the scenario where one target cell fulfills that limit
+                int numSource = this.GetCells().Count();
+                int numTarget = target.GetCells().Count();
+                maxIncoming = (int)Math.Ceiling((double)maxOutgoing * numSource / numTarget);
+            }
             foreach (Cell pre in this.GetCells())
             {
+                int counter = 0;
+
                 //To prevent recursive gap junctions in self projecting pools
                 IEnumerable<Cell> targetcells = this == target ? target.GetCells()
                     .Where(c => c.Somite > pre.Somite || (c.Somite == pre.Somite && c.Sequence > pre.Sequence)) : target.GetCells();
                 foreach (Cell post in targetcells)
                 {
+                    if (maxIncoming > 0) //check whether the target cell already has connections from the same pool
+                    {
+                        int existing = post.GapJunctions.Count(gj => gj.Cell1.CellPool == this);
+                        if (existing >= maxIncoming)
+                            continue;
+                    }
                     if (probability < Model.rand.Next(1))
                         continue;
                     double mult = 1;
@@ -404,13 +427,16 @@ namespace SiliFish.ModelUnits.Cells
                     if (reach.WithinReach(pre, post, mult))
                     {
                         mult = 1;
-                        if (CellPool.gapWeightNoiseMultiplier != null)
+                        if (gapWeightNoiseMultiplier != null)
                             mult = gapWeightNoiseMultiplier();
                         GapJunction jnc = pre.CreateGapJunction(post, weight * mult, distanceMode);
                         jnc.SetDelay(delay_ms);
                         jnc.SetTimeSpan(timeline);
                         if (fixedduration_ms != null)
                             jnc.SetFixedDuration((double)fixedduration_ms);
+                        counter++;
+                        if (maxOutgoing > 0 && counter >= maxOutgoing)
+                            break;
                     }
                 }
             }

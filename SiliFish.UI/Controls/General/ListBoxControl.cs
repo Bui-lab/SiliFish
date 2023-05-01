@@ -18,6 +18,7 @@ namespace SiliFish.UI.Controls
         public event EventHandler ItemsSort;
         public event EventHandler ItemSelect;
         public event EventHandler ItemPlot;
+        public event EventHandler ItemHighlight;
         public event EventHandler ItemsExport;
         public event EventHandler ItemsImport;
 
@@ -50,7 +51,7 @@ namespace SiliFish.UI.Controls
         }
         private void DeleteItem()
         {
-            ItemDelete?.Invoke(listBox.SelectedItem, new EventArgs());
+            ItemDelete?.Invoke(this, new EventArgs());//listBox is sent rather than the selected item, as the list box needs to be redrawn
         }
 
         private void miCustomSort_Click(object sender, EventArgs e)
@@ -162,6 +163,10 @@ namespace SiliFish.UI.Controls
         {
             ItemPlot?.Invoke(listBox.SelectedItem, new EventArgs());
         }
+        private void miHighlight_Click(object sender, EventArgs e)
+        {
+            ItemHighlight?.Invoke(listBox.SelectedItem, new EventArgs());
+        }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
             miSortAlphabetically.Visible = ItemsSort != null;
@@ -186,6 +191,9 @@ namespace SiliFish.UI.Controls
                     }
                 }
             }
+            miPlot.Visible = ItemPlot!= null;
+            miHighlight.Visible = ItemHighlight!=null;
+            sepPlot.Visible = miPlot.Visible || miHighlight.Visible;
         }
         private void listBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -268,6 +276,7 @@ namespace SiliFish.UI.Controls
                 mi.Enabled = enabled;
             }
         }
+
 
 
     }

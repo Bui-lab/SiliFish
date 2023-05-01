@@ -448,13 +448,18 @@ namespace SiliFish.UI
 
         private void modelControl_PlotRequested(object sender, EventArgs e)
         {
-            modelOutputControl.Plot((e as PlotRequestArgs).unitToPlot);
+            modelOutputControl.Plot((e as SelectedUnitArgs).unitSelected);
         }
 
 
         private void modelControl_ModelChanged(object sender, EventArgs e)
         {
             SetModel(modelControl.GetModel(), null, true);
+        }
+
+        private void modelControl_HighlightRequested(object sender, EventArgs e)
+        {
+            modelOutputControl.Highlight((e as SelectedUnitArgs).unitSelected);
         }
     }
 }

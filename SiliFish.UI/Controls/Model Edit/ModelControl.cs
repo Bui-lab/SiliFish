@@ -27,6 +27,7 @@ namespace SiliFish.UI.Controls
     {
         public event EventHandler ModelChanged;
         public event EventHandler PlotRequested;
+        public event EventHandler HighlightRequested;
         RunMode CurrentMode = RunMode.Template;
 
         private ModelBase Model;
@@ -388,9 +389,14 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
+        private void listCellPools_ItemHighlight(object sender, EventArgs e)
+        {
+            SelectedUnitArgs args = new() { unitSelected = SelectedPool };
+            HighlightRequested?.Invoke(this, args);
+        }
         private void listCellPools_ItemPlot(object sender, EventArgs e)
         {
-            PlotRequestArgs args = new() { unitToPlot = SelectedPool };
+            SelectedUnitArgs args = new() { unitSelected = SelectedPool };
             PlotRequested?.Invoke(this, args);
         }
         private void listCellPools_ItemToggleActive(object sender, EventArgs e)
@@ -555,10 +561,15 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void listCells_ItemHighlight(object sender, EventArgs e)
+        {
+            SelectedUnitArgs args = new() { unitSelected = SelectedCell };
+            HighlightRequested?.Invoke(this, args);
+        }
 
         private void listCells_ItemPlot(object sender, EventArgs e)
         {
-            PlotRequestArgs args = new() { unitToPlot = SelectedCell };
+            SelectedUnitArgs args = new() { unitSelected = SelectedCell };
             PlotRequested?.Invoke(this, args);
         }
 
@@ -893,9 +904,16 @@ namespace SiliFish.UI.Controls
             ModelIsUpdated();
         }
 
+        private void listConnections_ItemHighlight(object sender, EventArgs e)
+        {
+            SelectedUnitArgs args = new() { unitSelected = SelectedJunction };
+            HighlightRequested?.Invoke(this, args);
+        }
+
+
         private void listConnections_ItemPlot(object sender, EventArgs e)
         {
-            PlotRequestArgs args = new() { unitToPlot = SelectedJunction };
+            SelectedUnitArgs args = new() { unitSelected = SelectedJunction };
             PlotRequested?.Invoke(this, args);
         }
 
@@ -1245,9 +1263,15 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void listStimuli_ItemHighlight(object sender, EventArgs e)
+        {
+            SelectedUnitArgs args = new() { unitSelected = SelectedStimulus };
+            HighlightRequested?.Invoke(this, args);
+        }
+
         private void listStimuli_ItemPlot(object sender, EventArgs e)
         {
-            PlotRequestArgs args = new() { unitToPlot = SelectedStimulus };
+            SelectedUnitArgs args = new() { unitSelected = SelectedStimulus };
             PlotRequested?.Invoke(this, args);
         }
 

@@ -265,7 +265,7 @@ namespace SiliFish.UI.Controls
         private void cmiAnimationClearCache_Click(object sender, EventArgs e)
         {
             ClearBrowserCache(webViewAnimation);
-        }        
+        }
         #endregion
 
         #region Outputs
@@ -878,6 +878,13 @@ namespace SiliFish.UI.Controls
             else
                 await webView3DRender.ExecuteScriptAsync("HideGapJunc();");
         }
+        private async void cb3DShowUnselectedNodes_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb3DShowUnselectedNodes.Checked)
+                await webView3DRender.ExecuteScriptAsync("ShowInactiveNodes();");
+            else
+                await webView3DRender.ExecuteScriptAsync("HideInactiveNodes();");
+        }
         private void cb3DLegend_CheckedChanged(object sender, EventArgs e)
         {
             gr3DLegend.Visible = cb3DLegend.Checked;
@@ -909,6 +916,20 @@ namespace SiliFish.UI.Controls
         private async void btnZoomIn_Click(object sender, EventArgs e)
         {
             await webView3DRender.ExecuteScriptAsync("ZoomIn();");
+        }
+        internal async void Highlight(ModelUnitBase unitToPlot)
+        {
+            if (RunningModel == null) return;
+            if (unitToPlot == null) return;
+            if (unitToPlot is CellPool pool)
+            {
+                await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");
+            }
+            else if (unitToPlot is Cell cell)
+            {
+                await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
+            }
+            tabOutputs.SelectedTab = t3DRender;
         }
         #endregion
 

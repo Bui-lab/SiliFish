@@ -100,6 +100,7 @@
             legendIncoming = new Label();
             webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p3DRender = new Panel();
+            cb3DShowUnselectedNodes = new CheckBox();
             cb3DLegend = new CheckBox();
             cb3DGapJunc = new CheckBox();
             cb3DChemJunc = new CheckBox();
@@ -885,7 +886,7 @@
             p3DViewing.Controls.Add(dd3DViewpoint);
             p3DViewing.Controls.Add(btnZoomIn);
             p3DViewing.Controls.Add(btnZoomOut);
-            p3DViewing.Location = new Point(435, 46);
+            p3DViewing.Location = new Point(435, 85);
             p3DViewing.Name = "p3DViewing";
             p3DViewing.Size = new Size(256, 39);
             p3DViewing.TabIndex = 58;
@@ -986,10 +987,10 @@
             webView3DRender.CreationProperties = null;
             webView3DRender.DefaultBackgroundColor = Color.White;
             webView3DRender.Dock = DockStyle.Fill;
-            webView3DRender.Location = new Point(0, 40);
+            webView3DRender.Location = new Point(0, 64);
             webView3DRender.Name = "webView3DRender";
             webView3DRender.Padding = new Padding(10);
-            webView3DRender.Size = new Size(694, 727);
+            webView3DRender.Size = new Size(694, 703);
             webView3DRender.TabIndex = 0;
             webView3DRender.ZoomFactor = 1D;
             webView3DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
@@ -997,6 +998,7 @@
             // p3DRender
             // 
             p3DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p3DRender.Controls.Add(cb3DShowUnselectedNodes);
             p3DRender.Controls.Add(cb3DLegend);
             p3DRender.Controls.Add(cb3DGapJunc);
             p3DRender.Controls.Add(cb3DChemJunc);
@@ -1009,8 +1011,20 @@
             p3DRender.Location = new Point(0, 0);
             p3DRender.Name = "p3DRender";
             p3DRender.Padding = new Padding(0, 0, 5, 0);
-            p3DRender.Size = new Size(694, 40);
+            p3DRender.Size = new Size(694, 64);
             p3DRender.TabIndex = 3;
+            // 
+            // cb3DShowUnselectedNodes
+            // 
+            cb3DShowUnselectedNodes.Checked = true;
+            cb3DShowUnselectedNodes.CheckState = CheckState.Checked;
+            cb3DShowUnselectedNodes.Location = new Point(252, 10);
+            cb3DShowUnselectedNodes.Name = "cb3DShowUnselectedNodes";
+            cb3DShowUnselectedNodes.Size = new Size(180, 20);
+            cb3DShowUnselectedNodes.TabIndex = 58;
+            cb3DShowUnselectedNodes.Text = "Show Unselected Nodes";
+            cb3DShowUnselectedNodes.UseVisualStyleBackColor = true;
+            cb3DShowUnselectedNodes.CheckedChanged += cb3DShowUnselectedNodes_CheckedChanged;
             // 
             // cb3DLegend
             // 
@@ -1030,7 +1044,7 @@
             // 
             cb3DGapJunc.Checked = true;
             cb3DGapJunc.CheckState = CheckState.Checked;
-            cb3DGapJunc.Location = new Point(239, 10);
+            cb3DGapJunc.Location = new Point(148, 36);
             cb3DGapJunc.Name = "cb3DGapJunc";
             cb3DGapJunc.Size = new Size(80, 20);
             cb3DGapJunc.TabIndex = 39;
@@ -1052,7 +1066,7 @@
             // 
             // e3DSomiteRange
             // 
-            e3DSomiteRange.Location = new Point(410, 7);
+            e3DSomiteRange.Location = new Point(343, 33);
             e3DSomiteRange.Name = "e3DSomiteRange";
             e3DSomiteRange.Size = new Size(89, 23);
             e3DSomiteRange.TabIndex = 36;
@@ -1065,7 +1079,7 @@
             // 
             cb3DAllSomites.Checked = true;
             cb3DAllSomites.CheckState = CheckState.Checked;
-            cb3DAllSomites.Location = new Point(319, 10);
+            cb3DAllSomites.Location = new Point(252, 36);
             cb3DAllSomites.Name = "cb3DAllSomites";
             cb3DAllSomites.Size = new Size(85, 20);
             cb3DAllSomites.TabIndex = 35;
@@ -1077,7 +1091,7 @@
             // 
             pLine3D.BackColor = Color.LightGray;
             pLine3D.Dock = DockStyle.Bottom;
-            pLine3D.Location = new Point(0, 39);
+            pLine3D.Location = new Point(0, 63);
             pLine3D.Name = "pLine3D";
             pLine3D.Size = new Size(689, 1);
             pLine3D.TabIndex = 30;
@@ -1477,12 +1491,12 @@
             // 
             cmAnimation.Items.AddRange(new ToolStripItem[] { cmiAnimationClearCache });
             cmAnimation.Name = "cmWebView";
-            cmAnimation.Size = new Size(181, 48);
+            cmAnimation.Size = new Size(138, 26);
             // 
             // cmiAnimationClearCache
             // 
             cmiAnimationClearCache.Name = "cmiAnimationClearCache";
-            cmiAnimationClearCache.Size = new Size(180, 22);
+            cmiAnimationClearCache.Size = new Size(137, 22);
             cmiAnimationClearCache.Text = "Clear Cache";
             cmiAnimationClearCache.Click += cmiAnimationClearCache_Click;
             // 
@@ -1736,5 +1750,6 @@
         private ToolStripMenuItem cmiPlotImageSave;
         private ContextMenuStrip cmAnimation;
         private ToolStripMenuItem cmiAnimationClearCache;
+        private CheckBox cb3DShowUnselectedNodes;
     }
 }

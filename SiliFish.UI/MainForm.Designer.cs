@@ -251,6 +251,7 @@ namespace SiliFish.UI
             modelControl.TabIndex = 2;
             modelControl.ModelChanged += modelControl_ModelChanged;
             modelControl.PlotRequested += modelControl_PlotRequested;
+            modelControl.HighlightRequested += modelControl_HighlightRequested;
             // 
             // pGenerateModel
             // 

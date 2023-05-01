@@ -462,6 +462,7 @@
             listCellPools.ItemsSort += listCellPools_ItemsSort;
             listCellPools.ItemSelect += listCellPools_ItemSelect;
             listCellPools.ItemPlot += listCellPools_ItemPlot;
+            listCellPools.ItemHighlight += listCellPools_ItemHighlight;
             listCellPools.ItemsExport += listCellPools_ItemsExport;
             listCellPools.ItemsImport += listCellPools_ItemsImport;
             // 
@@ -512,6 +513,7 @@
             listCells.ItemsSort += listCells_ItemsSort;
             listCells.ItemSelect += listCells_ItemSelect;
             listCells.ItemPlot += listCells_ItemPlot;
+            listCells.ItemHighlight += listCells_ItemHighlight;
             listCells.ItemsExport += listCells_ItemsExport;
             listCells.ItemsImport += listCells_ItemsImport;
             // 
@@ -651,6 +653,7 @@
             listIncoming.ItemsSort += listConnections_ItemsSort;
             listIncoming.ItemSelect += listConnections_ItemSelect;
             listIncoming.ItemPlot += listConnections_ItemPlot;
+            listIncoming.ItemHighlight += listConnections_ItemHighlight;
             listIncoming.ItemsExport += listConnections_ItemsExport;
             listIncoming.ItemsImport += listConnections_ItemsImport;
             // 
@@ -701,6 +704,7 @@
             listOutgoing.ItemsSort += listConnections_ItemsSort;
             listOutgoing.ItemSelect += listConnections_ItemSelect;
             listOutgoing.ItemPlot += listConnections_ItemPlot;
+            listOutgoing.ItemHighlight += listConnections_ItemHighlight;
             listOutgoing.ItemsExport += listConnections_ItemsExport;
             listOutgoing.ItemsImport += listConnections_ItemsImport;
             // 
@@ -751,6 +755,7 @@
             listGap.ItemsSort += listConnections_ItemsSort;
             listGap.ItemSelect += listConnections_ItemSelect;
             listGap.ItemPlot += listConnections_ItemPlot;
+            listGap.ItemHighlight += listConnections_ItemHighlight;
             listGap.ItemsExport += listConnections_ItemsExport;
             listGap.ItemsImport += listConnections_ItemsImport;
             // 

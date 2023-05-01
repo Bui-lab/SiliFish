@@ -78,6 +78,7 @@
 
         let selectedNode = null;
         let showSingleNodeLinks = false;
+        let showInactiveNodes = true;
         let showChemJnc = __SHOW_CHEM__;
         let showGapJnc = __SHOW_GAP__;
         let somiteList = [__SOMITES__];
@@ -107,18 +108,21 @@
                 return '#C00';//red - incoming
             return '#808080';
         }
+        function isNodeActive(n) {
+            return selectedNode == null ||
+                selectedNode == n ||
+                !showSingleNodeLinks && selectedNode.g == n.g ||
+                (showSingleNodeLinks && (neighboring(selectedNode, n) || neighboring(n, selectedNode)));
+        }
         function showNode(n) {
             return n.s <= 0 || somiteList.length == 0 || somiteList.includes(n.s);
         }
         const gapChemDataSet = gapChemGraph
-            .nodeColor(n => (selectedNode == null || selectedNode == n ? colorSet[n.g] :
-                !showSingleNodeLinks && selectedNode.g == n.g ? colorSet[n.g] :
-                    (showSingleNodeLinks && (neighboring(selectedNode, n) || neighboring(n, selectedNode))) ? colorSet[n.g] :
-                        '#EEE'))
+            .nodeColor(n => isNodeActive(n) ? colorSet[n.g] : '#EEE')
             .nodeOpacity(0.9)
             .nodeLabel(n => `${n.id} ${n.crd}`)
             .nodeRelSize(__NODE_SIZE__)
-            .nodeVisibility(n => showNode(n))
+            .nodeVisibility(n => showNode(n) && (showInactiveNodes || isNodeActive(n)))
             .graphData(gapChemData)
             .linkColor(l => linkColor(l))
             .linkOpacity(l => selectedNode == null ? 0.8 : showLink(l) ? 1 : 0)
@@ -171,6 +175,15 @@
             gapChemGraph.refresh();
         }
 
+        function ShowInactiveNodes() {
+            showInactiveNodes = true;
+            gapChemGraph.refresh();
+        }
+        function HideInactiveNodes() {
+            showInactiveNodes = false;
+            gapChemGraph.refresh();
+        }
+
         function SetSomites(somites) {
             somiteList = somites;
             gapChemGraph.refresh();
@@ -204,6 +217,16 @@
         function ZoomOut() {
             pos = gapChemGraph.camera().position;
             gapChemGraph.cameraPosition({ x: pos.x * 2, y: pos.y * 2, z: pos.z * 2 });
+        }
+        function SelectCell(cellid) {
+            selectedNode = gapChemData.nodes.find(n => n.id == cellid);
+            showSingleNodeLinks = true;
+            gapChemGraph.refresh();
+        }
+        function SelectCellPool(pool) {
+            selectedNode = gapChemData.nodes.find(n => n.g == pool);
+            showSingleNodeLinks = false;
+            gapChemGraph.refresh();
         }
     </script>
 
