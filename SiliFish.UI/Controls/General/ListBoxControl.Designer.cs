@@ -28,224 +28,197 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.listBox = new System.Windows.Forms.ListBox();
-            this.contextMenuListBox = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.miEditItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miAddItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miDeleteItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miCreateCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.sepActive = new System.Windows.Forms.ToolStripSeparator();
-            this.miActivate = new System.Windows.Forms.ToolStripMenuItem();
-            this.miDeactivate = new System.Windows.Forms.ToolStripMenuItem();
-            this.miActivateAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.miDeactivateAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.sepShow = new System.Windows.Forms.ToolStripSeparator();
-            this.miHideInactive = new System.Windows.Forms.ToolStripMenuItem();
-            this.miShowAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.sepSort = new System.Windows.Forms.ToolStripSeparator();
-            this.miSortAlphabetically = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitExport = new System.Windows.Forms.ToolStripSeparator();
-            this.miExport = new System.Windows.Forms.ToolStripMenuItem();
-            this.miImport = new System.Windows.Forms.ToolStripMenuItem();
-            this.sepPlot = new System.Windows.Forms.ToolStripSeparator();
-            this.miPlot = new System.Windows.Forms.ToolStripMenuItem();
-            this.miHighlight = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.contextMenuListBox.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            listBox = new ListBox();
+            contextMenuListBox = new ContextMenuStrip(components);
+            miEditItem = new ToolStripMenuItem();
+            miAddItem = new ToolStripMenuItem();
+            miDeleteItem = new ToolStripMenuItem();
+            miCreateCopy = new ToolStripMenuItem();
+            sepActive = new ToolStripSeparator();
+            miActivate = new ToolStripMenuItem();
+            miDeactivate = new ToolStripMenuItem();
+            miActivateAll = new ToolStripMenuItem();
+            miDeactivateAll = new ToolStripMenuItem();
+            sepShow = new ToolStripSeparator();
+            miHideInactive = new ToolStripMenuItem();
+            miShowAll = new ToolStripMenuItem();
+            sepSort = new ToolStripSeparator();
+            miSortAlphabetically = new ToolStripMenuItem();
+            splitExport = new ToolStripSeparator();
+            miExport = new ToolStripMenuItem();
+            miImport = new ToolStripMenuItem();
+            sepPlot = new ToolStripSeparator();
+            miPlot = new ToolStripMenuItem();
+            miHighlight = new ToolStripMenuItem();
+            toolTip = new ToolTip(components);
+            contextMenuListBox.SuspendLayout();
+            SuspendLayout();
             // 
             // listBox
             // 
-            this.listBox.ContextMenuStrip = this.contextMenuListBox;
-            this.listBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox.FormattingEnabled = true;
-            this.listBox.IntegralHeight = false;
-            this.listBox.ItemHeight = 15;
-            this.listBox.Location = new System.Drawing.Point(0, 0);
-            this.listBox.Name = "listBox";
-            this.listBox.Size = new System.Drawing.Size(213, 262);
-            this.listBox.TabIndex = 0;
-            this.listBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBox_MouseClick);
-            this.listBox.SelectedIndexChanged += new System.EventHandler(this.listBox_SelectedIndexChanged);
-            this.listBox.DoubleClick += new System.EventHandler(this.listBox_DoubleClick);
-            this.listBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox_KeyDown);
+            listBox.ContextMenuStrip = contextMenuListBox;
+            listBox.Dock = DockStyle.Fill;
+            listBox.FormattingEnabled = true;
+            listBox.IntegralHeight = false;
+            listBox.ItemHeight = 15;
+            listBox.Location = new Point(0, 0);
+            listBox.Name = "listBox";
+            listBox.Size = new Size(213, 262);
+            listBox.TabIndex = 0;
+            listBox.MouseClick += listBox_MouseClick;
+            listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
+            listBox.DoubleClick += listBox_DoubleClick;
+            listBox.KeyDown += listBox_KeyDown;
             // 
             // contextMenuListBox
             // 
-            this.contextMenuListBox.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miEditItem,
-            this.miAddItem,
-            this.miDeleteItem,
-            this.miCreateCopy,
-            this.sepActive,
-            this.miActivate,
-            this.miDeactivate,
-            this.miActivateAll,
-            this.miDeactivateAll,
-            this.sepShow,
-            this.miHideInactive,
-            this.miShowAll,
-            this.sepSort,
-            this.miSortAlphabetically,
-            this.splitExport,
-            this.miExport,
-            this.miImport,
-            this.sepPlot,
-            this.miPlot,
-            this.miHighlight});
-            this.contextMenuListBox.Name = "contextMenuListBox";
-            this.contextMenuListBox.Size = new System.Drawing.Size(174, 364);
-            this.contextMenuListBox.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuListBox_Opening);
+            contextMenuListBox.Items.AddRange(new ToolStripItem[] { miEditItem, miAddItem, miDeleteItem, miCreateCopy, sepActive, miActivate, miDeactivate, miActivateAll, miDeactivateAll, sepShow, miHideInactive, miShowAll, sepSort, miSortAlphabetically, splitExport, miExport, miImport, sepPlot, miPlot, miHighlight });
+            contextMenuListBox.Name = "contextMenuListBox";
+            contextMenuListBox.Size = new Size(174, 364);
+            contextMenuListBox.Opening += contextMenuListBox_Opening;
             // 
             // miEditItem
             // 
-            this.miEditItem.Name = "miEditItem";
-            this.miEditItem.Size = new System.Drawing.Size(173, 22);
-            this.miEditItem.Text = "Edit Item";
-            this.miEditItem.Click += new System.EventHandler(this.listBox_DoubleClick);
+            miEditItem.Name = "miEditItem";
+            miEditItem.Size = new Size(173, 22);
+            miEditItem.Text = "Edit Item";
+            miEditItem.Click += listBox_DoubleClick;
             // 
             // miAddItem
             // 
-            this.miAddItem.Name = "miAddItem";
-            this.miAddItem.Size = new System.Drawing.Size(173, 22);
-            this.miAddItem.Text = "Add Item";
-            this.miAddItem.Click += new System.EventHandler(this.miAddItem_Click);
+            miAddItem.Name = "miAddItem";
+            miAddItem.Size = new Size(173, 22);
+            miAddItem.Text = "Add Item";
+            miAddItem.Click += miAddItem_Click;
             // 
             // miDeleteItem
             // 
-            this.miDeleteItem.Name = "miDeleteItem";
-            this.miDeleteItem.Size = new System.Drawing.Size(173, 22);
-            this.miDeleteItem.Text = "Delete Item";
-            this.miDeleteItem.Click += new System.EventHandler(this.miDeleteItem_Click);
+            miDeleteItem.Name = "miDeleteItem";
+            miDeleteItem.Size = new Size(173, 22);
+            miDeleteItem.Text = "Delete Item";
+            miDeleteItem.Click += miDeleteItem_Click;
             // 
             // miCreateCopy
             // 
-            this.miCreateCopy.Name = "miCreateCopy";
-            this.miCreateCopy.Size = new System.Drawing.Size(173, 22);
-            this.miCreateCopy.Text = "Create a Copy";
-            this.miCreateCopy.Click += new System.EventHandler(this.miCreateCopy_Click);
+            miCreateCopy.Name = "miCreateCopy";
+            miCreateCopy.Size = new Size(173, 22);
+            miCreateCopy.Text = "Create a Copy";
+            miCreateCopy.Click += miCreateCopy_Click;
             // 
             // sepActive
             // 
-            this.sepActive.Name = "sepActive";
-            this.sepActive.Size = new System.Drawing.Size(170, 6);
+            sepActive.Name = "sepActive";
+            sepActive.Size = new Size(170, 6);
             // 
             // miActivate
             // 
-            this.miActivate.Name = "miActivate";
-            this.miActivate.Size = new System.Drawing.Size(173, 22);
-            this.miActivate.Text = "Activate";
-            this.miActivate.Click += new System.EventHandler(this.miActivate_Click);
+            miActivate.Name = "miActivate";
+            miActivate.Size = new Size(173, 22);
+            miActivate.Text = "Activate";
+            miActivate.Click += miActivate_Click;
             // 
             // miDeactivate
             // 
-            this.miDeactivate.Name = "miDeactivate";
-            this.miDeactivate.Size = new System.Drawing.Size(173, 22);
-            this.miDeactivate.Text = "Deactivate";
-            this.miDeactivate.Click += new System.EventHandler(this.miDeactivate_Click);
+            miDeactivate.Name = "miDeactivate";
+            miDeactivate.Size = new Size(173, 22);
+            miDeactivate.Text = "Deactivate";
+            miDeactivate.Click += miDeactivate_Click;
             // 
             // miActivateAll
             // 
-            this.miActivateAll.Name = "miActivateAll";
-            this.miActivateAll.Size = new System.Drawing.Size(173, 22);
-            this.miActivateAll.Text = "Activate All";
-            this.miActivateAll.Click += new System.EventHandler(this.miActivateAll_Click);
+            miActivateAll.Name = "miActivateAll";
+            miActivateAll.Size = new Size(173, 22);
+            miActivateAll.Text = "Activate All";
+            miActivateAll.Click += miActivateAll_Click;
             // 
             // miDeactivateAll
             // 
-            this.miDeactivateAll.Name = "miDeactivateAll";
-            this.miDeactivateAll.Size = new System.Drawing.Size(173, 22);
-            this.miDeactivateAll.Text = "Deactivate All";
-            this.miDeactivateAll.Click += new System.EventHandler(this.miDeactivateAll_Click);
+            miDeactivateAll.Name = "miDeactivateAll";
+            miDeactivateAll.Size = new Size(173, 22);
+            miDeactivateAll.Text = "Deactivate All";
+            miDeactivateAll.Click += miDeactivateAll_Click;
             // 
             // sepShow
             // 
-            this.sepShow.Name = "sepShow";
-            this.sepShow.Size = new System.Drawing.Size(170, 6);
+            sepShow.Name = "sepShow";
+            sepShow.Size = new Size(170, 6);
             // 
             // miHideInactive
             // 
-            this.miHideInactive.Name = "miHideInactive";
-            this.miHideInactive.Size = new System.Drawing.Size(173, 22);
-            this.miHideInactive.Text = "Hide Inactive";
-            this.miHideInactive.Click += new System.EventHandler(this.miHideInactive_Click);
+            miHideInactive.Name = "miHideInactive";
+            miHideInactive.Size = new Size(173, 22);
+            miHideInactive.Text = "Hide Inactive";
+            miHideInactive.Click += miHideInactive_Click;
             // 
             // miShowAll
             // 
-            this.miShowAll.Name = "miShowAll";
-            this.miShowAll.Size = new System.Drawing.Size(173, 22);
-            this.miShowAll.Text = "Show All";
-            this.miShowAll.Click += new System.EventHandler(this.miShowAll_Click);
+            miShowAll.Name = "miShowAll";
+            miShowAll.Size = new Size(173, 22);
+            miShowAll.Text = "Show All";
+            miShowAll.Click += miShowAll_Click;
             // 
             // sepSort
             // 
-            this.sepSort.Name = "sepSort";
-            this.sepSort.Size = new System.Drawing.Size(170, 6);
+            sepSort.Name = "sepSort";
+            sepSort.Size = new Size(170, 6);
             // 
             // miSortAlphabetically
             // 
-            this.miSortAlphabetically.Name = "miSortAlphabetically";
-            this.miSortAlphabetically.Size = new System.Drawing.Size(173, 22);
-            this.miSortAlphabetically.Text = "Sort Alphabetically";
-            this.miSortAlphabetically.Click += new System.EventHandler(this.miSortAlphabetically_Click);
+            miSortAlphabetically.Name = "miSortAlphabetically";
+            miSortAlphabetically.Size = new Size(173, 22);
+            miSortAlphabetically.Text = "Sort Alphabetically";
+            miSortAlphabetically.Click += miSortAlphabetically_Click;
             // 
             // splitExport
             // 
-            this.splitExport.Name = "splitExport";
-            this.splitExport.Size = new System.Drawing.Size(170, 6);
+            splitExport.Name = "splitExport";
+            splitExport.Size = new Size(170, 6);
             // 
             // miExport
             // 
-            this.miExport.Enabled = false;
-            this.miExport.Name = "miExport";
-            this.miExport.Size = new System.Drawing.Size(173, 22);
-            this.miExport.Text = "Export";
-            this.miExport.Click += new System.EventHandler(this.miExport_Click);
+            miExport.Enabled = false;
+            miExport.Name = "miExport";
+            miExport.Size = new Size(173, 22);
+            miExport.Text = "Export";
+            miExport.Click += miExport_Click;
             // 
             // miImport
             // 
-            this.miImport.Enabled = false;
-            this.miImport.Name = "miImport";
-            this.miImport.Size = new System.Drawing.Size(173, 22);
-            this.miImport.Text = "Import";
-            this.miImport.Click += new System.EventHandler(this.miImport_Click);
+            miImport.Enabled = false;
+            miImport.Name = "miImport";
+            miImport.Size = new Size(173, 22);
+            miImport.Text = "Import";
+            miImport.Click += miImport_Click;
             // 
             // sepPlot
             // 
-            this.sepPlot.Name = "sepPlot";
-            this.sepPlot.Size = new System.Drawing.Size(170, 6);
+            sepPlot.Name = "sepPlot";
+            sepPlot.Size = new Size(170, 6);
             // 
             // miPlot
             // 
-            this.miPlot.Name = "miPlot";
-            this.miPlot.Size = new System.Drawing.Size(173, 22);
-            this.miPlot.Text = "Plot";
-            this.miPlot.Click += new System.EventHandler(this.miPlot_Click);
+            miPlot.Name = "miPlot";
+            miPlot.Size = new Size(173, 22);
+            miPlot.Text = "Plot";
+            miPlot.Click += miPlot_Click;
             // 
             // miHighlight
             // 
-            this.miHighlight.Name = "miHighlight";
-            this.miHighlight.Size = new System.Drawing.Size(173, 22);
-            this.miHighlight.Text = "Highlight";
-            this.miHighlight.Click += new System.EventHandler(this.miHighlight_Click);
-            // 
-            // toolTip
-            // 
-            this.toolTip.AutoPopDelay = 1000;
-            this.toolTip.InitialDelay = 500;
-            this.toolTip.ReshowDelay = 100;
+            miHighlight.Name = "miHighlight";
+            miHighlight.Size = new Size(173, 22);
+            miHighlight.Text = "Highlight";
+            miHighlight.Click += miHighlight_Click;
             // 
             // ListBoxControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.listBox);
-            this.Name = "ListBoxControl";
-            this.Size = new System.Drawing.Size(213, 262);
-            this.contextMenuListBox.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(listBox);
+            Name = "ListBoxControl";
+            Size = new Size(213, 262);
+            contextMenuListBox.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
