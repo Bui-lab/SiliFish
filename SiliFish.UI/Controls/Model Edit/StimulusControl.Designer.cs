@@ -36,11 +36,12 @@
             stimControl = new StimulusSettingsControl();
             eTargetCell = new TextBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            panel1 = new Panel();
             panel2 = new Panel();
+            panel1 = new Panel();
+            ddTargetCell = new ComboBox();
             flowLayoutPanel1.SuspendLayout();
-            panel1.SuspendLayout();
             panel2.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // cbActive
@@ -75,6 +76,7 @@
             // 
             // stimControl
             // 
+            stimControl.AutoSize = true;
             stimControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             stimControl.BackColor = Color.FromArgb(249, 249, 249);
             stimControl.Dock = DockStyle.Fill;
@@ -107,8 +109,18 @@
             flowLayoutPanel1.TabIndex = 37;
             flowLayoutPanel1.WrapContents = false;
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(timeLineControl);
+            panel2.Controls.Add(panel1);
+            panel2.Location = new Point(3, 106);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(314, 288);
+            panel2.TabIndex = 38;
+            // 
             // panel1
             // 
+            panel1.Controls.Add(ddTargetCell);
             panel1.Controls.Add(eTargetCell);
             panel1.Controls.Add(cbActive);
             panel1.Controls.Add(lTargetCell);
@@ -118,14 +130,19 @@
             panel1.Size = new Size(314, 57);
             panel1.TabIndex = 35;
             // 
-            // panel2
+            // ddTargetCell
             // 
-            panel2.Controls.Add(timeLineControl);
-            panel2.Controls.Add(panel1);
-            panel2.Location = new Point(3, 106);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(314, 288);
-            panel2.TabIndex = 38;
+            ddTargetCell.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddTargetCell.BackColor = Color.WhiteSmoke;
+            ddTargetCell.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddTargetCell.FlatStyle = FlatStyle.Flat;
+            ddTargetCell.FormattingEnabled = true;
+            ddTargetCell.Location = new Point(105, 3);
+            ddTargetCell.Name = "ddTargetCell";
+            ddTargetCell.Size = new Size(206, 23);
+            ddTargetCell.TabIndex = 37;
+            ddTargetCell.Visible = false;
+            ddTargetCell.SelectedIndexChanged += ddTargetCell_SelectedIndexChanged;
             // 
             // StimulusControl
             // 
@@ -137,9 +154,10 @@
             Name = "StimulusControl";
             Size = new Size(322, 397);
             flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            panel2.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -153,5 +171,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private Panel panel1;
         private Panel panel2;
+        private ComboBox ddTargetCell;
     }
 }

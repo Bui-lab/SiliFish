@@ -70,16 +70,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private static void FillCells(ComboBox dd, CellPool pool)
-        {
-            dd.Items.Clear();
-            if (pool.GetCells().Any())
-            {
-                dd.Items.Add("All Cells");
-                dd.Items.AddRange(pool.GetCells().ToArray());
-                dd.SelectedIndex = 0;
-            }
-        }
+
 
         private void LoadSelectedSourceValues()
         {
@@ -87,7 +78,7 @@ namespace SiliFish.UI.Controls
             {
                 sourcePool = pool;
                 sourceCell = null;
-                FillCells(ddSourceCell, sourcePool);
+                UtilWindows.FillCells(ddSourceCell, sourcePool);
 
                 switch (pool.NTMode)//fill default values, based on the NT
                 {
@@ -128,7 +119,7 @@ namespace SiliFish.UI.Controls
             {
                 targetPool = pool;
                 targetCell = null;
-                FillCells(ddTargetCell, targetPool);
+                UtilWindows.FillCells(ddTargetCell, targetPool);
             }
         }
 
@@ -183,12 +174,12 @@ namespace SiliFish.UI.Controls
 
                 Cell backup = sourceCell;//cleared when dropdowns are reset
                 ddSourcePool.SelectedItem = sourcePool;
-                FillCells(ddSourceCell, sourcePool);
+                UtilWindows.FillCells(ddSourceCell, sourcePool);
                 sourceCell = backup;
                 ddSourceCell.SelectedItem = sourceCell;
                 backup = targetCell;
                 ddTargetPool.SelectedItem = targetPool;
-                FillCells(ddTargetCell, targetPool);
+                UtilWindows.FillCells(ddTargetCell, targetPool);
                 targetCell = backup;
                 ddTargetCell.SelectedItem = targetCell;
                 ddSourcePool.Enabled = false;

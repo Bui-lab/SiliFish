@@ -112,10 +112,10 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         public static new string CSVExportColumnNames => $"Name,Source,Target," +
-                $"Axon Reach Mode,Connection Type,Distance Mode," +
+                $"Axon Reach Mode,Conn. Type,Dist. Mode," +
                 $"{CellReach.CSVExportColumnNames}," +
                 $"{SynapseParameters.CSVExportColumnNames}," +
-                $"Probability,Weight,Fixed Duration (ms),Delay (ms)," +
+                $"Prob.,Weight,Fixed Dur. (ms),Delay (ms)," +
                 $"Active," +
                 $"{TimeLine.CSVExportColumnNames}";
 
@@ -130,7 +130,7 @@ namespace SiliFish.ModelUnits.Junction
                 $"{CellReach.CSVExportValues}," +
                 $"{SynapseParameters?.CSVExportValues ?? SynapseParameters.CSVExportBlankValues}," +
                 $"{Probability},{Weight},{FixedDuration_ms},{Delay_ms}," +
-                $"{Active}," +
+                $" {Active}," +
                 $"{TimeLine_ms?.CSVExportValues}";
             set
             {

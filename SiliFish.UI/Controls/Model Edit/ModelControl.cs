@@ -965,7 +965,8 @@ namespace SiliFish.UI.Controls
             };
             ControlContainer frmControl = new();
             frmControl.AddControl(selectionControl, null);
-            frmControl.Text = "Please select the junctions to be exported.";
+            frmControl.Text = "Export";
+            selectionControl.Label = "Please select the junctions to be exported.";
             if (frmControl.ShowDialog() != DialogResult.OK) return;
 
             ModelUnitBase unit = SelectedUnit;
@@ -1006,7 +1007,8 @@ namespace SiliFish.UI.Controls
             };
             ControlContainer frmControl = new();
             frmControl.AddControl(selectionControl, null);
-            frmControl.Text = "Please select the junctions to be imported.";
+            frmControl.Text = "Import";
+            selectionControl.Label = "Please select the junctions to be imported.";
             if (frmControl.ShowDialog() != DialogResult.OK) return;
 
             ModelUnitBase unit = SelectedUnit;
@@ -1115,12 +1117,19 @@ namespace SiliFish.UI.Controls
             }
             else
             {
+                if (stim == null && SelectedCell == null && SelectedPool == null)
+                {
+                    MessageBox.Show("Please select the cell pool or cell the stimulus will be applied to.");
+                    return null;
+                }
                 StimulusControl stimControl = new();
                 stimControl.SetStimulus(stim as Stimulus);
                 frmControl.AddControl(stimControl, stimControl.CheckValues);
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
-                if (stim == null && SelectedCell != null)
-                    stimControl.SetTargetCell(SelectedCell);
+                if (stim == null)
+                {
+                    stimControl.SetTargetCellOrPool(SelectedCell, SelectedPool);
+                }
                 if (frmControl.ShowDialog() == DialogResult.OK)
                     return stimControl.GetStimulus();
             }

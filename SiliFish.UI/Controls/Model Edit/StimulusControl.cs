@@ -15,7 +15,8 @@ namespace SiliFish.UI.Controls
     public partial class StimulusControl : UserControl
     {
         private Stimulus Stimulus;
-
+        private Cell Cell;
+        private CellPool CellPool;
         public override string ToString()
         {
             string activeStatus = !cbActive.Checked ? " (inactive)" :
@@ -45,7 +46,7 @@ namespace SiliFish.UI.Controls
         {
             Stimulus = new()
             {
-                TargetCell = Stimulus.TargetCell,
+                TargetCell = Cell,
                 Settings = stimControl.GetStimulusSettings(),
                 TimeLine_ms = timeLineControl.GetTimeLine(),
                 Active = cbActive.Checked,
@@ -59,10 +60,28 @@ namespace SiliFish.UI.Controls
             checkValuesArgs.Errors = new();
             checkValuesArgs.Errors.AddRange(stimControl.CheckValues());
         }
-
-        internal void SetTargetCell(Cell selectedCell)
+        internal void SetTargetCellOrPool(Cell selectedCell, CellPool cellPool)
         {
-            eTargetCell.Text= selectedCell.ID;
+            Cell = selectedCell;
+            CellPool = cellPool;
+            if (selectedCell != null)
+            {
+                eTargetCell.Text = selectedCell.ID;
+                eTargetCell.Visible = true;
+                ddTargetCell.Visible = false;
+            }
+            else
+            {
+                eTargetCell.Text = "";
+                eTargetCell.Visible = false;
+                ddTargetCell.Visible = true;
+                UtilWindows.FillCells(ddTargetCell, cellPool, allCells: false);
+            }
+        }
+
+        private void ddTargetCell_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Cell = ddTargetCell.SelectedItem as Cell;
         }
     }
 }

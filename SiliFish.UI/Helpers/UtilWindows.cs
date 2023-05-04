@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using SiliFish.Helpers;
+using SiliFish.ModelUnits.Cells;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.UI
@@ -183,5 +184,17 @@ namespace SiliFish.UI
             return image;
         }
 
+        public static void FillCells(ComboBox dd, CellPool pool, bool allCells = true)
+        {
+            dd.Items.Clear();
+            if (pool.GetCells().Any())
+            {
+                if (allCells)
+                    dd.Items.Add("All Cells");
+                dd.Items.AddRange(pool.GetCells().ToArray());
+                dd.SelectedIndex = 0;
+
+            }
+        }
     }
 }

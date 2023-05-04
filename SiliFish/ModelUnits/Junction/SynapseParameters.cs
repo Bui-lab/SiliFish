@@ -19,7 +19,7 @@ namespace SiliFish.ModelUnits.Junction
         public double Erev { get; set; }
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Tau Decay,Tau Rise, V Threshold, Reversal Potential";
+        public static string CSVExportColumnNames => $"Tau Decay,Tau Rise, V Thresh, Rev. Pot.";
         [JsonIgnore, Browsable(false)]
         public static string CSVExportBlankValues => $" , , , ";
 

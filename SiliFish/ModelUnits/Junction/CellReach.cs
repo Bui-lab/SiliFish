@@ -37,9 +37,9 @@ namespace SiliFish.ModelUnits
 
         #endregion
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Ascending, Min Ascending Reach, Max Ascending Reach," +
-            $" Descending, Min Descending Reach, Max Descending Reach, " +
-            $"Max Outgoing, Max Incoming, Autapse, Somite Based";
+        public static string CSVExportColumnNames => $"Asc., Min Asc. Reach, Max Asc. Reach," +
+            $" Desc., Min Desc. Reach, Max Desc. Reach, " +
+            $"Max Out, Max In, Autapse, Somite Based";
 
         [JsonIgnore, Browsable(false)]
         internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
@@ -47,7 +47,7 @@ namespace SiliFish.ModelUnits
         public string CSVExportValues
         {
             get => $"{Ascending},{MinAscReach},{MaxAscReach}," +
-                $"{Descending},{MinDescReach}, {MaxDescReach}," +
+                $" {Descending},{MinDescReach}, {MaxDescReach}," +
                 $"{MaxOutgoing}, {MaxIncoming}, {Autapse}, {SomiteBased}";
             set
             {
