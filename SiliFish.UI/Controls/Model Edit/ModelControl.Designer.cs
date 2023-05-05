@@ -452,6 +452,7 @@
             listCellPools.Name = "listCellPools";
             listCellPools.SelectedIndex = -1;
             listCellPools.SelectedItem = null;
+            listCellPools.SelectionMode = SelectionMode.One;
             listCellPools.Size = new Size(314, 144);
             listCellPools.TabIndex = 7;
             listCellPools.ItemAdd += listCellPools_ItemAdd;
@@ -503,6 +504,7 @@
             listCells.Name = "listCells";
             listCells.SelectedIndex = -1;
             listCells.SelectedItem = null;
+            listCells.SelectionMode = SelectionMode.One;
             listCells.Size = new Size(314, 148);
             listCells.TabIndex = 0;
             listCells.ItemAdd += listCells_ItemAdd;
@@ -554,6 +556,7 @@
             listStimuli.Name = "listStimuli";
             listStimuli.SelectedIndex = -1;
             listStimuli.SelectedItem = null;
+            listStimuli.SelectionMode = SelectionMode.MultiExtended;
             listStimuli.Size = new Size(314, 175);
             listStimuli.TabIndex = 0;
             listStimuli.ItemAdd += listStimuli_ItemAdd;
@@ -643,6 +646,7 @@
             listIncoming.Name = "listIncoming";
             listIncoming.SelectedIndex = -1;
             listIncoming.SelectedItem = null;
+            listIncoming.SelectionMode = SelectionMode.One;
             listIncoming.Size = new Size(360, 106);
             listIncoming.TabIndex = 8;
             listIncoming.ItemAdd += listConnections_ItemAdd;
@@ -694,6 +698,7 @@
             listOutgoing.Name = "listOutgoing";
             listOutgoing.SelectedIndex = -1;
             listOutgoing.SelectedItem = null;
+            listOutgoing.SelectionMode = SelectionMode.One;
             listOutgoing.Size = new Size(360, 114);
             listOutgoing.TabIndex = 9;
             listOutgoing.ItemAdd += listConnections_ItemAdd;
@@ -745,6 +750,7 @@
             listGap.Name = "listGap";
             listGap.SelectedIndex = -1;
             listGap.SelectedItem = null;
+            listGap.SelectionMode = SelectionMode.One;
             listGap.Size = new Size(360, 247);
             listGap.TabIndex = 9;
             listGap.ItemAdd += listConnections_ItemAdd;

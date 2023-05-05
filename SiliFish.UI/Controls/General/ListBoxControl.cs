@@ -33,10 +33,24 @@ namespace SiliFish.UI.Controls
             set { listBox.SelectedItem = value; }
         }
 
+        public List<object> SelectedItems
+        {
+            get { return listBox.SelectedItems?.Cast<object>().ToList(); }
+        }
+
+
+
+        public SelectionMode SelectionMode
+        {
+            get => listBox.SelectionMode;
+            set { listBox.SelectionMode = value;}
+        }
+
         public void EnableImportExport()
         {
             miExport.Enabled = miImport.Enabled = true;
         }
+
 
         #region Private Functions
         private void EditItem()
@@ -88,12 +102,18 @@ namespace SiliFish.UI.Controls
         }
         private void miActivate_Click(object sender, EventArgs e)
         {
-            SetActive(listBox.SelectedItem, listBox.SelectedIndex, true);
+            foreach (int ind in listBox.SelectedIndices.Cast<int>().ToList())
+            {
+                SetActive(listBox.Items[ind], ind, true);
+            }
         }
 
         private void miDeactivate_Click(object sender, EventArgs e)
         {
-            SetActive(listBox.SelectedItem, listBox.SelectedIndex, false);
+            foreach (int ind in listBox.SelectedIndices.Cast<int>().ToList())
+            {
+                SetActive(listBox.Items[ind], ind, false);
+            }
         }
         private void miActivateAll_Click(object sender, EventArgs e)
         {

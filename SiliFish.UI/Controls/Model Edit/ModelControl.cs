@@ -952,9 +952,9 @@ namespace SiliFish.UI.Controls
             if (unit is CellPool cellPool)
                 return cellPool.HasConnections(gap, chemin, chemout);
             //if (unit is CellPoolTemplate cellPoolTemplate)
-              //  return cellPoolTemplate.HasConnections(gap, chemin, chemout);
+            //  return cellPoolTemplate.HasConnections(gap, chemin, chemout);
             return (Model as ModelTemplate).HasConnections();
-           }
+        }
         private void listConnections_ItemsExport(object sender, EventArgs e)
         {
             ConnectionSelectionControl selectionControl = new()
@@ -1033,6 +1033,7 @@ namespace SiliFish.UI.Controls
         private void LoadStimuli()
         {
             listStimuli.ClearItems();
+            lStimuliTitle.Text = $"Stimuli";
             SelectedStimulus = null;
             if (Model == null) return;
             foreach (StimulusBase stim in Model.GetStimuli())
@@ -1172,11 +1173,16 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemDelete(object sender, EventArgs e)
         {
-            if (listStimuli.SelectedIndex >= 0)
+            if (listStimuli.SelectedItems != null)
             {
-                StimulusBase stim = (StimulusBase)listStimuli.SelectedItem;
-                Model.RemoveStimulus(stim);
-                listStimuli.RemoveItemAt(listStimuli.SelectedIndex);
+                if (MessageBox.Show("Do you want to delete selected stimuli?") != DialogResult.OK)
+                    return;
+                foreach (object obj in listStimuli.SelectedItems)
+                {
+                    StimulusBase stim = (StimulusBase)obj;
+                    Model.RemoveStimulus(stim);
+                }
+                LoadStimuli(SelectedUnit);
                 ModelIsUpdated();
             }
         }
