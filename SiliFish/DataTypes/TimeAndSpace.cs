@@ -1,4 +1,5 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Stim;
 using System;
@@ -6,10 +7,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.DataTypes
 {
-    public struct Coordinate
+    public struct Coordinate : IDataExporterImporter
     {
         public double X;
         public double Y;
@@ -27,23 +29,20 @@ namespace SiliFish.DataTypes
         }
         public static implicit operator Coordinate(ValueTuple<double, double, double> values) => new(values.Item1, values.Item2, values.Item3);
         public static implicit operator Coordinate(ValueTuple<double, double> values) => new(values.Item1, values.Item2);
-        [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"X,Y,Z";
+
 
         [JsonIgnore, Browsable(false)]
-        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore, Browsable(false)]
-        public string CSVExportValues
+        public static List<string> ColumnNames { get; } = new() { "X", "Y", "Z" };
+
+        public List<string> ExportValues() =>
+            new() { X.ToString(), Y.ToString(), Z.ToString() };
+
+        public void ImportValues(List<string> values)
         {
-            get => $"{X},{Y},{Z}";
-            set 
-            {
-                string[] values = value.Split(',');
-                if (values.Length < 3) return;
-                X = double.Parse(values[0]);
-                Y = double.Parse(values[1]);
-                Z = double.Parse(values[2]);
-            }
+            if (values.Count < 3) return;
+            X = double.Parse(values[0]);
+            Y = double.Parse(values[1]);
+            Z = double.Parse(values[2]);
         }
         public static Coordinate[] GenerateCoordinates(Random random,ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution,  Distribution Z_RadiusDistribution, int n, int somite = -1)
@@ -114,7 +113,7 @@ namespace SiliFish.DataTypes
 
     }
 
-    public class TimeLine
+    public class TimeLine : IDataExporterImporter
     {
         private List<(int start, int end)> Periods = new();
         //private Dictionary<(int start, int end), (int active, int rest)> Cycles = new();
@@ -143,39 +142,40 @@ namespace SiliFish.DataTypes
         [JsonIgnore]
         public int End { get { return Periods.Count > 0 ? Periods.Max(tr => tr.end) : -1; } set { } }
 
-        [JsonIgnore, Browsable(false)   ]
-        public static string CSVExportColumnNames => $"Periods";
 
         [JsonIgnore, Browsable(false)]
-        public string CSVExportValues
+        public static List<string> ColumnNames { get; } = new() { "Periods" };
+
+        public List<string> ExportValues() =>
+            new() { string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))};
+
+        public void ImportValues(List<string> values)
         {
-            get => $"{string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))}";
-            set 
+            if (values.Count != ColumnNames.Count) return;
+            string[] periods = values[0].Split(';');
+            foreach (string period in periods)
             {
-                string[] periods = value.Split(';');
-                foreach (string period in periods)
+                if (string.IsNullOrEmpty(period))
+                    continue;
+                int sep = period.IndexOf(" - ");
+                if (sep == -1)
                 {
-                    if (string.IsNullOrEmpty(period))
+                    if (int.TryParse(period, out int i))
+                    {
+                        Periods.Add((i, -1));
                         continue;
-                    int sep = period.IndexOf(" - ");
-                    if (sep == -1)
-                    {
-                        if (int.TryParse(period, out int i))
-                        {
-                            Periods.Add((i, -1));
-                            continue;
-                        }
                     }
-                    if (int.TryParse(period.AsSpan(0, sep), out int j))
-                    {
-                        if (int.TryParse(period.AsSpan(sep + 3), out int k))
-                            Periods.Add((j, k));
-                        else
-                            Periods.Add((j, -1));
-                    }
+                }
+                if (int.TryParse(period.AsSpan(0, sep), out int j))
+                {
+                    if (int.TryParse(period.AsSpan(sep + 3), out int k))
+                        Periods.Add((j, k));
+                    else
+                        Periods.Add((j, -1));
                 }
             }
         }
+        
 
         public TimeLine()
         { }

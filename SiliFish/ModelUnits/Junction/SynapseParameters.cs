@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Helpers;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class SynapseParameters
+    public class SynapseParameters: IDataExporterImporter
     {
         public double TauD { get; set; }
         public double TauR { get; set; }
@@ -19,32 +20,32 @@ namespace SiliFish.ModelUnits.Junction
         public double Erev { get; set; }
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Tau Decay,Tau Rise, V Thresh, Rev. Pot.";
-        [JsonIgnore, Browsable(false)]
-        public static string CSVExportBlankValues => $" , , , ";
+        public static List<string> ColumnNames = new() { "Tau Decay", "Tau Rise", "V Thresh", "Rev. Pot." };
 
-        [JsonIgnore, Browsable(false)]
-        internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore, Browsable(false)]
-        public string CSVExportValues
+        public static List<string> ExportBlankValues()
         {
-            get => $"{TauD},{TauR},{Vth},{Erev}";
-            set
+            List<string> result = new();
+            for (int i = 0; i < ColumnNames.Count; i++)
+                result.Add(string.Empty);
+            return result;
+        }
+
+        public List<string> ExportValues() => ListBuilder.Build<string>(TauD, TauR, Vth, Erev);
+        public void ImportValues(List<string> values)
+        {
+            if (values.Count != ColumnNames.Count) return;
+            try
             {
-                string[] values = value.Split(',');
-                if (values.Length != CSVExportColumCount) return;
-                try
-                {
-                    TauD = double.Parse(values[0]);
-                    TauR = double.Parse(values[1]);
-                    Vth = double.Parse(values[2]);
-                    Erev = double.Parse(values[3]);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                    throw;
-                }
+                TauD = double.Parse(values[0]);
+                TauR = double.Parse(values[1]);
+                Vth = double.Parse(values[2]);
+                Erev = double.Parse(values[3]);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+
             }
         }
         public SynapseParameters() { }

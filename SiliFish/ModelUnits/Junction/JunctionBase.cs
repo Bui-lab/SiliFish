@@ -32,21 +32,21 @@ namespace SiliFish.ModelUnits.Junction
 
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Connection Type,Source,Target," +
-                $"Distance Mode," +
-                $"{SynapseParameters.CSVExportColumnNames}," +
-                $"Weight,Fixed Duration (ms),Delay (ms)," +
-                $"Active," +
-                $"{TimeLine.CSVExportColumnNames}";
+        public static List<string> ColumnNames { get; } = 
+            ListBuilder.Build<string>("Connection Type", "Source", "Target", 
+                "Distance Mode", 
+                SynapseParameters.ColumnNames, 
+                "Weight", "Fixed Duration (ms)", "Delay (ms)",
+                "Active", 
+                TimeLine.ColumnNames);
 
-        [JsonIgnore, Browsable(false)]
-        protected static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-
-        [JsonIgnore, Browsable(false)]
-        public virtual string CSVExportValues
+        public virtual List<string> ExportValues()
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            throw new NotImplementedException();
+        }
+        public virtual void ImportValues(List<string> values)
+        {
+            throw new NotImplementedException();
         }
 
         public JunctionBase()

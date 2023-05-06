@@ -47,6 +47,7 @@ namespace SiliFish.UI
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
             pModelControlTop = new Panel();
+            linkLabel1 = new LinkLabel();
             linkNewModel = new LinkLabel();
             pSimulation = new Panel();
             ldtEuler = new Label();
@@ -75,6 +76,7 @@ namespace SiliFish.UI
             pDistinguisherTop = new Panel();
             pDistinguisherRight = new Panel();
             pDistinguisherBottom = new Panel();
+            saveFileExcel = new SaveFileDialog();
             pTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
@@ -294,6 +296,7 @@ namespace SiliFish.UI
             // pModelControlTop
             // 
             pModelControlTop.BackColor = Color.FromArgb(236, 239, 241);
+            pModelControlTop.Controls.Add(linkLabel1);
             pModelControlTop.Controls.Add(linkNewModel);
             pModelControlTop.Controls.Add(linkLoadModel);
             pModelControlTop.Controls.Add(linkSaveModel);
@@ -303,6 +306,18 @@ namespace SiliFish.UI
             pModelControlTop.Name = "pModelControlTop";
             pModelControlTop.Size = new Size(543, 40);
             pModelControlTop.TabIndex = 3;
+            // 
+            // linkLabel1
+            // 
+            linkLabel1.AutoSize = true;
+            linkLabel1.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLabel1.Location = new Point(237, 13);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(61, 15);
+            linkLabel1.TabIndex = 7;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "Save Excel";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // linkNewModel
             // 
@@ -547,6 +562,10 @@ namespace SiliFish.UI
             pDistinguisherBottom.Size = new Size(1340, 4);
             pDistinguisherBottom.TabIndex = 9;
             // 
+            // saveFileExcel
+            // 
+            saveFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -627,5 +646,7 @@ namespace SiliFish.UI
         private Panel pDistinguisherBottom;
         private Button btnSettings;
         private LinkLabel linkNewModel;
+        private LinkLabel linkLabel1;
+        private SaveFileDialog saveFileExcel;
     }
 }

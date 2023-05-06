@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SiliFish": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "EPPlusLicenseContext": "NonCommercial"
+      }
+    }
+  }
+}

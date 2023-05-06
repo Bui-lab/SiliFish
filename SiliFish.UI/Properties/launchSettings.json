@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "SiliFish.UI": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "EPPlusLicenseContext": "NonCommercial"
+      },
+      "sqlDebugging": false,
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,34 +1,35 @@
-﻿using System.ComponentModel;
+﻿using SiliFish.ModelUnits;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace SiliFish.DataTypes
 {
 
-    public class SpatialDistribution
+    public class SpatialDistribution : IDataExporterImporter
     {
         public Distribution XDistribution { get; set; }
         public Distribution Y_AngleDistribution { get; set; }
         public Distribution Z_RadiusDistribution { get; set; }
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"XDistribution,YDistribution,ZDistribution";
+        public static List<string> ColumnNames { get; } = new() { "XDistribution", "YDistribution", "ZDistribution" };
 
-        [JsonIgnore, Browsable(false)]
-        internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore, Browsable(false)]
-        public string CSVExportValues
+        public List<string> ExportValues() =>
+            new() {
+                XDistribution.CSVCellExportValues,
+                Y_AngleDistribution.CSVCellExportValues,
+                Z_RadiusDistribution.CSVCellExportValues
+            };
+
+        public void ImportValues(List<string> values)
         {
-            get => $"{XDistribution.CSVCellExportValues},{Y_AngleDistribution.CSVCellExportValues},{Z_RadiusDistribution.CSVCellExportValues}";
-            set 
-            {
-                string[] values = value.Split(',');
-                if (values.Length != CSVExportColumCount) return;
-                XDistribution = Distribution.CreateDistributionObjectFromCSVCell(values[0]);
-                Y_AngleDistribution= Distribution.CreateDistributionObjectFromCSVCell(values[1]);
-                Z_RadiusDistribution= Distribution.CreateDistributionObjectFromCSVCell(values[2]);
-            }
-        }
+            if (values.Count != ColumnNames.Count) return;
+            XDistribution = Distribution.CreateDistributionObjectFromCSVCell(values[0]);
+            Y_AngleDistribution = Distribution.CreateDistributionObjectFromCSVCell(values[1]);
+            Z_RadiusDistribution = Distribution.CreateDistributionObjectFromCSVCell(values[2]);
+        }    
 
         public SpatialDistribution()
         { }

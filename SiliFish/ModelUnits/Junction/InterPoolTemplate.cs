@@ -7,12 +7,13 @@ using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class InterPoolTemplate : JunctionBase
+    public class InterPoolTemplate : JunctionBase, IDataExporterImporter
     {
         #region Private fields
         private string _Name;
@@ -111,68 +112,63 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         [JsonIgnore, Browsable(false)]
-        public static new string CSVExportColumnNames => $"Name,Source,Target," +
-                $"Axon Reach Mode,Conn. Type,Dist. Mode," +
-                $"{CellReach.CSVExportColumnNames}," +
-                $"{SynapseParameters.CSVExportColumnNames}," +
-                $"Prob.,Weight,Fixed Dur. (ms),Delay (ms)," +
-                $"Active," +
-                $"{TimeLine.CSVExportColumnNames}";
+        public static new List<string> ColumnNames { get; } =
+            ListBuilder.Build<string>("Name", "Source", "Target", 
+                "Axon Reach Mode", "Conn. Type", "Dist. Mode",
+                CellReach.ColumnNames, 
+                SynapseParameters.ColumnNames,
+                "Prob.", "Weight", "Fixed Dur. (ms)", "Delay (ms)", 
+                "Active," +
+                TimeLine.ColumnNames);
 
-        [JsonIgnore, Browsable(false)]
-        private static new int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-
-        [JsonIgnore, Browsable(false)]
-        public override string CSVExportValues
+        public override List<string> ExportValues()
         {
-            get => $"{Util.CSVEncode(Name)},{PoolSource},{PoolTarget}, " +
-                $"{AxonReachMode}, {ConnectionType}, {DistanceMode}, " +
-                $"{CellReach.CSVExportValues}," +
-                $"{SynapseParameters?.CSVExportValues ?? SynapseParameters.CSVExportBlankValues}," +
-                $"{Probability},{Weight},{FixedDuration_ms},{Delay_ms}," +
-                $" {Active}," +
-                $"{TimeLine_ms?.CSVExportValues}";
-            set
+            return ListBuilder.Build<string>(
+            Util.CSVEncode(Name), PoolSource, PoolTarget,
+                AxonReachMode, ConnectionType, DistanceMode,
+                CellReach.ExportValues(),
+                SynapseParameters?.ExportValues() ?? SynapseParameters.ExportBlankValues(),
+                Probability, Weight, FixedDuration_ms, Delay_ms,
+                Active,
+                TimeLine_ms?.ExportValues());
+        }
+        public override void ImportValues(List<string> values)
+        {
+            try
             {
-                try
-                {
-                    int iter = 0;
-                    string[] values = value.Split(',');
-                    if (values.Length < CSVExportColumCount - TimeLine.CSVExportColumnNames.Length) return;
-                    Name = values[iter++].Trim();
-                    PoolSource = values[iter++].Trim();
-                    PoolTarget = values[iter++].Trim();
+                int iter = 0;
+                if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
+                Name = values[iter++].Trim();
+                PoolSource = values[iter++].Trim();
+                PoolTarget = values[iter++].Trim();
 
-                    AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
-                    ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
-                    DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                    string cellReachString = string.Join(',', values[iter..(iter + CellReach.CSVExportColumCount)]);
-                    CellReach.CSVExportValues = cellReachString;
-                    iter += CellReach.CSVExportColumCount;
-                    string synapseString = string.Join(',', values[iter..(iter + SynapseParameters.CSVExportColumCount)]);
-                    if (!string.IsNullOrEmpty(synapseString.Replace(',', ' ').Trim()))
-                    {
-                        SynapseParameters = new()
-                        {
-                            CSVExportValues = synapseString
-                        };
-                    }
-                    iter += SynapseParameters.CSVExportColumCount;
-                    Probability = double.Parse(values[iter++]);
-                    Weight = double.Parse(values[iter++]);
-                    if (double.TryParse(values[iter++], out double d))
-                        FixedDuration_ms = d;
-                    Delay_ms = double.Parse(values[iter++]);
-                    Active = bool.Parse(values[iter++]);
-                    if (iter < values.Length)
-                        TimeLine_ms.CSVExportValues = values[iter++];
-                }
-                catch (Exception ex)
+                AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
+                ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
+                DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
+                CellReach.Importvalues(values.Take(new Range(iter, iter+CellReach.ColumnNames.Count)).ToList());
+                iter += CellReach.ColumnNames.Count;
+                List<string> synapseString = values.Take(new Range(iter, iter + SynapseParameters.ColumnNames.Count)).ToList();
+                if (synapseString.Any(s => !string.IsNullOrEmpty(s)))
                 {
-                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                    throw;
+                    SynapseParameters = new();
+                    SynapseParameters.ImportValues(synapseString);
                 }
+                iter += SynapseParameters.ColumnNames.Count;
+                Probability = double.Parse(values[iter++]);
+                Weight = double.Parse(values[iter++]);
+                if (double.TryParse(values[iter++], out double d))
+                    FixedDuration_ms = d;
+                Delay_ms = double.Parse(values[iter++]);
+                Active = bool.Parse(values[iter++]);
+                if (iter < values.Count)
+                    TimeLine_ms.ImportValues (new[] { values[iter++] }.ToList());
             }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+            }
+
         }
 
         #endregion

@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
@@ -10,6 +11,7 @@ using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -19,7 +21,7 @@ namespace SiliFish.ModelUnits.Cells
     [JsonDerivedType(typeof(Cell), typeDiscriminator: "cell")]
     [JsonDerivedType(typeof(Neuron), typeDiscriminator: "neuron")]
     [JsonDerivedType(typeof(MuscleCell), typeDiscriminator: "musclecell")]
-    public class Cell : ModelUnitBase
+    public class Cell : ModelUnitBase, IDataExporterImporter
     {
         private static int csvExportCoreParamCount = 10;
         private static Type GetTypeOfCell(string discriminator)
@@ -127,13 +129,12 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"CellType, CellPool, Somite, Sequence, {Coordinate.CSVExportColumnNames}," +
-            $"Conduction Velocity, CoreType, " +
-            $"{string.Join(',', Enumerable.Range(1, csvExportCoreParamCount).Select(i => $"Param{i},Value{i}"))}, " +
-            $"{TimeLine.CSVExportColumnNames}";
+        public static List<string> ColumnNames { get; } =
+            ListBuilder.Build<string>("CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
+            "Conduction Velocity", "CoreType",
+            Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+            TimeLine.ColumnNames);
 
-        [JsonIgnore, Browsable(false)]
-        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
          [JsonIgnore, Browsable(false)]
         private string csvExportCoreValues
         {
@@ -146,51 +147,48 @@ namespace SiliFish.ModelUnits.Cells
                     paramValues += ", , ";
                 return paramValues;
             }
-        }       
-        
-        [JsonIgnore, Browsable(false)]
-        public virtual string CSVExportValues
-        {
-            get => $"{Discriminator},{CellPool.ID},{Somite}, {Sequence}, {Coordinate.CSVExportValues}," +
-                $"{ConductionVelocity}, {Core.CoreType}, " +
-                $"{csvExportCoreValues}," +
-                $"{TimeLine_ms.CSVExportValues}";
-            set
-            {
-                int iter = 1; //discriminitor field will be already used when this object is created
-                string[] values = value.Split(',');
-                if (values.Length < CSVExportColumCount - 1) return;//Timeline may be blank
-                CellGroup = values[iter++];//this is the ID of the cell pool
-                Somite = int.Parse(values[iter++]);
-                Sequence = int.Parse(values[iter++]);
-                Coordinate.CSVExportValues = string.Join(",", values[iter..(iter + 3)]);
-                iter += 3;
-                ConductionVelocity = double.Parse(values[iter++]);
-                string coreType = values[iter++].Trim();
-                Dictionary<string, double> parameters = new();
-                for (int i = 1; i <= csvExportCoreParamCount; i++)
-                {
-                    if (iter > values.Length - 2) break;
-                    string paramkey = values[iter++].Trim();
-                    double.TryParse(values[iter++].Trim(), out double paramvalue);
-                    if (!string.IsNullOrEmpty(paramkey))
-                    {
-                        parameters.Add(paramkey, paramvalue);
-                    }
-                }
-                Core = CellCoreUnit.CreateCore(coreType, parameters);
-                if (iter < values.Length)
-                    TimeLine_ms.CSVExportValues = values[iter++];
-            }
         }
+
+        public List<string> ExportValues()
+        {
+            return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
+                ConductionVelocity, Core.CoreType, csvExportCoreValues, TimeLine_ms.ExportValues());
+        }
+        public void ImportValues(List<string> values)
+        {
+            int iter = 1; //discriminitor field will be already used when this object is created
+            if (values.Count < ColumnNames.Count - 1) return;//Timeline may be blank
+            CellGroup = values[iter++];//this is the ID of the cell pool
+            Somite = int.Parse(values[iter++]);
+            Sequence = int.Parse(values[iter++]);
+            Coordinate.ImportValues(values.Take(new Range(iter, iter + 3)).ToList());
+            iter += 3;
+            ConductionVelocity = double.Parse(values[iter++]);
+            string coreType = values[iter++].Trim();
+            Dictionary<string, double> parameters = new();
+            for (int i = 1; i <= csvExportCoreParamCount; i++)
+            {
+                if (iter > values.Count - 2) break;
+                string paramkey = values[iter++].Trim();
+                double.TryParse(values[iter++].Trim(), out double paramvalue);
+                if (!string.IsNullOrEmpty(paramkey))
+                {
+                    parameters.Add(paramkey, paramvalue);
+                }
+            }
+            Core = CellCoreUnit.CreateCore(coreType, parameters);
+            if (iter < values.Count)
+                TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
+        }
+        
 
         public static Cell GenerateFromCSVRow(string row)
         {
             string[] values = row.Split(',');
-            if (values.Length != CSVExportColumCount) return null;
+            if (values.Length != ColumnNames.Count) return null;
             string discriminator = values[0];
             Cell cell = CreateCell(discriminator);
-            cell.CSVExportValues = row;
+            cell.ImportValues(row.Split(",").ToList());
             return cell;
         }
         public Cell()

@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
@@ -21,7 +22,7 @@ namespace SiliFish.ModelUnits.Stim
 
         [JsonIgnore]
         public Cell TargetCell { get; set; }
-        
+
         [JsonIgnore]
         public RunParam RunParam { get; set; }
         [JsonIgnore]
@@ -41,12 +42,17 @@ namespace SiliFish.ModelUnits.Stim
 
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"TargetPool,TargetCell,{StimulusSettings.CSVExportColumnNames},{TimeLine.CSVExportColumnNames}";
+        public static List<string> ColumnNames { get; } =
+            ListBuilder.Build<string>("TargetPool", "TargetCell", StimulusSettings.ColumnNames, TimeLine.ColumnNames);
 
-        [JsonIgnore, Browsable(false)]
-        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
-        public string CSVExportValues=>$"{TargetCell.CellPool.ID},{TargetCell.ID},{Settings.CSVExportValues},{TimeLine_ms.CSVExportValues}";
+        public List<string> ExportValues()
+        {
+            return ListBuilder.Build<string>(TargetCell.CellPool.ID, TargetCell.ID, Settings.ExportValues(), TimeLine_ms.ExportValues());
+        }
+        public void ImportValues(List<string> values)
+        {
+            //TODO Stimulus Import
+        }
  
         public Stimulus() { }
         public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
@@ -59,10 +65,10 @@ namespace SiliFish.ModelUnits.Stim
         public void GenerateFromCSVRow(RunningModel Model, string row)
         {
             string[] values = row.Split(',');
-            if (values.Length != CSVExportColumCount) return;
+            if (values.Length != ColumnNames.Count) return;
             TargetCell = Model.GetCell(values[1]);
-            Settings.CSVExportValues = string.Join(",", values[2..(StimulusSettings.CSVExportColumCount + 1)]);
-            TimeLine_ms.CSVExportValues = string.Join(",", values[(StimulusSettings.CSVExportColumCount + 2)..]);
+            Settings.ImportValues(values.Take(new Range(2, (StimulusSettings.ColumnNames.Count + 1))).ToList());
+            TimeLine_ms.ImportValues(values.Take(new Range(StimulusSettings.ColumnNames.Count + 2, values.Length)).ToList());
             TargetCell.AddStimulus(this);
         }
         public override ModelUnitBase CreateCopy()

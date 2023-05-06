@@ -1019,7 +1019,7 @@ namespace SiliFish.UI.Controls
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadInterPoolTemplatesFromCSV(filename, Model, unit, gap, chemin, chemout))
+                if (ModelFile.ReadConnectionsFromCSV(filename, Model, unit, gap, chemin, chemout))
                     LoadProjections();
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");

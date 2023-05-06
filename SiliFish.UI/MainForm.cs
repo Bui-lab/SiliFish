@@ -391,7 +391,7 @@ namespace SiliFish.UI
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     modelFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
-                    ModelFile.Save(saveFileJson.FileName, mb);
+                    ModelFile.SaveToJson(saveFileJson.FileName, mb);
                     lastFileName = saveFileJson.FileName;
                     this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileJson.FileName)}";
                     modelControl.ModelUpdated = false;
@@ -410,7 +410,41 @@ namespace SiliFish.UI
             SaveModel();
         }
 
-
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //TODO
+            try
+            {
+                ModelBase mb = modelControl.GetModel();
+                List<string> errors = new();
+                if (!mb.CheckValues(ref errors))
+                {
+                    if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
+                        $"{string.Join("\r\n", errors)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return;
+                }
+                if (!string.IsNullOrEmpty(lastFileName))
+                    saveFileExcel.FileName = lastFileName;
+                else
+                    saveFileExcel.FileName = mb.ModelName;
+                saveFileExcel.InitialDirectory = modelFileDefaultFolder;
+                if (saveFileExcel.ShowDialog() == DialogResult.OK)
+                {
+                    modelFileDefaultFolder = Path.GetDirectoryName(saveFileExcel.FileName);
+                    ModelFile.SaveToExcel(saveFileExcel.FileName, mb);
+                    lastFileName = saveFileExcel.FileName;
+                    this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileExcel.FileName)}";
+                    modelControl.ModelUpdated = false;
+                    return;
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return;
+            }
+        }
         private void linkNewModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MainForm mf = new();
@@ -461,5 +495,7 @@ namespace SiliFish.UI
         {
             modelOutputControl.Highlight((e as SelectedUnitArgs).unitSelected);
         }
+
+
     }
 }

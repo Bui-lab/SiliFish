@@ -1,12 +1,16 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Stim
 {
-    public class StimulusTemplate : StimulusBase
+    public class StimulusTemplate : StimulusBase, IDataExporterImporter
     {
         public string TargetPool { get; set; }
         public string TargetSomite { get; set; } = "All";
@@ -44,26 +48,24 @@ namespace SiliFish.ModelUnits.Stim
         [JsonIgnore]
         public override string Tooltip => $"{ToString()}\r\n{Settings?.ToString()}\r\n{TimeLine_ms}";
 
-        [JsonIgnore]
-        public static string CSVExportColumnNames => $"TargetPool,TargetSomite,TargetCell,LeftRight,{StimulusSettings.CSVExportColumnNames},{TimeLine.CSVExportColumnNames}";
-        private static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore]
-        public string CSVExportValues
-        {
-            get => $"{TargetPool},{TargetSomite},{TargetCell},{LeftRight},{Settings.CSVExportValues},{TimeLine_ms.CSVExportValues}";
+        [JsonIgnore, Browsable(false)]
+        public static List<string> ColumnNames { get; } =
+            ListBuilder.Build<string>("TargetPool", "TargetSomite", "TargetCell", "LeftRight", StimulusSettings.ColumnNames, TimeLine.ColumnNames);
 
-            set
-            {
-                string[] values = value.Split(',');
-                if (values.Length != CSVExportColumCount) return;
-                TargetPool = values[0];
-                TargetSomite = values[1];
-                TargetCell = values[2];
-                LeftRight = values[3];
-                int lastSettingsCol = StimulusSettings.CSVExportColumCount + 4;
-                Settings.CSVExportValues = string.Join(",", values[4..lastSettingsCol]);
-                TimeLine_ms.CSVExportValues = string.Join(",", values[lastSettingsCol..]);
-            }
+        public List<string> ExportValues()
+        {
+            return ListBuilder.Build<string>(TargetPool, TargetSomite, TargetCell, LeftRight, Settings.ExportValues(), TimeLine_ms.ExportValues());
+        }
+        public void ImportValues(List<string> values)
+        {
+            if (values.Count != ColumnNames.Count) return;
+            TargetPool = values[0];
+            TargetSomite = values[1];
+            TargetCell = values[2];
+            LeftRight = values[3];
+            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 4;
+            Settings.ImportValues(values.Take(new Range(4,lastSettingsCol)).ToList());
+            TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol,values.Count)).ToList());
         }
     }
 

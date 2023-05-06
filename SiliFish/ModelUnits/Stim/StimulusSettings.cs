@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SiliFish.ModelUnits.Stim
 {
-    public class StimulusSettings
+    public class StimulusSettings: IDataExporterImporter
     {
         public StimulusMode Mode { get; set; }
         //mode = Gaussian: value1 and value2 are mean and SD 
@@ -24,27 +25,22 @@ namespace SiliFish.ModelUnits.Stim
         public double? Frequency { get; set; }
 
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Mode,Value1,Value2,Frequency";
-        [JsonIgnore, Browsable(false)]
-        public static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore, Browsable(false)]
-        public string CSVExportValues
-        {
-            get => $"{Mode},{Value1},{Value2},{Frequency}";
-            set
-            {
-                string[] values = value.Split(',');
-                if (values.Length < CSVExportColumCount - 1) return;//Frequency can be null and not included in the incoming string
-                Mode = (StimulusMode)Enum.Parse(typeof(StimulusMode), values[0]); 
-                Value1 = double.Parse(values[1]);
-                Value2 = double.Parse(values[2]);
-                if (values.Length < 4) return;
-                if (double.TryParse(values[3], out double f))
-                    Frequency = f;
-            }
-        }
-        
+        public static List<string> ColumnNames = new[] { "Mode", "Value1", "Value2", "Frequency" }.ToList();
 
+        public List<string> ExportValues()
+        {
+            return ListBuilder.Build<string>(Mode,Value1,Value2,Frequency);
+        }
+        public void ImportValues(List<string> values)
+        {
+            if (values.Count < ColumnNames.Count - 1) return;//Frequency can be null and not included in the incoming string
+            Mode = (StimulusMode)Enum.Parse(typeof(StimulusMode), values[0]);
+            Value1 = double.Parse(values[1]);
+            Value2 = double.Parse(values[2]);
+            if (values.Count < 4) return;
+            if (double.TryParse(values[3], out double f))
+                Frequency = f;
+        }
         public StimulusSettings()
         {
         }

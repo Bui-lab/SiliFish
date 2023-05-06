@@ -15,7 +15,7 @@ using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class ChemicalSynapse: JunctionBase
+    public class ChemicalSynapse : JunctionBase
     {
         private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
                               //calculated at InitForSimulation, and used only during simulation
@@ -56,27 +56,30 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore]
         public override string ID { get { return $"Syn: {PreNeuron.ID} -> {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
 
-        public override string CSVExportValues
+        public override List<string> ExportValues()
         {
-            get => $"{ConnectionType.Synapse},{PreNeuron.ID},{PostCell.ID}, " +
-                $"{DistanceMode}, " +
-                $"{SynapseParameters.CSVExportValues}," +
-                $"{Weight},{FixedDuration_ms},{Delay_ms}," +
-                $"{Active}," +
-                $"{TimeLine_ms?.CSVExportValues}";
-            set
+            return ListBuilder.Build<string>(
+            ConnectionType.Synapse, PreNeuron.ID, PostCell.ID,
+                DistanceMode,
+                SynapseParameters.ExportValues(),
+                Weight, FixedDuration_ms, Delay_ms,
+                Active,
+                TimeLine_ms?.ExportValues());
+        }
+
+        public override void ImportValues(List<string> values)
+        {
+            try
             {
-                try
-                {
-//TODO
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                    throw;
-                }
+                //TODO chemical synapse import
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                throw;
             }
         }
+
         public ChemicalSynapse()
         { }
         public ChemicalSynapse(Neuron preN, Cell postN, SynapseParameters param, double conductance, DistanceMode distmode)

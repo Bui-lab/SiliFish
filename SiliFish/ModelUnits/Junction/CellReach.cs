@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
@@ -37,22 +38,19 @@ namespace SiliFish.ModelUnits
 
         #endregion
         [JsonIgnore, Browsable(false)]
-        public static string CSVExportColumnNames => $"Asc., Min Asc. Reach, Max Asc. Reach," +
-            $" Desc., Min Desc. Reach, Max Desc. Reach, " +
-            $"Max Out, Max In, Autapse, Somite Based";
+        public static List<string> ColumnNames { get; } = new() {"Asc.", " Min Asc. Reach", " Max Asc. Reach",
+            " Desc.", " Min Desc. Reach", " Max Desc. Reach",
+            "Max Out", " Max In", " Autapse", " Somite Based"};
 
-        [JsonIgnore, Browsable(false)]
-        internal static int CSVExportColumCount => CSVExportColumnNames.Split(',').Length;
-        [JsonIgnore, Browsable(false)]
-        public string CSVExportValues
+        public List<string> ExportValues()
         {
-            get => $"{Ascending},{MinAscReach},{MaxAscReach}," +
-                $" {Descending},{MinDescReach}, {MaxDescReach}," +
-                $"{MaxOutgoing}, {MaxIncoming}, {Autapse}, {SomiteBased}";
-            set
+            return ListBuilder.Build<string>(Ascending, MinAscReach, MaxAscReach,
+                Descending, MinDescReach, MaxDescReach,
+                MaxOutgoing, MaxIncoming, Autapse, SomiteBased);
+        }
+        public void Importvalues(List<string> values)
             {
-                string[] values = value.Split(',');
-                if (values.Length != CSVExportColumCount) return;
+                if (values.Count != ColumnNames.Count) return;
                 try
                 {
                     int iter = 0;
@@ -72,7 +70,6 @@ namespace SiliFish.ModelUnits
                     ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
                     throw;
                 }
-            }
         }
         public CellReach() { }
         public CellReach(CellReach cr)
