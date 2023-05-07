@@ -50,11 +50,11 @@ namespace SiliFish.ModelUnits.Stim
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("TargetPool", "TargetSomite", "TargetCell", "LeftRight", StimulusSettings.ColumnNames, TimeLine.ColumnNames);
+            ListBuilder.Build<string>("TargetPool", "TargetSomite", "TargetCell", "LeftRight", "Active", StimulusSettings.ColumnNames, TimeLine.ColumnNames);
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(TargetPool, TargetSomite, TargetCell, LeftRight, Settings.ExportValues(), TimeLine_ms.ExportValues());
+            return ListBuilder.Build<string>(TargetPool, TargetSomite, TargetCell, LeftRight, Active, Settings.ExportValues(), TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -63,10 +63,10 @@ namespace SiliFish.ModelUnits.Stim
             TargetSomite = values[1];
             TargetCell = values[2];
             LeftRight = values[3];
-            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 4;
-            Settings.ImportValues(values.Take(new Range(4,lastSettingsCol)).ToList());
-            TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol,values.Count)).ToList());
+            Active = bool.Parse(values[4]);
+            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 5;
+            Settings.ImportValues(values.Take(new Range(5, lastSettingsCol)).ToList());
+            TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());
         }
     }
-
 }

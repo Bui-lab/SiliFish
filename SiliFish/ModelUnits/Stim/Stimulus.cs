@@ -15,7 +15,7 @@ using System.Text.Json.Serialization;
 namespace SiliFish.ModelUnits.Stim
 {
 
-    public class Stimulus : StimulusBase
+    public class Stimulus : StimulusBase, IDataExporterImporter
     {
         private double tangent; //valid only if mode==Ramp
         private double[] values = null;
@@ -52,6 +52,15 @@ namespace SiliFish.ModelUnits.Stim
         public void ImportValues(List<string> values)
         {
             //TODO Stimulus Import
+            if (values.Count != ColumnNames.Count) return;
+            /*TargetPool = values[0];
+            TargetSomite = values[1];
+            TargetCell = values[2];
+            LeftRight = values[3];
+            Active = bool.Parse(values[4]);
+            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 5;
+            Settings.ImportValues(values.Take(new Range(5, lastSettingsCol)).ToList());
+            TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());*/
         }
  
         public Stimulus() { }

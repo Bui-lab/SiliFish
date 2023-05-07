@@ -124,10 +124,12 @@ namespace SiliFish.ModelUnits.Cells
         public List<string> Attachments { get; set; } = new();
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("CellGroup", "CellType", "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange",
-            SpatialDistribution.ColumnNames, "Conduction Velocity", "CoreType",
-            Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
-            TimeLine.ColumnNames);
+            ListBuilder.Build<string>("CellGroup", "CellType", "NTMode",
+                "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange",
+                SpatialDistribution.ColumnNames, 
+                "Conduction Velocity", "CoreType",
+                Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+                "Active", TimeLine.ColumnNames);
 
         [JsonIgnore, Browsable(false)]
         private List<string> csvExportParamValues
@@ -146,18 +148,12 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<string> ExportValues()
         {
-            return new List<string>() { CellGroup,
-                CellType.ToString(),
-                BodyLocation.ToString(),
-                PositionLeftRight.ToString(),
-                NumOfCells.ToString(),
-                PerSomiteOrTotal.ToString(),
-                SomiteRange}
-            .Concat(SpatialDistribution.ExportValues())
-            .Concat(new[] { ConductionVelocity?.CSVCellExportValues, CoreType })
-            .Concat(csvExportParamValues)
-            .Concat(TimeLine_ms.ExportValues())
-            .ToList();
+            return ListBuilder.Build<string>(CellGroup, CellType, NTMode, 
+                BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange,
+                SpatialDistribution.ExportValues(), 
+                ConductionVelocity?.CSVCellExportValues ?? string.Empty,
+                CoreType, csvExportParamValues,
+                Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -165,6 +161,7 @@ namespace SiliFish.ModelUnits.Cells
             if (values.Count < ColumnNames.Count - CellCoreUnit.CoreParamMaxCount) return;
             CellGroup = values[iter++];
             CellType = (CellType)Enum.Parse(typeof(CellType), values[iter++]);
+            NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), values[iter++]);
             BodyLocation = (BodyLocation)Enum.Parse(typeof(BodyLocation), values[iter++]);
             PositionLeftRight = (SagittalPlane)Enum.Parse(typeof(SagittalPlane), values[iter++]);
             NumOfCells = int.Parse(values[iter++]);
@@ -186,6 +183,7 @@ namespace SiliFish.ModelUnits.Cells
                     parameters.Add(paramkey, Distribution.CreateDistributionObjectFromCSVCell(paramvalue));
                 }
             }
+            Active = bool.Parse(values[iter++]);
             if (iter < values.Count)
                 TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
         }

@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class InterPoolTemplate : JunctionBase, IDataExporterImporter
+    public class InterPoolTemplate : JunctionBase
     {
         #region Private fields
         private string _Name;
@@ -118,7 +118,7 @@ namespace SiliFish.ModelUnits.Junction
                 CellReach.ColumnNames, 
                 SynapseParameters.ColumnNames,
                 "Prob.", "Weight", "Fixed Dur. (ms)", "Delay (ms)", 
-                "Active," +
+                "Active",
                 TimeLine.ColumnNames);
 
         public override List<string> ExportValues()

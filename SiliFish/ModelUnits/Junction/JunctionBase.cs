@@ -18,7 +18,7 @@ using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class JunctionBase : ModelUnitBase
+    public class JunctionBase : ModelUnitBase, IDataExporterImporter
     {
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms
@@ -39,6 +39,7 @@ namespace SiliFish.ModelUnits.Junction
                 "Weight", "Fixed Duration (ms)", "Delay (ms)",
                 "Active", 
                 TimeLine.ColumnNames);
+
 
         public virtual List<string> ExportValues()
         {

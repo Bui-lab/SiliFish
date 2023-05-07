@@ -41,13 +41,15 @@ namespace SiliFish.UI
             linkLoadModel = new LinkLabel();
             linkClearModel = new LinkLabel();
             linkSaveModel = new LinkLabel();
+            cmSaveModel = new ContextMenuStrip(components);
+            saveAsJSON = new ToolStripMenuItem();
+            saveAsExcel = new ToolStripMenuItem();
             splitMain = new SplitContainer();
             modelControl = new ModelControl();
             pGenerateModel = new Panel();
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
             pModelControlTop = new Panel();
-            linkLabel1 = new LinkLabel();
             linkNewModel = new LinkLabel();
             pSimulation = new Panel();
             ldtEuler = new Label();
@@ -78,6 +80,7 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             pTop.SuspendLayout();
+            cmSaveModel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
             splitMain.Panel2.SuspendLayout();
@@ -209,6 +212,7 @@ namespace SiliFish.UI
             // linkSaveModel
             // 
             linkSaveModel.AutoSize = true;
+            linkSaveModel.ContextMenuStrip = cmSaveModel;
             linkSaveModel.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveModel.Location = new Point(87, 11);
             linkSaveModel.Name = "linkSaveModel";
@@ -217,6 +221,26 @@ namespace SiliFish.UI
             linkSaveModel.TabStop = true;
             linkSaveModel.Text = "Save Model";
             linkSaveModel.LinkClicked += linkSaveModel_LinkClicked;
+            // 
+            // cmSaveModel
+            // 
+            cmSaveModel.Items.AddRange(new ToolStripItem[] { saveAsJSON, saveAsExcel });
+            cmSaveModel.Name = "cmSaveModel";
+            cmSaveModel.Size = new Size(144, 48);
+            // 
+            // saveAsJSON
+            // 
+            saveAsJSON.Name = "saveAsJSON";
+            saveAsJSON.Size = new Size(143, 22);
+            saveAsJSON.Text = "Save as JSON";
+            saveAsJSON.Click += saveAsJSON_Click;
+            // 
+            // saveAsExcel
+            // 
+            saveAsExcel.Name = "saveAsExcel";
+            saveAsExcel.Size = new Size(143, 22);
+            saveAsExcel.Text = "Save as Excel";
+            saveAsExcel.Click += saveAsExcel_Click;
             // 
             // splitMain
             // 
@@ -296,7 +320,6 @@ namespace SiliFish.UI
             // pModelControlTop
             // 
             pModelControlTop.BackColor = Color.FromArgb(236, 239, 241);
-            pModelControlTop.Controls.Add(linkLabel1);
             pModelControlTop.Controls.Add(linkNewModel);
             pModelControlTop.Controls.Add(linkLoadModel);
             pModelControlTop.Controls.Add(linkSaveModel);
@@ -306,18 +329,6 @@ namespace SiliFish.UI
             pModelControlTop.Name = "pModelControlTop";
             pModelControlTop.Size = new Size(543, 40);
             pModelControlTop.TabIndex = 3;
-            // 
-            // linkLabel1
-            // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLabel1.Location = new Point(237, 13);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(61, 15);
-            linkLabel1.TabIndex = 7;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "Save Excel";
-            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // linkNewModel
             // 
@@ -585,6 +596,7 @@ namespace SiliFish.UI
             Load += MainForm_Load;
             pTop.ResumeLayout(false);
             pTop.PerformLayout();
+            cmSaveModel.ResumeLayout(false);
             splitMain.Panel1.ResumeLayout(false);
             splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
@@ -646,7 +658,9 @@ namespace SiliFish.UI
         private Panel pDistinguisherBottom;
         private Button btnSettings;
         private LinkLabel linkNewModel;
-        private LinkLabel linkLabel1;
         private SaveFileDialog saveFileExcel;
+        private ContextMenuStrip cmSaveModel;
+        private ToolStripMenuItem saveAsJSON;
+        private ToolStripMenuItem saveAsExcel;
     }
 }

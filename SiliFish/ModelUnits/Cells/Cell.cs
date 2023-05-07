@@ -26,17 +26,13 @@ namespace SiliFish.ModelUnits.Cells
         private static int csvExportCoreParamCount = 10;
         private static Type GetTypeOfCell(string discriminator)
         {
-            switch (discriminator)
+            return discriminator switch
             {
-                case "cell":
-                    return typeof(Cell);
-                case "neuron":
-                    return typeof(Neuron);
-                case "musclecell":
-                    return typeof(MuscleCell);
-                default:
-                    return typeof(Cell);
-            }
+                "cell" => typeof(Cell),
+                "neuron" => typeof(Neuron),
+                "musclecell" => typeof(MuscleCell),
+                _ => typeof(Cell),
+            };
         }
         public static Cell CreateCell(string cellType)
         {
@@ -133,18 +129,23 @@ namespace SiliFish.ModelUnits.Cells
             ListBuilder.Build<string>("CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
             "Conduction Velocity", "CoreType",
             Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+            "Active",
             TimeLine.ColumnNames);
 
          [JsonIgnore, Browsable(false)]
-        private string csvExportCoreValues
+        private List<string> csvExportCoreValues
         {
             get
             {
-                if (Core.Parameters.Count > csvExportCoreParamCount)
-                    return $"{string.Join(",", Core.Parameters.Take(csvExportCoreParamCount).OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
-                string paramValues = $"{string.Join(",", Core.Parameters.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key},{kv.Value}"))}";
-                for (int i = Core.Parameters.Count; i < csvExportCoreParamCount; i++)
-                    paramValues += ", , ";
+                List<string> paramValues = Core.Parameters
+                    .Take(CellCoreUnit.CoreParamMaxCount)
+                    .OrderBy(kv => kv.Key)
+                    .SelectMany(kv => new[] { kv.Key, kv.Value.ToString()}).ToList();
+                for (int i = Core.Parameters.Count; i < CellCoreUnit.CoreParamMaxCount; i++)
+                {
+                    paramValues.Add(string.Empty);
+                    paramValues.Add(string.Empty);
+                }
                 return paramValues;
             }
         }
@@ -152,7 +153,7 @@ namespace SiliFish.ModelUnits.Cells
         public List<string> ExportValues()
         {
             return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
-                ConductionVelocity, Core.CoreType, csvExportCoreValues, TimeLine_ms.ExportValues());
+                ConductionVelocity, Core.CoreType, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -177,6 +178,7 @@ namespace SiliFish.ModelUnits.Cells
                 }
             }
             Core = CellCoreUnit.CreateCore(coreType, parameters);
+            Active = bool.Parse(values[iter++]);
             if (iter < values.Count)
                 TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
         }

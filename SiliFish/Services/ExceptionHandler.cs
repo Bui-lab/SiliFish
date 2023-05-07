@@ -15,7 +15,7 @@ namespace SiliFish.Services
         public static void CompleteLogging()
         {
             if (logFile == null) return;
-            string newFileName = logFile.Replace(".log", $"_{DateTime.Now.ToString("yyMMdd_HHmm")}.log");
+            string newFileName = logFile.Replace(".log", $"_{DateTime.Now:yyMMdd_HHmm}.log");
             File.Copy(logFile, newFileName);
         }
 

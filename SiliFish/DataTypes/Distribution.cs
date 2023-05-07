@@ -27,23 +27,16 @@ namespace SiliFish.DataTypes
 
         private static Type GetTypeOfDiscriminator(string discriminator)
         {
-            switch (discriminator)
+            return discriminator switch
             {
-                case "None":
-                    return typeof(Distribution);
-                case "Uniform":
-                    return typeof(UniformDistribution);
-                case "Constant":
-                    return typeof(Constant_NoDistribution);
-                case "Equally Spaced":
-                    return typeof(SpacedDistribution);
-                case "Gaussian":
-                    return typeof(GaussianDistribution);
-                case "Bimodal":
-                    return typeof(BimodalDistribution);
-                default:
-                    return typeof(Distribution);
-            }
+                "None" => typeof(Distribution),
+                "Uniform" => typeof(UniformDistribution),
+                "Constant" => typeof(Constant_NoDistribution),
+                "Equally Spaced" => typeof(SpacedDistribution),
+                "Gaussian" => typeof(GaussianDistribution),
+                "Bimodal" => typeof(BimodalDistribution),
+                _ => typeof(Distribution),
+            };
         }
         public static Random Random = null;
 

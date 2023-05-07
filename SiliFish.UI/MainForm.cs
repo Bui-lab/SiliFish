@@ -100,7 +100,7 @@ namespace SiliFish.UI
                     DialogResult res = MessageBox.Show("The model/template has changed. Do you want to save the modifications?", "Model Save", MessageBoxButtons.YesNoCancel);
                     if (res == DialogResult.Yes)
                     {
-                        if (!SaveModel())
+                        if (!SaveModelAsJSON())
                         {
                             e.Cancel = true;
                             return;
@@ -371,7 +371,7 @@ namespace SiliFish.UI
                 SetCurrentMode(RunMode.RunningModel, name);
             }
         }
-        private bool SaveModel()
+        private bool SaveModelAsJSON()
         {
             try
             {
@@ -405,14 +405,8 @@ namespace SiliFish.UI
                 return false;
             }
         }
-        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void SaveModelAsExcel()
         {
-            SaveModel();
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            //TODO
             try
             {
                 ModelBase mb = modelControl.GetModel();
@@ -424,9 +418,9 @@ namespace SiliFish.UI
                         return;
                 }
                 if (!string.IsNullOrEmpty(lastFileName))
-                    saveFileExcel.FileName = lastFileName;
+                    saveFileExcel.FileName = Path.ChangeExtension(lastFileName, "xlsx");
                 else
-                    saveFileExcel.FileName = mb.ModelName;
+                    saveFileExcel.FileName = Path.Combine(mb.ModelName, ".xlsx");
                 saveFileExcel.InitialDirectory = modelFileDefaultFolder;
                 if (saveFileExcel.ShowDialog() == DialogResult.OK)
                 {
@@ -435,15 +429,36 @@ namespace SiliFish.UI
                     lastFileName = saveFileExcel.FileName;
                     this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileExcel.FileName)}";
                     modelControl.ModelUpdated = false;
-                    return;
+                    Process p = new()
+                    {
+                        StartInfo = new ProcessStartInfo(saveFileExcel.FileName)
+                        {
+                            UseShellExecute = true
+                        }
+                    };
+                    p.Start();
                 }
-                return;
             }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
                 return;
             }
+        }
+        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            cmSaveModel.Show(linkSaveModel, new Point(5, 5));
+        }
+
+        private void saveAsJSON_Click(object sender, EventArgs e)
+        {
+            SaveModelAsJSON();
+        }
+
+
+        private void saveAsExcel_Click(object sender, EventArgs e)
+        {
+            SaveModelAsExcel();
         }
         private void linkNewModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -495,7 +510,6 @@ namespace SiliFish.UI
         {
             modelOutputControl.Highlight((e as SelectedUnitArgs).unitSelected);
         }
-
 
     }
 }

@@ -1,11 +1,13 @@
 ﻿using OfficeOpenXml;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
@@ -13,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace SiliFish.Repositories
@@ -288,7 +291,7 @@ namespace SiliFish.Repositories
         }
         #endregion
 
-        #region CSV and Excel Related Functions
+        #region CSV Functions
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
             if (filename == null || Time == null || Values == null)
@@ -406,7 +409,7 @@ namespace SiliFish.Repositories
                     sw.WriteLine(string.Join(",", StimulusTemplate.ColumnNames));
                     foreach (StimulusTemplate stim in stimulusTemplates)
                     {
-                        sw.WriteLine(string.Join(",", stim.ExportValues()));
+                        sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues())); 
                     }
                 }
                 else if (model is RunningModel rm)
@@ -420,7 +423,7 @@ namespace SiliFish.Repositories
                     sw.WriteLine(string.Join(",", Stimulus.ColumnNames));
                     foreach (Stimulus stim in stimuli)
                     {
-                        sw.WriteLine(string.Join(",", stim.ExportValues()));
+                        sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues())); 
                     }
                 }
                 return true;
@@ -453,6 +456,7 @@ namespace SiliFish.Repositories
                         stim.ImportValues(contents[iter++].Split(",").ToList());
                         mt.AppliedStimuli.Add(stim);
                     }
+                    mt.LinkObjects();
                 }
                 else if (model is RunningModel rm)
                 {
@@ -464,6 +468,7 @@ namespace SiliFish.Repositories
                         Stimulus stim = new();
                         stim.GenerateFromCSVRow(rm, contents[iter++]);
                     }
+                    rm.LinkObjects();
                 }
                 return true;
             }
@@ -525,6 +530,7 @@ namespace SiliFish.Repositories
                             mt.AppliedStimuli.Add(stim);
                     }
                 }
+                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)
@@ -549,7 +555,7 @@ namespace SiliFish.Repositories
                 sw.WriteLine(string.Join(",", Cell.ColumnNames));
                 foreach (Cell cell in cells)
                 {
-                    sw.WriteLine(string.Join(",", cell.ExportValues()));
+                    sw.WriteLine(CSVUtil.GetCSVLine(cell.ExportValues()));
                 }
                 return true;
             }
@@ -585,6 +591,7 @@ namespace SiliFish.Repositories
                      stim.GenerateFromCSVRow(rm, contents[iter++]);
                  }*/
 
+                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)
@@ -614,6 +621,7 @@ namespace SiliFish.Repositories
                     if (cell.CellGroup == cellPool.ID)
                         cellPool.AddCell(cell);
                 }
+                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)
@@ -637,7 +645,7 @@ namespace SiliFish.Repositories
                 sw.WriteLine(string.Join(",",CellPoolTemplate.ColumnNames));
                 foreach (CellPoolTemplate cpt in cellPools)
                 {
-                    sw.WriteLine(string.Join(",", cpt.ExportValues()));
+                    sw.WriteLine(CSVUtil.GetCSVLine(cpt.ExportValues()));
                 }
 
                 return true;
@@ -681,6 +689,7 @@ namespace SiliFish.Repositories
                         modelRun.AddCellPool(cp);
                     }
                 }
+                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)
@@ -733,7 +742,7 @@ namespace SiliFish.Repositories
                 }
                 foreach (InterPoolTemplate ipt in list)
                 {
-                    sw.WriteLine(string.Join(",", ipt.ExportValues()));
+                    sw.WriteLine(CSVUtil.GetCSVLine(ipt.ExportValues()));
                 }
                 return true;
             }
@@ -775,6 +784,7 @@ namespace SiliFish.Repositories
                     if (jncCheck)
                         modelTemplate.AddJunction(ipt);
                 }
+                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)
@@ -796,7 +806,7 @@ namespace SiliFish.Repositories
                 if (!gap && !chem) return false;
                 using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
                 using StreamWriter sw = new(fs);
-                sw.WriteLine(string.Join(",", JunctionBase.ColumnNames));
+                sw.WriteLine(string.Join(",", InterPoolTemplate.ColumnNames));
                 List<JunctionBase> list;
 
                 if (selectedUnit is CellPool cp)
@@ -814,15 +824,15 @@ namespace SiliFish.Repositories
                 else
                 {
                     if (gap && chem)
-                        list = runningModel.GetChemicalProjections().Union(runningModel.GetGapProjections()).ToList();
+                        list = runningModel.GetChemicalProjections().Concat(runningModel.GetGapProjections()).ToList();
                     else if (gap)
                         list = runningModel.GetGapProjections().ToList();
                     else
                         list = runningModel.GetChemicalProjections().ToList();
                 }
-                foreach (JunctionBase jnc in list)
+                foreach (InterPoolTemplate jnc in list)
                 {
-                    sw.WriteLine(string.Join(",", jnc.ExportValues()));
+                    sw.WriteLine(CSVUtil.GetCSVLine(jnc.ExportValues()));
                 }
                 return true;
             }
@@ -844,7 +854,7 @@ namespace SiliFish.Repositories
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
                 int iter = 1;
-                if (columns != string.Join(",", JunctionBase.ColumnNames))
+                if (columns != string.Join(",", InterPoolTemplate.ColumnNames))
                     return false;
                 CellPool cellPool = selectedUnit as CellPool;
                 Cell cell= selectedUnit as Cell;
@@ -887,6 +897,7 @@ namespace SiliFish.Repositories
                     if (jncCheck)
                         runningModel.AddJunction(jb);
                 }
+                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)
@@ -895,72 +906,113 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
+        #endregion
 
-        public static void CreateCellPoolsWorkSheet(ModelBase model, ExcelWorkbook workbook)
+        #region Excel Functions
+        public static bool CreateCellPoolsWorkSheet(ModelBase model, ExcelWorkbook workbook)
         {
-            ExcelWorksheet workSheet = workbook.Worksheets.Add("Cell Pools");
-            List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
-                model is RunningModel modelRunning ? modelRunning.GetCellPools() : new();
-            int rowindex = 1;
-            int colindex = 1;
-            foreach (string s in CellPoolTemplate.ColumnNames)
-                workSheet.Cells[rowindex, colindex++].Value = s;
-
-            foreach (CellPoolTemplate cpt in cellPools)
-            {
-                colindex = 1;
-                rowindex++;
-                foreach (string s in cpt.ExportValues())
-                    workSheet.Cells[rowindex, colindex++].Value = s;
-            }
-        }
-        public static void CreateCellsWorkSheet(ModelBase model, ExcelWorkbook workbook)
-        {
-            if (model is not RunningModel modelRunning) { return; }
-            ExcelWorksheet workSheet = workbook.Worksheets.Add("Cells");
-            List<Cell> cells = modelRunning.GetCells();
-            int rowindex = 1;
-            int colindex = 1;
-            foreach (string s in Cell.ColumnNames)
-                workSheet.Cells[rowindex, colindex++].Value = s;
-
-            foreach (Cell cell in cells)
-            {
-                colindex = 1;
-                rowindex++;
-                foreach (string s in cell.ExportValues())
-                    workSheet.Cells[rowindex, colindex++].Value = s;
-            }
-        }
-
-        private static void CreateJunctionsWorkSheet(ModelBase model, ExcelWorkbook workbook)
-        {
-            /*if (filename == null || model == null)
-                return false;
-
             try
             {
-                if (model is not ModelTemplate modelTemplate) return false;
-                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
-                using StreamWriter sw = new(fs);
-                sw.WriteLine(InterPoolTemplate.CSVExportColumnNames);
-                List<InterPoolTemplate> list;
-                if (selectedUnit is CellPoolTemplate cpt)
-                    list = modelTemplate.InterPoolTemplates.Where(jnc =>
-                        (gap && jnc.ConnectionType == Definitions.ConnectionType.Gap && (jnc.PoolSource == cpt.CellGroup || jnc.PoolTarget == cpt.CellGroup)) ||
-                        (chemout && jnc.ConnectionType != Definitions.ConnectionType.Gap && jnc.PoolSource == cpt.CellGroup) ||
-                        (chemin && jnc.ConnectionType != Definitions.ConnectionType.Gap && jnc.PoolTarget == cpt.CellGroup))
-                        .ToList();
-                else
+                List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
+                    model is RunningModel modelRunning ? modelRunning.GetCellPools() : new();
+                CreateWorkSheet(workbook, "Cell Pools", CellPoolTemplate.ColumnNames, cellPools.Cast<IDataExporterImporter>().ToList());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public static bool CreateCellsWorkSheet(ModelBase model, ExcelWorkbook workbook)
+        {
+            try
+            {
+                if (model is not RunningModel modelRunning) { return false; }
+                CreateWorkSheet(workbook, "Cells", Cell.ColumnNames, modelRunning.GetCells().Cast<IDataExporterImporter>().ToList());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        private static bool CreateJunctionsWorkSheet(ModelBase model, ExcelWorkbook workbook)
+        {
+            try
+            {
+                if (model is RunningModel modelRunning)
                 {
-                    list = modelTemplate.InterPoolTemplates.Where(ipt =>
-                        gap && ipt.ConnectionType == Definitions.ConnectionType.Gap ||
-                        (chemout || chemin) && (ipt.ConnectionType == Definitions.ConnectionType.Synapse || ipt.ConnectionType == Definitions.ConnectionType.NMJ))
-                        .ToList();
+                    List<IDataExporterImporter> objList = modelRunning
+                        .GetChemicalProjections()
+                        .Concat(modelRunning.GetGapProjections())
+                        .Cast<IDataExporterImporter>().ToList();
+                    CreateWorkSheet(workbook, "Junctions", JunctionBase.ColumnNames, objList);
+                    return true;
                 }
-                foreach (InterPoolTemplate ipt in list)
+                else if (model is ModelTemplate modelTemplate)
                 {
-                    sw.WriteLine(ipt.CSVExportValues);
+                    List<IDataExporterImporter> objList = modelTemplate
+                        .InterPoolTemplates
+                        .Cast<IDataExporterImporter>().ToList();
+                    CreateWorkSheet(workbook, "Junctions", InterPoolTemplate.ColumnNames, objList);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        private static bool CreateStimuliWorkSheet(ModelBase model, ExcelWorkbook workbook)
+        {
+            try
+            {
+                if (model is RunningModel modelRunning)
+                {
+                    List<IDataExporterImporter> objList = modelRunning
+                        .GetStimuli().Select(stim => stim as Stimulus)
+                        .Cast<IDataExporterImporter>().ToList();
+                    CreateWorkSheet(workbook, "Stimuli", Stimulus.ColumnNames, objList);
+                    return true;
+                }
+                else if (model is ModelTemplate modelTemplate)
+                {
+                    List<IDataExporterImporter> objList = modelTemplate
+                        .AppliedStimuli
+                        .Cast<IDataExporterImporter>().ToList();
+                    CreateWorkSheet(workbook, "Stimuli", StimulusTemplate.ColumnNames, objList);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        private static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, List<IDataExporterImporter> objList)
+        {
+            try
+            {
+                ExcelWorksheet workSheet = workbook.Worksheets.Add(sheetName);
+                int rowindex = 1;
+                int colindex = 1;
+                foreach (string s in columnNames)
+                    workSheet.Cells[rowindex, colindex++].Value = s;
+
+                foreach (IDataExporterImporter jnc in objList)
+                {
+                    colindex = 1;
+                    rowindex++;
+                    foreach (string s in jnc.ExportValues())
+                        workSheet.Cells[rowindex, colindex++].Value = s;
                 }
                 return true;
             }
@@ -968,19 +1020,69 @@ namespace SiliFish.Repositories
             {
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 return false;
-            }*/
+            }
         }
-
         public static void SaveToExcel(string fileName, ModelBase model)
         {
             model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            using (ExcelPackage package = new ExcelPackage(fileName))
+            if (File.Exists(fileName)) 
+                File.Delete(fileName);
+            using ExcelPackage package = new(fileName);
+            ExcelWorksheet workSheet = package.Workbook.Worksheets.Add("Model");
+            int rowindex = 1;
+            workSheet.Cells[rowindex, 1].Value = "Version";
+            workSheet.Cells[rowindex++, 2].Value = model.Version;
+            workSheet.Cells[rowindex, 1].Value = "Name";
+            workSheet.Cells[rowindex++, 2].Value = model.ModelName;
+            workSheet.Cells[rowindex, 1].Value = "Description";
+            workSheet.Cells[rowindex++, 2].Value = model.ModelDescription;
+
+            workSheet = package.Workbook.Worksheets.Add("Model Dimensions");
+            rowindex = 1;
+            foreach (var prop in model.ModelDimensions.GetType().GetProperties())
             {
-                CreateCellPoolsWorkSheet(model, package.Workbook);
-                CreateCellsWorkSheet(model, package.Workbook);
-                package.Save();
+                workSheet.Cells[rowindex, 1].Value = prop.Name;
+                workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.ModelDimensions);
             }
+
+            workSheet = package.Workbook.Worksheets.Add("Model Settings");
+            rowindex = 1;
+            foreach (var prop in model.Settings.GetType().GetProperties())
+            {
+                workSheet.Cells[rowindex, 1].Value = prop.Name;
+                workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
+            }
+
+            workSheet = package.Workbook.Worksheets.Add("Kinem Params");
+            rowindex = 1;
+            foreach (var prop in model.Settings.GetType().GetProperties())
+            {
+                workSheet.Cells[rowindex, 1].Value = prop.Name;
+                workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
+            }
+
+            if (model.Parameters!=null && model.Parameters.Any())
+            {
+                workSheet = package.Workbook.Worksheets.Add("Parameters");
+                rowindex = 1;
+                foreach (var prop in model.Parameters)
+                {
+                    workSheet.Cells[rowindex, 1].Value = prop.Key;
+                    workSheet.Cells[rowindex++, 2].Value = prop.Value;
+                }
+            }
+            CreateCellPoolsWorkSheet(model, package.Workbook);
+            CreateCellsWorkSheet(model, package.Workbook);
+            CreateJunctionsWorkSheet(model, package.Workbook);
+            CreateStimuliWorkSheet(model, package.Workbook);
+            package.Save();
+        }
+
+        public static ModelBase ReadFromExcel(string fileName)
+        {
+            //TODO Read Model from Excel
+            return null;
         }
 
         #endregion
