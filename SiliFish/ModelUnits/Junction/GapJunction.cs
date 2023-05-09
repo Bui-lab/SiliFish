@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Drawing;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -64,32 +65,18 @@ namespace SiliFish.ModelUnits.Junction
             {
                 int iter = 1;//junction type is already read before junction creation
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
-                /*TODO PoolSource = values[iter++].Trim();
-                PoolTarget = values[iter++].Trim();
+                Source = values[iter++].Trim();
+                Target = values[iter++].Trim();
 
-                AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
-                ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                string cellReachString = string.Join(',', values[iter..(iter + CellReach.CSVExportColumCount)]);
-                CellReach.CSVExportValues = cellReachString;
-                iter += CellReach.CSVExportColumCount;
-                string synapseString = string.Join(',', values[iter..(iter + SynapseParameters.CSVExportColumCount)]);
-                if (!string.IsNullOrEmpty(synapseString.Replace(',', ' ').Trim()))
-                {
-                    SynapseParameters = new()
-                    {
-                        CSVExportValues = synapseString
-                    };
-                }
-                iter += SynapseParameters.CSVExportColumCount;
-                Probability = double.Parse(values[iter++]);
+                iter += SynapseParameters.ColumnNames.Count;
                 Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
                 Delay_ms = double.Parse(values[iter++]);
                 Active = bool.Parse(values[iter++]);
-                if (iter < values.Length)
-                    TimeLine_ms.CSVExportValues = values[iter++];*/
+                if (iter < values.Count)
+                    TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
             }
             catch (Exception ex)
             {
@@ -106,6 +93,7 @@ namespace SiliFish.ModelUnits.Junction
             Weight = conductance;
             Cell1 = c1;
             Cell2 = c2;
+            Source = Cell1.ID;
             Target = Cell2.ID;
             DistanceMode = distmode;
         }
@@ -126,12 +114,16 @@ namespace SiliFish.ModelUnits.Junction
             Cell1.GapJunctions.Remove(this);
             Cell2.GapJunctions.Remove(this);
         }
-        public void LinkObjects(RunningModel model)
+        public override void LinkObjects(RunningModel model)
         {
-            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();
-            if (cp is null) return;
-            Cell2 = cp.GetCell(Target);
-            Cell2.GapJunctions.Add(this);
+            Cell1 = model.GetCell(Source);
+            if (!Cell1.GapJunctions.Contains(this))
+                Cell1.GapJunctions.Add(this);
+            
+            Cell2 = model.GetCell(Target);
+            if (!Cell2.GapJunctions.Contains(this))
+                Cell2.GapJunctions.Add(this);
+
         }
         public override string ToString()
         {

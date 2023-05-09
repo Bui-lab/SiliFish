@@ -87,6 +87,7 @@ namespace SiliFish.ModelUnits.Junction
             Core = new TwoExp_syn(param, conductance, preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
             PreNeuron = preN;
             PostCell = postN;
+            Source = preN.ID;
             Target = postN.ID;
             DistanceMode = distmode;
             Weight = conductance;
@@ -130,14 +131,18 @@ namespace SiliFish.ModelUnits.Junction
                 n.Synapses.Remove(this);
         }
 
-        public void LinkObjects(RunningModel model)
+        public override void LinkObjects(RunningModel model)
         {
-            CellPool cp = model.CellPools.Where(cp => cp.Cells.Exists(c => c.ID == Target)).FirstOrDefault();
-            PostCell = cp.GetCell(Target);
+            PreNeuron = model.GetCell(Source) as Neuron;
+            if (!PreNeuron.Terminals.Contains(this))
+                PreNeuron.Terminals.Add(this);
+            
+            PostCell = model.GetCell(Target);
             if (PostCell is Neuron n)
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
+            
             Core.DeltaTEuler = model.RunParam.DeltaTEuler;
             Core.DeltaT = model.RunParam.DeltaT;
         }

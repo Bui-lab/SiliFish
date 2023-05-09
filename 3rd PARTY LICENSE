@@ -1,5 +1,9 @@
 SiliFish uses some 3rd party tools. Corresponding licences are below:
 
+EPPlus
+https://www.epplussoftware.com/en/Home/GetEPPlus
+https://polyformproject.org/licenses/noncommercial/1.0.0/
+
 GeneticSharp
 https://github.com/giacomelli/GeneticSharp
 https://github.com/giacomelli/GeneticSharp/blob/master/LICENSE

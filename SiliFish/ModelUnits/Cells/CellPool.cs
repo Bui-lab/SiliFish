@@ -244,23 +244,26 @@ namespace SiliFish.ModelUnits.Cells
             Random random = new();
             List<int> som = new();
             List<int> seq = new();
-            if (cellSelection.somiteSelection == PlotSelection.Single)
+            if (Model.ModelDimensions.NumberOfSomites > 0)
             {
-                som.Add(cellSelection.nSomite);
-            }
-            else if (cellSelection.somiteSelection == PlotSelection.FirstMiddleLast)
-            {
-                int minSom = Cells.Select(c => c.Somite).Min();
-                int maxSom = Cells.Select(c => c.Somite).Max();
-                som.Add(minSom);
-                som.Add(maxSom);
-                som.Add((minSom + maxSom) / 2);
-            }
-            else if (cellSelection.somiteSelection == PlotSelection.Random)
-            {
-                IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
-                if (somites.Count() > cellSelection.nSomite)
-                    som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nSomite));
+                if (cellSelection.somiteSelection == PlotSelection.Single)
+                {
+                    som.Add(cellSelection.nSomite);
+                }
+                else if (cellSelection.somiteSelection == PlotSelection.FirstMiddleLast)
+                {
+                    int minSom = Cells.Select(c => c.Somite).Min();
+                    int maxSom = Cells.Select(c => c.Somite).Max();
+                    som.Add(minSom);
+                    som.Add(maxSom);
+                    som.Add((minSom + maxSom) / 2);
+                }
+                else if (cellSelection.somiteSelection == PlotSelection.Random)
+                {
+                    IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
+                    if (somites.Count() > cellSelection.nSomite)
+                        som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nSomite));
+                }
             }
 
             if (cellSelection.cellSelection == PlotSelection.Single)

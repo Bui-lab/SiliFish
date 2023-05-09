@@ -806,7 +806,7 @@ namespace SiliFish.Repositories
                 if (!gap && !chem) return false;
                 using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
                 using StreamWriter sw = new(fs);
-                sw.WriteLine(string.Join(",", InterPoolTemplate.ColumnNames));
+                sw.WriteLine(string.Join(",", JunctionBase.ColumnNames));
                 List<JunctionBase> list;
 
                 if (selectedUnit is CellPool cp)
@@ -830,7 +830,7 @@ namespace SiliFish.Repositories
                     else
                         list = runningModel.GetChemicalProjections().ToList();
                 }
-                foreach (InterPoolTemplate jnc in list)
+                foreach (JunctionBase jnc in list)
                 {
                     sw.WriteLine(CSVUtil.GetCSVLine(jnc.ExportValues()));
                 }
@@ -854,7 +854,7 @@ namespace SiliFish.Repositories
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
                 int iter = 1;
-                if (columns != string.Join(",", InterPoolTemplate.ColumnNames))
+                if (columns != string.Join(",", JunctionBase.ColumnNames))
                     return false;
                 CellPool cellPool = selectedUnit as CellPool;
                 Cell cell= selectedUnit as Cell;
@@ -878,26 +878,25 @@ namespace SiliFish.Repositories
                     if (jb == null) continue;
                     jb.ImportValues(line.Split(",").ToList());
                     //check whether it is part of what needs to be imported
-                    bool jncCheck = gap && jb is GapJunction gapjnc &&
-                            (cellPool != null && (gapjnc.Cell1.CellGroup == cellPool.CellGroup || gapjnc.Cell2.CellGroup == cellPool.CellGroup) ||
-                             cell != null && (gapjnc.Cell1.ID == cell.ID || gapjnc.Cell2.ID == cell.ID) ||
+                    bool jncCheck = jb is GapJunction gapjnc &&
+                            (cellPool != null && (cellPool.Cells.FirstOrDefault(c => c.ID == jb.Source) != null || cellPool.Cells.FirstOrDefault(c => c.ID == jb.Target) != null) ||
+                             cell != null && (jb.Source == cell.ID || jb.Target == cell.ID) ||
                              cellPool == null && cell == null);
                     if (!jncCheck && jb is ChemicalSynapse syn)
                     {
                         jncCheck = chemout &&
-                           (cellPool != null && syn.PreNeuron.CellGroup == cellPool.CellGroup ||
-                             cell != null && syn.PreNeuron.ID == cell.ID ||
+                           (cellPool != null && cellPool.Cells.FirstOrDefault(c => c.ID == jb.Source) != null ||
+                             cell != null && jb.Source == cell.ID ||
                              cellPool == null && cell == null);
                         if (!jncCheck)
                             jncCheck = chemin &&
-                               (cellPool != null && syn.PostCell.CellGroup == cellPool.CellGroup ||
-                                 cell != null && syn.PostCell.ID == cell.ID ||
+                               (cellPool != null && cellPool.Cells.FirstOrDefault(c => c.ID == jb.Target) != null ||
+                                 cell != null && jb.Target == cell.ID ||
                                  cellPool == null && cell == null);
                     }
                     if (jncCheck)
-                        runningModel.AddJunction(jb);
+                        jb.LinkObjects(runningModel);
                 }
-                model.LinkObjects();
                 return true;
             }
             catch (Exception ex)

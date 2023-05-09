@@ -26,9 +26,10 @@ namespace SiliFish.ModelUnits.Junction
         public double Weight { get; set; }
 
         /// <summary>
-        /// used for JSON
+        /// used for import/exports
         /// </summary>
-        public string Target{ get; set; }
+        public string Source { get; set; }
+        public string Target { get; set; }
 
 
         [JsonIgnore, Browsable(false)]
@@ -62,6 +63,12 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         public virtual void LinkObjects()
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
+        public virtual void LinkObjects(RunningModel runningModel)
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);

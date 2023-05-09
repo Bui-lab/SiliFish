@@ -46,6 +46,7 @@ namespace SiliFish.UI.Controls
             else
             {
                 cbAllSomites.Checked = false;
+                eTargetSomites.ReadOnly = false;
                 eTargetSomites.Text = stim.TargetSomite;
             }
             if (string.IsNullOrEmpty(stim.TargetCell) || stim.TargetCell.StartsWith("All"))
@@ -55,6 +56,7 @@ namespace SiliFish.UI.Controls
             else
             {
                 cbAllCells.Checked = false;
+                eTargetCells.ReadOnly = false;
                 eTargetCells.Text = stim.TargetCell;
             }
             if (Enum.TryParse(typeof(SagittalPlane), stim.LeftRight, out object sp))

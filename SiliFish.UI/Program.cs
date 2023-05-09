@@ -28,7 +28,8 @@ namespace SiliFish.UI
             Application.Run(MainForm);
             foreach (string f in GlobalSettings.TempFiles)
             {
-                File.Delete(f);
+                try { File.Delete(f); }
+                catch { }
             }
             ExceptionHandler.CompleteLogging();
         }

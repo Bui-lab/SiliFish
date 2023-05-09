@@ -993,10 +993,12 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_ItemsImport(object sender, EventArgs e)
         {
+            ModelUnitBase unit = SelectedUnit;
             if (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
                 Model is RunningModel runningModel && runningModel.HasConnections())
             {
-                string msg = $"Importing will remove all cell pool connections and create from the CSV file. Do you want to continue?";
+                string ofUnit = unit != null ? $"of {unit.ID} " : "";
+                string msg = $"Importing will remove all cell pool connections {ofUnit}and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
             ConnectionSelectionControl selectionControl = new()
@@ -1011,7 +1013,6 @@ namespace SiliFish.UI.Controls
             selectionControl.Label = "Please select the junctions to be imported.";
             if (frmControl.ShowDialog() != DialogResult.OK) return;
 
-            ModelUnitBase unit = SelectedUnit;
             bool gap = selectionControl.GapJunctions;
             bool chemin = selectionControl.CheminalIncoming;
             bool chemout = selectionControl.ChemicalOutgoing;
