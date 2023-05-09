@@ -271,7 +271,7 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
         }
 
-        public void AddSortContextMenu(string label, EventHandler func)
+        public void AddContextMenu(string label, EventHandler func)
         {
             ToolStripItem mi = contextMenuListBox.Items[label];
             if (mi != null)
@@ -281,11 +281,28 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                int ind = contextMenuListBox.Items.IndexOf(sepSort);
                 mi = new ToolStripMenuItem(label);
-                contextMenuListBox.Items.Insert(ind + 1, mi);
+                contextMenuListBox.Items.Add(mi);
                 mi.Click += miCustomSort_Click;
                 mi.Tag = func;
+            }
+        }
+
+        public void RemoveContextMenu(string label)
+        {
+            ToolStripItem mi = null;
+            foreach (var item in contextMenuListBox.Items)
+            {
+                if (item.ToString() == label)
+                {
+                    mi = item as ToolStripItem;
+                    break;
+                }
+            }
+            if (mi != null)
+            {
+                mi.Visible = false;
+                mi.Enabled = false;
             }
         }
         public void SetEnabledContextMenu(string label, bool enabled)

@@ -44,7 +44,7 @@ namespace SiliFish.UI.Controls
         private Cell SelectedCell; //valid if Mode == Mode.RunningModel
         private JunctionBase SelectedJunction;
         private StimulusBase SelectedStimulus;
-
+        private bool highlightCellPoolOnClick = false;
         private ModelUnitBase SelectedUnit => (ModelUnitBase)SelectedCell ?? SelectedPool ?? SelectedPoolTemplate;
 
 
@@ -53,6 +53,7 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
             listStimuli.EnableImportExport();
             listCellPools.EnableImportExport();
+            listCellPools.AddContextMenu("Highlight on Click", listCellPools_HighlightOnClick);
             listCells.EnableImportExport();
             listIncoming.EnableImportExport();
             listOutgoing.EnableImportExport();
@@ -313,6 +314,8 @@ namespace SiliFish.UI.Controls
             if (sender is CellPool pool)
             {
                 SelectedPool = pool;
+                if (highlightCellPoolOnClick)
+                    listCellPools_ItemHighlight(sender, e);
                 SelectedCell = null;
                 LoadCells();
                 LoadProjections(pool);
@@ -394,6 +397,22 @@ namespace SiliFish.UI.Controls
             SelectedUnitArgs args = new() { unitSelected = SelectedPool };
             HighlightRequested?.Invoke(this, args);
         }
+
+        private void listCellPools_HighlightOnClick(object sender, EventArgs e)
+        {
+            listCellPools.RemoveContextMenu("Highlight on Click");
+            listCellPools.AddContextMenu("Skip Highlight on Click", listCellPools_SkipHighlightOnClick);
+            highlightCellPoolOnClick = true;
+        }
+
+        private void listCellPools_SkipHighlightOnClick(object sender, EventArgs e)
+        {
+            listCellPools.RemoveContextMenu("Skip Highlight on Click");
+            listCellPools.AddContextMenu("Highlight on Click", listCellPools_HighlightOnClick);
+            highlightCellPoolOnClick = false;
+        }
+
+
         private void listCellPools_ItemPlot(object sender, EventArgs e)
         {
             SelectedUnitArgs args = new() { unitSelected = SelectedPool };

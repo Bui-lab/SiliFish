@@ -89,10 +89,6 @@
             linkSaveHTML2D = new LinkLabel();
             btn2DRender = new Button();
             t3DRender = new TabPage();
-            p3DViewing = new Panel();
-            dd3DViewpoint = new ComboBox();
-            btnZoomIn = new Button();
-            btnZoomOut = new Button();
             gr3DLegend = new GroupBox();
             legendUnselected = new Label();
             legendOutgoing = new Label();
@@ -100,8 +96,12 @@
             legendIncoming = new Label();
             webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p3DRender = new Panel();
-            cb3DShowUnselectedNodes = new CheckBox();
+            p3DViewing = new Panel();
             cb3DLegend = new CheckBox();
+            dd3DViewpoint = new ComboBox();
+            btnZoomIn = new Button();
+            btnZoomOut = new Button();
+            cb3DShowUnselectedNodes = new CheckBox();
             cb3DGapJunc = new CheckBox();
             cb3DChemJunc = new CheckBox();
             e3DSomiteRange = new TextBox();
@@ -153,6 +153,8 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            udNodeSize = new General.UpDownControl();
+            lNodeSize = new Label();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -180,10 +182,10 @@
             ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
             p2DRender.SuspendLayout();
             t3DRender.SuspendLayout();
-            p3DViewing.SuspendLayout();
             gr3DLegend.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView3DRender).BeginInit();
             p3DRender.SuspendLayout();
+            p3DViewing.SuspendLayout();
             tMNKinematics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitKinematics).BeginInit();
             splitKinematics.Panel1.SuspendLayout();
@@ -868,7 +870,6 @@
             // 
             // t3DRender
             // 
-            t3DRender.Controls.Add(p3DViewing);
             t3DRender.Controls.Add(gr3DLegend);
             t3DRender.Controls.Add(webView3DRender);
             t3DRender.Controls.Add(p3DRender);
@@ -878,53 +879,6 @@
             t3DRender.TabIndex = 0;
             t3DRender.Text = "3D Rendering";
             t3DRender.UseVisualStyleBackColor = true;
-            // 
-            // p3DViewing
-            // 
-            p3DViewing.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            p3DViewing.BorderStyle = BorderStyle.FixedSingle;
-            p3DViewing.Controls.Add(dd3DViewpoint);
-            p3DViewing.Controls.Add(btnZoomIn);
-            p3DViewing.Controls.Add(btnZoomOut);
-            p3DViewing.Location = new Point(435, 85);
-            p3DViewing.Name = "p3DViewing";
-            p3DViewing.Size = new Size(256, 39);
-            p3DViewing.TabIndex = 58;
-            // 
-            // dd3DViewpoint
-            // 
-            dd3DViewpoint.DropDownStyle = ComboBoxStyle.DropDownList;
-            dd3DViewpoint.FormattingEnabled = true;
-            dd3DViewpoint.Items.AddRange(new object[] { "Free view", "Dorsal view", "Ventral view", "Rostral view", "Caudal view", "Lateral view (left)", "Lateral view (right)" });
-            dd3DViewpoint.Location = new Point(3, 7);
-            dd3DViewpoint.Name = "dd3DViewpoint";
-            dd3DViewpoint.Size = new Size(180, 23);
-            dd3DViewpoint.TabIndex = 54;
-            dd3DViewpoint.SelectedIndexChanged += dd3DViewpoint_SelectedIndexChanged;
-            // 
-            // btnZoomIn
-            // 
-            btnZoomIn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnZoomIn.Image = (Image)resources.GetObject("btnZoomIn.Image");
-            btnZoomIn.ImageAlign = ContentAlignment.TopLeft;
-            btnZoomIn.Location = new Point(220, 3);
-            btnZoomIn.Name = "btnZoomIn";
-            btnZoomIn.Size = new Size(32, 32);
-            btnZoomIn.TabIndex = 48;
-            btnZoomIn.UseVisualStyleBackColor = true;
-            btnZoomIn.Click += btnZoomIn_Click;
-            // 
-            // btnZoomOut
-            // 
-            btnZoomOut.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnZoomOut.Image = (Image)resources.GetObject("btnZoomOut.Image");
-            btnZoomOut.ImageAlign = ContentAlignment.TopLeft;
-            btnZoomOut.Location = new Point(186, 3);
-            btnZoomOut.Name = "btnZoomOut";
-            btnZoomOut.Size = new Size(32, 32);
-            btnZoomOut.TabIndex = 47;
-            btnZoomOut.UseVisualStyleBackColor = true;
-            btnZoomOut.Click += btnZoomOut_Click;
             // 
             // gr3DLegend
             // 
@@ -987,10 +941,10 @@
             webView3DRender.CreationProperties = null;
             webView3DRender.DefaultBackgroundColor = Color.White;
             webView3DRender.Dock = DockStyle.Fill;
-            webView3DRender.Location = new Point(0, 64);
+            webView3DRender.Location = new Point(0, 104);
             webView3DRender.Name = "webView3DRender";
             webView3DRender.Padding = new Padding(10);
-            webView3DRender.Size = new Size(694, 703);
+            webView3DRender.Size = new Size(694, 663);
             webView3DRender.TabIndex = 0;
             webView3DRender.ZoomFactor = 1D;
             webView3DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
@@ -998,8 +952,8 @@
             // p3DRender
             // 
             p3DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p3DRender.Controls.Add(p3DViewing);
             p3DRender.Controls.Add(cb3DShowUnselectedNodes);
-            p3DRender.Controls.Add(cb3DLegend);
             p3DRender.Controls.Add(cb3DGapJunc);
             p3DRender.Controls.Add(cb3DChemJunc);
             p3DRender.Controls.Add(e3DSomiteRange);
@@ -1010,9 +964,71 @@
             p3DRender.Dock = DockStyle.Top;
             p3DRender.Location = new Point(0, 0);
             p3DRender.Name = "p3DRender";
-            p3DRender.Padding = new Padding(0, 0, 5, 0);
-            p3DRender.Size = new Size(694, 64);
+            p3DRender.Size = new Size(694, 104);
             p3DRender.TabIndex = 3;
+            // 
+            // p3DViewing
+            // 
+            p3DViewing.Controls.Add(lNodeSize);
+            p3DViewing.Controls.Add(udNodeSize);
+            p3DViewing.Controls.Add(cb3DLegend);
+            p3DViewing.Controls.Add(dd3DViewpoint);
+            p3DViewing.Controls.Add(btnZoomIn);
+            p3DViewing.Controls.Add(btnZoomOut);
+            p3DViewing.Dock = DockStyle.Bottom;
+            p3DViewing.Location = new Point(0, 64);
+            p3DViewing.Name = "p3DViewing";
+            p3DViewing.Size = new Size(694, 39);
+            p3DViewing.TabIndex = 58;
+            // 
+            // cb3DLegend
+            // 
+            cb3DLegend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cb3DLegend.AutoSize = true;
+            cb3DLegend.Checked = true;
+            cb3DLegend.CheckState = CheckState.Checked;
+            cb3DLegend.Location = new Point(625, 9);
+            cb3DLegend.Name = "cb3DLegend";
+            cb3DLegend.Size = new Size(65, 19);
+            cb3DLegend.TabIndex = 63;
+            cb3DLegend.Text = "Legend";
+            cb3DLegend.UseVisualStyleBackColor = true;
+            cb3DLegend.CheckedChanged += cb3DLegend_CheckedChanged;
+            // 
+            // dd3DViewpoint
+            // 
+            dd3DViewpoint.DropDownStyle = ComboBoxStyle.DropDownList;
+            dd3DViewpoint.FormattingEnabled = true;
+            dd3DViewpoint.Items.AddRange(new object[] { "Free view", "Dorsal view", "Ventral view", "Rostral view", "Caudal view", "Lateral view (left)", "Lateral view (right)" });
+            dd3DViewpoint.Location = new Point(8, 7);
+            dd3DViewpoint.Name = "dd3DViewpoint";
+            dd3DViewpoint.Size = new Size(175, 23);
+            dd3DViewpoint.TabIndex = 54;
+            dd3DViewpoint.SelectedIndexChanged += dd3DViewpoint_SelectedIndexChanged;
+            // 
+            // btnZoomIn
+            // 
+            btnZoomIn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnZoomIn.Image = (Image)resources.GetObject("btnZoomIn.Image");
+            btnZoomIn.ImageAlign = ContentAlignment.TopLeft;
+            btnZoomIn.Location = new Point(220, 2);
+            btnZoomIn.Name = "btnZoomIn";
+            btnZoomIn.Size = new Size(32, 32);
+            btnZoomIn.TabIndex = 48;
+            btnZoomIn.UseVisualStyleBackColor = true;
+            btnZoomIn.Click += btnZoomIn_Click;
+            // 
+            // btnZoomOut
+            // 
+            btnZoomOut.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnZoomOut.Image = (Image)resources.GetObject("btnZoomOut.Image");
+            btnZoomOut.ImageAlign = ContentAlignment.TopLeft;
+            btnZoomOut.Location = new Point(186, 2);
+            btnZoomOut.Name = "btnZoomOut";
+            btnZoomOut.Size = new Size(32, 32);
+            btnZoomOut.TabIndex = 47;
+            btnZoomOut.UseVisualStyleBackColor = true;
+            btnZoomOut.Click += btnZoomOut_Click;
             // 
             // cb3DShowUnselectedNodes
             // 
@@ -1025,20 +1041,6 @@
             cb3DShowUnselectedNodes.Text = "Show Unselected Nodes";
             cb3DShowUnselectedNodes.UseVisualStyleBackColor = true;
             cb3DShowUnselectedNodes.CheckedChanged += cb3DShowUnselectedNodes_CheckedChanged;
-            // 
-            // cb3DLegend
-            // 
-            cb3DLegend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            cb3DLegend.AutoSize = true;
-            cb3DLegend.Checked = true;
-            cb3DLegend.CheckState = CheckState.Checked;
-            cb3DLegend.Location = new Point(528, 12);
-            cb3DLegend.Name = "cb3DLegend";
-            cb3DLegend.Size = new Size(65, 19);
-            cb3DLegend.TabIndex = 57;
-            cb3DLegend.Text = "Legend";
-            cb3DLegend.UseVisualStyleBackColor = true;
-            cb3DLegend.CheckedChanged += cb3DLegend_CheckedChanged;
             // 
             // cb3DGapJunc
             // 
@@ -1091,16 +1093,16 @@
             // 
             pLine3D.BackColor = Color.LightGray;
             pLine3D.Dock = DockStyle.Bottom;
-            pLine3D.Location = new Point(0, 63);
+            pLine3D.Location = new Point(0, 103);
             pLine3D.Name = "pLine3D";
-            pLine3D.Size = new Size(689, 1);
+            pLine3D.Size = new Size(694, 1);
             pLine3D.TabIndex = 30;
             // 
             // linkSaveHTML3D
             // 
             linkSaveHTML3D.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             linkSaveHTML3D.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTML3D.Location = new Point(620, 12);
+            linkSaveHTML3D.Location = new Point(625, 12);
             linkSaveHTML3D.Name = "linkSaveHTML3D";
             linkSaveHTML3D.Size = new Size(66, 16);
             linkSaveHTML3D.TabIndex = 27;
@@ -1560,6 +1562,28 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // udNodeSize
+            // 
+            udNodeSize.Items.Add(" ");
+            udNodeSize.Items.Add("  ");
+            udNodeSize.Items.Add("   ");
+            udNodeSize.Items.Add("    ");
+            udNodeSize.Location = new Point(333, 7);
+            udNodeSize.Name = "udNodeSize";
+            udNodeSize.Size = new Size(19, 23);
+            udNodeSize.TabIndex = 66;
+            udNodeSize.Wrap = true;
+            udNodeSize.SelectedItemChanged += udNodeSize_SelectedItemChanged;
+            // 
+            // lNodeSize
+            // 
+            lNodeSize.AutoSize = true;
+            lNodeSize.Location = new Point(268, 11);
+            lNodeSize.Name = "lNodeSize";
+            lNodeSize.Size = new Size(59, 15);
+            lNodeSize.TabIndex = 67;
+            lNodeSize.Text = "Node Size";
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1599,11 +1623,12 @@
             p2DRender.ResumeLayout(false);
             p2DRender.PerformLayout();
             t3DRender.ResumeLayout(false);
-            p3DViewing.ResumeLayout(false);
             gr3DLegend.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webView3DRender).EndInit();
             p3DRender.ResumeLayout(false);
             p3DRender.PerformLayout();
+            p3DViewing.ResumeLayout(false);
+            p3DViewing.PerformLayout();
             tMNKinematics.ResumeLayout(false);
             splitKinematics.Panel1.ResumeLayout(false);
             splitKinematics.Panel2.ResumeLayout(false);
@@ -1674,7 +1699,6 @@
         private LinkLabel linkSaveHTML2D;
         private Button btn2DRender;
         private TabPage t3DRender;
-        private Panel p3DViewing;
         private ComboBox dd3DViewpoint;
         private Button btnZoomIn;
         private Button btnZoomOut;
@@ -1685,7 +1709,6 @@
         private Label legendIncoming;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView3DRender;
         private Panel p3DRender;
-        private CheckBox cb3DLegend;
         private CheckBox cb3DGapJunc;
         private CheckBox cb3DChemJunc;
         private TextBox e3DSomiteRange;
@@ -1751,5 +1774,9 @@
         private ContextMenuStrip cmAnimation;
         private ToolStripMenuItem cmiAnimationClearCache;
         private CheckBox cb3DShowUnselectedNodes;
+        private Panel p3DViewing;
+        private CheckBox cb3DLegend;
+        private Label lNodeSize;
+        private General.UpDownControl udNodeSize;
     }
 }

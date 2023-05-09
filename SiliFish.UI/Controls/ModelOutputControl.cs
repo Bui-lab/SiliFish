@@ -1031,7 +1031,13 @@ namespace SiliFish.UI.Controls
         #endregion
         #endregion
 
-
+        private async void udNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (udNodeSize.UpClick)
+                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (udNodeSize.DownClick)
+                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
     }
 
 }

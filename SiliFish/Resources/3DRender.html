@@ -82,6 +82,7 @@
         let showChemJnc = __SHOW_CHEM__;
         let showGapJnc = __SHOW_GAP__;
         let somiteList = [__SOMITES__];
+        let nodeSize = __NODE_SIZE__
 
         function showLink(l) {
             let show = true;
@@ -121,7 +122,7 @@
             .nodeColor(n => isNodeActive(n) ? colorSet[n.g] : '#EEE')
             .nodeOpacity(0.9)
             .nodeLabel(n => `${n.id} ${n.crd}`)
-            .nodeRelSize(__NODE_SIZE__)
+            .nodeRelSize(nodeSize)
             .nodeVisibility(n => showNode(n) && (showInactiveNodes || isNodeActive(n)))
             .graphData(gapChemData)
             .linkColor(l => linkColor(l))
@@ -227,6 +228,10 @@
             selectedNode = gapChemData.nodes.find(n => n.g == pool);
             showSingleNodeLinks = false;
             gapChemGraph.refresh();
+        }
+        function SetNodeSizeMultiplier(mult) {
+            nodeSize *= mult;
+            gapChemGraph.nodeRelSize(nodeSize);
         }
     </script>
 
