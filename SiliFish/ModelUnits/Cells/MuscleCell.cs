@@ -191,9 +191,13 @@ namespace SiliFish.ModelUnits.Cells
             return 0;
         }
 
+        public override bool IsSpiking(int iStart = 0, int iEnd = -1)
+        {
+            return V.HasSpike(Core.Vthreshold, iStart, iEnd);
+        }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
         {
-            return V.GetPeakIndices(Core.Vr * 1.1, iStart, iEnd);//URGENT this is a random multiplier 
+            return V.GetSpikeIndices(Core.Vthreshold * 1.1, iStart, iEnd);//URGENT this is a random multiplier 
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {

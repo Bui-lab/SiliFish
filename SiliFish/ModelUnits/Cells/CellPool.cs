@@ -285,7 +285,9 @@ namespace SiliFish.ModelUnits.Cells
                     seq.AddRange(seqs.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nCell));
             }
             return Cells
-                .Where(c => (!som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
+                .Where(c =>
+                (cellSelection.cellSelection != PlotSelection.Spiking || c.IsSpiking()) &&
+                (c.Somite < 0 || !som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)
                 .Distinct()

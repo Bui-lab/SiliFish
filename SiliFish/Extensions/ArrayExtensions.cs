@@ -94,7 +94,13 @@ namespace SiliFish.Extensions
             double avg = thisArray.AverageValue();
             return std / avg;
         }
-        public static List<int> GetPeakIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
+        public static bool HasSpike(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
+        {
+            iEnd = iEnd < 0 ? thisArray.Length - 1 : iEnd;
+            int ind = Array.FindIndex(thisArray, iStart, iEnd-iStart, value => value >= threshold);
+            return ind >= 0;
+        }
+        public static List<int> GetSpikeIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
         {
             List<int> indices = new();
             if (iEnd < 0 || iEnd >= thisArray.Length)
@@ -114,7 +120,7 @@ namespace SiliFish.Extensions
             return indices;
         }
 
-        public static int GetPeakStart(this double[] thisArray, double threshold, int tIndex)
+        public static int GetSpikeStart(this double[] thisArray, double threshold, int tIndex)
         {
             List<int> indices = new();
             if (tIndex < 0) return tIndex;

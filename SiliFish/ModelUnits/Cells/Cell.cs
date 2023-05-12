@@ -387,6 +387,13 @@ namespace SiliFish.ModelUnits.Cells
         {
             return V?.MaxValue(iStart, iEnd) ?? 0;
         }
+
+        public virtual bool IsSpiking(int iStart = 0, int iEnd = -1)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
         public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
         {
             Exception exception = new NotImplementedException();
@@ -396,7 +403,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public int GetSpikeStart(int tIndex)
         {
-            return V?.GetPeakStart(Core.Vthreshold, tIndex) ?? -1;
+            return V?.GetSpikeStart(Core.Vthreshold, tIndex) ?? -1;
         }
 
         public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
