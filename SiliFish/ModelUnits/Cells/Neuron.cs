@@ -201,12 +201,6 @@ namespace SiliFish.ModelUnits.Cells
 
         }
 
-        public void NextStep(int t, double stim)
-        {
-            bool spike = false;
-            V[t] = Core.GetNextVal(stim, ref spike);
-        }
-
         public override void CalculateCellularOutputs(int t)
         {
             try

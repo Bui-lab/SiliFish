@@ -352,6 +352,17 @@ namespace SiliFish.ModelUnits.Cells
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
 
+        public virtual void NextStep(int t, double stim)
+        {
+            bool spike = false;
+            double v = Core.GetNextVal(stim, ref spike);
+            if (v < GlobalSettings.BiologicalMinPotential)
+                v = GlobalSettings.BiologicalMinPotential;
+            else if (v > GlobalSettings.BiologicalMaxPotential)
+                v = GlobalSettings.BiologicalMaxPotential;
+            V[t] = v;
+        }
+        
         public virtual void CalculateCellularOutputs(int t)
         {
             try

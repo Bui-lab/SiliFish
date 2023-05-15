@@ -99,7 +99,8 @@ namespace SiliFish.Services.Plotting
                         {
                             gapExists = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            gapTitle += "Gap: " + otherCell.ID + ",";
+                            string cellID = groupByPool ? cell.ID + "↔" : "";
+                            gapTitle += $"Gap: {cellID}{otherCell.ID},";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
@@ -113,6 +114,8 @@ namespace SiliFish.Services.Plotting
                         foreach (ChemicalSynapse jnc in synapses)
                         {
                             synInExists = true;
+                            if (groupByPool)
+                                synInTitle += cell.ID + "←";
                             synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
@@ -123,6 +126,8 @@ namespace SiliFish.Services.Plotting
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
                             {
                                 synOutExists = true;
+                                if (groupByPool)
+                                    synOutTitle += cell.ID + "→";
                                 synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))

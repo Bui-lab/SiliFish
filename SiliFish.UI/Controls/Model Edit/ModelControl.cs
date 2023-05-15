@@ -44,7 +44,6 @@ namespace SiliFish.UI.Controls
         private Cell SelectedCell; //valid if Mode == Mode.RunningModel
         private JunctionBase SelectedJunction;
         private StimulusBase SelectedStimulus;
-        private bool highlightCellPoolOnClick = false;
         private ModelUnitBase SelectedUnit => (ModelUnitBase)SelectedCell ?? SelectedPool ?? SelectedPoolTemplate;
 
 
@@ -53,7 +52,6 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
             listStimuli.EnableImportExport();
             listCellPools.EnableImportExport();
-            listCellPools.AddContextMenu("Highlight on Click", listCellPools_HighlightOnClick);
             listCells.EnableImportExport();
             listIncoming.EnableImportExport();
             listOutgoing.EnableImportExport();
@@ -314,7 +312,7 @@ namespace SiliFish.UI.Controls
             if (sender is CellPool pool)
             {
                 SelectedPool = pool;
-                if (highlightCellPoolOnClick)
+                if (listCellPools.HighlightSelected)
                     listCellPools_ItemHighlight(sender, e);
                 SelectedCell = null;
                 LoadCells();
@@ -359,14 +357,17 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_ItemDelete(object sender, EventArgs e)
         {
-            if (listCellPools.SelectedIndex >= 0)
+            if (listCellPools.SelectedIndices.Any())
             {
                 string msg = "Deleting a cell pool will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
-                    CellPoolTemplate cpl = (CellPoolTemplate)listCellPools.SelectedItem;
-                    Model.RemoveCellPool(cpl);
-                    listCellPools.RemoveItemAt(listCellPools.SelectedIndex);
+                    foreach (var item in listCellPools.SelectedItems)
+                    {
+                        CellPoolTemplate cpl = (CellPoolTemplate)item;
+                        Model.RemoveCellPool(cpl);
+                    }
+                    LoadPools();
                     //Automatically loaded with SelectedIndexChangedEvent LoadProjections();
                     LoadStimuli();
                     ModelIsUpdated();
@@ -397,21 +398,6 @@ namespace SiliFish.UI.Controls
             SelectedUnitArgs args = new() { unitSelected = SelectedPool };
             HighlightRequested?.Invoke(this, args);
         }
-
-        private void listCellPools_HighlightOnClick(object sender, EventArgs e)
-        {
-            listCellPools.RemoveContextMenu("Highlight on Click");
-            listCellPools.AddContextMenu("Skip Highlight on Click", listCellPools_SkipHighlightOnClick);
-            highlightCellPoolOnClick = true;
-        }
-
-        private void listCellPools_SkipHighlightOnClick(object sender, EventArgs e)
-        {
-            listCellPools.RemoveContextMenu("Skip Highlight on Click");
-            listCellPools.AddContextMenu("Highlight on Click", listCellPools_HighlightOnClick);
-            highlightCellPoolOnClick = false;
-        }
-
 
         private void listCellPools_ItemPlot(object sender, EventArgs e)
         {
@@ -516,6 +502,8 @@ namespace SiliFish.UI.Controls
             if (sender is Cell cell)
             {
                 SelectedCell = cell;
+                if (listCells.HighlightSelected)
+                    listCells_ItemHighlight(sender, e);
                 LoadProjections(cell);
                 LoadStimuli(cell);
             }
@@ -544,16 +532,19 @@ namespace SiliFish.UI.Controls
         }
         private void listCells_ItemDelete(object sender, EventArgs e)
         {
-            if (listCells.SelectedIndex >= 0)
+            if (listCells.SelectedIndices.Any())
             {
                 string msg = "Deleting a cell will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
-                    Cell cell = (Cell)listCells.SelectedItem;
-                    cell.ClearLinks();
-                    cell.CellPool.RemoveCell(cell);
-                    listCells.RemoveItemAt(listCells.SelectedIndex);
+                    foreach (var item in listCells.SelectedItems)
+                    {
+                        Cell cell = (Cell)item;
+                        cell.ClearLinks();
+                        cell.CellPool.RemoveCell(cell);
+                    }
                     SelectedCell = null;
+                    LoadCells();
                     LoadProjections();
                     LoadStimuli();
                     ModelIsUpdated();
@@ -896,14 +887,14 @@ namespace SiliFish.UI.Controls
         private void listConnections_ItemDelete(object sender, EventArgs e)
         {
             ListBoxControl lbc = sender as ListBoxControl;
-            if (lbc.SelectedIndex >= 0)
+            if (lbc.SelectedIndices.Any())
             {
-                if (lbc.SelectedItem is InterPoolTemplate ipt)
+                foreach (var item in lbc.SelectedItems)
+                if (item is InterPoolTemplate ipt)
                     Model.RemoveJunction(ipt);
-                else if (lbc.SelectedItem is JunctionBase jb)
+                else if (item is JunctionBase jb)
                     jb.UnlinkObjects();
-
-                lbc.RemoveItemAt(lbc.SelectedIndex);
+                LoadProjections();
                 ModelIsUpdated();
             }
         }
@@ -1193,7 +1184,7 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemDelete(object sender, EventArgs e)
         {
-            if (listStimuli.SelectedItems != null)
+            if (listStimuli.SelectedIndices.Any())
             {
                 if (MessageBox.Show("Do you want to delete selected stimuli?") != DialogResult.OK)
                     return;

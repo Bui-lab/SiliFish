@@ -17,6 +17,8 @@ namespace SiliFish.Definitions
         public static string TempFolder = Path.GetTempPath() + "SiliFish";
         public static string OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         public static double Epsilon = 0.00001;
+        public static double BiologicalMinPotential = -100;
+        public static double BiologicalMaxPotential = 100;
 
         public static int PlotWarningNumber = 10;
         public static string PlotDataFormat = "0.0###";
@@ -57,6 +59,17 @@ namespace SiliFish.Definitions
             DisplayName("Output Folder"),
             Category("Folder")]
         public string OutputFolder { get { return GlobalSettings.OutputFolder; } set { GlobalSettings.OutputFolder = value; } }
+
+
+        [Description("The minimum value a cell membrane potential can take."),
+            DisplayName("Biological Min V"),
+            Category("Const")]
+        public double BiologicalMinPotential { get { return GlobalSettings.BiologicalMinPotential; } set { GlobalSettings.BiologicalMinPotential = value; } }
+
+        [Description("The maximum value a cell membrane potential can take."),
+            DisplayName("Biological Max V"),
+            Category("Const")]
+        public double BiologicalMaxPotential { get { return GlobalSettings.BiologicalMaxPotential; } set { GlobalSettings.BiologicalMaxPotential = value; } }
 
 
         [Description("The maximum value between two numbers to consider them equal."), Category("Const")]

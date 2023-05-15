@@ -155,6 +155,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;
+            ISynA = ISynB = 0;
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / PreNeuron.Model.RunParam.DeltaT);
             else

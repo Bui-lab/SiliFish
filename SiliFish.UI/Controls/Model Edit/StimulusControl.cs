@@ -16,7 +16,6 @@ namespace SiliFish.UI.Controls
     {
         private Stimulus Stimulus;
         private Cell Cell;
-        private CellPool CellPool;
         public override string ToString()
         {
             string activeStatus = !cbActive.Checked ? " (inactive)" :
@@ -34,6 +33,7 @@ namespace SiliFish.UI.Controls
             Stimulus = stim;
             if (stim != null)
             {
+                Cell = stim.TargetCell;
                 eTargetCell.Text = stim.TargetCell.ID;
                 stimControl.SetStimulusSettings(stim.Settings);
                 cbActive.Checked = stim.Active;
@@ -63,7 +63,6 @@ namespace SiliFish.UI.Controls
         internal void SetTargetCellOrPool(Cell selectedCell, CellPool cellPool)
         {
             Cell = selectedCell;
-            CellPool = cellPool;
             if (selectedCell != null)
             {
                 eTargetCell.Text = selectedCell.ID;

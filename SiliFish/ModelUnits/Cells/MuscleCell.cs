@@ -147,11 +147,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (ChemicalSynapse jnc in this.EndPlates)
                 jnc.InitForSimulation(runParam.iMax);
         }
-        public void NextStep(int t, double stim)
-        {
-            bool spike = false;
-            V[t] = Core.GetNextVal(stim, ref spike);
-        }
+
         public override void CalculateMembranePotential(int timeIndex)
         {
             double ISyn = 0, IGap = 0, stim = 0;

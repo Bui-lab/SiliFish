@@ -27,6 +27,10 @@ namespace SiliFish.UI.Controls
             get { return listBox.SelectedIndex; }
             set { listBox.SelectedIndex = value; }
         }
+        public List<int> SelectedIndices
+        {
+            get { return listBox.SelectedIndices.Cast<int>().ToList(); }
+        }
         public object SelectedItem
         {
             get { return listBox.SelectedItem; }
@@ -38,13 +42,14 @@ namespace SiliFish.UI.Controls
             get { return listBox.SelectedItems?.Cast<object>().ToList(); }
         }
 
-
-
         public SelectionMode SelectionMode
         {
             get => listBox.SelectionMode;
-            set { listBox.SelectionMode = value;}
+            set { listBox.SelectionMode = value; }
         }
+
+        public bool HighlightSelected => miHighlightSelected.CheckState == CheckState.Checked;
+
 
         public void EnableImportExport()
         {
@@ -201,17 +206,26 @@ namespace SiliFish.UI.Controls
             {
                 var (_, exists) = listBox.Items[0].GetPropertyValue("Active", true);
                 miShowAll.Visible = miHideInactive.Visible = exists;
-                if (listBox.SelectedItem != null)
+                if (exists)
                 {
-                    (var active, exists) = listBox.SelectedItem.GetPropertyValue("Active", true);
-                    if (exists)
+                    bool activeExists = false;
+                    bool inactiveExists = false;
+
+                    foreach (var item in listBox.SelectedItems)
                     {
-                        miActivate.Visible = !active;
-                        miDeactivate.Visible = active;
+                        (bool active, bool _) = item.GetPropertyValue("Active", true);
+                        if (active)
+                            activeExists = true;
+                        else
+                            inactiveExists = true;
+                        if (activeExists && inactiveExists)
+                            break;
                     }
+                    miActivate.Visible = inactiveExists;
+                    miDeactivate.Visible = activeExists;
                 }
             }
-            miPlot.Visible = ItemPlot != null;
+            miPlot.Visible = listBox.SelectedItems.Count == 1 && ItemPlot != null;
             miHighlight.Visible = ItemHighlight != null;
             sepPlot.Visible = miPlot.Visible || miHighlight.Visible;
         }
@@ -314,7 +328,11 @@ namespace SiliFish.UI.Controls
             }
         }
 
-
-
+        private void miHighlightSelected_Click(object sender, EventArgs e)
+        {
+            miHighlightSelected.CheckState = miHighlightSelected.CheckState == CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
+            if (miHighlightSelected.CheckState == CheckState.Checked) 
+                ItemHighlight?.Invoke(listBox.SelectedItem, new EventArgs());
+        }
     }
 }

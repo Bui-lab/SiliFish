@@ -375,3 +375,4 @@ FodyWeavers.xsd
 /.obsidian
 /dygraph.js
 /Themes.txt
+/SiliFish/GlobalSuppressions.cs
