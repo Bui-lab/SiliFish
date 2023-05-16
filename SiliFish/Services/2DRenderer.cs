@@ -45,8 +45,13 @@ namespace SiliFish.Services
         /// </summary>
         private void GetNewCoordinates(CellPool pool)
         {
-            (double x, double y, double z) = pool.XYZMiddle();
-            PoolCoordinates.Add(pool.ID, (y, z));
+            if (!PoolCoordinates.ContainsKey(pool.CellGroup))
+            {
+                (double _, double y, double z) = pool.XYZMiddle();
+                if (pool.PositionLeftRight == SagittalPlane.Left)
+                    y *= -1;
+                PoolCoordinates.Add(pool.CellGroup, (y, z));
+            }
         }
         private double GetNewWeight(double d)
         {
@@ -55,7 +60,9 @@ namespace SiliFish.Services
         }
         private string CreateNodeDataPoint(CellPool pool)
         {
-            (double origX, double origY) = PoolCoordinates[pool.ID];
+            (double origX, double origY) = PoolCoordinates[pool.CellGroup];
+            if (pool.PositionLeftRight == SagittalPlane.Left)
+                origX *= -1;
             (double newX, double newY) = (origX * XMult + XOffset, origY * -1 * YMult + YOffset);
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX.ToString(GlobalSettings.CoordinateFormat)},y:{newY.ToString(GlobalSettings.CoordinateFormat)} }}";
         }
@@ -123,8 +130,8 @@ namespace SiliFish.Services
             spreadedPools2 = SpreadPools(negPools, true, true);
             PoolCoordinates = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
 
-            XMin = PoolCoordinates.Min(v => v.Value.Item1);
             XMax = PoolCoordinates.Max(v => v.Value.Item1);
+            XMin = -1 * XMax;
             YMin = PoolCoordinates.Min(v => v.Value.Item2);
             YMax = PoolCoordinates.Max(v => v.Value.Item2);
 

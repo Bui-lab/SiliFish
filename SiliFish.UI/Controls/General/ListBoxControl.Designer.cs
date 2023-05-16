@@ -209,6 +209,7 @@
             miHighlight.Name = "miHighlight";
             miHighlight.Size = new Size(180, 22);
             miHighlight.Text = "Highlight";
+            miHighlight.Visible = false;
             miHighlight.Click += miHighlight_Click;
             // 
             // miHighlightSelected
@@ -216,6 +217,7 @@
             miHighlightSelected.Name = "miHighlightSelected";
             miHighlightSelected.Size = new Size(180, 22);
             miHighlightSelected.Text = "Highlight Selected";
+            miHighlightSelected.Visible = false;
             miHighlightSelected.Click += miHighlightSelected_Click;
             // 
             // ListBoxControl

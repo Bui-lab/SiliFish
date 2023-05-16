@@ -71,7 +71,25 @@ namespace SiliFish.ModelUnits.Junction
         {
             try
             {
-                //TODO chemical synapse import
+                int iter = 1;//junction type is already read before junction creation
+                if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
+                Source = values[iter++].Trim();
+                Target = values[iter++].Trim();
+
+                DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
+                Core = new TwoExp_syn();
+                SynapseParameters synpar = new();
+                synpar.ImportValues(values.Skip(iter).Take(SynapseParameters.ColumnNames.Count).ToList());
+                SynapseParameters = synpar;
+                iter += SynapseParameters.ColumnNames.Count;
+                Weight = double.Parse(values[iter++]);
+                Core.Conductance = Weight;
+                if (double.TryParse(values[iter++], out double d))
+                    FixedDuration_ms = d;
+                Delay_ms = double.Parse(values[iter++]);
+                Active = bool.Parse(values[iter++]);
+                if (iter < values.Count)
+                    TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
             }
             catch (Exception ex)
             {
@@ -153,9 +171,11 @@ namespace SiliFish.ModelUnits.Junction
         }
         public void InitForSimulation(int nmax)
         {
+            Core.Conductance = Weight;
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;
             ISynA = ISynB = 0;
+            
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / PreNeuron.Model.RunParam.DeltaT);
             else

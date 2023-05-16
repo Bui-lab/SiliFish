@@ -44,6 +44,7 @@ namespace SiliFish.UI.Controls
         private string tempFile;
         List<ChartDataStruct> LastPlottedCharts;
         RunningModel RunningModel = null;
+        bool rendered2D = false;
 
         private bool PlotSelectionVisible
         {
@@ -403,10 +404,13 @@ namespace SiliFish.UI.Controls
             List<string> itemList = new()
             {
                 Const.AllPools,
-                Const.AllMuscleCells,
-                Const.AllMotoneurons,
-                Const.AllInterneurons,
-                Const.AllNeurons
+                Const.SupraSpinal,
+                Const.MuscleCells,
+                Const.Motoneurons,
+                Const.Interneurons,
+                Const.Neurons,
+                Const.ExcitatoryNeurons,
+                Const.InhibitoryNeurons
             };
             itemList.AddRange(RunningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p).ToArray());
 
@@ -747,6 +751,7 @@ namespace SiliFish.UI.Controls
             string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
             webView2DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+            rendered2D = true;
 
         }
         private void btn2DRender_Click(object sender, EventArgs e)
@@ -1037,6 +1042,12 @@ namespace SiliFish.UI.Controls
                 await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
             if (udNodeSize.DownClick)
                 await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+
+        private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
+                RenderIn2D();
         }
     }
 

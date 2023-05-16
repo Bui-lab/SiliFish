@@ -9,9 +9,12 @@ namespace SiliFish.Definitions
     public static class Const
     {
         public static string AllPools = "All Pools";
-        public static string AllMuscleCells = "Muscle Cells";
-        public static string AllNeurons = "Neurons";
-        public static string AllMotoneurons = "Motoneurons";
-        public static string AllInterneurons = "Interneurons";
+        public static string MuscleCells = "Muscle Cells";
+        public static string Neurons = "Neurons";
+        public static string Motoneurons = "Motoneurons";
+        public static string Interneurons = "Interneurons";
+        public static string SupraSpinal = "Supra Spinal";
+        public static string ExcitatoryNeurons = "Excitatory Neurons";
+        public static string InhibitoryNeurons = "Inhibitory Neurons";
     }
 }

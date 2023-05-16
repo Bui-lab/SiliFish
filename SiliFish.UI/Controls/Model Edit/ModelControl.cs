@@ -50,12 +50,19 @@ namespace SiliFish.UI.Controls
         public ModelControl()
         {
             InitializeComponent();
+            
             listStimuli.EnableImportExport();
+            
             listCellPools.EnableImportExport();
+            listCellPools.EnableHightlight();
+            
             listCells.EnableImportExport();
+            listCells.EnableHightlight();
+
             listIncoming.EnableImportExport();
             listOutgoing.EnableImportExport();
             listGap.EnableImportExport();
+            
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
         }
@@ -1287,12 +1294,6 @@ namespace SiliFish.UI.Controls
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
-        }
-
-        private void listStimuli_ItemHighlight(object sender, EventArgs e)
-        {
-            SelectedUnitArgs args = new() { unitSelected = SelectedStimulus };
-            HighlightRequested?.Invoke(this, args);
         }
 
         private void listStimuli_ItemPlot(object sender, EventArgs e)

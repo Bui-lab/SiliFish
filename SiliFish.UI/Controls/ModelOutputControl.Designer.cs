@@ -97,6 +97,8 @@
             webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p3DRender = new Panel();
             p3DViewing = new Panel();
+            lNodeSize = new Label();
+            udNodeSize = new General.UpDownControl();
             cb3DLegend = new CheckBox();
             dd3DViewpoint = new ComboBox();
             btnZoomIn = new Button();
@@ -153,8 +155,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            udNodeSize = new General.UpDownControl();
-            lNodeSize = new Label();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -218,6 +218,7 @@
             tabOutputs.SelectedIndex = 0;
             tabOutputs.Size = new Size(702, 795);
             tabOutputs.TabIndex = 2;
+            tabOutputs.SelectedIndexChanged += tabOutputs_SelectedIndexChanged;
             // 
             // tPlot
             // 
@@ -981,6 +982,28 @@
             p3DViewing.Size = new Size(694, 39);
             p3DViewing.TabIndex = 58;
             // 
+            // lNodeSize
+            // 
+            lNodeSize.AutoSize = true;
+            lNodeSize.Location = new Point(268, 11);
+            lNodeSize.Name = "lNodeSize";
+            lNodeSize.Size = new Size(59, 15);
+            lNodeSize.TabIndex = 67;
+            lNodeSize.Text = "Node Size";
+            // 
+            // udNodeSize
+            // 
+            udNodeSize.Items.Add(" ");
+            udNodeSize.Items.Add("  ");
+            udNodeSize.Items.Add("   ");
+            udNodeSize.Items.Add("    ");
+            udNodeSize.Location = new Point(333, 7);
+            udNodeSize.Name = "udNodeSize";
+            udNodeSize.Size = new Size(19, 23);
+            udNodeSize.TabIndex = 66;
+            udNodeSize.Wrap = true;
+            udNodeSize.SelectedItemChanged += udNodeSize_SelectedItemChanged;
+            // 
             // cb3DLegend
             // 
             cb3DLegend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -1561,28 +1584,6 @@
             // saveFileImage
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
-            // 
-            // udNodeSize
-            // 
-            udNodeSize.Items.Add(" ");
-            udNodeSize.Items.Add("  ");
-            udNodeSize.Items.Add("   ");
-            udNodeSize.Items.Add("    ");
-            udNodeSize.Location = new Point(333, 7);
-            udNodeSize.Name = "udNodeSize";
-            udNodeSize.Size = new Size(19, 23);
-            udNodeSize.TabIndex = 66;
-            udNodeSize.Wrap = true;
-            udNodeSize.SelectedItemChanged += udNodeSize_SelectedItemChanged;
-            // 
-            // lNodeSize
-            // 
-            lNodeSize.AutoSize = true;
-            lNodeSize.Location = new Point(268, 11);
-            lNodeSize.Name = "lNodeSize";
-            lNodeSize.Size = new Size(59, 15);
-            lNodeSize.TabIndex = 67;
-            lNodeSize.Text = "Node Size";
             // 
             // ModelOutputControl
             // 

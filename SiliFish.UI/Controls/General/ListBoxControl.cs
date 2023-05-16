@@ -56,6 +56,11 @@ namespace SiliFish.UI.Controls
             miExport.Enabled = miImport.Enabled = true;
         }
 
+        public void EnableHightlight()
+        {
+            miHighlight.Visible = miHighlightSelected.Visible = true;
+        }
+
 
         #region Private Functions
         private void EditItem()
@@ -331,7 +336,7 @@ namespace SiliFish.UI.Controls
         private void miHighlightSelected_Click(object sender, EventArgs e)
         {
             miHighlightSelected.CheckState = miHighlightSelected.CheckState == CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
-            if (miHighlightSelected.CheckState == CheckState.Checked) 
+            if (miHighlightSelected.CheckState == CheckState.Checked)
                 ItemHighlight?.Invoke(listBox.SelectedItem, new EventArgs());
         }
     }

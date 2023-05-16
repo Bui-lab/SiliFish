@@ -170,6 +170,8 @@ namespace SiliFish.ModelUnits.Cells
                 double avgSomite = (minSomite + maxSomite) / 2;
                 double minDistance = Cells.Min(c => Math.Abs(c.Somite - avgSomite));
                 List<Cell> midSomiteCells = Cells.Where(c => c.Somite - avgSomite == minDistance).OrderBy(c => c.Sequence).ToList();
+                if (!midSomiteCells.Any())
+                    return (0, 0, 0);
                 midCell = midSomiteCells[midSomiteCells.Count / 2];
             }
             int mult = 1;

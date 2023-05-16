@@ -622,14 +622,23 @@ namespace SiliFish.ModelUnits.Architecture
             List<CellPool> pools = null;
             if (poolIdentifier == Const.AllPools)
                 pools = neuronPools.Union(musclePools).Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.AllNeurons)
+            else if (poolIdentifier == Const.Neurons)
                 pools = neuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.AllMuscleCells)
+            else if (poolIdentifier == Const.MuscleCells)
                 pools = musclePools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.AllMotoneurons)
+            else if (poolIdentifier == Const.Motoneurons)
                 pools = MotoNeuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.AllInterneurons)
+            else if (poolIdentifier == Const.Interneurons)
                 pools = InterNeuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.ExcitatoryNeurons)
+                pools = neuronPools.Where(p => p.NTMode == NeuronClass.Glutamatergic &&
+                    p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.InhibitoryNeurons)
+                pools = neuronPools.Where(p => (p.NTMode == NeuronClass.GABAergic || p.NTMode == NeuronClass.Glycinergic) &&
+                    p.OnSide(cellSelection.SagittalPlane)).ToList();
+            else if (poolIdentifier == Const.SupraSpinal)
+                pools = neuronPools.Union(musclePools).Where(p => p.BodyLocation== BodyLocation.SupraSpinal &&
+                    p.OnSide(cellSelection.SagittalPlane)).ToList();
             else
                 pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
                                 && p.OnSide(cellSelection.SagittalPlane)).ToList();
