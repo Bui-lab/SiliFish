@@ -56,7 +56,7 @@ namespace SiliFish.UI.Controls
             }
             set
             {
-                pPlotSelection.Visible = value;
+                pPlotSelection.Visible = cbGroupByCells.Visible = cbGroupBySomites.Visible = value;
                 pPlotSelection.Tag = value;
                 //The visible property can return false if the form is not in the visible field, regardless of this value. So use the tag field instead
             }
@@ -282,7 +282,7 @@ namespace SiliFish.UI.Controls
                     IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.groupCells, multiCells.groupSomites);
                     numOfPlots = cellGroups.Count();
                 }
-                else numOfPlots=Cells.Count();
+                else numOfPlots = Cells.Count();
             }
             else if (Pools != null && Pools.Any())
                 numOfPlots = Pools.Count;
@@ -406,6 +406,18 @@ namespace SiliFish.UI.Controls
         private void ePlotSomiteSelection_ValueChanged(object sender, EventArgs e)
         {
             if (ePlotSomiteSelection.Focused)
+                DisplayNumberOfPlots();
+        }
+
+        private void cbGroupBySomites_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbGroupBySomites.Focused)
+                DisplayNumberOfPlots();
+        }
+
+        private void cbGroupByCells_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbGroupByCells.Focused)
                 DisplayNumberOfPlots();
         }
         private void PopulatePlotPools()
@@ -1064,6 +1076,8 @@ namespace SiliFish.UI.Controls
             if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
                 RenderIn2D();
         }
+
+
     }
 
 }

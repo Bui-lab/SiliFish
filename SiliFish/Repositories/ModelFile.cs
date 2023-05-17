@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml;
+﻿using GeneticSharp;
+using OfficeOpenXml;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
@@ -409,7 +410,7 @@ namespace SiliFish.Repositories
                     sw.WriteLine(string.Join(",", StimulusTemplate.ColumnNames));
                     foreach (StimulusTemplate stim in stimulusTemplates)
                     {
-                        sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues())); 
+                        sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues()));
                     }
                 }
                 else if (model is RunningModel rm)
@@ -423,7 +424,7 @@ namespace SiliFish.Repositories
                     sw.WriteLine(string.Join(",", Stimulus.ColumnNames));
                     foreach (Stimulus stim in stimuli)
                     {
-                        sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues())); 
+                        sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues()));
                     }
                 }
                 return true;
@@ -642,7 +643,7 @@ namespace SiliFish.Repositories
                 using StreamWriter sw = new(fs);
                 List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
                         model is RunningModel modelRunning ? modelRunning.GetCellPools() : new();
-                sw.WriteLine(string.Join(",",CellPoolTemplate.ColumnNames));
+                sw.WriteLine(string.Join(",", CellPoolTemplate.ColumnNames));
                 foreach (CellPoolTemplate cpt in cellPools)
                 {
                     sw.WriteLine(CSVUtil.GetCSVLine(cpt.ExportValues()));
@@ -715,7 +716,7 @@ namespace SiliFish.Repositories
                 return ReadJunctionsFromCSV(filename, model, selectedUnit, gap, chemin, chemout);
             return false;
         }
-        private static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
+        private static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -752,8 +753,8 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
-        
-        private static bool ReadInterPoolTemplatesFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
+
+        private static bool ReadInterPoolTemplatesFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -773,8 +774,8 @@ namespace SiliFish.Repositories
                     InterPoolTemplate ipt = new();
                     ipt.ImportValues(contents[iter++].Split(",").ToList());
                     //check whether it is part of what 
-                    bool jncCheck = gap && ipt.ConnectionType== ConnectionType.Gap &&
-                            (cpt==null || ipt.PoolSource == cpt.CellGroup || ipt.PoolTarget==cpt.CellGroup);
+                    bool jncCheck = gap && ipt.ConnectionType == ConnectionType.Gap &&
+                            (cpt == null || ipt.PoolSource == cpt.CellGroup || ipt.PoolTarget == cpt.CellGroup);
                     if (!jncCheck)
                         jncCheck = chemout && ipt.ConnectionType != ConnectionType.Gap &&
                             (cpt == null || ipt.PoolSource == cpt.CellGroup);
@@ -794,7 +795,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        private static bool SaveJunctionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
+        private static bool SaveJunctionsToCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -843,7 +844,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        private static bool ReadJunctionsFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit,bool gap, bool chemin, bool chemout)
+        private static bool ReadJunctionsFromCSV(string filename, ModelBase model, ModelUnitBase selectedUnit, bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -857,7 +858,7 @@ namespace SiliFish.Repositories
                 if (columns != string.Join(",", JunctionBase.ColumnNames))
                     return false;
                 CellPool cellPool = selectedUnit as CellPool;
-                Cell cell= selectedUnit as Cell;
+                Cell cell = selectedUnit as Cell;
                 runningModel.RemoveJunctionsOf(cellPool, cell, gap, chemin, chemout);
                 while (iter < contents.Length)
                 {
@@ -1025,11 +1026,13 @@ namespace SiliFish.Repositories
         {
             model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            if (File.Exists(fileName)) 
+            if (File.Exists(fileName))
                 File.Delete(fileName);
             using ExcelPackage package = new(fileName);
             ExcelWorksheet workSheet = package.Workbook.Worksheets.Add("Model");
             int rowindex = 1;
+            workSheet.Cells[rowindex, 1].Value = "Model";
+            workSheet.Cells[rowindex++, 2].Value = model is RunningModel ? "Running Model" : "Model Template";
             workSheet.Cells[rowindex, 1].Value = "Version";
             workSheet.Cells[rowindex++, 2].Value = model.Version;
             workSheet.Cells[rowindex, 1].Value = "Name";
@@ -1061,7 +1064,7 @@ namespace SiliFish.Repositories
                 workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
             }
 
-            if (model.Parameters!=null && model.Parameters.Any())
+            if (model.Parameters != null && model.Parameters.Any())
             {
                 workSheet = package.Workbook.Worksheets.Add("Parameters");
                 rowindex = 1;
@@ -1078,10 +1081,56 @@ namespace SiliFish.Repositories
             package.Save();
         }
 
+        public static bool ReadParamsFromSheet(ExcelWorkbook workbook, string sheetName, object obj)
+        {
+            try
+            {
+                ExcelWorksheet workSheet = workbook.Worksheets[sheetName];
+                if (workSheet == null)
+                    return false;
+                int rowindex = 1;
+                while (true)
+                {
+                    string prop = workSheet.Cells[rowindex, 1].Value?.ToString();
+                    if (string.IsNullOrEmpty(prop))
+                        break;
+                    obj.SetPropertyValue(prop, workSheet.Cells[rowindex++, 2].Value);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static ModelBase ReadFromExcel(string fileName)
         {
-            //TODO Read Model from Excel
-            return null;
+            using ExcelPackage package = new(fileName);
+            if (package.Workbook == null ||
+                !package.Workbook.Worksheets.Any(ws => ws.Name == "Model"))
+                return null;
+            ExcelWorksheet workSheet = package.Workbook.Worksheets["Model"];
+            int rowindex = 1;
+            if (workSheet.Cells[rowindex, 1].Value.ToString() != "Model")
+                return null;
+            string modelMode = workSheet.Cells[rowindex++, 2].Value.ToString();
+            ModelBase model = null;
+            if (modelMode == "Running Model")
+                model = new RunningModel();
+            else if (modelMode == "Model Template")
+                model = new ModelTemplate();
+            else return null;
+            model.Version = workSheet.Cells[rowindex++, 2].Value.ToString();
+            model.ModelName = workSheet.Cells[rowindex++, 2].Value.ToString();
+            model.ModelDescription = workSheet.Cells[rowindex++, 2].Value.ToString();
+
+            ReadParamsFromSheet(package.Workbook, "Model Dimensions", model.ModelDimensions);
+            ReadParamsFromSheet(package.Workbook, "Model Settings", model.Settings);
+            ReadParamsFromSheet(package.Workbook, "Kinem Params", model.KinemParam);
+            ReadParamsFromSheet(package.Workbook, "Parameters", model.Parameters);
+
+            //TODO read architecture
+            return model;
         }
 
         #endregion

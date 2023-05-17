@@ -42,6 +42,8 @@
             cmiPlotImageSave = new ToolStripMenuItem();
             pictureBoxRight = new PictureBox();
             pPlot = new Panel();
+            cbGroupByCells = new CheckBox();
+            cbGroupBySomites = new CheckBox();
             pPlotSelection = new Panel();
             lSagittal = new Label();
             ddPlotPools = new ComboBox();
@@ -155,8 +157,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            cbGroupBySomites = new CheckBox();
-            cbGroupByCells = new CheckBox();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -369,6 +369,28 @@
             pPlot.Name = "pPlot";
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
+            // 
+            // cbGroupByCells
+            // 
+            cbGroupByCells.AutoSize = true;
+            cbGroupByCells.Location = new Point(446, 114);
+            cbGroupByCells.Name = "cbGroupByCells";
+            cbGroupByCells.Size = new Size(59, 19);
+            cbGroupByCells.TabIndex = 62;
+            cbGroupByCells.Text = "Group";
+            cbGroupByCells.UseVisualStyleBackColor = true;
+            cbGroupByCells.CheckedChanged += cbGroupByCells_CheckedChanged;
+            // 
+            // cbGroupBySomites
+            // 
+            cbGroupBySomites.AutoSize = true;
+            cbGroupBySomites.Location = new Point(446, 89);
+            cbGroupBySomites.Name = "cbGroupBySomites";
+            cbGroupBySomites.Size = new Size(59, 19);
+            cbGroupBySomites.TabIndex = 61;
+            cbGroupBySomites.Text = "Group";
+            cbGroupBySomites.UseVisualStyleBackColor = true;
+            cbGroupBySomites.CheckedChanged += cbGroupBySomites_CheckedChanged;
             // 
             // pPlotSelection
             // 
@@ -1588,26 +1610,6 @@
             // saveFileImage
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
-            // 
-            // cbGroupBySomites
-            // 
-            cbGroupBySomites.AutoSize = true;
-            cbGroupBySomites.Location = new Point(446, 89);
-            cbGroupBySomites.Name = "cbGroupBySomites";
-            cbGroupBySomites.Size = new Size(59, 19);
-            cbGroupBySomites.TabIndex = 61;
-            cbGroupBySomites.Text = "Group";
-            cbGroupBySomites.UseVisualStyleBackColor = true;
-            // 
-            // cbGroupByCells
-            // 
-            cbGroupByCells.AutoSize = true;
-            cbGroupByCells.Location = new Point(446, 114);
-            cbGroupByCells.Name = "cbGroupByCells";
-            cbGroupByCells.Size = new Size(59, 19);
-            cbGroupByCells.TabIndex = 62;
-            cbGroupByCells.Text = "Group";
-            cbGroupByCells.UseVisualStyleBackColor = true;
             // 
             // ModelOutputControl
             // 

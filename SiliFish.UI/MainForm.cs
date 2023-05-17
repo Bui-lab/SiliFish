@@ -9,6 +9,7 @@ using SiliFish.Services;
 using SiliFish.UI.Controls;
 using SiliFish.UI.Definitions;
 using SiliFish.UI.EventArguments;
+using System.Diagnostics.Eventing.Reader;
 
 namespace SiliFish.UI
 {
@@ -371,18 +372,26 @@ namespace SiliFish.UI
                 SetCurrentMode(RunMode.RunningModel, name);
             }
         }
+
+        private bool CheckModelBeforeSave()
+        {
+            ModelBase mb = modelControl.GetModel();
+            List<string> errors = new();
+            if (!mb.CheckValues(ref errors))
+            {
+                if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
+                    $"{string.Join("\r\n", errors)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    return false;
+            }
+            return true;
+        }
         private bool SaveModelAsJSON()
         {
             try
             {
+                if (!CheckModelBeforeSave())
+                    return false;
                 ModelBase mb = modelControl.GetModel();
-                List<string> errors = new();
-                if (!mb.CheckValues(ref errors))
-                {
-                    if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
-                        $"{string.Join("\r\n", errors)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                        return false;
-                }
                 if (!string.IsNullOrEmpty(lastFileName))
                     saveFileJson.FileName = lastFileName;
                 else
@@ -405,18 +414,13 @@ namespace SiliFish.UI
                 return false;
             }
         }
-        private void SaveModelAsExcel()
+        private bool SaveModelAsExcel()
         {
             try
             {
+                if (!CheckModelBeforeSave())
+                    return false;
                 ModelBase mb = modelControl.GetModel();
-                List<string> errors = new();
-                if (!mb.CheckValues(ref errors))
-                {
-                    if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
-                        $"{string.Join("\r\n", errors)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                        return;
-                }
                 if (!string.IsNullOrEmpty(lastFileName))
                     saveFileExcel.FileName = Path.ChangeExtension(lastFileName, "xlsx");
                 else
@@ -437,28 +441,53 @@ namespace SiliFish.UI
                         }
                     };
                     p.Start();
+                    return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-                return;
+                return false;
             }
         }
         private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            cmSaveModel.Show(linkSaveModel, new Point(5, 5));
-        }
-
-        private void saveAsJSON_Click(object sender, EventArgs e)
-        {
             SaveModelAsJSON();
         }
 
-
-        private void saveAsExcel_Click(object sender, EventArgs e)
+        private void linkExportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SaveModelAsExcel();
+        }
+
+
+        private void linkImportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                openFileExcel.InitialDirectory = modelFileDefaultFolder;
+                if (openFileExcel.ShowDialog() == DialogResult.OK)
+                {
+                    ModelBase mb;
+                    try
+                    {
+                        mb = ModelFile.ReadFromExcel(openFileExcel.FileName);
+                        lastFileName = openFileExcel.FileName;
+                        SetModel(mb, Path.GetFileNameWithoutExtension(openFileExcel.FileName));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Selected file is not a valid Model or Template file.");
+                        return;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
         }
         private void linkNewModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

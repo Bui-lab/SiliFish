@@ -30,7 +30,7 @@ namespace SiliFish.ModelUnits.Architecture
         public KinemParam KinemParam { get; set; } = new();
 
         [JsonPropertyOrder(2)]
-        public Dictionary<string, object> Parameters { get; set; }
+        public Dictionary<string, object> Parameters { get; set; } = new();
 
         public ModelBase()
         {
