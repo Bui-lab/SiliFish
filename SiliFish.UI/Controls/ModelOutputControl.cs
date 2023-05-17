@@ -76,8 +76,7 @@ namespace SiliFish.UI.Controls
             PlotSelectionVisible = true;
             foreach (PlotSelection ps in Enum.GetValues(typeof(PlotSelection)))
             {
-                if (ps != PlotSelection.Summary)
-                    ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
+                ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
                 ddPlotCellSelection.Items.Add(ps.GetDisplayName());
             }
             foreach (SagittalPlane sp in Enum.GetValues(typeof(SagittalPlane)))
@@ -276,6 +275,18 @@ namespace SiliFish.UI.Controls
         private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
         {
             numOfPlots = Cells?.Count ?? 0 + Pools?.Count ?? 0;
+            if (Cells != null && Cells.Any())
+            {
+                if (plotCellSelection is PlotSelectionMultiCells multiCells)
+                {
+                    IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.groupCells, multiCells.groupSomites);
+                    numOfPlots = cellGroups.Count();
+                }
+                else numOfPlots=Cells.Count();
+            }
+            else if (Pools != null && Pools.Any())
+                numOfPlots = Pools.Count;
+
             if (numOfPlots > 0)
             {
                 if (PlotType == PlotType.FullDyn)
@@ -325,7 +336,9 @@ namespace SiliFish.UI.Controls
                     Pools = multiCells.Pools,
                     SagittalPlane = multiCells.SagittalPlane,
                     cellSelection = PlotSelection.All,
-                    somiteSelection = PlotSelection.All
+                    somiteSelection = PlotSelection.All,
+                    groupCells = false,
+                    groupSomites = false
                 };
                 (List<Cell> CellsFull, List<CellPool> PoolsFull) = RunningModel.GetSubsetCellsAndPools(PlotSubset, selForMaxNumbers);
 
@@ -435,7 +448,9 @@ namespace SiliFish.UI.Controls
                     somiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSelection.All),
                     nSomite = (int)ePlotSomiteSelection.Value,
                     cellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotSelection.All),
-                    nCell = (int)ePlotCellSelection.Value
+                    nCell = (int)ePlotCellSelection.Value,
+                    groupCells = cbGroupByCells.Checked,
+                    groupSomites = cbGroupBySomites.Checked
                 };
             }
 
@@ -541,7 +556,7 @@ namespace SiliFish.UI.Controls
             ddPlotSagittal.SelectedItem = pool.PositionLeftRight.ToString();
             ddPlotSomiteSelection.SelectedItem = "All";
             if (!Equals(ddPlotCellSelection.SelectedItem, "All"))
-                ddPlotCellSelection.SelectedItem = "Summary";
+                cbGroupByCells.Checked = true;
         }
         private void SelectPlotSelectionOfCell(Cell cell)
         {

@@ -155,6 +155,8 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            cbGroupBySomites = new CheckBox();
+            cbGroupByCells = new CheckBox();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -340,6 +342,8 @@
             // pPlot
             // 
             pPlot.BackColor = Color.FromArgb(236, 239, 241);
+            pPlot.Controls.Add(cbGroupByCells);
+            pPlot.Controls.Add(cbGroupBySomites);
             pPlot.Controls.Add(pPlotSelection);
             pPlot.Controls.Add(linkExportPlotData);
             pPlot.Controls.Add(pLinePlots);
@@ -1585,6 +1589,26 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // cbGroupBySomites
+            // 
+            cbGroupBySomites.AutoSize = true;
+            cbGroupBySomites.Location = new Point(446, 89);
+            cbGroupBySomites.Name = "cbGroupBySomites";
+            cbGroupBySomites.Size = new Size(59, 19);
+            cbGroupBySomites.TabIndex = 61;
+            cbGroupBySomites.Text = "Group";
+            cbGroupBySomites.UseVisualStyleBackColor = true;
+            // 
+            // cbGroupByCells
+            // 
+            cbGroupByCells.AutoSize = true;
+            cbGroupByCells.Location = new Point(446, 114);
+            cbGroupByCells.Name = "cbGroupByCells";
+            cbGroupByCells.Size = new Size(59, 19);
+            cbGroupByCells.TabIndex = 62;
+            cbGroupByCells.Text = "Group";
+            cbGroupByCells.UseVisualStyleBackColor = true;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1779,5 +1803,7 @@
         private CheckBox cb3DLegend;
         private Label lNodeSize;
         private General.UpDownControl udNodeSize;
+        private CheckBox cbGroupByCells;
+        private CheckBox cbGroupBySomites;
     }
 }

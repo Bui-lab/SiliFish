@@ -49,7 +49,6 @@ namespace SiliFish.Definitions
         [Display(Name = "Single")] Single,
         [Display(Name = "First/Middle/Last")] FirstMiddleLast,
         [Display(Name = "Random")] Random,
-        [Display(Name = "Summary")] Summary,
         [Display(Name = "Spiking")] Spiking
     }
 

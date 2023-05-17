@@ -235,6 +235,38 @@ namespace SiliFish.ModelUnits.Cells
             return Cells.AsEnumerable();
         }
 
+        public IEnumerable<int> GetSomites(PlotSelectionMultiCells somiteSelection)
+        {
+            if (somiteSelection.somiteSelection == PlotSelection.All)
+                return Cells.Select(c => c.Somite).Distinct().AsEnumerable();
+
+            Random random = new();
+            List<int> som = new();
+            if (Model.ModelDimensions.NumberOfSomites > 0)
+            {
+                if (somiteSelection.somiteSelection == PlotSelection.Single)
+                {
+                    som.Add(somiteSelection.nSomite);
+                }
+                else if (somiteSelection.somiteSelection == PlotSelection.FirstMiddleLast)
+                {
+                    int minSom = Cells.Select(c => c.Somite).Min();
+                    int maxSom = Cells.Select(c => c.Somite).Max();
+                    som.Add(minSom);
+                    som.Add(maxSom);
+                    som.Add((minSom + maxSom) / 2);
+                }
+                else if (somiteSelection.somiteSelection == PlotSelection.Random)
+                {
+                    IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
+                    if (somites.Count() > somiteSelection.nSomite)
+                        som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(somiteSelection.nSomite));
+                }
+            }
+            return som;
+        }
+
+
         public IEnumerable<Cell> GetCells(PlotSelectionMultiCells cellSelection)
         {
             if (cellSelection.somiteSelection == PlotSelection.All && cellSelection.cellSelection == PlotSelection.All)

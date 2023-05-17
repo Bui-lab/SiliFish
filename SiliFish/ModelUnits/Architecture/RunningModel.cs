@@ -617,6 +617,7 @@ namespace SiliFish.ModelUnits.Architecture
             FillMissingParameters(paramExternal);
         }
 
+
         public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionMultiCells cellSelection)
         {
             List<CellPool> pools = null;
@@ -643,8 +644,6 @@ namespace SiliFish.ModelUnits.Architecture
                 pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
                                 && p.OnSide(cellSelection.SagittalPlane)).ToList();
 
-            if (cellSelection.cellSelection == PlotSelection.Summary)
-                return (null, pools);
             List<Cell> cells = pools.SelectMany(p => p.GetCells(cellSelection)).ToList();
             if (cells.Any())
                 return (cells, null);
