@@ -13,18 +13,24 @@ namespace SiliFish.Services.Plotting
         public int nSomite = -1;
         public PlotSelection cellSelection = PlotSelection.All;
         public int nCell = -1;
-        public bool groupSomites = false;
-        public bool groupCells = false;
+        public bool combinePools = false;
+        public bool combineSomites = false;
+        public bool combineCells = false;
         public PlotSelectionMultiCells()
         {
         }
 
-        public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells,
-bool groupByPool, bool groupSomites)
+        public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells, 
+            bool combinePools, bool combineSomites, bool combineCells)
         {
-            return cells.GroupBy(c => (groupByPool && groupSomites) ? $"{c.CellPool.ID}" : //One group for all somites and cells in a cell pool
-                                    groupByPool ? $"{c.CellPool.ID}-Somite:{c.Somite}" : //One group for each somite in a cell pool
-                                    groupSomites ? $"Somite: {c.Somite}" : //One group for each somite - including all pools
+            if (combineSomites || combinePools)
+                combineCells = true;
+            return cells.GroupBy(c =>
+                !combinePools && !combineSomites && !combineCells ? $"{c.ID}" ://Each cell seperate
+                !combinePools && !combineSomites && combineCells ? $"{ c.CellPool.ID}-Somite:{ c.Somite}" : //One group for each somite in a cell pool
+                combinePools && !combineSomites ? $"Somite:{c.Somite}" ://One group for each somite
+                !combinePools && combineSomites ? $"{c.CellPool.ID}" ://One group for each pool
+                (combinePools && combineSomites) ? $"All" :
                                     c.ID); //Each cell is separate
         }
     }

@@ -56,7 +56,7 @@ namespace SiliFish.UI.Controls
             }
             set
             {
-                pPlotSelection.Visible = cbGroupByCells.Visible = cbGroupBySomites.Visible = value;
+                pPlotSelection.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = value;
                 pPlotSelection.Tag = value;
                 //The visible property can return false if the form is not in the visible field, regardless of this value. So use the tag field instead
             }
@@ -279,7 +279,7 @@ namespace SiliFish.UI.Controls
             {
                 if (plotCellSelection is PlotSelectionMultiCells multiCells)
                 {
-                    IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.groupCells, multiCells.groupSomites);
+                    IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.combinePools, multiCells.combineSomites, multiCells.combineCells);
                     numOfPlots = cellGroups.Count();
                 }
                 else numOfPlots = Cells.Count();
@@ -296,13 +296,10 @@ namespace SiliFish.UI.Controls
                 else if (PlotType == PlotType.ChemCurrent)
                     numOfPlots *= 2;
                 if (PlotType == PlotType.Stimuli)
-                    lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + numOfPlots.ToString();
+                    toolTip.SetToolTip(btnPlotHTML, $"# of plots: Max {numOfPlots}");
                 else
-                    lNumberOfPlots.Text = lNumberOfPlots.Tag + numOfPlots.ToString();
-                lNumberOfPlots.Visible = true;
+                    toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
             }
-            else
-                lNumberOfPlots.Visible = false;
         }
         private void DisplayNumberOfPlots()
         {
@@ -310,13 +307,13 @@ namespace SiliFish.UI.Controls
             if (PlotType == PlotType.Junction)
             {
                 numOfPlots = 3;
-                lNumberOfPlots.Text = lNumberOfPlots.Tag + numOfPlots.ToString();
+                toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
                 return;
             }
             if (PlotType == PlotType.Episodes)
             {
                 numOfPlots = 7;
-                lNumberOfPlots.Text = lNumberOfPlots.Tag + " max " + numOfPlots.ToString();
+                toolTip.SetToolTip(btnPlotHTML, $"# of plots: Max {numOfPlots}");
                 return;
             }
             GetPlotSubset();
@@ -337,8 +334,9 @@ namespace SiliFish.UI.Controls
                     SagittalPlane = multiCells.SagittalPlane,
                     cellSelection = PlotSelection.All,
                     somiteSelection = PlotSelection.All,
-                    groupCells = false,
-                    groupSomites = false
+                    combineCells = false,
+                    combineSomites = false,
+                    combinePools = false
                 };
                 (List<Cell> CellsFull, List<CellPool> PoolsFull) = RunningModel.GetSubsetCellsAndPools(PlotSubset, selForMaxNumbers);
 
@@ -409,15 +407,29 @@ namespace SiliFish.UI.Controls
                 DisplayNumberOfPlots();
         }
 
-        private void cbGroupBySomites_CheckedChanged(object sender, EventArgs e)
+        private void cbCombineSomites_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbGroupBySomites.Focused)
+            if (cbCombineSomites.Focused)
+            {
+                if (cbCombineSomites.Checked)
+                    cbCombineCells.Checked = true;
                 DisplayNumberOfPlots();
+            }
         }
 
-        private void cbGroupByCells_CheckedChanged(object sender, EventArgs e)
+        private void cbCombineCells_CheckedChanged(object sender, EventArgs e)
         {
-            if (cbGroupByCells.Focused)
+            if (cbCombineCells.Focused)
+            {
+                if (!cbCombineCells.Checked && (cbCombinePools.Checked || cbCombineSomites.Checked))
+                    cbCombineCells.Checked = true; //has to be combined
+                else
+                    DisplayNumberOfPlots();
+            }
+        }
+        private void cbCombinePools_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbCombinePools.Focused)
                 DisplayNumberOfPlots();
         }
         private void PopulatePlotPools()
@@ -461,8 +473,9 @@ namespace SiliFish.UI.Controls
                     nSomite = (int)ePlotSomiteSelection.Value,
                     cellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotSelection.All),
                     nCell = (int)ePlotCellSelection.Value,
-                    groupCells = cbGroupByCells.Checked,
-                    groupSomites = cbGroupBySomites.Checked
+                    combineCells = cbCombineCells.Checked,
+                    combineSomites = cbCombineSomites.Checked,
+                    combinePools = cbCombinePools.Checked
                 };
             }
 
@@ -568,7 +581,7 @@ namespace SiliFish.UI.Controls
             ddPlotSagittal.SelectedItem = pool.PositionLeftRight.ToString();
             ddPlotSomiteSelection.SelectedItem = "All";
             if (!Equals(ddPlotCellSelection.SelectedItem, "All"))
-                cbGroupByCells.Checked = true;
+                cbCombineCells.Checked = true;
         }
         private void SelectPlotSelectionOfCell(Cell cell)
         {

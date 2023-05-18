@@ -129,7 +129,7 @@ namespace SiliFish.ModelUnits.Cells
                 SpatialDistribution.ColumnNames, 
                 "Conduction Velocity", "CoreType",
                 Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
-                "Active", TimeLine.ColumnNames);
+                "Active", "Color", TimeLine.ColumnNames);
 
         [JsonIgnore, Browsable(false)]
         private List<string> csvExportParamValues
@@ -153,7 +153,7 @@ namespace SiliFish.ModelUnits.Cells
                 SpatialDistribution.ExportValues(), 
                 ConductionVelocity?.CSVCellExportValues ?? string.Empty,
                 CoreType, csvExportParamValues,
-                Active, TimeLine_ms.ExportValues());
+                Active, Color.ToHex(), TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -184,6 +184,8 @@ namespace SiliFish.ModelUnits.Cells
                 }
             }
             Active = bool.Parse(values[iter++]);
+            ColorConverter cc = new();
+            Color = (Color)cc.ConvertFromString(values[iter++]);
             if (iter < values.Count)
                 TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
         }

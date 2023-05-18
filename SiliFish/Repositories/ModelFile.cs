@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.Repositories
 {
@@ -924,6 +925,52 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
+        public static bool ReadCellPoolsFromWorksheet(ExcelWorkbook workbook, ModelBase model)
+        {
+            try
+            {
+                ExcelWorksheet worksheet = workbook.Worksheets["Cell Pools"];
+                if (worksheet == null) return false;
+                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                if (!contents.Equivalent(CellPoolTemplate.ColumnNames))
+                    return false;
+                int colCount = contents.Count;
+                int rowInd = 2;
+                if (model is ModelTemplate modelTemplate)
+                {
+                    modelTemplate.CellPoolTemplates.Clear();
+                    while (true)
+                    {
+                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        if (contents.IsEmpty())
+                            break;
+                        CellPoolTemplate cpt = new();
+                        cpt.ImportValues(contents);
+                        modelTemplate.AddCellPool(cpt);
+                    }
+                }
+                else if (model is RunningModel modelRun)
+                {
+                    modelRun.CellPools.Clear();
+                    while (true)
+                    {
+                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        if (contents.IsEmpty())
+                            break;
+                        CellPool cp = new();
+                        cp.ImportValues(contents);
+                        modelRun.AddCellPool(cp);
+                    }
+                }
+                model.LinkObjects();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
         public static bool CreateCellsWorkSheet(ModelBase model, ExcelWorkbook workbook)
         {
             try
@@ -939,6 +986,38 @@ namespace SiliFish.Repositories
             }
         }
 
+        public static bool ReadCellsFromWorksheet(ExcelWorkbook workbook, ModelBase model)
+        {
+            try
+            {
+                if (model is not RunningModel modelRun)
+                    return false;
+                ExcelWorksheet worksheet = workbook.Worksheets["Cells"];
+                if (worksheet == null) return false;
+                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                if (!contents.Equivalent(Cell.ColumnNames))
+                    return false;
+                int colCount = contents.Count;
+                int rowInd = 2;
+                modelRun.ClearCells();
+                while (true)
+                {
+                    contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                    if (contents.IsEmpty())
+                        break;
+                    string discriminator = contents[0];
+                    Cell cell = Cell.CreateCell(discriminator);
+                    cell.ImportValues(contents);
+                    modelRun.AddCell(cell);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
         private static bool CreateJunctionsWorkSheet(ModelBase model, ExcelWorkbook workbook)
         {
             try
@@ -961,6 +1040,64 @@ namespace SiliFish.Repositories
                     return true;
                 }
                 return false;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        public static bool ReadJunctionsFromWorksheet(ExcelWorkbook workbook, ModelBase model)
+        {
+            try
+            {
+                ExcelWorksheet worksheet = workbook.Worksheets["Junctions"];
+                if (worksheet == null) return false;
+                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                int rowInd = 2;
+                if (model is ModelTemplate modelTemplate)
+                {
+                    if (!contents.Equivalent(InterPoolTemplate.ColumnNames))
+                        return false;
+                    int colCount = contents.Count;
+                    modelTemplate.InterPoolTemplates.Clear();
+                    while (true)
+                    {
+                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        if (contents.IsEmpty())
+                            break;
+                        InterPoolTemplate ipt = new();
+                        ipt.ImportValues(contents);
+                        modelTemplate.AddJunction(ipt);
+                    }
+                }
+                else if (model is RunningModel modelRun)
+                {
+                    if (!contents.Equivalent(JunctionBase.ColumnNames))
+                        return false;
+                    int colCount = contents.Count;
+                    modelRun.RemoveJunctionsOf(null, null, true, true, true);
+                    while (true)
+                    {
+                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        if (contents.IsEmpty())
+                            break;
+                        JunctionBase jb = null;
+                        if (contents[0] == ConnectionType.Gap.ToString())
+                        {
+                            jb = new GapJunction();
+                        }
+                        else
+                        {
+                            jb = new ChemicalSynapse();
+                        }
+                        if (jb == null) continue;
+                        jb.ImportValues(contents);
+                        jb.LinkObjects(modelRun);
+                    }
+                }
+                return true;
             }
             catch (Exception ex)
             {
@@ -997,6 +1134,53 @@ namespace SiliFish.Repositories
             }
         }
 
+        public static bool ReadStimuliFromWorksheet(ExcelWorkbook workbook, ModelBase model)
+        {
+            try
+            {
+                ExcelWorksheet worksheet = workbook.Worksheets["Stimuli"];
+                if (worksheet == null) return false;
+                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                int rowInd = 2;
+                if (model is ModelTemplate modelTemplate)
+                {
+                    if (!contents.Equivalent(StimulusTemplate.ColumnNames))
+                        return false;
+                    int colCount = contents.Count;
+                    modelTemplate.ClearStimuli();
+                    while (true)
+                    {
+                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        if (contents.IsEmpty())
+                            break;
+                        StimulusTemplate stim = new();
+                        stim.ImportValues(contents);
+                        modelTemplate.AppliedStimuli.Add(stim);
+                    }
+                }
+                else if (model is RunningModel modelRun)
+                {
+                    if (!contents.Equivalent(Stimulus.ColumnNames))
+                        return false;
+                    int colCount = contents.Count;
+                    modelRun.ClearStimuli();
+                    while (true)
+                    {
+                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        if (contents.IsEmpty())
+                            break;
+                        Stimulus stim = new();
+                        stim.ImportValues(contents);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
         private static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, List<IDataExporterImporter> objList)
         {
             try
@@ -1081,7 +1265,21 @@ namespace SiliFish.Repositories
             package.Save();
         }
 
-        public static bool ReadParamsFromSheet(ExcelWorkbook workbook, string sheetName, object obj)
+        public static List<string> ReadXLCellsFromLine(ExcelWorksheet worksheet, int line, int maxCol = -1)
+        {
+            List<string> cells = new();
+            int colInd = 1;
+            while (true)
+            {
+                string s = worksheet.Cells[line, colInd].Value?.ToString();
+                if (string.IsNullOrEmpty(s) && maxCol < 0) break;
+                cells.Add(s);
+                if (colInd == maxCol) break;
+                colInd++;
+            }
+            return cells;
+        }
+        public static bool ReadPropertiesFromSheet(ExcelWorkbook workbook, string sheetName, object obj)
         {
             try
             {
@@ -1094,7 +1292,8 @@ namespace SiliFish.Repositories
                     string prop = workSheet.Cells[rowindex, 1].Value?.ToString();
                     if (string.IsNullOrEmpty(prop))
                         break;
-                    obj.SetPropertyValue(prop, workSheet.Cells[rowindex++, 2].Value);
+                    obj.SetPropertyValue(prop, workSheet.Cells[rowindex, 2].Value);
+                    rowindex++;
                 }
                 return true;
             }
@@ -1124,12 +1323,17 @@ namespace SiliFish.Repositories
             model.ModelName = workSheet.Cells[rowindex++, 2].Value.ToString();
             model.ModelDescription = workSheet.Cells[rowindex++, 2].Value.ToString();
 
-            ReadParamsFromSheet(package.Workbook, "Model Dimensions", model.ModelDimensions);
-            ReadParamsFromSheet(package.Workbook, "Model Settings", model.Settings);
-            ReadParamsFromSheet(package.Workbook, "Kinem Params", model.KinemParam);
-            ReadParamsFromSheet(package.Workbook, "Parameters", model.Parameters);
+            ReadPropertiesFromSheet(package.Workbook, "Model Dimensions", model.ModelDimensions);
+            ReadPropertiesFromSheet(package.Workbook, "Model Settings", model.Settings);
+            ReadPropertiesFromSheet(package.Workbook, "Kinem Params", model.KinemParam);
+            ReadPropertiesFromSheet(package.Workbook, "Parameters", model.Parameters);
 
-            //TODO read architecture
+
+            ReadCellPoolsFromWorksheet(package.Workbook, model);
+            ReadCellsFromWorksheet(package.Workbook, model);
+            ReadJunctionsFromWorksheet(package.Workbook, model);
+            ReadStimuliFromWorksheet(package.Workbook, model);
+            model.LinkObjects();
             return model;
         }
 
