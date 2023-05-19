@@ -5,8 +5,7 @@
       "environmentVariables": {
         "EPPlusLicenseContext": "NonCommercial"
       },
-      "sqlDebugging": false,
-      "nativeDebugging": true
+      "sqlDebugging": false
     }
   }
 }
