@@ -42,8 +42,9 @@
             cmiPlotImageSave = new ToolStripMenuItem();
             pictureBoxRight = new PictureBox();
             pPlot = new Panel();
-            cbGroupByCells = new CheckBox();
-            cbGroupBySomites = new CheckBox();
+            cbCombinePools = new CheckBox();
+            cbCombineCells = new CheckBox();
+            cbCombineSomites = new CheckBox();
             pPlotSelection = new Panel();
             lSagittal = new Label();
             ddPlotPools = new ComboBox();
@@ -63,7 +64,6 @@
             lpx1 = new Label();
             lPlotHeight = new Label();
             lpx2 = new Label();
-            lNumberOfPlots = new Label();
             btnPlotHTML = new Button();
             cmPlot = new ContextMenuStrip(components);
             cmiNonInteractivePlot = new ToolStripMenuItem();
@@ -342,8 +342,9 @@
             // pPlot
             // 
             pPlot.BackColor = Color.FromArgb(236, 239, 241);
-            pPlot.Controls.Add(cbGroupByCells);
-            pPlot.Controls.Add(cbGroupBySomites);
+            pPlot.Controls.Add(cbCombinePools);
+            pPlot.Controls.Add(cbCombineCells);
+            pPlot.Controls.Add(cbCombineSomites);
             pPlot.Controls.Add(pPlotSelection);
             pPlot.Controls.Add(linkExportPlotData);
             pPlot.Controls.Add(pLinePlots);
@@ -353,7 +354,6 @@
             pPlot.Controls.Add(lpx1);
             pPlot.Controls.Add(lPlotHeight);
             pPlot.Controls.Add(lpx2);
-            pPlot.Controls.Add(lNumberOfPlots);
             pPlot.Controls.Add(btnPlotHTML);
             pPlot.Controls.Add(linkSaveHTMLPlots);
             pPlot.Controls.Add(ePlotEnd);
@@ -370,27 +370,38 @@
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
             // 
-            // cbGroupByCells
+            // cbCombinePools
             // 
-            cbGroupByCells.AutoSize = true;
-            cbGroupByCells.Location = new Point(446, 114);
-            cbGroupByCells.Name = "cbGroupByCells";
-            cbGroupByCells.Size = new Size(59, 19);
-            cbGroupByCells.TabIndex = 62;
-            cbGroupByCells.Text = "Group";
-            cbGroupByCells.UseVisualStyleBackColor = true;
-            cbGroupByCells.CheckedChanged += cbGroupByCells_CheckedChanged;
+            cbCombinePools.AutoSize = true;
+            cbCombinePools.Location = new Point(446, 64);
+            cbCombinePools.Name = "cbCombinePools";
+            cbCombinePools.Size = new Size(75, 19);
+            cbCombinePools.TabIndex = 63;
+            cbCombinePools.Text = "Combine";
+            cbCombinePools.UseVisualStyleBackColor = true;
+            cbCombinePools.CheckedChanged += cbCombinePools_CheckedChanged;
             // 
-            // cbGroupBySomites
+            // cbCombineCells
             // 
-            cbGroupBySomites.AutoSize = true;
-            cbGroupBySomites.Location = new Point(446, 89);
-            cbGroupBySomites.Name = "cbGroupBySomites";
-            cbGroupBySomites.Size = new Size(59, 19);
-            cbGroupBySomites.TabIndex = 61;
-            cbGroupBySomites.Text = "Group";
-            cbGroupBySomites.UseVisualStyleBackColor = true;
-            cbGroupBySomites.CheckedChanged += cbGroupBySomites_CheckedChanged;
+            cbCombineCells.AutoSize = true;
+            cbCombineCells.Location = new Point(446, 114);
+            cbCombineCells.Name = "cbCombineCells";
+            cbCombineCells.Size = new Size(75, 19);
+            cbCombineCells.TabIndex = 62;
+            cbCombineCells.Text = "Combine";
+            cbCombineCells.UseVisualStyleBackColor = true;
+            cbCombineCells.CheckedChanged += cbCombineCells_CheckedChanged;
+            // 
+            // cbCombineSomites
+            // 
+            cbCombineSomites.AutoSize = true;
+            cbCombineSomites.Location = new Point(446, 89);
+            cbCombineSomites.Name = "cbCombineSomites";
+            cbCombineSomites.Size = new Size(75, 19);
+            cbCombineSomites.TabIndex = 61;
+            cbCombineSomites.Text = "Combine";
+            cbCombineSomites.UseVisualStyleBackColor = true;
+            cbCombineSomites.CheckedChanged += cbCombineSomites_CheckedChanged;
             // 
             // pPlotSelection
             // 
@@ -517,7 +528,7 @@
             // 
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(524, 64);
+            linkExportPlotData.Location = new Point(527, 31);
             linkExportPlotData.Name = "linkExportPlotData";
             linkExportPlotData.Size = new Size(103, 16);
             linkExportPlotData.TabIndex = 59;
@@ -594,17 +605,6 @@
             lpx2.TabIndex = 57;
             lpx2.Text = "(px)";
             // 
-            // lNumberOfPlots
-            // 
-            lNumberOfPlots.AutoSize = true;
-            lNumberOfPlots.Location = new Point(446, 8);
-            lNumberOfPlots.Name = "lNumberOfPlots";
-            lNumberOfPlots.Size = new Size(63, 15);
-            lNumberOfPlots.TabIndex = 53;
-            lNumberOfPlots.Tag = "# of plots: ";
-            lNumberOfPlots.Text = "# of plots: ";
-            lNumberOfPlots.Visible = false;
-            // 
             // btnPlotHTML
             // 
             btnPlotHTML.BackColor = Color.FromArgb(96, 125, 139);
@@ -613,7 +613,7 @@
             btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
             btnPlotHTML.FlatStyle = FlatStyle.Flat;
             btnPlotHTML.ForeColor = Color.White;
-            btnPlotHTML.Location = new Point(446, 34);
+            btnPlotHTML.Location = new Point(446, 6);
             btnPlotHTML.Name = "btnPlotHTML";
             btnPlotHTML.Size = new Size(75, 24);
             btnPlotHTML.TabIndex = 52;
@@ -638,7 +638,7 @@
             // 
             linkSaveHTMLPlots.Enabled = false;
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTMLPlots.Location = new Point(524, 42);
+            linkSaveHTMLPlots.Location = new Point(527, 11);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
             linkSaveHTMLPlots.Size = new Size(103, 16);
             linkSaveHTMLPlots.TabIndex = 53;
@@ -1698,7 +1698,6 @@
         private Label lpx1;
         private Label lPlotHeight;
         private Label lpx2;
-        private Label lNumberOfPlots;
         private ComboBox ddPlotSagittal;
         private Button btnPlotHTML;
         private ComboBox ddPlotCellSelection;
@@ -1805,7 +1804,8 @@
         private CheckBox cb3DLegend;
         private Label lNodeSize;
         private General.UpDownControl udNodeSize;
-        private CheckBox cbGroupByCells;
-        private CheckBox cbGroupBySomites;
+        private CheckBox cbCombineCells;
+        private CheckBox cbCombineSomites;
+        private CheckBox cbCombinePools;
     }
 }

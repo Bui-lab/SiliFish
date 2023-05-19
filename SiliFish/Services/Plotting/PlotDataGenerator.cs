@@ -18,8 +18,8 @@ namespace SiliFish.Services.Plotting
     {
 
         public static List<ChartDataStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, 
-            bool groupByPool, bool groupBySomite,
-           int iStart, int iEnd)
+            bool combinePools, bool combineSomites, bool combineCells,
+            int iStart, int iEnd)
         {
             List<ChartDataStruct> charts = new();
             if (cells == null || !cells.Any())
@@ -29,7 +29,7 @@ namespace SiliFish.Services.Plotting
             double yMax = cells.Max(c => c.MaxPotentialValue(iStart, iEnd));
             Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, groupByPool, groupBySomite);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string columnTitles = "Time,";
@@ -64,8 +64,8 @@ namespace SiliFish.Services.Plotting
             return charts;
         }
         private static List<ChartDataStruct> CreateCurrentCharts(double[] TimeArray,
-             List<Cell> cells, 
-             bool groupByPool, bool groupBySomite,
+             List<Cell> cells,
+            bool combinePools, bool combineSomites, bool combineCells,
              int iStart, int iEnd,
              UnitOfMeasure UoM,
              bool includeGap = true, bool includeChem = true)
@@ -77,7 +77,7 @@ namespace SiliFish.Services.Plotting
             double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
             Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, groupByPool, groupBySomite);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string gapTitle = "Time,";
@@ -101,7 +101,7 @@ namespace SiliFish.Services.Plotting
                         {
                             gapExists = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            string cellID = groupByPool ? cell.ID + "↔" : "";
+                            string cellID = combineCells ? cell.ID + "↔" : "";
                             gapTitle += $"Gap: {cellID}{otherCell.ID},";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
@@ -116,7 +116,7 @@ namespace SiliFish.Services.Plotting
                         foreach (ChemicalSynapse jnc in synapses)
                         {
                             synInExists = true;
-                            if (groupByPool)
+                            if (combineCells)
                                 synInTitle += cell.ID + "←";
                             synInTitle += jnc.PreNeuron.ID + ",";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
@@ -128,7 +128,7 @@ namespace SiliFish.Services.Plotting
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
                             {
                                 synOutExists = true;
-                                if (groupByPool)
+                                if (combineCells)
                                     synOutTitle += cell.ID + "→";
                                 synOutTitle += jnc.PostCell.ID + ",";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
@@ -263,7 +263,7 @@ namespace SiliFish.Services.Plotting
         }
 
         private static List<ChartDataStruct> CreateStimuliCharts(double[] TimeArray, List<Cell> cells,
-            bool groupByPool, bool groupBySomite,
+            bool combinePools, bool combineSomites, bool combineCells,
             int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<ChartDataStruct> charts = new();
@@ -274,7 +274,7 @@ namespace SiliFish.Services.Plotting
             double yMax = cells.Max(c => c.MaxStimulusValue());
             Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, groupByPool, groupBySomite);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string title = "Time,";
@@ -315,8 +315,8 @@ namespace SiliFish.Services.Plotting
             return charts;
         }
 
-        private static List<ChartDataStruct> CreateTensionCharts(double[] TimeArray, List<MuscleCell> cells, 
-            bool groupByPool, bool groupBySomite,
+        private static List<ChartDataStruct> CreateTensionCharts(double[] TimeArray, List<MuscleCell> cells,
+            bool combinePools, bool combineSomites, bool combineCells,
             int iStart, int iEnd)
         {
             List<ChartDataStruct> charts = new();
@@ -325,7 +325,7 @@ namespace SiliFish.Services.Plotting
             double yMax = 1.2;
             Util.SetYRange(ref yMin, ref yMax);
 
-            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells((List<Cell>)cells.Cast<Cell>(), groupByPool, groupBySomite);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells((List<Cell>)cells.Cast<Cell>(), combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 string title = "Time,";
@@ -357,16 +357,16 @@ namespace SiliFish.Services.Plotting
         }
 
         private static List<ChartDataStruct> CreateFullDynamicsCharts(double[] TimeOffset, List<Cell> cells,
-            bool groupByPool, bool groupBySomite,
+            bool combinePools, bool combineSomites, bool combineCells,
             int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<ChartDataStruct> charts = new();
-            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool, groupBySomite, iStart, iEnd));
-            charts.AddRange(CreateCurrentCharts(TimeOffset, cells, groupByPool,groupBySomite, iStart, iEnd, UoM, includeGap: true, includeChem: true));
-            charts.AddRange(CreateStimuliCharts(TimeOffset, cells, groupByPool,groupBySomite, iStart, iEnd, UoM));
+            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, combinePools, combineSomites, combineCells, iStart, iEnd));
+            charts.AddRange(CreateCurrentCharts(TimeOffset, cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM, includeGap: true, includeChem: true));
+            charts.AddRange(CreateStimuliCharts(TimeOffset, cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM));
             List<MuscleCell> muscleCells = cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
             if (muscleCells.Any())
-                charts.AddRange(CreateTensionCharts(TimeOffset, muscleCells, groupByPool,groupBySomite, iStart, iEnd));
+                charts.AddRange(CreateTensionCharts(TimeOffset, muscleCells, combinePools, combineSomites, combineCells, iStart, iEnd));
             return charts;
         }
 
@@ -388,7 +388,7 @@ namespace SiliFish.Services.Plotting
                 cells.Add(syn.PostCell);
                 synapses.Add(syn);
             }
-            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, groupByPool: false, groupBySomite: false, iStart, iEnd));
+            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd));
             charts.AddRange(CreateCurrentCharts(TimeOffset, gapJunctions, synapses, iStart, iEnd, UoM));
             return charts;
         }
@@ -567,39 +567,41 @@ namespace SiliFish.Services.Plotting
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
-            bool groupCells = false;
-            bool groupSomites = false;
+            bool combineCells = false;
+            bool combineSomites = false;
+            bool combinePools = false;
             if (selection is PlotSelectionMultiCells cellSelection)
             {
-                groupCells = cellSelection.groupCells;
-                groupSomites = cellSelection.groupSomites;
+                combinePools = cellSelection.combinePools;
+                combineCells = cellSelection.combineCells;
+                combineSomites = cellSelection.combineSomites;
             }
             string Title = "";
             switch (PlotType)
             {
                 case PlotType.MembPotential:
                     Title = "Membrane Potentials";
-                    charts = CreateMembranePotentialCharts(model.TimeArray, Cells, groupCells, groupSomites, iStart, iEnd);
+                    charts = CreateMembranePotentialCharts(model.TimeArray, Cells, combinePools, combineSomites, combineCells, iStart, iEnd);
                     break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
-                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupCells, groupSomites, iStart, iEnd, UoM, includeGap: true, includeChem: true);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM, includeGap: true, includeChem: true);
                     break;
                 case PlotType.GapCurrent:
                     Title = "Incoming Gap Currents";
-                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupCells, groupSomites, iStart, iEnd, UoM, includeGap: true, includeChem: false);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM, includeGap: true, includeChem: false);
                     break;
                 case PlotType.ChemCurrent:
                     Title = "Incoming Synaptic Currents";
-                    charts = CreateCurrentCharts(model.TimeArray, Cells, groupCells, groupSomites, iStart, iEnd, UoM, includeGap: false, includeChem: true);
+                    charts = CreateCurrentCharts(model.TimeArray, Cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM, includeGap: false, includeChem: true);
                     break;
                 case PlotType.Stimuli:
                     Title = "Applied Stimulus";
-                    charts = CreateStimuliCharts(model.TimeArray, Cells, groupCells, groupSomites, iStart, iEnd, UoM);
+                    charts = CreateStimuliCharts(model.TimeArray, Cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM);
                     break;
                 case PlotType.FullDyn:
                     Title = "Full Dynamics";
-                    charts = CreateFullDynamicsCharts(model.TimeArray, Cells, groupCells, groupSomites, iStart, iEnd, UoM);
+                    charts = CreateFullDynamicsCharts(model.TimeArray, Cells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM);
                     break;
                 case PlotType.Episodes:
                     Title = "Tail Beat Episodes";
@@ -633,9 +635,9 @@ namespace SiliFish.Services.Plotting
 
             UnitOfMeasure UoM = model.Settings.UoM;
             List<Cell> Cells = new() { preCell, postCell };
-            List<ChartDataStruct> charts = CreateMembranePotentialCharts(model.TimeArray, Cells, groupByPool: false, groupBySomite: false, iStart, iEnd);
+            List<ChartDataStruct> charts = CreateMembranePotentialCharts(model.TimeArray, Cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd);
 
-            charts.AddRange(CreateCurrentCharts(model.TimeArray, Cells, groupByPool: false, groupBySomite: false, iStart, iEnd, UoM, includeGap: gapJunc != null, includeChem: synapse != null));
+            charts.AddRange(CreateCurrentCharts(model.TimeArray, Cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd, UoM, includeGap: gapJunc != null, includeChem: synapse != null)) ;
             return ("Junction plot", charts);
         }
 

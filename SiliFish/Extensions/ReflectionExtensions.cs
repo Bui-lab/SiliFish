@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using System;
 using System.Reflection;
 
 namespace SiliFish.Extensions
@@ -10,7 +11,10 @@ namespace SiliFish.Extensions
             PropertyInfo pi = obj.GetType().GetProperty(propertyName);
             if (pi == null) return;
             if (pi.SetMethod == null) return;
-            pi.SetValue(obj, Convert.ChangeType(value, pi.PropertyType));
+            if (pi.PropertyType.IsEnum)
+                pi.SetValue(obj, Enum.Parse(pi.PropertyType, value?.ToString()));
+            else
+                pi.SetValue(obj, Convert.ChangeType(value, pi.PropertyType));
         }
 
         public static (T value, bool exists) GetPropertyValue<T>(this object obj, string propertyName, T defValue = default)
