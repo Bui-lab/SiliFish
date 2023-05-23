@@ -280,12 +280,26 @@ namespace SiliFish.UI.Controls
                 if (plotCellSelection is PlotSelectionMultiCells multiCells)
                 {
                     IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.combinePools, multiCells.combineSomites, multiCells.combineCells);
-                    numOfPlots = cellGroups.Count();
+                    if (PlotType == PlotType.Stimuli)
+                        numOfPlots = cellGroups.Count(cg => cg.Count(c => c.HasStimulus()) > 0);
+                    else
+                        numOfPlots = cellGroups.Count();
                 }
-                else numOfPlots = Cells.Count();
+                else 
+                {
+                    if (PlotType == PlotType.Stimuli)
+                        numOfPlots = Cells.Count(c => c.HasStimulus());
+                    else
+                        numOfPlots = Cells.Count; 
+                }
             }
             else if (Pools != null && Pools.Any())
-                numOfPlots = Pools.Count;
+            {
+                if (PlotType == PlotType.Stimuli)
+                    numOfPlots = Pools.Count(p => p.HasStimulus());
+                else
+                    numOfPlots = Pools.Count;
+            }
 
             if (numOfPlots > 0)
             {
@@ -295,10 +309,7 @@ namespace SiliFish.UI.Controls
                     numOfPlots *= 3;
                 else if (PlotType == PlotType.ChemCurrent)
                     numOfPlots *= 2;
-                if (PlotType == PlotType.Stimuli)
-                    toolTip.SetToolTip(btnPlotHTML, $"# of plots: Max {numOfPlots}");
-                else
-                    toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
+                toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
             }
         }
         private void DisplayNumberOfPlots()
