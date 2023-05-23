@@ -224,7 +224,7 @@ namespace SiliFish.Services.Plotting
             }
             if (synapses?.Count > 0)
             {
-                yMin = Math.Min(yMin, synapses.Min(jnc => jnc.InputCurrent.Min()));
+                yMin = Math.Min(yMin, synapses.Min(jnc => jnc.InputCurrent.Min()));//TODO handle when INputCurrent is null
                 yMax = Math.Max(yMax, synapses.Max(jnc => jnc.InputCurrent.Max()));
             }
             Util.SetYRange(ref yMin, ref yMax);

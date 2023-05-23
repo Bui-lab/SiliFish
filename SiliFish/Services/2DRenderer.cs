@@ -47,10 +47,10 @@ namespace SiliFish.Services
         {
             if (!PoolCoordinates.ContainsKey(pool.CellGroup))
             {
-                (double _, double y, double z) = pool.XYZMiddle();
+                (double x, double y, double z) = pool.XYZMiddle();
                 if (pool.PositionLeftRight == SagittalPlane.Left)
                     y *= -1;
-                PoolCoordinates.Add(pool.CellGroup, (y, z));
+                PoolCoordinates.Add(pool.CellGroup, (y, x));
             }
         }
         private double GetNewWeight(double d)
@@ -142,7 +142,7 @@ namespace SiliFish.Services
             }
             if (YMax > YMin)
             {
-                YMult = height / (YMax - YMin) / 2;
+                YMult = -1 * height / (YMax - YMin) / 2;
                 YOffset = (YMax + YMin) * YMult / 2;
             }
             List<string> nodes = new();
