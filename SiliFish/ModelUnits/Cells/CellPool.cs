@@ -325,7 +325,7 @@ namespace SiliFish.ModelUnits.Cells
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)
                 .Distinct()
-                .AsEnumerable<Cell>();
+                .AsEnumerable();
         }
 
    

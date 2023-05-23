@@ -180,7 +180,5 @@ namespace SiliFish.DynamicUnits
 
             return dyn;
         }
-
-
     }
 }
