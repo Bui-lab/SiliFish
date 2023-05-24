@@ -321,6 +321,7 @@ namespace SiliFish.ModelUnits.Cells
             return Cells
                 .Where(c =>
                 (cellSelection.cellSelection != PlotSelection.Spiking || c.IsSpiking()) &&
+                (cellSelection.cellSelection != PlotSelection.NonSpiking || !c.IsSpiking()) &&
                 (c.Somite < 0 || !som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)

@@ -358,7 +358,7 @@ namespace SiliFish.UI.Controls
             if (poolDuplicate != null)
             {
                 AddCellPool(poolDuplicate);
-                LoadProjections();
+                RefreshProjections();
                 ModelIsUpdated();
             }
         }
@@ -396,7 +396,7 @@ namespace SiliFish.UI.Controls
                 if (oldName != pool.CellGroup)
                 {
                     (Model as ModelTemplate).RenameCellPool(oldName, pool.CellGroup);
-                    LoadProjections();
+                    RefreshProjections();
                 }
             }
         }
@@ -533,7 +533,7 @@ namespace SiliFish.UI.Controls
                 listCells.AppendItem(cellDuplicate);
                 SelectedPool = cell.CellPool;
                 SelectedCell = cell;
-                LoadProjections();
+                RefreshProjections();
                 ModelIsUpdated();
             }
         }
@@ -897,11 +897,11 @@ namespace SiliFish.UI.Controls
             if (lbc.SelectedIndices.Any())
             {
                 foreach (var item in lbc.SelectedItems)
-                if (item is InterPoolTemplate ipt)
-                    Model.RemoveJunction(ipt);
-                else if (item is JunctionBase jb)
-                    jb.UnlinkObjects();
-                LoadProjections();
+                    if (item is InterPoolTemplate ipt)
+                        Model.RemoveJunction(ipt);
+                    else if (item is JunctionBase jb)
+                        jb.UnlinkObjects();
+                RefreshProjections();
                 ModelIsUpdated();
             }
         }
@@ -951,7 +951,7 @@ namespace SiliFish.UI.Controls
             else if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctions();
-                LoadProjections();
+                RefreshProjections();
             }
         }
 
@@ -1038,7 +1038,7 @@ namespace SiliFish.UI.Controls
             {
                 string filename = openFileCSV.FileName;
                 if (ModelFile.ReadConnectionsFromCSV(filename, Model, unit, gap, chemin, chemout))
-                    LoadProjections();
+                    RefreshProjections();
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }

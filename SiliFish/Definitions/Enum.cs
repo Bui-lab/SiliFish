@@ -37,8 +37,10 @@ namespace SiliFish.Definitions
         [Display(Name = "Current"), Description("Gap and chemical currents")] Current,
         [Display(Name = "Gap Current")] GapCurrent,
         [Display(Name = "Synaptic Current")] ChemCurrent,
+        [Display(Name = "Terminal Current")] ChemOutCurrent,
         [Display(Name = "Stimuli")] Stimuli,
         [Display(Name = "Full Dynamics")] FullDyn,
+        [Display(Name = "Muscle Tension")] Tension,
         [Display(Name = "Junction")] Junction,
         [Display(Name = "Episodes")] Episodes
     }
@@ -49,7 +51,8 @@ namespace SiliFish.Definitions
         [Display(Name = "Single")] Single,
         [Display(Name = "First/Middle/Last")] FirstMiddleLast,
         [Display(Name = "Random")] Random,
-        [Display(Name = "Spiking")] Spiking
+        [Display(Name = "Spiking")] Spiking,
+        [Display(Name = "Non-Spiking")] NonSpiking
     }
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }

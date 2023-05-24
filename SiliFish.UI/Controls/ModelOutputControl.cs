@@ -129,6 +129,9 @@ namespace SiliFish.UI.Controls
             GlobalSettings.LastPlotSettings[ddPlotCellSelection.Name] = ddPlotCellSelection.Text;
             GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name] = ePlotSomiteSelection.Value.ToString();
             GlobalSettings.LastPlotSettings[ePlotCellSelection.Name] = ePlotCellSelection.Value.ToString();
+            GlobalSettings.LastPlotSettings[cbCombinePools.Name] = cbCombinePools.Checked.ToString();
+            GlobalSettings.LastPlotSettings[cbCombineSomites.Name] = cbCombineSomites.Checked.ToString();
+            GlobalSettings.LastPlotSettings[cbCombineCells.Name] = cbCombineCells.Checked.ToString();
         }
         private void GetLastPlotSettings()
         {
@@ -143,6 +146,12 @@ namespace SiliFish.UI.Controls
                     ddPlotCellSelection.Text = GlobalSettings.LastPlotSettings[ddPlotCellSelection.Name];
                     ePlotSomiteSelection.SetValue(double.Parse(GlobalSettings.LastPlotSettings[ePlotSomiteSelection.Name]));
                     ePlotCellSelection.SetValue(double.Parse(GlobalSettings.LastPlotSettings[ePlotCellSelection.Name]));
+                    if (bool.TryParse(GlobalSettings.LastPlotSettings[cbCombinePools.Name], out bool b1))
+                        cbCombinePools.Checked = b1;
+                    if (bool.TryParse(GlobalSettings.LastPlotSettings[cbCombineSomites.Name], out bool b2))
+                        cbCombineSomites.Checked = b2;
+                    if (bool.TryParse(GlobalSettings.LastPlotSettings[cbCombineCells.Name], out bool b3))
+                        cbCombineCells.Checked = b3;
                 }
                 catch { }
             }
@@ -307,14 +316,13 @@ namespace SiliFish.UI.Controls
                     numOfPlots *= 5;
                 else if (PlotType == PlotType.Current)
                     numOfPlots *= 3;
-                else if (PlotType == PlotType.ChemCurrent)
-                    numOfPlots *= 2;
                 toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
             }
         }
         private void DisplayNumberOfPlots()
         {
             if (RunningModel == null) return;
+            GlobalSettings.LastPlotSettings.Clear();//to prevent overwriting the plot changes during a run
             if (PlotType == PlotType.Junction)
             {
                 numOfPlots = 3;

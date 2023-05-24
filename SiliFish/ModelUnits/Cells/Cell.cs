@@ -417,22 +417,28 @@ namespace SiliFish.ModelUnits.Cells
             return V?.GetSpikeStart(Core.Vthreshold, tIndex) ?? -1;
         }
 
-        public virtual double MinCurrentValue(int iStart = 0, int iEnd = -1)
+        public virtual double MinCurrentValue(bool gap, bool chemin, bool chemout, int iStart = 0, int iEnd = -1)
         {
-            return MinGapCurrentValue(iStart, iEnd) + MinSynInCurrentValue(iStart, iEnd) + MinSynOutCurrentValue(iStart, iEnd);
+            double gapcurrent = gap ? MinGapCurrentValue(iStart, iEnd) : 0;
+            double syncurrent = chemin ? MinSynInCurrentValue(iStart, iEnd) : 0;
+            double terminalcurrent = chemout ? MinSynOutCurrentValue(iStart, iEnd) : 0;
+            return gapcurrent + syncurrent + terminalcurrent;
         }
-        public virtual double MaxCurrentValue(int iStart = 0, int iEnd = -1)
+        public virtual double MaxCurrentValue(bool gap, bool chemin, bool chemout, int iStart = 0, int iEnd = -1)
         {
-            return MaxGapCurrentValue(iStart, iEnd) + MaxSynInCurrentValue(iStart, iEnd) + MaxSynOutCurrentValue(iStart, iEnd);
+            double gapcurrent = gap ? MaxGapCurrentValue(iStart, iEnd) : 0;
+            double syncurrent = chemin ? MaxSynInCurrentValue(iStart, iEnd) : 0;
+            double terminalcurrent = chemout ? MaxSynOutCurrentValue(iStart, iEnd) : 0;
+            return gapcurrent + syncurrent + terminalcurrent;
         }
 
         public virtual double MinGapCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent?.MinValue(iStart, iEnd) ?? 0) : 0;
         }
         public virtual double MaxGapCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent?.MaxValue(iStart, iEnd) ?? 0) : 0;
         }
 
         public virtual double MinSynInCurrentValue(int iStart = 0, int iEnd = -1)

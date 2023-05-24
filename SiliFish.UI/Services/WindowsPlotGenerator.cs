@@ -50,8 +50,8 @@ namespace Services
                     double[,] voltageArray = new double[poolcells.Count, timeArray.Length];
                     if (!GlobalSettings.SameYAxis)
                     {
-                        yMin = poolcells.Min(c => c.MinCurrentValue(iStart, iEnd));
-                        yMax = poolcells.Max(c => c.MaxCurrentValue(iStart, iEnd));
+                        yMin = poolcells.Min(c => c.MinPotentialValue(iStart, iEnd));
+                        yMax = poolcells.Max(c => c.MaxPotentialValue(iStart, iEnd));
                         Util.SetYRange(ref yMin, ref yMax);
                     }
                     int i = 0;
@@ -72,7 +72,7 @@ namespace Services
         private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, Cell c,
             int iStart, int iEnd,
             double yMin, double yMax,
-            bool gap, bool chem, UnitOfMeasure UoM)
+            bool gap, bool chemin, bool chemout, UnitOfMeasure UoM)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
@@ -86,15 +86,17 @@ namespace Services
                 else
                     rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Gap Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
             }
-            if (chem)
+            if (chemin)
             {
                 (Dictionary<string, Color> colors, Dictionary<string, List<double>> AffarentCurrents) = c.GetIncomingSynapticCurrents();
                 if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
                     leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                 else
                     rightImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Incoming Syn. Currents", colors, AffarentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
-
-                (colors, Dictionary<string, List<double>> EfferentCurrents) = c.GetOutgoingSynapticCurrents();
+            }
+            if (chemout)
+            { 
+                (Dictionary<string, Color> colors, Dictionary<string, List<double>> EfferentCurrents) = c.GetOutgoingSynapticCurrents();
                 if (c.CellPool.PositionLeftRight == SagittalPlane.Left)
                     leftImages.Add(UtilWindows.CreateCurrentsPlot(c.ID, c.ID + " Outgoing Syn. Currents", colors, EfferentCurrents, timeArray, iStart, iEnd, yAxis, yMin, yMax));
                 else
@@ -105,28 +107,24 @@ namespace Services
 
         private static (List<Image>, List<Image>) PlotCurrents(double[] timeArray, List<Cell> cells, List<CellPool> pools, PlotSelectionMultiCells cellSelection,
             int iStart, int iEnd,
-            bool gap, bool chem, UnitOfMeasure UoM)
+            bool gap, bool chemin, bool chemout, UnitOfMeasure UoM)
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
             if (cells != null)
             {
-                double yMin = cells.Min(c => c.MinCurrentValue(iStart, iEnd));
-                double yMax = cells.Max(c => c.MaxCurrentValue(iStart, iEnd));
+                double yMin = cells.Min(c => c.MinCurrentValue(gap, chemin, chemout, iStart, iEnd));
+                double yMax = cells.Max(c => c.MaxCurrentValue(gap, chemin, chemout, iStart, iEnd));
                 foreach (Cell c in cells)
                 {
                     if (!GlobalSettings.SameYAxis)
                     {
-                        yMin = gap && !chem ? c.MinGapCurrentValue(iStart, iEnd) :
-                            !gap && chem ? c.MinSynInCurrentValue(iStart, iEnd) + c.MinSynOutCurrentValue(iStart, iEnd) :
-                            c.MinCurrentValue(iStart, iEnd);
-                        yMax = gap && !chem ? c.MaxGapCurrentValue(iStart, iEnd) :
-                            !gap && chem ? c.MaxSynInCurrentValue(iStart, iEnd) + c.MaxSynOutCurrentValue(iStart, iEnd) :
-                            c.MaxCurrentValue(iStart, iEnd);
+                        yMin = c.MinCurrentValue(gap, chemin, chemout, iStart, iEnd);
+                        yMax = c.MaxCurrentValue(gap, chemin, chemout, iStart, iEnd);
                         Util.SetYRange(ref yMin, ref yMax);
                     }
 
-                    (List<Image> subLeftImages, List < Image > subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chem, UoM);
+                    (List<Image> subLeftImages, List < Image > subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chemin, chemout, UoM);
                     leftImages.AddRange(subLeftImages);
                     rightImages.AddRange(subRightImages);
                 }
@@ -135,8 +133,8 @@ namespace Services
 
             if (pools != null)
             {
-                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue(iStart, iEnd)));
-                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue(iStart, iEnd)));
+                double yMin = pools.Min(cp => cp.GetCells().Min(c => c.MinCurrentValue(gap, chemin, chemout, iStart, iEnd)));
+                double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue(gap, chemin, chemout, iStart, iEnd)));
                 foreach (CellPool pool in pools)
                 {
                     IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
@@ -144,15 +142,11 @@ namespace Services
                     {
                         if (!GlobalSettings.SameYAxis)
                         {
-                            yMin = gap && !chem ? c.MinGapCurrentValue(iStart, iEnd) :
-                                !gap && chem ? c.MinSynInCurrentValue(iStart, iEnd) + c.MinSynOutCurrentValue(iStart, iEnd) :
-                                c.MinCurrentValue(iStart, iEnd);
-                            yMax = gap && !chem ? c.MaxGapCurrentValue(iStart, iEnd) :
-                                !gap && chem ? c.MaxSynInCurrentValue(iStart, iEnd) + c.MaxSynOutCurrentValue(iStart, iEnd) :
-                                c.MaxCurrentValue(iStart, iEnd);
+                            yMin = c.MinCurrentValue(gap, chemin, chemout, iStart, iEnd);
+                            yMax = c.MaxCurrentValue(gap, chemin, chemout, iStart, iEnd);
                             Util.SetYRange(ref yMin, ref yMax);
                         }
-                        (List<Image> subLeftImages, List<Image> subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chem, UoM);
+                        (List<Image> subLeftImages, List<Image> subRightImages) = PlotCurrents(timeArray, c, iStart, iEnd, yMin, yMax, gap, chemin, chemout, UoM);
                         leftImages.AddRange(subLeftImages);
                         rightImages.AddRange(subRightImages);
                     }
@@ -215,6 +209,17 @@ namespace Services
             }
             return (leftImages, rightImages);
         }
+
+        private static (List<Image>, List<Image>) PlotTension(double[] timeArray, List<MuscleCell> cells, List<CellPool> pools,
+            PlotSelectionMultiCells cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
+        {
+            List<Image> leftImages = new();
+            List<Image> rightImages = new();
+            string yAxis = $"Muscle Tension";
+
+            //TODO
+            return (leftImages, rightImages);
+        }
         private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools, 
             PlotSelectionMultiCells cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
         {
@@ -224,13 +229,21 @@ namespace Services
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
-            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection, iStart, iEnd, gap: true, chem: true, UoM);
+            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection, iStart, iEnd, gap: true, chemin: true, chemout: true, UoM);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
             (leftImagesSub, rightImagesSub) = PlotStimuli(timeArray, cells, pools, cellSelection, iStart, iEnd, UoM);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
+
+            List<MuscleCell> muscleCells = cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
+            if (muscleCells.Any())
+            {
+                (leftImagesSub, rightImagesSub) = PlotTension(timeArray, muscleCells, pools, cellSelection, iStart, iEnd, UoM);
+                leftImages = leftImages.Concat(leftImagesSub).ToList();
+                rightImages = rightImages.Concat(rightImagesSub).ToList();
+            }
 
             return (leftImages, rightImages);
         }
@@ -342,15 +355,20 @@ namespace Services
                     case PlotType.MembPotential:
                         return PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                     case PlotType.Current:
-                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: true, uom);
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chemin: true, chemout: true, uom);
                     case PlotType.GapCurrent:
-                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chem: false, uom);
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chemin: false, chemout: false, uom);
                     case PlotType.ChemCurrent:
-                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chem: true, uom);
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chemin: true, chemout: false, uom);
+                    case PlotType.ChemOutCurrent:
+                        return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chemin: false, chemout: true, uom);
                     case PlotType.Stimuli:
                         return PlotStimuli(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
                     case PlotType.FullDyn:
                         return PlotFullDynamics(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
+                    case PlotType.Tension:
+                        List<MuscleCell> muscleCells = Cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
+                        return PlotTension(TimeArray, muscleCells, Pools, cellSelection, iStart, iEnd, uom);
                     case PlotType.Episodes:
                         return PlotEpisodes(model, tStart, tEnd);
                     default:
