@@ -121,6 +121,8 @@
             eEpisodesLeft = new RichTextBox();
             pLineMNKinematicsLeft = new Panel();
             pMNKinematicsTop = new Panel();
+            cbSpikingMNs = new CheckBox();
+            cbCombineMNPools = new CheckBox();
             pLineMNKinematics = new Panel();
             ePlotKinematicsHeight = new NumericUpDown();
             ePlotKinematicsWidth = new NumericUpDown();
@@ -1263,6 +1265,8 @@
             // pMNKinematicsTop
             // 
             pMNKinematicsTop.BackColor = Color.FromArgb(236, 239, 241);
+            pMNKinematicsTop.Controls.Add(cbSpikingMNs);
+            pMNKinematicsTop.Controls.Add(cbCombineMNPools);
             pMNKinematicsTop.Controls.Add(pLineMNKinematics);
             pMNKinematicsTop.Controls.Add(ePlotKinematicsHeight);
             pMNKinematicsTop.Controls.Add(ePlotKinematicsWidth);
@@ -1280,6 +1284,26 @@
             pMNKinematicsTop.Size = new Size(694, 64);
             pMNKinematicsTop.TabIndex = 7;
             // 
+            // cbSpikingMNs
+            // 
+            cbSpikingMNs.AutoSize = true;
+            cbSpikingMNs.Location = new Point(305, 34);
+            cbSpikingMNs.Name = "cbSpikingMNs";
+            cbSpikingMNs.Size = new Size(121, 19);
+            cbSpikingMNs.TabIndex = 66;
+            cbSpikingMNs.Text = "Spiking Cells Only";
+            cbSpikingMNs.UseVisualStyleBackColor = true;
+            // 
+            // cbCombineMNPools
+            // 
+            cbCombineMNPools.AutoSize = true;
+            cbCombineMNPools.Location = new Point(305, 5);
+            cbCombineMNPools.Name = "cbCombineMNPools";
+            cbCombineMNPools.Size = new Size(107, 19);
+            cbCombineMNPools.TabIndex = 65;
+            cbCombineMNPools.Text = "Combine Pools";
+            cbCombineMNPools.UseVisualStyleBackColor = true;
+            // 
             // pLineMNKinematics
             // 
             pLineMNKinematics.BackColor = Color.LightGray;
@@ -1292,7 +1316,7 @@
             // ePlotKinematicsHeight
             // 
             ePlotKinematicsHeight.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotKinematicsHeight.Location = new Point(208, 31);
+            ePlotKinematicsHeight.Location = new Point(208, 32);
             ePlotKinematicsHeight.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
             ePlotKinematicsHeight.Minimum = new decimal(new int[] { 100, 0, 0, 0 });
             ePlotKinematicsHeight.Name = "ePlotKinematicsHeight";
@@ -1304,7 +1328,7 @@
             // ePlotKinematicsWidth
             // 
             ePlotKinematicsWidth.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotKinematicsWidth.Location = new Point(208, 4);
+            ePlotKinematicsWidth.Location = new Point(208, 3);
             ePlotKinematicsWidth.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
             ePlotKinematicsWidth.Minimum = new decimal(new int[] { 200, 0, 0, 0 });
             ePlotKinematicsWidth.Name = "ePlotKinematicsWidth";
@@ -1316,7 +1340,7 @@
             // lPlotKinematicsWidth
             // 
             lPlotKinematicsWidth.AutoSize = true;
-            lPlotKinematicsWidth.Location = new Point(163, 8);
+            lPlotKinematicsWidth.Location = new Point(163, 7);
             lPlotKinematicsWidth.Name = "lPlotKinematicsWidth";
             lPlotKinematicsWidth.Size = new Size(39, 15);
             lPlotKinematicsWidth.TabIndex = 60;
@@ -1325,7 +1349,7 @@
             // lpx3
             // 
             lpx3.AutoSize = true;
-            lpx3.Location = new Point(262, 6);
+            lpx3.Location = new Point(262, 7);
             lpx3.Name = "lpx3";
             lpx3.Size = new Size(28, 15);
             lpx3.TabIndex = 61;
@@ -1334,7 +1358,7 @@
             // lPlotKinematicsHeight
             // 
             lPlotKinematicsHeight.AutoSize = true;
-            lPlotKinematicsHeight.Location = new Point(163, 34);
+            lPlotKinematicsHeight.Location = new Point(163, 36);
             lPlotKinematicsHeight.Name = "lPlotKinematicsHeight";
             lPlotKinematicsHeight.Size = new Size(43, 15);
             lPlotKinematicsHeight.TabIndex = 62;
@@ -1343,7 +1367,7 @@
             // lpx4
             // 
             lpx4.AutoSize = true;
-            lpx4.Location = new Point(262, 33);
+            lpx4.Location = new Point(262, 36);
             lpx4.Name = "lpx4";
             lpx4.Size = new Size(28, 15);
             lpx4.TabIndex = 63;
@@ -1352,7 +1376,7 @@
             // lSomitesNumMNDynamics
             // 
             lSomitesNumMNDynamics.AutoSize = true;
-            lSomitesNumMNDynamics.Location = new Point(12, 8);
+            lSomitesNumMNDynamics.Location = new Point(12, 7);
             lSomitesNumMNDynamics.Name = "lSomitesNumMNDynamics";
             lSomitesNumMNDynamics.Size = new Size(54, 15);
             lSomitesNumMNDynamics.TabIndex = 43;
@@ -1374,7 +1398,7 @@
             btnGenerateEpisodes.FlatAppearance.BorderColor = Color.LightGray;
             btnGenerateEpisodes.FlatStyle = FlatStyle.Flat;
             btnGenerateEpisodes.ForeColor = Color.White;
-            btnGenerateEpisodes.Location = new Point(8, 32);
+            btnGenerateEpisodes.Location = new Point(8, 31);
             btnGenerateEpisodes.Name = "btnGenerateEpisodes";
             btnGenerateEpisodes.Size = new Size(140, 24);
             btnGenerateEpisodes.TabIndex = 29;
@@ -1384,9 +1408,9 @@
             // 
             // lKinematicsTimes
             // 
-            lKinematicsTimes.Location = new Point(315, 5);
+            lKinematicsTimes.Location = new Point(433, 6);
             lKinematicsTimes.Name = "lKinematicsTimes";
-            lKinematicsTimes.Size = new Size(294, 19);
+            lKinematicsTimes.Size = new Size(241, 16);
             lKinematicsTimes.TabIndex = 33;
             lKinematicsTimes.Text = "Last kinematics:";
             // 
@@ -1807,5 +1831,7 @@
         private CheckBox cbCombineCells;
         private CheckBox cbCombineSomites;
         private CheckBox cbCombinePools;
+        private CheckBox cbSpikingMNs;
+        private CheckBox cbCombineMNPools;
     }
 }

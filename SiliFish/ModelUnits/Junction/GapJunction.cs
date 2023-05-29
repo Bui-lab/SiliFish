@@ -116,7 +116,8 @@ namespace SiliFish.ModelUnits.Junction
         }
         public override void LinkObjects(RunningModel model)
         {
-            Cell1 = model.GetCell(Source);
+            Cell1 ??= model.GetCell(Source);
+            Source ??= Cell1.ID;
             if (!Cell1.GapJunctions.Contains(this))
                 Cell1.GapJunctions.Add(this);
             

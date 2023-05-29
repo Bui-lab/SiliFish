@@ -286,12 +286,12 @@ namespace SiliFish.UI.Controls
                     else
                         numOfPlots = cellGroups.Count();
                 }
-                else 
+                else
                 {
                     if (PlotType == PlotType.Stimuli)
                         numOfPlots = Cells.Count(c => c.HasStimulus());
                     else
-                        numOfPlots = Cells.Count; 
+                        numOfPlots = Cells.Count;
                 }
             }
             else if (Pools != null && Pools.Any())
@@ -1068,7 +1068,10 @@ namespace SiliFish.UI.Controls
             (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons((int)eKinematicsSomite.Value);
             (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) =
                 SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
-            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, LeftMNs.Union(RightMNs).ToList(),
+            List<Cell> allMNs = cbSpikingMNs.Checked ? LeftMNs.Union(RightMNs).Where(c => c.IsSpiking()).OrderBy(c => c.CellGroup).ToList() :
+                LeftMNs.Union(RightMNs).OrderBy(c => c.CellGroup).ToList();
+
+            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, allMNs, cbCombineMNPools.Checked,
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
             webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             eEpisodesLeft.Text = "";

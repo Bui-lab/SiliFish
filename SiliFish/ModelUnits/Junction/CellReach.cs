@@ -82,6 +82,8 @@ namespace SiliFish.ModelUnits
             MaxDescReach = cr.MaxDescReach;
             MaxIncoming = cr.MaxIncoming;
             MaxOutgoing = cr.MaxOutgoing;
+            Ascending = cr.Ascending;
+            Descending = cr.Descending;
             Autapse = cr.Autapse;
             SomiteBased = cr.SomiteBased;
         }

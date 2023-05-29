@@ -127,6 +127,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public void LinkObjects(RunningModel model)
         {
+            Model = model;
             foreach (Cell cell in Cells)
             {
                 cell.CellPool = this;

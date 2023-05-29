@@ -489,9 +489,6 @@ namespace SiliFish.UI
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
-        private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
 
         private void btnGenerateModel_Click(object sender, EventArgs e)
         {

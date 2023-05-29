@@ -151,7 +151,8 @@ namespace SiliFish.ModelUnits.Junction
 
         public override void LinkObjects(RunningModel model)
         {
-            PreNeuron = model.GetCell(Source) as Neuron;
+            PreNeuron ??= model.GetCell(Source) as Neuron;
+            Source ??= PreNeuron.ID;
             if (!PreNeuron.Terminals.Contains(this))
                 PreNeuron.Terminals.Add(this);
             

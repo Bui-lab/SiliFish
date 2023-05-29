@@ -28,9 +28,9 @@ namespace SiliFish.Services.Plotting
             return cells.GroupBy(c =>
                 !combinePools && !combineSomites && !combineCells ? $"{c.ID}" ://Each cell seperate
                 !combinePools && !combineSomites && combineCells ? $"{ c.CellPool.ID}-Somite:{ c.Somite}" : //One group for each somite in a cell pool
-                combinePools && !combineSomites ? $"Somite:{c.Somite}" ://One group for each somite
+                combinePools && !combineSomites ? $"Somite:{c.Somite} - {c.CellPool.PositionLeftRight}" ://One group for each somite
                 !combinePools && combineSomites ? $"{c.CellPool.ID}" ://One group for each pool
-                (combinePools && combineSomites) ? $"All" :
+                (combinePools && combineSomites) ? $"{c.CellPool.PositionLeftRight}" :
                                     c.ID); //Each cell is separate
         }
     }
