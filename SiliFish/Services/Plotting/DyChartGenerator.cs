@@ -96,7 +96,7 @@ namespace SiliFish.Services.Plotting
                 iEnd = model.TimeArray.Length - 1;
 
             List<ChartDataStruct> charts = PlotDataGenerator.CreateMembranePotentialCharts(model.TimeArray, Cells, 
-                combinePools: true, combineSomites: true, combineCells: true,
+                combinePools: false, combineSomites: true, combineCells: true,
                 iStart, iEnd);
             string PlotHTML = PlotCharts(title: "Summary Membrane Potentials", charts, synchronized: true, width, height);
             return PlotHTML;

@@ -1076,7 +1076,7 @@ namespace SiliFish.UI.Controls
             (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons((int)eKinematicsSomite.Value);
             (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) =
                 SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
-            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, LeftMNs.Union(RightMNs).ToList(),
+            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, LeftMNs.Union(RightMNs).OrderBy(cp => cp.CellGroup).ThenBy(cp => cp.PositionLeftRight).ToList(),
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
             webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             eEpisodesLeft.Text = "";

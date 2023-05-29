@@ -22,7 +22,7 @@ namespace SiliFish.ModelUnits.Junction
 
         #region Properties
         [JsonIgnore]
-        public override string ID => $"{GeneratedName()} [{ConnectionType}]/{AxonReachMode}";
+        public override string ID => $"{GeneratedName()} [{ConnectionType}]/{AxonReachMode} {CellReach.Projection}";
         public string Name
         {
             get
@@ -193,7 +193,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" :
                 Active ? " (timeline)" : " (inactive)";
-            return $"{Name} [{ConnectionType}]/{AxonReachMode}{activeStatus}";
+            return $"{ID}{activeStatus}";
         }
         public override int CompareTo(ModelUnitBase otherbase)
         {
