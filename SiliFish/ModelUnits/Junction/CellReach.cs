@@ -36,6 +36,8 @@ namespace SiliFish.ModelUnits
         public bool Autapse { get; set; } = false;
         public bool SomiteBased { get; set; } = false;
 
+        public string Projection => Ascending && Descending ? "Bifurcating" : Ascending ? "Ascending" : Descending ? "Descending" : "N/A";
+
         #endregion
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } = new() {"Asc.", " Min Asc. Reach", " Max Asc. Reach",
