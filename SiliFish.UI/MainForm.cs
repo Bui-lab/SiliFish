@@ -489,21 +489,8 @@ namespace SiliFish.UI
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
-        private void linkNewModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            MainForm mf = new();
-            mf.Show();
-        }
         private void linkClearModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (MessageBox.Show("Do you want to start from a brand new template? All changes you have made will be cleared.", "Warning",
-                MessageBoxButtons.OKCancel) != DialogResult.OK)
-                return;
-            if (ModelTemplate != null)
-                ModelTemplate = new();
-            else
-                RunningModel = new();
-            modelControl.SetModel(ModelTemplate);
         }
 
         private void btnGenerateModel_Click(object sender, EventArgs e)
@@ -540,5 +527,22 @@ namespace SiliFish.UI
             modelOutputControl.Highlight((e as SelectedUnitArgs).unitSelected);
         }
 
+        private void btnNewModel_Click(object sender, EventArgs e)
+        {
+            MainForm mf = new();
+            mf.Show();
+        }
+
+        private void btnClearModel_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to start from a brand new template? All changes you have made will be cleared.", "Warning",
+                MessageBoxButtons.OKCancel) != DialogResult.OK)
+                return;
+            if (ModelTemplate != null)
+                ModelTemplate = new();
+            else
+                RunningModel = new();
+            modelControl.SetModel(ModelTemplate);
+        }
     }
 }

@@ -38,8 +38,9 @@ namespace SiliFish.UI
             btnCellularDynamics = new Button();
             linkBrowseToTempFolder = new LinkLabel();
             linkOpenOutputFolder = new LinkLabel();
+            btnClearModel = new Button();
+            btnNewModel = new Button();
             linkLoadModel = new LinkLabel();
-            linkClearModel = new LinkLabel();
             linkSaveModel = new LinkLabel();
             splitMain = new SplitContainer();
             modelControl = new ModelControl();
@@ -49,7 +50,6 @@ namespace SiliFish.UI
             pModelControlTop = new Panel();
             linkImportModel = new LinkLabel();
             linkExportModel = new LinkLabel();
-            linkNewModel = new LinkLabel();
             pSimulation = new Panel();
             ldtEuler = new Label();
             edtEuler = new NumericUpDown();
@@ -182,6 +182,38 @@ namespace SiliFish.UI
             toolTip.SetToolTip(linkOpenOutputFolder, "If there is a problem in creating html files, they will be saved in this folder.\r\n");
             linkOpenOutputFolder.LinkClicked += linkOpenOutputFolder_LinkClicked;
             // 
+            // btnClearModel
+            // 
+            btnClearModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnClearModel.AutoSize = true;
+            btnClearModel.BackColor = Color.FromArgb(96, 125, 139);
+            btnClearModel.FlatAppearance.BorderColor = Color.LightGray;
+            btnClearModel.FlatStyle = FlatStyle.Flat;
+            btnClearModel.ForeColor = Color.White;
+            btnClearModel.Location = new Point(457, 5);
+            btnClearModel.Name = "btnClearModel";
+            btnClearModel.Size = new Size(83, 27);
+            btnClearModel.TabIndex = 27;
+            btnClearModel.Text = "Clear Model";
+            btnClearModel.UseVisualStyleBackColor = false;
+            btnClearModel.Click += btnClearModel_Click;
+            // 
+            // btnNewModel
+            // 
+            btnNewModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnNewModel.AutoSize = true;
+            btnNewModel.BackColor = Color.FromArgb(96, 125, 139);
+            btnNewModel.FlatAppearance.BorderColor = Color.LightGray;
+            btnNewModel.FlatStyle = FlatStyle.Flat;
+            btnNewModel.ForeColor = Color.White;
+            btnNewModel.Location = new Point(371, 5);
+            btnNewModel.Name = "btnNewModel";
+            btnNewModel.Size = new Size(82, 27);
+            btnNewModel.TabIndex = 26;
+            btnNewModel.Text = "New Model";
+            btnNewModel.UseVisualStyleBackColor = false;
+            btnNewModel.Click += btnNewModel_Click;
+            // 
             // linkLoadModel
             // 
             linkLoadModel.AutoSize = true;
@@ -193,20 +225,6 @@ namespace SiliFish.UI
             linkLoadModel.TabStop = true;
             linkLoadModel.Text = "Load Model";
             linkLoadModel.LinkClicked += linkLoadModel_LinkClicked;
-            // 
-            // linkClearModel
-            // 
-            linkClearModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkClearModel.AutoSize = true;
-            linkClearModel.ForeColor = Color.White;
-            linkClearModel.LinkColor = Color.FromArgb(64, 64, 64);
-            linkClearModel.Location = new Point(459, 11);
-            linkClearModel.Name = "linkClearModel";
-            linkClearModel.Size = new Size(71, 15);
-            linkClearModel.TabIndex = 5;
-            linkClearModel.TabStop = true;
-            linkClearModel.Text = "Clear Model";
-            linkClearModel.LinkClicked += linkClearModel_LinkClicked;
             // 
             // linkSaveModel
             // 
@@ -298,12 +316,12 @@ namespace SiliFish.UI
             // pModelControlTop
             // 
             pModelControlTop.BackColor = Color.FromArgb(236, 239, 241);
+            pModelControlTop.Controls.Add(btnClearModel);
+            pModelControlTop.Controls.Add(btnNewModel);
             pModelControlTop.Controls.Add(linkImportModel);
             pModelControlTop.Controls.Add(linkExportModel);
-            pModelControlTop.Controls.Add(linkNewModel);
             pModelControlTop.Controls.Add(linkLoadModel);
             pModelControlTop.Controls.Add(linkSaveModel);
-            pModelControlTop.Controls.Add(linkClearModel);
             pModelControlTop.Dock = DockStyle.Top;
             pModelControlTop.Location = new Point(0, 0);
             pModelControlTop.Name = "pModelControlTop";
@@ -333,20 +351,6 @@ namespace SiliFish.UI
             linkExportModel.TabStop = true;
             linkExportModel.Text = "Export Model";
             linkExportModel.LinkClicked += linkExportModel_LinkClicked;
-            // 
-            // linkNewModel
-            // 
-            linkNewModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkNewModel.AutoSize = true;
-            linkNewModel.ForeColor = Color.White;
-            linkNewModel.LinkColor = Color.FromArgb(64, 64, 64);
-            linkNewModel.Location = new Point(382, 11);
-            linkNewModel.Name = "linkNewModel";
-            linkNewModel.Size = new Size(68, 15);
-            linkNewModel.TabIndex = 6;
-            linkNewModel.TabStop = true;
-            linkNewModel.Text = "New Model";
-            linkNewModel.LinkClicked += linkNewModel_LinkClicked;
             // 
             // pSimulation
             // 
@@ -652,7 +656,6 @@ namespace SiliFish.UI
         private Button btnAbout;
         private LinkLabel linkLoadModel;
         private LinkLabel linkSaveModel;
-        private LinkLabel linkClearModel;
         private ModelOutputControl modelOutputControl;
         private ModelControl modelControl;
         private Panel pModelControlTop;
@@ -664,10 +667,11 @@ namespace SiliFish.UI
         private Panel pDistinguisherRight;
         private Panel pDistinguisherBottom;
         private Button btnSettings;
-        private LinkLabel linkNewModel;
         private SaveFileDialog saveFileExcel;
         private LinkLabel linkExportModel;
         private LinkLabel linkImportModel;
         private OpenFileDialog openFileExcel;
+        private Button btnNewModel;
+        private Button btnClearModel;
     }
 }
