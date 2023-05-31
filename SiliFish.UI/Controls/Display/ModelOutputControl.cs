@@ -995,14 +995,14 @@ namespace SiliFish.UI.Controls
             if (unitToPlot is CellPool pool)
             {
                 if (tabOutputs.SelectedTab == t2DRender)
-                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");
+                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{pool.ID}');");
                 else
-                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");
+                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");//TODO for 3 D - both left and right pools are displayed
             }
             else if (unitToPlot is Cell cell)
             {
                 if (tabOutputs.SelectedTab == t2DRender)
-                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{cell.CellGroup}');");
+                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{cell.CellPool.ID}');");
                 else
                     await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
             }
