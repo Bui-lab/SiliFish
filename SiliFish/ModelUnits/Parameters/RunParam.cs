@@ -1,14 +1,15 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using System;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Parameters
 {
     public struct RunParam
     {
-        public int SkipDuration { get; set; } = 0;
-        public int MaxTime { get; set; } = 1000;
-        public double DeltaT { get; set; } = 0.1;//The step size
-        public double DeltaTEuler { get; set; } = 0.1;//The step size for Euler method
+        public int SkipDuration { get; set; } = GlobalSettings.SimulationSkipTime;
+        public int MaxTime { get; set; } = GlobalSettings.SimulationEndTime;
+        public double DeltaT { get; set; } = GlobalSettings.SimulationDeltaT;//The step size
+        public double DeltaTEuler { get; set; } = GlobalSettings.SimulationEulerDeltaT;//The step size for Euler method
 
         public int iIndex(double t)
         {

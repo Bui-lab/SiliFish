@@ -127,7 +127,8 @@ namespace SiliFish.Services
         {
             (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(model, startIndex, endIndex);
 
-            if (vel?.GetLength(0) != angle?.GetLength(0) ||
+            if (vel == null || angle == null ||
+                vel?.GetLength(0) != angle?.GetLength(0) ||
                 vel?.GetLength(1) != angle?.GetLength(1))
                 return null;
             int nSpineNode = vel.GetLength(0);

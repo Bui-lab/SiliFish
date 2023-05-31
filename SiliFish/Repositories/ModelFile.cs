@@ -1171,6 +1171,7 @@ namespace SiliFish.Repositories
                             break;
                         Stimulus stim = new();
                         stim.ImportValues(contents);
+                        stim.LinkObjects(modelRun);
                     }
                 }
                 return true;

@@ -165,6 +165,7 @@ namespace SiliFish.Services
                 html.Replace("__OFFLINE_2D_SCRIPT__", "");
                 html.Replace("__ONLINE_2D_SCRIPT__", "<script src=\"https://unpkg.com/force-graph\"></script>" +
                     "<script src=\"https://unpkg.com/three\"></script>");
+                //TODO how to keep up to date? https://unpkg.com/three@0.152.2/build/three.module.js
             }
             else
             {

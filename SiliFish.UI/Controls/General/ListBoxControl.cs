@@ -339,5 +339,10 @@ namespace SiliFish.UI.Controls
             if (miHighlightSelected.CheckState == CheckState.Checked)
                 ItemHighlight?.Invoke(listBox.SelectedItem, new EventArgs());
         }
+
+        private void listBox_Leave(object sender, EventArgs e)
+        {
+            toolTip.RemoveAll();
+        }
     }
 }

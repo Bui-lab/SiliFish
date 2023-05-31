@@ -71,116 +71,117 @@
             listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
             listBox.DoubleClick += listBox_DoubleClick;
             listBox.KeyDown += listBox_KeyDown;
+            listBox.Leave += listBox_Leave;
             // 
             // contextMenuListBox
             // 
             contextMenuListBox.Items.AddRange(new ToolStripItem[] { miEditItem, miAddItem, miDeleteItem, miCreateCopy, sepActive, miActivate, miDeactivate, miActivateAll, miDeactivateAll, sepShow, miHideInactive, miShowAll, sepSort, miSortAlphabetically, splitExport, miExport, miImport, sepPlot, miPlot, miHighlight, miHighlightSelected });
             contextMenuListBox.Name = "contextMenuListBox";
-            contextMenuListBox.Size = new Size(181, 408);
+            contextMenuListBox.Size = new Size(174, 386);
             contextMenuListBox.Opening += contextMenuListBox_Opening;
             // 
             // miEditItem
             // 
             miEditItem.Name = "miEditItem";
-            miEditItem.Size = new Size(180, 22);
+            miEditItem.Size = new Size(173, 22);
             miEditItem.Text = "Edit Item";
             miEditItem.Click += listBox_DoubleClick;
             // 
             // miAddItem
             // 
             miAddItem.Name = "miAddItem";
-            miAddItem.Size = new Size(180, 22);
+            miAddItem.Size = new Size(173, 22);
             miAddItem.Text = "Add Item";
             miAddItem.Click += miAddItem_Click;
             // 
             // miDeleteItem
             // 
             miDeleteItem.Name = "miDeleteItem";
-            miDeleteItem.Size = new Size(180, 22);
+            miDeleteItem.Size = new Size(173, 22);
             miDeleteItem.Text = "Delete Item";
             miDeleteItem.Click += miDeleteItem_Click;
             // 
             // miCreateCopy
             // 
             miCreateCopy.Name = "miCreateCopy";
-            miCreateCopy.Size = new Size(180, 22);
+            miCreateCopy.Size = new Size(173, 22);
             miCreateCopy.Text = "Create a Copy";
             miCreateCopy.Click += miCreateCopy_Click;
             // 
             // sepActive
             // 
             sepActive.Name = "sepActive";
-            sepActive.Size = new Size(177, 6);
+            sepActive.Size = new Size(170, 6);
             // 
             // miActivate
             // 
             miActivate.Name = "miActivate";
-            miActivate.Size = new Size(180, 22);
+            miActivate.Size = new Size(173, 22);
             miActivate.Text = "Activate";
             miActivate.Click += miActivate_Click;
             // 
             // miDeactivate
             // 
             miDeactivate.Name = "miDeactivate";
-            miDeactivate.Size = new Size(180, 22);
+            miDeactivate.Size = new Size(173, 22);
             miDeactivate.Text = "Deactivate";
             miDeactivate.Click += miDeactivate_Click;
             // 
             // miActivateAll
             // 
             miActivateAll.Name = "miActivateAll";
-            miActivateAll.Size = new Size(180, 22);
+            miActivateAll.Size = new Size(173, 22);
             miActivateAll.Text = "Activate All";
             miActivateAll.Click += miActivateAll_Click;
             // 
             // miDeactivateAll
             // 
             miDeactivateAll.Name = "miDeactivateAll";
-            miDeactivateAll.Size = new Size(180, 22);
+            miDeactivateAll.Size = new Size(173, 22);
             miDeactivateAll.Text = "Deactivate All";
             miDeactivateAll.Click += miDeactivateAll_Click;
             // 
             // sepShow
             // 
             sepShow.Name = "sepShow";
-            sepShow.Size = new Size(177, 6);
+            sepShow.Size = new Size(170, 6);
             // 
             // miHideInactive
             // 
             miHideInactive.Name = "miHideInactive";
-            miHideInactive.Size = new Size(180, 22);
+            miHideInactive.Size = new Size(173, 22);
             miHideInactive.Text = "Hide Inactive";
             miHideInactive.Click += miHideInactive_Click;
             // 
             // miShowAll
             // 
             miShowAll.Name = "miShowAll";
-            miShowAll.Size = new Size(180, 22);
+            miShowAll.Size = new Size(173, 22);
             miShowAll.Text = "Show All";
             miShowAll.Click += miShowAll_Click;
             // 
             // sepSort
             // 
             sepSort.Name = "sepSort";
-            sepSort.Size = new Size(177, 6);
+            sepSort.Size = new Size(170, 6);
             // 
             // miSortAlphabetically
             // 
             miSortAlphabetically.Name = "miSortAlphabetically";
-            miSortAlphabetically.Size = new Size(180, 22);
+            miSortAlphabetically.Size = new Size(173, 22);
             miSortAlphabetically.Text = "Sort Alphabetically";
             miSortAlphabetically.Click += miSortAlphabetically_Click;
             // 
             // splitExport
             // 
             splitExport.Name = "splitExport";
-            splitExport.Size = new Size(177, 6);
+            splitExport.Size = new Size(170, 6);
             // 
             // miExport
             // 
             miExport.Enabled = false;
             miExport.Name = "miExport";
-            miExport.Size = new Size(180, 22);
+            miExport.Size = new Size(173, 22);
             miExport.Text = "Export";
             miExport.Click += miExport_Click;
             // 
@@ -188,26 +189,26 @@
             // 
             miImport.Enabled = false;
             miImport.Name = "miImport";
-            miImport.Size = new Size(180, 22);
+            miImport.Size = new Size(173, 22);
             miImport.Text = "Import";
             miImport.Click += miImport_Click;
             // 
             // sepPlot
             // 
             sepPlot.Name = "sepPlot";
-            sepPlot.Size = new Size(177, 6);
+            sepPlot.Size = new Size(170, 6);
             // 
             // miPlot
             // 
             miPlot.Name = "miPlot";
-            miPlot.Size = new Size(180, 22);
+            miPlot.Size = new Size(173, 22);
             miPlot.Text = "Plot";
             miPlot.Click += miPlot_Click;
             // 
             // miHighlight
             // 
             miHighlight.Name = "miHighlight";
-            miHighlight.Size = new Size(180, 22);
+            miHighlight.Size = new Size(173, 22);
             miHighlight.Text = "Highlight";
             miHighlight.Visible = false;
             miHighlight.Click += miHighlight_Click;
@@ -215,7 +216,7 @@
             // miHighlightSelected
             // 
             miHighlightSelected.Name = "miHighlightSelected";
-            miHighlightSelected.Size = new Size(180, 22);
+            miHighlightSelected.Size = new Size(173, 22);
             miHighlightSelected.Text = "Highlight Selected";
             miHighlightSelected.Visible = false;
             miHighlightSelected.Click += miHighlightSelected_Click;

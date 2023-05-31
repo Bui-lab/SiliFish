@@ -50,19 +50,19 @@ namespace SiliFish.UI.Controls
         public ModelControl()
         {
             InitializeComponent();
-            
+
             listStimuli.EnableImportExport();
-            
+
             listCellPools.EnableImportExport();
             listCellPools.EnableHightlight();
-            
+
             listCells.EnableImportExport();
             listCells.EnableHightlight();
 
             listIncoming.EnableImportExport();
             listOutgoing.EnableImportExport();
             listGap.EnableImportExport();
-            
+
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
         }

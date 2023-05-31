@@ -24,6 +24,10 @@ namespace SiliFish.Definitions
         public static string PlotDataFormat = "0.0###";
         public static string CoordinateFormat = "0.0###";
 
+        public static int SimulationEndTime = 1000;
+        public static int SimulationSkipTime = 0;
+        public static double SimulationDeltaT = 0.1;
+        public static double SimulationEulerDeltaT = 0.1;
 
         public static bool SameYAxis = true;
 
@@ -33,9 +37,10 @@ namespace SiliFish.Definitions
 
         public static int RheobaseInfinity = 500;
 
-        public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5 };//, 2 };
+        public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
+
         [JsonIgnore, Browsable(false)]
         public static List<string> TempFiles = new();
 
@@ -119,6 +124,25 @@ namespace SiliFish.Definitions
             Category("Genetic Algorithm")]
         public double GeneticAlgorithmMaxValue { get { return GlobalSettings.GeneticAlgorithmMaxValue; } set { GlobalSettings.GeneticAlgorithmMaxValue = value; } }
 
+        [Description("In ms - the default simulation duration."),
+            DisplayName("Simulation Duration"),
+            Category("Simulation")]
+        public int SimulationEndTime { get { return GlobalSettings.SimulationEndTime; } set { GlobalSettings.SimulationEndTime= value; } }
+
+        [Description("In ms - the default duration to skip."),
+            DisplayName("Simulation Skip Duration"),
+            Category("Simulation")]
+        public int SimulationSkipTime { get { return GlobalSettings.SimulationSkipTime; } set { GlobalSettings.SimulationSkipTime = value; } }
+
+        [Description("In ms - the default time unit."),
+            DisplayName("Default δt"),
+            Category("Simulation")]
+        public double SimulationDeltaT { get { return GlobalSettings.SimulationDeltaT; } set { GlobalSettings.SimulationDeltaT= value; } }
+
+        [Description("In ms - the default time unit used in differential equations."),
+            DisplayName("Default Euler δt "),
+            Category("Simulation")]
+        public double SimulationEulerDeltaT { get { return GlobalSettings.SimulationEulerDeltaT; } set { GlobalSettings.SimulationEulerDeltaT = value; } }
 
         public void Save()
         {

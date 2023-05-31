@@ -20,6 +20,11 @@ namespace SiliFish.ModelUnits.Stim
         private double tangent; //valid only if mode==Ramp
         private double[] values = null;
 
+        /// <summary>
+        /// used for import/exports
+        /// </summary>
+        private string targetPool, targetCellID;
+
         [JsonIgnore]
         public Cell TargetCell { get; set; }
 
@@ -51,18 +56,18 @@ namespace SiliFish.ModelUnits.Stim
         }
         public void ImportValues(List<string> values)
         {
-            //TODO Stimulus Import
             if (values.Count != ColumnNames.Count) return;
-            /*TargetPool = values[0];
-            TargetSomite = values[1];
-            TargetCell = values[2];
-            LeftRight = values[3];
-            Active = bool.Parse(values[4]);
-            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 5;
-            Settings.ImportValues(values.Take(new Range(5, lastSettingsCol)).ToList());
-            TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());*/
+            targetPool= values[0];
+            targetCellID = values[1];
+            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 2;
+            Settings.ImportValues(values.Take(new Range(2, lastSettingsCol)).ToList());
+            TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());
         }
- 
+        public void LinkObjects(RunningModel model)
+        {
+            TargetCell ??= model.GetCell(targetCellID);
+            TargetCell.AddStimulus(this);
+        }
         public Stimulus() { }
         public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
         {

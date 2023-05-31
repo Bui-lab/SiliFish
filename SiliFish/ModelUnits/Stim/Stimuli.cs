@@ -45,7 +45,8 @@ namespace SiliFish.ModelUnits.Stim
         {
             if (stim == null)
                 return;
-            ListOfStimulus.Add(stim);
+            if (!ListOfStimulus.Contains(stim))
+                ListOfStimulus.Add(stim);
         }
         public void Remove(Stimulus stim)
         {

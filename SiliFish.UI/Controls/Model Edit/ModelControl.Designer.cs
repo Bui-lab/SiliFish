@@ -422,7 +422,7 @@
             splitCellsAndStimuli.Panel2.Controls.Add(listStimuli);
             splitCellsAndStimuli.Panel2.Controls.Add(pStimuliTop);
             splitCellsAndStimuli.Size = new Size(314, 553);
-            splitCellsAndStimuli.SplitterDistance = 348;
+            splitCellsAndStimuli.SplitterDistance = 362;
             splitCellsAndStimuli.TabIndex = 9;
             // 
             // splitCellPoolsAndCells
@@ -441,8 +441,8 @@
             // 
             splitCellPoolsAndCells.Panel2.Controls.Add(listCells);
             splitCellPoolsAndCells.Panel2.Controls.Add(pCellsTop);
-            splitCellPoolsAndCells.Size = new Size(314, 348);
-            splitCellPoolsAndCells.SplitterDistance = 170;
+            splitCellPoolsAndCells.Size = new Size(314, 362);
+            splitCellPoolsAndCells.SplitterDistance = 176;
             splitCellPoolsAndCells.TabIndex = 8;
             // 
             // listCellPools
@@ -453,7 +453,7 @@
             listCellPools.SelectedIndex = -1;
             listCellPools.SelectedItem = null;
             listCellPools.SelectionMode = SelectionMode.MultiExtended;
-            listCellPools.Size = new Size(314, 144);
+            listCellPools.Size = new Size(314, 150);
             listCellPools.TabIndex = 7;
             listCellPools.ItemAdd += listCellPools_ItemAdd;
             listCellPools.ItemDelete += listCellPools_ItemDelete;
@@ -505,7 +505,7 @@
             listCells.SelectedIndex = -1;
             listCells.SelectedItem = null;
             listCells.SelectionMode = SelectionMode.MultiExtended;
-            listCells.Size = new Size(314, 148);
+            listCells.Size = new Size(314, 156);
             listCells.TabIndex = 0;
             listCells.ItemAdd += listCells_ItemAdd;
             listCells.ItemDelete += listCells_ItemDelete;
@@ -557,7 +557,7 @@
             listStimuli.SelectedIndex = -1;
             listStimuli.SelectedItem = null;
             listStimuli.SelectionMode = SelectionMode.MultiExtended;
-            listStimuli.Size = new Size(314, 175);
+            listStimuli.Size = new Size(314, 161);
             listStimuli.TabIndex = 0;
             listStimuli.ItemAdd += listStimuli_ItemAdd;
             listStimuli.ItemDelete += listStimuli_ItemDelete;

@@ -126,6 +126,10 @@
                 .nodeColor(gapChemGraph.nodeColor())
                 .linkColor(gapChemGraph.linkColor())
         }
+        function SelectCellPool(pool) {
+            selectedNode = gapChemData.nodes.find(n => n.g == pool);
+            updateHighlight();
+        }
         gapChemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
     </script>
 

@@ -37,6 +37,7 @@ namespace SiliFish.UI.Controls
         List<ChartDataStruct> LastPlottedCharts;
         RunningModel RunningModel = null;
         bool rendered2D = false;
+        bool rendered3D = false;
 
         private bool PlotSelectionVisible
         {
@@ -86,6 +87,8 @@ namespace SiliFish.UI.Controls
 
             ePlotWidth.Value = GlobalSettings.DefaultPlotWidth;
             ePlotHeight.Value = GlobalSettings.DefaultPlotHeight;
+            ePlotEnd.Value = GlobalSettings.SimulationEndTime;
+            
             try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
             catch { }
             if (tabPlotSub.TabPages.Contains(tPlotWindows))
@@ -103,12 +106,15 @@ namespace SiliFish.UI.Controls
             {
                 eKinematicsSomite.Maximum = NumberOfSomites;
                 lSomitesNumMNDynamics.Text = "Somite #";
+                cb3DAllSomites.Visible = true;
+                e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             }
             else
             {
                 eKinematicsSomite.Maximum = RunningModel.CellPools.Any() ?
                     RunningModel.CellPools.Max(p => p.GetMaxCellSequence()) : 0;
                 lSomitesNumMNDynamics.Text = "Cell Seq.";
+                cb3DAllSomites.Visible = e3DSomiteRange.Visible = false;
             }
             GetLastPlotSettings();
         }
@@ -527,6 +533,7 @@ namespace SiliFish.UI.Controls
         private void PlotHTML()
         {
             if (RunningModel == null) return;
+            e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) =
@@ -861,6 +868,7 @@ namespace SiliFish.UI.Controls
                     webView3DRender.Width, webView3DRender.Height,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 webView3DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+                rendered3D = true;
             }
             catch (Exception ex)
             {
@@ -977,15 +985,28 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null) return;
             if (unitToPlot == null) return;
+            if (tabOutputs.SelectedTab != t2DRender && tabOutputs.SelectedTab != t3DRender)
+            { 
+                if (unitToPlot is Cell)
+                    tabOutputs.SelectedTab = t2DRender;
+                else
+                    tabOutputs.SelectedTab = t3DRender;
+            }
             if (unitToPlot is CellPool pool)
             {
-                await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");
+                if (tabOutputs.SelectedTab == t2DRender)
+                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");
+                else
+                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");
             }
             else if (unitToPlot is Cell cell)
             {
-                await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
+                if (tabOutputs.SelectedTab == t2DRender)
+                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{cell.CellGroup}');");
+                else
+                    await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
             }
-            tabOutputs.SelectedTab = t3DRender;
+            
         }
         #endregion
 
@@ -1102,6 +1123,8 @@ namespace SiliFish.UI.Controls
         {
             if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
                 RenderIn2D();
+            else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
+                RenderIn3D();
         }
 
 
