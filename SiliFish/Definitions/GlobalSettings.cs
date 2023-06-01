@@ -35,6 +35,8 @@ namespace SiliFish.Definitions
 
         public static int DefaultPlotHeight = 200;
 
+        public static int MaxNumberOfUnits = 100;
+
         public static int RheobaseInfinity = 500;
 
         public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
@@ -52,6 +54,7 @@ namespace SiliFish.Definitions
     }
     public class GlobalSettingsProperties
     {
+        #region Folder
         [Browsable(false),
             Description("Folder that temporary files are saved under. Will be cleared after the program exits."),
             DisplayName("Temporary Folder"),
@@ -65,7 +68,9 @@ namespace SiliFish.Definitions
             Category("Folder")]
         public string OutputFolder { get { return GlobalSettings.OutputFolder; } set { GlobalSettings.OutputFolder = value; } }
 
+        #endregion
 
+        #region Const
         [Description("The minimum value a cell membrane potential can take."),
             DisplayName("Biological Min V"),
             Category("Const")]
@@ -79,7 +84,17 @@ namespace SiliFish.Definitions
 
         [Description("The maximum value between two numbers to consider them equal."), Category("Const")]
         public double Epsilon { get { return GlobalSettings.Epsilon; } set { GlobalSettings.Epsilon = value; } }
+        #endregion
 
+        #region Display
+        [Description("The maximum number of items that will be listed on the architecture lists. This number is obsolote when a single cell is selected."), 
+            DisplayName("Max Number Of Units"),
+            Category("Display")]
+        public int MaxNumberOfUnits { get { return GlobalSettings.MaxNumberOfUnits; } set { GlobalSettings.MaxNumberOfUnits = value; } }
+
+        #endregion
+
+        #region Plotting
         [Description("The format used on charts. Useful to shorten numbers with high number of digitals."),
             DisplayName("Number Format"),
             Category("Plotting")]
@@ -104,7 +119,9 @@ namespace SiliFish.Definitions
             DisplayName("Default plot height"),
             Category("Plotting")]
         public int DefaultPlotHeight { get { return GlobalSettings.DefaultPlotHeight; } set { GlobalSettings.DefaultPlotHeight = value; } }
+        #endregion
 
+        #region Dynamics
         [Description("In ms. The duration used to calculate rheobase values."),
             DisplayName("Rheobase Infinity"),
             Category("Dynamics")]
@@ -114,7 +131,9 @@ namespace SiliFish.Definitions
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]
         public double[] RheobaseTestMultipliers { get { return GlobalSettings.RheobaseTestMultipliers; } set { GlobalSettings.RheobaseTestMultipliers = value; } }
+        #endregion
 
+        #region Genetic Algorithm
         [Description("Valid for all parameters."),
             DisplayName("Suggested Min Value"),
             Category("Genetic Algorithm")]
@@ -123,7 +142,9 @@ namespace SiliFish.Definitions
             DisplayName("Suggested Max Value"),
             Category("Genetic Algorithm")]
         public double GeneticAlgorithmMaxValue { get { return GlobalSettings.GeneticAlgorithmMaxValue; } set { GlobalSettings.GeneticAlgorithmMaxValue = value; } }
+        #endregion
 
+        #region Simulation
         [Description("In ms - the default simulation duration."),
             DisplayName("Simulation Duration"),
             Category("Simulation")]
@@ -143,6 +164,7 @@ namespace SiliFish.Definitions
             DisplayName("Default Euler δt "),
             Category("Simulation")]
         public double SimulationEulerDeltaT { get { return GlobalSettings.SimulationEulerDeltaT; } set { GlobalSettings.SimulationEulerDeltaT = value; } }
+        #endregion
 
         public void Save()
         {

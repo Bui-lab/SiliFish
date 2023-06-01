@@ -20,6 +20,7 @@ using SiliFish.UI.EventArguments;
 using OxyPlot;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.Controls.Model_Edit;
+using System.Collections.Generic;
 
 namespace SiliFish.UI.Controls
 {
@@ -465,8 +466,15 @@ namespace SiliFish.UI.Controls
             lCellsTitle.Text = SelectedPool != null ? $"Cells of {SelectedPool.ID}" : "Cells";
 
             List<Cell> Cells = (List<Cell>)(SelectedPool?.GetCells() ?? (Model as RunningModel).GetCells());
-            foreach (Cell cell in Cells)
-                listCells.AppendItem(cell);
+            if (SelectedPool == null && Cells.Count > GlobalSettings.MaxNumberOfUnits)
+            {
+                listCells.AppendItem("Please select a cell pool to list cells under...");
+            }
+            else
+            {
+                foreach (Cell cell in Cells)
+                    listCells.AppendItem(cell);
+            }
             SelectedCell = null;
         }
 
@@ -679,14 +687,18 @@ namespace SiliFish.UI.Controls
             lGapTitle.Text = "Gap Junctions";
             splitChemicalJunctions.Panel1Collapsed = true;
             if (Model == null) return;
-            foreach (object jnc in Model.GetChemicalProjections())
-            {
-                listOutgoing.AppendItem(jnc);
-            }
-            foreach (object jnc in Model.GetGapProjections())
-            {
-                listGap.AppendItem(jnc);
-            }
+            List<JunctionBase> chemJunctions = Model.GetChemicalProjections();
+            if (chemJunctions.Count > GlobalSettings.MaxNumberOfUnits)
+                listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+            else
+                foreach (object jnc in chemJunctions)
+                    listOutgoing.AppendItem(jnc);
+            List<JunctionBase> gapJunctions = Model.GetGapProjections();
+            if (gapJunctions.Count > GlobalSettings.MaxNumberOfUnits)
+                listGap.AppendItem("Please select a cell pool to list junctions under...");
+            else
+                foreach (object jnc in gapJunctions)
+                    listGap.AppendItem(jnc);
         }
 
         private void LoadProjections(string cellPoolID)
@@ -736,18 +748,27 @@ namespace SiliFish.UI.Controls
             lGapTitle.Text = $"Gap Junctions of {cp.ID}";
             splitChemicalJunctions.Panel1Collapsed = false;
             ClearProjections();
-            foreach (JunctionBase jnc in cp.Projections.Where(j => j is GapJunction))
+            List<JunctionBase> gapJunctions = cp.Projections.Where(j => j is GapJunction).ToList();
+            if (gapJunctions.Count > GlobalSettings.MaxNumberOfUnits)
+                listGap.AppendItem("Please select a cell to list junctions under...");
+            else
+                foreach (JunctionBase jnc in gapJunctions)
+                    listGap.AppendItem(jnc);
+            List<JunctionBase> chemJunctions = cp.Projections.Where(j => j is not GapJunction).ToList();
+            if (chemJunctions.Count > GlobalSettings.MaxNumberOfUnits)
             {
-                listGap.AppendItem(jnc);
+                listIncoming.AppendItem("Please select a cell to list junctions under...");
+                listOutgoing.AppendItem("Please select a cell to list junctions under...");
             }
-            foreach (JunctionBase jnc in cp.Projections.Where(j => j is not GapJunction))
-            {
-                ChemicalSynapse syn = jnc as ChemicalSynapse;
-                if (syn.PreNeuron.CellPool == cp)
-                    listOutgoing.AppendItem(jnc);
-                if (syn.PostCell.CellPool == cp)
-                    listIncoming.AppendItem(jnc);
-            }
+            else
+                foreach (JunctionBase jnc in cp.Projections.Where(j => j is not GapJunction))
+                {
+                    ChemicalSynapse syn = jnc as ChemicalSynapse;
+                    if (syn.PreNeuron.CellPool == cp)
+                        listOutgoing.AppendItem(jnc);
+                    if (syn.PostCell.CellPool == cp)
+                        listIncoming.AppendItem(jnc);
+                }
         }
         private void LoadProjections(Cell cell)
         {
@@ -908,6 +929,7 @@ namespace SiliFish.UI.Controls
         private void listConnections_ItemView(object sender, EventArgs e)
         {
             JunctionBase jnc = sender as JunctionBase;
+            if (jnc == null) return;
             List<JunctionBase> jncs = OpenConnectionDialog(jnc, false);
             if (jncs != null && jncs.Any())
             {

@@ -386,6 +386,8 @@
             // cbCombineCells
             // 
             cbCombineCells.AutoSize = true;
+            cbCombineCells.Checked = true;
+            cbCombineCells.CheckState = CheckState.Checked;
             cbCombineCells.Location = new Point(446, 114);
             cbCombineCells.Name = "cbCombineCells";
             cbCombineCells.Size = new Size(75, 19);
@@ -397,6 +399,8 @@
             // cbCombineSomites
             // 
             cbCombineSomites.AutoSize = true;
+            cbCombineSomites.Checked = true;
+            cbCombineSomites.CheckState = CheckState.Checked;
             cbCombineSomites.Location = new Point(446, 89);
             cbCombineSomites.Name = "cbCombineSomites";
             cbCombineSomites.Size = new Size(75, 19);

@@ -77,8 +77,8 @@ namespace SiliFish.UI.Controls
                 ddPlotSagittal.Items.Add(sp.GetDisplayName());
             }
             ddPlotSagittal.SelectedIndex = ddPlotSagittal.Items.Count - 1;
-            ddPlotSomiteSelection.SelectedIndex = 0;
-            ddPlotCellSelection.SelectedIndex = 0;
+            ddPlotSomiteSelection.SelectedItem = PlotSelection.All.ToString();
+            ddPlotCellSelection.SelectedItem = PlotSelection.Spiking.ToString();
 
             pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
             pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
@@ -88,7 +88,7 @@ namespace SiliFish.UI.Controls
             ePlotWidth.Value = GlobalSettings.DefaultPlotWidth;
             ePlotHeight.Value = GlobalSettings.DefaultPlotHeight;
             ePlotEnd.Value = GlobalSettings.SimulationEndTime;
-            
+
             try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
             catch { }
             if (tabPlotSub.TabPages.Contains(tPlotWindows))
@@ -986,7 +986,7 @@ namespace SiliFish.UI.Controls
             if (RunningModel == null) return;
             if (unitToPlot == null) return;
             if (tabOutputs.SelectedTab != t2DRender && tabOutputs.SelectedTab != t3DRender)
-            { 
+            {
                 if (unitToPlot is Cell)
                     tabOutputs.SelectedTab = t2DRender;
                 else
@@ -1006,7 +1006,7 @@ namespace SiliFish.UI.Controls
                 else
                     await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
             }
-            
+
         }
         #endregion
 
