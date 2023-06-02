@@ -163,7 +163,6 @@
             // eModelJSON
             // 
             eModelJSON.AcceptsTab = true;
-            eModelJSON.Dock = DockStyle.Fill;
             eModelJSON.Location = new Point(0, 40);
             eModelJSON.Name = "eModelJSON";
             eModelJSON.Size = new Size(682, 515);
@@ -388,6 +387,7 @@
             // 
             // splitMain
             // 
+            splitMain.BackColor = Color.FromArgb(55, 71, 79); 
             splitMain.BorderStyle = BorderStyle.FixedSingle;
             splitMain.Dock = DockStyle.Fill;
             splitMain.Location = new Point(0, 0);
@@ -404,6 +404,7 @@
             splitMain.Panel2MinSize = 200;
             splitMain.Size = new Size(682, 555);
             splitMain.SplitterDistance = 316;
+            splitMain.SplitterWidth = 2;
             splitMain.TabIndex = 5;
             // 
             // splitCellsAndStimuli
@@ -423,6 +424,7 @@
             splitCellsAndStimuli.Panel2.Controls.Add(pStimuliTop);
             splitCellsAndStimuli.Size = new Size(314, 553);
             splitCellsAndStimuli.SplitterDistance = 362;
+            splitCellsAndStimuli.SplitterWidth = 2;
             splitCellsAndStimuli.TabIndex = 9;
             // 
             // splitCellPoolsAndCells
@@ -443,6 +445,7 @@
             splitCellPoolsAndCells.Panel2.Controls.Add(pCellsTop);
             splitCellPoolsAndCells.Size = new Size(314, 362);
             splitCellPoolsAndCells.SplitterDistance = 176;
+            splitCellPoolsAndCells.SplitterWidth = 2;
             splitCellPoolsAndCells.TabIndex = 8;
             // 
             // listCellPools
@@ -505,7 +508,7 @@
             listCells.SelectedIndex = -1;
             listCells.SelectedItem = null;
             listCells.SelectionMode = SelectionMode.MultiExtended;
-            listCells.Size = new Size(314, 156);
+            listCells.Size = new Size(314, 159);
             listCells.TabIndex = 0;
             listCells.ItemAdd += listCells_ItemAdd;
             listCells.ItemDelete += listCells_ItemDelete;
@@ -557,7 +560,7 @@
             listStimuli.SelectedIndex = -1;
             listStimuli.SelectedItem = null;
             listStimuli.SelectionMode = SelectionMode.MultiExtended;
-            listStimuli.Size = new Size(314, 161);
+            listStimuli.Size = new Size(314, 164);
             listStimuli.TabIndex = 0;
             listStimuli.ItemAdd += listStimuli_ItemAdd;
             listStimuli.ItemDelete += listStimuli_ItemDelete;
@@ -615,8 +618,9 @@
             // 
             splitConnections.Panel2.Controls.Add(listGap);
             splitConnections.Panel2.Controls.Add(pGapTop);
-            splitConnections.Size = new Size(360, 553);
+            splitConnections.Size = new Size(363, 553);
             splitConnections.SplitterDistance = 276;
+            splitConnections.SplitterWidth = 2;
             splitConnections.TabIndex = 9;
             // 
             // splitChemicalJunctions
@@ -635,8 +639,9 @@
             // 
             splitChemicalJunctions.Panel2.Controls.Add(listOutgoing);
             splitChemicalJunctions.Panel2.Controls.Add(pOutgoingTop);
-            splitChemicalJunctions.Size = new Size(360, 276);
+            splitChemicalJunctions.Size = new Size(363, 276);
             splitChemicalJunctions.SplitterDistance = 132;
+            splitChemicalJunctions.SplitterWidth = 2;
             splitChemicalJunctions.TabIndex = 8;
             // 
             // listIncoming
@@ -647,7 +652,7 @@
             listIncoming.SelectedIndex = -1;
             listIncoming.SelectedItem = null;
             listIncoming.SelectionMode = SelectionMode.MultiExtended;
-            listIncoming.Size = new Size(360, 106);
+            listIncoming.Size = new Size(363, 106);
             listIncoming.TabIndex = 8;
             listIncoming.ItemAdd += listConnections_ItemAdd;
             listIncoming.ItemDelete += listConnections_ItemDelete;
@@ -669,7 +674,7 @@
             pIncomingTop.Dock = DockStyle.Top;
             pIncomingTop.Location = new Point(0, 0);
             pIncomingTop.Name = "pIncomingTop";
-            pIncomingTop.Size = new Size(360, 26);
+            pIncomingTop.Size = new Size(363, 26);
             pIncomingTop.TabIndex = 7;
             // 
             // pConnectionsSep
@@ -678,7 +683,7 @@
             pConnectionsSep.Dock = DockStyle.Bottom;
             pConnectionsSep.Location = new Point(0, 25);
             pConnectionsSep.Name = "pConnectionsSep";
-            pConnectionsSep.Size = new Size(360, 1);
+            pConnectionsSep.Size = new Size(363, 1);
             pConnectionsSep.TabIndex = 25;
             // 
             // lIncomingTitle
@@ -699,7 +704,7 @@
             listOutgoing.SelectedIndex = -1;
             listOutgoing.SelectedItem = null;
             listOutgoing.SelectionMode = SelectionMode.MultiExtended;
-            listOutgoing.Size = new Size(360, 114);
+            listOutgoing.Size = new Size(363, 117);
             listOutgoing.TabIndex = 9;
             listOutgoing.ItemAdd += listConnections_ItemAdd;
             listOutgoing.ItemDelete += listConnections_ItemDelete;
@@ -721,7 +726,7 @@
             pOutgoingTop.Dock = DockStyle.Top;
             pOutgoingTop.Location = new Point(0, 0);
             pOutgoingTop.Name = "pOutgoingTop";
-            pOutgoingTop.Size = new Size(360, 26);
+            pOutgoingTop.Size = new Size(363, 26);
             pOutgoingTop.TabIndex = 8;
             // 
             // panel2
@@ -730,7 +735,7 @@
             panel2.Dock = DockStyle.Bottom;
             panel2.Location = new Point(0, 25);
             panel2.Name = "panel2";
-            panel2.Size = new Size(360, 1);
+            panel2.Size = new Size(363, 1);
             panel2.TabIndex = 25;
             // 
             // lOutgoingTitle
@@ -751,7 +756,7 @@
             listGap.SelectedIndex = -1;
             listGap.SelectedItem = null;
             listGap.SelectionMode = SelectionMode.MultiExtended;
-            listGap.Size = new Size(360, 247);
+            listGap.Size = new Size(363, 250);
             listGap.TabIndex = 9;
             listGap.ItemAdd += listConnections_ItemAdd;
             listGap.ItemDelete += listConnections_ItemDelete;
@@ -773,7 +778,7 @@
             pGapTop.Dock = DockStyle.Top;
             pGapTop.Location = new Point(0, 0);
             pGapTop.Name = "pGapTop";
-            pGapTop.Size = new Size(360, 26);
+            pGapTop.Size = new Size(363, 26);
             pGapTop.TabIndex = 8;
             // 
             // panel4
@@ -782,7 +787,7 @@
             panel4.Dock = DockStyle.Bottom;
             panel4.Location = new Point(0, 25);
             panel4.Name = "panel4";
-            panel4.Size = new Size(360, 1);
+            panel4.Size = new Size(363, 1);
             panel4.TabIndex = 25;
             // 
             // lGapTitle
@@ -808,6 +813,7 @@
             // 
             // splitGeneral
             // 
+            splitGeneral.BackColor = Color.FromArgb(55, 71, 79);
             splitGeneral.Dock = DockStyle.Fill;
             splitGeneral.Location = new Point(0, 0);
             splitGeneral.Name = "splitGeneral";
@@ -815,6 +821,7 @@
             // 
             // splitGeneral.Panel1
             // 
+            splitGeneral.Panel1.BackColor = Color.White;
             splitGeneral.Panel1.Controls.Add(lModelName);
             splitGeneral.Panel1.Controls.Add(lDescription);
             splitGeneral.Panel1.Controls.Add(eModelDescription);
@@ -825,6 +832,7 @@
             splitGeneral.Panel2.Controls.Add(splitDimensions);
             splitGeneral.Size = new Size(682, 555);
             splitGeneral.SplitterDistance = 98;
+            splitGeneral.SplitterWidth = 2;
             splitGeneral.TabIndex = 62;
             // 
             // lModelName
@@ -865,6 +873,7 @@
             // 
             // splitDimensions
             // 
+            splitDimensions.BackColor = Color.FromArgb(55, 71, 79);
             splitDimensions.BorderStyle = BorderStyle.FixedSingle;
             splitDimensions.Dock = DockStyle.Fill;
             splitDimensions.Location = new Point(0, 0);
@@ -877,8 +886,9 @@
             // splitDimensions.Panel2
             // 
             splitDimensions.Panel2.Controls.Add(pDrawing);
-            splitDimensions.Size = new Size(682, 453);
-            splitDimensions.SplitterDistance = 227;
+            splitDimensions.Size = new Size(682, 456);
+            splitDimensions.SplitterDistance = 258;
+            splitDimensions.SplitterWidth = 2;
             splitDimensions.TabIndex = 61;
             // 
             // propModelDimensions
@@ -889,7 +899,7 @@
             propModelDimensions.HelpBorderColor = Color.FromArgb(0, 184, 212);
             propModelDimensions.Location = new Point(0, 0);
             propModelDimensions.Name = "propModelDimensions";
-            propModelDimensions.Size = new Size(225, 451);
+            propModelDimensions.Size = new Size(256, 454);
             propModelDimensions.TabIndex = 60;
             // 
             // pDrawing
@@ -899,16 +909,17 @@
             pDrawing.Dock = DockStyle.Fill;
             pDrawing.Location = new Point(0, 0);
             pDrawing.Name = "pDrawing";
-            pDrawing.Size = new Size(449, 451);
+            pDrawing.Size = new Size(421, 454);
             pDrawing.TabIndex = 15;
             // 
             // pbDrawing
             // 
+            pbDrawing.BackColor = Color.White;
             pbDrawing.Dock = DockStyle.Fill;
             pbDrawing.Image = (Image)resources.GetObject("pbDrawing.Image");
             pbDrawing.Location = new Point(0, 0);
             pbDrawing.Name = "pbDrawing";
-            pbDrawing.Size = new Size(449, 451);
+            pbDrawing.Size = new Size(421, 454);
             pbDrawing.SizeMode = PictureBoxSizeMode.Zoom;
             pbDrawing.TabIndex = 12;
             pbDrawing.TabStop = false;

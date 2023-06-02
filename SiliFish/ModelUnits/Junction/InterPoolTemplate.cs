@@ -154,12 +154,15 @@ namespace SiliFish.ModelUnits.Junction
                     SynapseParameters.ImportValues(synapseString);
                 }
                 iter += SynapseParameters.ColumnNames.Count;
-                Probability = double.Parse(values[iter++]);
+                if (double.TryParse(values[iter++], out double p))
+                    Probability = p;
                 Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
-                Delay_ms = double.Parse(values[iter++]);
-                Active = bool.Parse(values[iter++]);
+                if (double.TryParse(values[iter++],out double f))
+                    Delay_ms = f;
+                if (bool.TryParse(values[iter++],out bool b))
+                    Active = b;
                 if (iter < values.Count)
                     TimeLine_ms.ImportValues (new[] { values[iter++] }.ToList());
             }
