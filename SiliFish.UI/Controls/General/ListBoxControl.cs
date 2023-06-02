@@ -1,4 +1,6 @@
 ﻿using SiliFish.Extensions;
+using SiliFish.ModelUnits;
+using SiliFish.UI.EventArguments;
 using System;
 using System.ComponentModel;
 using Windows.Devices.SmartCards;
@@ -195,7 +197,8 @@ namespace SiliFish.UI.Controls
         }
         private void miHighlight_Click(object sender, EventArgs e)
         {
-            ItemHighlight?.Invoke(listBox.SelectedItem, new EventArgs());
+            ItemHighlight?.Invoke(listBox.SelectedItem, new SelectedUnitArgs()
+            { unitSelected = listBox.SelectedItem as ModelUnitBase, enforce = true });
         }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
@@ -337,7 +340,9 @@ namespace SiliFish.UI.Controls
         {
             miHighlightSelected.CheckState = miHighlightSelected.CheckState == CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
             if (miHighlightSelected.CheckState == CheckState.Checked)
-                ItemHighlight?.Invoke(listBox.SelectedItem, new EventArgs());
+                ItemHighlight?.Invoke(listBox.SelectedItem,
+                    new SelectedUnitArgs()
+                    { unitSelected = listBox.SelectedItem as ModelUnitBase, enforce = false });
         }
 
         private void listBox_Leave(object sender, EventArgs e)

@@ -981,12 +981,13 @@ namespace SiliFish.UI.Controls
         {
             await webView3DRender.ExecuteScriptAsync("ZoomIn();");
         }
-        internal async void Highlight(ModelUnitBase unitToPlot)
+        internal async void Highlight(ModelUnitBase unitToPlot, bool force)
         {
             if (RunningModel == null) return;
             if (unitToPlot == null) return;
             if (tabOutputs.SelectedTab != t2DRender && tabOutputs.SelectedTab != t3DRender)
             {
+                if (!force) return;
                 if (unitToPlot is Cell)
                     tabOutputs.SelectedTab = t2DRender;
                 else

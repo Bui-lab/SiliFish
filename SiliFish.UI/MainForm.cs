@@ -521,7 +521,9 @@ namespace SiliFish.UI
 
         private void modelControl_HighlightRequested(object sender, EventArgs e)
         {
-            modelOutputControl.Highlight((e as SelectedUnitArgs).unitSelected);
+            SelectedUnitArgs selectedUnitArgs = e as SelectedUnitArgs;
+            if (selectedUnitArgs != null)
+                modelOutputControl.Highlight(selectedUnitArgs.unitSelected, selectedUnitArgs.enforce);
         }
 
         private void btnNewModel_Click(object sender, EventArgs e)
