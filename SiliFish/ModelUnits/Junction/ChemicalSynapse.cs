@@ -54,7 +54,7 @@ namespace SiliFish.ModelUnits.Junction
 
         public double[] InputCurrent; //Current vector 
         [JsonIgnore]
-        public override string ID { get { return $"Syn: {PreNeuron.ID} -> {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
+        public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
 
         public override List<string> ExportValues()
         {

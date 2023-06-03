@@ -47,7 +47,7 @@ namespace SiliFish.ModelUnits.Junction
         public double[] InputCurrent; //Current vector
 
         [JsonIgnore]
-        public override string ID { get { return $"Gap: {Cell1.ID} -> {Cell2.ID}; Conductance: {Weight:0.#####}"; } }
+        public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}; Conductance: {Weight:0.#####}"; } }
 
         public override List<string> ExportValues()
         {
