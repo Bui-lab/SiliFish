@@ -36,7 +36,19 @@ namespace SiliFish.UI.Controls
         public object SelectedItem
         {
             get { return listBox.SelectedItem; }
-            set { listBox.SelectedItem = value; }
+            set
+            {
+                for (int i = 0; i < listBox.Items.Count; i++)
+                {
+                    if (listBox.Items[i]==value ||
+                        listBox.Items[i].ToString() == value.ToString())
+                    {
+                        listBox.SelectedIndices.Clear();
+                        listBox.SelectedIndex = i;
+                        return;
+                    }
+                }
+            }
         }
 
         public List<object> SelectedItems
@@ -79,7 +91,6 @@ namespace SiliFish.UI.Controls
         {
             ItemDelete?.Invoke(this, new EventArgs());//listBox is sent rather than the selected item, as the list box needs to be redrawn
         }
-
         private void miCustomSort_Click(object sender, EventArgs e)
         {
             if ((sender as ToolStripItem).Tag is EventHandler eh)
@@ -261,6 +272,11 @@ namespace SiliFish.UI.Controls
             return fullList;
         }
 
+
+        public ListBoxControl()
+        {
+            InitializeComponent();
+        }
         public void ClearItems()
         {
             listBox.Items.Clear();
@@ -287,12 +303,10 @@ namespace SiliFish.UI.Controls
             listBox.Items.Insert(ind, obj);
             listBox.SelectedIndex = ind;
         }
-
-        public ListBoxControl()
+        public void SelectItem(object obj)
         {
-            InitializeComponent();
+            SelectedItem = obj;
         }
-
         public void AddContextMenu(string label, EventHandler func)
         {
             ToolStripItem mi = contextMenuListBox.Items[label];

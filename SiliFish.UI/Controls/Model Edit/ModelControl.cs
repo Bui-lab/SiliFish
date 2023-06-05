@@ -61,8 +61,11 @@ namespace SiliFish.UI.Controls
             listCells.EnableHightlight();
 
             listIncoming.EnableImportExport();
+            listIncoming.AddContextMenu("Go to Source", listConnections_GotoSource);
             listOutgoing.EnableImportExport();
+            listOutgoing.AddContextMenu("Go to Target", listConnections_GotoTarget);
             listGap.EnableImportExport();
+            listGap.AddContextMenu("Go to Neighbor", listConnections_GotoNeighbor);
 
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
@@ -996,8 +999,10 @@ namespace SiliFish.UI.Controls
         }
         private void listConnections_ItemsExport(object sender, EventArgs e)
         {
+            ModelUnitBase unit = SelectedUnit;
             ConnectionSelectionControl selectionControl = new()
             {
+                ChemInOutExists = unit != null,
                 GapJunctions = sender == listGap,
                 CheminalIncoming = sender == listIncoming,
                 ChemicalOutgoing = sender == listOutgoing
@@ -1008,7 +1013,6 @@ namespace SiliFish.UI.Controls
             selectionControl.Label = "Please select the junctions to be exported.";
             if (frmControl.ShowDialog() != DialogResult.OK) return;
 
-            ModelUnitBase unit = SelectedUnit;
             bool gap = selectionControl.GapJunctions;
             bool chemin = selectionControl.CheminalIncoming;
             bool chemout = selectionControl.ChemicalOutgoing;
@@ -1042,6 +1046,7 @@ namespace SiliFish.UI.Controls
             }
             ConnectionSelectionControl selectionControl = new()
             {
+                ChemInOutExists = unit != null,
                 GapJunctions = sender == listGap,
                 CheminalIncoming = sender == listIncoming,
                 ChemicalOutgoing = sender == listOutgoing
@@ -1066,6 +1071,52 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void listConnections_GotoSource(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+            object obj = (sender as ListBoxControl).SelectedItem;
+            if (obj is ChemicalSynapse synapse)
+            {
+                listCellPools.SelectedItem = synapse.PreNeuron.CellPool;
+                listCells.SelectedItem = synapse.PreNeuron;
+            }
+            else if (obj is InterPoolTemplate ipt)
+            {
+                listCellPools.SelectItem(ipt.PoolSource);               
+            }
+        }
+
+        private void listConnections_GotoTarget(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+            object obj = (sender as ListBoxControl).SelectedItem;
+            if (obj is ChemicalSynapse synapse)
+            {
+                listCellPools.SelectedItem = synapse.PostCell.CellPool;
+                listCells.SelectedItem = synapse.PostCell;
+            }
+            else if (obj is InterPoolTemplate ipt)
+            {
+                listCellPools.SelectItem(ipt.PoolTarget);
+            }
+        }
+
+        private void listConnections_GotoNeighbor(object sender, EventArgs e)
+        {
+            if (Model == null) return;
+            object obj = (sender as ListBoxControl).SelectedItem;
+            if (obj is GapJunction jnc)
+            {
+                Cell otherCell = SelectedCell == jnc.Cell1? jnc.Cell2 : jnc.Cell1;
+                listCellPools.SelectedItem = otherCell.CellPool;
+                listCells.SelectedItem = otherCell;
+            }
+            else if (obj is InterPoolTemplate ipt)
+            {
+                string otherPool = SelectedPoolTemplate.CellGroup == ipt.PoolTarget ? ipt.PoolSource : ipt.PoolTarget;
+                listCellPools.SelectItem(otherPool);
+            }
+        }
         #endregion
 
         #region Stimulus

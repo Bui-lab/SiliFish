@@ -32,6 +32,7 @@
             cbChemIn = new CheckBox();
             cbGapJunctions = new CheckBox();
             lLabel = new Label();
+            cbChem = new CheckBox();
             SuspendLayout();
             // 
             // cbChemOut
@@ -73,10 +74,22 @@
             lLabel.TabIndex = 4;
             lLabel.Text = "Please select the junctions you want to export.";
             // 
+            // cbChem
+            // 
+            cbChem.AutoSize = true;
+            cbChem.Location = new Point(25, 71);
+            cbChem.Name = "cbChem";
+            cbChem.Size = new Size(129, 19);
+            cbChem.TabIndex = 8;
+            cbChem.Text = "Chemical Junctions";
+            cbChem.UseVisualStyleBackColor = true;
+            cbChem.Visible = false;
+            // 
             // ConnectionSelectionControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(cbChem);
             Controls.Add(cbChemOut);
             Controls.Add(cbChemIn);
             Controls.Add(cbGapJunctions);
@@ -93,5 +106,6 @@
         private CheckBox cbChemIn;
         private CheckBox cbGapJunctions;
         private Label lLabel;
+        private CheckBox cbChem;
     }
 }

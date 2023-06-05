@@ -9,6 +9,7 @@ using SiliFish.ModelUnits.Stim;
 using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
@@ -318,6 +319,10 @@ namespace SiliFish.ModelUnits.Cells
                 IEnumerable<int> seqs = Cells.Select(c => c.Sequence).Distinct();
                 if (seqs.Count() > cellSelection.nCell)
                     seq.AddRange(seqs.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nCell));
+            }
+            else if (cellSelection.somiteSelection == PlotSelection.NonSpiking)
+            {
+                
             }
             return Cells
                 .Where(c =>
