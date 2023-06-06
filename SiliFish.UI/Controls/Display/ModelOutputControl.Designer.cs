@@ -160,6 +160,7 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            cbPlotHistory = new CheckBox();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -345,6 +346,7 @@
             // pPlot
             // 
             pPlot.BackColor = Color.FromArgb(236, 239, 241);
+            pPlot.Controls.Add(cbPlotHistory);
             pPlot.Controls.Add(listPlotHistory);
             pPlot.Controls.Add(cbCombinePools);
             pPlot.Controls.Add(cbCombineCells);
@@ -1656,6 +1658,18 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // cbPlotHistory
+            // 
+            cbPlotHistory.AutoSize = true;
+            cbPlotHistory.Checked = true;
+            cbPlotHistory.CheckState = CheckState.Checked;
+            cbPlotHistory.Location = new Point(623, 10);
+            cbPlotHistory.Name = "cbPlotHistory";
+            cbPlotHistory.Size = new Size(93, 19);
+            cbPlotHistory.TabIndex = 65;
+            cbPlotHistory.Text = "Keep History";
+            cbPlotHistory.UseVisualStyleBackColor = true;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1855,5 +1869,6 @@
         private CheckBox cbSpikingMNs;
         private CheckBox cbCombineMNPools;
         private HistoryListControl listPlotHistory;
+        private CheckBox cbPlotHistory;
     }
 }

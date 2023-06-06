@@ -649,7 +649,8 @@ namespace SiliFish.UI.Controls
         private void CompletePlotHTML()
         {
             webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile);
-            listPlotHistory.AppendItem(lastPlot);
+            if (cbPlotHistory.Checked) 
+                listPlotHistory.AppendItem(lastPlot);
             UseWaitCursor = false;
             cmPlot.Enabled = true;
             btnPlotHTML.Enabled = true;
