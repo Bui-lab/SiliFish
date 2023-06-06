@@ -239,18 +239,18 @@ namespace SiliFish.ModelUnits.Cells
 
         public IEnumerable<int> GetSomites(PlotSelectionMultiCells somiteSelection)
         {
-            if (somiteSelection.somiteSelection == PlotSelection.All)
+            if (somiteSelection.SomiteSelection == PlotSelection.All)
                 return Cells.Select(c => c.Somite).Distinct().AsEnumerable();
 
             Random random = new();
             List<int> som = new();
             if (Model.ModelDimensions.NumberOfSomites > 0)
             {
-                if (somiteSelection.somiteSelection == PlotSelection.Single)
+                if (somiteSelection.SomiteSelection == PlotSelection.Single)
                 {
-                    som.Add(somiteSelection.nSomite);
+                    som.Add(somiteSelection.NSomite);
                 }
-                else if (somiteSelection.somiteSelection == PlotSelection.FirstMiddleLast)
+                else if (somiteSelection.SomiteSelection == PlotSelection.FirstMiddleLast)
                 {
                     int minSom = Cells.Select(c => c.Somite).Min();
                     int maxSom = Cells.Select(c => c.Somite).Max();
@@ -258,11 +258,11 @@ namespace SiliFish.ModelUnits.Cells
                     som.Add(maxSom);
                     som.Add((minSom + maxSom) / 2);
                 }
-                else if (somiteSelection.somiteSelection == PlotSelection.Random)
+                else if (somiteSelection.SomiteSelection == PlotSelection.Random)
                 {
                     IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
-                    if (somites.Count() > somiteSelection.nSomite)
-                        som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(somiteSelection.nSomite));
+                    if (somites.Count() > somiteSelection.NSomite)
+                        som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(somiteSelection.NSomite));
                 }
             }
             return som;
@@ -271,7 +271,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public IEnumerable<Cell> GetCells(PlotSelectionMultiCells cellSelection)
         {
-            if (cellSelection.somiteSelection == PlotSelection.All && cellSelection.cellSelection == PlotSelection.All)
+            if (cellSelection.SomiteSelection == PlotSelection.All && cellSelection.CellSelection == PlotSelection.All)
                 return Cells.AsEnumerable();
 
             if (!Cells.Any())
@@ -282,11 +282,11 @@ namespace SiliFish.ModelUnits.Cells
             List<int> seq = new();
             if (Model.ModelDimensions.NumberOfSomites > 0)
             {
-                if (cellSelection.somiteSelection == PlotSelection.Single)
+                if (cellSelection.SomiteSelection == PlotSelection.Single)
                 {
-                    som.Add(cellSelection.nSomite);
+                    som.Add(cellSelection.NSomite);
                 }
-                else if (cellSelection.somiteSelection == PlotSelection.FirstMiddleLast)
+                else if (cellSelection.SomiteSelection == PlotSelection.FirstMiddleLast)
                 {
                     int minSom = Cells.Select(c => c.Somite).Min();
                     int maxSom = Cells.Select(c => c.Somite).Max();
@@ -294,19 +294,19 @@ namespace SiliFish.ModelUnits.Cells
                     som.Add(maxSom);
                     som.Add((minSom + maxSom) / 2);
                 }
-                else if (cellSelection.somiteSelection == PlotSelection.Random)
+                else if (cellSelection.SomiteSelection == PlotSelection.Random)
                 {
                     IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
-                    if (somites.Count() > cellSelection.nSomite)
-                        som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nSomite));
+                    if (somites.Count() > cellSelection.NSomite)
+                        som.AddRange(somites.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.NSomite));
                 }
             }
 
-            if (cellSelection.cellSelection == PlotSelection.Single)
+            if (cellSelection.CellSelection == PlotSelection.Single)
             {
-                seq.Add(cellSelection.nCell);
+                seq.Add(cellSelection.NCell);
             }
-            else if (cellSelection.cellSelection == PlotSelection.FirstMiddleLast)
+            else if (cellSelection.CellSelection == PlotSelection.FirstMiddleLast)
             {
                 int minSeq = Cells.Select(c => c.Sequence).Min();
                 int maxSeq = Cells.Select(c => c.Sequence).Max();
@@ -314,20 +314,20 @@ namespace SiliFish.ModelUnits.Cells
                 seq.Add(maxSeq);
                 seq.Add((minSeq + maxSeq) / 2);
             }
-            else if (cellSelection.cellSelection == PlotSelection.Random)
+            else if (cellSelection.CellSelection == PlotSelection.Random)
             {
                 IEnumerable<int> seqs = Cells.Select(c => c.Sequence).Distinct();
-                if (seqs.Count() > cellSelection.nCell)
-                    seq.AddRange(seqs.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.nCell));
+                if (seqs.Count() > cellSelection.NCell)
+                    seq.AddRange(seqs.OrderBy(s => random.Next()).Select(s => s).Take(cellSelection.NCell));
             }
-            else if (cellSelection.somiteSelection == PlotSelection.NonSpiking)
+            else if (cellSelection.SomiteSelection == PlotSelection.NonSpiking)
             {
                 
             }
             return Cells
                 .Where(c =>
-                (cellSelection.cellSelection != PlotSelection.Spiking || c.IsSpiking()) &&
-                (cellSelection.cellSelection != PlotSelection.NonSpiking || !c.IsSpiking()) &&
+                (cellSelection.CellSelection != PlotSelection.Spiking || c.IsSpiking()) &&
+                (cellSelection.CellSelection != PlotSelection.NonSpiking || !c.IsSpiking()) &&
                 (c.Somite < 0 || !som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)
@@ -465,7 +465,8 @@ namespace SiliFish.ModelUnits.Cells
                         if (existing >= maxIncoming)
                             continue;
                     }
-                    if (probability < Model.rand.Next(1))
+                    double r = Model.rand.NextDouble();
+                    if (probability < r)
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)
@@ -532,7 +533,8 @@ namespace SiliFish.ModelUnits.Cells
                                 continue;
                         }
                     }
-                    if (probability < Model.rand.Next(1))
+                    double r = Model.rand.NextDouble();
+                    if (probability < r)
                         continue;
                     double mult = 1;
                     if (CellPool.rangeNoiseMultiplier != null)

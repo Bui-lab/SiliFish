@@ -5,21 +5,33 @@ using System.Linq;
 
 namespace SiliFish.Services.Plotting
 {
-    public struct PlotSelectionMultiCells : PlotSelectionInterface
+    public class PlotSelectionMultiCells : PlotSelectionInterface
     {
-        public string Pools = Const.AllPools;
-        public SagittalPlane SagittalPlane = SagittalPlane.Both;
-        public PlotSelection somiteSelection = PlotSelection.All;
-        public int nSomite = -1;
-        public PlotSelection cellSelection = PlotSelection.All;
-        public int nCell = -1;
-        public bool combinePools = false;
-        public bool combineSomites = false;
-        public bool combineCells = false;
+        public SagittalPlane SagittalPlane { get; set; } = SagittalPlane.Both;
+        public PlotSelection SomiteSelection { get; set; } = PlotSelection.All;
+        public int NSomite { get; set; } = -1;
+        public PlotSelection CellSelection { get; set; } = PlotSelection.All;
+        public int NCell { get; set; } = -1;
+        public bool CombinePools { get; set; } = false;
+        public bool CombineSomites { get; set; } = false;
+        public bool CombineCells { get; set; } = false;
         public PlotSelectionMultiCells()
         {
         }
-
+        public override string ToString()
+        {
+            string sagittal = SagittalPlane == SagittalPlane.Left ? "[L]" : SagittalPlane == SagittalPlane.Right ? "[R]" : "";
+            string somite = SomiteSelection == PlotSelection.All ? "" :
+                SomiteSelection == PlotSelection.Single ? $"Somite:{NSomite}" :
+                $"Somite: {SomiteSelection}";
+            if (CombineSomites && !string.IsNullOrEmpty(somite)) somite = "[" + somite + "]";
+            string cells = CellSelection == PlotSelection.All ? "" :
+                CellSelection == PlotSelection.Single ? $"Cell:{NCell}" :
+                $"Cells: {CellSelection}";
+            if (CombineCells && !string.IsNullOrEmpty(cells)) cells = "[" + cells + "]";           
+            return CombinePools?$"[{sagittal}{somite}{cells}]".Replace("  ", " ") :
+                $"{sagittal} {somite} {cells}".Replace("  "," ");
+        }
         public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells, 
             bool combinePools, bool combineSomites, bool combineCells)
         {

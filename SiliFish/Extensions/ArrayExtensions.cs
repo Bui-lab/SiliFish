@@ -96,6 +96,7 @@ namespace SiliFish.Extensions
         }
         public static bool HasSpike(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
         {
+            if (thisArray == null) return false;
             iEnd = iEnd < 0 ? thisArray.Length - 1 : iEnd;
             int ind = Array.FindIndex(thisArray, iStart, iEnd-iStart, value => value >= threshold);
             return ind >= 0;

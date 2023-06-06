@@ -42,6 +42,7 @@
             cmiPlotImageSave = new ToolStripMenuItem();
             pictureBoxRight = new PictureBox();
             pPlot = new Panel();
+            listPlotHistory = new HistoryListControl();
             cbCombinePools = new CheckBox();
             cbCombineCells = new CheckBox();
             cbCombineSomites = new CheckBox();
@@ -344,6 +345,7 @@
             // pPlot
             // 
             pPlot.BackColor = Color.FromArgb(236, 239, 241);
+            pPlot.Controls.Add(listPlotHistory);
             pPlot.Controls.Add(cbCombinePools);
             pPlot.Controls.Add(cbCombineCells);
             pPlot.Controls.Add(cbCombineSomites);
@@ -371,6 +373,19 @@
             pPlot.Name = "pPlot";
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
+            // 
+            // listPlotHistory
+            // 
+            listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            listPlotHistory.FirstItem = "(Plot History - Double click to select.)";
+            listPlotHistory.Location = new Point(527, 29);
+            listPlotHistory.Name = "listPlotHistory";
+            listPlotHistory.SelectedIndex = -1;
+            listPlotHistory.Size = new Size(154, 105);
+            listPlotHistory.TabIndex = 64;
+            listPlotHistory.ItemSelect += listPlotHistory_ItemSelect;
+            listPlotHistory.ItemsExport += listPlotHistory_ItemsExport;
+            listPlotHistory.ItemsImport += listPlotHistory_ItemsImport;
             // 
             // cbCombinePools
             // 
@@ -534,12 +549,13 @@
             // 
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(527, 31);
+            linkExportPlotData.Location = new Point(574, 11);
             linkExportPlotData.Name = "linkExportPlotData";
-            linkExportPlotData.Size = new Size(103, 16);
+            linkExportPlotData.Size = new Size(54, 15);
             linkExportPlotData.TabIndex = 59;
             linkExportPlotData.TabStop = true;
-            linkExportPlotData.Text = "Export Plot Data";
+            linkExportPlotData.Text = "Export";
+            toolTip.SetToolTip(linkExportPlotData, "Export plot data as a csv file");
             linkExportPlotData.LinkClicked += linkExportPlotData_LinkClicked;
             // 
             // pLinePlots
@@ -646,10 +662,11 @@
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveHTMLPlots.Location = new Point(527, 11);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
-            linkSaveHTMLPlots.Size = new Size(103, 16);
+            linkSaveHTMLPlots.Size = new Size(41, 15);
             linkSaveHTMLPlots.TabIndex = 53;
             linkSaveHTMLPlots.TabStop = true;
-            linkSaveHTMLPlots.Text = "Save Plot HTML";
+            linkSaveHTMLPlots.Text = "Save";
+            toolTip.SetToolTip(linkSaveHTMLPlots, "Save plot as an HTML file");
             linkSaveHTMLPlots.LinkClicked += linkSaveHTMLPlots_LinkClicked;
             // 
             // ePlotEnd
@@ -1837,5 +1854,6 @@
         private CheckBox cbCombinePools;
         private CheckBox cbSpikingMNs;
         private CheckBox cbCombineMNPools;
+        private HistoryListControl listPlotHistory;
     }
 }

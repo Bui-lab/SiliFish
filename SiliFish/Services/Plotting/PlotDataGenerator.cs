@@ -548,8 +548,8 @@ namespace SiliFish.Services.Plotting
             return charts;
         }
 
-        public static (string, List<ChartDataStruct>) GetPlotData(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-             PlotSelectionInterface selection, int tStart = 0, int tEnd = -1)
+        public static (string, List<ChartDataStruct>) GetPlotData(Plot Plot, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
+             int tStart = 0, int tEnd = -1)
         {
             List<ChartDataStruct> charts;
             double dt = model.RunParam.DeltaT;
@@ -561,27 +561,27 @@ namespace SiliFish.Services.Plotting
                 iEnd = model.TimeArray.Length - 1;
 
             UnitOfMeasure UoM = model.Settings.UoM;
-            if (selection is PlotSelectionJunction jncSelection)
+            if (Plot.Selection is PlotSelectionJunction jncSelection)
             {
                 charts = CreateJunctionCharts(model.TimeArray, jncSelection.Junction, iStart, iEnd, UoM);
                 return ("Junction", charts);
             }
 
-            if (PlotType != PlotType.Episodes &&
+            if (Plot.PlotType != PlotType.Episodes &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             bool combineCells = false;
             bool combineSomites = false;
             bool combinePools = false;
-            if (selection is PlotSelectionMultiCells cellSelection)
+            if (Plot.Selection is PlotSelectionMultiCells cellSelection)
             {
-                combinePools = cellSelection.combinePools;
-                combineCells = cellSelection.combineCells;
-                combineSomites = cellSelection.combineSomites;
+                combinePools = cellSelection.CombinePools;
+                combineCells = cellSelection.CombineCells;
+                combineSomites = cellSelection.CombineSomites;
             }
             string Title = "";
-            switch (PlotType)
+            switch (Plot.PlotType)
             {
                 case PlotType.MembPotential:
                     Title = "Membrane Potentials";
