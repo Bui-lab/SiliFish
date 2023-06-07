@@ -42,6 +42,7 @@
             cmiPlotImageSave = new ToolStripMenuItem();
             pictureBoxRight = new PictureBox();
             pPlot = new Panel();
+            cbPlotHistory = new CheckBox();
             listPlotHistory = new HistoryListControl();
             cbCombinePools = new CheckBox();
             cbCombineCells = new CheckBox();
@@ -160,7 +161,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            cbPlotHistory = new CheckBox();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -376,6 +376,18 @@
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
             // 
+            // cbPlotHistory
+            // 
+            cbPlotHistory.AutoSize = true;
+            cbPlotHistory.Checked = true;
+            cbPlotHistory.CheckState = CheckState.Checked;
+            cbPlotHistory.Location = new Point(644, 10);
+            cbPlotHistory.Name = "cbPlotHistory";
+            cbPlotHistory.Size = new Size(93, 19);
+            cbPlotHistory.TabIndex = 65;
+            cbPlotHistory.Text = "Keep History";
+            cbPlotHistory.UseVisualStyleBackColor = true;
+            // 
             // listPlotHistory
             // 
             listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -551,7 +563,7 @@
             // 
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(574, 11);
+            linkExportPlotData.Location = new Point(584, 11);
             linkExportPlotData.Name = "linkExportPlotData";
             linkExportPlotData.Size = new Size(54, 15);
             linkExportPlotData.TabIndex = 59;
@@ -664,7 +676,7 @@
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveHTMLPlots.Location = new Point(527, 11);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
-            linkSaveHTMLPlots.Size = new Size(41, 15);
+            linkSaveHTMLPlots.Size = new Size(51, 18);
             linkSaveHTMLPlots.TabIndex = 53;
             linkSaveHTMLPlots.TabStop = true;
             linkSaveHTMLPlots.Text = "Save";
@@ -1657,18 +1669,6 @@
             // saveFileImage
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
-            // 
-            // cbPlotHistory
-            // 
-            cbPlotHistory.AutoSize = true;
-            cbPlotHistory.Checked = true;
-            cbPlotHistory.CheckState = CheckState.Checked;
-            cbPlotHistory.Location = new Point(623, 10);
-            cbPlotHistory.Name = "cbPlotHistory";
-            cbPlotHistory.Size = new Size(93, 19);
-            cbPlotHistory.TabIndex = 65;
-            cbPlotHistory.Text = "Keep History";
-            cbPlotHistory.UseVisualStyleBackColor = true;
             // 
             // ModelOutputControl
             // 

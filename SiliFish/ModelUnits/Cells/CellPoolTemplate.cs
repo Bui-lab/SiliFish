@@ -263,7 +263,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 List<InterPoolTemplate> descIPT = model.InterPoolTemplates
                     .Where(ipt => ipt.PoolSource == CellGroup && ipt.CellReach.Descending).ToList();
-                double descending = descIPT != null && descIPT.Any() ? descIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
+                double descending = descIPT != null && descIPT.Any() ? descIPT.Max(ipt => ipt.CellReach.MaxDescReach) : double.NaN;
                 if (!double.IsNaN(descending))
                     DescendingAxonLength = new Constant_NoDistribution(descending);
             }

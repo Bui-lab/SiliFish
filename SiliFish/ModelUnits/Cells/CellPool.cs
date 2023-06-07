@@ -91,6 +91,8 @@ namespace SiliFish.ModelUnits.Cells
             Y_AngleDistribution = template.Y_AngleDistribution?.Clone();
             Y_AngleDistribution = Y_AngleDistribution?.ReviewYDistribution(leftright);
             Z_RadiusDistribution = template.Z_RadiusDistribution?.Clone();
+            AscendingAxonLength = template.AscendingAxonLength?.Clone();
+            DescendingAxonLength = template.DescendingAxonLength?.Clone();
             Parameters = template.Parameters.ToDictionary(entry => entry.Key, entry => entry.Value);
             PerSomiteOrTotal = template.PerSomiteOrTotal;
             SomiteRange = template.SomiteRange;
