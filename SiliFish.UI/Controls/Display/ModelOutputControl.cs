@@ -18,6 +18,7 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
 using SiliFish.DynamicUnits;
+using OfficeOpenXml.ConditionalFormatting;
 
 namespace SiliFish.UI.Controls
 {
@@ -591,6 +592,31 @@ namespace SiliFish.UI.Controls
                 {
                     string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                     List<Plot> plotList = (List<Plot>)JsonUtil.ToObject(typeof(List<Plot>), JSONString);
+                    if (plotList.Any(pl => pl.Selection is PlotSelectionJunction))
+                    {
+                        foreach (Plot plot in plotList)
+                        {
+                            if (plot.Selection is PlotSelectionJunction plotJnc)
+                            {
+                                string source = plotJnc.Junction.Source;
+                                string target = plotJnc.Junction.Target;
+                                JunctionBase jnc = null;
+                                if (plot.PlotSubset == nameof(ChemicalSynapse))
+                                {
+                                    jnc = RunningModel.GetChemicalProjections().FirstOrDefault(j => j.Source == source && j.Target == target);
+                                }
+                                else if (plot.PlotSubset == nameof(GapJunction))
+                                {
+                                    jnc = RunningModel.GetGapProjections().FirstOrDefault(j => j.Source == source && j.Target == target ||
+                                    j.Source == target && j.Target == source);
+                                }
+                                if (jnc != null)
+                                    plot.Selection = new PlotSelectionJunction() { Junction = jnc };
+                                else plot.Selection = null;
+                            }
+                        }
+                    }
+                    plotList.RemoveAll(pl => pl.Selection == null);
                     listPlotHistory.SetItems(plotList);
                 }
             }
@@ -608,12 +634,19 @@ namespace SiliFish.UI.Controls
             e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             htmlPlot = "";
 
-            (List<Cell> Cells, List<CellPool> Pools) =
-                !PlotSelectionVisible ? (null, null) :
-                RunningModel.GetSubsetCellsAndPools(PlotSubset, (PlotSelectionMultiCells)plotCellSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = (null, null);
+            string plotsubset = PlotSubset;
+            if (plotCellSelection is PlotSelectionMultiCells psmc)
+            {
+                (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, psmc);
+            }
+            else if (plotCellSelection is PlotSelectionJunction psj)
+            {
+                plotsubset = psj.Junction.GetType().Name;
+            }
             lastPlot = new()
             {
-                PlotSubset = PlotSubset,
+                PlotSubset = plotsubset,
                 PlotType = PlotType,
                 Selection = plotCellSelection
             };

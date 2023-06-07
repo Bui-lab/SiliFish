@@ -62,6 +62,8 @@ namespace SiliFish.ModelUnits.Cells
         public string SomiteRange { get; set; }
 
         public Distribution ConductionVelocity { get; set; }
+        public Distribution AscendingAxonLength { get; set; }
+        public Distribution DescendingAxonLength { get; set; }
         public override string ToString()
         {
             return CellGroup + (Active ? "" : " (inactive)");
@@ -127,6 +129,7 @@ namespace SiliFish.ModelUnits.Cells
             ListBuilder.Build<string>("CellGroup", "CellType", "NTMode",
                 "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange",
                 SpatialDistribution.ColumnNames, 
+                "Descending Axon", "Ascending Axon",
                 "Conduction Velocity", "CoreType",
                 Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Active", "Color", TimeLine.ColumnNames);
@@ -151,6 +154,8 @@ namespace SiliFish.ModelUnits.Cells
             return ListBuilder.Build<string>(CellGroup, CellType, NTMode, 
                 BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange,
                 SpatialDistribution.ExportValues(), 
+                DescendingAxonLength?.CSVCellExportValues??string.Empty,
+                AscendingAxonLength?.CSVCellExportValues??string.Empty,
                 ConductionVelocity?.CSVCellExportValues ?? string.Empty,
                 CoreType, csvExportParamValues,
                 Active, Color.ToHex(), TimeLine_ms.ExportValues());
@@ -170,6 +175,8 @@ namespace SiliFish.ModelUnits.Cells
             List<string> spatDistValues = values.Take(new Range(iter, iter + SpatialDistribution.ColumnNames.Count)).ToList();
             SpatialDistribution.ImportValues(spatDistValues);
             iter += SpatialDistribution.ColumnNames.Count;
+            DescendingAxonLength = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
+            AscendingAxonLength = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
             ConductionVelocity = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
             CoreType = values[iter++].Trim();
             parameters = new();
@@ -241,6 +248,26 @@ namespace SiliFish.ModelUnits.Cells
                 if (!parameters.ContainsKey(key))
                     parameters.Add(key, currentParams[key]);
             }
+        }
+        public void BackwardCompatibilityAxonLength(ModelTemplate model)
+        {
+            if (AscendingAxonLength == null)
+            {
+                List<InterPoolTemplate> ascIPT = model.InterPoolTemplates
+                    .Where(ipt => ipt.PoolSource == CellGroup && ipt.CellReach.Ascending).ToList();
+                double ascending = ascIPT!=null &&  ascIPT.Any() ? ascIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
+                if (!double.IsNaN(ascending))
+                    AscendingAxonLength = new Constant_NoDistribution(ascending);
+            }
+            if (DescendingAxonLength == null)
+            {
+                List<InterPoolTemplate> descIPT = model.InterPoolTemplates
+                    .Where(ipt => ipt.PoolSource == CellGroup && ipt.CellReach.Descending).ToList();
+                double descending = descIPT != null && descIPT.Any() ? descIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
+                if (!double.IsNaN(descending))
+                    DescendingAxonLength = new Constant_NoDistribution(descending);
+            }
+
         }
         public virtual CellPoolTemplate CreateTemplateCopy()
         {

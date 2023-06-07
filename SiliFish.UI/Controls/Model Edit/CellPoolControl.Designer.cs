@@ -75,6 +75,14 @@ namespace SiliFish.UI.Controls
             toolTip1 = new ToolTip(components);
             tabCellPool = new TabControl();
             tSpatialDist = new TabPage();
+            tProjections = new TabPage();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            pProjectionAscending = new Panel();
+            cbAscendingAxon = new CheckBox();
+            distributionAscending = new DistributionControl();
+            pProjectionDescending = new Panel();
+            cbDescendingAxon = new CheckBox();
+            distributionDescending = new DistributionControl();
             tDynamics = new TabPage();
             dgDynamics = new DistributionDataGrid();
             grConductionVelocity = new GroupBox();
@@ -100,6 +108,10 @@ namespace SiliFish.UI.Controls
             panel1.SuspendLayout();
             tabCellPool.SuspendLayout();
             tSpatialDist.SuspendLayout();
+            tProjections.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            pProjectionAscending.SuspendLayout();
+            pProjectionDescending.SuspendLayout();
             tDynamics.SuspendLayout();
             grConductionVelocity.SuspendLayout();
             pDynamicsTops.SuspendLayout();
@@ -239,7 +251,7 @@ namespace SiliFish.UI.Controls
             pMain.MaximumSize = new Size(400, 0);
             pMain.MinimumSize = new Size(244, 0);
             pMain.Name = "pMain";
-            pMain.Size = new Size(264, 521);
+            pMain.Size = new Size(264, 585);
             pMain.TabIndex = 0;
             // 
             // pMainInfo
@@ -395,7 +407,7 @@ namespace SiliFish.UI.Controls
             eDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             eDescription.Location = new Point(5, 308);
             eDescription.Name = "eDescription";
-            eDescription.Size = new Size(253, 209);
+            eDescription.Size = new Size(253, 273);
             eDescription.TabIndex = 17;
             eDescription.Text = "";
             // 
@@ -450,7 +462,7 @@ namespace SiliFish.UI.Controls
             timeLineControl.Dock = DockStyle.Fill;
             timeLineControl.Location = new Point(3, 3);
             timeLineControl.Name = "timeLineControl";
-            timeLineControl.Size = new Size(314, 487);
+            timeLineControl.Size = new Size(314, 551);
             timeLineControl.TabIndex = 23;
             // 
             // lSagittalPosition
@@ -484,16 +496,18 @@ namespace SiliFish.UI.Controls
             flowLayoutPanel1.Location = new Point(3, 3);
             flowLayoutPanel1.Margin = new Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(217, 487);
+            flowLayoutPanel1.Size = new Size(217, 551);
             flowLayoutPanel1.TabIndex = 8;
             // 
             // distributionX
             // 
+            distributionX.Absolute = false;
             distributionX.Angular = false;
             distributionX.AutoSize = true;
             distributionX.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             distributionX.BackColor = Color.White;
             distributionX.BorderStyle = BorderStyle.Fixed3D;
+            distributionX.DefaultConstant = false;
             distributionX.Dock = DockStyle.Top;
             flowLayoutPanel1.SetFlowBreak(distributionX, true);
             distributionX.Location = new Point(3, 33);
@@ -562,11 +576,13 @@ namespace SiliFish.UI.Controls
             // 
             // distributionY
             // 
+            distributionY.Absolute = false;
             distributionY.Angular = false;
             distributionY.AutoSize = true;
             distributionY.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             distributionY.BackColor = Color.White;
             distributionY.BorderStyle = BorderStyle.Fixed3D;
+            distributionY.DefaultConstant = false;
             distributionY.Dock = DockStyle.Top;
             flowLayoutPanel1.SetFlowBreak(distributionY, true);
             distributionY.Location = new Point(3, 246);
@@ -578,11 +594,13 @@ namespace SiliFish.UI.Controls
             // 
             // distributionZ
             // 
+            distributionZ.Absolute = false;
             distributionZ.Angular = false;
             distributionZ.AutoSize = true;
             distributionZ.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             distributionZ.BackColor = Color.White;
             distributionZ.BorderStyle = BorderStyle.Fixed3D;
+            distributionZ.DefaultConstant = false;
             distributionZ.Dock = DockStyle.Top;
             flowLayoutPanel1.SetFlowBreak(distributionZ, true);
             distributionZ.Location = new Point(3, 373);
@@ -595,6 +613,7 @@ namespace SiliFish.UI.Controls
             // tabCellPool
             // 
             tabCellPool.Controls.Add(tSpatialDist);
+            tabCellPool.Controls.Add(tProjections);
             tabCellPool.Controls.Add(tDynamics);
             tabCellPool.Controls.Add(tTimeline);
             tabCellPool.Controls.Add(tAttachments);
@@ -602,7 +621,7 @@ namespace SiliFish.UI.Controls
             tabCellPool.Location = new Point(0, 0);
             tabCellPool.Name = "tabCellPool";
             tabCellPool.SelectedIndex = 0;
-            tabCellPool.Size = new Size(328, 521);
+            tabCellPool.Size = new Size(328, 585);
             tabCellPool.TabIndex = 15;
             // 
             // tSpatialDist
@@ -611,10 +630,111 @@ namespace SiliFish.UI.Controls
             tSpatialDist.Location = new Point(4, 24);
             tSpatialDist.Name = "tSpatialDist";
             tSpatialDist.Padding = new Padding(3);
-            tSpatialDist.Size = new Size(320, 493);
+            tSpatialDist.Size = new Size(320, 557);
             tSpatialDist.TabIndex = 0;
-            tSpatialDist.Text = "Spatial Distribution";
+            tSpatialDist.Text = "Spatial Dist.";
             tSpatialDist.UseVisualStyleBackColor = true;
+            // 
+            // tProjections
+            // 
+            tProjections.Controls.Add(flowLayoutPanel2);
+            tProjections.Location = new Point(4, 24);
+            tProjections.Name = "tProjections";
+            tProjections.Padding = new Padding(3);
+            tProjections.Size = new Size(320, 557);
+            tProjections.TabIndex = 4;
+            tProjections.Text = "Projections";
+            tProjections.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.Controls.Add(pProjectionAscending);
+            flowLayoutPanel2.Controls.Add(distributionAscending);
+            flowLayoutPanel2.Controls.Add(pProjectionDescending);
+            flowLayoutPanel2.Controls.Add(distributionDescending);
+            flowLayoutPanel2.Dock = DockStyle.Fill;
+            flowLayoutPanel2.Location = new Point(3, 3);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(314, 551);
+            flowLayoutPanel2.TabIndex = 15;
+            // 
+            // pProjectionAscending
+            // 
+            pProjectionAscending.Controls.Add(cbAscendingAxon);
+            pProjectionAscending.Dock = DockStyle.Top;
+            pProjectionAscending.Location = new Point(0, 0);
+            pProjectionAscending.Margin = new Padding(0);
+            pProjectionAscending.Name = "pProjectionAscending";
+            pProjectionAscending.Size = new Size(211, 28);
+            pProjectionAscending.TabIndex = 14;
+            // 
+            // cbAscendingAxon
+            // 
+            cbAscendingAxon.AutoSize = true;
+            cbAscendingAxon.Checked = true;
+            cbAscendingAxon.CheckState = CheckState.Checked;
+            cbAscendingAxon.Location = new Point(3, 3);
+            cbAscendingAxon.Name = "cbAscendingAxon";
+            cbAscendingAxon.Size = new Size(113, 19);
+            cbAscendingAxon.TabIndex = 0;
+            cbAscendingAxon.Text = "Ascending Axon";
+            cbAscendingAxon.UseVisualStyleBackColor = true;
+            cbAscendingAxon.CheckedChanged += cbAscendingAxon_CheckedChanged;
+            // 
+            // distributionAscending
+            // 
+            distributionAscending.Absolute = true;
+            distributionAscending.Angular = false;
+            distributionAscending.AutoSize = true;
+            distributionAscending.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            distributionAscending.BackColor = Color.White;
+            distributionAscending.BorderStyle = BorderStyle.Fixed3D;
+            distributionAscending.DefaultConstant = true;
+            distributionAscending.Location = new Point(3, 31);
+            distributionAscending.MinimumSize = new Size(204, 0);
+            distributionAscending.Name = "distributionAscending";
+            distributionAscending.NoneIncluded = false;
+            distributionAscending.Size = new Size(211, 117);
+            distributionAscending.TabIndex = 0;
+            // 
+            // pProjectionDescending
+            // 
+            pProjectionDescending.Controls.Add(cbDescendingAxon);
+            pProjectionDescending.Dock = DockStyle.Top;
+            pProjectionDescending.Location = new Point(0, 151);
+            pProjectionDescending.Margin = new Padding(0);
+            pProjectionDescending.Name = "pProjectionDescending";
+            pProjectionDescending.Size = new Size(211, 28);
+            pProjectionDescending.TabIndex = 15;
+            // 
+            // cbDescendingAxon
+            // 
+            cbDescendingAxon.AutoSize = true;
+            cbDescendingAxon.Checked = true;
+            cbDescendingAxon.CheckState = CheckState.Checked;
+            cbDescendingAxon.Location = new Point(3, 3);
+            cbDescendingAxon.Name = "cbDescendingAxon";
+            cbDescendingAxon.Size = new Size(119, 19);
+            cbDescendingAxon.TabIndex = 0;
+            cbDescendingAxon.Text = "Descending Axon";
+            cbDescendingAxon.UseVisualStyleBackColor = true;
+            cbDescendingAxon.CheckedChanged += cbDescendingAxon_CheckedChanged;
+            // 
+            // distributionDescending
+            // 
+            distributionDescending.Absolute = true;
+            distributionDescending.Angular = false;
+            distributionDescending.AutoSize = true;
+            distributionDescending.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            distributionDescending.BackColor = Color.White;
+            distributionDescending.BorderStyle = BorderStyle.Fixed3D;
+            distributionDescending.DefaultConstant = true;
+            distributionDescending.Location = new Point(3, 182);
+            distributionDescending.MinimumSize = new Size(204, 0);
+            distributionDescending.Name = "distributionDescending";
+            distributionDescending.NoneIncluded = false;
+            distributionDescending.Size = new Size(211, 117);
+            distributionDescending.TabIndex = 16;
             // 
             // tDynamics
             // 
@@ -624,7 +744,7 @@ namespace SiliFish.UI.Controls
             tDynamics.Location = new Point(4, 24);
             tDynamics.Name = "tDynamics";
             tDynamics.Padding = new Padding(3);
-            tDynamics.Size = new Size(320, 493);
+            tDynamics.Size = new Size(320, 557);
             tDynamics.TabIndex = 1;
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
@@ -638,7 +758,7 @@ namespace SiliFish.UI.Controls
             dgDynamics.Location = new Point(3, 146);
             dgDynamics.MinimumSize = new Size(100, 100);
             dgDynamics.Name = "dgDynamics";
-            dgDynamics.Size = new Size(314, 344);
+            dgDynamics.Size = new Size(314, 408);
             dgDynamics.TabIndex = 3;
             // 
             // grConductionVelocity
@@ -655,11 +775,13 @@ namespace SiliFish.UI.Controls
             // 
             // distConductionVelocity
             // 
+            distConductionVelocity.Absolute = false;
             distConductionVelocity.Angular = false;
             distConductionVelocity.AutoSize = true;
             distConductionVelocity.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             distConductionVelocity.BackColor = Color.White;
             distConductionVelocity.BorderStyle = BorderStyle.Fixed3D;
+            distConductionVelocity.DefaultConstant = false;
             distConductionVelocity.Dock = DockStyle.Top;
             distConductionVelocity.Location = new Point(3, 19);
             distConductionVelocity.MinimumSize = new Size(204, 0);
@@ -709,7 +831,7 @@ namespace SiliFish.UI.Controls
             tTimeline.Location = new Point(4, 24);
             tTimeline.Name = "tTimeline";
             tTimeline.Padding = new Padding(3);
-            tTimeline.Size = new Size(320, 493);
+            tTimeline.Size = new Size(320, 557);
             tTimeline.TabIndex = 2;
             tTimeline.Text = "Timeline";
             tTimeline.UseVisualStyleBackColor = true;
@@ -719,7 +841,7 @@ namespace SiliFish.UI.Controls
             tAttachments.Controls.Add(attachmentList);
             tAttachments.Location = new Point(4, 24);
             tAttachments.Name = "tAttachments";
-            tAttachments.Size = new Size(320, 493);
+            tAttachments.Size = new Size(320, 557);
             tAttachments.TabIndex = 3;
             tAttachments.Text = "Attachments";
             tAttachments.UseVisualStyleBackColor = true;
@@ -729,7 +851,7 @@ namespace SiliFish.UI.Controls
             attachmentList.Dock = DockStyle.Fill;
             attachmentList.Location = new Point(0, 0);
             attachmentList.Name = "attachmentList";
-            attachmentList.Size = new Size(320, 493);
+            attachmentList.Size = new Size(320, 557);
             attachmentList.TabIndex = 0;
             // 
             // splitMain
@@ -747,7 +869,7 @@ namespace SiliFish.UI.Controls
             // splitMain.Panel2
             // 
             splitMain.Panel2.Controls.Add(tabCellPool);
-            splitMain.Size = new Size(600, 523);
+            splitMain.Size = new Size(600, 587);
             splitMain.SplitterDistance = 266;
             splitMain.TabIndex = 16;
             // 
@@ -764,7 +886,7 @@ namespace SiliFish.UI.Controls
             Controls.Add(splitMain);
             MinimumSize = new Size(480, 200);
             Name = "CellPoolControl";
-            Size = new Size(600, 523);
+            Size = new Size(600, 587);
             ((System.ComponentModel.ISupportInitialize)eNumOfCells).EndInit();
             ((System.ComponentModel.ISupportInitialize)e2DColumn).EndInit();
             pZAxis.ResumeLayout(false);
@@ -784,6 +906,13 @@ namespace SiliFish.UI.Controls
             panel1.PerformLayout();
             tabCellPool.ResumeLayout(false);
             tSpatialDist.ResumeLayout(false);
+            tProjections.ResumeLayout(false);
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            pProjectionAscending.ResumeLayout(false);
+            pProjectionAscending.PerformLayout();
+            pProjectionDescending.ResumeLayout(false);
+            pProjectionDescending.PerformLayout();
             tDynamics.ResumeLayout(false);
             tDynamics.PerformLayout();
             grConductionVelocity.ResumeLayout(false);
@@ -859,5 +988,13 @@ namespace SiliFish.UI.Controls
         private Label lBodyPosition;
         private LinkLabel linkLoadCoreUnit;
         private Panel pMainInfo;
+        private TabPage tProjections;
+        private Panel pProjectionAscending;
+        private CheckBox cbAscendingAxon;
+        private DistributionControl distributionAscending;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private Panel pProjectionDescending;
+        private CheckBox cbDescendingAxon;
+        private DistributionControl distributionDescending;
     }
 }

@@ -95,17 +95,23 @@ namespace SiliFish.UI.Controls
         private void ReadDataFromControl()
         {
             if (cell == null || cell.Core.CoreType != ddCoreType.Text)
-                cell = ddCellType.Text == CellType.Neuron.ToString() ? new Neuron(model, ddCoreType.Text, ddCellPool.Text, -1, -1, null, 0) :
-                            new MuscleCell(model, ddCoreType.Text, ddCellPool.Text, -1, -1, null, 0);
+                cell = ddCellType.Text == CellType.Neuron.ToString() ? new Neuron(model, ddCoreType.Text, ddCellPool.Text) :
+                            new MuscleCell(model, ddCoreType.Text, ddCellPool.Text);
             if (ddCellPool.Enabled)
                 cell.CellPool = ddCellPool.SelectedItem as CellPool;
-            if (double.TryParse(eConductionVelocity.Text, out double cv))
-                cell.ConductionVelocity = cv;
-            cell.Coordinate = new Coordinate(double.Parse(eX.Text), double.Parse(eY.Text), double.Parse(eZ.Text));
             cell.CellGroup = (ddCellPool.SelectedItem as CellPool).CellGroup;
             cell.PositionLeftRight = cell.CellPool.PositionLeftRight;
             cell.Somite = (int)eSomite.Value;
             cell.Sequence = (int)eSequence.Value;
+            if (double.TryParse(eConductionVelocity.Text, out double cv))
+                cell.ConductionVelocity = cv;
+            cell.Coordinate = new Coordinate(double.Parse(eX.Text), double.Parse(eY.Text), double.Parse(eZ.Text));
+            if (double.TryParse(eAscendingAxon.Text, out double asc))
+                cell.AscendingAxonLength = asc;
+            else cell.AscendingAxonLength = 0;
+            if (double.TryParse(eDescendingAxon.Text, out double desc))
+                cell.DescendingAxonLength = desc;
+            else cell.DescendingAxonLength = 0;
             cell.Active = cbActive.Checked;
             cell.TimeLine_ms = timeLineControl.GetTimeLine();
         }
@@ -120,7 +126,7 @@ namespace SiliFish.UI.Controls
 
             ddCellPool.SelectedItem = cell.CellPool;
             skipCellTypeChange = true;
-            ddCellType.SelectedItem = cell is Neuron? CellType.Neuron: CellType.MuscleCell;
+            ddCellType.SelectedItem = cell is Neuron ? CellType.Neuron : CellType.MuscleCell;
             skipCellTypeChange = false;
             skipCoreTypeChange = true;
             ddCoreType.Text = cell.Core.CoreType.ToString();
@@ -130,6 +136,8 @@ namespace SiliFish.UI.Controls
             eX.Text = cell.X.ToString();
             eY.Text = cell.Y.ToString();
             eZ.Text = cell.Z.ToString();
+            eAscendingAxon.Text = cell.AscendingAxonLength.ToString();
+            eDescendingAxon.Text = cell.DescendingAxonLength.ToString();
             propCore.SelectedObject = cell.Core;
             eConductionVelocity.Text = cell.ConductionVelocity.ToString();
         }

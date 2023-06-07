@@ -160,7 +160,8 @@ namespace SiliFish.UI.Controls
             poolBase.Active = cbActive.Checked;
             poolBase.TimeLine_ms = timeLineControl.GetTimeLine();
             poolBase.ConductionVelocity = distConductionVelocity.GetDistribution();
-
+            poolBase.AscendingAxonLength = cbAscendingAxon.Checked ? distributionAscending.GetDistribution() : null;
+            poolBase.DescendingAxonLength = cbDescendingAxon.Checked ? distributionDescending.GetDistribution() : null;
             poolBase.Attachments = attachmentList.GetAttachments();
         }
 
@@ -195,16 +196,28 @@ namespace SiliFish.UI.Controls
 
             btnColor.BackColor = poolBase.Color;
 
-            distributionX.SetDistribution((Distribution)poolBase.XDistribution);
-            distributionY.SetDistribution((Distribution)poolBase.Y_AngleDistribution);
-            distributionZ.SetDistribution((Distribution)poolBase.Z_RadiusDistribution);
+            distributionX.SetDistribution(poolBase.XDistribution);
+            distributionY.SetDistribution(poolBase.Y_AngleDistribution);
+            distributionZ.SetDistribution(poolBase.Z_RadiusDistribution);
             rbYZAngular.Checked = distributionY.GetDistribution() != null && distributionY.GetDistribution().Angular;
 
-            cbActive.Checked = poolBase.Active;
             timeLineControl.SetTimeLine(poolBase.TimeLine_ms);
-            distConductionVelocity.SetDistribution(poolBase.ConductionVelocity as Distribution);
+            distConductionVelocity.SetDistribution(poolBase.ConductionVelocity);
+            if (poolBase.AscendingAxonLength != null)
+            {
+                cbAscendingAxon.Checked = true;
+                distributionAscending.SetDistribution(poolBase.AscendingAxonLength);
+            }
+            else cbAscendingAxon.Checked = false;
+            if (poolBase.DescendingAxonLength != null)
+            {
+                cbDescendingAxon.Checked = true;
+                distributionDescending.SetDistribution(poolBase.DescendingAxonLength);
+            }
+            else cbDescendingAxon.Checked = false;
             ParamDictToGrid();
 
+            cbActive.Checked = poolBase.Active;
             attachmentList.SetAttachments(poolBase.Attachments);
         }
 
@@ -337,6 +350,16 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Sagittal position not defined.");
             if ((int)eNumOfCells.Value < GlobalSettings.Epsilon)
                 checkValuesArgs.Errors.Add("Number of cells is 0. To disable a cell pool, use the Active field instead.");
+        }
+
+        private void cbAscendingAxon_CheckedChanged(object sender, EventArgs e)
+        {
+            distributionAscending.Enabled = cbAscendingAxon.Checked;
+        }
+
+        private void cbDescendingAxon_CheckedChanged(object sender, EventArgs e)
+        {
+            distributionDescending.Enabled = cbDescendingAxon.Checked;
         }
     }
 }

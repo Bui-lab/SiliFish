@@ -6,6 +6,8 @@ namespace SiliFish.UI.Controls
 {
     public partial class DistributionControl : UserControl
     {
+        private bool defaultContstant = false;
+        private bool absolute = false;
         public bool NoneIncluded { get; set; } = false;
         public bool Angular { get; set; } = false;
         public bool AbsoluteEnforced
@@ -19,9 +21,44 @@ namespace SiliFish.UI.Controls
                 if (value)
                 {
                     lRange.Top = eRangeStart.Top = eRangeEnd.Top = lRangeSeparator.Top =
-                        lValue.Top = eUniqueValue.Top = 
+                        lValue.Top = eUniqueValue.Top =
                         rbAbsolute.Top;
                     pTop.Height = lRange.Bottom + lRange.Margin.Bottom + 12;
+                }
+                else
+                {
+                    lRange.Top = eRangeStart.Top = eRangeEnd.Top = lRangeSeparator.Top =
+                        lValue.Top = eUniqueValue.Top =
+                        rbAbsolute.Top + 29;
+                    pTop.Height = lRange.Bottom + lRange.Margin.Bottom + 12;
+                }
+            }
+        }
+        public bool Absolute
+        {
+            get { return absolute; }
+            set
+            {
+                absolute = value;
+                rbAbsolute.Checked = value;
+            }
+        }
+
+        public bool DefaultConstant
+        {
+            get => defaultContstant;
+            set
+            {
+                defaultContstant = value;
+                if (value)
+                {
+                    Constant_NoDistribution cd = new();
+                    ddDistribution.Text = cd.Discriminator;
+                }
+                else 
+                {
+                    UniformDistribution ud = new();
+                    ddDistribution.Text = ud.Discriminator;
                 }
             }
         }

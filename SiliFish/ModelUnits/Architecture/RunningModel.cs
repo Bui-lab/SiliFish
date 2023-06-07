@@ -289,7 +289,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public override void BackwardCompatibility_Stimulus()
+        public void BackwardCompatibility_Stimulus()
         {
             try
             {
@@ -313,11 +313,67 @@ namespace SiliFish.ModelUnits.Architecture
                 throw;
             }
         }
+
+        public void BackwardCompatibility_AxonLength()//has to be called after linkObjects
+        {
+            try
+            {
+                if (GetCells().Any(c => c.AscendingAxonLength > 0 || c.DescendingAxonLength > 0))
+                    return;
+
+                foreach (Cell cell in GetCells())
+                {
+                    List<GapJunction> descendingGapList = cell.GapJunctions.
+                        Where(jnc => jnc.Cell1.ID == cell.ID && cell.Coordinate.X < jnc.Cell2.Coordinate.X ||
+                            jnc.Cell2.ID == cell.ID && cell.Coordinate.X < jnc.Cell1.Coordinate.X)?.ToList();
+                    double descGap = descendingGapList.Any() ? 
+                        descendingGapList.Max(jnc => Util.Distance(jnc.Cell1.Coordinate, jnc.Cell2.Coordinate, jnc.DistanceMode)) : 0;
+                    double descChem = 0;
+                    if ( cell is Neuron neuron)
+                    {
+                        List<ChemicalSynapse> descendingChemList = neuron.Terminals.Where(jnc => cell.Coordinate.X < jnc.PostCell.Coordinate.X).ToList();
+                        if (descendingChemList.Any())
+                            descChem = descendingChemList.Max(jnc => Util.Distance(cell.Coordinate, jnc.PostCell.Coordinate, jnc.DistanceMode));
+                    }
+                    cell.DescendingAxonLength = Math.Max(descChem, descGap);
+
+                    List<GapJunction> ascendingGapList = cell.GapJunctions.
+                        Where(jnc => jnc.Cell1 == cell && cell.Coordinate.X > jnc.Cell2.Coordinate.X ||
+                            jnc.Cell2 == cell && cell.Coordinate.X > jnc.Cell1.Coordinate.X).ToList();
+                    double ascGap = ascendingGapList.Any() ?
+                        ascendingGapList.Max(jnc => Util.Distance(jnc.Cell1.Coordinate, jnc.Cell2.Coordinate, jnc.DistanceMode)) : 0;
+                    double ascChem = 0;
+                    if (cell is Neuron neuron2)
+                    {
+                        List<ChemicalSynapse> ascendingChemList = neuron2.Terminals.Where(jnc => cell.Coordinate.X < jnc.PostCell.Coordinate.X).ToList();
+                        if (ascendingChemList.Any())
+                            ascChem = ascendingChemList.Max(jnc => Util.Distance(cell.Coordinate, jnc.PostCell.Coordinate, jnc.DistanceMode));
+                    }
+                    cell.AscendingAxonLength = Math.Max(ascChem, ascGap);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                throw;
+            }
+        }
         public override void BackwardCompatibility()
         {
+            base.BackwardCompatibility();
+
             if (string.Compare(Version, "2.2.4") < 0)//frequency to stimulus is added on 2.2.4
             {
                 BackwardCompatibility_Stimulus();
+            }
+        }
+        public override void BackwardCompatibilityAfterLinkObjects()
+        {
+            base.BackwardCompatibilityAfterLinkObjects();
+            if (string.Compare(Version, "2.4.0") < 0)//axon legths are added on 2.4.0
+            {
+                BackwardCompatibility_AxonLength();
             }
         }
 

@@ -24,7 +24,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public ModelTemplate() { }
 
-        public override void BackwardCompatibility_Stimulus()
+        public void BackwardCompatibility_Stimulus()
         {
             try
             {
@@ -282,9 +282,12 @@ namespace SiliFish.ModelUnits.Architecture
         public override void BackwardCompatibility()
         {
             base.BackwardCompatibility();
+            bool checkAxonLength = string.Compare(Version, "2.4.0") < 0;//axon length added to stimulus is added on 2.4.0
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
             {
                 cpt.BackwardCompatibility();
+                if (checkAxonLength)
+                    cpt.BackwardCompatibilityAxonLength(this);
             }
         }
 

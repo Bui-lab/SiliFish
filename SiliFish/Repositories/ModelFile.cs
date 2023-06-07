@@ -289,6 +289,7 @@ namespace SiliFish.Repositories
                 mb = (ModelTemplate)JsonUtil.ToObject(typeof(ModelTemplate), json);
             mb?.BackwardCompatibility();
             mb?.LinkObjects();
+            mb?.BackwardCompatibilityAfterLinkObjects();
             return mb;
         }
         #endregion

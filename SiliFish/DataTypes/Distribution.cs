@@ -251,6 +251,7 @@ namespace SiliFish.DataTypes
         }
         public double NoiseStdDev { get; set; } = 0;
 
+        [JsonIgnore, Browsable(false)]
         public override string CSVCellExportValues
         {
             get => UniqueValue.ToString();

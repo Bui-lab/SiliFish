@@ -58,8 +58,10 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        
+
         public double ConductionVelocity { get; set; }
+        public double AscendingAxonLength { get; set; }
+        public double DescendingAxonLength { get; set; }
 
         [JsonPropertyOrder(3)]
         public Stimuli Stimuli { get; set; } = new();

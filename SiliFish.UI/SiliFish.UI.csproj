@@ -6,7 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-	<Version>2.3.1</Version>
+	<Version>2.4.0</Version>
 	<PackageIcon>fishbone2BlueBG.png</PackageIcon>
 	<ApplicationIcon>Resources\fishbone2BlueBG.ico</ApplicationIcon>
 	<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>

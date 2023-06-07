@@ -46,7 +46,9 @@ namespace SiliFish.ModelUnits.Cells
         /// <summary>
         /// Used as a template
         /// </summary>
-        public Neuron(RunningModel model, string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, double cv, TimeLine timeline = null)
+        public Neuron(RunningModel model, string coreType, string group, int somite, int seq, 
+            Dictionary<string, double> cellParams, double cv, double ascAxon, double descAxon,
+            TimeLine timeline = null)
         {
             Model = model;
             CellGroup = group;
@@ -58,10 +60,17 @@ namespace SiliFish.ModelUnits.Cells
             Terminals = new List<ChemicalSynapse>();
             TimeLine_ms = timeline;
             ConductionVelocity = cv;
+            AscendingAxonLength = ascAxon;
+            DescendingAxonLength = descAxon;
         }
-        public Neuron(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
-            : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
+        public Neuron(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv, double ascAxon, double descAxon)
+            : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, ascAxon, descAxon, cellTemp.TimeLine_ms)
         {
+        }
+
+        public Neuron(RunningModel model, string coreType, string group)
+            : this(model, coreType, group, -1, -1, null, 0, 0, 0)
+        { 
         }
 
         public override ModelUnitBase CreateCopy()

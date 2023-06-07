@@ -29,483 +29,502 @@ namespace SiliFish.UI.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.lGroupName = new System.Windows.Forms.Label();
-            this.lSomite = new System.Windows.Forms.Label();
-            this.eSomite = new System.Windows.Forms.NumericUpDown();
-            this.lSequence = new System.Windows.Forms.Label();
-            this.eSequence = new System.Windows.Forms.NumericUpDown();
-            this.lCellType = new System.Windows.Forms.Label();
-            this.pMain = new System.Windows.Forms.Panel();
-            this.ddCellPool = new System.Windows.Forms.ComboBox();
-            this.ddCoreType = new System.Windows.Forms.ComboBox();
-            this.ddCellType = new System.Windows.Forms.ComboBox();
-            this.eZ = new System.Windows.Forms.TextBox();
-            this.eY = new System.Windows.Forms.TextBox();
-            this.eX = new System.Windows.Forms.TextBox();
-            this.lX = new System.Windows.Forms.Label();
-            this.lZ = new System.Windows.Forms.Label();
-            this.lY = new System.Windows.Forms.Label();
-            this.lCoordinates = new System.Windows.Forms.Label();
-            this.pMainTop = new System.Windows.Forms.Panel();
-            this.linkSaveCell = new System.Windows.Forms.LinkLabel();
-            this.linkLoadCell = new System.Windows.Forms.LinkLabel();
-            this.cbActive = new System.Windows.Forms.CheckBox();
-            this.lCoreType = new System.Windows.Forms.Label();
-            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabCellPool = new System.Windows.Forms.TabControl();
-            this.tDynamics = new System.Windows.Forms.TabPage();
-            this.propCore = new System.Windows.Forms.PropertyGrid();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.lConductionVelocity = new System.Windows.Forms.Label();
-            this.eConductionVelocity = new System.Windows.Forms.TextBox();
-            this.pDynamicsTops = new System.Windows.Forms.Panel();
-            this.linkLoadCoreUnit = new System.Windows.Forms.LinkLabel();
-            this.linkTestDynamics = new System.Windows.Forms.LinkLabel();
-            this.tTimeline = new System.Windows.Forms.TabPage();
-            this.splitMain = new System.Windows.Forms.SplitContainer();
-            this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.openFileJson = new System.Windows.Forms.OpenFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.eSomite)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSequence)).BeginInit();
-            this.pMain.SuspendLayout();
-            this.pMainTop.SuspendLayout();
-            this.tabCellPool.SuspendLayout();
-            this.tDynamics.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.pDynamicsTops.SuspendLayout();
-            this.tTimeline.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
-            this.splitMain.Panel1.SuspendLayout();
-            this.splitMain.Panel2.SuspendLayout();
-            this.splitMain.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            lGroupName = new Label();
+            lSomite = new Label();
+            eSomite = new NumericUpDown();
+            lSequence = new Label();
+            eSequence = new NumericUpDown();
+            lCellType = new Label();
+            pMain = new Panel();
+            ddCellPool = new ComboBox();
+            ddCoreType = new ComboBox();
+            ddCellType = new ComboBox();
+            eZ = new TextBox();
+            eY = new TextBox();
+            eX = new TextBox();
+            lX = new Label();
+            lZ = new Label();
+            lY = new Label();
+            lCoordinates = new Label();
+            pMainTop = new Panel();
+            linkSaveCell = new LinkLabel();
+            linkLoadCell = new LinkLabel();
+            cbActive = new CheckBox();
+            lCoreType = new Label();
+            timeLineControl = new TimeLineControl();
+            toolTip1 = new ToolTip(components);
+            tabCellPool = new TabControl();
+            tDynamics = new TabPage();
+            propCore = new PropertyGrid();
+            panel1 = new Panel();
+            lConductionVelocity = new Label();
+            eConductionVelocity = new TextBox();
+            pDynamicsTops = new Panel();
+            linkLoadCoreUnit = new LinkLabel();
+            linkTestDynamics = new LinkLabel();
+            tTimeline = new TabPage();
+            splitMain = new SplitContainer();
+            colorDialog = new ColorDialog();
+            openFileJson = new OpenFileDialog();
+            lAscendingAxon = new Label();
+            lDescendingAxon = new Label();
+            eAscendingAxon = new TextBox();
+            eDescendingAxon = new TextBox();
+            ((System.ComponentModel.ISupportInitialize)eSomite).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)eSequence).BeginInit();
+            pMain.SuspendLayout();
+            pMainTop.SuspendLayout();
+            tabCellPool.SuspendLayout();
+            tDynamics.SuspendLayout();
+            panel1.SuspendLayout();
+            pDynamicsTops.SuspendLayout();
+            tTimeline.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
+            splitMain.Panel1.SuspendLayout();
+            splitMain.Panel2.SuspendLayout();
+            splitMain.SuspendLayout();
+            SuspendLayout();
             // 
             // lGroupName
             // 
-            this.lGroupName.AutoSize = true;
-            this.lGroupName.Location = new System.Drawing.Point(6, 36);
-            this.lGroupName.Name = "lGroupName";
-            this.lGroupName.Size = new System.Drawing.Size(75, 15);
-            this.lGroupName.TabIndex = 0;
-            this.lGroupName.Text = "Group Name";
+            lGroupName.AutoSize = true;
+            lGroupName.Location = new Point(6, 36);
+            lGroupName.Name = "lGroupName";
+            lGroupName.Size = new Size(75, 15);
+            lGroupName.TabIndex = 0;
+            lGroupName.Text = "Group Name";
             // 
             // lSomite
             // 
-            this.lSomite.AutoSize = true;
-            this.lSomite.Location = new System.Drawing.Point(6, 116);
-            this.lSomite.Name = "lSomite";
-            this.lSomite.Size = new System.Drawing.Size(44, 15);
-            this.lSomite.TabIndex = 8;
-            this.lSomite.Text = "Somite";
+            lSomite.AutoSize = true;
+            lSomite.Location = new Point(6, 116);
+            lSomite.Name = "lSomite";
+            lSomite.Size = new Size(44, 15);
+            lSomite.TabIndex = 8;
+            lSomite.Text = "Somite";
             // 
             // eSomite
             // 
-            this.eSomite.Location = new System.Drawing.Point(87, 114);
-            this.eSomite.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.eSomite.Name = "eSomite";
-            this.eSomite.Size = new System.Drawing.Size(64, 23);
-            this.eSomite.TabIndex = 9;
-            this.eSomite.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            eSomite.Location = new Point(87, 114);
+            eSomite.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            eSomite.Name = "eSomite";
+            eSomite.Size = new Size(64, 23);
+            eSomite.TabIndex = 9;
+            eSomite.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // lSequence
             // 
-            this.lSequence.AutoSize = true;
-            this.lSequence.Location = new System.Drawing.Point(6, 143);
-            this.lSequence.Name = "lSequence";
-            this.lSequence.Size = new System.Drawing.Size(58, 15);
-            this.lSequence.TabIndex = 13;
-            this.lSequence.Text = "Sequence";
+            lSequence.AutoSize = true;
+            lSequence.Location = new Point(6, 143);
+            lSequence.Name = "lSequence";
+            lSequence.Size = new Size(58, 15);
+            lSequence.TabIndex = 13;
+            lSequence.Text = "Sequence";
             // 
             // eSequence
             // 
-            this.eSequence.Location = new System.Drawing.Point(87, 141);
-            this.eSequence.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.eSequence.Name = "eSequence";
-            this.eSequence.Size = new System.Drawing.Size(64, 23);
-            this.eSequence.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.eSequence, "Used for 2D renderings or predefined 3D renderings");
-            this.eSequence.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            eSequence.Location = new Point(87, 141);
+            eSequence.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            eSequence.Name = "eSequence";
+            eSequence.Size = new Size(64, 23);
+            eSequence.TabIndex = 14;
+            toolTip1.SetToolTip(eSequence, "Used for 2D renderings or predefined 3D renderings");
+            eSequence.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // lCellType
             // 
-            this.lCellType.AutoSize = true;
-            this.lCellType.Location = new System.Drawing.Point(6, 63);
-            this.lCellType.Name = "lCellType";
-            this.lCellType.Size = new System.Drawing.Size(54, 15);
-            this.lCellType.TabIndex = 2;
-            this.lCellType.Text = "Cell Type";
+            lCellType.AutoSize = true;
+            lCellType.Location = new Point(6, 63);
+            lCellType.Name = "lCellType";
+            lCellType.Size = new Size(54, 15);
+            lCellType.TabIndex = 2;
+            lCellType.Text = "Cell Type";
             // 
             // pMain
             // 
-            this.pMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pMain.Controls.Add(this.ddCellPool);
-            this.pMain.Controls.Add(this.ddCoreType);
-            this.pMain.Controls.Add(this.ddCellType);
-            this.pMain.Controls.Add(this.eZ);
-            this.pMain.Controls.Add(this.eY);
-            this.pMain.Controls.Add(this.eX);
-            this.pMain.Controls.Add(this.lX);
-            this.pMain.Controls.Add(this.lZ);
-            this.pMain.Controls.Add(this.lY);
-            this.pMain.Controls.Add(this.lCoordinates);
-            this.pMain.Controls.Add(this.lGroupName);
-            this.pMain.Controls.Add(this.pMainTop);
-            this.pMain.Controls.Add(this.lSequence);
-            this.pMain.Controls.Add(this.eSequence);
-            this.pMain.Controls.Add(this.cbActive);
-            this.pMain.Controls.Add(this.eSomite);
-            this.pMain.Controls.Add(this.lSomite);
-            this.pMain.Controls.Add(this.lCellType);
-            this.pMain.Controls.Add(this.lCoreType);
-            this.pMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pMain.Location = new System.Drawing.Point(0, 0);
-            this.pMain.MaximumSize = new System.Drawing.Size(400, 0);
-            this.pMain.MinimumSize = new System.Drawing.Size(244, 0);
-            this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(258, 721);
-            this.pMain.TabIndex = 0;
+            pMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            pMain.Controls.Add(eDescendingAxon);
+            pMain.Controls.Add(eAscendingAxon);
+            pMain.Controls.Add(lDescendingAxon);
+            pMain.Controls.Add(lAscendingAxon);
+            pMain.Controls.Add(ddCellPool);
+            pMain.Controls.Add(ddCoreType);
+            pMain.Controls.Add(ddCellType);
+            pMain.Controls.Add(eZ);
+            pMain.Controls.Add(eY);
+            pMain.Controls.Add(eX);
+            pMain.Controls.Add(lX);
+            pMain.Controls.Add(lZ);
+            pMain.Controls.Add(lY);
+            pMain.Controls.Add(lCoordinates);
+            pMain.Controls.Add(lGroupName);
+            pMain.Controls.Add(pMainTop);
+            pMain.Controls.Add(lSequence);
+            pMain.Controls.Add(eSequence);
+            pMain.Controls.Add(cbActive);
+            pMain.Controls.Add(eSomite);
+            pMain.Controls.Add(lSomite);
+            pMain.Controls.Add(lCellType);
+            pMain.Controls.Add(lCoreType);
+            pMain.Dock = DockStyle.Fill;
+            pMain.Location = new Point(0, 0);
+            pMain.MaximumSize = new Size(400, 0);
+            pMain.MinimumSize = new Size(244, 0);
+            pMain.Name = "pMain";
+            pMain.Size = new Size(258, 721);
+            pMain.TabIndex = 0;
             // 
             // ddCellPool
             // 
-            this.ddCellPool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCellPool.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddCellPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCellPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddCellPool.FormattingEnabled = true;
-            this.ddCellPool.Location = new System.Drawing.Point(87, 33);
-            this.ddCellPool.Name = "ddCellPool";
-            this.ddCellPool.Size = new System.Drawing.Size(162, 23);
-            this.ddCellPool.TabIndex = 42;
+            ddCellPool.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddCellPool.BackColor = Color.WhiteSmoke;
+            ddCellPool.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCellPool.FlatStyle = FlatStyle.Flat;
+            ddCellPool.FormattingEnabled = true;
+            ddCellPool.Location = new Point(87, 33);
+            ddCellPool.Name = "ddCellPool";
+            ddCellPool.Size = new Size(162, 23);
+            ddCellPool.TabIndex = 42;
             // 
             // ddCoreType
             // 
-            this.ddCoreType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCoreType.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddCoreType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCoreType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddCoreType.FormattingEnabled = true;
-            this.ddCoreType.Location = new System.Drawing.Point(87, 87);
-            this.ddCoreType.Name = "ddCoreType";
-            this.ddCoreType.Size = new System.Drawing.Size(162, 23);
-            this.ddCoreType.TabIndex = 40;
-            this.ddCoreType.SelectedIndexChanged += new System.EventHandler(this.ddCoreType_SelectedIndexChanged);
+            ddCoreType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddCoreType.BackColor = Color.WhiteSmoke;
+            ddCoreType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCoreType.FlatStyle = FlatStyle.Flat;
+            ddCoreType.FormattingEnabled = true;
+            ddCoreType.Location = new Point(87, 87);
+            ddCoreType.Name = "ddCoreType";
+            ddCoreType.Size = new Size(162, 23);
+            ddCoreType.TabIndex = 40;
+            ddCoreType.SelectedIndexChanged += ddCoreType_SelectedIndexChanged;
             // 
             // ddCellType
             // 
-            this.ddCellType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddCellType.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddCellType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddCellType.Enabled = false;
-            this.ddCellType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddCellType.FormattingEnabled = true;
-            this.ddCellType.Location = new System.Drawing.Point(87, 60);
-            this.ddCellType.Name = "ddCellType";
-            this.ddCellType.Size = new System.Drawing.Size(162, 23);
-            this.ddCellType.TabIndex = 39;
-            this.ddCellType.SelectedIndexChanged += new System.EventHandler(this.ddCellType_SelectedIndexChanged);
+            ddCellType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddCellType.BackColor = Color.WhiteSmoke;
+            ddCellType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCellType.Enabled = false;
+            ddCellType.FlatStyle = FlatStyle.Flat;
+            ddCellType.FormattingEnabled = true;
+            ddCellType.Location = new Point(87, 60);
+            ddCellType.Name = "ddCellType";
+            ddCellType.Size = new Size(162, 23);
+            ddCellType.TabIndex = 39;
+            ddCellType.SelectedIndexChanged += ddCellType_SelectedIndexChanged;
             // 
             // eZ
             // 
-            this.eZ.Location = new System.Drawing.Point(179, 191);
-            this.eZ.Name = "eZ";
-            this.eZ.Size = new System.Drawing.Size(40, 23);
-            this.eZ.TabIndex = 38;
+            eZ.Location = new Point(179, 191);
+            eZ.Name = "eZ";
+            eZ.Size = new Size(40, 23);
+            eZ.TabIndex = 38;
             // 
             // eY
             // 
-            this.eY.Location = new System.Drawing.Point(133, 191);
-            this.eY.Name = "eY";
-            this.eY.Size = new System.Drawing.Size(40, 23);
-            this.eY.TabIndex = 37;
+            eY.Location = new Point(133, 191);
+            eY.Name = "eY";
+            eY.Size = new Size(40, 23);
+            eY.TabIndex = 37;
             // 
             // eX
             // 
-            this.eX.Location = new System.Drawing.Point(87, 191);
-            this.eX.Name = "eX";
-            this.eX.Size = new System.Drawing.Size(40, 23);
-            this.eX.TabIndex = 36;
+            eX.Location = new Point(87, 191);
+            eX.Name = "eX";
+            eX.Size = new Size(40, 23);
+            eX.TabIndex = 36;
             // 
             // lX
             // 
-            this.lX.AutoSize = true;
-            this.lX.Location = new System.Drawing.Point(101, 173);
-            this.lX.Name = "lX";
-            this.lX.Size = new System.Drawing.Size(14, 15);
-            this.lX.TabIndex = 35;
-            this.lX.Text = "X";
+            lX.AutoSize = true;
+            lX.Location = new Point(101, 173);
+            lX.Name = "lX";
+            lX.Size = new Size(14, 15);
+            lX.TabIndex = 35;
+            lX.Text = "X";
             // 
             // lZ
             // 
-            this.lZ.AutoSize = true;
-            this.lZ.Location = new System.Drawing.Point(191, 173);
-            this.lZ.Name = "lZ";
-            this.lZ.Size = new System.Drawing.Size(14, 15);
-            this.lZ.TabIndex = 34;
-            this.lZ.Text = "Z";
+            lZ.AutoSize = true;
+            lZ.Location = new Point(191, 173);
+            lZ.Name = "lZ";
+            lZ.Size = new Size(14, 15);
+            lZ.TabIndex = 34;
+            lZ.Text = "Z";
             // 
             // lY
             // 
-            this.lY.AutoSize = true;
-            this.lY.Location = new System.Drawing.Point(147, 173);
-            this.lY.Name = "lY";
-            this.lY.Size = new System.Drawing.Size(14, 15);
-            this.lY.TabIndex = 33;
-            this.lY.Text = "Y";
+            lY.AutoSize = true;
+            lY.Location = new Point(147, 173);
+            lY.Name = "lY";
+            lY.Size = new Size(14, 15);
+            lY.TabIndex = 33;
+            lY.Text = "Y";
             // 
             // lCoordinates
             // 
-            this.lCoordinates.AutoSize = true;
-            this.lCoordinates.Location = new System.Drawing.Point(6, 194);
-            this.lCoordinates.Name = "lCoordinates";
-            this.lCoordinates.Size = new System.Drawing.Size(71, 15);
-            this.lCoordinates.TabIndex = 32;
-            this.lCoordinates.Text = "Coordinates";
-            this.toolTip1.SetToolTip(this.lCoordinates, "Positive Y values are considered as sagittal right, negative values as sagittal l" +
-        "eft.");
+            lCoordinates.AutoSize = true;
+            lCoordinates.Location = new Point(6, 194);
+            lCoordinates.Name = "lCoordinates";
+            lCoordinates.Size = new Size(71, 15);
+            lCoordinates.TabIndex = 32;
+            lCoordinates.Text = "Coordinates";
+            toolTip1.SetToolTip(lCoordinates, "Positive Y values are considered as sagittal right, negative values as sagittal left.");
             // 
             // pMainTop
             // 
-            this.pMainTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pMainTop.Controls.Add(this.linkSaveCell);
-            this.pMainTop.Controls.Add(this.linkLoadCell);
-            this.pMainTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pMainTop.Location = new System.Drawing.Point(0, 0);
-            this.pMainTop.Name = "pMainTop";
-            this.pMainTop.Size = new System.Drawing.Size(258, 30);
-            this.pMainTop.TabIndex = 10;
+            pMainTop.BackColor = Color.FromArgb(236, 239, 241);
+            pMainTop.Controls.Add(linkSaveCell);
+            pMainTop.Controls.Add(linkLoadCell);
+            pMainTop.Dock = DockStyle.Top;
+            pMainTop.Location = new Point(0, 0);
+            pMainTop.Name = "pMainTop";
+            pMainTop.Size = new Size(258, 30);
+            pMainTop.TabIndex = 10;
             // 
             // linkSaveCell
             // 
-            this.linkSaveCell.AutoSize = true;
-            this.linkSaveCell.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkSaveCell.Location = new System.Drawing.Point(72, 9);
-            this.linkSaveCell.Name = "linkSaveCell";
-            this.linkSaveCell.Size = new System.Drawing.Size(54, 15);
-            this.linkSaveCell.TabIndex = 9;
-            this.linkSaveCell.TabStop = true;
-            this.linkSaveCell.Text = "Save Cell";
-            this.linkSaveCell.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkSavePool_LinkClicked);
+            linkSaveCell.AutoSize = true;
+            linkSaveCell.LinkColor = Color.FromArgb(64, 64, 64);
+            linkSaveCell.Location = new Point(72, 9);
+            linkSaveCell.Name = "linkSaveCell";
+            linkSaveCell.Size = new Size(54, 15);
+            linkSaveCell.TabIndex = 9;
+            linkSaveCell.TabStop = true;
+            linkSaveCell.Text = "Save Cell";
+            linkSaveCell.LinkClicked += linkSavePool_LinkClicked;
             // 
             // linkLoadCell
             // 
-            this.linkLoadCell.AutoSize = true;
-            this.linkLoadCell.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadCell.Location = new System.Drawing.Point(6, 9);
-            this.linkLoadCell.Name = "linkLoadCell";
-            this.linkLoadCell.Size = new System.Drawing.Size(56, 15);
-            this.linkLoadCell.TabIndex = 8;
-            this.linkLoadCell.TabStop = true;
-            this.linkLoadCell.Text = "Load Cell";
-            this.linkLoadCell.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCell_LinkClicked);
+            linkLoadCell.AutoSize = true;
+            linkLoadCell.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLoadCell.Location = new Point(6, 9);
+            linkLoadCell.Name = "linkLoadCell";
+            linkLoadCell.Size = new Size(56, 15);
+            linkLoadCell.TabIndex = 8;
+            linkLoadCell.TabStop = true;
+            linkLoadCell.Text = "Load Cell";
+            linkLoadCell.LinkClicked += linkLoadCell_LinkClicked;
             // 
             // cbActive
             // 
-            this.cbActive.AutoSize = true;
-            this.cbActive.Checked = true;
-            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(7, 222);
-            this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(59, 19);
-            this.cbActive.TabIndex = 16;
-            this.cbActive.Text = "Active";
-            this.cbActive.UseVisualStyleBackColor = true;
+            cbActive.AutoSize = true;
+            cbActive.Checked = true;
+            cbActive.CheckState = CheckState.Checked;
+            cbActive.Location = new Point(6, 297);
+            cbActive.Name = "cbActive";
+            cbActive.Size = new Size(59, 19);
+            cbActive.TabIndex = 16;
+            cbActive.Text = "Active";
+            cbActive.UseVisualStyleBackColor = true;
             // 
             // lCoreType
             // 
-            this.lCoreType.AutoSize = true;
-            this.lCoreType.Location = new System.Drawing.Point(6, 90);
-            this.lCoreType.Name = "lCoreType";
-            this.lCoreType.Size = new System.Drawing.Size(59, 15);
-            this.lCoreType.TabIndex = 4;
-            this.lCoreType.Text = "Core Type";
+            lCoreType.AutoSize = true;
+            lCoreType.Location = new Point(6, 90);
+            lCoreType.Name = "lCoreType";
+            lCoreType.Size = new Size(59, 15);
+            lCoreType.TabIndex = 4;
+            lCoreType.Text = "Core Type";
             // 
             // timeLineControl
             // 
-            this.timeLineControl.AutoScroll = true;
-            this.timeLineControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeLineControl.Location = new System.Drawing.Point(3, 3);
-            this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(320, 687);
-            this.timeLineControl.TabIndex = 23;
+            timeLineControl.AutoScroll = true;
+            timeLineControl.BackColor = Color.FromArgb(236, 239, 241);
+            timeLineControl.Dock = DockStyle.Fill;
+            timeLineControl.Location = new Point(3, 3);
+            timeLineControl.Name = "timeLineControl";
+            timeLineControl.Size = new Size(320, 687);
+            timeLineControl.TabIndex = 23;
             // 
             // tabCellPool
             // 
-            this.tabCellPool.Controls.Add(this.tDynamics);
-            this.tabCellPool.Controls.Add(this.tTimeline);
-            this.tabCellPool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabCellPool.Location = new System.Drawing.Point(0, 0);
-            this.tabCellPool.Name = "tabCellPool";
-            this.tabCellPool.SelectedIndex = 0;
-            this.tabCellPool.Size = new System.Drawing.Size(334, 721);
-            this.tabCellPool.TabIndex = 15;
+            tabCellPool.Controls.Add(tDynamics);
+            tabCellPool.Controls.Add(tTimeline);
+            tabCellPool.Dock = DockStyle.Fill;
+            tabCellPool.Location = new Point(0, 0);
+            tabCellPool.Name = "tabCellPool";
+            tabCellPool.SelectedIndex = 0;
+            tabCellPool.Size = new Size(334, 721);
+            tabCellPool.TabIndex = 15;
             // 
             // tDynamics
             // 
-            this.tDynamics.Controls.Add(this.propCore);
-            this.tDynamics.Controls.Add(this.panel1);
-            this.tDynamics.Controls.Add(this.pDynamicsTops);
-            this.tDynamics.Location = new System.Drawing.Point(4, 24);
-            this.tDynamics.Name = "tDynamics";
-            this.tDynamics.Padding = new System.Windows.Forms.Padding(3);
-            this.tDynamics.Size = new System.Drawing.Size(326, 693);
-            this.tDynamics.TabIndex = 1;
-            this.tDynamics.Text = "Dynamics";
-            this.tDynamics.UseVisualStyleBackColor = true;
+            tDynamics.Controls.Add(propCore);
+            tDynamics.Controls.Add(panel1);
+            tDynamics.Controls.Add(pDynamicsTops);
+            tDynamics.Location = new Point(4, 24);
+            tDynamics.Name = "tDynamics";
+            tDynamics.Padding = new Padding(3);
+            tDynamics.Size = new Size(326, 693);
+            tDynamics.TabIndex = 1;
+            tDynamics.Text = "Dynamics";
+            tDynamics.UseVisualStyleBackColor = true;
             // 
             // propCore
             // 
-            this.propCore.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propCore.Location = new System.Drawing.Point(3, 72);
-            this.propCore.Name = "propCore";
-            this.propCore.Size = new System.Drawing.Size(320, 618);
-            this.propCore.TabIndex = 1;
+            propCore.Dock = DockStyle.Fill;
+            propCore.Location = new Point(3, 72);
+            propCore.Name = "propCore";
+            propCore.Size = new Size(320, 618);
+            propCore.TabIndex = 1;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lConductionVelocity);
-            this.panel1.Controls.Add(this.eConductionVelocity);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(3, 36);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(320, 36);
-            this.panel1.TabIndex = 25;
+            panel1.Controls.Add(lConductionVelocity);
+            panel1.Controls.Add(eConductionVelocity);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(3, 36);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(320, 36);
+            panel1.TabIndex = 25;
             // 
             // lConductionVelocity
             // 
-            this.lConductionVelocity.AutoSize = true;
-            this.lConductionVelocity.Location = new System.Drawing.Point(3, 9);
-            this.lConductionVelocity.Name = "lConductionVelocity";
-            this.lConductionVelocity.Size = new System.Drawing.Size(114, 15);
-            this.lConductionVelocity.TabIndex = 23;
-            this.lConductionVelocity.Text = "Conduction Velocity";
+            lConductionVelocity.AutoSize = true;
+            lConductionVelocity.Location = new Point(3, 9);
+            lConductionVelocity.Name = "lConductionVelocity";
+            lConductionVelocity.Size = new Size(114, 15);
+            lConductionVelocity.TabIndex = 23;
+            lConductionVelocity.Text = "Conduction Velocity";
             // 
             // eConductionVelocity
             // 
-            this.eConductionVelocity.Location = new System.Drawing.Point(123, 6);
-            this.eConductionVelocity.Name = "eConductionVelocity";
-            this.eConductionVelocity.Size = new System.Drawing.Size(100, 23);
-            this.eConductionVelocity.TabIndex = 24;
+            eConductionVelocity.Location = new Point(123, 6);
+            eConductionVelocity.Name = "eConductionVelocity";
+            eConductionVelocity.Size = new Size(100, 23);
+            eConductionVelocity.TabIndex = 24;
             // 
             // pDynamicsTops
             // 
-            this.pDynamicsTops.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(239)))), ((int)(((byte)(241)))));
-            this.pDynamicsTops.Controls.Add(this.linkLoadCoreUnit);
-            this.pDynamicsTops.Controls.Add(this.linkTestDynamics);
-            this.pDynamicsTops.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pDynamicsTops.Location = new System.Drawing.Point(3, 3);
-            this.pDynamicsTops.Name = "pDynamicsTops";
-            this.pDynamicsTops.Size = new System.Drawing.Size(320, 33);
-            this.pDynamicsTops.TabIndex = 0;
+            pDynamicsTops.BackColor = Color.FromArgb(236, 239, 241);
+            pDynamicsTops.Controls.Add(linkLoadCoreUnit);
+            pDynamicsTops.Controls.Add(linkTestDynamics);
+            pDynamicsTops.Dock = DockStyle.Top;
+            pDynamicsTops.Location = new Point(3, 3);
+            pDynamicsTops.Name = "pDynamicsTops";
+            pDynamicsTops.Size = new Size(320, 33);
+            pDynamicsTops.TabIndex = 0;
             // 
             // linkLoadCoreUnit
             // 
-            this.linkLoadCoreUnit.AutoSize = true;
-            this.linkLoadCoreUnit.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkLoadCoreUnit.Location = new System.Drawing.Point(94, 9);
-            this.linkLoadCoreUnit.Name = "linkLoadCoreUnit";
-            this.linkLoadCoreUnit.Size = new System.Drawing.Size(86, 15);
-            this.linkLoadCoreUnit.TabIndex = 22;
-            this.linkLoadCoreUnit.TabStop = true;
-            this.linkLoadCoreUnit.Text = "Load Core Unit";
-            this.linkLoadCoreUnit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLoadCoreUnit_LinkClicked);
+            linkLoadCoreUnit.AutoSize = true;
+            linkLoadCoreUnit.LinkColor = Color.FromArgb(64, 64, 64);
+            linkLoadCoreUnit.Location = new Point(94, 9);
+            linkLoadCoreUnit.Name = "linkLoadCoreUnit";
+            linkLoadCoreUnit.Size = new Size(86, 15);
+            linkLoadCoreUnit.TabIndex = 22;
+            linkLoadCoreUnit.TabStop = true;
+            linkLoadCoreUnit.Text = "Load Core Unit";
+            linkLoadCoreUnit.LinkClicked += linkLoadCoreUnit_LinkClicked;
             // 
             // linkTestDynamics
             // 
-            this.linkTestDynamics.AutoSize = true;
-            this.linkTestDynamics.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.linkTestDynamics.Location = new System.Drawing.Point(6, 9);
-            this.linkTestDynamics.Name = "linkTestDynamics";
-            this.linkTestDynamics.Size = new System.Drawing.Size(82, 15);
-            this.linkTestDynamics.TabIndex = 9;
-            this.linkTestDynamics.TabStop = true;
-            this.linkTestDynamics.Text = "Test Dynamics";
-            this.linkTestDynamics.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTestDynamics_LinkClicked);
+            linkTestDynamics.AutoSize = true;
+            linkTestDynamics.LinkColor = Color.FromArgb(64, 64, 64);
+            linkTestDynamics.Location = new Point(6, 9);
+            linkTestDynamics.Name = "linkTestDynamics";
+            linkTestDynamics.Size = new Size(82, 15);
+            linkTestDynamics.TabIndex = 9;
+            linkTestDynamics.TabStop = true;
+            linkTestDynamics.Text = "Test Dynamics";
+            linkTestDynamics.LinkClicked += linkTestDynamics_LinkClicked;
             // 
             // tTimeline
             // 
-            this.tTimeline.Controls.Add(this.timeLineControl);
-            this.tTimeline.Location = new System.Drawing.Point(4, 24);
-            this.tTimeline.Name = "tTimeline";
-            this.tTimeline.Padding = new System.Windows.Forms.Padding(3);
-            this.tTimeline.Size = new System.Drawing.Size(326, 693);
-            this.tTimeline.TabIndex = 2;
-            this.tTimeline.Text = "Timeline";
-            this.tTimeline.UseVisualStyleBackColor = true;
+            tTimeline.Controls.Add(timeLineControl);
+            tTimeline.Location = new Point(4, 24);
+            tTimeline.Name = "tTimeline";
+            tTimeline.Padding = new Padding(3);
+            tTimeline.Size = new Size(326, 693);
+            tTimeline.TabIndex = 2;
+            tTimeline.Text = "Timeline";
+            tTimeline.UseVisualStyleBackColor = true;
             // 
             // splitMain
             // 
-            this.splitMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitMain.Location = new System.Drawing.Point(0, 0);
-            this.splitMain.Name = "splitMain";
+            splitMain.BorderStyle = BorderStyle.FixedSingle;
+            splitMain.Dock = DockStyle.Fill;
+            splitMain.Location = new Point(0, 0);
+            splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.pMain);
-            this.splitMain.Panel1MinSize = 260;
+            splitMain.Panel1.Controls.Add(pMain);
+            splitMain.Panel1MinSize = 260;
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.tabCellPool);
-            this.splitMain.Size = new System.Drawing.Size(600, 723);
-            this.splitMain.SplitterDistance = 260;
-            this.splitMain.TabIndex = 16;
+            splitMain.Panel2.Controls.Add(tabCellPool);
+            splitMain.Size = new Size(600, 723);
+            splitMain.SplitterDistance = 260;
+            splitMain.TabIndex = 16;
             // 
             // openFileJson
             // 
-            this.openFileJson.Filter = "JSON files(*.json)|*.json";
+            openFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // lAscendingAxon
+            // 
+            lAscendingAxon.AutoSize = true;
+            lAscendingAxon.Location = new Point(6, 226);
+            lAscendingAxon.Name = "lAscendingAxon";
+            lAscendingAxon.Size = new Size(100, 15);
+            lAscendingAxon.TabIndex = 43;
+            lAscendingAxon.Text = "Asc. Axon Length";
+            // 
+            // lDescendingAxon
+            // 
+            lDescendingAxon.AutoSize = true;
+            lDescendingAxon.Location = new Point(6, 251);
+            lDescendingAxon.Name = "lDescendingAxon";
+            lDescendingAxon.Size = new Size(106, 15);
+            lDescendingAxon.TabIndex = 44;
+            lDescendingAxon.Text = "Desc. Axon Length";
+            // 
+            // eAscendingAxon
+            // 
+            eAscendingAxon.Location = new Point(133, 218);
+            eAscendingAxon.Name = "eAscendingAxon";
+            eAscendingAxon.Size = new Size(86, 23);
+            eAscendingAxon.TabIndex = 45;
+            // 
+            // eDescendingAxon
+            // 
+            eDescendingAxon.Location = new Point(133, 247);
+            eDescendingAxon.Name = "eDescendingAxon";
+            eDescendingAxon.Size = new Size(86, 23);
+            eDescendingAxon.TabIndex = 46;
             // 
             // CellControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.splitMain);
-            this.MinimumSize = new System.Drawing.Size(480, 200);
-            this.Name = "CellControl";
-            this.Size = new System.Drawing.Size(600, 723);
-            ((System.ComponentModel.ISupportInitialize)(this.eSomite)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.eSequence)).EndInit();
-            this.pMain.ResumeLayout(false);
-            this.pMain.PerformLayout();
-            this.pMainTop.ResumeLayout(false);
-            this.pMainTop.PerformLayout();
-            this.tabCellPool.ResumeLayout(false);
-            this.tDynamics.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.pDynamicsTops.ResumeLayout(false);
-            this.pDynamicsTops.PerformLayout();
-            this.tTimeline.ResumeLayout(false);
-            this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
-            this.splitMain.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            BackColor = Color.White;
+            Controls.Add(splitMain);
+            MinimumSize = new Size(480, 200);
+            Name = "CellControl";
+            Size = new Size(600, 723);
+            ((System.ComponentModel.ISupportInitialize)eSomite).EndInit();
+            ((System.ComponentModel.ISupportInitialize)eSequence).EndInit();
+            pMain.ResumeLayout(false);
+            pMain.PerformLayout();
+            pMainTop.ResumeLayout(false);
+            pMainTop.PerformLayout();
+            tabCellPool.ResumeLayout(false);
+            tDynamics.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            pDynamicsTops.ResumeLayout(false);
+            pDynamicsTops.PerformLayout();
+            tTimeline.ResumeLayout(false);
+            splitMain.Panel1.ResumeLayout(false);
+            splitMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
+            splitMain.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -547,5 +566,9 @@ namespace SiliFish.UI.Controls
         private ComboBox ddCoreType;
         private ComboBox ddCellType;
         private ComboBox ddCellPool;
+        private Label lDescendingAxon;
+        private Label lAscendingAxon;
+        private TextBox eDescendingAxon;
+        private TextBox eAscendingAxon;
     }
 }

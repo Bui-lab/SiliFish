@@ -358,8 +358,14 @@ namespace SiliFish.ModelUnits.Cells
 
                 double defaultCV = Model.Settings.cv;
                 double[] cv = ConductionVelocity != null ?
-                    ((Distribution)ConductionVelocity).GenerateNNumbers(n, 0, ordered: false) :
+                    ConductionVelocity.GenerateNNumbers(n, 0, ordered: false) :
                     Enumerable.Repeat(defaultCV, n).ToArray();
+                double[] ascendingAxonLength = AscendingAxonLength != null ?
+                    AscendingAxonLength.GenerateNNumbers(n, 0, ordered: false) :
+                    Enumerable.Repeat(0.0, n).ToArray();
+                double[] descendingAxonLength = DescendingAxonLength != null ?
+                    DescendingAxonLength.GenerateNNumbers(n, 0, ordered: false) :
+                    Enumerable.Repeat(0.0, n).ToArray();
 
                 foreach (int i in Enumerable.Range(0, n))
                 {
@@ -376,8 +382,8 @@ namespace SiliFish.ModelUnits.Cells
                         }
                     }
                     Dictionary<string, double> cellParams = paramValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value[i]);
-                    Cell cell = neuron ? new Neuron(Model, this, actualSomite, i + 1, cellParams, cv[i]) :
-                        new MuscleCell(Model, this, actualSomite, i + 1, cellParams, cv[i]);
+                    Cell cell = neuron ? new Neuron(Model, this, actualSomite, i + 1, cellParams, cv[i], ascendingAxonLength[i], descendingAxonLength[i]) :
+                        new MuscleCell(Model, this, actualSomite, i + 1, cellParams, cv[i], ascendingAxonLength[i], descendingAxonLength[i]);
                     cell.PositionLeftRight = PositionLeftRight;
                     cell.Coordinate = coordinates[i];
                     

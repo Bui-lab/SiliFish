@@ -56,7 +56,8 @@ namespace SiliFish.ModelUnits.Cells
         /// <summary>
         /// Used as a template
         /// </summary>
-        public MuscleCell(RunningModel model, string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, double cv, TimeLine timeline = null)
+        public MuscleCell(RunningModel model, string coreType, string group, int somite, int seq, Dictionary<string, double> cellParams, double cv,
+            double ascAxon, double descAxon, TimeLine timeline = null)
         {
             Model = model;
             CellGroup = group;
@@ -66,10 +67,16 @@ namespace SiliFish.ModelUnits.Cells
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
             ConductionVelocity = cv;
+            AscendingAxonLength = ascAxon;
+            DescendingAxonLength = descAxon;
             TimeLine_ms = timeline;
         }
-        public MuscleCell(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv)
-            : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, cellTemp.TimeLine_ms)
+        public MuscleCell(RunningModel model, CellPoolTemplate cellTemp, int somite, int seq, Dictionary<string, double> cellParams, double cv, double ascAxon, double descAxon)
+            : this(model, cellTemp.CoreType, cellTemp.CellGroup, somite, seq, cellParams, cv, ascAxon, descAxon, cellTemp.TimeLine_ms)
+        {
+        }
+        public MuscleCell(RunningModel model, string coreType, string group)
+            : this(model, coreType, group, -1, -1, null, 0, 0, 0)
         {
         }
         public override ModelUnitBase CreateCopy()
