@@ -587,13 +587,6 @@ namespace SiliFish.Repositories
                     Cell cell = Cell.GenerateFromCSVRow(contents[iter++]);
                     model.AddCell(cell);
                 }
-                /*TODO cell csv export model.ClearCells();
-                 while (iter < contents.Length)
-                 {
-                     Stimulus stim = new();
-                     stim.GenerateFromCSVRow(rm, contents[iter++]);
-                 }*/
-
                 model.LinkObjects();
                 return true;
             }

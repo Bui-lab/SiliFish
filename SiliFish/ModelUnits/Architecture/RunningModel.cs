@@ -78,7 +78,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             get
             {
-                return MotoNeurons.Select(c=>c.CellPool).Distinct().ToList();
+                return MotoNeurons.Select(c => c.CellPool).Distinct().ToList();
             }
         }
         [Browsable(false)]

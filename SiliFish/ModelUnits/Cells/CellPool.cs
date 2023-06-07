@@ -477,7 +477,7 @@ namespace SiliFish.ModelUnits.Cells
                     if (probability < r)
                         continue;
                     double mult = 1;
-                    if (CellPool.rangeNoiseMultiplier != null)
+                    if (rangeNoiseMultiplier != null)
                         mult = rangeNoiseMultiplier();
                     if (reach.WithinReach(pre, post, mult))
                     {

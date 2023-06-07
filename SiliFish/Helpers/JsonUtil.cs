@@ -18,7 +18,7 @@ namespace SiliFish.Helpers
         {
             var options = new JsonSerializerOptions()
             {
-                Converters = { new ColorJsonConverter() },//TODO, new PlotSelectionJsonConverter() },
+                Converters = { new ColorJsonConverter() },
                 WriteIndented = true
             };
             string jsonstring = JsonSerializer.Serialize(content, options);
@@ -30,7 +30,7 @@ namespace SiliFish.Helpers
             {
                 var options = new JsonSerializerOptions()
                 {
-                    Converters = { new ColorJsonConverter() }//TODO, new PlotSelectionJsonConverter() }
+                    Converters = { new ColorJsonConverter() }
                 };
                 return JsonSerializer.Deserialize(jsonstring, content, options);
             }
@@ -44,7 +44,7 @@ namespace SiliFish.Helpers
         {
             var options = new JsonSerializerOptions()
             {
-                Converters = { new ColorJsonConverter() },//TODO, new PlotSelectionJsonConverter() },
+                Converters = { new ColorJsonConverter() },
 
                 WriteIndented = true
             };
