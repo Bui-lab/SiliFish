@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -40,6 +41,30 @@ namespace SiliFish.ModelUnits.Cells
         public SagittalPlane PositionLeftRight { get; set; } = SagittalPlane.Both;
 
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
+
+        [JsonIgnore]
+        public CellInputMode CellInputMode
+        {
+            get
+            {
+                switch (NTMode)
+                {
+                    case NeuronClass.NotSet:
+                        return CellInputMode.NotSet;
+                    case NeuronClass.Glycinergic:
+                    case NeuronClass.GABAergic:
+                        return CellInputMode.Inhibitory;
+                    case NeuronClass.Glutamatergic:
+                    case NeuronClass.Cholinergic:
+                        return CellInputMode.Excitatory;
+                    case NeuronClass.Modulatory:
+                        return CellInputMode.Modulatory;
+                    case NeuronClass.Mixed:
+                        return CellInputMode.NotSet;
+                };
+                return CellInputMode.NotSet;
+            }
+        }
 
         private Dictionary<string, object> parameters;
         [JsonPropertyOrder(1)]

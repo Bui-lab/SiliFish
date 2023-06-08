@@ -129,7 +129,8 @@ namespace SiliFish.ModelUnits.Architecture
                                 TargetPool = target,
                                 CountJunctions = count,
                                 MinConductance = minConductance,
-                                MaxConductance = maxConductance
+                                MaxConductance = maxConductance,
+                                Mode = CellInputMode.Electrical
                             });
                         }
                     }
@@ -166,7 +167,8 @@ namespace SiliFish.ModelUnits.Architecture
                                 TargetPool = target,
                                 CountJunctions = count,
                                 MinConductance = minConductance,
-                                MaxConductance = maxConductance
+                                MaxConductance = maxConductance,
+                                Mode = sourcePool.CellInputMode
                             });
                         }
                     }

@@ -38,6 +38,9 @@
         let selectedNode = null;
         let showChemJnc = __SHOW_CHEM__;
         let showGapJnc = __SHOW_GAP__;
+        let nodeSize = __NODE_SIZE__
+        let linkSizeMultiplier = 1;
+
 
         //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
         var linkedByID = {};
@@ -49,23 +52,27 @@
         }
 
         function nodePaint(node, color, ctx) {
+            if (node.id == '_h_' || node.id == "_t_")
+                return;
             if (selectedNode != null && selectedNode.id != node.id
                 && !neighboring(selectedNode, node)
                 && !neighboring(node, selectedNode))
                 color = '#EEE';
             ctx.fillStyle = color;
             ctx.beginPath();
-            ctx.arc(node.x, node.y, 10, 0, 2 * Math.PI, false); //circle
+            ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false); //circle
             ctx.fillStyle = color;
             ctx.fill();
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.textSize = 10;
+            ctx.textSize = nodeSize;
             ctx.fillStyle = 'black';
             ctx.fillText(node.id, node.x, node.y);
         }
         function showLink(l) {
             let show = true;
+            if (l.type == "spine")
+                return true;
             if (selectedNode != null)
                 show = l.source.id == selectedNode.id || l.target.id == selectedNode.id;
             return show;
@@ -77,17 +84,18 @@
             .nodeLabel(`id`)
             .graphData(gapChemData)
             .enableNodeDrag(true)
-            .linkColor(l => selectedNode == null ? '#808080' ://medium gray
-                !showLink(l) ? '#DDD' ://light gray
-                    l.type == 'gap' ? '#333' ://dark gray
-                        (l.source.g == selectedNode.g) ? '#0C0' ://green - outgoing
-                            '#C00') //red - incoming
-            .linkLabel(l => l.type == 'gap' ?
-                `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` :
-                `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`)
-            .linkWidth(l => Math.max(l.value, 0.5))
+            .linkColor(l => l.type == 'exc' ? '#0C0' ://green - excitatory
+                            l.type == 'inh' ? '#C00' ://red - inibitory
+                            '#333') //dark gray
+            .linkLabel(l => l.source.id == '_h_' || l.source == "_t_" ? `` ://spine
+                l.type == 'gap' ?
+                `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` : //gap junction
+                `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`) //chem junction
+            .linkWidth(l => Math.max(l.value *  linkSizeMultiplier, 0.5))
+            .linkDirectionalArrowLength(l => l.type == "gap" || l.type == "spine" ? 0 : 10)
+            .linkDirectionalArrowRelPos(0.95)
             .linkCurvature('curv')
-            .linkVisibility(l => (l.type == 'chem' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
+            .linkVisibility(l => (l.type != 'gap' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
             .onNodeClick(node => {
                 selectedNode = node;
                 updateHighlight();
@@ -128,6 +136,14 @@
         }
         function SelectCellPool(pool) {
             selectedNode = gapChemData.nodes.find(n => n.id == pool);
+            updateHighlight();
+        }
+        function SetNodeSizeMultiplier(mult) {
+            nodeSize *= mult;
+            updateHighlight();
+        }
+        function SetLinkSizeMultiplier(mult) {
+            linkSizeMultiplier *= mult;
             updateHighlight();
         }
         gapChemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes

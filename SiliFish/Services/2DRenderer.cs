@@ -24,15 +24,34 @@ namespace SiliFish.Services
         double XOffset, YOffset;
         double WeightMult;
         Dictionary<string, (double, double)> PoolCoordinates;
-        private string CreateLinkDataPoint(InterPool interPool, bool gap)
+        Dictionary<(string, string), int> LinkCounter =new();
+
+        private string CreateLinkDataPoint(InterPool interPool)
         {
-            string curvInfo = interPool.SourcePool == interPool.TargetPool ? ",curv: 0.7" : "";
+            string mode = interPool.Mode == CellInputMode.Excitatory ? "exc" :
+                interPool.Mode == CellInputMode.Inhibitory ? "inh" :
+                interPool.Mode == CellInputMode.Electrical ? "gap" :
+                "";
+            string p1 = interPool.SourcePool;
+            string p2 = interPool.TargetPool;
+            if (string.Compare(p1, p2)<0)
+                (p1, p2) = (p2, p1);
+            double curv = interPool.SourcePool == interPool.TargetPool ? 0.7 : 0;
+            if (LinkCounter.ContainsKey((p1, p2)))
+            {
+                curv += LinkCounter[(p1, p2)] * 0.1;
+                LinkCounter[(p1, p2)]++;
+            }
+            else
+                LinkCounter[(p1, p2)] = 1;
+
+            string curvInfo = curv>0 ? $",curv: {curv}" : "";
             string conductance = interPool.MinConductance == interPool.MaxConductance ?
                 interPool.MinConductance.ToString("0.######") :
                 $"{interPool.MinConductance:0.######} -  {interPool.MaxConductance:0.######}";
             string link = $"{{\"source\":\"{interPool.SourcePool}\"," +
                 $"\"target\":\"{interPool.TargetPool}\"," +
-                $"\"type\":" +( gap?"\"gap\",":"\"chem\",")+
+                $"\"type\":\"{mode}\"," +
                 $"\"value\":{GetNewWeight(interPool.CountJunctions):0.######}," +
                 $"\"conductance\":\"{conductance}\"" +
                 $"{curvInfo} }}";
@@ -47,7 +66,7 @@ namespace SiliFish.Services
         {
             if (!PoolCoordinates.ContainsKey(pool.CellGroup))
             {
-                (double x, double y, double z) = pool.XYZMiddle();
+                (double x, double y, _) = pool.XYZMiddle();
                 if (pool.PositionLeftRight == SagittalPlane.Left)
                     y *= -1;
                 PoolCoordinates.Add(pool.CellGroup, (y, x));
@@ -58,11 +77,22 @@ namespace SiliFish.Services
             double w = d * WeightMult;
             return w > 2 ? w : 2;
         }
+
+        private (string, string, string) CreateSpine()
+        {
+            (double newX, double newY) = (XOffset, YOffset);
+            string head = $"{{\"id\":\"_h_\",\"g\":\"Spine\",x:{newX.ToString(GlobalSettings.CoordinateFormat)},y:{(-newY).ToString(GlobalSettings.CoordinateFormat)}}}";
+            string tail = $"{{\"id\":\"_t_\",\"g\":\"Spine\",x:{newX.ToString(GlobalSettings.CoordinateFormat)},y:{newY.ToString(GlobalSettings.CoordinateFormat)} }}";
+            string link = $"{{\"source\":\"_h_\",\"target\":\"_t_\",\"type\":\"spine\"}}";
+            return (head, tail, link);
+        }
         private string CreateNodeDataPoint(CellPool pool)
         {
             (double origX, double origY) = PoolCoordinates[pool.CellGroup];
             if (pool.PositionLeftRight == SagittalPlane.Left)
                 origX *= -1;
+            if (Math.Abs(origX) < 1)
+                origX /= Math.Abs(origX);
             (double newX, double newY) = (origX * XMult + XOffset, origY * -1 * YMult + YOffset);
             return $"{{\"id\":\"{pool.ID}\",\"g\":\"{pool.CellGroup}\",x:{newX.ToString(GlobalSettings.CoordinateFormat)},y:{newY.ToString(GlobalSettings.CoordinateFormat)} }}";
         }
@@ -85,7 +115,7 @@ namespace SiliFish.Services
                         if (Math.Abs(v.Value.Item1) >= Math.Abs(curXY))
                             curXY = v.Value.Item1;
                         spreadedPools.Add(v.Key, (curXY, v.Value.Item2));
-                        curXY += inc * (neg?-1:1);
+                        curXY += inc * (neg ? -1 : 1);
                     }
                     else
                     {
@@ -98,6 +128,7 @@ namespace SiliFish.Services
             }
             return spreadedPools;
         }
+
         private List<string> CreatePoolNodes(List<CellPool> pools, int width, int height)
         {
             PoolCoordinates = new();
@@ -137,16 +168,17 @@ namespace SiliFish.Services
 
             if (XMax > XMin)
             {
-                XMult = width / (XMax - XMin) / 2;
+                XMult = width / (XMax - XMin) / 1.2 ;
                 XOffset = -(XMax + XMin) * XMult / 2;
             }
             if (YMax > YMin)
             {
-                YMult = -1 * height / (YMax - YMin) / 2;
+                YMult = -1 * height / (YMax - YMin) / 1.2;
                 YOffset = (YMax + YMin) * YMult / 2;
             }
             List<string> nodes = new();
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
+
             return nodes;
         }
 
@@ -178,11 +210,15 @@ namespace SiliFish.Services
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title));
 
             List<string> nodes = CreatePoolNodes(pools, width, height);
+            (string head, string tail, string spine) = CreateSpine();
+            nodes.Add(head);
+            nodes.Add(tail);
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
+            html.Replace("__NODE_SIZE__", "10");
 
             List<InterPool> gapInterPools = model.GapPoolConnections;
             List<InterPool> chemInterPools = model.ChemPoolConnections;
-
+            
             int CountMax = 0;
             if (gapInterPools.Any())
                 CountMax = gapInterPools.Max(ip => ip.CountJunctions);
@@ -190,19 +226,30 @@ namespace SiliFish.Services
                 CountMax = Math.Max(CountMax, chemInterPools.Max(ip => ip.CountJunctions));
             WeightMult = 5 / CountMax;
 
+            LinkCounter.Clear();
             List<string> gapChemLinks = new();
-            gapInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con, true)));
-            chemInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con, false)));
-            html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
+            gapInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con)));
+            chemInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con)));
+            gapChemLinks.Add(spine);
+            html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !string.IsNullOrEmpty(s))));
 
             List<string> colors = new();
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
-            html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
+            html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !string.IsNullOrEmpty(s))));
 
             List<string> shapes = new();
             pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
-            html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !String.IsNullOrEmpty(s))));
+            html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !string.IsNullOrEmpty(s))));
 
+            //Add spine
+            ModelDimensions MD = model.ModelDimensions;
+            double spinalposX = MD.SupraSpinalRostralCaudalDistance;
+            double spinalposY = MD.SpinalBodyPosition + MD.SpinalDorsalVentralDistance / 2;
+            double spinallength = MD.SpinalRostralCaudalDistance;
+            (double newX, double newY) = (/*origX * XMult + */XOffset, /*origY * -1 * YMult + */YOffset);
+            html.Replace("__SPINE_X__", newX.ToString());
+            html.Replace("__SPINE_Y__", newY.ToString());
+            html.Replace("__SPINE_LENGTH__", newY.ToString());
             return html.ToString();
         }
 

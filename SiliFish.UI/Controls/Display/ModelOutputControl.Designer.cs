@@ -86,6 +86,8 @@
             label4 = new Label();
             webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p2DRender = new Panel();
+            l2DNodeSize = new Label();
+            ud2DNodeSize = new General.UpDownControl();
             cb2DLegend = new CheckBox();
             cb2DGapJunc = new CheckBox();
             cb2DChemJunc = new CheckBox();
@@ -101,8 +103,8 @@
             webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p3DRender = new Panel();
             p3DViewing = new Panel();
-            lNodeSize = new Label();
-            udNodeSize = new General.UpDownControl();
+            l3DNodeSize = new Label();
+            ud3DNodeSize = new General.UpDownControl();
             cb3DLegend = new CheckBox();
             dd3DViewpoint = new ComboBox();
             btnZoomIn = new Button();
@@ -161,6 +163,8 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            l2DLinkSize = new Label();
+            ud2DLinkSize = new General.UpDownControl();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -781,9 +785,9 @@
             gr2DLegend.Controls.Add(label2);
             gr2DLegend.Controls.Add(label3);
             gr2DLegend.Controls.Add(label4);
-            gr2DLegend.Location = new Point(559, 670);
+            gr2DLegend.Location = new Point(554, 656);
             gr2DLegend.Name = "gr2DLegend";
-            gr2DLegend.Size = new Size(130, 94);
+            gr2DLegend.Size = new Size(122, 94);
             gr2DLegend.TabIndex = 54;
             gr2DLegend.TabStop = false;
             gr2DLegend.Text = "Projection Legend";
@@ -794,9 +798,9 @@
             label1.ForeColor = SystemColors.ControlLightLight;
             label1.Location = new Point(6, 17);
             label1.Name = "label1";
-            label1.Size = new Size(120, 18);
+            label1.Size = new Size(110, 18);
             label1.TabIndex = 49;
-            label1.Text = "Unselected";
+            label1.Text = "Unknown";
             // 
             // label2
             // 
@@ -804,9 +808,9 @@
             label2.ForeColor = SystemColors.ControlLightLight;
             label2.Location = new Point(6, 71);
             label2.Name = "label2";
-            label2.Size = new Size(120, 18);
+            label2.Size = new Size(110, 18);
             label2.TabIndex = 52;
-            label2.Text = "Outgoing Projections";
+            label2.Text = "Excitatory Projections";
             // 
             // label3
             // 
@@ -814,7 +818,7 @@
             label3.ForeColor = SystemColors.ControlLightLight;
             label3.Location = new Point(6, 35);
             label3.Name = "label3";
-            label3.Size = new Size(120, 18);
+            label3.Size = new Size(110, 18);
             label3.TabIndex = 50;
             label3.Text = "Gap junc";
             // 
@@ -824,9 +828,9 @@
             label4.ForeColor = SystemColors.ControlLightLight;
             label4.Location = new Point(6, 53);
             label4.Name = "label4";
-            label4.Size = new Size(120, 18);
+            label4.Size = new Size(110, 18);
             label4.TabIndex = 51;
-            label4.Text = "Incoming Projections";
+            label4.Text = "Inhibitory";
             // 
             // webView2DRender
             // 
@@ -846,6 +850,10 @@
             // p2DRender
             // 
             p2DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p2DRender.Controls.Add(l2DLinkSize);
+            p2DRender.Controls.Add(ud2DLinkSize);
+            p2DRender.Controls.Add(l2DNodeSize);
+            p2DRender.Controls.Add(ud2DNodeSize);
             p2DRender.Controls.Add(cb2DLegend);
             p2DRender.Controls.Add(cb2DGapJunc);
             p2DRender.Controls.Add(cb2DChemJunc);
@@ -857,6 +865,28 @@
             p2DRender.Name = "p2DRender";
             p2DRender.Size = new Size(694, 40);
             p2DRender.TabIndex = 2;
+            // 
+            // l2DNodeSize
+            // 
+            l2DNodeSize.AutoSize = true;
+            l2DNodeSize.Location = new Point(315, 13);
+            l2DNodeSize.Name = "l2DNodeSize";
+            l2DNodeSize.Size = new Size(59, 15);
+            l2DNodeSize.TabIndex = 69;
+            l2DNodeSize.Text = "Node Size";
+            // 
+            // ud2DNodeSize
+            // 
+            ud2DNodeSize.Items.Add(" ");
+            ud2DNodeSize.Items.Add("  ");
+            ud2DNodeSize.Items.Add("   ");
+            ud2DNodeSize.Items.Add("    ");
+            ud2DNodeSize.Location = new Point(380, 9);
+            ud2DNodeSize.Name = "ud2DNodeSize";
+            ud2DNodeSize.Size = new Size(19, 23);
+            ud2DNodeSize.TabIndex = 68;
+            ud2DNodeSize.Wrap = true;
+            ud2DNodeSize.SelectedItemChanged += ud2DNodeSize_SelectedItemChanged;
             // 
             // cb2DLegend
             // 
@@ -951,9 +981,9 @@
             gr3DLegend.Controls.Add(legendOutgoing);
             gr3DLegend.Controls.Add(legendGap);
             gr3DLegend.Controls.Add(legendIncoming);
-            gr3DLegend.Location = new Point(559, 670);
+            gr3DLegend.Location = new Point(554, 656);
             gr3DLegend.Name = "gr3DLegend";
-            gr3DLegend.Size = new Size(130, 94);
+            gr3DLegend.Size = new Size(122, 94);
             gr3DLegend.TabIndex = 53;
             gr3DLegend.TabStop = false;
             gr3DLegend.Text = "Projection Legend";
@@ -964,7 +994,7 @@
             legendUnselected.ForeColor = SystemColors.ControlLightLight;
             legendUnselected.Location = new Point(6, 17);
             legendUnselected.Name = "legendUnselected";
-            legendUnselected.Size = new Size(120, 18);
+            legendUnselected.Size = new Size(110, 18);
             legendUnselected.TabIndex = 49;
             legendUnselected.Text = "Unselected";
             // 
@@ -974,9 +1004,9 @@
             legendOutgoing.ForeColor = SystemColors.ControlLightLight;
             legendOutgoing.Location = new Point(6, 71);
             legendOutgoing.Name = "legendOutgoing";
-            legendOutgoing.Size = new Size(120, 18);
+            legendOutgoing.Size = new Size(110, 18);
             legendOutgoing.TabIndex = 52;
-            legendOutgoing.Text = "Outgoing Projections";
+            legendOutgoing.Text = "Outgoing";
             // 
             // legendGap
             // 
@@ -984,7 +1014,7 @@
             legendGap.ForeColor = SystemColors.ControlLightLight;
             legendGap.Location = new Point(6, 35);
             legendGap.Name = "legendGap";
-            legendGap.Size = new Size(120, 18);
+            legendGap.Size = new Size(110, 18);
             legendGap.TabIndex = 50;
             legendGap.Text = "Gap junc";
             // 
@@ -994,9 +1024,9 @@
             legendIncoming.ForeColor = SystemColors.ControlLightLight;
             legendIncoming.Location = new Point(6, 53);
             legendIncoming.Name = "legendIncoming";
-            legendIncoming.Size = new Size(120, 18);
+            legendIncoming.Size = new Size(110, 18);
             legendIncoming.TabIndex = 51;
-            legendIncoming.Text = "Incoming Projections";
+            legendIncoming.Text = "Incoming";
             // 
             // webView3DRender
             // 
@@ -1033,8 +1063,8 @@
             // 
             // p3DViewing
             // 
-            p3DViewing.Controls.Add(lNodeSize);
-            p3DViewing.Controls.Add(udNodeSize);
+            p3DViewing.Controls.Add(l3DNodeSize);
+            p3DViewing.Controls.Add(ud3DNodeSize);
             p3DViewing.Controls.Add(cb3DLegend);
             p3DViewing.Controls.Add(dd3DViewpoint);
             p3DViewing.Controls.Add(btnZoomIn);
@@ -1045,27 +1075,27 @@
             p3DViewing.Size = new Size(694, 39);
             p3DViewing.TabIndex = 58;
             // 
-            // lNodeSize
+            // l3DNodeSize
             // 
-            lNodeSize.AutoSize = true;
-            lNodeSize.Location = new Point(268, 11);
-            lNodeSize.Name = "lNodeSize";
-            lNodeSize.Size = new Size(59, 15);
-            lNodeSize.TabIndex = 67;
-            lNodeSize.Text = "Node Size";
+            l3DNodeSize.AutoSize = true;
+            l3DNodeSize.Location = new Point(268, 11);
+            l3DNodeSize.Name = "l3DNodeSize";
+            l3DNodeSize.Size = new Size(59, 15);
+            l3DNodeSize.TabIndex = 67;
+            l3DNodeSize.Text = "Node Size";
             // 
-            // udNodeSize
+            // ud3DNodeSize
             // 
-            udNodeSize.Items.Add(" ");
-            udNodeSize.Items.Add("  ");
-            udNodeSize.Items.Add("   ");
-            udNodeSize.Items.Add("    ");
-            udNodeSize.Location = new Point(333, 7);
-            udNodeSize.Name = "udNodeSize";
-            udNodeSize.Size = new Size(19, 23);
-            udNodeSize.TabIndex = 66;
-            udNodeSize.Wrap = true;
-            udNodeSize.SelectedItemChanged += udNodeSize_SelectedItemChanged;
+            ud3DNodeSize.Items.Add(" ");
+            ud3DNodeSize.Items.Add("  ");
+            ud3DNodeSize.Items.Add("   ");
+            ud3DNodeSize.Items.Add("    ");
+            ud3DNodeSize.Location = new Point(333, 7);
+            ud3DNodeSize.Name = "ud3DNodeSize";
+            ud3DNodeSize.Size = new Size(19, 23);
+            ud3DNodeSize.TabIndex = 66;
+            ud3DNodeSize.Wrap = true;
+            ud3DNodeSize.SelectedItemChanged += ud3DNodeSize_SelectedItemChanged;
             // 
             // cb3DLegend
             // 
@@ -1670,6 +1700,28 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // l2DLinkSize
+            // 
+            l2DLinkSize.AutoSize = true;
+            l2DLinkSize.Location = new Point(415, 13);
+            l2DLinkSize.Name = "l2DLinkSize";
+            l2DLinkSize.Size = new Size(64, 15);
+            l2DLinkSize.TabIndex = 71;
+            l2DLinkSize.Text = "Link Width";
+            // 
+            // ud2DLinkSize
+            // 
+            ud2DLinkSize.Items.Add(" ");
+            ud2DLinkSize.Items.Add("  ");
+            ud2DLinkSize.Items.Add("   ");
+            ud2DLinkSize.Items.Add("    ");
+            ud2DLinkSize.Location = new Point(480, 9);
+            ud2DLinkSize.Name = "ud2DLinkSize";
+            ud2DLinkSize.Size = new Size(19, 23);
+            ud2DLinkSize.TabIndex = 70;
+            ud2DLinkSize.Wrap = true;
+            ud2DLinkSize.SelectedItemChanged += ud2DLinkSize_SelectedItemChanged;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1861,8 +1913,8 @@
         private CheckBox cb3DShowUnselectedNodes;
         private Panel p3DViewing;
         private CheckBox cb3DLegend;
-        private Label lNodeSize;
-        private General.UpDownControl udNodeSize;
+        private Label l3DNodeSize;
+        private General.UpDownControl ud3DNodeSize;
         private CheckBox cbCombineCells;
         private CheckBox cbCombineSomites;
         private CheckBox cbCombinePools;
@@ -1870,5 +1922,9 @@
         private CheckBox cbCombineMNPools;
         private HistoryListControl listPlotHistory;
         private CheckBox cbPlotHistory;
+        private Label l2DNodeSize;
+        private General.UpDownControl ud2DNodeSize;
+        private Label l2DLinkSize;
+        private General.UpDownControl ud2DLinkSize;
     }
 }

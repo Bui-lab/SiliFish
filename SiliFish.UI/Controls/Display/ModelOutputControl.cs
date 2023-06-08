@@ -71,9 +71,12 @@ namespace SiliFish.UI.Controls
             }
 
             PlotSelectionVisible = true;
-            foreach (PlotSelection ps in Enum.GetValues(typeof(PlotSelection)))
+            foreach (PlotSomiteSelection ps in Enum.GetValues(typeof(PlotSomiteSelection)))
             {
                 ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
+            }
+            foreach (PlotCellSelection ps in Enum.GetValues(typeof(PlotCellSelection)))
+            {
                 ddPlotCellSelection.Items.Add(ps.GetDisplayName());
             }
             foreach (SagittalPlane sp in Enum.GetValues(typeof(SagittalPlane)))
@@ -81,8 +84,8 @@ namespace SiliFish.UI.Controls
                 ddPlotSagittal.Items.Add(sp.GetDisplayName());
             }
             ddPlotSagittal.SelectedIndex = ddPlotSagittal.Items.Count - 1;
-            ddPlotSomiteSelection.SelectedItem = PlotSelection.All.ToString();
-            ddPlotCellSelection.SelectedItem = PlotSelection.Spiking.ToString();
+            ddPlotSomiteSelection.SelectedItem = PlotSomiteSelection.All.ToString();
+            ddPlotCellSelection.SelectedItem = PlotCellSelection.Spiking.ToString();
 
             pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
             pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
@@ -352,8 +355,8 @@ namespace SiliFish.UI.Controls
                 PlotSelectionMultiCells selForMaxNumbers = new()
                 {
                     SagittalPlane = multiCells.SagittalPlane,
-                    CellSelection = PlotSelection.All,
-                    SomiteSelection = PlotSelection.All,
+                    CellSelection = PlotCellSelection.All,
+                    SomiteSelection = PlotSomiteSelection.All,
                     CombineCells = false,
                     CombineSomites = false,
                     CombinePools = false
@@ -394,8 +397,9 @@ namespace SiliFish.UI.Controls
         private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddPlotSomiteSelection.SelectedIndex < 0) return;
-            PlotSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
-            ePlotSomiteSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
+            PlotSomiteSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSomiteSelection>(PlotSomiteSelection.All);
+            ePlotSomiteSelection.Enabled = sel == PlotSomiteSelection.Random || sel == PlotSomiteSelection.Single ||
+                sel == PlotSomiteSelection.RostralTo || sel == PlotSomiteSelection.CaudalTo;
             if (ddPlotSomiteSelection.Focused)
                 DisplayNumberOfPlots();
         }
@@ -403,8 +407,8 @@ namespace SiliFish.UI.Controls
         private void ddPlotCellSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddPlotCellSelection.SelectedIndex < 0) return;
-            PlotSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotSelection>(PlotSelection.All);
-            ePlotCellSelection.Enabled = sel == PlotSelection.Random || sel == PlotSelection.Single;
+            PlotCellSelection sel = ddPlotCellSelection.Text.GetValueFromName<PlotCellSelection>(PlotCellSelection.All);
+            ePlotCellSelection.Enabled = sel == PlotCellSelection.Random || sel == PlotCellSelection.Single;
             if (ddPlotCellSelection.Focused)
                 DisplayNumberOfPlots();
         }
@@ -489,9 +493,9 @@ namespace SiliFish.UI.Controls
                 plotCellSelection = new PlotSelectionMultiCells()
                 {
                     SagittalPlane = ddPlotSagittal.Text.GetValueFromName(SagittalPlane.Both),
-                    SomiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSelection.All),
+                    SomiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSomiteSelection.All),
                     NSomite = (int)ePlotSomiteSelection.Value,
-                    CellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotSelection.All),
+                    CellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotCellSelection.All),
                     NCell = (int)ePlotCellSelection.Value,
                     CombineCells = cbCombineCells.Checked,
                     CombineSomites = cbCombineSomites.Checked,
@@ -1111,6 +1115,29 @@ namespace SiliFish.UI.Controls
             }
 
         }
+        private async void ud3DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud3DNodeSize.UpClick)
+                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (ud3DNodeSize.DownClick)
+                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DNodeSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (ud2DNodeSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+
+        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DLinkSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
+            if (ud2DLinkSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
+        }
+
         #endregion
 
         #region Animation
@@ -1214,13 +1241,6 @@ namespace SiliFish.UI.Controls
         #endregion
         #endregion
 
-        private async void udNodeSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (udNodeSize.UpClick)
-                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (udNodeSize.DownClick)
-                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
-        }
 
         private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1229,7 +1249,6 @@ namespace SiliFish.UI.Controls
             else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
                 RenderIn3D();
         }
-
 
     }
 

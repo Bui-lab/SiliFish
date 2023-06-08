@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Definitions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,6 @@ namespace SiliFish.ModelUnits.Junction
         public int CountJunctions;
         public double MinConductance;
         public double MaxConductance;
+        public CellInputMode Mode; 
     }
 }

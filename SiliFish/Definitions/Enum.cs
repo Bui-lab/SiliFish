@@ -45,7 +45,16 @@ namespace SiliFish.Definitions
         [Display(Name = "Episodes")] Episodes
     }
 
-    public enum PlotSelection
+    public enum PlotSomiteSelection
+    {
+        [Display(Name = "All")] All,
+        [Display(Name = "Single")] Single,
+        [Display(Name = "First/Middle/Last")] FirstMiddleLast,
+        [Display(Name = "Random")] Random,
+        [Display(Name = "Rostral to")] RostralTo,
+        [Display(Name = "Caudal to")] CaudalTo,
+    }
+    public enum PlotCellSelection
     {
         [Display(Name = "All")] All,
         [Display(Name = "Single")] Single,
@@ -60,6 +69,7 @@ namespace SiliFish.Definitions
     public enum ConnectionType { NotSet, Synapse, Gap, NMJ }
     public enum StimulusMode { Step, Gaussian, Ramp, Sinusoidal, Pulse }
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed }
+    public enum CellInputMode { NotSet, Excitatory, Inhibitory, Modulatory, Electrical}
 
     public enum UnitOfMeasure
     {

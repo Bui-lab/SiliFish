@@ -254,7 +254,7 @@ namespace SiliFish.DataTypes
         [JsonIgnore, Browsable(false)]
         public override string CSVCellExportValues
         {
-            get => UniqueValue.ToString();
+            get => Absolute? UniqueValue.ToString() : base.CSVCellExportValues;
         }
         public Constant_NoDistribution()
         { }

@@ -11,14 +11,25 @@ namespace SiliFish.Helpers
 {
     public class FileUtil
     {
+        //https://stackoverflow.com/questions/12744725/how-do-i-perform-file-readalllines-on-a-file-that-is-also-open-in-excel
+        private static string[] ReadAllLines(string path)
+        {
+            using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var sr = new StreamReader(file);
+            List<string> lines = new();
+            while (!sr.EndOfStream)
+            {
+                lines.Add(sr.ReadLine());
+            }
+            return lines.ToArray();
+        }
         public static string ReadFromFile(string path)
         {
-            File.ReadAllLines(path);
             return File.ReadAllText(path);
         }
         public static string[] ReadLinesFromFile(string path)
         {
-            return File.ReadAllLines(path);
+            return ReadAllLines(path);
         }
 
         public static void SaveToFile(string path, string content)

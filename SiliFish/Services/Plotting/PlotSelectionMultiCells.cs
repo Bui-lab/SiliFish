@@ -8,9 +8,9 @@ namespace SiliFish.Services.Plotting
     public class PlotSelectionMultiCells : PlotSelectionInterface
     {
         public SagittalPlane SagittalPlane { get; set; } = SagittalPlane.Both;
-        public PlotSelection SomiteSelection { get; set; } = PlotSelection.All;
+        public PlotSomiteSelection SomiteSelection { get; set; } = PlotSomiteSelection.All;
         public int NSomite { get; set; } = -1;
-        public PlotSelection CellSelection { get; set; } = PlotSelection.All;
+        public PlotCellSelection CellSelection { get; set; } = PlotCellSelection.All;
         public int NCell { get; set; } = -1;
         public bool CombinePools { get; set; } = false;
         public bool CombineSomites { get; set; } = false;
@@ -21,12 +21,12 @@ namespace SiliFish.Services.Plotting
         public override string ToString()
         {
             string sagittal = SagittalPlane == SagittalPlane.Left ? "[L]" : SagittalPlane == SagittalPlane.Right ? "[R]" : "";
-            string somite = SomiteSelection == PlotSelection.All ? "" :
-                SomiteSelection == PlotSelection.Single ? $"Somite:{NSomite}" :
+            string somite = SomiteSelection == PlotSomiteSelection.All ? "" :
+                SomiteSelection == PlotSomiteSelection.Single ? $"Somite:{NSomite}" :
                 $"Somite: {SomiteSelection}";
             if (CombineSomites && !string.IsNullOrEmpty(somite)) somite = "[" + somite + "]";
-            string cells = CellSelection == PlotSelection.All ? "" :
-                CellSelection == PlotSelection.Single ? $"Cell:{NCell}" :
+            string cells = CellSelection == PlotCellSelection.All ? "" :
+                CellSelection == PlotCellSelection.Single ? $"Cell:{NCell}" :
                 $"Cells: {CellSelection}";
             if (CombineCells && !string.IsNullOrEmpty(cells)) cells = "[" + cells + "]";           
             return CombinePools?$"[{sagittal}{somite}{cells}]".Replace("  ", " ") :
