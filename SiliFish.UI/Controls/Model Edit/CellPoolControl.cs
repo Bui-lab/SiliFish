@@ -38,8 +38,9 @@ namespace SiliFish.UI.Controls
 
                 linkLoadPool.Enabled = !createdCellPool;
                 ((Control)tSpatialDist).Enabled = !createdCellPool;
-
-                //The lone below also disables Test Dynamics Test
+                tProjections.Enabled = !createdCellPool;
+                tTimeline.Enabled = !createdCellPool;
+                //The alone below also disables Test Dynamics Test
                 //((Control)tDynamics).Enabled = !createdCellPool;
                 //Disable all other controls individually 
                 dgDynamics.Enabled = !createdCellPool;

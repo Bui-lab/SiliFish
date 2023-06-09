@@ -635,7 +635,6 @@ namespace SiliFish.UI.Controls
         private void PlotHTML()
         {
             if (RunningModel == null) return;
-            e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
