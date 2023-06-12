@@ -640,11 +640,7 @@ namespace SiliFish.ModelUnits.Architecture
             return CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count + ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));
         }
 
-        public virtual Dictionary<string, object> GetParameters()
-        {
-            return null;
-        }
-
+        
         /// <summary>
         /// Parameter Desc keeps some descriptive text for the relevant parameters
         /// for easy user entry
@@ -717,7 +713,6 @@ namespace SiliFish.ModelUnits.Architecture
             string Vfilename = Path.ChangeExtension(filename, "V.csv");
             string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
             string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
-            string filenamejson = Path.ChangeExtension(filename, "json");
 
             List<string> cell_names = new();
             cell_names.AddRange(neuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
@@ -747,7 +742,6 @@ namespace SiliFish.ModelUnits.Architecture
             ModelFile.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
             ModelFile.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
             ModelFile.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
-            JsonUtil.SaveToJsonFile(filenamejson, GetParameters());
         }
 
         protected virtual void InitForSimulation()

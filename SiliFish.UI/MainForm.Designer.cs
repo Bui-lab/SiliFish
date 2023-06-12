@@ -463,6 +463,7 @@ namespace SiliFish.UI
             linkExportOutput.TabIndex = 27;
             linkExportOutput.TabStop = true;
             linkExportOutput.Text = "Export Output";
+            toolTip.SetToolTip(linkExportOutput, "Exports membrane potential values of all cells, and currents passing through every junction throughout the simulation to multiple CSV files.");
             linkExportOutput.Visible = false;
             linkExportOutput.LinkClicked += linkExportOutput_LinkClicked;
             // 

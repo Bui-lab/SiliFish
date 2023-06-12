@@ -286,8 +286,10 @@ namespace SiliFish.UI
         }
         private void linkExportOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string msg = "Save Run may take a while depending on the duration and number of cells.";
-            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+            string msg = "Exporting the output may take a while depending on the duration of the simulation and the number of cells." +
+                " The resulting files can also be large. You may want to consider exporting partial data exporting indivusal plots instead." +
+                " Do you still want to continue with the full export?";
+            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {

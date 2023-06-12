@@ -561,7 +561,7 @@ namespace SiliFish.Services.Plotting
                 iEnd = model.TimeArray.Length - 1;
 
             UnitOfMeasure UoM = model.Settings.UoM;
-            if (Plot.Selection is PlotSelectionJunction jncSelection)
+            if (Plot.PlotType == PlotType.Junction && Plot.Selection is PlotSelectionJunction jncSelection)
             {
                 charts = CreateJunctionCharts(model.TimeArray, jncSelection.Junction, iStart, iEnd, UoM);
                 return ("Junction", charts);

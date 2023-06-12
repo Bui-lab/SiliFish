@@ -514,7 +514,7 @@ namespace SiliFish.UI.Controls
 
             if (LastPlottedCharts.Count > 1)
             {
-                string msg = "Every plot data will be saved as a separate CSV file. File names are appended to ";
+                string msg = "Every plot data will be saved as a separate CSV file. Plot names will be appended to the file name selected.";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
@@ -532,7 +532,7 @@ namespace SiliFish.UI.Controls
                     fileNames.Add(filename);
                 }
             }
-            MessageBox.Show($"File(s) {string.Join(",", fileNames)} are saved.");
+            MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.");
         }
         private void SelectPlotSelectionOfCellPool(CellPool pool)
         {
