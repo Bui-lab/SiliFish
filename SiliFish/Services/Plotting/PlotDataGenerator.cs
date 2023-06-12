@@ -488,23 +488,26 @@ namespace SiliFish.Services.Plotting
                 });
 
                 xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
-                yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
-                title = "Time,Instant. Freq.";
-                data = new string[xValues.Length];
-                foreach (int i in Enumerable.Range(0, xValues.Length))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new ChartDataStruct
+                if (xValues.Any())
                 {
-                    CsvData = csvData,
-                    Title = $"`Instantenous Frequency (Outliers Removed)`",
-                    yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
+                    yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
+                    title = "Time,Instant. Freq.";
+                    data = new string[xValues.Length];
+                    foreach (int i in Enumerable.Range(0, xValues.Length))
+                        data[i] = xValues[i] + "," + yValues[i];
+                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                    charts.Add(new ChartDataStruct
+                    {
+                        CsvData = csvData,
+                        Title = $"`Instantenous Frequency (Outliers Removed)`",
+                        yLabel = "`Freq (Hz)`",
+                        ScatterPlot = true,
+                        xMin = Time[0],
+                        xMax = Time[^1] + 1,
+                        yMin = 0,
+                        yMax = yValues.Max() + 1
+                    });
+                }
 
                 xValues = episodes.Select(e => e.Start).ToArray();
                 yValues = episodes.Select(e => e.BeatFrequency).ToArray();

@@ -662,7 +662,6 @@
             listIncoming.ItemsSort += listConnections_ItemsSort;
             listIncoming.ItemSelect += listConnections_ItemSelect;
             listIncoming.ItemPlot += listConnections_ItemPlot;
-            listIncoming.ItemHighlight += listConnections_ItemHighlight;
             listIncoming.ItemsExport += listConnections_ItemsExport;
             listIncoming.ItemsImport += listConnections_ItemsImport;
             // 
@@ -714,7 +713,6 @@
             listOutgoing.ItemsSort += listConnections_ItemsSort;
             listOutgoing.ItemSelect += listConnections_ItemSelect;
             listOutgoing.ItemPlot += listConnections_ItemPlot;
-            listOutgoing.ItemHighlight += listConnections_ItemHighlight;
             listOutgoing.ItemsExport += listConnections_ItemsExport;
             listOutgoing.ItemsImport += listConnections_ItemsImport;
             // 
@@ -766,7 +764,6 @@
             listGap.ItemsSort += listConnections_ItemsSort;
             listGap.ItemSelect += listConnections_ItemSelect;
             listGap.ItemPlot += listConnections_ItemPlot;
-            listGap.ItemHighlight += listConnections_ItemHighlight;
             listGap.ItemsExport += listConnections_ItemsExport;
             listGap.ItemsImport += listConnections_ItemsImport;
             // 

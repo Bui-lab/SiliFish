@@ -946,13 +946,6 @@ namespace SiliFish.UI.Controls
             ModelIsUpdated();
         }
 
-        private void listConnections_ItemHighlight(object sender, EventArgs e)
-        {
-            SelectedUnitArgs args = new() { unitSelected = SelectedJunction };
-            HighlightRequested?.Invoke(this, args);
-        }
-
-
         private void listConnections_ItemPlot(object sender, EventArgs e)
         {
             SelectedUnitArgs args = new() { unitSelected = SelectedJunction };
