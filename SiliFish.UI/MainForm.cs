@@ -512,7 +512,7 @@ namespace SiliFish.UI
 
         private void modelControl_PlotRequested(object sender, EventArgs e)
         {
-            modelOutputControl.Plot((e as SelectedUnitArgs).unitSelected);
+            modelOutputControl.Plot((e as SelectedUnitArgs).unitsSelected);
         }
 
 
@@ -525,7 +525,7 @@ namespace SiliFish.UI
         {
             SelectedUnitArgs selectedUnitArgs = e as SelectedUnitArgs;
             if (selectedUnitArgs != null)
-                modelOutputControl.Highlight(selectedUnitArgs.unitSelected, selectedUnitArgs.enforce);
+                modelOutputControl.Highlight(selectedUnitArgs.unitsSelected.First(), selectedUnitArgs.enforce);
         }
 
         private void btnNewModel_Click(object sender, EventArgs e)

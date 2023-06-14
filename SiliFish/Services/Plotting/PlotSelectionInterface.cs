@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace SiliFish.Services.Plotting
 {
     [JsonDerivedType(typeof(PlotSelectionMultiCells), typeDiscriminator: "multicell")]
-    [JsonDerivedType(typeof(PlotSelectionJunction), typeDiscriminator: "junction")]
+    [JsonDerivedType(typeof(PlotSelectionSomite), typeDiscriminator: "somite")]
+    [JsonDerivedType(typeof(PlotSelectionUnits), typeDiscriminator: "units")]
 
     public interface PlotSelectionInterface
     {

@@ -38,9 +38,6 @@ namespace SiliFish.ModelUnits.Parameters
         [Description("The time range that will be looked ahead to detect motion."), DisplayName("Delay"), Category("Swim Statistics")]
         public int Delay { get; set; } = 1000;
 
-        [Description("In ms. The duration required considered to be a burst break."), DisplayName("Burst Break"), Category("MN based kinematics")]
-        public int BurstBreak { get; set; } = 10;
-
         [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("MN based kinematics")]
         public int EpisodeBreak { get; set; } = 100;
 

@@ -41,8 +41,9 @@ namespace SiliFish.Definitions
         [Display(Name = "Stimuli")] Stimuli,
         [Display(Name = "Full Dynamics")] FullDyn,
         [Display(Name = "Muscle Tension")] Tension,
-        [Display(Name = "Junction")] Junction,
-        [Display(Name = "Episodes")] Episodes
+        [Display(Name = "Episodes (Tail)")] EpisodesTail,
+        [Display(Name = "Episodes (MN)")] EpisodesMN,
+        [Display(Name = "Selection")] Selection
     }
 
     public enum PlotSomiteSelection

@@ -35,6 +35,7 @@ namespace SiliFish.Helpers
         public static void SaveToFile(string path, string content)
         {
             path = string.Join("_", path.Split(Path.GetInvalidPathChars()));
+            path = string.Join("_", path.Split(Path.GetInvalidFileNameChars()));
             File.WriteAllText(path, content);
         }
 

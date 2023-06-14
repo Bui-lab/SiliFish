@@ -278,13 +278,13 @@ namespace Services
                         Color.Red));
                 leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
                     episodes.SelectMany(e => e.InstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray(),
+                    episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray(),
                     tStart, tEnd,
                     "Freq.", 0, null,
                     Color.Red));
                 leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
                     episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray(),
+                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray(),
                     tStart, tEnd,
                     "Freq.", 0, null,
                     Color.Red));
@@ -307,33 +307,10 @@ namespace Services
             return (leftImages, null);
         }
 
-        private static List<Image> PlotJunctionCharts(double[] TimeOffset, JunctionBase jnc, int iStart, int iEnd, UnitOfMeasure UoM)
-        {
-            /*TODO List<ChartDataStruct> charts = new();
-             List<Cell> cells = new();
-             List<GapJunction> gapJunctions = new();
-             List<ChemicalSynapse> synapses = new();
-             if (jnc is GapJunction gj)
-             {
-                 cells.Add(gj.Cell1);
-                 cells.Add(gj.Cell2);
-                 gapJunctions.Add(gj);
-             }
-             else if (jnc is ChemicalSynapse syn)
-             {
-                 cells.Add(syn.PreNeuron);
-                 cells.Add(syn.PostCell);
-                 synapses.Add(syn);
-             }
-             charts.AddRange(PlotMembranePotentials(TimeOffset, cells, null, null, iStart, iEnd));
-             charts.AddRange(PlotCurrents(TimeOffset, gapJunctions, synapses, iStart, iEnd, UoM));
-             return charts;*/
-            return null;
-        }
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             PlotSelectionInterface cellSelectionInterface, int tStart = 0, int tEnd = -1)
         {
-            if (PlotType != PlotType.Episodes &&
+            if (PlotType != PlotType.EpisodesTail &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
@@ -369,7 +346,7 @@ namespace Services
                     case PlotType.Tension:
                         List<MuscleCell> muscleCells = Cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
                         return PlotTension(TimeArray, muscleCells, Pools, cellSelection, iStart, iEnd, uom);
-                    case PlotType.Episodes:
+                    case PlotType.EpisodesTail:
                         return PlotEpisodes(model, tStart, tEnd);
                     default:
                         break;

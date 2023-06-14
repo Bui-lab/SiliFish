@@ -365,14 +365,14 @@ namespace SiliFish.Repositories
                     $"{episode.Beats.Count}";
                 swEpisode.WriteLine(epiRow);
                 int beatCounter = 1;
-                foreach ((double beatStart, double beatEnd) in episode.Beats)
+                foreach (Beat b in episode.Beats)
                 {
                     string beatRow = $"{run}," +
                         $"{epiCounter}," +
                         $"{beatCounter++}," +
-                        $"{beatStart:0.####}," +
-                        $"{beatEnd:0.####}," +
-                        $"{1000 / (beatEnd - beatStart):0.####}";
+                        $"{b.BeatStart:0.####}," +
+                        $"{b.BeatEnd:0.####}," +
+                        $"{1000 / (b.BeatEnd - b.BeatStart):0.####}";
                     swBeats.WriteLine(beatRow);
                 }
                 epiCounter++;

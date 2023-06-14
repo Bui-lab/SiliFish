@@ -10,6 +10,7 @@ using System.Linq;
 using SiliFish.ModelUnits.Junction;
 using System;
 using System.Runtime.InteropServices;
+using SiliFish.ModelUnits.Stim;
 
 namespace SiliFish.Services.Plotting
 {
@@ -17,7 +18,7 @@ namespace SiliFish.Services.Plotting
     public class PlotDataGenerator
     {
 
-        public static List<ChartDataStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells, 
+        public static List<ChartDataStruct> CreateMembranePotentialCharts(double[] TimeArray, List<Cell> cells,
             bool combinePools, bool combineSomites, bool combineCells,
             int iStart, int iEnd)
         {
@@ -70,7 +71,7 @@ namespace SiliFish.Services.Plotting
              UnitOfMeasure UoM,
              bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true)
         {
-            if (cells==null || !cells.Any()) return new List<ChartDataStruct>();
+            if (cells == null || !cells.Any()) return new List<ChartDataStruct>();
             List<ChartDataStruct> gapCharts = new();
             List<ChartDataStruct> synCharts = new();
             double yMin = cells.Min(c => c.MinCurrentValue(includeGap, includeChemIn, includeChemOut, iStart, iEnd));
@@ -124,8 +125,8 @@ namespace SiliFish.Services.Plotting
                                 synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                         }
                     }
-                    if (includeChemOut) 
-                    { 
+                    if (includeChemOut)
+                    {
                         if (cell is Neuron neuron2)
                         {
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
@@ -227,14 +228,14 @@ namespace SiliFish.Services.Plotting
             }
             if (synapses?.Count > 0)
             {
-                yMin = Math.Min(yMin, synapses.Min(jnc => jnc.InputCurrent?.Min()??0));
-                yMax = Math.Max(yMax, synapses.Max(jnc => jnc.InputCurrent?.Max()??0));
+                yMin = Math.Min(yMin, synapses.Min(jnc => jnc.InputCurrent?.Min() ?? 0));
+                yMax = Math.Max(yMax, synapses.Max(jnc => jnc.InputCurrent?.Max() ?? 0));
             }
             Util.SetYRange(ref yMin, ref yMax);
 
             string columnTitles = "Time,";
             List<string> data = new(TimeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-            
+
             foreach (GapJunction jnc in gapJunctions)
             {
                 columnTitles += jnc.ID + ",";
@@ -256,7 +257,7 @@ namespace SiliFish.Services.Plotting
             {
                 CsvData = csvData,
                 Title = $"`Junction:{columnTitles[5..]}`",
-                yLabel =  $"`Current ({ampere})`",
+                yLabel = $"`Current ({ampere})`",
                 yMin = yMin,
                 yMax = yMax,
                 xMin = TimeArray[iStart],
@@ -374,30 +375,33 @@ namespace SiliFish.Services.Plotting
             return charts;
         }
 
-        private static List<ChartDataStruct> CreateJunctionCharts(double[] TimeOffset, JunctionBase jnc, int iStart, int iEnd, UnitOfMeasure UoM)
+        private static List<ChartDataStruct> CreateJunctionCharts(double[] TimeOffset, List<JunctionBase> jncList, int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<ChartDataStruct> charts = new();
-            List<Cell> cells = new();
-            List<GapJunction> gapJunctions = new();
-            List<ChemicalSynapse> synapses = new();
-            if (jnc is GapJunction gj)
+            foreach (JunctionBase jnc in jncList)
             {
-                cells.Add(gj.Cell1);
-                cells.Add(gj.Cell2);
-                gapJunctions.Add(gj);
+                List<Cell> cells = new();
+                List<GapJunction> gapJunctions = new();
+                List<ChemicalSynapse> synapses = new();
+                if (jnc is GapJunction gj)
+                {
+                    cells.Add(gj.Cell1);
+                    cells.Add(gj.Cell2);
+                    gapJunctions.Add(gj);
+                }
+                else if (jnc is ChemicalSynapse syn)
+                {
+                    cells.Add(syn.PreNeuron);
+                    cells.Add(syn.PostCell);
+                    synapses.Add(syn);
+                }
+                charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd));
+                charts.AddRange(CreateCurrentCharts(TimeOffset, gapJunctions, synapses, iStart, iEnd, UoM));
             }
-            else if (jnc is ChemicalSynapse syn)
-            {
-                cells.Add(syn.PreNeuron);
-                cells.Add(syn.PostCell);
-                synapses.Add(syn);
-            }
-            charts.AddRange(CreateMembranePotentialCharts(TimeOffset, cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd));
-            charts.AddRange(CreateCurrentCharts(TimeOffset, gapJunctions, synapses, iStart, iEnd, UoM));
             return charts;
         }
 
-        private static List<ChartDataStruct> CreateEpisodeCharts(RunningModel model, int iStart, int iEnd)
+        private static List<ChartDataStruct> CreateTailEpisodeCharts(RunningModel model, int iStart, int iEnd)
         {
             List<ChartDataStruct> charts = new();
 
@@ -468,7 +472,7 @@ namespace SiliFish.Services.Plotting
                     });
                 }
 
-                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.beatStart)).ToArray();
+                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
                 yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
                 title = "Time,Instant. Freq.";
                 data = new string[xValues.Length];
@@ -487,7 +491,163 @@ namespace SiliFish.Services.Plotting
                     yMax = yValues.Max() + 1
                 });
 
-                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.beatStart)).ToArray();
+                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray();
+                if (xValues.Any())
+                {
+                    yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
+                    title = "Time,Instant. Freq.";
+                    data = new string[xValues.Length];
+                    foreach (int i in Enumerable.Range(0, xValues.Length))
+                        data[i] = xValues[i] + "," + yValues[i];
+                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                    charts.Add(new ChartDataStruct
+                    {
+                        CsvData = csvData,
+                        Title = $"`Instantenous Frequency (Outliers Removed)`",
+                        yLabel = "`Freq (Hz)`",
+                        ScatterPlot = true,
+                        xMin = Time[0],
+                        xMax = Time[^1] + 1,
+                        yMin = 0,
+                        yMax = yValues.Max() + 1
+                    });
+                }
+
+                xValues = episodes.Select(e => e.Start).ToArray();
+                yValues = episodes.Select(e => e.BeatFrequency).ToArray();
+                title = "Time,Tail Beat Freq.";
+                data = new string[episodes.Count];
+                foreach (int i in Enumerable.Range(0, episodes.Count))
+                    data[i] = xValues[i] + "," + yValues[i];
+                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                charts.Add(new ChartDataStruct
+                {
+                    CsvData = csvData,
+                    Title = $"`Tail Beat Frequency`",
+                    yLabel = "`Freq (Hz)`",
+                    ScatterPlot = true,
+                    xMin = Time[0],
+                    xMax = Time[^1] + 1,
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
+                });
+
+                xValues = episodes.Select(e => e.Start).ToArray();
+                yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
+                title = "Time,Tail Beat/Episode";
+                data = new string[episodes.Count];
+                foreach (int i in Enumerable.Range(0, episodes.Count))
+                    data[i] = xValues[i] + "," + yValues[i];
+                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                charts.Add(new ChartDataStruct
+                {
+                    CsvData = csvData,
+                    Title = $"`Tail Beat/Episode`",
+                    yLabel = "`Count`",
+                    ScatterPlot = true,
+                    xMin = Time[0],
+                    xMax = Time[^1] + 1,
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
+                });
+            }
+
+            return charts;
+        }
+
+        private static List<ChartDataStruct> CreateMNEpisodeCharts(RunningModel model, int somiteNumber, int iStart, int iEnd)
+        {
+            List<ChartDataStruct> charts = new();
+
+            (List<Cell> LeftMNs, List<Cell> RightMNs) = model.GetMotoNeurons(somiteNumber);
+
+            (double[] mnMaxPotentials, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, LeftMNs, RightMNs);
+
+            double[] Time = model.TimeArray[iStart..(iEnd + 1)];
+            double[] xValues = Time;
+            double[] yValues = mnMaxPotentials;
+
+            //Tail Movement
+            string title = "Time,Y-Axis";
+            string[] data = new string[iEnd - iStart + 2];
+            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                data[i] = xValues[i] + "," + yValues[i];
+            string csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+            charts.Add(new ChartDataStruct
+            {
+                CsvData = csvData,
+                Title = $"`Tail Movement`",
+                yLabel = "`Y-Coordinate`",
+                xMin = Time[0],
+                xMax = Time[^1] + 1,
+                yMin = yValues.Min() - 1,
+                yMax = yValues.Max() + 1
+            });
+
+            if (episodes.Any())
+            {
+                xValues = episodes.Select(e => e.Start).ToArray();
+                yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
+                title = "Time,Episode Duration";
+                data = new string[episodes.Count];
+                foreach (int i in Enumerable.Range(0, episodes.Count))
+                    data[i] = xValues[i] + "," + yValues[i];
+                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                charts.Add(new ChartDataStruct
+                {
+                    CsvData = csvData,
+                    Title = $"`Episode Duration`",
+                    yLabel = "`Duration (ms)`",
+                    ScatterPlot = true,
+                    xMin = Time[0],
+                    xMax = Time[^1] + 1,
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
+                });
+
+
+                if (episodes.Count > 1)
+                {
+                    xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
+                    yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
+                    title = "Time,Episode Intervals";
+                    data = new string[episodes.Count];
+                    foreach (int i in Enumerable.Range(0, episodes.Count - 1))
+                        data[i] = xValues[i] + "," + yValues[i];
+                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                    charts.Add(new ChartDataStruct
+                    {
+                        CsvData = csvData,
+                        Title = $"`Episode Intervals`",
+                        yLabel = "`Interval (ms)`",
+                        ScatterPlot = true,
+                        xMin = Time[0],
+                        xMax = Time[^1] + 1,
+                        yMin = 0,
+                        yMax = yValues.Max() + 1
+                    });
+                }
+
+                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
+                yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
+                title = "Time,Instant. Freq.";
+                data = new string[xValues.Length];
+                foreach (int i in Enumerable.Range(0, xValues.Length))
+                    data[i] = xValues[i] + "," + yValues[i];
+                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                charts.Add(new ChartDataStruct
+                {
+                    CsvData = csvData,
+                    Title = $"`Instantenous Frequency`",
+                    yLabel = "`Freq (Hz)`",
+                    ScatterPlot = true,
+                    xMin = Time[0],
+                    xMax = Time[^1] + 1,
+                    yMin = 0,
+                    yMax = yValues.Max() + 1
+                });
+
+                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray();
                 if (xValues.Any())
                 {
                     yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
@@ -552,7 +712,7 @@ namespace SiliFish.Services.Plotting
         }
 
         public static (string, List<ChartDataStruct>) GetPlotData(Plot Plot, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
-             int tStart = 0, int tEnd = -1)
+            int tStart = 0, int tEnd = -1)
         {
             List<ChartDataStruct> charts;
             double dt = model.RunParam.DeltaT;
@@ -564,19 +724,46 @@ namespace SiliFish.Services.Plotting
                 iEnd = model.TimeArray.Length - 1;
 
             UnitOfMeasure UoM = model.Settings.UoM;
-            if (Plot.PlotType == PlotType.Junction && Plot.Selection is PlotSelectionJunction jncSelection)
-            {
-                charts = CreateJunctionCharts(model.TimeArray, jncSelection.Junction, iStart, iEnd, UoM);
-                return ("Junction", charts);
-            }
-
-            if (Plot.PlotType != PlotType.Episodes &&
-                (Cells == null || !Cells.Any()) &&
-                (Pools == null || !Pools.Any()))
-                return (null, null);
             bool combineCells = false;
             bool combineSomites = false;
             bool combinePools = false;
+
+            if (Plot.Selection is PlotSelectionUnits unitSelection)
+            {
+                List<JunctionBase> junctions = unitSelection.Units.Where(x => x is JunctionBase).Cast<JunctionBase>().ToList();
+                if (junctions.Any())
+                {
+
+                    charts = CreateJunctionCharts(model.TimeArray, junctions, iStart, iEnd, UoM);
+                    return ("Junction", charts);
+                }
+                List<Stimulus> stims = unitSelection.Units.Where(x => x is Stimulus).Cast<Stimulus>().ToList();
+                if (stims.Any())
+                {
+                    List<Cell> targetCells = stims.Select(s=>s.TargetCell).ToList();
+                    charts = CreateStimuliCharts(model.TimeArray, targetCells, combinePools, combineSomites, combineCells, iStart, iEnd, UoM);
+                    return ("Stimuli", charts);
+                }
+                List<CellPool> cellPools = unitSelection.Units.Where(x => x is CellPool).Cast<CellPool>().ToList();
+                if (cellPools.Any())
+                {
+                    List<Cell> poolcells = cellPools.SelectMany(cp => cp.GetCells()).ToList();
+                    charts = CreateMembranePotentialCharts(model.TimeArray, poolcells, combinePools, true, true, iStart, iEnd);
+                    return ("Membrane Potentials", charts);
+                }
+                List<Cell> cells = unitSelection.Units.Where(x => x is Cell).Cast<Cell>().ToList();
+                if (cells.Any())
+                {
+                    charts = CreateMembranePotentialCharts(model.TimeArray, cells, combinePools, combineSomites, combineCells, iStart, iEnd);
+                    return ("Membrane Potentials", charts);
+                }
+            }
+
+            if (Plot.PlotType != PlotType.EpisodesTail &&
+                Plot.PlotType != PlotType.EpisodesMN &&
+                (Cells == null || !Cells.Any()) &&
+                (Pools == null || !Pools.Any()))
+                return (null, null);
             if (Plot.Selection is PlotSelectionMultiCells cellSelection)
             {
                 combinePools = cellSelection.CombinePools;
@@ -619,9 +806,16 @@ namespace SiliFish.Services.Plotting
                     List<MuscleCell> muscleCells = Cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
                     charts = CreateTensionCharts(model.TimeArray, muscleCells, combinePools, combineSomites, combineCells, iStart, iEnd);
                     break;
-                case PlotType.Episodes:
+                case PlotType.EpisodesTail:
                     Title = "Tail Beat Episodes";
-                    charts = CreateEpisodeCharts(model, iStart, iEnd);
+                    charts = CreateTailEpisodeCharts(model, iStart, iEnd);
+                    break;
+                case PlotType.EpisodesMN:
+                    Title = "Motoneuron Episodes";
+                    int somite = model.ModelDimensions.NumberOfSomites;
+                    if (Plot.Selection is PlotSelectionSomite pss)
+                        somite = pss.Somite;
+                    charts = CreateMNEpisodeCharts(model, somite, iStart, iEnd);
                     break;
                 default:
                     charts = null;
@@ -653,7 +847,7 @@ namespace SiliFish.Services.Plotting
             List<Cell> Cells = new() { preCell, postCell };
             List<ChartDataStruct> charts = CreateMembranePotentialCharts(model.TimeArray, Cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd);
 
-            charts.AddRange(CreateCurrentCharts(model.TimeArray, Cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd, UoM, includeGap: gapJunc != null, includeChemIn: false, includeChemOut: synapse != null)) ;
+            charts.AddRange(CreateCurrentCharts(model.TimeArray, Cells, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd, UoM, includeGap: gapJunc != null, includeChemIn: false, includeChemOut: synapse != null));
             return ("Junction plot", charts);
         }
 

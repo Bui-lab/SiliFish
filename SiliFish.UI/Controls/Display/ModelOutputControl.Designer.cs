@@ -60,12 +60,6 @@
             ddPlotSagittal = new ComboBox();
             linkExportPlotData = new LinkLabel();
             pLinePlots = new Panel();
-            ePlotHeight = new NumericUpDown();
-            ePlotWidth = new NumericUpDown();
-            lPlotWidth = new Label();
-            lpx1 = new Label();
-            lPlotHeight = new Label();
-            lpx2 = new Label();
             btnPlotHTML = new Button();
             cmPlot = new ContextMenuStrip(components);
             cmiNonInteractivePlot = new ToolStripMenuItem();
@@ -86,6 +80,8 @@
             label4 = new Label();
             webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p2DRender = new Panel();
+            l2DLinkSize = new Label();
+            ud2DLinkSize = new General.UpDownControl();
             l2DNodeSize = new Label();
             ud2DNodeSize = new General.UpDownControl();
             cb2DLegend = new CheckBox();
@@ -121,8 +117,7 @@
             splitKinematics = new SplitContainer();
             webViewSummaryV = new Microsoft.Web.WebView2.WinForms.WebView2();
             pLineMNKinematicsRight = new Panel();
-            eEpisodesRight = new RichTextBox();
-            eEpisodesLeft = new RichTextBox();
+            eEpisodes = new RichTextBox();
             pLineMNKinematicsLeft = new Panel();
             pMNKinematicsTop = new Panel();
             cbSpikingMNs = new CheckBox();
@@ -163,8 +158,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            l2DLinkSize = new Label();
-            ud2DLinkSize = new General.UpDownControl();
             tabOutputs.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
@@ -182,8 +175,6 @@
             pPlotSelection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ePlotSomiteSelection).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotCellSelection).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotHeight).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotWidth).BeginInit();
             cmPlot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).BeginInit();
@@ -358,12 +349,6 @@
             pPlot.Controls.Add(pPlotSelection);
             pPlot.Controls.Add(linkExportPlotData);
             pPlot.Controls.Add(pLinePlots);
-            pPlot.Controls.Add(ePlotHeight);
-            pPlot.Controls.Add(ePlotWidth);
-            pPlot.Controls.Add(lPlotWidth);
-            pPlot.Controls.Add(lpx1);
-            pPlot.Controls.Add(lPlotHeight);
-            pPlot.Controls.Add(lpx2);
             pPlot.Controls.Add(btnPlotHTML);
             pPlot.Controls.Add(linkSaveHTMLPlots);
             pPlot.Controls.Add(ePlotEnd);
@@ -379,6 +364,7 @@
             pPlot.Name = "pPlot";
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
+            pPlot.Paint += pPlot_Paint;
             // 
             // cbPlotHistory
             // 
@@ -584,66 +570,6 @@
             pLinePlots.Name = "pLinePlots";
             pLinePlots.Size = new Size(688, 1);
             pLinePlots.TabIndex = 58;
-            // 
-            // ePlotHeight
-            // 
-            ePlotHeight.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotHeight.Location = new Point(73, 110);
-            ePlotHeight.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
-            ePlotHeight.Minimum = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotHeight.Name = "ePlotHeight";
-            ePlotHeight.Size = new Size(48, 23);
-            ePlotHeight.TabIndex = 46;
-            ePlotHeight.ThousandsSeparator = true;
-            ePlotHeight.Value = new decimal(new int[] { 200, 0, 0, 0 });
-            // 
-            // ePlotWidth
-            // 
-            ePlotWidth.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotWidth.Location = new Point(73, 84);
-            ePlotWidth.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
-            ePlotWidth.Minimum = new decimal(new int[] { 200, 0, 0, 0 });
-            ePlotWidth.Name = "ePlotWidth";
-            ePlotWidth.Size = new Size(48, 23);
-            ePlotWidth.TabIndex = 45;
-            ePlotWidth.ThousandsSeparator = true;
-            ePlotWidth.Value = new decimal(new int[] { 800, 0, 0, 0 });
-            // 
-            // lPlotWidth
-            // 
-            lPlotWidth.AutoSize = true;
-            lPlotWidth.Location = new Point(12, 86);
-            lPlotWidth.Name = "lPlotWidth";
-            lPlotWidth.Size = new Size(39, 15);
-            lPlotWidth.TabIndex = 54;
-            lPlotWidth.Text = "Width";
-            // 
-            // lpx1
-            // 
-            lpx1.AutoSize = true;
-            lpx1.Location = new Point(127, 89);
-            lpx1.Name = "lpx1";
-            lpx1.Size = new Size(28, 15);
-            lpx1.TabIndex = 55;
-            lpx1.Text = "(px)";
-            // 
-            // lPlotHeight
-            // 
-            lPlotHeight.AutoSize = true;
-            lPlotHeight.Location = new Point(12, 112);
-            lPlotHeight.Name = "lPlotHeight";
-            lPlotHeight.Size = new Size(43, 15);
-            lPlotHeight.TabIndex = 56;
-            lPlotHeight.Text = "Height";
-            // 
-            // lpx2
-            // 
-            lpx2.AutoSize = true;
-            lpx2.Location = new Point(127, 115);
-            lpx2.Name = "lpx2";
-            lpx2.Size = new Size(28, 15);
-            lpx2.TabIndex = 57;
-            lpx2.Text = "(px)";
             // 
             // btnPlotHTML
             // 
@@ -865,6 +791,28 @@
             p2DRender.Name = "p2DRender";
             p2DRender.Size = new Size(694, 40);
             p2DRender.TabIndex = 2;
+            // 
+            // l2DLinkSize
+            // 
+            l2DLinkSize.AutoSize = true;
+            l2DLinkSize.Location = new Point(415, 13);
+            l2DLinkSize.Name = "l2DLinkSize";
+            l2DLinkSize.Size = new Size(64, 15);
+            l2DLinkSize.TabIndex = 71;
+            l2DLinkSize.Text = "Link Width";
+            // 
+            // ud2DLinkSize
+            // 
+            ud2DLinkSize.Items.Add(" ");
+            ud2DLinkSize.Items.Add("  ");
+            ud2DLinkSize.Items.Add("   ");
+            ud2DLinkSize.Items.Add("    ");
+            ud2DLinkSize.Location = new Point(480, 9);
+            ud2DLinkSize.Name = "ud2DLinkSize";
+            ud2DLinkSize.Size = new Size(19, 23);
+            ud2DLinkSize.TabIndex = 70;
+            ud2DLinkSize.Wrap = true;
+            ud2DLinkSize.SelectedItemChanged += ud2DLinkSize_SelectedItemChanged;
             // 
             // l2DNodeSize
             // 
@@ -1268,10 +1216,8 @@
             // splitKinematics.Panel2
             // 
             splitKinematics.Panel2.BackColor = Color.White;
-            splitKinematics.Panel2.Controls.Add(eEpisodesRight);
-            splitKinematics.Panel2.Controls.Add(eEpisodesLeft);
+            splitKinematics.Panel2.Controls.Add(eEpisodes);
             splitKinematics.Panel2.Controls.Add(pLineMNKinematicsLeft);
-            splitKinematics.Panel2.SizeChanged += splitKinematics_Panel2_SizeChanged;
             splitKinematics.Size = new Size(694, 703);
             splitKinematics.SplitterDistance = 471;
             splitKinematics.SplitterWidth = 2;
@@ -1300,23 +1246,14 @@
             pLineMNKinematicsRight.Size = new Size(1, 703);
             pLineMNKinematicsRight.TabIndex = 7;
             // 
-            // eEpisodesRight
+            // eEpisodes
             // 
-            eEpisodesRight.Dock = DockStyle.Fill;
-            eEpisodesRight.Location = new Point(115, 0);
-            eEpisodesRight.Name = "eEpisodesRight";
-            eEpisodesRight.Size = new Size(106, 703);
-            eEpisodesRight.TabIndex = 1;
-            eEpisodesRight.Text = "";
-            // 
-            // eEpisodesLeft
-            // 
-            eEpisodesLeft.Dock = DockStyle.Left;
-            eEpisodesLeft.Location = new Point(1, 0);
-            eEpisodesLeft.Name = "eEpisodesLeft";
-            eEpisodesLeft.Size = new Size(114, 703);
-            eEpisodesLeft.TabIndex = 0;
-            eEpisodesLeft.Text = "";
+            eEpisodes.Dock = DockStyle.Fill;
+            eEpisodes.Location = new Point(1, 0);
+            eEpisodes.Name = "eEpisodes";
+            eEpisodes.Size = new Size(220, 703);
+            eEpisodes.TabIndex = 1;
+            eEpisodes.Text = "";
             // 
             // pLineMNKinematicsLeft
             // 
@@ -1700,28 +1637,6 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // l2DLinkSize
-            // 
-            l2DLinkSize.AutoSize = true;
-            l2DLinkSize.Location = new Point(415, 13);
-            l2DLinkSize.Name = "l2DLinkSize";
-            l2DLinkSize.Size = new Size(64, 15);
-            l2DLinkSize.TabIndex = 71;
-            l2DLinkSize.Text = "Link Width";
-            // 
-            // ud2DLinkSize
-            // 
-            ud2DLinkSize.Items.Add(" ");
-            ud2DLinkSize.Items.Add("  ");
-            ud2DLinkSize.Items.Add("   ");
-            ud2DLinkSize.Items.Add("    ");
-            ud2DLinkSize.Location = new Point(480, 9);
-            ud2DLinkSize.Name = "ud2DLinkSize";
-            ud2DLinkSize.Size = new Size(19, 23);
-            ud2DLinkSize.TabIndex = 70;
-            ud2DLinkSize.Wrap = true;
-            ud2DLinkSize.SelectedItemChanged += ud2DLinkSize_SelectedItemChanged;
-            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1750,8 +1665,6 @@
             pPlotSelection.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ePlotSomiteSelection).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotCellSelection).EndInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotHeight).EndInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotWidth).EndInit();
             cmPlot.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).EndInit();
@@ -1803,12 +1716,6 @@
         private Panel pPlot;
         private LinkLabel linkExportPlotData;
         private Panel pLinePlots;
-        private NumericUpDown ePlotHeight;
-        private NumericUpDown ePlotWidth;
-        private Label lPlotWidth;
-        private Label lpx1;
-        private Label lPlotHeight;
-        private Label lpx2;
         private ComboBox ddPlotSagittal;
         private Button btnPlotHTML;
         private ComboBox ddPlotCellSelection;
@@ -1857,8 +1764,7 @@
         private SplitContainer splitKinematics;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewSummaryV;
         private Panel pLineMNKinematicsRight;
-        private RichTextBox eEpisodesRight;
-        private RichTextBox eEpisodesLeft;
+        private RichTextBox eEpisodes;
         private Panel pLineMNKinematicsLeft;
         private Panel pMNKinematicsTop;
         private Panel pLineMNKinematics;

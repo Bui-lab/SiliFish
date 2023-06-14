@@ -387,7 +387,7 @@
             // 
             // splitMain
             // 
-            splitMain.BackColor = Color.FromArgb(55, 71, 79); 
+            splitMain.BackColor = Color.FromArgb(55, 71, 79);
             splitMain.BorderStyle = BorderStyle.FixedSingle;
             splitMain.Dock = DockStyle.Fill;
             splitMain.Location = new Point(0, 0);
@@ -465,7 +465,7 @@
             listCellPools.ItemToggleActive += listCellPools_ItemToggleActive;
             listCellPools.ItemsSort += listCellPools_ItemsSort;
             listCellPools.ItemSelect += listCellPools_ItemSelect;
-            listCellPools.ItemPlot += listCellPools_ItemPlot;
+            listCellPools.ItemPlot += listGeneric_ItemPlot;
             listCellPools.ItemHighlight += listCellPools_ItemHighlight;
             listCellPools.ItemsExport += listCellPools_ItemsExport;
             listCellPools.ItemsImport += listCellPools_ItemsImport;
@@ -508,7 +508,7 @@
             listCells.SelectedIndex = -1;
             listCells.SelectedItem = null;
             listCells.SelectionMode = SelectionMode.MultiExtended;
-            listCells.Size = new Size(314, 159);
+            listCells.Size = new Size(314, 158);
             listCells.TabIndex = 0;
             listCells.ItemAdd += listCells_ItemAdd;
             listCells.ItemDelete += listCells_ItemDelete;
@@ -517,7 +517,7 @@
             listCells.ItemToggleActive += listCells_ItemToggleActive;
             listCells.ItemsSort += listCells_ItemsSort;
             listCells.ItemSelect += listCells_ItemSelect;
-            listCells.ItemPlot += listCells_ItemPlot;
+            listCells.ItemPlot += listGeneric_ItemPlot;
             listCells.ItemHighlight += listCells_ItemHighlight;
             listCells.ItemsExport += listCells_ItemsExport;
             listCells.ItemsImport += listCells_ItemsImport;
@@ -560,7 +560,7 @@
             listStimuli.SelectedIndex = -1;
             listStimuli.SelectedItem = null;
             listStimuli.SelectionMode = SelectionMode.MultiExtended;
-            listStimuli.Size = new Size(314, 164);
+            listStimuli.Size = new Size(314, 163);
             listStimuli.TabIndex = 0;
             listStimuli.ItemAdd += listStimuli_ItemAdd;
             listStimuli.ItemDelete += listStimuli_ItemDelete;
@@ -569,7 +569,7 @@
             listStimuli.ItemToggleActive += listStimuli_ItemToggleActive;
             listStimuli.ItemsSort += listStimuli_ItemsSort;
             listStimuli.ItemSelect += listStimuli_ItemSelect;
-            listStimuli.ItemPlot += listStimuli_ItemPlot;
+            listStimuli.ItemPlot += listGeneric_ItemPlot;
             listStimuli.ItemsExport += listStimuli_ItemsExport;
             listStimuli.ItemsImport += listStimuli_ItemsImport;
             // 
@@ -618,7 +618,7 @@
             // 
             splitConnections.Panel2.Controls.Add(listGap);
             splitConnections.Panel2.Controls.Add(pGapTop);
-            splitConnections.Size = new Size(363, 553);
+            splitConnections.Size = new Size(362, 553);
             splitConnections.SplitterDistance = 276;
             splitConnections.SplitterWidth = 2;
             splitConnections.TabIndex = 9;
@@ -639,7 +639,7 @@
             // 
             splitChemicalJunctions.Panel2.Controls.Add(listOutgoing);
             splitChemicalJunctions.Panel2.Controls.Add(pOutgoingTop);
-            splitChemicalJunctions.Size = new Size(363, 276);
+            splitChemicalJunctions.Size = new Size(362, 276);
             splitChemicalJunctions.SplitterDistance = 132;
             splitChemicalJunctions.SplitterWidth = 2;
             splitChemicalJunctions.TabIndex = 8;
@@ -652,7 +652,7 @@
             listIncoming.SelectedIndex = -1;
             listIncoming.SelectedItem = null;
             listIncoming.SelectionMode = SelectionMode.MultiExtended;
-            listIncoming.Size = new Size(363, 106);
+            listIncoming.Size = new Size(362, 106);
             listIncoming.TabIndex = 8;
             listIncoming.ItemAdd += listConnections_ItemAdd;
             listIncoming.ItemDelete += listConnections_ItemDelete;
@@ -661,7 +661,7 @@
             listIncoming.ItemToggleActive += listConnections_ItemToggleActive;
             listIncoming.ItemsSort += listConnections_ItemsSort;
             listIncoming.ItemSelect += listConnections_ItemSelect;
-            listIncoming.ItemPlot += listConnections_ItemPlot;
+            listIncoming.ItemPlot += listGeneric_ItemPlot;
             listIncoming.ItemsExport += listConnections_ItemsExport;
             listIncoming.ItemsImport += listConnections_ItemsImport;
             // 
@@ -673,7 +673,7 @@
             pIncomingTop.Dock = DockStyle.Top;
             pIncomingTop.Location = new Point(0, 0);
             pIncomingTop.Name = "pIncomingTop";
-            pIncomingTop.Size = new Size(363, 26);
+            pIncomingTop.Size = new Size(362, 26);
             pIncomingTop.TabIndex = 7;
             // 
             // pConnectionsSep
@@ -682,7 +682,7 @@
             pConnectionsSep.Dock = DockStyle.Bottom;
             pConnectionsSep.Location = new Point(0, 25);
             pConnectionsSep.Name = "pConnectionsSep";
-            pConnectionsSep.Size = new Size(363, 1);
+            pConnectionsSep.Size = new Size(362, 1);
             pConnectionsSep.TabIndex = 25;
             // 
             // lIncomingTitle
@@ -703,7 +703,7 @@
             listOutgoing.SelectedIndex = -1;
             listOutgoing.SelectedItem = null;
             listOutgoing.SelectionMode = SelectionMode.MultiExtended;
-            listOutgoing.Size = new Size(363, 117);
+            listOutgoing.Size = new Size(362, 116);
             listOutgoing.TabIndex = 9;
             listOutgoing.ItemAdd += listConnections_ItemAdd;
             listOutgoing.ItemDelete += listConnections_ItemDelete;
@@ -712,7 +712,7 @@
             listOutgoing.ItemToggleActive += listConnections_ItemToggleActive;
             listOutgoing.ItemsSort += listConnections_ItemsSort;
             listOutgoing.ItemSelect += listConnections_ItemSelect;
-            listOutgoing.ItemPlot += listConnections_ItemPlot;
+            listOutgoing.ItemPlot += listGeneric_ItemPlot;
             listOutgoing.ItemsExport += listConnections_ItemsExport;
             listOutgoing.ItemsImport += listConnections_ItemsImport;
             // 
@@ -724,7 +724,7 @@
             pOutgoingTop.Dock = DockStyle.Top;
             pOutgoingTop.Location = new Point(0, 0);
             pOutgoingTop.Name = "pOutgoingTop";
-            pOutgoingTop.Size = new Size(363, 26);
+            pOutgoingTop.Size = new Size(362, 26);
             pOutgoingTop.TabIndex = 8;
             // 
             // panel2
@@ -733,7 +733,7 @@
             panel2.Dock = DockStyle.Bottom;
             panel2.Location = new Point(0, 25);
             panel2.Name = "panel2";
-            panel2.Size = new Size(363, 1);
+            panel2.Size = new Size(362, 1);
             panel2.TabIndex = 25;
             // 
             // lOutgoingTitle
@@ -754,7 +754,7 @@
             listGap.SelectedIndex = -1;
             listGap.SelectedItem = null;
             listGap.SelectionMode = SelectionMode.MultiExtended;
-            listGap.Size = new Size(363, 250);
+            listGap.Size = new Size(362, 249);
             listGap.TabIndex = 9;
             listGap.ItemAdd += listConnections_ItemAdd;
             listGap.ItemDelete += listConnections_ItemDelete;
@@ -763,7 +763,7 @@
             listGap.ItemToggleActive += listConnections_ItemToggleActive;
             listGap.ItemsSort += listConnections_ItemsSort;
             listGap.ItemSelect += listConnections_ItemSelect;
-            listGap.ItemPlot += listConnections_ItemPlot;
+            listGap.ItemPlot += listGeneric_ItemPlot;
             listGap.ItemsExport += listConnections_ItemsExport;
             listGap.ItemsImport += listConnections_ItemsImport;
             // 
@@ -775,7 +775,7 @@
             pGapTop.Dock = DockStyle.Top;
             pGapTop.Location = new Point(0, 0);
             pGapTop.Name = "pGapTop";
-            pGapTop.Size = new Size(363, 26);
+            pGapTop.Size = new Size(362, 26);
             pGapTop.TabIndex = 8;
             // 
             // panel4
@@ -784,7 +784,7 @@
             panel4.Dock = DockStyle.Bottom;
             panel4.Location = new Point(0, 25);
             panel4.Name = "panel4";
-            panel4.Size = new Size(363, 1);
+            panel4.Size = new Size(362, 1);
             panel4.TabIndex = 25;
             // 
             // lGapTitle
@@ -883,7 +883,7 @@
             // splitDimensions.Panel2
             // 
             splitDimensions.Panel2.Controls.Add(pDrawing);
-            splitDimensions.Size = new Size(682, 456);
+            splitDimensions.Size = new Size(682, 455);
             splitDimensions.SplitterDistance = 258;
             splitDimensions.SplitterWidth = 2;
             splitDimensions.TabIndex = 61;
@@ -896,7 +896,7 @@
             propModelDimensions.HelpBorderColor = Color.FromArgb(0, 184, 212);
             propModelDimensions.Location = new Point(0, 0);
             propModelDimensions.Name = "propModelDimensions";
-            propModelDimensions.Size = new Size(256, 454);
+            propModelDimensions.Size = new Size(256, 453);
             propModelDimensions.TabIndex = 60;
             // 
             // pDrawing
@@ -906,7 +906,7 @@
             pDrawing.Dock = DockStyle.Fill;
             pDrawing.Location = new Point(0, 0);
             pDrawing.Name = "pDrawing";
-            pDrawing.Size = new Size(421, 454);
+            pDrawing.Size = new Size(420, 453);
             pDrawing.TabIndex = 15;
             // 
             // pbDrawing
@@ -916,7 +916,7 @@
             pbDrawing.Image = (Image)resources.GetObject("pbDrawing.Image");
             pbDrawing.Location = new Point(0, 0);
             pbDrawing.Name = "pbDrawing";
-            pbDrawing.Size = new Size(421, 454);
+            pbDrawing.Size = new Size(420, 453);
             pbDrawing.SizeMode = PictureBoxSizeMode.Zoom;
             pbDrawing.TabIndex = 12;
             pbDrawing.TabStop = false;

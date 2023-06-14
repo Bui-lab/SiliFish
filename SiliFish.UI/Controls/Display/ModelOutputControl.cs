@@ -19,6 +19,7 @@ using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
 using SiliFish.DynamicUnits;
 using OfficeOpenXml.ConditionalFormatting;
+using System.Diagnostics;
 
 namespace SiliFish.UI.Controls
 {
@@ -42,22 +43,7 @@ namespace SiliFish.UI.Controls
         bool rendered2D = false;
         bool rendered3D = false;
 
-        private bool PlotSelectionVisible
-        {
-            get
-            {
-                if (pPlotSelection.Tag is bool visible)
-                    return visible;
-                return true;
-            }
-            set
-            {
-                pPlotSelection.Visible =
-                    cbCombinePools.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = value;
-                pPlotSelection.Tag = value;
-                //The visible property can return false if the form is not in the visible field, regardless of this value. So use the tag field instead
-            }
-        }
+
         public ModelOutputControl()
         {
             InitializeComponent();
@@ -66,11 +52,11 @@ namespace SiliFish.UI.Controls
 
             foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
             {
-                if (pt == PlotType.Junction) continue;
+                if (pt == PlotType.Selection) continue;
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
 
-            PlotSelectionVisible = true;
+            SetEnablesBasedOnPlot();
             foreach (PlotSomiteSelection ps in Enum.GetValues(typeof(PlotSomiteSelection)))
             {
                 ddPlotSomiteSelection.Items.Add(ps.GetDisplayName());
@@ -92,8 +78,6 @@ namespace SiliFish.UI.Controls
 
             dd3DViewpoint.SelectedIndex = 0;
 
-            ePlotWidth.Value = GlobalSettings.DefaultPlotWidth;
-            ePlotHeight.Value = GlobalSettings.DefaultPlotHeight;
             ePlotEnd.Value = GlobalSettings.SimulationEndTime;
 
             try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
@@ -101,7 +85,30 @@ namespace SiliFish.UI.Controls
             if (tabPlotSub.TabPages.Contains(tPlotWindows))
                 tabPlotSub.TabPages.Remove(tPlotWindows);
         }
-
+        public void SetEnablesBasedOnPlot()
+        {
+            if (PlotType == PlotType.Selection || PlotType == PlotType.EpisodesTail)
+            {
+                pPlotSelection.Visible =
+                    cbCombinePools.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = false;
+            }
+            else if (PlotType == PlotType.EpisodesMN)
+            {
+                pPlotSelection.Visible = true;
+                foreach (Control ctrl in pPlotSelection.Controls)
+                    ctrl.Enabled = false;
+                ddPlotSomiteSelection.Text = PlotSomiteSelection.Single.ToString();
+                ePlotSomiteSelection.Enabled = true;
+                cbCombinePools.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = false;
+            }
+            else
+            {
+                pPlotSelection.Visible = true;
+                foreach (Control ctrl in pPlotSelection.Controls)
+                    ctrl.Enabled = true;
+                cbCombinePools.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = true;
+            }
+        }
         public void SetRunningModel(RunningModel model)
         {
             if (model == null) return;
@@ -328,13 +335,13 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null) return;
             GlobalSettings.LastPlotSettings.Clear();//to prevent overwriting the plot changes during a run
-            if (PlotType == PlotType.Junction)
+            if (PlotType == PlotType.Selection)
             {
-                numOfPlots = 3;
+                numOfPlots = 3;//TODO this is wrong
                 toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
                 return;
             }
-            if (PlotType == PlotType.Episodes)
+            if (PlotType == PlotType.EpisodesTail)
             {
                 numOfPlots = 7;
                 toolTip.SetToolTip(btnPlotHTML, $"# of plots: Max {numOfPlots}");
@@ -380,7 +387,7 @@ namespace SiliFish.UI.Controls
         private void ddPlot_SelectedIndexChanged(object sender, EventArgs e)
         {
             PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
-            PlotSelectionVisible = PlotType != PlotType.Junction && PlotType != PlotType.Episodes;
+            SetEnablesBasedOnPlot();
 
             toolTip.SetToolTip(ddPlot, PlotType.GetDescription());
             if (ddPlot.Focused)
@@ -389,15 +396,15 @@ namespace SiliFish.UI.Controls
 
         private void ddPlot_DropDown(object sender, EventArgs e)
         {
-            if (ddPlot.Items.Contains(PlotType.Junction.GetDisplayName()))
-                ddPlot.Items.Remove(PlotType.Junction.GetDisplayName());
+            if (ddPlot.Items.Contains(PlotType.Selection.GetDisplayName()))
+                ddPlot.Items.Remove(PlotType.Selection.GetDisplayName());
 
         }
 
         private void ddPlotSomiteSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddPlotSomiteSelection.SelectedIndex < 0) return;
-            PlotSomiteSelection sel = ddPlotSomiteSelection.Text.GetValueFromName<PlotSomiteSelection>(PlotSomiteSelection.All);
+            PlotSomiteSelection sel = ddPlotSomiteSelection.Text.GetValueFromName(PlotSomiteSelection.All);
             ePlotSomiteSelection.Enabled = sel == PlotSomiteSelection.Random || sel == PlotSomiteSelection.Single ||
                 sel == PlotSomiteSelection.RostralTo || sel == PlotSomiteSelection.CaudalTo;
             if (ddPlotSomiteSelection.Focused)
@@ -489,7 +496,14 @@ namespace SiliFish.UI.Controls
             PlotSubset = ddPlotPools.Text;
             plotSelection = null;
 
-            if (PlotSelectionVisible)
+            if (PlotType == PlotType.EpisodesMN)
+            {
+                plotSelection = new PlotSelectionSomite()
+                {
+                    Somite = (int)ePlotSomiteSelection.Value
+                };
+            }
+            else if (PlotType != PlotType.Selection || PlotType != PlotType.EpisodesTail)
             {
                 plotSelection = new PlotSelectionMultiCells()
                 {
@@ -535,28 +549,12 @@ namespace SiliFish.UI.Controls
             }
             MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.");
         }
-        private void SelectPlotSelectionOfCellPool(CellPool pool)
-        {
-            ddPlotPools.SelectedItem = pool.CellGroup;
-            ddPlotSagittal.SelectedItem = pool.PositionLeftRight.ToString();
-            ddPlotSomiteSelection.SelectedItem = "All";
-            if (!Equals(ddPlotCellSelection.SelectedItem, "All"))
-                cbCombineCells.Checked = true;
-        }
-        private void SelectPlotSelectionOfCell(Cell cell)
-        {
-            ddPlotPools.SelectedItem = cell.CellGroup;
-            ddPlotSagittal.SelectedItem = cell.CellPool.PositionLeftRight.ToString();
-            ddPlotSomiteSelection.SelectedItem = "Single";
-            ePlotSomiteSelection.SetValue(cell.Somite);
-            ddPlotCellSelection.SelectedItem = "Single";
-            ePlotCellSelection.SetValue(cell.Sequence);
-        }
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
         {
             if (sender is not Plot plot) return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             ddPlotPools.Text = plot.PlotSubset;
+            plotSelection = plot.Selection;
             if (plot.Selection is PlotSelectionMultiCells multiCells)
             {
                 ddPlotSagittal.Text = multiCells.SagittalPlane.GetDisplayName();
@@ -567,10 +565,12 @@ namespace SiliFish.UI.Controls
                 cbCombinePools.Checked = multiCells.CombinePools;
                 cbCombineSomites.Checked = multiCells.CombineSomites;
                 cbCombineCells.Checked = multiCells.CombineCells;
+                Task.Run(PlotHTML);
             }
-            else if (plot.Selection is PlotSelectionJunction junction)
+            else if (plot.Selection is PlotSelectionUnits selectedUnits)
             {
-                SetPlotSelectionToJunction(junction.Junction);
+                SetPlotSelectionToUnits(selectedUnits.Units);
+                Task.Run(PlotHTML);
             }
         }
         private void listPlotHistory_ItemsExport(object sender, EventArgs e)
@@ -597,27 +597,37 @@ namespace SiliFish.UI.Controls
                 {
                     string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
                     List<Plot> plotList = (List<Plot>)JsonUtil.ToObject(typeof(List<Plot>), JSONString);
-                    if (plotList.Any(pl => pl.Selection is PlotSelectionJunction))
+                    if (plotList.Any(pl => pl.Selection is PlotSelectionUnits))
                     {
                         foreach (Plot plot in plotList)
                         {
-                            if (plot.Selection is PlotSelectionJunction plotJnc)
+                            if (plot.Selection is PlotSelectionUnits plotJnc)
                             {
-                                string source = plotJnc.Junction.Source;
-                                string target = plotJnc.Junction.Target;
-                                JunctionBase jnc = null;
-                                if (plot.PlotSubset == nameof(ChemicalSynapse))
+                                PlotSelectionUnits linkedSelection = new();
+                                foreach (ModelUnitBase unitRead in plotJnc.Units)
                                 {
-                                    jnc = RunningModel.GetChemicalProjections().FirstOrDefault(j => j.Source == source && j.Target == target);
+                                    if (unitRead is JunctionBase jncRead)
+                                    {
+                                        string source = jncRead.Source;
+                                        string target = jncRead.Target;
+                                        JunctionBase jnc = null;
+                                        if (plot.PlotSubset == nameof(ChemicalSynapse))
+                                        {
+                                            jnc = RunningModel.GetChemicalProjections().FirstOrDefault(j => j.Source == source && j.Target == target);
+                                        }
+                                        else if (plot.PlotSubset == nameof(GapJunction))
+                                        {
+                                            jnc = RunningModel.GetGapProjections().FirstOrDefault(j => j.Source == source && j.Target == target ||
+                                            j.Source == target && j.Target == source);
+                                        }
+                                        if (jnc != null)
+                                            linkedSelection.Units.Add(jnc);
+                                    }
+                                    else 
+                                    {//TODO 
+                                    }
                                 }
-                                else if (plot.PlotSubset == nameof(GapJunction))
-                                {
-                                    jnc = RunningModel.GetGapProjections().FirstOrDefault(j => j.Source == source && j.Target == target ||
-                                    j.Source == target && j.Target == source);
-                                }
-                                if (jnc != null)
-                                    plot.Selection = new PlotSelectionJunction() { Junction = jnc };
-                                else plot.Selection = null;
+                                plot.Selection = linkedSelection;
                             }
                         }
                     }
@@ -644,9 +654,10 @@ namespace SiliFish.UI.Controls
             {
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, psmc);
             }
-            else if (plotSelection is PlotSelectionJunction psj)
+            else if (plotSelection is PlotSelectionUnits psUnits)
             {
-                plotsubset = psj.Junction.GetType().Name;
+                Cells = psUnits.Units.Where(u => u is Cell).Cast<Cell>().ToList();
+                Pools = psUnits.Units.Where(u=>u is CellPool).Cast<CellPool>().ToList();    
             }
             lastPlot = new()
             {
@@ -656,8 +667,8 @@ namespace SiliFish.UI.Controls
             };
             (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(lastPlot, RunningModel, Cells, Pools, tPlotStart, tPlotEnd);
 
-            htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts,
-                (int)ePlotWidth.Value, (int)ePlotHeight.Value);
+            htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts, GlobalSettings.ShowZeroValues,
+                GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
             Invoke(CompletePlotHTML);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
@@ -673,7 +684,7 @@ namespace SiliFish.UI.Controls
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
-            if (PlotType == PlotType.Episodes)
+            if (PlotType == PlotType.EpisodesTail)
                 RunningModel.SetAnimationParameters(RunningModel.KinemParam);
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
@@ -710,53 +721,76 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void SetPlotSelectionToJunction(JunctionBase jnc)
+        private void SetPlotSelectionToUnits(List<ModelUnitBase> unitList)
         {
-            if (!ddPlot.Items.Contains(PlotType.Junction.GetDisplayName()))
-                ddPlot.Items.Add(PlotType.Junction.GetDisplayName());
-            ddPlot.SelectedItem = PlotType.Junction.GetDisplayName();
+            if (!ddPlot.Items.Contains(PlotType.Selection.GetDisplayName()))
+                ddPlot.Items.Add(PlotType.Selection.GetDisplayName());
+            ddPlot.SelectedItem = PlotType.Selection.GetDisplayName();
             PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
             PlotSubset = ddPlotPools.Text;
-            plotSelection = new PlotSelectionJunction()
+            plotSelection = new PlotSelectionUnits()
             {
-                Junction = jnc
+                Units = unitList
             };
         }
-        internal void Plot(ModelUnitBase unitToPlot)
+
+        /// <summary>
+        /// Called from the architecture panel
+        /// The plot type is determined by the units selected
+        /// Assumption: all the units have the same type
+        /// Eg: Currently plotting a cell pool and a junction is not supported
+        /// </summary>
+        /// <param name="unitsToPlot"></param>
+        internal void Plot(List<ModelUnitBase> unitsToPlot)
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
-            if (unitToPlot == null) return;
+            if (unitsToPlot == null || !unitsToPlot.Any()) return;
             plotSelection = null;
-            if (unitToPlot is JunctionBase jnc)
-            {
-                SetPlotSelectionToJunction(jnc);
+            SetPlotSelectionToUnits(unitsToPlot);
 
-                tPlotStart = (int)ePlotStart.Value;
-                tPlotEnd = (int)ePlotEnd.Value;
-                if (tPlotEnd > RunningModel.RunParam.MaxTime)
-                    tPlotEnd = RunningModel.RunParam.MaxTime;
+            /*if (unitsToPlot.First() is JunctionBase)
+            {
+                List<JunctionBase> jncs = unitsToPlot.Where(unit => unit is JunctionBase).Cast<JunctionBase>().ToList();
             }
             else
             {
-                if (unitToPlot is Stimulus stim)
+                if (unitsToPlot.First() is Stimulus stim) //TODO handle multiple stimuli
                 {
+                    List<Stimulus> stims = unitsToPlot.Where(unit => unit is Stimulus).Cast<Stimulus>().ToList();
                     ddPlot.SelectedItem = PlotType.Stimuli.GetDisplayName();
-                    SelectPlotSelectionOfCell(stim.TargetCell);
+                    SelectPlotSelectionOfCell(stim.TargetCell);//TODO find a better way to express the architecture panel driven plotting
                 }
-                else if (unitToPlot is CellPool pool)
+                else if (unitsToPlot.First() is CellPool pool)
                 {
-                    if (ddPlot.Text.GetValueFromName(PlotType.NotSet) == PlotType.Episodes)
+                    PlotType prevPlot = ddPlot.Text.GetValueFromName(PlotType.NotSet);
+                    if (prevPlot == PlotType.EpisodesTail || prevPlot == PlotType.EpisodesMN || prevPlot == PlotType.Junction)
                         ddPlot.SelectedItem = PlotType.MembPotential.GetDisplayName();
-                    SelectPlotSelectionOfCellPool(pool);
+                    SelectPlotSelectionOfCellPool(pool);//TODO find a better way to express the architecture panel driven plotting
+                    plotSelection = new PlotSelectionMultiCells()
+                    {
+                        SagittalPlane = ddPlotSagittal.Text.GetValueFromName(SagittalPlane.Both),
+                        SomiteSelection = ddPlotSomiteSelection.Text.GetValueFromName(PlotSomiteSelection.All),
+                        NSomite = (int)ePlotSomiteSelection.Value,
+                        CellSelection = ddPlotCellSelection.Text.GetValueFromName(PlotCellSelection.All),
+                        NCell = (int)ePlotCellSelection.Value,
+                        CombineCells = cbCombineCells.Checked,
+                        CombineSomites = cbCombineSomites.Checked,
+                        CombinePools = cbCombinePools.Checked
+                    };
                 }
-                else if (unitToPlot is Cell cell)
+                else if (unitsToPlot.First() is Cell cell)
                 {
                     ddPlot.SelectedItem = PlotType.FullDyn.GetDisplayName();
                     SelectPlotSelectionOfCell(cell);
                 }
                 SaveLastPlotSettings();
-                GetPlotSubset();
             }
+            */
+            tPlotStart = (int)ePlotStart.Value;
+            tPlotEnd = (int)ePlotEnd.Value;
+            if (tPlotEnd > RunningModel.RunParam.MaxTime)
+                tPlotEnd = RunningModel.RunParam.MaxTime;
+
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
@@ -799,7 +833,7 @@ namespace SiliFish.UI.Controls
                 SaveLastPlotSettings();
 
                 GetPlotSubset();
-                if (PlotType == PlotType.Episodes)
+                if (PlotType == PlotType.EpisodesTail)
                     RunningModel.SetAnimationParameters(RunningModel.KinemParam);
                 tabOutputs.SelectedTab = tPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
@@ -1218,25 +1252,18 @@ namespace SiliFish.UI.Controls
             if (RunningModel == null || !RunningModel.ModelRun) return;
 
             (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons((int)eKinematicsSomite.Value);
-            (List<SwimmingEpisode> episodesLeft, List<SwimmingEpisode> episodesRight) =
+            (_, List<SwimmingEpisode> episodes) =
                 SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
             List<Cell> allMNs = cbSpikingMNs.Checked ? LeftMNs.Union(RightMNs).Where(c => c.IsSpiking()).OrderBy(c => c.CellGroup).ToList() :
                 LeftMNs.Union(RightMNs).OrderBy(c => c.CellGroup).ToList();
 
-            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, allMNs, cbCombineMNPools.Checked,
+            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, allMNs, cbCombineMNPools.Checked, GlobalSettings.ShowZeroValues,
                 width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
             webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
-            eEpisodesLeft.Text = "";
-            eEpisodesRight.Text = "";
-            foreach (SwimmingEpisode episode in episodesLeft)
-                eEpisodesLeft.Text += episode.ToString() + "\r\n\r\n";
-            foreach (SwimmingEpisode episode in episodesRight)
-                eEpisodesRight.Text += episode.ToString() + "\r\n\r\n";
+            eEpisodes.Text = "";
+            foreach (SwimmingEpisode episode in episodes)
+                eEpisodes.Text += episode.ToString() + "\r\n\r\n";
             lKinematicsTimes.Text = $"Last kinematics:{DateTime.Now:t}";
-        }
-        private void splitKinematics_Panel2_SizeChanged(object sender, EventArgs e)
-        {
-            eEpisodesLeft.Width = splitKinematics.Panel2.Width / 2;
         }
 
         #endregion
@@ -1251,6 +1278,10 @@ namespace SiliFish.UI.Controls
                 RenderIn3D();
         }
 
+        private void pPlot_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 
 }

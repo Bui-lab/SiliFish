@@ -189,7 +189,7 @@ namespace SiliFish.UI.Controls
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts,
-                "Firing Analysis", synchronized: true,
+                "Firing Analysis", synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
@@ -227,7 +227,7 @@ namespace SiliFish.UI.Controls
             int height = (webViewPlots.ClientSize.Height - 150) / charts.Count;
             if (height < 200) height = 200;
             string html = DyChartGenerator.PlotLineCharts(charts,
-                "Rheobase Sensitivity Analysis", synchronized: false,
+                "Rheobase Sensitivity Analysis", synchronized: false, showZeroValues: GlobalSettings.ShowZeroValues,
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
@@ -404,7 +404,7 @@ namespace SiliFish.UI.Controls
             }
             int numCharts = charts.Any() ? charts.Count : 1;
             string html = DyChartGenerator.PlotLineCharts(charts,
-                "Dynamics Test Results", synchronized: true,
+                "Dynamics Test Results", synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
@@ -438,7 +438,7 @@ namespace SiliFish.UI.Controls
             });
             int numCharts = charts.Any() ? charts.Count : 1;
             string html = DyChartGenerator.PlotLineCharts(charts,
-                "Dynamics Test Results", synchronized: true,
+                "Dynamics Test Results", synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";

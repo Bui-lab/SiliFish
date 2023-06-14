@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.WinForms;
 using SiliFish.Definitions;
+using SiliFish.Helpers;
 
 namespace SiliFish.UI.Extensions
 {
@@ -12,9 +13,9 @@ namespace SiliFish.UI.Extensions
                 tempFile = "";
                 if (html.Length > 1000000 && !string.IsNullOrEmpty(tempFolder))
                 {
-                    tempFile = Path.GetFullPath(System.Guid.NewGuid().ToString() + ".html", tempFolder);
+                    tempFile = System.Guid.NewGuid().ToString() + ".html";
+                    tempFile = FileUtil.SaveToTempFolder(tempFile, html.ToString());
                     GlobalSettings.TempFiles.Add(tempFile);
-                    File.WriteAllText(tempFile, html.ToString());
                     htmlContainer.CoreWebView2.Navigate(tempFile);
                 }
                 else

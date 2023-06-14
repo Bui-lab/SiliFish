@@ -30,6 +30,7 @@ namespace SiliFish.Definitions
         public static double SimulationEulerDeltaT = 0.1;
 
         public static bool SameYAxis = true;
+        public static bool ShowZeroValues = true;
 
         public static int DefaultPlotWidth = 800;
 
@@ -72,12 +73,12 @@ namespace SiliFish.Definitions
 
         #region Const
         [Description("The minimum value a cell membrane potential can take."),
-            DisplayName("Biological Min V"),
+            DisplayName("Biological min V"),
             Category("Const")]
         public double BiologicalMinPotential { get { return GlobalSettings.BiologicalMinPotential; } set { GlobalSettings.BiologicalMinPotential = value; } }
 
         [Description("The maximum value a cell membrane potential can take."),
-            DisplayName("Biological Max V"),
+            DisplayName("Biological max V"),
             Category("Const")]
         public double BiologicalMaxPotential { get { return GlobalSettings.BiologicalMaxPotential; } set { GlobalSettings.BiologicalMaxPotential = value; } }
 
@@ -88,7 +89,7 @@ namespace SiliFish.Definitions
 
         #region Display
         [Description("The maximum number of items that will be listed on the architecture lists. This number is obsolote when a single cell is selected."), 
-            DisplayName("Max Number Of Units"),
+            DisplayName("Max number of units"),
             Category("Display")]
         public int MaxNumberOfUnits { get { return GlobalSettings.MaxNumberOfUnits; } set { GlobalSettings.MaxNumberOfUnits = value; } }
 
@@ -96,12 +97,12 @@ namespace SiliFish.Definitions
 
         #region Plotting
         [Description("The format used on charts. Useful to shorten numbers with high number of digitals."),
-            DisplayName("Number Format"),
+            DisplayName("Number format"),
             Category("Plotting")]
         public string DecimalPointFormat { get { return GlobalSettings.PlotDataFormat; } set { GlobalSettings.PlotDataFormat = value; } }
 
         [Description("If there are more plots to be drawn than the 'Max # of Plots', the user will be warned to prevent unwanted resource usages."),
-            DisplayName("Max # of Plots"),
+            DisplayName("Max # of plots"),
             Category("Plotting")]
         public int PlotWarningNumber { get { return GlobalSettings.PlotWarningNumber; } set { GlobalSettings.PlotWarningNumber = value; } }
 
@@ -109,6 +110,11 @@ namespace SiliFish.Definitions
             DisplayName("Use the same y-axis"),
             Category("Plotting")]
         public bool SameYAxis { get { return GlobalSettings.SameYAxis; } set { GlobalSettings.SameYAxis = value; } }
+
+        [Description("Valid for HTML plots. Whether the zero values will be displayed on the legend."),
+            DisplayName("Show zero values"),
+            Category("Plotting")]
+        public bool ShowZeroValues { get { return GlobalSettings.ShowZeroValues; } set { GlobalSettings.ShowZeroValues = value; } }
 
         [Description("In pixels."),
             DisplayName("Default plot width"),

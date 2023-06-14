@@ -226,14 +226,14 @@ namespace SiliFish.Services
                     {
                         side = LEFT;
                         lastEpisode.EndBeat(t);
-                        lastEpisode.StartBeat(t);
+                        lastEpisode.StartBeat(t, SagittalPlane.Right);
                     }
 
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
                         lastEpisode.EndBeat(t);
-                        lastEpisode.StartBeat(t);
+                        lastEpisode.StartBeat(t, SagittalPlane.Left);
                     }
                 }
                 i++;
@@ -243,9 +243,8 @@ namespace SiliFish.Services
         }
 
 
-        public static (List<SwimmingEpisode>, List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs)
+        public static (double[], List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs)
         { 
-            double burstBreak = model.KinemParam.BurstBreak;
             double episodeBreak = model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();
@@ -257,10 +256,30 @@ namespace SiliFish.Services
             leftSpikes.Sort();
             rightSpikes.Sort();
 
-            List<SwimmingEpisode> leftEpisodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, burstBreak, episodeBreak);
-            List<SwimmingEpisode> rightEpisodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, rightSpikes, burstBreak, episodeBreak);
+            List<SwimmingEpisode> Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, rightSpikes, episodeBreak);
+            double[] range = new double[model.TimeArray.Length];
+            foreach(SwimmingEpisode episode in Episodes)
+            {
+                foreach (Beat beat in episode.Beats)
+                {
+                    int startInd = model.RunParam.iIndex(beat.BeatStart);
+                    int endInd = model.RunParam.iIndex(beat.BeatEnd);
+                    int middleInd = (startInd + endInd) / 2;
+                    if (beat.Direction == SagittalPlane.Left)
+                    {
+                        double value = leftMNs.Max(MN => MN.V.Skip(startInd).Take(endInd - startInd + 1).Max());
+                        range[middleInd] = -value;
+                    }
+                    else //if (beat.Direction == SagittalPlane.Right)
+                    {
+                        double value = rightMNs.Max(MN => MN.V.Skip(startInd).Take(endInd - startInd + 1).Max());
+                        range[middleInd] = value;
+                    }
+                }
 
-            return (leftEpisodes, rightEpisodes);
+            }
+
+            return (range, Episodes);
         }
 
     }

@@ -14,7 +14,7 @@ namespace SiliFish.Services.Plotting
 {
     public class DyChartGenerator : EmbeddedResourceReader
     {
-        public static string PlotCharts(string title, List<ChartDataStruct> charts, bool synchronized, int width, int height)
+        public static string PlotCharts(string title, List<ChartDataStruct> charts, bool synchronized, bool showZeroValues, int width, int height)
         {
             try
             {
@@ -62,6 +62,7 @@ namespace SiliFish.Services.Plotting
                         chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
                         chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
                         chart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
+                        chart.Replace("__SHOW_ZERO__", showZeroValues.ToString().ToLower());
                         chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
                         chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
                         chartHTML.Add(chart.ToString());
@@ -80,14 +81,14 @@ namespace SiliFish.Services.Plotting
         }
 
 
-        public static string Plot(string Title, List<ChartDataStruct> charts, int width = 480, int height = 240)
+        public static string Plot(string Title, List<ChartDataStruct> charts, bool showZeroValues, int width = 480, int height = 240)
         {
-            string PlotHTML = PlotCharts(Title, charts, synchronized: true, width, height);
+            string PlotHTML = PlotCharts(Title, charts, synchronized: true, showZeroValues, width, height);
             return PlotHTML;
         }
 
         public static string PlotSummaryMembranePotentials(RunningModel model, List<Cell> Cells,
-            bool combinePools,
+            bool combinePools, bool showZeroValues,
             int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
         {
             double dt = model.RunParam.DeltaT;
@@ -99,12 +100,12 @@ namespace SiliFish.Services.Plotting
             List<ChartDataStruct> charts = PlotDataGenerator.CreateMembranePotentialCharts(model.TimeArray, Cells, 
                 combinePools: combinePools, combineSomites: true, combineCells: true,
                 iStart, iEnd);
-            string PlotHTML = PlotCharts(title: "Summary Membrane Potentials", charts, synchronized: true, width, height);
+            string PlotHTML = PlotCharts(title: "Summary Membrane Potentials", charts, synchronized: true, showZeroValues, width, height);
             return PlotHTML;
         }
 
         public static string PlotLineCharts(List<ChartDataStruct> chartsData,
-            string mainTitle, bool synchronized,
+            string mainTitle, bool synchronized, bool showZeroValues,
             int width = 480, int height = 240)
         {
             List<ChartDataStruct> charts = new();
@@ -112,7 +113,7 @@ namespace SiliFish.Services.Plotting
             {
                 charts.Add(chartData);
             }
-            string PlotHTML = PlotCharts(title: mainTitle, charts, synchronized, width, height);
+            string PlotHTML = PlotCharts(title: mainTitle, charts, synchronized, showZeroValues, width, height);
             return PlotHTML;
         }
     }

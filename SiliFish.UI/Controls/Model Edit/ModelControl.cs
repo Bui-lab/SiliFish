@@ -240,6 +240,14 @@ namespace SiliFish.UI.Controls
 
 
         #endregion
+        private void listGeneric_ItemPlot(object sender, EventArgs e)
+        {
+            List<ModelUnitBase> units = (List<ModelUnitBase>)sender;
+            SelectedUnitArgs args = new();
+            args.unitsSelected.AddRange(units);
+            PlotRequested?.Invoke(this, args);
+        }
+
         #region Cell Pool
         private void AddCellPool(CellPoolTemplate newPool)
         {
@@ -406,15 +414,12 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_ItemHighlight(object sender, EventArgs e)
         {
-            SelectedUnitArgs args = new() { unitSelected = SelectedPool };
+            SelectedUnitArgs args = new();
+            args.unitsSelected.Add(SelectedPool);
             HighlightRequested?.Invoke(this, args);
         }
 
-        private void listCellPools_ItemPlot(object sender, EventArgs e)
-        {
-            SelectedUnitArgs args = new() { unitSelected = SelectedPool };
-            PlotRequested?.Invoke(this, args);
-        }
+
         private void listCellPools_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
@@ -591,14 +596,9 @@ namespace SiliFish.UI.Controls
 
         private void listCells_ItemHighlight(object sender, EventArgs e)
         {
-            SelectedUnitArgs args = new() { unitSelected = SelectedCell };
+            SelectedUnitArgs args = new();
+            args.unitsSelected.Add(SelectedCell);
             HighlightRequested?.Invoke(this, args);
-        }
-
-        private void listCells_ItemPlot(object sender, EventArgs e)
-        {
-            SelectedUnitArgs args = new() { unitSelected = SelectedCell };
-            PlotRequested?.Invoke(this, args);
         }
 
         private void listCells_ItemsSort(object sender, EventArgs e)
@@ -946,12 +946,6 @@ namespace SiliFish.UI.Controls
             ModelIsUpdated();
         }
 
-        private void listConnections_ItemPlot(object sender, EventArgs e)
-        {
-            SelectedUnitArgs args = new() { unitSelected = SelectedJunction };
-            PlotRequested?.Invoke(this, args);
-        }
-
         private void listConnections_ItemSelect(object sender, EventArgs e)
         {
             if (sender is JunctionBase jnc)
@@ -973,23 +967,6 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private bool SelectedUnitHasConnections(bool gap, bool chemin, bool chemout)
-        {
-            ModelUnitBase unit = SelectedUnit;
-            if (unit == null)
-            {
-                if (Model is ModelTemplate mt)
-                    return mt.HasConnections();
-                return (Model as RunningModel).HasConnections();
-            }
-            if (unit is Cell cell)
-                return cell.HasConnections(gap, chemin, chemout);
-            if (unit is CellPool cellPool)
-                return cellPool.HasConnections(gap, chemin, chemout);
-            //if (unit is CellPoolTemplate cellPoolTemplate)
-            //  return cellPoolTemplate.HasConnections(gap, chemin, chemout);
-            return (Model as ModelTemplate).HasConnections();
-        }
         private void listConnections_ItemsExport(object sender, EventArgs e)
         {
             ModelUnitBase unit = SelectedUnit;
@@ -1075,7 +1052,7 @@ namespace SiliFish.UI.Controls
             }
             else if (obj is InterPoolTemplate ipt)
             {
-                listCellPools.SelectItem(ipt.PoolSource);               
+                listCellPools.SelectItem(ipt.PoolSource);
             }
         }
 
@@ -1100,7 +1077,7 @@ namespace SiliFish.UI.Controls
             object obj = (sender as ListBoxControl).SelectedItem;
             if (obj is GapJunction jnc)
             {
-                Cell otherCell = SelectedCell == jnc.Cell1? jnc.Cell2 : jnc.Cell1;
+                Cell otherCell = SelectedCell == jnc.Cell1 ? jnc.Cell2 : jnc.Cell1;
                 listCellPools.SelectedItem = otherCell.CellPool;
                 listCells.SelectedItem = otherCell;
             }
@@ -1361,13 +1338,6 @@ namespace SiliFish.UI.Controls
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
         }
-
-        private void listStimuli_ItemPlot(object sender, EventArgs e)
-        {
-            SelectedUnitArgs args = new() { unitSelected = SelectedStimulus };
-            PlotRequested?.Invoke(this, args);
-        }
-
 
         #endregion
 

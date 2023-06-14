@@ -204,12 +204,14 @@ namespace SiliFish.UI.Controls
         }
         private void miPlot_Click(object sender, EventArgs e)
         {
-            ItemPlot?.Invoke(listBox.SelectedItem, new EventArgs());
+            List<ModelUnitBase> list = listBox.SelectedItems.Cast<ModelUnitBase>().ToList();
+            ItemPlot?.Invoke(list, new EventArgs());
         }
         private void miHighlight_Click(object sender, EventArgs e)
         {
-            ItemHighlight?.Invoke(listBox.SelectedItem, new SelectedUnitArgs()
-            { unitSelected = listBox.SelectedItem as ModelUnitBase, enforce = true });
+            SelectedUnitArgs args = new() { enforce = true };
+            args.unitsSelected.AddRange((IEnumerable<ModelUnitBase>)listBox.SelectedItems);
+            ItemHighlight?.Invoke(listBox.SelectedItems, args);
         }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
@@ -244,7 +246,7 @@ namespace SiliFish.UI.Controls
                     miDeactivate.Visible = activeExists;
                 }
             }
-            miPlot.Visible = listBox.SelectedItems.Count == 1 && ItemPlot != null;
+            miPlot.Visible = ItemPlot != null;
             miHighlight.Visible = ItemHighlight != null;
             sepPlot.Visible = miPlot.Visible || miHighlight.Visible;
         }
@@ -354,9 +356,12 @@ namespace SiliFish.UI.Controls
         {
             miHighlightSelected.CheckState = miHighlightSelected.CheckState == CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
             if (miHighlightSelected.CheckState == CheckState.Checked)
-                ItemHighlight?.Invoke(listBox.SelectedItem,
-                    new SelectedUnitArgs()
-                    { unitSelected = listBox.SelectedItem as ModelUnitBase, enforce = false });
+            {
+                SelectedUnitArgs args = new() { enforce = false };
+                args.unitsSelected.AddRange((IEnumerable<ModelUnitBase>)listBox.SelectedItems);
+                ItemHighlight?.Invoke(listBox.SelectedItems, args);
+
+            }
         }
 
         private void listBox_Leave(object sender, EventArgs e)

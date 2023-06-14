@@ -8,7 +8,7 @@ namespace SiliFish.UI.EventArguments
 {
     internal class SelectedUnitArgs : EventArgs
     {
-        internal ModelUnitBase unitSelected;
+        internal List<ModelUnitBase> unitsSelected = new();
         internal bool enforce;
     }
 
