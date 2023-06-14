@@ -187,7 +187,7 @@ namespace SiliFish.Services
             int nMax = model.TimeArray.Length;
             double dt = model.RunParam.DeltaT;
             double offset = model.RunParam.SkipDuration;
-            int delay = (int)(model.KinemParam.Delay / dt);
+            int delay = (int)(model.KinemParam.EpisodeBreak / dt);
             List<SwimmingEpisode> episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);

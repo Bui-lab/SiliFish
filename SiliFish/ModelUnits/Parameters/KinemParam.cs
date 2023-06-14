@@ -32,13 +32,13 @@ namespace SiliFish.ModelUnits.Parameters
             "Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Conversion Coef"), Category("Animation")]
         public double ConvCoef { get; set; } = 0.1;
 
-        [Description("The distance considered as a move from the center line."), DisplayName("Boundary"), Category("Swim Statistics")]
+        [Description("The distance considered as a move from the center line. Used only for tail based episode calculation."), 
+            DisplayName("Boundary"), Category("Swim Dynamics")]
         public double Boundary { get; set; } = 0.5;
 
-        [Description("The time range that will be looked ahead to detect motion."), DisplayName("Delay"), Category("Swim Statistics")]
-        public int Delay { get; set; } = 1000;
-
-        [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("MN based kinematics")]
+        //same as the time range that will be looked ahead to detect motion
+        
+        [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("Swim Dynamics")]
         public int EpisodeBreak { get; set; } = 100;
 
         public KinemParam() { }
@@ -57,7 +57,7 @@ namespace SiliFish.ModelUnits.Parameters
             Alpha = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Alpha", Alpha);
             Beta = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Beta", Beta);
             Boundary = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Boundary", Boundary);
-            Delay = paramExternal.ReadIntegerAndRemoveKey("Kinematics.Delay", Delay);
+            EpisodeBreak = paramExternal.ReadIntegerAndRemoveKey("Kinematics.Delay", EpisodeBreak);
             return paramExternal;
         }
 
