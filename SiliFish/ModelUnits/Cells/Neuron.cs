@@ -204,9 +204,8 @@ namespace SiliFish.ModelUnits.Cells
         public override void InitForSimulation(RunParam runParam)
         {
             base.InitForSimulation(runParam);
-            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitForSimulation(runParam.iMax);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent);
 
         }
 

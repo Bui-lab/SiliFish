@@ -23,8 +23,6 @@ namespace SiliFish.ModelUnits.Architecture
 {
     public class RunningModel : ModelBase
     {      
-
-        private int iRunCounter = 0;
         private int iProgress = 0;
         private int iMax = 1;
 
@@ -190,10 +188,11 @@ namespace SiliFish.ModelUnits.Architecture
         [JsonIgnore]
         [Browsable(false)]
         public bool CancelRun { get; set; } = false;
-        private bool CancelLoop { get; set; } = false;
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
-        public int GetRunCounter() => iRunCounter;
 
+        [JsonIgnore]
+        [Browsable(false)]
+        public bool JunctionCurrentTrackingOn = true;
 
         public RunningModel()
         {
@@ -706,14 +705,10 @@ namespace SiliFish.ModelUnits.Architecture
 
         public virtual void SaveToFile(string filename)
         {
-            if (!this.model_run)
+            if (!model_run)
             {
                 return;
             }
-            string Vfilename = Path.ChangeExtension(filename, "V.csv");
-            string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
-            string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
-
             List<string> cell_names = new();
             cell_names.AddRange(neuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
             cell_names.AddRange(musclePools.Select(k => k.CellGroup).Distinct());
@@ -727,21 +722,34 @@ namespace SiliFish.ModelUnits.Architecture
                 foreach (Cell c in pool.GetCells())
                 {
                     Vdata_list.Add(c.ID, c.V);
-                    c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                    if (c is MuscleCell)
+                    if (JunctionCurrentTrackingOn)
                     {
-                        (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                    }
-                    else if (c is Neuron)
-                    {
-                        (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        if (c is MuscleCell)
+                        {
+                            (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        }
+                        else if (c is Neuron)
+                        {
+                            (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        }
                     }
                 }
 
             }
-            ModelFile.SaveModelDynamicsToCSV(filename: Vfilename, Time: this.Time, Values: Vdata_list);
-            ModelFile.SaveModelDynamicsToCSV(filename: Gapfilename, Time: this.Time, Values: Gapdata_list);
-            ModelFile.SaveModelDynamicsToCSV(filename: Synfilename, Time: this.Time, Values: Syndata_list);
+            if (JunctionCurrentTrackingOn)
+            {
+                string Vfilename = Path.ChangeExtension(filename, "V.csv");
+                ModelFile.SaveModelDynamicsToCSV(filename: Vfilename, Time: Time, Values: Vdata_list);
+                string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
+                string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
+                ModelFile.SaveModelDynamicsToCSV(filename: Gapfilename, Time: Time, Values: Gapdata_list);
+                ModelFile.SaveModelDynamicsToCSV(filename: Synfilename, Time: Time, Values: Syndata_list);
+            }
+            else
+            {
+                ModelFile.SaveModelDynamicsToCSV(filename: filename, Time: Time, Values: Vdata_list);
+            }
         }
 
         protected virtual void InitForSimulation()
@@ -805,7 +813,7 @@ namespace SiliFish.ModelUnits.Architecture
                     cell.CalculateMembranePotential(timeIndex);
             }
         }
-        protected virtual void RunModelLoop()
+        public virtual void RunModel()
         {
             try
             {
@@ -815,6 +823,8 @@ namespace SiliFish.ModelUnits.Architecture
                 iMax = RunParam.iMax;
 
                 InitForSimulation();
+                if (CancelRun)
+                    return;
                 if (!initialized)
                     return;
                 //# This loop is the main loop where we solve the ordinary differential equations at every time point
@@ -826,7 +836,6 @@ namespace SiliFish.ModelUnits.Architecture
                     if (CancelRun)
                     {
                         CancelRun = false;
-                        CancelLoop = true;
                         return;
                     }
                     CalculateCellularOutputs(index);
@@ -840,36 +849,6 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public void RunModel(int count = 1)
-        {
-            string filename = $"{ModelName}_{DateTime.Now:yyMMdd-HHmm}";
-            string outputFolder = GlobalSettings.OutputFolder;
-            filename = Path.Combine(outputFolder, filename);
-            for (int i = 0; i < count; i++)
-            {
-                iRunCounter = i + 1;
-                if (CancelLoop)
-                {
-                    CancelLoop = false;
-                    return;
-                }
-                RunModelLoop();
-                if (count > 1 && ModelRun)
-                {
-                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(this);
-                    string runfilename = $"{filename}_Run{iRunCounter}";
-                    runfilename = Path.Combine(outputFolder, runfilename);
-                    ModelFile.SaveTailMovementToCSV(runfilename + ".csv", Time, tail_tip_coord);
-                    ModelFile.SaveEpisodesToCSV(filename + ".csv", iRunCounter, episodes);
-                    JsonUtil.SaveToJsonFile(runfilename + ".json", this);
-                }
-                if (CancelLoop)
-                {
-                    CancelLoop = false;
-                    return;
-                }
-            }
-        }
 
     }
 

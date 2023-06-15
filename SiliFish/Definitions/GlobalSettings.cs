@@ -19,6 +19,7 @@ namespace SiliFish.Definitions
         public static double Epsilon = 0.00001;
         public static double BiologicalMinPotential = -100;
         public static double BiologicalMaxPotential = 100;
+        public static double MemoryWarningLimit = 10;//in GB
 
         public static int PlotWarningNumber = 10;
         public static string PlotDataFormat = "0.0###";
@@ -85,6 +86,11 @@ namespace SiliFish.Definitions
 
         [Description("The maximum value between two numbers to consider them equal."), Category("Const")]
         public double Epsilon { get { return GlobalSettings.Epsilon; } set { GlobalSettings.Epsilon = value; } }
+
+        [Description("The maximum memory usage (in GB) allowed before the user is given the option to turn off junction level current tracking."), 
+            DisplayName("Memory warning limit"),
+            Category("Const")]
+        public double MemoryWarningLimit { get { return GlobalSettings.MemoryWarningLimit; } set { GlobalSettings.MemoryWarningLimit = value; } }
         #endregion
 
         #region Display

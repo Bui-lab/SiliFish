@@ -342,11 +342,11 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
-            V = new double[runParam.iMax];
             Core.Initialize(runParam.DeltaT, runParam.DeltaTEuler);
+            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             Stimuli.InitForSimulation(Model.RunParam, Model.rand);
             foreach (GapJunction jnc in GapJunctions)
-                jnc.InitForSimulation(runParam.iMax);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent);
         }
         internal bool IsAlive(int timepoint)
         {

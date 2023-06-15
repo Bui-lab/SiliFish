@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <AssemblyVersion></AssemblyVersion>
     <Version>2.4.0</Version>
   </PropertyGroup>

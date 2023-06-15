@@ -150,9 +150,8 @@ namespace SiliFish.ModelUnits.Cells
         {
             base.InitForSimulation(runParam);
             tension = null;
-            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             foreach (ChemicalSynapse jnc in this.EndPlates)
-                jnc.InitForSimulation(runParam.iMax);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent);
         }
 
         public override void CalculateMembranePotential(int timeIndex)

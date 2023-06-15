@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using SiliFish.Services;
 using System.Xml.Linq;
+using OfficeOpenXml.ExternalReferences;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -170,11 +171,16 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public void InitForSimulation(int nmax)
+        public void InitForSimulation(int nmax, bool trackCurrent)
         {
             Core.Conductance = Weight;
-            InputCurrent = new double[nmax];
-            InputCurrent[0] = 0;
+            if (trackCurrent)
+            {
+                InputCurrent = new double[nmax];
+                InputCurrent[0] = 0;
+            }
+            else
+                InputCurrent = null;
             ISynA = ISynB = 0;
             
             if (FixedDuration_ms != null)
@@ -210,7 +216,8 @@ namespace SiliFish.ModelUnits.Junction
         public double GetSynapticCurrent(int tIndex)
         {
             double current = IsActive(tIndex) ? ISyn : 0;
-            InputCurrent[tIndex] = current;
+            if (InputCurrent != null)
+                InputCurrent[tIndex] = current;
             return current;
         }
     }

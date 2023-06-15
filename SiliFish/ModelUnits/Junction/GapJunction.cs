@@ -131,8 +131,16 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public void InitForSimulation(int nmax)
+        public void InitForSimulation(int nmax, bool trackCurrent)
         {
+            if (trackCurrent)
+            {
+                InputCurrent = new double[nmax];
+                InputCurrent[0] = 0;
+            }
+            else
+                InputCurrent = null;
+
             InputCurrent = new double[nmax];
             InputCurrent[0] = 0;
             double deltaT = Cell1.Model.RunParam.DeltaT;
@@ -183,7 +191,8 @@ namespace SiliFish.ModelUnits.Junction
             else
             {
                 current = -1 * current;
-                InputCurrent[t_current] = current;
+                if (InputCurrent != null)
+                    InputCurrent[t_current] = current;
                 return current;
             }
         }
