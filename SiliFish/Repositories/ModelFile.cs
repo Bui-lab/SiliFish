@@ -1046,52 +1046,60 @@ namespace SiliFish.Repositories
         {
             try
             {
-                ExcelWorksheet worksheet = workbook.Worksheets["Junctions"];
-                if (worksheet == null) return false;
-                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
-                int rowInd = 2;
-                if (model is ModelTemplate modelTemplate)
+                int sheetIndex = 0;
+                string sheetName = "Junctions";
+                while (true)
                 {
-                    if (!contents.Equivalent(InterPoolTemplate.ColumnNames))
-                        return false;
-                    int colCount = contents.Count;
-                    modelTemplate.InterPoolTemplates.Clear();
-                    while (true)
+                    ExcelWorksheet worksheet = workbook.Worksheets[sheetName];
+                    if (worksheet == null) return sheetIndex > 0;
+                    List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                    int rowInd = 2;
+                    if (model is ModelTemplate modelTemplate)
                     {
-                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
-                        if (contents.IsEmpty())
-                            break;
-                        InterPoolTemplate ipt = new();
-                        ipt.ImportValues(contents);
-                        modelTemplate.AddJunction(ipt);
+                        if (!contents.Equivalent(InterPoolTemplate.ColumnNames))
+                            return false;
+                        int colCount = contents.Count;
+                        if (sheetIndex == 0)
+                            modelTemplate.InterPoolTemplates.Clear();
+                        while (true)
+                        {
+                            contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                            if (contents.IsEmpty())
+                                break;
+                            InterPoolTemplate ipt = new();
+                            ipt.ImportValues(contents);
+                            modelTemplate.AddJunction(ipt);
+                        }
                     }
-                }
-                else if (model is RunningModel modelRun)
-                {
-                    if (!contents.Equivalent(JunctionBase.ColumnNames))
-                        return false;
-                    int colCount = contents.Count;
-                    modelRun.RemoveJunctionsOf(null, null, true, true, true);
-                    while (true)
+                    else if (model is RunningModel modelRun)
                     {
-                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
-                        if (contents.IsEmpty())
-                            break;
-                        JunctionBase jb = null;
-                        if (contents[0] == ConnectionType.Gap.ToString())
+                        if (!contents.Equivalent(JunctionBase.ColumnNames))
+                            return false;
+                        int colCount = contents.Count;
+                        if (sheetIndex == 0)
+                            modelRun.RemoveJunctionsOf(null, null, true, true, true);
+                        while (true)
                         {
-                            jb = new GapJunction();
+                            contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                            if (contents.IsEmpty())
+                                break;
+                            JunctionBase jb = null;
+                            if (contents[0] == ConnectionType.Gap.ToString())
+                            {
+                                jb = new GapJunction();
+                            }
+                            else
+                            {
+                                jb = new ChemicalSynapse();
+                            }
+                            if (jb == null) continue;
+                            jb.ImportValues(contents);
+                            jb.LinkObjects(modelRun);
                         }
-                        else
-                        {
-                            jb = new ChemicalSynapse();
-                        }
-                        if (jb == null) continue;
-                        jb.ImportValues(contents);
-                        jb.LinkObjects(modelRun);
                     }
+
+                    sheetName = "JunctionsExt_" + ++sheetIndex;
                 }
-                return true;
             }
             catch (Exception ex)
             {
@@ -1185,11 +1193,25 @@ namespace SiliFish.Repositories
                 int colindex = 1;
                 foreach (string s in columnNames)
                     workSheet.Cells[rowindex, colindex++].Value = s;
-
                 foreach (IDataExporterImporter jnc in objList)
                 {
                     colindex = 1;
                     rowindex++;
+                    if (rowindex > 1048576) //max number of rows excel allows
+                    {
+                        Regex regex = new("(.*)Ext_(.*)");
+                        Match parMatch = regex.Match(sheetName);
+                        if (!parMatch.Success)
+                            sheetName += "Ext_1";
+                        else
+                        {
+                            int extension = 0;
+                            if (int.TryParse(parMatch.Groups[2].Value, out extension))
+                                extension++;
+                            sheetName = parMatch.Groups[1].Value + "Ext_" + extension;
+                        }
+                        return CreateWorkSheet(workbook, sheetName, columnNames, objList.Skip(rowindex - 1).ToList());
+                    }
                     foreach (string s in jnc.ExportValues())
                         workSheet.Cells[rowindex, colindex++].Value = s;
                 }
