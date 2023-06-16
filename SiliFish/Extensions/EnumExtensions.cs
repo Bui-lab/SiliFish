@@ -28,7 +28,7 @@ namespace SiliFish.Extensions
                 typeof(GroupAttribute)
             ) as GroupAttribute;
 
-            return Attribute.Group;
+            return Attribute?.Group ?? "";
         }
         //used https://benjaminray.com/codebase/c-enum-display-names-with-spaces-and-special-characters/
         public static string GetDisplayName(this Enum enumValue)

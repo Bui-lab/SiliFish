@@ -307,7 +307,7 @@ namespace SiliFish.ModelUnits.Cells
                 if (seqs.Count() > cellSelection.NCell)
                     seq.AddRange(seqs.OrderBy(s => Model.rand.Next()).Select(s => s).Take(cellSelection.NCell));
             }
-            return Cells
+            List<Cell> subList = Cells
                 .Where(c =>
                 (cellSelection.CellSelection != PlotCellSelection.Spiking || c.IsSpiking()) &&
                 (cellSelection.CellSelection != PlotCellSelection.NonSpiking || !c.IsSpiking()) &&
@@ -315,7 +315,8 @@ namespace SiliFish.ModelUnits.Cells
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)
                 .Distinct()
-                .AsEnumerable();
+                .ToList();
+            return subList;
         }
 
    

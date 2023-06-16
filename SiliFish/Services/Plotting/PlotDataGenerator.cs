@@ -735,7 +735,7 @@ namespace SiliFish.Services.Plotting
 
             if (Plot.Selection is PlotSelectionUnits unitSelection)
             {
-                List<JunctionBase> junctions = unitSelection.Units.Where(x => x is JunctionBase).Cast<JunctionBase>().ToList();
+            /*    List<JunctionBase> junctions = unitSelection.Units.Where(x => x is JunctionBase).Cast<JunctionBase>().ToList();
                 if (junctions.Any())
                 {
                     charts = CreateJunctionCharts(model.TimeArray, junctions, model.JunctionCurrentTrackingOn, iStart, iEnd, UoM);
@@ -760,7 +760,7 @@ namespace SiliFish.Services.Plotting
                 {
                     charts = CreateMembranePotentialCharts(model.TimeArray, cells, combinePools, combineSomites, combineCells, iStart, iEnd);
                     return ("Membrane Potentials", charts);
-                }
+                }*/
             }
 
             if (Plot.PlotType != PlotType.EpisodesTail &&

@@ -54,8 +54,7 @@ namespace SiliFish.Definitions
         [Display(Name = "Episodes (Tail)"),
             Group("episode")] EpisodesTail,
         [Display(Name = "Episodes (MN)"), 
-            Group("episode")] EpisodesMN,
-        [Display(Name = "Selection")] Selection
+            Group("episode")] EpisodesMN
     }
 
     public enum PlotSomiteSelection

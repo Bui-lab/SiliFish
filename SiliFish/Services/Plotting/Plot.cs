@@ -18,8 +18,7 @@ namespace SiliFish.Services.Plotting
 
         public override string ToString()
         {
-            return PlotType == PlotType.Selection ? $"{PlotType}:{Selection}" :
-                $"{PlotType}-{PlotSubset}:{Selection}";
+            return $"{PlotType}-{PlotSubset}:{Selection}";
         }
     }
 }

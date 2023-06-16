@@ -671,35 +671,54 @@ namespace SiliFish.ModelUnits.Architecture
         }
 
 
-        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionMultiCells cellSelection)
+        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionInterface cellSelection)
         {
             List<CellPool> pools = null;
-            if (poolIdentifier == Const.AllPools)
-                pools = neuronPools.Union(musclePools).Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.Neurons)
-                pools = neuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.MuscleCells)
-                pools = musclePools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.Motoneurons)
-                pools = MotoNeuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.Interneurons)
-                pools = InterNeuronPools.Where(p => p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.ExcitatoryNeurons)
-                pools = neuronPools.Where(p => p.NTMode == NeuronClass.Glutamatergic &&
-                    p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.InhibitoryNeurons)
-                pools = neuronPools.Where(p => (p.NTMode == NeuronClass.GABAergic || p.NTMode == NeuronClass.Glycinergic) &&
-                    p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else if (poolIdentifier == Const.SupraSpinal)
-                pools = neuronPools.Union(musclePools).Where(p => p.BodyLocation== BodyLocation.SupraSpinal &&
-                    p.OnSide(cellSelection.SagittalPlane)).ToList();
-            else
-                pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
-                                && p.OnSide(cellSelection.SagittalPlane)).ToList();
 
-            List<Cell> cells = pools.SelectMany(p => p.GetCells(cellSelection)).ToList();
-            if (cells.Any())
-                return (cells, null);
+            if (cellSelection is PlotSelectionUnits unitsSelection)                
+            {
+                if (unitsSelection.Units.FirstOrDefault() is Cell)
+                {
+                    List<Cell> cells = unitsSelection.Units.Where(c => c is Cell).Cast<Cell>().ToList();
+                    return (cells, null);
+                }
+                if (unitsSelection.Units.FirstOrDefault() is CellPool)
+                {
+                    pools = unitsSelection.Units.Where(c => c is CellPool).Cast<CellPool>().ToList();
+                }
+            }
+            if (cellSelection is PlotSelectionMultiCells mcs)
+            {
+                if (pools == null) //not loaded from the units above
+                {
+                    if (poolIdentifier == Const.AllPools)
+                        pools = neuronPools.Union(musclePools).Where(p => p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.Neurons)
+                        pools = neuronPools.Where(p => p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.MuscleCells)
+                        pools = musclePools.Where(p => p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.Motoneurons)
+                        pools = MotoNeuronPools.Where(p => p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.Interneurons)
+                        pools = InterNeuronPools.Where(p => p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.ExcitatoryNeurons)
+                        pools = neuronPools.Where(p => p.NTMode == NeuronClass.Glutamatergic &&
+                            p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.InhibitoryNeurons)
+                        pools = neuronPools.Where(p => (p.NTMode == NeuronClass.GABAergic || p.NTMode == NeuronClass.Glycinergic) &&
+                            p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.SupraSpinal)
+                        pools = neuronPools.Union(musclePools).Where(p => p.BodyLocation == BodyLocation.SupraSpinal &&
+                            p.OnSide(mcs.SagittalPlane)).ToList();
+                    else
+                        pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
+                                        && p.OnSide(mcs.SagittalPlane)).ToList();
+                }
+                List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs)).ToList();
+                if (cells.Any())
+                    return (cells, null);
+                return (null, pools);
+            }
             return (null, pools);
         }
 

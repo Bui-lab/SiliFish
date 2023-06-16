@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 namespace SiliFish.Services.Plotting
 {
 
-    public class PlotSelectionUnits : PlotSelectionInterface
+    public class PlotSelectionUnits : PlotSelectionMultiCells
     {
         private List<Tuple<string, string>> unitTags;
 
