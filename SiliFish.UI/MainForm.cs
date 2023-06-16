@@ -271,24 +271,26 @@ namespace SiliFish.UI
                     $"{string.Join("\r\n", errors)}");
                 return;
             }
-            int iMax = (int)(eTimeEnd.Value / edt.Value);
-            long numConn = RunningModel.GetNumberOfConnections();
-            long memoryRequired = numConn * iMax * 8;//number of bytes
-            memoryRequired /= (1024 * 1024 * 1024);
-            if (memoryRequired > GlobalSettings.MemoryWarningLimit)
+            RunningModel.JunctionCurrentTrackingOn = GlobalSettings.JunctionLevelTracking;
+            if (GlobalSettings.JunctionLevelTracking)
             {
-                string msg = $"There are {numConn:n0} connections, which would require more than {memoryRequired} GB extra memory for junction based current tracking.\r\n" +
-                    $"Do you want to turn off current tracking to minimize memory problems? You will not be able to plot the currents at a specific junction.";
+                int iMax = (int)(eTimeEnd.Value / edt.Value);
+                long numConn = RunningModel.GetNumberOfConnections();
+                long memoryRequired = numConn * iMax * 8;//number of bytes
+                memoryRequired /= (1024 * 1024 * 1024);
+                if (memoryRequired > GlobalSettings.MemoryWarningLimit)
+                {
+                    string msg = $"There are {numConn:n0} connections, which would require more than {memoryRequired} GB extra memory for junction based current tracking.\r\n" +
+                        $"Do you want to turn off current tracking to minimize memory problems? You will not be able to plot the currents at a specific junction.";
 
-                DialogResult dlg = MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNoCancel);
-                if (dlg == DialogResult.Yes)
-                    RunningModel.JunctionCurrentTrackingOn = false;
-                else if (dlg == DialogResult.No)
-                    RunningModel.JunctionCurrentTrackingOn = true;
-                else
-                    return;
-
-
+                    DialogResult dlg = MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNoCancel);
+                    if (dlg == DialogResult.Yes)
+                        RunningModel.JunctionCurrentTrackingOn = false;
+                    else if (dlg == DialogResult.No)
+                        RunningModel.JunctionCurrentTrackingOn = true;
+                    else
+                        return;
+                }
             }
             RunningModel.RunParam = new()
             {

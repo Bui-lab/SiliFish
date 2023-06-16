@@ -8,6 +8,28 @@ namespace SiliFish.Extensions
 {
     public static class EnumExtensions
     {
+        public class GroupAttribute : Attribute
+        {
+            public string Group { get; protected set; }
+
+            public GroupAttribute(string value)
+            {
+                this.Group = value;
+            }
+        }
+
+        public static string GetGroup(this Enum Value)
+        {
+            Type Type = Value.GetType();
+
+            FieldInfo FieldInfo = Type.GetField(Value.ToString());
+
+            GroupAttribute Attribute = FieldInfo.GetCustomAttribute(
+                typeof(GroupAttribute)
+            ) as GroupAttribute;
+
+            return Attribute.Group;
+        }
         //used https://benjaminray.com/codebase/c-enum-display-names-with-spaces-and-special-characters/
         public static string GetDisplayName(this Enum enumValue)
         {

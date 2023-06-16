@@ -52,7 +52,8 @@ namespace SiliFish.UI.Controls
 
             foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
             {
-                if (pt == PlotType.Selection) continue;
+                if (!GlobalSettings.JunctionLevelTracking)
+                    if (pt.GetGroup() == "current") continue;
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
 

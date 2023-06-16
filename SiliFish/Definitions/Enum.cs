@@ -1,14 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static SiliFish.Extensions.EnumExtensions;
 
 namespace SiliFish.Definitions
 {
     //To convert string to enum:
     //ex: CellType cellType = (CellType)Enum.Parse(typeof(CellType), ddCellType.Text);
-    
+
     //To fill dropdown with enum:
     //ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
+   
     public enum CellType { Neuron, MuscleCell }
     public enum FiringRhythm { NoSpike, Phasic, Tonic }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }
@@ -30,19 +32,29 @@ namespace SiliFish.Definitions
         [Display(Name = "Left/Right")] Both
     }
 
+
     public enum PlotType
     {
-        [Display(Name = "")] NotSet,
-        [Display(Name = "Memb. Potential")] MembPotential,
-        [Display(Name = "Current"), Description("Gap and chemical currents")] Current,
-        [Display(Name = "Gap Current")] GapCurrent,
-        [Display(Name = "Synaptic Current")] ChemCurrent,
-        [Display(Name = "Terminal Current")] ChemOutCurrent,
+        [Display(Name = ""), 
+            Group("")] NotSet,
+        [Display(Name = "Memb. Potential"), 
+            Group("potential")] MembPotential,
+        [Display(Name = "Current"), 
+            Description("Gap and chemical currents"), 
+            Group("current")] Current,
+        [Display(Name = "Gap Current"),
+            Group("current")] GapCurrent,
+        [Display(Name = "Synaptic Current"),
+            Group("current")] ChemCurrent,
+        [Display(Name = "Terminal Current"),
+            Group("current")] ChemOutCurrent,
         [Display(Name = "Stimuli")] Stimuli,
         [Display(Name = "Full Dynamics")] FullDyn,
         [Display(Name = "Muscle Tension")] Tension,
-        [Display(Name = "Episodes (Tail)")] EpisodesTail,
-        [Display(Name = "Episodes (MN)")] EpisodesMN,
+        [Display(Name = "Episodes (Tail)"),
+            Group("episode")] EpisodesTail,
+        [Display(Name = "Episodes (MN)"), 
+            Group("episode")] EpisodesMN,
         [Display(Name = "Selection")] Selection
     }
 

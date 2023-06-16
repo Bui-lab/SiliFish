@@ -29,6 +29,7 @@ namespace SiliFish.Definitions
         public static int SimulationSkipTime = 0;
         public static double SimulationDeltaT = 0.1;
         public static double SimulationEulerDeltaT = 0.1;
+        public static bool JunctionLevelTracking = true;
 
         public static bool SameYAxis = true;
         public static bool ShowZeroValues = true;
@@ -173,9 +174,16 @@ namespace SiliFish.Definitions
         public double SimulationDeltaT { get { return GlobalSettings.SimulationDeltaT; } set { GlobalSettings.SimulationDeltaT= value; } }
 
         [Description("In ms - the default time unit used in differential equations."),
-            DisplayName("Default Euler δt "),
+            DisplayName("Default Euler δt"),
             Category("Simulation")]
         public double SimulationEulerDeltaT { get { return GlobalSettings.SimulationEulerDeltaT; } set { GlobalSettings.SimulationEulerDeltaT = value; } }
+
+        [Description("Whether junction level current tracking is on or off. For larger models turning it off is recommended."),
+            DisplayName("Junction level current tracking"),
+            Category("Simulation")]
+        public bool JunctionLevelTracking { get { return GlobalSettings.JunctionLevelTracking; } set { GlobalSettings.JunctionLevelTracking = value; } }
+
+
         #endregion
 
         public void Save()
