@@ -38,6 +38,11 @@ namespace SiliFish.Services.Plotting
         public PlotSelectionUnits()
         {
         }
+
+        public PlotSelectionUnits(PlotSelectionInterface copyFrom):
+            base(copyFrom)
+        { 
+        }
         public override string ToString()
         {
             if (Units == null || !Units.Any()) return "";

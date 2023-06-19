@@ -16,5 +16,4 @@ namespace SiliFish.Services.Plotting
     {
     }
 
-
 }

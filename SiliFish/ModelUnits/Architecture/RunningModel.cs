@@ -677,12 +677,12 @@ namespace SiliFish.ModelUnits.Architecture
 
             if (cellSelection is PlotSelectionUnits unitsSelection)                
             {
-                if (unitsSelection.Units.FirstOrDefault() is Cell)
+                if (unitsSelection.Units?.FirstOrDefault() is Cell)
                 {
                     List<Cell> cells = unitsSelection.Units.Where(c => c is Cell).Cast<Cell>().ToList();
                     return (cells, null);
                 }
-                if (unitsSelection.Units.FirstOrDefault() is CellPool)
+                if (unitsSelection.Units?.FirstOrDefault() is CellPool)
                 {
                     pools = unitsSelection.Units.Where(c => c is CellPool).Cast<CellPool>().ToList();
                 }

@@ -50,13 +50,7 @@ namespace SiliFish.UI.Controls
             WebViewInitializations();
             splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
 
-            foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
-            {
-                if (!GlobalSettings.JunctionLevelTracking)
-                    if (pt.GetGroup() == "current") continue;
-                ddPlot.Items.Add(pt.GetDisplayName());
-            }
-
+            PopulatePlotTypes();
             SetEnablesBasedOnPlot();
             foreach (PlotSomiteSelection ps in Enum.GetValues(typeof(PlotSomiteSelection)))
             {
@@ -131,6 +125,7 @@ namespace SiliFish.UI.Controls
         {
             if (model == null) return;
             RunningModel = model;
+            PopulatePlotTypes();
             PopulatePlotPools();
             int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
             ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = NumberOfSomites > 0;
@@ -386,10 +381,15 @@ namespace SiliFish.UI.Controls
 
                 ePlotSomiteSelection.Maximum =
                     PoolsFull != null && PoolsFull.Any() ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
-                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Somite) : 0;
+                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Somite) :
+                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSomite()) :
+                    Cells != null && Cells.Any() ? Cells.Max(c => c.Somite) : 0;
+
                 ePlotCellSelection.Maximum =
                     PoolsFull != null && PoolsFull.Any() ? PoolsFull.Max(p => p.GetMaxCellSequence()) :
-                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Sequence) : 0;
+                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Sequence) :
+                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSequence()) :
+                    Cells != null && Cells.Any() ? Cells.Max(c => c.Sequence) : 0;
                 if (ddPlotPools.Focused)
                     DisplayNumberOfPlots(Cells, Pools);
             }
@@ -478,6 +478,19 @@ namespace SiliFish.UI.Controls
         {
             if (cbCombinePools.Focused)
                 DisplayNumberOfPlots();
+        }
+
+        private void PopulatePlotTypes()
+        {
+            string lastSelection = ddPlot.SelectedText;
+            ddPlot.Items.Clear();
+            foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
+            {
+                if (!GlobalSettings.JunctionLevelTracking)
+                    if (pt.GetGroup() == "current") continue;
+                ddPlot.Items.Add(pt.GetDisplayName());
+            }
+            ddPlot.SelectedText = lastSelection;
         }
         private void PopulatePlotPools()
         {
@@ -601,13 +614,19 @@ namespace SiliFish.UI.Controls
                 cbCombinePools.Checked = multiCells.CombinePools;
                 cbCombineSomites.Checked = multiCells.CombineSomites;
                 cbCombineCells.Checked = multiCells.CombineCells;
-                Task.Run(PlotHTML);
             }
-            else if (plot.Selection is PlotSelectionUnits selectedUnits)
+            if (plot.Selection is PlotSelectionUnits selectedUnits)
             {
-                SetPlotSelectionToUnits(selectedUnits.Units);
-                Task.Run(PlotHTML);
+                //SetPlotSelectionToUnits(selectedUnits.Units);
+                if (!ddPlotPools.Items.Contains("Selection"))
+                    ddPlotPools.Items.Add("Selection");
+                ddPlotPools.SelectedItem = "Selection";
+                ddPlotPools.Tag = selectedUnits.Units;
+                SetEnablesBasedOnPlot();
             }
+            else
+                return;
+            Task.Run(PlotHTML);
         }
         private void listPlotHistory_ItemsExport(object sender, EventArgs e)
         {
@@ -639,7 +658,7 @@ namespace SiliFish.UI.Controls
                         {
                             if (plot.Selection is PlotSelectionUnits plotSelection)
                             {
-                                PlotSelectionUnits linkedSelection = new();
+                                PlotSelectionUnits linkedSelection = new(plotSelection);
                                 foreach (Tuple<string, string> unitTag in plotSelection.UnitTags)
                                 {
                                     ModelUnitBase unit = null;

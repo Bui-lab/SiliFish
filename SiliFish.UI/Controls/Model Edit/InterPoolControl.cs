@@ -295,7 +295,8 @@ namespace SiliFish.UI.Controls
                 MinDescReach = (double)numMinDescReach.Value,
                 MaxDescReach = (double)numMaxDescReach.Value,
                 MaxIncoming = (int)numMaxIncoming.Value,
-                MaxOutgoing = (int)numMaxOutgoing.Value
+                MaxOutgoing = (int)numMaxOutgoing.Value,
+                SomiteBased = SomiteBased
             };
 
             interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);

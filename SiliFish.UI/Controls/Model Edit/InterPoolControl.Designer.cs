@@ -340,7 +340,7 @@
             // 
             // numProbability
             // 
-            numProbability.DecimalPlaces = 2;
+            numProbability.DecimalPlaces = 3;
             numProbability.Location = new Point(109, 162);
             numProbability.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
             numProbability.Name = "numProbability";
@@ -585,7 +585,7 @@
             tTimeline.Location = new Point(4, 24);
             tTimeline.Name = "tTimeline";
             tTimeline.Padding = new Padding(3);
-            tTimeline.Size = new Size(545, 531);
+            tTimeline.Size = new Size(280, 531);
             tTimeline.TabIndex = 1;
             tTimeline.Text = "Timeline";
             tTimeline.UseVisualStyleBackColor = true;
@@ -597,7 +597,7 @@
             timeLineControl.Dock = DockStyle.Fill;
             timeLineControl.Location = new Point(3, 3);
             timeLineControl.Name = "timeLineControl";
-            timeLineControl.Size = new Size(539, 525);
+            timeLineControl.Size = new Size(274, 525);
             timeLineControl.TabIndex = 24;
             // 
             // tAttachments
@@ -605,7 +605,7 @@
             tAttachments.Controls.Add(attachmentList);
             tAttachments.Location = new Point(4, 24);
             tAttachments.Name = "tAttachments";
-            tAttachments.Size = new Size(545, 531);
+            tAttachments.Size = new Size(280, 531);
             tAttachments.TabIndex = 2;
             tAttachments.Text = "Attachments";
             tAttachments.UseVisualStyleBackColor = true;
@@ -615,7 +615,7 @@
             attachmentList.Dock = DockStyle.Fill;
             attachmentList.Location = new Point(0, 0);
             attachmentList.Name = "attachmentList";
-            attachmentList.Size = new Size(545, 531);
+            attachmentList.Size = new Size(280, 531);
             attachmentList.TabIndex = 0;
             // 
             // InterPoolControl

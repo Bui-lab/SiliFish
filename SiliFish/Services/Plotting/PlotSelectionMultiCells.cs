@@ -18,6 +18,21 @@ namespace SiliFish.Services.Plotting
         public PlotSelectionMultiCells()
         {
         }
+
+        public PlotSelectionMultiCells(PlotSelectionInterface copyFrom)
+        {
+            if (copyFrom is PlotSelectionMultiCells plot)
+            {
+                SagittalPlane = plot.SagittalPlane;
+                SomiteSelection = plot.SomiteSelection;
+                NSomite = plot.NSomite;
+                CellSelection = plot.CellSelection;
+                NCell = plot.NCell;
+                CombinePools = plot.CombinePools;
+                CombineSomites = plot.CombineSomites;
+                CombineCells = plot.CombineCells;
+            }            
+        }
         public override string ToString()
         {
             string sagittal = SagittalPlane == SagittalPlane.Left ? "[L]" : SagittalPlane == SagittalPlane.Right ? "[R]" : "";
