@@ -110,6 +110,9 @@ namespace SiliFish.UI.Controls
                 foreach (Control ctrl in pPlotSelection.Controls)
                     ctrl.Enabled = true;
                 cbCombinePools.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = true;
+                int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
+                ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = cbCombineSomites.Enabled = NumberOfSomites > 0;
+
                 if (ddPlotPools.Tag != null)
                 {
                     List<ModelUnitBase> units = (List<ModelUnitBase>)ddPlotPools.Tag;
@@ -128,7 +131,7 @@ namespace SiliFish.UI.Controls
             PopulatePlotTypes();
             PopulatePlotPools();
             int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
-            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = NumberOfSomites > 0;
+            ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = cbCombineSomites.Enabled = NumberOfSomites > 0;
             if (NumberOfSomites > 0)
             {
                 eKinematicsSomite.Maximum = NumberOfSomites;
@@ -414,6 +417,7 @@ namespace SiliFish.UI.Controls
             {
                 ddPlotPools.Items.Remove("Selection");
                 ddPlotPools.Tag = null;
+                ddPlotSagittal.Enabled = true;
             }
         }
 
@@ -771,6 +775,7 @@ namespace SiliFish.UI.Controls
             if (!ddPlotPools.Items.Contains("Selection"))
                 ddPlotPools.Items.Add("Selection");
             ddPlotPools.SelectedItem = "Selection";
+            ddPlotSagittal.Enabled = false;
             ddPlotPools.Tag = unitList;
             PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
             PlotSubset = unitList?.FirstOrDefault()?.GetType().Name ?? "";

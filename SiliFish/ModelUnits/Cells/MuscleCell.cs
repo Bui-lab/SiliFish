@@ -161,11 +161,11 @@ namespace SiliFish.ModelUnits.Cells
             {
                 foreach (ChemicalSynapse syn in EndPlates)
                 {
-                    ISyn += syn.GetSynapticCurrent(timeIndex);
+                    ISyn += syn.ISyn;
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {
-                    IGap += jnc.GetGapCurrent(this, timeIndex);
+                    IGap += jnc.Cell1 == this ? jnc.IGap : -1 * jnc.IGap;
                 }
                 stim = GetStimulus(timeIndex);
             }

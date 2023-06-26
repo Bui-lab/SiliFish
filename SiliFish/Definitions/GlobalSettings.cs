@@ -29,7 +29,7 @@ namespace SiliFish.Definitions
         public static int SimulationSkipTime = 0;
         public static double SimulationDeltaT = 0.1;
         public static double SimulationEulerDeltaT = 0.1;
-        public static bool JunctionLevelTracking = true;
+        public static bool JunctionLevelTracking = false;
 
         public static bool SameYAxis = true;
         public static bool ShowZeroValues = true;

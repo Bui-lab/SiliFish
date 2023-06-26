@@ -25,6 +25,8 @@ namespace SiliFish.ModelUnits.Junction
         public double Delay_ms { get; set; } = 0;//in ms
         public double Weight { get; set; }
 
+        public double[] InputCurrent; //Current array 
+
         /// <summary>
         /// used for import/exports
         /// </summary>
@@ -81,6 +83,31 @@ namespace SiliFish.ModelUnits.Junction
             throw exception;
         }
 
+        public virtual void InitForSimulation(int nmax, bool trackCurrent)
+        {
+            if (trackCurrent)
+            {
+                InputCurrent = new double[nmax];
+                InputCurrent[0] = 0;
+            }
+            else
+                InputCurrent = null;
+        }
+        public virtual void NextStep(int tIndex)
+        {
+            throw new NotImplementedException();
+        }
+        //if current tracking is Off, the current array can be populated after the simulation for an individual junction
+        public void PopulateCurrentArray(int nmax)
+        {
+            if (InputCurrent != null)
+                return;//Already populated
+            InitForSimulation(nmax, true);
+            foreach (var index in Enumerable.Range(1, nmax - 1))
+            {
+                NextStep(index);
+            }
+        }
 
     }
 }

@@ -23,7 +23,8 @@ namespace SiliFish.ModelUnits.Junction
 
         private double ISynA = 0; //the momentary current value
         private double ISynB = 0; //the momentary current value
-        private double ISyn { get { return ISynA - ISynB; } }
+        [JsonIgnore]
+        public double ISyn { get { return ISynA - ISynB; } }
 
         public TwoExp_syn Core { get; set; }
 
@@ -53,7 +54,6 @@ namespace SiliFish.ModelUnits.Junction
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
 
-        public double[] InputCurrent; //Current vector 
         [JsonIgnore]
         public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
 
@@ -171,16 +171,11 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public void InitForSimulation(int nmax, bool trackCurrent)
+        public override void InitForSimulation(int nmax, bool trackCurrent)
         {
+            base.InitForSimulation(nmax, trackCurrent);
             Core.Conductance = Weight;
-            if (trackCurrent)
-            {
-                InputCurrent = new double[nmax];
-                InputCurrent[0] = 0;
-            }
-            else
-                InputCurrent = null;
+            
             ISynA = ISynB = 0;
             
             if (FixedDuration_ms != null)
@@ -206,20 +201,23 @@ namespace SiliFish.ModelUnits.Junction
         {
             TimeLine_ms = span;
         }
-        public void NextStep(int tIndex)
+        public override void NextStep(int tIndex)
         {
+            if (!IsActive(tIndex))
+            {
+                ISynA = ISynB = 0;
+                if (InputCurrent != null)
+                    InputCurrent[tIndex] = 0;
+                return;
+            }
             int tt = duration;
             double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
             (ISynA, ISynB) = Core.GetNextVal(vPreSynapse, vPost, ISynA, ISynB);
-        }
-        public double GetSynapticCurrent(int tIndex)
-        {
-            double current = IsActive(tIndex) ? ISyn : 0;
             if (InputCurrent != null)
-                InputCurrent[tIndex] = current;
-            return current;
+                InputCurrent[tIndex] = ISyn;
         }
+
     }
 
 }

@@ -214,7 +214,7 @@ namespace SiliFish.ModelUnits.Cells
             try
             {
                 base.CalculateCellularOutputs(t);
-                foreach (ChemicalSynapse syn in Terminals.Where(t=>t.Active))
+                foreach (ChemicalSynapse syn in Terminals.Where(t => t.Active))
                 {
                     if (syn.IsActive(t))
                         syn.NextStep(t);
@@ -224,7 +224,6 @@ namespace SiliFish.ModelUnits.Cells
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
-
         }
 
         public override void CalculateMembranePotential(int timeIndex)
@@ -237,12 +236,12 @@ namespace SiliFish.ModelUnits.Cells
                     foreach (ChemicalSynapse syn in Synapses.Where(syn => syn.Active))
                     {
                         if (syn.IsActive(timeIndex))
-                            ISyn += syn.GetSynapticCurrent(timeIndex);
+                            ISyn += syn.ISyn;
                     }
                     foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {
                         if (jnc.IsActive(timeIndex))
-                            IGap += jnc.GetGapCurrent(this, timeIndex);
+                            IGap += jnc.Cell1 == this ? jnc.IGap : -1 * jnc.IGap;
                     }
                     stim = GetStimulus(timeIndex);
                 }

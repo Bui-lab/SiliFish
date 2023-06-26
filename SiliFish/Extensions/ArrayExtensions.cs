@@ -14,6 +14,8 @@ namespace SiliFish.Extensions
 
         public static double MinValue(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
+            if (thisArray == null || !thisArray.Any())
+                return 0;
             if (iEnd == -1 && iStart == 0)
                 return thisArray.Min();
             if (iStart < 0 || iStart >= thisArray.Length)
@@ -25,6 +27,8 @@ namespace SiliFish.Extensions
         }
         public static double MaxValue(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
+            if (thisArray == null || !thisArray.Any())
+                return 0;
             if (iEnd == -1 && iStart == 0)
                 return thisArray.Max();
             if (iStart < 0 || iStart >= thisArray.Length)

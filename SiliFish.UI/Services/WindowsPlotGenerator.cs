@@ -220,8 +220,7 @@ namespace Services
             //TODO
             return (leftImages, rightImages);
         }
-        private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools, 
-            bool currentTracking,
+        private static (List<Image>, List<Image>) PlotFullDynamics(double[] timeArray, List<Cell> cells, List<CellPool> pools,
             PlotSelectionMultiCells cellSelection, int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<Image> leftImages = new();
@@ -230,12 +229,9 @@ namespace Services
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
-            if (currentTracking)
-            {
-                (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection, iStart, iEnd, gap: true, chemin: true, chemout: true, UoM);
-                leftImages = leftImages.Concat(leftImagesSub).ToList();
-                rightImages = rightImages.Concat(rightImagesSub).ToList();
-            }
+            (leftImagesSub, rightImagesSub) = PlotCurrents(timeArray, cells, pools, cellSelection, iStart, iEnd, gap: true, chemin: true, chemout: true, UoM);
+            leftImages = leftImages.Concat(leftImagesSub).ToList();
+            rightImages = rightImages.Concat(rightImagesSub).ToList();
 
             (leftImagesSub, rightImagesSub) = PlotStimuli(timeArray, cells, pools, cellSelection, iStart, iEnd, UoM);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
@@ -336,25 +332,17 @@ namespace Services
                     case PlotType.MembPotential:
                         return PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                     case PlotType.Current:
-                        if (model.JunctionCurrentTrackingOn)
                             return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chemin: true, chemout: true, uom);
-                        return (null, null);
                     case PlotType.GapCurrent:
-                        if (model.JunctionCurrentTrackingOn)
                             return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chemin: false, chemout: false, uom);
-                        return (null, null);
                     case PlotType.ChemCurrent:
-                        if (model.JunctionCurrentTrackingOn)
                             return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chemin: true, chemout: false, uom);
-                        return (null, null);
                     case PlotType.ChemOutCurrent:
-                        if (model.JunctionCurrentTrackingOn)
                             return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: false, chemin: false, chemout: true, uom);
-                        return (null, null);
                     case PlotType.Stimuli:
                         return PlotStimuli(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
                     case PlotType.FullDyn:
-                        return PlotFullDynamics(TimeArray, Cells, Pools, model.JunctionCurrentTrackingOn, cellSelection, iStart, iEnd, uom);
+                        return PlotFullDynamics(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, uom);
                     case PlotType.Tension:
                         List<MuscleCell> muscleCells = Cells.Where(c => c is MuscleCell).Select(c => (MuscleCell)c).ToList();
                         return PlotTension(TimeArray, muscleCells, Pools, cellSelection, iStart, iEnd, uom);

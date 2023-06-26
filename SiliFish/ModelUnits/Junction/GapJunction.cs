@@ -35,6 +35,9 @@ namespace SiliFish.ModelUnits.Junction
                                                 //Voltage Diff * 1/2 * conductance will give the momentary current value
         private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } }
         private int t_current = 0; //the time point  where the momentary values are kept for        public override string Target { get => Cell2.ID; set => target = value; }
+
+        [JsonIgnore]
+        public double IGap { get { return Weight * VoltageDiff; } }
         public Cell Cell1;
         public Cell Cell2;
 
@@ -43,8 +46,6 @@ namespace SiliFish.ModelUnits.Junction
             double t_ms = Cell1.Model.RunParam.GetTimeOfIndex(timepoint);
             return TimeLine_ms?.IsActive(t_ms) ?? true;
         }
-
-        public double[] InputCurrent; //Current vector
 
         [JsonIgnore]
         public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}; Conductance: {Weight:0.#####}"; } }
@@ -131,18 +132,9 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public void InitForSimulation(int nmax, bool trackCurrent)
+        public override void InitForSimulation(int nmax, bool trackCurrent)
         {
-            if (trackCurrent)
-            {
-                InputCurrent = new double[nmax];
-                InputCurrent[0] = 0;
-            }
-            else
-                InputCurrent = null;
-
-            InputCurrent = new double[nmax];
-            InputCurrent[0] = 0;
+            base.InitForSimulation(nmax, trackCurrent);
             double deltaT = Cell1.Model.RunParam.DeltaT;
             if (FixedDuration_ms != null)
                 duration1 = duration2 = (int)(FixedDuration_ms / Cell1.Model.RunParam.DeltaT);
@@ -170,31 +162,24 @@ namespace SiliFish.ModelUnits.Junction
             TimeLine_ms = span;
         }
 
-        public void NextStep(int tIndex)
+        public override void NextStep(int tIndex)
         {
             if (tIndex <= 0) return;
-            t_current = tIndex;
+            if (!IsActive(tIndex))
+            {
+                VoltageDiffFrom1To2 = VoltageDiffFrom2To1 = 0;
+                if (InputCurrent != null)
+                    InputCurrent[tIndex] = 0;
+                return;
+            }
             double v1 = duration1 <= tIndex ? Cell1.V[tIndex - duration1] : Cell1.RestingMembranePotential;
             double v2 = Cell2.V[tIndex - 1];
             VoltageDiffFrom1To2 = v1 - v2;
             v2 = duration2 <= tIndex ? Cell2.V[tIndex - duration2] : Cell2.RestingMembranePotential;
             v1 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v2 - v1;
-        }
-
-        public double GetGapCurrent(Cell n, int tIndex)
-        {
-            double current = IsActive(tIndex) ? Weight * VoltageDiff : 0;
-
-            if (n == Cell1)
-                return current;
-            else
-            {
-                current = -1 * current;
-                if (InputCurrent != null)
-                    InputCurrent[t_current] = current;
-                return current;
-            }
+            if (InputCurrent != null)
+                InputCurrent[tIndex] = IGap;
         }
     }
  
