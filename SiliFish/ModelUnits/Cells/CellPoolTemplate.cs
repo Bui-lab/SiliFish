@@ -240,6 +240,8 @@ namespace SiliFish.ModelUnits.Cells
             PerSomiteOrTotal = cpl.PerSomiteOrTotal;
             SomiteRange = cpl.SomiteRange;
             SpatialDistribution = cpl.SpatialDistribution.Clone();
+            DescendingAxonLength = cpl.DescendingAxonLength?.Clone();
+            AscendingAxonLength = cpl.AscendingAxonLength?.Clone();
             ConductionVelocity = cpl.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
