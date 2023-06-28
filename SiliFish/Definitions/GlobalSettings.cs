@@ -20,7 +20,8 @@ namespace SiliFish.Definitions
         public static double BiologicalMinPotential = -100;
         public static double BiologicalMaxPotential = 100;
         public static double MemoryWarningLimit = 10;//in GB
-
+        
+        public static long PlotDataPointLimit = (long)5E6;
         public static int PlotWarningNumber = 10;
         public static string PlotDataFormat = "0.0###";
         public static string CoordinateFormat = "0.0###";
@@ -107,6 +108,11 @@ namespace SiliFish.Definitions
             DisplayName("Number format"),
             Category("Plotting")]
         public string DecimalPointFormat { get { return GlobalSettings.PlotDataFormat; } set { GlobalSettings.PlotDataFormat = value; } }
+
+        [Description("If there are more data points to be drawn than the 'Max # of data points', the charts will not be completed to prevent memory crashes."),
+            DisplayName("Max # of data points"),
+            Category("Plotting")]
+        public long PlotDataPointLimit { get { return GlobalSettings.PlotDataPointLimit; } set { GlobalSettings.PlotDataPointLimit = value; } }
 
         [Description("If there are more plots to be drawn than the 'Max # of Plots', the user will be warned to prevent unwanted resource usages."),
             DisplayName("Max # of plots"),

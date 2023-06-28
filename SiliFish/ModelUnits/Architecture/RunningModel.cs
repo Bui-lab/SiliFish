@@ -8,7 +8,7 @@ using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services;
-using SiliFish.Services.Plotting;
+using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

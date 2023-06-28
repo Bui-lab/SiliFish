@@ -123,12 +123,6 @@
             cbSpikingMNs = new CheckBox();
             cbCombineMNPools = new CheckBox();
             pLineMNKinematics = new Panel();
-            ePlotKinematicsHeight = new NumericUpDown();
-            ePlotKinematicsWidth = new NumericUpDown();
-            lPlotKinematicsWidth = new Label();
-            lpx3 = new Label();
-            lPlotKinematicsHeight = new Label();
-            lpx4 = new Label();
             lSomitesNumMNDynamics = new Label();
             eKinematicsSomite = new NumericUpDown();
             btnGenerateEpisodes = new Button();
@@ -194,8 +188,6 @@
             splitKinematics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewSummaryV).BeginInit();
             pMNKinematicsTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)ePlotKinematicsHeight).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotKinematicsWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eKinematicsSomite).BeginInit();
             tAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
@@ -1270,12 +1262,6 @@
             pMNKinematicsTop.Controls.Add(cbSpikingMNs);
             pMNKinematicsTop.Controls.Add(cbCombineMNPools);
             pMNKinematicsTop.Controls.Add(pLineMNKinematics);
-            pMNKinematicsTop.Controls.Add(ePlotKinematicsHeight);
-            pMNKinematicsTop.Controls.Add(ePlotKinematicsWidth);
-            pMNKinematicsTop.Controls.Add(lPlotKinematicsWidth);
-            pMNKinematicsTop.Controls.Add(lpx3);
-            pMNKinematicsTop.Controls.Add(lPlotKinematicsHeight);
-            pMNKinematicsTop.Controls.Add(lpx4);
             pMNKinematicsTop.Controls.Add(lSomitesNumMNDynamics);
             pMNKinematicsTop.Controls.Add(eKinematicsSomite);
             pMNKinematicsTop.Controls.Add(btnGenerateEpisodes);
@@ -1289,7 +1275,7 @@
             // cbSpikingMNs
             // 
             cbSpikingMNs.AutoSize = true;
-            cbSpikingMNs.Location = new Point(305, 34);
+            cbSpikingMNs.Location = new Point(151, 34);
             cbSpikingMNs.Name = "cbSpikingMNs";
             cbSpikingMNs.Size = new Size(121, 19);
             cbSpikingMNs.TabIndex = 66;
@@ -1299,7 +1285,7 @@
             // cbCombineMNPools
             // 
             cbCombineMNPools.AutoSize = true;
-            cbCombineMNPools.Location = new Point(305, 5);
+            cbCombineMNPools.Location = new Point(12, 34);
             cbCombineMNPools.Name = "cbCombineMNPools";
             cbCombineMNPools.Size = new Size(107, 19);
             cbCombineMNPools.TabIndex = 65;
@@ -1314,66 +1300,6 @@
             pLineMNKinematics.Name = "pLineMNKinematics";
             pLineMNKinematics.Size = new Size(694, 1);
             pLineMNKinematics.TabIndex = 64;
-            // 
-            // ePlotKinematicsHeight
-            // 
-            ePlotKinematicsHeight.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotKinematicsHeight.Location = new Point(208, 32);
-            ePlotKinematicsHeight.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
-            ePlotKinematicsHeight.Minimum = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotKinematicsHeight.Name = "ePlotKinematicsHeight";
-            ePlotKinematicsHeight.Size = new Size(48, 23);
-            ePlotKinematicsHeight.TabIndex = 59;
-            ePlotKinematicsHeight.ThousandsSeparator = true;
-            ePlotKinematicsHeight.Value = new decimal(new int[] { 200, 0, 0, 0 });
-            // 
-            // ePlotKinematicsWidth
-            // 
-            ePlotKinematicsWidth.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            ePlotKinematicsWidth.Location = new Point(208, 3);
-            ePlotKinematicsWidth.Maximum = new decimal(new int[] { 2000, 0, 0, 0 });
-            ePlotKinematicsWidth.Minimum = new decimal(new int[] { 200, 0, 0, 0 });
-            ePlotKinematicsWidth.Name = "ePlotKinematicsWidth";
-            ePlotKinematicsWidth.Size = new Size(48, 23);
-            ePlotKinematicsWidth.TabIndex = 58;
-            ePlotKinematicsWidth.ThousandsSeparator = true;
-            ePlotKinematicsWidth.Value = new decimal(new int[] { 800, 0, 0, 0 });
-            // 
-            // lPlotKinematicsWidth
-            // 
-            lPlotKinematicsWidth.AutoSize = true;
-            lPlotKinematicsWidth.Location = new Point(163, 7);
-            lPlotKinematicsWidth.Name = "lPlotKinematicsWidth";
-            lPlotKinematicsWidth.Size = new Size(39, 15);
-            lPlotKinematicsWidth.TabIndex = 60;
-            lPlotKinematicsWidth.Text = "Width";
-            // 
-            // lpx3
-            // 
-            lpx3.AutoSize = true;
-            lpx3.Location = new Point(262, 7);
-            lpx3.Name = "lpx3";
-            lpx3.Size = new Size(28, 15);
-            lpx3.TabIndex = 61;
-            lpx3.Text = "(px)";
-            // 
-            // lPlotKinematicsHeight
-            // 
-            lPlotKinematicsHeight.AutoSize = true;
-            lPlotKinematicsHeight.Location = new Point(163, 36);
-            lPlotKinematicsHeight.Name = "lPlotKinematicsHeight";
-            lPlotKinematicsHeight.Size = new Size(43, 15);
-            lPlotKinematicsHeight.TabIndex = 62;
-            lPlotKinematicsHeight.Text = "Height";
-            // 
-            // lpx4
-            // 
-            lpx4.AutoSize = true;
-            lpx4.Location = new Point(262, 36);
-            lpx4.Name = "lpx4";
-            lpx4.Size = new Size(28, 15);
-            lpx4.TabIndex = 63;
-            lpx4.Text = "(px)";
             // 
             // lSomitesNumMNDynamics
             // 
@@ -1400,7 +1326,7 @@
             btnGenerateEpisodes.FlatAppearance.BorderColor = Color.LightGray;
             btnGenerateEpisodes.FlatStyle = FlatStyle.Flat;
             btnGenerateEpisodes.ForeColor = Color.White;
-            btnGenerateEpisodes.Location = new Point(8, 31);
+            btnGenerateEpisodes.Location = new Point(151, 2);
             btnGenerateEpisodes.Name = "btnGenerateEpisodes";
             btnGenerateEpisodes.Size = new Size(140, 24);
             btnGenerateEpisodes.TabIndex = 29;
@@ -1410,9 +1336,9 @@
             // 
             // lKinematicsTimes
             // 
-            lKinematicsTimes.Location = new Point(433, 6);
+            lKinematicsTimes.Location = new Point(307, 7);
             lKinematicsTimes.Name = "lKinematicsTimes";
-            lKinematicsTimes.Size = new Size(241, 16);
+            lKinematicsTimes.Size = new Size(372, 19);
             lKinematicsTimes.TabIndex = 33;
             lKinematicsTimes.Text = "Last kinematics:";
             // 
@@ -1688,8 +1614,6 @@
             ((System.ComponentModel.ISupportInitialize)webViewSummaryV).EndInit();
             pMNKinematicsTop.ResumeLayout(false);
             pMNKinematicsTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)ePlotKinematicsHeight).EndInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotKinematicsWidth).EndInit();
             ((System.ComponentModel.ISupportInitialize)eKinematicsSomite).EndInit();
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
@@ -1768,12 +1692,6 @@
         private Panel pLineMNKinematicsLeft;
         private Panel pMNKinematicsTop;
         private Panel pLineMNKinematics;
-        private NumericUpDown ePlotKinematicsHeight;
-        private NumericUpDown ePlotKinematicsWidth;
-        private Label lPlotKinematicsWidth;
-        private Label lpx3;
-        private Label lPlotKinematicsHeight;
-        private Label lpx4;
         private Label lSomitesNumMNDynamics;
         private NumericUpDown eKinematicsSomite;
         private Button btnGenerateEpisodes;

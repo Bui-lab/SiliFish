@@ -165,7 +165,7 @@ namespace SiliFish.UI.Controls
 
         private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
         {
-            List<ChartDataStruct> charts = new();
+            List<Chart> charts = new();
             ReadParameters();
             string param = sensitivityAnalysisFiring.SelectedParam;
             CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
@@ -176,7 +176,7 @@ namespace SiliFish.UI.Controls
             for (int iter = 0; iter < values.Length; iter++)
             {
                 DynamicsStats stat = stats[iter];
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = values[iter].ToString("0.###"),
                     Color = Color.Purple.ToRGBQuoted(),
@@ -199,7 +199,7 @@ namespace SiliFish.UI.Controls
         private void SensitivityAnalysisRheobase_RunAnalysis(object sender, EventArgs e)
         {
             double limit = (double)eRheobaseLimit.Value;
-            List<ChartDataStruct> charts = new();
+            List<Chart> charts = new();
             ReadParameters();
             Dictionary<string, double> paramToTest = parameters;
             string selectedParam = sensitivityAnalysisRheobase.SelectedParam;
@@ -212,7 +212,7 @@ namespace SiliFish.UI.Controls
                 double[] values = sensitivityAnalysisRheobase.GetValues(parameters[param]);
 
                 double[] rheos = core.RheobaseSensitivityAnalysis(param, values, deltaT, maxRheobase: limit, sensitivity: Math.Pow(0.1, 3), infinity: (int)eRheobaseDuration.Value);
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = param,
                     Color = Color.Purple.ToRGBQuoted(),
@@ -302,12 +302,12 @@ namespace SiliFish.UI.Controls
         {
             if (dynamics == null)
                 return;
-            List<ChartDataStruct> charts = new();
+            List<Chart> charts = new();
             string firingPattern = dynamics.FiringPattern.ToString();
             string firingRhythm = dynamics.FiringRhythm.ToString();
             if (cbV.Checked)
             {
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = $"V ({firingRhythm} {firingPattern})",
                     Color = Color.Purple.ToRGBQuoted(),
@@ -320,7 +320,7 @@ namespace SiliFish.UI.Controls
             {
                 foreach (string key in dynamics.SecLists.Keys)
                 {
-                    charts.Add(new ChartDataStruct
+                    charts.Add(new Chart
                     {
                         Title = key,
                         Color = Color.Blue.ToRGBQuoted(),
@@ -333,7 +333,7 @@ namespace SiliFish.UI.Controls
 
             if (cbTauRise.Checked && dynamics.TauRise.Any())
             {
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = "Tau rise",
                     Color = Color.Green.ToRGBQuoted(),
@@ -348,7 +348,7 @@ namespace SiliFish.UI.Controls
             }
             if (cbTauDecay.Checked && dynamics.TauDecay.Any())
             {
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = "Tau decay",
                     Color = Color.Green.ToRGBQuoted(),
@@ -363,7 +363,7 @@ namespace SiliFish.UI.Controls
             }
             if (cbInterval.Checked && dynamics.Intervals_ms != null && dynamics.Intervals_ms.Any())
             {
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = "Intervals",
                     Color = Color.Blue.ToRGBQuoted(),
@@ -378,7 +378,7 @@ namespace SiliFish.UI.Controls
             }
             if (cbSpikingFrequency.Checked && dynamics.FiringFrequency != null && dynamics.FiringFrequency.Any())
             {
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = "Spiking Freq.",
                     Color = Color.Blue.ToRGBQuoted(),
@@ -393,7 +393,7 @@ namespace SiliFish.UI.Controls
             }
             if (cbStimulus.Checked)
             {
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = "Stimulus",
                     Color = Color.Red.ToRGBQuoted(),
@@ -412,14 +412,14 @@ namespace SiliFish.UI.Controls
         }
         private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
-            List<ChartDataStruct> charts = new();
+            List<Chart> charts = new();
             foreach (string key in dynamicsList.Keys)
             {
                 DynamicsStats dynamics = dynamicsList[key];
                 string firingPattern = dynamics.FiringPattern.ToString();
                 string firingRhythm = dynamics.FiringRhythm.ToString();
 
-                charts.Add(new ChartDataStruct
+                charts.Add(new Chart
                 {
                     Title = $"{key} ({firingRhythm} {firingPattern})",
                     Color = Color.Purple.ToRGBQuoted(),
@@ -428,7 +428,7 @@ namespace SiliFish.UI.Controls
                     yLabel = "V (mV)"
                 });
             }
-            charts.Add(new ChartDataStruct
+            charts.Add(new Chart
             {
                 Title = $"Stimulus",
                 Color = Color.Red.ToRGBQuoted(),

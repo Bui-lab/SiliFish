@@ -3,7 +3,7 @@ using SiliFish.ModelUnits.Cells;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SiliFish.Services.Plotting
+namespace SiliFish.Services.Plotting.PlotSelection
 {
     public class PlotSelectionSomite : PlotSelectionInterface
     {

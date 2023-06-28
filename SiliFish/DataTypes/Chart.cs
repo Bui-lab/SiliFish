@@ -2,22 +2,33 @@
 using SiliFish.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace SiliFish.DataTypes
 {
-    public struct ChartDataStruct
+    public struct Chart
     {
+        private long numOfPoints = 0;
         private string csvData = "";
-        public string CsvData 
+        public string CsvData
         {
-            get 
-            { 
+            get
+            {
                 if (string.IsNullOrEmpty(csvData))
                     GenerateCsv();
                 return csvData;
             }
-            set { csvData = value; }
+            set
+            {
+                csvData = value;
+                long numOfLines = csvData.LongCount(c => c == '\n');
+                int firstLineEnd = csvData.IndexOf('\n');
+                string firstLine = csvData.Substring(0, firstLineEnd);
+                int numOfColumns = firstLine.Count(c => c == ',');
+                numOfPoints = numOfLines * numOfColumns;
+            }
         }
+        public long NumOfDataPoints => numOfPoints;
 
         public string Title = "", xLabel = "Time (ms)", yLabel = "";
         public string Color = System.Drawing.Color.Red.ToRGBQuoted();
@@ -63,7 +74,7 @@ namespace SiliFish.DataTypes
             }
             set { yMaxSet = value; }
         }
-        public ChartDataStruct()
+        public Chart()
         {
         }
 
@@ -74,14 +85,17 @@ namespace SiliFish.DataTypes
             List<string> data = new(xData.Select(t => t.ToString(dpf) + ","));
             if (yData != null)
             {
+                numOfPoints = yData.LongLength;
                 foreach (int i in Enumerable.Range(0, yData.Length))
                     data[i] += yData[i].ToString(GlobalSettings.PlotDataFormat) + ",";
             }
             else
             {
+                numOfPoints = 0;
                 for (int colIndex = 0; colIndex < yMultiData.Count; colIndex++)
                 {
                     double[] singleyData = yMultiData[colIndex];
+                    numOfPoints += singleyData.LongLength;
                     foreach (int i in Enumerable.Range(0, singleyData.Length))
                         data[i] += singleyData[i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }

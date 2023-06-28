@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace SiliFish.Services.Plotting
+namespace SiliFish.Services.Plotting.PlotSelection
 {
 
     public class PlotSelectionUnits : PlotSelectionMultiCells
@@ -39,9 +39,9 @@ namespace SiliFish.Services.Plotting
         {
         }
 
-        public PlotSelectionUnits(PlotSelectionInterface copyFrom):
+        public PlotSelectionUnits(PlotSelectionInterface copyFrom) :
             base(copyFrom)
-        { 
+        {
         }
         public override string ToString()
         {

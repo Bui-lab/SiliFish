@@ -6,7 +6,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
-using SiliFish.Services.Plotting;
+using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace SiliFish.Services.Plotting
+namespace SiliFish.Services.Plotting.PlotSelection
 {
     [JsonDerivedType(typeof(PlotSelectionMultiCells), typeDiscriminator: "multicell")]
     [JsonDerivedType(typeof(PlotSelectionSomite), typeDiscriminator: "somite")]

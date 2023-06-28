@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using SiliFish.Services.Plotting.PlotGenerators;
 
 namespace SiliFish.Services.Plotting
 {
     public class DyChartGenerator : EmbeddedResourceReader
     {
-        public static string PlotCharts(string title, List<ChartDataStruct> charts, bool synchronized, bool showZeroValues, int width, int height)
+        public static string PlotCharts(string title, List<Chart> charts, bool synchronized, bool showZeroValues, int width, int height)
         {
             try
             {
@@ -81,35 +82,19 @@ namespace SiliFish.Services.Plotting
         }
 
 
-        public static string Plot(string Title, List<ChartDataStruct> charts, bool showZeroValues, int width = 480, int height = 240)
+        public static string Plot(string Title, List<Chart> charts, bool showZeroValues, int width = 480, int height = 240)
         {
             string PlotHTML = PlotCharts(Title, charts, synchronized: true, showZeroValues, width, height);
             return PlotHTML;
         }
 
-        public static string PlotSummaryMembranePotentials(RunningModel model, List<Cell> Cells,
-            bool combinePools, bool showZeroValues,
-            int tStart = 0, int tEnd = -1, int width = 480, int height = 240)
-        {
-            double dt = model.RunParam.DeltaT;
-            int iStart = (int)((tStart + model.RunParam.SkipDuration) / dt);
-            int iEnd = (int)((tEnd + model.RunParam.SkipDuration) / dt);
-            if (iEnd < iStart || iEnd >= model.TimeArray.Length)
-                iEnd = model.TimeArray.Length - 1;
 
-            List<ChartDataStruct> charts = PlotDataGenerator.CreateMembranePotentialCharts(model.TimeArray, Cells, 
-                combinePools: combinePools, combineSomites: true, combineCells: true,
-                iStart, iEnd);
-            string PlotHTML = PlotCharts(title: "Summary Membrane Potentials", charts, synchronized: true, showZeroValues, width, height);
-            return PlotHTML;
-        }
-
-        public static string PlotLineCharts(List<ChartDataStruct> chartsData,
+        public static string PlotLineCharts(List<Chart> chartsData,
             string mainTitle, bool synchronized, bool showZeroValues,
             int width = 480, int height = 240)
         {
-            List<ChartDataStruct> charts = new();
-            foreach (ChartDataStruct chartData in chartsData)
+            List<Chart> charts = new();
+            foreach (Chart chartData in chartsData)
             {
                 charts.Add(chartData);
             }

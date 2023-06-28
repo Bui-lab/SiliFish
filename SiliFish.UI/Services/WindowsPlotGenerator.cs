@@ -8,8 +8,8 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using SiliFish.UI;
 using SiliFish.ModelUnits.Junction;
-using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
+using SiliFish.Services.Plotting.PlotSelection;
 
 namespace Services
 {

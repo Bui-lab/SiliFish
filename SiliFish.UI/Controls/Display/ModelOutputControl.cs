@@ -13,18 +13,15 @@ using System.Data;
 using System.Text.Json;
 using System.Drawing.Imaging;
 using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Stim;
-using SiliFish.ModelUnits.Junction;
 using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
-using SiliFish.DynamicUnits;
-using OfficeOpenXml.ConditionalFormatting;
-using System.Diagnostics;
+using SiliFish.Services.Plotting.PlotSelection;
 
 namespace SiliFish.UI.Controls
 {
     public partial class ModelOutputControl : UserControl
     {
+        string errorMessage;
         string htmlAnimation = "";
         string htmlPlot = "";
         string PlotSubset = "";
@@ -34,11 +31,12 @@ namespace SiliFish.UI.Controls
         int tPlotStart = 0;
         int tPlotEnd = 0;
         int numOfPlots = 0;
-        Plot lastPlot = null;
+        long numOfDataPoints = 0;
+        PlotDefinition lastPlot = null;
         PlotType PlotType = PlotType.MembPotential;
         PlotSelectionInterface plotSelection;
         private string tempFile;
-        List<ChartDataStruct> LastPlottedCharts;
+        List<Chart> LastPlottedCharts;
         RunningModel RunningModel = null;
         bool rendered2D = false;
         bool rendered3D = false;
@@ -110,7 +108,7 @@ namespace SiliFish.UI.Controls
                 foreach (Control ctrl in pPlotSelection.Controls)
                     ctrl.Enabled = true;
                 cbCombinePools.Visible = cbCombineCells.Visible = cbCombineSomites.Visible = true;
-                int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
+                int NumberOfSomites = RunningModel?.ModelDimensions.NumberOfSomites ?? 0;
                 ddPlotSomiteSelection.Enabled = ePlotSomiteSelection.Enabled = cbCombineSomites.Enabled = NumberOfSomites > 0;
 
                 if (ddPlotPools.Tag != null)
@@ -218,6 +216,7 @@ namespace SiliFish.UI.Controls
             webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewSummaryV.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+
         }
         private async void InitAsync()
         {
@@ -490,8 +489,6 @@ namespace SiliFish.UI.Controls
             ddPlot.Items.Clear();
             foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
             {
-                if (!GlobalSettings.JunctionLevelTracking)
-                    if (pt.GetGroup() == "current") continue;
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
             ddPlot.SelectedText = lastSelection;
@@ -584,7 +581,7 @@ namespace SiliFish.UI.Controls
             List<string> fileNames = new();
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                foreach (ChartDataStruct chart in LastPlottedCharts)
+                foreach (Chart chart in LastPlottedCharts)
                 {
                     string title = chart.Title.Replace("'", "").Replace("\"", "").Replace("`", "");
                     string ext = Path.GetExtension(saveFileCSV.FileName);
@@ -599,7 +596,7 @@ namespace SiliFish.UI.Controls
         }
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
         {
-            if (sender is not Plot plot) return;
+            if (sender is not PlotDefinition plot) return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             PlotSubset = ddPlotPools.Text = plot.PlotSubset;
             plotSelection = plot.Selection;
@@ -636,7 +633,7 @@ namespace SiliFish.UI.Controls
         {
             try
             {
-                string json = JsonUtil.ToJson(listPlotHistory.GetItems<Plot>());
+                string json = JsonUtil.ToJson(listPlotHistory.GetItems<PlotDefinition>());
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllText(saveFileJson.FileName, json);
@@ -655,10 +652,10 @@ namespace SiliFish.UI.Controls
                 if (openFileJson.ShowDialog() == DialogResult.OK)
                 {
                     string JSONString = FileUtil.ReadFromFile(openFileJson.FileName);
-                    List<Plot> plotList = (List<Plot>)JsonUtil.ToObject(typeof(List<Plot>), JSONString);
+                    List<PlotDefinition> plotList = (List<PlotDefinition>)JsonUtil.ToObject(typeof(List<PlotDefinition>), JSONString);
                     if (plotList.Any(pl => pl.Selection is PlotSelectionUnits))
                     {
-                        foreach (Plot plot in plotList)
+                        foreach (PlotDefinition plot in plotList)
                         {
                             if (plot.Selection is PlotSelectionUnits plotSelection)
                             {
@@ -674,12 +671,12 @@ namespace SiliFish.UI.Controls
                                         unit = RunningModel.GetChemicalProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
                                     else if (unitTag.Item1 == "GapJunction")
                                         unit = RunningModel.GetGapProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
-                                    else 
+                                    else
                                     { }
                                     if (unit != null)
                                         linkedSelection.AddUnit(unit);
                                 }
-                                if (linkedSelection.Units?.Count > 0) 
+                                if (linkedSelection.Units?.Count > 0)
                                     plot.Selection = linkedSelection;
                                 else plot.Selection = null;
                             }
@@ -714,7 +711,7 @@ namespace SiliFish.UI.Controls
                 PlotType = PlotType,
                 Selection = plotSelection
             };
-            (string Title, LastPlottedCharts) = PlotDataGenerator.GetPlotData(lastPlot, RunningModel, Cells, Pools, tPlotStart, tPlotEnd);
+            (string Title, LastPlottedCharts) = PlotGenerator.GetPlotData(lastPlot, RunningModel, Cells, Pools, out errorMessage, tPlotStart, tPlotEnd);
 
             htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts, GlobalSettings.ShowZeroValues,
                 GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
@@ -745,6 +742,8 @@ namespace SiliFish.UI.Controls
         }
         private void CompletePlotHTML()
         {
+            if (!string.IsNullOrEmpty(errorMessage))
+                MessageBox.Show(errorMessage);
             webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile);
             if (cbPlotHistory.Checked)
                 listPlotHistory.AppendItem(lastPlot);
@@ -1310,14 +1309,27 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
 
-            (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons((int)eKinematicsSomite.Value);
+            int cellNumber = (int)eKinematicsSomite.Value;
+            (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons(cellNumber);
             (_, List<SwimmingEpisode> episodes) =
                 SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
             List<Cell> allMNs = cbSpikingMNs.Checked ? LeftMNs.Union(RightMNs).Where(c => c.IsSpiking()).OrderBy(c => c.CellGroup).ToList() :
                 LeftMNs.Union(RightMNs).OrderBy(c => c.CellGroup).ToList();
 
-            string html = DyChartGenerator.PlotSummaryMembranePotentials(RunningModel, allMNs, cbCombineMNPools.Checked, GlobalSettings.ShowZeroValues,
-                width: (int)ePlotKinematicsWidth.Value, height: (int)ePlotKinematicsHeight.Value);
+            PlotSelectionInterface plotSelection = new PlotSelectionUnits()
+            {
+                Units = allMNs.Cast<ModelUnitBase>().ToList(),
+                SomiteSelection = PlotSomiteSelection.All,
+                CellSelection = PlotCellSelection.All,
+                CombinePools = cbCombineMNPools.Checked
+            };
+            PlotDefinition plotDefinition = new PlotDefinition() 
+            { 
+                PlotType = PlotType.MembPotential, Selection = plotSelection 
+            };
+            (string _, List<Chart> charts) =  PlotGenerator.GetPlotData(plotDefinition, RunningModel, allMNs, null, out string errorMessage);
+            string html = DyChartGenerator.PlotCharts("Summary Membrane Potentials", charts, true, GlobalSettings.ShowZeroValues, 
+                GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
             webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
             eEpisodes.Text = "";
             foreach (SwimmingEpisode episode in episodes)
