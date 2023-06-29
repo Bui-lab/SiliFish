@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    public class PlotGeneratorMembranePotentials : PlotGeneratorOfCells
+    internal class PlotGeneratorMembranePotentials : PlotGeneratorOfCells
     {
-        public PlotGeneratorMembranePotentials(List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd) :
-            base(timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
+        public PlotGeneratorMembranePotentials(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd) :
+            base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
         }
         protected override void CreateCharts()

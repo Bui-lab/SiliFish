@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    public class PlotGeneratorStimuli : PlotGeneratorOfCells
+    internal class PlotGeneratorStimuli : PlotGeneratorOfCells
     {
         private UnitOfMeasure uoM;
-        public PlotGeneratorStimuli(List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd, UnitOfMeasure uoM) :
-            base(timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
+        public PlotGeneratorStimuli(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd, UnitOfMeasure uoM) :
+            base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
             this.uoM = uoM;
         }
@@ -31,28 +31,29 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
-                string title = "Time,";
+                string columnTitles = "Time,";
                 List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
                 List<string> colorPerChart = new();
                 bool stimExists = false;
-                if (!GlobalSettings.SameYAxis)
-                {
-                    yMin = cellGroup.Min(c => c.MinStimulusValue());
-                    yMax = cellGroup.Max(c => c.MaxStimulusValue());
-                    Util.SetYRange(ref yMin, ref yMax);
-                }
+
 
                 foreach (Cell cell in cellGroup.Where(c => c.Stimuli.HasStimulus))
                 {
                     stimExists = true;
-                    title += cell.ID + ",";
+                    columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
                 if (stimExists)
                 {
-                    string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = cellGroup.Min(c => c.MinStimulusValue());
+                        yMax = cellGroup.Max(c => c.MaxStimulusValue());
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
+                    string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                     Chart chart = new()
                     {
                         CsvData = csvData,

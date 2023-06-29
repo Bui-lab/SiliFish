@@ -503,6 +503,8 @@ namespace SiliFish.UI.Controls
             {
                 Const.AllPools,
                 Const.SupraSpinal,
+                Const.Spinal,
+                Const.MusculoSkeletal,
                 Const.MuscleCells,
                 Const.Motoneurons,
                 Const.Interneurons,
@@ -705,13 +707,29 @@ namespace SiliFish.UI.Controls
             {
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(PlotSubset, plotSelection);
             }
+            if (lastPlot != null &&
+                lastPlot.PlotSubset.Equals(plotsubset) &&
+                lastPlot.PlotType.Equals(PlotType))//replot the same plot
+            {
+                if (lastPlot.Selection is PlotSelectionMultiCells lpsm && plotSelection is PlotSelectionMultiCells psm)
+                {
+                    //TODO lpsm.Equals(psm) returns false even if they are equal. Investigate
+                    if (PlotType.GetGroup() == "current")
+                    {
+                        psm.CombineJunctions = !lpsm.CombineJunctions;
+                    }
+                }
+
+            }
             lastPlot = new()
             {
                 PlotSubset = plotsubset,
                 PlotType = PlotType,
                 Selection = plotSelection
             };
-            (string Title, LastPlottedCharts) = PlotGenerator.GetPlotData(lastPlot, RunningModel, Cells, Pools, out errorMessage, tPlotStart, tPlotEnd);
+            PlotGenerator PG = new();
+            (string Title, LastPlottedCharts) = PG.GetPlotData(lastPlot, RunningModel, Cells, Pools, tPlotStart, tPlotEnd);
+            errorMessage = PG.errorMessage;
 
             htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts, GlobalSettings.ShowZeroValues,
                 GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
@@ -742,7 +760,7 @@ namespace SiliFish.UI.Controls
         }
         private void CompletePlotHTML()
         {
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (!string.IsNullOrEmpty(errorMessage)) //TODO convert error message to enum - and add "(You can set the number of plots that triggers this warning through the 'Settings' button above)"
                 MessageBox.Show(errorMessage);
             webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile);
             if (cbPlotHistory.Checked)
@@ -1327,7 +1345,8 @@ namespace SiliFish.UI.Controls
             { 
                 PlotType = PlotType.MembPotential, Selection = plotSelection 
             };
-            (string _, List<Chart> charts) =  PlotGenerator.GetPlotData(plotDefinition, RunningModel, allMNs, null, out string errorMessage);
+            PlotGenerator PG = new();
+            (string _, List<Chart> charts) =  PG.GetPlotData(plotDefinition, RunningModel, allMNs, null);
             string html = DyChartGenerator.PlotCharts("Summary Membrane Potentials", charts, true, GlobalSettings.ShowZeroValues, 
                 GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
             webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);

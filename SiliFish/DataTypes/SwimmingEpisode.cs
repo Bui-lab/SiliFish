@@ -122,6 +122,12 @@ namespace SiliFish.DataTypes
                             break;
                         else
                             beat_end = TimeArray[sortedIndices[indexOfInd++]];
+                        if (beat_end - t > episodeBreak)
+                        {
+                            indexOfInd -= 2;
+                            beat_end = TimeArray[sortedIndices[indexOfInd++]];
+                            break;
+                        }
                     }
                 }
                 else //rightIndices.Contains(ind)
@@ -133,6 +139,12 @@ namespace SiliFish.DataTypes
                             break;
                         else
                             beat_end = TimeArray[sortedIndices[indexOfInd++]];
+                        if (beat_end - t > episodeBreak)
+                        {
+                            indexOfInd -= 2;
+                            beat_end = TimeArray[sortedIndices[indexOfInd++]];
+                            break;
+                        }
                     }
                 }
 

@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    public class PlotGeneratorTension : PlotGeneratorOfCells
+    internal class PlotGeneratorTension : PlotGeneratorOfCells
     {
-        public PlotGeneratorTension(List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd) :
-            base(timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
+        public PlotGeneratorTension(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd) :
+            base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
         }
         protected override void CreateCharts()
@@ -30,19 +30,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cellList, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
-                string title = "Time,";
+                string columnTitles = "Time,";
                 List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
                 List<string> colorPerChart = new();
                 foreach (Cell cell in cellGroup)
                 {
                     MuscleCell muscleCell = cell as MuscleCell;
                     double[] Tension = muscleCell.RelativeTension;
-                    title += cell.ID + ",";
+                    columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += Tension[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
-                string csvData = "`" + title[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
                 Chart chart = new()
                 {
                     CsvData = csvData,

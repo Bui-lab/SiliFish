@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using GeneticSharp;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
@@ -7,32 +8,97 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    public class PlotGeneratorCurrentsOfCells : PlotGeneratorOfCells
+    internal class PlotGeneratorCurrentsOfCells : PlotGeneratorOfCells
     {
         private readonly UnitOfMeasure uoM;
         private readonly bool includeGap;
         private readonly bool includeChemIn;
         private readonly bool includeChemOut;
+        private readonly bool combineJunctions;
 
-        public PlotGeneratorCurrentsOfCells(List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd,
-            UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true) :
-            base(timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
+        public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd,
+            UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true, bool combineJunctions = true) :
+            base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
             this.uoM = uoM;
             this.includeGap = includeGap;
             this.includeChemIn = includeChemIn;
             this.includeChemOut = includeChemOut;
+            this.combineJunctions = combineJunctions;
         }
+
+        private void CreateIndividualJunctionsCharts()
+        {
+            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools:false, combineSomites:false, combineCells:false);
+            List<GapJunction> gapJunctions = new();
+            List<ChemicalSynapse> synapses = new();
+            foreach (IGrouping<string, Cell> cellGroup in cellGroups)
+            {
+                foreach (Cell cell in cellGroup)
+                {
+                    if (includeGap)
+                    {
+                        foreach (GapJunction gapJunction in cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell)) 
+                        {
+                            if (!gapJunction.InputCurrent.Any(c => c != 0))
+                                continue;
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, new() { gapJunction}, null, timeArray, iStart, iEnd, uoM);
+                            junctionPG.CreateCharts(charts);
+                        }
+                    }
+                    if (includeChemIn)
+                    {
+                        if (cell is Neuron neuron)
+                        {
+                            foreach (ChemicalSynapse synapse in neuron.Synapses)
+                            {
+                                if (!synapse.InputCurrent.Any(c => c != 0))
+                                    continue;
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, uoM);
+                                junctionPG.CreateCharts(charts);
+                            }
+                        }
+                        else if (cell is MuscleCell muscleCell)
+                        {
+                            foreach (ChemicalSynapse synapse in muscleCell.EndPlates)
+                            {
+                                if (!synapse.InputCurrent.Any(c => c != 0))
+                                    continue;
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, uoM);
+                                junctionPG.CreateCharts(charts);
+                            }
+                        }
+                    }
+                    if (includeChemOut && cell is Neuron neuron1)
+                    {
+                        foreach (ChemicalSynapse synapse in neuron1.Terminals)
+                        {
+                            if (!synapse.InputCurrent.Any(c => c != 0))
+                                continue;
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, uoM);
+                            junctionPG.CreateCharts(charts);
+                        }
+                    }
+                }
+            }
+        }
+
         protected override void CreateCharts()
         {
             if (cells == null || !cells.Any())
                 return;
+            if (!combineJunctions)
+            {
+                CreateIndividualJunctionsCharts();
+                return;
+            }
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
@@ -55,7 +121,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     {
                         foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell))
                         {
-                            jnc.PopulateCurrentArray(timeArray.Length);
                             gapExists = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
                             string cellID = combineCells ? cell.ID + "↔" : "";
@@ -72,7 +137,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         else if (cell is MuscleCell muscleCell) synapses = muscleCell.EndPlates;
                         foreach (ChemicalSynapse jnc in synapses)
                         {
-                            jnc.PopulateCurrentArray(timeArray.Length);
                             synInExists = true;
                             if (combineCells)
                                 synInTitle += cell.ID + "←";
@@ -88,7 +152,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
                             {
-                                jnc.PopulateCurrentArray(timeArray.Length);
                                 synOutExists = true;
                                 if (combineCells)
                                     synOutTitle += cell.ID + "→";

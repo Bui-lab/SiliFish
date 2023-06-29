@@ -28,6 +28,8 @@ namespace SiliFish.ModelUnits.Junction
 
         public TwoExp_syn Core { get; set; }
 
+        protected override int nMax => PreNeuron.V.Length;
+
         [JsonIgnore]
         public SynapseParameters SynapseParameters
         {
@@ -206,16 +208,16 @@ namespace SiliFish.ModelUnits.Junction
             if (!IsActive(tIndex))
             {
                 ISynA = ISynB = 0;
-                if (InputCurrent != null)
-                    InputCurrent[tIndex] = 0;
+                if (inputCurrent != null)
+                    inputCurrent[tIndex] = 0;
                 return;
             }
             int tt = duration;
             double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
             (ISynA, ISynB) = Core.GetNextVal(vPreSynapse, vPost, ISynA, ISynB);
-            if (InputCurrent != null)
-                InputCurrent[tIndex] = ISyn;
+            if (inputCurrent != null)
+                inputCurrent[tIndex] = ISyn;
         }
 
     }

@@ -34,7 +34,8 @@ namespace SiliFish.ModelUnits.Junction
                                                 //
                                                 //Voltage Diff * 1/2 * conductance will give the momentary current value
         private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } }
-        private int t_current = 0; //the time point  where the momentary values are kept for        public override string Target { get => Cell2.ID; set => target = value; }
+
+        protected override int nMax => Cell1.V.Length;
 
         [JsonIgnore]
         public double IGap { get { return Weight * VoltageDiff; } }
@@ -168,8 +169,8 @@ namespace SiliFish.ModelUnits.Junction
             if (!IsActive(tIndex))
             {
                 VoltageDiffFrom1To2 = VoltageDiffFrom2To1 = 0;
-                if (InputCurrent != null)
-                    InputCurrent[tIndex] = 0;
+                if (inputCurrent != null)
+                    inputCurrent[tIndex] = 0;
                 return;
             }
             double v1 = duration1 <= tIndex ? Cell1.V[tIndex - duration1] : Cell1.RestingMembranePotential;
@@ -178,8 +179,8 @@ namespace SiliFish.ModelUnits.Junction
             v2 = duration2 <= tIndex ? Cell2.V[tIndex - duration2] : Cell2.RestingMembranePotential;
             v1 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v2 - v1;
-            if (InputCurrent != null)
-                InputCurrent[tIndex] = IGap;
+            if (inputCurrent != null)
+                inputCurrent[tIndex] = IGap;
         }
     }
  

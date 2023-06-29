@@ -710,6 +710,12 @@ namespace SiliFish.ModelUnits.Architecture
                     else if (poolIdentifier == Const.SupraSpinal)
                         pools = neuronPools.Union(musclePools).Where(p => p.BodyLocation == BodyLocation.SupraSpinal &&
                             p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.Spinal)
+                        pools = neuronPools.Union(musclePools).Where(p => p.BodyLocation == BodyLocation.SpinalCord &&
+                            p.OnSide(mcs.SagittalPlane)).ToList();
+                    else if (poolIdentifier == Const.MusculoSkeletal)
+                        pools = neuronPools.Union(musclePools).Where(p => p.BodyLocation == BodyLocation.MusculoSkeletal &&
+                            p.OnSide(mcs.SagittalPlane)).ToList();
                     else
                         pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
                                         && p.OnSide(mcs.SagittalPlane)).ToList();

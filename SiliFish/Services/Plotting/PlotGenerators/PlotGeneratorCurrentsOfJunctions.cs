@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Junction;
 using System;
@@ -10,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    public class PlotGeneratorCurrentsOfJunctions : PlotGeneratorBase
+    internal class PlotGeneratorCurrentsOfJunctions : PlotGeneratorBase
     {
         List<GapJunction> gapJunctions;
         List<ChemicalSynapse> synapses;
         private UnitOfMeasure uoM;
-        public PlotGeneratorCurrentsOfJunctions(List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses,
+        public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses,
             double[] timeArray, int iStart, int iEnd, UnitOfMeasure uoM) :
-            base(timeArray, iStart, iEnd)
+            base(plotGenerator, timeArray, iStart, iEnd)
         {
             this.gapJunctions = gapJunctions;
             this.synapses = synapses;
@@ -27,8 +28,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             List<Chart> gapCharts = new();
             List<Chart> synCharts = new();
-            gapJunctions?.ForEach(junction => junction.PopulateCurrentArray(timeArray.Length));
-            synapses?.ForEach(junction => junction.PopulateCurrentArray(timeArray.Length));
 
             double yMin = double.MaxValue;
             double yMax = double.MinValue;
@@ -46,18 +45,27 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
             string columnTitles = "Time,";
             List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
+            List<string> colorPerChart = new();
 
-            foreach (GapJunction jnc in gapJunctions)
+            if (gapJunctions != null)
             {
-                columnTitles += jnc.ID + ",";
-                foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                    data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                foreach (GapJunction jnc in gapJunctions)
+                {
+                    colorPerChart.Add(jnc.Cell1.CellPool.Color.ToRGBQuoted());
+                    columnTitles += jnc.ID + ",";
+                    foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                        data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                }
             }
-            foreach (ChemicalSynapse jnc in synapses)
+            if (synapses != null)
             {
-                columnTitles += jnc.ID + ",";
-                foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                    data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                foreach (ChemicalSynapse jnc in synapses)
+                {
+                    colorPerChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
+                    columnTitles += jnc.ID + ",";
+                    foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                        data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                }
             }
 
             string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
@@ -67,6 +75,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             {
                 CsvData = csvData,
                 Title = $"`Junction:{columnTitles[5..]}`",
+                Color = string.Join(',', colorPerChart),
                 yLabel = $"`Current ({ampere})`",
                 yMin = yMin,
                 yMax = yMax,

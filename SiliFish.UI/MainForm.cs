@@ -451,7 +451,7 @@ namespace SiliFish.UI
                 if (!string.IsNullOrEmpty(lastFileName))
                     saveFileExcel.FileName = Path.ChangeExtension(lastFileName, "xlsx");
                 else
-                    saveFileExcel.FileName = Path.Combine(mb.ModelName, ".xlsx");
+                    saveFileExcel.FileName = $"{mb.ModelName}.xlsx";
                 saveFileExcel.InitialDirectory = modelFileDefaultFolder;
                 if (saveFileExcel.ShowDialog() == DialogResult.OK)
                 {

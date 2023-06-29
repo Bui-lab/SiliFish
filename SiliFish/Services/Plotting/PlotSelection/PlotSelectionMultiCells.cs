@@ -15,6 +15,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
         public bool CombinePools { get; set; } = false;
         public bool CombineSomites { get; set; } = false;
         public bool CombineCells { get; set; } = false;
+        public bool CombineJunctions { get; set; } = true;
         public PlotSelectionMultiCells()
         {
         }
@@ -31,6 +32,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
                 CombinePools = plot.CombinePools;
                 CombineSomites = plot.CombineSomites;
                 CombineCells = plot.CombineCells;
+                CombineJunctions = plot.CombineJunctions;
             }
         }
         public override string ToString()
@@ -44,8 +46,9 @@ namespace SiliFish.Services.Plotting.PlotSelection
                 CellSelection == PlotCellSelection.Single ? $"Cell:{NCell}" :
                 $"Cells: {CellSelection}";
             if (CombineCells && !string.IsNullOrEmpty(cells)) cells = "[" + cells + "]";
-            return CombinePools ? $"[{sagittal}{somite}{cells}]".Replace("  ", " ") :
-                $"{sagittal} {somite} {cells}".Replace("  ", " ");
+            string junctions = CombineJunctions ? "" : " (junction partitioned)";
+            return CombinePools ? $"[{sagittal}{somite}{cells}{junctions}]".Replace("  ", " ") :
+                $"{sagittal} {somite} {cells}{junctions}".Replace("  ", " ");
         }
         public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells,
             bool combinePools, bool combineSomites, bool combineCells)

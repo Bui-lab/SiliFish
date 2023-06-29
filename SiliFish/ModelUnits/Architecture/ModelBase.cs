@@ -1,4 +1,5 @@
-﻿using SiliFish.ModelUnits.Cells;
+﻿using SiliFish.DataTypes;
+using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
@@ -16,7 +17,8 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
-        public Random rand = new(0);
+        public Random rand = null;
+        private ModelSettings settings = new();
 
         public string Version { get; set; }
         public string ClassType => GetType().Name;
@@ -24,8 +26,16 @@ namespace SiliFish.ModelUnits.Architecture
         public string ModelDescription { get; set; }
 
         public ModelDimensions ModelDimensions { get; set; } = new();
-        public ModelSettings Settings { get; set; } = new();
-
+        public ModelSettings Settings 
+        { 
+            get => settings;
+            set
+            {
+                settings = value;
+                rand = new Random(settings.Seed);
+                Distribution.Random = rand;
+            }
+        }
         [JsonPropertyOrder(2)]
         public KinemParam KinemParam { get; set; } = new();
 

@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    public abstract class PlotGeneratorOfCells : PlotGeneratorBase
+    internal abstract class PlotGeneratorOfCells : PlotGeneratorBase
     {
         protected readonly List<Cell> cells;
         protected readonly bool combinePools;
         protected readonly bool combineSomites;
         protected readonly bool combineCells;
 
-        protected PlotGeneratorOfCells(double[] timeArray, int iStart, int iEnd, List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells) :
-            base(timeArray, iStart, iEnd)
+        protected PlotGeneratorOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells) :
+            base(plotGenerator, timeArray, iStart, iEnd)
         {
             this.cells = cells;
             this.combinePools = combinePools;

@@ -129,6 +129,7 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
+            "Descending Axon", "Ascending Axon",
             "Conduction Velocity", "CoreType",
             Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
             "Active",
@@ -155,6 +156,7 @@ namespace SiliFish.ModelUnits.Cells
         public List<string> ExportValues()
         {
             return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
+                DescendingAxonLength, AscendingAxonLength,
                 ConductionVelocity, Core.CoreType, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
@@ -166,6 +168,8 @@ namespace SiliFish.ModelUnits.Cells
             Sequence = int.Parse(values[iter++]);
             Coordinate.ImportValues(values.Take(new Range(iter, iter + 3)).ToList());
             iter += 3;
+            DescendingAxonLength = double.Parse(values[iter++]);
+            AscendingAxonLength = double.Parse(values[iter++]);
             ConductionVelocity = double.Parse(values[iter++]);
             string coreType = values[iter++].Trim();
             Dictionary<string, double> parameters = new();

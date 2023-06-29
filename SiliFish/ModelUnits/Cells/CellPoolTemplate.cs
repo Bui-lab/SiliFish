@@ -176,11 +176,11 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(CellGroup, CellType, NTMode, 
+            return ListBuilder.Build<string>(CellGroup, CellType, NTMode,
                 BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange,
-                SpatialDistribution.ExportValues(), 
-                DescendingAxonLength?.CSVCellExportValues??string.Empty,
-                AscendingAxonLength?.CSVCellExportValues??string.Empty,
+                SpatialDistribution.ExportValues(),
+                DescendingAxonLength?.CSVCellExportValues ?? string.Empty,
+                AscendingAxonLength?.CSVCellExportValues ?? string.Empty,
                 ConductionVelocity?.CSVCellExportValues ?? string.Empty,
                 CoreType, csvExportParamValues,
                 Active, Color.ToHex(), TimeLine_ms.ExportValues());

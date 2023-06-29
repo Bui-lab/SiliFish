@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using OfficeOpenXml.Sparkline;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
@@ -20,12 +21,15 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class JunctionBase : ModelUnitBase, IDataExporterImporter
     {
+        protected double[] inputCurrent; //Current array 
+
+        [JsonIgnore, Browsable(false)] 
+        protected virtual int nMax => throw new NotImplementedException();
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms
         public double Delay_ms { get; set; } = 0;//in ms
         public double Weight { get; set; }
 
-        public double[] InputCurrent; //Current array 
 
         /// <summary>
         /// used for import/exports
@@ -43,6 +47,16 @@ namespace SiliFish.ModelUnits.Junction
                 "Active", 
                 TimeLine.ColumnNames);
 
+        [JsonIgnore, Browsable(false)]
+        public double[] InputCurrent 
+        {
+            get
+            {
+                if (inputCurrent == null)
+                    PopulateCurrentArray();
+                return inputCurrent;
+            }
+        }
 
         public virtual List<string> ExportValues()
         {
@@ -63,7 +77,19 @@ namespace SiliFish.ModelUnits.Junction
             Delay_ms = jnc.Delay_ms;
             Weight = jnc.Weight;
         }
-
+        //if current tracking is Off, the current array can be populated after the simulation for an individual junction
+        private void PopulateCurrentArray()
+        {
+            int nmax = nMax;
+            if (inputCurrent != null)
+                return;//Already populated
+            InitForSimulation(nmax, true);
+            if (!Active) return;
+            foreach (var index in Enumerable.Range(1, nmax - 1))
+            {
+                NextStep(index);
+            }
+        }
         public virtual void LinkObjects()
         {
             Exception exception = new NotImplementedException();
@@ -87,27 +113,17 @@ namespace SiliFish.ModelUnits.Junction
         {
             if (trackCurrent)
             {
-                InputCurrent = new double[nmax];
-                InputCurrent[0] = 0;
+                inputCurrent = new double[nmax];
+                inputCurrent[0] = 0;
             }
             else
-                InputCurrent = null;
+                inputCurrent = null;
         }
         public virtual void NextStep(int tIndex)
         {
             throw new NotImplementedException();
         }
-        //if current tracking is Off, the current array can be populated after the simulation for an individual junction
-        public void PopulateCurrentArray(int nmax)
-        {
-            if (InputCurrent != null)
-                return;//Already populated
-            InitForSimulation(nmax, true);
-            foreach (var index in Enumerable.Range(1, nmax - 1))
-            {
-                NextStep(index);
-            }
-        }
+
 
     }
 }
