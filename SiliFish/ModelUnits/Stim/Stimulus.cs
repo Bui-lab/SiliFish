@@ -44,7 +44,8 @@ namespace SiliFish.ModelUnits.Stim
                 return 0;
             }
         }
-
+        [JsonIgnore]
+        public override string Tooltip => $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
@@ -93,11 +94,6 @@ namespace SiliFish.ModelUnits.Stim
         public override string ToString()
         {
             return TargetCell.ID + ": " + Settings.ToString() + (Active ? "" : " (inactive)");
-        }
-
-        public string GetTooltip()
-        {
-            return $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
         }
 
         public double[] GetValues(int nMax)

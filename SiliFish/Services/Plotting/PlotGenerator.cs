@@ -43,8 +43,8 @@ namespace SiliFish.Services.Plotting
             if (!string.IsNullOrEmpty(errorMessage))
                 return charts;
 
-            List<Cell> muscleCells = cells.Where(c => c is MuscleCell).ToList();
-            if (muscleCells.Any())
+            List<Cell> muscleCells = cells?.Where(c => c is MuscleCell).ToList();
+            if (muscleCells != null && muscleCells.Any())
             {
                 PlotGeneratorTension plotGeneratorTension = new PlotGeneratorTension(this, cells, TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd);
                 plotGeneratorTension.CreateCharts(charts);

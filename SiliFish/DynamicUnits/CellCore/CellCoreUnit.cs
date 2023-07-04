@@ -42,8 +42,12 @@ namespace SiliFish.DynamicUnits
             CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
             if (dt_euler != null)
                 core.deltaTEuler = (double)dt_euler;
+            else if (core.deltaTEuler==0)
+                core.deltaTEuler = GlobalSettings.SimulationEulerDeltaT;
             if (dt_run != null)
                 core.deltaT = (double)dt_run;
+            else if (core.deltaT == 0)
+                core.deltaT = GlobalSettings.SimulationDeltaT;
             return core;
         }
 
@@ -69,6 +73,19 @@ namespace SiliFish.DynamicUnits
 
         protected double deltaT, deltaTEuler;
         protected double V = -70;//Keeps the current value of V 
+        private double? rheobase;
+
+        [Browsable(false)]
+        public double Rheobase { get
+            {
+                if (rheobase == null)
+                {
+                    rheobase = CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
+                }
+                return (double)rheobase;
+            }
+            
+            set => rheobase = value; }
 
         [Description("The resting membrane potential.")]
         public double Vr { get; set; } = -70;
@@ -120,6 +137,7 @@ namespace SiliFish.DynamicUnits
         {
             if (paramExternal == null || paramExternal.Count == 0)
                 return;
+            rheobase = null;//initialize rheobase
             foreach (string key in paramExternal.Keys)
             {
                 SetParameter(key, paramExternal[key]);
@@ -172,7 +190,7 @@ namespace SiliFish.DynamicUnits
             double[] I = new double[tmax];
             double curI = maxRheobase;
             double minI = 0;
-            double rheobase = -1;
+            rheobase = -1;
 
             while (curI >= minI + sensitivity)
             {
@@ -186,7 +204,7 @@ namespace SiliFish.DynamicUnits
                 else //increment
                 {
                     minI = curI;
-                    curI = (curI + (rheobase > 0 ? rheobase : maxRheobase)) / 2;
+                    curI = (double)((curI + (rheobase > 0 ? rheobase : maxRheobase)) / 2);
                 }
             }
             if (curI < minI + sensitivity)//test the minimum current as well - some neurons fire without any stimulus
@@ -196,7 +214,7 @@ namespace SiliFish.DynamicUnits
                 if (DoesSpike(I, warmup))
                     rheobase = minI;
             }
-            return rheobase;
+            return (double)rheobase;
         }
 
         public virtual double GetNextVal(double I, ref bool spike)

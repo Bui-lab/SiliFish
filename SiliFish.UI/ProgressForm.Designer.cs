@@ -28,78 +28,78 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.linkStopRun = new System.Windows.Forms.LinkLabel();
-            this.lProgress = new System.Windows.Forms.Label();
-            this.lProgressValue = new System.Windows.Forms.Label();
-            this.lProgressDetails = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            progressBar = new ProgressBar();
+            linkStopRun = new LinkLabel();
+            lProgress = new Label();
+            lProgressValue = new Label();
+            lProgressDetails = new Label();
+            SuspendLayout();
             // 
             // progressBar
             // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressBar.Location = new System.Drawing.Point(0, 124);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(348, 23);
-            this.progressBar.TabIndex = 0;
+            progressBar.Dock = DockStyle.Bottom;
+            progressBar.Location = new Point(0, 124);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(348, 23);
+            progressBar.TabIndex = 0;
             // 
             // linkStopRun
             // 
-            this.linkStopRun.AutoSize = true;
-            this.linkStopRun.Location = new System.Drawing.Point(281, 19);
-            this.linkStopRun.Name = "linkStopRun";
-            this.linkStopRun.Size = new System.Drawing.Size(55, 15);
-            this.linkStopRun.TabIndex = 1;
-            this.linkStopRun.TabStop = true;
-            this.linkStopRun.Text = "Stop Run";
-            this.linkStopRun.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkStopRun_LinkClicked);
+            linkStopRun.AutoSize = true;
+            linkStopRun.Location = new Point(281, 19);
+            linkStopRun.Name = "linkStopRun";
+            linkStopRun.Size = new Size(55, 15);
+            linkStopRun.TabIndex = 1;
+            linkStopRun.TabStop = true;
+            linkStopRun.Text = "Stop Run";
+            linkStopRun.LinkClicked += linkStopRun_LinkClicked;
             // 
             // lProgress
             // 
-            this.lProgress.AutoSize = true;
-            this.lProgress.Location = new System.Drawing.Point(12, 19);
-            this.lProgress.Name = "lProgress";
-            this.lProgress.Size = new System.Drawing.Size(55, 15);
-            this.lProgress.TabIndex = 2;
-            this.lProgress.Text = "Progress:";
+            lProgress.AutoSize = true;
+            lProgress.Location = new Point(12, 19);
+            lProgress.Name = "lProgress";
+            lProgress.Size = new Size(55, 15);
+            lProgress.TabIndex = 2;
+            lProgress.Text = "Progress:";
             // 
             // lProgressValue
             // 
-            this.lProgressValue.AutoSize = true;
-            this.lProgressValue.Location = new System.Drawing.Point(73, 19);
-            this.lProgressValue.Name = "lProgressValue";
-            this.lProgressValue.Size = new System.Drawing.Size(23, 15);
-            this.lProgressValue.TabIndex = 3;
-            this.lProgressValue.Text = "0%";
+            lProgressValue.AutoSize = true;
+            lProgressValue.Location = new Point(73, 19);
+            lProgressValue.Name = "lProgressValue";
+            lProgressValue.Size = new Size(23, 15);
+            lProgressValue.TabIndex = 3;
+            lProgressValue.Text = "0%";
             // 
             // lProgressDetails
             // 
-            this.lProgressDetails.AutoSize = true;
-            this.lProgressDetails.Location = new System.Drawing.Point(12, 47);
-            this.lProgressDetails.Name = "lProgressDetails";
-            this.lProgressDetails.Size = new System.Drawing.Size(0, 15);
-            this.lProgressDetails.TabIndex = 4;
+            lProgressDetails.AutoSize = true;
+            lProgressDetails.Location = new Point(12, 47);
+            lProgressDetails.Name = "lProgressDetails";
+            lProgressDetails.Size = new Size(19, 15);
+            lProgressDetails.TabIndex = 4;
+            lProgressDetails.Text = "....";
             // 
             // ProgressForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(348, 147);
-            this.ControlBox = false;
-            this.Controls.Add(this.lProgressDetails);
-            this.Controls.Add(this.lProgressValue);
-            this.Controls.Add(this.lProgress);
-            this.Controls.Add(this.linkStopRun);
-            this.Controls.Add(this.progressBar);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "ProgressForm";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "ProgressForm";
-            this.Shown += new System.EventHandler(this.ProgressForm_Shown);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(348, 147);
+            ControlBox = false;
+            Controls.Add(lProgressDetails);
+            Controls.Add(lProgressValue);
+            Controls.Add(lProgress);
+            Controls.Add(linkStopRun);
+            Controls.Add(progressBar);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "ProgressForm";
+            SizeGripStyle = SizeGripStyle.Hide;
+            Text = "ProgressForm";
+            Shown += ProgressForm_Shown;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

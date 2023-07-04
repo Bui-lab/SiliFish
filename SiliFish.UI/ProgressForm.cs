@@ -34,7 +34,7 @@ namespace SiliFish.UI
 
         public string ProgressText
         {
-            set 
+            set
             {
                 lProgressDetails.Text = value;
             }

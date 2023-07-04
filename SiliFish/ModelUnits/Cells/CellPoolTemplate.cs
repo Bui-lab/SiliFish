@@ -34,6 +34,8 @@ namespace SiliFish.ModelUnits.Cells
                 coreType = value;
             }
         }
+        public double Rheobase { get => GetSampleRheobase(); set { } }
+
 
         public BodyLocation BodyLocation { get; set; }
         public Color Color { get; set; } = Color.Red;
@@ -107,6 +109,7 @@ namespace SiliFish.ModelUnits.Cells
                     $"Position: {Position}\r\n" +
                     $"# of cells: {NumOfCells}{persomite}\r\n" +
                     $"Spatial Distribution:\r\n{SpatialDistribution.GetTooltip()}\r\n" +
+                    $"Rheobase: {Rheobase}\r\n" +
                     $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
             }
@@ -155,7 +158,7 @@ namespace SiliFish.ModelUnits.Cells
                 "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange",
                 SpatialDistribution.ColumnNames, 
                 "Descending Axon", "Ascending Axon",
-                "Conduction Velocity", "CoreType",
+                "Conduction Velocity", "CoreType", "Rheobase (output only/sample)",
                 Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Active", "Color", TimeLine.ColumnNames);
 
@@ -182,7 +185,7 @@ namespace SiliFish.ModelUnits.Cells
                 DescendingAxonLength?.CSVCellExportValues ?? string.Empty,
                 AscendingAxonLength?.CSVCellExportValues ?? string.Empty,
                 ConductionVelocity?.CSVCellExportValues ?? string.Empty,
-                CoreType, csvExportParamValues,
+                CoreType, Rheobase, csvExportParamValues,
                 Active, Color.ToHex(), TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
@@ -204,6 +207,7 @@ namespace SiliFish.ModelUnits.Cells
             AscendingAxonLength = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
             ConductionVelocity = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
             CoreType = values[iter++].Trim();
+            iter++;//skip rheobase
             parameters = new();
             for (int i = 1; i <= CellCoreUnit.CoreParamMaxCount; i++)
             {
@@ -245,6 +249,15 @@ namespace SiliFish.ModelUnits.Cells
             ConductionVelocity = cpl.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(cpl.TimeLine_ms);
         }
+
+        private double GetSampleRheobase()
+        {
+            Dictionary<string, double> dparams = Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
+            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, dparams);
+            return core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
+           
+        }
+
         public override int CompareTo(ModelUnitBase otherbase)
         {
             CellPoolTemplate other = otherbase as CellPoolTemplate;
@@ -305,6 +318,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             return Coordinate.GenerateCoordinates(random, modelDimensions, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
         }
+
 
     }
 }

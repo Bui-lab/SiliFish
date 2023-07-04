@@ -7,20 +7,14 @@ using System.Data;
 using SiliFish.Services;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using SiliFish.ModelUnits.Junction;
 using System.Text.Json;
 using SiliFish.UI.Definitions;
 using SiliFish.Definitions;
-using System.Windows.Forms;
 using SiliFish.UI.Extensions;
 using System.Diagnostics;
-using System.IO;
 using SiliFish.UI.EventArguments;
-using OxyPlot;
-using SiliFish.Services.Optimization;
 using SiliFish.UI.Controls.Model_Edit;
-using System.Collections.Generic;
 
 namespace SiliFish.UI.Controls
 {
@@ -753,15 +747,29 @@ namespace SiliFish.UI.Controls
             ClearProjections();
             List<JunctionBase> gapJunctions = cp.Projections.Where(j => j is GapJunction).ToList();
             if (gapJunctions.Count > GlobalSettings.MaxNumberOfUnits)
-                listGap.AppendItem("Please select a cell to list junctions under...");
+            {
+                List<InterPool> gapInterPools = (Model as RunningModel).GapPoolConnections
+                    .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
+                foreach (InterPool ip in gapInterPools)
+                {
+                    listGap.AppendItem (ip);
+                }
+            }
             else
                 foreach (JunctionBase jnc in gapJunctions)
                     listGap.AppendItem(jnc);
             List<JunctionBase> chemJunctions = cp.Projections.Where(j => j is not GapJunction).ToList();
             if (chemJunctions.Count > GlobalSettings.MaxNumberOfUnits)
             {
-                listIncoming.AppendItem("Please select a cell to list junctions under...");
-                listOutgoing.AppendItem("Please select a cell to list junctions under...");
+                List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolConnections
+                    .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
+                foreach (InterPool ip in chemInterPools)
+                {
+                    if (ip.SourcePool == cp.ID)
+                        listOutgoing.AppendItem(ip);
+                    if (ip.TargetPool == cp.ID)
+                        listIncoming.AppendItem(ip);
+                }
             }
             else
                 foreach (JunctionBase jnc in cp.Projections.Where(j => j is not GapJunction))

@@ -85,6 +85,10 @@ namespace SiliFish.UI.Controls
             distributionDescending = new DistributionControl();
             tDynamics = new TabPage();
             dgDynamics = new DistributionDataGrid();
+            panel2 = new Panel();
+            lRheobaseDescription = new Label();
+            eRheobase = new TextBox();
+            lRheobase = new Label();
             grConductionVelocity = new GroupBox();
             distConductionVelocity = new DistributionControl();
             pDynamicsTops = new Panel();
@@ -113,6 +117,7 @@ namespace SiliFish.UI.Controls
             pProjectionAscending.SuspendLayout();
             pProjectionDescending.SuspendLayout();
             tDynamics.SuspendLayout();
+            panel2.SuspendLayout();
             grConductionVelocity.SuspendLayout();
             pDynamicsTops.SuspendLayout();
             tTimeline.SuspendLayout();
@@ -739,6 +744,7 @@ namespace SiliFish.UI.Controls
             // tDynamics
             // 
             tDynamics.Controls.Add(dgDynamics);
+            tDynamics.Controls.Add(panel2);
             tDynamics.Controls.Add(grConductionVelocity);
             tDynamics.Controls.Add(pDynamicsTops);
             tDynamics.Location = new Point(4, 24);
@@ -755,11 +761,49 @@ namespace SiliFish.UI.Controls
             dgDynamics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             dgDynamics.BackColor = Color.WhiteSmoke;
             dgDynamics.Dock = DockStyle.Fill;
-            dgDynamics.Location = new Point(3, 146);
+            dgDynamics.Location = new Point(3, 182);
             dgDynamics.MinimumSize = new Size(100, 100);
             dgDynamics.Name = "dgDynamics";
-            dgDynamics.Size = new Size(314, 408);
+            dgDynamics.Size = new Size(314, 372);
             dgDynamics.TabIndex = 3;
+            dgDynamics.Leave += dgDynamics_Leave;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(lRheobaseDescription);
+            panel2.Controls.Add(eRheobase);
+            panel2.Controls.Add(lRheobase);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(3, 146);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(314, 36);
+            panel2.TabIndex = 4;
+            // 
+            // lRheobaseDescription
+            // 
+            lRheobaseDescription.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            lRheobaseDescription.Location = new Point(146, 4);
+            lRheobaseDescription.Name = "lRheobaseDescription";
+            lRheobaseDescription.Size = new Size(117, 31);
+            lRheobaseDescription.TabIndex = 2;
+            lRheobaseDescription.Text = "(for average values of the parameters below)";
+            // 
+            // eRheobase
+            // 
+            eRheobase.Location = new Point(84, 7);
+            eRheobase.Name = "eRheobase";
+            eRheobase.ReadOnly = true;
+            eRheobase.Size = new Size(56, 23);
+            eRheobase.TabIndex = 1;
+            // 
+            // lRheobase
+            // 
+            lRheobase.AutoSize = true;
+            lRheobase.Location = new Point(13, 11);
+            lRheobase.Name = "lRheobase";
+            lRheobase.Size = new Size(58, 15);
+            lRheobase.TabIndex = 0;
+            lRheobase.Text = "Rheobase";
             // 
             // grConductionVelocity
             // 
@@ -915,6 +959,8 @@ namespace SiliFish.UI.Controls
             pProjectionDescending.PerformLayout();
             tDynamics.ResumeLayout(false);
             tDynamics.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             grConductionVelocity.ResumeLayout(false);
             grConductionVelocity.PerformLayout();
             pDynamicsTops.ResumeLayout(false);
@@ -996,5 +1042,9 @@ namespace SiliFish.UI.Controls
         private Panel pProjectionDescending;
         private CheckBox cbDescendingAxon;
         private DistributionControl distributionDescending;
+        private Panel panel2;
+        private TextBox eRheobase;
+        private Label lRheobase;
+        private Label lRheobaseDescription;
     }
 }

@@ -49,6 +49,7 @@ namespace SiliFish.ModelUnits.Cells
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
         public int Somite { get; set; } = -1;
+        public double Rheobase { get => Core?.Rheobase ?? -1; set { } }
         public override string ID
         {
             get
@@ -58,6 +59,17 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        [JsonIgnore]
+        public override string Tooltip
+        {
+            get
+            {
+                string rheobase = Rheobase < 0 ? "N/A" : Rheobase.ToString("0.00");
+                return $"{ToString()}\r\n" +
+                    $"Rheobase: {rheobase}\r\n" +
+                    $"TimeLine: {TimeLine_ms}";
+            }
+        }
 
         public double ConductionVelocity { get; set; }
         public double AscendingAxonLength { get; set; }
@@ -130,7 +142,7 @@ namespace SiliFish.ModelUnits.Cells
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
             "Descending Axon", "Ascending Axon",
-            "Conduction Velocity", "CoreType",
+            "Conduction Velocity", "CoreType", "Rheobase (output only)",
             Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
             "Active",
             TimeLine.ColumnNames);
@@ -157,7 +169,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
                 DescendingAxonLength, AscendingAxonLength,
-                ConductionVelocity, Core.CoreType, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
+                ConductionVelocity, Core.CoreType, Rheobase, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -172,6 +184,7 @@ namespace SiliFish.ModelUnits.Cells
             AscendingAxonLength = double.Parse(values[iter++]);
             ConductionVelocity = double.Parse(values[iter++]);
             string coreType = values[iter++].Trim();
+            iter++;//skip rheobase
             Dictionary<string, double> parameters = new();
             for (int i = 1; i <= csvExportCoreParamCount; i++)
             {
@@ -207,11 +220,6 @@ namespace SiliFish.ModelUnits.Cells
         public override string ToString()
         {
             return ID + (Active ? "" : " (inactive)");
-        }
-
-        public string GetTooltip()
-        {
-            return $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
         }
 
         public virtual void LinkObjects(RunningModel model, CellPool pool)

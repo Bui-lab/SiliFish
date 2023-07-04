@@ -48,6 +48,7 @@
             btnCalculateFitness = new Button();
             pLineFitnessFunctions = new Panel();
             lFitnessFunctions = new Label();
+            btnOptimizeExhaustive = new Button();
             grTermination = new GroupBox();
             cbTargetFitness = new CheckBox();
             cbCustomTermination = new CheckBox();
@@ -106,6 +107,7 @@
             // splitGA.Panel2
             // 
             splitGA.Panel2.BackColor = Color.White;
+            splitGA.Panel2.Controls.Add(btnOptimizeExhaustive);
             splitGA.Panel2.Controls.Add(grTermination);
             splitGA.Panel2.Controls.Add(lOptimizationOutput);
             splitGA.Panel2.Controls.Add(btnOptimize);
@@ -311,6 +313,21 @@
             lFitnessFunctions.TabIndex = 2;
             lFitnessFunctions.Text = "Fitness Functions";
             // 
+            // btnOptimizeFull
+            // 
+            btnOptimizeExhaustive.BackColor = Color.FromArgb(96, 125, 139);
+            btnOptimizeExhaustive.FlatAppearance.BorderColor = Color.LightGray;
+            btnOptimizeExhaustive.FlatStyle = FlatStyle.Flat;
+            btnOptimizeExhaustive.ForeColor = Color.White;
+            btnOptimizeExhaustive.Location = new Point(6, 320);
+            btnOptimizeExhaustive.Name = "btnOptimizeFull";
+            btnOptimizeExhaustive.Size = new Size(161, 23);
+            btnOptimizeExhaustive.TabIndex = 52;
+            btnOptimizeExhaustive.Text = "Optimize (Exhaustive)";
+            toolTip.SetToolTip(btnOptimizeExhaustive, "Run the genetic algorithm with every selection, crosoover, mutation and reinsertion options available.");
+            btnOptimizeExhaustive.UseVisualStyleBackColor = false;
+            btnOptimizeExhaustive.Click += btnOptimizeFull_Click;
+            // 
             // grTermination
             // 
             grTermination.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -416,9 +433,9 @@
             // lOptimizationOutput
             // 
             lOptimizationOutput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lOptimizationOutput.Location = new Point(6, 316);
+            lOptimizationOutput.Location = new Point(6, 346);
             lOptimizationOutput.Name = "lOptimizationOutput";
-            lOptimizationOutput.Size = new Size(270, 148);
+            lOptimizationOutput.Size = new Size(270, 27);
             lOptimizationOutput.TabIndex = 45;
             lOptimizationOutput.Text = "Latest fitness:";
             // 
@@ -667,5 +684,6 @@
         private DataGridViewTextBoxColumn colFFFunction;
         private DataGridViewLinkColumn colFFEdit;
         private DataGridViewLinkColumn colFFDelete;
+        private Button btnOptimizeExhaustive;
     }
 }

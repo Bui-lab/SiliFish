@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SiliFish.ModelUnits.Junction
@@ -16,6 +17,13 @@ namespace SiliFish.ModelUnits.Junction
         public int CountJunctions;
         public double MinConductance;
         public double MaxConductance;
-        public CellInputMode Mode; 
+        public CellInputMode Mode;
+
+        public override string ToString()
+        {
+            string arrow = Mode == CellInputMode.Electrical ? "↔" : "→";
+            return $"{SourcePool}{arrow}{TargetPool}";
+        }
+
     }
 }

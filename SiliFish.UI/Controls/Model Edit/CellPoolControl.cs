@@ -87,11 +87,19 @@ namespace SiliFish.UI.Controls
         private void ParamDictToGrid()
         {
             dgDynamics.WriteToGrid(poolBase.Parameters);
+            eRheobase.Text = PoolBase?.Rheobase.ToString();
         }
 
         private Dictionary<string, Distribution> GridToParamDict()
         {
             return dgDynamics.ReadFromGrid();
+        }
+
+        private void dgDynamics_Leave(object sender, EventArgs e)
+        {
+            if (PoolBase == null) return;
+            PoolBase.Parameters = GridToParamDict();
+            eRheobase.Text = PoolBase.Rheobase.ToString();
         }
 
         private void eGroupName_TextChanged(object sender, EventArgs e)
@@ -362,5 +370,6 @@ namespace SiliFish.UI.Controls
         {
             distributionDescending.Enabled = cbDescendingAxon.Checked;
         }
+
     }
 }
