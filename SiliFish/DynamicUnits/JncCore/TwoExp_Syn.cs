@@ -52,6 +52,8 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             if (Conductance < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
+            if (TauD <= TauR + GlobalSettings.Epsilon)
+                errors.Add($"Chemical synapse: Tau decay needs to be smaller than tau rise.");
             return errors.Count == 0;
         }
         public (double, double) GetNextVal(double vPreSynapse, double vPost, double IsynA, double IsynB)

@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -124,7 +125,11 @@ namespace SiliFish.Services.Optimization
                 int iter = 0;
                 foreach (string key in SortedKeys)
                 {
-                    int numOfDecimalDigit = Util.NumOfDecimalDigits(ParamValues[key]);
+                    int numOfDecimalDigit = Math.Max(Math.Max(
+                        Util.NumOfDecimalDigits(ParamValues[key]),
+                        Util.NumOfDecimalDigits(MinValues[iter])),
+                        Util.NumOfDecimalDigits(MaxValues[iter]))
+                        ;
                     decimalDigits[iter++] = numOfDecimalDigit;
                 }
 
