@@ -48,7 +48,16 @@ namespace SiliFish.Services.Plotting.PlotSelection
             if (Units == null || !Units.Any()) return "";
             return string.Join("; ", Units.Select(unit => unit.ID));
         }
-
+        public override bool Equals(object obj)
+        {
+            if (obj is not PlotSelectionUnits psu)
+                return false;
+            List<Tuple<string, string>> tags1 = UnitTags;
+            tags1.Sort();
+            List<Tuple<string, string>> tags2 = psu.UnitTags;
+            tags2.Sort();
+            return tags1.Equals(tags2);
+        }
         public void AddUnit(ModelUnitBase unit)
         {
             Units ??= new();

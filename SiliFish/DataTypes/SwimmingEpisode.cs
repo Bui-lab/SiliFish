@@ -179,5 +179,59 @@ namespace SiliFish.DataTypes
             }
             return episodes;
         }
+        public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> spikeIndices, double episodeBreak)
+        {
+            List<SwimmingEpisode> episodes = new();
+            bool inEpisode = false;
+            SwimmingEpisode episode = null;
+            double last_t = -1;
+            int indexOfInd = 0;
+            while (indexOfInd < spikeIndices.Count)
+            {
+                int ind = spikeIndices[indexOfInd++];
+                double t = TimeArray[ind];
+                double beat_end = t;
+                while (indexOfInd < spikeIndices.Count)
+                {
+                    beat_end = TimeArray[spikeIndices[indexOfInd++]];
+                    if (beat_end - t > episodeBreak)
+                    {
+                        indexOfInd -= 2;
+                        beat_end = TimeArray[spikeIndices[indexOfInd++]];
+                        break;
+                    }
+                }
+
+                if (!inEpisode)
+                {
+                    inEpisode = true;
+                    episode = new(t);
+                    episode.StartBeat(t, SagittalPlane.Both);
+                    episode.EndBeat(beat_end);
+                    episodes.Add(episode);
+
+                }
+                else if (last_t > 0)
+                {
+                    if ((t - last_t) > episodeBreak)
+                    {
+                        episode.EndEpisode(last_t);
+                        inEpisode = false;
+                        episode = null;
+                    }
+                    else
+                    {
+                        episode.StartBeat(t, SagittalPlane.Both);
+                        episode.EndBeat(beat_end);
+                    }
+                }
+                last_t = beat_end;
+            }
+            if (inEpisode)//last episode is not completed
+            {
+                episodes.Last().EndEpisode(last_t);
+            }
+            return episodes;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Extensions
 {
-    public static class FlowPanelLayoutExtension
+    public static class FlowPanelLayoutExtensions
     {
         public static void CreateTextBoxControlsForDictionary(this FlowLayoutPanel flowPanel, Dictionary<string, object> ParamDict)
         {

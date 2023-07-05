@@ -50,6 +50,25 @@ namespace SiliFish.Services.Plotting.PlotSelection
             return CombinePools ? $"[{sagittal}{somite}{cells}{junctions}]".Replace("  ", " ") :
                 $"{sagittal} {somite} {cells}{junctions}".Replace("  ", " ");
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not PlotSelectionMultiCells multiCells)
+            {
+                return false;                
+            }
+            if (SagittalPlane != multiCells.SagittalPlane ||
+                SomiteSelection != multiCells.SomiteSelection ||
+                NSomite != multiCells.NSomite ||
+                CellSelection != multiCells.CellSelection ||
+                NCell!= multiCells.NCell ||
+                CombineCells!= multiCells.CombineCells ||
+                CombinePools!= multiCells.CombinePools ||
+                CombineJunctions != multiCells.CombineJunctions ||
+                CombineSomites!= multiCells.CombineSomites)
+                return false;
+            return true;
+        }
         public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells,
             bool combinePools, bool combineSomites, bool combineCells)
         {

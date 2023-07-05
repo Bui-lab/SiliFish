@@ -15,6 +15,14 @@ namespace SiliFish.Services.Plotting.PlotSelection
         {
             return $"{Somite}";
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is not PlotSelectionSomite pss)
+            {
+                return false;
+            }
+            return Somite == pss.Somite;
+        }
 
     }
 }

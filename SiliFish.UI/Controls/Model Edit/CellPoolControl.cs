@@ -87,7 +87,7 @@ namespace SiliFish.UI.Controls
         private void ParamDictToGrid()
         {
             dgDynamics.WriteToGrid(poolBase.Parameters);
-            eRheobase.Text = PoolBase?.Rheobase.ToString();
+            eRheobase.Text = poolBase?.Rheobase.ToString();
         }
 
         private Dictionary<string, Distribution> GridToParamDict()
@@ -97,9 +97,9 @@ namespace SiliFish.UI.Controls
 
         private void dgDynamics_Leave(object sender, EventArgs e)
         {
-            if (PoolBase == null) return;
-            PoolBase.Parameters = GridToParamDict();
-            eRheobase.Text = PoolBase.Rheobase.ToString();
+            if (poolBase == null) return;
+            poolBase.Parameters = GridToParamDict();
+            eRheobase.Text = poolBase.Rheobase.ToString();
         }
 
         private void eGroupName_TextChanged(object sender, EventArgs e)
