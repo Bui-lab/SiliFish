@@ -18,11 +18,7 @@ namespace SiliFish.Services.Optimization
             int burstCount = stat.BurstsOrSpikes.Count(bs => bs.IsBurst);
             double timeRange = stat.CurrentEndTime - stat.CurrentStartTime;
             double freq = 1000 * burstCount / timeRange;
-            if (ValueMin <= freq && ValueMax >= freq)
-                return Weight;
-            if (freq < ValueMin)
-                return Weight / (ValueMin - freq);
-            return Weight / (freq - ValueMax);
+            return CalculateFitnessFor(freq);
         }
 
     }

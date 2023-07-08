@@ -46,6 +46,18 @@ namespace SiliFish.Services.Optimization
             throw exception;
         }
 
+        public double CalculateFitnessFor(double d)
+        {
+            //rather than checking [ValueMin, ValueMax], check (ValueMin - 1, ValueMax + 1)
+            //to prevent division with small numbers in the next step
+            if (ValueMin - 1 < d && ValueMax + 1 > d)
+                return Weight;
+            if (d < ValueMin)
+                return Weight / (ValueMin - d);
+            return Weight / (d - ValueMax);
+
+        }
+
         public FitnessFunction()
         {
             fitnessFunctionType = GetType().Name;

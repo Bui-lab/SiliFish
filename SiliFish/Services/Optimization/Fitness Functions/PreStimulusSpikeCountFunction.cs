@@ -34,11 +34,8 @@ namespace SiliFish.Services.Optimization
         public override double CalculateFitness(DynamicsStats stat)
         {
             int spikeCount = stat.PreStimulusSpikeList.Count;
-            if (ValueMin <= spikeCount && ValueMax + 1 > spikeCount)
-                return Weight;
-            if (spikeCount < ValueMin)
-                return Weight / (ValueMin - spikeCount);
-            return Weight / (spikeCount - ValueMax);
+            return CalculateFitnessFor(spikeCount);
+
         }
     }
 

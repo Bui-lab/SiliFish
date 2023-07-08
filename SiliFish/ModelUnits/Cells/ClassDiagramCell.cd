@@ -1,96 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="SiliFish.DynamicUnits.Izhikevich_9P" Collapsed="true">
-    <Position X="7.5" Y="1.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AIAAAACghAAAgSIAAAAIAAEEAAEEBBCkgQIQhEAACAA=</HashCode>
-      <FileName>DynamicUnits\CellCore\Izhikevich_9P.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.HodgkinHuxley" Collapsed="true">
-    <Position X="0.75" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQAAABYAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DynamicUnits\CellCore\HodgkinHuxley.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.HodgkinHuxleyClassic" Collapsed="true">
-    <Position X="0.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAIAABAAAASAAABYIQAMEABEIAAAAUgAEoEAACAg=</HashCode>
-      <FileName>DynamicUnits\CellCore\HodgkinHuxleyClassic.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.Izhikevich_5P" Collapsed="true">
-    <Position X="9.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAACgAAAAgSIAAAAIAAEEAAAEBACkAQIQgEAACAA=</HashCode>
-      <FileName>DynamicUnits\CellCore\Izhikevich_5P.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.Leaky_Integrator" Collapsed="true">
-    <Position X="3" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAQAAACAASAAAAAIAAkEAAAAgCAEAAAAgEAACQA=</HashCode>
-      <FileName>DynamicUnits\CellCore\LeakyIntegrator.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.QuadraticIntegrateAndFire" Collapsed="true">
-    <Position X="5.25" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAASAAAAAIAAEEAAAAAAAAAAAAgEAACAA=</HashCode>
-      <FileName>DynamicUnits\CellCore\QuadIntegrateFire.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.CellCoreUnit" Collapsed="true">
-    <Position X="5.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAgAIBAAAAAgISAAABAIAAEEAAAEAAAAQIBAhMAwCCA=</HashCode>
-      <FileName>DynamicUnits\CellCore\CellCoreUnit.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.DynamicUnits.TwoExp_syn" Collapsed="true">
-    <Position X="0.5" Y="5.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QAAAAAAgAAAAAAAAAAAIABAAAAEAAgAAAACAAAAAgAA=</HashCode>
-      <FileName>DynamicUnits\JncCore\TwoExp_Syn.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="SiliFish.ModelUnits.Cells.Cell" Collapsed="true">
-    <Position X="5" Y="3.5" Width="1.5" />
+    <Position X="2.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>BYIAACKCAAIAhgAkWAggECJAAAASIEAQCBoAMAFw4AM=</HashCode>
+      <HashCode>FUIASCKKAEIChhBkWAghEGJBAAFSIFAYWB6AMAFw4AM=</HashCode>
       <FileName>ModelUnits\Cells\Cell.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Core" />
-    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.CellPool" Collapsed="true">
-    <Position X="10.25" Y="4.75" Width="1.5" />
+    <Position X="5" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAAAnAAAAoAAAAEAAIUwAAABCAAoAAgAAgAgQAAiAA=</HashCode>
+      <HashCode>QAAAQnICAEoQDBAEAEIUwABBBDAAoAhkEAiAgQAAiAA=</HashCode>
       <FileName>ModelUnits\Cells\CellPool.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.CellPoolTemplate" Collapsed="true">
-    <Position X="10" Y="3.25" Width="2" />
+    <Position X="4.75" Y="4.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AIAAAgAgAAAgoBUkCAAAAAIAMBAACDMQCIAApECAAAA=</HashCode>
+      <HashCode>AIAAAACgAEAioAUmCAAEAEIAMBAACBsUCIAAtECAQAE=</HashCode>
       <FileName>ModelUnits\Cells\CellPoolTemplate.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SiliFish.ModelUnits.Cells.MuscleCell" Collapsed="true">
-    <Position X="3.25" Y="5" Width="1.5" />
+  <Class Name="SiliFish.ModelUnits.Cells.MuscleCell">
+    <Position X="0.75" Y="2" Width="2.5" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Method Name="MuscleCell" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Field Name="tension" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>BAIAACACAAAAAAAACAAAEIAAAAAQIAAAEFAAEAAAgQA=</HashCode>
+      <HashCode>FAIAQiAIAAAAAAAACAABEKAAAAGAIAAAEFSAEAAAgQA=</HashCode>
       <FileName>ModelUnits\Cells\MuscleCell.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SiliFish.ModelUnits.Cells.Neuron" Collapsed="true">
-    <Position X="6.5" Y="5" Width="1.5" />
+  <Class Name="SiliFish.ModelUnits.Cells.Neuron">
+    <Position X="4" Y="2" Width="2.25" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="CalculateCellularOutputs" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="CheckValues" Hidden="true" />
+      <Method Name="CreateChemicalSynapse" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Method Name="Neuron" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Method Name="SortJunctions" Hidden="true" />
+      <Method Name="SortJunctionsBySource" Hidden="true" />
+      <Method Name="SortJunctionsByTarget" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>BAIAACICAAABBAAACAAAEABAAAAQIAAAADAAEAAggAA=</HashCode>
+      <HashCode>FAIAQiIKAEABBAAACAABECBAAAEAIAAAADSAEAAggAA=</HashCode>
       <FileName>ModelUnits\Cells\Neuron.cs</FileName>
     </TypeIdentifier>
   </Class>

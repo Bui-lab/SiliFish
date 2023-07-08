@@ -9,36 +9,36 @@ namespace SiliFish.DynamicUnits
 {
     public class Izhikevich_9P : CellCoreUnit
     {
-        private static double a_suggestedMin = 0.01;
+        private static double a_suggestedMin = 0.001;
         private static double a_suggestedMax = 1;
-        private static double b_suggestedMin = 0.01;
+        private static double b_suggestedMin = 0.001;
         private static double b_suggestedMax = 1;
-        private static double d_suggestedMin = -10;
+        private static double d_suggestedMin = -10.001;
         private static double d_suggestedMax = 10;
-        private static double k_suggestedMin = 0.01;
+        private static double k_suggestedMin = 0.001;
         private static double k_suggestedMax = 100;
-        private static double Cm_suggestedMin = 1;
-        private static double Cm_suggestedMax = 500;
+        private static double Cm_suggestedMin = 0.01;
+        private static double Cm_suggestedMax = 20;
 
         //a, b, c, d, are the parameters for the membrane potential dynamics
         //Default values are taken from Izhikevich 2003 (IEEE)
 
         [Description("The time scale of the recovery variable, u.")]
-        public double a { get; set; } = 0.02;
+        public double a { get; set; } = 0.021;
         [Description("The sensitivity of the recovery variable, u.")]
-        public double b { get; set; } = 0.2;
+        public double b { get; set; } = 0.201;
         [Description("The membrane potential V resets to value c (in mV) after a spike.")]
-        public double c { get; set; } = -65;
+        public double c { get; set; } = -65.001;
         [Description("The recovery variable u is incremented by the value d after a spike.")]
-        public double d { get; set; } = 2;
+        public double d { get; set; } = 2.001;
 
         [Description("The threshold membrane potential for a spike.")]
-        public double Vt { get; set; } = -57;
+        public double Vt { get; set; } = -57.001;
         // k is a coefficient of the quadratic polynomial 
         [Description("An approximation of the subthreshold region of the fast component of the I-V relationship of the neuron.")]
-        public double k { get; set; } = 1;
+        public double k { get; set; } = 1.001;
         [Description("The membrane capacitance.")]
-        public double Cm { get; set; } = 10; //the membrane capacitance
+        public double Cm { get; set; } = 10.001; //the membrane capacitance
 
         [JsonIgnore]
         double u = 0;//Keeps the current value of u

@@ -19,6 +19,9 @@ namespace SiliFish.UI.Controls
         private string coreType;
 
         private bool optimizationCancelled = false;
+        private DateTime optimizationStartTime;
+        private TimeSpan optimizationDuration;
+
         private CoreSolver solver;
         private CoreSolverOutput solverOutput;
 
@@ -71,6 +74,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimize()
         {
             if (solver == null) return;
+            optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
             solverOutput = solver.Optimize();
             Invoke(CompleteOptimization);
@@ -79,6 +83,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimizeExhaustive()
         {
             if (exhaustiveSolverList == null || !exhaustiveSolverList.Any()) return;
+            optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
             exhaustiveSolverOutput = null;
             exhaustiveBestSolver = null;
@@ -104,6 +109,7 @@ namespace SiliFish.UI.Controls
 
         private void CompleteOptimization()
         {
+            optimizationDuration = DateTime.Now - optimizationStartTime;
             timerOptimization.Enabled = false;
             exhaustiveSolverList = null;
             exhaustiveSolverIterator = 0;
@@ -114,7 +120,8 @@ namespace SiliFish.UI.Controls
                 optimizationProgress.Close();
             optimizationProgress = null;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
-            lOptimizationOutput.Text = $"Latest fitness: {solverOutput.BestFitness}";
+            lOptimizationOutput.Text = $"Latest fitness: {solverOutput.BestFitness}\r\n" +
+                $"Opimization duration: {optimizationDuration:g}";
             if (!string.IsNullOrEmpty(solverOutput.ErrorMessage))
                 lOptimizationOutput.Text += $"\r\nOptimization ran with errors: {solverOutput.ErrorMessage}";
         }

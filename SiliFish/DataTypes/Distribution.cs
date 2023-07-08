@@ -271,7 +271,7 @@ namespace SiliFish.DataTypes
 
         public override string ToString()
         {
-            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:0; SD:{1:0.#####}" : "";
+            string noise = NoiseStdDev > 0 ? $"\r\nNoise: µ:0; SD:{NoiseStdDev:0.#####}" : "";
             return $"{UniqueValue}{noise}";
         }
 

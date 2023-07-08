@@ -18,11 +18,7 @@ namespace SiliFish.Services.Optimization
             int spikeCount = stat.BurstsOrSpikes.Sum(bs => bs.SpikeCount);
             double timeRange = stat.CurrentEndTime - stat.CurrentStartTime;
             double freq = 1000 * spikeCount / timeRange;
-            if (ValueMin <= freq + 1 && ValueMax >= freq - 1)
-                return Weight;
-            if (freq < ValueMin)
-                return Weight / (ValueMin - freq);
-            return Weight / (freq - ValueMax);
+            return CalculateFitnessFor(freq);
         }
 
     }
