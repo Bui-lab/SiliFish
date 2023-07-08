@@ -13,6 +13,7 @@ using Windows.Gaming.XboxLive.Storage;
 
 namespace SiliFish.UI.Controls
 {
+
     public partial class GAControl : UserControl
     {
         private static string GAFileDefaultFolder;
@@ -29,6 +30,9 @@ namespace SiliFish.UI.Controls
         private int exhaustiveSolverIterator;
         private CoreSolverOutput exhaustiveSolverOutput;
         private CoreSolver exhaustiveBestSolver;
+        private List<(double Fitness, Dictionary<string, double> Parameters)> exhaustiveBestParameters;
+        private int exhaustiveBestSolverIterator;
+
 
         private Dictionary<string, double> minValues;
         private Dictionary<string, double> maxValues;
@@ -37,6 +41,7 @@ namespace SiliFish.UI.Controls
         private ProgressForm optimizationProgress;
 
         public event EventHandler OnCompleteOptimization;
+        public event EventHandler OnTriggerOptimization;
         public event EventHandler OnLoadParams;
         public event EventHandler OnGetParams;
         public event EventHandler ContentChanged;
@@ -83,6 +88,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimizeExhaustive()
         {
             if (exhaustiveSolverList == null || !exhaustiveSolverList.Any()) return;
+            exhaustiveBestParameters = new();
             optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
             exhaustiveSolverOutput = null;
@@ -98,22 +104,62 @@ namespace SiliFish.UI.Controls
                 {
                     exhaustiveSolverOutput = currentOutput;
                     exhaustiveBestSolver = solver;
+                    if (exhaustiveBestParameters.Count < GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
+                        exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
+                    else
+                    {
+                        double minFitness = exhaustiveBestParameters.Min(ebp => ebp.Fitness);
+                        if (minFitness < currentOutput.BestFitness)
+                        {
+                            var toRemove = exhaustiveBestParameters.Find(ebp => ebp.Fitness == minFitness);
+                            exhaustiveBestParameters.Remove(toRemove);
+                        }
+                        exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
+                    }
+
+                    Invoke(TriggerOptimizationLoop);
                 }
                 if (exhaustiveSolverOutput?.BestFitness >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon)
                     break;
             }
             solver = exhaustiveBestSolver;
             solverOutput = exhaustiveSolverOutput;
-            Invoke(CompleteOptimization);
+            Invoke(CompleteExhaustiveOptimization);
+        }
+        private void TriggerOptimizationLoop()
+        {
+            OnTriggerOptimization?.Invoke(this, new OptimizationEventArgs()
+            {
+                Fitness = exhaustiveSolverOutput.BestFitness,
+                Parameters = exhaustiveSolverOutput.BestValues
+            });
+            lOptimizationOutput.Text = $"Best fitness: {exhaustiveSolverOutput.BestFitness}";
         }
 
+        private void CompleteExhaustiveOptimization()
+        {
+            if (exhaustiveBestParameters.Any())
+            {
+                btnOptimizePrev.Visible =
+                btnOptimizeNext.Visible = true;
+                btnOptimizePrev.Enabled = false;
+                btnOptimizeNext.Enabled = exhaustiveBestParameters.Count > 1;
+                exhaustiveBestSolverIterator = 0;
+            }
+            else
+            {
+                btnOptimizePrev.Visible =
+                btnOptimizeNext.Visible = false;
+            }
+            CompleteOptimization();
+        }
         private void CompleteOptimization()
         {
             optimizationDuration = DateTime.Now - optimizationStartTime;
             timerOptimization.Enabled = false;
             exhaustiveSolverList = null;
             exhaustiveSolverIterator = 0;
-            btnOptimize.Enabled = btnOptimizeExhaustive.Enabled =  true;
+            btnOptimize.Enabled = btnOptimizeExhaustive.Enabled = true;
             if (solverOutput == null) return;
             Parameters = solverOutput.BestValues;
             if (optimizationProgress != null && optimizationProgress.Visible)
@@ -389,6 +435,7 @@ namespace SiliFish.UI.Controls
             CreateSolver();
             timerOptimization.Enabled = true;
             btnOptimize.Enabled = btnOptimizeExhaustive.Enabled = false;
+            btnOptimizePrev.Enabled = btnOptimizeNext.Enabled = false;
             optimizationProgress = new()
             {
                 Text = "Optimization",
@@ -530,6 +577,24 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void btnOptimizePrev_Click(object sender, EventArgs e)
+        {
+            if (exhaustiveBestSolverIterator <= 0) return;
+            btnOptimizeNext.Enabled = true;
+            Parameters = exhaustiveBestParameters[--exhaustiveBestSolverIterator].Parameters;
+            OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
+            if (exhaustiveBestSolverIterator == 0)
+                btnOptimizePrev.Enabled = false;
+        }
 
+        private void btnOptimizeNext_Click(object sender, EventArgs e)
+        {
+            if (exhaustiveBestSolverIterator >= exhaustiveBestParameters.Count - 1) return;
+            btnOptimizePrev.Enabled = true;
+            Parameters = exhaustiveBestParameters[++exhaustiveBestSolverIterator].Parameters;
+            OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
+            if (exhaustiveBestSolverIterator == exhaustiveBestParameters.Count - 1)
+                btnOptimizeNext.Enabled = false;
+        }
     }
 }

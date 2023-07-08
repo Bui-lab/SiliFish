@@ -48,6 +48,8 @@
             btnCalculateFitness = new Button();
             pLineFitnessFunctions = new Panel();
             lFitnessFunctions = new Label();
+            btnOptimizeNext = new Button();
+            btnOptimizePrev = new Button();
             btnOptimizeExhaustive = new Button();
             grTermination = new GroupBox();
             cbTargetFitness = new CheckBox();
@@ -107,6 +109,8 @@
             // splitGA.Panel2
             // 
             splitGA.Panel2.BackColor = Color.White;
+            splitGA.Panel2.Controls.Add(btnOptimizeNext);
+            splitGA.Panel2.Controls.Add(btnOptimizePrev);
             splitGA.Panel2.Controls.Add(btnOptimizeExhaustive);
             splitGA.Panel2.Controls.Add(grTermination);
             splitGA.Panel2.Controls.Add(lOptimizationOutput);
@@ -313,14 +317,46 @@
             lFitnessFunctions.TabIndex = 2;
             lFitnessFunctions.Text = "Fitness Functions";
             // 
-            // btnOptimizeFull
+            // btnOptimizeNext
+            // 
+            btnOptimizeNext.BackColor = Color.FromArgb(96, 125, 139);
+            btnOptimizeNext.FlatAppearance.BorderColor = Color.LightGray;
+            btnOptimizeNext.FlatStyle = FlatStyle.Flat;
+            btnOptimizeNext.ForeColor = Color.White;
+            btnOptimizeNext.Location = new Point(205, 320);
+            btnOptimizeNext.Name = "btnOptimizeNext";
+            btnOptimizeNext.Size = new Size(31, 23);
+            btnOptimizeNext.TabIndex = 54;
+            btnOptimizeNext.Text = ">";
+            toolTip.SetToolTip(btnOptimizeNext, "Display the next best solution");
+            btnOptimizeNext.UseVisualStyleBackColor = false;
+            btnOptimizeNext.Visible = false;
+            btnOptimizeNext.Click += btnOptimizeNext_Click;
+            // 
+            // btnOptimizePrev
+            // 
+            btnOptimizePrev.BackColor = Color.FromArgb(96, 125, 139);
+            btnOptimizePrev.FlatAppearance.BorderColor = Color.LightGray;
+            btnOptimizePrev.FlatStyle = FlatStyle.Flat;
+            btnOptimizePrev.ForeColor = Color.White;
+            btnOptimizePrev.Location = new Point(173, 320);
+            btnOptimizePrev.Name = "btnOptimizePrev";
+            btnOptimizePrev.Size = new Size(31, 23);
+            btnOptimizePrev.TabIndex = 53;
+            btnOptimizePrev.Text = "<";
+            toolTip.SetToolTip(btnOptimizePrev, "Display the previous best solution");
+            btnOptimizePrev.UseVisualStyleBackColor = false;
+            btnOptimizePrev.Visible = false;
+            btnOptimizePrev.Click += btnOptimizePrev_Click;
+            // 
+            // btnOptimizeExhaustive
             // 
             btnOptimizeExhaustive.BackColor = Color.FromArgb(96, 125, 139);
             btnOptimizeExhaustive.FlatAppearance.BorderColor = Color.LightGray;
             btnOptimizeExhaustive.FlatStyle = FlatStyle.Flat;
             btnOptimizeExhaustive.ForeColor = Color.White;
             btnOptimizeExhaustive.Location = new Point(6, 320);
-            btnOptimizeExhaustive.Name = "btnOptimizeFull";
+            btnOptimizeExhaustive.Name = "btnOptimizeExhaustive";
             btnOptimizeExhaustive.Size = new Size(161, 23);
             btnOptimizeExhaustive.TabIndex = 52;
             btnOptimizeExhaustive.Text = "Optimize (Exhaustive)";
@@ -685,5 +721,7 @@
         private DataGridViewLinkColumn colFFEdit;
         private DataGridViewLinkColumn colFFDelete;
         private Button btnOptimizeExhaustive;
+        private Button btnOptimizeNext;
+        private Button btnOptimizePrev;
     }
 }
