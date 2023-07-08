@@ -153,6 +153,7 @@ namespace SiliFish.UI.Controls
 
             splitGAAndPlots.Panel1Collapsed = true;
             gaControl.OnCompleteOptimization += GaControl_OnCompleteOptimization;
+            gaControl.OnTriggerOptimization += GaControl_OnTriggerOptimization;
             gaControl.OnLoadParams += GaControl_OnLoadParams;
             gaControl.OnGetParams += GaControl_OnGetParams;
             sensitivityAnalysisRheobase.RunAnalysis += SensitivityAnalysisRheobase_RunAnalysis;
@@ -162,6 +163,7 @@ namespace SiliFish.UI.Controls
             if (string.IsNullOrEmpty(outputFolder))
                 outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         }
+
 
         private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
         {
@@ -250,6 +252,11 @@ namespace SiliFish.UI.Controls
         }
 
         private void GaControl_OnCompleteOptimization(object sender, EventArgs e)
+        {
+            Parameters = gaControl.Parameters;
+        }
+
+        private void GaControl_OnTriggerOptimization(object sender, EventArgs e)
         {
             Parameters = gaControl.Parameters;
         }
