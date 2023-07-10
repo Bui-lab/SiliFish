@@ -16,6 +16,7 @@ using SiliFish.ModelUnits;
 using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
+using System.Diagnostics;
 
 namespace SiliFish.UI.Controls
 {
@@ -80,10 +81,11 @@ namespace SiliFish.UI.Controls
             }
             else if (PlotType == PlotType.EpisodesMN)
             {
-                cellSelectionPlot.Visible = true;
                 cellSelectionPlot.ControlsEnabled = false;
-                cellSelectionPlot.TurnOnSingleCellOrSomite();
                 cellSelectionPlot.CombineOptionsVisible = false;
+                cellSelectionPlot.Visible = true;
+                cellSelectionPlot.Refresh();
+                cellSelectionPlot.TurnOnSingleCellOrSomite();
             }
             else
             {
@@ -1091,8 +1093,31 @@ namespace SiliFish.UI.Controls
         {
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
-                MessageBox.Show($"File {saveFileCSV.FileName} is saved.");
+                bool saved = false;
+                try
+                {
+                    FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
+                    saved = true;
+                    Process p = new()
+                    {
+                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
+                        {
+                            UseShellExecute = true
+                        }
+                    };
+                    p.Start();
+                }
+                catch (Exception exc)
+                {
+                    if (!saved)
+                    {
+                        MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.");
+                    }
+                }
             }
         }
 

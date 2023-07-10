@@ -53,10 +53,16 @@ namespace SiliFish.Services.Plotting.PlotSelection
             if (obj is not PlotSelectionUnits psu)
                 return false;
             List<Tuple<string, string>> tags1 = UnitTags;
-            tags1.Sort();
             List<Tuple<string, string>> tags2 = psu.UnitTags;
+            if (tags1.Count != tags2.Count) return false;
+            tags1.Sort();
             tags2.Sort();
-            return tags1.Equals(tags2);
+            for (int i = 0; i < tags1.Count; i++)
+            {
+                if (!tags1[i].Equals(tags2[i]))
+                    return false;
+            }
+            return true;           
         }
         public void AddUnit(ModelUnitBase unit)
         {

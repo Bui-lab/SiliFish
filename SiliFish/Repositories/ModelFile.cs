@@ -295,6 +295,56 @@ namespace SiliFish.Repositories
         #endregion
 
         #region CSV Functions
+
+        public static void SaveToFile(RunningModel model, string filename)
+        {
+            if (!model.ModelRun)
+            {
+                return;
+            }
+            bool jncTracking = model.JunctionCurrentTrackingOn;
+            List<string> cell_names = new();
+            cell_names.AddRange(model.NeuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
+            cell_names.AddRange(model.MusclePools.Select(k => k.CellGroup).Distinct());
+
+            Dictionary<string, double[]> Vdata_list = new();
+            Dictionary<string, double[]> Gapdata_list = new();
+            Dictionary<string, double[]> Syndata_list = new();
+            foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
+            {
+                //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
+                foreach (Cell c in pool.GetCells())
+                {
+                    Vdata_list.Add(c.ID, c.V);
+                    if (jncTracking)
+                    {
+                        c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        if (c is MuscleCell)
+                        {
+                            (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        }
+                        else if (c is Neuron)
+                        {
+                            (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                        }
+                    }
+                }
+
+            }
+            if (jncTracking)
+            {
+                string Vfilename = Path.ChangeExtension(filename, "V.csv");
+                SaveModelDynamicsToCSV(filename: Vfilename, Time: model.TimeArray, Values: Vdata_list);
+                string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
+                string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
+                SaveModelDynamicsToCSV(filename: Gapfilename, Time: model.TimeArray, Values: Gapdata_list);
+                SaveModelDynamicsToCSV(filename: Synfilename, Time: model.TimeArray, Values: Syndata_list);
+            }
+            else
+            {
+                SaveModelDynamicsToCSV(filename: filename, Time: model.TimeArray, Values: Vdata_list);
+            }
+        }
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
             if (filename == null || Time == null || Values == null)
@@ -307,7 +357,7 @@ namespace SiliFish.Repositories
             for (int t = 0; t < Time.Length; t++)
             {
                 string row = Time[t].ToString() + ',' +
-                    string.Join(',', Values.Select(item => item.Value[t]));
+                    string.Join(',', Values.Select(item => item.Value[t].ToString(GlobalSettings.PlotDataFormat)));
                 sw.WriteLine(row);
             }
         }

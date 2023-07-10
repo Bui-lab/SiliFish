@@ -728,54 +728,7 @@ namespace SiliFish.ModelUnits.Architecture
             return (null, pools);
         }
 
-        public virtual void SaveToFile(string filename)
-        {
-            if (!model_run)
-            {
-                return;
-            }
-            List<string> cell_names = new();
-            cell_names.AddRange(neuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
-            cell_names.AddRange(musclePools.Select(k => k.CellGroup).Distinct());
 
-            Dictionary<string, double[]> Vdata_list = new();
-            Dictionary<string, double[]> Gapdata_list = new();
-            Dictionary<string, double[]> Syndata_list = new();
-            foreach (CellPool pool in neuronPools.Union(musclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
-            {
-                //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
-                foreach (Cell c in pool.GetCells())
-                {
-                    Vdata_list.Add(c.ID, c.V);
-                    if (JunctionCurrentTrackingOn)
-                    {
-                        c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                        if (c is MuscleCell)
-                        {
-                            (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                        }
-                        else if (c is Neuron)
-                        {
-                            (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                        }
-                    }
-                }
-
-            }
-            if (JunctionCurrentTrackingOn)
-            {
-                string Vfilename = Path.ChangeExtension(filename, "V.csv");
-                ModelFile.SaveModelDynamicsToCSV(filename: Vfilename, Time: Time, Values: Vdata_list);
-                string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
-                string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
-                ModelFile.SaveModelDynamicsToCSV(filename: Gapfilename, Time: Time, Values: Gapdata_list);
-                ModelFile.SaveModelDynamicsToCSV(filename: Synfilename, Time: Time, Values: Syndata_list);
-            }
-            else
-            {
-                ModelFile.SaveModelDynamicsToCSV(filename: filename, Time: Time, Values: Vdata_list);
-            }
-        }
 
         protected virtual void InitForSimulation()
         {

@@ -318,7 +318,7 @@ namespace SiliFish.UI
                 return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                RunningModel.SaveToFile(saveFileCSV.FileName);
+                ModelFile.SaveToFile(RunningModel, saveFileCSV.FileName);
             }
         }
 

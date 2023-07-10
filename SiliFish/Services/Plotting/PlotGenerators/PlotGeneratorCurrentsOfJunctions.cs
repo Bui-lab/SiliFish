@@ -74,7 +74,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             Chart chart = new()
             {
                 CsvData = csvData,
-                Title = $"`Junction:{columnTitles[5..]}`",
+                Title = $"`{columnTitles[5..]}`",
                 Color = string.Join(',', colorPerChart),
                 yLabel = $"`Current ({ampere})`",
                 yMin = yMin,

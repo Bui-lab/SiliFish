@@ -1,4 +1,5 @@
-﻿using SiliFish.Definitions;
+﻿using Extensions;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
@@ -35,7 +36,7 @@ namespace SiliFish.UI.Controls.Display
             set
             {
                 foreach (Control ctrl in Controls)
-                    ctrl.Enabled = value;
+                    ctrl.SetEnabled(value);
                 int NumberOfSomites = runningModel?.ModelDimensions.NumberOfSomites ?? 0;
                 ddSomiteSelection.Enabled = eSomiteSelection.Enabled = cbCombineSomites.Enabled = NumberOfSomites > 0;
             }
@@ -184,6 +185,7 @@ namespace SiliFish.UI.Controls.Display
         }
         public void TurnOnSingleCellOrSomite()
         {
+            pMain.SetEnabledNoChild(true);
             if (runningModel.ModelDimensions.NumberOfSomites > 0)
             {
                 ddSomiteSelection.Text = PlotSomiteSelection.Single.ToString();
