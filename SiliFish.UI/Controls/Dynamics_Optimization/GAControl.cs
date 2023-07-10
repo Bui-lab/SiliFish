@@ -479,7 +479,8 @@ namespace SiliFish.UI.Controls
                     {
                         Settings = GeneticAlgorithmFile.Load(openFileJson.FileName)
                     };
-
+                    if (solver.Settings == null)
+                        throw new Exception();
                     coreType = solver.Settings.CoreType;
                     eMinChromosome.Text = solver.Settings.MinPopulationSize.ToString();
                     eMaxChromosome.Text = solver.Settings.MaxPopulationSize.ToString();
