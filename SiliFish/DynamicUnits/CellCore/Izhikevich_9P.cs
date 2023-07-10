@@ -9,14 +9,14 @@ namespace SiliFish.DynamicUnits
 {
     public class Izhikevich_9P : CellCoreUnit
     {
-        private static double a_suggestedMin = 0.001;
-        private static double a_suggestedMax = 1;
-        private static double b_suggestedMin = 0.001;
-        private static double b_suggestedMax = 1;
-        private static double d_suggestedMin = -10.001;
+        private static double a_suggestedMin = 0.01;
+        private static double a_suggestedMax = 10;
+        private static double b_suggestedMin = 0.01;
+        private static double b_suggestedMax = 20;
+        private static double d_suggestedMin = -10.01;
         private static double d_suggestedMax = 10;
-        private static double k_suggestedMin = 0.001;
-        private static double k_suggestedMax = 100;
+        private static double k_suggestedMin = 0.01;
+        private static double k_suggestedMax = 10;
         private static double Cm_suggestedMin = 0.01;
         private static double Cm_suggestedMax = 20;
 
