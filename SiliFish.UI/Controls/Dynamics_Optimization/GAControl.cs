@@ -331,6 +331,7 @@ namespace SiliFish.UI.Controls
             string progress = solver.ProgressText;
             if (exhaustiveSolverIterator > 0)
                 progress = $"{progress}\r\n" +
+                    $"~.~.~.~.~.~.~.~.~.~.~.~.~.~\r\n" +
                     $"Exhaustive search {exhaustiveSolverIterator}/{exhaustiveSolverList.Count}\r\n" +
                     $"Best overall fitness: {exhaustiveSolverOutput?.BestFitness}";
             optimizationProgress.Progress = solver.Progress;
