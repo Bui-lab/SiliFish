@@ -100,7 +100,7 @@ namespace SiliFish.UI.Controls
                 solver = iterSolver;
                 exhaustiveSolverIterator++;
                 CoreSolverOutput currentOutput = solver.Optimize();
-                if (exhaustiveSolverOutput == null || exhaustiveSolverOutput.BestFitness < currentOutput.BestFitness)
+                if (exhaustiveSolverOutput == null || exhaustiveSolverOutput.BestFitness <= currentOutput.BestFitness)
                 {
                     exhaustiveSolverOutput = currentOutput;
                     exhaustiveBestSolver = solver;
@@ -119,7 +119,8 @@ namespace SiliFish.UI.Controls
 
                     Invoke(TriggerOptimizationLoop);
                 }
-                if (exhaustiveSolverOutput?.BestFitness >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon)
+                if (exhaustiveSolverOutput?.BestFitness >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon
+                    && exhaustiveBestParameters.Count == GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
                     break;
             }
             solver = exhaustiveBestSolver;
