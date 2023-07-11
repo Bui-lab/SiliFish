@@ -84,8 +84,8 @@ namespace SiliFish.UI.Controls
                 cellSelectionPlot.ControlsEnabled = false;
                 cellSelectionPlot.CombineOptionsVisible = false;
                 cellSelectionPlot.Visible = true;
-                cellSelectionPlot.Refresh();
                 cellSelectionPlot.TurnOnSingleCellOrSomite();
+                cellSelectionPlot.Refresh();
             }
             else
             {
@@ -405,17 +405,29 @@ namespace SiliFish.UI.Controls
         }
         private void listPlotHistory_ItemsExport(object sender, EventArgs e)
         {
+            bool fileSaved = false;
             try
             {
                 string json = JsonUtil.ToJson(listPlotHistory.GetItems<PlotDefinition>());
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllText(saveFileJson.FileName, json);
+                    fileSaved = true;
+                    Process p = new()
+                    {
+                        StartInfo = new ProcessStartInfo(saveFileJson.FileName)
+                        {
+                            UseShellExecute = true
+                        }
+                    };
+                    p.Start();
                 }
             }
             catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                if (!fileSaved)
+                    MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                else MessageBox.Show($"File {saveFileJson.FileName} is saved.");
             }
         }
 
@@ -1174,6 +1186,7 @@ namespace SiliFish.UI.Controls
             linkExportSpikes.Enabled = true;
             UseWaitCursor = false;
         }
+
     }
 
 }

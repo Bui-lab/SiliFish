@@ -25,7 +25,7 @@ namespace Extensions
             control.Enabled = enabled;
             foreach (Control ctrl in control.Controls)
             {
-                ctrl.Enabled = prevValues[ctrl.Name];
+                ctrl.SetEnabledNoChild(prevValues[ctrl.Name]);
             }
         }
 

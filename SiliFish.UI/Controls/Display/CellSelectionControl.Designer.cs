@@ -90,6 +90,7 @@
             eSomiteSelection.TabIndex = 39;
             eSomiteSelection.Value = new decimal(new int[] { 1, 0, 0, 0 });
             eSomiteSelection.ValueChanged += eSomiteSelection_ValueChanged;
+            eSomiteSelection.EnabledChanged += eSomiteSelection_EnabledChanged;
             // 
             // lSomites
             // 
@@ -162,7 +163,7 @@
             // cbCombinePools
             // 
             cbCombinePools.AutoSize = true;
-            cbCombinePools.Location = new Point(10, 37);
+            cbCombinePools.Location = new Point(4, 37);
             cbCombinePools.Name = "cbCombinePools";
             cbCombinePools.Size = new Size(75, 19);
             cbCombinePools.TabIndex = 66;
@@ -175,7 +176,7 @@
             cbCombineCells.AutoSize = true;
             cbCombineCells.Checked = true;
             cbCombineCells.CheckState = CheckState.Checked;
-            cbCombineCells.Location = new Point(10, 87);
+            cbCombineCells.Location = new Point(4, 87);
             cbCombineCells.Name = "cbCombineCells";
             cbCombineCells.Size = new Size(75, 19);
             cbCombineCells.TabIndex = 65;
@@ -188,7 +189,7 @@
             cbCombineSomites.AutoSize = true;
             cbCombineSomites.Checked = true;
             cbCombineSomites.CheckState = CheckState.Checked;
-            cbCombineSomites.Location = new Point(10, 62);
+            cbCombineSomites.Location = new Point(4, 62);
             cbCombineSomites.Name = "cbCombineSomites";
             cbCombineSomites.Size = new Size(75, 19);
             cbCombineSomites.TabIndex = 64;
@@ -224,6 +225,7 @@
             pMain.Name = "pMain";
             pMain.Size = new Size(240, 116);
             pMain.TabIndex = 68;
+            pMain.EnabledChanged += pMain_EnabledChanged;
             // 
             // CellSelectionControl
             // 
@@ -233,6 +235,7 @@
             Controls.Add(pCombine);
             Name = "CellSelectionControl";
             Size = new Size(326, 116);
+            EnabledChanged += CellSelectionControl_EnabledChanged;
             ((System.ComponentModel.ISupportInitialize)eSomiteSelection).EndInit();
             ((System.ComponentModel.ISupportInitialize)eCellSelection).EndInit();
             pCombine.ResumeLayout(false);

@@ -204,8 +204,12 @@ namespace SiliFish.UI.Controls
         }
         private void miPlot_Click(object sender, EventArgs e)
         {
-            List<ModelUnitBase> list = listBox.SelectedItems.Cast<ModelUnitBase>().ToList();
-            ItemPlot?.Invoke(list, new EventArgs());
+            try
+            {
+                List<ModelUnitBase> list = listBox.SelectedItems.Cast<ModelUnitBase>().ToList();
+                ItemPlot?.Invoke(list, new EventArgs());
+            }
+            catch { }
         }
         private void miHighlight_Click(object sender, EventArgs e)
         {

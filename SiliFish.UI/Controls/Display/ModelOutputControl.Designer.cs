@@ -336,12 +336,13 @@
             // pPlot
             // 
             pPlot.BackColor = Color.FromArgb(236, 239, 241);
+            pPlot.Controls.Add(btnPlotHTML);
+            pPlot.Controls.Add(ddPlot);
             pPlot.Controls.Add(listPlotHistory);
             pPlot.Controls.Add(cellSelectionPlot);
             pPlot.Controls.Add(cbPlotHistory);
             pPlot.Controls.Add(linkExportPlotData);
             pPlot.Controls.Add(pLinePlots);
-            pPlot.Controls.Add(btnPlotHTML);
             pPlot.Controls.Add(linkSaveHTMLPlots);
             pPlot.Controls.Add(ePlotEnd);
             pPlot.Controls.Add(ePlotStart);
@@ -350,7 +351,6 @@
             pPlot.Controls.Add(lPlotEnd);
             pPlot.Controls.Add(lms2);
             pPlot.Controls.Add(lPlotPlot);
-            pPlot.Controls.Add(ddPlot);
             pPlot.Dock = DockStyle.Top;
             pPlot.Location = new Point(3, 3);
             pPlot.Name = "pPlot";
@@ -361,7 +361,7 @@
             // 
             listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             listPlotHistory.FirstItem = "(Plot History - Double click to select.)";
-            listPlotHistory.Location = new Point(535, 29);
+            listPlotHistory.Location = new Point(539, 28);
             listPlotHistory.Name = "listPlotHistory";
             listPlotHistory.SelectedIndex = -1;
             listPlotHistory.Size = new Size(146, 108);
@@ -372,11 +372,11 @@
             // 
             // cellSelectionPlot
             // 
-            cellSelectionPlot.CombineOptionsVisible = false;
-            cellSelectionPlot.Location = new Point(208, 29);
+            cellSelectionPlot.CombineOptionsVisible = true;
+            cellSelectionPlot.Location = new Point(212, 25);
             cellSelectionPlot.Name = "cellSelectionPlot";
             cellSelectionPlot.SelectedUnits = null;
-            cellSelectionPlot.Size = new Size(321, 111);
+            cellSelectionPlot.Size = new Size(327, 111);
             cellSelectionPlot.TabIndex = 66;
             // 
             // cbPlotHistory
@@ -527,9 +527,9 @@
             ddPlot.DropDownStyle = ComboBoxStyle.DropDownList;
             ddPlot.FlatStyle = FlatStyle.Flat;
             ddPlot.FormattingEnabled = true;
-            ddPlot.Location = new Point(272, 6);
+            ddPlot.Location = new Point(278, 5);
             ddPlot.Name = "ddPlot";
-            ddPlot.Size = new Size(168, 23);
+            ddPlot.Size = new Size(165, 23);
             ddPlot.TabIndex = 34;
             ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
             // 

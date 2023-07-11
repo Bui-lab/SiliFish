@@ -343,5 +343,19 @@ namespace SiliFish.UI.Controls.Display
             return selection;
         }
 
+        private void eSomiteSelection_EnabledChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pMain_EnabledChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CellSelectionControl_EnabledChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

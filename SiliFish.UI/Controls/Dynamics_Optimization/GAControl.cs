@@ -518,6 +518,9 @@ namespace SiliFish.UI.Controls
             {
                 GeneticAlgorithmFile.Save(saveFileJson.FileName, solver.Settings);
                 GAFileDefaultFolder = Path.GetDirectoryName(saveFileJson.FileName);
+                ContentChangedArgs args = new()
+                { Caption = $"GA File: {Path.GetFileNameWithoutExtension(saveFileJson.FileName)}" };
+                ContentChanged?.Invoke(this, args);
             }
         }
 
