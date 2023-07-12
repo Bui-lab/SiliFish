@@ -17,6 +17,7 @@ using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using System.Diagnostics;
+using SiliFish.UI.Services;
 
 namespace SiliFish.UI.Controls
 {
@@ -81,7 +82,6 @@ namespace SiliFish.UI.Controls
             }
             else if (PlotType == PlotType.EpisodesMN)
             {
-                cellSelectionPlot.ControlsEnabled = false;
                 cellSelectionPlot.CombineOptionsVisible = false;
                 cellSelectionPlot.Visible = true;
                 cellSelectionPlot.TurnOnSingleCellOrSomite();
@@ -331,13 +331,13 @@ namespace SiliFish.UI.Controls
 
         private void PopulatePlotTypes()
         {
-            string lastSelection = ddPlot.SelectedText;
+            string lastSelection = ddPlot.Text;
             ddPlot.Items.Clear();
             foreach (PlotType pt in Enum.GetValues(typeof(PlotType)))
             {
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
-            ddPlot.SelectedText = lastSelection;
+            ddPlot.Text = lastSelection;
         }
         private void GetPlotSubset()
         {
@@ -384,8 +384,8 @@ namespace SiliFish.UI.Controls
                     FileUtil.SaveToFile(path + "\\" + filename, chart.CsvData);
                     fileNames.Add(filename);
                 }
+                MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.");
             }
-            MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.");
         }
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
         {
@@ -547,7 +547,10 @@ namespace SiliFish.UI.Controls
         {
             if (!string.IsNullOrEmpty(errorMessage)) //TODO convert error message to enum - and add "(You can set the number of plots that triggers this warning through the 'Settings' button above)"
                 MessageBox.Show(errorMessage);
-            webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile);
+            bool navigated = false;
+            webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
             if (cbPlotHistory.Checked)
                 listPlotHistory.AppendItem(lastPlot);
             UseWaitCursor = false;
@@ -757,7 +760,10 @@ namespace SiliFish.UI.Controls
             TwoDRenderer modelGenerator = new();
             string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
-            webView2DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+            bool navigated = false;
+            webView2DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
             rendered2D = true;
 
         }
@@ -816,7 +822,10 @@ namespace SiliFish.UI.Controls
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     webView3DRender.Width, webView3DRender.Height,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
-                webView3DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+                bool navigated = false;
+                webView3DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+                if (!navigated)
+                    Warner.LargeFileWarning(tempFile);
                 rendered3D = true;
             }
             catch (Exception ex)
@@ -1000,7 +1009,10 @@ namespace SiliFish.UI.Controls
         }
         private void CompleteAnimation()
         {
-            webViewAnimation.NavigateTo(htmlAnimation, GlobalSettings.TempFolder, ref tempFile);
+            bool navigated = false;
+            webViewAnimation.NavigateTo(htmlAnimation, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
             linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
             lAnimationTime.Text = $"Last animation: {DateTime.Now:t}";
             btnAnimate.Enabled = true;
@@ -1082,7 +1094,10 @@ namespace SiliFish.UI.Controls
             (string _, List<Chart> charts) = PG.GetPlotData(plotDefinition, RunningModel, allMNs, null);
             string html = DyChartGenerator.PlotCharts("Summary Membrane Potentials", charts, true, GlobalSettings.ShowZeroValues,
                 GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
-            webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile);
+            bool navigated = false;
+            webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
             eEpisodes.Text = "";
             foreach (SwimmingEpisode episode in episodes)
                 eEpisodes.Text += episode.ToString() + "\r\n\r\n";

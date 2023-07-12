@@ -27,20 +27,25 @@ namespace SiliFish.ModelUnits.Architecture
         [Description("Default conduction velocity of currents between cells."),
             DisplayName("Conduction Velocity"),
             Category("Default Values")]
-        public double cv { get; set; } = 1; //the transmission speed
+        public double cv { get; set; } = 0.2; 
+
+        [Description("Default delay in chemical synapses."),
+            DisplayName("Synaptic Delay"),
+            Category("Default Values")]
+        public double syanptic_delay { get; set; } = 0.5; 
 
         [Description("Default reversal potential of glutamate."),
             Category("Default Values")]
-        public double E_glu { get; set; } = 0;////the reversal potential of glutamate
+        public double E_glu { get; set; } = 0;
         [Description("Default reversal potential of glycine."),
             Category("Default Values")]
-        public double E_gly { get; set; } = -70; //the reversal potential of glycine
+        public double E_gly { get; set; } = -70; 
         [Description("Default reversal potential of GABA."),
             Category("Default Values")]
-        public double E_gaba { get; set; } = -70; //the reversal potential of GABA
+        public double E_gaba { get; set; } = -70; 
         [Description("Default reversal potential of ACh."),
             Category("Default Values")]
-        public double E_ach { get; set; } = 120; //reversal potential for ACh receptors
+        public double E_ach { get; set; } = 120; 
 
         [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"),
             DisplayName("Chattering Irregularity"),

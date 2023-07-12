@@ -185,7 +185,8 @@ namespace SiliFish.UI.Controls.Display
         }
         public void TurnOnSingleCellOrSomite()
         {
-            pMain.SetEnabledNoChild(true);
+            foreach(Control control in pMain.Controls) 
+                control.Enabled = false;
             if (runningModel.ModelDimensions.NumberOfSomites > 0)
             {
                 ddSomiteSelection.Text = PlotSomiteSelection.Single.ToString();

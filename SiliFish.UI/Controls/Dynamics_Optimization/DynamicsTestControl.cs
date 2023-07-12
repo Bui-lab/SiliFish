@@ -12,6 +12,7 @@ using SiliFish.Repositories;
 using SiliFish.Services.Plotting;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Extensions;
+using SiliFish.UI.Services;
 using System.ComponentModel;
 
 namespace SiliFish.UI.Controls
@@ -195,7 +196,10 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
+            bool navigated = false;
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
         }
 
         private void SensitivityAnalysisRheobase_RunAnalysis(object sender, EventArgs e)
@@ -233,7 +237,11 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 height);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
+            bool navigated = false;
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
+
         }
 
         private void GaControl_OnLoadParams(object sender, EventArgs e)
@@ -415,7 +423,10 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
+            bool navigated = false;
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
         }
         private void CreatePlots(Dictionary<string, DynamicsStats> dynamicsList, List<string> columnNames, List<double[]> I)
         {
@@ -449,7 +460,10 @@ namespace SiliFish.UI.Controls
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile);
+            bool navigated = false;
+            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
         }
 
         private void cbPlotSelection_CheckedChanged(object sender, EventArgs e)
@@ -525,7 +539,7 @@ namespace SiliFish.UI.Controls
                     }
                     else //if (rbMultipleEntry.Checked)
                     {
-                        string[] multValues = eMultipleStimulus.Text.Split(new char[] { ';', ' ', ':', '-' });
+                        string[] multValues = eMultipleStimulus.Text.Split(new char[] { ';', ' ', ':' });
                         foreach (string s in multValues)
                             if (double.TryParse(s, out double d))
                             {

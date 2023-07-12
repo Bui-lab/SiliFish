@@ -180,13 +180,14 @@ namespace SiliFish.ModelUnits.Junction
             
             ISynA = ISynB = 0;
             
+            RunningModel model = PreNeuron.Model;
             if (FixedDuration_ms != null)
-                duration = (int)(FixedDuration_ms / PreNeuron.Model.RunParam.DeltaT);
+                duration = (int)(FixedDuration_ms / model.RunParam.DeltaT);
             else
             {
                 double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
-                int delay = (int)(Delay_ms / PreNeuron.Model.RunParam.DeltaT);
-                duration = Math.Max((int)(distance / (PreNeuron.ConductionVelocity * PreNeuron.Model.RunParam.DeltaT)), 1);
+                int delay = (int)((Delay_ms + model.Settings.syanptic_delay) / model.RunParam.DeltaT);
+                duration = Math.Max((int)(distance / (PreNeuron.ConductionVelocity * model.RunParam.DeltaT)), 1);
                 duration += delay;
             }
         }

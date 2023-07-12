@@ -19,8 +19,9 @@ namespace SiliFish.Definitions
         public static double Epsilon = 0.00001;
         public static double BiologicalMinPotential = -100;
         public static double BiologicalMaxPotential = 100;
+        public static double FileSizeWarningLimit = 20;//in MB
         public static double MemoryWarningLimit = 10;//in GB
-        
+
         public static long PlotDataPointLimit = (long)5E6;
         public static int PlotWarningNumber = 10;
         public static string PlotDataFormat = "0.0###";
@@ -94,6 +95,14 @@ namespace SiliFish.Definitions
             DisplayName("Memory warning limit"),
             Category("Const")]
         public double MemoryWarningLimit { get { return GlobalSettings.MemoryWarningLimit; } set { GlobalSettings.MemoryWarningLimit = value; } }
+
+
+        [Description("The maximum file size (in MB) to be displayed on the HTML windows. " +
+            "This limit is put to prevent crashes due to memory when displaying large plot."),
+            DisplayName("File size warning limit"),
+            Category("Const")]
+        public double FileSizeWarningLimit { get { return GlobalSettings.FileSizeWarningLimit; } set { GlobalSettings.FileSizeWarningLimit = value; } }
+
         #endregion
 
         #region Display
