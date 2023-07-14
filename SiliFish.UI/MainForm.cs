@@ -524,14 +524,17 @@ namespace SiliFish.UI
                 MessageBox.Show("There is no model template loaded.", "Error");
                 return;
             }
+            UseWaitCursor = true;
             List<string> errors = new();
             if (!ModelTemplate.CheckValues(ref errors))
             {
+                UseWaitCursor = false;
                 MessageBox.Show($"There are errors in the template file. Please correct them before generating a model: \r\n" +
                     $"{string.Join("\r\n", errors)}");
                 return;
             }
             MainForm mf = new(new RunningModel(ModelTemplate));
+            UseWaitCursor = false;
             mf.Show();
         }
 

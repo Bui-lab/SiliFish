@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace SiliFish.Helpers
 {
@@ -64,7 +65,33 @@ namespace SiliFish.Helpers
             File.WriteAllText(path, content);
             return path;
         }
+        private static string GetUniqueFileName(string filename, string path)
+        {
+            if (string.IsNullOrEmpty(filename))
+            {
+                filename = "Temp";
+            }
+            string ext = Path.GetExtension(filename);
+            string prefix = Path.GetFileNameWithoutExtension(filename);
+            filename = Path.Combine(path, prefix + ext);
+            int suffix = 0;
+            while (File.Exists(filename))
+                filename = Path.Combine(path, prefix + (suffix++).ToString() + ext);
+            return filename;
+        }
+        public static string SaveToOutputFolder(string filename, string content)
+        {
+            filename = GetUniqueFileName(filename, GlobalSettings.OutputFolder);
+            SaveToFile(filename, content);
+            return filename;
+        }
 
+        public static string CopyFileToOutputFolder(string filename, string tempFile)
+        {
+            filename = GetUniqueFileName(filename, GlobalSettings.OutputFolder);
+            File.Copy(tempFile, filename);
+            return filename;
+        }
 
 
     }

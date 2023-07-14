@@ -12,7 +12,7 @@ namespace SiliFish.UI.Services
         public static void LargeFileWarning(string filename) 
         {
             double limit = GlobalSettings.FileSizeWarningLimit;
-            string message = $"The file size to be displayed is larger than {limit:0.##} MB. It is saved as {filename}.\r\n" +
+            string message = $"The size of the file to be displayed is larger than {limit:0.##} MB. It is saved as {filename}.\r\n" +
                 $"(You can set this limit through the 'Settings' button above) ";
             MessageBox.Show(message, "Warning", MessageBoxButtons.OK);
         }

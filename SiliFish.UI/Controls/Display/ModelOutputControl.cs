@@ -32,9 +32,8 @@ namespace SiliFish.UI.Controls
         int tPlotStart = 0;
         int tPlotEnd = 0;
         int numOfPlots = 0;
-        long numOfDataPoints = 0;
         PlotDefinition lastPlot = null;
-        SiliFish.Definitions.PlotType PlotType = PlotType.MembPotential;
+        PlotType PlotType = PlotType.MembPotential;
         PlotSelectionInterface plotSelection;
         private string tempFile;
         List<Chart> LastPlottedCharts;
@@ -239,12 +238,7 @@ namespace SiliFish.UI.Controls
                 else
                 {
                     string target = (sender as CoreWebView2).DocumentTitle;
-                    string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(GlobalSettings.OutputFolder, prefix + ".html");
-                    int suffix = 0;
-                    while (File.Exists(target))
-                        target = Path.Combine(GlobalSettings.OutputFolder, prefix + (suffix++).ToString() + ".html");
-                    File.Copy(tempFile, target);
+                    target = FileUtil.CopyFileToOutputFolder(tempFile, target);
                     RegenerateWebview(sender as WebView2);
                     Invoke(() => WarningMessage("There was a problem with displaying the html file. It is saved as " + target + "."));
                 }

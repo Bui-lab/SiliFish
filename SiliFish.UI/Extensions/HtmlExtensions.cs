@@ -15,16 +15,8 @@ namespace SiliFish.UI.Extensions
                 tempFile = "";
                 if (html.Length > 1024 * 1024 * GlobalSettings.FileSizeWarningLimit && !string.IsNullOrEmpty(tempFolder))
                 {
-                    string target = htmlContainer.CoreWebView2.DocumentTitle;
-                    if (string.IsNullOrEmpty(target)) { 
-                        target = "Temp"; }
-                    string prefix = Path.GetFileNameWithoutExtension(target);
-                    target = Path.Combine(GlobalSettings.OutputFolder, prefix + ".html");
-                    int suffix = 0;
-                    while (File.Exists(target))
-                        target = Path.Combine(GlobalSettings.OutputFolder, prefix + (suffix++).ToString() + ".html");
-                    tempFile = target;
-                    FileUtil.SaveToFile(target, html);
+                    string target = "plot.html";                    
+                    tempFile = FileUtil.SaveToOutputFolder(target, html);
                     navigated = false;
                 }
                 else if (html.Length > 1000000 && !string.IsNullOrEmpty(tempFolder))

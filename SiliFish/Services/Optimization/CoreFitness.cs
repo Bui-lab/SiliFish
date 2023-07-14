@@ -57,6 +57,8 @@ namespace SiliFish.Services.Optimization
 
             foreach (FitnessFunction function in fitnessFunctions)
             {
+                if (function.RheobaseBased && rheobase <= 0) 
+                    continue;
                 double current = function.CurrentValueOrRheobaseMultiplier * (function.RheobaseBased ? rheobase : 1);
                 DynamicsStats stat = stats[current];
                 fitness += function.CalculateFitness(stat);

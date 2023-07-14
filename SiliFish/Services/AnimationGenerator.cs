@@ -111,7 +111,6 @@ namespace SiliFish.Services
         }
 
 
-
         public static string GenerateAnimation(RunningModel model, int tStart, int tEnd, double animdt, out Dictionary<string, Coordinate[]> spineCoordinates)
         {
             spineCoordinates = null;
