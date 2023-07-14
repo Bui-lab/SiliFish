@@ -31,6 +31,7 @@ namespace SiliFish.Services
             string mode = interPool.Mode == CellInputMode.Excitatory ? "exc" :
                 interPool.Mode == CellInputMode.Inhibitory ? "inh" :
                 interPool.Mode == CellInputMode.Electrical ? "gap" :
+                interPool.Mode == CellInputMode.Cholinergic ? "ACh" :
                 "";
             string p1 = interPool.SourcePool;
             string p2 = interPool.TargetPool;

@@ -1,4 +1,5 @@
 ﻿using Extensions;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
@@ -160,8 +161,10 @@ namespace SiliFish.UI.Controls.Display
             catch { }
         }
 
-        public void SetSelection(PlotSelectionInterface selection)
+        public void SetPlot(PlotDefinition plot)
         {
+            PoolSubset = plot.PlotSubset;
+            PlotSelectionInterface selection = plot.Selection;
             if (selection is PlotSelectionMultiCells multiCells)
             {
                 ddSagittal.Text = multiCells.SagittalPlane.GetDisplayName();

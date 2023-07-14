@@ -16,7 +16,6 @@ namespace SiliFish.ModelUnits.Cells
 {
     public class MuscleCell : Cell
     {
-        //TODO muscle cell assumed to be LeakyIntegrator
         private double[] tension = null;
 
         [JsonIgnore]

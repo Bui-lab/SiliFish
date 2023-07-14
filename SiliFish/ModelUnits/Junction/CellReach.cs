@@ -104,13 +104,13 @@ namespace SiliFish.ModelUnits
         /// <param name="cell1"></param>
         /// <param name="cell2"></param>
         /// <returns></returns>
-        public bool WithinReach(Cell cell1, Cell cell2, double noise)
+        public bool WithinReach(Cell cell1, Cell cell2)
         {
             if (!Autapse && cell1 == cell2)
                 return false;
 
             double diff_x = SomiteBased ? cell2.Somite - cell1.Somite :
-                (cell2.X - cell1.X) * noise;//positive values mean cell2 is more caudal
+                cell2.X - cell1.X;//positive values mean cell2 is more caudal
             if (Descending && diff_x >= 0 && 
                 diff_x <= cell1.DescendingAxonLength && 
                 diff_x >= MinDescReach && diff_x <= MaxDescReach)

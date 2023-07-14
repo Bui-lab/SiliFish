@@ -57,8 +57,9 @@ namespace SiliFish.ModelUnits.Cells
                     case NeuronClass.GABAergic:
                         return CellInputMode.Inhibitory;
                     case NeuronClass.Glutamatergic:
-                    case NeuronClass.Cholinergic:
                         return CellInputMode.Excitatory;
+                    case NeuronClass.Cholinergic:
+                        return CellInputMode.Cholinergic;
                     case NeuronClass.Modulatory:
                         return CellInputMode.Modulatory;
                     case NeuronClass.Mixed:

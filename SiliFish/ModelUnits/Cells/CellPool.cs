@@ -20,10 +20,6 @@ namespace SiliFish.ModelUnits.Cells
 {
     public class CellPool: CellPoolTemplate
     {
-        public static Func<double> gapWeightNoiseMultiplier;//TODO incorporate noise
-        public static Func<double> synWeightNoiseMultiplier;
-        public static Func<double> rangeNoiseMultiplier;
-
         [JsonIgnore]
         public RunningModel Model { get; set; }
 
@@ -458,15 +454,9 @@ namespace SiliFish.ModelUnits.Cells
                     double r = Model.rand.NextDouble();
                     if (probability < r)
                         continue;
-                    double mult = 1;
-                    if (rangeNoiseMultiplier != null)
-                        mult = rangeNoiseMultiplier();
-                    if (reach.WithinReach(pre, post, mult))
+                    if (reach.WithinReach(pre, post))
                     {
-                        mult = 1;
-                        if (gapWeightNoiseMultiplier != null)
-                            mult = gapWeightNoiseMultiplier();
-                        GapJunction jnc = pre.CreateGapJunction(post, weight * mult, distanceMode);
+                        GapJunction jnc = pre.CreateGapJunction(post, weight, distanceMode);
                         jnc.SetDelay(delay_ms);
                         jnc.SetTimeSpan(timeline);
                         if (fixedduration_ms != null)
@@ -526,15 +516,9 @@ namespace SiliFish.ModelUnits.Cells
                     double r = Model.rand.NextDouble();
                     if (probability < r)
                         continue;
-                    double mult = 1;
-                    if (CellPool.rangeNoiseMultiplier != null)
-                        mult = rangeNoiseMultiplier();
-                    if (reach.WithinReach(pre, post, mult))
+                    if (reach.WithinReach(pre, post))
                     {
-                        mult = 1;
-                        if (CellPool.synWeightNoiseMultiplier != null)
-                            mult = synWeightNoiseMultiplier();
-                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, weight * mult, distanceMode);
+                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, param, weight, distanceMode);
                         syn.SetDelay(delay_ms);
                         if (fixedduration_ms != null)
                             syn.SetFixedDuration((double)fixedduration_ms);

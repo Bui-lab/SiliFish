@@ -151,7 +151,7 @@ namespace SiliFish.UI.Controls
             pTop.Visible = !testMode;
 
             rbRheobaseBasedStimulus.Text = $"Use Rheobase ({string.Join(", ", GlobalSettings.RheobaseTestMultipliers.Select(mult => "x" + mult.ToString()))})";
-            eRheobaseLimit.Value = 1000;//TODO add to Global Settings
+            eRheobaseLimit.Value = GlobalSettings.RheobaseLimit;
             eRheobaseDuration.Value = GlobalSettings.RheobaseInfinity;
             eStepEndTime.Value = GlobalSettings.RheobaseInfinity + eStepStartTime.Value;
             splitGAAndPlots.Panel1Collapsed = true;

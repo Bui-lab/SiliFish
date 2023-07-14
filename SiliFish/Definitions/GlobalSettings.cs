@@ -43,6 +43,7 @@ namespace SiliFish.Definitions
         public static int MaxNumberOfUnits = 100;
 
         public static int RheobaseInfinity = 500;
+        public static int RheobaseLimit = 1000;
 
         public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
         public static double GeneticAlgorithmMinValue = -100;
@@ -156,6 +157,11 @@ namespace SiliFish.Definitions
             Category("Dynamics")]
         public int RheobaseInfinity { get { return GlobalSettings.RheobaseInfinity; } set { GlobalSettings.RheobaseInfinity = value; } }
 
+        [Description("The max amount of stimulus to be tested to calculate rheobase values."),
+            DisplayName("Rheobase Limit"),
+            Category("Dynamics")]
+        public int RheobaseLimit { get { return GlobalSettings.RheobaseLimit; } set { GlobalSettings.RheobaseLimit = value; } }
+        
         [Description("The rheobase multipliers displayed on 'Cellular Dynamics' user interface."),
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]

@@ -81,7 +81,7 @@ namespace SiliFish.Definitions
     public enum ConnectionType { NotSet, Synapse, Gap, NMJ }
     public enum StimulusMode { Step, Gaussian, Ramp, Sinusoidal, Pulse }
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed }
-    public enum CellInputMode { NotSet, Excitatory, Inhibitory, Modulatory, Electrical}
+    public enum CellInputMode { NotSet, Excitatory, Inhibitory, Modulatory, Electrical, Cholinergic}
 
     public enum UnitOfMeasure
     {

@@ -390,11 +390,10 @@ namespace SiliFish.UI.Controls
             tPlotEnd = (int)ePlotEnd.Value;
             if (tPlotEnd > RunningModel.RunParam.MaxTime)
                 tPlotEnd = RunningModel.RunParam.MaxTime;
-            cellSelectionPlot.SetSelection(plot.Selection);
+            
+            cellSelectionPlot.SetPlot(plot);
             if (plot.Selection is PlotSelectionUnits selectedUnits)
                 SetEnablesBasedOnPlot();
-            else
-                return;
             Task.Run(PlotHTML);
         }
         private void listPlotHistory_ItemsExport(object sender, EventArgs e)

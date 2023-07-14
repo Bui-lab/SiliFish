@@ -72,7 +72,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         [Browsable(false)]
         [JsonIgnore]
-        public List<CellPool> MotoNeuronPools //TODO add sensory neurons
+        public List<CellPool> MotoNeuronPools 
         {
             get
             {
@@ -81,7 +81,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         [Browsable(false)]
         [JsonIgnore]
-        public List<CellPool> InterNeuronPools //TODO handle sensory neurons
+        public List<CellPool> InterNeuronPools 
         {
             get
             {
