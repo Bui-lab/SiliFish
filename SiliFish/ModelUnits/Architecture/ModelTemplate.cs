@@ -20,7 +20,7 @@ namespace SiliFish.ModelUnits.Architecture
         [JsonPropertyOrder(1)]
         public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
         [JsonPropertyOrder(1)]
-        public List<StimulusTemplate> AppliedStimuli { get; set; } = new();
+        public List<StimulusTemplate> StimulusTemplates { get; set; } = new();
 
         public ModelTemplate() { }
 
@@ -28,8 +28,8 @@ namespace SiliFish.ModelUnits.Architecture
         {
             try
             {
-                if (AppliedStimuli == null) return;
-                foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.Settings.Mode == Definitions.StimulusMode.Sinusoidal))
+                if (StimulusTemplates == null) return;
+                foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == Definitions.StimulusMode.Sinusoidal))
                 {
                     if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
                     { 
@@ -37,7 +37,7 @@ namespace SiliFish.ModelUnits.Architecture
                         stim.Settings.Value2 = 0;
                     } 
                 }
-                foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.Settings.Mode == Definitions.StimulusMode.Pulse))
+                foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == Definitions.StimulusMode.Pulse))
                 {
                     if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
                     {
@@ -71,7 +71,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cellPool.CellGroup);
             InterPoolTemplates.RemoveAll(ipt => ipt.PoolTarget == cellPool.CellGroup);
-            AppliedStimuli.RemoveAll(s => s.TargetPool == cellPool.CellGroup);
+            StimulusTemplates.RemoveAll(s => s.TargetPool == cellPool.CellGroup);
             return CellPoolTemplates.Remove(cellPool);
         }
         #endregion
@@ -83,20 +83,20 @@ namespace SiliFish.ModelUnits.Architecture
             return InterPoolTemplates.Any();
         }
 
-        public override List<JunctionBase> GetChemicalProjections()
+        public override List<InterPoolBase> GetChemicalProjections()
         {
             return InterPoolTemplates
                 .Where(ip => ip.ConnectionType is ConnectionType.Synapse or ConnectionType.NMJ)
-                .Select(ip => (JunctionBase)ip).ToList();
+                .Select(ip => (InterPoolBase)ip).ToList();
         }
 
-        public override List<JunctionBase> GetGapProjections()
+        public override List<InterPoolBase> GetGapProjections()
         {
             return InterPoolTemplates
                 .Where(ip => ip.ConnectionType is ConnectionType.Gap)
-                .Select(ip => (JunctionBase)ip).ToList();
+                .Select(ip => (InterPoolBase)ip).ToList();
         }
-        public override bool AddJunction(JunctionBase jnc) 
+        public override bool AddJunction(InterPoolBase jnc) 
         {
             if (jnc is InterPoolTemplate ipt && !InterPoolTemplates.Contains(ipt))
             { 
@@ -105,7 +105,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return false;
         }
-        public override bool RemoveJunction(JunctionBase jnc) 
+        public override bool RemoveJunction(InterPoolBase jnc) 
         {
             if (jnc is InterPoolTemplate ipt && InterPoolTemplates.Contains(ipt))
             {
@@ -166,40 +166,40 @@ namespace SiliFish.ModelUnits.Architecture
         #region Stimulus
         public bool HasStimulus()
         {
-            return AppliedStimuli.Any();
+            return StimulusTemplates.Any();
         }
         public override List<StimulusBase> GetStimuli()
         {
-            return AppliedStimuli.Select(stim => (StimulusBase)stim).ToList();
+            return StimulusTemplates.Select(stim => (StimulusBase)stim).ToList();
         }
 
         public override void AddStimulus(StimulusBase stim)
         {
-            AppliedStimuli.Add(stim as StimulusTemplate);
+            StimulusTemplates.Add(stim as StimulusTemplate);
         }
 
         public override void RemoveStimulus(StimulusBase stim)
         {
-            AppliedStimuli.Remove(stim as StimulusTemplate);
+            StimulusTemplates.Remove(stim as StimulusTemplate);
         }
 
         public override void UpdateStimulus(StimulusBase stim, StimulusBase stim2)
         {
-            int ind = AppliedStimuli.IndexOf(stim as StimulusTemplate);
+            int ind = StimulusTemplates.IndexOf(stim as StimulusTemplate);
             if (ind != -1)
-                AppliedStimuli[ind] = stim2 as StimulusTemplate;
+                StimulusTemplates[ind] = stim2 as StimulusTemplate;
             else
                 AddStimulus(stim2);
         }
 
         public void ClearStimuli()
         {
-            AppliedStimuli.Clear();
+            StimulusTemplates.Clear();
         }
 
         public void ClearStimuli(string cellPool)
         {
-            AppliedStimuli.RemoveAll(stim => stim.TargetPool == cellPool);
+            StimulusTemplates.RemoveAll(stim => stim.TargetPool == cellPool);
         }
         #endregion
         public void ClearLists()
@@ -207,7 +207,7 @@ namespace SiliFish.ModelUnits.Architecture
             CellPoolTemplates.Clear();
             InterPoolTemplates.Clear();
             Parameters?.Clear();
-            AppliedStimuli.Clear();
+            StimulusTemplates.Clear();
         }
 
         //Needs to be run after created from JSON
@@ -270,7 +270,7 @@ namespace SiliFish.ModelUnits.Architecture
                 ip.PoolSource = newName;
             foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolTarget == oldName))
                 ip.PoolTarget = newName;
-            foreach (StimulusTemplate stim in AppliedStimuli.Where(s => s.TargetPool == oldName))
+            foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.TargetPool == oldName))
                 stim.TargetPool = newName;
             return true;
         }

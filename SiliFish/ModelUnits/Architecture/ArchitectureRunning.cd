@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SiliFish.ModelUnits.Architecture.RunningModel">
+    <Position X="0.5" Y="1" Width="4" />
+    <Members>
+      <Method Name="AddCell" Hidden="true" />
+      <Method Name="AddCellPool" Hidden="true" />
+      <Method Name="AddStimulus" Hidden="true" />
+      <Method Name="BackwardCompatibility" Hidden="true" />
+      <Method Name="BackwardCompatibility_AxonLength" Hidden="true" />
+      <Method Name="BackwardCompatibility_Stimulus" Hidden="true" />
+      <Method Name="BackwardCompatibilityAfterLinkObjects" Hidden="true" />
+      <Method Name="CalculateCellularOutputs" Hidden="true" />
+      <Method Name="CalculateMembranePotentialsFromCurrents" Hidden="true" />
+      <Property Name="CancelRun" Hidden="true" />
+      <Method Name="CheckValues" Hidden="true" />
+      <Property Name="ChemPoolConnections" Hidden="true" />
+      <Method Name="ClearCells" Hidden="true" />
+      <Method Name="ClearStimuli" Hidden="true" />
+      <Method Name="CopyConnectionsOfCellPool" Hidden="true" />
+      <Method Name="FillMissingParameters" Hidden="true" />
+      <Property Name="GapPoolConnections" Hidden="true" />
+      <Method Name="GenerateCellPoolsFrom" Hidden="true" />
+      <Method Name="GetCell" Hidden="true" />
+      <Method Name="GetCellPools" Hidden="true" />
+      <Method Name="GetCells" Hidden="true" />
+      <Method Name="GetChemicalProjections" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetGapProjections" Hidden="true" />
+      <Method Name="GetMotoNeurons" Hidden="true" />
+      <Method Name="GetNumberOfCells" Hidden="true" />
+      <Method Name="GetNumberOfConnections" Hidden="true" />
+      <Method Name="GetParameterDesc" Hidden="true" />
+      <Method Name="GetProgress" Hidden="true" />
+      <Method Name="GetSpatialRange" Hidden="true" />
+      <Method Name="GetStimuli" Hidden="true" />
+      <Method Name="GetSubsetCellsAndPools" Hidden="true" />
+      <Method Name="HasCells" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="HasStimulus" Hidden="true" />
+      <Field Name="iMax" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Field Name="initialized" Hidden="true" />
+      <Property Name="InterNeuronPools" Hidden="true" />
+      <Field Name="iProgress" Hidden="true" />
+      <Field Name="JunctionCurrentTrackingOn" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Field Name="model_run" Hidden="true" />
+      <Property Name="ModelRun" Hidden="true" />
+      <Property Name="MotoNeuronPools" Hidden="true" />
+      <Property Name="MotoNeurons" Hidden="true" />
+      <Field Name="musclePools" Hidden="true" />
+      <Property Name="MusclePools" Hidden="true" />
+      <Field Name="neuronPools" Hidden="true" />
+      <Property Name="NeuronPools" Hidden="true" />
+      <Method Name="PoolToPoolChemSynapse" Hidden="true" />
+      <Method Name="PoolToPoolGapJunction" Hidden="true" />
+      <Method Name="RemoveCellPool" Hidden="true" />
+      <Method Name="RemoveJunctionsOf" Hidden="true" />
+      <Method Name="RemoveStimulus" Hidden="true" />
+      <Method Name="RunModel" Hidden="true" />
+      <Method Name="RunningModel" Hidden="true" />
+      <Property Name="RunParam" Hidden="true" />
+      <Method Name="SetAnimationParameters" Hidden="true" />
+      <Method Name="SetParameters" Hidden="true" />
+      <Method Name="SortCellPools" Hidden="true" />
+      <Field Name="Time" Hidden="true" />
+      <Property Name="TimeArray" Hidden="true" />
+      <Method Name="UpdateStimulus" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>xUAISDCoJFoVARAQAQIwoAAIAFAAEAAcGAIEAmBgifI=</HashCode>
+      <FileName>ModelUnits\Architecture\RunningModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CellPools" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.CellPool">
+    <Position X="1" Y="3.5" Width="3.25" />
+    <Members>
+      <Method Name="AddCell" Hidden="true" />
+      <Method Name="ApplyStimulus" Hidden="true" />
+      <Method Name="CellPool" Hidden="true" />
+      <Method Name="CheckValues" Hidden="true" />
+      <Method Name="ClearStimuli" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="CreateTemplateCopy" Hidden="true" />
+      <Method Name="DeleteCells" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Method Name="GenerateCells" Hidden="true" />
+      <Method Name="GetCell" Hidden="true" />
+      <Method Name="GetCells" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetMaxCellSequence" Hidden="true" />
+      <Method Name="GetMaxCellSomite" Hidden="true" />
+      <Method Name="GetSomites" Hidden="true" />
+      <Method Name="GetStimuli" Hidden="true" />
+      <Method Name="HasCells" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="HasStimulus" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="OnSide" Hidden="true" />
+      <Method Name="ReachToCellPoolViaChemSynapse" Hidden="true" />
+      <Method Name="ReachToCellPoolViaGapJunction" Hidden="true" />
+      <Method Name="RemoveCell" Hidden="true" />
+      <Method Name="SortJunctions" Hidden="true" />
+      <Method Name="SortJunctionsBySource" Hidden="true" />
+      <Method Name="SortJunctionsByTarget" Hidden="true" />
+      <Method Name="SortStimuli" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="XRange" Hidden="true" />
+      <Method Name="XYZMiddle" Hidden="true" />
+      <Method Name="YRange" Hidden="true" />
+      <Method Name="ZRange" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>QAAAQmICAEoQDBAEAEIQwABBBDAAoAhkEAiAgAAAiAA=</HashCode>
+      <FileName>ModelUnits\Cells\CellPool.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Cells" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.Cell">
+    <Position X="5.5" Y="2" Width="2.25" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="AddStimulus" Hidden="true" />
+      <Method Name="CalculateCellularOutputs" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="Cell" Hidden="true" />
+      <Field Name="CellPool" Hidden="true" />
+      <Method Name="CheckValues" Hidden="true" />
+      <Method Name="ClearLinks" Hidden="true" />
+      <Method Name="ClearStimuli" Hidden="true" />
+      <Property Name="ColumnNames" Hidden="true" />
+      <Field Name="Coordinate" Hidden="true" />
+      <Method Name="CreateCell" Hidden="true" />
+      <Method Name="CreateGapJunction" Hidden="true" />
+      <Field Name="csvExportCoreParamCount" Hidden="true" />
+      <Property Name="csvExportCoreValues" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Property Name="Discriminator" Hidden="true" />
+      <Method Name="ExportValues" Hidden="true" />
+      <Method Name="GenerateFromCSVRow" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetGapCurrents" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="GetSpikeStart" Hidden="true" />
+      <Method Name="GetStimulus" Hidden="true" />
+      <Method Name="GetTypeOfCell" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="HasStimulus" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsAlive" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Property Name="LeavingGapJunctions" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="MaxCurrentValue" Hidden="true" />
+      <Method Name="MaxGapCurrentValue" Hidden="true" />
+      <Method Name="MaxPotentialValue" Hidden="true" />
+      <Method Name="MaxStimulusValue" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinCurrentValue" Hidden="true" />
+      <Method Name="MinGapCurrentValue" Hidden="true" />
+      <Method Name="MinPotentialValue" Hidden="true" />
+      <Method Name="MinStimulusValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Property Name="Model" Hidden="true" />
+      <Method Name="NextStep" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Method Name="RemoveStimulus" Hidden="true" />
+      <Method Name="SortJunctions" Hidden="true" />
+      <Method Name="SortJunctionsBySource" Hidden="true" />
+      <Method Name="SortJunctionsByTarget" Hidden="true" />
+      <Method Name="SortStimuli" Hidden="true" />
+      <Property Name="Tooltip" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <AssociationLine Name="GapJunctions" Type="SiliFish.ModelUnits.Junction.GapJunction" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="5.562" />
+        <Point X="8.125" Y="5.562" />
+        <Point X="8.125" Y="6.878" />
+        <Point X="9.75" Y="6.878" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>FUIASCKKAEIChhBkWAghEGJBAAFSIFAYWB6AMAFw4AM=</HashCode>
+      <FileName>ModelUnits\Cells\Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Stimuli" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="GapJunctions" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.GapJunction">
+    <Position X="9.75" Y="6.25" Width="1.5" />
+    <Members>
+      <Method Name="ExportValues" Hidden="true" />
+      <Method Name="GapJunction" Hidden="true" />
+      <Property Name="ID" Hidden="true" />
+      <Property Name="IGap" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsActive" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="NextStep" Hidden="true" />
+      <Property Name="nMax" Hidden="true" />
+      <Method Name="SetDelay" Hidden="true" />
+      <Method Name="SetFixedDuration" Hidden="true" />
+      <Method Name="SetTimeSpan" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="UnlinkObjects" Hidden="true" />
+      <Property Name="VoltageDiff" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BgAAACICAABQgAIEEAEAAAAAAAAAAEAAAIAQqACAQAA=</HashCode>
+      <FileName>ModelUnits\Junction\GapJunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.ChemicalSynapse">
+    <Position X="3.75" Y="9.25" Width="1.5" />
+    <Members>
+      <Method Name="CheckValues" Hidden="true" />
+      <Method Name="ChemicalSynapse" Hidden="true" />
+      <Property Name="Core" Hidden="true" />
+      <Method Name="ExportValues" Hidden="true" />
+      <Property Name="ID" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsActive" Hidden="true" />
+      <Property Name="ISyn" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="NextStep" Hidden="true" />
+      <Property Name="nMax" Hidden="true" />
+      <Method Name="SetDelay" Hidden="true" />
+      <Method Name="SetFixedDuration" Hidden="true" />
+      <Method Name="SetTimeLine" Hidden="true" />
+      <Property Name="SynapseParameters" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="UnlinkObjects" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BgABACICAEAAgAAEUAGgAAAIAAIAAAAEAAAQKAAAQAA=</HashCode>
+      <FileName>ModelUnits\Junction\ChemicalSynapse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stim.Stimuli">
+    <Position X="9.25" Y="3.75" Width="2.5" />
+    <Members>
+      <Method Name="Add" Hidden="true" />
+      <Method Name="Clear" Hidden="true" />
+      <Method Name="GetStimulus" Hidden="true" />
+      <Method Name="GetStimulusArray" Hidden="true" />
+      <Property Name="HasStimulus" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Property Name="ListOfStimulus" Hidden="true" />
+      <Property Name="MaxValue" Hidden="true" />
+      <Property Name="MinValue" Hidden="true" />
+      <Method Name="Remove" Hidden="true" />
+      <Method Name="Sort" Hidden="true" />
+      <Method Name="Stimuli" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BAIAAAAAAAAAABgABAAQBAAIAAAAAAAAAAAgIABAAAA=</HashCode>
+      <FileName>ModelUnits\Stim\Stimuli.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.Neuron">
+    <Position X="4.75" Y="7.25" Width="1.5" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="CalculateCellularOutputs" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="CheckValues" Hidden="true" />
+      <Method Name="CreateChemicalSynapse" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Property Name="Discriminator" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Method Name="Neuron" Hidden="true" />
+      <Property Name="Projections" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Property Name="RestingMembranePotential" Hidden="true" />
+      <Method Name="SortJunctions" Hidden="true" />
+      <Method Name="SortJunctionsBySource" Hidden="true" />
+      <Method Name="SortJunctionsByTarget" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Terminals" Type="SiliFish.ModelUnits.Junction.ChemicalSynapse">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.07" Y="0.495" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Synapses" Type="SiliFish.ModelUnits.Junction.ChemicalSynapse">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.817" Y="0.664" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>FAIAQiIKAEABBAAACAABECBAAAEAIAAAADSAEAAggAA=</HashCode>
+      <FileName>ModelUnits\Cells\Neuron.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Terminals" />
+      <Property Name="Synapses" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.MuscleCell">
+    <Position X="7" Y="7.25" Width="1.5" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Property Name="Discriminator" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Method Name="MuscleCell" Hidden="true" />
+      <Property Name="Projections" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Property Name="RestingMembranePotential" Hidden="true" />
+      <Field Name="tension" Hidden="true" />
+    </Members>
+    <AssociationLine Name="EndPlates" Type="SiliFish.ModelUnits.Junction.ChemicalSynapse" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7" Y="8.589" />
+        <Point X="6.082" Y="8.589" />
+        <Point X="6.082" Y="10.255" />
+        <Point X="5.25" Y="10.255" />
+        <Point X="5.25" Y="10.188" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.796" Y="-0.898" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>FAIAQiAIAAAAAAAACAABEKAAAAGAIAAAEFSAEAAAgQA=</HashCode>
+      <FileName>ModelUnits\Cells\MuscleCell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="EndPlates" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

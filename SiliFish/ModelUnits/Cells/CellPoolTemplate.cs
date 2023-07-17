@@ -45,27 +45,27 @@ namespace SiliFish.ModelUnits.Cells
         public NeuronClass NTMode { get; set; }//relevant only if CellType==Neuron
 
         [JsonIgnore]
-        public CellInputMode CellInputMode
+        public CellOutputMode CellOutputMode
         {
             get
             {
                 switch (NTMode)
                 {
                     case NeuronClass.NotSet:
-                        return CellInputMode.NotSet;
+                        return CellOutputMode.NotSet;
                     case NeuronClass.Glycinergic:
                     case NeuronClass.GABAergic:
-                        return CellInputMode.Inhibitory;
+                        return CellOutputMode.Inhibitory;
                     case NeuronClass.Glutamatergic:
-                        return CellInputMode.Excitatory;
+                        return CellOutputMode.Excitatory;
                     case NeuronClass.Cholinergic:
-                        return CellInputMode.Cholinergic;
+                        return CellOutputMode.Cholinergic;
                     case NeuronClass.Modulatory:
-                        return CellInputMode.Modulatory;
+                        return CellOutputMode.Modulatory;
                     case NeuronClass.Mixed:
-                        return CellInputMode.NotSet;
+                        return CellOutputMode.NotSet;
                 };
-                return CellInputMode.NotSet;
+                return CellOutputMode.NotSet;
             }
         }
 

@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
 {
-    public class InterPoolTemplate : JunctionBase
+    public class InterPoolTemplate : InterPoolBase
     {
         #region Private fields
         private string _Name;

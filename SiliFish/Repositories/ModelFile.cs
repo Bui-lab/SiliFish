@@ -457,8 +457,8 @@ namespace SiliFish.Repositories
                 {
                     List<StimulusTemplate> stimulusTemplates =
                         (selectedUnit is CellPoolTemplate cellPoolTemplate) ?
-                        mt.AppliedStimuli.Where(stim => stim.TargetPool == cellPoolTemplate.CellGroup).ToList() :
-                        mt.AppliedStimuli;
+                        mt.StimulusTemplates.Where(stim => stim.TargetPool == cellPoolTemplate.CellGroup).ToList() :
+                        mt.StimulusTemplates;
                     sw.WriteLine(string.Join(",", StimulusTemplate.ColumnNames));
                     foreach (StimulusTemplate stim in stimulusTemplates)
                     {
@@ -507,7 +507,7 @@ namespace SiliFish.Repositories
                     {
                         StimulusTemplate stim = new();
                         stim.ImportValues(contents[iter++].Split(",").ToList());
-                        mt.AppliedStimuli.Add(stim);
+                        mt.StimulusTemplates.Add(stim);
                     }
                     mt.LinkObjects();
                 }
@@ -580,7 +580,7 @@ namespace SiliFish.Repositories
                         StimulusTemplate stim = new();
                         stim.ImportValues(contents[iter++].Split(",").ToList());
                         if (stim.TargetPool == cellPoolTemp.CellGroup)
-                            mt.AppliedStimuli.Add(stim);
+                            mt.StimulusTemplates.Add(stim);
                     }
                 }
                 model.LinkObjects();
@@ -870,11 +870,11 @@ namespace SiliFish.Repositories
                 else
                 {
                     if (gap && chem)
-                        list = runningModel.GetChemicalProjections().Concat(runningModel.GetGapProjections()).ToList();
+                        list = runningModel.GetChemicalProjections().Concat(runningModel.GetGapProjections()).Cast<JunctionBase>().ToList();
                     else if (gap)
-                        list = runningModel.GetGapProjections().ToList();
+                        list = runningModel.GetGapProjections().Cast<JunctionBase>().ToList();
                     else
-                        list = runningModel.GetChemicalProjections().ToList();
+                        list = runningModel.GetChemicalProjections().Cast<JunctionBase>().ToList();
                 }
                 foreach (JunctionBase jnc in list)
                 {
@@ -1172,7 +1172,7 @@ namespace SiliFish.Repositories
                 else if (model is ModelTemplate modelTemplate)
                 {
                     List<IDataExporterImporter> objList = modelTemplate
-                        .AppliedStimuli
+                        .StimulusTemplates
                         .Cast<IDataExporterImporter>().ToList();
                     CreateWorkSheet(workbook, "Stimuli", StimulusTemplate.ColumnNames, objList);
                     return true;
@@ -1207,7 +1207,7 @@ namespace SiliFish.Repositories
                             break;
                         StimulusTemplate stim = new();
                         stim.ImportValues(contents);
-                        modelTemplate.AppliedStimuli.Add(stim);
+                        modelTemplate.StimulusTemplates.Add(stim);
                     }
                 }
                 else if (model is RunningModel modelRun)

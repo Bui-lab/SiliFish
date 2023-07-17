@@ -128,7 +128,7 @@ namespace SiliFish.ModelUnits.Architecture
                                 CountJunctions = count,
                                 MinConductance = minConductance,
                                 MaxConductance = maxConductance,
-                                Mode = CellInputMode.Electrical
+                                Mode = CellOutputMode.Electrical
                             });
                         }
                     }
@@ -166,7 +166,7 @@ namespace SiliFish.ModelUnits.Architecture
                                 CountJunctions = count,
                                 MinConductance = minConductance,
                                 MaxConductance = maxConductance,
-                                Mode = sourcePool.CellInputMode
+                                Mode = sourcePool.CellOutputMode
                             });
                         }
                     }
@@ -260,9 +260,9 @@ namespace SiliFish.ModelUnits.Architecture
             #endregion
 
             #region Generate Stimuli
-            if (swimmingModelTemplate.AppliedStimuli?.Count > 0)
+            if (swimmingModelTemplate.StimulusTemplates?.Count > 0)
             {
-                foreach (StimulusTemplate stimulus in swimmingModelTemplate.AppliedStimuli.Where(stim => stim.Active))
+                foreach (StimulusTemplate stimulus in swimmingModelTemplate.StimulusTemplates.Where(stim => stim.Active))
                 {
                     if (stimulus.LeftRight.Contains("Left") || stimulus.LeftRight == "Both")
                     {
@@ -506,9 +506,9 @@ namespace SiliFish.ModelUnits.Architecture
         {
             return CellPools.Any(cp => cp.HasConnections());
         }
-        public override List<JunctionBase> GetGapProjections()
+        public override List<InterPoolBase> GetGapProjections()
         {
-            List<JunctionBase> listProjections = new();
+            List<InterPoolBase> listProjections = new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
@@ -516,9 +516,9 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return listProjections;
         }
-        public override List<JunctionBase> GetChemicalProjections()
+        public override List<InterPoolBase> GetChemicalProjections()
         {
-            List<JunctionBase> listProjections = new();
+            List<InterPoolBase> listProjections = new();
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 if (cell is Neuron neuron)

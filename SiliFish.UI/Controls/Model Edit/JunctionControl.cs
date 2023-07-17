@@ -273,7 +273,7 @@ namespace SiliFish.UI.Controls
             double delay = (double)numDelay.Value;
             double conductance = (double)numConductance.Value;
             DistanceMode distanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
-            List<JunctionBase> junctions=new();
+            List<JunctionBase> junctions = new();
             if (junction != null)
             {
                 junctions.Add(junction);
@@ -307,17 +307,20 @@ namespace SiliFish.UI.Controls
                 }
                 junction = null;
             }
-            foreach(JunctionBase jnc in junctions)
+            foreach (JunctionBase jnc in junctions)
             {
 
                 jnc.Delay_ms = delay;
                 jnc.FixedDuration_ms = fixedDuration;
                 jnc.TimeLine_ms = timeLineControl.GetTimeLine();
-            jnc.Active = cbActive.Checked;
-                }
+                jnc.Active = cbActive.Checked;
+            }
             return junctions;
         }
 
-
+        private void JunctionControl_SizeChanged(object sender, EventArgs e)
+        {
+            Refresh();//the drop down boxes do not refresh properly otherwise
+        }
     }
 }

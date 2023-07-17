@@ -86,13 +86,13 @@ namespace SiliFish.ModelUnits.Architecture
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual List<JunctionBase> GetGapProjections()
+        public virtual List<InterPoolBase> GetGapProjections()
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual List<JunctionBase> GetChemicalProjections()
+        public virtual List<InterPoolBase> GetChemicalProjections()
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
@@ -142,13 +142,13 @@ namespace SiliFish.ModelUnits.Architecture
             throw exception;
         }
 
-        public virtual bool AddJunction(JunctionBase jnc)
+        public virtual bool AddJunction(InterPoolBase jnc)
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual bool RemoveJunction(JunctionBase jnc)
+        public virtual bool RemoveJunction(InterPoolBase jnc)
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);

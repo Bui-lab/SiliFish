@@ -28,10 +28,10 @@ namespace SiliFish.Services
 
         private string CreateLinkDataPoint(InterPool interPool)
         {
-            string mode = interPool.Mode == CellInputMode.Excitatory ? "exc" :
-                interPool.Mode == CellInputMode.Inhibitory ? "inh" :
-                interPool.Mode == CellInputMode.Electrical ? "gap" :
-                interPool.Mode == CellInputMode.Cholinergic ? "ACh" :
+            string mode = interPool.Mode == CellOutputMode.Excitatory ? "exc" :
+                interPool.Mode == CellOutputMode.Inhibitory ? "inh" :
+                interPool.Mode == CellOutputMode.Electrical ? "gap" :
+                interPool.Mode == CellOutputMode.Cholinergic ? "ACh" :
                 "";
             string p1 = interPool.SourcePool;
             string p2 = interPool.TargetPool;

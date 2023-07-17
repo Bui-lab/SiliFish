@@ -554,6 +554,7 @@
             splitContainerMain.Size = new Size(510, 559);
             splitContainerMain.SplitterDistance = 218;
             splitContainerMain.TabIndex = 28;
+            splitContainerMain.SplitterMoved += splitContainerMain_SplitterMoved;
             // 
             // tabInterPool
             // 

@@ -320,5 +320,9 @@ namespace SiliFish.UI.Controls
             return interPoolTemplate;
         }
 
+        private void splitContainerMain_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            splitContainerMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise
+        }
     }
 }

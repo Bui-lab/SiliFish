@@ -17,11 +17,11 @@ namespace SiliFish.ModelUnits.Junction
         public int CountJunctions;
         public double MinConductance;
         public double MaxConductance;
-        public CellInputMode Mode;
+        public CellOutputMode Mode;
 
         public override string ToString()
         {
-            string arrow = Mode == CellInputMode.Electrical ? "↔" : "→";
+            string arrow = Mode == CellOutputMode.Electrical ? "↔" : "→";
             return $"{SourcePool}{arrow}{TargetPool}";
         }
 

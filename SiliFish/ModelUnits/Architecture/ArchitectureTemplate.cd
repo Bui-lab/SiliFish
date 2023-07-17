@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SiliFish.ModelUnits.Architecture.ModelTemplate">
-    <Position X="5.5" Y="8.75" Width="4" />
+    <Position X="2.25" Y="0.75" Width="4" />
     <Members>
       <Method Name="AddCellPool" Hidden="true" />
       <Method Name="AddJunction" Hidden="true" />
@@ -13,13 +13,17 @@
       <Method Name="ClearStimuli" Hidden="true" />
       <Method Name="CopyConnectionsOfCellPool" Hidden="true" />
       <Method Name="GetCellPools" Hidden="true" />
-      <Method Name="GetProjections" Hidden="true" />
+      <Method Name="GetChemicalProjections" Hidden="true" />
+      <Method Name="GetGapProjections" Hidden="true" />
       <Method Name="GetStimuli" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
       <Method Name="HasStimulus" Hidden="true" />
       <Method Name="LinkObjects" Hidden="true" />
       <Method Name="ModelTemplate" Hidden="true" />
       <Method Name="RemoveCellPool" Hidden="true" />
       <Method Name="RemoveJunction" Hidden="true" />
+      <Method Name="RemoveJunctions" Hidden="true" />
+      <Method Name="RemoveJunctionsOf" Hidden="true" />
       <Method Name="RemoveStimulus" Hidden="true" />
       <Method Name="RenameCellPool" Hidden="true" />
       <Method Name="SortCellPools" Hidden="true" />
@@ -29,27 +33,50 @@
       <Method Name="SortJunctionsByType" Hidden="true" />
       <Method Name="UpdateStimulus" Hidden="true" />
     </Members>
+    <AssociationLine Name="CellPoolTemplates" Type="SiliFish.ModelUnits.Cells.CellPoolTemplate">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.096" Y="0.831" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="InterPoolTemplates" Type="SiliFish.ModelUnits.Junction.InterPoolTemplate">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.037" Y="0.81" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="StimulusTemplates" Type="SiliFish.ModelUnits.Stim.StimulusTemplate">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.199" Y="0.583" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>gAAAACICAFMAARAAQAAApClAAAAgAAAEGAAAAEBAAAI=</HashCode>
+      <HashCode>wAAAQCICAFMAARAAQAAQpCBAAAAgAAAEGAAAAEBAQII=</HashCode>
       <FileName>ModelUnits\Architecture\ModelTemplate.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="CellPoolTemplates" />
       <Property Name="InterPoolTemplates" />
-      <Property Name="AppliedStimuli" />
+      <Property Name="StimulusTemplates" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.CellPoolTemplate">
-    <Position X="3.75" Y="4.5" Width="2.25" />
+    <Position X="0.5" Y="3" Width="2.5" />
     <Members>
       <Property Name="Attachments" Hidden="true" />
       <Method Name="BackwardCompatibility" Hidden="true" />
+      <Method Name="BackwardCompatibilityAxonLength" Hidden="true" />
       <Method Name="CellPoolTemplate" Hidden="true" />
       <Method Name="CheckValues" Hidden="true" />
       <Property Name="Color" Hidden="true" />
+      <Property Name="ColumnIndex2D" Hidden="true" />
+      <Property Name="ColumnNames" Hidden="true" />
       <Method Name="CompareTo" Hidden="true" />
+      <Field Name="coreType" Hidden="true" />
       <Method Name="CreateTemplateCopy" Hidden="true" />
+      <Property Name="csvExportParamValues" Hidden="true" />
+      <Method Name="ExportValues" Hidden="true" />
       <Method Name="GenerateCoordinates" Hidden="true" />
+      <Method Name="GetSampleRheobase" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
       <Field Name="parameters" Hidden="true" />
       <Property Name="Parameters" Hidden="true" />
       <Property Name="PerSomiteOrTotal" Hidden="true" />
@@ -57,66 +84,91 @@
       <Property Name="Tooltip" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
     </Members>
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAgAEAgoAUkCAAAAAIAMBAACBoQCIAApECAAAA=</HashCode>
+      <HashCode>AIAAAAAgAEAioAUmCAAEgEIAMBAACBsUCIAAtECAQAE=</HashCode>
       <FileName>ModelUnits\Cells\CellPoolTemplate.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="XDistribution" />
-      <Property Name="Y_AngleDistribution" />
-      <Property Name="Z_RadiusDistribution" />
-    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.InterPoolTemplate">
-    <Position X="10.75" Y="7.25" Width="2.25" />
+    <Position X="3.25" Y="3" Width="2.25" />
     <Members>
+      <Field Name="_Name" Hidden="true" />
       <Property Name="Attachments" Hidden="true" />
       <Method Name="CheckValues" Hidden="true" />
+      <Property Name="ColumnNames" Hidden="true" />
       <Method Name="CompareTo" Hidden="true" />
+      <Method Name="ExportValues" Hidden="true" />
       <Method Name="GeneratedName" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
       <Method Name="InterPoolTemplate" Hidden="true" />
+      <Field Name="linkedSource" Hidden="true" />
+      <Field Name="linkedTarget" Hidden="true" />
+      <Field Name="poolSource" Hidden="true" />
+      <Field Name="poolTarget" Hidden="true" />
       <Property Name="Tooltip" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAFAhgAUEGEAAIJQIBAJAAAAgAAAAIAEAAAA=</HashCode>
+      <HashCode>AQAAAAAAAFAjgAUEGEAAIJQIBAJAAAAgAAAAIAEAQAA=</HashCode>
       <FileName>ModelUnits\Junction\InterPoolTemplate.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="SynapseParameters" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="SiliFish.DataTypes.Distribution" Collapsed="true">
-    <Position X="0.75" Y="6" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAJKkIAAAACAAEQAAAEAACAAIABAAEAAABAKIAAhA=</HashCode>
-      <FileName>DataTypes\Distribution.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.StimulusTemplate">
-    <Position X="6.75" Y="6.5" Width="3.25" />
+    <Position X="5.75" Y="2.75" Width="3.25" />
     <Members>
+      <Property Name="ColumnNames" Hidden="true" />
       <Method Name="CompareTo" Hidden="true" />
       <Method Name="CreateCopy" Hidden="true" />
-      <Property Name="CSVExportColumCount" Hidden="true" />
-      <Property Name="CSVExportColumnNames" Hidden="true" />
-      <Property Name="CSVExportValues" Hidden="true" />
+      <Method Name="ExportValues" Hidden="true" />
       <Property Name="ID" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
       <Property Name="LeftRight" Hidden="true" />
       <Method Name="StimulusTemplate" Hidden="true" />
       <Property Name="Tooltip" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
     </Members>
+    <InheritanceLine Type="SiliFish.ModelUnits.Stim.StimulusBase" FixedFromPoint="true">
+      <Path>
+        <Point X="6.875" Y="4.75" />
+        <Point X="6.875" Y="4.559" />
+        <Point X="7.375" Y="4.559" />
+        <Point X="7.375" Y="4.367" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAgBAAAAAgAwEAAABAgAACAAAAAABAAAAMAAAAAA=</HashCode>
+      <HashCode>AAAAAgBAAAACgAwEAAABAAAAAAAAAAAAAAAAMAAAQAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusTemplate.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="SiliFish.ModelUnits.Stim.StimulusBase">
-    <Position X="7.5" Y="4.5" Width="1.75" />
+  <Class Name="SiliFish.ModelUnits.Stim.StimulusSettings">
+    <Position X="5.75" Y="6" Width="2.75" />
+    <Members>
+      <Method Name="Clone" Hidden="true" />
+      <Field Name="ColumnNames" Hidden="true" />
+      <Method Name="ExportValues" Hidden="true" />
+      <Method Name="ImportValues" Hidden="true" />
+      <Method Name="StimulusSettings" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIACAAAEAAAAAAAAAIAAAAAAAAAgIAAAQBA=</HashCode>
+      <FileName>ModelUnits\Stim\StimulusSettings.cs</FileName>
+      <NewMemberFileName>ModelUnits\Stim\Stimulus.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stim.StimulusBase" Collapsed="true">
+    <Position X="6.25" Y="4.75" Width="1.5" />
+    <Members>
+      <Method Name="StimulusBase" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Settings" Type="SiliFish.ModelUnits.Stim.StimulusSettings">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.9" Y="0.216" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusBase.cs</FileName>
@@ -125,53 +177,12 @@
       <Property Name="Settings" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="SiliFish.ModelUnits.Stim.StimulusSettings">
-    <Position X="4" Y="1.25" Width="2.75" />
-    <Members>
-      <Method Name="Clone" Hidden="true" />
-      <Property Name="CSVExportColumCount" Hidden="true" />
-      <Property Name="CSVExportColumnNames" Hidden="true" />
-      <Property Name="CSVExportValues" Hidden="true" />
-      <Method Name="StimulusSettings" Hidden="true" />
-      <Method Name="ToString" Hidden="true" />
-    </Members>
+  <Struct Name="SiliFish.ModelUnits.Junction.InterPool" Collapsed="true">
+    <Position X="5.25" Y="21.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIAAAAAEAAAAAgAACIAAAAABAAAgAAAAABA=</HashCode>
-      <FileName>ModelUnits\Stim\StimulusSettings.cs</FileName>
-      <NewMemberFileName>ModelUnits\Stim\Stimulus.cs</NewMemberFileName>
+      <HashCode>AAAAAABAAICAAAAEAAABAAAAAAAAAEAAAAAAAAAAAAQ=</HashCode>
+      <FileName>ModelUnits\Junction\InterPool.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.ModelUnits.Junction.JunctionBase">
-    <Position X="11.25" Y="4.5" Width="1.5" />
-    <Members>
-      <Method Name="JunctionBase" Hidden="true" />
-      <Method Name="LinkObjects" Hidden="true" />
-      <Method Name="UnlinkObjects" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAgCAIAAAAAAAAAAAAACAAACAAAAAAAAAQAAAEAAA=</HashCode>
-      <FileName>ModelUnits\Junction\JunctionBase.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.ModelUnits.ModelUnitBase">
-    <Position X="7.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAgAAAEAAgBQAAAAQAAAAAAAAAAAoAAAAIAAAAAA=</HashCode>
-      <FileName>ModelUnits\ModelUnitBase.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="SiliFish.ModelUnits.Junction.SynapseParameters">
-    <Position X="15" Y="7.25" Width="2.25" />
-    <Members>
-      <Method Name="CheckValues" Hidden="true" />
-      <Method Name="GetTooltip" Hidden="true" />
-      <Method Name="SynapseParameters" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AIAAAAAAAEAAAAAAAAAAgAAAgAAAAgAAAAAAAAAAAAE=</HashCode>
-      <FileName>ModelUnits\Junction\SynapseParameters.cs</FileName>
-    </TypeIdentifier>
-  </Class>
+  </Struct>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
