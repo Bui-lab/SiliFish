@@ -265,6 +265,11 @@ namespace SiliFish.Repositories
                 json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
                 json = JsonUtil.CleanUp(json);
             }
+            else if (version.Groups[1].Value.CompareTo("\"2.5.1.0\"") < 0)
+            {
+                if (json.Contains("\"AppliedStimuli\": ["))
+                    json = json.Replace("\"AppliedStimuli\": [", "\"StimulusTemplates\": [");
+            }
             return list;
         }
         public static void SaveToJson(string fileName, ModelBase model)
