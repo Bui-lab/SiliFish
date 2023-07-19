@@ -194,7 +194,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public override bool IsSpiking(int iStart = 0, int iEnd = -1)
         {
-            return V.HasSpike(Core.Vthreshold, iStart, iEnd);
+            return V.HasSpike(Core.Vmax, iStart, iEnd);
         }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
         {
