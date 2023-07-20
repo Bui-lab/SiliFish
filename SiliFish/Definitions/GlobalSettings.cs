@@ -35,9 +35,7 @@ namespace SiliFish.Definitions
 
         public static bool SameYAxis = true;
         public static bool ShowZeroValues = true;
-
         public static int DefaultPlotWidth = 800;
-
         public static int DefaultPlotHeight = 200;
 
         public static int MaxNumberOfUnits = 100;

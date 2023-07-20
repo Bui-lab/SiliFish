@@ -419,7 +419,7 @@ namespace SiliFish.ModelUnits.Cells
             double weight,
             double probability, 
             DistanceMode distanceMode,
-            double delay_ms,
+            double? delay_ms,
             double? fixedduration_ms)
         {
             int maxIncoming = reach.MaxIncoming;
@@ -476,7 +476,7 @@ namespace SiliFish.ModelUnits.Cells
             double weight,
             double probability, 
             DistanceMode distanceMode, 
-            double delay_ms,
+            double? delay_ms,
             double? fixedduration_ms)
         {
             int maxIncoming = reach.MaxIncoming;

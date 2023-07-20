@@ -153,8 +153,8 @@ namespace SiliFish.UI.Controls
                 sourceCell = gapJunction.Cell1;
                 targetCell = gapJunction.Cell2;
                 numConductance.SetValue(gapJunction.Weight);
-                numDelay.SetValue(gapJunction.Delay_ms);
                 eFixedDuration.Text = gapJunction.FixedDuration_ms.ToString();
+                eSynDelay.Text = gapJunction.Delay_ms.ToString();
                 ddConnectionType.SelectedItem = ConnectionType.Gap;
             }
             else if (junction is ChemicalSynapse syn)
@@ -164,8 +164,8 @@ namespace SiliFish.UI.Controls
                 ddConnectionType.SelectedItem = targetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
                 synapseControl.SetSynapseParameters(syn.SynapseParameters);
                 numConductance.SetValue(syn.Weight);
-                numDelay.SetValue(syn.Delay_ms);
                 eFixedDuration.Text = syn.FixedDuration_ms.ToString();
+                eSynDelay.Text = syn.Delay_ms.ToString();
             }
             if (this.junction != null)
             {
@@ -270,7 +270,9 @@ namespace SiliFish.UI.Controls
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;
-            double delay = (double)numDelay.Value;
+            double? delay = null;
+            if (!string.IsNullOrEmpty(eSynDelay.Text) && double.TryParse(eSynDelay.Text, out double sd))
+                delay = sd;
             double conductance = (double)numConductance.Value;
             DistanceMode distanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             List<JunctionBase> junctions = new();

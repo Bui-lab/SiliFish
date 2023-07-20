@@ -39,7 +39,6 @@
             ddConnectionType = new ComboBox();
             toolTip1 = new ToolTip(components);
             numConductance = new NumericUpDown();
-            numDelay = new NumericUpDown();
             eFixedDuration = new TextBox();
             cbActive = new CheckBox();
             timeLineControl = new TimeLineControl();
@@ -52,8 +51,8 @@
             ddTargetPool = new ComboBox();
             gSynapse = new GroupBox();
             synapseControl = new SynapseControl();
+            eSynDelay = new TextBox();
             ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numDelay).BeginInit();
             gSynapse.SuspendLayout();
             SuspendLayout();
             // 
@@ -112,7 +111,7 @@
             lDelay.Size = new Size(63, 15);
             lDelay.TabIndex = 22;
             lDelay.Text = "Delay (ms)";
-            toolTip1.SetToolTip(lDelay, "The time that will be added to the duratino calculated by the distance and conduction velocity.");
+            toolTip1.SetToolTip(lDelay, "If entered, will replace model's generic synaptic delay (for chemical synapses).");
             // 
             // ddSourcePool
             // 
@@ -150,15 +149,6 @@
             numConductance.Size = new Size(66, 23);
             numConductance.TabIndex = 19;
             toolTip1.SetToolTip(numConductance, "Maximum conductance");
-            // 
-            // numDelay
-            // 
-            numDelay.DecimalPlaces = 2;
-            numDelay.Location = new Point(120, 218);
-            numDelay.Name = "numDelay";
-            numDelay.Size = new Size(66, 23);
-            numDelay.TabIndex = 23;
-            toolTip1.SetToolTip(numDelay, "The time that will be added to the duratino calculated by the distance and conduction velocity.");
             // 
             // eFixedDuration
             // 
@@ -288,6 +278,14 @@
             synapseControl.TabIndex = 0;
             synapseControl.VThreshold = 0D;
             // 
+            // eSynDelay
+            // 
+            eSynDelay.Location = new Point(120, 217);
+            eSynDelay.Name = "eSynDelay";
+            eSynDelay.Size = new Size(66, 23);
+            eSynDelay.TabIndex = 22;
+            toolTip1.SetToolTip(eSynDelay, "If entered, will replace model's generic synaptic delay (for chemical synapses).");
+            // 
             // JunctionControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -295,11 +293,11 @@
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = Color.White;
+            Controls.Add(eSynDelay);
             Controls.Add(timeLineControl);
             Controls.Add(gSynapse);
             Controls.Add(lSourcePool);
             Controls.Add(lTargetCell);
-            Controls.Add(numDelay);
             Controls.Add(ddTargetCell);
             Controls.Add(eFixedDuration);
             Controls.Add(lSourceCell);
@@ -320,7 +318,6 @@
             Size = new Size(254, 562);
             SizeChanged += JunctionControl_SizeChanged;
             ((System.ComponentModel.ISupportInitialize)numConductance).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numDelay).EndInit();
             gSynapse.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -338,7 +335,6 @@
         private ComboBox ddConnectionType;
         private ToolTip toolTip1;
         private NumericUpDown numConductance;
-        private NumericUpDown numDelay;
         private TextBox eFixedDuration;
         private CheckBox cbActive;
         private TimeLineControl timeLineControl;
@@ -351,5 +347,6 @@
         private ComboBox ddTargetPool;
         private GroupBox gSynapse;
         private SynapseControl synapseControl;
+        private TextBox eSynDelay;
     }
 }

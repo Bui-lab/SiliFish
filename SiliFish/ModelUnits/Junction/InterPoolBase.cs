@@ -23,7 +23,7 @@ namespace SiliFish.ModelUnits.Junction
     {
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms
-        public double Delay_ms { get; set; } = 0;//in ms
+        public double? Delay_ms { get; set; } = null;//in ms
         public double Weight { get; set; }
 
 

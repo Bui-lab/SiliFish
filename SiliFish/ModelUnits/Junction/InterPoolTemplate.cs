@@ -98,7 +98,7 @@ namespace SiliFish.ModelUnits.Junction
                 return $"{Name}\r\n" +
                     $"{Description}\r\n" +
                     $"From {PoolSource} to {PoolTarget}\r\n" +
-                    $"Weight:{Weight: 0.###}\r\n" +
+                    $"Weight:{Weight: 0.#####}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
                     $"Fixed Duration:{FixedDuration_ms: 0.###}\r\n" +
                     $"Delay:{Delay_ms: 0.###}\r\n" +

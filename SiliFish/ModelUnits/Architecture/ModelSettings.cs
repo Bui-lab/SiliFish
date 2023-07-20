@@ -27,12 +27,16 @@ namespace SiliFish.ModelUnits.Architecture
         [Description("Default conduction velocity of currents between cells."),
             DisplayName("Conduction Velocity"),
             Category("Default Values")]
-        public double cv { get; set; } = 0.2; 
+        public double cv { get; set; } = 0.2;
 
         [Description("Default delay in chemical synapses."),
             DisplayName("Synaptic Delay"),
             Category("Default Values")]
-        public double syanptic_delay { get; set; } = 0.5; 
+        public double synaptic_delay { get; set; } = 0.5;
+        [Description("Default delay in electrical junctions."),
+            DisplayName("Gap Junction Delay"),
+            Category("Default Values")]
+        public double gap_delay { get; set; } = 0;
 
         [Description("Default reversal potential of glutamate."),
             Category("Default Values")]

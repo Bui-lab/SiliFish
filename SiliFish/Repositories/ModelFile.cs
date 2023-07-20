@@ -265,10 +265,18 @@ namespace SiliFish.Repositories
                 json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
                 json = JsonUtil.CleanUp(json);
             }
-            else if (version.Groups[1].Value.CompareTo("\"2.5.1.0\"") < 0)
+            else
             {
-                if (json.Contains("\"AppliedStimuli\": ["))
-                    json = json.Replace("\"AppliedStimuli\": [", "\"StimulusTemplates\": [");
+                if (version.Groups[1].Value.CompareTo("\"2.5.1.0\"") < 0)
+                {
+                    if (json.Contains("\"AppliedStimuli\": ["))
+                        json = json.Replace("\"AppliedStimuli\": [", "\"StimulusTemplates\": [");
+                }
+                if (version.Groups[1].Value.CompareTo("\"2.5.2.0\"") < 0)
+                {
+                    if (json.Contains("\"Delay_ms\": 0,"))
+                        json = json.Replace("\"Delay_ms\": 0,", "\"Delay_ms\": null,");
+                }
             }
             return list;
         }

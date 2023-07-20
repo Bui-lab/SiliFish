@@ -75,7 +75,8 @@ namespace SiliFish.ModelUnits.Junction
                 Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
-                Delay_ms = double.Parse(values[iter++]);
+                if (double.TryParse(values[iter++], out double dd))
+                    Delay_ms = dd;
                 Active = bool.Parse(values[iter++]);
                 if (iter < values.Count)
                     TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
@@ -137,15 +138,16 @@ namespace SiliFish.ModelUnits.Junction
         {
             base.InitForSimulation(nmax, trackCurrent);
             double deltaT = Cell1.Model.RunParam.DeltaT;
+            RunningModel model = Cell1.Model;
             if (FixedDuration_ms != null)
                 duration1 = duration2 = (int)(FixedDuration_ms / Cell1.Model.RunParam.DeltaT);
             else
             {
                 double distance = Util.Distance(Cell1.Coordinate, Cell2.Coordinate, DistanceMode);
-                int delay = (int)(Delay_ms / deltaT);
-                duration1 = Math.Max((int)(distance / (Cell1.ConductionVelocity * deltaT)), 1);
+                int delay = (int)((Delay_ms ?? model.Settings.gap_delay) / model.RunParam.DeltaT);
+                duration1 = Math.Max((int)Math.Round(distance / (Cell1.ConductionVelocity * deltaT)), 1);
                 duration1 += delay;
-                duration2 = Math.Max((int)(distance / (Cell2.ConductionVelocity * deltaT)), 1);
+                duration2 = Math.Max((int)Math.Round(distance / (Cell2.ConductionVelocity * deltaT)), 1);
                 duration2 += delay;
             }
         }
@@ -154,7 +156,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             FixedDuration_ms = dur;
         }
-        public void SetDelay(double delay)
+        public void SetDelay(double? delay)
         {
             Delay_ms = delay;
         }

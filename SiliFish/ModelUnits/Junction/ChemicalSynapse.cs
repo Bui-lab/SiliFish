@@ -89,7 +89,8 @@ namespace SiliFish.ModelUnits.Junction
                 Core.Conductance = Weight;
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
-                Delay_ms = double.Parse(values[iter++]);
+                if (double.TryParse(values[iter++], out double dd))
+                    Delay_ms = dd;
                 Active = bool.Parse(values[iter++]);
                 if (iter < values.Count)
                     TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
@@ -186,8 +187,8 @@ namespace SiliFish.ModelUnits.Junction
             else
             {
                 double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
-                int delay = (int)((Delay_ms + model.Settings.syanptic_delay) / model.RunParam.DeltaT);
-                duration = Math.Max((int)(distance / (PreNeuron.ConductionVelocity * model.RunParam.DeltaT)), 1);
+                int delay = (int)((Delay_ms ?? model.Settings.synaptic_delay) / model.RunParam.DeltaT);
+                duration = Math.Max((int)Math.Round(distance / (PreNeuron.ConductionVelocity * model.RunParam.DeltaT)), 1);
                 duration += delay;
             }
         }
@@ -196,7 +197,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             FixedDuration_ms = dur;
         }
-        public void SetDelay(double delay)
+        public void SetDelay(double? delay)
         {
             Delay_ms = delay;
         }

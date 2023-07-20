@@ -264,8 +264,8 @@ namespace SiliFish.UI.Controls
                 numMaxOutgoing.SetValue(interPoolTemplate.CellReach.MaxOutgoing);
 
                 numConductance.SetValue(interPoolTemplate.Weight);
-                numDelay.SetValue(interPoolTemplate.Delay_ms);
                 eFixedDuration.Text = interPoolTemplate.FixedDuration_ms?.ToString() ?? "";
+                eSynDelay.Text = interPoolTemplate.Delay_ms?.ToString() ?? "";
                 if (interPoolTemplate.SynapseParameters != null)
                 {
                     synapseControl.SetSynapseParameters(interPoolTemplate.SynapseParameters);
@@ -286,6 +286,9 @@ namespace SiliFish.UI.Controls
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;
+            double? synDelay = null;
+            if (!string.IsNullOrEmpty(eSynDelay.Text) && double.TryParse(eSynDelay.Text, out double sd))
+                synDelay = sd;
             interPoolTemplate.CellReach = new CellReach
             {
                 Ascending = cbAscending.Checked,
@@ -303,8 +306,8 @@ namespace SiliFish.UI.Controls
             interPoolTemplate.ConnectionType = ddConnectionType.SelectedItem != null ? (ConnectionType)ddConnectionType.SelectedItem : ConnectionType.NotSet;
             interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             interPoolTemplate.Weight = (double)numConductance.Value;
-            interPoolTemplate.Delay_ms = (double)numDelay.Value;
             interPoolTemplate.FixedDuration_ms = fixedDuration;
+            interPoolTemplate.Delay_ms = synDelay;
             interPoolTemplate.Name = eName.Text;
             interPoolTemplate.Description = eDescription.Text;
             interPoolTemplate.Probability = (double)numProbability.Value;

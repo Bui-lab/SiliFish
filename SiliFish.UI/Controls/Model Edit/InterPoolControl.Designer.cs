@@ -36,14 +36,13 @@
             lMinReach = new Label();
             lWeight = new Label();
             lFixedDuration = new Label();
-            lDelay = new Label();
+            lSynDelay = new Label();
             ddSourcePool = new ComboBox();
             ddTargetPool = new ComboBox();
             ddAxonReachMode = new ComboBox();
             ddConnectionType = new ComboBox();
             toolTip1 = new ToolTip(components);
             numConductance = new NumericUpDown();
-            numDelay = new NumericUpDown();
             eFixedDuration = new TextBox();
             lMaxReach = new Label();
             lMaxIncoming = new Label();
@@ -56,6 +55,7 @@
             numMinDescReach = new NumericUpDown();
             numProbability = new NumericUpDown();
             lProbability = new Label();
+            eSynDelay = new TextBox();
             gSynapse = new GroupBox();
             synapseControl = new SynapseControl();
             cbActive = new CheckBox();
@@ -78,7 +78,6 @@
             tAttachments = new TabPage();
             attachmentList = new AttachmentListControl();
             ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numDelay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMinAscReach).BeginInit();
@@ -162,17 +161,17 @@
             lFixedDuration.Size = new Size(60, 15);
             lFixedDuration.TabIndex = 20;
             lFixedDuration.Text = "Fixed Dur.";
-            toolTip1.SetToolTip(lFixedDuration, "(in ms) - if entered, distance/speed will not be used to calculate duration.");
+            toolTip1.SetToolTip(lFixedDuration, "If entered, distance/speed will not be used to calculate duration.");
             // 
-            // lDelay
+            // lSynDelay
             // 
-            lDelay.AutoSize = true;
-            lDelay.Location = new Point(13, 245);
-            lDelay.Name = "lDelay";
-            lDelay.Size = new Size(36, 15);
-            lDelay.TabIndex = 22;
-            lDelay.Text = "Delay";
-            toolTip1.SetToolTip(lDelay, "in ms");
+            lSynDelay.AutoSize = true;
+            lSynDelay.Location = new Point(13, 245);
+            lSynDelay.Name = "lSynDelay";
+            lSynDelay.Size = new Size(61, 15);
+            lSynDelay.TabIndex = 22;
+            lSynDelay.Text = "Syn. Delay";
+            toolTip1.SetToolTip(lSynDelay, "If entered, will replace to the model's generic synaptic delay.");
             // 
             // ddSourcePool
             // 
@@ -237,22 +236,13 @@
             numConductance.TabIndex = 19;
             toolTip1.SetToolTip(numConductance, "Maximum conductance");
             // 
-            // numDelay
-            // 
-            numDelay.DecimalPlaces = 2;
-            numDelay.Location = new Point(109, 240);
-            numDelay.Name = "numDelay";
-            numDelay.Size = new Size(66, 23);
-            numDelay.TabIndex = 23;
-            toolTip1.SetToolTip(numDelay, "in ms");
-            // 
             // eFixedDuration
             // 
             eFixedDuration.Location = new Point(109, 214);
             eFixedDuration.Name = "eFixedDuration";
             eFixedDuration.Size = new Size(66, 23);
             eFixedDuration.TabIndex = 21;
-            toolTip1.SetToolTip(eFixedDuration, "(in ms) - if entered, distance/speed will not be used to calculate duration.\r\n");
+            toolTip1.SetToolTip(eFixedDuration, "If entered, distance/speed will not be used to calculate duration.\r\n");
             // 
             // lMaxReach
             // 
@@ -358,6 +348,14 @@
             lProbability.TabIndex = 16;
             lProbability.Text = "Probability";
             toolTip1.SetToolTip(lProbability, "The probability of whether there will be a connection between the source and target cell.");
+            // 
+            // eSynDelay
+            // 
+            eSynDelay.Location = new Point(109, 241);
+            eSynDelay.Name = "eSynDelay";
+            eSynDelay.Size = new Size(66, 23);
+            eSynDelay.TabIndex = 22;
+            toolTip1.SetToolTip(eSynDelay, "If entered, distance/speed will not be used to calculate duration.\r\n");
             // 
             // gSynapse
             // 
@@ -522,6 +520,7 @@
             // 
             // splitContainerMain.Panel1
             // 
+            splitContainerMain.Panel1.Controls.Add(eSynDelay);
             splitContainerMain.Panel1.Controls.Add(lSourcePool);
             splitContainerMain.Panel1.Controls.Add(lMaxOutgoing);
             splitContainerMain.Panel1.Controls.Add(lTargetPool);
@@ -534,7 +533,7 @@
             splitContainerMain.Panel1.Controls.Add(eDescription);
             splitContainerMain.Panel1.Controls.Add(lFixedDuration);
             splitContainerMain.Panel1.Controls.Add(eName);
-            splitContainerMain.Panel1.Controls.Add(lDelay);
+            splitContainerMain.Panel1.Controls.Add(lSynDelay);
             splitContainerMain.Panel1.Controls.Add(lDescription);
             splitContainerMain.Panel1.Controls.Add(ddSourcePool);
             splitContainerMain.Panel1.Controls.Add(lName);
@@ -546,7 +545,6 @@
             splitContainerMain.Panel1.Controls.Add(cbActive);
             splitContainerMain.Panel1.Controls.Add(numConductance);
             splitContainerMain.Panel1.Controls.Add(eFixedDuration);
-            splitContainerMain.Panel1.Controls.Add(numDelay);
             // 
             // splitContainerMain.Panel2
             // 
@@ -629,7 +627,6 @@
             Name = "InterPoolControl";
             Size = new Size(510, 559);
             ((System.ComponentModel.ISupportInitialize)numConductance).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numDelay).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMinAscReach).EndInit();
@@ -661,14 +658,13 @@
         private Label lMinReach;
         private Label lWeight;
         private Label lFixedDuration;
-        private Label lDelay;
+        private Label lSynDelay;
         private ComboBox ddSourcePool;
         private ComboBox ddTargetPool;
         private ComboBox ddAxonReachMode;
         private ComboBox ddConnectionType;
         private ToolTip toolTip1;
         private NumericUpDown numConductance;
-        private NumericUpDown numDelay;
         private TextBox eFixedDuration;
         private GroupBox gSynapse;
         private CheckBox cbActive;
@@ -702,5 +698,6 @@
         private TimeLineControl timeLineControl;
         private SynapseControl synapseControl;
         private AttachmentListControl attachmentList;
+        private TextBox eSynDelay;
     }
 }
