@@ -40,6 +40,8 @@ namespace SiliFish.UI.Controls.Display
                     ctrl.SetEnabled(value);
                 int NumberOfSomites = runningModel?.ModelDimensions.NumberOfSomites ?? 0;
                 ddSomiteSelection.Enabled = eSomiteSelection.Enabled = cbCombineSomites.Enabled = NumberOfSomites > 0;
+                if (NumberOfSomites == 0)
+                    cbCombineSomites.Checked = false;
             }
         }
 
@@ -74,6 +76,8 @@ namespace SiliFish.UI.Controls.Display
                 PopulatePools();
                 int NumberOfSomites = runningModel.ModelDimensions.NumberOfSomites;
                 ddSomiteSelection.Enabled = eSomiteSelection.Enabled = cbCombineSomites.Enabled = NumberOfSomites > 0;
+                if (NumberOfSomites == 0)
+                    cbCombineSomites.Checked = false;
             }
         }
         public CellSelectionControl()
@@ -303,7 +307,8 @@ namespace SiliFish.UI.Controls.Display
         {
             if (cbCombineCells.Focused)
             {
-                if (!cbCombineCells.Checked && (cbCombinePools.Checked || cbCombineSomites.Checked))
+                int NumberOfSomites = runningModel?.ModelDimensions.NumberOfSomites ?? 0;
+                if (NumberOfSomites > 0 && !cbCombineCells.Checked && (cbCombinePools.Checked || cbCombineSomites.Checked))
                     cbCombineCells.Checked = true; //has to be combined
                 else
                     SelectionChanged?.Invoke(this, EventArgs.Empty);
@@ -318,6 +323,7 @@ namespace SiliFish.UI.Controls.Display
         public PlotSelectionInterface GetSelection()
         {
             PlotSelectionInterface selection;
+            int NumberOfSomites = runningModel?.ModelDimensions.NumberOfSomites ?? 0;
             if (SelectedUnits != null && SelectedUnits.Any())
             {
                 selection = new PlotSelectionUnits()
@@ -328,7 +334,7 @@ namespace SiliFish.UI.Controls.Display
                     CellSelection = ddCellSelection.Text.GetValueFromName(PlotCellSelection.All),
                     NCell = (int)eCellSelection.Value,
                     CombineCells = cbCombineCells.Checked,
-                    CombineSomites = cbCombineSomites.Checked,
+                    CombineSomites = NumberOfSomites > 0 && cbCombineSomites.Checked,
                     CombinePools = cbCombinePools.Checked
                 };
             }
@@ -341,7 +347,7 @@ namespace SiliFish.UI.Controls.Display
                     CellSelection = ddCellSelection.Text.GetValueFromName(PlotCellSelection.All),
                     NCell = (int)eCellSelection.Value,
                     CombineCells = cbCombineCells.Checked,
-                    CombineSomites = cbCombineSomites.Checked,
+                    CombineSomites = NumberOfSomites > 0 && cbCombineSomites.Checked,
                     CombinePools = cbCombinePools.Checked
                 };
             return selection;

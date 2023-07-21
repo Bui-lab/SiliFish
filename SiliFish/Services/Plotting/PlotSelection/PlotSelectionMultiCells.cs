@@ -72,6 +72,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
         public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells,
             bool combinePools, bool combineSomites, bool combineCells)
         {
+            
             if (combineSomites || combinePools)
                 combineCells = true;
             return cells.GroupBy(c =>
