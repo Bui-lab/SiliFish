@@ -1062,6 +1062,10 @@ namespace SiliFish.UI.Controls
             {
                 listCellPools.SelectItem(ipt.PoolSource);
             }
+            else if (obj is InterPool ip)
+            {
+                listCellPools.SelectItem(ip.SourcePool);
+            }
         }
 
         private void listConnections_GotoTarget(object sender, EventArgs e)
@@ -1076,6 +1080,10 @@ namespace SiliFish.UI.Controls
             else if (obj is InterPoolTemplate ipt)
             {
                 listCellPools.SelectItem(ipt.PoolTarget);
+            }
+            else if (obj is InterPool ip)
+            {
+                listCellPools.SelectItem(ip.TargetPool);
             }
         }
 

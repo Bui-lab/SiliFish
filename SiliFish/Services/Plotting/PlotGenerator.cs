@@ -445,7 +445,7 @@ namespace SiliFish.Services.Plotting
             {
                 combinePools = cellSelection.CombinePools;
                 combineCells = cellSelection.CombineCells;
-                combineSomites = cellSelection.CombineSomites;
+                combineSomites = model.ModelDimensions.NumberOfSomites>0 && cellSelection.CombineSomites;
                 combineJunctions = cellSelection.CombineJunctions;
             }
             string Title = "";
