@@ -39,6 +39,7 @@ namespace SiliFish.ModelUnits.Cells
             return (Cell)Activator.CreateInstance(GetTypeOfCell(cellType));
         }
         protected virtual string Discriminator => "cell";
+        protected int lastSpike = -1;
 
         public CellPool CellPool;
         public Coordinate Coordinate;
@@ -164,6 +165,9 @@ namespace SiliFish.ModelUnits.Cells
                 return paramValues;
             }
         }
+
+        [JsonIgnore, Browsable(false)]
+        public int LastSpike { get => lastSpike; }
 
         public List<string> ExportValues()
         {
@@ -370,6 +374,8 @@ namespace SiliFish.ModelUnits.Cells
         {
             bool spike = false;
             double v = Core.GetNextVal(stim, ref spike);
+            if (spike)
+                lastSpike = t;
             if (v < GlobalSettings.BiologicalMinPotential)
                 v = GlobalSettings.BiologicalMinPotential;
             else if (v > GlobalSettings.BiologicalMaxPotential)

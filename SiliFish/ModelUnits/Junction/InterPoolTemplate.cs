@@ -18,6 +18,7 @@ namespace SiliFish.ModelUnits.Junction
         #region Private fields
         private string _Name;
         private string poolSource, poolTarget;
+        private string coreType;
         #endregion
 
         #region Properties
@@ -67,6 +68,16 @@ namespace SiliFish.ModelUnits.Junction
                 if (rename) Name = GeneratedName();
             }
         }
+        public string CoreType
+        {
+            get => coreType;
+            set
+            {
+                if (value.Trim() != value)
+                { }
+                coreType = value;
+            }
+        }
         [JsonPropertyOrder(2)]
         public CellReach CellReach { get; set; } = new();
 
@@ -113,11 +124,11 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         public static new List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("Name", "Source", "Target", 
-                "Axon Reach Mode", "Conn. Type", "Dist. Mode",
-                CellReach.ColumnNames, 
+            ListBuilder.Build<string>("Name", "Source", "Target",
+                "Axon Reach Mode", "Conn. Type", "Core Type" , "Dist. Mode",
+                CellReach.ColumnNames,
                 SynapseParameters.ColumnNames,
-                "Prob.", "Weight", "Fixed Dur. (ms)", "Delay (ms)", 
+                "Prob.", "Weight", "Fixed Dur. (ms)", "Delay (ms)",
                 "Active",
                 TimeLine.ColumnNames);
 
@@ -125,7 +136,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             return ListBuilder.Build<string>(
             Util.CSVEncode(Name), PoolSource, PoolTarget,
-                AxonReachMode, ConnectionType, DistanceMode,
+                AxonReachMode, ConnectionType, CoreType, DistanceMode,
                 CellReach.ExportValues(),
                 SynapseParameters?.ExportValues() ?? SynapseParameters.ExportBlankValues(),
                 Probability, Weight, FixedDuration_ms, Delay_ms,
@@ -144,8 +155,9 @@ namespace SiliFish.ModelUnits.Junction
 
                 AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
                 ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
+                CoreType = values[iter++].Trim();
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                CellReach.Importvalues(values.Take(new Range(iter, iter+CellReach.ColumnNames.Count)).ToList());
+                CellReach.Importvalues(values.Take(new Range(iter, iter + CellReach.ColumnNames.Count)).ToList());
                 iter += CellReach.ColumnNames.Count;
                 List<string> synapseString = values.Take(new Range(iter, iter + SynapseParameters.ColumnNames.Count)).ToList();
                 if (synapseString.Any(s => !string.IsNullOrEmpty(s)))
@@ -159,12 +171,12 @@ namespace SiliFish.ModelUnits.Junction
                 Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
-                if (double.TryParse(values[iter++],out double f))
+                if (double.TryParse(values[iter++], out double f))
                     Delay_ms = f;
-                if (bool.TryParse(values[iter++],out bool b))
+                if (bool.TryParse(values[iter++], out bool b))
                     Active = b;
                 if (iter < values.Count)
-                    TimeLine_ms.ImportValues (new[] { values[iter++] }.ToList());
+                    TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
             }
             catch (Exception ex)
             {
@@ -176,9 +188,9 @@ namespace SiliFish.ModelUnits.Junction
 
         #endregion
 
-        public InterPoolTemplate():base()
+        public InterPoolTemplate() : base()
         { }
-        public InterPoolTemplate(InterPoolTemplate ipt):base (ipt)
+        public InterPoolTemplate(InterPoolTemplate ipt) : base(ipt)
         {
             Name = ipt.Name;
             Description = ipt.Description;
@@ -221,6 +233,12 @@ namespace SiliFish.ModelUnits.Junction
         public string GeneratedName()
         {
             return $"{(!string.IsNullOrEmpty(PoolSource) ? PoolSource : "__")}-->{(!string.IsNullOrEmpty(PoolTarget) ? PoolTarget : "__")}";
+        }
+
+        internal void BackwardCompatibility()
+        {
+            if ((ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ) && string.IsNullOrEmpty(coreType))
+                coreType = typeof(SimpleSyn).Name;
         }
     }
 

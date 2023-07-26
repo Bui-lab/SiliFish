@@ -54,7 +54,7 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
-            ConnectionType.Gap, Cell1.ID, Cell2.ID,
+            ConnectionType.Gap,"", Cell1.ID, Cell2.ID,
                 DistanceMode,
                 SynapseParameters.ExportBlankValues(),
                 Weight, FixedDuration_ms, Delay_ms,
@@ -65,7 +65,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             try
             {
-                int iter = 1;//junction type is already read before junction creation
+                int iter = 2;//junction type is already read before junction creation
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();

@@ -71,6 +71,8 @@
             lUoD2 = new Label();
             lUoD1 = new Label();
             splitContainerMain = new SplitContainer();
+            ddCoreType = new ComboBox();
+            lCoreType = new Label();
             tabInterPool = new TabControl();
             tDynamics = new TabPage();
             tTimeline = new TabPage();
@@ -146,7 +148,7 @@
             // lWeight
             // 
             lWeight.AutoSize = true;
-            lWeight.Location = new Point(13, 191);
+            lWeight.Location = new Point(13, 217);
             lWeight.Name = "lWeight";
             lWeight.Size = new Size(45, 15);
             lWeight.TabIndex = 18;
@@ -156,7 +158,7 @@
             // lFixedDuration
             // 
             lFixedDuration.AutoSize = true;
-            lFixedDuration.Location = new Point(13, 219);
+            lFixedDuration.Location = new Point(13, 245);
             lFixedDuration.Name = "lFixedDuration";
             lFixedDuration.Size = new Size(60, 15);
             lFixedDuration.TabIndex = 20;
@@ -166,7 +168,7 @@
             // lSynDelay
             // 
             lSynDelay.AutoSize = true;
-            lSynDelay.Location = new Point(13, 245);
+            lSynDelay.Location = new Point(13, 271);
             lSynDelay.Name = "lSynDelay";
             lSynDelay.Size = new Size(61, 15);
             lSynDelay.TabIndex = 22;
@@ -230,7 +232,7 @@
             // 
             numConductance.DecimalPlaces = 6;
             numConductance.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            numConductance.Location = new Point(109, 188);
+            numConductance.Location = new Point(109, 214);
             numConductance.Name = "numConductance";
             numConductance.Size = new Size(66, 23);
             numConductance.TabIndex = 19;
@@ -238,7 +240,7 @@
             // 
             // eFixedDuration
             // 
-            eFixedDuration.Location = new Point(109, 214);
+            eFixedDuration.Location = new Point(109, 240);
             eFixedDuration.Name = "eFixedDuration";
             eFixedDuration.Size = new Size(66, 23);
             eFixedDuration.TabIndex = 21;
@@ -257,7 +259,7 @@
             // lMaxIncoming
             // 
             lMaxIncoming.AutoSize = true;
-            lMaxIncoming.Location = new Point(13, 113);
+            lMaxIncoming.Location = new Point(13, 139);
             lMaxIncoming.Name = "lMaxIncoming";
             lMaxIncoming.Size = new Size(84, 15);
             lMaxIncoming.TabIndex = 12;
@@ -266,7 +268,7 @@
             // 
             // numMaxIncoming
             // 
-            numMaxIncoming.Location = new Point(109, 110);
+            numMaxIncoming.Location = new Point(109, 136);
             numMaxIncoming.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMaxIncoming.Name = "numMaxIncoming";
             numMaxIncoming.Size = new Size(66, 23);
@@ -276,7 +278,7 @@
             // lMaxOutgoing
             // 
             lMaxOutgoing.AutoSize = true;
-            lMaxOutgoing.Location = new Point(13, 139);
+            lMaxOutgoing.Location = new Point(13, 165);
             lMaxOutgoing.Name = "lMaxOutgoing";
             lMaxOutgoing.Size = new Size(84, 15);
             lMaxOutgoing.TabIndex = 14;
@@ -285,7 +287,7 @@
             // 
             // numMaxOutgoing
             // 
-            numMaxOutgoing.Location = new Point(109, 136);
+            numMaxOutgoing.Location = new Point(109, 162);
             numMaxOutgoing.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMaxOutgoing.Name = "numMaxOutgoing";
             numMaxOutgoing.Size = new Size(66, 23);
@@ -331,7 +333,7 @@
             // numProbability
             // 
             numProbability.DecimalPlaces = 3;
-            numProbability.Location = new Point(109, 162);
+            numProbability.Location = new Point(109, 188);
             numProbability.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
             numProbability.Name = "numProbability";
             numProbability.Size = new Size(66, 23);
@@ -342,7 +344,7 @@
             // lProbability
             // 
             lProbability.AutoSize = true;
-            lProbability.Location = new Point(13, 165);
+            lProbability.Location = new Point(13, 191);
             lProbability.Name = "lProbability";
             lProbability.Size = new Size(64, 15);
             lProbability.TabIndex = 16;
@@ -351,7 +353,7 @@
             // 
             // eSynDelay
             // 
-            eSynDelay.Location = new Point(109, 241);
+            eSynDelay.Location = new Point(109, 267);
             eSynDelay.Name = "eSynDelay";
             eSynDelay.Size = new Size(66, 23);
             eSynDelay.TabIndex = 22;
@@ -383,7 +385,7 @@
             cbActive.AutoSize = true;
             cbActive.Checked = true;
             cbActive.CheckState = CheckState.Checked;
-            cbActive.Location = new Point(156, 296);
+            cbActive.Location = new Point(156, 322);
             cbActive.Name = "cbActive";
             cbActive.Size = new Size(59, 19);
             cbActive.TabIndex = 0;
@@ -393,7 +395,7 @@
             // lName
             // 
             lName.AutoSize = true;
-            lName.Location = new Point(13, 271);
+            lName.Location = new Point(13, 295);
             lName.Name = "lName";
             lName.Size = new Size(39, 15);
             lName.TabIndex = 24;
@@ -402,7 +404,7 @@
             // lDescription
             // 
             lDescription.AutoSize = true;
-            lDescription.Location = new Point(16, 300);
+            lDescription.Location = new Point(16, 326);
             lDescription.Name = "lDescription";
             lDescription.Size = new Size(67, 15);
             lDescription.TabIndex = 26;
@@ -411,7 +413,7 @@
             // eName
             // 
             eName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            eName.Location = new Point(109, 268);
+            eName.Location = new Point(109, 294);
             eName.Name = "eName";
             eName.Size = new Size(106, 23);
             eName.TabIndex = 25;
@@ -441,9 +443,9 @@
             // 
             eDescription.AcceptsTab = true;
             eDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            eDescription.Location = new Point(13, 321);
+            eDescription.Location = new Point(13, 359);
             eDescription.Name = "eDescription";
-            eDescription.Size = new Size(202, 234);
+            eDescription.Size = new Size(202, 196);
             eDescription.TabIndex = 27;
             eDescription.Text = "";
             // 
@@ -520,7 +522,9 @@
             // 
             // splitContainerMain.Panel1
             // 
+            splitContainerMain.Panel1.Controls.Add(ddCoreType);
             splitContainerMain.Panel1.Controls.Add(eSynDelay);
+            splitContainerMain.Panel1.Controls.Add(lCoreType);
             splitContainerMain.Panel1.Controls.Add(lSourcePool);
             splitContainerMain.Panel1.Controls.Add(lMaxOutgoing);
             splitContainerMain.Panel1.Controls.Add(lTargetPool);
@@ -553,6 +557,28 @@
             splitContainerMain.SplitterDistance = 218;
             splitContainerMain.TabIndex = 28;
             splitContainerMain.SplitterMoved += splitContainerMain_SplitterMoved;
+            // 
+            // ddCoreType
+            // 
+            ddCoreType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddCoreType.BackColor = Color.WhiteSmoke;
+            ddCoreType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCoreType.FlatStyle = FlatStyle.Flat;
+            ddCoreType.FormattingEnabled = true;
+            ddCoreType.Location = new Point(109, 110);
+            ddCoreType.Name = "ddCoreType";
+            ddCoreType.Size = new Size(107, 23);
+            ddCoreType.TabIndex = 12;
+            ddCoreType.SelectedIndexChanged += ddCoreType_SelectedIndexChanged;
+            // 
+            // lCoreType
+            // 
+            lCoreType.AutoSize = true;
+            lCoreType.Location = new Point(13, 113);
+            lCoreType.Name = "lCoreType";
+            lCoreType.Size = new Size(59, 15);
+            lCoreType.TabIndex = 6;
+            lCoreType.Text = "Core Type";
             // 
             // tabInterPool
             // 
@@ -699,5 +725,7 @@
         private SynapseControl synapseControl;
         private AttachmentListControl attachmentList;
         private TextBox eSynDelay;
+        private ComboBox ddCoreType;
+        private Label lCoreType;
     }
 }

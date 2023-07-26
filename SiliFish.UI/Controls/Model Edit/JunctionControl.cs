@@ -23,6 +23,7 @@ namespace SiliFish.UI.Controls
         public JunctionControl(RunningModel model)
         {
             InitializeComponent();
+            //TODO coretype is not handled
             Model = model;
             settings = model.Settings;
 
@@ -303,7 +304,7 @@ namespace SiliFish.UI.Controls
                         if ((ConnectionType)ddConnectionType.SelectedItem == ConnectionType.Gap)
                             junction = new GapJunction(conductance, sc, tc, distanceMode);
                         else
-                            junction = new ChemicalSynapse(sc as Neuron, tc, synapseControl.GetSynapseParameters(), conductance, distanceMode);
+                            junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, synapseControl.GetSynapseParameters(), conductance, distanceMode);
                         junctions.Add(junction);
                     }
                 }

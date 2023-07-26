@@ -130,9 +130,9 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Connection functions
-        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, SynapseParameters param, double conductance, DistanceMode distanceMode)
+        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, string coreType, SynapseParameters param, double conductance, DistanceMode distanceMode)
         {
-            ChemicalSynapse jnc = new(this, postCell, param, conductance, distanceMode);
+            ChemicalSynapse jnc = new(this, postCell, coreType, param, conductance, distanceMode);
             if (jnc == null) return null;
             Terminals.Add(jnc);
             postCell.AddChemicalSynapse(jnc);
@@ -236,7 +236,7 @@ namespace SiliFish.ModelUnits.Cells
                     foreach (ChemicalSynapse syn in Synapses.Where(syn => syn.Active))
                     {
                         if (syn.IsActive(timeIndex))
-                            ISyn += syn.ISyn;
+                            ISyn += syn.Core.ISyn;
                     }
                     foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {

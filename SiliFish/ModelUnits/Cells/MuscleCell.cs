@@ -160,7 +160,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 foreach (ChemicalSynapse syn in EndPlates)
                 {
-                    ISyn += syn.ISyn;
+                    ISyn += syn.Core.ISyn;
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {

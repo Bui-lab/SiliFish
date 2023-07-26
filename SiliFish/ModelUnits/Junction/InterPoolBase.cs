@@ -36,7 +36,7 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } = 
-            ListBuilder.Build<string>("Connection Type", "Source", "Target", 
+            ListBuilder.Build<string>("Connection Type", "Core Type",  "Source", "Target", 
                 "Distance Mode", 
                 SynapseParameters.ColumnNames, 
                 "Weight", "Fixed Duration (ms)", "Delay (ms)",

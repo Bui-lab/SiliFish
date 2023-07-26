@@ -86,11 +86,13 @@ namespace SiliFish.Helpers
             return filename;
         }
 
-        public static string CopyFileToOutputFolder(string filename, string tempFile)
+        public static string CopyFileToOutputFolder(string tempFile, string target)
         {
-            filename = GetUniqueFileName(filename, GlobalSettings.OutputFolder);
-            File.Copy(tempFile, filename);
-            return filename;
+            string ext = Path.GetExtension(tempFile);
+            target = Path.ChangeExtension(target, ext);
+            target = GetUniqueFileName(target, GlobalSettings.OutputFolder);
+            File.Copy(tempFile, target);
+            return target;
         }
 
 

@@ -1,4 +1,6 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
@@ -32,7 +34,11 @@ namespace SiliFish.UI.Controls
             {
                 ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
                 if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
+                {
                     checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
+                    if (ddCoreType.SelectedIndex < 0)
+                        checkValuesArgs.Errors.Add("Synapse type not defined.");
+                }
             }
             if ((double)numConductance.Value < GlobalSettings.Epsilon)
                 checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
@@ -122,7 +128,9 @@ namespace SiliFish.UI.Controls
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            gSynapse.Visible = ddConnectionType.Text != "Gap";
+            ddCoreType.Visible = lCoreType.Visible =
+                gSynapse.Visible = ddConnectionType.Text != "Gap";
+
             if (interPoolTemplate == null || !ddConnectionType.Focused) return;
             interPoolTemplate.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
             UpdateName();
@@ -173,6 +181,8 @@ namespace SiliFish.UI.Controls
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
+            ddCoreType.Items.AddRange(Synapse.GetSynapseTypes().ToArray());// fill before connection types
+
             ddConnectionType.Items.Clear();
             ddConnectionType.Items.Add(ConnectionType.Gap);
             ddConnectionType.Items.Add(ConnectionType.Synapse);
@@ -269,6 +279,7 @@ namespace SiliFish.UI.Controls
                 if (interPoolTemplate.SynapseParameters != null)
                 {
                     synapseControl.SetSynapseParameters(interPoolTemplate.SynapseParameters);
+                    ddCoreType.Text = interPoolTemplate.CoreType?.ToString();
                 }
                 cbActive.Checked = interPoolTemplate.Active;
                 timeLineControl.SetTimeLine(interPoolTemplate.TimeLine_ms);
@@ -315,7 +326,9 @@ namespace SiliFish.UI.Controls
             if (interPoolTemplate.ConnectionType != ConnectionType.Gap)
             {
                 interPoolTemplate.SynapseParameters = synapseControl.GetSynapseParameters();
+                interPoolTemplate.CoreType = ddCoreType.Text;
             }
+
             interPoolTemplate.Active = cbActive.Checked;
             interPoolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
             interPoolTemplate.Attachments = attachmentList.GetAttachments();
@@ -326,6 +339,16 @@ namespace SiliFish.UI.Controls
         private void splitContainerMain_SplitterMoved(object sender, SplitterEventArgs e)
         {
             splitContainerMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise
+        }
+
+        private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /*TODO convert SynapseParameters to dictionary
+             * if (skipCoreTypeChange) return;
+            string coreType = ddCoreType.Text;
+            poolBase.Parameters = CellCoreUnit.GetParameters(coreType);
+            ParamDictToGrid();
+            */
         }
     }
 }

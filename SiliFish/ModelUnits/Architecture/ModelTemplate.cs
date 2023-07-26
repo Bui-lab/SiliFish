@@ -289,6 +289,10 @@ namespace SiliFish.ModelUnits.Architecture
                 if (checkAxonLength)
                     cpt.BackwardCompatibilityAxonLength(this);
             }
+            foreach (InterPoolTemplate ip in InterPoolTemplates)
+            {
+                ip.BackwardCompatibility();
+            }
         }
 
     }
