@@ -24,7 +24,6 @@ namespace SiliFish.ModelUnits.Junction
         private double ISynA = 0; //the momentary current value
         private double ISynB = 0; //the momentary current value
         [JsonIgnore]
-        public double ISyn { get { return ISynA - ISynB; } }
 
         public TwoExp_syn Core { get; set; }
 
