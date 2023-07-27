@@ -15,7 +15,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    [JsonDerivedType(typeof(CellCoreUnit), typeDiscriminator: "cellcore")]
+    [JsonDerivedType(typeof(CellCore), typeDiscriminator: "cellcore")]
     [JsonDerivedType(typeof(HodgkinHuxley), typeDiscriminator: "hodgkinhuxley")]
     [JsonDerivedType(typeof(HodgkinHuxleyClassic), typeDiscriminator: "hodgkinhuxleyclassic")]
     [JsonDerivedType(typeof(Izhikevich_5P), typeDiscriminator: "izhikevich5p")]
@@ -23,23 +23,23 @@ namespace SiliFish.DynamicUnits
     [JsonDerivedType(typeof(Leaky_Integrator), typeDiscriminator: "leakyintegrator")]
     [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
     [JsonDerivedType(typeof(LeakyIntegrateAndFire), typeDiscriminator: "leakyintegratefire")]
-    public class CellCoreUnit
+    public class CellCore: BaseCore
     {
         #region Static members and functions
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
-        .Where(type => typeof(CellCoreUnit).IsAssignableFrom(type))
+        .Where(type => typeof(CellCore).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
 
         public static int CoreParamMaxCount = 10;
 
         public static List<string> GetCoreTypes()
         {
-            return typeMap.Keys.Where(k => k != nameof(CellCoreUnit) && k!=nameof(ContractibleCellCoreUnit)).ToList();
+            return typeMap.Keys.Where(k => k != nameof(CellCore) && k!=nameof(ContractibleCellCore)).ToList();
         }
 
-        public static CellCoreUnit CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)
+        public static CellCore CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)
         {
-            CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            CellCore core = (CellCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
             if (dt_euler != null)
                 core.deltaTEuler = (double)dt_euler;
             else if (core.deltaTEuler==0)
@@ -51,9 +51,9 @@ namespace SiliFish.DynamicUnits
             return core;
         }
 
-        public static CellCoreUnit CreateCore(CellCoreUnit copyFrom)
+        public static CellCore CreateCore(CellCore copyFrom)
         {
-            CellCoreUnit core = (CellCoreUnit)Activator.CreateInstance(typeMap[copyFrom.CoreType], copyFrom.Parameters ?? new Dictionary<string, double>());
+            CellCore core = (CellCore)Activator.CreateInstance(typeMap[copyFrom.CoreType], copyFrom.Parameters ?? new Dictionary<string, double>());
             core.deltaTEuler = copyFrom.deltaTEuler;
             core.deltaT = copyFrom.deltaT;
             return core;
@@ -65,7 +65,7 @@ namespace SiliFish.DynamicUnits
         /// <returns></returns>
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
-            CellCoreUnit core = CreateCore(coreType, null);
+            CellCore core = CreateCore(coreType, null);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
 
@@ -95,12 +95,7 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore, Browsable(false)]
         public virtual double Vthreshold { get; set; }
-        [JsonIgnore, Browsable(false)]
-        public Dictionary<string, double> Parameters
-        {
-            get { return GetParameters(); }
-            set { SetParameters(value); }
-        }
+
 
         [JsonIgnore, Browsable(false)]
         public string CoreType => GetType().Name;
@@ -118,46 +113,10 @@ namespace SiliFish.DynamicUnits
             throw exception;
         }
 
-        public virtual Dictionary<string, double> GetParameters()
+        public override void SetParameters(Dictionary<string, double> paramExternal)
         {
-            Dictionary<string, double> paramDict = new();
-
-            foreach (PropertyInfo prop in GetType().GetProperties())
-            {
-                if (prop.GetCustomAttribute<BrowsableAttribute>()?.Equals(BrowsableAttribute.No) ?? false)
-                    continue;
-                if (prop.PropertyType.Name != typeof(double).Name)
-                    continue;
-                paramDict.Add(prop.Name, (double)prop.GetValue(this));
-            }
-            return paramDict;
-        }
-
-        public virtual void SetParameters(Dictionary<string, double> paramExternal)
-        {
-            if (paramExternal == null || paramExternal.Count == 0)
-                return;
+            base.SetParameters(paramExternal);
             rheobase = null;//initialize rheobase
-            foreach (string key in paramExternal.Keys)
-            {
-                SetParameter(key, paramExternal[key]);
-            }
-        }
-        public virtual void SetParameter(string name, double value)
-        {
-            name = name.Replace(GetType().Name + ".", "");//TODO temporary replacement - version 2.2.4
-            this.SetPropertyValue(name, value);
-        }
-        public virtual bool CheckValues(ref List<string> errors)
-        {
-            errors ??= new();
-            return errors.Count == 0;
-        }
-        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
-        {
-            errors ??= new();
-            CellCoreUnit core = CreateCore(coreType, param);
-            return core.CheckValues(ref errors);
         }
 
 
@@ -290,6 +249,12 @@ namespace SiliFish.DynamicUnits
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
 
+        }
+        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
+        {
+            errors ??= new();
+            BaseCore core = CreateCore(coreType, param);
+            return core.CheckValues(ref errors);
         }
 
     }

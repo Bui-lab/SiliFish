@@ -79,25 +79,25 @@ namespace SiliFish.Repositories
             return list;
         }
 
-        public static void Save(string fileName, CellCoreUnit core)
+        public static void Save(string fileName, CellCore core)
         {
-            CellCoreUnit[] arr = new CellCoreUnit[] { core };
+            CellCore[] arr = new CellCore[] { core };
             //the core is saved as an array to benefit from $type tag added by the JsonSerializer
             JsonUtil.SaveToJsonFile(fileName, arr);
         }
 
 
-        public static CellCoreUnit Load(string fileName)
+        public static CellCore Load(string fileName)
         {
             string JSONString = FileUtil.ReadFromFile(fileName);
             if (string.IsNullOrEmpty(JSONString))
                 return null;
             CheckJSONVersion(ref JSONString);
             //the core is saved as an array to benefit from $type tag added by the JsonSerializer
-            CellCoreUnit[] arr = (CellCoreUnit[])JsonUtil.ToObject(typeof(CellCoreUnit[]), JSONString);
+            CellCore[] arr = (CellCore[])JsonUtil.ToObject(typeof(CellCore[]), JSONString);
             if (arr != null && arr.Any())
             {
-                CellCoreUnit core = arr[0];
+                CellCore core = arr[0];
                 return core;
             }
             return null;

@@ -142,10 +142,10 @@ namespace SiliFish.UI.Controls
 
             //Settings
             if (ddDefaultNeuronCore.Items.Count == 0)
-                ddDefaultNeuronCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
+                ddDefaultNeuronCore.Items.AddRange(CellCore.GetCoreTypes().ToArray());
             ddDefaultNeuronCore.Text = Model?.Settings.DefaultNeuronCore;
             if (ddDefaultMuscleCellCore.Items.Count == 0)
-                ddDefaultMuscleCellCore.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
+                ddDefaultMuscleCellCore.Items.AddRange(CellCore.GetCoreTypes().ToArray());
             ddDefaultMuscleCellCore.Text = Model?.Settings.DefaultMuscleCellCore;
             propSettings.SelectedObject = Model?.Settings;
             propKinematics.SelectedObject = Model?.KinemParam;
@@ -828,7 +828,7 @@ namespace SiliFish.UI.Controls
                 InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
-                ipControl.SetInterPoolTemplate(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
+                ipControl.WriteDataToControl(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
                 if (setSource && SelectedPoolTemplate != null)
                     ipControl.SetSourcePool(SelectedPoolTemplate);
                 if (setTarget && SelectedPoolTemplate != null)
@@ -840,7 +840,7 @@ namespace SiliFish.UI.Controls
 
                 if (frmControl.ShowDialog() == DialogResult.OK)
                 {
-                    interPoolTemplate = ipControl.GetInterPoolTemplate();
+                    interPoolTemplate = ipControl.ReadDataFromControl();
                     modelTemplate.LinkObjects(interPoolTemplate);
                     return new List<InterPoolBase> { interPoolTemplate };
                 }

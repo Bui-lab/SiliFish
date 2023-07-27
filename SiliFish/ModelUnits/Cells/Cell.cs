@@ -23,8 +23,7 @@ namespace SiliFish.ModelUnits.Cells
     [JsonDerivedType(typeof(MuscleCell), typeDiscriminator: "musclecell")]
     public class Cell : ModelUnitBase, IDataExporterImporter
     {
-        private static int csvExportCoreParamCount = 10;
-        private static Type GetTypeOfCell(string discriminator)
+       private static Type GetTypeOfCell(string discriminator)
         {
             return discriminator switch
             {
@@ -46,7 +45,7 @@ namespace SiliFish.ModelUnits.Cells
 
         [JsonIgnore]
         public RunningModel Model { get; set; }
-        public CellCoreUnit Core { get; set; }
+        public CellCore Core { get; set; }
         public string CellGroup { get; set; }
         public int Sequence { get; set; }
         public int Somite { get; set; } = -1;
@@ -144,20 +143,20 @@ namespace SiliFish.ModelUnits.Cells
             ListBuilder.Build<string>("CellType", "CellPool", "Somite", "Sequence", Coordinate.ColumnNames,
             "Descending Axon", "Ascending Axon",
             "Conduction Velocity", "CoreType", "Rheobase (output only)",
-            Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+            Enumerable.Range(1, CellCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
             "Active",
             TimeLine.ColumnNames);
 
          [JsonIgnore, Browsable(false)]
-        private List<string> csvExportCoreValues
+        private List<string> csvExportParamValues
         {
             get
             {
                 List<string> paramValues = Core.Parameters
-                    .Take(CellCoreUnit.CoreParamMaxCount)
+                    .Take(CellCore.CoreParamMaxCount)
                     .OrderBy(kv => kv.Key)
                     .SelectMany(kv => new[] { kv.Key, kv.Value.ToString()}).ToList();
-                for (int i = Core.Parameters.Count; i < CellCoreUnit.CoreParamMaxCount; i++)
+                for (int i = Core.Parameters.Count; i < CellCore.CoreParamMaxCount; i++)
                 {
                     paramValues.Add(string.Empty);
                     paramValues.Add(string.Empty);
@@ -173,7 +172,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
                 DescendingAxonLength, AscendingAxonLength,
-                ConductionVelocity, Core.CoreType, Rheobase, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
+                ConductionVelocity, Core.CoreType, Rheobase, csvExportParamValues, Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -190,7 +189,7 @@ namespace SiliFish.ModelUnits.Cells
             string coreType = values[iter++].Trim();
             iter++;//skip rheobase
             Dictionary<string, double> parameters = new();
-            for (int i = 1; i <= csvExportCoreParamCount; i++)
+            for (int i = 1; i <= CellCore.CoreParamMaxCount; i++)
             {
                 if (iter > values.Count - 2) break;
                 string paramkey = values[iter++].Trim();
@@ -200,7 +199,7 @@ namespace SiliFish.ModelUnits.Cells
                     parameters.Add(paramkey, paramvalue);
                 }
             }
-            Core = CellCoreUnit.CreateCore(coreType, parameters);
+            Core = CellCore.CreateCore(coreType, parameters);
             Active = bool.Parse(values[iter++]);
             if (iter < values.Count)
                 TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
@@ -230,7 +229,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCoreUnit.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.DeltaT, Model.RunParam.DeltaTEuler);
+            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.DeltaT, Model.RunParam.DeltaTEuler);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;

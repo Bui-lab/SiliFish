@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class HodgkinHuxleyClassic: CellCoreUnit
+    public class HodgkinHuxleyClassic: CellCore
     {
         protected static double g_K_suggestedMin = 30;
         protected static double g_K_suggestedMax = 40;

@@ -761,9 +761,8 @@ namespace SiliFish.ModelUnits.Architecture
             if (pool1 == null || pool2 == null) return;
             CellReach cr = template.CellReach;
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
-            SynapseParameters synParam = template.SynapseParameters;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, template.CoreType, synParam, timeline, template.Weight, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, template.CoreType, template.Parameters, timeline, template.Weight, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         private void CalculateCellularOutputs(int t)

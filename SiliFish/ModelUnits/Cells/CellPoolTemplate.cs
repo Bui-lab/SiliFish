@@ -2,6 +2,7 @@
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
@@ -160,7 +161,7 @@ namespace SiliFish.ModelUnits.Cells
                 SpatialDistribution.ColumnNames, 
                 "Descending Axon", "Ascending Axon",
                 "Conduction Velocity", "CoreType", "Rheobase (output only/sample)",
-                Enumerable.Range(1, CellCoreUnit.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+                Enumerable.Range(1, CellCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Active", "Color", TimeLine.ColumnNames);
 
         [JsonIgnore, Browsable(false)]
@@ -168,8 +169,8 @@ namespace SiliFish.ModelUnits.Cells
         {
             get
             {
-                List<string> paramValues = Parameters.Take(CellCoreUnit.CoreParamMaxCount).OrderBy(kv => kv.Key).SelectMany(kv => new[] { kv.Key, kv.Value.CSVCellExportValues }).ToList();
-                for (int i = parameters.Count; i < CellCoreUnit.CoreParamMaxCount; i++)
+                List<string> paramValues = Parameters.Take(CellCore.CoreParamMaxCount).OrderBy(kv => kv.Key).SelectMany(kv => new[] { kv.Key, kv.Value.CSVCellExportValues }).ToList();
+                for (int i = parameters.Count; i < CellCore.CoreParamMaxCount; i++)
                 {
                     paramValues.Add(string.Empty);
                     paramValues.Add(string.Empty);
@@ -192,7 +193,7 @@ namespace SiliFish.ModelUnits.Cells
         public void ImportValues(List<string> values)
         {
             int iter = 0;
-            if (values.Count < ColumnNames.Count - CellCoreUnit.CoreParamMaxCount) return;
+            if (values.Count < ColumnNames.Count - CellCore.CoreParamMaxCount) return;
             CellGroup = values[iter++];
             CellType = (CellType)Enum.Parse(typeof(CellType), values[iter++]);
             NTMode = (NeuronClass)Enum.Parse(typeof(NeuronClass), values[iter++]);
@@ -210,7 +211,7 @@ namespace SiliFish.ModelUnits.Cells
             CoreType = values[iter++].Trim();
             iter++;//skip rheobase
             parameters = new();
-            for (int i = 1; i <= CellCoreUnit.CoreParamMaxCount; i++)
+            for (int i = 1; i <= CellCore.CoreParamMaxCount; i++)
             {
                 if (iter > values.Count - 2) break;
                 string paramkey = values[iter++].Trim();
@@ -254,7 +255,7 @@ namespace SiliFish.ModelUnits.Cells
         private double GetSampleRheobase()
         {
             Dictionary<string, double> dparams = Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, dparams);
+            CellCore core = CellCore.CreateCore(CoreType, dparams);
             return core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
            
         }
@@ -269,14 +270,14 @@ namespace SiliFish.ModelUnits.Cells
         {
             base.CheckValues(ref errors);
             int errorCount = errors.Count;
-            CellCoreUnit.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues());
+            CellCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues());
             if (errors.Count > errorCount)
                 errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;
         }
         public void BackwardCompatibility()
         {
-            var currentParams = CellCoreUnit.GetParameters(CoreType);
+            var currentParams = CellCore.GetParameters(CoreType);
             while (parameters.Keys.FirstOrDefault(k => k.StartsWith($"{CoreType}.")) != null)
             {
                 string key = parameters.Keys.FirstOrDefault(k => k.StartsWith($"{CoreType}."));

@@ -54,7 +54,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCoreUnit.CreateCore(coreType, cellParams, model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
+            Core = CellCore.CreateCore(coreType, cellParams, model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
             GapJunctions = new List<GapJunction>();
             Synapses = new List<ChemicalSynapse>();
             Terminals = new List<ChemicalSynapse>();
@@ -79,7 +79,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 CellPool = CellPool,
                 CellGroup = CellGroup,
-                Core = CellCoreUnit.CreateCore(this.Core),
+                Core = CellCore.CreateCore(this.Core),
                 Coordinate = Coordinate,
                 Model = Model,
                 ConductionVelocity = ConductionVelocity,
@@ -130,7 +130,7 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Connection functions
-        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, string coreType, SynapseParameters param, double conductance, DistanceMode distanceMode)
+        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, string coreType, Dictionary<string, double> param, double conductance, DistanceMode distanceMode)
         {
             ChemicalSynapse jnc = new(this, postCell, coreType, param, conductance, distanceMode);
             if (jnc == null) return null;

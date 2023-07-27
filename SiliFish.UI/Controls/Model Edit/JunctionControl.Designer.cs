@@ -42,7 +42,6 @@
             eFixedDuration = new TextBox();
             eSynDelay = new TextBox();
             cbActive = new CheckBox();
-            timeLineControl = new TimeLineControl();
             ddDistanceMode = new ComboBox();
             lDistanceMode = new Label();
             lSourceCell = new Label();
@@ -50,12 +49,10 @@
             lTargetCell = new Label();
             ddTargetCell = new ComboBox();
             ddTargetPool = new ComboBox();
-            gSynapse = new GroupBox();
-            synapseControl = new SynapseControl();
             ddCoreType = new ComboBox();
             lCoreType = new Label();
+            propCore = new PropertyGrid();
             ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
-            gSynapse.SuspendLayout();
             SuspendLayout();
             // 
             // lSourcePool
@@ -182,14 +179,6 @@
             cbActive.Text = "Active";
             cbActive.UseVisualStyleBackColor = true;
             // 
-            // timeLineControl
-            // 
-            timeLineControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            timeLineControl.Location = new Point(3, 437);
-            timeLineControl.Name = "timeLineControl";
-            timeLineControl.Size = new Size(165, 125);
-            timeLineControl.TabIndex = 0;
-            // 
             // ddDistanceMode
             // 
             ddDistanceMode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -268,26 +257,6 @@
             ddTargetPool.TabIndex = 7;
             ddTargetPool.SelectedIndexChanged += ddTargetPool_SelectedIndexChanged;
             // 
-            // gSynapse
-            // 
-            gSynapse.Controls.Add(synapseControl);
-            gSynapse.Location = new Point(9, 285);
-            gSynapse.Name = "gSynapse";
-            gSynapse.Size = new Size(239, 146);
-            gSynapse.TabIndex = 2;
-            gSynapse.TabStop = false;
-            gSynapse.Text = "Synapse Parameters";
-            // 
-            // synapseControl
-            // 
-            synapseControl.BackColor = Color.White;
-            synapseControl.EReversal = 0D;
-            synapseControl.Location = new Point(18, 22);
-            synapseControl.Name = "synapseControl";
-            synapseControl.Size = new Size(152, 127);
-            synapseControl.TabIndex = 0;
-            synapseControl.VThreshold = 0D;
-            // 
             // ddCoreType
             // 
             ddCoreType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -309,6 +278,14 @@
             lCoreType.TabIndex = 34;
             lCoreType.Text = "Core Type";
             // 
+            // propCore
+            // 
+            propCore.Dock = DockStyle.Bottom;
+            propCore.Location = new Point(0, 293);
+            propCore.Name = "propCore";
+            propCore.Size = new Size(254, 269);
+            propCore.TabIndex = 36;
+            // 
             // JunctionControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -316,11 +293,10 @@
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = Color.White;
+            Controls.Add(propCore);
             Controls.Add(ddCoreType);
             Controls.Add(lCoreType);
             Controls.Add(eSynDelay);
-            Controls.Add(timeLineControl);
-            Controls.Add(gSynapse);
             Controls.Add(lSourcePool);
             Controls.Add(lTargetCell);
             Controls.Add(ddTargetCell);
@@ -343,7 +319,6 @@
             Size = new Size(254, 562);
             SizeChanged += JunctionControl_SizeChanged;
             ((System.ComponentModel.ISupportInitialize)numConductance).EndInit();
-            gSynapse.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -370,10 +345,9 @@
         private Label lTargetCell;
         private ComboBox ddTargetCell;
         private ComboBox ddTargetPool;
-        private GroupBox gSynapse;
-        private SynapseControl synapseControl;
         private TextBox eSynDelay;
         private ComboBox ddCoreType;
         private Label lCoreType;
+        private PropertyGrid propCore;
     }
 }

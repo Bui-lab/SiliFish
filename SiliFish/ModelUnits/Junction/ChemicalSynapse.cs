@@ -25,35 +25,11 @@ namespace SiliFish.ModelUnits.Junction
         private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
                               //calculated at InitForSimulation, and used only during simulation
 
-        [JsonIgnore]
-
-        public Synapse Core { get; set; }
+        
 
         protected override int nMax => PreNeuron.V.Length;
 
-        [JsonIgnore]
-        public SynapseParameters SynapseParameters
-        {
-            get
-            {
-                if (Core == null) return null;
-                return new SynapseParameters()
-                {
-                    Erev = Core.ERev,
-                    TauD = Core.TauD,
-                    TauR = Core.TauR,
-                    Vth = Core.Vth
-                };
-            }
-            set
-            {
-                if (Core == null) return;
-                Core.ERev = value.Erev;
-                Core.TauD = value.TauD;
-                Core.TauR = value.TauR;
-                Core.Vth = value.Vth;
-            }
-        }
+
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
 
@@ -63,9 +39,11 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
-            ConnectionType.Synapse, Core.SynapseType, PreNeuron.ID, PostCell.ID,
+            ConnectionType.Synapse, Core.SynapseType,
+            csvExportParamValues,
+
+            PreNeuron.ID, PostCell.ID,
                 DistanceMode,
-                SynapseParameters.ExportValues(),
                 Weight, FixedDuration_ms, Delay_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
@@ -77,17 +55,26 @@ namespace SiliFish.ModelUnits.Junction
             {
                 int iter = 1;//junction type is already read before junction creation
                 string coreType = values[iter++].Trim();
+
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
+                Dictionary<string, double> parameters = new();
+                for (int i = 1; i <= SynapseCore.CoreParamMaxCount; i++)
+                {
+                    if (iter > values.Count - 2) break;
+                    string paramkey = values[iter++].Trim();
+                    double.TryParse(values[iter++].Trim(), out double paramvalue);
+                    if (!string.IsNullOrEmpty(paramkey))
+                    {
+                        parameters.Add(paramkey, paramvalue);
+                    }
+                }
+                Core = SynapseCore.CreateCore(coreType, parameters, Weight, 0.1, 0.1);//TODO constant values here - FIX!!!!
+
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
 
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                SynapseParameters synpar = new();
-                synpar.ImportValues(values.Skip(iter).Take(SynapseParameters.ColumnNames.Count).ToList());
-                SynapseParameters = synpar;
-                iter += SynapseParameters.ColumnNames.Count;
                 Weight = double.Parse(values[iter++]);
-                Core = Synapse.CreateSynapse(coreType, synpar, Weight, 0.1, 0.1);//TODO constant values here - FIX!!!!
 
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
@@ -106,9 +93,9 @@ namespace SiliFish.ModelUnits.Junction
 
         public ChemicalSynapse()
         { }
-        public ChemicalSynapse(Neuron preN, Cell postN, string coreType, SynapseParameters param, double conductance, DistanceMode distmode)
+        public ChemicalSynapse(Neuron preN, Cell postN, string coreType, Dictionary<string, double> synParams, double conductance, DistanceMode distmode)
         {
-            Core = Synapse.CreateSynapse(coreType, param, conductance,  preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
+            Core = SynapseCore.CreateCore(coreType, synParams, conductance,  preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
 
             PreNeuron = preN;
             PostCell = postN;
@@ -121,7 +108,7 @@ namespace SiliFish.ModelUnits.Junction
 
         public ChemicalSynapse(ChemicalSynapse syn): base(syn)
         {
-            Core = Synapse.CreateSynapse(syn.Core);
+            Core = SynapseCore.CreateCore(syn.Core);
             Core = new SimpleSyn(syn.Core as SimpleSyn);
             PreNeuron = syn.PreNeuron;
             PostCell = syn.PostCell;

@@ -239,6 +239,63 @@ namespace SiliFish.Repositories
             return updated;
         }
 
+        private static bool FixSynapseParametersJson(ref string json)
+        {
+            bool updated = false;
+            bool checkTau = false;
+
+            if (json.Contains("\"SynapseParameters:\": "))
+            {
+                Regex coreRegex = new("\"SynapseParameters\": {(\\s+.*[^}]*?)}");
+                MatchCollection matchCollection = coreRegex.Matches(json);
+                for (int i = matchCollection.Count - 1; i >= 0; i--)
+                {
+                    Match match = matchCollection[i];
+                    int index = match.Groups[0].Index;
+                    string core = match.Value;
+                    Regex paramRegex = new("\"Parameters\": {(\\s+.*[^}]*?)}");
+                    Match parMatch = paramRegex.Match(core);
+                    if (parMatch.Success)
+                    {
+                        string newJson = "";
+                        Regex singleRegex = new("\"(.*\\.)(.*\":.*,)");
+                        MatchCollection singleMatch = singleRegex.Matches(parMatch.Value);
+                        for (int j = 0; j < singleMatch.Count; j++)
+                        {
+                            Match singleParam = singleMatch[j];
+                            newJson += $"\"{singleParam.Groups[2]}\r\n";
+                        }
+                        json = json.Remove(index + parMatch.Index, parMatch.Value.Length);
+                        newJson = newJson.Replace("V_", "V");//change V_r, V_t, V_max to Vr, Vt, Vmax
+                        json = json.Insert(index + parMatch.Index, newJson);
+                    }
+                    else
+                    {
+                        checkTau = true;
+                    }
+                    updated = true;
+                }
+            }
+            else
+            {
+                if (json.Contains(".V_"))
+                {
+                    json = json.Replace("V_", "V");
+                    updated = true;
+                }
+            }
+            if (checkTau && json.Contains("\"taur\""))
+            {
+                json = json.Replace("\"taur\"", "\"TauR\"");
+                json = json.Replace("\"taud\"", "\"TauD\"");
+                json = json.Replace("\"vth\"", "\"Vth\"");
+                json = json.Replace("\"E_rev\"", "\"Erev\"");
+                updated = true;
+            }
+
+            return updated;
+        }
+
         public static List<string> CheckJSONVersion(ref string json)
         {
             Regex versionRegex = new("\"Version\": (.*),");

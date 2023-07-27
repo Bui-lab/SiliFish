@@ -80,7 +80,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            poolBase.Parameters = CellCoreUnit.GetParameters(coreType);
+            poolBase.Parameters = CellCore.GetParameters(coreType);
             ParamDictToGrid();
         }
 
@@ -266,10 +266,10 @@ namespace SiliFish.UI.Controls
                 if (string.IsNullOrEmpty(JSONString))
                     return;
                 //the core is saved as an array to benefit from $type tag added by the JsonSerializer
-                CellCoreUnit[] arr = (CellCoreUnit[])JsonUtil.ToObject(typeof(CellCoreUnit[]), JSONString);
+                CellCore[] arr = (CellCore[])JsonUtil.ToObject(typeof(CellCore[]), JSONString);
                 if (arr != null && arr.Any())
                 {
-                    CellCoreUnit core = arr[0];
+                    CellCore core = arr[0];
                     if (core != null)
                     {
                         skipCoreTypeChange = true;
@@ -326,7 +326,7 @@ namespace SiliFish.UI.Controls
             this.settings = settings;
             SomiteBased = somiteBased;
             distConductionVelocity.AbsoluteEnforced = true;
-            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
+            ddCoreType.Items.AddRange(CellCore.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));

@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class Leaky_Integrator : ContractibleCellCoreUnit
+    public class Leaky_Integrator : ContractibleCellCore
     {
         [Description("Resistance")]
         public double R { get; set; } 

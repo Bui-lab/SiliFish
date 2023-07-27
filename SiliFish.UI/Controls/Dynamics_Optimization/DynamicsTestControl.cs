@@ -134,7 +134,7 @@ namespace SiliFish.UI.Controls
         private void FillCoreTypes(string def = null)
         {
             if (ddCoreType.Items.Count == 0)
-                ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());
+                ddCoreType.Items.AddRange(CellCore.GetCoreTypes().ToArray());
             if (!string.IsNullOrEmpty(def))
                 ddCoreType.Text = def;
             if (ddCoreType.SelectedIndex < 0)
@@ -173,7 +173,7 @@ namespace SiliFish.UI.Controls
             List<Chart> charts = new();
             ReadParameters();
             string param = sensitivityAnalysisFiring.SelectedParam;
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
             double[] I = GenerateStimulus(stimulusControl1.GetStimulusSettings());
@@ -213,7 +213,7 @@ namespace SiliFish.UI.Controls
             string selectedParam = sensitivityAnalysisRheobase.SelectedParam;
             if (parameters.ContainsKey(selectedParam))
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == selectedParam).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, DeltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, DeltaT, deltaTEuler);
 
             foreach (string param in paramToTest.Keys)//change one parameter at a time
             {
@@ -478,7 +478,7 @@ namespace SiliFish.UI.Controls
             if (skipCoreTypeChange) return;
             CoreType = ddCoreType.Text;
             updateParamNames = true;
-            Parameters = CellCoreUnit.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
+            Parameters = CellCore.GetParameters(CoreType).ToDictionary(kvp => kvp.Key, kvp => double.Parse(kvp.Value.ToString()));
         }
 
         private void stimulusControl1_StimulusChanged(object sender, EventArgs e)
@@ -516,7 +516,7 @@ namespace SiliFish.UI.Controls
         private void DynamicsRun()
         {
             ReadParameters();
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             if (core != null)
             {
                 if (rbSingleEntryStimulus.Checked)
@@ -581,7 +581,7 @@ namespace SiliFish.UI.Controls
         private void CalculateRheobase()
         {
             ReadParameters();
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
@@ -652,7 +652,7 @@ namespace SiliFish.UI.Controls
             {
                 string fileName = openFileJson.FileName;
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(fileName);
-                CellCoreUnit core = CellCoreUnitFile.Load(fileName);
+                CellCore core = CellCoreUnitFile.Load(fileName);
                 if (core != null)
                 {
                     skipCoreTypeChange = true;
@@ -675,7 +675,7 @@ namespace SiliFish.UI.Controls
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {

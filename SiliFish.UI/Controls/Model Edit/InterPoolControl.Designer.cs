@@ -56,8 +56,6 @@
             numProbability = new NumericUpDown();
             lProbability = new Label();
             eSynDelay = new TextBox();
-            gSynapse = new GroupBox();
-            synapseControl = new SynapseControl();
             cbActive = new CheckBox();
             lName = new Label();
             lDescription = new Label();
@@ -75,10 +73,9 @@
             lCoreType = new Label();
             tabInterPool = new TabControl();
             tDynamics = new TabPage();
+            dgDynamics = new DistributionDataGrid();
             tTimeline = new TabPage();
-            timeLineControl = new TimeLineControl();
             tAttachments = new TabPage();
-            attachmentList = new AttachmentListControl();
             ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
@@ -87,7 +84,6 @@
             ((System.ComponentModel.ISupportInitialize)numMaxDescReach).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMinDescReach).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numProbability).BeginInit();
-            gSynapse.SuspendLayout();
             grReach.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainerMain).BeginInit();
             splitContainerMain.Panel1.SuspendLayout();
@@ -95,8 +91,6 @@
             splitContainerMain.SuspendLayout();
             tabInterPool.SuspendLayout();
             tDynamics.SuspendLayout();
-            tTimeline.SuspendLayout();
-            tAttachments.SuspendLayout();
             SuspendLayout();
             // 
             // lSourcePool
@@ -359,26 +353,6 @@
             eSynDelay.TabIndex = 22;
             toolTip1.SetToolTip(eSynDelay, "If entered, distance/speed will not be used to calculate duration.\r\n");
             // 
-            // gSynapse
-            // 
-            gSynapse.Controls.Add(synapseControl);
-            gSynapse.Location = new Point(10, 128);
-            gSynapse.Name = "gSynapse";
-            gSynapse.Size = new Size(239, 157);
-            gSynapse.TabIndex = 2;
-            gSynapse.TabStop = false;
-            gSynapse.Text = "Synapse Parameters";
-            // 
-            // synapseControl
-            // 
-            synapseControl.BackColor = Color.White;
-            synapseControl.EReversal = 0D;
-            synapseControl.Location = new Point(8, 22);
-            synapseControl.Name = "synapseControl";
-            synapseControl.Size = new Size(152, 127);
-            synapseControl.TabIndex = 0;
-            synapseControl.VThreshold = 0D;
-            // 
             // cbActive
             // 
             cbActive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -463,9 +437,10 @@
             grReach.Controls.Add(lDistanceMode);
             grReach.Controls.Add(lMinReach);
             grReach.Controls.Add(lMaxReach);
-            grReach.Location = new Point(10, 3);
+            grReach.Dock = DockStyle.Top;
+            grReach.Location = new Point(3, 3);
             grReach.Name = "grReach";
-            grReach.Size = new Size(263, 124);
+            grReach.Size = new Size(274, 124);
             grReach.TabIndex = 1;
             grReach.TabStop = false;
             grReach.Text = "Reach";
@@ -594,8 +569,8 @@
             // 
             // tDynamics
             // 
+            tDynamics.Controls.Add(dgDynamics);
             tDynamics.Controls.Add(grReach);
-            tDynamics.Controls.Add(gSynapse);
             tDynamics.Location = new Point(4, 24);
             tDynamics.Name = "tDynamics";
             tDynamics.Padding = new Padding(3);
@@ -604,9 +579,21 @@
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
             // 
+            // dgDynamics
+            // 
+            dgDynamics.AutoSize = true;
+            dgDynamics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            dgDynamics.BackColor = Color.WhiteSmoke;
+            dgDynamics.Dock = DockStyle.Fill;
+            dgDynamics.Location = new Point(3, 127);
+            dgDynamics.MinimumSize = new Size(100, 100);
+            dgDynamics.Name = "dgDynamics";
+            dgDynamics.Size = new Size(274, 401);
+            dgDynamics.TabIndex = 4;
+            dgDynamics.Leave += dgDynamics_Leave;
+            // 
             // tTimeline
             // 
-            tTimeline.Controls.Add(timeLineControl);
             tTimeline.Location = new Point(4, 24);
             tTimeline.Name = "tTimeline";
             tTimeline.Padding = new Padding(3);
@@ -615,33 +602,14 @@
             tTimeline.Text = "Timeline";
             tTimeline.UseVisualStyleBackColor = true;
             // 
-            // timeLineControl
-            // 
-            timeLineControl.AutoScroll = true;
-            timeLineControl.BackColor = Color.FromArgb(236, 239, 241);
-            timeLineControl.Dock = DockStyle.Fill;
-            timeLineControl.Location = new Point(3, 3);
-            timeLineControl.Name = "timeLineControl";
-            timeLineControl.Size = new Size(274, 525);
-            timeLineControl.TabIndex = 24;
-            // 
             // tAttachments
             // 
-            tAttachments.Controls.Add(attachmentList);
             tAttachments.Location = new Point(4, 24);
             tAttachments.Name = "tAttachments";
             tAttachments.Size = new Size(280, 531);
             tAttachments.TabIndex = 2;
             tAttachments.Text = "Attachments";
             tAttachments.UseVisualStyleBackColor = true;
-            // 
-            // attachmentList
-            // 
-            attachmentList.Dock = DockStyle.Fill;
-            attachmentList.Location = new Point(0, 0);
-            attachmentList.Name = "attachmentList";
-            attachmentList.Size = new Size(280, 531);
-            attachmentList.TabIndex = 0;
             // 
             // InterPoolControl
             // 
@@ -660,7 +628,6 @@
             ((System.ComponentModel.ISupportInitialize)numMaxDescReach).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMinDescReach).EndInit();
             ((System.ComponentModel.ISupportInitialize)numProbability).EndInit();
-            gSynapse.ResumeLayout(false);
             grReach.ResumeLayout(false);
             grReach.PerformLayout();
             splitContainerMain.Panel1.ResumeLayout(false);
@@ -670,8 +637,7 @@
             splitContainerMain.ResumeLayout(false);
             tabInterPool.ResumeLayout(false);
             tDynamics.ResumeLayout(false);
-            tTimeline.ResumeLayout(false);
-            tAttachments.ResumeLayout(false);
+            tDynamics.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -692,7 +658,6 @@
         private ToolTip toolTip1;
         private NumericUpDown numConductance;
         private TextBox eFixedDuration;
-        private GroupBox gSynapse;
         private CheckBox cbActive;
         private NumericUpDown numProbability;
         private Label lProbability;
@@ -722,10 +687,10 @@
         private TabPage tTimeline;
         private TabPage tAttachments;
         private TimeLineControl timeLineControl;
-        private SynapseControl synapseControl;
         private AttachmentListControl attachmentList;
         private TextBox eSynDelay;
         private ComboBox ddCoreType;
         private Label lCoreType;
+        private DistributionDataGrid dgDynamics;
     }
 }

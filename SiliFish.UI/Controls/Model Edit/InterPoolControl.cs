@@ -1,4 +1,5 @@
-﻿using SiliFish.Definitions;
+﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits;
@@ -17,6 +18,7 @@ namespace SiliFish.UI.Controls
         private InterPoolTemplate interPoolTemplate;
         private Dictionary<string, object> Parameters;
         private bool SomiteBased = false;
+        private bool skipCoreTypeChange = false;
 
         public void CheckValues(object sender, EventArgs args)
         {
@@ -35,7 +37,9 @@ namespace SiliFish.UI.Controls
                 ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
                 if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
                 {
-                    checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
+                    List<string> errors = checkValuesArgs.Errors;
+                    //TODO if (!(propCore.SelectedObject as BaseCore).CheckValues(ref errors))
+                    //checkValuesArgs.Errors = errors;
                     if (ddCoreType.SelectedIndex < 0)
                         checkValuesArgs.Errors.Add("Synapse type not defined.");
                 }
@@ -83,7 +87,7 @@ namespace SiliFish.UI.Controls
         {
             if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
-                switch (pool.NTMode)
+                /*TODO switch (pool.NTMode)
                 {
                     case NeuronClass.Glycinergic:
                         synapseControl.EReversal = settings.E_gly;
@@ -99,7 +103,7 @@ namespace SiliFish.UI.Controls
                         break;
                     default:
                         break;
-                }
+                }*/
             }
             interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
@@ -117,6 +121,15 @@ namespace SiliFish.UI.Controls
             interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
         }
+        private void ParamDictToGrid()
+        {
+            dgDynamics.WriteToGrid(interPoolTemplate.Parameters);
+        }
+
+        private Dictionary<string, Distribution> GridToParamDict()
+        {
+            return dgDynamics.ReadFromGrid();
+        }
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -129,8 +142,7 @@ namespace SiliFish.UI.Controls
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddCoreType.Visible = lCoreType.Visible =
-                gSynapse.Visible = ddConnectionType.Text != "Gap";
-
+                 ddConnectionType.Text != "Gap";
             if (interPoolTemplate == null || !ddConnectionType.Focused) return;
             interPoolTemplate.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
             UpdateName();
@@ -181,7 +193,7 @@ namespace SiliFish.UI.Controls
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
-            ddCoreType.Items.AddRange(Synapse.GetSynapseTypes().ToArray());// fill before connection types
+            ddCoreType.Items.AddRange(SynapseCore.GetSynapseTypes().ToArray());// fill before connection types
 
             ddConnectionType.Items.Clear();
             ddConnectionType.Items.Add(ConnectionType.Gap);
@@ -237,7 +249,7 @@ namespace SiliFish.UI.Controls
             try { ddConnectionType.SelectedItem = ConnectionType.Gap; }
             catch { }
         }
-        public void SetInterPoolTemplate(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
+        public void WriteDataToControl(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
         {
             Parameters = modelTemplate.Parameters;
             ddSourcePool.Items.Clear();
@@ -276,20 +288,22 @@ namespace SiliFish.UI.Controls
                 numConductance.SetValue(interPoolTemplate.Weight);
                 eFixedDuration.Text = interPoolTemplate.FixedDuration_ms?.ToString() ?? "";
                 eSynDelay.Text = interPoolTemplate.Delay_ms?.ToString() ?? "";
-                if (interPoolTemplate.SynapseParameters != null)
+                if (interPoolTemplate.Parameters != null)
                 {
-                    synapseControl.SetSynapseParameters(interPoolTemplate.SynapseParameters);
+                    skipCoreTypeChange = true;
                     ddCoreType.Text = interPoolTemplate.CoreType?.ToString();
+                    skipCoreTypeChange = false;
                 }
                 cbActive.Checked = interPoolTemplate.Active;
                 timeLineControl.SetTimeLine(interPoolTemplate.TimeLine_ms);
             }
             else
                 this.interPoolTemplate = new();
+            ParamDictToGrid();
             attachmentList.SetAttachments(this.interPoolTemplate.Attachments);
         }
 
-        public InterPoolTemplate GetInterPoolTemplate()
+        public InterPoolTemplate ReadDataFromControl()
         {
             interPoolTemplate.PoolSource = GetDropDownValue(ddSourcePool);
             interPoolTemplate.PoolTarget = GetDropDownValue(ddTargetPool);
@@ -325,8 +339,8 @@ namespace SiliFish.UI.Controls
 
             if (interPoolTemplate.ConnectionType != ConnectionType.Gap)
             {
-                interPoolTemplate.SynapseParameters = synapseControl.GetSynapseParameters();
                 interPoolTemplate.CoreType = ddCoreType.Text;
+                interPoolTemplate.Parameters = GridToParamDict();
             }
 
             interPoolTemplate.Active = cbActive.Checked;
@@ -343,12 +357,16 @@ namespace SiliFish.UI.Controls
 
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            /*TODO convert SynapseParameters to dictionary
-             * if (skipCoreTypeChange) return;
+            if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            poolBase.Parameters = CellCoreUnit.GetParameters(coreType);
+            interPoolTemplate.Parameters = SynapseCore.GetParameters(coreType);
             ParamDictToGrid();
-            */
+        }
+
+        private void dgDynamics_Leave(object sender, EventArgs e)
+        {
+            if (interPoolTemplate == null) return;
+            interPoolTemplate.Parameters = GridToParamDict();
         }
     }
 }

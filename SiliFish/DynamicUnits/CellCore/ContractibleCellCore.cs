@@ -15,7 +15,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class ContractibleCellCoreUnit: CellCoreUnit
+    public class ContractibleCellCore: CellCore
     {
         [Description("Vm when tension is half of Tmax/2")]
         public double Va { get; set; }

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class QuadraticIntegrateAndFire : CellCoreUnit
+    public class QuadraticIntegrateAndFire : CellCore
     {
         protected override void Initialize()
         {

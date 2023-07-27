@@ -10,19 +10,24 @@ using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class SimpleSyn: Synapse
+    public class SimpleSyn: SynapseCore
     {
         private double ISynA = 0; //the momentary current value
         private double ISynB = 0; //the momentary current value
         [JsonIgnore]
         public override double ISyn { get { return ISynA - ISynB; } }
 
-
+        public double TauD { get; set; }
+        public double TauR { get; set; }
+        public double Vth { get; set; }
+        public double ERev { get; set; }
         public SimpleSyn()
         { }
-        public SimpleSyn(SynapseParameters param, double conductance, double rundt, double eulerdt)
-            :base(param, conductance, rundt, eulerdt)
+
+        public SimpleSyn(Dictionary<string, double> paramExternal, double conductance, double rundt, double eulerdt)
+            :base(conductance, rundt, eulerdt)
         {
+            SetParameters(paramExternal);
         }
 
         public SimpleSyn(SimpleSyn copyFrom)
@@ -39,6 +44,8 @@ namespace SiliFish.DynamicUnits
         {
             base.CheckValues(ref errors);
             errors ??= new();
+            if (TauD < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
+                errors.Add($"Chemical synapse: Tau has 0 value.");
             return errors.Count == 0;
         }
         public override double GetNextVal(double vPreSynapse, double vPost, double _)

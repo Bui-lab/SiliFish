@@ -1,4 +1,6 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
@@ -81,7 +83,8 @@ namespace SiliFish.UI.Controls
                 sourceCell = null;
                 UtilWindows.FillCells(ddSourceCell, sourcePool);
 
-                switch (pool.NTMode)//fill default values, based on the NT
+                /*TODO add a SetNT function to synapse core class
+                    switch (pool.NTMode)//fill default values, based on the NT
                 {
                     case NeuronClass.Glycinergic:
                         synapseControl.EReversal = settings.E_gly;
@@ -97,7 +100,7 @@ namespace SiliFish.UI.Controls
                         break;
                     default:
                         break;
-                }
+                }*/
             }
         }
         private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
@@ -142,7 +145,7 @@ namespace SiliFish.UI.Controls
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            gSynapse.Visible = ddConnectionType.Text != "Gap";
+            propCore.Visible = ddConnectionType.Text != "Gap";
             if (junction == null || !ddConnectionType.Focused) return;
         }
 
@@ -157,13 +160,14 @@ namespace SiliFish.UI.Controls
                 eFixedDuration.Text = gapJunction.FixedDuration_ms.ToString();
                 eSynDelay.Text = gapJunction.Delay_ms.ToString();
                 ddConnectionType.SelectedItem = ConnectionType.Gap;
+                propCore.SelectedObject = gapJunction.Core;
             }
             else if (junction is ChemicalSynapse syn)
             {
                 sourceCell = syn.PreNeuron;
                 targetCell = syn.PostCell;
                 ddConnectionType.SelectedItem = targetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
-                synapseControl.SetSynapseParameters(syn.SynapseParameters);
+                propCore.SelectedObject = syn.Core;
                 numConductance.SetValue(syn.Weight);
                 eFixedDuration.Text = syn.FixedDuration_ms.ToString();
                 eSynDelay.Text = syn.Delay_ms.ToString();
@@ -251,9 +255,9 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Connection type not defined.");
             else
             {
-                ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
-                if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
-                    checkValuesArgs.Errors.AddRange(synapseControl.CheckValues());
+                List<string> errors = checkValuesArgs.Errors;
+                if (!(propCore.SelectedObject as BaseCore).CheckValues(ref errors))
+                    checkValuesArgs.Errors = errors;
             }
 
             if ((double)numConductance.Value < GlobalSettings.Epsilon)
@@ -282,8 +286,7 @@ namespace SiliFish.UI.Controls
                 junctions.Add(junction);
                 junction.DistanceMode = distanceMode;
                 junction.Weight = conductance;
-                if (junction is ChemicalSynapse syn)
-                    syn.SynapseParameters = synapseControl.GetSynapseParameters();
+                junction.Core = propCore.SelectedObject as SynapseCore;
             }
             else
             {
@@ -304,7 +307,7 @@ namespace SiliFish.UI.Controls
                         if ((ConnectionType)ddConnectionType.SelectedItem == ConnectionType.Gap)
                             junction = new GapJunction(conductance, sc, tc, distanceMode);
                         else
-                            junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, synapseControl.GetSynapseParameters(), conductance, distanceMode);
+                            junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, (propCore.SelectedObject as BaseCore).Parameters, conductance, distanceMode);
                         junctions.Add(junction);
                     }
                 }

@@ -2,6 +2,7 @@
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
@@ -36,9 +37,10 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } = 
-            ListBuilder.Build<string>("Connection Type", "Core Type",  "Source", "Target", 
+            ListBuilder.Build<string>("Connection Type", "Core Type",
+               Enumerable.Range(1, SynapseCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+                "Source", "Target", 
                 "Distance Mode", 
-                SynapseParameters.ColumnNames, 
                 "Weight", "Fixed Duration (ms)", "Delay (ms)",
                 "Active", 
                 TimeLine.ColumnNames);

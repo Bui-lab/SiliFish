@@ -62,7 +62,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCoreUnit.CreateCore(coreType, cellParams, model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
+            Core = CellCore.CreateCore(coreType, cellParams, model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
             EndPlates = new List<ChemicalSynapse>();
             GapJunctions = new List<GapJunction>();
             ConductionVelocity = cv;
@@ -84,7 +84,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 CellPool = CellPool,
                 CellGroup = CellGroup,
-                Core = CellCoreUnit.CreateCore(this.Core),
+                Core = CellCore.CreateCore(this.Core),
                 Coordinate = Coordinate,
                 Model = Model,
                 ConductionVelocity = ConductionVelocity,

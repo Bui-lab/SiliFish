@@ -1,6 +1,8 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
+using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services;
@@ -19,6 +21,8 @@ namespace SiliFish.ModelUnits.Junction
         private string _Name;
         private string poolSource, poolTarget;
         private string coreType;
+        private Dictionary<string, object> parameters;
+        
         #endregion
 
         #region Properties
@@ -81,8 +85,6 @@ namespace SiliFish.ModelUnits.Junction
         [JsonPropertyOrder(2)]
         public CellReach CellReach { get; set; } = new();
 
-        [JsonPropertyOrder(1)]
-        public SynapseParameters SynapseParameters { get; set; }
 
         [JsonIgnore]
         public CellPoolTemplate linkedSource, linkedTarget;
@@ -116,7 +118,7 @@ namespace SiliFish.ModelUnits.Junction
                     $"Probability: {Probability}\r\n" +
                     $"Mode: {AxonReachMode}\r\n" +
                     $"Type: {ConnectionType}\r\n" +
-                    $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +
+                    //TODO $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +
                     $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
             }
@@ -125,9 +127,10 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore, Browsable(false)]
         public static new List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("Name", "Source", "Target",
-                "Axon Reach Mode", "Conn. Type", "Core Type" , "Dist. Mode",
+                "Axon Reach Mode", "Conn. Type", "Core Type" ,
+                Enumerable.Range(1, SynapseCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+                "Dist. Mode",
                 CellReach.ColumnNames,
-                SynapseParameters.ColumnNames,
                 "Prob.", "Weight", "Fixed Dur. (ms)", "Delay (ms)",
                 "Active",
                 TimeLine.ColumnNames);
@@ -136,9 +139,10 @@ namespace SiliFish.ModelUnits.Junction
         {
             return ListBuilder.Build<string>(
             Util.CSVEncode(Name), PoolSource, PoolTarget,
-                AxonReachMode, ConnectionType, CoreType, DistanceMode,
+                AxonReachMode, ConnectionType, CoreType,
+                csvExportParamValues,
+                DistanceMode,
                 CellReach.ExportValues(),
-                SynapseParameters?.ExportValues() ?? SynapseParameters.ExportBlankValues(),
                 Probability, Weight, FixedDuration_ms, Delay_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
@@ -156,16 +160,20 @@ namespace SiliFish.ModelUnits.Junction
                 AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
                 ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
                 CoreType = values[iter++].Trim();
+                parameters = new();
+                for (int i = 1; i <= SynapseCore.CoreParamMaxCount; i++)
+                {
+                    if (iter > values.Count - 2) break;
+                    string paramkey = values[iter++].Trim();
+                    string paramvalue = values[iter++];
+                    if (!string.IsNullOrEmpty(paramkey))
+                    {
+                        parameters.Add(paramkey, Distribution.CreateDistributionObjectFromCSVCell(paramvalue));
+                    }
+                }
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
                 CellReach.Importvalues(values.Take(new Range(iter, iter + CellReach.ColumnNames.Count)).ToList());
                 iter += CellReach.ColumnNames.Count;
-                List<string> synapseString = values.Take(new Range(iter, iter + SynapseParameters.ColumnNames.Count)).ToList();
-                if (synapseString.Any(s => !string.IsNullOrEmpty(s)))
-                {
-                    SynapseParameters = new();
-                    SynapseParameters.ImportValues(synapseString);
-                }
-                iter += SynapseParameters.ColumnNames.Count;
                 if (double.TryParse(values[iter++], out double p))
                     Probability = p;
                 Weight = double.Parse(values[iter++]);
@@ -188,6 +196,34 @@ namespace SiliFish.ModelUnits.Junction
 
         #endregion
 
+        [JsonPropertyOrder(1)]
+        public Dictionary<string, Distribution> Parameters
+        {
+            get
+            {
+                return parameters?.ToDictionary(kvp => kvp.Key,
+                    kvp => Distribution.CreateDistributionObject(kvp.Value));
+            }
+            set
+            {
+                parameters = value?.ToDictionary(kvp => kvp.Key,
+                    kvp => Distribution.CreateDistributionObject(kvp.Value) as object);
+            }
+        }
+        [JsonIgnore, Browsable(false)]
+        private List<string> csvExportParamValues
+        {
+            get
+            {
+                List<string> paramValues = Parameters.Take(SynapseCore.CoreParamMaxCount).OrderBy(kv => kv.Key).SelectMany(kv => new[] { kv.Key, kv.Value.CSVCellExportValues }).ToList();
+                for (int i = parameters.Count; i < CellCore.CoreParamMaxCount; i++)
+                {
+                    paramValues.Add(string.Empty);
+                    paramValues.Add(string.Empty);
+                }
+                return paramValues;
+            }
+        }
         public InterPoolTemplate() : base()
         { }
         public InterPoolTemplate(InterPoolTemplate ipt) : base(ipt)
@@ -200,7 +236,7 @@ namespace SiliFish.ModelUnits.Junction
             Probability = ipt.Probability;
             AxonReachMode = ipt.AxonReachMode;
             ConnectionType = ipt.ConnectionType;
-            SynapseParameters = new SynapseParameters(ipt.SynapseParameters);
+            Parameters = new Dictionary<string, Distribution>(ipt.Parameters);
             Active = ipt.Active;
             TimeLine_ms = new TimeLine(ipt.TimeLine_ms);
         }
@@ -225,7 +261,7 @@ namespace SiliFish.ModelUnits.Junction
             base.CheckValues(ref errors);
             int errorCount = errors.Count;
             if (ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ)
-                SynapseParameters.CheckValues(ref errors);
+                SynapseCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues(), Weight);
             if (errors.Count > errorCount)
                 errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;

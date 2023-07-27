@@ -59,7 +59,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            CellCoreUnit core = CellCoreUnit.CreateCore(coreType, null);
+            CellCore core = CellCore.CreateCore(coreType, null);
             propCore.SelectedObject = core;
         }
         private void linkLoadCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -149,7 +149,7 @@ namespace SiliFish.UI.Controls
             {
                 coreUnitFileDefaultFolder = Path.GetDirectoryName(openFileJson.FileName);
 
-                CellCoreUnit core = CellCoreUnitFile.Load(openFileJson.FileName);
+                CellCore core = CellCoreUnitFile.Load(openFileJson.FileName);
                 if (core != null)
                 {
                     skipCoreTypeChange = true;
@@ -182,7 +182,7 @@ namespace SiliFish.UI.Controls
             if (e is not UpdatedParamsEventArgs args || args.ParamsAsDistribution == null)
                 return;
             if (args.CoreType != cell.Core.CoreType)
-                cell.Core = CellCoreUnit.CreateCore(args.CoreType, args.ParamsAsDouble);
+                cell.Core = CellCore.CreateCore(args.CoreType, args.ParamsAsDouble);
             else
                 cell.Core.Parameters = args.ParamsAsDouble;
             ddCoreType.Text = cell.Core.CoreType.ToString();
@@ -196,7 +196,7 @@ namespace SiliFish.UI.Controls
             this.model = model;
             ddCellPool.Items.AddRange(model.CellPools.ToArray());
             ddCellPool.Enabled = false;
-            ddCoreType.Items.AddRange(CellCoreUnit.GetCoreTypes().ToArray());// fill before celltypes
+            ddCoreType.Items.AddRange(CellCore.GetCoreTypes().ToArray());// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddCellType.Enabled = false;//It has to be linked to the cell pool, always disabled
         }

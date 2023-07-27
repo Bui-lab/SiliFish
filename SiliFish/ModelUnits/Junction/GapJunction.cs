@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Drawing;
+using SiliFish.DynamicUnits.JncCore;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -54,9 +55,10 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
-            ConnectionType.Gap,"", Cell1.ID, Cell2.ID,
+            ConnectionType.Gap, "",
+                csvExportParamValues,
+                Cell1.ID, Cell2.ID,
                 DistanceMode,
-                SynapseParameters.ExportBlankValues(),
                 Weight, FixedDuration_ms, Delay_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
@@ -67,11 +69,23 @@ namespace SiliFish.ModelUnits.Junction
             {
                 int iter = 2;//junction type is already read before junction creation
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
+                Dictionary<string, double> parameters = new();
+                for (int i = 1; i <= SynapseCore.CoreParamMaxCount; i++)
+                {
+                    if (iter > values.Count - 2) break;
+                    string paramkey = values[iter++].Trim();
+                    double.TryParse(values[iter++].Trim(), out double paramvalue);
+                    if (!string.IsNullOrEmpty(paramkey))
+                    {
+                        parameters.Add(paramkey, paramvalue);
+                    }
+                }
+                //TODO Core = SynapseCore.CreateSynapse(coreType, parameters, Weight, 0.1, 0.1);//TODO constant values here - FIX!!!!
+
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
 
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                iter += SynapseParameters.ColumnNames.Count;
                 Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;

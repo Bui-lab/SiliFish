@@ -24,7 +24,7 @@ namespace SiliFish.Services.Optimization
             FitnessFunctions = settings.FitnessFunctions;
         }
 
-        public static double Evaluate(TargetRheobaseFunction targetRheobaseFunction, List<FitnessFunction> fitnessFunctions, CellCoreUnit core)
+        public static double Evaluate(TargetRheobaseFunction targetRheobaseFunction, List<FitnessFunction> fitnessFunctions, CellCore core)
         {
             if (core == null)
                 return 0;
@@ -78,7 +78,7 @@ namespace SiliFish.Services.Optimization
                 instanceValues.Add(key, values[iter++]);
             }
 
-            CellCoreUnit core = CellCoreUnit.CreateCore(CoreType, instanceValues, coreUnitSolver.Settings.DeltaT, coreUnitSolver.Settings.DeltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, instanceValues, coreUnitSolver.Settings.DeltaT, coreUnitSolver.Settings.DeltaTEuler);
             return Evaluate(TargetRheobaseFunction, FitnessFunctions, core);
         }
     }

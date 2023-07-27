@@ -2,6 +2,7 @@
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
@@ -21,6 +22,10 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class JunctionBase : InterPoolBase
     {
+        [JsonIgnore]
+
+        public SynapseCore Core { get; set; }
+
         protected double[] inputCurrent; //Current array 
 
         [JsonIgnore, Browsable(false)]
@@ -36,7 +41,23 @@ namespace SiliFish.ModelUnits.Junction
                 return inputCurrent;
             }
         }
-
+        [JsonIgnore, Browsable(false)]
+        protected List<string> csvExportParamValues
+        {
+            get
+            {
+                List<string> paramValues = Core.Parameters
+                    .Take(CellCore.CoreParamMaxCount)
+                    .OrderBy(kv => kv.Key)
+                    .SelectMany(kv => new[] { kv.Key, kv.Value.ToString() }).ToList();
+                for (int i = Core.Parameters.Count; i < CellCore.CoreParamMaxCount; i++)
+                {
+                    paramValues.Add(string.Empty);
+                    paramValues.Add(string.Empty);
+                }
+                return paramValues;
+            }
+        }
         public JunctionBase()
         { }
         public JunctionBase(JunctionBase jnc)
