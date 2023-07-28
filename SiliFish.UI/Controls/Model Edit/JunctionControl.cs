@@ -14,8 +14,6 @@ namespace SiliFish.UI.Controls
 {
     public partial class JunctionControl : UserControl
     {
-        private readonly ModelSettings settings = null;
-
         private JunctionBase junction;
         private RunningModel Model;
         private CellPool sourcePool, targetPool;
@@ -27,8 +25,7 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
             //TODO coretype is not handled
             Model = model;
-            settings = model.Settings;
-
+            
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
 
             //ddConnectionType is manually loaded as not all of them are displayed

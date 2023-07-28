@@ -551,8 +551,7 @@ namespace SiliFish.UI
 
         private void modelControl_HighlightRequested(object sender, EventArgs e)
         {
-            SelectedUnitArgs selectedUnitArgs = e as SelectedUnitArgs;
-            if (selectedUnitArgs != null)
+            if (e is SelectedUnitArgs selectedUnitArgs)
                 modelOutputControl.Highlight(selectedUnitArgs.unitsSelected.First(), selectedUnitArgs.enforce);
         }
 

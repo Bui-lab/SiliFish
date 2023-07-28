@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using static OfficeOpenXml.ExcelErrorValue;
@@ -242,57 +244,59 @@ namespace SiliFish.Repositories
         private static bool FixSynapseParametersJson(ref string json)
         {
             bool updated = false;
-            bool checkTau = false;
+            json = json.Replace("\"SynapseParameters\": null,", "\"Parameters\": {},");
+            /*Convert 
+            "SynapseParameters": {
+                            "TauD": 1,
+                            "TauR": 0,
+                            "Vth": 0,
+                            "Erev": 0
+                          },
 
-            if (json.Contains("\"SynapseParameters:\": "))
+            to 
+            "Parameters": {
+                        "TauD": {
+                          "$type": "Constant",
+                          "UniqueValue": 1,
+                          "NoiseStdDev": 0,
+                          "Angular": false,
+                          "Absolute": true,
+                          "RangeStart": 1,
+                          "RangeEnd": 1,
+                          "Range": 0
+                        },
+            ... etc*/
+            if (json.Contains("\"SynapseParameters\": "))
             {
                 Regex coreRegex = new("\"SynapseParameters\": {(\\s+.*[^}]*?)}");
                 MatchCollection matchCollection = coreRegex.Matches(json);
                 for (int i = matchCollection.Count - 1; i >= 0; i--)
                 {
                     Match match = matchCollection[i];
-                    int index = match.Groups[0].Index;
-                    string core = match.Value;
-                    Regex paramRegex = new("\"Parameters\": {(\\s+.*[^}]*?)}");
-                    Match parMatch = paramRegex.Match(core);
-                    if (parMatch.Success)
+                    string paramList = match.Groups[1].Value;
+                    string newJson = "\"Parameters\": {";
+                    Regex singleRegex = new("\\s+(\".*\"):(.*)[,\n]");
+                    MatchCollection singleMatch = singleRegex.Matches(paramList);
+                    for (int j = 0; j < singleMatch.Count; j++)
                     {
-                        string newJson = "";
-                        Regex singleRegex = new("\"(.*\\.)(.*\":.*,)");
-                        MatchCollection singleMatch = singleRegex.Matches(parMatch.Value);
-                        for (int j = 0; j < singleMatch.Count; j++)
-                        {
-                            Match singleParam = singleMatch[j];
-                            newJson += $"\"{singleParam.Groups[2]}\r\n";
-                        }
-                        json = json.Remove(index + parMatch.Index, parMatch.Value.Length);
-                        newJson = newJson.Replace("V_", "V");//change V_r, V_t, V_max to Vr, Vt, Vmax
-                        json = json.Insert(index + parMatch.Index, newJson);
+                        Match singleParam = singleMatch[j];
+                        if (!double.TryParse(singleParam.Groups[2].Value, out double val))
+                            val = double.Parse(singleParam.Groups[2].Value.Replace(',', ' '));
+                        Constant_NoDistribution constD = new (val);
+                        string jsonstring = JsonUtil.ToJson(new Distribution[] { constD });
+                        jsonstring = jsonstring[1..^1];
+                        newJson += $"{singleParam.Groups[1].Value}: {jsonstring},\r\n";
                     }
-                    else
-                    {
-                        checkTau = true;
-                    }
-                    updated = true;
-                }
-            }
-            else
-            {
-                if (json.Contains(".V_"))
-                {
-                    json = json.Replace("V_", "V");
-                    updated = true;
-                }
-            }
-            if (checkTau && json.Contains("\"taur\""))
-            {
-                json = json.Replace("\"taur\"", "\"TauR\"");
-                json = json.Replace("\"taud\"", "\"TauD\"");
-                json = json.Replace("\"vth\"", "\"Vth\"");
-                json = json.Replace("\"E_rev\"", "\"Erev\"");
-                updated = true;
-            }
+                    newJson = newJson.TrimEnd(',');
+                    if (newJson.TrimEnd().EndsWith(','))
+                        newJson = newJson.TrimEnd().Remove(newJson.TrimEnd().Length - 1);
+                    newJson += "}";
+                    json = json.Remove(match.Index, match.Value.Length);                                        
+                    json = json.Insert(match.Index, newJson);
 
+                    updated = true;
+                }
+            }
             return updated;
         }
 
@@ -333,6 +337,11 @@ namespace SiliFish.Repositories
                 {
                     if (json.Contains("\"Delay_ms\": 0,"))
                         json = json.Replace("\"Delay_ms\": 0,", "\"Delay_ms\": null,");
+                }
+                if (version.Groups[1].Value.CompareTo("\"2.6.0\"") < 0)
+                {
+                    if (FixSynapseParametersJson(ref json))
+                        list.Add("Synapse core parameters");
                 }
             }
             return list;
@@ -1325,8 +1334,7 @@ namespace SiliFish.Repositories
                             sheetName += "Ext_1";
                         else
                         {
-                            int extension = 0;
-                            if (int.TryParse(parMatch.Groups[2].Value, out extension))
+                            if (int.TryParse(parMatch.Groups[2].Value, out int extension))
                                 extension++;
                             sheetName = parMatch.Groups[1].Value + "Ext_" + extension;
                         }

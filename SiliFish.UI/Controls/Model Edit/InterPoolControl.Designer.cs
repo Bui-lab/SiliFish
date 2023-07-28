@@ -75,7 +75,9 @@
             tDynamics = new TabPage();
             dgDynamics = new DistributionDataGrid();
             tTimeline = new TabPage();
+            timeLineControl = new TimeLineControl();
             tAttachments = new TabPage();
+            attachmentList = new AttachmentListControl();
             ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
@@ -91,6 +93,8 @@
             splitContainerMain.SuspendLayout();
             tabInterPool.SuspendLayout();
             tDynamics.SuspendLayout();
+            tTimeline.SuspendLayout();
+            tAttachments.SuspendLayout();
             SuspendLayout();
             // 
             // lSourcePool
@@ -594,6 +598,7 @@
             // 
             // tTimeline
             // 
+            tTimeline.Controls.Add(timeLineControl);
             tTimeline.Location = new Point(4, 24);
             tTimeline.Name = "tTimeline";
             tTimeline.Padding = new Padding(3);
@@ -602,14 +607,33 @@
             tTimeline.Text = "Timeline";
             tTimeline.UseVisualStyleBackColor = true;
             // 
+            // timeLineControl
+            // 
+            timeLineControl.AutoScroll = true;
+            timeLineControl.BackColor = Color.FromArgb(236, 239, 241);
+            timeLineControl.Dock = DockStyle.Fill;
+            timeLineControl.Location = new Point(3, 3);
+            timeLineControl.Name = "timeLineControl";
+            timeLineControl.Size = new Size(274, 525);
+            timeLineControl.TabIndex = 24;
+            // 
             // tAttachments
             // 
+            tAttachments.Controls.Add(attachmentList); 
             tAttachments.Location = new Point(4, 24);
             tAttachments.Name = "tAttachments";
             tAttachments.Size = new Size(280, 531);
             tAttachments.TabIndex = 2;
             tAttachments.Text = "Attachments";
             tAttachments.UseVisualStyleBackColor = true;
+            // 
+            // attachmentList
+            // 
+            attachmentList.Dock = DockStyle.Fill;
+            attachmentList.Location = new Point(0, 0);
+            attachmentList.Name = "attachmentList";
+            attachmentList.Size = new Size(280, 531);
+            attachmentList.TabIndex = 0;
             // 
             // InterPoolControl
             // 
@@ -638,6 +662,8 @@
             tabInterPool.ResumeLayout(false);
             tDynamics.ResumeLayout(false);
             tDynamics.PerformLayout();
+            tTimeline.ResumeLayout(false);
+            tAttachments.ResumeLayout(false);
             ResumeLayout(false);
         }
 

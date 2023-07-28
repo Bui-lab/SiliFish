@@ -77,7 +77,7 @@ namespace SiliFish.DynamicUnits
             }
             ISynA = IsynANew;
             ISynB = IsynBNew;
-            return ISyn;
+            return ISynA - ISynB;
         }
     }
 

@@ -472,7 +472,7 @@ namespace SiliFish.ModelUnits.Cells
         public void ReachToCellPoolViaChemSynapse(CellPool target, 
             CellReach reach,
             string coreType,
-            Dictionary<string, Distribution> param, 
+            Dictionary<string, Distribution> synParams, 
             TimeLine timeline, 
             double weight,
             double probability, 
@@ -519,7 +519,7 @@ namespace SiliFish.ModelUnits.Cells
                         continue;
                     if (reach.WithinReach(pre, post))
                     {
-                        Dictionary<string, double> paramValues = Parameters.GenerateSingleInstanceValues();
+                        Dictionary<string, double> paramValues = synParams.GenerateSingleInstanceValues();
                         ChemicalSynapse syn = pre.CreateChemicalSynapse(post, coreType, paramValues, weight, distanceMode);
                         syn.SetDelay(delay_ms);
                         if (fixedduration_ms != null)

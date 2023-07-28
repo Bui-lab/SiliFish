@@ -62,8 +62,7 @@ namespace SiliFish.ModelUnits.Junction
                 {
                     if (iter > values.Count - 2) break;
                     string paramkey = values[iter++].Trim();
-                    double.TryParse(values[iter++].Trim(), out double paramvalue);
-                    if (!string.IsNullOrEmpty(paramkey))
+                    if (double.TryParse(values[iter++].Trim(), out double paramvalue) && !string.IsNullOrEmpty(paramkey))
                     {
                         parameters.Add(paramkey, paramvalue);
                     }

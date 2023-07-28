@@ -90,7 +90,6 @@
             eSomiteSelection.TabIndex = 39;
             eSomiteSelection.Value = new decimal(new int[] { 1, 0, 0, 0 });
             eSomiteSelection.ValueChanged += eSomiteSelection_ValueChanged;
-            eSomiteSelection.EnabledChanged += eSomiteSelection_EnabledChanged;
             // 
             // lSomites
             // 
@@ -225,7 +224,6 @@
             pMain.Name = "pMain";
             pMain.Size = new Size(240, 116);
             pMain.TabIndex = 68;
-            pMain.EnabledChanged += pMain_EnabledChanged;
             // 
             // CellSelectionControl
             // 
@@ -235,7 +233,6 @@
             Controls.Add(pCombine);
             Name = "CellSelectionControl";
             Size = new Size(326, 116);
-            EnabledChanged += CellSelectionControl_EnabledChanged;
             ((System.ComponentModel.ISupportInitialize)eSomiteSelection).EndInit();
             ((System.ComponentModel.ISupportInitialize)eCellSelection).EndInit();
             pCombine.ResumeLayout(false);

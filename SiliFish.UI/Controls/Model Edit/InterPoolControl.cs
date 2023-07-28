@@ -16,7 +16,6 @@ namespace SiliFish.UI.Controls
         private ModelSettings settings;
         private bool autoGenerateName = true;
         private InterPoolTemplate interPoolTemplate;
-        private Dictionary<string, object> Parameters;
         private bool SomiteBased = false;
         private bool skipCoreTypeChange = false;
 
@@ -251,7 +250,6 @@ namespace SiliFish.UI.Controls
         }
         public void WriteDataToControl(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
         {
-            Parameters = modelTemplate.Parameters;
             ddSourcePool.Items.Clear();
             ddTargetPool.Items.Clear();
 
