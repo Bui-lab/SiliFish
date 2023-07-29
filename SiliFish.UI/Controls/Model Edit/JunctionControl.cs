@@ -171,7 +171,9 @@ namespace SiliFish.UI.Controls
                 eFixedDuration.Text = gapJunction.FixedDuration_ms.ToString();
                 eSynDelay.Text = gapJunction.Delay_ms.ToString();
                 ddConnectionType.SelectedItem = ConnectionType.Gap;
-                //TODO ddCoreType.Text = gapJunction.Core;
+                ddCoreType.Items.Clear();
+                ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray()); 
+                ddCoreType.Text = gapJunction.Core.GetType().Name;
                 propCore.SelectedObject = gapJunction.Core;
             }
             else if (junction is ChemicalSynapse syn)
@@ -179,6 +181,9 @@ namespace SiliFish.UI.Controls
                 sourceCell = syn.PreNeuron;
                 targetCell = syn.PostCell;
                 ddConnectionType.SelectedItem = targetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
+                ddCoreType.Items.Clear();
+                ddCoreType.Items.AddRange(ChemSynapseCore.GetSynapseTypes().ToArray());
+                ddCoreType.Text = syn.Core.GetType().Name;
                 propCore.SelectedObject = syn.Core;
                 eFixedDuration.Text = syn.FixedDuration_ms.ToString();
                 eSynDelay.Text = syn.Delay_ms.ToString();
@@ -212,6 +217,7 @@ namespace SiliFish.UI.Controls
                 ddTargetPool.Enabled = false;
                 ddTargetCell.Enabled = false;
                 ddConnectionType.Enabled = false;
+                ddCoreType.Enabled = false;
             }
         }
         internal void SetSourcePool(CellPool selectedPool)

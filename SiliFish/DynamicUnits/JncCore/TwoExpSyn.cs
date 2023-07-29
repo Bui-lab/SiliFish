@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using System;
@@ -61,13 +62,16 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             return errors.Count == 0;
         }
-        public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent)
+        public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, ModelSettings settings)
         {
             double g_t = 0;
 
-            double threshold = Math.Max(tLastSignificantSpike, tCurrent - 3 * Math.Max(10 * TauDFast, TauDSlow));
+            double threshold = Math.Max(tLastSignificantSpike, tCurrent - settings.ThresholdMultiplier * (TauR + TauDFast + TauDSlow));
             List<double> closeBySpikes = spikeArrivalTimes.Where(t => t > threshold && t < tCurrent).ToList();
-            foreach (var ti in closeBySpikes.TakeLast(10))
+            if (settings.SpikeTrainSpikeCount > 0)
+                closeBySpikes = closeBySpikes.TakeLast(settings.SpikeTrainSpikeCount).ToList();
+
+            foreach (var ti in closeBySpikes)
             {
                 double t_t0 = tCurrent - ti;
                 double rise = 1 - Math.Exp(-t_t0 / TauR);
@@ -80,6 +84,10 @@ namespace SiliFish.DynamicUnits
             }
             iSyn = g_t * (ERev - vPost);
             return iSyn;
+        }
+        public override bool CausesReverseCurrent(double V, bool excitatory)
+        {
+            return excitatory && V > ERev || !excitatory && V < ERev;
         }
 
     }

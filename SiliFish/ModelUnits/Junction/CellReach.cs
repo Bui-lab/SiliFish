@@ -90,12 +90,11 @@ namespace SiliFish.ModelUnits
         internal object GetTooltip()
         {
             string reach =
-                (Ascending ? $"Ascending: {MinAscReach:0.###} -  {MaxAscReach:0.###} \r\n" : "") +
-                (Descending ? $"Descending: {MinDescReach:0.###} -  {MaxDescReach:0.###} \r\n" : "");
+                (Ascending ? $"Ascending: {MinAscReach:0.###} -  {MaxAscReach:0.###}; " : "") +
+                (Descending ? $"Descending: {MinDescReach:0.###} -  {MaxDescReach:0.###}; " : "");
             return reach +
-                (MaxIncoming > 0 ? $"Max in: {MaxIncoming:0}\r\n" : "") +
-                (MaxOutgoing > 0 ? $"Max out: {MaxOutgoing:0}\r\n" : "") +
-                $"\r\n";
+                (MaxIncoming > 0 ? $"Max in: {MaxIncoming:0}; " : "") +
+                (MaxOutgoing > 0 ? $"Max out: {MaxOutgoing:0}; " : "");
         }
 
         /// <summary>

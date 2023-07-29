@@ -1,5 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
@@ -81,7 +82,12 @@ namespace SiliFish.DynamicUnits.JncCore
             ChemSynapseCore core = CreateCore(coreType, param, 0, 0);
             return core.CheckValues(ref errors);
         }
-        public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent)
+        public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, ModelSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool CausesReverseCurrent(double V, bool excitatory)
         {
             throw new NotImplementedException();
         }

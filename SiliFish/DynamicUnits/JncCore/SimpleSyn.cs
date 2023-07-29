@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits.JncCore;
 using SiliFish.ModelUnits;
+using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using System;
@@ -55,7 +56,7 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             return errors.Count == 0;
         }
-        public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent)
+        public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent, ModelSettings settings)
         {
             double IsynANew = ISynA, IsynBNew = ISynB;
             double dtTracker = 0;
@@ -86,6 +87,11 @@ namespace SiliFish.DynamicUnits
             ISynB = IsynBNew;
             return ISynA - ISynB;
         }
+        public override bool CausesReverseCurrent(double V, bool excitatory)
+        {
+            return excitatory && V > ERev || !excitatory && V < ERev;
+        }
+
     }
 
 }

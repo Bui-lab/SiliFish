@@ -49,35 +49,53 @@ namespace SiliFish.ModelUnits.Architecture
         public double E_gaba { get; set; } = -70; 
         [Description("Default reversal potential of ACh."),
             Category("Default Values")]
-        public double E_ach { get; set; } = 120; 
+        public double E_ach { get; set; } = 120;
+
+        [Description("If set to 'false', the negative currents in excitatory synapses and positive currents in inhibitory synapses will be zeroed out."),
+            DisplayName("Allow Reverse Current"),
+            Category("Dynamics - Chem Syn")]
+        public bool AllowReverseCurrent{ get; set; } = true;
+
+        [Description("The number of spikes that would be considered in calculating the current conductance of a synapse. " +
+            "Smaller numbers will lower the sensitivity of the simulation, whicle larger numbers will lower the performance." +
+            "Enter 0 or a negative number to consider all of the spikes."),
+            DisplayName("Spike Train Spike Count"),
+            Category("Dynamics - Two Exp Syn")]
+        public int SpikeTrainSpikeCount{ get; set; } = 10;
+
+        [Description("To increase performance of the simulation, the spikes earlier than " +
+            "ThresholdMultiplier * (TauR + TauDFast + TauDSlow) will be ignored in calculating the current conductance of a synapse."),
+            DisplayName("Threshold multiplier"),
+            Category("Dynamics - Two Exp Syn")]
+        public double ThresholdMultiplier{ get; set; } = 3;
 
         [Description("The 'SD/Avg Interval' ratio for a burst sequence to be considered chattering"),
             DisplayName("Chattering Irregularity"),
-            Category("Dynamics")]
+            Category("Firing Patterns")]
         public double ChatteringIrregularity { get; set; } = 0.1;
 
         [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
             "Used if the interval within spikes are not increasing with time."),
             DisplayName("Max Burst Interval - no spread"),
-            Category("Dynamics")]
+            Category("Firing Patterns")]
         public double MaxBurstInterval_DefaultLowerRange { get; set; } = 5;
 
         [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
             "Used if the interval within spikes are increasing with time."),
             DisplayName("Max Burst Interval - spread"),
-            Category("Dynamics")]
+            Category("Firing Patterns")]
         public double MaxBurstInterval_DefaultUpperRange { get; set; } = 30;
 
 
         [Description("Centroid2 (average duration between bursts) < Centroid1 (average duration between spikes) * OneClusterMultiplier " +
             "means there is only one cluster (all spikes are part of a burst)"),
             DisplayName("One Cluster Multiplier"),
-            Category("Dynamics")]
+            Category("Firing Patterns")]
         public double OneClusterMultiplier { get; set; } = 2;
 
         [Description("In ms, the range between the last spike and the end of current to be considered as tonic firing"),
             DisplayName("Tonic Padding"),
-            Category("Dynamics")]
+            Category("Firing Patterns")]
         public double TonicPadding { get; set; } = 1;
 
         public ModelSettings Clone()

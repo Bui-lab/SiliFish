@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Junction
@@ -111,14 +112,14 @@ namespace SiliFish.ModelUnits.Junction
                 return $"{Name}\r\n" +
                     $"{Description}\r\n" +
                     $"From {PoolSource} to {PoolTarget}\r\n" +
-                    //TODO $"Weight:{Weight: 0.#####}\r\n" +
+                    $"Core:{CoreType}\r\n" +
+                    $"\t{string.Join(',', Parameters.Select((k, v) => k + ": " + v))}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
                     $"Fixed Duration:{FixedDuration_ms: 0.###}\r\n" +
                     $"Delay:{Delay_ms: 0.###}\r\n" +
                     $"Probability: {Probability}\r\n" +
                     $"Mode: {AxonReachMode}\r\n" +
                     $"Type: {ConnectionType}\r\n" +
-                    //TODO $"Parameters: {SynapseParameters?.GetTooltip()}\r\n" +
                     $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
             }
@@ -273,8 +274,13 @@ namespace SiliFish.ModelUnits.Junction
 
         internal void BackwardCompatibility()
         {
-            if ((ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ) && string.IsNullOrEmpty(coreType))
-                coreType = typeof(SimpleSyn).Name;
+            if (string.IsNullOrEmpty(coreType))
+            {
+                if (ConnectionType == ConnectionType.Gap)
+                    coreType = nameof(SimpleGap); 
+                else
+                    coreType = nameof(SimpleSyn);
+            }
         }
     }
 
