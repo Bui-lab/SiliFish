@@ -34,7 +34,6 @@
             lAxonReachMode = new Label();
             lConnectionType = new Label();
             lMinReach = new Label();
-            lWeight = new Label();
             lFixedDuration = new Label();
             lSynDelay = new Label();
             ddSourcePool = new ComboBox();
@@ -42,7 +41,6 @@
             ddAxonReachMode = new ComboBox();
             ddConnectionType = new ComboBox();
             toolTip1 = new ToolTip(components);
-            numConductance = new NumericUpDown();
             eFixedDuration = new TextBox();
             lMaxReach = new Label();
             lMaxIncoming = new Label();
@@ -78,7 +76,6 @@
             timeLineControl = new TimeLineControl();
             tAttachments = new TabPage();
             attachmentList = new AttachmentListControl();
-            ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMinAscReach).BeginInit();
@@ -100,7 +97,7 @@
             // lSourcePool
             // 
             lSourcePool.AutoSize = true;
-            lSourcePool.Location = new Point(13, 9);
+            lSourcePool.Location = new Point(3, 9);
             lSourcePool.Name = "lSourcePool";
             lSourcePool.Size = new Size(70, 15);
             lSourcePool.TabIndex = 4;
@@ -109,7 +106,7 @@
             // lTargetPool
             // 
             lTargetPool.AutoSize = true;
-            lTargetPool.Location = new Point(13, 35);
+            lTargetPool.Location = new Point(3, 35);
             lTargetPool.Name = "lTargetPool";
             lTargetPool.Size = new Size(66, 15);
             lTargetPool.TabIndex = 6;
@@ -118,7 +115,7 @@
             // lAxonReachMode
             // 
             lAxonReachMode.AutoSize = true;
-            lAxonReachMode.Location = new Point(13, 61);
+            lAxonReachMode.Location = new Point(3, 61);
             lAxonReachMode.Name = "lAxonReachMode";
             lAxonReachMode.Size = new Size(70, 15);
             lAxonReachMode.TabIndex = 8;
@@ -127,7 +124,7 @@
             // lConnectionType
             // 
             lConnectionType.AutoSize = true;
-            lConnectionType.Location = new Point(13, 87);
+            lConnectionType.Location = new Point(3, 87);
             lConnectionType.Name = "lConnectionType";
             lConnectionType.Size = new Size(96, 15);
             lConnectionType.TabIndex = 10;
@@ -143,20 +140,10 @@
             lMinReach.Text = "Min";
             toolTip1.SetToolTip(lMinReach, "The distance in 3-D, calculated according to the selected 'distance mode'");
             // 
-            // lWeight
-            // 
-            lWeight.AutoSize = true;
-            lWeight.Location = new Point(13, 217);
-            lWeight.Name = "lWeight";
-            lWeight.Size = new Size(45, 15);
-            lWeight.TabIndex = 18;
-            lWeight.Text = "Weight";
-            toolTip1.SetToolTip(lWeight, "Maximum conductance");
-            // 
             // lFixedDuration
             // 
             lFixedDuration.AutoSize = true;
-            lFixedDuration.Location = new Point(13, 245);
+            lFixedDuration.Location = new Point(3, 217);
             lFixedDuration.Name = "lFixedDuration";
             lFixedDuration.Size = new Size(60, 15);
             lFixedDuration.TabIndex = 20;
@@ -166,7 +153,7 @@
             // lSynDelay
             // 
             lSynDelay.AutoSize = true;
-            lSynDelay.Location = new Point(13, 271);
+            lSynDelay.Location = new Point(3, 243);
             lSynDelay.Name = "lSynDelay";
             lSynDelay.Size = new Size(61, 15);
             lSynDelay.TabIndex = 22;
@@ -180,9 +167,9 @@
             ddSourcePool.DropDownStyle = ComboBoxStyle.DropDownList;
             ddSourcePool.FlatStyle = FlatStyle.Flat;
             ddSourcePool.FormattingEnabled = true;
-            ddSourcePool.Location = new Point(109, 6);
+            ddSourcePool.Location = new Point(97, 6);
             ddSourcePool.Name = "ddSourcePool";
-            ddSourcePool.Size = new Size(106, 23);
+            ddSourcePool.Size = new Size(117, 23);
             ddSourcePool.TabIndex = 5;
             ddSourcePool.SelectedIndexChanged += ddSourcePool_SelectedIndexChanged;
             // 
@@ -193,9 +180,9 @@
             ddTargetPool.DropDownStyle = ComboBoxStyle.DropDownList;
             ddTargetPool.FlatStyle = FlatStyle.Flat;
             ddTargetPool.FormattingEnabled = true;
-            ddTargetPool.Location = new Point(109, 32);
+            ddTargetPool.Location = new Point(97, 32);
             ddTargetPool.Name = "ddTargetPool";
-            ddTargetPool.Size = new Size(106, 23);
+            ddTargetPool.Size = new Size(117, 23);
             ddTargetPool.TabIndex = 7;
             ddTargetPool.SelectedIndexChanged += ddTargetPool_SelectedIndexChanged;
             // 
@@ -206,9 +193,9 @@
             ddAxonReachMode.DropDownStyle = ComboBoxStyle.DropDownList;
             ddAxonReachMode.FlatStyle = FlatStyle.Flat;
             ddAxonReachMode.FormattingEnabled = true;
-            ddAxonReachMode.Location = new Point(109, 58);
+            ddAxonReachMode.Location = new Point(97, 58);
             ddAxonReachMode.Name = "ddAxonReachMode";
-            ddAxonReachMode.Size = new Size(106, 23);
+            ddAxonReachMode.Size = new Size(117, 23);
             ddAxonReachMode.TabIndex = 9;
             ddAxonReachMode.SelectedIndexChanged += ddAxonReachMode_SelectedIndexChanged;
             // 
@@ -220,27 +207,17 @@
             ddConnectionType.FlatStyle = FlatStyle.Flat;
             ddConnectionType.FormattingEnabled = true;
             ddConnectionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
-            ddConnectionType.Location = new Point(109, 84);
+            ddConnectionType.Location = new Point(97, 84);
             ddConnectionType.Name = "ddConnectionType";
-            ddConnectionType.Size = new Size(106, 23);
+            ddConnectionType.Size = new Size(117, 23);
             ddConnectionType.TabIndex = 11;
             ddConnectionType.SelectedIndexChanged += ddConnectionType_SelectedIndexChanged;
             // 
-            // numConductance
-            // 
-            numConductance.DecimalPlaces = 6;
-            numConductance.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            numConductance.Location = new Point(109, 214);
-            numConductance.Name = "numConductance";
-            numConductance.Size = new Size(66, 23);
-            numConductance.TabIndex = 19;
-            toolTip1.SetToolTip(numConductance, "Maximum conductance");
-            // 
             // eFixedDuration
             // 
-            eFixedDuration.Location = new Point(109, 240);
+            eFixedDuration.Location = new Point(97, 214);
             eFixedDuration.Name = "eFixedDuration";
-            eFixedDuration.Size = new Size(66, 23);
+            eFixedDuration.Size = new Size(77, 23);
             eFixedDuration.TabIndex = 21;
             toolTip1.SetToolTip(eFixedDuration, "If entered, distance/speed will not be used to calculate duration.\r\n");
             // 
@@ -257,7 +234,7 @@
             // lMaxIncoming
             // 
             lMaxIncoming.AutoSize = true;
-            lMaxIncoming.Location = new Point(13, 139);
+            lMaxIncoming.Location = new Point(3, 139);
             lMaxIncoming.Name = "lMaxIncoming";
             lMaxIncoming.Size = new Size(84, 15);
             lMaxIncoming.TabIndex = 12;
@@ -266,17 +243,17 @@
             // 
             // numMaxIncoming
             // 
-            numMaxIncoming.Location = new Point(109, 136);
+            numMaxIncoming.Location = new Point(97, 136);
             numMaxIncoming.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMaxIncoming.Name = "numMaxIncoming";
-            numMaxIncoming.Size = new Size(66, 23);
+            numMaxIncoming.Size = new Size(77, 23);
             numMaxIncoming.TabIndex = 13;
             toolTip1.SetToolTip(numMaxIncoming, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // lMaxOutgoing
             // 
             lMaxOutgoing.AutoSize = true;
-            lMaxOutgoing.Location = new Point(13, 165);
+            lMaxOutgoing.Location = new Point(3, 165);
             lMaxOutgoing.Name = "lMaxOutgoing";
             lMaxOutgoing.Size = new Size(84, 15);
             lMaxOutgoing.TabIndex = 14;
@@ -285,10 +262,10 @@
             // 
             // numMaxOutgoing
             // 
-            numMaxOutgoing.Location = new Point(109, 162);
+            numMaxOutgoing.Location = new Point(97, 162);
             numMaxOutgoing.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMaxOutgoing.Name = "numMaxOutgoing";
-            numMaxOutgoing.Size = new Size(66, 23);
+            numMaxOutgoing.Size = new Size(77, 23);
             numMaxOutgoing.TabIndex = 15;
             toolTip1.SetToolTip(numMaxOutgoing, "The number of maximum connections the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
@@ -331,10 +308,10 @@
             // numProbability
             // 
             numProbability.DecimalPlaces = 3;
-            numProbability.Location = new Point(109, 188);
+            numProbability.Location = new Point(97, 188);
             numProbability.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
             numProbability.Name = "numProbability";
-            numProbability.Size = new Size(66, 23);
+            numProbability.Size = new Size(77, 23);
             numProbability.TabIndex = 17;
             toolTip1.SetToolTip(numProbability, "The probability of whether there will be a connection between the source and target cell.");
             numProbability.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -342,7 +319,7 @@
             // lProbability
             // 
             lProbability.AutoSize = true;
-            lProbability.Location = new Point(13, 191);
+            lProbability.Location = new Point(3, 191);
             lProbability.Name = "lProbability";
             lProbability.Size = new Size(64, 15);
             lProbability.TabIndex = 16;
@@ -351,9 +328,9 @@
             // 
             // eSynDelay
             // 
-            eSynDelay.Location = new Point(109, 267);
+            eSynDelay.Location = new Point(97, 240);
             eSynDelay.Name = "eSynDelay";
-            eSynDelay.Size = new Size(66, 23);
+            eSynDelay.Size = new Size(77, 23);
             eSynDelay.TabIndex = 22;
             toolTip1.SetToolTip(eSynDelay, "If entered, distance/speed will not be used to calculate duration.\r\n");
             // 
@@ -363,7 +340,7 @@
             cbActive.AutoSize = true;
             cbActive.Checked = true;
             cbActive.CheckState = CheckState.Checked;
-            cbActive.Location = new Point(156, 322);
+            cbActive.Location = new Point(156, 294);
             cbActive.Name = "cbActive";
             cbActive.Size = new Size(59, 19);
             cbActive.TabIndex = 0;
@@ -373,7 +350,7 @@
             // lName
             // 
             lName.AutoSize = true;
-            lName.Location = new Point(13, 295);
+            lName.Location = new Point(3, 269);
             lName.Name = "lName";
             lName.Size = new Size(39, 15);
             lName.TabIndex = 24;
@@ -382,7 +359,7 @@
             // lDescription
             // 
             lDescription.AutoSize = true;
-            lDescription.Location = new Point(16, 326);
+            lDescription.Location = new Point(3, 295);
             lDescription.Name = "lDescription";
             lDescription.Size = new Size(67, 15);
             lDescription.TabIndex = 26;
@@ -391,9 +368,9 @@
             // eName
             // 
             eName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            eName.Location = new Point(109, 294);
+            eName.Location = new Point(97, 266);
             eName.Name = "eName";
-            eName.Size = new Size(106, 23);
+            eName.Size = new Size(117, 23);
             eName.TabIndex = 25;
             eName.Leave += eName_Leave;
             // 
@@ -420,10 +397,10 @@
             // eDescription
             // 
             eDescription.AcceptsTab = true;
-            eDescription.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            eDescription.Location = new Point(13, 359);
+            eDescription.Dock = DockStyle.Bottom;
+            eDescription.Location = new Point(0, 319);
             eDescription.Name = "eDescription";
-            eDescription.Size = new Size(202, 196);
+            eDescription.Size = new Size(218, 240);
             eDescription.TabIndex = 27;
             eDescription.Text = "";
             // 
@@ -512,7 +489,6 @@
             splitContainerMain.Panel1.Controls.Add(lMaxIncoming);
             splitContainerMain.Panel1.Controls.Add(lConnectionType);
             splitContainerMain.Panel1.Controls.Add(numMaxIncoming);
-            splitContainerMain.Panel1.Controls.Add(lWeight);
             splitContainerMain.Panel1.Controls.Add(eDescription);
             splitContainerMain.Panel1.Controls.Add(lFixedDuration);
             splitContainerMain.Panel1.Controls.Add(eName);
@@ -526,7 +502,6 @@
             splitContainerMain.Panel1.Controls.Add(numProbability);
             splitContainerMain.Panel1.Controls.Add(ddConnectionType);
             splitContainerMain.Panel1.Controls.Add(cbActive);
-            splitContainerMain.Panel1.Controls.Add(numConductance);
             splitContainerMain.Panel1.Controls.Add(eFixedDuration);
             // 
             // splitContainerMain.Panel2
@@ -544,16 +519,16 @@
             ddCoreType.DropDownStyle = ComboBoxStyle.DropDownList;
             ddCoreType.FlatStyle = FlatStyle.Flat;
             ddCoreType.FormattingEnabled = true;
-            ddCoreType.Location = new Point(109, 110);
+            ddCoreType.Location = new Point(97, 110);
             ddCoreType.Name = "ddCoreType";
-            ddCoreType.Size = new Size(107, 23);
+            ddCoreType.Size = new Size(118, 23);
             ddCoreType.TabIndex = 12;
             ddCoreType.SelectedIndexChanged += ddCoreType_SelectedIndexChanged;
             // 
             // lCoreType
             // 
             lCoreType.AutoSize = true;
-            lCoreType.Location = new Point(13, 113);
+            lCoreType.Location = new Point(3, 113);
             lCoreType.Name = "lCoreType";
             lCoreType.Size = new Size(59, 15);
             lCoreType.TabIndex = 6;
@@ -619,7 +594,7 @@
             // 
             // tAttachments
             // 
-            tAttachments.Controls.Add(attachmentList); 
+            tAttachments.Controls.Add(attachmentList);
             tAttachments.Location = new Point(4, 24);
             tAttachments.Name = "tAttachments";
             tAttachments.Size = new Size(280, 531);
@@ -644,7 +619,6 @@
             Controls.Add(splitContainerMain);
             Name = "InterPoolControl";
             Size = new Size(510, 559);
-            ((System.ComponentModel.ISupportInitialize)numConductance).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).EndInit();
             ((System.ComponentModel.ISupportInitialize)numMinAscReach).EndInit();
@@ -674,7 +648,6 @@
         private Label lAxonReachMode;
         private Label lConnectionType;
         private Label lMinReach;
-        private Label lWeight;
         private Label lFixedDuration;
         private Label lSynDelay;
         private ComboBox ddSourcePool;
@@ -682,7 +655,6 @@
         private ComboBox ddAxonReachMode;
         private ComboBox ddConnectionType;
         private ToolTip toolTip1;
-        private NumericUpDown numConductance;
         private TextBox eFixedDuration;
         private CheckBox cbActive;
         private NumericUpDown numProbability;

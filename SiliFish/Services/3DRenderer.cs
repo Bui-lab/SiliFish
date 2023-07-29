@@ -30,8 +30,8 @@ namespace SiliFish.Services
             return $"{{\"source\":\"{jnc.Cell1.ID}\"," +
                 $"\"target\":\"{jnc.Cell2.ID}\"," +
                 $"\"type\":\"gap\"," +
-                $"\"value\":{GetNewWeight(jnc.Weight):0.###}," +
-                $"\"conductance\":{jnc.Weight:0.######}" +
+                $"\"value\":{GetNewWeight(jnc.Core.Conductance):0.###}," +
+                $"\"conductance\":{jnc.Core.Conductance:0.######}" +
                 $"{curvInfo} }}";
         }
         private string CreateLinkDataPoint(ChemicalSynapse jnc)
@@ -40,8 +40,8 @@ namespace SiliFish.Services
             return $"{{\"source\":\"{jnc.PreNeuron.ID}\"," +
                 $"\"target\":\"{jnc.PostCell.ID}\"," +
                 $"\"type\":\"chem\"," +
-                $"\"value\":{GetNewWeight(jnc.Weight):0.###}," +
-                $"\"conductance\":{jnc.Weight:0.######}" +
+                $"\"value\":{GetNewWeight(jnc.Core.Conductance):0.###}," +
+                $"\"conductance\":{jnc.Core.Conductance:0.######}" +
                 $"{curvInfo} }}";
         }
         private (double, double, double) GetNewCoordinates(double x, double y, double z, int columnIndex2D)
@@ -111,7 +111,7 @@ namespace SiliFish.Services
         }
 
         public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, 
-            int width, int height, 
+            int width, int _, 
             bool showGap, bool showChem)
         {
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DRender.html"));
@@ -159,7 +159,7 @@ namespace SiliFish.Services
 
             int numOfConnections = model.GetNumberOfConnections();
             double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
-            (_, WeightMax) = model.GetConnectionRange();
+            (double _, WeightMax) = model.GetConnectionRange();
             WeightMult = maxjncsize / WeightMax;
 
             ModelDimensions MD = model.ModelDimensions;

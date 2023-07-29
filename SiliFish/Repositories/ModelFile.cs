@@ -244,8 +244,10 @@ namespace SiliFish.Repositories
         private static bool FixSynapseParametersJson(ref string json)
         {
             bool updated = false;
-            json = json.Replace("\"SynapseParameters\": null,", "\"Parameters\": {},");
             /*Convert 
+            ...
+            "Weight": 1,
+            ...
             "SynapseParameters": {
                             "TauD": 1,
                             "TauR": 0,
@@ -265,38 +267,74 @@ namespace SiliFish.Repositories
                           "RangeEnd": 1,
                           "Range": 0
                         },
+                        ...
+                        "Conductance": {
+                          "$type": "Constant",
+                          "UniqueValue": 1,
+                          "NoiseStdDev": 0,
+                          "Angular": false,
+                          "Absolute": true,
+                          "RangeStart": 1,
+                          "RangeEnd": 1,
+                          "Range": 0
+                        }
             ... etc*/
-            if (json.Contains("\"SynapseParameters\": "))
+            if (!json.Contains("\"SynapseParameters\": ")) return false;
+            //chemical junctions
+            Regex coreRegex = new("\"SynapseParameters\": {(\\s+.*[^}]*?)}");
+            MatchCollection matchCollection = coreRegex.Matches(json);
+            for (int i = matchCollection.Count - 1; i >= 0; i--)
             {
-                Regex coreRegex = new("\"SynapseParameters\": {(\\s+.*[^}]*?)}");
-                MatchCollection matchCollection = coreRegex.Matches(json);
-                for (int i = matchCollection.Count - 1; i >= 0; i--)
+                Match match = matchCollection[i];
+                int weightPos = json.LastIndexOf("\"Weight\":", match.Index);
+                int weightEndPos = json.IndexOf(',', weightPos);
+                double weight = double.Parse(json.Substring(weightPos + 9, weightEndPos - weightPos - 9));
+                string paramList = match.Groups[1].Value;
+                string newJson = "\"Parameters\": {";
+                Regex singleRegex = new("\\s+(\".*\"):(.*)[,\n]");
+                MatchCollection singleMatch = singleRegex.Matches(paramList);
+                for (int j = 0; j < singleMatch.Count; j++)
                 {
-                    Match match = matchCollection[i];
-                    string paramList = match.Groups[1].Value;
-                    string newJson = "\"Parameters\": {";
-                    Regex singleRegex = new("\\s+(\".*\"):(.*)[,\n]");
-                    MatchCollection singleMatch = singleRegex.Matches(paramList);
-                    for (int j = 0; j < singleMatch.Count; j++)
-                    {
-                        Match singleParam = singleMatch[j];
-                        if (!double.TryParse(singleParam.Groups[2].Value, out double val))
-                            val = double.Parse(singleParam.Groups[2].Value.Replace(',', ' '));
-                        Constant_NoDistribution constD = new (val);
-                        string jsonstring = JsonUtil.ToJson(new Distribution[] { constD });
-                        jsonstring = jsonstring[1..^1];
-                        newJson += $"{singleParam.Groups[1].Value}: {jsonstring},\r\n";
-                    }
-                    newJson = newJson.TrimEnd(',');
-                    if (newJson.TrimEnd().EndsWith(','))
-                        newJson = newJson.TrimEnd().Remove(newJson.TrimEnd().Length - 1);
-                    newJson += "}";
-                    json = json.Remove(match.Index, match.Value.Length);                                        
-                    json = json.Insert(match.Index, newJson);
-
-                    updated = true;
+                    Match singleParam = singleMatch[j];
+                    if (!double.TryParse(singleParam.Groups[2].Value, out double val))
+                        val = double.Parse(singleParam.Groups[2].Value.Replace(',', ' '));
+                    Constant_NoDistribution constD = new(val);
+                    string distJson = JsonUtil.ToJson(new Distribution[] { constD });
+                    distJson = distJson[1..^1];
+                    newJson += $"{singleParam.Groups[1].Value}: {distJson},\r\n";
                 }
+                Constant_NoDistribution conductance = new(weight);
+                string conductanceJson = JsonUtil.ToJson(new Distribution[] { conductance });
+                conductanceJson = conductanceJson[1..^1];
+                newJson += $"\"Conductance\": {conductanceJson} \r\n";
+                newJson += "}";
+                newJson = newJson.Replace("\"Erev\"", "\"ERev\"");
+                json = json.Remove(match.Index, match.Value.Length);
+                json = json.Insert(match.Index, newJson);
+
+                updated = true;
             }
+            //gap junctions
+            coreRegex = new("\"SynapseParameters\": null,");
+            matchCollection = coreRegex.Matches(json);
+            for (int i = matchCollection.Count - 1; i >= 0; i--)
+            {
+                Match match = matchCollection[i];
+                int weightPos = json.LastIndexOf("\"Weight\":", match.Index);
+                int weightEndPos = json.IndexOf(',', weightPos);
+                double weight = double.Parse(json.Substring(weightPos + 9, weightEndPos - weightPos - 9));
+                string newJson = "\"Parameters\": {";
+                Constant_NoDistribution constD = new(weight);
+                string conductanceJson = JsonUtil.ToJson(new Distribution[] { constD });
+                conductanceJson = conductanceJson[1..^1];
+                newJson += $"\"Conductance\": {conductanceJson} \r\n";
+                newJson += "},";
+                json = json.Remove(match.Index, match.Value.Length);
+                json = json.Insert(match.Index, newJson);
+
+                updated = true;
+            }
+
             return updated;
         }
 
@@ -338,7 +376,7 @@ namespace SiliFish.Repositories
                     if (json.Contains("\"Delay_ms\": 0,"))
                         json = json.Replace("\"Delay_ms\": 0,", "\"Delay_ms\": null,");
                 }
-                if (version.Groups[1].Value.CompareTo("\"2.6.0\"") < 0)
+                if (version.Groups[1].Value.CompareTo("\"2.6.1\"") < 0)
                 {
                     if (FixSynapseParametersJson(ref json))
                         list.Add("Synapse core parameters");
@@ -854,15 +892,15 @@ namespace SiliFish.Repositories
                 List<InterPoolTemplate> list;
                 if (selectedUnit is CellPoolTemplate cpt)
                     list = modelTemplate.InterPoolTemplates.Where(jnc =>
-                        (gap && jnc.ConnectionType == Definitions.ConnectionType.Gap && (jnc.PoolSource == cpt.CellGroup || jnc.PoolTarget == cpt.CellGroup)) ||
-                        (chemout && jnc.ConnectionType != Definitions.ConnectionType.Gap && jnc.PoolSource == cpt.CellGroup) ||
-                        (chemin && jnc.ConnectionType != Definitions.ConnectionType.Gap && jnc.PoolTarget == cpt.CellGroup))
+                        (gap && jnc.ConnectionType == ConnectionType.Gap && (jnc.PoolSource == cpt.CellGroup || jnc.PoolTarget == cpt.CellGroup)) ||
+                        (chemout && jnc.ConnectionType != ConnectionType.Gap && jnc.PoolSource == cpt.CellGroup) ||
+                        (chemin && jnc.ConnectionType != ConnectionType.Gap && jnc.PoolTarget == cpt.CellGroup))
                         .ToList();
                 else
                 {
                     list = modelTemplate.InterPoolTemplates.Where(ipt =>
-                        gap && ipt.ConnectionType == Definitions.ConnectionType.Gap ||
-                        (chemout || chemin) && (ipt.ConnectionType == Definitions.ConnectionType.Synapse || ipt.ConnectionType == Definitions.ConnectionType.NMJ))
+                        gap && ipt.ConnectionType == ConnectionType.Gap ||
+                        (chemout || chemin) && (ipt.ConnectionType == ConnectionType.Synapse || ipt.ConnectionType == ConnectionType.NMJ))
                         .ToList();
                 }
                 foreach (InterPoolTemplate ipt in list)
@@ -931,7 +969,7 @@ namespace SiliFish.Repositories
                 if (!gap && !chem) return false;
                 using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
                 using StreamWriter sw = new(fs);
-                sw.WriteLine(string.Join(",", JunctionBase.ColumnNames));
+                sw.WriteLine(string.Join(",", InterPoolBase.ColumnNames));
                 List<JunctionBase> list;
 
                 if (selectedUnit is CellPool cp)

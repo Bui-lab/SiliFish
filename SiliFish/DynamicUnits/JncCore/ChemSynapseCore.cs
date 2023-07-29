@@ -13,30 +13,28 @@ using System.Threading.Tasks;
 namespace SiliFish.DynamicUnits.JncCore
 {
     [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simple")]
-    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "hodgkinhuxley")]
-    public class SynapseCore: BaseCore
+    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "twoexp")]
+    public class ChemSynapseCore: JunctionCore
     {
         #region Static members and functions
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
-        .Where(type => typeof(SynapseCore).IsAssignableFrom(type))
+        .Where(type => typeof(ChemSynapseCore).IsAssignableFrom(type))
         .ToDictionary(type => type.Name, type => type);
-
-        public static int CoreParamMaxCount = 5;
 
         public static List<string> GetSynapseTypes()
         {
-            return typeMap.Keys.Where(k => k != nameof(SynapseCore)).ToList();
+            return typeMap.Keys.Where(k => k != nameof(ChemSynapseCore)).ToList();
         }
 
-        public static SynapseCore CreateCore(string coreType, Dictionary<string, double> parameters, double conductance, double rundt, double eulerdt)
+        public static ChemSynapseCore CreateCore(string coreType, Dictionary<string, double> parameters, double rundt, double eulerdt)
         {
-            SynapseCore core = (SynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>(), conductance, rundt, eulerdt);
+            ChemSynapseCore core = (ChemSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>(), rundt, eulerdt);
             return core;
         }
 
-        public static SynapseCore CreateCore(SynapseCore copyFrom)
+        public static ChemSynapseCore CreateCore(ChemSynapseCore copyFrom)
         {
-            SynapseCore syn = (SynapseCore)Activator.CreateInstance(typeMap[copyFrom.SynapseType]);
+            ChemSynapseCore syn = (ChemSynapseCore)Activator.CreateInstance(typeMap[copyFrom.SynapseType]);
 
             return syn;
         }
@@ -48,40 +46,27 @@ namespace SiliFish.DynamicUnits.JncCore
         /// <returns></returns>
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
-            SynapseCore core = CreateCore(coreType, null, 0, 0, 0);
+            ChemSynapseCore core = CreateCore(coreType, null, 0, 0);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
         #endregion
 
-        [JsonIgnore, Browsable(false)]
-        public string SynapseType => GetType().Name;
-        public double DeltaT, DeltaTEuler;
-        public double Conductance { get; set; }
-
-        [JsonIgnore]
-        public virtual double ISyn { get { throw new NotImplementedException(); } }
-
-
-        public SynapseCore()
+        public ChemSynapseCore()
         { }
-        public SynapseCore(double conductance, double rundt, double eulerdt)
+        public ChemSynapseCore(double rundt, double eulerdt)
         {
             DeltaT = rundt;
             DeltaTEuler = eulerdt;
-            Conductance = conductance; //unitary conductance
         }
 
-        public SynapseCore(SynapseCore copyFrom)
+        public ChemSynapseCore(ChemSynapseCore copyFrom)
         {
             DeltaT = copyFrom.DeltaT;
             DeltaTEuler = copyFrom.DeltaTEuler;
             Conductance = copyFrom.Conductance; //unitary conductance
             SetParameters(copyFrom.GetParameters());//TODO - test; if works put parameter collection to the above constructor
         }
-        public virtual void InitForSimulation(double conductance)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public override bool CheckValues(ref List<string> errors)
         {
@@ -90,13 +75,13 @@ namespace SiliFish.DynamicUnits.JncCore
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
             return errors.Count == 0;
         }
-        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param, double conductance)
+        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
             errors ??= new();
-            SynapseCore core = SynapseCore.CreateCore(coreType, param, conductance, 0, 0);
+            ChemSynapseCore core = CreateCore(coreType, param, 0, 0);
             return core.CheckValues(ref errors);
         }
-        public virtual double GetNextVal(double vPreSynapse, double vPost, double t_t0)
+        public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent)
         {
             throw new NotImplementedException();
         }

@@ -35,6 +35,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
                 CombineJunctions = plot.CombineJunctions;
             }
         }
+        public override int GetHashCode() => base.GetHashCode();
         public override string ToString()
         {
             string sagittal = SagittalPlane == SagittalPlane.Left ? "[L]" : SagittalPlane == SagittalPlane.Right ? "[R]" : "";
@@ -83,5 +84,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
                 combinePools && combineSomites ? $"{c.CellPool.PositionLeftRight}" :
                                     c.ID); //Each cell is separate
         }
+
+        
     }
 }

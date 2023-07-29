@@ -25,7 +25,7 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
             //TODO coretype is not handled
             Model = model;
-            
+
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
 
             //ddConnectionType is manually loaded as not all of them are displayed
@@ -52,6 +52,8 @@ namespace SiliFish.UI.Controls
                     ddConnectionType.Items.Clear();
                     ddConnectionType.Items.Add(ConnectionType.Gap);
                     ddConnectionType.SelectedItem = ConnectionType.Gap;
+                    ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray());
+
                 }
                 else //Neuron
                 {
@@ -66,6 +68,12 @@ namespace SiliFish.UI.Controls
                         ddConnectionType.Items.Add(ConnectionType.Synapse);
                     if (ddConnectionType.Items.Contains(prevType))
                         ddConnectionType.SelectedItem = prevType;
+                    string lastSelection = ddCoreType.Text;
+                    ddCoreType.Items.Clear();
+                    ddCoreType.Items.AddRange(prevType == ConnectionType.Gap ?
+                        ElecSynapseCore.GetSynapseTypes().ToArray() :
+                        ChemSynapseCore.GetSynapseTypes().ToArray());
+                    ddCoreType.Text = lastSelection;
                 }
             }
         }
@@ -142,8 +150,15 @@ namespace SiliFish.UI.Controls
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            propCore.Visible = ddConnectionType.Text != "Gap";
             if (junction == null || !ddConnectionType.Focused) return;
+            ConnectionType ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+            string lastSelection = ddCoreType.Text;
+            ddCoreType.Items.Clear();
+            ddCoreType.Items.AddRange(ConnectionType == ConnectionType.Gap ?
+                ElecSynapseCore.GetSynapseTypes().ToArray() :
+                ChemSynapseCore.GetSynapseTypes().ToArray());
+            ddCoreType.Text = lastSelection;
+
         }
 
         public void SetJunction(JunctionBase junction, bool newJunc)
@@ -153,10 +168,10 @@ namespace SiliFish.UI.Controls
             {
                 sourceCell = gapJunction.Cell1;
                 targetCell = gapJunction.Cell2;
-                numConductance.SetValue(gapJunction.Weight);
                 eFixedDuration.Text = gapJunction.FixedDuration_ms.ToString();
                 eSynDelay.Text = gapJunction.Delay_ms.ToString();
                 ddConnectionType.SelectedItem = ConnectionType.Gap;
+                //TODO ddCoreType.Text = gapJunction.Core;
                 propCore.SelectedObject = gapJunction.Core;
             }
             else if (junction is ChemicalSynapse syn)
@@ -165,7 +180,6 @@ namespace SiliFish.UI.Controls
                 targetCell = syn.PostCell;
                 ddConnectionType.SelectedItem = targetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
                 propCore.SelectedObject = syn.Core;
-                numConductance.SetValue(syn.Weight);
                 eFixedDuration.Text = syn.FixedDuration_ms.ToString();
                 eSynDelay.Text = syn.Delay_ms.ToString();
             }
@@ -257,8 +271,6 @@ namespace SiliFish.UI.Controls
                     checkValuesArgs.Errors = errors;
             }
 
-            if ((double)numConductance.Value < GlobalSettings.Epsilon)
-                checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
             if (ddDistanceMode.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Distance mode is not selected.");
         }
@@ -275,15 +287,13 @@ namespace SiliFish.UI.Controls
             double? delay = null;
             if (!string.IsNullOrEmpty(eSynDelay.Text) && double.TryParse(eSynDelay.Text, out double sd))
                 delay = sd;
-            double conductance = (double)numConductance.Value;
             DistanceMode distanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             List<JunctionBase> junctions = new();
             if (junction != null)
             {
                 junctions.Add(junction);
                 junction.DistanceMode = distanceMode;
-                junction.Weight = conductance;
-                junction.Core = propCore.SelectedObject as SynapseCore;
+                junction.Core = propCore.SelectedObject as JunctionCore;
             }
             else
             {
@@ -302,9 +312,9 @@ namespace SiliFish.UI.Controls
                     foreach (Cell tc in targetCells)
                     {
                         if ((ConnectionType)ddConnectionType.SelectedItem == ConnectionType.Gap)
-                            junction = new GapJunction(conductance, sc, tc, distanceMode);
+                            junction = new GapJunction(sc, tc, nameof(SimpleGap), (propCore.SelectedObject as BaseCore).Parameters, distanceMode);
                         else
-                            junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, (propCore.SelectedObject as BaseCore).Parameters, conductance, distanceMode);
+                            junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, (propCore.SelectedObject as BaseCore).Parameters, distanceMode);
                         junctions.Add(junction);
                     }
                 }

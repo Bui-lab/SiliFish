@@ -32,13 +32,11 @@
             lSourcePool = new Label();
             lTargetPool = new Label();
             lConnectionType = new Label();
-            lWeight = new Label();
             lFixedDuration = new Label();
             lDelay = new Label();
             ddSourcePool = new ComboBox();
             ddConnectionType = new ComboBox();
             toolTip1 = new ToolTip(components);
-            numConductance = new NumericUpDown();
             eFixedDuration = new TextBox();
             eSynDelay = new TextBox();
             cbActive = new CheckBox();
@@ -54,18 +52,17 @@
             lCoreType = new Label();
             propCore = new PropertyGrid();
             tabJunction = new TabControl();
-            tTimeLine = new TabPage();
             tDynamics = new TabPage();
-            ((System.ComponentModel.ISupportInitialize)numConductance).BeginInit();
+            tTimeLine = new TabPage();
             tabJunction.SuspendLayout();
-            tTimeLine.SuspendLayout();
             tDynamics.SuspendLayout();
+            tTimeLine.SuspendLayout();
             SuspendLayout();
             // 
             // lSourcePool
             // 
             lSourcePool.AutoSize = true;
-            lSourcePool.Location = new Point(12, 12);
+            lSourcePool.Location = new Point(9, 12);
             lSourcePool.Name = "lSourcePool";
             lSourcePool.Size = new Size(70, 15);
             lSourcePool.TabIndex = 4;
@@ -74,7 +71,7 @@
             // lTargetPool
             // 
             lTargetPool.AutoSize = true;
-            lTargetPool.Location = new Point(12, 64);
+            lTargetPool.Location = new Point(9, 62);
             lTargetPool.Name = "lTargetPool";
             lTargetPool.Size = new Size(66, 15);
             lTargetPool.TabIndex = 6;
@@ -83,26 +80,16 @@
             // lConnectionType
             // 
             lConnectionType.AutoSize = true;
-            lConnectionType.Location = new Point(12, 116);
+            lConnectionType.Location = new Point(9, 112);
             lConnectionType.Name = "lConnectionType";
             lConnectionType.Size = new Size(96, 15);
             lConnectionType.TabIndex = 10;
             lConnectionType.Text = "Connection Type";
             // 
-            // lWeight
-            // 
-            lWeight.AutoSize = true;
-            lWeight.Location = new Point(12, 190);
-            lWeight.Name = "lWeight";
-            lWeight.Size = new Size(45, 15);
-            lWeight.TabIndex = 18;
-            lWeight.Text = "Weight";
-            toolTip1.SetToolTip(lWeight, "Maximum conductance");
-            // 
             // lFixedDuration
             // 
             lFixedDuration.AutoSize = true;
-            lFixedDuration.Location = new Point(12, 216);
+            lFixedDuration.Location = new Point(9, 187);
             lFixedDuration.Name = "lFixedDuration";
             lFixedDuration.Size = new Size(87, 15);
             lFixedDuration.TabIndex = 20;
@@ -112,7 +99,7 @@
             // lDelay
             // 
             lDelay.AutoSize = true;
-            lDelay.Location = new Point(12, 242);
+            lDelay.Location = new Point(9, 212);
             lDelay.Name = "lDelay";
             lDelay.Size = new Size(63, 15);
             lDelay.TabIndex = 22;
@@ -126,9 +113,9 @@
             ddSourcePool.DropDownStyle = ComboBoxStyle.DropDownList;
             ddSourcePool.FlatStyle = FlatStyle.Flat;
             ddSourcePool.FormattingEnabled = true;
-            ddSourcePool.Location = new Point(120, 10);
+            ddSourcePool.Location = new Point(110, 10);
             ddSourcePool.Name = "ddSourcePool";
-            ddSourcePool.Size = new Size(242, 23);
+            ddSourcePool.Size = new Size(252, 23);
             ddSourcePool.TabIndex = 5;
             ddSourcePool.SelectedIndexChanged += ddSourcePool_SelectedIndexChanged;
             // 
@@ -140,35 +127,25 @@
             ddConnectionType.FlatStyle = FlatStyle.Flat;
             ddConnectionType.FormattingEnabled = true;
             ddConnectionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
-            ddConnectionType.Location = new Point(120, 114);
+            ddConnectionType.Location = new Point(110, 110);
             ddConnectionType.Name = "ddConnectionType";
-            ddConnectionType.Size = new Size(241, 23);
+            ddConnectionType.Size = new Size(251, 23);
             ddConnectionType.TabIndex = 11;
             ddConnectionType.SelectedIndexChanged += ddConnectionType_SelectedIndexChanged;
             // 
-            // numConductance
-            // 
-            numConductance.DecimalPlaces = 6;
-            numConductance.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            numConductance.Location = new Point(120, 188);
-            numConductance.Name = "numConductance";
-            numConductance.Size = new Size(66, 23);
-            numConductance.TabIndex = 19;
-            toolTip1.SetToolTip(numConductance, "Maximum conductance");
-            // 
             // eFixedDuration
             // 
-            eFixedDuration.Location = new Point(120, 214);
+            eFixedDuration.Location = new Point(110, 185);
             eFixedDuration.Name = "eFixedDuration";
-            eFixedDuration.Size = new Size(66, 23);
+            eFixedDuration.Size = new Size(76, 23);
             eFixedDuration.TabIndex = 21;
             toolTip1.SetToolTip(eFixedDuration, "If entered, distance/speed and delay values will not be used to calculate duration.\r\n");
             // 
             // eSynDelay
             // 
-            eSynDelay.Location = new Point(120, 239);
+            eSynDelay.Location = new Point(110, 210);
             eSynDelay.Name = "eSynDelay";
-            eSynDelay.Size = new Size(66, 23);
+            eSynDelay.Size = new Size(76, 23);
             eSynDelay.TabIndex = 22;
             toolTip1.SetToolTip(eSynDelay, "If entered, will replace model's generic synaptic delay (for chemical synapses).");
             // 
@@ -179,7 +156,7 @@
             cbActive.CheckAlign = ContentAlignment.MiddleRight;
             cbActive.Checked = true;
             cbActive.CheckState = CheckState.Checked;
-            cbActive.Location = new Point(15, 279);
+            cbActive.Location = new Point(9, 237);
             cbActive.Name = "cbActive";
             cbActive.Size = new Size(59, 19);
             cbActive.TabIndex = 0;
@@ -201,15 +178,15 @@
             ddDistanceMode.DropDownStyle = ComboBoxStyle.DropDownList;
             ddDistanceMode.FlatStyle = FlatStyle.Flat;
             ddDistanceMode.FormattingEnabled = true;
-            ddDistanceMode.Location = new Point(120, 162);
+            ddDistanceMode.Location = new Point(110, 160);
             ddDistanceMode.Name = "ddDistanceMode";
-            ddDistanceMode.Size = new Size(241, 23);
+            ddDistanceMode.Size = new Size(251, 23);
             ddDistanceMode.TabIndex = 29;
             // 
             // lDistanceMode
             // 
             lDistanceMode.AutoSize = true;
-            lDistanceMode.Location = new Point(12, 164);
+            lDistanceMode.Location = new Point(9, 162);
             lDistanceMode.Name = "lDistanceMode";
             lDistanceMode.Size = new Size(86, 15);
             lDistanceMode.TabIndex = 28;
@@ -218,7 +195,7 @@
             // lSourceCell
             // 
             lSourceCell.AutoSize = true;
-            lSourceCell.Location = new Point(12, 38);
+            lSourceCell.Location = new Point(9, 37);
             lSourceCell.Name = "lSourceCell";
             lSourceCell.Size = new Size(66, 15);
             lSourceCell.TabIndex = 30;
@@ -231,16 +208,16 @@
             ddSourceCell.DropDownStyle = ComboBoxStyle.DropDownList;
             ddSourceCell.FlatStyle = FlatStyle.Flat;
             ddSourceCell.FormattingEnabled = true;
-            ddSourceCell.Location = new Point(120, 36);
+            ddSourceCell.Location = new Point(110, 35);
             ddSourceCell.Name = "ddSourceCell";
-            ddSourceCell.Size = new Size(241, 23);
+            ddSourceCell.Size = new Size(251, 23);
             ddSourceCell.TabIndex = 31;
             ddSourceCell.SelectedIndexChanged += ddSourceCell_SelectedIndexChanged;
             // 
             // lTargetCell
             // 
             lTargetCell.AutoSize = true;
-            lTargetCell.Location = new Point(12, 90);
+            lTargetCell.Location = new Point(9, 87);
             lTargetCell.Name = "lTargetCell";
             lTargetCell.Size = new Size(62, 15);
             lTargetCell.TabIndex = 32;
@@ -253,9 +230,9 @@
             ddTargetCell.DropDownStyle = ComboBoxStyle.DropDownList;
             ddTargetCell.FlatStyle = FlatStyle.Flat;
             ddTargetCell.FormattingEnabled = true;
-            ddTargetCell.Location = new Point(120, 88);
+            ddTargetCell.Location = new Point(110, 85);
             ddTargetCell.Name = "ddTargetCell";
-            ddTargetCell.Size = new Size(241, 23);
+            ddTargetCell.Size = new Size(251, 23);
             ddTargetCell.TabIndex = 33;
             ddTargetCell.SelectedIndexChanged += ddTargetCell_SelectedIndexChanged;
             // 
@@ -266,9 +243,9 @@
             ddTargetPool.DropDownStyle = ComboBoxStyle.DropDownList;
             ddTargetPool.FlatStyle = FlatStyle.Flat;
             ddTargetPool.FormattingEnabled = true;
-            ddTargetPool.Location = new Point(120, 62);
+            ddTargetPool.Location = new Point(110, 60);
             ddTargetPool.Name = "ddTargetPool";
-            ddTargetPool.Size = new Size(241, 23);
+            ddTargetPool.Size = new Size(251, 23);
             ddTargetPool.TabIndex = 7;
             ddTargetPool.SelectedIndexChanged += ddTargetPool_SelectedIndexChanged;
             // 
@@ -279,15 +256,15 @@
             ddCoreType.DropDownStyle = ComboBoxStyle.DropDownList;
             ddCoreType.FlatStyle = FlatStyle.Flat;
             ddCoreType.FormattingEnabled = true;
-            ddCoreType.Location = new Point(120, 136);
+            ddCoreType.Location = new Point(110, 135);
             ddCoreType.Name = "ddCoreType";
-            ddCoreType.Size = new Size(241, 23);
+            ddCoreType.Size = new Size(251, 23);
             ddCoreType.TabIndex = 35;
             // 
             // lCoreType
             // 
             lCoreType.AutoSize = true;
-            lCoreType.Location = new Point(15, 136);
+            lCoreType.Location = new Point(9, 137);
             lCoreType.Name = "lCoreType";
             lCoreType.Size = new Size(59, 15);
             lCoreType.TabIndex = 34;
@@ -298,7 +275,7 @@
             propCore.Dock = DockStyle.Fill;
             propCore.Location = new Point(3, 3);
             propCore.Name = "propCore";
-            propCore.Size = new Size(353, 320);
+            propCore.Size = new Size(353, 362);
             propCore.TabIndex = 36;
             // 
             // tabJunction
@@ -306,22 +283,11 @@
             tabJunction.Controls.Add(tDynamics);
             tabJunction.Controls.Add(tTimeLine);
             tabJunction.Dock = DockStyle.Bottom;
-            tabJunction.Location = new Point(0, 304);
+            tabJunction.Location = new Point(0, 262);
             tabJunction.Name = "tabJunction";
             tabJunction.SelectedIndex = 0;
-            tabJunction.Size = new Size(367, 354);
+            tabJunction.Size = new Size(367, 396);
             tabJunction.TabIndex = 37;
-            // 
-            // tTimeLine
-            // 
-            tTimeLine.Controls.Add(timeLineControl);
-            tTimeLine.Location = new Point(4, 24);
-            tTimeLine.Name = "tTimeLine";
-            tTimeLine.Padding = new Padding(3);
-            tTimeLine.Size = new Size(359, 326);
-            tTimeLine.TabIndex = 0;
-            tTimeLine.Text = "TimeLine";
-            tTimeLine.UseVisualStyleBackColor = true;
             // 
             // tDynamics
             // 
@@ -329,10 +295,21 @@
             tDynamics.Location = new Point(4, 24);
             tDynamics.Name = "tDynamics";
             tDynamics.Padding = new Padding(3);
-            tDynamics.Size = new Size(359, 326);
+            tDynamics.Size = new Size(359, 368);
             tDynamics.TabIndex = 1;
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
+            // 
+            // tTimeLine
+            // 
+            tTimeLine.Controls.Add(timeLineControl);
+            tTimeLine.Location = new Point(4, 24);
+            tTimeLine.Name = "tTimeLine";
+            tTimeLine.Padding = new Padding(3);
+            tTimeLine.Size = new Size(359, 352);
+            tTimeLine.TabIndex = 0;
+            tTimeLine.Text = "TimeLine";
+            tTimeLine.UseVisualStyleBackColor = true;
             // 
             // JunctionControl
             // 
@@ -350,7 +327,6 @@
             Controls.Add(ddTargetCell);
             Controls.Add(eFixedDuration);
             Controls.Add(lSourceCell);
-            Controls.Add(numConductance);
             Controls.Add(ddSourceCell);
             Controls.Add(cbActive);
             Controls.Add(ddDistanceMode);
@@ -362,14 +338,12 @@
             Controls.Add(lDelay);
             Controls.Add(lConnectionType);
             Controls.Add(lFixedDuration);
-            Controls.Add(lWeight);
             Name = "JunctionControl";
             Size = new Size(367, 658);
             SizeChanged += JunctionControl_SizeChanged;
-            ((System.ComponentModel.ISupportInitialize)numConductance).EndInit();
             tabJunction.ResumeLayout(false);
-            tTimeLine.ResumeLayout(false);
             tDynamics.ResumeLayout(false);
+            tTimeLine.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -379,13 +353,11 @@
         private Label lSourcePool;
         private Label lTargetPool;
         private Label lConnectionType;
-        private Label lWeight;
         private Label lFixedDuration;
         private Label lDelay;
         private ComboBox ddSourcePool;
         private ComboBox ddConnectionType;
         private ToolTip toolTip1;
-        private NumericUpDown numConductance;
         private TextBox eFixedDuration;
         private CheckBox cbActive;
         private TimeLineControl timeLineControl;

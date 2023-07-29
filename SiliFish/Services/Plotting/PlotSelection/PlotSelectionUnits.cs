@@ -43,6 +43,8 @@ namespace SiliFish.Services.Plotting.PlotSelection
             base(copyFrom)
         {
         }
+
+        public override int GetHashCode() => base.GetHashCode();
         public override string ToString()
         {
             if (Units == null || !Units.Any()) return "";

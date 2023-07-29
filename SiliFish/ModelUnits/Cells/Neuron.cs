@@ -130,9 +130,9 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Connection functions
-        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, string coreType, Dictionary<string, double> param, double conductance, DistanceMode distanceMode)
+        public ChemicalSynapse CreateChemicalSynapse(Cell postCell, string coreType, Dictionary<string, double> param, DistanceMode distanceMode)
         {
-            ChemicalSynapse jnc = new(this, postCell, coreType, param, conductance, distanceMode);
+            ChemicalSynapse jnc = new(this, postCell, coreType, param, distanceMode);
             if (jnc == null) return null;
             Terminals.Add(jnc);
             postCell.AddChemicalSynapse(jnc);
@@ -142,8 +142,8 @@ namespace SiliFish.ModelUnits.Cells
         public override (double, double) GetConnectionRange()
         {
             (double minWeight1, double maxWeight1) = base.GetConnectionRange();
-            double maxWeight2 = Synapses.Select(j => j.Weight).DefaultIfEmpty(0).Max();
-            double minWeight2 = Synapses.Where(j => j.Weight > 0).Select(j => j.Weight).DefaultIfEmpty(999).Min();
+            double maxWeight2 = Synapses.Select(j => j.Core.Conductance).DefaultIfEmpty(0).Max();
+            double minWeight2 = Synapses.Where(j => j.Core.Conductance > 0).Select(j => j.Core.Conductance).DefaultIfEmpty(999).Min();
             double maxWeight = Math.Max(maxWeight1, maxWeight2);
             double minWeight = Math.Min(minWeight1, minWeight2);
             return (minWeight, maxWeight);
@@ -241,7 +241,7 @@ namespace SiliFish.ModelUnits.Cells
                     foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {
                         if (jnc.IsActive(timeIndex))
-                            IGap += jnc.Cell1 == this ? jnc.IGap : -1 * jnc.IGap;
+                            IGap += jnc.Cell1 == this ? jnc.Core.ISyn : -1 * jnc.Core.ISyn;
                     }
                     stim = GetStimulus(timeIndex);
                 }

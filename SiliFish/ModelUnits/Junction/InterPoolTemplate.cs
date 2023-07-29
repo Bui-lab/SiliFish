@@ -27,7 +27,7 @@ namespace SiliFish.ModelUnits.Junction
 
         #region Properties
         [JsonIgnore]
-        public override string ID => $"{GeneratedName()} [{ConnectionType}]/{AxonReachMode} {CellReach.Projection}";
+        public override string ID => $"{Name} [{ConnectionType}]/{AxonReachMode} {CellReach.Projection}";
         public string Name
         {
             get
@@ -111,7 +111,7 @@ namespace SiliFish.ModelUnits.Junction
                 return $"{Name}\r\n" +
                     $"{Description}\r\n" +
                     $"From {PoolSource} to {PoolTarget}\r\n" +
-                    $"Weight:{Weight: 0.#####}\r\n" +
+                    //TODO $"Weight:{Weight: 0.#####}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
                     $"Fixed Duration:{FixedDuration_ms: 0.###}\r\n" +
                     $"Delay:{Delay_ms: 0.###}\r\n" +
@@ -128,10 +128,10 @@ namespace SiliFish.ModelUnits.Junction
         public static new List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("Name", "Source", "Target",
                 "Axon Reach Mode", "Conn. Type", "Core Type" ,
-                Enumerable.Range(1, SynapseCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+                Enumerable.Range(1, JunctionCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Dist. Mode",
                 CellReach.ColumnNames,
-                "Prob.", "Weight", "Fixed Dur. (ms)", "Delay (ms)",
+                "Prob.", "Fixed Dur. (ms)", "Delay (ms)",
                 "Active",
                 TimeLine.ColumnNames);
 
@@ -140,10 +140,10 @@ namespace SiliFish.ModelUnits.Junction
             return ListBuilder.Build<string>(
             Util.CSVEncode(Name), PoolSource, PoolTarget,
                 AxonReachMode, ConnectionType, CoreType,
-                csvExportParamValues,
+                csvExportCoreValues,
                 DistanceMode,
                 CellReach.ExportValues(),
-                Probability, Weight, FixedDuration_ms, Delay_ms,
+                Probability, FixedDuration_ms, Delay_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
         }
@@ -161,10 +161,10 @@ namespace SiliFish.ModelUnits.Junction
                 ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
                 CoreType = values[iter++].Trim();
                 parameters = new();
-                for (int i = 1; i <= SynapseCore.CoreParamMaxCount; i++)
+                for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
                     if (iter > values.Count - 2) break;
-                    string paramkey = values[iter++].Trim();
+                    string paramkey = values[iter++]?.Trim() ?? "";
                     string paramvalue = values[iter++];
                     if (!string.IsNullOrEmpty(paramkey))
                     {
@@ -176,7 +176,6 @@ namespace SiliFish.ModelUnits.Junction
                 iter += CellReach.ColumnNames.Count;
                 if (double.TryParse(values[iter++], out double p))
                     Probability = p;
-                Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
                 if (double.TryParse(values[iter++], out double f))
@@ -211,12 +210,12 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
         [JsonIgnore, Browsable(false)]
-        private List<string> csvExportParamValues
+        private List<string> csvExportCoreValues
         {
             get
             {
-                List<string> paramValues = Parameters.Take(SynapseCore.CoreParamMaxCount).OrderBy(kv => kv.Key).SelectMany(kv => new[] { kv.Key, kv.Value.CSVCellExportValues }).ToList();
-                for (int i = parameters.Count; i < CellCore.CoreParamMaxCount; i++)
+                List<string> paramValues = Parameters.Take(JunctionCore.CoreParamMaxCount).OrderBy(kv => kv.Key).SelectMany(kv => new[] { kv.Key, kv.Value.CSVCellExportValues }).ToList();
+                for (int i = parameters.Count; i < JunctionCore.CoreParamMaxCount; i++)
                 {
                     paramValues.Add(string.Empty);
                     paramValues.Add(string.Empty);
@@ -236,6 +235,7 @@ namespace SiliFish.ModelUnits.Junction
             Probability = ipt.Probability;
             AxonReachMode = ipt.AxonReachMode;
             ConnectionType = ipt.ConnectionType;
+            CoreType = ipt.CoreType;
             Parameters = new Dictionary<string, Distribution>(ipt.Parameters);
             Active = ipt.Active;
             TimeLine_ms = new TimeLine(ipt.TimeLine_ms);
@@ -244,7 +244,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" :
                 Active ? " (timeline)" : " (inactive)";
-            return $"{ID}{activeStatus}";
+            return $"{Name}{activeStatus}";
         }
         public override int CompareTo(ModelUnitBase otherbase)
         {
@@ -261,7 +261,7 @@ namespace SiliFish.ModelUnits.Junction
             base.CheckValues(ref errors);
             int errorCount = errors.Count;
             if (ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ)
-                SynapseCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues(), Weight);
+                ChemSynapseCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues());
             if (errors.Count > errorCount)
                 errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;

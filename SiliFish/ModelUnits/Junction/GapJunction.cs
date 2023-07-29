@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Drawing;
 using SiliFish.DynamicUnits.JncCore;
+using SiliFish.DynamicUnits;
+using System.ComponentModel;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -38,8 +40,7 @@ namespace SiliFish.ModelUnits.Junction
 
         protected override int nMax => Cell1.V.Length;
 
-        [JsonIgnore]
-        public double IGap { get { return Weight * VoltageDiff; } }
+
         public Cell Cell1;
         public Cell Cell2;
 
@@ -50,16 +51,16 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         [JsonIgnore]
-        public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}; Conductance: {Weight:0.#####}"; } }
+        public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}; {Core.Identifier}"; } }
 
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
             ConnectionType.Gap, "",
-                csvExportParamValues,
+                csvExportCoreValues,
                 Cell1.ID, Cell2.ID,
                 DistanceMode,
-                Weight, FixedDuration_ms, Delay_ms,
+                FixedDuration_ms, Delay_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
         }
@@ -70,7 +71,7 @@ namespace SiliFish.ModelUnits.Junction
                 int iter = 2;//junction type is already read before junction creation
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
                 Dictionary<string, double> parameters = new();
-                for (int i = 1; i <= SynapseCore.CoreParamMaxCount; i++)
+                for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
                     if (iter > values.Count - 2) break;
                     string paramkey = values[iter++].Trim();
@@ -80,13 +81,12 @@ namespace SiliFish.ModelUnits.Junction
                         parameters.Add(paramkey, paramvalue);
                     }
                 }
-                //TODO Core = SynapseCore.CreateSynapse(coreType, parameters, Weight, 0.1, 0.1);//TODO constant values here - FIX!!!!
+                Core = ElecSynapseCore.CreateCore(nameof(SimpleGap), parameters, 0.1, 0.1);//TODO constant values here - FIX!!!!
 
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
 
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                Weight = double.Parse(values[iter++]);
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
                 if (double.TryParse(values[iter++], out double dd))
@@ -105,14 +105,14 @@ namespace SiliFish.ModelUnits.Junction
 
         public GapJunction()
         { }
-        public GapJunction(double conductance, Cell c1, Cell c2, DistanceMode distmode)
+        public GapJunction(Cell c1, Cell c2, string coreType, Dictionary<string, double> synParams, DistanceMode distmode)
         {
-            Weight = conductance;
             Cell1 = c1;
             Cell2 = c2;
             Source = Cell1.ID;
             Target = Cell2.ID;
             DistanceMode = distmode;
+            Core = ElecSynapseCore.CreateCore(coreType, synParams, Cell1.Model.RunParam.DeltaT, Cell1.Model.RunParam.DeltaTEuler);
         }
 
         public GapJunction(GapJunction gapJunction) : base(gapJunction)
@@ -166,19 +166,6 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
 
-        public void SetFixedDuration(double dur)
-        {
-            FixedDuration_ms = dur;
-        }
-        public void SetDelay(double? delay)
-        {
-            Delay_ms = delay;
-        }
-        public void SetTimeSpan(TimeLine span)
-        {
-            TimeLine_ms = span;
-        }
-
         public override void NextStep(int tIndex)
         {
             if (tIndex <= 0) return;
@@ -195,9 +182,25 @@ namespace SiliFish.ModelUnits.Junction
             v2 = duration2 <= tIndex ? Cell2.V[tIndex - duration2] : Cell2.RestingMembranePotential;
             v1 = Cell1.V[tIndex - 1];
             VoltageDiffFrom2To1 = v2 - v1;
+            double IGap = (Core as ElecSynapseCore).GetNextVal(VoltageDiffFrom1To2, VoltageDiffFrom2To1);
             if (inputCurrent != null)
                 inputCurrent[tIndex] = IGap;
         }
     }
- 
+    /*            if (!IsActive(tIndex))
+               {
+                   Core.ZeroISyn();
+                   if (inputCurrent != null)
+                       inputCurrent[tIndex] = 0;
+                   return;
+               }
+               RunningModel model = PreNeuron.Model;
+
+               int tt = duration;
+               double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
+               double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
+               double t_t0 = PreNeuron.LastSpike >= 0 ? (tIndex - PreNeuron.LastSpike) * model.RunParam.DeltaT : 0;//Time since the last spike
+               double ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, t_t0);
+               if (inputCurrent != null)
+                   inputCurrent[tIndex] = ISyn;*/
 }

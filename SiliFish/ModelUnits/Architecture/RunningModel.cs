@@ -119,8 +119,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Weight);
-                            double maxConductance = list.Max(c => c.Weight);
+                            double minConductance = list.Min(c => c.Core.Conductance);
+                            double maxConductance = list.Max(c => c.Core.Conductance);
                             interPools.Add(new InterPool()
                             {
                                 SourcePool = source,
@@ -156,8 +156,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Weight);
-                            double maxConductance = list.Max(c => c.Weight);
+                            double minConductance = list.Min(c => c.Core.Conductance);
+                            double maxConductance = list.Max(c => c.Core.Conductance);
 
                             interPools.Add(new InterPool()
                             {
@@ -753,7 +753,7 @@ namespace SiliFish.ModelUnits.Architecture
             CellReach cr = template.CellReach;
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Weight, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Parameters, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
@@ -762,7 +762,7 @@ namespace SiliFish.ModelUnits.Architecture
             CellReach cr = template.CellReach;
             cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, template.CoreType, template.Parameters, timeline, template.Weight, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, template.CoreType, template.Parameters, timeline, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         private void CalculateCellularOutputs(int t)

@@ -34,17 +34,17 @@ namespace SiliFish.ModelUnits.Junction
         public Cell PostCell; //can be a neuron or a muscle cell
 
         [JsonIgnore]
-        public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}; Conductance: {Weight:0.#####}"; } }
+        public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}; {Core.Identifier}"; } }
 
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
             ConnectionType.Synapse, Core.SynapseType,
-            csvExportParamValues,
+            csvExportCoreValues,
 
             PreNeuron.ID, PostCell.ID,
                 DistanceMode,
-                Weight, FixedDuration_ms, Delay_ms,
+                FixedDuration_ms, Delay_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
         }
@@ -58,7 +58,7 @@ namespace SiliFish.ModelUnits.Junction
 
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
                 Dictionary<string, double> parameters = new();
-                for (int i = 1; i <= SynapseCore.CoreParamMaxCount; i++)
+                for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
                     if (iter > values.Count - 2) break;
                     string paramkey = values[iter++].Trim();
@@ -67,13 +67,12 @@ namespace SiliFish.ModelUnits.Junction
                         parameters.Add(paramkey, paramvalue);
                     }
                 }
-                Core = SynapseCore.CreateCore(coreType, parameters, Weight, 0.1, 0.1);//TODO constant values here - FIX!!!!
+                Core = ChemSynapseCore.CreateCore(coreType, parameters, 0.1, 0.1);//TODO constant values here - FIX!!!!
 
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
 
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
-                Weight = double.Parse(values[iter++]);
 
                 if (double.TryParse(values[iter++], out double d))
                     FixedDuration_ms = d;
@@ -92,22 +91,21 @@ namespace SiliFish.ModelUnits.Junction
 
         public ChemicalSynapse()
         { }
-        public ChemicalSynapse(Neuron preN, Cell postN, string coreType, Dictionary<string, double> synParams, double conductance, DistanceMode distmode)
+        public ChemicalSynapse(Neuron preN, Cell postN, string coreType, Dictionary<string, double> synParams, DistanceMode distmode)
         {
-            Core = SynapseCore.CreateCore(coreType, synParams, conductance,  preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
+            Core = ChemSynapseCore.CreateCore(coreType, synParams, preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
 
             PreNeuron = preN;
             PostCell = postN;
             Source = preN.ID;
             Target = postN.ID;
             DistanceMode = distmode;
-            Weight = conductance;
         }
 
 
         public ChemicalSynapse(ChemicalSynapse syn): base(syn)
         {
-            Core = SynapseCore.CreateCore(syn.Core);
+            Core = ChemSynapseCore.CreateCore(syn.Core as ChemSynapseCore);
             Core = new SimpleSyn(syn.Core as SimpleSyn);
             PreNeuron = syn.PreNeuron;
             PostCell = syn.PostCell;
@@ -167,7 +165,7 @@ namespace SiliFish.ModelUnits.Junction
         public override void InitForSimulation(int nmax, bool trackCurrent)
         {
             base.InitForSimulation(nmax, trackCurrent);
-            Core.InitForSimulation(Weight);
+            Core.InitForSimulation();
             
             RunningModel model = PreNeuron.Model;
             if (FixedDuration_ms != null)
@@ -181,33 +179,20 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
 
-        public void SetFixedDuration(double dur)
-        {
-            FixedDuration_ms = dur;
-        }
-        public void SetDelay(double? delay)
-        {
-            Delay_ms = delay;
-        }
-        public void SetTimeLine(TimeLine span)
-        {
-            TimeLine_ms = span;
-        }
         public override void NextStep(int tIndex)
         {
             if (!IsActive(tIndex))
             {
+                Core.ZeroISyn();
                 if (inputCurrent != null)
                     inputCurrent[tIndex] = 0;
                 return;
             }
-            RunningModel model = PreNeuron.Model;
-
             int tt = duration;
             double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
-            double t_t0 = PreNeuron.LastSpike >= 0 ? (tIndex - PreNeuron.LastSpike) * model.RunParam.DeltaT : 0;//Time since the last spike
-            double ISyn = Core.GetNextVal(vPreSynapse, vPost, t_t0);
+            List<double> spikeArrivalTimes = PreNeuron.SpikeTrain.Select(t => (t + tt) * Core.DeltaT).ToList();
+            double ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, spikeArrivalTimes, tIndex * Core.DeltaT);
             if (inputCurrent != null)
                 inputCurrent[tIndex] = ISyn;
         }

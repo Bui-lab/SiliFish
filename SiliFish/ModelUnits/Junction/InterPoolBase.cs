@@ -25,8 +25,6 @@ namespace SiliFish.ModelUnits.Junction
         public DistanceMode DistanceMode { get; set; } = DistanceMode.Euclidean;
         public double? FixedDuration_ms { get; set; } = null;// in ms
         public double? Delay_ms { get; set; } = null;//in ms
-        public double Weight { get; set; }
-
 
         /// <summary>
         /// used for import/exports
@@ -38,7 +36,7 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } = 
             ListBuilder.Build<string>("Connection Type", "Core Type",
-               Enumerable.Range(1, SynapseCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
+               Enumerable.Range(1, ChemSynapseCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Source", "Target", 
                 "Distance Mode", 
                 "Weight", "Fixed Duration (ms)", "Delay (ms)",
@@ -62,7 +60,6 @@ namespace SiliFish.ModelUnits.Junction
             DistanceMode = jnc.DistanceMode;
             FixedDuration_ms = jnc.FixedDuration_ms;
             Delay_ms = jnc.Delay_ms;
-            Weight = jnc.Weight;
         }
         public virtual void LinkObjects()
         {

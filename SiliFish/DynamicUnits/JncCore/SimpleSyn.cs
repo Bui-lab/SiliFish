@@ -5,27 +5,35 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class SimpleSyn: SynapseCore
+    public class SimpleSyn: ChemSynapseCore
     {
         private double ISynA = 0; //the momentary current value
         private double ISynB = 0; //the momentary current value
-        [JsonIgnore]
+        [JsonIgnore, Browsable(false)]
         public override double ISyn { get { return ISynA - ISynB; } }
-
+        public override void ZeroISyn()
+        {
+            ISynA = ISynB = 0;
+        }
         public double TauD { get; set; }
         public double TauR { get; set; }
         public double Vth { get; set; }
         public double ERev { get; set; }
+
+        [JsonIgnore, Browsable(false)]
+        public override string Identifier => $"Conductance: {Conductance:0.####} τ(r/d): {TauR}/{TauD}";
+
         public SimpleSyn()
         { }
 
-        public SimpleSyn(Dictionary<string, double> paramExternal, double conductance, double rundt, double eulerdt)
-            :base(conductance, rundt, eulerdt)
+        public SimpleSyn(Dictionary<string, double> paramExternal, double rundt, double eulerdt)
+            :base(rundt, eulerdt)
         {
             SetParameters(paramExternal);
         }
@@ -34,9 +42,8 @@ namespace SiliFish.DynamicUnits
             :base(copyFrom)
         {
         }
-        public override void InitForSimulation(double conductance)
+        public override void InitForSimulation()
         {
-            Conductance = conductance;
             ISynA = ISynB = 0;
         }
 
@@ -48,7 +55,7 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             return errors.Count == 0;
         }
-        public override double GetNextVal(double vPreSynapse, double vPost, double _)
+        public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent)
         {
             double IsynANew = ISynA, IsynBNew = ISynB;
             double dtTracker = 0;

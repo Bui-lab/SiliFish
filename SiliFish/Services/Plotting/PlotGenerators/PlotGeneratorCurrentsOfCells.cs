@@ -123,8 +123,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             gapExists = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            string cellID = combineCells ? cell.ID + "↔" : "";
-                            gapTitle += $"Gap: {cellID}{otherCell.ID},";
+                            gapTitle += $"Gap: {jnc.ID},";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
@@ -139,8 +138,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             synInExists = true;
                             if (combineCells)
-                                synInTitle += cell.ID + "←";
-                            synInTitle += jnc.PreNeuron.ID + ",";
+                                synInTitle += jnc.ID + ",";
+                            else
+                                synInTitle += $"{jnc.PreNeuron.ID} {jnc.Core.Identifier} ,";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
@@ -154,8 +154,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 synOutExists = true;
                                 if (combineCells)
-                                    synOutTitle += cell.ID + "→";
-                                synOutTitle += jnc.PostCell.ID + ",";
+                                    synOutTitle += jnc.ID + ",";
+                                else 
+                                    synOutTitle += $"{jnc.PostCell.ID} {jnc.Core.Identifier} ,";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                     synOutData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";

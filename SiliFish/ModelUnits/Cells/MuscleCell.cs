@@ -105,8 +105,8 @@ namespace SiliFish.ModelUnits.Cells
         public override (double, double) GetConnectionRange()
         {
             (double minWeight1, double maxWeight1) = base.GetConnectionRange();
-            double maxWeight2 = EndPlates.Select(j => j.Weight).DefaultIfEmpty(0).Max();
-            double minWeight2 = EndPlates.Where(j => j.Weight > 0).Select(j => j.Weight).DefaultIfEmpty(999).Min();
+            double maxWeight2 = EndPlates.Select(j => j.Core.Conductance).DefaultIfEmpty(0).Max();
+            double minWeight2 = EndPlates.Where(j => j.Core.Conductance > 0).Select(j => j.Core.Conductance).DefaultIfEmpty(999).Min();
 
             double maxWeight = Math.Max(maxWeight1, maxWeight2);
             double minWeight = Math.Min(minWeight1, minWeight2);
@@ -164,7 +164,7 @@ namespace SiliFish.ModelUnits.Cells
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {
-                    IGap += jnc.Cell1 == this ? jnc.IGap : -1 * jnc.IGap;
+                    IGap += jnc.Cell1 == this ? jnc.Core.ISyn : -1 * jnc.Core.ISyn;
                 }
                 stim = GetStimulus(timeIndex);
             }

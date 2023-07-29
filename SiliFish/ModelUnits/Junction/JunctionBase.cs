@@ -24,7 +24,7 @@ namespace SiliFish.ModelUnits.Junction
     {
         [JsonIgnore]
 
-        public SynapseCore Core { get; set; }
+        public JunctionCore Core { get; set; }
 
         protected double[] inputCurrent; //Current array 
 
@@ -42,15 +42,15 @@ namespace SiliFish.ModelUnits.Junction
             }
         }
         [JsonIgnore, Browsable(false)]
-        protected List<string> csvExportParamValues
+        protected List<string> csvExportCoreValues
         {
             get
             {
                 List<string> paramValues = Core.Parameters
-                    .Take(CellCore.CoreParamMaxCount)
+                    .Take(JunctionCore.CoreParamMaxCount)
                     .OrderBy(kv => kv.Key)
                     .SelectMany(kv => new[] { kv.Key, kv.Value.ToString() }).ToList();
-                for (int i = Core.Parameters.Count; i < CellCore.CoreParamMaxCount; i++)
+                for (int i = Core.Parameters.Count; i < JunctionCore.CoreParamMaxCount; i++)
                 {
                     paramValues.Add(string.Empty);
                     paramValues.Add(string.Empty);
@@ -66,8 +66,20 @@ namespace SiliFish.ModelUnits.Junction
             DistanceMode = jnc.DistanceMode;
             FixedDuration_ms = jnc.FixedDuration_ms;
             Delay_ms = jnc.Delay_ms;
-            Weight = jnc.Weight;
         }
+        public void SetFixedDuration(double dur)
+        {
+            FixedDuration_ms = dur;
+        }
+        public void SetDelay(double? delay)
+        {
+            Delay_ms = delay;
+        }
+        public void SetTimeLine(TimeLine span)
+        {
+            TimeLine_ms = span;
+        }
+
         //if current tracking is Off, the current array can be populated after the simulation for an individual junction
         private void PopulateCurrentArray()
         {

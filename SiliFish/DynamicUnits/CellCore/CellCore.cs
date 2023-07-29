@@ -78,10 +78,7 @@ namespace SiliFish.DynamicUnits
         [Browsable(false)]
         public double Rheobase { get
             {
-                if (rheobase == null)
-                {
-                    rheobase = CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
-                }
+                rheobase ??= CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
                 return (double)rheobase;
             }
             

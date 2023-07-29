@@ -36,15 +36,10 @@ namespace SiliFish.UI.Controls
                 ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
                 if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
                 {
-                    List<string> errors = checkValuesArgs.Errors;
-                    //TODO if (!(propCore.SelectedObject as BaseCore).CheckValues(ref errors))
-                    //checkValuesArgs.Errors = errors;
                     if (ddCoreType.SelectedIndex < 0)
                         checkValuesArgs.Errors.Add("Synapse type not defined.");
                 }
             }
-            if ((double)numConductance.Value < GlobalSettings.Epsilon)
-                checkValuesArgs.Errors.Add("Junction weight is 0. To disable a junction, use the Active field instead.");
             if (ddDistanceMode.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Distance mode is not selected.");
         }
@@ -86,23 +81,25 @@ namespace SiliFish.UI.Controls
         {
             if (ddSourcePool.SelectedItem is CellPoolTemplate pool)
             {
-                /*TODO switch (pool.NTMode)
+                double EReversal = 0;
+                switch (pool.NTMode)
                 {
                     case NeuronClass.Glycinergic:
-                        synapseControl.EReversal = settings.E_gly;
+                        EReversal = settings.E_gly;
                         break;
                     case NeuronClass.GABAergic:
-                        synapseControl.EReversal = settings.E_gaba;
+                        EReversal = settings.E_gaba;
                         break;
                     case NeuronClass.Glutamatergic:
-                        synapseControl.EReversal = settings.E_glu;
+                        EReversal = settings.E_glu;
                         break;
                     case NeuronClass.Cholinergic:
-                        synapseControl.EReversal = settings.E_ach;
+                        EReversal = settings.E_ach;
                         break;
                     default:
                         break;
-                }*/
+                }
+                interPoolTemplate.Parameters["ERev"] = new Constant_NoDistribution(EReversal);
             }
             interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
@@ -140,10 +137,14 @@ namespace SiliFish.UI.Controls
 
         private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ddCoreType.Visible = lCoreType.Visible =
-                 ddConnectionType.Text != "Gap";
             if (interPoolTemplate == null || !ddConnectionType.Focused) return;
             interPoolTemplate.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+            string lastSelection = ddCoreType.Text;
+            ddCoreType.Items.Clear();
+            ddCoreType.Items.AddRange(interPoolTemplate.ConnectionType == ConnectionType.Gap ?
+                ElecSynapseCore.GetSynapseTypes().ToArray() :
+                ChemSynapseCore.GetSynapseTypes().ToArray());
+            ddCoreType.Text = lastSelection;
             UpdateName();
         }
 
@@ -192,7 +193,7 @@ namespace SiliFish.UI.Controls
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
-            ddCoreType.Items.AddRange(SynapseCore.GetSynapseTypes().ToArray());// fill before connection types
+            ddCoreType.Items.AddRange(ChemSynapseCore.GetSynapseTypes().ToArray());//TODO handle gap core as well fill before connection types
 
             ddConnectionType.Items.Clear();
             ddConnectionType.Items.Add(ConnectionType.Gap);
@@ -248,7 +249,7 @@ namespace SiliFish.UI.Controls
             try { ddConnectionType.SelectedItem = ConnectionType.Gap; }
             catch { }
         }
-        public void WriteDataToControl(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate, ModelTemplate modelTemplate)
+        public void WriteDataToControl(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate)
         {
             ddSourcePool.Items.Clear();
             ddTargetPool.Items.Clear();
@@ -283,7 +284,6 @@ namespace SiliFish.UI.Controls
                 numMaxIncoming.SetValue(interPoolTemplate.CellReach.MaxIncoming);
                 numMaxOutgoing.SetValue(interPoolTemplate.CellReach.MaxOutgoing);
 
-                numConductance.SetValue(interPoolTemplate.Weight);
                 eFixedDuration.Text = interPoolTemplate.FixedDuration_ms?.ToString() ?? "";
                 eSynDelay.Text = interPoolTemplate.Delay_ms?.ToString() ?? "";
                 if (interPoolTemplate.Parameters != null)
@@ -328,7 +328,6 @@ namespace SiliFish.UI.Controls
             interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
             interPoolTemplate.ConnectionType = ddConnectionType.SelectedItem != null ? (ConnectionType)ddConnectionType.SelectedItem : ConnectionType.NotSet;
             interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
-            interPoolTemplate.Weight = (double)numConductance.Value;
             interPoolTemplate.FixedDuration_ms = fixedDuration;
             interPoolTemplate.Delay_ms = synDelay;
             interPoolTemplate.Name = eName.Text;
@@ -357,7 +356,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            interPoolTemplate.Parameters = SynapseCore.GetParameters(coreType);
+            interPoolTemplate.Parameters = ChemSynapseCore.GetParameters(coreType);
             ParamDictToGrid();
         }
 

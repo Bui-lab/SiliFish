@@ -9,16 +9,16 @@ namespace SiliFish.DynamicUnits
 {
     public class Izhikevich_9P : CellCore
     {
-        private static double a_suggestedMin = 0.01;
-        private static double a_suggestedMax = 10;
-        private static double b_suggestedMin = 0.01;
-        private static double b_suggestedMax = 20;
-        private static double d_suggestedMin = -10.01;
-        private static double d_suggestedMax = 10;
-        private static double k_suggestedMin = 0.01;
-        private static double k_suggestedMax = 10;
-        private static double Cm_suggestedMin = 0.01;
-        private static double Cm_suggestedMax = 20;
+        private static readonly double a_suggestedMin = 0.01;
+        private static readonly double a_suggestedMax = 10;
+        private static readonly double b_suggestedMin = 0.01;
+        private static readonly double b_suggestedMax = 20;
+        private static readonly double d_suggestedMin = -10.01;
+        private static readonly double d_suggestedMax = 10;
+        private static readonly double k_suggestedMin = 0.01;
+        private static readonly double k_suggestedMax = 10;
+        private static readonly double Cm_suggestedMin = 0.01;
+        private static readonly double Cm_suggestedMax = 20;
 
         //a, b, c, d, are the parameters for the membrane potential dynamics
         //Default values are taken from Izhikevich 2003 (IEEE)

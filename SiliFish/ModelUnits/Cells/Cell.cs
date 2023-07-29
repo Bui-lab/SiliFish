@@ -38,7 +38,7 @@ namespace SiliFish.ModelUnits.Cells
             return (Cell)Activator.CreateInstance(GetTypeOfCell(cellType));
         }
         protected virtual string Discriminator => "cell";
-        protected int lastSpike = -1;
+        protected List<int> spikeTrain = new();
 
         public CellPool CellPool;
         public Coordinate Coordinate;
@@ -148,7 +148,7 @@ namespace SiliFish.ModelUnits.Cells
             TimeLine.ColumnNames);
 
          [JsonIgnore, Browsable(false)]
-        private List<string> csvExportParamValues
+        private List<string> csvExportCoreValues
         {
             get
             {
@@ -166,13 +166,13 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         [JsonIgnore, Browsable(false)]
-        public int LastSpike { get => lastSpike; }
+        public List<int> SpikeTrain { get => spikeTrain; }
 
         public List<string> ExportValues()
         {
             return ListBuilder.Build<string>(Discriminator, CellPool.ID, Somite, Sequence, Coordinate.ExportValues(),
                 DescendingAxonLength, AscendingAxonLength,
-                ConductionVelocity, Core.CoreType, Rheobase, csvExportParamValues, Active, TimeLine_ms.ExportValues());
+                ConductionVelocity, Core.CoreType, Rheobase, csvExportCoreValues, Active, TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -311,9 +311,9 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Connection Functions
-        public GapJunction CreateGapJunction(Cell n2, double weight, DistanceMode distanceMode)
+        public GapJunction CreateGapJunction(Cell n2, Dictionary<string, double> synParams, DistanceMode distanceMode)
         {
-            GapJunction jnc = new(weight, this, n2, distanceMode);
+            GapJunction jnc = new(this, n2, nameof(SimpleGap), synParams, distanceMode);
             if (jnc == null) return null;
             GapJunctions.Add(jnc);
             n2.GapJunctions.Add(jnc);
@@ -325,8 +325,8 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual (double, double) GetConnectionRange()
         {
-            double? maxWeight1 = GapJunctions.Select(j => j.Weight).DefaultIfEmpty(0).Max();
-            double? minWeight1 = GapJunctions.Where(j => j.Weight > 0).Select(j => j.Weight).DefaultIfEmpty(999).Min();
+            double? maxWeight1 = GapJunctions.Select(j => j.Core.Conductance).DefaultIfEmpty(0).Max();
+            double? minWeight1 = GapJunctions.Where(j => j.Core.Conductance > 0).Select(j => j.Core.Conductance).DefaultIfEmpty(999).Min();
             return (minWeight1 ?? 0, maxWeight1 ?? 999);
         }
 
@@ -358,6 +358,7 @@ namespace SiliFish.ModelUnits.Cells
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
             Core.Initialize(runParam.DeltaT, runParam.DeltaTEuler);
+            spikeTrain.Clear();
             V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             Stimuli.InitForSimulation(Model.RunParam, Model.rand);
             foreach (GapJunction jnc in GapJunctions)
@@ -374,7 +375,7 @@ namespace SiliFish.ModelUnits.Cells
             bool spike = false;
             double v = Core.GetNextVal(stim, ref spike);
             if (spike)
-                lastSpike = t;
+                spikeTrain.Add(t - 1);
             if (v < GlobalSettings.BiologicalMinPotential)
                 v = GlobalSettings.BiologicalMinPotential;
             else if (v > GlobalSettings.BiologicalMaxPotential)

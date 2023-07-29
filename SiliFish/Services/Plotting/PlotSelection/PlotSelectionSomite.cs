@@ -23,6 +23,6 @@ namespace SiliFish.Services.Plotting.PlotSelection
             }
             return Somite == pss.Somite;
         }
-
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

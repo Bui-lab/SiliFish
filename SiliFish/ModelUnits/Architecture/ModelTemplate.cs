@@ -230,7 +230,7 @@ namespace SiliFish.ModelUnits.Architecture
             var v = CellPoolTemplates.GroupBy(p => p.ToString()).Where(c => c.Count() > 1);
             foreach (string cpt in v.Select(gr => gr.Key).Distinct())
                 errors.Add($"Cell pool names have to be unique: {cpt}");
-            var v2 = InterPoolTemplates.GroupBy(p => p.ToString()).Where(c => c.Count() > 1);
+            var v2 = InterPoolTemplates.GroupBy(p => p.ID).Where(c => c.Count() > 1);
             foreach (string ipt in v2.Select(gr => gr.Key).Distinct())
                 errors.Add($"Gap junction and synapse names have to be unique: {ipt}");
             foreach (CellPoolTemplate cpt in CellPoolTemplates)

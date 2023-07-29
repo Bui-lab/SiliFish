@@ -415,8 +415,8 @@ namespace SiliFish.ModelUnits.Cells
         #region Projection Functions
         public void ReachToCellPoolViaGapJunction(CellPool target, 
             CellReach reach, 
-            TimeLine timeline, 
-            double weight,
+            TimeLine timeline,
+            Dictionary<string, Distribution> synParams,
             double probability, 
             DistanceMode distanceMode,
             double? delay_ms,
@@ -456,9 +456,11 @@ namespace SiliFish.ModelUnits.Cells
                         continue;
                     if (reach.WithinReach(pre, post))
                     {
-                        GapJunction jnc = pre.CreateGapJunction(post, weight, distanceMode);
+                        Dictionary<string, double> paramValues = synParams.GenerateSingleInstanceValues();
+
+                        GapJunction jnc = pre.CreateGapJunction(post, paramValues, distanceMode);
                         jnc.SetDelay(delay_ms);
-                        jnc.SetTimeSpan(timeline);
+                        jnc.SetTimeLine(timeline);
                         if (fixedduration_ms != null)
                             jnc.SetFixedDuration((double)fixedduration_ms);
                         counter++;
@@ -474,7 +476,6 @@ namespace SiliFish.ModelUnits.Cells
             string coreType,
             Dictionary<string, Distribution> synParams, 
             TimeLine timeline, 
-            double weight,
             double probability, 
             DistanceMode distanceMode, 
             double? delay_ms,
@@ -484,13 +485,13 @@ namespace SiliFish.ModelUnits.Cells
             int maxOutgoing = reach.MaxOutgoing;
             if (maxIncoming > 0 && maxOutgoing == 0)
             {//if target pool has a limit, prevent the scenario where one source cell fulfills that limit
-                int numSource = this.GetCells().Count();
+                int numSource = GetCells().Count();
                 int numTarget = target.GetCells().Count();
                 maxOutgoing = (int)Math.Ceiling((double)maxIncoming * numTarget / numSource);
             }
             else if (maxIncoming == 0 && maxOutgoing > 0)
             {//if the source pool has a limit, prevent the scenario where one target cell fulfills that limit
-                int numSource = this.GetCells().Count();
+                int numSource = GetCells().Count();
                 int numTarget = target.GetCells().Count();
                 maxIncoming = (int)Math.Ceiling((double)maxOutgoing * numSource / numTarget);
             }
@@ -520,7 +521,7 @@ namespace SiliFish.ModelUnits.Cells
                     if (reach.WithinReach(pre, post))
                     {
                         Dictionary<string, double> paramValues = synParams.GenerateSingleInstanceValues();
-                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, coreType, paramValues, weight, distanceMode);
+                        ChemicalSynapse syn = pre.CreateChemicalSynapse(post, coreType, paramValues, distanceMode);
                         syn.SetDelay(delay_ms);
                         if (fixedduration_ms != null)
                             syn.SetFixedDuration((double)fixedduration_ms);

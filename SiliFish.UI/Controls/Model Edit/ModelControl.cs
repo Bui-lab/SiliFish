@@ -828,7 +828,7 @@ namespace SiliFish.UI.Controls
                 InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
-                ipControl.WriteDataToControl(modelTemplate.CellPoolTemplates, interPoolTemplate, modelTemplate);
+                ipControl.WriteDataToControl(modelTemplate.CellPoolTemplates, interPoolTemplate);
                 if (setSource && SelectedPoolTemplate != null)
                     ipControl.SetSourcePool(SelectedPoolTemplate);
                 if (setTarget && SelectedPoolTemplate != null)
@@ -939,8 +939,7 @@ namespace SiliFish.UI.Controls
         }
         private void listConnections_ItemView(object sender, EventArgs e)
         {
-            InterPoolBase jnc = sender as InterPoolBase;
-            if (jnc == null) return;
+            if (sender is not InterPoolBase jnc) return;
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, false);
             if (jncs != null && jncs.Any())
             {
