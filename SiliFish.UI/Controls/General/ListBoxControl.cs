@@ -190,6 +190,7 @@ namespace SiliFish.UI.Controls
         private void miShowAll_Click(object sender, EventArgs e)
         {
             foreach (int ind in HiddenItems.Keys.OrderBy(k => k))
+                //listBox.Items.Add(HiddenItems[ind]);
                 listBox.Items.Insert(ind, HiddenItems[ind]);
             HiddenItems.Clear();
         }

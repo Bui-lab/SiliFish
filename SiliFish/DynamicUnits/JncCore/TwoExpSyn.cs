@@ -62,8 +62,14 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             return errors.Count == 0;
         }
-        public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, ModelSettings settings)
+        public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, ModelSettings settings, bool excitatory)
         {
+            if (!settings.AllowReverseCurrent && (excitatory && vPost>ERev || !excitatory && vPost < ERev))
+            {
+                //iSyn = 0;
+                return iSyn;
+            }
+                
             double g_t = 0;
 
             double threshold = Math.Max(tLastSignificantSpike, tCurrent - settings.ThresholdMultiplier * (TauR + TauDFast + TauDSlow));

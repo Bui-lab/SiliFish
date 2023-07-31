@@ -53,7 +53,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         [Description("If set to 'false', the negative currents in excitatory synapses and positive currents in inhibitory synapses will be zeroed out."),
             DisplayName("Allow Reverse Current"),
-            Category("Dynamics - Chem Syn")]
+            Category("Dynamics - Two Exp Syn")]
         public bool AllowReverseCurrent{ get; set; } = true;
 
         [Description("The number of spikes that would be considered in calculating the current conductance of a synapse. " +

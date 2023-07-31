@@ -194,13 +194,8 @@ namespace SiliFish.ModelUnits.Junction
             bool excitatory = PreNeuron.CellPool.NTMode == NeuronClass.Glutamatergic || PreNeuron.CellPool.NTMode == NeuronClass.Cholinergic;
             double ISyn;
             ModelSettings modelSettings = PreNeuron.Model.Settings;
-            if (!modelSettings.AllowReverseCurrent && (Core as ChemSynapseCore).CausesReverseCurrent(vPost, excitatory))
-                ISyn = 0;
-            else
-            {
-                List<double> spikeArrivalTimes = PreNeuron.SpikeTrain.Select(t => (t + tt) * Core.DeltaT).ToList();
-                ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, spikeArrivalTimes, tIndex * Core.DeltaT, modelSettings);
-            }
+            List<double> spikeArrivalTimes = PreNeuron.SpikeTrain.Select(t => (t + tt) * Core.DeltaT).ToList();
+            ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, spikeArrivalTimes, tIndex * Core.DeltaT, modelSettings, excitatory);
             if (inputCurrent != null)
                 inputCurrent[tIndex] = ISyn;
         }
