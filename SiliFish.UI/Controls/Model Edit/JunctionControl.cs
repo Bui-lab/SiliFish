@@ -23,7 +23,6 @@ namespace SiliFish.UI.Controls
         public JunctionControl(RunningModel model)
         {
             InitializeComponent();
-            //TODO coretype is not handled
             Model = model;
 
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
