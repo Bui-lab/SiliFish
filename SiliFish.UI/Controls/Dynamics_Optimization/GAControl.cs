@@ -588,6 +588,9 @@ namespace SiliFish.UI.Controls
             btnOptimizeNext.Enabled = true;
             Parameters = exhaustiveBestParameters[--exhaustiveBestSolverIterator].Parameters;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
+            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
+            double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
+            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}"; 
             if (exhaustiveBestSolverIterator == 0)
                 btnOptimizePrev.Enabled = false;
         }
@@ -598,6 +601,9 @@ namespace SiliFish.UI.Controls
             btnOptimizePrev.Enabled = true;
             Parameters = exhaustiveBestParameters[++exhaustiveBestSolverIterator].Parameters;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
+            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
+            double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
+            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
             if (exhaustiveBestSolverIterator == exhaustiveBestParameters.Count - 1)
                 btnOptimizeNext.Enabled = false;
         }

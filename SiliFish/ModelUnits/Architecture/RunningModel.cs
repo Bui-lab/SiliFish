@@ -813,7 +813,7 @@ namespace SiliFish.ModelUnits.Architecture
                     if (CancelRun)
                     {
                         CancelRun = false;
-                        return;
+                        break;
                     }
                     CalculateCellularOutputs(index);
                     CalculateMembranePotentialsFromCurrents(index);
