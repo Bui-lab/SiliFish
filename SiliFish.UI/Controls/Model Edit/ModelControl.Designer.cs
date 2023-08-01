@@ -163,6 +163,7 @@
             // eModelJSON
             // 
             eModelJSON.AcceptsTab = true;
+            eModelJSON.Dock = DockStyle.Fill;
             eModelJSON.Location = new Point(0, 40);
             eModelJSON.Name = "eModelJSON";
             eModelJSON.Size = new Size(682, 515);

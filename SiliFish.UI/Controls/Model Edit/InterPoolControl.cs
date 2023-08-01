@@ -356,7 +356,9 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            interPoolTemplate.Parameters = ChemSynapseCore.GetParameters(coreType);
+            interPoolTemplate.Parameters = interPoolTemplate.ConnectionType == ConnectionType.Gap ?
+                ElecSynapseCore.GetParameters(coreType):
+                ChemSynapseCore.GetParameters(coreType);
             ParamDictToGrid();
         }
 

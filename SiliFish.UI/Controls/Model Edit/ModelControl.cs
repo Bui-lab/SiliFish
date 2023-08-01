@@ -752,7 +752,7 @@ namespace SiliFish.UI.Controls
                     .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
                 foreach (InterPool ip in gapInterPools)
                 {
-                    listGap.AppendItem (ip);
+                    listGap.AppendItem(ip);
                 }
             }
             else

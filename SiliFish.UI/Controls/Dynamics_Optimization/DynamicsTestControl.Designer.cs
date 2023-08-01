@@ -814,6 +814,7 @@
             webViewPlots.Dock = DockStyle.Fill;
             webViewPlots.Location = new Point(0, 0);
             webViewPlots.Name = "webViewPlots";
+            webViewPlots.Padding = new Padding(5, 0, 0, 0);
             webViewPlots.Size = new Size(904, 260);
             webViewPlots.TabIndex = 0;
             webViewPlots.ZoomFactor = 1D;
