@@ -34,7 +34,7 @@ namespace SiliFish.ModelUnits.Junction
         public Cell PostCell; //can be a neuron or a muscle cell
 
         [JsonIgnore]
-        public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}; {Core.Identifier}"; } }
+        public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}"; } }
 
         public override List<string> ExportValues()
         {

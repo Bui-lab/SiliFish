@@ -49,20 +49,22 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
             if (gapJunctions != null)
             {
+                bool useIdentifier = gapJunctions.GroupBy(j => j.ID).Count() != gapJunctions.Count;
                 foreach (GapJunction jnc in gapJunctions)
                 {
                     colorPerChart.Add(jnc.Cell1.CellPool.Color.ToRGBQuoted());
-                    columnTitles += jnc.ID + ",";
+                    columnTitles += $"{jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
             }
             if (synapses != null)
             {
+                bool useIdentifier = synapses.GroupBy(j => j.ID).Count() != synapses.Count;
                 foreach (ChemicalSynapse jnc in synapses)
                 {
                     colorPerChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
-                    columnTitles += jnc.ID + ",";
+                    columnTitles += $"{jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         data[i] += jnc.InputCurrent?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
@@ -74,7 +76,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             Chart chart = new()
             {
                 CsvData = csvData,
-                Title = $"`{columnTitles[5..]}`",
+                Title = $"`{columnTitles[5..].TrimEnd(',')}`",
                 Color = string.Join(',', colorPerChart),
                 yLabel = $"`Current ({ampere})`",
                 yMin = yMin,

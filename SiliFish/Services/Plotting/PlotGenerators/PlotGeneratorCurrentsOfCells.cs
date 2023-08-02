@@ -119,11 +119,13 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
                     if (includeGap)
                     {
-                        foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell))
+                        List<GapJunction> gapJunctions = cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell).ToList();
+                        bool useIdentifier = gapJunctions.GroupBy(j => j.ID).Count() != gapJunctions.Count;
+                        foreach (GapJunction jnc in gapJunctions)
                         {
                             gapExists = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            gapTitle += $"Gap: {jnc.ID},";
+                            gapTitle += $"Gap: {jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
                             colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
@@ -134,13 +136,14 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         List<ChemicalSynapse> synapses = null;
                         if (cell is Neuron neuron) synapses = neuron.Synapses;
                         else if (cell is MuscleCell muscleCell) synapses = muscleCell.EndPlates;
+                        bool useIdentifier = synapses.GroupBy(j => j.ID).Count() != synapses.Count;
                         foreach (ChemicalSynapse jnc in synapses)
                         {
                             synInExists = true;
                             if (combineCells)
                                 synInTitle += jnc.ID + ",";
                             else
-                                synInTitle += $"{jnc.PreNeuron.ID} {jnc.Core.Identifier} ,";
+                                synInTitle += $"{jnc.PreNeuron.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")} ,";
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
@@ -150,13 +153,14 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     {
                         if (cell is Neuron neuron2)
                         {
+                            bool useIdentifier = neuron2.Terminals.GroupBy(j => j.ID).Count() != neuron2.Terminals.Count;
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
                             {
                                 synOutExists = true;
                                 if (combineCells)
                                     synOutTitle += jnc.ID + ",";
                                 else 
-                                    synOutTitle += $"{jnc.PostCell.ID} {jnc.Core.Identifier} ,";
+                                    synOutTitle += $"{jnc.PostCell.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")} ,";
                                 colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                     synOutData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";

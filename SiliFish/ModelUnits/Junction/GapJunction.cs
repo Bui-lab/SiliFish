@@ -51,7 +51,7 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         [JsonIgnore]
-        public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}; {Core.Identifier}"; } }
+        public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}"; } }
 
         public override List<string> ExportValues()
         {

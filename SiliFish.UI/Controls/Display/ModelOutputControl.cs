@@ -23,6 +23,7 @@ namespace SiliFish.UI.Controls
 {
     public partial class ModelOutputControl : UserControl
     {
+        bool currentPlotWarning = false;
         string errorMessage;
         string htmlAnimation = "";
         string htmlPlot = "";
@@ -523,6 +524,15 @@ namespace SiliFish.UI.Controls
             {
                 string msg = $"Plotting {numOfPlots} charts will use a lot of resources. Do you want to continue?\r\n" +
                     $"(You can set the number of plots that triggers this warning through the 'Settings' button above)";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
+            if (!currentPlotWarning && 
+                !RunningModel.JunctionCurrentTrackingOn && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
+            {
+                currentPlotWarning = true;
+                string msg = $"Plotting current information (including Full Dynamics) will require to regenerate the current arrays for the whole simulation for the selected cells. " +
+                    $"It can use a lot of memory. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
