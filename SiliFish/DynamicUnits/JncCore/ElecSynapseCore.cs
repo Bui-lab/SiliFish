@@ -25,9 +25,9 @@ namespace SiliFish.DynamicUnits.JncCore
             return typeMap.Keys.Where(k => k != nameof(ElecSynapseCore)).ToList();
         }
 
-        public static ElecSynapseCore CreateCore(string coreType, Dictionary<string, double> parameters, double rundt, double eulerdt)
+        public static ElecSynapseCore CreateCore(string coreType, Dictionary<string, double> parameters)
         {
-            ElecSynapseCore core = (ElecSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>(), rundt, eulerdt);
+            ElecSynapseCore core = (ElecSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
             return core;
         }
 
@@ -45,24 +45,17 @@ namespace SiliFish.DynamicUnits.JncCore
         /// <returns></returns>
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
-            ElecSynapseCore core = CreateCore(coreType, null, 0, 0);
+            ElecSynapseCore core = CreateCore(coreType, null);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
         #endregion
 
         public ElecSynapseCore()
         { }
-        public ElecSynapseCore(double rundt, double eulerdt)
-        {
-            DeltaT = rundt;
-            DeltaTEuler = eulerdt;
-        }
 
         public ElecSynapseCore(ElecSynapseCore copyFrom)
         {
-            DeltaT = copyFrom.DeltaT;
-            DeltaTEuler = copyFrom.DeltaTEuler;
-            SetParameters(copyFrom.GetParameters());//TODO - test; if works put parameter collection to the above constructor
+            SetParameters(copyFrom.GetParameters());
         }
 
 
@@ -76,7 +69,7 @@ namespace SiliFish.DynamicUnits.JncCore
         public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
             errors ??= new();
-            ChemSynapseCore core = ChemSynapseCore.CreateCore(coreType, param, 0, 0);
+            ChemSynapseCore core = ChemSynapseCore.CreateCore(coreType, param);
             return core.CheckValues(ref errors);
         }
         public virtual double GetNextVal(double VoltageDiffFrom1To2, double VoltageDiffFrom2To1)

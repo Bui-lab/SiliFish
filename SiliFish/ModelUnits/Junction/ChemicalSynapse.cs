@@ -67,7 +67,7 @@ namespace SiliFish.ModelUnits.Junction
                         parameters.Add(paramkey, paramvalue);
                     }
                 }
-                Core = ChemSynapseCore.CreateCore(coreType, parameters, 0.1, 0.1);//TODO constant values here - FIX!!!!
+                Core = ChemSynapseCore.CreateCore(coreType, parameters);
 
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
@@ -93,7 +93,7 @@ namespace SiliFish.ModelUnits.Junction
         { }
         public ChemicalSynapse(Neuron preN, Cell postN, string coreType, Dictionary<string, double> synParams, DistanceMode distmode)
         {
-            Core = ChemSynapseCore.CreateCore(coreType, synParams, preN.Model.RunParam.DeltaT, preN.Model.RunParam.DeltaTEuler);
+            Core = ChemSynapseCore.CreateCore(coreType, synParams);
 
             PreNeuron = preN;
             PostCell = postN;
@@ -165,9 +165,9 @@ namespace SiliFish.ModelUnits.Junction
         public override void InitForSimulation(int nmax, bool trackCurrent)
         {
             base.InitForSimulation(nmax, trackCurrent);
-            Core.InitForSimulation();
-            
             RunningModel model = PreNeuron.Model;
+            Core.InitForSimulation(model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
+            
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / model.RunParam.DeltaT);
             else

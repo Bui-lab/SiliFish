@@ -46,7 +46,7 @@ namespace SiliFish.Services.Plotting
             List<Cell> muscleCells = cells?.Where(c => c is MuscleCell).ToList();
             if (muscleCells != null && muscleCells.Any())
             {
-                PlotGeneratorTension plotGeneratorTension = new PlotGeneratorTension(this, cells, TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd);
+                PlotGeneratorTension plotGeneratorTension = new (this, cells, TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd);
                 plotGeneratorTension.CreateCharts(charts);
             }
             return charts;
@@ -83,318 +83,6 @@ namespace SiliFish.Services.Plotting
                 if (!string.IsNullOrEmpty(errorMessage))
                     return charts;
             }
-            return charts;
-        }
-
-        //TODO write a PlotGenerator class for Tail Episode charts
-        private List<Chart> CreateTailEpisodeCharts(RunningModel model, int iStart, int iEnd)
-        {
-            List<Chart> charts = new();
-
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
-
-            double[] Time = model.TimeArray[iStart..(iEnd + 1)];
-            double[] xValues = Time;
-            double[] yValues = tail_tip_coord[iStart..(iEnd + 1)].Select(c => c.X).ToArray();
-
-            //Tail Movement
-            string title = "Time,Y-Axis";
-            string[] data = new string[iEnd - iStart + 2];
-            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                data[i] = xValues[i] + "," + yValues[i];
-            string csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-            charts.Add(new Chart
-            {
-                CsvData = csvData,
-                Title = $"`Tail Movement`",
-                yLabel = "`Y-Coordinate`",
-                xMin = Time[0],
-                xMax = Time[^1] + 1,
-                yMin = yValues.Min() - 1,
-                yMax = yValues.Max() + 1
-            });
-
-            if (episodes.Any())
-            {
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
-                title = "Time,Episode Duration";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Episode Duration`",
-                    yLabel = "`Duration (ms)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-
-
-                if (episodes.Count > 1)
-                {
-                    xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
-                    yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
-                    title = "Time,Episode Intervals";
-                    data = new string[episodes.Count];
-                    foreach (int i in Enumerable.Range(0, episodes.Count - 1))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    charts.Add(new Chart
-                    {
-                        CsvData = csvData,
-                        Title = $"`Episode Intervals`",
-                        yLabel = "`Interval (ms)`",
-                        ScatterPlot = true,
-                        xMin = Time[0],
-                        xMax = Time[^1] + 1,
-                        yMin = 0,
-                        yMax = yValues.Max() + 1
-                    });
-                }
-
-                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
-                yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
-                title = "Time,Instant. Freq.";
-                data = new string[xValues.Length];
-                foreach (int i in Enumerable.Range(0, xValues.Length))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Instantenous Frequency`",
-                    yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-
-                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray();
-                if (xValues.Any())
-                {
-                    yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
-                    title = "Time,Instant. Freq.";
-                    data = new string[xValues.Length];
-                    foreach (int i in Enumerable.Range(0, xValues.Length))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    charts.Add(new Chart
-                    {
-                        CsvData = csvData,
-                        Title = $"`Instantenous Frequency (Outliers Removed)`",
-                        yLabel = "`Freq (Hz)`",
-                        ScatterPlot = true,
-                        xMin = Time[0],
-                        xMax = Time[^1] + 1,
-                        yMin = 0,
-                        yMax = yValues.Max() + 1
-                    });
-                }
-
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => e.BeatFrequency).ToArray();
-                title = "Time,Tail Beat Freq.";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Tail Beat Frequency`",
-                    yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
-                title = "Time,Tail Beat/Episode";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Tail Beat/Episode`",
-                    yLabel = "`Count`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-            }
-
-            return charts;
-        }
-
-        //TODO write a PlotGenerator class for MN Episode charts
-        private List<Chart> CreateMNEpisodeCharts(RunningModel model, int somiteNumber, int iStart, int iEnd)
-        {
-            List<Chart> charts = new();
-
-            (List<Cell> LeftMNs, List<Cell> RightMNs) = model.GetMotoNeurons(somiteNumber);
-
-            (double[] mnMaxPotentials, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, LeftMNs, RightMNs);
-
-            double[] Time = model.TimeArray[iStart..(iEnd + 1)];
-            double[] xValues = Time;
-            double[] yValues = mnMaxPotentials;
-
-            //Tail Movement
-            string title = "Time,Y-Axis";
-            string[] data = new string[iEnd - iStart + 2];
-            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                data[i] = xValues[i] + "," + yValues[i];
-            string csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-            charts.Add(new Chart
-            {
-                CsvData = csvData,
-                Title = $"`Tail Movement`",
-                yLabel = "`Y-Coordinate`",
-                xMin = Time[0],
-                xMax = Time[^1] + 1,
-                yMin = yValues.Min() - 1,
-                yMax = yValues.Max() + 1
-            });
-
-            if (episodes.Any())
-            {
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
-                title = "Time,Episode Duration";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Episode Duration`",
-                    yLabel = "`Duration (ms)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-
-
-                if (episodes.Count > 1)
-                {
-                    xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
-                    yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
-                    title = "Time,Episode Intervals";
-                    data = new string[episodes.Count];
-                    foreach (int i in Enumerable.Range(0, episodes.Count - 1))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    charts.Add(new Chart
-                    {
-                        CsvData = csvData,
-                        Title = $"`Episode Intervals`",
-                        yLabel = "`Interval (ms)`",
-                        ScatterPlot = true,
-                        xMin = Time[0],
-                        xMax = Time[^1] + 1,
-                        yMin = 0,
-                        yMax = yValues.Max() + 1
-                    });
-                }
-
-                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
-                yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
-                title = "Time,Instant. Freq.";
-                data = new string[xValues.Length];
-                foreach (int i in Enumerable.Range(0, xValues.Length))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Instantenous Frequency`",
-                    yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-
-                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray();
-                if (xValues.Any())
-                {
-                    yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
-                    title = "Time,Instant. Freq.";
-                    data = new string[xValues.Length];
-                    foreach (int i in Enumerable.Range(0, xValues.Length))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    charts.Add(new Chart
-                    {
-                        CsvData = csvData,
-                        Title = $"`Instantenous Frequency (Outliers Removed)`",
-                        yLabel = "`Freq (Hz)`",
-                        ScatterPlot = true,
-                        xMin = Time[0],
-                        xMax = Time[^1] + 1,
-                        yMin = 0,
-                        yMax = yValues.Max() + 1
-                    });
-                }
-
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => e.BeatFrequency).ToArray();
-                title = "Time,Tail Beat Freq.";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Tail Beat Frequency`",
-                    yLabel = "`Freq (Hz)`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
-                title = "Time,Tail Beat/Episode";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
-                    data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                charts.Add(new Chart
-                {
-                    CsvData = csvData,
-                    Title = $"`Tail Beat/Episode`",
-                    yLabel = "`Count`",
-                    ScatterPlot = true,
-                    xMin = Time[0],
-                    xMax = Time[^1] + 1,
-                    yMin = 0,
-                    yMax = yValues.Max() + 1
-                });
-            }
-
             return charts;
         }
 
@@ -482,7 +170,7 @@ namespace SiliFish.Services.Plotting
                     break;
                 case PlotType.Stimuli:
                     Title = "Applied Stimulus";
-                    PlotGeneratorStimuli pg5 = new PlotGeneratorStimuli(this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd, UoM);
+                    PlotGeneratorStimuli pg5 = new (this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd, UoM);
                     pg5.CreateCharts(charts);
                     break;
                 case PlotType.FullDyn:
@@ -494,20 +182,23 @@ namespace SiliFish.Services.Plotting
                     List<Cell> muscleCells = Cells.Where(c => c is MuscleCell).ToList();
                     if (muscleCells.Any())
                     {
-                        PlotGeneratorTension plotGeneratorTension = new PlotGeneratorTension(this, muscleCells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd);
+                        PlotGeneratorTension plotGeneratorTension = new (this, muscleCells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd);
                         plotGeneratorTension.CreateCharts(charts);
                     }
                     break;
                 case PlotType.EpisodesTail:
                     Title = "Tail Beat Episodes";
-                    charts = CreateTailEpisodeCharts(model, iStart, iEnd);
+                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail = new(this, tail_tip_coord, episodes, model.TimeArray, iStart, iEnd);
+                    plotGeneratorEpisodesTail.CreateCharts(charts);
                     break;
                 case PlotType.EpisodesMN:
                     Title = "Motoneuron Episodes";
-                    int somite = model.ModelDimensions.NumberOfSomites;
-                    if (Plot.Selection is PlotSelectionSomite pss)
-                        somite = pss.Somite;
-                    charts = CreateMNEpisodeCharts(model, somite, iStart, iEnd);
+                    int somite = Plot.Selection is PlotSelectionSomite pss ? pss.Somite : model.ModelDimensions.NumberOfSomites;
+                    (List<Cell> LeftMNs, List<Cell> RightMNs) = model.GetMotoNeurons(somite);
+                    (double[] mnMaxPotentials, List<SwimmingEpisode> episodesMN) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, LeftMNs, RightMNs);
+                    PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN = new (this, mnMaxPotentials, episodesMN, model.TimeArray, iStart, iEnd);
+                    plotGeneratorEpisodesMN.CreateCharts(charts);
                     break;
                 default:
                     charts = null;

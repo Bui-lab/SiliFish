@@ -47,7 +47,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     Util.SetYRange(ref yMin, ref yMax);
                 }
                 string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-                Chart chartDataStruct = new Chart
+                Chart chartDataStruct = new()
                 {
                     CsvData = csvData,
                     Color = string.Join(',', colorPerChart),

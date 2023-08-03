@@ -14,7 +14,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorStimuli : PlotGeneratorOfCells
     {
-        private UnitOfMeasure uoM;
+        private readonly UnitOfMeasure uoM;
         public PlotGeneratorStimuli(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd, UnitOfMeasure uoM) :
             base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {

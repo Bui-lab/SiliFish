@@ -29,8 +29,8 @@ namespace SiliFish.DynamicUnits
         public SimpleGap()
         { }
 
-        public SimpleGap(Dictionary<string, double> paramExternal, double rundt, double eulerdt)
-            :base(rundt, eulerdt)
+        public SimpleGap(Dictionary<string, double> paramExternal)
+            :base()
         {
             SetParameters(paramExternal);
         }
@@ -39,8 +39,9 @@ namespace SiliFish.DynamicUnits
             :base(copyFrom)
         {
         }
-        public override void InitForSimulation()
+        public override void InitForSimulation(double deltaT, double deltaTEuler)
         {
+            base.InitForSimulation(deltaT, deltaTEuler);
             ISynA = ISynB = 0;
         }
 

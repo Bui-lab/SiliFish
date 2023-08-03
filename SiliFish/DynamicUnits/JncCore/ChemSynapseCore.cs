@@ -27,9 +27,9 @@ namespace SiliFish.DynamicUnits.JncCore
             return typeMap.Keys.Where(k => k != nameof(ChemSynapseCore)).ToList();
         }
 
-        public static ChemSynapseCore CreateCore(string coreType, Dictionary<string, double> parameters, double rundt, double eulerdt)
+        public static ChemSynapseCore CreateCore(string coreType, Dictionary<string, double> parameters)
         {
-            ChemSynapseCore core = (ChemSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>(), rundt, eulerdt);
+            ChemSynapseCore core = (ChemSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
             return core;
         }
 
@@ -47,18 +47,13 @@ namespace SiliFish.DynamicUnits.JncCore
         /// <returns></returns>
         public static Dictionary<string, Distribution> GetParameters(string coreType)
         {
-            ChemSynapseCore core = CreateCore(coreType, null, 0, 0);
+            ChemSynapseCore core = CreateCore(coreType, null);
             return core?.GetParameters().ToDictionary(kvp => kvp.Key, kvp => new Constant_NoDistribution(kvp.Value) as Distribution);
         }
         #endregion
 
         public ChemSynapseCore()
         { }
-        public ChemSynapseCore(double rundt, double eulerdt)
-        {
-            DeltaT = rundt;
-            DeltaTEuler = eulerdt;
-        }
 
         public ChemSynapseCore(ChemSynapseCore copyFrom)
         {
@@ -79,7 +74,7 @@ namespace SiliFish.DynamicUnits.JncCore
         public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
             errors ??= new();
-            ChemSynapseCore core = CreateCore(coreType, param, 0, 0);
+            ChemSynapseCore core = CreateCore(coreType, param);
             return core.CheckValues(ref errors);
         }
         public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, ModelSettings settings, bool excitatory)

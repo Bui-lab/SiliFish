@@ -81,7 +81,7 @@ namespace SiliFish.ModelUnits.Junction
                         parameters.Add(paramkey, paramvalue);
                     }
                 }
-                Core = ElecSynapseCore.CreateCore(nameof(SimpleGap), parameters, 0.1, 0.1);//TODO constant values here - FIX!!!!
+                Core = ElecSynapseCore.CreateCore(nameof(SimpleGap), parameters);
 
                 Source = values[iter++].Trim();
                 Target = values[iter++].Trim();
@@ -112,7 +112,7 @@ namespace SiliFish.ModelUnits.Junction
             Source = Cell1.ID;
             Target = Cell2.ID;
             DistanceMode = distmode;
-            Core = ElecSynapseCore.CreateCore(coreType, synParams, Cell1.Model.RunParam.DeltaT, Cell1.Model.RunParam.DeltaTEuler);
+            Core = ElecSynapseCore.CreateCore(coreType, synParams);
         }
 
         public GapJunction(GapJunction gapJunction) : base(gapJunction)

@@ -488,7 +488,7 @@ namespace SiliFish.UI.Controls
             if (lastPlot != null &&
                 lastPlot.PlotSubset.Equals(plotsubset) &&
                 lastPlot.PlotType.Equals(PlotType) &&
-                lastPlot.Selection.Equals(plotSelection))//replot the same plot
+                lastPlot.Selection != null && lastPlot.Selection.Equals(plotSelection))//replot the same plot
             {
                 if (lastPlot.Selection is PlotSelectionMultiCells lpsm && plotSelection is PlotSelectionMultiCells psm)
                 {
@@ -498,7 +498,6 @@ namespace SiliFish.UI.Controls
                         psm.CombineJunctions = !lpsm.CombineJunctions;
                     }
                 }
-
             }
             lastPlot = new()
             {

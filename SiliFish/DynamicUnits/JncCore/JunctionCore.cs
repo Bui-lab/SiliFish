@@ -26,9 +26,10 @@ namespace SiliFish.DynamicUnits.JncCore
         
         public double DeltaT, DeltaTEuler;
 
-        public virtual void InitForSimulation()
+        public virtual void InitForSimulation(double deltaT, double deltaTEuler)
         {
-            throw new NotImplementedException();
+            this.DeltaT = deltaT;
+            this.DeltaTEuler = deltaTEuler;
         }
     }
 }

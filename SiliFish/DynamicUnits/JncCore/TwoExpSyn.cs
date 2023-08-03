@@ -36,8 +36,8 @@ namespace SiliFish.DynamicUnits
         }
         public TwoExpSyn()
         { }
-        public TwoExpSyn(Dictionary<string, double> paramExternal, double rundt, double eulerdt)
-            : base( rundt, eulerdt)
+        public TwoExpSyn(Dictionary<string, double> paramExternal)
+            : base()
         {
             SetParameters(paramExternal);
         }
@@ -46,8 +46,9 @@ namespace SiliFish.DynamicUnits
             : base(copyFrom)
         {
         }
-        public override void InitForSimulation()
+        public override void InitForSimulation(double deltaT, double deltaTEuler)
         {
+            base.InitForSimulation(deltaT, deltaTEuler);
             iSyn = 0;
             tLastSignificantSpike = -1;
         }

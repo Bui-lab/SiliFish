@@ -13,9 +13,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorCurrentsOfJunctions : PlotGeneratorBase
     {
-        List<GapJunction> gapJunctions;
-        List<ChemicalSynapse> synapses;
-        private UnitOfMeasure uoM;
+        readonly List<GapJunction> gapJunctions;
+        readonly List<ChemicalSynapse> synapses;
+        private readonly UnitOfMeasure uoM;
         public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses,
             double[] timeArray, int iStart, int iEnd, UnitOfMeasure uoM) :
             base(plotGenerator, timeArray, iStart, iEnd)

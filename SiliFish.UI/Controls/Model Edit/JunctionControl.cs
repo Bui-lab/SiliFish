@@ -15,7 +15,7 @@ namespace SiliFish.UI.Controls
     public partial class JunctionControl : UserControl
     {
         private JunctionBase junction;
-        private RunningModel Model;
+        private readonly RunningModel Model;
         private CellPool sourcePool, targetPool;
         private Cell sourceCell;
         private Cell targetCell;

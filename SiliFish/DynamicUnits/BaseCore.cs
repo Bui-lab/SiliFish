@@ -12,11 +12,6 @@ namespace SiliFish.DynamicUnits
 {
     abstract public class BaseCore
     {
-
-
-
-
-
         [JsonIgnore, Browsable(false)]
         public Dictionary<string, double> Parameters
         {
