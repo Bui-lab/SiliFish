@@ -101,7 +101,7 @@ namespace SiliFish.UI.Controls
                 }
                 interPoolTemplate.Parameters["ERev"] = new Constant_NoDistribution(EReversal);
             }
-            interPoolTemplate.PoolSource = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
+            interPoolTemplate.SourcePool = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
         }
         private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
@@ -114,7 +114,7 @@ namespace SiliFish.UI.Controls
 
         private void LoadSelectedTargetValues()
         {
-            interPoolTemplate.PoolTarget = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
+            interPoolTemplate.TargetPool = ddTargetPool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
         }
         private void ParamDictToGrid()
@@ -262,8 +262,8 @@ namespace SiliFish.UI.Controls
             {
                 this.interPoolTemplate = interPoolTemplate;
                 ConnectionType jnc = interPoolTemplate.ConnectionType;
-                SetDropDownValue(ddSourcePool, interPoolTemplate.PoolSource);
-                SetDropDownValue(ddTargetPool, interPoolTemplate.PoolTarget);
+                SetDropDownValue(ddSourcePool, interPoolTemplate.SourcePool);
+                SetDropDownValue(ddTargetPool, interPoolTemplate.TargetPool);
                 ddAxonReachMode.Text = interPoolTemplate.AxonReachMode.ToString();
                 interPoolTemplate.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
                 ddConnectionType.Text = interPoolTemplate.ConnectionType.ToString();
@@ -303,8 +303,8 @@ namespace SiliFish.UI.Controls
 
         public InterPoolTemplate ReadDataFromControl()
         {
-            interPoolTemplate.PoolSource = GetDropDownValue(ddSourcePool);
-            interPoolTemplate.PoolTarget = GetDropDownValue(ddTargetPool);
+            interPoolTemplate.SourcePool = GetDropDownValue(ddSourcePool);
+            interPoolTemplate.TargetPool = GetDropDownValue(ddTargetPool);
 
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))

@@ -296,7 +296,7 @@ namespace SiliFish.ModelUnits.Cells
             if (AscendingAxonLength == null)
             {
                 List<InterPoolTemplate> ascIPT = model.InterPoolTemplates
-                    .Where(ipt => ipt.PoolSource == CellGroup && ipt.CellReach.Ascending).ToList();
+                    .Where(ipt => ipt.SourcePool == CellGroup && ipt.CellReach.Ascending).ToList();
                 double ascending = ascIPT!=null &&  ascIPT.Any() ? ascIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
                 if (!double.IsNaN(ascending))
                     AscendingAxonLength = new Constant_NoDistribution(ascending);
@@ -304,7 +304,7 @@ namespace SiliFish.ModelUnits.Cells
             if (DescendingAxonLength == null)
             {
                 List<InterPoolTemplate> descIPT = model.InterPoolTemplates
-                    .Where(ipt => ipt.PoolSource == CellGroup && ipt.CellReach.Descending).ToList();
+                    .Where(ipt => ipt.SourcePool == CellGroup && ipt.CellReach.Descending).ToList();
                 double descending = descIPT != null && descIPT.Any() ? descIPT.Max(ipt => ipt.CellReach.MaxDescReach) : double.NaN;
                 if (!double.IsNaN(descending))
                     DescendingAxonLength = new Constant_NoDistribution(descending);

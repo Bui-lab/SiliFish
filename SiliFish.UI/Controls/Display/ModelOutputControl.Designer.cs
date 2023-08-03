@@ -42,14 +42,15 @@
             cmiPlotImageSave = new ToolStripMenuItem();
             pictureBoxRight = new PictureBox();
             pPlot = new Panel();
+            btnPlotHTML = new Button();
+            cmPlot = new ContextMenuStrip(components);
+            cmiNonInteractivePlot = new ToolStripMenuItem();
+            ddPlot = new ComboBox();
             listPlotHistory = new HistoryListControl();
             cellSelectionPlot = new Display.CellSelectionControl();
             cbPlotHistory = new CheckBox();
             linkExportPlotData = new LinkLabel();
             pLinePlots = new Panel();
-            btnPlotHTML = new Button();
-            cmPlot = new ContextMenuStrip(components);
-            cmiNonInteractivePlot = new ToolStripMenuItem();
             linkSaveHTMLPlots = new LinkLabel();
             ePlotEnd = new NumericUpDown();
             ePlotStart = new NumericUpDown();
@@ -58,7 +59,6 @@
             lPlotEnd = new Label();
             lms2 = new Label();
             lPlotPlot = new Label();
-            ddPlot = new ComboBox();
             t2DRender = new TabPage();
             gr2DLegend = new GroupBox();
             label1 = new Label();
@@ -357,6 +357,47 @@
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
             // 
+            // btnPlotHTML
+            // 
+            btnPlotHTML.BackColor = Color.FromArgb(96, 125, 139);
+            btnPlotHTML.ContextMenuStrip = cmPlot;
+            btnPlotHTML.Enabled = false;
+            btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
+            btnPlotHTML.FlatStyle = FlatStyle.Flat;
+            btnPlotHTML.ForeColor = Color.White;
+            btnPlotHTML.Location = new Point(446, 5);
+            btnPlotHTML.Name = "btnPlotHTML";
+            btnPlotHTML.Size = new Size(75, 24);
+            btnPlotHTML.TabIndex = 52;
+            btnPlotHTML.Text = "Plot";
+            btnPlotHTML.UseVisualStyleBackColor = false;
+            btnPlotHTML.Click += btnPlotHTML_Click;
+            // 
+            // cmPlot
+            // 
+            cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot });
+            cmPlot.Name = "cmPlot";
+            cmPlot.Size = new Size(182, 26);
+            // 
+            // cmiNonInteractivePlot
+            // 
+            cmiNonInteractivePlot.Name = "cmiNonInteractivePlot";
+            cmiNonInteractivePlot.Size = new Size(181, 22);
+            cmiNonInteractivePlot.Text = "Non-interactive plot";
+            cmiNonInteractivePlot.Click += cmiNonInteractivePlot_Click;
+            // 
+            // ddPlot
+            // 
+            ddPlot.BackColor = Color.White;
+            ddPlot.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddPlot.FlatStyle = FlatStyle.Flat;
+            ddPlot.FormattingEnabled = true;
+            ddPlot.Location = new Point(278, 6);
+            ddPlot.Name = "ddPlot";
+            ddPlot.Size = new Size(165, 23);
+            ddPlot.TabIndex = 34;
+            ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
+            // 
             // listPlotHistory
             // 
             listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -384,7 +425,7 @@
             cbPlotHistory.AutoSize = true;
             cbPlotHistory.Checked = true;
             cbPlotHistory.CheckState = CheckState.Checked;
-            cbPlotHistory.Location = new Point(644, 10);
+            cbPlotHistory.Location = new Point(644, 8);
             cbPlotHistory.Name = "cbPlotHistory";
             cbPlotHistory.Size = new Size(93, 19);
             cbPlotHistory.TabIndex = 65;
@@ -395,7 +436,7 @@
             // 
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(584, 11);
+            linkExportPlotData.Location = new Point(584, 10);
             linkExportPlotData.Name = "linkExportPlotData";
             linkExportPlotData.Size = new Size(54, 15);
             linkExportPlotData.TabIndex = 59;
@@ -413,42 +454,13 @@
             pLinePlots.Size = new Size(688, 1);
             pLinePlots.TabIndex = 58;
             // 
-            // btnPlotHTML
-            // 
-            btnPlotHTML.BackColor = Color.FromArgb(96, 125, 139);
-            btnPlotHTML.ContextMenuStrip = cmPlot;
-            btnPlotHTML.Enabled = false;
-            btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
-            btnPlotHTML.FlatStyle = FlatStyle.Flat;
-            btnPlotHTML.ForeColor = Color.White;
-            btnPlotHTML.Location = new Point(446, 6);
-            btnPlotHTML.Name = "btnPlotHTML";
-            btnPlotHTML.Size = new Size(75, 24);
-            btnPlotHTML.TabIndex = 52;
-            btnPlotHTML.Text = "Plot";
-            btnPlotHTML.UseVisualStyleBackColor = false;
-            btnPlotHTML.Click += btnPlotHTML_Click;
-            // 
-            // cmPlot
-            // 
-            cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot });
-            cmPlot.Name = "cmPlot";
-            cmPlot.Size = new Size(182, 26);
-            // 
-            // cmiNonInteractivePlot
-            // 
-            cmiNonInteractivePlot.Name = "cmiNonInteractivePlot";
-            cmiNonInteractivePlot.Size = new Size(181, 22);
-            cmiNonInteractivePlot.Text = "Non-interactive plot";
-            cmiNonInteractivePlot.Click += cmiNonInteractivePlot_Click;
-            // 
             // linkSaveHTMLPlots
             // 
             linkSaveHTMLPlots.Enabled = false;
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTMLPlots.Location = new Point(546, 10);
+            linkSaveHTMLPlots.Location = new Point(539, 10);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
-            linkSaveHTMLPlots.Size = new Size(51, 18);
+            linkSaveHTMLPlots.Size = new Size(51, 15);
             linkSaveHTMLPlots.TabIndex = 53;
             linkSaveHTMLPlots.TabStop = true;
             linkSaveHTMLPlots.Text = "Save";
@@ -479,7 +491,7 @@
             // lPlotStart
             // 
             lPlotStart.AutoSize = true;
-            lPlotStart.Location = new Point(12, 8);
+            lPlotStart.Location = new Point(12, 10);
             lPlotStart.Name = "lPlotStart";
             lPlotStart.Size = new Size(55, 15);
             lPlotStart.TabIndex = 11;
@@ -488,7 +500,7 @@
             // lms1
             // 
             lms1.AutoSize = true;
-            lms1.Location = new Point(180, 8);
+            lms1.Location = new Point(180, 10);
             lms1.Name = "lms1";
             lms1.Size = new Size(31, 15);
             lms1.TabIndex = 13;
@@ -515,23 +527,12 @@
             // lPlotPlot
             // 
             lPlotPlot.AutoSize = true;
-            lPlotPlot.Location = new Point(217, 8);
+            lPlotPlot.Location = new Point(217, 10);
             lPlotPlot.Name = "lPlotPlot";
             lPlotPlot.Size = new Size(28, 15);
             lPlotPlot.TabIndex = 19;
             lPlotPlot.Text = "Plot";
-            // 
-            // ddPlot
-            // 
-            ddPlot.BackColor = Color.White;
-            ddPlot.DropDownStyle = ComboBoxStyle.DropDownList;
-            ddPlot.FlatStyle = FlatStyle.Flat;
-            ddPlot.FormattingEnabled = true;
-            ddPlot.Location = new Point(278, 5);
-            ddPlot.Name = "ddPlot";
-            ddPlot.Size = new Size(165, 23);
-            ddPlot.TabIndex = 34;
-            ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
+            lPlotPlot.DoubleClick += lPlotPlot_DoubleClick;
             // 
             // t2DRender
             // 

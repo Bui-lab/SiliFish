@@ -391,7 +391,7 @@ namespace SiliFish.UI.Controls
             tPlotEnd = (int)ePlotEnd.Value;
             if (tPlotEnd > RunningModel.RunParam.MaxTime)
                 tPlotEnd = RunningModel.RunParam.MaxTime;
-            
+
             cellSelectionPlot.SetPlot(plot);
             if (plot.Selection is PlotSelectionUnits selectedUnits)
                 SetEnablesBasedOnPlot();
@@ -526,7 +526,7 @@ namespace SiliFish.UI.Controls
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
-            if (!currentPlotWarning && 
+            if (!currentPlotWarning &&
                 !RunningModel.JunctionCurrentTrackingOn && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
             {
                 currentPlotWarning = true;
@@ -1202,6 +1202,18 @@ namespace SiliFish.UI.Controls
             }
             linkExportSpikes.Enabled = true;
             UseWaitCursor = false;
+        }
+
+        /// <summary>
+        /// hidden feature
+        /// to reset the plot selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lPlotPlot_DoubleClick(object sender, EventArgs e)
+        {
+            ddPlot.SelectedIndex = 1;
+            cellSelectionPlot.ResetSelection();
         }
 
     }

@@ -353,5 +353,18 @@ namespace SiliFish.UI.Controls.Display
             return selection;
         }
 
+        internal void ResetSelection()
+        {
+            try
+            {
+                ddSagittal.SelectedItem = SagittalPlane.Both;
+                ddSomiteSelection.SelectedItem = PlotSomiteSelection.All;
+                ddCellSelection.SelectedItem = PlotCellSelection.Spiking;
+                cbCombineCells.Checked = true;
+                cbCombineSomites.Checked = true;
+                cbCombinePools.Checked = false;
+            }
+            catch { }
+        }
     }
 }

@@ -17,7 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.ModelUnits.Architecture
 {
@@ -224,11 +226,11 @@ namespace SiliFish.ModelUnits.Architecture
             #region Generate Gap Junctions and Chemical Synapses
             foreach (InterPoolTemplate jncTemp in swimmingModelTemplate.InterPoolTemplates.Where(ip => ip.JncActive))
             {
-                CellPool leftSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.PoolSource && np.PositionLeftRight == SagittalPlane.Right);
+                CellPool leftSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.SourcePool && np.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightSource = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == jncTemp.SourcePool && np.PositionLeftRight == SagittalPlane.Right);
 
-                CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Left);
-                CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.PoolTarget && mp.PositionLeftRight == SagittalPlane.Right);
+                CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.TargetPool && mp.PositionLeftRight == SagittalPlane.Left);
+                CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.TargetPool && mp.PositionLeftRight == SagittalPlane.Right);
 
                 if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
                 {
@@ -685,6 +687,17 @@ namespace SiliFish.ModelUnits.Architecture
                 if (unitsSelection.Units?.FirstOrDefault() is CellPool)
                 {
                     pools = unitsSelection.Units.Where(c => c is CellPool).Cast<CellPool>().ToList();
+                }
+                if (unitsSelection.Units?.FirstOrDefault() is InterPool)
+                {
+                    List<InterPool> interpools = unitsSelection.Units.Where(x => x is InterPool).Cast<InterPool>().ToList();
+                    if (interpools.Any())
+                    {
+                        pools = new();
+                        foreach (InterPool ip in interpools)
+                            pools.AddRange(CellPools.Where(c => c.ID == ip.SourcePool || c.ID == ip.TargetPool).ToList());
+                        pools = pools.Distinct().ToList();
+                    }
                 }
             }
             if (cellSelection is PlotSelectionMultiCells mcs)

@@ -32,6 +32,9 @@ namespace SiliFish.ModelUnits.Junction
         public string Source { get; set; }
         public string Target { get; set; }
 
+        public virtual string SourcePool { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public virtual string TargetPool { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } = 

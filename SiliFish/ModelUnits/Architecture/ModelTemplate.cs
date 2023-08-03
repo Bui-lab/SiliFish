@@ -69,8 +69,8 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override bool RemoveCellPool(CellPoolTemplate cellPool)
         {
-            InterPoolTemplates.RemoveAll(ipt => ipt.PoolSource == cellPool.CellGroup);
-            InterPoolTemplates.RemoveAll(ipt => ipt.PoolTarget == cellPool.CellGroup);
+            InterPoolTemplates.RemoveAll(ipt => ipt.SourcePool == cellPool.CellGroup);
+            InterPoolTemplates.RemoveAll(ipt => ipt.TargetPool == cellPool.CellGroup);
             StimulusTemplates.RemoveAll(s => s.TargetPool == cellPool.CellGroup);
             return CellPoolTemplates.Remove(cellPool);
         }
@@ -124,12 +124,12 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override void SortJunctionsBySource()
         {
-            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.PoolSource).ToList();
+            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.SourcePool).ToList();
         }
 
         public override void SortJunctionsByTarget()
         {
-            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.PoolTarget).ToList();
+            InterPoolTemplates = InterPoolTemplates.OrderBy(jnc => jnc.TargetPool).ToList();
         }
 
         public void RemoveJunctions(bool gap, bool chem)
@@ -153,13 +153,13 @@ namespace SiliFish.ModelUnits.Architecture
             }
             if (gap)
                 InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType == ConnectionType.Gap &&
-                    (jnc.PoolTarget == cpt.CellGroup || jnc.PoolSource == cpt.CellGroup));
+                    (jnc.TargetPool == cpt.CellGroup || jnc.SourcePool == cpt.CellGroup));
             if (chemin)
                 InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap &&
-                    jnc.PoolTarget == cpt.CellGroup);
+                    jnc.TargetPool == cpt.CellGroup);
             if (chemout)
                 InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap &&
-                    jnc.PoolSource == cpt.CellGroup);
+                    jnc.SourcePool == cpt.CellGroup);
         }
         #endregion
 
@@ -220,8 +220,8 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public void LinkObjects(InterPoolTemplate jnc)
         {
-            jnc.linkedSource = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.PoolSource);
-            jnc.linkedTarget = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.PoolTarget);
+            jnc.linkedSource = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.SourcePool);
+            jnc.linkedTarget = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.TargetPool);
         }
 
         public override bool CheckValues(ref List<string> errors)
@@ -242,19 +242,19 @@ namespace SiliFish.ModelUnits.Architecture
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {
             List<InterPoolTemplate> iptNewList = new();
-            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolSource == poolSource.CellGroup))
+            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.SourcePool == poolSource.CellGroup))
             {
                 InterPoolTemplate iptCopy = new(ipt)
                 {
-                    PoolSource = poolCopyTo.CellGroup
+                    SourcePool = poolCopyTo.CellGroup
                 };
                 iptNewList.Add(iptCopy);
             }
-            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.PoolTarget == poolSource.CellGroup))
+            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.TargetPool == poolSource.CellGroup))
             {
                 InterPoolTemplate iptCopy = new(ipt)
                 {
-                    PoolTarget = poolCopyTo.CellGroup
+                    TargetPool = poolCopyTo.CellGroup
                 };
                 iptNewList.Add(iptCopy);
             }
@@ -266,10 +266,10 @@ namespace SiliFish.ModelUnits.Architecture
                 return true;
             if (CellPoolTemplates.Any(p => p.CellGroup == oldName))
                 return false;
-            foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolSource == oldName))
-                ip.PoolSource = newName;
-            foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.PoolTarget == oldName))
-                ip.PoolTarget = newName;
+            foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.SourcePool == oldName))
+                ip.SourcePool = newName;
+            foreach (InterPoolTemplate ip in InterPoolTemplates.Where(ip => ip.TargetPool == oldName))
+                ip.TargetPool = newName;
             foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.TargetPool == oldName))
                 stim.TargetPool = newName;
             return true;

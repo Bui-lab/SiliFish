@@ -113,6 +113,7 @@ namespace SiliFish.Services.Plotting
                     charts = CreateJunctionCharts(model.TimeArray, junctions, iStart, iEnd, UoM);
                     return ("Junction", charts);
                 }
+
                 List<Stimulus> stims = unitSelection.Units.Where(x => x is Stimulus).Cast<Stimulus>().ToList();
                 if (stims.Any())
                 {

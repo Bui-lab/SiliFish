@@ -53,6 +53,16 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore]
         public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}"; } }
 
+        public override string SourcePool
+        {
+            get => Cell1.CellPool.ID;
+            set { }
+        }
+        public override string TargetPool
+        {
+            get => Cell2.CellPool.ID;
+            set { }
+        }
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(

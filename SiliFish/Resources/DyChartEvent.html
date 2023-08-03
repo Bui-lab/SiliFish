@@ -1,0 +1,6 @@
+﻿div__CHART_INDEX__.addEventListener('wheel', (event) => {
+      event.preventDefault(); // Prevent default scrolling behavior
+
+      const deltaY = event.deltaY;
+      legend__CHART_INDEX__.scrollTop += deltaY; // Adjust the scrollTop property based on the scroll direction
+    });

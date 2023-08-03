@@ -381,6 +381,14 @@ namespace SiliFish.Repositories
                     if (FixSynapseParametersJson(ref json))
                         list.Add("Synapse core parameters");
                 }
+                if (version.Groups[1].Value.CompareTo("\"2.6.2.0\"") < 0)
+                {
+                    if (json.Contains("\"PoolSource\":"))
+                        json = json.Replace("\"PoolSource\":", "\"SourcePool\":");
+                    if (json.Contains("\"PoolTarget\":"))
+                        json = json.Replace("\"PoolTarget\":", "\"TargetPool\":");
+                }
+
             }
             return list;
         }
@@ -892,9 +900,9 @@ namespace SiliFish.Repositories
                 List<InterPoolTemplate> list;
                 if (selectedUnit is CellPoolTemplate cpt)
                     list = modelTemplate.InterPoolTemplates.Where(jnc =>
-                        (gap && jnc.ConnectionType == ConnectionType.Gap && (jnc.PoolSource == cpt.CellGroup || jnc.PoolTarget == cpt.CellGroup)) ||
-                        (chemout && jnc.ConnectionType != ConnectionType.Gap && jnc.PoolSource == cpt.CellGroup) ||
-                        (chemin && jnc.ConnectionType != ConnectionType.Gap && jnc.PoolTarget == cpt.CellGroup))
+                        (gap && jnc.ConnectionType == ConnectionType.Gap && (jnc.SourcePool == cpt.CellGroup || jnc.TargetPool == cpt.CellGroup)) ||
+                        (chemout && jnc.ConnectionType != ConnectionType.Gap && jnc.SourcePool == cpt.CellGroup) ||
+                        (chemin && jnc.ConnectionType != ConnectionType.Gap && jnc.TargetPool == cpt.CellGroup))
                         .ToList();
                 else
                 {
@@ -937,13 +945,13 @@ namespace SiliFish.Repositories
                     ipt.ImportValues(contents[iter++].Split(",").ToList());
                     //check whether it is part of what 
                     bool jncCheck = gap && ipt.ConnectionType == ConnectionType.Gap &&
-                            (cpt == null || ipt.PoolSource == cpt.CellGroup || ipt.PoolTarget == cpt.CellGroup);
+                            (cpt == null || ipt.SourcePool == cpt.CellGroup || ipt.TargetPool == cpt.CellGroup);
                     if (!jncCheck)
                         jncCheck = chemout && ipt.ConnectionType != ConnectionType.Gap &&
-                            (cpt == null || ipt.PoolSource == cpt.CellGroup);
+                            (cpt == null || ipt.SourcePool == cpt.CellGroup);
                     if (!jncCheck)
                         jncCheck = chemin && ipt.ConnectionType != ConnectionType.Gap &&
-                            (cpt == null || ipt.PoolTarget == cpt.CellGroup);
+                            (cpt == null || ipt.TargetPool == cpt.CellGroup);
                     if (jncCheck)
                         modelTemplate.AddJunction(ipt);
                 }

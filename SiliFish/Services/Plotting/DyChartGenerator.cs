@@ -25,6 +25,7 @@ namespace SiliFish.Services.Plotting
                 StringBuilder plot = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
                 StringBuilder synchronizer = new(ReadEmbeddedText("SiliFish.Resources.DySynchronizer.js"));
                 string chartDiv = ReadEmbeddedText("SiliFish.Resources.DyChartDiv.html");
+                string eventListener = ReadEmbeddedText("SiliFish.Resources.DyChartEvent.html");
 
                 html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
 
@@ -45,12 +46,14 @@ namespace SiliFish.Services.Plotting
                 html.Replace("__WIDTH_PX__", width.ToString());
                 html.Replace("__HEIGHT_PX__", height.ToString());
                 string chartDivs = "";
+                string eventListeners = "";
                 List<string> chartHTML = new();
                 if (charts != null)
                 {
                     foreach (int chartIndex in Enumerable.Range(0, charts.Count))
                     {
                         chartDivs += chartDiv.Replace("__CHART_INDEX__", chartIndex.ToString());
+                        eventListeners += eventListener.Replace("__CHART_INDEX__", chartIndex.ToString());
                         StringBuilder chart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
                         chart.Replace("__CHART_INDEX__", chartIndex.ToString());
                         chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
@@ -70,6 +73,7 @@ namespace SiliFish.Services.Plotting
                     }
                 }
                 html.Replace("__CHART_DIVS__", chartDivs);
+                html.Replace("__DY_LISTENERS__", eventListeners);
                 html.Replace("__CHARTS__", string.Join('\n', chartHTML));
                 html.Replace("__DY_SYNCHRONIZER__", synchronizer.ToString());
 

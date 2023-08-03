@@ -53,7 +53,7 @@ namespace SiliFish.ModelUnits.Junction
             set { base.Active = value; }
         }
 
-        public string PoolSource
+        public override string SourcePool
         {
             get { return poolSource; }
             set
@@ -63,7 +63,7 @@ namespace SiliFish.ModelUnits.Junction
                 if (rename) Name = GeneratedName();
             }
         }
-        public string PoolTarget
+        public override string TargetPool
         {
             get { return poolTarget; }
             set
@@ -111,7 +111,7 @@ namespace SiliFish.ModelUnits.Junction
             {
                 return $"{Name}\r\n" +
                     $"{Description}\r\n" +
-                    $"From {PoolSource} to {PoolTarget}\r\n" +
+                    $"From {SourcePool} to {TargetPool}\r\n" +
                     $"Core:{CoreType}\r\n" +
                     $"\t{string.Join(',', Parameters.Select((k, v) => k + ": " + v))}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
@@ -139,7 +139,7 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
-            Util.CSVEncode(Name), PoolSource, PoolTarget,
+            Util.CSVEncode(Name), SourcePool, TargetPool,
                 AxonReachMode, ConnectionType, CoreType,
                 csvExportCoreValues,
                 DistanceMode,
@@ -155,8 +155,8 @@ namespace SiliFish.ModelUnits.Junction
                 int iter = 0;
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
                 Name = values[iter++].Trim();
-                PoolSource = values[iter++].Trim();
-                PoolTarget = values[iter++].Trim();
+                SourcePool = values[iter++].Trim();
+                TargetPool = values[iter++].Trim();
 
                 AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
                 ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
@@ -230,8 +230,8 @@ namespace SiliFish.ModelUnits.Junction
         {
             Name = ipt.Name;
             Description = ipt.Description;
-            PoolSource = ipt.PoolSource;
-            PoolTarget = ipt.PoolTarget;
+            SourcePool = ipt.SourcePool;
+            TargetPool = ipt.TargetPool;
             CellReach = new CellReach(ipt.CellReach);
             Probability = ipt.Probability;
             AxonReachMode = ipt.AxonReachMode;
@@ -250,9 +250,9 @@ namespace SiliFish.ModelUnits.Junction
         public override int CompareTo(ModelUnitBase otherbase)
         {
             InterPoolTemplate other = otherbase as InterPoolTemplate;
-            int c = this.PoolSource.CompareTo(other.PoolSource);
+            int c = this.SourcePool.CompareTo(other.SourcePool);
             if (c != 0) return c;
-            c = this.PoolTarget.CompareTo(other.PoolTarget);
+            c = this.TargetPool.CompareTo(other.TargetPool);
             if (c != 0) return c;
             return this.ConnectionType.CompareTo(other.ConnectionType);
         }
@@ -269,7 +269,7 @@ namespace SiliFish.ModelUnits.Junction
         }
         public string GeneratedName()
         {
-            return $"{(!string.IsNullOrEmpty(PoolSource) ? PoolSource : "__")}-->{(!string.IsNullOrEmpty(PoolTarget) ? PoolTarget : "__")}";
+            return $"{(!string.IsNullOrEmpty(SourcePool) ? SourcePool : "__")}-->{(!string.IsNullOrEmpty(TargetPool) ? TargetPool : "__")}";
         }
 
         internal void BackwardCompatibility()

@@ -684,18 +684,36 @@ namespace SiliFish.UI.Controls
             lGapTitle.Text = "Gap Junctions";
             splitChemicalJunctions.Panel1Collapsed = true;
             if (Model == null) return;
-            List<InterPoolBase> chemJunctions = Model.GetChemicalProjections();
-            if (chemJunctions.Count > GlobalSettings.MaxNumberOfUnits)
-                listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
-            else
-                foreach (object jnc in chemJunctions)
-                    listOutgoing.AppendItem(jnc);
-            List<InterPoolBase> gapJunctions = Model.GetGapProjections();
-            if (gapJunctions.Count > GlobalSettings.MaxNumberOfUnits)
-                listGap.AppendItem("Please select a cell pool to list junctions under...");
-            else
-                foreach (object jnc in gapJunctions)
-                    listGap.AppendItem(jnc);
+            if (Model is RunningModel rm)
+            {
+                List<InterPool> chemInterPools = rm.ChemPoolConnections.ToList();
+                if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                    listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+                else
+                    foreach (object jnc in chemInterPools)
+                        listOutgoing.AppendItem(jnc);
+                List<InterPool> gapInterPools = rm.GapPoolConnections.ToList();
+                if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                    listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+                else
+                    foreach (object jnc in gapInterPools)
+                        listGap.AppendItem(jnc);
+            }
+            else if (Model is ModelTemplate mt)
+            {
+                List<InterPoolTemplate> chemInterPools = mt.InterPoolTemplates.Where(jnc =>jnc.ConnectionType != ConnectionType.Gap).ToList();
+                if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                    listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+                else
+                    foreach (object jnc in chemInterPools)
+                        listOutgoing.AppendItem(jnc);
+                List<InterPoolTemplate> gapInterPools = mt.InterPoolTemplates.Where(jnc => jnc.ConnectionType == ConnectionType.Gap).ToList();
+                if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                    listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+                else
+                    foreach (object jnc in gapInterPools)
+                        listGap.AppendItem(jnc);
+            }
         }
 
         private void LoadProjections(string cellPoolID)
@@ -712,21 +730,21 @@ namespace SiliFish.UI.Controls
             splitChemicalJunctions.Panel1Collapsed = false;
             if (Model == null || Model is not ModelTemplate) return;
             foreach (InterPoolTemplate jnc in Model.GetChemicalProjections()
-                .Where(proj => ((InterPoolTemplate)proj).PoolSource == cellPoolID)
+                .Where(proj => ((InterPoolTemplate)proj).SourcePool == cellPoolID)
                 .Cast<InterPoolTemplate>())
 
             {
                 listOutgoing.AppendItem(jnc);
             }
             foreach (InterPoolTemplate jnc in Model.GetChemicalProjections()
-                .Where(proj => ((InterPoolTemplate)proj).PoolTarget == cellPoolID)
+                .Where(proj => ((InterPoolTemplate)proj).TargetPool == cellPoolID)
                 .Cast<InterPoolTemplate>())
 
             {
                 listIncoming.AppendItem(jnc);
             }
             foreach (InterPoolTemplate jnc in Model.GetGapProjections()
-                .Where(proj => ((InterPoolTemplate)proj).PoolSource == cellPoolID || ((InterPoolTemplate)proj).PoolTarget == cellPoolID)
+                .Where(proj => ((InterPoolTemplate)proj).SourcePool == cellPoolID || ((InterPoolTemplate)proj).TargetPool == cellPoolID)
                 .Cast<InterPoolTemplate>())
 
             {
@@ -746,21 +764,13 @@ namespace SiliFish.UI.Controls
             splitChemicalJunctions.Panel1Collapsed = false;
             ClearProjections();
             List<JunctionBase> gapJunctions = cp.Projections.Where(j => j is GapJunction).ToList();
-            if (gapJunctions.Count > GlobalSettings.MaxNumberOfUnits)
+            List<InterPool> gapInterPools = (Model as RunningModel).GapPoolConnections
+                .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
+            foreach (InterPool ip in gapInterPools)
             {
-                List<InterPool> gapInterPools = (Model as RunningModel).GapPoolConnections
-                    .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
-                foreach (InterPool ip in gapInterPools)
-                {
-                    listGap.AppendItem(ip);
-                }
+                listGap.AppendItem(ip);
             }
-            else
-                foreach (JunctionBase jnc in gapJunctions)
-                    listGap.AppendItem(jnc);
             List<JunctionBase> chemJunctions = cp.Projections.Where(j => j is not GapJunction).ToList();
-            if (chemJunctions.Count > GlobalSettings.MaxNumberOfUnits)
-            {
                 List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolConnections
                     .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
                 foreach (InterPool ip in chemInterPools)
@@ -769,16 +779,6 @@ namespace SiliFish.UI.Controls
                         listOutgoing.AppendItem(ip);
                     if (ip.TargetPool == cp.ID)
                         listIncoming.AppendItem(ip);
-                }
-            }
-            else
-                foreach (JunctionBase jnc in cp.Projections.Where(j => j is not GapJunction))
-                {
-                    ChemicalSynapse syn = jnc as ChemicalSynapse;
-                    if (syn.PreNeuron.CellPool == cp)
-                        listOutgoing.AppendItem(jnc);
-                    if (syn.PostCell.CellPool == cp)
-                        listIncoming.AppendItem(jnc);
                 }
         }
         private void LoadProjections(Cell cell)
@@ -1059,7 +1059,7 @@ namespace SiliFish.UI.Controls
             }
             else if (obj is InterPoolTemplate ipt)
             {
-                listCellPools.SelectItem(ipt.PoolSource);
+                listCellPools.SelectItem(ipt.SourcePool);
             }
             else if (obj is InterPool ip)
             {
@@ -1078,7 +1078,7 @@ namespace SiliFish.UI.Controls
             }
             else if (obj is InterPoolTemplate ipt)
             {
-                listCellPools.SelectItem(ipt.PoolTarget);
+                listCellPools.SelectItem(ipt.TargetPool);
             }
             else if (obj is InterPool ip)
             {
@@ -1098,7 +1098,7 @@ namespace SiliFish.UI.Controls
             }
             else if (obj is InterPoolTemplate ipt)
             {
-                string otherPool = SelectedPoolTemplate.CellGroup == ipt.PoolTarget ? ipt.PoolSource : ipt.PoolTarget;
+                string otherPool = SelectedPoolTemplate.CellGroup == ipt.TargetPool ? ipt.SourcePool : ipt.TargetPool;
                 listCellPools.SelectItem(otherPool);
             }
         }

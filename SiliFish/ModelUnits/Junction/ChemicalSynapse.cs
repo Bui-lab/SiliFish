@@ -33,6 +33,16 @@ namespace SiliFish.ModelUnits.Junction
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
 
+        public override string SourcePool
+        {
+            get => PreNeuron.CellPool.ID;
+            set { }
+        }
+        public override string TargetPool
+        {
+            get => PostCell.CellPool.ID;
+            set { }
+        }
         [JsonIgnore]
         public override string ID { get { return $"{PreNeuron.ID} → {PostCell.ID}"; } }
 
