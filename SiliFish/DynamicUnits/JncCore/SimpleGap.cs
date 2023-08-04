@@ -55,7 +55,7 @@ namespace SiliFish.DynamicUnits
         //if any other type of gap junction is implemented, this function may need to be modified
         public override double GetNextVal(double VoltageDiffFrom1To2, double VoltageDiffFrom2To1)
         {
-            double VoltageDiff = 0;
+            double VoltageDiff = VoltageDiffFrom2To1 - VoltageDiffFrom1To2;
             return Conductance * VoltageDiff; 
         }
     }
