@@ -349,7 +349,7 @@ namespace SiliFish.UI.Controls
 
         private void splitContainerMain_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            splitContainerMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise
+            splitContainerMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise - still doesn;t work
         }
 
         private void ddCoreType_SelectedIndexChanged(object sender, EventArgs e)
@@ -357,7 +357,7 @@ namespace SiliFish.UI.Controls
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
             interPoolTemplate.Parameters = interPoolTemplate.ConnectionType == ConnectionType.Gap ?
-                ElecSynapseCore.GetParameters(coreType):
+                ElecSynapseCore.GetParameters(coreType) :
                 ChemSynapseCore.GetParameters(coreType);
             ParamDictToGrid();
         }
@@ -366,6 +366,11 @@ namespace SiliFish.UI.Controls
         {
             if (interPoolTemplate == null) return;
             interPoolTemplate.Parameters = GridToParamDict();
+        }
+
+        private void splitContainerMain_Panel1_SizeChanged(object sender, EventArgs e)
+        {
+            splitContainerMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise - still doesn;t work
         }
     }
 }

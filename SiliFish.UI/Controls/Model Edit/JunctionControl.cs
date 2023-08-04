@@ -171,7 +171,7 @@ namespace SiliFish.UI.Controls
                 eSynDelay.Text = gapJunction.Delay_ms.ToString();
                 ddConnectionType.SelectedItem = ConnectionType.Gap;
                 ddCoreType.Items.Clear();
-                ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray()); 
+                ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray());
                 ddCoreType.Text = gapJunction.Core.GetType().Name;
                 propCore.SelectedObject = gapJunction.Core;
             }
@@ -340,5 +340,7 @@ namespace SiliFish.UI.Controls
         {
             Refresh();//the drop down boxes do not refresh properly otherwise
         }
+
+ 
     }
 }

@@ -37,6 +37,10 @@ namespace SiliFish.UI.Controls
             eSequence = new NumericUpDown();
             lCellType = new Label();
             pMain = new Panel();
+            eDescendingAxon = new TextBox();
+            eAscendingAxon = new TextBox();
+            lDescendingAxon = new Label();
+            lAscendingAxon = new Label();
             ddCellPool = new ComboBox();
             ddCoreType = new ComboBox();
             ddCellType = new ComboBox();
@@ -67,10 +71,6 @@ namespace SiliFish.UI.Controls
             splitMain = new SplitContainer();
             colorDialog = new ColorDialog();
             openFileJson = new OpenFileDialog();
-            lAscendingAxon = new Label();
-            lDescendingAxon = new Label();
-            eAscendingAxon = new TextBox();
-            eDescendingAxon = new TextBox();
             ((System.ComponentModel.ISupportInitialize)eSomite).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eSequence).BeginInit();
             pMain.SuspendLayout();
@@ -174,6 +174,38 @@ namespace SiliFish.UI.Controls
             pMain.Name = "pMain";
             pMain.Size = new Size(258, 721);
             pMain.TabIndex = 0;
+            // 
+            // eDescendingAxon
+            // 
+            eDescendingAxon.Location = new Point(133, 247);
+            eDescendingAxon.Name = "eDescendingAxon";
+            eDescendingAxon.Size = new Size(86, 23);
+            eDescendingAxon.TabIndex = 46;
+            // 
+            // eAscendingAxon
+            // 
+            eAscendingAxon.Location = new Point(133, 218);
+            eAscendingAxon.Name = "eAscendingAxon";
+            eAscendingAxon.Size = new Size(86, 23);
+            eAscendingAxon.TabIndex = 45;
+            // 
+            // lDescendingAxon
+            // 
+            lDescendingAxon.AutoSize = true;
+            lDescendingAxon.Location = new Point(6, 251);
+            lDescendingAxon.Name = "lDescendingAxon";
+            lDescendingAxon.Size = new Size(106, 15);
+            lDescendingAxon.TabIndex = 44;
+            lDescendingAxon.Text = "Desc. Axon Length";
+            // 
+            // lAscendingAxon
+            // 
+            lAscendingAxon.AutoSize = true;
+            lAscendingAxon.Location = new Point(6, 226);
+            lAscendingAxon.Name = "lAscendingAxon";
+            lAscendingAxon.Size = new Size(100, 15);
+            lAscendingAxon.TabIndex = 43;
+            lAscendingAxon.Text = "Asc. Axon Length";
             // 
             // ddCellPool
             // 
@@ -460,42 +492,11 @@ namespace SiliFish.UI.Controls
             splitMain.Size = new Size(600, 723);
             splitMain.SplitterDistance = 260;
             splitMain.TabIndex = 16;
+            splitMain.SplitterMoved += splitMain_SplitterMoved;
             // 
             // openFileJson
             // 
             openFileJson.Filter = "JSON files(*.json)|*.json";
-            // 
-            // lAscendingAxon
-            // 
-            lAscendingAxon.AutoSize = true;
-            lAscendingAxon.Location = new Point(6, 226);
-            lAscendingAxon.Name = "lAscendingAxon";
-            lAscendingAxon.Size = new Size(100, 15);
-            lAscendingAxon.TabIndex = 43;
-            lAscendingAxon.Text = "Asc. Axon Length";
-            // 
-            // lDescendingAxon
-            // 
-            lDescendingAxon.AutoSize = true;
-            lDescendingAxon.Location = new Point(6, 251);
-            lDescendingAxon.Name = "lDescendingAxon";
-            lDescendingAxon.Size = new Size(106, 15);
-            lDescendingAxon.TabIndex = 44;
-            lDescendingAxon.Text = "Desc. Axon Length";
-            // 
-            // eAscendingAxon
-            // 
-            eAscendingAxon.Location = new Point(133, 218);
-            eAscendingAxon.Name = "eAscendingAxon";
-            eAscendingAxon.Size = new Size(86, 23);
-            eAscendingAxon.TabIndex = 45;
-            // 
-            // eDescendingAxon
-            // 
-            eDescendingAxon.Location = new Point(133, 247);
-            eDescendingAxon.Name = "eDescendingAxon";
-            eDescendingAxon.Size = new Size(86, 23);
-            eDescendingAxon.TabIndex = 46;
             // 
             // CellControl
             // 

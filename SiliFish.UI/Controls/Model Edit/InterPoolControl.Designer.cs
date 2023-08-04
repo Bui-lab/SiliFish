@@ -169,7 +169,7 @@
             ddSourcePool.FormattingEnabled = true;
             ddSourcePool.Location = new Point(97, 6);
             ddSourcePool.Name = "ddSourcePool";
-            ddSourcePool.Size = new Size(117, 23);
+            ddSourcePool.Size = new Size(145, 23);
             ddSourcePool.TabIndex = 5;
             ddSourcePool.SelectedIndexChanged += ddSourcePool_SelectedIndexChanged;
             // 
@@ -182,7 +182,7 @@
             ddTargetPool.FormattingEnabled = true;
             ddTargetPool.Location = new Point(97, 32);
             ddTargetPool.Name = "ddTargetPool";
-            ddTargetPool.Size = new Size(117, 23);
+            ddTargetPool.Size = new Size(145, 23);
             ddTargetPool.TabIndex = 7;
             ddTargetPool.SelectedIndexChanged += ddTargetPool_SelectedIndexChanged;
             // 
@@ -195,7 +195,7 @@
             ddAxonReachMode.FormattingEnabled = true;
             ddAxonReachMode.Location = new Point(97, 58);
             ddAxonReachMode.Name = "ddAxonReachMode";
-            ddAxonReachMode.Size = new Size(117, 23);
+            ddAxonReachMode.Size = new Size(145, 23);
             ddAxonReachMode.TabIndex = 9;
             ddAxonReachMode.SelectedIndexChanged += ddAxonReachMode_SelectedIndexChanged;
             // 
@@ -209,7 +209,7 @@
             ddConnectionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
             ddConnectionType.Location = new Point(97, 84);
             ddConnectionType.Name = "ddConnectionType";
-            ddConnectionType.Size = new Size(117, 23);
+            ddConnectionType.Size = new Size(145, 23);
             ddConnectionType.TabIndex = 11;
             ddConnectionType.SelectedIndexChanged += ddConnectionType_SelectedIndexChanged;
             // 
@@ -340,7 +340,7 @@
             cbActive.AutoSize = true;
             cbActive.Checked = true;
             cbActive.CheckState = CheckState.Checked;
-            cbActive.Location = new Point(156, 294);
+            cbActive.Location = new Point(184, 294);
             cbActive.Name = "cbActive";
             cbActive.Size = new Size(59, 19);
             cbActive.TabIndex = 0;
@@ -370,7 +370,7 @@
             eName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             eName.Location = new Point(97, 266);
             eName.Name = "eName";
-            eName.Size = new Size(117, 23);
+            eName.Size = new Size(145, 23);
             eName.TabIndex = 25;
             eName.Leave += eName_Leave;
             // 
@@ -400,7 +400,7 @@
             eDescription.Dock = DockStyle.Bottom;
             eDescription.Location = new Point(0, 319);
             eDescription.Name = "eDescription";
-            eDescription.Size = new Size(218, 240);
+            eDescription.Size = new Size(246, 240);
             eDescription.TabIndex = 27;
             eDescription.Text = "";
             // 
@@ -421,7 +421,7 @@
             grReach.Dock = DockStyle.Top;
             grReach.Location = new Point(3, 3);
             grReach.Name = "grReach";
-            grReach.Size = new Size(274, 124);
+            grReach.Size = new Size(246, 124);
             grReach.TabIndex = 1;
             grReach.TabStop = false;
             grReach.Text = "Reach";
@@ -503,12 +503,13 @@
             splitContainerMain.Panel1.Controls.Add(ddConnectionType);
             splitContainerMain.Panel1.Controls.Add(cbActive);
             splitContainerMain.Panel1.Controls.Add(eFixedDuration);
+            splitContainerMain.Panel1.SizeChanged += splitContainerMain_Panel1_SizeChanged;
             // 
             // splitContainerMain.Panel2
             // 
             splitContainerMain.Panel2.Controls.Add(tabInterPool);
             splitContainerMain.Size = new Size(510, 559);
-            splitContainerMain.SplitterDistance = 218;
+            splitContainerMain.SplitterDistance = 246;
             splitContainerMain.TabIndex = 28;
             splitContainerMain.SplitterMoved += splitContainerMain_SplitterMoved;
             // 
@@ -521,7 +522,7 @@
             ddCoreType.FormattingEnabled = true;
             ddCoreType.Location = new Point(97, 110);
             ddCoreType.Name = "ddCoreType";
-            ddCoreType.Size = new Size(118, 23);
+            ddCoreType.Size = new Size(146, 23);
             ddCoreType.TabIndex = 12;
             ddCoreType.SelectedIndexChanged += ddCoreType_SelectedIndexChanged;
             // 
@@ -543,7 +544,7 @@
             tabInterPool.Location = new Point(0, 0);
             tabInterPool.Name = "tabInterPool";
             tabInterPool.SelectedIndex = 0;
-            tabInterPool.Size = new Size(288, 559);
+            tabInterPool.Size = new Size(260, 559);
             tabInterPool.TabIndex = 0;
             // 
             // tDynamics
@@ -553,7 +554,7 @@
             tDynamics.Location = new Point(4, 24);
             tDynamics.Name = "tDynamics";
             tDynamics.Padding = new Padding(3);
-            tDynamics.Size = new Size(280, 531);
+            tDynamics.Size = new Size(252, 531);
             tDynamics.TabIndex = 0;
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
@@ -567,7 +568,7 @@
             dgDynamics.Location = new Point(3, 127);
             dgDynamics.MinimumSize = new Size(100, 100);
             dgDynamics.Name = "dgDynamics";
-            dgDynamics.Size = new Size(274, 401);
+            dgDynamics.Size = new Size(246, 401);
             dgDynamics.TabIndex = 4;
             dgDynamics.Leave += dgDynamics_Leave;
             // 

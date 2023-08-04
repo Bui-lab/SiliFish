@@ -614,6 +614,12 @@ namespace SiliFish.UI.Controls
         private void rbMultipleEntry_CheckedChanged(object sender, EventArgs e)
         {
             eMultipleStimulus.ReadOnly = !rbMultipleEntry.Checked;
+            if (rbMultipleEntry.Checked && eMultipleStimulus.Text == "example: 1;10")
+                eMultipleStimulus.Text = "";
+            else if (!rbMultipleEntry.Checked && string.IsNullOrEmpty(eMultipleStimulus.Text))
+                eMultipleStimulus.Text = "example: 1;10";
+            if (rbMultipleEntry.Checked && cbAutoDrawPlots.Checked)
+                DynamicsRun();
         }
 
         private void rbRheobaseBasedStimulus_CheckedChanged(object sender, EventArgs e)

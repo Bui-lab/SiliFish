@@ -220,5 +220,10 @@ namespace SiliFish.UI.Controls
             if (cp.Cells.Any(c => c != cell && c.Somite == somite && c.Sequence == seq))
                 checkValuesArgs.Errors.Add("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence/somite.");
         }
+
+        private void splitMain_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            splitMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise
+        }
     }
 }

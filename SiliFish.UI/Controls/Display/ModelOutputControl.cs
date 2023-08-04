@@ -85,7 +85,7 @@ namespace SiliFish.UI.Controls
                 cellSelectionPlot.CombineOptionsVisible = false;
                 cellSelectionPlot.Visible = true;
                 cellSelectionPlot.TurnOnSingleCellOrSomite();
-                cellSelectionPlot.Refresh();
+                cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
             }
             else
             {

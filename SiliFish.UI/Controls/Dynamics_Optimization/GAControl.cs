@@ -19,6 +19,8 @@ namespace SiliFish.UI.Controls
         private static string GAFileDefaultFolder;
         private string coreType;
 
+        private bool exhaustiveSearch = false;
+
         private bool optimizationCancelled = false;
         private DateTime optimizationStartTime;
         private TimeSpan optimizationDuration;
@@ -79,6 +81,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimize()
         {
             if (solver == null) return;
+            exhaustiveSearch = false;
             optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
             solverOutput = solver.Optimize();
@@ -88,6 +91,7 @@ namespace SiliFish.UI.Controls
         private void RunOptimizeExhaustive()
         {
             if (exhaustiveSolverList == null || !exhaustiveSolverList.Any()) return;
+            exhaustiveSearch = true;
             exhaustiveBestParameters = new();
             optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
@@ -162,12 +166,19 @@ namespace SiliFish.UI.Controls
             exhaustiveSolverIterator = 0;
             btnOptimize.Enabled = btnOptimizeExhaustive.Enabled = true;
             if (solverOutput == null) return;
-            Parameters = solverOutput.BestValues;
+            if (exhaustiveSearch && exhaustiveBestParameters.Any())
+                Parameters = exhaustiveBestParameters[0].Parameters;
+            else
+                Parameters = solverOutput.BestValues;
             if (optimizationProgress != null && optimizationProgress.Visible)
                 optimizationProgress.Close();
             optimizationProgress = null;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
-            lOptimizationOutput.Text = $"Latest fitness: {solverOutput.BestFitness}\r\n" +
+            if (exhaustiveSearch && exhaustiveBestParameters.Any())
+                lOptimizationOutput.Text = $"Current fitness: {exhaustiveBestParameters[0].Fitness}\r\n" +
+                $"Opimization duration: {optimizationDuration:g}";
+            else
+                lOptimizationOutput.Text = $"Latest fitness: {solverOutput.BestFitness}\r\n" +
                 $"Opimization duration: {optimizationDuration:g}";
             if (!string.IsNullOrEmpty(solverOutput.ErrorMessage))
                 lOptimizationOutput.Text += $"\r\nOptimization ran with errors: {solverOutput.ErrorMessage}";
@@ -590,7 +601,7 @@ namespace SiliFish.UI.Controls
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
             CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
             double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
-            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}"; 
+            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
             if (exhaustiveBestSolverIterator == 0)
                 btnOptimizePrev.Enabled = false;
         }
@@ -607,5 +618,6 @@ namespace SiliFish.UI.Controls
             if (exhaustiveBestSolverIterator == exhaustiveBestParameters.Count - 1)
                 btnOptimizeNext.Enabled = false;
         }
+
     }
 }

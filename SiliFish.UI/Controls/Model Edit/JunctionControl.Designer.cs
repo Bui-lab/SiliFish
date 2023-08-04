@@ -306,7 +306,7 @@
             tTimeLine.Location = new Point(4, 24);
             tTimeLine.Name = "tTimeLine";
             tTimeLine.Padding = new Padding(3);
-            tTimeLine.Size = new Size(359, 352);
+            tTimeLine.Size = new Size(359, 368);
             tTimeLine.TabIndex = 0;
             tTimeLine.Text = "TimeLine";
             tTimeLine.UseVisualStyleBackColor = true;
