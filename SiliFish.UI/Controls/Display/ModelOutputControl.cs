@@ -1171,12 +1171,21 @@ namespace SiliFish.UI.Controls
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
+            Dictionary<Cell, List<int>> cellSpikes = new();
+            Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices()));
+            int spikeCount = cellSpikes.Values.Sum(l=>l.Count);
+            if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
+            {
+                string msg = $"There are {spikeCount} spikes, which can take a while to list. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
             double episodeBreak = RunningModel.KinemParam.EpisodeBreak;
             dgSpikeStats.Rows.Clear();
             colSpikeEpisode.Visible = cbSpikeEpisodes.Checked;
             foreach (Cell cell in Cells)
             {
-                List<int> spikes = cell.GetSpikeIndices();
+                List<int> spikes = cellSpikes[cell];
                 if (cbSpikeEpisodes.Checked)
                 {
                     List<SwimmingEpisode> Episodes = SwimmingEpisode.GenerateEpisodes(RunningModel.TimeArray, spikes, episodeBreak);

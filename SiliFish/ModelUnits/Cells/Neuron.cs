@@ -241,7 +241,7 @@ namespace SiliFish.ModelUnits.Cells
                     foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {
                         if (jnc.IsActive(timeIndex))
-                            IGap += jnc.Cell1 == this ? jnc.Core.ISyn : -1 * jnc.Core.ISyn;
+                            IGap += jnc.Cell1 == this ? -1 * jnc.Core.ISyn : jnc.Core.ISyn;
                     }
                     stim = GetStimulus(timeIndex);
                 }

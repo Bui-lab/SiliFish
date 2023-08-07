@@ -13,13 +13,13 @@ namespace SiliFish.DynamicUnits
 {
     public class SimpleGap: ElecSynapseCore
     {
-        private double ISynA = 0; //the momentary current value
-        private double ISynB = 0; //the momentary current value
+        private double IGap1to2 = 0; //the momentary current value
+        private double IGap2to1 = 0; //the momentary current value
         [JsonIgnore, Browsable(false)]
-        public override double ISyn { get { return ISynA - ISynB; } }
+        public override double ISyn { get { return IGap1to2 - IGap2to1; } }
         public override void ZeroISyn()
         {
-            ISynA = ISynB = 0;
+            IGap1to2 = IGap2to1 = 0;
         }
 
         [JsonIgnore, Browsable(false)]
@@ -42,7 +42,7 @@ namespace SiliFish.DynamicUnits
         public override void InitForSimulation(double deltaT, double deltaTEuler)
         {
             base.InitForSimulation(deltaT, deltaTEuler);
-            ISynA = ISynB = 0;
+            IGap1to2 = IGap2to1 = 0;
         }
 
         public override bool CheckValues(ref List<string> errors)
@@ -55,8 +55,9 @@ namespace SiliFish.DynamicUnits
         //if any other type of gap junction is implemented, this function may need to be modified
         public override double GetNextVal(double VoltageDiffFrom1To2, double VoltageDiffFrom2To1)
         {
-            double VoltageDiff = VoltageDiffFrom2To1 - VoltageDiffFrom1To2;
-            return Conductance * VoltageDiff; 
+            IGap1to2 = Conductance * VoltageDiffFrom1To2;
+            IGap2to1 = Conductance * VoltageDiffFrom2To1;
+            return ISyn; 
         }
     }
 

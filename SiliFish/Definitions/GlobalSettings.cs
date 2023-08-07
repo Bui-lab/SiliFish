@@ -32,6 +32,7 @@ namespace SiliFish.Definitions
         public static double SimulationDeltaT = 0.1;
         public static double SimulationEulerDeltaT = 0.1;
         public static bool JunctionLevelTracking = false;
+        public static bool Randomization = true;
 
         public static bool SameYAxis = true;
         public static bool ShowZeroValues = true;
@@ -209,6 +210,10 @@ namespace SiliFish.Definitions
             Category("Simulation")]
         public bool JunctionLevelTracking { get { return GlobalSettings.JunctionLevelTracking; } set { GlobalSettings.JunctionLevelTracking = value; } }
 
+        [Description("If set to false, any single value will be set as the center of the distribution without any randomization."),
+            DisplayName("Randomization"),
+            Category("Simulation")]
+        public bool Randomization { get { return GlobalSettings.Randomization; } set { GlobalSettings.Randomization = value; } }
 
         #endregion
 
