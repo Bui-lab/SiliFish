@@ -360,7 +360,7 @@ namespace SiliFish.UI.Controls.Display
                 ddSagittal.SelectedItem = SagittalPlane.Both.GetDisplayName();
                 ddSomiteSelection.SelectedItem = PlotSomiteSelection.All.ToString();
                 ddPools.SelectedItem = Const.AllPools;
-                ddCellSelection.SelectedItem = PlotCellSelection.Spiking;
+                ddCellSelection.SelectedItem = PlotCellSelection.Spiking.ToString();
                 cbCombineCells.Checked = true;
                 cbCombineSomites.Checked = true;
                 cbCombinePools.Checked = false;

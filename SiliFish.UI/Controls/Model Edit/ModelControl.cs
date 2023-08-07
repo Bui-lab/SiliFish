@@ -456,7 +456,10 @@ namespace SiliFish.UI.Controls
             {
                 string filename = openFileCSV.FileName;
                 if (ModelFile.ReadCellPoolsFromCSV(filename, Model))
+                {
                     LoadPools();
+                    MessageBox.Show($"The cell pools are imported from {filename}.");
+                }
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
@@ -647,7 +650,10 @@ namespace SiliFish.UI.Controls
             {
                 string filename = openFileCSV.FileName;
                 if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPool))
+                {
                     LoadCells();
+                    MessageBox.Show($"The cells are imported from {filename}.");
+                }
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
@@ -1042,7 +1048,18 @@ namespace SiliFish.UI.Controls
             {
                 string filename = openFileCSV.FileName;
                 if (ModelFile.ReadConnectionsFromCSV(filename, Model, unit, gap, chemin, chemout))
+                {
                     RefreshProjections();
+                    string jncList = chemin && chemout ? "chemical" :
+                        !chemin && chemout ? "outgoing chemical" :
+                        chemin && !chemout ? "incoming chemical" :
+                        "";
+                    if (gap && string.IsNullOrEmpty(jncList))
+                        jncList = "gap and " + jncList;
+                    else if (gap)
+                        jncList = "gap";
+                    MessageBox.Show($"The {jncList} junctions are imported from {filename}.");
+                }
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
@@ -1348,7 +1365,10 @@ namespace SiliFish.UI.Controls
             {
                 string filename = openFileCSV.FileName;
                 if (ModelFile.ReadStimulusFromCSV(filename, Model, selectedUnit))
+                {
                     LoadStimuli(selectedUnit);
+                    MessageBox.Show($"The stimuli are imported from {filename}.");
+                }
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
             }
