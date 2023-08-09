@@ -377,7 +377,7 @@
             // 
             cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot });
             cmPlot.Name = "cmPlot";
-            cmPlot.Size = new Size(182, 26);
+            cmPlot.Size = new Size(182, 48);
             // 
             // cmiNonInteractivePlot
             // 

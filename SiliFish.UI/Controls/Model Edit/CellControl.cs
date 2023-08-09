@@ -140,6 +140,7 @@ namespace SiliFish.UI.Controls
             eDescendingAxon.Text = cell.DescendingAxonLength.ToString();
             propCore.SelectedObject = cell.Core;
             eConductionVelocity.Text = cell.ConductionVelocity.ToString();
+            eRheobase.Text = cell.Rheobase.ToString();
         }
 
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

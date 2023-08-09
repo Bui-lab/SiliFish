@@ -186,9 +186,9 @@ namespace SiliFish.DataTypes
         }
         public virtual double[] GenerateNNumbers(int n, double range, bool ordered)
         {
-            if (n == 1 && !GlobalSettings.Randomization)
-                return new double[1] { UniqueValue };
             Range = range;
+            if (n == 1 && !GlobalSettings.Randomization)
+                return new double[1] { (LowerLimit + UpperLimit) / 2 };
             Random ??= new Random();
             return Random.Uniform(LowerLimit, UpperLimit, n, ordered);
         }
@@ -279,14 +279,14 @@ namespace SiliFish.DataTypes
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
+            Range = range;
             double[] result = new double[n];
             if (n == 1 && !GlobalSettings.Randomization)
             {
-                result[0] = UniqueValue;
+                result[0] = (LowerLimit + UpperLimit) / 2;
                 return result;
             }
             Random ??= new Random();
-            Range = range;
             for (int i = 0; i < n; i++)
             {
                 double noise = NoiseStdDev > 0 ? Random.Gauss(0, NoiseStdDev) : 0;

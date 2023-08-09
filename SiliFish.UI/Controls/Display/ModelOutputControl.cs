@@ -550,7 +550,7 @@ namespace SiliFish.UI.Controls
             if (!string.IsNullOrEmpty(errorMessage)) //TODO convert error message to enum - and add "(You can set the number of plots that triggers this warning through the 'Settings' button above)"
                 MessageBox.Show(errorMessage);
             bool navigated = false;
-            webViewPlot.NavigateTo(htmlPlot, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            webViewPlot.NavigateTo(htmlPlot, PlotType.GetDisplayName(), GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             if (cbPlotHistory.Checked)
@@ -763,7 +763,7 @@ namespace SiliFish.UI.Controls
             string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
             bool navigated = false;
-            webView2DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             rendered2D = true;
@@ -825,7 +825,7 @@ namespace SiliFish.UI.Controls
                     webView3DRender.Width, webView3DRender.Height,
                     showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 bool navigated = false;
-                webView3DRender.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+                webView3DRender.NavigateTo(html, "3DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
                 if (!navigated)
                     Warner.LargeFileWarning(tempFile);
                 rendered3D = true;
@@ -1012,7 +1012,7 @@ namespace SiliFish.UI.Controls
         private void CompleteAnimation()
         {
             bool navigated = false;
-            webViewAnimation.NavigateTo(htmlAnimation, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            webViewAnimation.NavigateTo(htmlAnimation, "Animation", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             linkSaveAnimationHTML.Enabled = linkSaveAnimationCSV.Enabled = true;
@@ -1097,7 +1097,7 @@ namespace SiliFish.UI.Controls
             string html = DyChartGenerator.PlotCharts("Summary Membrane Potentials", charts, true, GlobalSettings.ShowZeroValues,
                 GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
             bool navigated = false;
-            webViewSummaryV.NavigateTo(html, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            webViewSummaryV.NavigateTo(html, "Episodes", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             eEpisodes.Text = "";
@@ -1173,7 +1173,7 @@ namespace SiliFish.UI.Controls
                     Cells.AddRange(pool.Cells);
             Dictionary<Cell, List<int>> cellSpikes = new();
             Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices()));
-            int spikeCount = cellSpikes.Values.Sum(l=>l.Count);
+            int spikeCount = cellSpikes.Values.Sum(l => l.Count);
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
             {
                 string msg = $"There are {spikeCount} spikes, which can take a while to list. Do you want to continue?";

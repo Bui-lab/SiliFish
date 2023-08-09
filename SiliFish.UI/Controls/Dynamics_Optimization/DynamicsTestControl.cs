@@ -200,7 +200,7 @@ namespace SiliFish.UI.Controls
                 height);
             string tempFile = "";
             bool navigated = false;
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            webViewPlots.NavigateTo(html, "RheobaseAnalysis", tempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
         }
@@ -241,7 +241,7 @@ namespace SiliFish.UI.Controls
                 height);
             string tempFile = "";
             bool navigated = false;
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            webViewPlots.NavigateTo(html, "FiringAnalysis", tempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
 
@@ -421,13 +421,14 @@ namespace SiliFish.UI.Controls
                 });
             }
             int numCharts = charts.Any() ? charts.Count : 1;
+            string mainTitle = "Dynamics Test Results";
             string html = DyChartGenerator.PlotLineCharts(charts,
-                "Dynamics Test Results", synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
+                mainTitle, synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
             bool navigated = false;
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            webViewPlots.NavigateTo(html, mainTitle, tempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
         }
@@ -458,13 +459,14 @@ namespace SiliFish.UI.Controls
                 yLabel = string.Join(',', columnNames)
             });
             int numCharts = charts.Any() ? charts.Count : 1;
+            string mainTitle = "Dynamics Test Results";
             string html = DyChartGenerator.PlotLineCharts(charts,
-                "Dynamics Test Results", synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
+                mainTitle, synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
                 webViewPlots.ClientSize.Width,
                 (webViewPlots.ClientSize.Height - 150) / numCharts);
             string tempFile = "";
             bool navigated = false;
-            webViewPlots.NavigateTo(html, tempFolder, ref tempFile, ref navigated);
+            webViewPlots.NavigateTo(html, mainTitle, tempFolder, ref tempFile, ref navigated);
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
         }

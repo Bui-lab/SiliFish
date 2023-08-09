@@ -44,7 +44,9 @@ namespace SiliFish.UI.Controls
                         listBox.Items[i].ToString() == value.ToString())
                     {
                         listBox.SelectedIndices.Clear();
+                        //listBox.Focus();
                         listBox.SelectedIndex = i;
+                        listBox.TopIndex = i;
                         return;
                     }
                 }
@@ -156,7 +158,7 @@ namespace SiliFish.UI.Controls
                 return;
             (string tt, bool _) = listBox.SelectedItem?.GetPropertyValue("Tooltip", listBox.SelectedItem?.ToString()) ?? ("", false);
             toolTip.SetToolTip(listBox, tt);
-            ItemSelect?.Invoke(listBox.SelectedItem, new EventArgs());
+            ItemSelect?.Invoke(this, new EventArgs());
         }
 
         private void listBox_DoubleClick(object sender, EventArgs e)

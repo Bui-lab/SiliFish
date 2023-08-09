@@ -71,6 +71,8 @@ namespace SiliFish.UI.Controls
             splitMain = new SplitContainer();
             colorDialog = new ColorDialog();
             openFileJson = new OpenFileDialog();
+            eRheobase = new TextBox();
+            lRheobase = new Label();
             ((System.ComponentModel.ISupportInitialize)eSomite).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eSequence).BeginInit();
             pMain.SuspendLayout();
@@ -397,25 +399,27 @@ namespace SiliFish.UI.Controls
             // propCore
             // 
             propCore.Dock = DockStyle.Fill;
-            propCore.Location = new Point(3, 72);
+            propCore.Location = new Point(3, 101);
             propCore.Name = "propCore";
-            propCore.Size = new Size(320, 618);
+            propCore.Size = new Size(320, 589);
             propCore.TabIndex = 1;
             // 
             // panel1
             // 
             panel1.Controls.Add(lConductionVelocity);
+            panel1.Controls.Add(eRheobase);
             panel1.Controls.Add(eConductionVelocity);
+            panel1.Controls.Add(lRheobase);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(3, 36);
             panel1.Name = "panel1";
-            panel1.Size = new Size(320, 36);
+            panel1.Size = new Size(320, 65);
             panel1.TabIndex = 25;
             // 
             // lConductionVelocity
             // 
             lConductionVelocity.AutoSize = true;
-            lConductionVelocity.Location = new Point(3, 9);
+            lConductionVelocity.Location = new Point(6, 9);
             lConductionVelocity.Name = "lConductionVelocity";
             lConductionVelocity.Size = new Size(114, 15);
             lConductionVelocity.TabIndex = 23;
@@ -423,9 +427,9 @@ namespace SiliFish.UI.Controls
             // 
             // eConductionVelocity
             // 
-            eConductionVelocity.Location = new Point(123, 6);
+            eConductionVelocity.Location = new Point(124, 6);
             eConductionVelocity.Name = "eConductionVelocity";
-            eConductionVelocity.Size = new Size(100, 23);
+            eConductionVelocity.Size = new Size(56, 23);
             eConductionVelocity.TabIndex = 24;
             // 
             // pDynamicsTops
@@ -497,6 +501,23 @@ namespace SiliFish.UI.Controls
             // openFileJson
             // 
             openFileJson.Filter = "JSON files(*.json)|*.json";
+            // 
+            // eRheobase
+            // 
+            eRheobase.Location = new Point(124, 32);
+            eRheobase.Name = "eRheobase";
+            eRheobase.ReadOnly = true;
+            eRheobase.Size = new Size(56, 23);
+            eRheobase.TabIndex = 1;
+            // 
+            // lRheobase
+            // 
+            lRheobase.AutoSize = true;
+            lRheobase.Location = new Point(6, 35);
+            lRheobase.Name = "lRheobase";
+            lRheobase.Size = new Size(58, 15);
+            lRheobase.TabIndex = 0;
+            lRheobase.Text = "Rheobase";
             // 
             // CellControl
             // 
@@ -571,5 +592,7 @@ namespace SiliFish.UI.Controls
         private Label lAscendingAxon;
         private TextBox eDescendingAxon;
         private TextBox eAscendingAxon;
+        private TextBox eRheobase;
+        private Label lRheobase;
     }
 }

@@ -37,6 +37,7 @@ namespace SiliFish.UI.Controls
         private CellPoolTemplate SelectedPoolTemplate;
         private CellPool SelectedPool;
         private Cell SelectedCell; //valid if Mode == Mode.RunningModel
+        private char modeIOG;//I: incoming, O; outgoing; G: gap
         private JunctionBase SelectedJunction;
         private StimulusBase SelectedStimulus;
         private ModelUnitBase SelectedUnit => (ModelUnitBase)SelectedCell ?? SelectedPool ?? SelectedPoolTemplate;
@@ -322,7 +323,8 @@ namespace SiliFish.UI.Controls
         {
             if (CurrentMode == RunMode.RunningModel)
                 listCells.ClearItems();
-            if (sender is CellPool pool)
+            ListBoxControl lb = sender as ListBoxControl;
+            if (lb.SelectedItem is CellPool pool)
             {
                 SelectedPool = pool;
                 if (listCellPools.HighlightSelected)
@@ -332,13 +334,13 @@ namespace SiliFish.UI.Controls
                 LoadProjections(pool);
                 LoadStimuli(pool);
             }
-            else if (sender is CellPoolTemplate cpt)
+            else if (lb.SelectedItem is CellPoolTemplate cpt)
             {
                 SelectedPoolTemplate = cpt;
                 LoadProjections(cpt.CellGroup);
                 LoadStimuli(cpt);
             }
-            else if (sender == null)
+            else if (lb.SelectedItem == null)
             {
                 SelectedPoolTemplate = null;
                 SelectedPool = null;
@@ -519,7 +521,8 @@ namespace SiliFish.UI.Controls
         private void listCells_ItemSelect(object sender, EventArgs e)
         {
             if (CurrentMode != RunMode.RunningModel) return;
-            if (sender is Cell cell)
+            ListBoxControl lb = sender as ListBoxControl;
+            if (lb.SelectedItem is Cell cell)
             {
                 SelectedCell = cell;
                 if (listCells.HighlightSelected)
@@ -681,10 +684,26 @@ namespace SiliFish.UI.Controls
                 LoadProjections(SelectedPoolTemplate.CellGroup);
             else
                 LoadProjections();
+            if (SelectedJunction != null)
+            {
+                switch (modeIOG)
+                {
+                    case 'I':
+                        listIncoming.SelectedItem = SelectedJunction;
+                        break;
+                    case 'O':
+                        listOutgoing.SelectedItem = SelectedJunction;
+                        break;
+                    case 'G':
+                        listGap.SelectedItem = SelectedJunction;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         private void LoadProjections()
         {
-            SelectedJunction = null;
             ClearProjections();
             lOutgoingTitle.Text = "Synaptic Connections";
             lGapTitle.Text = "Gap Junctions";
@@ -961,8 +980,10 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_ItemSelect(object sender, EventArgs e)
         {
-            if (sender is JunctionBase jnc)
+            ListBoxControl lb = sender as ListBoxControl;
+            if (lb.SelectedItem is JunctionBase jnc)
             {
+                modeIOG = lb == listOutgoing ? 'O' : lb == listIncoming ? 'I' : 'G';
                 SelectedJunction = jnc;
             }
         }
@@ -1231,7 +1252,8 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemSelect(object sender, EventArgs e)
         {
-            if (sender is StimulusBase stim)
+            ListBoxControl lb = sender as ListBoxControl;
+            if (lb.SelectedItem is StimulusBase stim)
             {
                 SelectedStimulus = stim;
             }
