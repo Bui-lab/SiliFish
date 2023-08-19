@@ -257,7 +257,7 @@ namespace SiliFish.Services
             rightSpikes.Sort();
 
             List<SwimmingEpisode> Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, rightSpikes, episodeBreak);
-            double[] range = new double[model.TimeArray.Length];
+            double[] range = new double[model.TimeArray.Length - iSkip];
             foreach(SwimmingEpisode episode in Episodes)
             {
                 foreach (Beat beat in episode.Beats)
@@ -268,12 +268,12 @@ namespace SiliFish.Services
                     if (beat.Direction == SagittalPlane.Left)
                     {
                         double value = leftMNs.Max(MN => MN.V.Skip(startInd).Take(endInd - startInd + 1).Max());
-                        range[middleInd] = -value;
+                        range[middleInd - iSkip] = -value;
                     }
                     else //if (beat.Direction == SagittalPlane.Right)
                     {
                         double value = rightMNs.Max(MN => MN.V.Skip(startInd).Take(endInd - startInd + 1).Max());
-                        range[middleInd] = value;
+                        range[middleInd - iSkip] = value;
                     }
                 }
 

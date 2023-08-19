@@ -93,7 +93,14 @@ namespace SiliFish.DataTypes
 
         public double Start { get { return episodeStart; } }
         public double End { get { return episodeEnd; } }
-
+        /// <summary>
+        /// returns episode start and end times excluding the skip period (after skip, the time is set to 0)
+        /// </summary>
+        /// <param name="TimeArray"></param>
+        /// <param name="leftIndices">indices including the skiped period</param>
+        /// <param name="rightIndices">indices including the skiped period</param>
+        /// <param name="episodeBreak"></param>
+        /// <returns></returns>
         public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
         {
             List<SwimmingEpisode> episodes = new();

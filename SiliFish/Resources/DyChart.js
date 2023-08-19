@@ -16,7 +16,7 @@ var g__CHART_INDEX__ = new Dygraph(
         yRangePad: 3
     }
 );
-g__CHART_INDEX__.updateOptions({ axes: { x: { logscale: __LOG_SCALE__ } } });
+g__CHART_INDEX__.updateOptions({ axes: { x: { logscale: __LOG_SCALE__ }, y: { pixelsPerLabel: 20 } } });
 
 gs.push(g__CHART_INDEX__);
 
