@@ -66,9 +66,9 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
-            ConnectionType.Gap, "",
-                csvExportCoreValues,
                 Cell1.ID, Cell2.ID,
+                ConnectionType.Gap, Core.SynapseType,
+                csvExportCoreValues,
                 DistanceMode,
                 FixedDuration_ms, Delay_ms,
                 Active,
@@ -78,8 +78,12 @@ namespace SiliFish.ModelUnits.Junction
         {
             try
             {
-                int iter = 2;//junction type is already read before junction creation
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
+                int iter = 0;
+                Source = values[iter++].Trim();
+                Target = values[iter++].Trim();
+                iter++; //junction type is already read before junction creation
+                string coreType = values[iter++].Trim();
                 Dictionary<string, double> parameters = new();
                 for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
@@ -91,10 +95,7 @@ namespace SiliFish.ModelUnits.Junction
                         parameters.Add(paramkey, paramvalue);
                     }
                 }
-                Core = ElecSynapseCore.CreateCore(nameof(SimpleGap), parameters);
-
-                Source = values[iter++].Trim();
-                Target = values[iter++].Trim();
+                Core = ElecSynapseCore.CreateCore(coreType, parameters);
 
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
                 if (double.TryParse(values[iter++], out double d))

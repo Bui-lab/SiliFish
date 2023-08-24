@@ -1036,7 +1036,7 @@ namespace SiliFish.Repositories
                     string[] csvCells = line.Split(',');
                     if (csvCells.Length <= 0) continue;
                     JunctionBase jb = null;
-                    if (csvCells[0] == ConnectionType.Gap.ToString())
+                    if (csvCells[2] == ConnectionType.Gap.ToString())//1st and 2nd cells are for Source and Target
                     {
                         if (gap)
                             jb = new GapJunction();

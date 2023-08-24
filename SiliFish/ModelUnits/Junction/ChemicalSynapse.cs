@@ -49,10 +49,9 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
+            PreNeuron.ID, PostCell.ID,
             ConnectionType.Synapse, Core.SynapseType,
             csvExportCoreValues,
-
-            PreNeuron.ID, PostCell.ID,
                 DistanceMode,
                 FixedDuration_ms, Delay_ms,
                 Active,
@@ -63,10 +62,12 @@ namespace SiliFish.ModelUnits.Junction
         {
             try
             {
-                int iter = 1;//junction type is already read before junction creation
-                string coreType = values[iter++].Trim();
-
                 if (values.Count < ColumnNames.Count - TimeLine.ColumnNames.Count) return;
+                int iter = 0;
+                Source = values[iter++].Trim();
+                Target = values[iter++].Trim();
+                iter++; //junction type is already read before junction creation
+                string coreType = values[iter++].Trim();
                 Dictionary<string, double> parameters = new();
                 for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
@@ -78,9 +79,6 @@ namespace SiliFish.ModelUnits.Junction
                     }
                 }
                 Core = ChemSynapseCore.CreateCore(coreType, parameters);
-
-                Source = values[iter++].Trim();
-                Target = values[iter++].Trim();
 
                 DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), values[iter++]);
 

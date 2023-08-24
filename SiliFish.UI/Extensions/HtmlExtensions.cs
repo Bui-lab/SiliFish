@@ -15,7 +15,7 @@ namespace SiliFish.UI.Extensions
                 tempFile = "";
                 if (html.Length > 1024 * 1024 * GlobalSettings.FileSizeWarningLimit && !string.IsNullOrEmpty(tempFolder))
                 {
-                    string target = title ?? "plot" + ".html";
+                    string target = (title ?? "plot") + ".html";
                     tempFile = FileUtil.SaveToOutputFolder(target, html);
                     navigated = false;
                 }
