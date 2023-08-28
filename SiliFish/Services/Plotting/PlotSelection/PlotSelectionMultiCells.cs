@@ -73,10 +73,14 @@ namespace SiliFish.Services.Plotting.PlotSelection
         public static IEnumerable<IGrouping<string, Cell>> GroupCells(List<Cell> cells,
             bool combinePools, bool combineSomites, bool combineCells)
         {
-            
+
             if (combineSomites || combinePools)
                 combineCells = true;
-            return cells.GroupBy(c =>
+            return cells.OrderBy(c => c.CellGroup)
+                .ThenBy(c => c.Somite)
+                .ThenBy(c => c.Sequence)
+                .ThenBy(c => c.PositionLeftRight)
+                .GroupBy(c =>
                 !combinePools && !combineSomites && !combineCells ? $"{c.ID}" ://Each cell seperate
                 !combinePools && !combineSomites && combineCells ? $"{c.CellPool.ID}-Somite:{c.Somite}" : //One group for each somite in a cell pool
                 combinePools && !combineSomites ? $"Somite:{c.Somite} - {c.CellPool.PositionLeftRight}" ://One group for each somite

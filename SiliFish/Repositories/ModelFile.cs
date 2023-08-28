@@ -989,8 +989,8 @@ namespace SiliFish.Repositories
                 else if (selectedUnit is Cell cell)
                     list = cell.Projections.Where(jnc =>
                         gap && jnc is GapJunction ||
-                        (chemout && jnc is ChemicalSynapse syn && syn.PreNeuron.CellGroup == cell.CellGroup) ||
-                        (chemin && jnc is ChemicalSynapse syn2 && syn2.PostCell.CellGroup == cell.CellGroup))
+                        (chemout && jnc is ChemicalSynapse syn && syn.PreNeuron == cell) ||
+                        (chemin && jnc is ChemicalSynapse syn2 && syn2.PostCell == cell))
                         .ToList();
                 else
                 {

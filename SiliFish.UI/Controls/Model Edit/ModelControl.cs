@@ -360,7 +360,7 @@ namespace SiliFish.UI.Controls
             poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             while (Model.GetCellPools().Any(p => p.CellGroup == poolDuplicate?.CellGroup))
             {
-                MessageBox.Show("Cell pool group names have to be unique. Please enter a different name.");
+                MessageBox.Show("Cell pool group names have to be unique. Please enter a different name.", "Warning");
                 poolDuplicate = OpenCellPoolDialog(poolDuplicate);
             }
             if (poolDuplicate != null)
@@ -442,7 +442,7 @@ namespace SiliFish.UI.Controls
                     p.Start();
                 }
                 else
-                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
             }
         }
 
@@ -460,10 +460,10 @@ namespace SiliFish.UI.Controls
                 if (ModelFile.ReadCellPoolsFromCSV(filename, Model))
                 {
                     LoadPools();
-                    MessageBox.Show($"The cell pools are imported from {filename}.");
+                    MessageBox.Show($"The cell pools are imported.", "Information");
                 }
                 else
-                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
             }
         }
         private void LoadCells()
@@ -540,7 +540,7 @@ namespace SiliFish.UI.Controls
             cellDuplicate = OpenCellDialog(cellDuplicate);
             while (cellDuplicate != null && cell.CellPool.Cells.Any(c => c.ID == cellDuplicate.ID))
             {
-                MessageBox.Show("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence.");
+                MessageBox.Show("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence.", "Warning");
                 cellDuplicate = OpenCellDialog(cellDuplicate);
             }
             if (cellDuplicate != null)
@@ -583,7 +583,7 @@ namespace SiliFish.UI.Controls
             cell = OpenCellDialog(cell); //check modeltemplate's list
             while (cell != null && oldSeq != cell.Sequence && cell.CellPool.Cells.Any(c => c.ID == cell.ID && c != cell))
             {
-                MessageBox.Show("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence.");
+                MessageBox.Show("Cell sequence has to be unique for a cell pool and somite. Please enter a different sequence.", "Warning");
                 cell = OpenCellDialog(cell);
             }
             if (cell != null)
@@ -636,7 +636,7 @@ namespace SiliFish.UI.Controls
                         p.Start();
                     }
                     else
-                        MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+                        MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
                 }
             }
         }
@@ -655,10 +655,11 @@ namespace SiliFish.UI.Controls
                 if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPool))
                 {
                     LoadCells();
-                    MessageBox.Show($"The cells are imported from {filename}.");
+                    string units = SelectedPool != null ? " of " + SelectedPool.ID : "";
+                    MessageBox.Show($"The cells{units} are imported.", "Information");
                 }
                 else
-                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
             }
         }
 
@@ -1034,7 +1035,7 @@ namespace SiliFish.UI.Controls
                     p.Start();
                 }
                 else
-                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
             }
         }
 
@@ -1075,14 +1076,15 @@ namespace SiliFish.UI.Controls
                         !chemin && chemout ? "outgoing chemical" :
                         chemin && !chemout ? "incoming chemical" :
                         "";
-                    if (gap && string.IsNullOrEmpty(jncList))
+                    if (gap && !string.IsNullOrEmpty(jncList))
                         jncList = "gap and " + jncList;
                     else if (gap)
                         jncList = "gap";
-                    MessageBox.Show($"The {jncList} junctions are imported from {filename}.");
+                    string units = unit != null ? " of " + unit.ID : "";
+                    MessageBox.Show($"The {jncList} junctions{units} are imported.", "Information");
                 }
                 else
-                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
             }
         }
 
@@ -1234,7 +1236,7 @@ namespace SiliFish.UI.Controls
             {
                 if (stim == null && SelectedCell == null && SelectedPool == null)
                 {
-                    MessageBox.Show("Please select the cell pool or cell the stimulus will be applied to.");
+                    MessageBox.Show("Please select the cell pool or cell the stimulus will be applied to.", "Confirmation");
                     return null;
                 }
                 StimulusControl stimControl = new();
@@ -1290,7 +1292,7 @@ namespace SiliFish.UI.Controls
         {
             if (listStimuli.SelectedIndices.Any())
             {
-                if (MessageBox.Show("Do you want to delete selected stimuli?") != DialogResult.OK)
+                if (MessageBox.Show("Do you want to delete selected stimuli?", "Confirmation") != DialogResult.OK)
                     return;
                 foreach (object obj in listStimuli.SelectedItems)
                 {
@@ -1368,7 +1370,7 @@ namespace SiliFish.UI.Controls
                     p.Start();
                 }
                 else
-                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.");
+                    MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
             }
         }
 
@@ -1389,10 +1391,11 @@ namespace SiliFish.UI.Controls
                 if (ModelFile.ReadStimulusFromCSV(filename, Model, selectedUnit))
                 {
                     LoadStimuli(selectedUnit);
-                    MessageBox.Show($"The stimuli are imported from {filename}.");
+                    string units = selectedUnit != null ? " of " + selectedUnit.ID : "";
+                    MessageBox.Show($"The stimuli{units} are imported.", "Information");
                 }
                 else
-                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.");
+                    MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
             }
         }
 
@@ -1443,11 +1446,11 @@ namespace SiliFish.UI.Controls
                 ModelBase mb = ModelFile.ReadFromJson(json, out List<string> issues);
                 SetModel(mb, clearJson: false);
                 ModelIsUpdated();
-                MessageBox.Show("Updated JSON is loaded.");
+                MessageBox.Show("Updated JSON is loaded.", "Information");
             }
             catch (JsonException exc)
             {
-                MessageBox.Show($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}");
+                MessageBox.Show($"There is a problem with the JSON file. Please check the format of the text in a JSON editor. {exc.Message}", "Error");
             }
             catch (Exception exc)
             {

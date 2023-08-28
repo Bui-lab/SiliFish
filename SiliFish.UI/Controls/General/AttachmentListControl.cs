@@ -33,7 +33,7 @@ namespace SiliFish.UI.Controls
             };
             if (!File.Exists(filename))
             {
-                MessageBox.Show($"Path or file {filename} does not exist.");
+                MessageBox.Show($"Path or file {filename} does not exist.", "Error");
                 return;
             }
             p.Start();

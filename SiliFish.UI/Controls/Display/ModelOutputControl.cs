@@ -199,7 +199,7 @@ namespace SiliFish.UI.Controls
 
         private static void WarningMessage(string s)
         {
-            MessageBox.Show(s);
+            MessageBox.Show(s, "Warning");
         }
 
         private void RegenerateWebview(WebView2 webView)
@@ -379,7 +379,7 @@ namespace SiliFish.UI.Controls
                     FileUtil.SaveToFile(path + "\\" + filename, chart.CsvData);
                     fileNames.Add(filename);
                 }
-                MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.");
+                MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.", "Information");
             }
         }
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
@@ -420,8 +420,8 @@ namespace SiliFish.UI.Controls
             catch (Exception exc)
             {
                 if (!fileSaved)
-                    MessageBox.Show("There is a problem in saving the file:" + exc.Message);
-                else MessageBox.Show($"File {saveFileJson.FileName} is saved.");
+                    MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
+                else MessageBox.Show($"File {saveFileJson.FileName} is saved.", "Information");
             }
         }
 
@@ -468,7 +468,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in loading the file:" + exc.Message);
+                MessageBox.Show("There is a problem in loading the file:" + exc.Message, "Error");
             }
         }
         #endregion
@@ -548,7 +548,7 @@ namespace SiliFish.UI.Controls
         private void CompletePlotHTML()
         {
             if (!string.IsNullOrEmpty(errorMessage)) //TODO convert error message to enum - and add "(You can set the number of plots that triggers this warning through the 'Settings' button above)"
-                MessageBox.Show(errorMessage);
+                MessageBox.Show(errorMessage, "Error");
             bool navigated = false;
             webViewPlot.NavigateTo(htmlPlot, PlotType.GetDisplayName(), GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
@@ -573,7 +573,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
             }
         }
 
@@ -749,7 +749,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
             }
         }
 
@@ -788,7 +788,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
             }
         }
 
@@ -883,7 +883,7 @@ namespace SiliFish.UI.Controls
             }
             catch (Exception exc)
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
             }
         }
 
@@ -1140,11 +1140,11 @@ namespace SiliFish.UI.Controls
                 {
                     if (!saved)
                     {
-                        MessageBox.Show("There is a problem in saving the file:" + exc.Message);
+                        MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
                     }
                     else
                     {
-                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.");
+                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.", "Information");
                     }
                 }
             }

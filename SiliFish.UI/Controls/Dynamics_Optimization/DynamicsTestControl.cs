@@ -675,7 +675,7 @@ namespace SiliFish.UI.Controls
                 }
                 else
                 {
-                    MessageBox.Show("Selected file is not a valid Core file.");
+                    MessageBox.Show("Selected file is not a valid Core file.", "Error");
                 }
             }
         }

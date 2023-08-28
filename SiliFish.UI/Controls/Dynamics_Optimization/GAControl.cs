@@ -442,7 +442,7 @@ namespace SiliFish.UI.Controls
         {
             if (!cbTargetFitness.Checked && !cbMaxGeneration.Checked && !cbCustomTermination.Checked)
             {
-                MessageBox.Show("Select at least one termination mode.");
+                MessageBox.Show("Select at least one termination mode.", "Warning");
                 return;
             }
             CreateSolver();
@@ -463,7 +463,7 @@ namespace SiliFish.UI.Controls
         {
             if (!cbTargetFitness.Checked && !cbMaxGeneration.Checked && !cbCustomTermination.Checked)
             {
-                MessageBox.Show("Select at least one termination mode.");
+                MessageBox.Show("Select at least one termination mode.", "Warning");
                 return;
             }
             CreateExhaustiveSolverList();
@@ -514,7 +514,7 @@ namespace SiliFish.UI.Controls
                 }
                 catch
                 {
-                    MessageBox.Show("Selected file is not a valid Genetic Algorithm Parameters file.");
+                    MessageBox.Show("Selected file is not a valid Genetic Algorithm Parameters file.", "Error");
                     return;
                 }
                 OnLoadParams?.Invoke(this, EventArgs.Empty);

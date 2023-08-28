@@ -74,12 +74,12 @@ namespace SiliFish.UI.Controls
             }
             catch
             {
-                MessageBox.Show("Selected file is not a valid Cell file.");
+                MessageBox.Show("Selected file is not a valid Cell file.", "Error");
                 return;
             }
             if (cell == null)
             {
-                MessageBox.Show("Selected file is not a valid Cell file.");
+                MessageBox.Show("Selected file is not a valid Cell file.", "Error");
                 return;
             }
             WriteDataToControl();
@@ -160,7 +160,7 @@ namespace SiliFish.UI.Controls
                 }
                 else
                 {
-                    MessageBox.Show("Selected file is not a valid Core file.");
+                    MessageBox.Show("Selected file is not a valid Core file.", "Error");
                 }
             }
         }

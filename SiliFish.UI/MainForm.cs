@@ -268,7 +268,7 @@ namespace SiliFish.UI
             if (!RunningModel.CheckValues(ref errors))
             {
                 MessageBox.Show($"There are errors in the model. Please correct them before running a simulation: \r\n" +
-                    $"{string.Join("\r\n", errors)}");
+                    $"{string.Join("\r\n", errors)}", "Error");
                 return;
             }
             RunningModel.JunctionCurrentTrackingOn = GlobalSettings.JunctionLevelTracking;
@@ -367,14 +367,14 @@ namespace SiliFish.UI
                     }
                     catch
                     {
-                        MessageBox.Show("Selected file is not a valid Model or Template file.");
+                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
                         return;
                     }
                 }
             }
             catch (Exception exc)
             {
-                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
@@ -505,14 +505,14 @@ namespace SiliFish.UI
                     }
                     catch
                     {
-                        MessageBox.Show("Selected file is not a valid Model or Template file.");
+                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
                         return;
                     }
                 }
             }
             catch (Exception exc)
             {
-                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}");
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
             }
         }
@@ -530,7 +530,7 @@ namespace SiliFish.UI
             {
                 UseWaitCursor = false;
                 MessageBox.Show($"There are errors in the template file. Please correct them before generating a model: \r\n" +
-                    $"{string.Join("\r\n", errors)}");
+                    $"{string.Join("\r\n", errors)}", "Error");
                 return;
             }
             MainForm mf = new(new RunningModel(ModelTemplate));

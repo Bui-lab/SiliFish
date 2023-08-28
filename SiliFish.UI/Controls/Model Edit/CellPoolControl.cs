@@ -120,12 +120,12 @@ namespace SiliFish.UI.Controls
             }
             catch
             {
-                MessageBox.Show("Selected file is not a valid Cell Pool Template file.");
+                MessageBox.Show("Selected file is not a valid Cell Pool Template file.", "Error");
                 return;
             }
             if (poolBase == null)
             {
-                MessageBox.Show("Selected file is not a valid Cell Pool Template file.");
+                MessageBox.Show("Selected file is not a valid Cell Pool Template file.", "Error");
                 return;
             }
             WriteDataToControl();
