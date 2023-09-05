@@ -77,8 +77,8 @@ namespace SiliFish.Services.Plotting.PlotSelection
             if (combineSomites || combinePools)
                 combineCells = true;
             return cells.OrderBy(c => c.CellGroup)
-                .ThenBy(c => c.Somite)
-                .ThenBy(c => c.Sequence)
+                .ThenBy(c => !combineSomites? c.Somite : 1)
+                .ThenBy(c => !combineCells ? c.Sequence :1)
                 .ThenByDescending(c => c.PositionLeftRight)
                 .GroupBy(c =>
                 !combinePools && !combineSomites && !combineCells ? $"{c.ID}" ://Each cell seperate
