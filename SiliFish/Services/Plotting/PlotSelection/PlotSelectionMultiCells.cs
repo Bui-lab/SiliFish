@@ -79,7 +79,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
             return cells.OrderBy(c => c.CellGroup)
                 .ThenBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)
-                .ThenBy(c => c.PositionLeftRight)
+                .ThenByDescending(c => c.PositionLeftRight)
                 .GroupBy(c =>
                 !combinePools && !combineSomites && !combineCells ? $"{c.ID}" ://Each cell seperate
                 !combinePools && !combineSomites && combineCells ? $"{c.CellPool.ID}-Somite:{c.Somite}" : //One group for each somite in a cell pool

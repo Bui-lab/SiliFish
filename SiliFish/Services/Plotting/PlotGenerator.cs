@@ -189,7 +189,7 @@ namespace SiliFish.Services.Plotting
                     break;
                 case PlotType.EpisodesTail:
                     Title = "Tail Beat Episodes";
-                    (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+                    (Coordinate[] tail_tip_coord, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
                     PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail = new(this, tail_tip_coord, episodes, model.TimeArray, iStart, iEnd);
                     plotGeneratorEpisodesTail.CreateCharts(charts);
                     break;
@@ -197,7 +197,7 @@ namespace SiliFish.Services.Plotting
                     Title = "Motoneuron Episodes";
                     int somite = Plot.Selection is PlotSelectionSomite pss ? pss.Somite : model.ModelDimensions.NumberOfSomites;
                     (List<Cell> LeftMNs, List<Cell> RightMNs) = model.GetMotoNeurons(somite);
-                    (double[] mnMaxPotentials, List<SwimmingEpisode> episodesMN) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, LeftMNs, RightMNs);
+                    (double[] mnMaxPotentials, SwimmingEpisodes episodesMN) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, LeftMNs, RightMNs);
                     PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN = new (this, mnMaxPotentials, episodesMN, model.TimeArray, iStart, iEnd);
                     plotGeneratorEpisodesMN.CreateCharts(charts);
                     break;

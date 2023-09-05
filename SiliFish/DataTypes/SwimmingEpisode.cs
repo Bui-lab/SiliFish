@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.DataTypes
 {
@@ -14,9 +15,10 @@ namespace SiliFish.DataTypes
     {
         private readonly double episodeStart;
         private double episodeEnd;
+        private bool episodeEnded = false;
         double lastBeatStart = -1;
         SagittalPlane lastbeatDirection;
-        public bool InBeat { get { return lastBeatStart >= 0; } }
+        public bool EpisodeEnded { get { return episodeEnded; } }
         List<Beat> beats;
         public List<Beat> Beats { get => beats; }
         public List<Beat> InlierBeats
@@ -26,12 +28,20 @@ namespace SiliFish.DataTypes
                 double n_1 = beats.Count - 1;
                 if (n_1 > 1)
                 {
+                    List<double> beatDurations = beats.Select(b => b.BeatEnd - b.BeatStart).ToList();
+                    beatDurations.Sort();
+                    double median = beatDurations[beats.Count / 2];
                     double avgDuration = beats.Average(b => b.BeatEnd - b.BeatStart);
                     double sumOfSquares = beats.Sum(b => (Math.Pow((b.BeatEnd - b.BeatStart - avgDuration), 2)));
                     double stdDev = Math.Sqrt(sumOfSquares / n_1);
                     double stdError = stdDev / Math.Sqrt(beats.Count);
                     double rangeMin = avgDuration - 1.96 * stdError;
                     double rangeMax = avgDuration + 1.96 * stdError;
+                    if (median < rangeMin || median > rangeMax)//use the mode instead of the mean
+                    {
+                        rangeMin = median - 1.96 * stdError;
+                        rangeMax = median + 1.96 * stdError;
+                    }
                     return beats.Where(b => (b.BeatEnd - b.BeatStart) >= rangeMin && (b.BeatEnd - b.BeatStart) <= rangeMax).ToList();
                 }
                 else return beats;
@@ -48,6 +58,7 @@ namespace SiliFish.DataTypes
         {
             episodeStart = start;
             episodeEnd = end;
+            episodeEnded = true;
             beats = new();
             lastBeatStart = start;
         }
@@ -82,6 +93,7 @@ namespace SiliFish.DataTypes
         {
             EndBeat(e);
             episodeEnd = e;
+            episodeEnded = true;
         }
 
         public int NumOfBeats { get { return beats?.Count ?? 0; } }
@@ -93,17 +105,48 @@ namespace SiliFish.DataTypes
 
         public double Start { get { return episodeStart; } }
         public double End { get { return episodeEnd; } }
+
+        /// <summary>
+        /// The start of a beat:
+        ///     If there is a beat before: the mid point between the two indices
+        /// The end of a beat:
+        ///     If there is a beat after: the mid point between the two indices
+        /// </summary>        
+        internal void Smooth()
+        {
+            if (beats.Count <= 1) return;
+            for (int i = 0; i < beats.Count - 2; i++)
+            {
+                double midPoint = (beats[i].BeatEnd + beats[i + 1].BeatStart) / 2;
+                beats[i] = new Beat()
+                {
+                    Direction = beats[i].Direction,
+                    BeatStart = beats[i].BeatStart,
+                    BeatEnd = midPoint
+                };
+                beats[i+1] = new Beat()
+                {
+                    Direction = beats[i+1].Direction,
+                    BeatStart = midPoint,
+                    BeatEnd = beats[i + 1].BeatEnd
+                };
+            }
+        }
         /// <summary>
         /// returns episode start and end times excluding the skip period (after skip, the time is set to 0)
+        /// The start of a beat:
+        ///     If there is a beat before: the mid point between the two indices
+        /// The end of a beat:
+        ///     If there is a beat after: the mid point between the two indices
         /// </summary>
         /// <param name="TimeArray"></param>
         /// <param name="leftIndices">indices including the skiped period</param>
         /// <param name="rightIndices">indices including the skiped period</param>
         /// <param name="episodeBreak"></param>
         /// <returns></returns>
-        public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
+        public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
         {
-            List<SwimmingEpisode> episodes = new();
+            SwimmingEpisodes episodes = new();
             bool inEpisode = false;
             SwimmingEpisode episode = null;
             double last_t = -1;
@@ -161,7 +204,7 @@ namespace SiliFish.DataTypes
                     episode = new(t);
                     episode.StartBeat(t, direction);
                     episode.EndBeat(beat_end);
-                    episodes.Add(episode);
+                    episodes.AddEpisode(episode);
                     
                 }
                 else if (last_t > 0)
@@ -180,15 +223,12 @@ namespace SiliFish.DataTypes
                 }
                 last_t = beat_end;
             }
-            if (inEpisode)//last episode is not completed
-            {
-                episodes.Last().EndEpisode(last_t);
-            }
+            episodes.Smooth(last_t);
             return episodes;
         }
-        public static List<SwimmingEpisode> GenerateEpisodes(double[] TimeArray, List<int> spikeIndices, double episodeBreak)
+        public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, List<int> spikeIndices, double episodeBreak)
         {
-            List<SwimmingEpisode> episodes = new();
+            SwimmingEpisodes episodes = new();
             bool inEpisode = false;
             SwimmingEpisode episode = null;
             double last_t = -1;
@@ -215,7 +255,7 @@ namespace SiliFish.DataTypes
                     episode = new(t);
                     episode.StartBeat(t, SagittalPlane.Both);
                     episode.EndBeat(beat_end);
-                    episodes.Add(episode);
+                    episodes.AddEpisode(episode);
 
                 }
                 else if (last_t > 0)
@@ -234,11 +274,10 @@ namespace SiliFish.DataTypes
                 }
                 last_t = beat_end;
             }
-            if (inEpisode)//last episode is not completed
-            {
-                episodes.Last().EndEpisode(last_t);
-            }
+            episodes.Smooth(last_t);
             return episodes;
         }
     }
+
+
 }

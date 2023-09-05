@@ -727,7 +727,7 @@ namespace SiliFish.UI.Controls
             }
             else if (Model is ModelTemplate mt)
             {
-                List<InterPoolTemplate> chemInterPools = mt.InterPoolTemplates.Where(jnc =>jnc.ConnectionType != ConnectionType.Gap).ToList();
+                List<InterPoolTemplate> chemInterPools = mt.InterPoolTemplates.Where(jnc => jnc.ConnectionType != ConnectionType.Gap).ToList();
                 if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
@@ -797,15 +797,15 @@ namespace SiliFish.UI.Controls
                 listGap.AppendItem(ip);
             }
             List<JunctionBase> chemJunctions = cp.Projections.Where(j => j is not GapJunction).ToList();
-                List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolConnections
-                    .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
-                foreach (InterPool ip in chemInterPools)
-                {
-                    if (ip.SourcePool == cp.ID)
-                        listOutgoing.AppendItem(ip);
-                    if (ip.TargetPool == cp.ID)
-                        listIncoming.AppendItem(ip);
-                }
+            List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolConnections
+                .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
+            foreach (InterPool ip in chemInterPools)
+            {
+                if (ip.SourcePool == cp.ID)
+                    listOutgoing.AppendItem(ip);
+                if (ip.TargetPool == cp.ID)
+                    listIncoming.AppendItem(ip);
+            }
         }
         private void LoadProjections(Cell cell)
         {
@@ -1477,5 +1477,15 @@ namespace SiliFish.UI.Controls
             p.Start();
         }
 
+        private void listGeneric_ListBoxActivated(object sender, EventArgs e)
+        {
+            listCellPools.BorderStyle = BorderStyle.None;
+            listCells.BorderStyle = BorderStyle.None;
+            listIncoming.BorderStyle = BorderStyle.None;
+            listOutgoing.BorderStyle = BorderStyle.None;
+            listGap.BorderStyle = BorderStyle.None;
+            listStimuli.BorderStyle = BorderStyle.None;
+            (sender as ListBoxControl).BorderStyle = BorderStyle.Fixed3D;
+        }
     }
 }

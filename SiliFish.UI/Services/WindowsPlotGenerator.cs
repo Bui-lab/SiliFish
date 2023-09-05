@@ -10,6 +10,7 @@ using SiliFish.UI;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace Services
 {
@@ -255,48 +256,49 @@ namespace Services
             int iEnd = model.RunParam.iIndex(tEnd);
             //FUTURE_IMPROVEMENT color
 
-            (Coordinate[] tail_tip_coord, List<SwimmingEpisode> episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+            (Coordinate[] tail_tip_coord, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
             leftImages.Add(UtilWindows.CreateLinePlot("Tail Movement",
                 tail_tip_coord.Select(c => c.X).ToArray(),
                 model.TimeArray, iStart, iEnd,
                 "X", null, null,
                 Color.Red));
-            if (episodes.Any())
+            double[] xValues, yValues;
+            if (episodes.HasEpisodes)
             {
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeDuration);
                 leftImages.Add(UtilWindows.CreateScatterPlot("Episode Duration",
-                    episodes.Select(e => e.EpisodeDuration).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
+                    xValues, yValues,
                     tStart, tEnd,
                     "Duration (ms)", 0, null,
                     Color.Red));
-                if (episodes.Count > 1)
+                if (episodes.EpisodeCount > 1)
                     leftImages.Add(UtilWindows.CreateScatterPlot("Episode Intervals",
-                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
-                        Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray(),
+                        Enumerable.Range(0, episodes.EpisodeCount - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray(),
+                        Enumerable.Range(0, episodes.EpisodeCount - 1).Select(i => episodes[i].End).ToArray(),
                         tStart, tEnd,
                         "Intervals (ms)", 0, null,
                         Color.Red));
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InstantFreq);
                 leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency",
-                    episodes.SelectMany(e => e.InstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray(),
+                    xValues, yValues,
                     tStart, tEnd,
                     "Freq.", 0, null,
                     Color.Red));
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InlierInstantFreq);
                 leftImages.Add(UtilWindows.CreateScatterPlot("Instantenous Frequency (Outliers removed)",
-                    episodes.SelectMany(e => e.InlierInstantFequency).ToArray(),
-                    episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray(),
+                    xValues, yValues,
                     tStart, tEnd,
                     "Freq.", 0, null,
                     Color.Red));
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
                 leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat Frequency",
-                    episodes.Select(e => e.BeatFrequency).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
+                    xValues, yValues,
                     tStart, tEnd,
                     "Freq.", 0, null,
                     Color.Red));
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatsPerEpisode);
                 leftImages.Add(UtilWindows.CreateScatterPlot("Tail Beat/Episode",
-                    episodes.Select(e => (double)e.Beats.Count).ToArray(),
-                    episodes.Select(e => e.Start).ToArray(),
+                    xValues, yValues,
                     tStart, tEnd,
                     "Count", 0, null,
                     Color.Red));

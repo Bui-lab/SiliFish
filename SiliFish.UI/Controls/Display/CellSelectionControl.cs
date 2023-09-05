@@ -167,7 +167,7 @@ namespace SiliFish.UI.Controls.Display
 
         public void SetPlot(PlotDefinition plot)
         {
-            PoolSubset = plot.PlotSubset;
+            ddPools.Text = PoolSubset = plot.PlotSubset;
             PlotSelectionInterface selection = plot.Selection;
             if (selection is PlotSelectionMultiCells multiCells)
             {

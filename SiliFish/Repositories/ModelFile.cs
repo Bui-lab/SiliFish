@@ -505,7 +505,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static void SaveEpisodesToCSV(string filename, int run, List<SwimmingEpisode> episodes)
+        public static void SaveEpisodesToCSV(string filename, int run, SwimmingEpisodes episodes)
         {
             if (filename == null || episodes == null)
                 return;
@@ -522,10 +522,10 @@ namespace SiliFish.Repositories
                 swBeats.WriteLine("Run,Episode,Beat,Start,Finish,Instan.Freq.");
             }
             int epiCounter = 1;
-            foreach (SwimmingEpisode episode in episodes)
+            foreach (SwimmingEpisode episode in episodes.Episodes)
             {
                 double? timeToNext = null;
-                if (epiCounter < episodes.Count - 2)
+                if (epiCounter < episodes.EpisodeCount - 2)
                 {
                     SwimmingEpisode nextEpisode = episodes[epiCounter];//1-based index is used
                     timeToNext = nextEpisode.Start - episode.End;

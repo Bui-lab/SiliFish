@@ -23,6 +23,7 @@ namespace SiliFish.UI.Controls
         public event EventHandler ItemHighlight;
         public event EventHandler ItemsExport;
         public event EventHandler ItemsImport;
+        public event EventHandler ListBoxActivated;
 
         public int SelectedIndex
         {
@@ -40,7 +41,7 @@ namespace SiliFish.UI.Controls
             {
                 for (int i = 0; i < listBox.Items.Count; i++)
                 {
-                    if (listBox.Items[i]==value ||
+                    if (listBox.Items[i] == value ||
                         listBox.Items[i].ToString() == value.ToString())
                     {
                         listBox.SelectedIndices.Clear();
@@ -223,6 +224,7 @@ namespace SiliFish.UI.Controls
         }
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
+            ListBoxActivated?.Invoke(this, EventArgs.Empty);
             miSortAlphabetically.Visible = ItemsSort != null;
 
             miActivate.Visible = miDeactivate.Visible = false;
@@ -376,6 +378,11 @@ namespace SiliFish.UI.Controls
         private void listBox_Leave(object sender, EventArgs e)
         {
             toolTip.RemoveAll();
+        }
+
+        private void listBox_Enter(object sender, EventArgs e)
+        {
+            ListBoxActivated?.Invoke(this, EventArgs.Empty);
         }
     }
 }

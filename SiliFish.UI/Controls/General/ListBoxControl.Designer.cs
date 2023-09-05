@@ -70,6 +70,7 @@
             listBox.MouseClick += listBox_MouseClick;
             listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
             listBox.DoubleClick += listBox_DoubleClick;
+            listBox.Enter += listBox_Enter;
             listBox.KeyDown += listBox_KeyDown;
             listBox.Leave += listBox_Leave;
             // 

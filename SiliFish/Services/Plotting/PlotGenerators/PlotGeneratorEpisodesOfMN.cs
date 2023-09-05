@@ -16,8 +16,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     internal class PlotGeneratorEpisodesOfMN : PlotGeneratorBase
     {
         readonly double[] mnMaxPotentials;
-        readonly List<SwimmingEpisode> episodes;
-        public PlotGeneratorEpisodesOfMN(PlotGenerator plotGenerator, double[] mnMaxPotentials, List<SwimmingEpisode> episodes,
+        readonly SwimmingEpisodes episodes;
+        public PlotGeneratorEpisodesOfMN(PlotGenerator plotGenerator, double[] mnMaxPotentials, SwimmingEpisodes episodes,
             double[] timeArray, int iStart, int iEnd) :
             base(plotGenerator, timeArray, iStart, iEnd)
         {
@@ -48,13 +48,12 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             };
             if (!AddChart(chart)) return;
 
-            if (episodes.Any())
+            if (episodes.HasEpisodes)
             {
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => e.EpisodeDuration).ToArray();
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeDuration);
                 title = "Time,Episode Duration";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
+                data = new string[episodes.EpisodeCount];
+                foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
                 chart = new Chart
@@ -70,13 +69,13 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 };
                 if (!AddChart(chart)) return;
 
-                if (episodes.Count > 1)
+                if (episodes.EpisodeCount > 1)
                 {
-                    xValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i].End).ToArray();
-                    yValues = Enumerable.Range(0, episodes.Count - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
+                    xValues = Enumerable.Range(0, episodes.EpisodeCount - 1).Select(i => episodes[i].End).ToArray();
+                    yValues = Enumerable.Range(0, episodes.EpisodeCount - 1).Select(i => episodes[i + 1].Start - episodes[i].End).ToArray();
                     title = "Time,Episode Intervals";
-                    data = new string[episodes.Count];
-                    foreach (int i in Enumerable.Range(0, episodes.Count - 1))
+                    data = new string[episodes.EpisodeCount];
+                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount - 1))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
                     chart = new Chart
@@ -93,8 +92,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     if (!AddChart(chart)) return;
                 }
 
-                xValues = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
-                yValues = episodes.SelectMany(e => e.InstantFequency).ToArray();
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InstantFreq);
                 title = "Time,Instant. Freq.";
                 data = new string[xValues.Length];
                 foreach (int i in Enumerable.Range(0, xValues.Length))
@@ -113,10 +111,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 };
                 if (!AddChart(chart)) return;
 
-                xValues = episodes.SelectMany(e => e.InlierBeats.Select(b => b.BeatStart)).ToArray();
+
+
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InlierInstantFreq);
                 if (xValues.Any())
                 {
-                    yValues = episodes.SelectMany(e => e.InlierInstantFequency).ToArray();
                     title = "Time,Instant. Freq.";
                     data = new string[xValues.Length];
                     foreach (int i in Enumerable.Range(0, xValues.Length))
@@ -136,11 +135,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     if (!AddChart(chart)) return;
                 }
 
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => e.BeatFrequency).ToArray();
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
                 title = "Time,Tail Beat Freq.";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
+                data = new string[episodes.EpisodeCount];
+                foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
                 chart = new Chart
@@ -156,11 +154,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 };
                 if (!AddChart(chart)) return;
 
-                xValues = episodes.Select(e => e.Start).ToArray();
-                yValues = episodes.Select(e => (double)e.Beats.Count).ToArray();
+                (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatsPerEpisode);
                 title = "Time,Tail Beat/Episode";
-                data = new string[episodes.Count];
-                foreach (int i in Enumerable.Range(0, episodes.Count))
+                data = new string[episodes.EpisodeCount];
+                foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                     data[i] = xValues[i] + "," + yValues[i];
                 csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
                 chart = new Chart

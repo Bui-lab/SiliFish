@@ -161,7 +161,7 @@ namespace SiliFish.Services
             }
             return somiteCoordinates;
         }
-        public static (Coordinate[], List<SwimmingEpisode>) GetSwimmingEpisodesUsingMuscleCells(RunningModel model)
+        public static (Coordinate[], SwimmingEpisodes) GetSwimmingEpisodesUsingMuscleCells(RunningModel model)
         {
             /*Converted from the code written by Yann Roussel and Tuan Bui
             This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
@@ -188,7 +188,7 @@ namespace SiliFish.Services
             double dt = model.RunParam.DeltaT;
             double offset = model.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.EpisodeBreak / dt);
-            List<SwimmingEpisode> episodes = new();
+            SwimmingEpisodes episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);
             while (i < nMax)
@@ -210,13 +210,13 @@ namespace SiliFish.Services
                     if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
                     {
                         lastEpisode = new SwimmingEpisode(t);
-                        episodes.Add(lastEpisode);
+                        episodes.AddEpisode(lastEpisode);
                         side = LEFT;
                     }
                     else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
                     {
                         lastEpisode = new SwimmingEpisode(t);
-                        episodes.Add(lastEpisode);
+                        episodes.AddEpisode(lastEpisode);
                         side = RIGHT;
                     }
                 }
@@ -238,15 +238,15 @@ namespace SiliFish.Services
                 }
                 i++;
             }
-            if (episodes.Count==1 && episodes[0].End == 0 && episodes[0].Start > 0)//single episode that is not completed. Assume tmax is the end time of the episode
+            if (episodes.EpisodeCount==1 && episodes[0].End == 0 && episodes[0].Start > 0)//single episode that is not completed. Assume tmax is the end time of the episode
             {
                 episodes[0].EndEpisode(model.TimeArray[^1]);
             }
-            return (tail_tip_coord, episodes.Where(e => e.End > 0).ToList());
+            return (tail_tip_coord, episodes);
         }
 
 
-        public static (double[], List<SwimmingEpisode>) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs)
+        public static (double[], SwimmingEpisodes) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs)
         { 
             double episodeBreak = model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = new();
@@ -259,9 +259,9 @@ namespace SiliFish.Services
             leftSpikes.Sort();
             rightSpikes.Sort();
 
-            List<SwimmingEpisode> Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, rightSpikes, episodeBreak);
+            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, rightSpikes, episodeBreak);
             double[] range = new double[model.TimeArray.Length - iSkip];
-            foreach(SwimmingEpisode episode in Episodes)
+            foreach(SwimmingEpisode episode in Episodes.Episodes)
             {
                 foreach (Beat beat in episode.Beats)
                 {

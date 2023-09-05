@@ -371,7 +371,7 @@ namespace SiliFish.UI.Controls
             {
                 foreach (Chart chart in LastPlottedCharts)
                 {
-                    string title = chart.Title.Replace("'", "").Replace("\"", "").Replace("`", "");
+                    string title = chart.Title.Replace("'", "_").Replace("\"", "_").Replace("`", "_").Replace("/", "_");
                     string ext = Path.GetExtension(saveFileCSV.FileName);
                     string path = Path.GetDirectoryName(saveFileCSV.FileName);
                     string filename = Path.GetFileNameWithoutExtension(saveFileCSV.FileName);
@@ -1075,10 +1075,10 @@ namespace SiliFish.UI.Controls
 
             int cellNumber = (int)eKinematicsSomite.Value;
             (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons(cellNumber);
-            (_, List<SwimmingEpisode> episodes) =
+            (_, SwimmingEpisodes episodes) =
                 SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
             List<Cell> allMNs = cbSpikingMNs.Checked ? LeftMNs.Union(RightMNs).Where(c => c.IsSpiking()).OrderBy(c => c.CellGroup).ToList() :
-                LeftMNs.Union(RightMNs).OrderBy(c => c.CellGroup).ToList();
+                RightMNs.Union(LeftMNs).OrderBy(c => c.CellGroup).ToList();
 
             PlotSelectionInterface plotSelection = new PlotSelectionUnits()
             {
@@ -1101,7 +1101,7 @@ namespace SiliFish.UI.Controls
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             eEpisodes.Text = "";
-            foreach (SwimmingEpisode episode in episodes)
+            foreach (SwimmingEpisode episode in episodes.Episodes)
                 eEpisodes.Text += episode.ToString() + "\r\n\r\n";
             lKinematicsTimes.Text = $"Last kinematics:{DateTime.Now:t}";
         }
@@ -1188,8 +1188,8 @@ namespace SiliFish.UI.Controls
                 List<int> spikes = cellSpikes[cell];
                 if (cbSpikeEpisodes.Checked)
                 {
-                    List<SwimmingEpisode> Episodes = SwimmingEpisode.GenerateEpisodes(RunningModel.TimeArray, spikes, episodeBreak);
-                    foreach (SwimmingEpisode episode in Episodes)
+                    SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(RunningModel.TimeArray, spikes, episodeBreak);
+                    foreach (SwimmingEpisode episode in Episodes.Episodes)
                     {
                         int rowIndex = AddCellToSpikeGrid(cell);
                         dgSpikeStats[colSpikeEpisode.Index, rowIndex].Value = "Start";
