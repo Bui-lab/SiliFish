@@ -93,7 +93,9 @@ namespace SiliFish.ModelUnits.Stim
 
         public override string ToString()
         {
-            return TargetCell.ID + ": " + Settings.ToString() + (Active ? "" : " (inactive)");
+            string timeline = TimeLine_ms != null && !TimeLine_ms.IsBlank() ? TimeLine_ms.ToString() : "";
+            string active = Active ? "" : " (inactive)";
+            return $"{TargetCell.ID}: {Settings} {timeline} {active}".Replace("  ", " ");
         }
 
         public double[] GetValues(int nMax)

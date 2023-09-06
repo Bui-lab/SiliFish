@@ -10,7 +10,7 @@ namespace SiliFish.UI.Controls
 
     public partial class ListBoxControl : UserControl
     {
-        private Dictionary<int, object> HiddenItems = new();
+        private List<object> HiddenItems = new();
 
         public event EventHandler ItemAdd;
         public event EventHandler ItemDelete;
@@ -185,16 +185,15 @@ namespace SiliFish.UI.Controls
                 if (exists && !active)
                 {
                     listBox.Items.RemoveAt(ind);
-                    HiddenItems.Add(ind, obj);
+                    HiddenItems.Add(obj);
                 }
             }
         }
 
         private void miShowAll_Click(object sender, EventArgs e)
         {
-            foreach (int ind in HiddenItems.Keys.OrderBy(k => k))
-                //listBox.Items.Add(HiddenItems[ind]);
-                listBox.Items.Insert(ind, HiddenItems[ind]);
+            foreach (object obj in HiddenItems)
+                listBox.Items.Add(obj);
             HiddenItems.Clear();
         }
         private void miExport_Click(object sender, EventArgs e)
@@ -277,10 +276,8 @@ namespace SiliFish.UI.Controls
                 return listBox.Items.Cast<object>().ToList();
             List<object> fullList = new();
             fullList.AddRange(listBox.Items.Cast<object>().ToList());
-            foreach (int index in HiddenItems.Keys.OrderBy(k => k))
-            {
-                fullList.Insert(index, HiddenItems[index]);
-            }
+            foreach (object obj in HiddenItems)
+                fullList.Add(obj);
             return fullList;
         }
 

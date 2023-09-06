@@ -41,7 +41,9 @@ namespace SiliFish.ModelUnits.Stim
         }
         public override string ToString()
         {
-            return ID + (Active ? "" : " (inactive)");
+            string timeline = TimeLine_ms != null && !TimeLine_ms.IsBlank() ? TimeLine_ms.ToString() : "";
+            string active = Active ? "" : " (inactive)";
+            return $"{ID}: {Settings} {timeline} {active}".Replace("  ", " ");
         }
         [JsonIgnore]
         public override string ID => $"Target: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
