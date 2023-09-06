@@ -84,7 +84,7 @@ namespace SiliFish.ModelUnits.Stim
             TargetCell = Model.GetCell(values[1]);
             Settings.ImportValues(values.Take(new Range(2, (StimulusSettings.ColumnNames.Count + 1))).ToList());
             TimeLine_ms.ImportValues(values.Take(new Range(StimulusSettings.ColumnNames.Count + 2, values.Length)).ToList());
-            TargetCell.AddStimulus(this);
+            TargetCell?.AddStimulus(this);
         }
         public override ModelUnitBase CreateCopy()
         {
