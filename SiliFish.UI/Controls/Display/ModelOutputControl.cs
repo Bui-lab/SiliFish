@@ -310,7 +310,7 @@ namespace SiliFish.UI.Controls
                 return;
             }
             GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, (PlotSelectionMultiCells)plotSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, plotSelection);
             DisplayNumberOfPlots(Cells, Pools);
         }
 
@@ -485,6 +485,8 @@ namespace SiliFish.UI.Controls
             {
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection);
             }
+            if (plotsubset == "Selection" && PlotType.GetGroup() == "episode")
+                PlotType = PlotType.MembPotential;
             if (lastPlot != null &&
                 lastPlot.PlotSubset.Equals(plotsubset) &&
                 lastPlot.PlotType.Equals(PlotType) &&
