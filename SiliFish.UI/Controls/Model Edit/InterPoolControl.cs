@@ -99,7 +99,8 @@ namespace SiliFish.UI.Controls
                     default:
                         break;
                 }
-                interPoolTemplate.Parameters["ERev"] = new Constant_NoDistribution(EReversal);
+                if (interPoolTemplate?.Parameters != null)
+                    interPoolTemplate.Parameters["ERev"] = new Constant_NoDistribution(EReversal);
             }
             interPoolTemplate.SourcePool = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
