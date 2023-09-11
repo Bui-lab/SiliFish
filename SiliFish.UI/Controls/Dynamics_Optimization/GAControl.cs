@@ -1,13 +1,17 @@
-﻿using SiliFish.DataTypes;
+﻿using OxyPlot;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.EventArguments;
 using System.Data;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Windows.Gaming.XboxLive.Storage;
 
@@ -108,22 +112,23 @@ namespace SiliFish.UI.Controls
                 {
                     exhaustiveSolverOutput = currentOutput;
                     exhaustiveBestSolver = solver;
-                    if (exhaustiveBestParameters.Count < GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
-                        exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
-                    else
-                    {
-                        double minFitness = exhaustiveBestParameters.Min(ebp => ebp.Fitness);
-                        if (minFitness < currentOutput.BestFitness)
-                        {
-                            var toRemove = exhaustiveBestParameters.Find(ebp => ebp.Fitness == minFitness);
-                            exhaustiveBestParameters.Remove(toRemove);
-                        }
-                        exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
-                    }
-
                     Invoke(TriggerOptimizationLoop);
                 }
-                if (exhaustiveSolverOutput?.BestFitness >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon
+                if (exhaustiveBestParameters.Count < GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
+                    exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
+                else
+                {
+                    double minFitness = exhaustiveBestParameters.Min(ebp => ebp.Fitness);
+                    if (minFitness < currentOutput.BestFitness)
+                    {
+                        var toRemove = exhaustiveBestParameters.Find(ebp => ebp.Fitness == minFitness);
+                        exhaustiveBestParameters.Remove(toRemove);
+                        exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
+                    }
+                }
+
+
+                if (exhaustiveBestParameters.Min(ebp => ebp.Fitness) >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon
                     && exhaustiveBestParameters.Count == GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
                     break;
             }
@@ -150,11 +155,13 @@ namespace SiliFish.UI.Controls
                 btnOptimizePrev.Enabled = false;
                 btnOptimizeNext.Enabled = exhaustiveBestParameters.Count > 1;
                 exhaustiveBestSolverIterator = 0;
+                linkExportExhOptRes.Visible = true;
             }
             else
             {
                 btnOptimizePrev.Visible =
                 btnOptimizeNext.Visible = false;
+                linkExportExhOptRes.Visible = false;
             }
             CompleteOptimization();
         }
@@ -599,8 +606,7 @@ namespace SiliFish.UI.Controls
             btnOptimizeNext.Enabled = true;
             Parameters = exhaustiveBestParameters[--exhaustiveBestSolverIterator].Parameters;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
-            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
-            double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
+            double fitness = exhaustiveBestParameters[exhaustiveBestSolverIterator].Fitness;
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
             if (exhaustiveBestSolverIterator == 0)
                 btnOptimizePrev.Enabled = false;
@@ -612,12 +618,30 @@ namespace SiliFish.UI.Controls
             btnOptimizePrev.Enabled = true;
             Parameters = exhaustiveBestParameters[++exhaustiveBestSolverIterator].Parameters;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
-            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
-            double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
+            double fitness = exhaustiveBestParameters[exhaustiveBestSolverIterator].Fitness;
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
             if (exhaustiveBestSolverIterator == exhaustiveBestParameters.Count - 1)
                 btnOptimizeNext.Enabled = false;
         }
 
+        private void linkExportExhOptRes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (exhaustiveBestParameters.Any() == false) return;
+            saveFileCSV.InitialDirectory = GAFileDefaultFolder;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                using FileStream fs = File.Open(saveFileCSV.FileName, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                sw.WriteLine(string.Join(",", string.Join(",", exhaustiveBestParameters[0].Parameters.Keys), "fitness", "rheobase"));
+                foreach (var bp in exhaustiveBestParameters)
+                {
+                    CellCore core = CellCore.CreateCore(CoreType, bp.Parameters, DeltaT, DeltaTEuler);
+                    double rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
+                    sw.WriteLine(string.Join(",", string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
+                }
+                FileUtil.ShowFile(saveFileCSV.FileName);
+            }
+
+        }
     }
 }

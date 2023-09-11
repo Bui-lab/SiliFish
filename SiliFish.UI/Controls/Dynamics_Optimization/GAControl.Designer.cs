@@ -48,6 +48,7 @@
             btnCalculateFitness = new Button();
             pLineFitnessFunctions = new Panel();
             lFitnessFunctions = new Label();
+            linkExportExhOptRes = new LinkLabel();
             btnOptimizeNext = new Button();
             btnOptimizePrev = new Button();
             btnOptimizeExhaustive = new Button();
@@ -80,6 +81,7 @@
             openFileJson = new OpenFileDialog();
             saveFileJson = new SaveFileDialog();
             toolTip = new ToolTip(components);
+            saveFileCSV = new SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)splitGA).BeginInit();
             splitGA.Panel1.SuspendLayout();
             splitGA.Panel2.SuspendLayout();
@@ -109,6 +111,7 @@
             // splitGA.Panel2
             // 
             splitGA.Panel2.BackColor = Color.White;
+            splitGA.Panel2.Controls.Add(linkExportExhOptRes);
             splitGA.Panel2.Controls.Add(btnOptimizeNext);
             splitGA.Panel2.Controls.Add(btnOptimizePrev);
             splitGA.Panel2.Controls.Add(btnOptimizeExhaustive);
@@ -317,6 +320,19 @@
             lFitnessFunctions.TabIndex = 2;
             lFitnessFunctions.Text = "Fitness Functions";
             // 
+            // linkExportExhOptRes
+            // 
+            linkExportExhOptRes.AutoSize = true;
+            linkExportExhOptRes.LinkColor = Color.FromArgb(64, 64, 64);
+            linkExportExhOptRes.Location = new Point(6, 350);
+            linkExportExhOptRes.Name = "linkExportExhOptRes";
+            linkExportExhOptRes.Size = new Size(212, 15);
+            linkExportExhOptRes.TabIndex = 55;
+            linkExportExhOptRes.TabStop = true;
+            linkExportExhOptRes.Text = "Export Exhaustive Optimization Results";
+            linkExportExhOptRes.Visible = false;
+            linkExportExhOptRes.LinkClicked += linkExportExhOptRes_LinkClicked;
+            // 
             // btnOptimizeNext
             // 
             btnOptimizeNext.BackColor = Color.FromArgb(96, 125, 139);
@@ -469,7 +485,7 @@
             // lOptimizationOutput
             // 
             lOptimizationOutput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lOptimizationOutput.Location = new Point(6, 346);
+            lOptimizationOutput.Location = new Point(6, 371);
             lOptimizationOutput.Name = "lOptimizationOutput";
             lOptimizationOutput.Size = new Size(270, 27);
             lOptimizationOutput.TabIndex = 45;
@@ -643,6 +659,10 @@
             // 
             saveFileJson.Filter = "JSON files(*.json)|*.json";
             // 
+            // saveFileCSV
+            // 
+            saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
             // GAControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -723,5 +743,7 @@
         private Button btnOptimizeExhaustive;
         private Button btnOptimizeNext;
         private Button btnOptimizePrev;
+        private LinkLabel linkExportExhOptRes;
+        private SaveFileDialog saveFileCSV;
     }
 }

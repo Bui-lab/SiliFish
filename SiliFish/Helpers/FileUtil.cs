@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -95,6 +96,18 @@ namespace SiliFish.Helpers
             return target;
         }
 
+        public static void ShowFile(string filename)
+        {
+            Process p = new()
+            {
+                StartInfo = new ProcessStartInfo(filename)
+                {
+                    UseShellExecute = true
+                }
+            };
+            p.Start();
+
+        }
 
     }
 }

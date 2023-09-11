@@ -432,14 +432,7 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model))
                 {
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileCSV.FileName);
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -626,14 +619,7 @@ namespace SiliFish.UI.Controls
                 {
                     if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPool))
                     {
-                        Process p = new()
-                        {
-                            StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
-                            {
-                                UseShellExecute = true
-                            }
-                        };
-                        p.Start();
+                        FileUtil.ShowFile(saveFileCSV.FileName);
                     }
                     else
                         MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -1025,14 +1011,7 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, unit, gap, chemin, chemout))
                 {
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileCSV.FileName);
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -1360,14 +1339,7 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnit))
                 {
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileCSV.FileName);
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -1467,14 +1439,7 @@ namespace SiliFish.UI.Controls
             if (string.IsNullOrEmpty(json))
                 json = JsonUtil.ToJson(Model);
             string fullPath = FileUtil.SaveToTempFolder(filename, json);
-            Process p = new()
-            {
-                StartInfo = new ProcessStartInfo(fullPath)
-                {
-                    UseShellExecute = true
-                }
-            };
-            p.Start();
+            FileUtil.ShowFile(fullPath);
         }
 
         private void listGeneric_ListBoxActivated(object sender, EventArgs e)

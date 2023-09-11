@@ -310,7 +310,7 @@ namespace SiliFish.UI.Controls
                 return;
             }
             GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, (PlotSelectionMultiCells)plotSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, plotSelection);
             DisplayNumberOfPlots(Cells, Pools);
         }
 
@@ -407,14 +407,7 @@ namespace SiliFish.UI.Controls
                 {
                     File.WriteAllText(saveFileJson.FileName, json);
                     fileSaved = true;
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileJson.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileJson.FileName);
                 }
             }
             catch (Exception exc)
@@ -485,6 +478,8 @@ namespace SiliFish.UI.Controls
             {
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection);
             }
+            if (plotsubset == "Selection" && PlotType.GetGroup() == "episode")
+                PlotType = PlotType.MembPotential;
             if (lastPlot != null &&
                 lastPlot.PlotSubset.Equals(plotsubset) &&
                 lastPlot.PlotType.Equals(PlotType) &&
@@ -1127,14 +1122,7 @@ namespace SiliFish.UI.Controls
                 {
                     FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
                     saved = true;
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileCSV.FileName);
                 }
                 catch (Exception exc)
                 {

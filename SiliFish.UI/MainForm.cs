@@ -460,14 +460,8 @@ namespace SiliFish.UI
                     lastFileName = saveFileExcel.FileName;
                     this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileExcel.FileName)}";
                     modelControl.ModelUpdated = false;
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileExcel.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileExcel.FileName);
+
                     return true;
                 }
                 return false;

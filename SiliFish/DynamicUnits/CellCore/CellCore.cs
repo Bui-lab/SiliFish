@@ -39,6 +39,7 @@ namespace SiliFish.DynamicUnits
 
         public static CellCore CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)
         {
+            if (string.IsNullOrEmpty(coreType)) return null;
             CellCore core = (CellCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
             if (dt_euler != null)
                 core.deltaTEuler = (double)dt_euler;
