@@ -11,6 +11,7 @@ using SiliFish.Repositories;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.EventArguments;
 using System.Data;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Windows.Gaming.XboxLive.Storage;
 
@@ -637,9 +638,10 @@ namespace SiliFish.UI.Controls
                     CellCore core = CellCore.CreateCore(CoreType, bp.Parameters, DeltaT, DeltaTEuler);
                     double rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
                     sw.WriteLine(string.Join(",", string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
-
                 }
+                FileUtil.ShowFile(saveFileCSV.FileName);
             }
+
         }
     }
 }

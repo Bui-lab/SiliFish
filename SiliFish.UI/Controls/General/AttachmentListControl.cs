@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,19 +25,12 @@ namespace SiliFish.UI.Controls
         private void cmiViewFile_Click(object sender, EventArgs e)
         {
             string filename = listAttachments.SelectedItem.ToString();
-            Process p = new()
-            {
-                StartInfo = new ProcessStartInfo(filename)
-                {
-                    UseShellExecute = true
-                }
-            };
             if (!File.Exists(filename))
             {
                 MessageBox.Show($"Path or file {filename} does not exist.", "Error");
                 return;
             }
-            p.Start();
+            FileUtil.ShowFile(filename);
         }
 
         private void cmiAddAttachment_Click(object sender, EventArgs e)

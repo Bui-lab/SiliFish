@@ -407,14 +407,7 @@ namespace SiliFish.UI.Controls
                 {
                     File.WriteAllText(saveFileJson.FileName, json);
                     fileSaved = true;
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileJson.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileJson.FileName);
                 }
             }
             catch (Exception exc)
@@ -1129,14 +1122,7 @@ namespace SiliFish.UI.Controls
                 {
                     FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
                     saved = true;
-                    Process p = new()
-                    {
-                        StartInfo = new ProcessStartInfo(saveFileCSV.FileName)
-                        {
-                            UseShellExecute = true
-                        }
-                    };
-                    p.Start();
+                    FileUtil.ShowFile(saveFileCSV.FileName);
                 }
                 catch (Exception exc)
                 {
