@@ -1,14 +1,16 @@
 ﻿using GeneticSharp;
+using SiliFish.Definitions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 //https://diegogiacomelli.com.br/function-optimization-with-geneticsharp/
 namespace SiliFish.Services.Optimization
 {
     public class CoreSolverOutput
     {
-        public Dictionary<string, double> BestValues;
-        public double BestFitness;
+        public Dictionary<string, double> Values;
+        public double Fitness;
         public string ErrorMessage;
     }
     public class CoreSolver
@@ -26,6 +28,7 @@ namespace SiliFish.Services.Optimization
 
         private double latestFitness = 0.0;
         private double bestFitness = 0.0;
+        private List<FloatingPointChromosome> Candidates;
         /// <summary>
         /// The algorithm does not always return the best solution, if the next generation's solution is not as well.
         /// bestestchromosome is kept as a bookmark, and returns the best available solution at the end. 
@@ -151,22 +154,47 @@ namespace SiliFish.Services.Optimization
                 Termination = Termination,
                 Reinsertion = Reinsertion
             };
+            latestFitness = 0;
+            Candidates = new();
         }
-        public CoreSolverOutput Optimize()
+
+        private void CheckResult(FloatingPointChromosome chromosome, bool single)
+        {
+            latestFitness = chromosome.Fitness.Value;
+            if (bestFitness < latestFitness)
+            {
+                bestFitness = latestFitness;
+                bestestChromosome = chromosome;
+                if (single)
+                {
+                    Candidates.Clear();
+                    Candidates.Add(chromosome);
+                    return;
+                }
+            }
+            if (Candidates.Count < GlobalSettings.GeneticAlgorithmSolutionCount) 
+                Candidates.Add(chromosome);
+            else if (Candidates.Min(c => c.Fitness.Value) < latestFitness)
+            {
+                FloatingPointChromosome toRemove = Candidates.First(c=>c.Fitness.Value <= Candidates.Min(c => c.Fitness.Value) + double.Epsilon);
+                Candidates.Remove(toRemove);
+                Candidates.Add(chromosome);
+            }
+        }
+
+        public (List<CoreSolverOutput> Outputs, string ErrMessage) Optimize(bool single)
         {
             try
             {
-                CoreSolverOutput output = new();
+                string errMessage = null;
                 InitializeOptimization();
-                latestFitness = 0.0;
+
                 Algorithm.GenerationRan += (sender, e) =>
                 {
-                    var bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
-                    latestFitness = bestChromosome.Fitness.Value;
-                    if (bestFitness < latestFitness)
+                    FloatingPointChromosome bestChromosome = Algorithm.BestChromosome as FloatingPointChromosome;
+                    if (bestChromosome != null)
                     {
-                        bestFitness = latestFitness;
-                        bestestChromosome = bestChromosome;
+                        CheckResult(bestChromosome, single);
                     }
                 };
                 errorMessage = "";
@@ -176,23 +204,29 @@ namespace SiliFish.Services.Optimization
                 }
                 catch (Exception exc)
                 {
-                    output.ErrorMessage = exc.Message;
+                    errMessage = exc.Message;
                 }
 
-                Dictionary<string, double> BestValues = new();
-                int iter = 0;
-                foreach (string key in Settings.SortedKeys)
+                List<CoreSolverOutput> results = new();
+                foreach (FloatingPointChromosome chromosome in Candidates)
                 {
-                    var phenotype = (bestestChromosome as FloatingPointChromosome).ToFloatingPoints();
-                    BestValues.Add(key, phenotype[iter++]);
+                    CoreSolverOutput output = new();
+                    Dictionary<string, double> BestValues = new();
+                    int iter = 0;
+                    foreach (string key in Settings.SortedKeys)
+                    {
+                        var phenotype = (bestestChromosome as FloatingPointChromosome).ToFloatingPoints();
+                        BestValues.Add(key, phenotype[iter++]);
+                    }
+                    output.Values = BestValues;
+                    output.Fitness = bestestChromosome.Fitness ?? 0;
+                    results.Add(output);
                 }
-                output.BestValues = BestValues;
-                output.BestFitness = bestestChromosome.Fitness ?? 0;
-                return output;
+                return (results, errMessage);
             }
-            catch 
+            catch (Exception e) 
             {
-                return null;
+                return (null, e.Message);
             }
         }
         public void CancelOptimization()

@@ -47,7 +47,8 @@ namespace SiliFish.Definitions
         public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
-        public static int GeneticAlgorithmExhaustiveSolutionCount = 10;
+        public static int GeneticAlgorithmSolutionCount = 3;
+        public static int GeneticAlgorithmExhaustiveSolutionCount = 100;
 
         [JsonIgnore, Browsable(false)]
         public static List<string> TempFiles = new();
@@ -178,10 +179,15 @@ namespace SiliFish.Definitions
         public double GeneticAlgorithmMaxValue { get { return GlobalSettings.GeneticAlgorithmMaxValue; } set { GlobalSettings.GeneticAlgorithmMaxValue = value; } }
 
 
-        [Description("Valid for all parameters."),
-            DisplayName("# of solutions to keep in exhaustive search"),
+        [Description("Valid for all exhaustive search."),
+            DisplayName("# of solutions per each setting combination"),
             Category("Genetic Algorithm")]
-        public int GeneticAlgorithmSolutionCount { get { return GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount; } set { GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount = value; } }
+        public int GeneticAlgorithmSolutionCount { get { return GlobalSettings.GeneticAlgorithmSolutionCount; } set { GlobalSettings.GeneticAlgorithmSolutionCount = value; } }
+
+        [Description("Valid for all exhaustive search."),
+            DisplayName("# of total solutions"),
+            Category("Genetic Algorithm")]
+        public int GeneticAlgorithmExhaustiveSolutionCount { get { return GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount; } set { GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount = value; } }
         #endregion
 
         #region Simulation

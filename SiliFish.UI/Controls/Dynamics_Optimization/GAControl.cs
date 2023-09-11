@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿using GeneticSharp;
+using OxyPlot;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
@@ -88,10 +89,32 @@ namespace SiliFish.UI.Controls
             exhaustiveSearch = false;
             optimizationStartTime = DateTime.Now;
             optimizationCancelled = false;
-            solverOutput = solver.Optimize();
+            solverOutput = solver.Optimize(single:true).Outputs[0];
             Invoke(CompleteOptimization);
         }
 
+        private void CheckResult(CoreSolverOutput currentOutput)
+        {
+            if (exhaustiveSolverOutput == null || exhaustiveSolverOutput.Fitness <= currentOutput.Fitness)
+            {
+                exhaustiveSolverOutput = currentOutput;
+                exhaustiveBestSolver = solver;
+                Invoke(TriggerOptimizationLoop);
+            }
+            if (exhaustiveBestParameters.Count < GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
+                exhaustiveBestParameters.Add((currentOutput.Fitness, currentOutput.Values));
+            else
+            {
+                double minFitness = exhaustiveBestParameters.Min(ebp => ebp.Fitness);
+                if (minFitness < currentOutput.Fitness)
+                {
+                    var toRemove = exhaustiveBestParameters.Find(ebp => ebp.Fitness == minFitness);
+                    exhaustiveBestParameters.Remove(toRemove);
+                    exhaustiveBestParameters.Add((currentOutput.Fitness, currentOutput.Values));
+                }
+            }
+
+        }
         private void RunOptimizeExhaustive()
         {
             if (exhaustiveSolverList == null || !exhaustiveSolverList.Any()) return;
@@ -107,30 +130,13 @@ namespace SiliFish.UI.Controls
                 if (optimizationCancelled) break;
                 solver = iterSolver;
                 exhaustiveSolverIterator++;
-                CoreSolverOutput currentOutput = solver.Optimize();
-                if (exhaustiveSolverOutput == null || exhaustiveSolverOutput.BestFitness <= currentOutput.BestFitness)
-                {
-                    exhaustiveSolverOutput = currentOutput;
-                    exhaustiveBestSolver = solver;
-                    Invoke(TriggerOptimizationLoop);
-                }
-                if (exhaustiveBestParameters.Count < GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
-                    exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
-                else
-                {
-                    double minFitness = exhaustiveBestParameters.Min(ebp => ebp.Fitness);
-                    if (minFitness < currentOutput.BestFitness)
-                    {
-                        var toRemove = exhaustiveBestParameters.Find(ebp => ebp.Fitness == minFitness);
-                        exhaustiveBestParameters.Remove(toRemove);
-                        exhaustiveBestParameters.Add((currentOutput.BestFitness, currentOutput.BestValues));
-                    }
-                }
-
-
+                List<CoreSolverOutput> currentOutputs = solver.Optimize(single: false).Outputs;
+                foreach(CoreSolverOutput output in currentOutputs)
+                    CheckResult(output);
                 if (exhaustiveBestParameters.Min(ebp => ebp.Fitness) >= iterSolver.Settings.TargetFitness - GlobalSettings.Epsilon
                     && exhaustiveBestParameters.Count == GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount)
                     break;
+
             }
             solver = exhaustiveBestSolver;
             solverOutput = exhaustiveSolverOutput;
@@ -140,10 +146,10 @@ namespace SiliFish.UI.Controls
         {
             OnTriggerOptimization?.Invoke(this, new OptimizationEventArgs()
             {
-                Fitness = exhaustiveSolverOutput.BestFitness,
-                Parameters = exhaustiveSolverOutput.BestValues
+                Fitness = exhaustiveSolverOutput.Fitness,
+                Parameters = exhaustiveSolverOutput.Values
             });
-            lOptimizationOutput.Text = $"Best fitness: {exhaustiveSolverOutput.BestFitness}";
+            lOptimizationOutput.Text = $"Best fitness: {exhaustiveSolverOutput.Fitness}";
         }
 
         private void CompleteExhaustiveOptimization()
@@ -176,7 +182,7 @@ namespace SiliFish.UI.Controls
             if (exhaustiveSearch && exhaustiveBestParameters.Any())
                 Parameters = exhaustiveBestParameters[0].Parameters;
             else
-                Parameters = solverOutput.BestValues;
+                Parameters = solverOutput.Values;
             if (optimizationProgress != null && optimizationProgress.Visible)
                 optimizationProgress.Close();
             optimizationProgress = null;
@@ -185,7 +191,7 @@ namespace SiliFish.UI.Controls
                 lOptimizationOutput.Text = $"Current fitness: {exhaustiveBestParameters[0].Fitness}\r\n" +
                 $"Opimization duration: {optimizationDuration:g}";
             else
-                lOptimizationOutput.Text = $"Latest fitness: {solverOutput.BestFitness}\r\n" +
+                lOptimizationOutput.Text = $"Latest fitness: {solverOutput.Fitness}\r\n" +
                 $"Opimization duration: {optimizationDuration:g}";
             if (!string.IsNullOrEmpty(solverOutput.ErrorMessage))
                 lOptimizationOutput.Text += $"\r\nOptimization ran with errors: {solverOutput.ErrorMessage}";
@@ -351,7 +357,7 @@ namespace SiliFish.UI.Controls
                 progress = $"{progress}\r\n" +
                     $"~.~.~.~.~.~.~.~.~.~.~.~.~.~\r\n" +
                     $"Exhaustive search {exhaustiveSolverIterator}/{exhaustiveSolverList.Count}\r\n" +
-                    $"Best overall fitness: {exhaustiveSolverOutput?.BestFitness}";
+                    $"Best overall fitness: {exhaustiveSolverOutput?.Fitness}";
             optimizationProgress.Progress = solver.Progress;
             optimizationProgress.ProgressText = progress;
         }
@@ -632,12 +638,13 @@ namespace SiliFish.UI.Controls
             {
                 using FileStream fs = File.Open(saveFileCSV.FileName, FileMode.Create, FileAccess.Write);
                 using StreamWriter sw = new(fs);
-                sw.WriteLine(string.Join(",", string.Join(",", exhaustiveBestParameters[0].Parameters.Keys), "fitness", "rheobase"));
+                sw.WriteLine(string.Join(",", "Solution", string.Join(",", exhaustiveBestParameters[0].Parameters.Keys), "Fitness", "Rheobase"));
+                int iter = 0;
                 foreach (var bp in exhaustiveBestParameters)
                 {
                     CellCore core = CellCore.CreateCore(CoreType, bp.Parameters, DeltaT, DeltaTEuler);
                     double rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
-                    sw.WriteLine(string.Join(",", string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
+                    sw.WriteLine(string.Join(",", ++iter, string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
                 }
                 FileUtil.ShowFile(saveFileCSV.FileName);
             }
