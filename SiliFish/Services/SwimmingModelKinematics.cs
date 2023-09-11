@@ -238,10 +238,8 @@ namespace SiliFish.Services
                 }
                 i++;
             }
-            if (episodes.EpisodeCount==1 && episodes[0].End == 0 && episodes[0].Start > 0)//single episode that is not completed. Assume tmax is the end time of the episode
-            {
-                episodes[0].EndEpisode(model.TimeArray[^1]);
-            }
+            episodes.Smooth(model.TimeArray[^1]);
+
             return (tail_tip_coord, episodes);
         }
 
