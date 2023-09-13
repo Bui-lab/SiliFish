@@ -1,4 +1,5 @@
 ﻿using SiliFish.Extensions;
+using System.Linq.Expressions;
 
 namespace Extensions
 {
@@ -35,41 +36,45 @@ namespace Extensions
 
         public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel, Dictionary<string, double> ParamDict)
         {
-            int maxLen = ParamDict.Keys.Select(k => k.Length).Max();
-            int tabIndex = 1;
-            flowPanel.Controls.Clear();
-            flowPanel.FlowDirection = FlowDirection.LeftToRight;
-            foreach (string key in ParamDict.Keys)
+            try
             {
+                int maxLen = ParamDict.Keys.Select(k => k.Length).Max();
+                int tabIndex = 1;
+                flowPanel.Controls.Clear();
+                flowPanel.FlowDirection = FlowDirection.LeftToRight;
+                foreach (string key in ParamDict.Keys)
+                {
 
-                Label lbl = new()
-                {
-                    Text = key,
-                    Height = 23,
-                    Width = 6 * maxLen + 5,
-                    TextAlign = ContentAlignment.MiddleLeft,
-                    TabIndex = tabIndex++
-                };
-                flowPanel.Controls.Add(lbl);
-                decimal val = Convert.ToDecimal(ParamDict[key]);
-                int[] bits = Decimal.GetBits(val);
-                int decPoints = (bits[3] >> 16) & 0x7F;//https://docs.microsoft.com/en-us/dotnet/api/system.decimal.getbits?view=net-6.0
-                decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10, decPoints)));
-                NumericUpDown numBox = new()
-                {
-                    Tag = val,
-                    Height = 23,
-                    Width = 60,
-                    Minimum = decimal.MinValue,
-                    Maximum = decimal.MaxValue,
-                    Value = val,
-                    DecimalPlaces = decPoints + 2,
-                    Increment = inc,
-                    TabIndex = tabIndex++
-                };
-                flowPanel.Controls.Add(numBox);
-                flowPanel.SetFlowBreak(numBox, true);
+                    Label lbl = new()
+                    {
+                        Text = key,
+                        Height = 23,
+                        Width = 6 * maxLen + 5,
+                        TextAlign = ContentAlignment.MiddleLeft,
+                        TabIndex = tabIndex++
+                    };
+                    flowPanel.Controls.Add(lbl);
+                    decimal val = Convert.ToDecimal(ParamDict[key]);
+                    int[] bits = Decimal.GetBits(val);
+                    int decPoints = (bits[3] >> 16) & 0x7F;//https://docs.microsoft.com/en-us/dotnet/api/system.decimal.getbits?view=net-6.0
+                    decimal inc = decPoints == 0 ? 1 : (decimal)(1 / (Math.Pow(10, decPoints)));
+                    NumericUpDown numBox = new()
+                    {
+                        Tag = val,
+                        Height = 23,
+                        Width = 60,
+                        Minimum = decimal.MinValue,
+                        Maximum = decimal.MaxValue,
+                        Value = val,
+                        DecimalPlaces = decPoints + 2,
+                        Increment = inc,
+                        TabIndex = tabIndex++
+                    };
+                    flowPanel.Controls.Add(numBox);
+                    flowPanel.SetFlowBreak(numBox, true);
+                }
             }
+            catch { }
         }
 
         public static Dictionary<string, double> CreateDoubleDictionaryFromControls(this FlowLayoutPanel flowPanel)

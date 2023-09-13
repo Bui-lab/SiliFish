@@ -95,6 +95,8 @@ namespace SiliFish.UI.Controls
 
         private void CheckResult(CoreSolverOutput currentOutput)
         {
+            if (exhaustiveBestParameters.Any(bp => string.Join(",", bp.Item2) == string.Join(",", currentOutput.Values)))
+                return;
             if (exhaustiveSolverOutput == null || exhaustiveSolverOutput.Fitness <= currentOutput.Fitness)
             {
                 exhaustiveSolverOutput = currentOutput;

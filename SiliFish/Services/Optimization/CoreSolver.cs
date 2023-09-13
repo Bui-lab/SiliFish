@@ -1,5 +1,6 @@
 ﻿using GeneticSharp;
 using SiliFish.Definitions;
+using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,21 @@ namespace SiliFish.Services.Optimization
         public Dictionary<string, double> Values;
         public double Fitness;
         public string ErrorMessage;
+        public override bool Equals(object obj)
+        {
+            if (obj is not CoreSolverOutput cso) 
+                return false;
+            if (Values.Count != cso.Values.Count)
+                return false;
+            foreach (KeyValuePair<string, double> kvp in Values)
+            {
+                if(!cso.Values.ContainsKey(kvp.Key)) 
+                    return false;
+                if (Math.Abs(cso.Values[kvp.Key] - kvp.Value) > double.Epsilon)
+                    return false;
+            }
+            return true;
+        }
     }
     public class CoreSolver
     {
@@ -161,6 +177,8 @@ namespace SiliFish.Services.Optimization
         private void CheckResult(FloatingPointChromosome chromosome, bool single)
         {
             latestFitness = chromosome.Fitness.Value;
+            if (Candidates.Any(c => c.EquivalentTo(chromosome)))
+                return;
             if (bestFitness < latestFitness)
             {
                 bestFitness = latestFitness;
@@ -211,15 +229,15 @@ namespace SiliFish.Services.Optimization
                 foreach (FloatingPointChromosome chromosome in Candidates)
                 {
                     CoreSolverOutput output = new();
-                    Dictionary<string, double> BestValues = new();
+                    Dictionary<string, double> paramValues = new();
                     int iter = 0;
                     foreach (string key in Settings.SortedKeys)
                     {
-                        var phenotype = (bestestChromosome as FloatingPointChromosome).ToFloatingPoints();
-                        BestValues.Add(key, phenotype[iter++]);
+                        var phenotype = chromosome.ToFloatingPoints();
+                        paramValues.Add(key, phenotype[iter++]);
                     }
-                    output.Values = BestValues;
-                    output.Fitness = bestestChromosome.Fitness ?? 0;
+                    output.Values = paramValues;
+                    output.Fitness = chromosome.Fitness ?? 0;
                     results.Add(output);
                 }
                 return (results, errMessage);

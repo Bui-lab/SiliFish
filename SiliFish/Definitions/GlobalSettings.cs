@@ -48,7 +48,7 @@ namespace SiliFish.Definitions
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
         public static int GeneticAlgorithmSolutionCount = 3;
-        public static int GeneticAlgorithmExhaustiveSolutionCount = 100;
+        public static int GeneticAlgorithmExhaustiveSolutionCount = 30;
 
         [JsonIgnore, Browsable(false)]
         public static List<string> TempFiles = new();
