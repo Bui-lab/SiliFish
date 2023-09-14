@@ -615,7 +615,7 @@ namespace SiliFish.UI.Controls
             Parameters = exhaustiveBestParameters[--exhaustiveBestSolverIterator].Parameters;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
             double fitness = exhaustiveBestParameters[exhaustiveBestSolverIterator].Fitness;
-            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
+            lOptimizationOutput.Text = $"Solution {exhaustiveBestSolverIterator + 1} fitness: {fitness}";
             if (exhaustiveBestSolverIterator == 0)
                 btnOptimizePrev.Enabled = false;
         }
@@ -627,7 +627,7 @@ namespace SiliFish.UI.Controls
             Parameters = exhaustiveBestParameters[++exhaustiveBestSolverIterator].Parameters;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
             double fitness = exhaustiveBestParameters[exhaustiveBestSolverIterator].Fitness;
-            lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
+            lOptimizationOutput.Text = $"Solution {exhaustiveBestSolverIterator + 1} fitness: {fitness}";
             if (exhaustiveBestSolverIterator == exhaustiveBestParameters.Count - 1)
                 btnOptimizeNext.Enabled = false;
         }

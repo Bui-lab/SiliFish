@@ -2,6 +2,7 @@
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -363,11 +364,12 @@ namespace SiliFish.DynamicUnits
             burstOrSpike.SpikeTimeList.Add(lastTime);
             double lastInterval = double.NaN;
             bool spreadingOut = true;
+            int sensitivity = BitConverter.GetBytes(decimal.GetBits((decimal)dt)[3])[2];
             for (int spikeTimeIndex = 1; spikeTimeIndex < SpikeList.Count; spikeTimeIndex++)
             {
                 double curTime = SpikeList[spikeTimeIndex] * dt;
-                double curInterval = curTime - lastTime;
-                if (lastInterval is not double.NaN && curInterval < lastInterval - GlobalSettings.Epsilon)
+                double curInterval = Math.Round(curTime - lastTime, sensitivity);
+                if (lastInterval is not double.NaN && curInterval < lastInterval - dt)//dt is used instead of epsilon, as the sensitivity is set by dt
                     spreadingOut = false;
                 if ((lastInterval is double.NaN && curInterval > MaxBurstInterval_LowerRange) ||
                     (spreadingOut && curInterval >= MaxBurstInterval_UpperRange + GlobalSettings.Epsilon) ||
