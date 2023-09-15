@@ -312,7 +312,7 @@ namespace Services
         public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             PlotSelectionInterface cellSelectionInterface, int tStart = 0, int tEnd = -1)
         {
-            if (PlotType != PlotType.EpisodesTail &&
+            if (PlotType.GetGroup() != "episode" &&
                 (Cells == null || !Cells.Any()) &&
                 (Pools == null || !Pools.Any()))
                 return (null, null);
@@ -350,6 +350,7 @@ namespace Services
                         return PlotTension(TimeArray, muscleCells, Pools, cellSelection, iStart, iEnd, uom);
                     case PlotType.EpisodesTail:
                         return PlotEpisodes(model, tStart, tEnd);
+                        //TODO windows plot for episodes
                     default:
                         break;
                 }

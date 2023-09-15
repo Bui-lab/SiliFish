@@ -36,7 +36,14 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             this.iStart = iStart;
             this.iEnd = iEnd;
         }
+        protected abstract void CreateCharts(PlotType plotType);
         protected abstract void CreateCharts();
+        public void CreateCharts(List<Chart> chartList, PlotType plotType)
+        {
+            CreateCharts(plotType);
+            if (charts.Any())
+                chartList.AddRange(charts);
+        }
         public void CreateCharts(List<Chart> chartList)
         {
             CreateCharts();

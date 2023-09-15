@@ -18,6 +18,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
         }
+        protected override void CreateCharts(PlotType _)
+        {
+            CreateCharts();
+        }
         protected override void CreateCharts()
         {
             if (cells == null || !cells.Any())

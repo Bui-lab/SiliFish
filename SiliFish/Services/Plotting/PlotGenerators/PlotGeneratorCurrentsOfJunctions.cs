@@ -24,6 +24,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             this.synapses = synapses;
             this.uoM = uoM;
         }
+        protected override void CreateCharts(PlotType _)
+        {
+            CreateCharts();
+        }
         protected override void CreateCharts()
         {
             List<Chart> gapCharts = new();

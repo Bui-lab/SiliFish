@@ -206,6 +206,22 @@ namespace SiliFish.UI.Controls.Display
             }
         }
 
+        public void TurnOnMultipleCellOrSomite()
+        {
+            foreach (Control control in pMain.Controls)
+                control.Enabled = false;
+            if (runningModel.ModelDimensions.NumberOfSomites > 0)
+            {
+                ddSomiteSelection.Enabled = true;
+                eSomiteSelection.Enabled = true;
+            }
+            else
+            {
+                ddCellSelection.Enabled = true;
+                eCellSelection.Enabled = true;
+            }
+        }
+
         public int GetSingleSomiteOrCell()
         {
             if (runningModel?.ModelDimensions.NumberOfSomites > 0)

@@ -87,6 +87,13 @@ namespace SiliFish.UI.Controls
                 cellSelectionPlot.TurnOnSingleCellOrSomite();
                 cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
             }
+            else if (PlotType.GetGroup() == "episode")
+            {
+                cellSelectionPlot.CombineOptionsVisible = false;
+                cellSelectionPlot.Visible = true;
+                cellSelectionPlot.TurnOnMultipleCellOrSomite();
+                cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
+            }
             else
             {
                 cellSelectionPlot.Visible = true;
@@ -295,6 +302,13 @@ namespace SiliFish.UI.Controls
                     numOfPlots *= 5;
                 else if (PlotType == PlotType.Current)
                     numOfPlots *= 3;
+                else if (PlotType.GetGroup() == "episode")
+                {
+                    if (PlotType == PlotType.EpisodesMN || PlotType == PlotType.EpisodesTail)
+                        numOfPlots = 7;
+                    else
+                        numOfPlots = RunningModel.ModelDimensions.NumberOfSomites + 1;//TODO covers only somite based - add VR related functions to model
+                }
                 toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
             }
         }
@@ -530,7 +544,7 @@ namespace SiliFish.UI.Controls
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
-            if (PlotType == PlotType.EpisodesTail)
+            if (PlotType.GetGroup() == "episode")
                 RunningModel.SetAnimationParameters(RunningModel.KinemParam);
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
@@ -641,7 +655,7 @@ namespace SiliFish.UI.Controls
                 SaveLastPlotSettings();
 
                 GetPlotSubset();
-                if (PlotType == PlotType.EpisodesTail)
+                if (PlotType.GetGroup() == "episode")
                     RunningModel.SetAnimationParameters(RunningModel.KinemParam);
                 tabOutputs.SelectedTab = tPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;

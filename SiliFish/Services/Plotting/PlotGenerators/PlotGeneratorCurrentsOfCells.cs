@@ -89,6 +89,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 }
             }
         }
+        protected override void CreateCharts(PlotType _)
+        {
+            CreateCharts();
+        }
 
         protected override void CreateCharts()
         {

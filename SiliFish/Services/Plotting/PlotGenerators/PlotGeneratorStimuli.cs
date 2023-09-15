@@ -20,6 +20,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             this.uoM = uoM;
         }
+        protected override void CreateCharts(PlotType _)
+        {
+            CreateCharts();
+        }
         protected override void CreateCharts()
         {
             if (cells == null || !cells.Any())
