@@ -206,10 +206,13 @@ namespace SiliFish.UI
             }
             finally
             {
-                if (RunningModel.ModelRun)
-                    Invoke(CompleteRun);
-                else
-                    Invoke(CancelRun);
+                if (RunningModel != null)//the window might have been closed
+                {
+                    if (RunningModel.ModelRun)
+                        Invoke(CompleteRun);
+                    else
+                        Invoke(CancelRun);
+                }
             }
         }
         private void CancelRun()
