@@ -205,6 +205,11 @@ namespace SiliFish.Services.Plotting
                 case PlotType.InstFreq:
                 case PlotType.TailBeatFreq:
                 case PlotType.TailBeatPerEpisode:
+                    if (!model.MusclePools.Any())
+                    {
+                        charts = null;
+                        break;
+                    }
                     Title = Plot.PlotType.ToString();
                     (Coordinate[] tail_tip_coord2, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
                     PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, tail_tip_coord2, episodes2, model.TimeArray, iStart, iEnd);
