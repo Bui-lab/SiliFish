@@ -11,6 +11,7 @@ namespace SiliFish.UI.Controls
     public partial class ListBoxControl : UserControl
     {
         private List<object> HiddenItems = new();
+        private bool IsInactiveHidden = false;
 
         public event EventHandler ItemAdd;
         public event EventHandler ItemDelete;
@@ -176,8 +177,9 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void miHideInactive_Click(object sender, EventArgs e)
+        private void HideInactive()
         {
+            IsInactiveHidden = true;
             for (int ind = listBox.Items.Count - 1; ind >= 0; ind--)
             {
                 object obj = listBox.Items[ind];
@@ -189,12 +191,21 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
+        private void miHideInactive_Click(object sender, EventArgs e)
+        {
+            HideInactive();
+        }
+
+        private void ShowAll()
+        {             
+            IsInactiveHidden = false;
+            foreach (object obj in HiddenItems)
+                listBox.Items.Add(obj);
+            HiddenItems.Clear();}
 
         private void miShowAll_Click(object sender, EventArgs e)
         {
-            foreach (object obj in HiddenItems)
-                listBox.Items.Add(obj);
-            HiddenItems.Clear();
+            ShowAll();
         }
         private void miExport_Click(object sender, EventArgs e)
         {
@@ -291,7 +302,14 @@ namespace SiliFish.UI.Controls
             listBox.Items.Clear();
             HiddenItems.Clear();
         }
-
+        public void LoadItems(List<object> items)
+        {
+            ClearItems();
+            foreach (object item in items)
+                AppendItem(item);
+            if (IsInactiveHidden)
+                HideInactive();
+        }
         public void AppendItem(object obj)
         {
             listBox.Items.Add(obj);

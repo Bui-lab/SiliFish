@@ -264,13 +264,9 @@ namespace SiliFish.UI.Controls
         }
         private void LoadPools()
         {
-            listCellPools.ClearItems();
-            listCells.ClearItems();
             if (Model == null) return;
-            foreach (CellPoolTemplate cp in Model.GetCellPools())
-            {
-                listCellPools.AppendItem(cp);
-            }
+            listCells.ClearItems();
+            listCellPools.LoadItems(Model.GetCellPools().Cast<object>().ToList());
             SelectedPoolTemplate = null;
             SelectedPool = null;
             SelectedCell = null;
@@ -462,18 +458,17 @@ namespace SiliFish.UI.Controls
         private void LoadCells()
         {
             if (Model is ModelTemplate) return;
-            listCells.ClearItems();
             lCellsTitle.Text = SelectedPool != null ? $"Cells of {SelectedPool.ID}" : "Cells";
 
             List<Cell> Cells = (List<Cell>)(SelectedPool?.GetCells() ?? (Model as RunningModel).GetCells());
             if (SelectedPool == null && Cells.Count > GlobalSettings.MaxNumberOfUnits)
             {
+                listCells.ClearItems();
                 listCells.AppendItem("Please select a cell pool to list cells under...");
             }
             else
             {
-                foreach (Cell cell in Cells)
-                    listCells.AppendItem(cell);
+                listCells.LoadItems(Cells.Cast<object>().ToList());
             }
             SelectedCell = null;
         }
@@ -691,25 +686,23 @@ namespace SiliFish.UI.Controls
         }
         private void LoadProjections()
         {
+            if (Model == null) return;
             ClearProjections();
             lOutgoingTitle.Text = "Synaptic Connections";
             lGapTitle.Text = "Gap Junctions";
             splitChemicalJunctions.Panel1Collapsed = true;
-            if (Model == null) return;
             if (Model is RunningModel rm)
             {
                 List<InterPool> chemInterPools = rm.ChemPoolConnections.ToList();
                 if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
-                    foreach (object jnc in chemInterPools)
-                        listOutgoing.AppendItem(jnc);
+                    listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
                 List<InterPool> gapInterPools = rm.GapPoolConnections.ToList();
                 if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
-                    listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+                    listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
-                    foreach (object jnc in gapInterPools)
-                        listGap.AppendItem(jnc);
+                    listGap.LoadItems(gapInterPools.Cast<object>().ToList());
             }
             else if (Model is ModelTemplate mt)
             {
@@ -717,14 +710,12 @@ namespace SiliFish.UI.Controls
                 if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
-                    foreach (object jnc in chemInterPools)
-                        listOutgoing.AppendItem(jnc);
+                    listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
                 List<InterPoolTemplate> gapInterPools = mt.InterPoolTemplates.Where(jnc => jnc.ConnectionType == ConnectionType.Gap).ToList();
                 if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
-                    listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
+                    listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
-                    foreach (object jnc in gapInterPools)
-                        listGap.AppendItem(jnc);
+                    listGap.LoadItems(gapInterPools.Cast<object>().ToList());
             }
         }
 
@@ -741,27 +732,18 @@ namespace SiliFish.UI.Controls
             lGapTitle.Text = $"Gap Junctions of {cellPoolID}";
             splitChemicalJunctions.Panel1Collapsed = false;
             if (Model == null || Model is not ModelTemplate) return;
-            foreach (InterPoolTemplate jnc in Model.GetChemicalProjections()
+            listOutgoing.LoadItems(Model.GetChemicalProjections()
                 .Where(proj => ((InterPoolTemplate)proj).SourcePool == cellPoolID)
-                .Cast<InterPoolTemplate>())
-
-            {
-                listOutgoing.AppendItem(jnc);
-            }
-            foreach (InterPoolTemplate jnc in Model.GetChemicalProjections()
+                .Cast<object>()
+                .ToList());
+            listIncoming.LoadItems(Model.GetChemicalProjections()
                 .Where(proj => ((InterPoolTemplate)proj).TargetPool == cellPoolID)
-                .Cast<InterPoolTemplate>())
-
-            {
-                listIncoming.AppendItem(jnc);
-            }
-            foreach (InterPoolTemplate jnc in Model.GetGapProjections()
+                .Cast<object>()
+                .ToList());
+            listGap.LoadItems(Model.GetGapProjections()
                 .Where(proj => ((InterPoolTemplate)proj).SourcePool == cellPoolID || ((InterPoolTemplate)proj).TargetPool == cellPoolID)
-                .Cast<InterPoolTemplate>())
-
-            {
-                listGap.AppendItem(jnc);
-            }
+                .Cast<object>()
+                .ToList());
         }
         private void LoadProjections(CellPool cp)
         {
@@ -778,20 +760,13 @@ namespace SiliFish.UI.Controls
             List<JunctionBase> gapJunctions = cp.Projections.Where(j => j is GapJunction).ToList();
             List<InterPool> gapInterPools = (Model as RunningModel).GapPoolConnections
                 .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
-            foreach (InterPool ip in gapInterPools)
-            {
-                listGap.AppendItem(ip);
-            }
+            listGap.LoadItems(gapInterPools.Cast<object>().ToList());
+
             List<JunctionBase> chemJunctions = cp.Projections.Where(j => j is not GapJunction).ToList();
             List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolConnections
                 .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
-            foreach (InterPool ip in chemInterPools)
-            {
-                if (ip.SourcePool == cp.ID)
-                    listOutgoing.AppendItem(ip);
-                if (ip.TargetPool == cp.ID)
-                    listIncoming.AppendItem(ip);
-            }
+            listOutgoing.LoadItems(chemInterPools.Where(ip => ip.SourcePool == cp.ID).Cast<object>().ToList());
+            listIncoming.LoadItems(chemInterPools.Where(ip => ip.TargetPool == cp.ID).Cast<object>().ToList());
         }
         private void LoadProjections(Cell cell)
         {
@@ -807,27 +782,16 @@ namespace SiliFish.UI.Controls
             lIncomingTitle.Text = $"Incoming Connections of {cell.ID}";
             lOutgoingTitle.Text = $"Outgoing Connections of {cell.ID}";
             lGapTitle.Text = $"Gap Junctions of {cell.ID}";
-            foreach (JunctionBase jnc in cell.GapJunctions)
-            {
-                listGap.AppendItem(jnc);
-            }
+            listGap.LoadItems(cell.GapJunctions.Cast<object>().ToList());
+
             if (cell is Neuron neuron)
             {
-                foreach (JunctionBase jnc in neuron.Synapses)
-                {
-                    listIncoming.AppendItem(jnc);
-                }
-                foreach (JunctionBase jnc in neuron.Terminals)
-                {
-                    listOutgoing.AppendItem(jnc);
-                }
+                listIncoming.LoadItems(neuron.Synapses.Cast<object>().ToList());
+                listOutgoing.LoadItems(neuron.Terminals.Cast<object>().ToList());
             }
             if (cell is MuscleCell muscleCell)
             {
-                foreach (JunctionBase jnc in muscleCell.EndPlates)
-                {
-                    listIncoming.AppendItem(jnc);
-                }
+                listIncoming.LoadItems(muscleCell.EndPlates.Cast<object>().ToList());
             }
         }
         private List<InterPoolBase> OpenConnectionDialog(InterPoolBase interpool, bool newJunc,
@@ -1127,14 +1091,10 @@ namespace SiliFish.UI.Controls
 
         private void LoadStimuli()
         {
-            listStimuli.ClearItems();
             lStimuliTitle.Text = $"Stimuli";
             SelectedStimulus = null;
             if (Model == null) return;
-            foreach (StimulusBase stim in Model.GetStimuli())
-            {
-                listStimuli.AppendItem(stim);
-            }
+            listStimuli.LoadItems(Model.GetStimuli().Cast<object>().ToList());
         }
 
         private void LoadStimuli(ModelUnitBase unit)
@@ -1157,12 +1117,9 @@ namespace SiliFish.UI.Controls
                 LoadStimuli();
                 return;
             }
-            lStimuliTitle.Text = $"Stimuli of {cellPoolTemplate.CellGroup}";
-            listStimuli.ClearItems();
             if (Model == null || Model is not ModelTemplate) return;
-            IEnumerable<StimulusTemplate> list = Model.GetStimuli().Cast<StimulusTemplate>().Where(st => st.TargetPool == cellPoolTemplate.CellGroup);
-            foreach (StimulusTemplate stim in list)
-                listStimuli.AppendItem(stim);
+            lStimuliTitle.Text = $"Stimuli of {cellPoolTemplate.CellGroup}";
+            listStimuli.LoadItems(Model.GetStimuli().Cast<StimulusTemplate>().Where(st => st.TargetPool == cellPoolTemplate.CellGroup).Cast<object>().ToList());
         }
         private void LoadStimuli(CellPool cp)
         {
@@ -1172,9 +1129,7 @@ namespace SiliFish.UI.Controls
                 return;
             }
             lStimuliTitle.Text = $"Stimuli of {cp.ID}";
-            listStimuli.ClearItems();
-            foreach (Stimulus stim in cp.GetStimuli().Cast<Stimulus>())
-                listStimuli.AppendItem(stim);
+            listStimuli.LoadItems(cp.GetStimuli().Cast<object>().ToList());
         }
         private void LoadStimuli(Cell cell)
         {
@@ -1187,11 +1142,7 @@ namespace SiliFish.UI.Controls
                 return;
             }
             lStimuliTitle.Text = $"Stimuli of {cell.ID}";
-            listStimuli.ClearItems();
-            foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)
-            {
-                listStimuli.AppendItem(stim);
-            }
+            listStimuli.LoadItems(cell.Stimuli.ListOfStimulus.Cast<object>().ToList());
         }
 
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
