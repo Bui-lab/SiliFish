@@ -16,6 +16,7 @@ namespace SiliFish.UI
     public partial class MainForm : Form
     {
         private static bool showAboutForm = true;
+        public static bool currentPlotWarning = false;
         private DateTime runStart;
         private string modelFileDefaultFolder, lastFileName;
         private ModelTemplate ModelTemplate = null;

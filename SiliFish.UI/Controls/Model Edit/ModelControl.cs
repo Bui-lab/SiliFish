@@ -1403,5 +1403,25 @@ namespace SiliFish.UI.Controls
             listStimuli.BorderStyle = BorderStyle.None;
             (sender as ListBoxControl).BorderStyle = BorderStyle.Fixed3D;
         }
+
+        private void listGeneric_ItemsHideShowInactive(object sender, EventArgs e)
+        {
+            if (sender is ListBoxControl listBoxControl && e is GenericArgs args)
+            {
+                Label label = listBoxControl == listCellPools ? lCellPoolsTitle :
+                    listBoxControl == listCells ? lCellsTitle :
+                    listBoxControl == listStimuli ? lStimuliTitle :
+                    listBoxControl == listOutgoing ? lOutgoingTitle :
+                    listBoxControl == listIncoming ? lIncomingTitle :
+                    listBoxControl == listGap ? lGapTitle :
+                    null;
+                if (label == null) return;
+                bool showInactive = args.ValueBoolean;
+                if (!showInactive && !label.Text.EndsWith(" (active only)"))
+                    label.Text += " (active only)";
+                else if (showInactive && label.Text.EndsWith(" (active only)"))
+                    label.Text = label.Text.Remove(label.Text.Length - 14);
+            }
+        }
     }
 }

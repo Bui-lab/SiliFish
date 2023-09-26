@@ -470,6 +470,7 @@
             listCellPools.ItemHighlight += listCellPools_ItemHighlight;
             listCellPools.ItemsExport += listCellPools_ItemsExport;
             listCellPools.ItemsImport += listCellPools_ItemsImport;
+            listCellPools.ItemsHideShowInactive += listGeneric_ItemsHideShowInactive;
             listCellPools.ListBoxActivated += listGeneric_ListBoxActivated;
             // 
             // pCellPoolsTop
@@ -523,6 +524,7 @@
             listCells.ItemHighlight += listCells_ItemHighlight;
             listCells.ItemsExport += listCells_ItemsExport;
             listCells.ItemsImport += listCells_ItemsImport;
+            listCells.ItemsHideShowInactive += listGeneric_ItemsHideShowInactive;
             listCells.ListBoxActivated += listGeneric_ListBoxActivated;
             // 
             // pCellsTop
@@ -575,6 +577,7 @@
             listStimuli.ItemPlot += listGeneric_ItemPlot;
             listStimuli.ItemsExport += listStimuli_ItemsExport;
             listStimuli.ItemsImport += listStimuli_ItemsImport;
+            listStimuli.ItemsHideShowInactive += listGeneric_ItemsHideShowInactive;
             listStimuli.ListBoxActivated += listGeneric_ListBoxActivated;
             // 
             // pStimuliTop
@@ -668,6 +671,7 @@
             listIncoming.ItemPlot += listGeneric_ItemPlot;
             listIncoming.ItemsExport += listConnections_ItemsExport;
             listIncoming.ItemsImport += listConnections_ItemsImport;
+            listIncoming.ItemsHideShowInactive += listGeneric_ItemsHideShowInactive;
             listIncoming.ListBoxActivated += listGeneric_ListBoxActivated;
             // 
             // pIncomingTop
@@ -720,6 +724,7 @@
             listOutgoing.ItemPlot += listGeneric_ItemPlot;
             listOutgoing.ItemsExport += listConnections_ItemsExport;
             listOutgoing.ItemsImport += listConnections_ItemsImport;
+            listOutgoing.ItemsHideShowInactive += listGeneric_ItemsHideShowInactive;
             listOutgoing.ListBoxActivated += listGeneric_ListBoxActivated;
             // 
             // pOutgoingTop
@@ -772,6 +777,7 @@
             listGap.ItemPlot += listGeneric_ItemPlot;
             listGap.ItemsExport += listConnections_ItemsExport;
             listGap.ItemsImport += listConnections_ItemsImport;
+            listGap.ItemsHideShowInactive += listGeneric_ItemsHideShowInactive;
             listGap.ListBoxActivated += listGeneric_ListBoxActivated;
             // 
             // pGapTop

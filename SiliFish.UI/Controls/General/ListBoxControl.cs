@@ -24,6 +24,7 @@ namespace SiliFish.UI.Controls
         public event EventHandler ItemHighlight;
         public event EventHandler ItemsExport;
         public event EventHandler ItemsImport;
+        public event EventHandler ItemsHideShowInactive;
         public event EventHandler ListBoxActivated;
 
         public int SelectedIndex
@@ -190,22 +191,25 @@ namespace SiliFish.UI.Controls
                     HiddenItems.Add(obj);
                 }
             }
+            ItemsHideShowInactive?.Invoke(this, new GenericArgs() { ValueBoolean = false });
         }
         private void miHideInactive_Click(object sender, EventArgs e)
         {
             HideInactive();
         }
 
-        private void ShowAll()
+        private void ShowInactive()
         {             
             IsInactiveHidden = false;
             foreach (object obj in HiddenItems)
                 listBox.Items.Add(obj);
-            HiddenItems.Clear();}
+            HiddenItems.Clear();
+            ItemsHideShowInactive?.Invoke(this, new GenericArgs() { ValueBoolean = true }) ;
+        }
 
         private void miShowAll_Click(object sender, EventArgs e)
         {
-            ShowAll();
+            ShowInactive();
         }
         private void miExport_Click(object sender, EventArgs e)
         {
