@@ -245,7 +245,22 @@ namespace SiliFish.ModelUnits.Junction
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" :
                 Active ? " (timeline)" : " (inactive)";
-            return $"{Name}{activeStatus}";
+            string arrows="";
+            if (AxonReachMode == AxonReachMode.Ipsilateral || AxonReachMode == AxonReachMode.Bilateral)
+            {
+                if (CellReach.Ascending)
+                    arrows += "⬆";
+                if (CellReach.Descending)
+                    arrows += "⬇";
+            }
+            if (AxonReachMode == AxonReachMode.Contralateral || AxonReachMode == AxonReachMode.Bilateral)
+            {
+                if (CellReach.Ascending)
+                    arrows += "⬈";
+                if (CellReach.Descending)
+                    arrows += "⬊";
+            }
+            return $"{Name}{activeStatus}{arrows}";
         }
         public override int CompareTo(ModelUnitBase otherbase)
         {

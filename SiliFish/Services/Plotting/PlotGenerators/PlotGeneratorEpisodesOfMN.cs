@@ -33,6 +33,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         protected override void CreateCharts(PlotType plotType)
         { 
+            if (mnMaxPotentials.Min() == mnMaxPotentials.Max() && mnMaxPotentials[0] == 0) 
+                return; 
             double[] Time = timeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;
             double[] yValues = mnMaxPotentials;
