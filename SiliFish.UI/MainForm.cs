@@ -114,6 +114,14 @@ namespace SiliFish.UI
                         return;
                     }
                 }
+                else if (RunningModel?.ModelRun ?? false)
+                {
+                    if (MessageBox.Show("Do you want to close the form? The simulation values will be lost.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                }
                 ModelTemplate = null;
                 RunningModel = null;
                 if (Program.MainForm == this)
@@ -257,6 +265,11 @@ namespace SiliFish.UI
                 if (RunningModel != null)
                     RunningModel.CancelRun = true;
                 return;
+            }
+            if (RunningModel?.ModelRun ?? false)
+            {
+                if (MessageBox.Show("Do you want to run the stimulation? Old simulation values will be lost.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    return;
             }
             SaveLastRunSettings();
             runStart = DateTime.Now;
