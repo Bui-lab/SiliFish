@@ -27,6 +27,10 @@ namespace SiliFish.DataTypes
     {
         private List<SwimmingEpisode> episodes = new();
         public int EpisodeCount => episodes.Count;
+        public bool HasEpisodes => episodes.Any();
+
+        public List<SwimmingEpisode> Episodes { get => episodes; }
+        
         public SwimmingEpisode this[int index]
         {
             get
@@ -51,9 +55,6 @@ namespace SiliFish.DataTypes
                 episodes[^1].EndEpisode(last_t);
         }
 
-        public bool HasEpisodes => episodes.Any();
-
-        public List<SwimmingEpisode> Episodes { get => episodes; }
 
         public (double[] xValues, double[] yValues) GetXYValues(EpisodeStats stat)
         {

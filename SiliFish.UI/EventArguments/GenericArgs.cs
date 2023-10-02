@@ -6,10 +6,10 @@ namespace SiliFish.UI.EventArguments
 {
     internal class GenericArgs : EventArgs
     {
-        internal bool ValueBoolean;
-        internal int ValueInt;
-        internal double ValueDouble;
-        internal string ValueString;
+        internal bool ValueBoolean = false;
+        internal int ValueInt = 0;
+        internal double ValueDouble = 0;
+        internal string ValueString = "";
     }
 
 }

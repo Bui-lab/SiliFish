@@ -31,34 +31,6 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
             tabOutputs = new TabControl();
-            tPlot = new TabPage();
-            tabPlotSub = new TabControl();
-            tPlotHTML = new TabPage();
-            webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
-            tPlotWindows = new TabPage();
-            splitPlotWindows = new SplitContainer();
-            pictureBoxLeft = new PictureBox();
-            cmPlotImageSave = new ContextMenuStrip(components);
-            cmiPlotImageSave = new ToolStripMenuItem();
-            pictureBoxRight = new PictureBox();
-            pPlot = new Panel();
-            btnPlotHTML = new Button();
-            cmPlot = new ContextMenuStrip(components);
-            cmiNonInteractivePlot = new ToolStripMenuItem();
-            ddPlot = new ComboBox();
-            listPlotHistory = new HistoryListControl();
-            cellSelectionPlot = new Display.CellSelectionControl();
-            cbPlotHistory = new CheckBox();
-            linkExportPlotData = new LinkLabel();
-            pLinePlots = new Panel();
-            linkSaveHTMLPlots = new LinkLabel();
-            ePlotEnd = new NumericUpDown();
-            ePlotStart = new NumericUpDown();
-            lPlotStart = new Label();
-            lms1 = new Label();
-            lPlotEnd = new Label();
-            lms2 = new Label();
-            lPlotPlot = new Label();
             t2DRender = new TabPage();
             gr2DLegend = new GroupBox();
             label1 = new Label();
@@ -100,31 +72,49 @@
             pLine3D = new Panel();
             linkSaveHTML3D = new LinkLabel();
             btn3DRender = new Button();
-            tMNKinematics = new TabPage();
-            splitKinematics = new SplitContainer();
-            webViewSummaryV = new Microsoft.Web.WebView2.WinForms.WebView2();
-            pLineMNKinematicsRight = new Panel();
-            eEpisodes = new RichTextBox();
-            pLineMNKinematicsLeft = new Panel();
-            pMNKinematicsTop = new Panel();
-            cbSpikingMNs = new CheckBox();
-            cbCombineMNPools = new CheckBox();
-            pLineMNKinematics = new Panel();
-            lSomitesNumMNDynamics = new Label();
-            eKinematicsSomite = new NumericUpDown();
-            btnGenerateEpisodes = new Button();
-            lKinematicsTimes = new Label();
+            tPlot = new TabPage();
+            tabPlotSub = new TabControl();
+            tPlotHTML = new TabPage();
+            webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
+            tPlotWindows = new TabPage();
+            splitPlotWindows = new SplitContainer();
+            pictureBoxLeft = new PictureBox();
+            cmPlotImageSave = new ContextMenuStrip(components);
+            cmiPlotImageSave = new ToolStripMenuItem();
+            pictureBoxRight = new PictureBox();
+            pPlot = new Panel();
+            btnPlotHTML = new Button();
+            cmPlot = new ContextMenuStrip(components);
+            cmiNonInteractivePlot = new ToolStripMenuItem();
+            ddPlot = new ComboBox();
+            listPlotHistory = new HistoryListControl();
+            cellSelectionPlot = new Display.CellSelectionControl();
+            cbPlotHistory = new CheckBox();
+            linkExportPlotData = new LinkLabel();
+            pLinePlots = new Panel();
+            linkSaveHTMLPlots = new LinkLabel();
+            ePlotEnd = new NumericUpDown();
+            ePlotStart = new NumericUpDown();
+            lPlotStart = new Label();
+            lms1 = new Label();
+            lPlotEnd = new Label();
+            lms2 = new Label();
+            lPlotPlot = new Label();
             tSpikeStats = new TabPage();
+            tabSpikesEpisodes = new TabControl();
+            tSpikes = new TabPage();
             dgSpikeStats = new DataGridView();
             colSpikeCell = new DataGridViewTextBoxColumn();
             colSpikeSagittal = new DataGridViewTextBoxColumn();
             colSpikeCellPool = new DataGridViewTextBoxColumn();
             colSpikeSomite = new DataGridViewTextBoxColumn();
-            colSpikeSeq = new DataGridViewTextBoxColumn();
-            colSpikeEpisode = new DataGridViewTextBoxColumn();
+            colSpikeCellSeq = new DataGridViewTextBoxColumn();
             colSpikeTime = new DataGridViewTextBoxColumn();
+            tEpisodes = new TabPage();
+            dgEpisodeStats = new DataGridView();
             panel1 = new Panel();
-            cbSpikeEpisodes = new CheckBox();
+            linkExportEpisodes = new LinkLabel();
+            btnListEpisodes = new Button();
             btnListSpikes = new Button();
             linkExportSpikes = new LinkLabel();
             cellSelectionSpike = new Display.CellSelectionControl();
@@ -154,7 +144,21 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            colEpisodesEpisode = new DataGridViewTextBoxColumn();
+            colEpisodesCellGroup = new DataGridViewTextBoxColumn();
+            colEpisodesSomite = new DataGridViewTextBoxColumn();
+            colEpisodesStart = new DataGridViewTextBoxColumn();
+            colEpisodesEnd = new DataGridViewTextBoxColumn();
             tabOutputs.SuspendLayout();
+            t2DRender.SuspendLayout();
+            gr2DLegend.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
+            p2DRender.SuspendLayout();
+            t3DRender.SuspendLayout();
+            gr3DLegend.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView3DRender).BeginInit();
+            p3DRender.SuspendLayout();
+            p3DViewing.SuspendLayout();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
             tPlotHTML.SuspendLayout();
@@ -171,25 +175,12 @@
             cmPlot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).BeginInit();
-            t2DRender.SuspendLayout();
-            gr2DLegend.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
-            p2DRender.SuspendLayout();
-            t3DRender.SuspendLayout();
-            gr3DLegend.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView3DRender).BeginInit();
-            p3DRender.SuspendLayout();
-            p3DViewing.SuspendLayout();
-            tMNKinematics.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitKinematics).BeginInit();
-            splitKinematics.Panel1.SuspendLayout();
-            splitKinematics.Panel2.SuspendLayout();
-            splitKinematics.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewSummaryV).BeginInit();
-            pMNKinematicsTop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)eKinematicsSomite).BeginInit();
             tSpikeStats.SuspendLayout();
+            tabSpikesEpisodes.SuspendLayout();
+            tSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).BeginInit();
+            tEpisodes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgEpisodeStats).BeginInit();
             panel1.SuspendLayout();
             tAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
@@ -202,10 +193,9 @@
             // 
             // tabOutputs
             // 
-            tabOutputs.Controls.Add(tPlot);
             tabOutputs.Controls.Add(t2DRender);
             tabOutputs.Controls.Add(t3DRender);
-            tabOutputs.Controls.Add(tMNKinematics);
+            tabOutputs.Controls.Add(tPlot);
             tabOutputs.Controls.Add(tSpikeStats);
             tabOutputs.Controls.Add(tAnimation);
             tabOutputs.Dock = DockStyle.Fill;
@@ -215,324 +205,6 @@
             tabOutputs.Size = new Size(702, 795);
             tabOutputs.TabIndex = 2;
             tabOutputs.SelectedIndexChanged += tabOutputs_SelectedIndexChanged;
-            // 
-            // tPlot
-            // 
-            tPlot.Controls.Add(tabPlotSub);
-            tPlot.Controls.Add(pPlot);
-            tPlot.Location = new Point(4, 24);
-            tPlot.Name = "tPlot";
-            tPlot.Padding = new Padding(3);
-            tPlot.Size = new Size(694, 767);
-            tPlot.TabIndex = 4;
-            tPlot.Text = "Plots";
-            tPlot.UseVisualStyleBackColor = true;
-            // 
-            // tabPlotSub
-            // 
-            tabPlotSub.Controls.Add(tPlotHTML);
-            tabPlotSub.Controls.Add(tPlotWindows);
-            tabPlotSub.Dock = DockStyle.Fill;
-            tabPlotSub.Location = new Point(3, 143);
-            tabPlotSub.Name = "tabPlotSub";
-            tabPlotSub.SelectedIndex = 0;
-            tabPlotSub.Size = new Size(688, 621);
-            tabPlotSub.TabIndex = 6;
-            // 
-            // tPlotHTML
-            // 
-            tPlotHTML.Controls.Add(webViewPlot);
-            tPlotHTML.Location = new Point(4, 24);
-            tPlotHTML.Name = "tPlotHTML";
-            tPlotHTML.Padding = new Padding(3);
-            tPlotHTML.Size = new Size(680, 593);
-            tPlotHTML.TabIndex = 1;
-            tPlotHTML.Text = "HTML Plots";
-            tPlotHTML.UseVisualStyleBackColor = true;
-            // 
-            // webViewPlot
-            // 
-            webViewPlot.AllowExternalDrop = true;
-            webViewPlot.BackColor = Color.White;
-            webViewPlot.CreationProperties = null;
-            webViewPlot.DefaultBackgroundColor = Color.White;
-            webViewPlot.Dock = DockStyle.Fill;
-            webViewPlot.Location = new Point(3, 3);
-            webViewPlot.Name = "webViewPlot";
-            webViewPlot.Size = new Size(674, 587);
-            webViewPlot.TabIndex = 1;
-            webViewPlot.ZoomFactor = 1D;
-            webViewPlot.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
-            // 
-            // tPlotWindows
-            // 
-            tPlotWindows.Controls.Add(splitPlotWindows);
-            tPlotWindows.Location = new Point(4, 24);
-            tPlotWindows.Name = "tPlotWindows";
-            tPlotWindows.Padding = new Padding(3);
-            tPlotWindows.Size = new Size(680, 593);
-            tPlotWindows.TabIndex = 0;
-            tPlotWindows.Text = "Image Plots";
-            // 
-            // splitPlotWindows
-            // 
-            splitPlotWindows.BackColor = Color.Gray;
-            splitPlotWindows.BorderStyle = BorderStyle.FixedSingle;
-            splitPlotWindows.Dock = DockStyle.Fill;
-            splitPlotWindows.Location = new Point(3, 3);
-            splitPlotWindows.Name = "splitPlotWindows";
-            // 
-            // splitPlotWindows.Panel1
-            // 
-            splitPlotWindows.Panel1.AutoScroll = true;
-            splitPlotWindows.Panel1.BackColor = Color.White;
-            splitPlotWindows.Panel1.Controls.Add(pictureBoxLeft);
-            // 
-            // splitPlotWindows.Panel2
-            // 
-            splitPlotWindows.Panel2.AutoScroll = true;
-            splitPlotWindows.Panel2.BackColor = Color.White;
-            splitPlotWindows.Panel2.Controls.Add(pictureBoxRight);
-            splitPlotWindows.Size = new Size(674, 587);
-            splitPlotWindows.SplitterDistance = 312;
-            splitPlotWindows.SplitterWidth = 2;
-            splitPlotWindows.TabIndex = 0;
-            // 
-            // pictureBoxLeft
-            // 
-            pictureBoxLeft.ContextMenuStrip = cmPlotImageSave;
-            pictureBoxLeft.Dock = DockStyle.Fill;
-            pictureBoxLeft.Location = new Point(0, 0);
-            pictureBoxLeft.Name = "pictureBoxLeft";
-            pictureBoxLeft.Size = new Size(310, 585);
-            pictureBoxLeft.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBoxLeft.TabIndex = 0;
-            pictureBoxLeft.TabStop = false;
-            // 
-            // cmPlotImageSave
-            // 
-            cmPlotImageSave.Items.AddRange(new ToolStripItem[] { cmiPlotImageSave });
-            cmPlotImageSave.Name = "cmImageSave";
-            cmPlotImageSave.Size = new Size(135, 26);
-            // 
-            // cmiPlotImageSave
-            // 
-            cmiPlotImageSave.Name = "cmiPlotImageSave";
-            cmiPlotImageSave.Size = new Size(134, 22);
-            cmiPlotImageSave.Text = "Save Image";
-            cmiPlotImageSave.Click += cmiPlotImageSave_Click;
-            // 
-            // pictureBoxRight
-            // 
-            pictureBoxRight.ContextMenuStrip = cmPlotImageSave;
-            pictureBoxRight.Dock = DockStyle.Fill;
-            pictureBoxRight.Location = new Point(0, 0);
-            pictureBoxRight.Name = "pictureBoxRight";
-            pictureBoxRight.Size = new Size(358, 585);
-            pictureBoxRight.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBoxRight.TabIndex = 0;
-            pictureBoxRight.TabStop = false;
-            // 
-            // pPlot
-            // 
-            pPlot.BackColor = Color.FromArgb(236, 239, 241);
-            pPlot.Controls.Add(btnPlotHTML);
-            pPlot.Controls.Add(ddPlot);
-            pPlot.Controls.Add(listPlotHistory);
-            pPlot.Controls.Add(cellSelectionPlot);
-            pPlot.Controls.Add(cbPlotHistory);
-            pPlot.Controls.Add(linkExportPlotData);
-            pPlot.Controls.Add(pLinePlots);
-            pPlot.Controls.Add(linkSaveHTMLPlots);
-            pPlot.Controls.Add(ePlotEnd);
-            pPlot.Controls.Add(ePlotStart);
-            pPlot.Controls.Add(lPlotStart);
-            pPlot.Controls.Add(lms1);
-            pPlot.Controls.Add(lPlotEnd);
-            pPlot.Controls.Add(lms2);
-            pPlot.Controls.Add(lPlotPlot);
-            pPlot.Dock = DockStyle.Top;
-            pPlot.Location = new Point(3, 3);
-            pPlot.Name = "pPlot";
-            pPlot.Size = new Size(688, 140);
-            pPlot.TabIndex = 5;
-            // 
-            // btnPlotHTML
-            // 
-            btnPlotHTML.BackColor = Color.FromArgb(96, 125, 139);
-            btnPlotHTML.ContextMenuStrip = cmPlot;
-            btnPlotHTML.Enabled = false;
-            btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
-            btnPlotHTML.FlatStyle = FlatStyle.Flat;
-            btnPlotHTML.ForeColor = Color.White;
-            btnPlotHTML.Location = new Point(446, 5);
-            btnPlotHTML.Name = "btnPlotHTML";
-            btnPlotHTML.Size = new Size(75, 24);
-            btnPlotHTML.TabIndex = 52;
-            btnPlotHTML.Text = "Plot";
-            btnPlotHTML.UseVisualStyleBackColor = false;
-            btnPlotHTML.Click += btnPlotHTML_Click;
-            // 
-            // cmPlot
-            // 
-            cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot });
-            cmPlot.Name = "cmPlot";
-            cmPlot.Size = new Size(182, 26);
-            // 
-            // cmiNonInteractivePlot
-            // 
-            cmiNonInteractivePlot.Name = "cmiNonInteractivePlot";
-            cmiNonInteractivePlot.Size = new Size(181, 22);
-            cmiNonInteractivePlot.Text = "Non-interactive plot";
-            cmiNonInteractivePlot.Click += cmiNonInteractivePlot_Click;
-            // 
-            // ddPlot
-            // 
-            ddPlot.BackColor = Color.White;
-            ddPlot.DropDownStyle = ComboBoxStyle.DropDownList;
-            ddPlot.FlatStyle = FlatStyle.Flat;
-            ddPlot.FormattingEnabled = true;
-            ddPlot.Location = new Point(278, 6);
-            ddPlot.Name = "ddPlot";
-            ddPlot.Size = new Size(165, 23);
-            ddPlot.TabIndex = 34;
-            ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
-            // 
-            // listPlotHistory
-            // 
-            listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            listPlotHistory.FirstItem = "(Plot History - Double click to select.)";
-            listPlotHistory.Location = new Point(539, 28);
-            listPlotHistory.Name = "listPlotHistory";
-            listPlotHistory.SelectedIndex = -1;
-            listPlotHistory.Size = new Size(146, 108);
-            listPlotHistory.TabIndex = 64;
-            listPlotHistory.ItemSelect += listPlotHistory_ItemSelect;
-            listPlotHistory.ItemsExport += listPlotHistory_ItemsExport;
-            listPlotHistory.ItemsImport += listPlotHistory_ItemsImport;
-            // 
-            // cellSelectionPlot
-            // 
-            cellSelectionPlot.CombineOptionsVisible = true;
-            cellSelectionPlot.Location = new Point(212, 25);
-            cellSelectionPlot.Name = "cellSelectionPlot";
-            cellSelectionPlot.SelectedUnits = null;
-            cellSelectionPlot.Size = new Size(327, 111);
-            cellSelectionPlot.TabIndex = 66;
-            // 
-            // cbPlotHistory
-            // 
-            cbPlotHistory.AutoSize = true;
-            cbPlotHistory.Checked = true;
-            cbPlotHistory.CheckState = CheckState.Checked;
-            cbPlotHistory.Location = new Point(644, 8);
-            cbPlotHistory.Name = "cbPlotHistory";
-            cbPlotHistory.Size = new Size(93, 19);
-            cbPlotHistory.TabIndex = 65;
-            cbPlotHistory.Text = "Keep History";
-            cbPlotHistory.UseVisualStyleBackColor = true;
-            // 
-            // linkExportPlotData
-            // 
-            linkExportPlotData.Enabled = false;
-            linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportPlotData.Location = new Point(584, 10);
-            linkExportPlotData.Name = "linkExportPlotData";
-            linkExportPlotData.Size = new Size(54, 15);
-            linkExportPlotData.TabIndex = 59;
-            linkExportPlotData.TabStop = true;
-            linkExportPlotData.Text = "Export";
-            toolTip.SetToolTip(linkExportPlotData, "Export plot data as a csv file");
-            linkExportPlotData.LinkClicked += linkExportPlotData_LinkClicked;
-            // 
-            // pLinePlots
-            // 
-            pLinePlots.BackColor = Color.LightGray;
-            pLinePlots.Dock = DockStyle.Bottom;
-            pLinePlots.Location = new Point(0, 139);
-            pLinePlots.Name = "pLinePlots";
-            pLinePlots.Size = new Size(688, 1);
-            pLinePlots.TabIndex = 58;
-            // 
-            // linkSaveHTMLPlots
-            // 
-            linkSaveHTMLPlots.Enabled = false;
-            linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveHTMLPlots.Location = new Point(539, 10);
-            linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
-            linkSaveHTMLPlots.Size = new Size(51, 15);
-            linkSaveHTMLPlots.TabIndex = 53;
-            linkSaveHTMLPlots.TabStop = true;
-            linkSaveHTMLPlots.Text = "Save";
-            toolTip.SetToolTip(linkSaveHTMLPlots, "Save plot as an HTML file");
-            linkSaveHTMLPlots.LinkClicked += linkSaveHTMLPlots_LinkClicked;
-            // 
-            // ePlotEnd
-            // 
-            ePlotEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            ePlotEnd.Location = new Point(73, 32);
-            ePlotEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            ePlotEnd.Name = "ePlotEnd";
-            ePlotEnd.Size = new Size(100, 23);
-            ePlotEnd.TabIndex = 33;
-            ePlotEnd.ThousandsSeparator = true;
-            ePlotEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // ePlotStart
-            // 
-            ePlotStart.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            ePlotStart.Location = new Point(73, 6);
-            ePlotStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            ePlotStart.Name = "ePlotStart";
-            ePlotStart.Size = new Size(100, 23);
-            ePlotStart.TabIndex = 31;
-            ePlotStart.ThousandsSeparator = true;
-            // 
-            // lPlotStart
-            // 
-            lPlotStart.AutoSize = true;
-            lPlotStart.Location = new Point(12, 10);
-            lPlotStart.Name = "lPlotStart";
-            lPlotStart.Size = new Size(55, 15);
-            lPlotStart.TabIndex = 11;
-            lPlotStart.Text = "Plot Start";
-            // 
-            // lms1
-            // 
-            lms1.AutoSize = true;
-            lms1.Location = new Point(180, 10);
-            lms1.Name = "lms1";
-            lms1.Size = new Size(31, 15);
-            lms1.TabIndex = 13;
-            lms1.Text = "(ms)";
-            // 
-            // lPlotEnd
-            // 
-            lPlotEnd.AutoSize = true;
-            lPlotEnd.Location = new Point(12, 34);
-            lPlotEnd.Name = "lPlotEnd";
-            lPlotEnd.Size = new Size(51, 15);
-            lPlotEnd.TabIndex = 14;
-            lPlotEnd.Text = "Plot End";
-            // 
-            // lms2
-            // 
-            lms2.AutoSize = true;
-            lms2.Location = new Point(180, 37);
-            lms2.Name = "lms2";
-            lms2.Size = new Size(31, 15);
-            lms2.TabIndex = 16;
-            lms2.Text = "(ms)";
-            // 
-            // lPlotPlot
-            // 
-            lPlotPlot.AutoSize = true;
-            lPlotPlot.Location = new Point(217, 10);
-            lPlotPlot.Name = "lPlotPlot";
-            lPlotPlot.Size = new Size(28, 15);
-            lPlotPlot.TabIndex = 19;
-            lPlotPlot.Text = "Plot";
-            lPlotPlot.DoubleClick += lPlotPlot_DoubleClick;
             // 
             // t2DRender
             // 
@@ -1031,170 +703,327 @@
             btn3DRender.UseVisualStyleBackColor = false;
             btn3DRender.Click += btn3DRender_Click;
             // 
-            // tMNKinematics
+            // tPlot
             // 
-            tMNKinematics.Controls.Add(splitKinematics);
-            tMNKinematics.Controls.Add(pMNKinematicsTop);
-            tMNKinematics.Location = new Point(4, 24);
-            tMNKinematics.Name = "tMNKinematics";
-            tMNKinematics.Size = new Size(694, 767);
-            tMNKinematics.TabIndex = 7;
-            tMNKinematics.Text = "MN Based Kinematics";
-            tMNKinematics.UseVisualStyleBackColor = true;
+            tPlot.Controls.Add(tabPlotSub);
+            tPlot.Controls.Add(pPlot);
+            tPlot.Location = new Point(4, 24);
+            tPlot.Name = "tPlot";
+            tPlot.Padding = new Padding(3);
+            tPlot.Size = new Size(694, 767);
+            tPlot.TabIndex = 4;
+            tPlot.Text = "Plots";
+            tPlot.UseVisualStyleBackColor = true;
             // 
-            // splitKinematics
+            // tabPlotSub
             // 
-            splitKinematics.BackColor = Color.DarkGray;
-            splitKinematics.Dock = DockStyle.Fill;
-            splitKinematics.Location = new Point(0, 64);
-            splitKinematics.Name = "splitKinematics";
+            tabPlotSub.Controls.Add(tPlotHTML);
+            tabPlotSub.Controls.Add(tPlotWindows);
+            tabPlotSub.Dock = DockStyle.Fill;
+            tabPlotSub.Location = new Point(3, 143);
+            tabPlotSub.Name = "tabPlotSub";
+            tabPlotSub.SelectedIndex = 0;
+            tabPlotSub.Size = new Size(688, 621);
+            tabPlotSub.TabIndex = 6;
             // 
-            // splitKinematics.Panel1
+            // tPlotHTML
             // 
-            splitKinematics.Panel1.BackColor = Color.White;
-            splitKinematics.Panel1.Controls.Add(webViewSummaryV);
-            splitKinematics.Panel1.Controls.Add(pLineMNKinematicsRight);
+            tPlotHTML.Controls.Add(webViewPlot);
+            tPlotHTML.Location = new Point(4, 24);
+            tPlotHTML.Name = "tPlotHTML";
+            tPlotHTML.Padding = new Padding(3);
+            tPlotHTML.Size = new Size(680, 593);
+            tPlotHTML.TabIndex = 1;
+            tPlotHTML.Text = "HTML Plots";
+            tPlotHTML.UseVisualStyleBackColor = true;
             // 
-            // splitKinematics.Panel2
+            // webViewPlot
             // 
-            splitKinematics.Panel2.BackColor = Color.White;
-            splitKinematics.Panel2.Controls.Add(eEpisodes);
-            splitKinematics.Panel2.Controls.Add(pLineMNKinematicsLeft);
-            splitKinematics.Size = new Size(694, 703);
-            splitKinematics.SplitterDistance = 471;
-            splitKinematics.SplitterWidth = 2;
-            splitKinematics.TabIndex = 8;
+            webViewPlot.AllowExternalDrop = true;
+            webViewPlot.BackColor = Color.White;
+            webViewPlot.CreationProperties = null;
+            webViewPlot.DefaultBackgroundColor = Color.White;
+            webViewPlot.Dock = DockStyle.Fill;
+            webViewPlot.Location = new Point(3, 3);
+            webViewPlot.Name = "webViewPlot";
+            webViewPlot.Size = new Size(674, 587);
+            webViewPlot.TabIndex = 1;
+            webViewPlot.ZoomFactor = 1D;
+            webViewPlot.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
-            // webViewSummaryV
+            // tPlotWindows
             // 
-            webViewSummaryV.AllowExternalDrop = true;
-            webViewSummaryV.BackColor = Color.White;
-            webViewSummaryV.CreationProperties = null;
-            webViewSummaryV.DefaultBackgroundColor = Color.White;
-            webViewSummaryV.Dock = DockStyle.Fill;
-            webViewSummaryV.Location = new Point(0, 0);
-            webViewSummaryV.Name = "webViewSummaryV";
-            webViewSummaryV.Size = new Size(470, 703);
-            webViewSummaryV.TabIndex = 6;
-            webViewSummaryV.ZoomFactor = 1D;
-            webViewSummaryV.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
+            tPlotWindows.Controls.Add(splitPlotWindows);
+            tPlotWindows.Location = new Point(4, 24);
+            tPlotWindows.Name = "tPlotWindows";
+            tPlotWindows.Padding = new Padding(3);
+            tPlotWindows.Size = new Size(680, 593);
+            tPlotWindows.TabIndex = 0;
+            tPlotWindows.Text = "Image Plots";
             // 
-            // pLineMNKinematicsRight
+            // splitPlotWindows
             // 
-            pLineMNKinematicsRight.BackColor = Color.LightGray;
-            pLineMNKinematicsRight.Dock = DockStyle.Right;
-            pLineMNKinematicsRight.Location = new Point(470, 0);
-            pLineMNKinematicsRight.Name = "pLineMNKinematicsRight";
-            pLineMNKinematicsRight.Size = new Size(1, 703);
-            pLineMNKinematicsRight.TabIndex = 7;
+            splitPlotWindows.BackColor = Color.Gray;
+            splitPlotWindows.BorderStyle = BorderStyle.FixedSingle;
+            splitPlotWindows.Dock = DockStyle.Fill;
+            splitPlotWindows.Location = new Point(3, 3);
+            splitPlotWindows.Name = "splitPlotWindows";
             // 
-            // eEpisodes
+            // splitPlotWindows.Panel1
             // 
-            eEpisodes.Dock = DockStyle.Fill;
-            eEpisodes.Location = new Point(1, 0);
-            eEpisodes.Name = "eEpisodes";
-            eEpisodes.Size = new Size(220, 703);
-            eEpisodes.TabIndex = 1;
-            eEpisodes.Text = "";
+            splitPlotWindows.Panel1.AutoScroll = true;
+            splitPlotWindows.Panel1.BackColor = Color.White;
+            splitPlotWindows.Panel1.Controls.Add(pictureBoxLeft);
             // 
-            // pLineMNKinematicsLeft
+            // splitPlotWindows.Panel2
             // 
-            pLineMNKinematicsLeft.BackColor = Color.LightGray;
-            pLineMNKinematicsLeft.Dock = DockStyle.Left;
-            pLineMNKinematicsLeft.Location = new Point(0, 0);
-            pLineMNKinematicsLeft.Name = "pLineMNKinematicsLeft";
-            pLineMNKinematicsLeft.Size = new Size(1, 703);
-            pLineMNKinematicsLeft.TabIndex = 2;
+            splitPlotWindows.Panel2.AutoScroll = true;
+            splitPlotWindows.Panel2.BackColor = Color.White;
+            splitPlotWindows.Panel2.Controls.Add(pictureBoxRight);
+            splitPlotWindows.Size = new Size(674, 587);
+            splitPlotWindows.SplitterDistance = 312;
+            splitPlotWindows.SplitterWidth = 2;
+            splitPlotWindows.TabIndex = 0;
             // 
-            // pMNKinematicsTop
+            // pictureBoxLeft
             // 
-            pMNKinematicsTop.BackColor = Color.FromArgb(236, 239, 241);
-            pMNKinematicsTop.Controls.Add(cbSpikingMNs);
-            pMNKinematicsTop.Controls.Add(cbCombineMNPools);
-            pMNKinematicsTop.Controls.Add(pLineMNKinematics);
-            pMNKinematicsTop.Controls.Add(lSomitesNumMNDynamics);
-            pMNKinematicsTop.Controls.Add(eKinematicsSomite);
-            pMNKinematicsTop.Controls.Add(btnGenerateEpisodes);
-            pMNKinematicsTop.Controls.Add(lKinematicsTimes);
-            pMNKinematicsTop.Dock = DockStyle.Top;
-            pMNKinematicsTop.Location = new Point(0, 0);
-            pMNKinematicsTop.Name = "pMNKinematicsTop";
-            pMNKinematicsTop.Size = new Size(694, 64);
-            pMNKinematicsTop.TabIndex = 7;
+            pictureBoxLeft.ContextMenuStrip = cmPlotImageSave;
+            pictureBoxLeft.Dock = DockStyle.Fill;
+            pictureBoxLeft.Location = new Point(0, 0);
+            pictureBoxLeft.Name = "pictureBoxLeft";
+            pictureBoxLeft.Size = new Size(310, 585);
+            pictureBoxLeft.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBoxLeft.TabIndex = 0;
+            pictureBoxLeft.TabStop = false;
             // 
-            // cbSpikingMNs
+            // cmPlotImageSave
             // 
-            cbSpikingMNs.AutoSize = true;
-            cbSpikingMNs.Location = new Point(151, 34);
-            cbSpikingMNs.Name = "cbSpikingMNs";
-            cbSpikingMNs.Size = new Size(121, 19);
-            cbSpikingMNs.TabIndex = 66;
-            cbSpikingMNs.Text = "Spiking Cells Only";
-            cbSpikingMNs.UseVisualStyleBackColor = true;
+            cmPlotImageSave.Items.AddRange(new ToolStripItem[] { cmiPlotImageSave });
+            cmPlotImageSave.Name = "cmImageSave";
+            cmPlotImageSave.Size = new Size(135, 26);
             // 
-            // cbCombineMNPools
+            // cmiPlotImageSave
             // 
-            cbCombineMNPools.AutoSize = true;
-            cbCombineMNPools.Location = new Point(12, 34);
-            cbCombineMNPools.Name = "cbCombineMNPools";
-            cbCombineMNPools.Size = new Size(107, 19);
-            cbCombineMNPools.TabIndex = 65;
-            cbCombineMNPools.Text = "Combine Pools";
-            cbCombineMNPools.UseVisualStyleBackColor = true;
+            cmiPlotImageSave.Name = "cmiPlotImageSave";
+            cmiPlotImageSave.Size = new Size(134, 22);
+            cmiPlotImageSave.Text = "Save Image";
+            cmiPlotImageSave.Click += cmiPlotImageSave_Click;
             // 
-            // pLineMNKinematics
+            // pictureBoxRight
             // 
-            pLineMNKinematics.BackColor = Color.LightGray;
-            pLineMNKinematics.Dock = DockStyle.Bottom;
-            pLineMNKinematics.Location = new Point(0, 63);
-            pLineMNKinematics.Name = "pLineMNKinematics";
-            pLineMNKinematics.Size = new Size(694, 1);
-            pLineMNKinematics.TabIndex = 64;
+            pictureBoxRight.ContextMenuStrip = cmPlotImageSave;
+            pictureBoxRight.Dock = DockStyle.Fill;
+            pictureBoxRight.Location = new Point(0, 0);
+            pictureBoxRight.Name = "pictureBoxRight";
+            pictureBoxRight.Size = new Size(358, 585);
+            pictureBoxRight.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBoxRight.TabIndex = 0;
+            pictureBoxRight.TabStop = false;
             // 
-            // lSomitesNumMNDynamics
+            // pPlot
             // 
-            lSomitesNumMNDynamics.AutoSize = true;
-            lSomitesNumMNDynamics.Location = new Point(12, 7);
-            lSomitesNumMNDynamics.Name = "lSomitesNumMNDynamics";
-            lSomitesNumMNDynamics.Size = new Size(54, 15);
-            lSomitesNumMNDynamics.TabIndex = 43;
-            lSomitesNumMNDynamics.Text = "Somite #";
+            pPlot.BackColor = Color.FromArgb(236, 239, 241);
+            pPlot.Controls.Add(btnPlotHTML);
+            pPlot.Controls.Add(ddPlot);
+            pPlot.Controls.Add(listPlotHistory);
+            pPlot.Controls.Add(cellSelectionPlot);
+            pPlot.Controls.Add(cbPlotHistory);
+            pPlot.Controls.Add(linkExportPlotData);
+            pPlot.Controls.Add(pLinePlots);
+            pPlot.Controls.Add(linkSaveHTMLPlots);
+            pPlot.Controls.Add(ePlotEnd);
+            pPlot.Controls.Add(ePlotStart);
+            pPlot.Controls.Add(lPlotStart);
+            pPlot.Controls.Add(lms1);
+            pPlot.Controls.Add(lPlotEnd);
+            pPlot.Controls.Add(lms2);
+            pPlot.Controls.Add(lPlotPlot);
+            pPlot.Dock = DockStyle.Top;
+            pPlot.Location = new Point(3, 3);
+            pPlot.Name = "pPlot";
+            pPlot.Size = new Size(688, 140);
+            pPlot.TabIndex = 5;
             // 
-            // eKinematicsSomite
+            // btnPlotHTML
             // 
-            eKinematicsSomite.Location = new Point(82, 3);
-            eKinematicsSomite.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            eKinematicsSomite.Name = "eKinematicsSomite";
-            eKinematicsSomite.Size = new Size(53, 23);
-            eKinematicsSomite.TabIndex = 42;
-            eKinematicsSomite.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            btnPlotHTML.BackColor = Color.FromArgb(96, 125, 139);
+            btnPlotHTML.ContextMenuStrip = cmPlot;
+            btnPlotHTML.Enabled = false;
+            btnPlotHTML.FlatAppearance.BorderColor = Color.LightGray;
+            btnPlotHTML.FlatStyle = FlatStyle.Flat;
+            btnPlotHTML.ForeColor = Color.White;
+            btnPlotHTML.Location = new Point(446, 5);
+            btnPlotHTML.Name = "btnPlotHTML";
+            btnPlotHTML.Size = new Size(75, 24);
+            btnPlotHTML.TabIndex = 52;
+            btnPlotHTML.Text = "Plot";
+            btnPlotHTML.UseVisualStyleBackColor = false;
+            btnPlotHTML.Click += btnPlotHTML_Click;
             // 
-            // btnGenerateEpisodes
+            // cmPlot
             // 
-            btnGenerateEpisodes.BackColor = Color.FromArgb(96, 125, 139);
-            btnGenerateEpisodes.Enabled = false;
-            btnGenerateEpisodes.FlatAppearance.BorderColor = Color.LightGray;
-            btnGenerateEpisodes.FlatStyle = FlatStyle.Flat;
-            btnGenerateEpisodes.ForeColor = Color.White;
-            btnGenerateEpisodes.Location = new Point(151, 2);
-            btnGenerateEpisodes.Name = "btnGenerateEpisodes";
-            btnGenerateEpisodes.Size = new Size(140, 24);
-            btnGenerateEpisodes.TabIndex = 29;
-            btnGenerateEpisodes.Text = "Calculate Episodes";
-            btnGenerateEpisodes.UseVisualStyleBackColor = false;
-            btnGenerateEpisodes.Click += btnGenerateEpisodes_Click;
+            cmPlot.Items.AddRange(new ToolStripItem[] { cmiNonInteractivePlot });
+            cmPlot.Name = "cmPlot";
+            cmPlot.Size = new Size(182, 26);
             // 
-            // lKinematicsTimes
+            // cmiNonInteractivePlot
             // 
-            lKinematicsTimes.Location = new Point(307, 7);
-            lKinematicsTimes.Name = "lKinematicsTimes";
-            lKinematicsTimes.Size = new Size(372, 19);
-            lKinematicsTimes.TabIndex = 33;
-            lKinematicsTimes.Text = "Last kinematics:";
+            cmiNonInteractivePlot.Name = "cmiNonInteractivePlot";
+            cmiNonInteractivePlot.Size = new Size(181, 22);
+            cmiNonInteractivePlot.Text = "Non-interactive plot";
+            cmiNonInteractivePlot.Click += cmiNonInteractivePlot_Click;
+            // 
+            // ddPlot
+            // 
+            ddPlot.BackColor = Color.White;
+            ddPlot.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddPlot.FlatStyle = FlatStyle.Flat;
+            ddPlot.FormattingEnabled = true;
+            ddPlot.Location = new Point(278, 6);
+            ddPlot.Name = "ddPlot";
+            ddPlot.Size = new Size(165, 23);
+            ddPlot.TabIndex = 34;
+            ddPlot.SelectedIndexChanged += ddPlot_SelectedIndexChanged;
+            // 
+            // listPlotHistory
+            // 
+            listPlotHistory.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            listPlotHistory.FirstItem = "(Plot History - Double click to select.)";
+            listPlotHistory.Location = new Point(539, 28);
+            listPlotHistory.Name = "listPlotHistory";
+            listPlotHistory.SelectedIndex = -1;
+            listPlotHistory.Size = new Size(146, 108);
+            listPlotHistory.TabIndex = 64;
+            listPlotHistory.ItemSelect += listPlotHistory_ItemSelect;
+            listPlotHistory.ItemsExport += listPlotHistory_ItemsExport;
+            listPlotHistory.ItemsImport += listPlotHistory_ItemsImport;
+            // 
+            // cellSelectionPlot
+            // 
+            cellSelectionPlot.CombineOptionsVisible = false;
+            cellSelectionPlot.Location = new Point(212, 25);
+            cellSelectionPlot.Name = "cellSelectionPlot";
+            cellSelectionPlot.SelectedUnits = null;
+            cellSelectionPlot.Size = new Size(327, 111);
+            cellSelectionPlot.TabIndex = 66;
+            // 
+            // cbPlotHistory
+            // 
+            cbPlotHistory.AutoSize = true;
+            cbPlotHistory.Checked = true;
+            cbPlotHistory.CheckState = CheckState.Checked;
+            cbPlotHistory.Location = new Point(644, 8);
+            cbPlotHistory.Name = "cbPlotHistory";
+            cbPlotHistory.Size = new Size(93, 19);
+            cbPlotHistory.TabIndex = 65;
+            cbPlotHistory.Text = "Keep History";
+            cbPlotHistory.UseVisualStyleBackColor = true;
+            // 
+            // linkExportPlotData
+            // 
+            linkExportPlotData.Enabled = false;
+            linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
+            linkExportPlotData.Location = new Point(584, 10);
+            linkExportPlotData.Name = "linkExportPlotData";
+            linkExportPlotData.Size = new Size(54, 15);
+            linkExportPlotData.TabIndex = 59;
+            linkExportPlotData.TabStop = true;
+            linkExportPlotData.Text = "Export";
+            toolTip.SetToolTip(linkExportPlotData, "Export plot data as a csv file");
+            linkExportPlotData.LinkClicked += linkExportPlotData_LinkClicked;
+            // 
+            // pLinePlots
+            // 
+            pLinePlots.BackColor = Color.LightGray;
+            pLinePlots.Dock = DockStyle.Bottom;
+            pLinePlots.Location = new Point(0, 139);
+            pLinePlots.Name = "pLinePlots";
+            pLinePlots.Size = new Size(688, 1);
+            pLinePlots.TabIndex = 58;
+            // 
+            // linkSaveHTMLPlots
+            // 
+            linkSaveHTMLPlots.Enabled = false;
+            linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
+            linkSaveHTMLPlots.Location = new Point(539, 10);
+            linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
+            linkSaveHTMLPlots.Size = new Size(51, 15);
+            linkSaveHTMLPlots.TabIndex = 53;
+            linkSaveHTMLPlots.TabStop = true;
+            linkSaveHTMLPlots.Text = "Save";
+            toolTip.SetToolTip(linkSaveHTMLPlots, "Save plot as an HTML file");
+            linkSaveHTMLPlots.LinkClicked += linkSaveHTMLPlots_LinkClicked;
+            // 
+            // ePlotEnd
+            // 
+            ePlotEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
+            ePlotEnd.Location = new Point(73, 32);
+            ePlotEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            ePlotEnd.Name = "ePlotEnd";
+            ePlotEnd.Size = new Size(100, 23);
+            ePlotEnd.TabIndex = 33;
+            ePlotEnd.ThousandsSeparator = true;
+            ePlotEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // ePlotStart
+            // 
+            ePlotStart.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
+            ePlotStart.Location = new Point(73, 6);
+            ePlotStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            ePlotStart.Name = "ePlotStart";
+            ePlotStart.Size = new Size(100, 23);
+            ePlotStart.TabIndex = 31;
+            ePlotStart.ThousandsSeparator = true;
+            // 
+            // lPlotStart
+            // 
+            lPlotStart.AutoSize = true;
+            lPlotStart.Location = new Point(12, 10);
+            lPlotStart.Name = "lPlotStart";
+            lPlotStart.Size = new Size(55, 15);
+            lPlotStart.TabIndex = 11;
+            lPlotStart.Text = "Plot Start";
+            // 
+            // lms1
+            // 
+            lms1.AutoSize = true;
+            lms1.Location = new Point(180, 10);
+            lms1.Name = "lms1";
+            lms1.Size = new Size(31, 15);
+            lms1.TabIndex = 13;
+            lms1.Text = "(ms)";
+            // 
+            // lPlotEnd
+            // 
+            lPlotEnd.AutoSize = true;
+            lPlotEnd.Location = new Point(12, 34);
+            lPlotEnd.Name = "lPlotEnd";
+            lPlotEnd.Size = new Size(51, 15);
+            lPlotEnd.TabIndex = 14;
+            lPlotEnd.Text = "Plot End";
+            // 
+            // lms2
+            // 
+            lms2.AutoSize = true;
+            lms2.Location = new Point(180, 37);
+            lms2.Name = "lms2";
+            lms2.Size = new Size(31, 15);
+            lms2.TabIndex = 16;
+            lms2.Text = "(ms)";
+            // 
+            // lPlotPlot
+            // 
+            lPlotPlot.AutoSize = true;
+            lPlotPlot.Location = new Point(217, 10);
+            lPlotPlot.Name = "lPlotPlot";
+            lPlotPlot.Size = new Size(28, 15);
+            lPlotPlot.TabIndex = 19;
+            lPlotPlot.Text = "Plot";
+            lPlotPlot.DoubleClick += lPlotPlot_DoubleClick;
             // 
             // tSpikeStats
             // 
-            tSpikeStats.Controls.Add(dgSpikeStats);
+            tSpikeStats.Controls.Add(tabSpikesEpisodes);
             tSpikeStats.Controls.Add(panel1);
             tSpikeStats.Location = new Point(4, 24);
             tSpikeStats.Name = "tSpikeStats";
@@ -1203,18 +1032,40 @@
             tSpikeStats.Text = "Spike Stats";
             tSpikeStats.UseVisualStyleBackColor = true;
             // 
+            // tabSpikesEpisodes
+            // 
+            tabSpikesEpisodes.Controls.Add(tSpikes);
+            tabSpikesEpisodes.Controls.Add(tEpisodes);
+            tabSpikesEpisodes.Dock = DockStyle.Fill;
+            tabSpikesEpisodes.Location = new Point(0, 120);
+            tabSpikesEpisodes.Name = "tabSpikesEpisodes";
+            tabSpikesEpisodes.SelectedIndex = 0;
+            tabSpikesEpisodes.Size = new Size(694, 647);
+            tabSpikesEpisodes.TabIndex = 8;
+            // 
+            // tSpikes
+            // 
+            tSpikes.Controls.Add(dgSpikeStats);
+            tSpikes.Location = new Point(4, 24);
+            tSpikes.Name = "tSpikes";
+            tSpikes.Padding = new Padding(3);
+            tSpikes.Size = new Size(686, 619);
+            tSpikes.TabIndex = 0;
+            tSpikes.Text = "Spikes";
+            tSpikes.UseVisualStyleBackColor = true;
+            // 
             // dgSpikeStats
             // 
             dgSpikeStats.AllowUserToAddRows = false;
             dgSpikeStats.AllowUserToDeleteRows = false;
             dgSpikeStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgSpikeStats.Columns.AddRange(new DataGridViewColumn[] { colSpikeCell, colSpikeSagittal, colSpikeCellPool, colSpikeSomite, colSpikeSeq, colSpikeEpisode, colSpikeTime });
+            dgSpikeStats.Columns.AddRange(new DataGridViewColumn[] { colSpikeCell, colSpikeSagittal, colSpikeCellPool, colSpikeSomite, colSpikeCellSeq, colSpikeTime });
             dgSpikeStats.Dock = DockStyle.Fill;
-            dgSpikeStats.Location = new Point(0, 120);
+            dgSpikeStats.Location = new Point(3, 3);
             dgSpikeStats.Name = "dgSpikeStats";
             dgSpikeStats.ReadOnly = true;
             dgSpikeStats.RowTemplate.Height = 25;
-            dgSpikeStats.Size = new Size(694, 647);
+            dgSpikeStats.Size = new Size(680, 613);
             dgSpikeStats.TabIndex = 7;
             // 
             // colSpikeCell
@@ -1241,17 +1092,11 @@
             colSpikeSomite.Name = "colSpikeSomite";
             colSpikeSomite.ReadOnly = true;
             // 
-            // colSpikeSeq
+            // colSpikeCellSeq
             // 
-            colSpikeSeq.HeaderText = "Cell Seq";
-            colSpikeSeq.Name = "colSpikeSeq";
-            colSpikeSeq.ReadOnly = true;
-            // 
-            // colSpikeEpisode
-            // 
-            colSpikeEpisode.HeaderText = "Episode";
-            colSpikeEpisode.Name = "colSpikeEpisode";
-            colSpikeEpisode.ReadOnly = true;
+            colSpikeCellSeq.HeaderText = "Cell Seq";
+            colSpikeCellSeq.Name = "colSpikeCellSeq";
+            colSpikeCellSeq.ReadOnly = true;
             // 
             // colSpikeTime
             // 
@@ -1259,10 +1104,36 @@
             colSpikeTime.Name = "colSpikeTime";
             colSpikeTime.ReadOnly = true;
             // 
+            // tEpisodes
+            // 
+            tEpisodes.Controls.Add(dgEpisodeStats);
+            tEpisodes.Location = new Point(4, 24);
+            tEpisodes.Name = "tEpisodes";
+            tEpisodes.Padding = new Padding(3);
+            tEpisodes.Size = new Size(686, 619);
+            tEpisodes.TabIndex = 1;
+            tEpisodes.Text = "Episodes";
+            tEpisodes.UseVisualStyleBackColor = true;
+            // 
+            // dgEpisodeStats
+            // 
+            dgEpisodeStats.AllowUserToAddRows = false;
+            dgEpisodeStats.AllowUserToDeleteRows = false;
+            dgEpisodeStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgEpisodeStats.Columns.AddRange(new DataGridViewColumn[] { colEpisodesEpisode, colEpisodesCellGroup, colEpisodesSomite, colEpisodesStart, colEpisodesEnd });
+            dgEpisodeStats.Dock = DockStyle.Fill;
+            dgEpisodeStats.Location = new Point(3, 3);
+            dgEpisodeStats.Name = "dgEpisodeStats";
+            dgEpisodeStats.ReadOnly = true;
+            dgEpisodeStats.RowTemplate.Height = 25;
+            dgEpisodeStats.Size = new Size(680, 613);
+            dgEpisodeStats.TabIndex = 8;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(236, 239, 241);
-            panel1.Controls.Add(cbSpikeEpisodes);
+            panel1.Controls.Add(linkExportEpisodes);
+            panel1.Controls.Add(btnListEpisodes);
             panel1.Controls.Add(btnListSpikes);
             panel1.Controls.Add(linkExportSpikes);
             panel1.Controls.Add(cellSelectionSpike);
@@ -1273,15 +1144,33 @@
             panel1.Size = new Size(694, 120);
             panel1.TabIndex = 6;
             // 
-            // cbSpikeEpisodes
+            // linkExportEpisodes
             // 
-            cbSpikeEpisodes.AutoSize = true;
-            cbSpikeEpisodes.Location = new Point(234, 40);
-            cbSpikeEpisodes.Name = "cbSpikeEpisodes";
-            cbSpikeEpisodes.Size = new Size(100, 19);
-            cbSpikeEpisodes.TabIndex = 62;
-            cbSpikeEpisodes.Text = "Episodes Only";
-            cbSpikeEpisodes.UseVisualStyleBackColor = true;
+            linkExportEpisodes.Enabled = false;
+            linkExportEpisodes.LinkColor = Color.FromArgb(64, 64, 64);
+            linkExportEpisodes.Location = new Point(337, 42);
+            linkExportEpisodes.Name = "linkExportEpisodes";
+            linkExportEpisodes.Size = new Size(54, 15);
+            linkExportEpisodes.TabIndex = 63;
+            linkExportEpisodes.TabStop = true;
+            linkExportEpisodes.Text = "Export";
+            toolTip.SetToolTip(linkExportEpisodes, "Export spike data as a csv file");
+            linkExportEpisodes.LinkClicked += linkExportEpisodes_LinkClicked;
+            // 
+            // btnListEpisodes
+            // 
+            btnListEpisodes.BackColor = Color.FromArgb(96, 125, 139);
+            btnListEpisodes.Enabled = false;
+            btnListEpisodes.FlatAppearance.BorderColor = Color.LightGray;
+            btnListEpisodes.FlatStyle = FlatStyle.Flat;
+            btnListEpisodes.ForeColor = Color.White;
+            btnListEpisodes.Location = new Point(231, 37);
+            btnListEpisodes.Name = "btnListEpisodes";
+            btnListEpisodes.Size = new Size(100, 24);
+            btnListEpisodes.TabIndex = 62;
+            btnListEpisodes.Text = "List Episodes";
+            btnListEpisodes.UseVisualStyleBackColor = false;
+            btnListEpisodes.Click += btnListEpisodes_Click;
             // 
             // btnListSpikes
             // 
@@ -1550,6 +1439,36 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // colEpisodesEpisode
+            // 
+            colEpisodesEpisode.HeaderText = "Episode";
+            colEpisodesEpisode.Name = "colEpisodesEpisode";
+            colEpisodesEpisode.ReadOnly = true;
+            // 
+            // colEpisodesCellGroup
+            // 
+            colEpisodesCellGroup.HeaderText = "Cell Group";
+            colEpisodesCellGroup.Name = "colEpisodesCellGroup";
+            colEpisodesCellGroup.ReadOnly = true;
+            // 
+            // colEpisodesSomite
+            // 
+            colEpisodesSomite.HeaderText = "Somite";
+            colEpisodesSomite.Name = "colEpisodesSomite";
+            colEpisodesSomite.ReadOnly = true;
+            // 
+            // colEpisodesStart
+            // 
+            colEpisodesStart.HeaderText = "Start Time";
+            colEpisodesStart.Name = "colEpisodesStart";
+            colEpisodesStart.ReadOnly = true;
+            // 
+            // colEpisodesEnd
+            // 
+            colEpisodesEnd.HeaderText = "End Time";
+            colEpisodesEnd.Name = "colEpisodesEnd";
+            colEpisodesEnd.ReadOnly = true;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1557,7 +1476,20 @@
             Controls.Add(tabOutputs);
             Name = "ModelOutputControl";
             Size = new Size(702, 795);
+            Load += ModelOutputControl_Load;
             tabOutputs.ResumeLayout(false);
+            t2DRender.ResumeLayout(false);
+            gr2DLegend.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webView2DRender).EndInit();
+            p2DRender.ResumeLayout(false);
+            p2DRender.PerformLayout();
+            t3DRender.ResumeLayout(false);
+            gr3DLegend.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webView3DRender).EndInit();
+            p3DRender.ResumeLayout(false);
+            p3DRender.PerformLayout();
+            p3DViewing.ResumeLayout(false);
+            p3DViewing.PerformLayout();
             tPlot.ResumeLayout(false);
             tabPlotSub.ResumeLayout(false);
             tPlotHTML.ResumeLayout(false);
@@ -1577,31 +1509,13 @@
             cmPlot.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).EndInit();
-            t2DRender.ResumeLayout(false);
-            gr2DLegend.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView2DRender).EndInit();
-            p2DRender.ResumeLayout(false);
-            p2DRender.PerformLayout();
-            t3DRender.ResumeLayout(false);
-            gr3DLegend.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView3DRender).EndInit();
-            p3DRender.ResumeLayout(false);
-            p3DRender.PerformLayout();
-            p3DViewing.ResumeLayout(false);
-            p3DViewing.PerformLayout();
-            tMNKinematics.ResumeLayout(false);
-            splitKinematics.Panel1.ResumeLayout(false);
-            splitKinematics.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitKinematics).EndInit();
-            splitKinematics.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webViewSummaryV).EndInit();
-            pMNKinematicsTop.ResumeLayout(false);
-            pMNKinematicsTop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)eKinematicsSomite).EndInit();
             tSpikeStats.ResumeLayout(false);
+            tabSpikesEpisodes.ResumeLayout(false);
+            tSpikes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).EndInit();
+            tEpisodes.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgEpisodeStats).EndInit();
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
             pAnimation.ResumeLayout(false);
@@ -1661,18 +1575,6 @@
         private Panel pLine3D;
         private LinkLabel linkSaveHTML3D;
         private Button btn3DRender;
-        private TabPage tMNKinematics;
-        private SplitContainer splitKinematics;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewSummaryV;
-        private Panel pLineMNKinematicsRight;
-        private RichTextBox eEpisodes;
-        private Panel pLineMNKinematicsLeft;
-        private Panel pMNKinematicsTop;
-        private Panel pLineMNKinematics;
-        private Label lSomitesNumMNDynamics;
-        private NumericUpDown eKinematicsSomite;
-        private Button btnGenerateEpisodes;
-        private Label lKinematicsTimes;
         private TabPage tAnimation;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewAnimation;
         private Panel pAnimation;
@@ -1715,8 +1617,6 @@
         private CheckBox cb3DLegend;
         private Label l3DNodeSize;
         private General.UpDownControl ud3DNodeSize;
-        private CheckBox cbSpikingMNs;
-        private CheckBox cbCombineMNPools;
         private HistoryListControl listPlotHistory;
         private CheckBox cbPlotHistory;
         private Label l2DNodeSize;
@@ -1731,13 +1631,22 @@
         private Display.CellSelectionControl cellSelectionPlot;
         private Display.CellSelectionControl cellSelectionSpike;
         private Button btnListSpikes;
-        private CheckBox cbSpikeEpisodes;
         private DataGridViewTextBoxColumn colSpikeCell;
         private DataGridViewTextBoxColumn colSpikeSagittal;
         private DataGridViewTextBoxColumn colSpikeCellPool;
         private DataGridViewTextBoxColumn colSpikeSomite;
-        private DataGridViewTextBoxColumn colSpikeSeq;
-        private DataGridViewTextBoxColumn colSpikeEpisode;
+        private DataGridViewTextBoxColumn colSpikeCellSeq;
         private DataGridViewTextBoxColumn colSpikeTime;
+        private Button btnListEpisodes;
+        private TabControl tabSpikesEpisodes;
+        private TabPage tSpikes;
+        private TabPage tEpisodes;
+        private DataGridView dgEpisodeStats;
+        private LinkLabel linkExportEpisodes;
+        private DataGridViewTextBoxColumn colEpisodesEpisode;
+        private DataGridViewTextBoxColumn colEpisodesCellGroup;
+        private DataGridViewTextBoxColumn colEpisodesSomite;
+        private DataGridViewTextBoxColumn colEpisodesStart;
+        private DataGridViewTextBoxColumn colEpisodesEnd;
     }
 }

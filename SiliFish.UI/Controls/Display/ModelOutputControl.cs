@@ -18,6 +18,7 @@ using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using System.Diagnostics;
 using SiliFish.UI.Services;
+using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.UI.Controls
 {
@@ -110,16 +111,11 @@ namespace SiliFish.UI.Controls
             int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
             if (NumberOfSomites > 0)
             {
-                eKinematicsSomite.Maximum = NumberOfSomites;
-                lSomitesNumMNDynamics.Text = "Somite #";
                 cb3DAllSomites.Visible = true;
                 e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             }
             else
             {
-                eKinematicsSomite.Maximum = RunningModel.CellPools.Any() ?
-                    RunningModel.CellPools.Max(p => p.GetMaxCellSequence()) : 0;
-                lSomitesNumMNDynamics.Text = "Cell Seq.";
                 cb3DAllSomites.Visible = e3DSomiteRange.Visible = false;
             }
             GetLastPlotSettings();
@@ -156,18 +152,16 @@ namespace SiliFish.UI.Controls
             eAnimationEnd.Value = tMax;
 
             cmPlot.Enabled =
-                btnListSpikes.Enabled =
+                btnListSpikes.Enabled = btnListEpisodes.Enabled =
                 btnPlotHTML.Enabled =
-                btnAnimate.Enabled =
-                btnGenerateEpisodes.Enabled = true;
+                btnAnimate.Enabled = true;
         }
 
         public void CancelRun()
         {
             cmPlot.Enabled =
                 btnPlotHTML.Enabled =
-                btnAnimate.Enabled =
-                btnGenerateEpisodes.Enabled = false;
+                btnAnimate.Enabled = false;
         }
         #region webViewPlot
         private void WebViewInitializations()
@@ -178,7 +172,6 @@ namespace SiliFish.UI.Controls
             webView3DRender.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
-            webViewSummaryV.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
         }
         private async void InitAsync()
@@ -187,14 +180,13 @@ namespace SiliFish.UI.Controls
             await webView2DRender.EnsureCoreWebView2Async();
             await webView3DRender.EnsureCoreWebView2Async();
             await webViewAnimation.EnsureCoreWebView2Async();
-            await webViewSummaryV.EnsureCoreWebView2Async();
         }
 
         private void Wait()
         {
             while (webViewPlot.Tag == null ||
                 webView2DRender.Tag == null || webView3DRender.Tag == null ||
-                webViewAnimation.Tag == null || webViewSummaryV.Tag == null)
+                webViewAnimation.Tag == null)
                 Application.DoEvents();
         }
 
@@ -263,8 +255,257 @@ namespace SiliFish.UI.Controls
         #endregion
 
         #region Outputs
+        #region 2D Rendering
+        private void RenderIn2D()
+        {
+            if (RunningModel == null) return;
+            TwoDRenderer modelGenerator = new();
+            string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
+                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
+            bool navigated = false;
+            webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            if (!navigated)
+                Warner.LargeFileWarning(tempFile);
+            rendered2D = true;
 
+        }
+        private void btn2DRender_Click(object sender, EventArgs e)
+        {
+            RenderIn2D();
+        }
+
+        private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileHTML.ShowDialog() == DialogResult.OK)
+                {
+                    string htmlHead = JsonSerializer.Deserialize<string>(await webView2DRender.ExecuteScriptAsync("document.head.outerHTML"));
+                    string htmlBody = JsonSerializer.Deserialize<string>(await webView2DRender.ExecuteScriptAsync("document.body.outerHTML"));
+                    string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
+                    File.WriteAllText(saveFileHTML.FileName, html);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
+            }
+        }
+
+        private async void cb2DChemJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb2DChemJunc.Checked)
+                await webView2DRender.ExecuteScriptAsync("ShowChemJunc();");
+            else
+                await webView2DRender.ExecuteScriptAsync("HideChemJunc();");
+        }
+
+        private async void cb2DGapJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb2DGapJunc.Checked)
+                await webView2DRender.ExecuteScriptAsync("ShowGapJunc();");
+            else
+                await webView2DRender.ExecuteScriptAsync("HideGapJunc();");
+        }
+        private void cb2DLegend_CheckedChanged(object sender, EventArgs e)
+        {
+            gr2DLegend.Visible = cb2DLegend.Checked;
+        }
+        #endregion
+
+        #region 3D Rendering
+
+        private void RenderIn3D()
+        {
+            try
+            {
+                ThreeDRenderer threeDRenderer = new();
+                string html = threeDRenderer.RenderIn3D(RunningModel, RunningModel.CellPools,
+                    somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
+                    webView3DRender.Width, webView3DRender.Height,
+                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
+                bool navigated = false;
+                webView3DRender.NavigateTo(html, "3DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
+                if (!navigated)
+                    Warner.LargeFileWarning(tempFile);
+                rendered3D = true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
+
+        private void btn3DRender_Click(object sender, EventArgs e)
+        {
+            RenderIn3D();
+        }
+        private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
+        {
+            if (RunningModel == null) return;
+            e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
+            string func = $"SetSomites([]);";
+            if (!cb3DAllSomites.Checked)
+            {
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
+                func = $"SetSomites([{string.Join(',', somites)}]);";
+            }
+            await webView3DRender.ExecuteScriptAsync(func);
+        }
+
+        private string lastSomiteSelection;
+        private void e3DSomiteRange_Enter(object sender, EventArgs e)
+        {
+            lastSomiteSelection = e3DSomiteRange.Text;
+        }
+
+        private async void e3DSomiteRange_Leave(object sender, EventArgs e)
+        {
+            if (RunningModel == null) return;
+            if (lastSomiteSelection != e3DSomiteRange.Text)
+            {
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
+                string func = $"SetSomites([{string.Join(',', somites)}]);";
+                await webView3DRender.ExecuteScriptAsync(func);
+            }
+        }
+        private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (saveFileHTML.ShowDialog() == DialogResult.OK)
+                {
+                    string htmlHead = JsonSerializer.Deserialize<string>(await webView3DRender.ExecuteScriptAsync("document.head.outerHTML"));
+                    string htmlBody = JsonSerializer.Deserialize<string>(await webView3DRender.ExecuteScriptAsync("document.body.outerHTML"));
+                    string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
+                    File.WriteAllText(saveFileHTML.FileName, html);
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
+            }
+        }
+
+        private async void cb3DChemJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb3DChemJunc.Checked)
+                await webView3DRender.ExecuteScriptAsync("ShowChemJunc();");
+            else
+                await webView3DRender.ExecuteScriptAsync("HideChemJunc();");
+        }
+
+        private async void cb3DGapJunc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb3DGapJunc.Checked)
+                await webView3DRender.ExecuteScriptAsync("ShowGapJunc();");
+            else
+                await webView3DRender.ExecuteScriptAsync("HideGapJunc();");
+        }
+        private async void cb3DShowUnselectedNodes_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb3DShowUnselectedNodes.Checked)
+                await webView3DRender.ExecuteScriptAsync("ShowInactiveNodes();");
+            else
+                await webView3DRender.ExecuteScriptAsync("HideInactiveNodes();");
+        }
+        private void cb3DLegend_CheckedChanged(object sender, EventArgs e)
+        {
+            gr3DLegend.Visible = cb3DLegend.Checked;
+        }
+
+        private async void dd3DViewpoint_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (dd3DViewpoint.Text == "Dorsal view")
+                await webView3DRender.ExecuteScriptAsync("DorsalView();");
+            else if (dd3DViewpoint.Text == "Ventral view")
+                await webView3DRender.ExecuteScriptAsync("VentralView();");
+            else if (dd3DViewpoint.Text == "Rostral view")
+                await webView3DRender.ExecuteScriptAsync("RostralView();");
+            else if (dd3DViewpoint.Text == "Caudal view")
+                await webView3DRender.ExecuteScriptAsync("CaudalView();");
+            else if (dd3DViewpoint.Text == "Lateral view (left)")
+                await webView3DRender.ExecuteScriptAsync("LateralLeftView();");
+            else if (dd3DViewpoint.Text == "Lateral view (right)")
+                await webView3DRender.ExecuteScriptAsync("LateralRightView();");
+            else
+                await webView3DRender.ExecuteScriptAsync("FreeView();");
+        }
+
+        private async void btnZoomOut_Click(object sender, EventArgs e)
+        {
+            await webView3DRender.ExecuteScriptAsync("ZoomOut();");
+        }
+
+        private async void btnZoomIn_Click(object sender, EventArgs e)
+        {
+            await webView3DRender.ExecuteScriptAsync("ZoomIn();");
+        }
+        internal async void Highlight(ModelUnitBase unitToPlot, bool force)
+        {
+            if (RunningModel == null) return;
+            if (unitToPlot == null) return;
+            if (tabOutputs.SelectedTab != t2DRender && tabOutputs.SelectedTab != t3DRender)
+            {
+                if (!force) return;
+                if (unitToPlot is Cell)
+                    tabOutputs.SelectedTab = t2DRender;
+                else
+                    tabOutputs.SelectedTab = t3DRender;
+            }
+            if (unitToPlot is CellPool pool)
+            {
+                if (tabOutputs.SelectedTab == t2DRender)
+                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{pool.ID}');");
+                else
+                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");//TODO for 3 D - both left and right pools are displayed
+            }
+            else if (unitToPlot is Cell cell)
+            {
+                if (tabOutputs.SelectedTab == t2DRender)
+                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{cell.CellPool.ID}');");
+                else
+                    await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
+            }
+
+        }
+        private async void ud3DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud3DNodeSize.UpClick)
+                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (ud3DNodeSize.DownClick)
+                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DNodeSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (ud2DNodeSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+
+        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DLinkSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
+            if (ud2DLinkSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
+        }
+
+        #endregion
         #region HTML and Windows Plots - Common Functions
+
+        /// <summary>
+        /// hidden feature
+        /// to reset the plot selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lPlotPlot_DoubleClick(object sender, EventArgs e)
+        {
+            ddPlot.SelectedIndex = 1;
+            cellSelectionPlot.ResetSelection();
+        }
 
         private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
         {
@@ -763,244 +1004,136 @@ namespace SiliFish.UI.Controls
 
         #endregion
 
-        #region 2D Rendering
-        private void RenderIn2D()
+        #region Spike Stats
+        private void linkExportSpikes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (RunningModel == null) return;
-            TwoDRenderer modelGenerator = new();
-            string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
-                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
-            bool navigated = false;
-            webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
-            if (!navigated)
-                Warner.LargeFileWarning(tempFile);
-            rendered2D = true;
-
-        }
-        private void btn2DRender_Click(object sender, EventArgs e)
-        {
-            RenderIn2D();
-        }
-
-        private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileHTML.ShowDialog() == DialogResult.OK)
+                bool saved = false;
+                try
                 {
-                    string htmlHead = JsonSerializer.Deserialize<string>(await webView2DRender.ExecuteScriptAsync("document.head.outerHTML"));
-                    string htmlBody = JsonSerializer.Deserialize<string>(await webView2DRender.ExecuteScriptAsync("document.body.outerHTML"));
-                    string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
-                    File.WriteAllText(saveFileHTML.FileName, html);
+                    FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
+                    saved = true;
+                    FileUtil.ShowFile(saveFileCSV.FileName);
+                }
+                catch (Exception exc)
+                {
+                    if (!saved)
+                    {
+                        MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.", "Information");
+                    }
                 }
             }
-            catch (Exception exc)
+        }
+
+        private int AddCellToSpikeGrid(Cell cell)
+        {
+            dgSpikeStats.RowCount++;
+            int rowIndex = dgSpikeStats.RowCount - 1;
+            dgSpikeStats[colSpikeCell.Index, rowIndex].Value = cell.ID;
+            dgSpikeStats[colSpikeSagittal.Index, rowIndex].Value = cell.PositionLeftRight;
+            dgSpikeStats[colSpikeCellPool.Index, rowIndex].Value = cell.CellPool.CellGroup;
+            dgSpikeStats[colSpikeSomite.Index, rowIndex].Value = cell.Somite;
+            dgSpikeStats[colSpikeCellSeq.Index, rowIndex].Value = cell.Sequence;
+            return rowIndex;
+        }
+        private void btnListSpikes_Click(object sender, EventArgs e)
+        {
+            if (RunningModel == null || !RunningModel.ModelRun) return;
+            UseWaitCursor = true;
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
+            Cells ??= new();
+            if (Pools != null)
+                foreach (CellPool pool in Pools)
+                    Cells.AddRange(pool.Cells);
+            Dictionary<Cell, List<int>> cellSpikes = new();
+            Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices()));
+            int spikeCount = cellSpikes.Values.Sum(l => l.Count);
+            if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
             {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
+                string msg = $"There are {spikeCount} spikes, which can take a while to list. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
             }
+            dgSpikeStats.Rows.Clear();
+            foreach (Cell cell in Cells)
+            {
+                List<int> spikes = cellSpikes[cell];
+                foreach (int spikeIndex in spikes)
+                {
+                    int rowIndex = AddCellToSpikeGrid(cell);
+                    dgSpikeStats[colSpikeTime.Index, rowIndex].Value = RunningModel.TimeArray[spikeIndex];
+                }
+            }
+            linkExportSpikes.Enabled = true;
+            UseWaitCursor = false;
         }
+        private void btnListEpisodes_Click(object sender, EventArgs e)
+        {
+            if (RunningModel == null || !RunningModel.ModelRun) return;
+            UseWaitCursor = true;
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
+            Cells ??= new();
+            if (Pools != null)
+                foreach (CellPool pool in Pools)
+                    Cells.AddRange(pool.Cells);
+            double episodeBreak = RunningModel.KinemParam.EpisodeBreak;
 
-        private async void cb2DChemJunc_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cb2DChemJunc.Checked)
-                await webView2DRender.ExecuteScriptAsync("ShowChemJunc();");
-            else
-                await webView2DRender.ExecuteScriptAsync("HideChemJunc();");
-        }
+            List<string> pools = Cells.Select(c=>c.CellPool.ID).Distinct().ToList();
 
-        private async void cb2DGapJunc_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cb2DGapJunc.Checked)
-                await webView2DRender.ExecuteScriptAsync("ShowGapJunc();");
-            else
-                await webView2DRender.ExecuteScriptAsync("HideGapJunc();");
+            foreach (string pool in pools)
+            {
+                List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
+                Dictionary<int, List<SwimmingEpisode>> orderedEpisodes = SwimmingKinematics.GenerateRostraCaudalDelays(RunningModel.TimeArray, pooledCells, episodeBreak);
+                dgEpisodeStats.Rows.Clear();
+
+                foreach (var kvp in orderedEpisodes)
+                {
+                    foreach (var episode in kvp.Value)
+                    {
+                        dgEpisodeStats.RowCount++;
+                        int rowIndex = dgEpisodeStats.RowCount - 1;
+                        dgEpisodeStats[colEpisodesEpisode.Index, rowIndex].Value = kvp.Key;
+                        dgEpisodeStats[colEpisodesCellGroup.Index, rowIndex].Value = pool;
+                        dgEpisodeStats[colEpisodesSomite.Index, rowIndex].Value = episode.Somite;
+                        dgEpisodeStats[colEpisodesStart.Index, rowIndex].Value = episode.Start;
+                        dgEpisodeStats[colEpisodesEnd.Index, rowIndex].Value = episode.End;
+                    }
+                }
+            }
+            linkExportEpisodes.Enabled = true;
+            UseWaitCursor = false;
         }
-        private void cb2DLegend_CheckedChanged(object sender, EventArgs e)
-        {
-            gr2DLegend.Visible = cb2DLegend.Checked;
+        private void linkExportEpisodes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {//TODO this code is repeated in linkExportSpikes as well. Write a function
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                bool saved = false;
+                try
+                {
+                    FileUtil.SaveToFile(saveFileCSV.FileName, dgEpisodeStats.ExportToStringBuilder().ToString());
+                    saved = true;
+                    FileUtil.ShowFile(saveFileCSV.FileName);
+                }
+                catch (Exception exc)
+                {
+                    if (!saved)
+                    {
+                        MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.", "Information");
+                    }
+                }
+            }
         }
         #endregion
 
-        #region 3D Rendering
-
-        private void RenderIn3D()
-        {
-            try
-            {
-                ThreeDRenderer threeDRenderer = new();
-                string html = threeDRenderer.RenderIn3D(RunningModel, RunningModel.CellPools,
-                    somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
-                    webView3DRender.Width, webView3DRender.Height,
-                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
-                bool navigated = false;
-                webView3DRender.NavigateTo(html, "3DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
-                if (!navigated)
-                    Warner.LargeFileWarning(tempFile);
-                rendered3D = true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
-
-        private void btn3DRender_Click(object sender, EventArgs e)
-        {
-            RenderIn3D();
-        }
-        private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
-        {
-            if (RunningModel == null) return;
-            e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
-            string func = $"SetSomites([]);";
-            if (!cb3DAllSomites.Checked)
-            {
-                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
-                func = $"SetSomites([{string.Join(',', somites)}]);";
-            }
-            await webView3DRender.ExecuteScriptAsync(func);
-        }
-
-        private string lastSomiteSelection;
-        private void e3DSomiteRange_Enter(object sender, EventArgs e)
-        {
-            lastSomiteSelection = e3DSomiteRange.Text;
-        }
-
-        private async void e3DSomiteRange_Leave(object sender, EventArgs e)
-        {
-            if (RunningModel == null) return;
-            if (lastSomiteSelection != e3DSomiteRange.Text)
-            {
-                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
-                string func = $"SetSomites([{string.Join(',', somites)}]);";
-                await webView3DRender.ExecuteScriptAsync(func);
-            }
-        }
-        private async void linkSaveHTML3D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                if (saveFileHTML.ShowDialog() == DialogResult.OK)
-                {
-                    string htmlHead = JsonSerializer.Deserialize<string>(await webView3DRender.ExecuteScriptAsync("document.head.outerHTML"));
-                    string htmlBody = JsonSerializer.Deserialize<string>(await webView3DRender.ExecuteScriptAsync("document.body.outerHTML"));
-                    string html = $@"<!DOCTYPE html> <html lang=""en"">{htmlHead}{htmlBody}</html>";
-                    File.WriteAllText(saveFileHTML.FileName, html);
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
-            }
-        }
-
-        private async void cb3DChemJunc_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cb3DChemJunc.Checked)
-                await webView3DRender.ExecuteScriptAsync("ShowChemJunc();");
-            else
-                await webView3DRender.ExecuteScriptAsync("HideChemJunc();");
-        }
-
-        private async void cb3DGapJunc_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cb3DGapJunc.Checked)
-                await webView3DRender.ExecuteScriptAsync("ShowGapJunc();");
-            else
-                await webView3DRender.ExecuteScriptAsync("HideGapJunc();");
-        }
-        private async void cb3DShowUnselectedNodes_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cb3DShowUnselectedNodes.Checked)
-                await webView3DRender.ExecuteScriptAsync("ShowInactiveNodes();");
-            else
-                await webView3DRender.ExecuteScriptAsync("HideInactiveNodes();");
-        }
-        private void cb3DLegend_CheckedChanged(object sender, EventArgs e)
-        {
-            gr3DLegend.Visible = cb3DLegend.Checked;
-        }
-
-        private async void dd3DViewpoint_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (dd3DViewpoint.Text == "Dorsal view")
-                await webView3DRender.ExecuteScriptAsync("DorsalView();");
-            else if (dd3DViewpoint.Text == "Ventral view")
-                await webView3DRender.ExecuteScriptAsync("VentralView();");
-            else if (dd3DViewpoint.Text == "Rostral view")
-                await webView3DRender.ExecuteScriptAsync("RostralView();");
-            else if (dd3DViewpoint.Text == "Caudal view")
-                await webView3DRender.ExecuteScriptAsync("CaudalView();");
-            else if (dd3DViewpoint.Text == "Lateral view (left)")
-                await webView3DRender.ExecuteScriptAsync("LateralLeftView();");
-            else if (dd3DViewpoint.Text == "Lateral view (right)")
-                await webView3DRender.ExecuteScriptAsync("LateralRightView();");
-            else
-                await webView3DRender.ExecuteScriptAsync("FreeView();");
-        }
-
-        private async void btnZoomOut_Click(object sender, EventArgs e)
-        {
-            await webView3DRender.ExecuteScriptAsync("ZoomOut();");
-        }
-
-        private async void btnZoomIn_Click(object sender, EventArgs e)
-        {
-            await webView3DRender.ExecuteScriptAsync("ZoomIn();");
-        }
-        internal async void Highlight(ModelUnitBase unitToPlot, bool force)
-        {
-            if (RunningModel == null) return;
-            if (unitToPlot == null) return;
-            if (tabOutputs.SelectedTab != t2DRender && tabOutputs.SelectedTab != t3DRender)
-            {
-                if (!force) return;
-                if (unitToPlot is Cell)
-                    tabOutputs.SelectedTab = t2DRender;
-                else
-                    tabOutputs.SelectedTab = t3DRender;
-            }
-            if (unitToPlot is CellPool pool)
-            {
-                if (tabOutputs.SelectedTab == t2DRender)
-                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{pool.ID}');");
-                else
-                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");//TODO for 3 D - both left and right pools are displayed
-            }
-            else if (unitToPlot is Cell cell)
-            {
-                if (tabOutputs.SelectedTab == t2DRender)
-                    await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{cell.CellPool.ID}');");
-                else
-                    await webView3DRender.ExecuteScriptAsync($"SelectCell('{cell.ID}');");
-            }
-
-        }
-        private async void ud3DNodeSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud3DNodeSize.UpClick)
-                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (ud3DNodeSize.DownClick)
-                await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
-        }
-        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud2DNodeSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (ud2DNodeSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
-        }
-
-        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud2DLinkSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
-            if (ud2DLinkSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
-        }
-
-        #endregion
 
         #region Animation
         int lastAnimationStartIndex;
@@ -1075,46 +1208,6 @@ namespace SiliFish.UI.Controls
 
         #endregion
 
-        #region MN Based Kinematics
-
-        private void btnGenerateEpisodes_Click(object sender, EventArgs e)
-        {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
-
-            int cellNumber = (int)eKinematicsSomite.Value;
-            (List<Cell> LeftMNs, List<Cell> RightMNs) = RunningModel.GetMotoNeurons(cellNumber);
-            (_, SwimmingEpisodes episodes) =
-                SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(RunningModel, LeftMNs, RightMNs);
-            List<Cell> allMNs = cbSpikingMNs.Checked ? LeftMNs.Union(RightMNs).Where(c => c.IsSpiking()).OrderBy(c => c.CellGroup).ToList() :
-                RightMNs.Union(LeftMNs).OrderBy(c => c.CellGroup).ToList();
-
-            PlotSelectionInterface plotSelection = new PlotSelectionUnits()
-            {
-                Units = allMNs.Cast<ModelUnitBase>().ToList(),
-                SomiteSelection = PlotSomiteSelection.All,
-                CellSelection = PlotCellSelection.All,
-                CombinePools = cbCombineMNPools.Checked
-            };
-            PlotDefinition plotDefinition = new PlotDefinition()
-            {
-                PlotType = PlotType.MembPotential,
-                Selection = plotSelection
-            };
-            PlotGenerator PG = new();
-            (string _, List<Chart> charts) = PG.GetPlotData(plotDefinition, RunningModel, allMNs, null);
-            string html = DyChartGenerator.PlotCharts("Summary Membrane Potentials", charts, true, GlobalSettings.ShowZeroValues,
-                GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
-            bool navigated = false;
-            webViewSummaryV.NavigateTo(html, "Episodes", GlobalSettings.TempFolder, ref tempFile, ref navigated);
-            if (!navigated)
-                Warner.LargeFileWarning(tempFile);
-            eEpisodes.Text = "";
-            foreach (SwimmingEpisode episode in episodes.Episodes)
-                eEpisodes.Text += episode.ToString() + "\r\n\r\n";
-            lKinematicsTimes.Text = $"Last kinematics:{DateTime.Now:t}";
-        }
-
-        #endregion
         #endregion
 
 
@@ -1126,106 +1219,10 @@ namespace SiliFish.UI.Controls
                 RenderIn3D();
         }
 
-        private void linkExportSpikes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void ModelOutputControl_Load(object sender, EventArgs e)
         {
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                bool saved = false;
-                try
-                {
-                    FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
-                    saved = true;
-                    FileUtil.ShowFile(saveFileCSV.FileName);
-                }
-                catch (Exception exc)
-                {
-                    if (!saved)
-                    {
-                        MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
-                    }
-                    else
-                    {
-                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.", "Information");
-                    }
-                }
-            }
+            tabOutputs_SelectedIndexChanged(sender, e);
         }
-
-        private int AddCellToSpikeGrid(Cell cell)
-        {
-            dgSpikeStats.RowCount++;
-            int rowIndex = dgSpikeStats.RowCount - 1;
-            dgSpikeStats[colSpikeCell.Index, rowIndex].Value = cell.ID;
-            dgSpikeStats[colSpikeSagittal.Index, rowIndex].Value = cell.PositionLeftRight;
-            dgSpikeStats[colSpikeCellPool.Index, rowIndex].Value = cell.CellPool.CellGroup;
-            dgSpikeStats[colSpikeSomite.Index, rowIndex].Value = cell.Somite;
-            dgSpikeStats[colSpikeSeq.Index, rowIndex].Value = cell.Sequence;
-            return rowIndex;
-        }
-        private void btnListSpikes_Click(object sender, EventArgs e)
-        {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
-            UseWaitCursor = true;
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
-            if (Cells == null)
-                Cells = new();
-            if (Pools != null)
-                foreach (CellPool pool in Pools)
-                    Cells.AddRange(pool.Cells);
-            Dictionary<Cell, List<int>> cellSpikes = new();
-            Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices()));
-            int spikeCount = cellSpikes.Values.Sum(l => l.Count);
-            if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
-            {
-                string msg = $"There are {spikeCount} spikes, which can take a while to list. Do you want to continue?";
-                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
-                    return;
-            }
-            double episodeBreak = RunningModel.KinemParam.EpisodeBreak;
-            dgSpikeStats.Rows.Clear();
-            colSpikeEpisode.Visible = cbSpikeEpisodes.Checked;
-            foreach (Cell cell in Cells)
-            {
-                List<int> spikes = cellSpikes[cell];
-                if (cbSpikeEpisodes.Checked)
-                {
-                    SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(RunningModel.TimeArray, spikes, episodeBreak);
-                    foreach (SwimmingEpisode episode in Episodes.Episodes)
-                    {
-                        int rowIndex = AddCellToSpikeGrid(cell);
-                        dgSpikeStats[colSpikeEpisode.Index, rowIndex].Value = "Start";
-                        dgSpikeStats[colSpikeTime.Index, rowIndex].Value = episode.Start;
-
-                        rowIndex = AddCellToSpikeGrid(cell);
-                        dgSpikeStats[colSpikeEpisode.Index, rowIndex].Value = "End";
-                        dgSpikeStats[colSpikeTime.Index, rowIndex].Value = episode.End;
-                    }
-                }
-                else
-                {
-                    foreach (int spikeIndex in spikes)
-                    {
-                        int rowIndex = AddCellToSpikeGrid(cell);
-                        dgSpikeStats[colSpikeTime.Index, rowIndex].Value = RunningModel.TimeArray[spikeIndex];
-                    }
-                }
-            }
-            linkExportSpikes.Enabled = true;
-            UseWaitCursor = false;
-        }
-
-        /// <summary>
-        /// hidden feature
-        /// to reset the plot selection
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lPlotPlot_DoubleClick(object sender, EventArgs e)
-        {
-            ddPlot.SelectedIndex = 1;
-            cellSelectionPlot.ResetSelection();
-        }
-
     }
 
 }

@@ -1,4 +1,6 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Cells;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,10 @@ namespace SiliFish.DataTypes
         public SagittalPlane Direction;
         public double BeatStart, BeatEnd;
     }
+
+    /// <summary>
+    /// The list of Beats (direction and beat start/end) of a single ventral root or tail tip
+    /// </summary>
     public class SwimmingEpisode
     {
         private readonly double episodeStart;
@@ -226,6 +232,9 @@ namespace SiliFish.DataTypes
             episodes.Smooth(last_t);
             return episodes;
         }
+
+
+        
         public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, List<int> spikeIndices, double episodeBreak)
         {
             SwimmingEpisodes episodes = new();

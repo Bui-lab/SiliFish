@@ -188,7 +188,7 @@ namespace SiliFish.Services
             double dt = model.RunParam.DeltaT;
             double offset = model.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.EpisodeBreak / dt);
-            SwimmingEpisodes episodes = new();
+            SwimmingEpisodes episodes = new("Tail", -1);
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);
             while (i < nMax)
@@ -244,8 +244,9 @@ namespace SiliFish.Services
         }
 
 
-        public static (double[], SwimmingEpisodes) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, List<Cell> leftMNs, List<Cell> rightMNs)
-        { 
+        public static (double[], SwimmingEpisodes) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, int somite)
+        {
+            (List<Cell> leftMNs, List<Cell> rightMNs) = model.GetMotoNeurons(somite);
             double episodeBreak = model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = new();
             List<int> rightSpikes = new();
@@ -281,6 +282,79 @@ namespace SiliFish.Services
             }
 
             return (range, Episodes);
+        }
+
+        /// <summary>
+        /// Looking at the earliest episode, starts with the earliest somite, and goes caudal and rostral to find the episodes that belong to the same undulatory movement
+        /// </summary>
+        /// <param name="TimeArray"></param>
+        /// <param name="cells">of a single cell pool and sagittal plane</param>
+        /// <param name="episodeBreak"></param>
+        /// <returns></returns>
+        public static Dictionary<int, List<SwimmingEpisode>> GenerateRostraCaudalDelays(double[] TimeArray, List<Cell> cells, double episodeBreak)
+        {
+            //TODO works for only somite based models
+            //TODO do not use episodebreak, have another constant. Also do not use SwimmingEpisode - I need another class here. These are bursts
+            Dictionary<int, List<SwimmingEpisode>> trueEpisodes = new();
+            List<SwimmingEpisode> ungroupedEpisodes = new();
+            foreach (Cell cell in cells)
+            {
+                List<int> spikes = cell.GetSpikeIndices();
+                SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(TimeArray, spikes, episodeBreak);
+                ungroupedEpisodes.AddRange(Episodes.Episodes);
+            }
+            ungroupedEpisodes= ungroupedEpisodes.OrderBy(epi => epi.Start).ToList();
+                int curIndex = 0;
+                while (ungroupedEpisodes.Any())
+                {
+                    SwimmingEpisode keyEpisode = ungroupedEpisodes.First();
+                    ungroupedEpisodes.Remove(keyEpisode);
+                    List<SwimmingEpisode> chainedEpisodes = new() { keyEpisode };
+                    //going downward caudally
+                    SwimmingEpisode curEpisode = keyEpisode;
+                    while (ungroupedEpisodes.Any())
+                    {
+                        SwimmingEpisode caudal = ungroupedEpisodes
+                            .OrderBy(e => e.Start)
+                            .FirstOrDefault(e => e.Somite == curEpisode.Somite + 1 &&
+                                e.cellGroup == curEpisode.CellGroup &&
+                                ((curEpisode.Start - 10 <= e.Start && e.Start <= curEpisode.End + 10) ||//TODO hardcoded
+                                (curEpisode.Start - 10 <= e.End && e.End <= curEpisode.End + 10))
+                                );
+                        if (caudal == null)
+                            break;
+                        chainedEpisodes.Add(caudal);
+                        ungroupedEpisodes.Remove(caudal);
+                        ungroupedEpisodes.RemoveAll(e => e.Somite == curEpisode.Somite + 1 &&
+                                e.cellGroup == curEpisode.CellGroup &&
+                                ((curEpisode.Start <= e.Start && e.Start <= curEpisode.End) ||
+                                (curEpisode.Start <= e.End && e.End <= curEpisode.End)));
+                        curEpisode = caudal;
+                    }
+                    //goind upward rostrally
+                    curEpisode = keyEpisode;
+                    while (ungroupedEpisodes.Any())
+                    {
+                        SwimmingEpisode rostral = groupedEpisodes
+                            .OrderByDescending(e => e.End)
+                            .FirstOrDefault(e => e.Somite == curEpisode.Somite - 1 &&
+                                e.cellGroup == curEpisode.CellGroup &&
+                                ((curEpisode.Start - 10 <= e.Start && e.Start <= curEpisode.End + 10) ||
+                                (curEpisode.Start - 10 <= e.End && e.End <= curEpisode.End + 10))
+                                );
+                        if (rostral == null)
+                            break;
+                        chainedEpisodes.Add(rostral);
+                        groupedEpisodes.RemoveAll(e => e.Somite == curEpisode.Somite - 1 &&
+                            ((curEpisode.Start <= e.Start && e.Start <= curEpisode.End) ||
+                            (curEpisode.Start <= e.End && e.End <= curEpisode.End)));
+                        curEpisode = rostral;
+                    }
+
+                    trueEpisodes.Add(curIndex++, chainedEpisodes);
+                }
+            
+            return trueEpisodes;
         }
 
     }
