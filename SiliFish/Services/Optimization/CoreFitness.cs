@@ -1,6 +1,7 @@
 ﻿using GeneticSharp;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.Firing;
 using System;
 using System.Collections.Generic;
 using System.Linq;

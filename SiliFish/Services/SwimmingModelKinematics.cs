@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.DynamicUnits;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SiliFish.Services
 {
@@ -188,7 +191,7 @@ namespace SiliFish.Services
             double dt = model.RunParam.DeltaT;
             double offset = model.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.EpisodeBreak / dt);
-            SwimmingEpisodes episodes = new("Tail", -1);
+            SwimmingEpisodes episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);
             while (i < nMax)
@@ -291,28 +294,32 @@ namespace SiliFish.Services
         /// <param name="cells">of a single cell pool and sagittal plane</param>
         /// <param name="episodeBreak"></param>
         /// <returns></returns>
-        public static Dictionary<int, List<SwimmingEpisode>> GenerateRostraCaudalDelays(double[] TimeArray, List<Cell> cells, double episodeBreak)
+        public static Dictionary<int, Dictionary<int, List<BurstOrSpike>>> GenerateTrainOfBursts(double[] TimeArray, List<Cell> cells, double episodeBreak)
         {
+
             //TODO works for only somite based models
-            //TODO do not use episodebreak, have another constant. Also do not use SwimmingEpisode - I need another class here. These are bursts
-            Dictionary<int, List<SwimmingEpisode>> trueEpisodes = new();
-            List<SwimmingEpisode> ungroupedEpisodes = new();
+            //TODO TrainOfBursts
+            /*Dictionary<int, List<SwimmingEpisode>> trueEpisodes = new();
+            Dictionary<int, List<BurstOrSpike>> ungroupedBursts = new();
             foreach (Cell cell in cells)
             {
                 List<int> spikes = cell.GetSpikeIndices();
-                SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(TimeArray, spikes, episodeBreak);
-                ungroupedEpisodes.AddRange(Episodes.Episodes);
+                List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(new ModelSettings(), 0.1, spikes, out double _);//TODO send the current model settings and dt
+                if (ungroupedBursts.ContainsKey(cell.Somite))
+                    ungroupedBursts[cell.Somite].AddRange(burstOrSpikes);
+                else 
+                    ungroupedBursts[cell.Somite] = burstOrSpikes;
             }
-            ungroupedEpisodes= ungroupedEpisodes.OrderBy(epi => epi.Start).ToList();
+            ungroupedBursts = ungroupedBursts .OrderBy(epi => epi.Start).ToList();
                 int curIndex = 0;
-                while (ungroupedEpisodes.Any())
+                while (ungroupedBursts.Any())
                 {
                     SwimmingEpisode keyEpisode = ungroupedEpisodes.First();
                     ungroupedEpisodes.Remove(keyEpisode);
                     List<SwimmingEpisode> chainedEpisodes = new() { keyEpisode };
                     //going downward caudally
                     SwimmingEpisode curEpisode = keyEpisode;
-                    while (ungroupedEpisodes.Any())
+                    while (ungroupedBursts.Any())
                     {
                         SwimmingEpisode caudal = ungroupedEpisodes
                             .OrderBy(e => e.Start)
@@ -333,7 +340,7 @@ namespace SiliFish.Services
                     }
                     //goind upward rostrally
                     curEpisode = keyEpisode;
-                    while (ungroupedEpisodes.Any())
+                    while (ungroupedBursts.Any())
                     {
                         SwimmingEpisode rostral = groupedEpisodes
                             .OrderByDescending(e => e.End)
@@ -354,7 +361,8 @@ namespace SiliFish.Services
                     trueEpisodes.Add(curIndex++, chainedEpisodes);
                 }
             
-            return trueEpisodes;
+            return trueEpisodes;*/
+            return null;
         }
 
     }

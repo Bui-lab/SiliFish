@@ -7,59 +7,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace SiliFish.DynamicUnits
+namespace SiliFish.DynamicUnits.Firing
 {
-    public class Cluster
-    {
-        public double clusterMin, clusterMax, centroid;
-        public int numMember = 0;
-        public Cluster(double center)
-        {
-            clusterMin = clusterMax = centroid = center;
-            numMember++;
-        }
-        public Cluster(List<double> intervals)
-        {
-            clusterMin = intervals.Min();
-            clusterMax = intervals.Max();
-            centroid = intervals.Average();
-            numMember = intervals.Count;
-        }
-        public void AddMember(double d)
-        {
-            centroid = (d + centroid * numMember) / ++numMember;
-            if (clusterMin > d)
-                clusterMin = d;
-            if (clusterMax < d)
-                clusterMax = d;
-        }
 
-        public void MergeCluster(Cluster c)
-        {
-            centroid = (centroid * numMember + c.centroid * c.numMember) / (numMember + c.numMember);
-            numMember += c.numMember;
-            if (clusterMax < c.clusterMin)
-                clusterMax = c.clusterMax;
-            else
-                clusterMin = c.clusterMin;
-
-        }
-
-    }
-    public class BurstOrSpike
-    {
-        public static double MinBurstSpikeCount { get; set; } = 2; //the number of minimum spikes required
-        public List<double> SpikeTimeList = new();
-        public bool IsSpike { get { return SpikeTimeList?.Count == 1; } }
-        public bool IsDoublet { get { return SpikeTimeList?.Count == 2; } }
-        public bool IsBurst { get { return SpikeTimeList?.Count >= MinBurstSpikeCount; } }
-        public int SpikeCount { get { return SpikeTimeList.Count; } }
-    }
     /// <summary>
     /// The class that is used to show how a cell behaves to a certain stimulus
     /// </summary>
     public class DynamicsStats
     {
+        private ModelSettings modelSettings;
         private double chatteringIrregularity = 0.1;
         private double oneClusterMultiplier = 2;
         private double tonicPadding = 1;
@@ -203,7 +159,7 @@ namespace SiliFish.DynamicUnits
         { }
         public DynamicsStats(ModelSettings settings, double[] stimulus, double dt)
         {
-            settings ??= new ModelSettings();//use default values
+            modelSettings = settings ?? new ModelSettings();//use default values
             chatteringIrregularity = settings.ChatteringIrregularity;
             oneClusterMultiplier = settings.OneClusterMultiplier;
             tonicPadding = settings.TonicPadding;
@@ -358,35 +314,7 @@ namespace SiliFish.DynamicUnits
                 }
             }
 
-            BurstOrSpike burstOrSpike = new();
-            burstsOrSpikes.Add(burstOrSpike);
-            double lastTime = SpikeList[0] * dt;
-            burstOrSpike.SpikeTimeList.Add(lastTime);
-            double lastInterval = double.NaN;
-            bool spreadingOut = true;
-            int sensitivity = BitConverter.GetBytes(decimal.GetBits((decimal)dt)[3])[2];
-            for (int spikeTimeIndex = 1; spikeTimeIndex < SpikeList.Count; spikeTimeIndex++)
-            {
-                double curTime = SpikeList[spikeTimeIndex] * dt;
-                double curInterval = Math.Round(curTime - lastTime, sensitivity);
-                if (lastInterval is not double.NaN && curInterval < lastInterval - dt)//dt is used instead of epsilon, as the sensitivity is set by dt
-                    spreadingOut = false;
-                if ((lastInterval is double.NaN && curInterval > MaxBurstInterval_LowerRange) ||
-                    (spreadingOut && curInterval >= MaxBurstInterval_UpperRange + GlobalSettings.Epsilon) ||
-                    (!spreadingOut && curInterval >= MaxBurstInterval_LowerRange + GlobalSettings.Epsilon))
-                {
-                    burstOrSpike = new();
-                    burstsOrSpikes.Add(burstOrSpike);
-                    spreadingOut = true;
-                    lastInterval = double.NaN;
-                }
-                else
-                {
-                    lastInterval = curInterval;
-                }
-                burstOrSpike.SpikeTimeList.Add(curTime);
-                lastTime = curTime;
-            }
+            burstsOrSpikes = BurstOrSpike.SpikesToBursts(modelSettings, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))
                 lastInterval = quiescence;
             followedByQuiescence = lastStimulusTime - lastSpikeTime >= lastInterval + tonicPadding;
