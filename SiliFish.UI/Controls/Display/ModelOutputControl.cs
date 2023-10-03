@@ -20,11 +20,34 @@ using System.Diagnostics;
 using SiliFish.UI.Services;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Swimming;
+using System.Windows.Forms;
 
 namespace SiliFish.UI.Controls
 {
     public partial class ModelOutputControl : UserControl
     {
+        class RCGridComparer : System.Collections.IComparer
+        {
+            public int Compare(object x, object y)
+            {
+                DataGridViewRow row1 = (DataGridViewRow)x;
+                DataGridViewRow row2 = (DataGridViewRow)y;
+                //Sort by "Cell Group", "Train #", "Somite"
+                string cellPool1 = row1.Cells["colRCTrainCellGroup"].Value.ToString();
+                string cellPool2 = row2.Cells["colRCTrainCellGroup"].Value.ToString();
+                int train1 = int.Parse(row1.Cells["colRCTrainNumber"].Value.ToString());
+                int train2 = int.Parse(row2.Cells["colRCTrainNumber"].Value.ToString());
+                int somite1 = int.Parse(row1.Cells["colRCTrainSomite"].Value.ToString());
+                int somite2 = int.Parse(row2.Cells["colRCTrainSomite"].Value.ToString());
+                int compareResult = string.Compare(cellPool1, cellPool2);
+                if (compareResult == 0)
+                    compareResult = train1.CompareTo(train2);
+                if (compareResult == 0)
+                    compareResult = somite1.CompareTo(somite2);
+
+                return compareResult;
+            }
+        }
         string errorMessage;
         string htmlAnimation = "";
         string htmlPlot = "";
@@ -1092,8 +1115,6 @@ namespace SiliFish.UI.Controls
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
                 List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(RunningModel.TimeArray, pooledCells, episodeBreak);
-
-
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
                     foreach (var singleBurst in burstTrain.BurstList)
@@ -1105,9 +1126,32 @@ namespace SiliFish.UI.Controls
                         dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = singleBurst.iID;
                         dgRCTrains[colRCTrainStart.Index, rowIndex].Value = singleBurst.Bursts.Start;
                         dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = singleBurst.Bursts.End;
-                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = singleBurst.Bursts.Center;
-                        dgRCTrains[colRCTrainWeightedCenter.Index, rowIndex].Value = singleBurst.Bursts.WeightedCenter;
+                        dgRCTrains[colRCTrainMidPoint.Index, rowIndex].Value = singleBurst.Bursts.Center;
+                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = singleBurst.Bursts.WeightedCenter;
                     }
+                }
+            }
+            dgRCTrains.Sort(new RCGridComparer());
+            for (int i = 1; i < dgRCTrains.RowCount; i++)
+            {
+                DataGridViewRow rowPrev = dgRCTrains.Rows[i - 1];
+                DataGridViewRow rowCurrent = dgRCTrains.Rows[i];
+                //Sort by "Cell Group", "Train #", "Somite"
+                string cellPoolPrev = rowPrev.Cells[colRCTrainCellGroup.Index].Value.ToString();
+                string cellPoolCurrent = rowCurrent.Cells[colRCTrainCellGroup.Index].Value.ToString();
+                int trainPrev = int.Parse(rowPrev.Cells[colRCTrainNumber.Index].Value.ToString());
+                int trainCurrent = int.Parse(rowCurrent.Cells[colRCTrainNumber.Index].Value.ToString());
+                if (cellPoolPrev == cellPoolCurrent && trainPrev == trainCurrent)
+                {
+                    rowCurrent.Cells[colRCTrainStartDelay.Index].Value =
+                        double.Parse(rowCurrent.Cells[colRCTrainStart.Index].Value.ToString()) -
+                        double.Parse(rowPrev.Cells[colRCTrainStart.Index].Value.ToString());
+                    rowCurrent.Cells[colRCTrainMidPointDelay.Index].Value =
+                        double.Parse(rowCurrent.Cells[colRCTrainMidPoint.Index].Value.ToString()) -
+                        double.Parse(rowPrev.Cells[colRCTrainMidPoint.Index].Value.ToString());
+                    rowCurrent.Cells[colRCTrainCenterDelay.Index].Value =
+                        double.Parse(rowCurrent.Cells[colRCTrainCenter.Index].Value.ToString()) -
+                        double.Parse(rowPrev.Cells[colRCTrainCenter.Index].Value.ToString());
                 }
             }
             linkExportRCTrains.Enabled = true;
