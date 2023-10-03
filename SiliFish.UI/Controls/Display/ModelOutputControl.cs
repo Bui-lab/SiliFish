@@ -19,6 +19,7 @@ using SiliFish.Services.Plotting.PlotSelection;
 using System.Diagnostics;
 using SiliFish.UI.Services;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.Swimming;
 
 namespace SiliFish.UI.Controls
 {
@@ -152,7 +153,7 @@ namespace SiliFish.UI.Controls
             eAnimationEnd.Value = tMax;
 
             cmPlot.Enabled =
-                btnListSpikes.Enabled = btnListEpisodes.Enabled =
+                btnListSpikes.Enabled = btnListRCTrains.Enabled =
                 btnPlotHTML.Enabled =
                 btnAnimate.Enabled = true;
         }
@@ -1070,9 +1071,10 @@ namespace SiliFish.UI.Controls
                 }
             }
             linkExportSpikes.Enabled = true;
+            tabSpikesRCTrains.SelectedTab = tSpikes;
             UseWaitCursor = false;
         }
-        private void btnListEpisodes_Click(object sender, EventArgs e)
+        private void btnListRCTrains_Click(object sender, EventArgs e)
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
             UseWaitCursor = true;
@@ -1083,29 +1085,33 @@ namespace SiliFish.UI.Controls
                     Cells.AddRange(pool.Cells);
             double episodeBreak = RunningModel.KinemParam.EpisodeBreak;
 
-            List<string> pools = Cells.Select(c=>c.CellPool.ID).Distinct().ToList();
+            List<string> pools = Cells.Select(c => c.CellPool.ID).Distinct().ToList();
 
+            dgRCTrains.Rows.Clear();
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                Dictionary<int, List<SwimmingEpisode>> orderedEpisodes = SwimmingKinematics.GenerateRostraCaudalDelays(RunningModel.TimeArray, pooledCells, episodeBreak);
-                dgEpisodeStats.Rows.Clear();
+                List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(RunningModel.TimeArray, pooledCells, episodeBreak);
 
-                foreach (var kvp in orderedEpisodes)
+
+                foreach (TrainOfBursts burstTrain in burstTrains)
                 {
-                    foreach (var episode in kvp.Value)
+                    foreach (var singleBurst in burstTrain.BurstList)
                     {
-                        dgEpisodeStats.RowCount++;
-                        int rowIndex = dgEpisodeStats.RowCount - 1;
-                        dgEpisodeStats[colEpisodesEpisode.Index, rowIndex].Value = kvp.Key;
-                        dgEpisodeStats[colEpisodesCellGroup.Index, rowIndex].Value = pool;
-                        dgEpisodeStats[colEpisodesSomite.Index, rowIndex].Value = episode.Somite;
-                        dgEpisodeStats[colEpisodesStart.Index, rowIndex].Value = episode.Start;
-                        dgEpisodeStats[colEpisodesEnd.Index, rowIndex].Value = episode.End;
+                        dgRCTrains.RowCount++;
+                        int rowIndex = dgRCTrains.RowCount - 1;
+                        dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iID;
+                        dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = singleBurst.sID;
+                        dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = singleBurst.iID;
+                        dgRCTrains[colRCTrainStart.Index, rowIndex].Value = singleBurst.Bursts.Start;
+                        dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = singleBurst.Bursts.End;
+                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = singleBurst.Bursts.Center;
+                        dgRCTrains[colRCTrainWeightedCenter.Index, rowIndex].Value = singleBurst.Bursts.WeightedCenter;
                     }
                 }
             }
-            linkExportEpisodes.Enabled = true;
+            linkExportRCTrains.Enabled = true;
+            tabSpikesRCTrains.SelectedTab = tRCTrains;
             UseWaitCursor = false;
         }
         private void linkExportEpisodes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1115,7 +1121,7 @@ namespace SiliFish.UI.Controls
                 bool saved = false;
                 try
                 {
-                    FileUtil.SaveToFile(saveFileCSV.FileName, dgEpisodeStats.ExportToStringBuilder().ToString());
+                    FileUtil.SaveToFile(saveFileCSV.FileName, dgRCTrains.ExportToStringBuilder().ToString());
                     saved = true;
                     FileUtil.ShowFile(saveFileCSV.FileName);
                 }

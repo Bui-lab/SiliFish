@@ -101,7 +101,7 @@
             lms2 = new Label();
             lPlotPlot = new Label();
             tSpikeStats = new TabPage();
-            tabSpikesEpisodes = new TabControl();
+            tabSpikesRCTrains = new TabControl();
             tSpikes = new TabPage();
             dgSpikeStats = new DataGridView();
             colSpikeCell = new DataGridViewTextBoxColumn();
@@ -110,11 +110,11 @@
             colSpikeSomite = new DataGridViewTextBoxColumn();
             colSpikeCellSeq = new DataGridViewTextBoxColumn();
             colSpikeTime = new DataGridViewTextBoxColumn();
-            tEpisodes = new TabPage();
-            dgEpisodeStats = new DataGridView();
+            tRCTrains = new TabPage();
+            dgRCTrains = new DataGridView();
             panel1 = new Panel();
-            linkExportEpisodes = new LinkLabel();
-            btnListEpisodes = new Button();
+            linkExportRCTrains = new LinkLabel();
+            btnListRCTrains = new Button();
             btnListSpikes = new Button();
             linkExportSpikes = new LinkLabel();
             cellSelectionSpike = new Display.CellSelectionControl();
@@ -144,11 +144,13 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            colEpisodesEpisode = new DataGridViewTextBoxColumn();
-            colEpisodesCellGroup = new DataGridViewTextBoxColumn();
-            colEpisodesSomite = new DataGridViewTextBoxColumn();
-            colEpisodesStart = new DataGridViewTextBoxColumn();
-            colEpisodesEnd = new DataGridViewTextBoxColumn();
+            colRCTrainNumber = new DataGridViewTextBoxColumn();
+            colRCTrainCellGroup = new DataGridViewTextBoxColumn();
+            colRCTrainSomite = new DataGridViewTextBoxColumn();
+            colRCTrainStart = new DataGridViewTextBoxColumn();
+            colRCTrainEnd = new DataGridViewTextBoxColumn();
+            colRCTrainCenter = new DataGridViewTextBoxColumn();
+            colRCTrainWeightedCenter = new DataGridViewTextBoxColumn();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             gr2DLegend.SuspendLayout();
@@ -176,11 +178,11 @@
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).BeginInit();
             tSpikeStats.SuspendLayout();
-            tabSpikesEpisodes.SuspendLayout();
+            tabSpikesRCTrains.SuspendLayout();
             tSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).BeginInit();
-            tEpisodes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgEpisodeStats).BeginInit();
+            tRCTrains.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgRCTrains).BeginInit();
             panel1.SuspendLayout();
             tAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
@@ -1023,7 +1025,7 @@
             // 
             // tSpikeStats
             // 
-            tSpikeStats.Controls.Add(tabSpikesEpisodes);
+            tSpikeStats.Controls.Add(tabSpikesRCTrains);
             tSpikeStats.Controls.Add(panel1);
             tSpikeStats.Location = new Point(4, 24);
             tSpikeStats.Name = "tSpikeStats";
@@ -1034,14 +1036,14 @@
             // 
             // tabSpikesEpisodes
             // 
-            tabSpikesEpisodes.Controls.Add(tSpikes);
-            tabSpikesEpisodes.Controls.Add(tEpisodes);
-            tabSpikesEpisodes.Dock = DockStyle.Fill;
-            tabSpikesEpisodes.Location = new Point(0, 120);
-            tabSpikesEpisodes.Name = "tabSpikesEpisodes";
-            tabSpikesEpisodes.SelectedIndex = 0;
-            tabSpikesEpisodes.Size = new Size(694, 647);
-            tabSpikesEpisodes.TabIndex = 8;
+            tabSpikesRCTrains.Controls.Add(tSpikes);
+            tabSpikesRCTrains.Controls.Add(tRCTrains);
+            tabSpikesRCTrains.Dock = DockStyle.Fill;
+            tabSpikesRCTrains.Location = new Point(0, 120);
+            tabSpikesRCTrains.Name = "tabSpikesEpisodes";
+            tabSpikesRCTrains.SelectedIndex = 0;
+            tabSpikesRCTrains.Size = new Size(694, 647);
+            tabSpikesRCTrains.TabIndex = 8;
             // 
             // tSpikes
             // 
@@ -1106,34 +1108,34 @@
             // 
             // tEpisodes
             // 
-            tEpisodes.Controls.Add(dgEpisodeStats);
-            tEpisodes.Location = new Point(4, 24);
-            tEpisodes.Name = "tEpisodes";
-            tEpisodes.Padding = new Padding(3);
-            tEpisodes.Size = new Size(686, 619);
-            tEpisodes.TabIndex = 1;
-            tEpisodes.Text = "Episodes";
-            tEpisodes.UseVisualStyleBackColor = true;
+            tRCTrains.Controls.Add(dgRCTrains);
+            tRCTrains.Location = new Point(4, 24);
+            tRCTrains.Name = "tEpisodes";
+            tRCTrains.Padding = new Padding(3);
+            tRCTrains.Size = new Size(686, 619);
+            tRCTrains.TabIndex = 1;
+            tRCTrains.Text = "Episodes";
+            tRCTrains.UseVisualStyleBackColor = true;
             // 
             // dgEpisodeStats
             // 
-            dgEpisodeStats.AllowUserToAddRows = false;
-            dgEpisodeStats.AllowUserToDeleteRows = false;
-            dgEpisodeStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgEpisodeStats.Columns.AddRange(new DataGridViewColumn[] { colEpisodesEpisode, colEpisodesCellGroup, colEpisodesSomite, colEpisodesStart, colEpisodesEnd });
-            dgEpisodeStats.Dock = DockStyle.Fill;
-            dgEpisodeStats.Location = new Point(3, 3);
-            dgEpisodeStats.Name = "dgEpisodeStats";
-            dgEpisodeStats.ReadOnly = true;
-            dgEpisodeStats.RowTemplate.Height = 25;
-            dgEpisodeStats.Size = new Size(680, 613);
-            dgEpisodeStats.TabIndex = 8;
+            dgRCTrains.AllowUserToAddRows = false;
+            dgRCTrains.AllowUserToDeleteRows = false;
+            dgRCTrains.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgRCTrains.Columns.AddRange(new DataGridViewColumn[] { colRCTrainNumber, colRCTrainCellGroup, colRCTrainSomite, colRCTrainStart, colRCTrainEnd, colRCTrainCenter, colRCTrainWeightedCenter });
+            dgRCTrains.Dock = DockStyle.Fill;
+            dgRCTrains.Location = new Point(3, 3);
+            dgRCTrains.Name = "dgEpisodeStats";
+            dgRCTrains.ReadOnly = true;
+            dgRCTrains.RowTemplate.Height = 25;
+            dgRCTrains.Size = new Size(680, 613);
+            dgRCTrains.TabIndex = 8;
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(236, 239, 241);
-            panel1.Controls.Add(linkExportEpisodes);
-            panel1.Controls.Add(btnListEpisodes);
+            panel1.Controls.Add(linkExportRCTrains);
+            panel1.Controls.Add(btnListRCTrains);
             panel1.Controls.Add(btnListSpikes);
             panel1.Controls.Add(linkExportSpikes);
             panel1.Controls.Add(cellSelectionSpike);
@@ -1144,33 +1146,33 @@
             panel1.Size = new Size(694, 120);
             panel1.TabIndex = 6;
             // 
-            // linkExportEpisodes
+            // linkExportRCTrains
             // 
-            linkExportEpisodes.Enabled = false;
-            linkExportEpisodes.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportEpisodes.Location = new Point(337, 42);
-            linkExportEpisodes.Name = "linkExportEpisodes";
-            linkExportEpisodes.Size = new Size(54, 15);
-            linkExportEpisodes.TabIndex = 63;
-            linkExportEpisodes.TabStop = true;
-            linkExportEpisodes.Text = "Export";
-            toolTip.SetToolTip(linkExportEpisodes, "Export spike data as a csv file");
-            linkExportEpisodes.LinkClicked += linkExportEpisodes_LinkClicked;
+            linkExportRCTrains.Enabled = false;
+            linkExportRCTrains.LinkColor = Color.FromArgb(64, 64, 64);
+            linkExportRCTrains.Location = new Point(337, 42);
+            linkExportRCTrains.Name = "linkExportRCTrains";
+            linkExportRCTrains.Size = new Size(83, 19);
+            linkExportRCTrains.TabIndex = 63;
+            linkExportRCTrains.TabStop = true;
+            linkExportRCTrains.Text = "Export";
+            toolTip.SetToolTip(linkExportRCTrains, "Export spike data as a csv file");
+            linkExportRCTrains.LinkClicked += linkExportEpisodes_LinkClicked;
             // 
-            // btnListEpisodes
+            // btnListRCTrains
             // 
-            btnListEpisodes.BackColor = Color.FromArgb(96, 125, 139);
-            btnListEpisodes.Enabled = false;
-            btnListEpisodes.FlatAppearance.BorderColor = Color.LightGray;
-            btnListEpisodes.FlatStyle = FlatStyle.Flat;
-            btnListEpisodes.ForeColor = Color.White;
-            btnListEpisodes.Location = new Point(231, 37);
-            btnListEpisodes.Name = "btnListEpisodes";
-            btnListEpisodes.Size = new Size(100, 24);
-            btnListEpisodes.TabIndex = 62;
-            btnListEpisodes.Text = "List Episodes";
-            btnListEpisodes.UseVisualStyleBackColor = false;
-            btnListEpisodes.Click += btnListEpisodes_Click;
+            btnListRCTrains.BackColor = Color.FromArgb(96, 125, 139);
+            btnListRCTrains.Enabled = false;
+            btnListRCTrains.FlatAppearance.BorderColor = Color.LightGray;
+            btnListRCTrains.FlatStyle = FlatStyle.Flat;
+            btnListRCTrains.ForeColor = Color.White;
+            btnListRCTrains.Location = new Point(231, 37);
+            btnListRCTrains.Name = "btnListRCTrains";
+            btnListRCTrains.Size = new Size(100, 24);
+            btnListRCTrains.TabIndex = 62;
+            btnListRCTrains.Text = "List RC Trains";
+            btnListRCTrains.UseVisualStyleBackColor = false;
+            btnListRCTrains.Click += btnListRCTrains_Click;
             // 
             // btnListSpikes
             // 
@@ -1193,7 +1195,7 @@
             linkExportSpikes.LinkColor = Color.FromArgb(64, 64, 64);
             linkExportSpikes.Location = new Point(337, 15);
             linkExportSpikes.Name = "linkExportSpikes";
-            linkExportSpikes.Size = new Size(54, 15);
+            linkExportSpikes.Size = new Size(83, 19);
             linkExportSpikes.TabIndex = 59;
             linkExportSpikes.TabStop = true;
             linkExportSpikes.Text = "Export";
@@ -1439,35 +1441,47 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // colEpisodesEpisode
+            // colRCTrainNumber
             // 
-            colEpisodesEpisode.HeaderText = "Episode";
-            colEpisodesEpisode.Name = "colEpisodesEpisode";
-            colEpisodesEpisode.ReadOnly = true;
+            colRCTrainNumber.HeaderText = "Train #";
+            colRCTrainNumber.Name = "colRCTrainNumber";
+            colRCTrainNumber.ReadOnly = true;
             // 
-            // colEpisodesCellGroup
+            // colRCTrainCellGroup
             // 
-            colEpisodesCellGroup.HeaderText = "Cell Group";
-            colEpisodesCellGroup.Name = "colEpisodesCellGroup";
-            colEpisodesCellGroup.ReadOnly = true;
+            colRCTrainCellGroup.HeaderText = "Cell Group";
+            colRCTrainCellGroup.Name = "colRCTrainCellGroup";
+            colRCTrainCellGroup.ReadOnly = true;
             // 
-            // colEpisodesSomite
+            // colRCTrainSomite
             // 
-            colEpisodesSomite.HeaderText = "Somite";
-            colEpisodesSomite.Name = "colEpisodesSomite";
-            colEpisodesSomite.ReadOnly = true;
+            colRCTrainSomite.HeaderText = "Somite";
+            colRCTrainSomite.Name = "colRCTrainSomite";
+            colRCTrainSomite.ReadOnly = true;
             // 
-            // colEpisodesStart
+            // colRCTrainStart
             // 
-            colEpisodesStart.HeaderText = "Start Time";
-            colEpisodesStart.Name = "colEpisodesStart";
-            colEpisodesStart.ReadOnly = true;
+            colRCTrainStart.HeaderText = "Start Time";
+            colRCTrainStart.Name = "colRCTrainStart";
+            colRCTrainStart.ReadOnly = true;
             // 
-            // colEpisodesEnd
+            // colRCTrainEnd
             // 
-            colEpisodesEnd.HeaderText = "End Time";
-            colEpisodesEnd.Name = "colEpisodesEnd";
-            colEpisodesEnd.ReadOnly = true;
+            colRCTrainEnd.HeaderText = "End Time";
+            colRCTrainEnd.Name = "colRCTrainEnd";
+            colRCTrainEnd.ReadOnly = true;
+            // 
+            // colRCTrainCenter
+            // 
+            colRCTrainCenter.HeaderText = "Center";
+            colRCTrainCenter.Name = "colRCTrainCenter";
+            colRCTrainCenter.ReadOnly = true;
+            // 
+            // colRCTrainWeightedCenter
+            // 
+            colRCTrainWeightedCenter.HeaderText = "Weighted Center";
+            colRCTrainWeightedCenter.Name = "colRCTrainWeightedCenter";
+            colRCTrainWeightedCenter.ReadOnly = true;
             // 
             // ModelOutputControl
             // 
@@ -1510,11 +1524,11 @@
             ((System.ComponentModel.ISupportInitialize)ePlotEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotStart).EndInit();
             tSpikeStats.ResumeLayout(false);
-            tabSpikesEpisodes.ResumeLayout(false);
+            tabSpikesRCTrains.ResumeLayout(false);
             tSpikes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).EndInit();
-            tEpisodes.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgEpisodeStats).EndInit();
+            tRCTrains.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgRCTrains).EndInit();
             panel1.ResumeLayout(false);
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
@@ -1637,16 +1651,18 @@
         private DataGridViewTextBoxColumn colSpikeSomite;
         private DataGridViewTextBoxColumn colSpikeCellSeq;
         private DataGridViewTextBoxColumn colSpikeTime;
-        private Button btnListEpisodes;
-        private TabControl tabSpikesEpisodes;
+        private Button btnListRCTrains;
+        private TabControl tabSpikesRCTrains;
         private TabPage tSpikes;
-        private TabPage tEpisodes;
-        private DataGridView dgEpisodeStats;
-        private LinkLabel linkExportEpisodes;
-        private DataGridViewTextBoxColumn colEpisodesEpisode;
-        private DataGridViewTextBoxColumn colEpisodesCellGroup;
-        private DataGridViewTextBoxColumn colEpisodesSomite;
-        private DataGridViewTextBoxColumn colEpisodesStart;
-        private DataGridViewTextBoxColumn colEpisodesEnd;
+        private TabPage tRCTrains;
+        private DataGridView dgRCTrains;
+        private LinkLabel linkExportRCTrains;
+        private DataGridViewTextBoxColumn colRCTrainNumber;
+        private DataGridViewTextBoxColumn colRCTrainCellGroup;
+        private DataGridViewTextBoxColumn colRCTrainSomite;
+        private DataGridViewTextBoxColumn colRCTrainStart;
+        private DataGridViewTextBoxColumn colRCTrainEnd;
+        private DataGridViewTextBoxColumn colRCTrainCenter;
+        private DataGridViewTextBoxColumn colRCTrainWeightedCenter;
     }
 }

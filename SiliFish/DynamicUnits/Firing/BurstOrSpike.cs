@@ -16,6 +16,11 @@ namespace SiliFish.DynamicUnits
         public bool IsDoublet { get { return SpikeTimeList?.Count == 2; } }
         public bool IsBurst { get { return SpikeTimeList?.Count >= MinBurstSpikeCount; } }
         public int SpikeCount { get { return SpikeTimeList.Count; } }
+        public double Start => SpikeTimeList.Count > 0 ? SpikeTimeList[0] : -1;
+        public double End => SpikeTimeList.Count > 0 ? SpikeTimeList[^1] : -1;
+        public double Center => SpikeTimeList.Count > 0 ? (SpikeTimeList[0] + SpikeTimeList[^1]) / 2 : -1;
+        public double WeightedCenter => SpikeTimeList.Count > 0 ? SpikeTimeList.Average(): -1;
+
         public static List<BurstOrSpike> SpikesToBursts(ModelSettings settings, double dt, List<int> SpikeList, out double lastInterval)
         {
             List<BurstOrSpike> burstsOrSpikes = new();
