@@ -112,5 +112,11 @@ namespace SiliFish.Services.Plotting
             string PlotHTML = PlotCharts(title: mainTitle, charts, synchronized, showZeroValues, width, height);
             return PlotHTML;
         }
+
+        public static string PlotHistogram()//TODO this is amchart, not dychart
+        {
+            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.AmChartHist.html"));
+            return html.ToString();
+        }
     }
 }

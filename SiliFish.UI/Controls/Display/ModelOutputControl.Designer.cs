@@ -118,7 +118,19 @@
             colSpikeCellSeq = new DataGridViewTextBoxColumn();
             colSpikeTime = new DataGridViewTextBoxColumn();
             tRCTrains = new TabPage();
+            splitRCTrains = new SplitContainer();
             dgRCTrains = new DataGridView();
+            colRCTrainNumber = new DataGridViewTextBoxColumn();
+            colRCTrainCellGroup = new DataGridViewTextBoxColumn();
+            colRCTrainSomite = new DataGridViewTextBoxColumn();
+            colRCTrainStart = new DataGridViewTextBoxColumn();
+            colRCTrainEnd = new DataGridViewTextBoxColumn();
+            colRCTrainMidPoint = new DataGridViewTextBoxColumn();
+            colRCTrainCenter = new DataGridViewTextBoxColumn();
+            colRCTrainStartDelay = new DataGridViewTextBoxColumn();
+            colRCTrainMidPointDelay = new DataGridViewTextBoxColumn();
+            colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
+            webViewRCTrains = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel1 = new Panel();
             linkExportRCTrains = new LinkLabel();
             btnListRCTrains = new Button();
@@ -151,16 +163,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            colRCTrainNumber = new DataGridViewTextBoxColumn();
-            colRCTrainCellGroup = new DataGridViewTextBoxColumn();
-            colRCTrainSomite = new DataGridViewTextBoxColumn();
-            colRCTrainStart = new DataGridViewTextBoxColumn();
-            colRCTrainEnd = new DataGridViewTextBoxColumn();
-            colRCTrainMidPoint = new DataGridViewTextBoxColumn();
-            colRCTrainCenter = new DataGridViewTextBoxColumn();
-            colRCTrainStartDelay = new DataGridViewTextBoxColumn();
-            colRCTrainMidPointDelay = new DataGridViewTextBoxColumn();
-            colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             gr2DLegend.SuspendLayout();
@@ -192,7 +194,12 @@
             tSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).BeginInit();
             tRCTrains.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitRCTrains).BeginInit();
+            splitRCTrains.Panel1.SuspendLayout();
+            splitRCTrains.Panel2.SuspendLayout();
+            splitRCTrains.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)webViewRCTrains).BeginInit();
             panel1.SuspendLayout();
             tAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
@@ -1118,7 +1125,7 @@
             // 
             // tRCTrains
             // 
-            tRCTrains.Controls.Add(dgRCTrains);
+            tRCTrains.Controls.Add(splitRCTrains);
             tRCTrains.Location = new Point(4, 24);
             tRCTrains.Name = "tRCTrains";
             tRCTrains.Padding = new Padding(3);
@@ -1127,6 +1134,24 @@
             tRCTrains.Text = "Rostro-Caudal Burst Trains";
             tRCTrains.UseVisualStyleBackColor = true;
             // 
+            // splitRCTrains
+            // 
+            splitRCTrains.Dock = DockStyle.Fill;
+            splitRCTrains.Location = new Point(3, 3);
+            splitRCTrains.Name = "splitRCTrains";
+            splitRCTrains.Orientation = Orientation.Horizontal;
+            // 
+            // splitRCTrains.Panel1
+            // 
+            splitRCTrains.Panel1.Controls.Add(dgRCTrains);
+            // 
+            // splitRCTrains.Panel2
+            // 
+            splitRCTrains.Panel2.Controls.Add(webViewRCTrains);
+            splitRCTrains.Size = new Size(680, 613);
+            splitRCTrains.SplitterDistance = 306;
+            splitRCTrains.TabIndex = 9;
+            // 
             // dgRCTrains
             // 
             dgRCTrains.AllowUserToAddRows = false;
@@ -1134,12 +1159,102 @@
             dgRCTrains.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgRCTrains.Columns.AddRange(new DataGridViewColumn[] { colRCTrainNumber, colRCTrainCellGroup, colRCTrainSomite, colRCTrainStart, colRCTrainEnd, colRCTrainMidPoint, colRCTrainCenter, colRCTrainStartDelay, colRCTrainMidPointDelay, colRCTrainCenterDelay });
             dgRCTrains.Dock = DockStyle.Fill;
-            dgRCTrains.Location = new Point(3, 3);
+            dgRCTrains.Location = new Point(0, 0);
             dgRCTrains.Name = "dgRCTrains";
             dgRCTrains.ReadOnly = true;
             dgRCTrains.RowTemplate.Height = 25;
-            dgRCTrains.Size = new Size(680, 613);
+            dgRCTrains.Size = new Size(680, 306);
             dgRCTrains.TabIndex = 8;
+            // 
+            // colRCTrainNumber
+            // 
+            colRCTrainNumber.HeaderText = "Train #";
+            colRCTrainNumber.Name = "colRCTrainNumber";
+            colRCTrainNumber.ReadOnly = true;
+            // 
+            // colRCTrainCellGroup
+            // 
+            colRCTrainCellGroup.HeaderText = "Cell Group";
+            colRCTrainCellGroup.Name = "colRCTrainCellGroup";
+            colRCTrainCellGroup.ReadOnly = true;
+            // 
+            // colRCTrainSomite
+            // 
+            colRCTrainSomite.HeaderText = "Somite";
+            colRCTrainSomite.Name = "colRCTrainSomite";
+            colRCTrainSomite.ReadOnly = true;
+            // 
+            // colRCTrainStart
+            // 
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
+            colRCTrainStart.HeaderText = "Start Time";
+            colRCTrainStart.Name = "colRCTrainStart";
+            colRCTrainStart.ReadOnly = true;
+            // 
+            // colRCTrainEnd
+            // 
+            dataGridViewCellStyle2.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            colRCTrainEnd.HeaderText = "End Time";
+            colRCTrainEnd.Name = "colRCTrainEnd";
+            colRCTrainEnd.ReadOnly = true;
+            // 
+            // colRCTrainMidPoint
+            // 
+            dataGridViewCellStyle3.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            colRCTrainMidPoint.HeaderText = "Mid Point";
+            colRCTrainMidPoint.Name = "colRCTrainMidPoint";
+            colRCTrainMidPoint.ReadOnly = true;
+            // 
+            // colRCTrainCenter
+            // 
+            dataGridViewCellStyle4.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
+            colRCTrainCenter.HeaderText = "Center";
+            colRCTrainCenter.Name = "colRCTrainCenter";
+            colRCTrainCenter.ReadOnly = true;
+            // 
+            // colRCTrainStartDelay
+            // 
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
+            colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
+            colRCTrainStartDelay.Name = "colRCTrainStartDelay";
+            colRCTrainStartDelay.ReadOnly = true;
+            // 
+            // colRCTrainMidPointDelay
+            // 
+            dataGridViewCellStyle6.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
+            colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
+            colRCTrainMidPointDelay.ReadOnly = true;
+            // 
+            // colRCTrainCenterDelay
+            // 
+            dataGridViewCellStyle7.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
+            colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
+            colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
+            colRCTrainCenterDelay.ReadOnly = true;
+            // 
+            // webViewRCTrains
+            // 
+            webViewRCTrains.AllowExternalDrop = true;
+            webViewRCTrains.BackColor = Color.White;
+            webViewRCTrains.CreationProperties = null;
+            webViewRCTrains.DefaultBackgroundColor = Color.White;
+            webViewRCTrains.Dock = DockStyle.Fill;
+            webViewRCTrains.Location = new Point(0, 0);
+            webViewRCTrains.Name = "webViewRCTrains";
+            webViewRCTrains.Size = new Size(680, 303);
+            webViewRCTrains.TabIndex = 2;
+            webViewRCTrains.ZoomFactor = 1D;
+            webViewRCTrains.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
             // panel1
             // 
@@ -1451,82 +1566,6 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // colRCTrainNumber
-            // 
-            colRCTrainNumber.HeaderText = "Train #";
-            colRCTrainNumber.Name = "colRCTrainNumber";
-            colRCTrainNumber.ReadOnly = true;
-            // 
-            // colRCTrainCellGroup
-            // 
-            colRCTrainCellGroup.HeaderText = "Cell Group";
-            colRCTrainCellGroup.Name = "colRCTrainCellGroup";
-            colRCTrainCellGroup.ReadOnly = true;
-            // 
-            // colRCTrainSomite
-            // 
-            colRCTrainSomite.HeaderText = "Somite";
-            colRCTrainSomite.Name = "colRCTrainSomite";
-            colRCTrainSomite.ReadOnly = true;
-            // 
-            // colRCTrainStart
-            // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
-            colRCTrainStart.HeaderText = "Start Time";
-            colRCTrainStart.Name = "colRCTrainStart";
-            colRCTrainStart.ReadOnly = true;
-            // 
-            // colRCTrainEnd
-            // 
-            dataGridViewCellStyle2.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
-            colRCTrainEnd.HeaderText = "End Time";
-            colRCTrainEnd.Name = "colRCTrainEnd";
-            colRCTrainEnd.ReadOnly = true;
-            // 
-            // colRCTrainMidPoint
-            // 
-            dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
-            colRCTrainMidPoint.HeaderText = "Mid Point";
-            colRCTrainMidPoint.Name = "colRCTrainMidPoint";
-            colRCTrainMidPoint.ReadOnly = true;
-            // 
-            // colRCTrainCenter
-            // 
-            dataGridViewCellStyle4.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
-            colRCTrainCenter.HeaderText = "Center";
-            colRCTrainCenter.Name = "colRCTrainCenter";
-            colRCTrainCenter.ReadOnly = true;
-            // 
-            // colRCTrainStartDelay
-            // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
-            colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
-            colRCTrainStartDelay.Name = "colRCTrainStartDelay";
-            colRCTrainStartDelay.ReadOnly = true;
-            // 
-            // colRCTrainMidPointDelay
-            // 
-            dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
-            colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
-            colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
-            colRCTrainMidPointDelay.ReadOnly = true;
-            // 
-            // colRCTrainCenterDelay
-            // 
-            dataGridViewCellStyle7.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
-            colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
-            colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
-            colRCTrainCenterDelay.ReadOnly = true;
-            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1572,7 +1611,12 @@
             tSpikes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).EndInit();
             tRCTrains.ResumeLayout(false);
+            splitRCTrains.Panel1.ResumeLayout(false);
+            splitRCTrains.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitRCTrains).EndInit();
+            splitRCTrains.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).EndInit();
+            ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
             panel1.ResumeLayout(false);
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
@@ -1711,5 +1755,7 @@
         private DataGridViewTextBoxColumn colRCTrainStartDelay;
         private DataGridViewTextBoxColumn colRCTrainMidPointDelay;
         private DataGridViewTextBoxColumn colRCTrainCenterDelay;
+        private SplitContainer splitRCTrains;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webViewRCTrains;
     }
 }

@@ -196,6 +196,7 @@ namespace SiliFish.UI.Controls
             webView3DRender.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewAnimation.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
+            webViewRCTrains.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
         }
         private async void InitAsync()
@@ -204,13 +205,14 @@ namespace SiliFish.UI.Controls
             await webView2DRender.EnsureCoreWebView2Async();
             await webView3DRender.EnsureCoreWebView2Async();
             await webViewAnimation.EnsureCoreWebView2Async();
+            await webViewRCTrains.EnsureCoreWebView2Async();
         }
 
         private void Wait()
         {
             while (webViewPlot.Tag == null ||
                 webView2DRender.Tag == null || webView3DRender.Tag == null ||
-                webViewAnimation.Tag == null)
+                webViewAnimation.Tag == null || webViewRCTrains.Tag == null)
                 Application.DoEvents();
         }
 
@@ -1157,6 +1159,8 @@ namespace SiliFish.UI.Controls
             linkExportRCTrains.Enabled = true;
             tabSpikesRCTrains.SelectedTab = tRCTrains;
             UseWaitCursor = false;
+            bool navigated = false;
+            webViewRCTrains.NavigateTo(DyChartGenerator.PlotHistogram(), "Delays", GlobalSettings.TempFolder, ref tempFile, ref navigated);
         }
         private void linkExportEpisodes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {//TODO this code is repeated in linkExportSpikes as well. Write a function
