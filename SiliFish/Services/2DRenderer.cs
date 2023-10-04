@@ -132,6 +132,8 @@ namespace SiliFish.Services
 
         private List<string> CreatePoolNodes(List<CellPool> pools, int width, int height)
         {
+            if (pools == null || pools.Count == 0)
+                return null;
             PoolCoordinates = new();
             XMult = 1;
             YMult = 1;
@@ -185,6 +187,8 @@ namespace SiliFish.Services
 
         public string Create2DRendering(RunningModel model, List<CellPool> pools, int width, int height, bool showGap, bool showChem)
         {
+            if (pools == null || pools.Count == 0)
+                return null;
             string title = model.ModelName + " 2D Rendering";
 
             StringBuilder html = new(ReadEmbeddedText(Resource));

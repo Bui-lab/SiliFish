@@ -419,13 +419,14 @@
             // linkSaveHTML2D
             // 
             linkSaveHTML2D.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkSaveHTML2D.AutoSize = true;
             linkSaveHTML2D.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveHTML2D.Location = new Point(625, 12);
             linkSaveHTML2D.Name = "linkSaveHTML2D";
-            linkSaveHTML2D.Size = new Size(66, 16);
+            linkSaveHTML2D.Size = new Size(69, 15);
             linkSaveHTML2D.TabIndex = 23;
             linkSaveHTML2D.TabStop = true;
-            linkSaveHTML2D.Text = "Save HTML";
+            linkSaveHTML2D.Text = "Save HTML ";
             linkSaveHTML2D.TextAlign = ContentAlignment.MiddleRight;
             linkSaveHTML2D.LinkClicked += linkSaveHTML2D_LinkClicked;
             // 
@@ -698,13 +699,14 @@
             // linkSaveHTML3D
             // 
             linkSaveHTML3D.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkSaveHTML3D.AutoSize = true;
             linkSaveHTML3D.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveHTML3D.Location = new Point(625, 12);
             linkSaveHTML3D.Name = "linkSaveHTML3D";
-            linkSaveHTML3D.Size = new Size(66, 16);
+            linkSaveHTML3D.Size = new Size(69, 15);
             linkSaveHTML3D.TabIndex = 27;
             linkSaveHTML3D.TabStop = true;
-            linkSaveHTML3D.Text = "Save HTML";
+            linkSaveHTML3D.Text = "Save HTML ";
             linkSaveHTML3D.TextAlign = ContentAlignment.MiddleRight;
             linkSaveHTML3D.LinkClicked += linkSaveHTML3D_LinkClicked;
             // 
@@ -940,14 +942,15 @@
             // 
             // linkExportPlotData
             // 
+            linkExportPlotData.AutoSize = true;
             linkExportPlotData.Enabled = false;
             linkExportPlotData.LinkColor = Color.FromArgb(64, 64, 64);
             linkExportPlotData.Location = new Point(584, 10);
             linkExportPlotData.Name = "linkExportPlotData";
-            linkExportPlotData.Size = new Size(54, 15);
+            linkExportPlotData.Size = new Size(44, 15);
             linkExportPlotData.TabIndex = 59;
             linkExportPlotData.TabStop = true;
-            linkExportPlotData.Text = "Export";
+            linkExportPlotData.Text = "Export ";
             toolTip.SetToolTip(linkExportPlotData, "Export plot data as a csv file");
             linkExportPlotData.LinkClicked += linkExportPlotData_LinkClicked;
             // 
@@ -962,14 +965,15 @@
             // 
             // linkSaveHTMLPlots
             // 
+            linkSaveHTMLPlots.AutoSize = true;
             linkSaveHTMLPlots.Enabled = false;
             linkSaveHTMLPlots.LinkColor = Color.FromArgb(64, 64, 64);
             linkSaveHTMLPlots.Location = new Point(539, 10);
             linkSaveHTMLPlots.Name = "linkSaveHTMLPlots";
-            linkSaveHTMLPlots.Size = new Size(51, 15);
+            linkSaveHTMLPlots.Size = new Size(34, 15);
             linkSaveHTMLPlots.TabIndex = 53;
             linkSaveHTMLPlots.TabStop = true;
-            linkSaveHTMLPlots.Text = "Save";
+            linkSaveHTMLPlots.Text = "Save ";
             toolTip.SetToolTip(linkSaveHTMLPlots, "Save plot as an HTML file");
             linkSaveHTMLPlots.LinkClicked += linkSaveHTMLPlots_LinkClicked;
             // 
@@ -1165,24 +1169,28 @@
             dgRCTrains.RowTemplate.Height = 25;
             dgRCTrains.Size = new Size(680, 306);
             dgRCTrains.TabIndex = 8;
+            dgRCTrains.ColumnHeaderMouseDoubleClick += dgRCTrains_ColumnHeaderMouseDoubleClick;
             // 
             // colRCTrainNumber
             // 
             colRCTrainNumber.HeaderText = "Train #";
             colRCTrainNumber.Name = "colRCTrainNumber";
             colRCTrainNumber.ReadOnly = true;
+            colRCTrainNumber.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainCellGroup
             // 
             colRCTrainCellGroup.HeaderText = "Cell Group";
             colRCTrainCellGroup.Name = "colRCTrainCellGroup";
             colRCTrainCellGroup.ReadOnly = true;
+            colRCTrainCellGroup.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainSomite
             // 
             colRCTrainSomite.HeaderText = "Somite";
             colRCTrainSomite.Name = "colRCTrainSomite";
             colRCTrainSomite.ReadOnly = true;
+            colRCTrainSomite.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainStart
             // 
@@ -1192,6 +1200,7 @@
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
+            colRCTrainStart.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainEnd
             // 
@@ -1200,6 +1209,7 @@
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
+            colRCTrainEnd.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainMidPoint
             // 
@@ -1208,6 +1218,7 @@
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
+            colRCTrainMidPoint.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainCenter
             // 
@@ -1216,6 +1227,7 @@
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
+            colRCTrainCenter.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainStartDelay
             // 
@@ -1225,6 +1237,7 @@
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
+            colRCTrainStartDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainMidPointDelay
             // 
@@ -1233,6 +1246,7 @@
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
+            colRCTrainMidPointDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // colRCTrainCenterDelay
             // 
@@ -1241,6 +1255,7 @@
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
+            colRCTrainCenterDelay.SortMode = DataGridViewColumnSortMode.Programmatic;
             // 
             // webViewRCTrains
             // 
@@ -1273,16 +1288,17 @@
             // 
             // linkExportRCTrains
             // 
+            linkExportRCTrains.AutoSize = true;
             linkExportRCTrains.Enabled = false;
             linkExportRCTrains.LinkColor = Color.FromArgb(64, 64, 64);
             linkExportRCTrains.Location = new Point(337, 42);
             linkExportRCTrains.Name = "linkExportRCTrains";
-            linkExportRCTrains.Size = new Size(83, 19);
+            linkExportRCTrains.Size = new Size(44, 15);
             linkExportRCTrains.TabIndex = 63;
             linkExportRCTrains.TabStop = true;
-            linkExportRCTrains.Text = "Export";
+            linkExportRCTrains.Text = "Export ";
             toolTip.SetToolTip(linkExportRCTrains, "Export spike data as a csv file");
-            linkExportRCTrains.LinkClicked += linkExportEpisodes_LinkClicked;
+            linkExportRCTrains.LinkClicked += linkExportRCTrains_LinkClicked;
             // 
             // btnListRCTrains
             // 
@@ -1316,14 +1332,15 @@
             // 
             // linkExportSpikes
             // 
+            linkExportSpikes.AutoSize = true;
             linkExportSpikes.Enabled = false;
             linkExportSpikes.LinkColor = Color.FromArgb(64, 64, 64);
             linkExportSpikes.Location = new Point(337, 15);
             linkExportSpikes.Name = "linkExportSpikes";
-            linkExportSpikes.Size = new Size(83, 19);
+            linkExportSpikes.Size = new Size(44, 15);
             linkExportSpikes.TabIndex = 59;
             linkExportSpikes.TabStop = true;
-            linkExportSpikes.Text = "Export";
+            linkExportSpikes.Text = "Export ";
             toolTip.SetToolTip(linkExportSpikes, "Export spike data as a csv file");
             linkExportSpikes.LinkClicked += linkExportSpikes_LinkClicked;
             // 
@@ -1423,14 +1440,15 @@
             // linkSaveAnimationCSV
             // 
             linkSaveAnimationCSV.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkSaveAnimationCSV.AutoSize = true;
             linkSaveAnimationCSV.Enabled = false;
             linkSaveAnimationCSV.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveAnimationCSV.Location = new Point(567, 41);
+            linkSaveAnimationCSV.Location = new Point(633, 37);
             linkSaveAnimationCSV.Name = "linkSaveAnimationCSV";
-            linkSaveAnimationCSV.Size = new Size(124, 16);
+            linkSaveAnimationCSV.Size = new Size(58, 15);
             linkSaveAnimationCSV.TabIndex = 34;
             linkSaveAnimationCSV.TabStop = true;
-            linkSaveAnimationCSV.Text = "Save Animation CSV";
+            linkSaveAnimationCSV.Text = "Save CSV ";
             linkSaveAnimationCSV.TextAlign = ContentAlignment.MiddleRight;
             linkSaveAnimationCSV.LinkClicked += linkSaveAnimationCSV_LinkClicked;
             // 
@@ -1438,7 +1456,7 @@
             // 
             lAnimationTime.Location = new Point(345, 6);
             lAnimationTime.Name = "lAnimationTime";
-            lAnimationTime.Size = new Size(251, 54);
+            lAnimationTime.Size = new Size(271, 54);
             lAnimationTime.TabIndex = 33;
             lAnimationTime.Text = "Last animation:";
             // 
@@ -1466,14 +1484,15 @@
             // linkSaveAnimationHTML
             // 
             linkSaveAnimationHTML.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkSaveAnimationHTML.AutoSize = true;
             linkSaveAnimationHTML.Enabled = false;
             linkSaveAnimationHTML.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveAnimationHTML.Location = new Point(553, 13);
+            linkSaveAnimationHTML.Location = new Point(622, 14);
             linkSaveAnimationHTML.Name = "linkSaveAnimationHTML";
-            linkSaveAnimationHTML.Size = new Size(138, 16);
+            linkSaveAnimationHTML.Size = new Size(69, 15);
             linkSaveAnimationHTML.TabIndex = 31;
             linkSaveAnimationHTML.TabStop = true;
-            linkSaveAnimationHTML.Text = "Save Animation HTML";
+            linkSaveAnimationHTML.Text = "Save HTML ";
             linkSaveAnimationHTML.TextAlign = ContentAlignment.MiddleRight;
             linkSaveAnimationHTML.LinkClicked += linkSaveAnimationHTML_LinkClicked;
             // 
@@ -1618,6 +1637,7 @@
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).EndInit();
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
             pAnimation.ResumeLayout(false);
@@ -1745,6 +1765,8 @@
         private LinkLabel linkExportRCTrains;
         internal TabPage tRCTrains;
         internal DataGridView dgRCTrains;
+        private SplitContainer splitRCTrains;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webViewRCTrains;
         private DataGridViewTextBoxColumn colRCTrainNumber;
         private DataGridViewTextBoxColumn colRCTrainCellGroup;
         private DataGridViewTextBoxColumn colRCTrainSomite;
@@ -1755,7 +1777,5 @@
         private DataGridViewTextBoxColumn colRCTrainStartDelay;
         private DataGridViewTextBoxColumn colRCTrainMidPointDelay;
         private DataGridViewTextBoxColumn colRCTrainCenterDelay;
-        private SplitContainer splitRCTrains;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewRCTrains;
     }
 }

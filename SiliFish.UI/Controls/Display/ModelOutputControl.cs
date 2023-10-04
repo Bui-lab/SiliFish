@@ -288,6 +288,8 @@ namespace SiliFish.UI.Controls
             TwoDRenderer modelGenerator = new();
             string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
+            if (string.IsNullOrEmpty(html))
+                return;
             bool navigated = false;
             webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
@@ -1099,6 +1101,35 @@ namespace SiliFish.UI.Controls
             tabSpikesRCTrains.SelectedTab = tSpikes;
             UseWaitCursor = false;
         }
+
+        private int lastHistogramColumn = -1;//TODO find a more elegant solution to this
+        private void GenerateHistogramOfRCColumn(int colIndex)
+        {
+            double[] dataPoints = dgRCTrains.Rows
+                .Cast<DataGridViewRow>()
+                .Where(r => r.Cells[colIndex].Value != null)
+                .Select(r => double.Parse(r.Cells[colIndex].Value.ToString()))
+                .ToArray();
+            if (lastHistogramColumn == colIndex) //display only the range between ± 2SD
+            {
+                double mean = dataPoints.Average();
+                double std = dataPoints.StandardDeviation();
+                dataPoints = dataPoints
+                    .Where(dp => dp >= mean - 2 * std && dp <= mean + 2 * std)
+                    .Select(dp => Math.Round(dp, 2))
+                    .ToArray();
+            }
+            else
+                dataPoints = dataPoints.Select(dp => Math.Round(dp, 2)).ToArray();
+
+            string title = dgRCTrains.Columns[colIndex].HeaderText;
+            double width = webViewRCTrains.ClientSize.Width;
+            double height = webViewRCTrains.ClientSize.Height;
+            string histHtml = HistogramGenerator.GenerateHistogram(dataPoints, title, width, height);
+            bool navigated = false;
+            webViewRCTrains.NavigateTo(histHtml, title, GlobalSettings.TempFolder, ref tempFile, ref navigated);
+            lastHistogramColumn = colIndex;
+        }
         private void btnListRCTrains_Click(object sender, EventArgs e)
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
@@ -1157,12 +1188,12 @@ namespace SiliFish.UI.Controls
                 }
             }
             linkExportRCTrains.Enabled = true;
+
             tabSpikesRCTrains.SelectedTab = tRCTrains;
+            GenerateHistogramOfRCColumn(colRCTrainCenterDelay.Index);
             UseWaitCursor = false;
-            bool navigated = false;
-            webViewRCTrains.NavigateTo(DyChartGenerator.PlotHistogram(), "Delays", GlobalSettings.TempFolder, ref tempFile, ref navigated);
         }
-        private void linkExportEpisodes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkExportRCTrains_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {//TODO this code is repeated in linkExportSpikes as well. Write a function
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
@@ -1185,6 +1216,15 @@ namespace SiliFish.UI.Controls
                     }
                 }
             }
+        }
+
+        private void dgRCTrains_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            int colIndex = e.ColumnIndex;
+            if (colIndex == colRCTrainCenterDelay.Index ||
+                colIndex == colRCTrainStartDelay.Index ||
+                colIndex == colRCTrainMidPointDelay.Index)
+                GenerateHistogramOfRCColumn(colIndex);
         }
         #endregion
 
@@ -1277,6 +1317,8 @@ namespace SiliFish.UI.Controls
         {
             tabOutputs_SelectedIndexChanged(sender, e);
         }
+
+
     }
 
 }

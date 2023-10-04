@@ -8,20 +8,6 @@ using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.DataTypes
 {
-    /*            
-            else if (mode == "Instant Frequency")
-                return (episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray(),
-                    episodes.SelectMany(e => e.InstantFequency).ToArray());
-            else if (mode == "Beat Frequency")
-                return (episodes.Select(e => e.Start).ToArray(),
-                    episodes.Select(e => e.BeatFrequency).ToArray());
-            else if (mode == "Num of Beats")
-                return (episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray(),
-                    episodes.SelectMany(e => e.InstantFequency).ToArray());
-            else if (mode == "Beat Count")
-                return (episodes.Select(e => e.Start).ToArray(),
-                    episodes.Select(e => (double)e.Beats.Count).ToArray());
-            */
     public enum EpisodeStats { EpisodeDuration, BeatsPerEpisode, BeatFreq, InstantFreq, InlierInstantFreq}
     public class SwimmingEpisodes
     {
@@ -104,9 +90,6 @@ namespace SiliFish.DataTypes
                     }
                     return (inlierX.ToArray(), inlierY.ToArray());
             }
-
-
-
             return (null, null);
         }
     }

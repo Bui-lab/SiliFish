@@ -114,6 +114,8 @@ namespace SiliFish.Services
             int width, int _, 
             bool showGap, bool showChem)
         {
+            if (pools == null || pools.Count == 0)
+                return null;
             StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.3DRender.html"));
 
             string title = model.ModelName + " 3D Rendering";

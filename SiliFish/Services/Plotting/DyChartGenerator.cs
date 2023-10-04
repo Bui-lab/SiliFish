@@ -113,10 +113,6 @@ namespace SiliFish.Services.Plotting
             return PlotHTML;
         }
 
-        public static string PlotHistogram()//TODO this is amchart, not dychart
-        {
-            StringBuilder html = new(ReadEmbeddedText("SiliFish.Resources.AmChartHist.html"));
-            return html.ToString();
-        }
+
     }
 }
