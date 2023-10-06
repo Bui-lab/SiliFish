@@ -23,6 +23,11 @@ namespace SiliFish.DynamicUnits
 
         public static List<BurstOrSpike> SpikesToBursts(ModelSettings settings, double dt, List<int> SpikeList, out double lastInterval)
         {
+            if (SpikeList == null || SpikeList.Count == 0)
+            {
+                lastInterval = 0;
+                return null;
+            }
             List<BurstOrSpike> burstsOrSpikes = new();
             BurstOrSpike burstOrSpike = new();
             burstsOrSpikes.Add(burstOrSpike);

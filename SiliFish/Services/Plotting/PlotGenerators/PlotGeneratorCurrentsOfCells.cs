@@ -43,16 +43,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             {
                 foreach (Cell cell in cellGroup)
                 {
-                    if (includeGap)
-                    {
-                        foreach (GapJunction gapJunction in cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell)) 
-                        {
-                            if (!gapJunction.InputCurrent.Any(c => c != 0))
-                                continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, new() { gapJunction}, null, timeArray, iStart, iEnd, uoM);
-                            junctionPG.CreateCharts(charts);
-                        }
-                    }
                     if (includeChemIn)
                     {
                         if (cell is Neuron neuron)
@@ -74,6 +64,16 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                                 PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, uoM);
                                 junctionPG.CreateCharts(charts);
                             }
+                        }
+                    }
+                    if (includeGap)
+                    {
+                        foreach (GapJunction gapJunction in cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell))
+                        {
+                            if (!gapJunction.InputCurrent.Any(c => c != 0))
+                                continue;
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, new() { gapJunction }, null, timeArray, iStart, iEnd, uoM);
+                            junctionPG.CreateCharts(charts);
                         }
                     }
                     if (includeChemOut && cell is Neuron neuron1)
@@ -121,20 +121,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
                 foreach (Cell cell in cellGroup)
                 {
-                    if (includeGap)
-                    {
-                        List<GapJunction> gapJunctions = cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell).ToList();
-                        bool useIdentifier = gapJunctions.GroupBy(j => j.ID).Count() != gapJunctions.Count;
-                        foreach (GapJunction jnc in gapJunctions)
-                        {
-                            gapExists = true;
-                            Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            gapTitle += $"Gap: {jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
-                            colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
-                            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
-                        }
-                    }
                     if (includeChemIn)
                     {
                         List<ChemicalSynapse> synapses = null;
@@ -151,6 +137,20 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                                 synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                        }
+                    }
+                    if (includeGap)
+                    {
+                        List<GapJunction> gapJunctions = cell.GapJunctions.Where(j => j.Cell2 == cell || j.Cell1 == cell).ToList();
+                        bool useIdentifier = gapJunctions.GroupBy(j => j.ID).Count() != gapJunctions.Count;
+                        foreach (GapJunction jnc in gapJunctions)
+                        {
+                            gapExists = true;
+                            Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
+                            gapTitle += $"Gap: {jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
+                            colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
+                            foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
+                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                         }
                     }
                     if (includeChemOut)
@@ -177,29 +177,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 double yMax = cells.Max(c => c.MaxCurrentValue(includeGap, includeChemIn, includeChemOut, iStart, iEnd));
                 Util.SetYRange(ref yMin, ref yMax);
 
-                if (gapExists)
-                {
-                    if (!GlobalSettings.SameYAxis)
-                    {
-                        yMin = cellGroup.Min(c => c.MinGapCurrentValue(iStart, iEnd));
-                        yMax = cellGroup.Max(c => c.MaxGapCurrentValue(iStart, iEnd));
-                        Util.SetYRange(ref yMin, ref yMax);
-                    }
 
-                    string csvData = "`" + gapTitle[..^1] + "\n" + string.Join("\n", gapData.Select(line => line[..^1]).ToArray()) + "`";
-                    Chart chart = new()
-                    {
-                        CsvData = csvData,
-                        Color = string.Join(',', colorPerGapChart),
-                        Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(uoM, Measure.Current)})`",
-                        yMin = yMin,
-                        yMax = yMax,
-                        xMin = timeArray[iStart],
-                        xMax = timeArray[iEnd] + 1
-                    };
-                    if (!AddChart(chart)) return;
-                }
                 if (synInExists)
                 {
                     if (!GlobalSettings.SameYAxis)
@@ -223,6 +201,29 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     };
                     if (!AddChart(chart)) return;
                 }
+                 if (gapExists)
+                {
+                    if (!GlobalSettings.SameYAxis)
+                    {
+                        yMin = cellGroup.Min(c => c.MinGapCurrentValue(iStart, iEnd));
+                        yMax = cellGroup.Max(c => c.MaxGapCurrentValue(iStart, iEnd));
+                        Util.SetYRange(ref yMin, ref yMax);
+                    }
+
+                    string csvData = "`" + gapTitle[..^1] + "\n" + string.Join("\n", gapData.Select(line => line[..^1]).ToArray()) + "`";
+                    Chart chart = new()
+                    {
+                        CsvData = csvData,
+                        Color = string.Join(',', colorPerGapChart),
+                        Title = $"`{cellGroup.Key} Gap Currents`",
+                        yLabel = $"`Current ({Util.GetUoM(uoM, Measure.Current)})`",
+                        yMin = yMin,
+                        yMax = yMax,
+                        xMin = timeArray[iStart],
+                        xMax = timeArray[iEnd] + 1
+                    };
+                    if (!AddChart(chart)) return;
+                }               
                 if (synOutExists)
                 {
                     if (!GlobalSettings.SameYAxis)

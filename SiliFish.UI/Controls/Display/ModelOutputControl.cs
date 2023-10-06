@@ -1110,6 +1110,11 @@ namespace SiliFish.UI.Controls
                 .Where(r => r.Cells[colIndex].Value != null)
                 .Select(r => double.Parse(r.Cells[colIndex].Value.ToString()))
                 .ToArray();
+            if (!dataPoints.Any())
+            {
+                webViewRCTrains.NavigateToString("");
+                return;
+            }
             if (lastHistogramColumn == colIndex) //display only the range between ± 2SD
             {
                 double mean = dataPoints.Average();
@@ -1124,7 +1129,7 @@ namespace SiliFish.UI.Controls
 
             string title = dgRCTrains.Columns[colIndex].HeaderText;
             double width = webViewRCTrains.ClientSize.Width;
-            double height = webViewRCTrains.ClientSize.Height;
+            double height = webViewRCTrains.ClientSize.Height - 50;
             string histHtml = HistogramGenerator.GenerateHistogram(dataPoints, title, width, height);
             bool navigated = false;
             webViewRCTrains.NavigateTo(histHtml, title, GlobalSettings.TempFolder, ref tempFile, ref navigated);
@@ -1190,7 +1195,7 @@ namespace SiliFish.UI.Controls
             linkExportRCTrains.Enabled = true;
 
             tabSpikesRCTrains.SelectedTab = tRCTrains;
-            GenerateHistogramOfRCColumn(colRCTrainCenterDelay.Index);
+            GenerateHistogramOfRCColumn(colRCTrainStartDelay.Index);
             UseWaitCursor = false;
         }
         private void linkExportRCTrains_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

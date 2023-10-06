@@ -303,6 +303,7 @@ namespace SiliFish.Services
             foreach (Cell cell in cells)
             {
                 List<int> spikes = cell.GetSpikeIndices();
+                if (!spikes.Any()) continue;
                 List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(new ModelSettings(), 0.1, spikes, out double _);//TODO send the current model settings and dt
                 TrainOfBursts train = new(burstOrSpikes, cell.CellPool.ID, cell.Somite);
                 ungroupedTrains.Add(train);
