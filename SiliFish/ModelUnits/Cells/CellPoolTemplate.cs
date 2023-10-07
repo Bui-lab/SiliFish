@@ -157,7 +157,7 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("CellGroup", "CellType", "NTMode",
-                "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange",
+                "BodyLocation", "PositionLeftRight", "NumOfCells", "PerSomiteOrTotal", "SomiteRange","2DRendSpread",
                 SpatialDistribution.ColumnNames, 
                 "Descending Axon", "Ascending Axon",
                 "Conduction Velocity", "CoreType", "Rheobase (output only/sample)",
@@ -182,7 +182,7 @@ namespace SiliFish.ModelUnits.Cells
         public List<string> ExportValues()
         {
             return ListBuilder.Build<string>(CellGroup, CellType, NTMode,
-                BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange,
+                BodyLocation, PositionLeftRight, NumOfCells, PerSomiteOrTotal, SomiteRange, ColumnIndex2D,
                 SpatialDistribution.ExportValues(),
                 DescendingAxonLength?.CSVCellExportValues ?? string.Empty,
                 AscendingAxonLength?.CSVCellExportValues ?? string.Empty,
@@ -202,6 +202,7 @@ namespace SiliFish.ModelUnits.Cells
             NumOfCells = int.Parse(values[iter++]);
             PerSomiteOrTotal = (CountingMode)Enum.Parse(typeof(CountingMode), values[iter++]);
             SomiteRange = values[iter++];
+            ColumnIndex2D = int.Parse(values[iter++]);
             List<string> spatDistValues = values.Take(new Range(iter, iter + SpatialDistribution.ColumnNames.Count)).ToList();
             SpatialDistribution.ImportValues(spatDistValues);
             iter += SpatialDistribution.ColumnNames.Count;

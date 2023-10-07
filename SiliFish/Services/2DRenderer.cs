@@ -12,6 +12,7 @@ using System.Web;
 using SiliFish.ModelUnits.Junction;
 using System.Xml.Serialization;
 using SiliFish.Definitions;
+using GeneticSharp;
 
 namespace SiliFish.Services
 {
@@ -70,7 +71,7 @@ namespace SiliFish.Services
                 (double x, double y, _) = pool.XYZMiddle();
                 if (pool.PositionLeftRight == SagittalPlane.Left)
                     y *= -1;
-                PoolCoordinates.Add(pool.CellGroup, (y, x));
+                PoolCoordinates.Add(pool.CellGroup, (pool.ColumnIndex2D * y, x));
             }
         }
         private double GetNewWeight(double d)
@@ -103,26 +104,30 @@ namespace SiliFish.Services
             Dictionary<string, (double, double)> spreadedPools = new();
             if (pools.Any())
             {
-                double xyMin = item2? pools.Min(v => v.Value.Item2): pools.Min(v => v.Value.Item1);
-                double xyMax = item2? pools.Max(v => v.Value.Item2): pools.Max(v => v.Value.Item1);
+                double xyMin = item2 ? pools.Min(v => v.Value.Item2) : pools.Min(v => v.Value.Item1);
+                double xyMax = item2 ? pools.Max(v => v.Value.Item2) : pools.Max(v => v.Value.Item1);
                 double inc = (xyMax - xyMin) / (pools.Count - 1);
                 if (inc < 1)
                     inc = 1;
                 double curXY = xyMin;
-                foreach (var v in pools)
+                if (item2) //sort the y coordinate - the supraspinal pools are already put to the rostral region
                 {
-                    if (!item2)
-                    {
-                        if (Math.Abs(v.Value.Item1) >= Math.Abs(curXY))
-                            curXY = v.Value.Item1;
-                        spreadedPools.Add(v.Key, (curXY, v.Value.Item2));
-                        curXY += inc * (neg ? -1 : 1);
-                    }
-                    else
+                    //to randomize, it is sorted by the first and last character of the cell pool name
+                    foreach (var v in pools.OrderBy(p => p.Value.Item2).ThenByDescending(p => p.Key[0] + p.Key[^1]))
                     {
                         if (Math.Abs(v.Value.Item2) >= Math.Abs(curXY))
                             curXY = v.Value.Item2;
                         spreadedPools.Add(v.Key, (v.Value.Item1, curXY));
+                        curXY += inc * (neg ? -1 : 1);
+                    }
+                }
+                else
+                {
+                    foreach (var v in pools)
+                    {
+                        if (Math.Abs(v.Value.Item1) >= Math.Abs(curXY))
+                            curXY = v.Value.Item1;
+                        spreadedPools.Add(v.Key, (curXY, v.Value.Item2));
                         curXY += inc * (neg ? -1 : 1);
                     }
                 }
@@ -148,6 +153,45 @@ namespace SiliFish.Services
             Dictionary<string, (double, double)> negPools = PoolCoordinates
                 .Where(v => v.Value.Item1 < 0)
                 .OrderBy(v => Math.Abs(v.Value.Item1)).ToDictionary(t => t.Key, t => t.Value);
+
+            //put the supraspinal pools to the top, and musculoskeletal to the lateral region.
+            List<string> supraPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SupraSpinal).Select(cp => cp.CellGroup).ToList();
+            List<string> musclePools = pools.Where(cp => cp.BodyLocation == BodyLocation.MusculoSkeletal).Select(cp => cp.CellGroup).ToList();
+            List<string> spinalPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SpinalCord).Select(cp => cp.CellGroup).ToList();
+            double supraMinY = PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2);
+            double supraMaxY = PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2);
+            double muscleMinX = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1);
+            double muscleMaxX = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1);
+            double muscleMinY = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2);
+            double muscleMaxY = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2);
+            double spinalMinX = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1);
+            double spinalMaxX = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1);
+            double spinalMinY = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2);
+            double spinalMaxY = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2);
+            double msMinY = Math.Min(spinalMinY, muscleMinY);
+            if (supraMaxY > msMinY)
+            {
+                double msMaxY = Math.Max(spinalMaxY, muscleMaxY);
+                double bufferY = supraMaxY - msMinY + (msMaxY - msMinY) / 10;
+                foreach (var pc in PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)))
+                {
+                    if (posPools.ContainsKey(pc.Key))
+                        posPools[pc.Key] = (posPools[pc.Key].Item1, posPools[pc.Key].Item2 - bufferY);
+                    if (negPools.ContainsKey(pc.Key))
+                        negPools[pc.Key] = (negPools[pc.Key].Item1, negPools[pc.Key].Item2 - bufferY);
+                }
+            }
+            if (muscleMinX < spinalMaxX)
+            {
+                double bufferX = spinalMaxX - muscleMinX + (spinalMaxX - spinalMinX) / 10;
+                foreach (var pc in PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)))
+                {
+                    if (posPools.ContainsKey(pc.Key))
+                        posPools[pc.Key] = (posPools[pc.Key].Item1 + bufferX, posPools[pc.Key].Item2);
+                    if (negPools.ContainsKey(pc.Key))
+                        negPools[pc.Key] = (negPools[pc.Key].Item1 + bufferX, negPools[pc.Key].Item2);
+                }
+            }
 
             Dictionary<string, (double, double)> spreadedPools = SpreadPools(posPools);
             Dictionary<string, (double, double)> spreadedPools2 = SpreadPools(negPools, false, true);

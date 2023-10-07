@@ -169,9 +169,9 @@ namespace SiliFish.UI.Controls
             l2DRenderColumn.AutoSize = true;
             l2DRenderColumn.Location = new Point(7, 172);
             l2DRenderColumn.Name = "l2DRenderColumn";
-            l2DRenderColumn.Size = new Size(100, 15);
+            l2DRenderColumn.Size = new Size(93, 15);
             l2DRenderColumn.TabIndex = 13;
-            l2DRenderColumn.Text = "2D Rend. Column";
+            l2DRenderColumn.Text = "2D Rend. Spread";
             // 
             // e2DColumn
             // 
