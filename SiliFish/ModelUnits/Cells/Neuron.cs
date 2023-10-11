@@ -205,7 +205,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             base.InitForSimulation(runParam);
             foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT);
 
         }
 
@@ -231,7 +231,7 @@ namespace SiliFish.ModelUnits.Cells
             try
             {
                 double ISyn = 0, IGap = 0, stim = 0;
-                if (IsAlive(timeIndex))
+                if (IsActive(timeIndex))
                 {
                     foreach (ChemicalSynapse syn in Synapses.Where(syn => syn.Active))
                     {

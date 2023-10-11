@@ -112,8 +112,9 @@ namespace SiliFish.Services
                 double curXY = xyMin;
                 if (item2) //sort the y coordinate - the supraspinal pools are already put to the rostral region
                 {
-                    //to randomize, it is sorted by the first and last character of the cell pool name
-                    foreach (var v in pools.OrderBy(p => p.Value.Item2).ThenByDescending(p => p.Key[0] + p.Key[^1]))
+                    Random r = new();
+                    //randomize the pools with the same x axis value (medial lateral axis)
+                    foreach (var v in pools.OrderBy(p => p.Value.Item2).ThenBy(p => r.Next()))
                     {
                         if (Math.Abs(v.Value.Item2) >= Math.Abs(curXY))
                             curXY = v.Value.Item2;
@@ -158,18 +159,18 @@ namespace SiliFish.Services
             List<string> supraPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SupraSpinal).Select(cp => cp.CellGroup).ToList();
             List<string> musclePools = pools.Where(cp => cp.BodyLocation == BodyLocation.MusculoSkeletal).Select(cp => cp.CellGroup).ToList();
             List<string> spinalPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SpinalCord).Select(cp => cp.CellGroup).ToList();
-            double supraMinY = PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2);
-            double supraMaxY = PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2);
-            double muscleMinX = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1);
-            double muscleMaxX = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1);
-            double muscleMinY = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2);
-            double muscleMaxY = PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2);
-            double spinalMinX = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1);
-            double spinalMaxX = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1);
-            double spinalMinY = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2);
-            double spinalMaxY = PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2);
+            //double supraMinY = supraPools.Any() ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
+            double supraMaxY = supraPools.Any() ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
+            double muscleMinX =musclePools.Any()? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1):0;
+            //double muscleMaxX = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1):0;
+            double muscleMinY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2):0;
+            double muscleMaxY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2):0;
+            double spinalMinX = spinalPools.Any()?  PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1):0;
+            double spinalMaxX = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1) : 0;
+            double spinalMinY = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
+            double spinalMaxY = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
             double msMinY = Math.Min(spinalMinY, muscleMinY);
-            if (supraMaxY > msMinY)
+            if (supraPools.Any() && supraMaxY > msMinY)
             {
                 double msMaxY = Math.Max(spinalMaxY, muscleMaxY);
                 double bufferY = supraMaxY - msMinY + (msMaxY - msMinY) / 10;
@@ -181,9 +182,9 @@ namespace SiliFish.Services
                         negPools[pc.Key] = (negPools[pc.Key].Item1, negPools[pc.Key].Item2 - bufferY);
                 }
             }
-            if (muscleMinX < spinalMaxX)
+            if (musclePools.Any() && spinalPools.Any() && muscleMinX < spinalMaxX)
             {
-                double bufferX = spinalMaxX - muscleMinX + (spinalMaxX - spinalMinX) / 10;
+                double bufferX = spinalMaxX - muscleMinX + (spinalMaxX - spinalMinX);
                 foreach (var pc in PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)))
                 {
                     if (posPools.ContainsKey(pc.Key))
@@ -220,7 +221,7 @@ namespace SiliFish.Services
             }
             if (YMax > YMin)
             {
-                YMult = -1 * height / (YMax - YMin) / 1.2;
+                YMult = - height / (YMax - YMin) / 1.2;
                 YOffset = (YMax + YMin) * YMult / 2;
             }
             List<string> nodes = new();

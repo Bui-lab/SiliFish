@@ -355,6 +355,7 @@ namespace SiliFish.ModelUnits.Cells
         #region RunTime
         public virtual void InitForSimulation(RunParam runParam)
         {
+            InitForSimulation(runParam.DeltaT);
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
             Core.Initialize(runParam.DeltaT, runParam.DeltaTEuler);
@@ -362,14 +363,8 @@ namespace SiliFish.ModelUnits.Cells
             V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             Stimuli.InitForSimulation(Model.RunParam, Model.rand);
             foreach (GapJunction jnc in GapJunctions)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT);
         }
-        internal bool IsAlive(int timepoint)
-        {
-            double t_ms = Model.RunParam.GetTimeOfIndex(timepoint);
-            return TimeLine_ms?.IsActive(t_ms) ?? true;
-        }
-
         public virtual void NextStep(int t, double stim)
         {
             bool spike = false;
@@ -387,7 +382,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             try
             {
-                foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this && j.Active)) //to prevent double call
+                foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this)) //to prevent double call
                 {
                     if (jnc.IsActive(t))
                         jnc.NextStep(t);

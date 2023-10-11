@@ -141,6 +141,7 @@ namespace SiliFish.UI.Controls
             propCore.SelectedObject = cell.Core;
             eConductionVelocity.Text = cell.ConductionVelocity.ToString();
             eRheobase.Text = cell.Rheobase.ToString();
+            timeLineControl.SetTimeLine(cell.TimeLine_ms);
         }
 
         private void linkLoadCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

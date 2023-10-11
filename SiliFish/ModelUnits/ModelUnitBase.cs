@@ -19,7 +19,8 @@ namespace SiliFish.ModelUnits
         private bool _Active = true;
         public virtual bool Active { get => _Active; set => _Active = value; }
         public TimeLine TimeLine_ms { get; set; } = new TimeLine();
-        
+        public TimeLine TimeLine_ind { get; set; } = null;
+
 
         public virtual int CompareTo(ModelUnitBase other)
         {
@@ -38,13 +39,21 @@ namespace SiliFish.ModelUnits
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-
-
         public virtual bool HasStimulus()
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
+
+        public virtual void InitForSimulation(double dt)
+        {
+            TimeLine_ind = new TimeLine(TimeLine_ms, 1/dt);
+        }
+        public virtual bool IsActive(int timepoint)
+        {
+            return TimeLine_ind?.IsActive(timepoint) ?? true;
+        }
+
     }
 }

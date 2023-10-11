@@ -24,11 +24,7 @@ namespace SiliFish.ModelUnits.Junction
     {
         private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
                               //calculated at InitForSimulation, and used only during simulation
-
-        
-
         protected override int nMax => PreNeuron.V.Length;
-
 
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
@@ -119,12 +115,6 @@ namespace SiliFish.ModelUnits.Junction
             PostCell = syn.PostCell;
         }
 
-        internal bool IsActive(int timepoint)
-        {
-            double t_ms = PreNeuron.Model.RunParam.GetTimeOfIndex(timepoint);
-            return TimeLine_ms?.IsActive(t_ms) ?? true;
-        }
-
 
         public override bool CheckValues(ref List<string> errors)
         {
@@ -170,21 +160,21 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public override void InitForSimulation(int nmax, bool trackCurrent)
+        public override void InitForSimulation(int nmax, bool trackCurrent, double dt)
         {
-            base.InitForSimulation(nmax, trackCurrent);
+            base.InitForSimulation(nmax, trackCurrent, dt);
             RunningModel model = PreNeuron.Model;
-            Core.InitForSimulation(model.RunParam.DeltaT, model.RunParam.DeltaTEuler);
+            Core.InitForSimulation(dt, model.RunParam.DeltaTEuler);
             
             if (FixedDuration_ms != null)
-                duration = (int)(FixedDuration_ms / model.RunParam.DeltaT);
+                duration = (int)(FixedDuration_ms / dt);
             else
             {
                 double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
-                int delay = (int)((Delay_ms ?? model.Settings.synaptic_delay) / model.RunParam.DeltaT);
-                duration = Math.Max((int)Math.Round(distance / (PreNeuron.ConductionVelocity * model.RunParam.DeltaT)), 1);
-                duration += delay;
+                duration = Math.Max((int)Math.Round(distance / (PreNeuron.ConductionVelocity * dt)), 1);
             }
+            int delay = (int)((Delay_ms ?? model.Settings.synaptic_delay) / dt);
+            duration += delay;
         }
 
         public override void NextStep(int tIndex)

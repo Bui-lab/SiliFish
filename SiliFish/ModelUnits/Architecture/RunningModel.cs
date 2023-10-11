@@ -782,9 +782,9 @@ namespace SiliFish.ModelUnits.Architecture
         {
             try
             {
-                foreach (CellPool pool in CellPools.Where(cp => cp.Active))
+                foreach (CellPool pool in CellPools.Where(cp => cp.IsActive(t)))
                 {
-                    foreach (Cell cell in pool.GetCells().Where(c => c.Active))
+                    foreach (Cell cell in pool.GetCells().Where(c => c.IsActive(t)))
                         cell.CalculateCellularOutputs(t);
                 }
 
@@ -797,7 +797,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         private void CalculateMembranePotentialsFromCurrents(int timeIndex)
         {
-            foreach (CellPool pool in CellPools.Where(cp => cp.Active))
+            foreach (CellPool pool in CellPools.Where(cp => cp.IsActive(timeIndex)))
             {
                 foreach (Cell cell in pool.GetCells().Where(c => c.Active))
                     cell.CalculateMembranePotential(timeIndex);

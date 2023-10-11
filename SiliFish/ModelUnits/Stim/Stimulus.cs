@@ -230,6 +230,7 @@ namespace SiliFish.ModelUnits.Stim
         #endregion
         public void InitForSimulation(RunParam runParam, Random rand)
         {
+            InitForSimulation(runParam.DeltaT);
             RunParam = runParam;
             values = new double[RunParam.iMax];
             List<(int start, int end)> timeRanges = new(TimeLine_ms.GetTimeLine());

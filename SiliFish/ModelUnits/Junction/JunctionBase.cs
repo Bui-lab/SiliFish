@@ -37,7 +37,7 @@ namespace SiliFish.ModelUnits.Junction
             get
             {
                 if (inputCurrent == null)
-                    PopulateCurrentArray();
+                    PopulateCurrentArray(0.1);//TODO added a constant value temporarily
                 return inputCurrent;
             }
         }
@@ -81,20 +81,21 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         //if current tracking is Off, the current array can be populated after the simulation for an individual junction
-        private void PopulateCurrentArray()
+        private void PopulateCurrentArray(double dt)
         {
             int nmax = nMax;
             if (inputCurrent != null)
                 return;//Already populated
-            InitForSimulation(nmax, true);
+            InitForSimulation(nmax, true, dt);
             if (!Active) return;
             foreach (var index in Enumerable.Range(1, nmax - 1))
             {
                 NextStep(index);
             }
         }
-        public virtual void InitForSimulation(int nmax, bool trackCurrent)
+        public virtual void InitForSimulation(int nmax, bool trackCurrent, double dt)
         {
+            InitForSimulation(dt);
             if (trackCurrent)
             {
                 inputCurrent = new double[nmax];

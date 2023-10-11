@@ -44,11 +44,6 @@ namespace SiliFish.ModelUnits.Junction
         public Cell Cell1;
         public Cell Cell2;
 
-        internal bool IsActive(int timepoint)
-        {
-            double t_ms = Cell1.Model.RunParam.GetTimeOfIndex(timepoint);
-            return TimeLine_ms?.IsActive(t_ms) ?? true;
-        }
 
         [JsonIgnore]
         public override string ID { get { return $"{Cell1.ID}  ↔ {Cell2.ID}"; } }
@@ -159,20 +154,19 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public override void InitForSimulation(int nmax, bool trackCurrent)
+        public override void InitForSimulation(int nmax, bool trackCurrent, double dt)
         {
-            base.InitForSimulation(nmax, trackCurrent);
-            double deltaT = Cell1.Model.RunParam.DeltaT;
+            base.InitForSimulation(nmax, trackCurrent, dt);
             RunningModel model = Cell1.Model;
             if (FixedDuration_ms != null)
-                duration1 = duration2 = (int)(FixedDuration_ms / Cell1.Model.RunParam.DeltaT);
+                duration1 = duration2 = (int)(FixedDuration_ms / dt);
             else
             {
                 double distance = Util.Distance(Cell1.Coordinate, Cell2.Coordinate, DistanceMode);
                 int delay = (int)((Delay_ms ?? model.Settings.gap_delay) / model.RunParam.DeltaT);
-                duration1 = Math.Max((int)Math.Round(distance / (Cell1.ConductionVelocity * deltaT)), 1);
+                duration1 = Math.Max((int)Math.Round(distance / (Cell1.ConductionVelocity * dt)), 1);
                 duration1 += delay;
-                duration2 = Math.Max((int)Math.Round(distance / (Cell2.ConductionVelocity * deltaT)), 1);
+                duration2 = Math.Max((int)Math.Round(distance / (Cell2.ConductionVelocity * dt)), 1);
                 duration2 += delay;
             }
         }
