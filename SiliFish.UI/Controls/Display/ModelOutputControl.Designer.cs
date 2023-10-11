@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
             gr2DLegend = new GroupBox();
@@ -132,6 +132,12 @@
             colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
             webViewRCTrains = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel1 = new Panel();
+            eSpikeEnd = new NumericUpDown();
+            eSpikeStart = new NumericUpDown();
+            lSpikeStart = new Label();
+            lms5 = new Label();
+            label7 = new Label();
+            lms6 = new Label();
             linkExportRCTrains = new LinkLabel();
             btnListRCTrains = new Button();
             btnListSpikes = new Button();
@@ -201,6 +207,8 @@
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).BeginInit();
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).BeginInit();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)eSpikeEnd).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)eSpikeStart).BeginInit();
             tAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
             pAnimation.SuspendLayout();
@@ -1194,9 +1202,9 @@
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle8;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -1204,8 +1212,8 @@
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle9;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -1213,8 +1221,8 @@
             // 
             // colRCTrainMidPoint
             // 
-            dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle10;
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
@@ -1222,8 +1230,8 @@
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle4.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle11;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -1231,9 +1239,9 @@
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Format = "N2";
+            dataGridViewCellStyle12.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle12;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -1241,8 +1249,8 @@
             // 
             // colRCTrainMidPointDelay
             // 
-            dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle13.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle13;
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
@@ -1250,8 +1258,8 @@
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle7.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle14.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle14;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
@@ -1274,6 +1282,12 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(236, 239, 241);
+            panel1.Controls.Add(eSpikeEnd);
+            panel1.Controls.Add(eSpikeStart);
+            panel1.Controls.Add(lSpikeStart);
+            panel1.Controls.Add(lms5);
+            panel1.Controls.Add(label7);
+            panel1.Controls.Add(lms6);
             panel1.Controls.Add(linkExportRCTrains);
             panel1.Controls.Add(btnListRCTrains);
             panel1.Controls.Add(btnListSpikes);
@@ -1286,12 +1300,69 @@
             panel1.Size = new Size(694, 120);
             panel1.TabIndex = 6;
             // 
+            // eSpikeEnd
+            // 
+            eSpikeEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
+            eSpikeEnd.Location = new Point(73, 34);
+            eSpikeEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            eSpikeEnd.Name = "eSpikeEnd";
+            eSpikeEnd.Size = new Size(100, 23);
+            eSpikeEnd.TabIndex = 69;
+            eSpikeEnd.ThousandsSeparator = true;
+            eSpikeEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // eSpikeStart
+            // 
+            eSpikeStart.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
+            eSpikeStart.Location = new Point(73, 8);
+            eSpikeStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
+            eSpikeStart.Name = "eSpikeStart";
+            eSpikeStart.Size = new Size(100, 23);
+            eSpikeStart.TabIndex = 68;
+            eSpikeStart.ThousandsSeparator = true;
+            // 
+            // lSpikeStart
+            // 
+            lSpikeStart.AutoSize = true;
+            lSpikeStart.Location = new Point(12, 12);
+            lSpikeStart.Name = "lSpikeStart";
+            lSpikeStart.Size = new Size(52, 15);
+            lSpikeStart.TabIndex = 64;
+            lSpikeStart.Text = "List Start";
+            // 
+            // lms5
+            // 
+            lms5.AutoSize = true;
+            lms5.Location = new Point(180, 12);
+            lms5.Name = "lms5";
+            lms5.Size = new Size(31, 15);
+            lms5.TabIndex = 65;
+            lms5.Text = "(ms)";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(12, 36);
+            label7.Name = "label7";
+            label7.Size = new Size(48, 15);
+            label7.TabIndex = 66;
+            label7.Text = "List End";
+            // 
+            // lms6
+            // 
+            lms6.AutoSize = true;
+            lms6.Location = new Point(180, 39);
+            lms6.Name = "lms6";
+            lms6.Size = new Size(31, 15);
+            lms6.TabIndex = 67;
+            lms6.Text = "(ms)";
+            // 
             // linkExportRCTrains
             // 
             linkExportRCTrains.AutoSize = true;
             linkExportRCTrains.Enabled = false;
             linkExportRCTrains.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportRCTrains.Location = new Point(337, 42);
+            linkExportRCTrains.Location = new Point(551, 43);
             linkExportRCTrains.Name = "linkExportRCTrains";
             linkExportRCTrains.Size = new Size(44, 15);
             linkExportRCTrains.TabIndex = 63;
@@ -1307,7 +1378,7 @@
             btnListRCTrains.FlatAppearance.BorderColor = Color.LightGray;
             btnListRCTrains.FlatStyle = FlatStyle.Flat;
             btnListRCTrains.ForeColor = Color.White;
-            btnListRCTrains.Location = new Point(231, 37);
+            btnListRCTrains.Location = new Point(445, 38);
             btnListRCTrains.Name = "btnListRCTrains";
             btnListRCTrains.Size = new Size(100, 24);
             btnListRCTrains.TabIndex = 62;
@@ -1322,7 +1393,7 @@
             btnListSpikes.FlatAppearance.BorderColor = Color.LightGray;
             btnListSpikes.FlatStyle = FlatStyle.Flat;
             btnListSpikes.ForeColor = Color.White;
-            btnListSpikes.Location = new Point(231, 10);
+            btnListSpikes.Location = new Point(445, 11);
             btnListSpikes.Name = "btnListSpikes";
             btnListSpikes.Size = new Size(100, 24);
             btnListSpikes.TabIndex = 61;
@@ -1335,7 +1406,7 @@
             linkExportSpikes.AutoSize = true;
             linkExportSpikes.Enabled = false;
             linkExportSpikes.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportSpikes.Location = new Point(337, 15);
+            linkExportSpikes.Location = new Point(551, 16);
             linkExportSpikes.Name = "linkExportSpikes";
             linkExportSpikes.Size = new Size(44, 15);
             linkExportSpikes.TabIndex = 59;
@@ -1347,7 +1418,7 @@
             // cellSelectionSpike
             // 
             cellSelectionSpike.CombineOptionsVisible = false;
-            cellSelectionSpike.Location = new Point(3, 3);
+            cellSelectionSpike.Location = new Point(217, 4);
             cellSelectionSpike.Name = "cellSelectionSpike";
             cellSelectionSpike.SelectedUnits = null;
             cellSelectionSpike.Size = new Size(232, 113);
@@ -1638,6 +1709,8 @@
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)eSpikeEnd).EndInit();
+            ((System.ComponentModel.ISupportInitialize)eSpikeStart).EndInit();
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
             pAnimation.ResumeLayout(false);
@@ -1777,5 +1850,11 @@
         private DataGridViewTextBoxColumn colRCTrainStartDelay;
         private DataGridViewTextBoxColumn colRCTrainMidPointDelay;
         private DataGridViewTextBoxColumn colRCTrainCenterDelay;
+        private NumericUpDown eSpikeEnd;
+        private NumericUpDown eSpikeStart;
+        private Label lSpikeStart;
+        private Label lms5;
+        private Label label7;
+        private Label lms6;
     }
 }

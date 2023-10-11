@@ -84,7 +84,7 @@ namespace SiliFish.UI.Controls
 
             dd3DViewpoint.SelectedIndex = 0;
 
-            ePlotEnd.Value = GlobalSettings.SimulationEndTime;
+            ePlotEnd.Value = eSpikeEnd.Value = GlobalSettings.SimulationEndTime;
 
             try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
             catch { }
@@ -172,7 +172,7 @@ namespace SiliFish.UI.Controls
             eAnimationdt.Value = dt; //10 * dt;
 
             decimal tMax = (decimal)RunningModel.RunParam.MaxTime;
-            ePlotEnd.Value = tMax;
+            ePlotEnd.Value = eSpikeEnd.Value = tMax;
             eAnimationEnd.Value = tMax;
 
             cmPlot.Enabled =
@@ -1079,7 +1079,9 @@ namespace SiliFish.UI.Controls
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
             Dictionary<Cell, List<int>> cellSpikes = new();
-            Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices()));
+            int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
+            int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
+            Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices(iSpikeStart, iSpikeEnd)));
             int spikeCount = cellSpikes.Values.Sum(l => l.Count);
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
             {
@@ -1145,6 +1147,8 @@ namespace SiliFish.UI.Controls
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
             double episodeBreak = RunningModel.KinemParam.EpisodeBreak;
+            int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
+            int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
 
             List<string> pools = Cells.Select(c => c.CellPool.ID).Distinct().ToList();
 
@@ -1152,7 +1156,7 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(RunningModel.TimeArray, pooledCells, episodeBreak);
+                List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(pooledCells,iSpikeStart, iSpikeEnd, episodeBreak);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
                     foreach (var singleBurst in burstTrain.BurstList)
