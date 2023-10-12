@@ -1117,10 +1117,10 @@ namespace SiliFish.UI.Controls
                 webViewRCTrains.NavigateToString("");
                 return;
             }
+            double mean = dataPoints.Average();
+            double std = dataPoints.StandardDeviation();
             if (lastHistogramColumn == colIndex) //display only the range between ± 2SD
             {
-                double mean = dataPoints.Average();
-                double std = dataPoints.StandardDeviation();
                 dataPoints = dataPoints
                     .Where(dp => dp >= mean - 2 * std && dp <= mean + 2 * std)
                     .Select(dp => Math.Round(dp, 2))
@@ -1129,7 +1129,7 @@ namespace SiliFish.UI.Controls
             else
                 dataPoints = dataPoints.Select(dp => Math.Round(dp, 2)).ToArray();
 
-            string title = dgRCTrains.Columns[colIndex].HeaderText;
+            string title = $"{dgRCTrains.Columns[colIndex].HeaderText} {mean:0.##}±{std:0.##}";
             double width = webViewRCTrains.ClientSize.Width;
             double height = webViewRCTrains.ClientSize.Height - 50;
             string histHtml = HistogramGenerator.GenerateHistogram(dataPoints, title, width, height);
@@ -1146,7 +1146,8 @@ namespace SiliFish.UI.Controls
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
-            double episodeBreak = RunningModel.KinemParam.EpisodeBreak;
+            //TODO a new episode break: burst break???
+            double episodeBreak = 10;// RunningModel.KinemParam.EpisodeBreak; 
             int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
             int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
 

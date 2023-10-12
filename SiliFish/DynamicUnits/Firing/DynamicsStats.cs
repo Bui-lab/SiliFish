@@ -160,11 +160,11 @@ namespace SiliFish.DynamicUnits.Firing
         public DynamicsStats(ModelSettings settings, double[] stimulus, double dt)
         {
             modelSettings = settings ?? new ModelSettings();//use default values
-            chatteringIrregularity = settings.ChatteringIrregularity;
-            oneClusterMultiplier = settings.OneClusterMultiplier;
-            tonicPadding = settings.TonicPadding;
-            MaxBurstInterval_LowerRange = settings.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = settings.MaxBurstInterval_DefaultUpperRange;
+            chatteringIrregularity = modelSettings.ChatteringIrregularity;
+            oneClusterMultiplier = modelSettings.OneClusterMultiplier;
+            tonicPadding = modelSettings.TonicPadding;
+            MaxBurstInterval_LowerRange = modelSettings.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = modelSettings.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             int iMax = stimulus.Length;
