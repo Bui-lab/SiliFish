@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
@@ -231,12 +232,18 @@ namespace SiliFish.ModelUnits.Cells
             try
             {
                 double ISyn = 0, IGap = 0, stim = 0;
+                double minV = 0;
                 if (IsActive(timeIndex))
                 {
                     foreach (ChemicalSynapse syn in Synapses.Where(syn => syn.Active))
                     {
                         if (syn.IsActive(timeIndex))
+                        { 
                             ISyn += syn.Core.ISyn;
+                            ChemSynapseCore cs = syn.Core as ChemSynapseCore;
+                            if (cs.ERev < minV)
+                                minV = cs.ERev;
+                        }
                     }
                     foreach (GapJunction jnc in GapJunctions.Where(jnc => jnc.Active))
                     {
@@ -245,8 +252,8 @@ namespace SiliFish.ModelUnits.Cells
                     }
                     stim = GetStimulus(timeIndex);
                 }
-
-                NextStep(timeIndex, stim + ISyn + IGap);
+                if (minV == 0) minV = GlobalSettings.BiologicalMinPotential;
+                NextStep(timeIndex, stim + ISyn + IGap, minV, GlobalSettings.BiologicalMaxPotential);
             }
             catch (Exception ex)
             {
@@ -276,7 +283,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override bool IsSpiking(int iStart = 0, int iEnd = -1)
         {
-            return V.HasSpike(Core.Vmax, iStart, iEnd);
+            return V.HasSpike(Core.Vthreshold, iStart, iEnd);
         }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
         {

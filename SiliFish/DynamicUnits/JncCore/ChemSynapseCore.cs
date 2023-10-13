@@ -52,6 +52,7 @@ namespace SiliFish.DynamicUnits.JncCore
         }
         #endregion
 
+        public double ERev { get; set; }
         public ChemSynapseCore()
         { }
 
@@ -60,7 +61,7 @@ namespace SiliFish.DynamicUnits.JncCore
             DeltaT = copyFrom.DeltaT;
             DeltaTEuler = copyFrom.DeltaTEuler;
             Conductance = copyFrom.Conductance; //unitary conductance
-            SetParameters(copyFrom.GetParameters());//TODO - test; if works put parameter collection to the above constructor
+            SetParameters(copyFrom.GetParameters());
         }
 
 

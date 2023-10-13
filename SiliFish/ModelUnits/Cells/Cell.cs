@@ -365,16 +365,16 @@ namespace SiliFish.ModelUnits.Cells
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT);
         }
-        public virtual void NextStep(int t, double stim)
+        public virtual void NextStep(int t, double stim, double minV, double maxV)
         {
             bool spike = false;
             double v = Core.GetNextVal(stim, ref spike);
             if (spike)
                 spikeTrain.Add(t - 1);
-            if (v < GlobalSettings.BiologicalMinPotential)
-                v = GlobalSettings.BiologicalMinPotential;
-            else if (v > GlobalSettings.BiologicalMaxPotential)
-                v = GlobalSettings.BiologicalMaxPotential;
+            if (v < minV)
+                v = minV;
+            else if (v > maxV)
+                v = maxV;
             V[t] = v;
         }
         

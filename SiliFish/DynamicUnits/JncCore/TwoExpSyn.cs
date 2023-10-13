@@ -22,7 +22,6 @@ namespace SiliFish.DynamicUnits
         public double TauDSlow { get; set; }
         public double TauR { get; set; }
         public double Vth { get; set; }
-        public double ERev { get; set; }
         
         [JsonIgnore, Browsable(false)]
         public override double ISyn => iSyn;

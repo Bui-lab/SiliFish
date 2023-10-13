@@ -25,7 +25,6 @@ namespace SiliFish.DynamicUnits
         public double TauD { get; set; }
         public double TauR { get; set; }
         public double Vth { get; set; }
-        public double ERev { get; set; }
 
         [JsonIgnore, Browsable(false)]
         public override string Identifier => $"Conductance: {Conductance:0.####} τ(r/d): {TauR}/{TauD}";

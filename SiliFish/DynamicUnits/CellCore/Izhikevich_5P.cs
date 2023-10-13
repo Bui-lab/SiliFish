@@ -4,6 +4,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
 
@@ -73,6 +74,7 @@ namespace SiliFish.DynamicUnits
             double vNew, uNew;
             spike = false;
             double dtTracker = 0;
+            bool rising = false;
             while (dtTracker < deltaT)
             {
                 dtTracker += deltaTEuler;
@@ -84,11 +86,17 @@ namespace SiliFish.DynamicUnits
                     vNew = V + Cdv * deltaTEuler;// / Cm;
                     double du = a * (b * V - u);
                     uNew = u + deltaTEuler * du;
+                    if (vNew > V) rising = true;//to prevent resetting to Vreset due to different Euler dt
                     V = vNew;
                     u = uNew;
                 }
                 else
                 {
+                    if (rising)//allow to reach the potential >=Vmax before going back to "c"
+                    {
+                        spike = true;
+                        break;
+                    }
                     // Spike
                     spike = true;
                     vNew = c;

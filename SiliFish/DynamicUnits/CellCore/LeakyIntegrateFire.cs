@@ -3,6 +3,7 @@ using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
@@ -52,6 +53,7 @@ namespace SiliFish.DynamicUnits
             double vNew;
             spike = false;
             double dtTracker = 0;
+            bool rising = false;
             while (dtTracker < deltaT)
             {
                 dtTracker += deltaTEuler;
@@ -63,6 +65,11 @@ namespace SiliFish.DynamicUnits
                 }
                 else if (V >= Vmax)
                 {
+                    if (rising)//allow to reach the potential >=Vmax before going back to "c"
+                    {
+                        spike = true;
+                        break;
+                    }
                     vNew = Vreset;
                     V = vNew;
                     break;
@@ -73,6 +80,7 @@ namespace SiliFish.DynamicUnits
                     // (Dynamical Systems in Neuroscience: page 268, Eq 8.1)
                     double Cdv = I - (V - Vr)/R;
                     vNew = V + Cdv * deltaTEuler / C;
+                    if (vNew > V) rising = true;//to prevent resetting to Vreset due to different Euler dt
                     V = vNew;
                 }
             }

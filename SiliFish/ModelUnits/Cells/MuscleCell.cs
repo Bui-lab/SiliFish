@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
@@ -156,19 +157,29 @@ namespace SiliFish.ModelUnits.Cells
         public override void CalculateMembranePotential(int timeIndex)
         {
             double ISyn = 0, IGap = 0, stim = 0;
+            double minV = 0;
             if (IsActive(timeIndex))
             {
                 foreach (ChemicalSynapse syn in EndPlates)
                 {
+                    if (syn.IsActive(timeIndex))
+                    {
+                        ISyn += syn.Core.ISyn;
+                        ChemSynapseCore cs = syn.Core as ChemSynapseCore;
+                        if (cs.ERev < minV)
+                            minV = cs.ERev;
+                    }
                     ISyn += syn.Core.ISyn;
                 }
                 foreach (GapJunction jnc in GapJunctions)
                 {
-                    IGap += jnc.Cell1 == this ? jnc.Core.ISyn : -1 * jnc.Core.ISyn;
+                    if (jnc.IsActive(timeIndex))
+                        IGap += jnc.Cell1 == this ? jnc.Core.ISyn : -1 * jnc.Core.ISyn;
                 }
                 stim = GetStimulus(timeIndex);
             }
-            NextStep(timeIndex, stim + ISyn + IGap);
+            if (minV == 0) minV = GlobalSettings.BiologicalMinPotential;
+            NextStep(timeIndex, stim + ISyn + IGap, minV, GlobalSettings.BiologicalMaxPotential);
         }
         #endregion
 
