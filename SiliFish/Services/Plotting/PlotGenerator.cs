@@ -55,25 +55,30 @@ namespace SiliFish.Services.Plotting
         private List<Chart> CreateJunctionCharts(double[] TimeArray, List<JunctionBase> jncList, int iStart, int iEnd, UnitOfMeasure UoM)
         {
             List<Chart> charts = new();
-            foreach (JunctionBase jnc in jncList)
+            foreach (var jncGroup in jncList.GroupBy(j => j is GapJunction gj ? gj.Cell2.ID : j is ChemicalSynapse syn ? syn.PostCell.ID : ""))
             {
                 List<Cell> cells = new();
                 List<GapJunction> gapJunctions = new();
                 List<ChemicalSynapse> synapses = new();
-                if (jnc is GapJunction gj)
+                foreach (JunctionBase junction in jncGroup)
                 {
-                    cells.Add(gj.Cell1);
-                    cells.Add(gj.Cell2);
-                    gapJunctions.Add(gj);
+                    foreach (JunctionBase jnc in jncList)
+                    {
+                        if (jnc is GapJunction gj)
+                        {
+                            cells.Add(gj.Cell1);
+                            cells.Add(gj.Cell2);
+                            gapJunctions.Add(gj);
+                        }
+                        else if (jnc is ChemicalSynapse syn)
+                        {
+                            cells.Add(syn.PreNeuron);
+                            cells.Add(syn.PostCell);
+                            synapses.Add(syn);
+                        }
+                    }
                 }
-                else if (jnc is ChemicalSynapse syn)
-                {
-                    cells.Add(syn.PreNeuron);
-                    cells.Add(syn.PostCell);
-                    synapses.Add(syn);
-                }
-
-                PlotGeneratorMembranePotentials plotGeneratorMP = new(this, cells, TimeArray, combinePools: false, combineSomites: false, combineCells: false, iStart, iEnd);
+                PlotGeneratorMembranePotentials plotGeneratorMP = new(this, cells.DistinctBy(c => c.ID).ToList(), TimeArray, combinePools: false, combineSomites: true, combineCells: false, iStart, iEnd);
                 plotGeneratorMP.CreateCharts(charts);
                 if (!string.IsNullOrEmpty(errorMessage))
                     return charts;

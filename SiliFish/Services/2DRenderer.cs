@@ -161,11 +161,11 @@ namespace SiliFish.Services
             List<string> spinalPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SpinalCord).Select(cp => cp.CellGroup).ToList();
             //double supraMinY = supraPools.Any() ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
             double supraMaxY = supraPools.Any() ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
-            double muscleMinX =musclePools.Any()? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1):0;
+            double muscleMinX = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1) : 0;
             //double muscleMaxX = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1):0;
-            double muscleMinY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2):0;
-            double muscleMaxY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2):0;
-            double spinalMinX = spinalPools.Any()?  PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1):0;
+            double muscleMinY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
+            double muscleMaxY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
+            double spinalMinX = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1) : 0;
             double spinalMaxX = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1) : 0;
             double spinalMinY = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
             double spinalMaxY = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
@@ -216,12 +216,12 @@ namespace SiliFish.Services
 
             if (XMax > XMin)
             {
-                XMult = width / (XMax - XMin) / 1.2 ;
+                XMult = width / (XMax - XMin) / 1.2;
                 XOffset = -(XMax + XMin) * XMult / 2;
             }
             if (YMax > YMin)
             {
-                YMult = - height / (YMax - YMin) / 1.2;
+                YMult = -height / (YMax - YMin) / 1.2;
                 YOffset = (YMax + YMin) * YMult / 2;
             }
             List<string> nodes = new();

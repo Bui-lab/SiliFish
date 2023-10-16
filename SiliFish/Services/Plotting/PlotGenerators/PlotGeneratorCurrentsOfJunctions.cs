@@ -77,10 +77,18 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
             string ampere = uoM == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" :
                 uoM == UnitOfMeasure.milliVolt_nanoAmpere_MegaOhm_nanoFarad_microSiemens ? "nA" : "";
+            string title = $"`{columnTitles[5..].TrimEnd(',')}`";
+            if (title.Length > 50)
+            {
+                if (columnTitles.Split(',').Length > 2)
+                    title = "Multiple currents";
+                else
+                    title = title[..50] + "...";
+            }
             Chart chart = new()
             {
                 CsvData = csvData,
-                Title = $"`{columnTitles[5..].TrimEnd(',')}`",
+                Title = title,
                 Color = string.Join(',', colorPerChart),
                 yLabel = $"`Current ({ampere})`",
                 yMin = yMin,
