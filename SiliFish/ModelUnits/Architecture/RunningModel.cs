@@ -292,6 +292,34 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
+        public void LinkPlotObjects(PlotDefinition plot)
+        {
+            if (plot == null) return;
+            if (plot.Selection is PlotSelectionUnits plotSelection)
+            {
+                PlotSelectionUnits linkedSelection = new(plotSelection);
+                foreach (Tuple<string, string> unitTag in plotSelection.UnitTags)
+                {
+                    ModelUnitBase unit = null;
+                    if (unitTag.Item1 == "CellPool")
+                        unit = GetCellPools().FirstOrDefault(cp => cp.ID == unitTag.Item2);
+                    else if (unitTag.Item1 == "Neuron" || unitTag.Item1 == "MuscleCell")
+                        unit = GetCells().FirstOrDefault(cp => cp.ID == unitTag.Item2);
+                    else if (unitTag.Item1 == "ChemicalSynapse")
+                        unit = GetChemicalProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
+                    else if (unitTag.Item1 == "GapJunction")
+                        unit = GetGapProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
+                    else
+                    { }
+                    if (unit != null)
+                        linkedSelection.AddUnit(unit);
+                }
+                if (linkedSelection.Units?.Count > 0)
+                    plot.Selection = linkedSelection;
+                else plot.Selection = null;
+            }
+
+        }
         public void BackwardCompatibility_Stimulus()
         {
             try
@@ -838,7 +866,6 @@ namespace SiliFish.ModelUnits.Architecture
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-
 
     }
 

@@ -36,6 +36,7 @@
             miExport = new ToolStripMenuItem();
             miImport = new ToolStripMenuItem();
             toolTip = new ToolTip(components);
+            miEditItem = new ToolStripMenuItem();
             contextMenuListBox.SuspendLayout();
             SuspendLayout();
             // 
@@ -57,38 +58,45 @@
             // 
             // contextMenuListBox
             // 
-            contextMenuListBox.Items.AddRange(new ToolStripItem[] { miDeleteItem, miClearAll, miExport, miImport });
+            contextMenuListBox.Items.AddRange(new ToolStripItem[] { miDeleteItem, miEditItem, miClearAll, miExport, miImport });
             contextMenuListBox.Name = "contextMenuListBox";
-            contextMenuListBox.Size = new Size(135, 92);
+            contextMenuListBox.Size = new Size(181, 136);
             contextMenuListBox.Opening += contextMenuListBox_Opening;
             // 
             // miDeleteItem
             // 
             miDeleteItem.Name = "miDeleteItem";
-            miDeleteItem.Size = new Size(134, 22);
+            miDeleteItem.Size = new Size(180, 22);
             miDeleteItem.Text = "Delete Item";
             miDeleteItem.Click += miDeleteItem_Click;
             // 
             // miClearAll
             // 
             miClearAll.Name = "miClearAll";
-            miClearAll.Size = new Size(134, 22);
+            miClearAll.Size = new Size(180, 22);
             miClearAll.Text = "Clear All";
             miClearAll.Click += miClearAll_Click;
             // 
             // miExport
             // 
             miExport.Name = "miExport";
-            miExport.Size = new Size(134, 22);
+            miExport.Size = new Size(180, 22);
             miExport.Text = "Export";
             miExport.Click += miExport_Click;
             // 
             // miImport
             // 
             miImport.Name = "miImport";
-            miImport.Size = new Size(134, 22);
+            miImport.Size = new Size(180, 22);
             miImport.Text = "Import";
             miImport.Click += miImport_Click;
+            // 
+            // miEditItem
+            // 
+            miEditItem.Name = "miEditItem";
+            miEditItem.Size = new Size(180, 22);
+            miEditItem.Text = "Edit Item";
+            miEditItem.Click += miEditItem_Click;
             // 
             // HistoryListControl
             // 
@@ -110,5 +118,6 @@
         private ToolStripMenuItem miClearAll;
         private ToolStripMenuItem miExport;
         private ToolStripMenuItem miImport;
+        private ToolStripMenuItem miEditItem;
     }
 }

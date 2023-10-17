@@ -1,5 +1,7 @@
 ﻿using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits;
+using SiliFish.Services.Optimization;
 using SiliFish.UI.EventArguments;
 using System;
 using System.ComponentModel;
@@ -21,6 +23,7 @@ namespace SiliFish.UI.Controls
             }
         }
         public event EventHandler ItemSelect;
+        public event EventHandler ItemEdit;
         public event EventHandler ItemsExport;
         public event EventHandler ItemsImport;
         public int SelectedIndex
@@ -112,6 +115,7 @@ namespace SiliFish.UI.Controls
 
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
+            miEditItem.Visible = ItemEdit != null;
             miExport.Visible = ItemsExport != null;
             miImport.Visible = ItemsImport != null;
             miExport.Enabled = listBox.Items.Count > 1;
@@ -125,6 +129,16 @@ namespace SiliFish.UI.Controls
         private void miImport_Click(object sender, EventArgs e)
         {
             ItemsImport?.Invoke(this, EventArgs.Empty);
+        }
+        private void EditItem()
+        {
+            if (listBox.SelectedIndex <= 0) return;
+            ItemEdit?.Invoke(listBox.SelectedItem, EventArgs.Empty);
+        }
+
+        private void miEditItem_Click(object sender, EventArgs e)
+        {
+            EditItem();
         }
     }
 }

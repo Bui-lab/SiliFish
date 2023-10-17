@@ -1,4 +1,7 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.Helpers;
+using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits;
 using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
@@ -21,5 +24,7 @@ namespace SiliFish.DataTypes
         {
             return $"{PlotType}-{PlotSubset}:{Selection}";
         }
+
+ 
     }
 }

@@ -108,7 +108,7 @@ namespace SiliFish.Services
                 {
                     double tensDiff =
                         useMuscleTension?                        
-                        coef * RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1]):
+                        coef * (RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1])):
                         coef * (RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]));
                     double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + tensDiff; 
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;

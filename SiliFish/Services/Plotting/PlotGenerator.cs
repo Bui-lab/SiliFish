@@ -103,6 +103,7 @@ namespace SiliFish.Services.Plotting
             int iEnd = (int)((tEnd + tSkip) / dt);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;
+            if (iStart >= iEnd) return ("Invalid time range", null);
 
             UnitOfMeasure UoM = model.Settings.UoM;
             bool combineCells = false;

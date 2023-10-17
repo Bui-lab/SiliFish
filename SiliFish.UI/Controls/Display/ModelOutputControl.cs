@@ -679,6 +679,27 @@ namespace SiliFish.UI.Controls
                 SetEnablesBasedOnPlot();
             Task.Run(PlotHTML);
         }
+        private void listPlotHistory_ItemEdit(object sender, EventArgs e)
+        {
+            if (sender is not PlotDefinition plot) return;
+            int ind = listPlotHistory.SelectedIndex - 1;
+            ControlContainer frmControl = new();
+            RichTextBox richTextBox = new()
+            {
+                Text = JsonUtil.ToJson(plot)
+            };
+            frmControl.AddControl(richTextBox, null);
+            frmControl.Text = "Edit";
+            if (frmControl.ShowDialog() == DialogResult.OK)
+            {
+                string JSONString = richTextBox.Text;
+                plot = (PlotDefinition)JsonUtil.ToObject(typeof(PlotDefinition), JSONString);
+                RunningModel.LinkPlotObjects(plot);
+                List<PlotDefinition> plots = listPlotHistory.GetItems<PlotDefinition>().ToList();
+                plots[ind]= plot;
+                listPlotHistory.SetItems(plots);
+            }
+        }
         private void listPlotHistory_ItemsExport(object sender, EventArgs e)
         {
             bool fileSaved = false;
@@ -712,29 +733,7 @@ namespace SiliFish.UI.Controls
                     {
                         foreach (PlotDefinition plot in plotList)
                         {
-                            if (plot.Selection is PlotSelectionUnits plotSelection)
-                            {
-                                PlotSelectionUnits linkedSelection = new(plotSelection);
-                                foreach (Tuple<string, string> unitTag in plotSelection.UnitTags)
-                                {
-                                    ModelUnitBase unit = null;
-                                    if (unitTag.Item1 == "CellPool")
-                                        unit = RunningModel.GetCellPools().FirstOrDefault(cp => cp.ID == unitTag.Item2);
-                                    else if (unitTag.Item1 == "Neuron" || unitTag.Item1 == "MuscleCell")
-                                        unit = RunningModel.GetCells().FirstOrDefault(cp => cp.ID == unitTag.Item2);
-                                    else if (unitTag.Item1 == "ChemicalSynapse")
-                                        unit = RunningModel.GetChemicalProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
-                                    else if (unitTag.Item1 == "GapJunction")
-                                        unit = RunningModel.GetGapProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
-                                    else
-                                    { }
-                                    if (unit != null)
-                                        linkedSelection.AddUnit(unit);
-                                }
-                                if (linkedSelection.Units?.Count > 0)
-                                    plot.Selection = linkedSelection;
-                                else plot.Selection = null;
-                            }
+                            RunningModel.LinkPlotObjects(plot);
                         }
                     }
                     plotList.RemoveAll(pl => pl.Selection == null);
@@ -1157,7 +1156,7 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(pooledCells,iSpikeStart, iSpikeEnd, episodeBreak);
+                List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(pooledCells, iSpikeStart, iSpikeEnd, episodeBreak);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
                     foreach (var singleBurst in burstTrain.BurstList)
