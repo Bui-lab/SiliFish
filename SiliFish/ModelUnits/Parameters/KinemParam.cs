@@ -8,29 +8,33 @@ namespace SiliFish.ModelUnits.Parameters
 {
     public class KinemParam
     {
-        [Description("Damping Coefficient"), DisplayName("Damping Coef"), Category("Animation")]
+        [Description("Damping Coefficient"), DisplayName("Damping Coef"), Category("Swim Dynamics")]
         public double Zeta { get; set; } = 3.0; //#damping constant , high zeta =0.5/ low = 0.1
 
-        [Description("Natural oscillation frequency"), DisplayName("w0"), Category("Animation")]
+        [Description("Natural oscillation frequency"), DisplayName("w0"), Category("Swim Dynamics")]
         public double w0 { get; set; } = 2.5; //20Hz = 125.6
 
         [Description("If set to false, membrane potential values are used for animation.") , 
-            DisplayName("Use Muscle Tension"), Category("Animation")]
+            DisplayName("Use Muscle Tension"), Category("Swim Dynamics")]
         public bool UseMuscleTension { get; set; } = false;
 
-        [Description("Obsolete if 'Tension' values are used for animation." +
+        [Description("Used if 'Use Muscle Tension' is set to false." +
             "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
-            DisplayName("Alpha"), Category("Animation")]
+            DisplayName("Alpha"), Category("Swim Dynamics")]
         public double Alpha { get; set; } = 0;
 
-        [Description("Obsolete if 'Tension' values are used for animation." +
+        [Description("Used if 'Use Muscle Tension' is set to false." +
             "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
-            DisplayName("Beta"), Category("Animation")]
+            DisplayName("Beta"), Category("Swim Dynamics")]
         public double Beta { get; set; } = 0;
 
-        [Description("Obsolete if 'Tension' values are used for animation." +
-            "Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Conversion Coef"), Category("Animation")]
-        public double ConvCoef { get; set; } = 0.1;
+        [Description("Used if 'Use Muscle Tension' is set to false." +
+            "Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Potential Conversion Coef"), Category("Swim Dynamics")]
+        public double ConvCoefPotential { get; set; } = 0.1;
+
+        [Description("\"Used if 'Use Muscle Tension' is set to true." +
+            "Coefficient to convert muscle tension to driving force for the oscillation"), DisplayName("Tension Conversion Coef"), Category("Swim Dynamics")]
+        public double ConvCoefTension { get; set; } = 0.1;
 
         [Description("The distance considered as a move from the center line. Used only for tail based episode calculation."), 
             DisplayName("Boundary"), Category("Swim Dynamics")]
@@ -40,6 +44,9 @@ namespace SiliFish.ModelUnits.Parameters
         
         [Description("In ms. The duration required considered to be an episode break."), DisplayName("Episode Break"), Category("Swim Dynamics")]
         public int EpisodeBreak { get; set; } = 100;
+
+        [Browsable(false)]
+        public double ConvCoef => UseMuscleTension ? ConvCoefTension: ConvCoefPotential;
 
         public KinemParam() { }
 
@@ -53,7 +60,8 @@ namespace SiliFish.ModelUnits.Parameters
                 return paramExternal;
             Zeta = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Damping Coef", Zeta);
             w0 = paramExternal.ReadDoubleAndRemoveKey("Kinematics.w0", w0);
-            ConvCoef = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Conversion Coef", ConvCoef);
+            ConvCoefPotential = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Potential Conversion Coef", ConvCoefPotential);
+            ConvCoefTension = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Tension Conversion Coef", ConvCoefTension);
             Alpha = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Alpha", Alpha);
             Beta = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Beta", Beta);
             Boundary = paramExternal.ReadDoubleAndRemoveKey("Kinematics.Boundary", Boundary);
@@ -63,8 +71,9 @@ namespace SiliFish.ModelUnits.Parameters
 
         public string GetAnimationDetails()
         {
+            double convCoef = UseMuscleTension ? ConvCoefTension : ConvCoefPotential;
             string details = $"Damping coef: {Zeta}; Natural Oscillation Freq: {w0:0.###}\r\n" +
-                (UseMuscleTension ? "" : $"Conv. Coef: {ConvCoef:0.###}; Alpha {Alpha:0.###}; Beta {Beta:0.###}");
+                $"Conv. Coef: {convCoef:0.###}; Alpha {Alpha:0.###}; Beta {Beta:0.###}";
             return details;
         }
     }

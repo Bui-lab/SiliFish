@@ -218,10 +218,13 @@ namespace SiliFish.DataTypes
                     if ((t - last_t) > episodeBreak)
                     {
                         episode.EndEpisode(last_t);
-                        inEpisode = false;
-                        episode = null;
+                        inEpisode = true;
+                        episode = new(t);
+                        episode.StartBeat(t, direction);
+                        episode.EndBeat(beat_end);
+                        episodes.AddEpisode(episode);
                     }
-                    else 
+                    else
                     {
                         episode.StartBeat(t, direction);
                         episode.EndBeat(beat_end);

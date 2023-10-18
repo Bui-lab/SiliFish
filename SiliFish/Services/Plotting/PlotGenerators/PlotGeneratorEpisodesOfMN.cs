@@ -37,7 +37,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 return; 
             double[] Time = timeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;
-            double[] yValues = mnMaxPotentials[iStart..(iEnd + 1)]; ;
+            double[] yValues = mnMaxPotentials[iStart..(iEnd + 1)];
             string title, csvData;
             string[] data;
 

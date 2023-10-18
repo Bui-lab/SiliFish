@@ -207,7 +207,7 @@ namespace SiliFish.UI.Controls
                 toolTip1.SetToolTip(numMinDescReach, "Set 0 for within somite projections");
                 toolTip1.SetToolTip(lMinReach, "Set 0 for within somite projections");
                 numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
-                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 0;
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 1;//a single somite can represent multiple somites of the fish
                 numMinAscReach.Increment = numMinDescReach.Increment =
                     numMaxAscReach.Increment = numMaxDescReach.Increment = 1;
             }

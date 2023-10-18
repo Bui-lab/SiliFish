@@ -754,13 +754,12 @@ namespace SiliFish.UI.Controls
             htmlPlot = "";
 
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
-            string plotsubset = cellSelectionPlot.PoolSubset;
+            string plotsubset = cellSelectionPlot.Visible ? cellSelectionPlot.PoolSubset : "";
             if (plotSelection is PlotSelectionMultiCells || plotSelection is PlotSelectionUnits)
             {
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection);
             }
-            if (plotsubset == "Selection" && PlotType.GetGroup() == "episode")
-                PlotType = PlotType.MembPotential;
+            
             if (lastPlot != null &&
                 lastPlot.PlotSubset.Equals(plotsubset) &&
                 lastPlot.PlotType.Equals(PlotType) &&
@@ -857,6 +856,11 @@ namespace SiliFish.UI.Controls
         {
             cellSelectionPlot.SelectedUnits = unitList;
             PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
+            if (PlotType.GetGroup() == "episode")
+            {
+                PlotType = PlotType.MembPotential;
+                ddPlot.SelectedItem = PlotType.GetDisplayName();
+            }
             plotSelection = cellSelectionPlot.GetSelection();
             SetEnablesBasedOnPlot();
         }
@@ -886,6 +890,7 @@ namespace SiliFish.UI.Controls
             cmPlot.Enabled = false;
             btnPlotHTML.Enabled = false;
 
+            SetEnablesBasedOnPlot();
             Task.Run(PlotHTML);
         }
 
