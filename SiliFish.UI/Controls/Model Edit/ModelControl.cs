@@ -15,6 +15,7 @@ using SiliFish.UI.Extensions;
 using System.Diagnostics;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Controls.Model_Edit;
+using SiliFish.UI.Controls.General;
 
 namespace SiliFish.UI.Controls
 {
@@ -51,6 +52,7 @@ namespace SiliFish.UI.Controls
 
             listCellPools.EnableImportExport();
             listCellPools.EnableHightlight();
+            listCellPools.AddContextMenu("Projection Multiplier", listCellPools_ProjectionMultiplier);
 
             listCells.EnableImportExport();
             listCells.EnableHightlight();
@@ -455,6 +457,47 @@ namespace SiliFish.UI.Controls
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
             }
         }
+        private void listCellPools_ProjectionMultiplier(object sender, EventArgs e)
+        {
+            if (listCellPools.SelectedItem is not CellPoolTemplate poolTemplate) return;
+            ControlContainer controlContainer = new();
+            ProjectionMultiplier multiplier = new();
+            controlContainer.AddControl(multiplier, null);
+            if (controlContainer.ShowDialog() == DialogResult.OK)
+            {
+                double mult = multiplier.GapMultiplier;
+                if (mult!=1)
+                {
+                    if (mult == 0)
+                        Model.GetGapProjections()
+                            .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
+                            .ToList()
+                            .ForEach(c => c.Active = false);
+                    else
+                        Model.GetGapProjections()
+                            .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
+                            .ToList()
+                            .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
+                }
+                mult = multiplier.ChemMultiplier;
+                if (mult != 1)
+                {
+                    if (mult == 0)
+                        Model.GetChemicalProjections()
+                             .Where(c => c.SourcePool == poolTemplate.CellGroup)
+                             .ToList()
+                             .ForEach(c => c.Active = false);
+                    else
+                        Model.GetChemicalProjections()
+                            .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
+                            .ToList()
+                            .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
+                }
+                RefreshProjections();
+                ModelIsUpdated();
+            }
+        }
+
         private void LoadCells()
         {
             if (Model is ModelTemplate) return;

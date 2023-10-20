@@ -5,6 +5,7 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.UI.Controls.General;
 using SiliFish.UI.EventArguments;
 using System.ComponentModel;
 using static SiliFish.UI.Controls.DynamicsTestControl;

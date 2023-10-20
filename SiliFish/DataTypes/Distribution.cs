@@ -88,6 +88,12 @@ namespace SiliFish.DataTypes
         {
             get => Util.CSVEncode(string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value)));
         }
+
+        public virtual void Multiply(double d)
+        {
+            RangeStart*= d;
+            RangeEnd*= d;
+        }
         public Distribution()
         {
             //default values of 0 and 999 used
@@ -335,7 +341,14 @@ namespace SiliFish.DataTypes
         public override double UniqueValue
         {
             get { return Mean; }
-        }       
+        }
+
+        public override void Multiply(double d)
+        {
+            base.Multiply(d);
+            Mean *= d;
+            Stddev *= d;
+        }
         public GaussianDistribution()
         { }
 
@@ -380,6 +393,12 @@ namespace SiliFish.DataTypes
         public override double UniqueValue
         {
             get { return (Mean + Mean2) / 2; }
+        }
+        public override void Multiply(double d)
+        {
+            base.Multiply(d);
+            Mean2 *= d;
+            Stddev2 *= d;
         }
         public double Mean2 { get; set; } = 1;
         public double Stddev2 { get; set; } = 0;
