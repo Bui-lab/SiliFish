@@ -199,12 +199,12 @@ namespace SiliFish.UI.Controls
         }
 
         private void ShowInactive()
-        {             
+        {
             IsInactiveHidden = false;
             foreach (object obj in HiddenItems)
                 listBox.Items.Add(obj);
             HiddenItems.Clear();
-            ItemsHideShowInactive?.Invoke(this, new GenericArgs() { ValueBoolean = true }) ;
+            ItemsHideShowInactive?.Invoke(this, new GenericArgs() { ValueBoolean = true });
         }
 
         private void miShowAll_Click(object sender, EventArgs e)
@@ -348,6 +348,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
+                sepCustom.Visible = true;
                 mi = new ToolStripMenuItem(label);
                 contextMenuListBox.Items.Add(mi);
                 mi.Click += miCustomSort_Click;
