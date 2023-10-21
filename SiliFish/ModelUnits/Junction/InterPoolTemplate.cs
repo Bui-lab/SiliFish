@@ -210,6 +210,12 @@ namespace SiliFish.ModelUnits.Junction
                     kvp => Distribution.CreateDistributionObject(kvp.Value) as object);
             }
         }
+        public void SetParameter(string key, Distribution value)
+        {
+            if (parameters != null)
+                parameters[key] = value;
+        }
+
         [JsonIgnore, Browsable(false)]
         private List<string> csvExportCoreValues
         {

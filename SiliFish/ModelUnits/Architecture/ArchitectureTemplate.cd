@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SiliFish.ModelUnits.Architecture.ModelTemplate">
-    <Position X="2.25" Y="0.75" Width="4" />
+    <Position X="2.25" Y="9" Width="4" />
     <Members>
       <Method Name="AddCellPool" Hidden="true" />
       <Method Name="AddJunction" Hidden="true" />
@@ -33,21 +33,6 @@
       <Method Name="SortJunctionsByType" Hidden="true" />
       <Method Name="UpdateStimulus" Hidden="true" />
     </Members>
-    <AssociationLine Name="CellPoolTemplates" Type="SiliFish.ModelUnits.Cells.CellPoolTemplate">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.096" Y="0.831" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="InterPoolTemplates" Type="SiliFish.ModelUnits.Junction.InterPoolTemplate">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.037" Y="0.81" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="StimulusTemplates" Type="SiliFish.ModelUnits.Stim.StimulusTemplate">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.199" Y="0.583" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>wAAAQCICAFMAARAAQAAQpCBAAAAgAAAEGAAAAEBAQII=</HashCode>
       <FileName>ModelUnits\Architecture\ModelTemplate.cs</FileName>
@@ -59,7 +44,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="SiliFish.ModelUnits.Cells.CellPoolTemplate">
-    <Position X="0.5" Y="3" Width="2.5" />
+    <Position X="0.5" Y="3.25" Width="2.5" />
     <Members>
       <Property Name="Attachments" Hidden="true" />
       <Method Name="BackwardCompatibility" Hidden="true" />
@@ -85,13 +70,13 @@
       <Method Name="ToString" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AIAAAAAgAEAioAUmCAAEgEIAMBAACBsUCIAAtECAQAE=</HashCode>
+      <HashCode>AIAAAAAgAEAioAUmCAAEgEIAMBABCBsUCIAAtECAQAE=</HashCode>
       <FileName>ModelUnits\Cells\CellPoolTemplate.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.InterPoolTemplate">
-    <Position X="3.25" Y="3" Width="2.25" />
+    <Position X="7.75" Y="4.75" Width="2.25" />
     <Members>
       <Field Name="_Name" Hidden="true" />
       <Property Name="Attachments" Hidden="true" />
@@ -110,12 +95,12 @@
       <Method Name="ToString" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AQAAAAAAAFAjgAUEGEAAIJQIBAJAAAAgAAAAIAEAQAA=</HashCode>
+      <HashCode>AQAACAAAAFAjgAUEGEABIIQIBABBAEAkAIAAJECAQAA=</HashCode>
       <FileName>ModelUnits\Junction\InterPoolTemplate.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.StimulusTemplate">
-    <Position X="5.75" Y="2.75" Width="3.25" />
+    <Position X="3.75" Y="4.75" Width="3.25" />
     <Members>
       <Property Name="ColumnNames" Hidden="true" />
       <Method Name="CompareTo" Hidden="true" />
@@ -128,14 +113,6 @@
       <Property Name="Tooltip" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
     </Members>
-    <InheritanceLine Type="SiliFish.ModelUnits.Stim.StimulusBase" FixedFromPoint="true">
-      <Path>
-        <Point X="6.875" Y="4.75" />
-        <Point X="6.875" Y="4.559" />
-        <Point X="7.375" Y="4.559" />
-        <Point X="7.375" Y="4.367" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAgBAAAACgAwEAAABAAAAAAAAAAAAAAAAMAAAQAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusTemplate.cs</FileName>
@@ -143,7 +120,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.StimulusSettings">
-    <Position X="5.75" Y="6" Width="2.75" />
+    <Position X="7.25" Y="0.75" Width="2.75" />
     <Members>
       <Method Name="Clone" Hidden="true" />
       <Field Name="ColumnNames" Hidden="true" />
@@ -160,15 +137,10 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.StimulusBase" Collapsed="true">
-    <Position X="6.25" Y="4.75" Width="1.5" />
+    <Position X="4.75" Y="3.25" Width="1.5" />
     <Members>
       <Method Name="StimulusBase" Hidden="true" />
     </Members>
-    <AssociationLine Name="Settings" Type="SiliFish.ModelUnits.Stim.StimulusSettings">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.9" Y="0.216" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusBase.cs</FileName>
@@ -176,6 +148,22 @@
     <ShowAsAssociation>
       <Property Name="Settings" />
     </ShowAsAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.ModelUnitBase" Collapsed="true">
+    <Position X="4.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BABAAgAAAEAAgBQAEAAQAAAAAAAAAAAoAAAAIAAAAAA=</HashCode>
+      <FileName>ModelUnits\ModelUnitBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.InterPoolBase" Collapsed="true">
+    <Position X="8.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgCAKAgACAAAAAAABACAAAAAAAEAAAAAQIAAEQAA=</HashCode>
+      <FileName>ModelUnits\Junction\InterPoolBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Struct Name="SiliFish.ModelUnits.Junction.InterPool" Collapsed="true">
     <Position X="5.25" Y="21.75" Width="1.5" />

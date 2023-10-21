@@ -85,6 +85,11 @@ namespace SiliFish.ModelUnits.Cells
                     kvp => Distribution.CreateDistributionObject(kvp.Value) as object);
             }
         }
+        public void SetParameter(string key, Distribution value)
+        {
+            if (parameters != null)
+                parameters[key] = value;
+        }
         public int NumOfCells { get; set; } = 1;
         public CountingMode PerSomiteOrTotal { get; set; } = CountingMode.Total;
 

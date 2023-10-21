@@ -116,6 +116,13 @@ namespace SiliFish.Extensions
                 key += "'";
             dictionary.Add(key, value);
         }
+        public static void AddOrUpdateObject<T>(this Dictionary<string, T> dictionary, string key, T value)
+        {
+            if (dictionary.ContainsKey(key))
+                dictionary[key] = value;
+            else
+                dictionary.Add(key, value);
+        }
 
         public static void AddObject<T>(this Dictionary<int, T> dictionary, int key, T value, bool skipIfExists = false)
         {

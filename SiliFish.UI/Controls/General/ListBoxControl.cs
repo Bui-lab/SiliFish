@@ -273,6 +273,7 @@ namespace SiliFish.UI.Controls
             miPlot.Visible = ItemPlot != null;
             miHighlight.Visible = ItemHighlight != null;
             sepPlot.Visible = miPlot.Visible || miHighlight.Visible;
+            sepShow.Visible = miShowAll.Visible || miHideInactive.Visible;
         }
         private void listBox_KeyDown(object sender, KeyEventArgs e)
         {

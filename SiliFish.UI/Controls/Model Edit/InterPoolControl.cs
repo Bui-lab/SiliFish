@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.DynamicUnits.JncCore;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
@@ -99,8 +100,8 @@ namespace SiliFish.UI.Controls
                     default:
                         break;
                 }
-                if (interPoolTemplate?.Parameters != null)
-                    interPoolTemplate.Parameters["ERev"] = new Constant_NoDistribution(EReversal);
+                interPoolTemplate.SetParameter("ERev", new Constant_NoDistribution(EReversal));
+                ParamDictToGrid();
             }
             interPoolTemplate.SourcePool = ddSourcePool.SelectedItem is CellPoolTemplate cpt ? cpt.CellGroup : "";
             UpdateName();
