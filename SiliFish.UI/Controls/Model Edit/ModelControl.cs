@@ -460,7 +460,10 @@ namespace SiliFish.UI.Controls
         private void listCellPools_ProjectionMultiplier(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem is not CellPoolTemplate) return;
-            ControlContainer controlContainer = new();
+            ControlContainer controlContainer = new()
+            {
+                Text = "Conduction Multiplier"
+            };
             ProjectionMultiplier multiplier = new();
             controlContainer.AddControl(multiplier, null);
             if (controlContainer.ShowDialog() == DialogResult.OK)
