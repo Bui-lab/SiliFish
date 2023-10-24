@@ -1,6 +1,6 @@
 ﻿namespace SiliFish.UI.Controls.General
 {
-    partial class ProjectionMultiplier
+    partial class ConductanceMultiplier
     {
         /// <summary> 
         /// Required designer variable.

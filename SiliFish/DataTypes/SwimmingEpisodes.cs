@@ -38,7 +38,12 @@ namespace SiliFish.DataTypes
             if (!episodes.Any()) return;
             episodes.ForEach(e => e.Smooth());
             if (!episodes[^1].EpisodeEnded)
-                episodes[^1].EndEpisode(last_t);
+            {
+                if (!episodes[^1].Beats.Any())
+                    episodes.RemoveAt(episodes.Count - 1);
+                else
+                    episodes[^1].EndEpisode(last_t);
+            }
         }
 
 

@@ -49,24 +49,30 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
 
             listStimuli.EnableImportExport();
+            listStimuli.AddContextMenu("Stimulus Setter/Multiplier", listStimuli_ValueSetter);
 
             listCellPools.EnableImportExport();
             listCellPools.EnableHightlight();
-            listCellPools.AddContextMenu("Projection Multiplier", listCellPools_ProjectionMultiplier);
+            listCellPools.AddContextMenu("Projection Conductance Multiplier", listCellPools_ConductanceMultiplier);
 
             listCells.EnableImportExport();
             listCells.EnableHightlight();
 
             listIncoming.EnableImportExport();
             listIncoming.AddContextMenu("Go to Source", listConnections_GotoSource);
+            listIncoming.AddContextMenu("Projection Conductance Multiplier", listConnections_ConductanceMultiplier);
             listOutgoing.EnableImportExport();
             listOutgoing.AddContextMenu("Go to Target", listConnections_GotoTarget);
+            listOutgoing.AddContextMenu("Projection Conductance Multiplier", listConnections_ConductanceMultiplier);
             listGap.EnableImportExport();
             listGap.AddContextMenu("Go to Neighbor", listConnections_GotoNeighbor);
+            listGap.AddContextMenu("Projection Conductance Multiplier", listConnections_ConductanceMultiplier);
 
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
         }
+
+
 
         private void ModelIsUpdated()
         {
@@ -457,14 +463,14 @@ namespace SiliFish.UI.Controls
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
             }
         }
-        private void listCellPools_ProjectionMultiplier(object sender, EventArgs e)
+        private void listCellPools_ConductanceMultiplier(object sender, EventArgs e)
         {
             if (listCellPools.SelectedItem is not CellPoolTemplate) return;
             ControlContainer controlContainer = new()
             {
-                Text = "Conduction Multiplier"
+                Text = "Conductance Multiplier"
             };
-            ProjectionMultiplier multiplier = new();
+            ConductanceMultiplier multiplier = new();
             controlContainer.AddControl(multiplier, null);
             if (controlContainer.ShowDialog() == DialogResult.OK)
             {
@@ -1135,10 +1141,62 @@ namespace SiliFish.UI.Controls
                 listCellPools.SelectItem(otherPool);
             }
         }
+
+        private void listConnections_ConductanceMultiplier(object sender, EventArgs e)
+        {
+            ControlContainer controlContainer = new()
+            {
+                Text = "Conductance Multiplier"
+            };
+            ListBoxControl lb = sender as ListBoxControl;
+            bool gap = lb == listGap;
+            ConductanceMultiplier multiplier = new(gap);
+            controlContainer.AddControl(multiplier, null);
+            if (controlContainer.ShowDialog() == DialogResult.OK)
+            {
+                double mult = gap ? multiplier.GapMultiplier : multiplier.ChemMultiplier;
+                if (mult == 1) return;
+                foreach (var jnc in lb.SelectedItems)
+                {
+                    if (jnc is InterPoolTemplate jncTemplate)
+                    {
+                        if (mult == 0)
+                            jncTemplate.Active = false;
+                        else
+                            jncTemplate.Parameters["Conductance"].Multiply(mult);
+                    }
+                    else if (jnc is JunctionBase junct)
+                    {
+                        if (mult == 0)
+                            junct.Active = false;
+                        else
+                            junct.Core.Conductance *= mult;
+                    }
+
+                }
+                RefreshProjections();
+                ModelIsUpdated();
+            }
+        }
         #endregion
 
         #region Stimulus
 
+        private void RefreshStimuli()
+        {
+            if (SelectedCell != null)
+                LoadStimuli(SelectedCell);
+            else if (SelectedPool != null)
+                LoadStimuli(SelectedPool);
+            else if (SelectedPoolTemplate != null)
+                LoadStimuli(SelectedPoolTemplate);
+            else
+                LoadStimuli();
+            if (SelectedStimulus != null)
+            {
+                listStimuli.SelectedItem = SelectedStimulus;
+            }
+        }
         private void LoadStimuli()
         {
             lStimuliTitle.Text = $"Stimuli";
@@ -1372,6 +1430,33 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        private void listStimuli_ValueSetter(object sender, EventArgs e)
+        {
+            ControlContainer controlContainer = new()
+            {
+                Text = "Stimulus Setter"
+            };
+            StimulusMultiplier multiplier = new();
+            controlContainer.AddControl(multiplier, null);
+            if (controlContainer.ShowDialog() == DialogResult.OK)
+            {
+                double mult = multiplier.StimMultiplier;
+                double value = multiplier.StimValue;
+
+                foreach (var stim in listStimuli.SelectedItems)
+                {
+                    if (stim is not StimulusTemplate st) continue;
+                    if (mult == 0 && value == 0)
+                        st.Active = false;
+                    else if (mult != 0)
+                        st.Settings.Value1 *= mult;                        
+                    else
+                        st.Settings.Value1 = value;
+                }
+                RefreshStimuli();
+                ModelIsUpdated();
+            }
+        }
         #endregion
 
         #region Advanced Settings

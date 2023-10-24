@@ -59,6 +59,9 @@
     <Compile Update="Controls\DynamicsTestByDistControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\General\StimulusMultiplier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\General\HistoryListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

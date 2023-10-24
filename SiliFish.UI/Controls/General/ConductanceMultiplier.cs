@@ -10,13 +10,19 @@ using System.Windows.Forms;
 
 namespace SiliFish.UI.Controls.General
 {
-    public partial class ProjectionMultiplier : UserControl
+    public partial class ConductanceMultiplier : UserControl
     {
         public double GapMultiplier => (double)numGapMult.Value;
         public double ChemMultiplier => (double)numChemMult.Value;
-        public ProjectionMultiplier()
+        public ConductanceMultiplier()
         {
             InitializeComponent();
+        }
+        public ConductanceMultiplier(bool gap)
+        {
+            InitializeComponent();
+            lGapJuncMultiplier.Visible = numGapMult.Visible = gap;
+            lChemJncMultiplier.Visible = numChemMult.Visible = !gap;
         }
     }
 }
