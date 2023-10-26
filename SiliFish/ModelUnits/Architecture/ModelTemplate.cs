@@ -24,6 +24,44 @@ namespace SiliFish.ModelUnits.Architecture
 
         public ModelTemplate() { }
 
+        public override List<string> DiffersFrom(ModelBase other)
+        {
+            List<string> differences = new();
+            if (other is ModelTemplate om)
+            {
+                //TODO handle new cp in "other"
+                foreach (CellPoolTemplate cpt1 in CellPoolTemplates)
+                {
+                    CellPoolTemplate cpt2 = om.CellPoolTemplates.FirstOrDefault(cp => cp.CellGroup == cpt1.CellGroup);
+                    if (cpt2 is null)
+                        differences.Add($"New cell pool: {cpt1.CellGroup}");
+                    else
+                    {
+                        List<string> diff = cpt1.DiffersFrom(cpt2);
+                        if (diff != null)
+                            differences.AddRange(diff);
+                    }
+                }
+                //TODO handle new junction in "other"
+                foreach (InterPoolTemplate ipt1 in InterPoolTemplates)
+                {
+                    InterPoolTemplate ipt2 = om.InterPoolTemplates.FirstOrDefault(ip => ip.ID == ipt1.ID);
+                    if (ipt2 is null)
+                        differences.Add($"New cell junction: {ipt1.ID}");
+                    else
+                    {
+                        List<string> diff = ipt1.DiffersFrom(ipt2);
+                        if (diff != null)
+                            differences.AddRange(diff);
+                    }
+                }
+            }
+            else
+            {
+                differences.Add("Models not comparable.");
+            }
+            return differences;
+        }
         public void BackwardCompatibility_Stimulus()
         {
             try

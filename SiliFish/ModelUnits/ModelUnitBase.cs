@@ -21,7 +21,10 @@ namespace SiliFish.ModelUnits
         public TimeLine TimeLine_ms { get; set; } = new TimeLine();
         public TimeLine TimeLine_ind { get; set; } = null;
 
-
+        public virtual List<string> DiffersFrom(ModelUnitBase other)
+        {
+            return null;
+        }
         public virtual int CompareTo(ModelUnitBase other)
         {
             return ID.CompareTo(other.ID);

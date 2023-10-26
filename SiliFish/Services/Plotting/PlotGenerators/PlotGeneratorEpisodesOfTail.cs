@@ -59,6 +59,28 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             }
             if (episodes.HasEpisodes)
             {
+                //Tail Beat Frequency
+                if (plotType == PlotType.EpisodesTail || plotType == PlotType.TailBeatFreq)
+                {
+                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
+                    title = "Time,Tail Beat Freq.";
+                    data = new string[episodes.EpisodeCount];
+                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
+                        data[i] = xValues[i] + "," + yValues[i];
+                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                    Chart chart = new Chart
+                    {
+                        CsvData = csvData,
+                        Title = $"`Tail Beat Frequency`",
+                        yLabel = "`Freq (Hz)`",
+                        ScatterPlot = true,
+                        xMin = Time[0],
+                        xMax = Time[^1] + 1,
+                        yMin = 0,
+                        yMax = yValues.Max() + 1
+                    };
+                    if (!AddChart(chart)) return;
+                }
                 //Episode Duration
                 if (plotType == PlotType.EpisodesTail || plotType == PlotType.EpisodeDuration)
                 {
@@ -173,28 +195,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         };
                         if (!AddChart(chart)) return;
                     }
-                }
-                //Tail Beat Frequency
-                if (plotType == PlotType.EpisodesTail || plotType == PlotType.TailBeatFreq)
-                {
-                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
-                    title = "Time,Tail Beat Freq.";
-                    data = new string[episodes.EpisodeCount];
-                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    Chart chart = new Chart
-                    {
-                        CsvData = csvData,
-                        Title = $"`Tail Beat Frequency`",
-                        yLabel = "`Freq (Hz)`",
-                        ScatterPlot = true,
-                        xMin = Time[0],
-                        xMax = Time[^1] + 1,
-                        yMin = 0,
-                        yMax = yValues.Max() + 1
-                    };
-                    if (!AddChart(chart)) return;
                 }
             }
         }

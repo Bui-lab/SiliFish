@@ -16,6 +16,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Cells
 {
@@ -267,6 +268,53 @@ namespace SiliFish.ModelUnits.Cells
            
         }
 
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            List<string> diffs = new();
+            CellPoolTemplate cpt = other as CellPoolTemplate;
+            if (CellGroup != cpt.CellGroup)
+                diffs.Add($"{ID} CellGroup: {CellGroup} vs {cpt.CellGroup}");
+            if ((Description ?? "") != (cpt.Description ?? ""))
+                diffs.Add($"{ID} Description: {Description} vs {cpt.Description}");
+            if (CellType != cpt.CellType)
+                diffs.Add($"{ID} CellType: {CellType} vs {cpt.CellType}");
+            if (CoreType != cpt.CoreType)
+                diffs.Add($"{ID} CoreType: {CoreType} vs {cpt.CoreType}");
+            if (NTMode != cpt.NTMode)
+                diffs.Add($"{ID} NTMode: {NTMode} vs {cpt.NTMode}");
+            if (Color != cpt.Color)
+                diffs.Add($"{ID} Color: {Color} vs {cpt.Color}");
+            if (!Parameters.SameAs(cpt.Parameters, out string diff))
+                diffs.Add($"{ID} Parameters: {diff}");
+            if (BodyLocation != cpt.BodyLocation)
+                diffs.Add($"{ID} BodyLocation: {BodyLocation} vs {cpt.BodyLocation}");
+            if (PositionLeftRight != cpt.PositionLeftRight)
+                diffs.Add($"{ID} PositionLeftRight: {PositionLeftRight} vs {cpt.PositionLeftRight}");
+            if (ColumnIndex2D != cpt.ColumnIndex2D)
+                diffs.Add($"{ID} ColumnIndex2D: {ColumnIndex2D} vs {cpt.ColumnIndex2D}");
+            if (NumOfCells != cpt.NumOfCells)
+                diffs.Add($"{ID} NumOfCells: {NumOfCells} vs {cpt.NumOfCells}");
+            if (PerSomiteOrTotal != cpt.PerSomiteOrTotal)
+                diffs.Add($"{ID} PerSomiteOrTotal: {PerSomiteOrTotal} vs {cpt.PerSomiteOrTotal}");
+            if (SomiteRange != cpt.SomiteRange)
+                diffs.Add($"{ID} SomiteRange: {SomiteRange} vs {cpt.SomiteRange}");
+            if (SpatialDistribution.ToString() != cpt.SpatialDistribution.ToString())//TODO missing implementation
+                diffs.Add($"{ID} SpatialDistribution: {SpatialDistribution} vs {cpt.SpatialDistribution}");
+            if (DescendingAxonLength?.ToString()!=cpt.DescendingAxonLength?.ToString())
+                diffs.Add($"{ID} DescendingAxonLength: {DescendingAxonLength} vs {cpt.DescendingAxonLength}");
+            if (AscendingAxonLength?.ToString() != cpt.AscendingAxonLength?.ToString())
+                diffs.Add($"{ID} AscendingAxonLength: {AscendingAxonLength} vs {cpt.AscendingAxonLength}");
+            if (ConductionVelocity?.ToString() != cpt.ConductionVelocity?.ToString())
+                diffs.Add($"{ID} ConductionVelocity: {ConductionVelocity} vs {cpt.ConductionVelocity}");
+            if (Active != cpt.Active)
+                diffs.Add($"{ID} Active: {Active} vs {cpt.Active}");
+            if (TimeLine_ms.ToString() != cpt.TimeLine_ms.ToString())
+                diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {cpt.TimeLine_ms}");
+
+            if (diffs.Any())
+                return diffs;
+            return null;
+        }
         public override int CompareTo(ModelUnitBase otherbase)
         {
             CellPoolTemplate other = otherbase as CellPoolTemplate;

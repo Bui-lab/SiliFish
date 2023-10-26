@@ -33,23 +33,32 @@ namespace SiliFish.UI
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             pTop = new Panel();
-            btnSettings = new Button();
             btnAbout = new Button();
-            btnCellularDynamics = new Button();
-            linkBrowseToTempFolder = new LinkLabel();
-            linkOpenOutputFolder = new LinkLabel();
-            btnClearModel = new Button();
-            btnNewModel = new Button();
-            linkLoadModel = new LinkLabel();
-            linkSaveModel = new LinkLabel();
+            menuStripMain = new MenuStrip();
+            mFile = new ToolStripMenuItem();
+            miFileLoad = new ToolStripMenuItem();
+            miFileSave = new ToolStripMenuItem();
+            miFileSep1 = new ToolStripSeparator();
+            miFileExport = new ToolStripMenuItem();
+            miFileImport = new ToolStripMenuItem();
+            miFileSep2 = new ToolStripSeparator();
+            miFileNewModel = new ToolStripMenuItem();
+            miFileClearModel = new ToolStripMenuItem();
+            mTools = new ToolStripMenuItem();
+            miToolsCompareModel = new ToolStripMenuItem();
+            miToolsSep1 = new ToolStripSeparator();
+            miToolsCellularDynamics = new ToolStripMenuItem();
+            miToolsSep2 = new ToolStripSeparator();
+            miToolsSettings = new ToolStripMenuItem();
+            mView = new ToolStripMenuItem();
+            miViewOutputFolder = new ToolStripMenuItem();
+            miViewTempFolder = new ToolStripMenuItem();
+            miViewAbout = new ToolStripMenuItem();
             splitMain = new SplitContainer();
             modelControl = new ModelControl();
             pGenerateModel = new Panel();
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
-            pModelControlTop = new Panel();
-            linkImportModel = new LinkLabel();
-            linkExportModel = new LinkLabel();
             pSimulation = new Panel();
             ldtEuler = new Label();
             edtEuler = new NumericUpDown();
@@ -80,12 +89,12 @@ namespace SiliFish.UI
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
             pTop.SuspendLayout();
+            menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
             splitMain.Panel2.SuspendLayout();
             splitMain.SuspendLayout();
             pGenerateModel.SuspendLayout();
-            pModelControlTop.SuspendLayout();
             pSimulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)edtEuler).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eSkip).BeginInit();
@@ -96,32 +105,13 @@ namespace SiliFish.UI
             // pTop
             // 
             pTop.BorderStyle = BorderStyle.FixedSingle;
-            pTop.Controls.Add(btnSettings);
             pTop.Controls.Add(btnAbout);
-            pTop.Controls.Add(btnCellularDynamics);
-            pTop.Controls.Add(linkBrowseToTempFolder);
-            pTop.Controls.Add(linkOpenOutputFolder);
+            pTop.Controls.Add(menuStripMain);
             pTop.Dock = DockStyle.Top;
             pTop.Location = new Point(4, 4);
             pTop.Name = "pTop";
-            pTop.Size = new Size(1340, 40);
+            pTop.Size = new Size(1340, 32);
             pTop.TabIndex = 3;
-            // 
-            // btnSettings
-            // 
-            btnSettings.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnSettings.AutoSize = true;
-            btnSettings.BackColor = Color.FromArgb(96, 125, 139);
-            btnSettings.FlatAppearance.BorderColor = Color.LightGray;
-            btnSettings.FlatStyle = FlatStyle.Flat;
-            btnSettings.ForeColor = Color.White;
-            btnSettings.Location = new Point(1200, 6);
-            btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(88, 27);
-            btnSettings.TabIndex = 25;
-            btnSettings.Text = "Settings";
-            btnSettings.UseVisualStyleBackColor = false;
-            btnSettings.Click += btnSettings_Click;
             // 
             // btnAbout
             // 
@@ -129,7 +119,7 @@ namespace SiliFish.UI
             btnAbout.AutoSize = true;
             btnAbout.BackColor = Color.Transparent;
             btnAbout.Image = (Image)resources.GetObject("btnAbout.Image");
-            btnAbout.Location = new Point(1294, 5);
+            btnAbout.Location = new Point(1303, 0);
             btnAbout.Name = "btnAbout";
             btnAbout.Size = new Size(33, 30);
             btnAbout.TabIndex = 24;
@@ -137,113 +127,149 @@ namespace SiliFish.UI
             btnAbout.UseVisualStyleBackColor = false;
             btnAbout.Click += btnAbout_Click;
             // 
-            // btnCellularDynamics
+            // menuStripMain
             // 
-            btnCellularDynamics.AutoSize = true;
-            btnCellularDynamics.BackColor = Color.FromArgb(96, 125, 139);
-            btnCellularDynamics.FlatAppearance.BorderColor = Color.LightGray;
-            btnCellularDynamics.FlatStyle = FlatStyle.Flat;
-            btnCellularDynamics.ForeColor = Color.White;
-            btnCellularDynamics.Location = new Point(4, 6);
-            btnCellularDynamics.Name = "btnCellularDynamics";
-            btnCellularDynamics.Size = new Size(120, 27);
-            btnCellularDynamics.TabIndex = 23;
-            btnCellularDynamics.Text = "Cellular Dynamics";
-            btnCellularDynamics.UseVisualStyleBackColor = false;
-            btnCellularDynamics.Click += btnCellularDynamics_Click;
+            menuStripMain.BackColor = Color.FromArgb(207, 216, 220);
+            menuStripMain.Items.AddRange(new ToolStripItem[] { mFile, mTools, mView });
+            menuStripMain.Location = new Point(0, 0);
+            menuStripMain.Name = "menuStripMain";
+            menuStripMain.Padding = new Padding(6, 6, 0, 6);
+            menuStripMain.Size = new Size(1338, 31);
+            menuStripMain.TabIndex = 28;
+            menuStripMain.Text = "menuStrip1";
             // 
-            // linkBrowseToTempFolder
+            // mFile
             // 
-            linkBrowseToTempFolder.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkBrowseToTempFolder.AutoSize = true;
-            linkBrowseToTempFolder.ForeColor = Color.White;
-            linkBrowseToTempFolder.LinkColor = Color.FromArgb(64, 64, 64);
-            linkBrowseToTempFolder.Location = new Point(1081, 13);
-            linkBrowseToTempFolder.Name = "linkBrowseToTempFolder";
-            linkBrowseToTempFolder.Size = new Size(104, 15);
-            linkBrowseToTempFolder.TabIndex = 7;
-            linkBrowseToTempFolder.TabStop = true;
-            linkBrowseToTempFolder.Text = "Open Temp Folder";
-            toolTip.SetToolTip(linkBrowseToTempFolder, "The contents saved to the temp folder will be cleared on exit.");
-            linkBrowseToTempFolder.LinkClicked += linkOpenTempFolder_LinkClicked;
+            mFile.DropDownItems.AddRange(new ToolStripItem[] { miFileLoad, miFileSave, miFileSep1, miFileExport, miFileImport, miFileSep2, miFileNewModel, miFileClearModel });
+            mFile.Name = "mFile";
+            mFile.Size = new Size(37, 19);
+            mFile.Text = "File";
             // 
-            // linkOpenOutputFolder
+            // miFileLoad
             // 
-            linkOpenOutputFolder.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            linkOpenOutputFolder.AutoSize = true;
-            linkOpenOutputFolder.ForeColor = Color.White;
-            linkOpenOutputFolder.LinkColor = Color.FromArgb(64, 64, 64);
-            linkOpenOutputFolder.Location = new Point(962, 13);
-            linkOpenOutputFolder.Name = "linkOpenOutputFolder";
-            linkOpenOutputFolder.Size = new Size(113, 15);
-            linkOpenOutputFolder.TabIndex = 6;
-            linkOpenOutputFolder.TabStop = true;
-            linkOpenOutputFolder.Text = "Open Output Folder";
-            toolTip.SetToolTip(linkOpenOutputFolder, "If there is a problem in creating html files, they will be saved in this folder.\r\n");
-            linkOpenOutputFolder.LinkClicked += linkOpenOutputFolder_LinkClicked;
+            miFileLoad.Name = "miFileLoad";
+            miFileLoad.Size = new Size(169, 22);
+            miFileLoad.Text = "Load";
+            miFileLoad.Click += miFileLoad_Click;
             // 
-            // btnClearModel
+            // miFileSave
             // 
-            btnClearModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnClearModel.AutoSize = true;
-            btnClearModel.BackColor = Color.FromArgb(96, 125, 139);
-            btnClearModel.FlatAppearance.BorderColor = Color.LightGray;
-            btnClearModel.FlatStyle = FlatStyle.Flat;
-            btnClearModel.ForeColor = Color.White;
-            btnClearModel.Location = new Point(457, 5);
-            btnClearModel.Name = "btnClearModel";
-            btnClearModel.Size = new Size(83, 27);
-            btnClearModel.TabIndex = 27;
-            btnClearModel.Text = "Clear Model";
-            btnClearModel.UseVisualStyleBackColor = false;
-            btnClearModel.Click += btnClearModel_Click;
+            miFileSave.Name = "miFileSave";
+            miFileSave.ShortcutKeys = Keys.Control | Keys.S;
+            miFileSave.Size = new Size(169, 22);
+            miFileSave.Text = "Save";
+            miFileSave.Click += miFileSave_Click;
             // 
-            // btnNewModel
+            // miFileSep1
             // 
-            btnNewModel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnNewModel.AutoSize = true;
-            btnNewModel.BackColor = Color.FromArgb(96, 125, 139);
-            btnNewModel.FlatAppearance.BorderColor = Color.LightGray;
-            btnNewModel.FlatStyle = FlatStyle.Flat;
-            btnNewModel.ForeColor = Color.White;
-            btnNewModel.Location = new Point(371, 5);
-            btnNewModel.Name = "btnNewModel";
-            btnNewModel.Size = new Size(82, 27);
-            btnNewModel.TabIndex = 26;
-            btnNewModel.Text = "New Model";
-            btnNewModel.UseVisualStyleBackColor = false;
-            btnNewModel.Click += btnNewModel_Click;
+            miFileSep1.Name = "miFileSep1";
+            miFileSep1.Size = new Size(166, 6);
             // 
-            // linkLoadModel
+            // miFileExport
             // 
-            linkLoadModel.AutoSize = true;
-            linkLoadModel.LinkColor = Color.FromArgb(64, 64, 64);
-            linkLoadModel.Location = new Point(11, 11);
-            linkLoadModel.Name = "linkLoadModel";
-            linkLoadModel.Size = new Size(70, 15);
-            linkLoadModel.TabIndex = 4;
-            linkLoadModel.TabStop = true;
-            linkLoadModel.Text = "Load Model";
-            linkLoadModel.LinkClicked += linkLoadModel_LinkClicked;
+            miFileExport.Name = "miFileExport";
+            miFileExport.Size = new Size(169, 22);
+            miFileExport.Text = "Export to Excel";
+            miFileExport.Click += miFileExport_Click;
             // 
-            // linkSaveModel
+            // miFileImport
             // 
-            linkSaveModel.AutoSize = true;
-            linkSaveModel.LinkColor = Color.FromArgb(64, 64, 64);
-            linkSaveModel.Location = new Point(87, 11);
-            linkSaveModel.Name = "linkSaveModel";
-            linkSaveModel.Size = new Size(68, 15);
-            linkSaveModel.TabIndex = 3;
-            linkSaveModel.TabStop = true;
-            linkSaveModel.Text = "Save Model";
-            linkSaveModel.LinkClicked += linkSaveModel_LinkClicked;
+            miFileImport.Name = "miFileImport";
+            miFileImport.Size = new Size(169, 22);
+            miFileImport.Text = "Import from Excel";
+            miFileImport.Click += miFileImport_Click;
+            // 
+            // miFileSep2
+            // 
+            miFileSep2.Name = "miFileSep2";
+            miFileSep2.Size = new Size(166, 6);
+            // 
+            // miFileNewModel
+            // 
+            miFileNewModel.Name = "miFileNewModel";
+            miFileNewModel.Size = new Size(169, 22);
+            miFileNewModel.Text = "New Model";
+            miFileNewModel.Click += miFileNewModel_Click;
+            // 
+            // miFileClearModel
+            // 
+            miFileClearModel.Name = "miFileClearModel";
+            miFileClearModel.Size = new Size(169, 22);
+            miFileClearModel.Text = "Clear Model";
+            miFileClearModel.Click += miFileClearModel_Click;
+            // 
+            // mTools
+            // 
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsSettings });
+            mTools.Name = "mTools";
+            mTools.Size = new Size(46, 19);
+            mTools.Text = "Tools";
+            // 
+            // miToolsCompareModel
+            // 
+            miToolsCompareModel.Name = "miToolsCompareModel";
+            miToolsCompareModel.Size = new Size(175, 22);
+            miToolsCompareModel.Text = "Compare To Model";
+            miToolsCompareModel.Click += miCompareModel_Click;
+            // 
+            // miToolsSep1
+            // 
+            miToolsSep1.Name = "miToolsSep1";
+            miToolsSep1.Size = new Size(172, 6);
+            // 
+            // miToolsCellularDynamics
+            // 
+            miToolsCellularDynamics.Name = "miToolsCellularDynamics";
+            miToolsCellularDynamics.Size = new Size(175, 22);
+            miToolsCellularDynamics.Text = "Cellular Dynamics";
+            miToolsCellularDynamics.Click += miToolsCellularDynamics_Click;
+            // 
+            // miToolsSep2
+            // 
+            miToolsSep2.Name = "miToolsSep2";
+            miToolsSep2.Size = new Size(172, 6);
+            // 
+            // miToolsSettings
+            // 
+            miToolsSettings.Name = "miToolsSettings";
+            miToolsSettings.Size = new Size(175, 22);
+            miToolsSettings.Text = "Settings";
+            miToolsSettings.Click += miToolsSettings_Click;
+            // 
+            // mView
+            // 
+            mView.DropDownItems.AddRange(new ToolStripItem[] { miViewOutputFolder, miViewTempFolder, miViewAbout });
+            mView.Name = "mView";
+            mView.Size = new Size(44, 19);
+            mView.Text = "View";
+            // 
+            // miViewOutputFolder
+            // 
+            miViewOutputFolder.Name = "miViewOutputFolder";
+            miViewOutputFolder.Size = new Size(148, 22);
+            miViewOutputFolder.Text = "Output Folder";
+            miViewOutputFolder.Click += miViewOutputFolder_Click;
+            // 
+            // miViewTempFolder
+            // 
+            miViewTempFolder.Name = "miViewTempFolder";
+            miViewTempFolder.Size = new Size(148, 22);
+            miViewTempFolder.Text = "Temp Folder";
+            miViewTempFolder.Click += miViewTempFolder_Click;
+            // 
+            // miViewAbout
+            // 
+            miViewAbout.Name = "miViewAbout";
+            miViewAbout.Size = new Size(148, 22);
+            miViewAbout.Text = "About";
+            miViewAbout.Click += miViewAbout_Click;
             // 
             // splitMain
             // 
             splitMain.BackColor = Color.Gray;
             splitMain.BorderStyle = BorderStyle.FixedSingle;
             splitMain.Dock = DockStyle.Fill;
-            splitMain.Location = new Point(4, 44);
+            splitMain.Location = new Point(4, 36);
             splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
@@ -251,14 +277,13 @@ namespace SiliFish.UI
             splitMain.Panel1.BackColor = Color.White;
             splitMain.Panel1.Controls.Add(modelControl);
             splitMain.Panel1.Controls.Add(pGenerateModel);
-            splitMain.Panel1.Controls.Add(pModelControlTop);
             splitMain.Panel1.Controls.Add(pSimulation);
             // 
             // splitMain.Panel2
             // 
             splitMain.Panel2.BackColor = Color.White;
             splitMain.Panel2.Controls.Add(modelOutputControl);
-            splitMain.Size = new Size(1340, 663);
+            splitMain.Size = new Size(1340, 671);
             splitMain.SplitterDistance = 545;
             splitMain.SplitterWidth = 2;
             splitMain.TabIndex = 5;
@@ -266,10 +291,10 @@ namespace SiliFish.UI
             // modelControl
             // 
             modelControl.Dock = DockStyle.Fill;
-            modelControl.Location = new Point(0, 40);
+            modelControl.Location = new Point(0, 0);
             modelControl.ModelUpdated = true;
             modelControl.Name = "modelControl";
-            modelControl.Size = new Size(543, 405);
+            modelControl.Size = new Size(543, 453);
             modelControl.TabIndex = 2;
             modelControl.ModelChanged += modelControl_ModelChanged;
             modelControl.PlotRequested += modelControl_PlotRequested;
@@ -280,7 +305,7 @@ namespace SiliFish.UI
             pGenerateModel.Controls.Add(btnGenerateModel);
             pGenerateModel.Controls.Add(linkLabel4);
             pGenerateModel.Dock = DockStyle.Bottom;
-            pGenerateModel.Location = new Point(0, 445);
+            pGenerateModel.Location = new Point(0, 453);
             pGenerateModel.Name = "pGenerateModel";
             pGenerateModel.Size = new Size(543, 51);
             pGenerateModel.TabIndex = 4;
@@ -313,45 +338,6 @@ namespace SiliFish.UI
             linkLabel4.TabStop = true;
             linkLabel4.Text = "Clear Model";
             // 
-            // pModelControlTop
-            // 
-            pModelControlTop.BackColor = Color.FromArgb(236, 239, 241);
-            pModelControlTop.Controls.Add(btnClearModel);
-            pModelControlTop.Controls.Add(btnNewModel);
-            pModelControlTop.Controls.Add(linkImportModel);
-            pModelControlTop.Controls.Add(linkExportModel);
-            pModelControlTop.Controls.Add(linkLoadModel);
-            pModelControlTop.Controls.Add(linkSaveModel);
-            pModelControlTop.Dock = DockStyle.Top;
-            pModelControlTop.Location = new Point(0, 0);
-            pModelControlTop.Name = "pModelControlTop";
-            pModelControlTop.Size = new Size(543, 40);
-            pModelControlTop.TabIndex = 3;
-            // 
-            // linkImportModel
-            // 
-            linkImportModel.AutoSize = true;
-            linkImportModel.LinkColor = Color.FromArgb(64, 64, 64);
-            linkImportModel.Location = new Point(245, 11);
-            linkImportModel.Name = "linkImportModel";
-            linkImportModel.Size = new Size(80, 15);
-            linkImportModel.TabIndex = 8;
-            linkImportModel.TabStop = true;
-            linkImportModel.Text = "Import Model";
-            linkImportModel.LinkClicked += linkImportModel_LinkClicked;
-            // 
-            // linkExportModel
-            // 
-            linkExportModel.AutoSize = true;
-            linkExportModel.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportModel.Location = new Point(161, 11);
-            linkExportModel.Name = "linkExportModel";
-            linkExportModel.Size = new Size(78, 15);
-            linkExportModel.TabIndex = 7;
-            linkExportModel.TabStop = true;
-            linkExportModel.Text = "Export Model";
-            linkExportModel.LinkClicked += linkExportModel_LinkClicked;
-            // 
             // pSimulation
             // 
             pSimulation.BackColor = Color.FromArgb(236, 239, 241);
@@ -369,7 +355,7 @@ namespace SiliFish.UI
             pSimulation.Controls.Add(lTimeEnd);
             pSimulation.Controls.Add(lRunParameters);
             pSimulation.Dock = DockStyle.Bottom;
-            pSimulation.Location = new Point(0, 496);
+            pSimulation.Location = new Point(0, 504);
             pSimulation.Name = "pSimulation";
             pSimulation.Size = new Size(543, 165);
             pSimulation.TabIndex = 1;
@@ -514,7 +500,7 @@ namespace SiliFish.UI
             modelOutputControl.Dock = DockStyle.Fill;
             modelOutputControl.Location = new Point(0, 0);
             modelOutputControl.Name = "modelOutputControl";
-            modelOutputControl.Size = new Size(791, 661);
+            modelOutputControl.Size = new Size(791, 669);
             modelOutputControl.TabIndex = 0;
             // 
             // timerRun
@@ -603,20 +589,21 @@ namespace SiliFish.UI
             Controls.Add(pDistinguisherTop);
             Controls.Add(pDistinguisher);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStripMain;
             Name = "MainForm";
             Text = "SiliFish";
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             pTop.ResumeLayout(false);
             pTop.PerformLayout();
+            menuStripMain.ResumeLayout(false);
+            menuStripMain.PerformLayout();
             splitMain.Panel1.ResumeLayout(false);
             splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
             splitMain.ResumeLayout(false);
             pGenerateModel.ResumeLayout(false);
             pGenerateModel.PerformLayout();
-            pModelControlTop.ResumeLayout(false);
-            pModelControlTop.PerformLayout();
             pSimulation.ResumeLayout(false);
             pSimulation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)edtEuler).EndInit();
@@ -648,18 +635,13 @@ namespace SiliFish.UI
         private Label ldt;
         private NumericUpDown eSkip;
         private Label lSkip;
-        private LinkLabel linkOpenOutputFolder;
-        private LinkLabel linkBrowseToTempFolder;
         private SaveFileDialog saveFileImage;
         private Button btnCellularDynamics;
         private Label ldtEuler;
         private NumericUpDown edtEuler;
         private Button btnAbout;
-        private LinkLabel linkLoadModel;
-        private LinkLabel linkSaveModel;
         private ModelOutputControl modelOutputControl;
         private ModelControl modelControl;
-        private Panel pModelControlTop;
         private Panel pGenerateModel;
         private LinkLabel linkLabel4;
         private Button btnGenerateModel;
@@ -667,12 +649,27 @@ namespace SiliFish.UI
         private Panel pDistinguisherTop;
         private Panel pDistinguisherRight;
         private Panel pDistinguisherBottom;
-        private Button btnSettings;
         private SaveFileDialog saveFileExcel;
-        private LinkLabel linkExportModel;
-        private LinkLabel linkImportModel;
         private OpenFileDialog openFileExcel;
-        private Button btnNewModel;
-        private Button btnClearModel;
+        private MenuStrip menuStripMain;
+        private ToolStripMenuItem mFile;
+        private ToolStripMenuItem miFileLoad;
+        private ToolStripMenuItem miFileSave;
+        private ToolStripMenuItem miFileNewModel;
+        private ToolStripMenuItem miFileClearModel;
+        private ToolStripMenuItem mTools;
+        private ToolStripMenuItem miToolsCompareModel;
+        private ToolStripSeparator miFileSep1;
+        private ToolStripMenuItem miFileExport;
+        private ToolStripMenuItem miFileImport;
+        private ToolStripSeparator miToolsSep1;
+        private ToolStripMenuItem miToolsCellularDynamics;
+        private ToolStripSeparator miFileSep2;
+        private ToolStripMenuItem mView;
+        private ToolStripMenuItem miViewOutputFolder;
+        private ToolStripMenuItem miViewTempFolder;
+        private ToolStripMenuItem miViewAbout;
+        private ToolStripMenuItem miToolsSettings;
+        private ToolStripSeparator miToolsSep2;
     }
 }

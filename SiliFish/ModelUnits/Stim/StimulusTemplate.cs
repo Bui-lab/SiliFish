@@ -33,7 +33,7 @@ namespace SiliFish.ModelUnits.Stim
             };
             return stim;
         }
-
+        //TODO DiffersFrom is not implemented
         public override int CompareTo(ModelUnitBase otherbase)
         {
             StimulusTemplate other = otherbase as StimulusTemplate;

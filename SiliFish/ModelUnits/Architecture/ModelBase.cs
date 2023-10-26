@@ -46,6 +46,10 @@ namespace SiliFish.ModelUnits.Architecture
         {
         }
 
+        public virtual List<string> DiffersFrom(ModelBase other)
+        {
+            throw new NotImplementedException();
+        }
         public virtual bool CheckValues(ref List<string> errors) 
         {
             errors ??= new();

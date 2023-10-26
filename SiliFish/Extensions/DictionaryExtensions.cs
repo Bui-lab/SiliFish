@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,6 +149,31 @@ namespace SiliFish.Extensions
             return true;
         }
 
+        public static bool SameAs(this Dictionary<string, Distribution> dictionary, Dictionary<string, Distribution> dic2, out string diff)
+        {
+            diff = null;
+            if (dictionary?.Count != dic2?.Count)
+            {
+                diff = "Different lengths";
+                return false;
+            }
+            foreach (var key in dictionary.Keys)
+            {
+                if (!dic2.ContainsKey(key))
+                {
+                    diff = $"Missing value: {key}";
+                    return false;
+                }
+                string s1 = dictionary[key]?.ToString() ?? "";
+                string s2 = dic2[key]?.ToString() ?? "";
+                if (s1 != s2)
+                {
+                    diff = $"{key}: {s1} vs {s2}";
+                    return false;
+                }
+            }
+            return true;
+        }
         public static Dictionary<string, double> GenerateSingleInstanceValues(this Dictionary<string, Distribution> dictionary)
         {
             Dictionary<string, double> valuesArray = new();

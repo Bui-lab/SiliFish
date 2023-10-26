@@ -161,20 +161,12 @@ namespace SiliFish.UI
         #region Settings
         private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", GlobalSettings.OutputFolder);
-            }
-            catch { }
+
         }
 
         private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", GlobalSettings.TempFolder);
-            }
-            catch { }
+
         }
 
         #endregion
@@ -188,16 +180,7 @@ namespace SiliFish.UI
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            ControlContainer controlContainer = new()
-            {
-                Text = "Settings"
-            };
-            GlobalSettingsControl gsc = new(new GlobalSettingsProperties());
-            controlContainer.AddControl(gsc, null);
-            if (controlContainer.ShowDialog() == DialogResult.OK)
-                gsc.GSProperties.Save();//save to global.settings 
-            else
-                _ = GlobalSettingsProperties.Load();//reload from global.settings
+
         }
 
         #endregion
@@ -344,13 +327,7 @@ namespace SiliFish.UI
         ControlContainer frmDynamics;
         private void btnCellularDynamics_Click(object sender, EventArgs e)
         {
-            DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
-            frmDynamics = new();
-            frmDynamics.AddControl(dynControl, null);
-            dynControl.ContentChanged += frmDynamics.ChangeCaption;
-            frmDynamics.Text = "Cellular Dynamics Test";
-            frmDynamics.SaveVisible = false;
-            frmDynamics.Show();
+
         }
 
 
@@ -368,33 +345,7 @@ namespace SiliFish.UI
                  Color.Blue;
             Text = $"SiliFish [{mode} mode] - {name ?? Model.ModelName}";
         }
-        private void linkLoadModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                openFileJson.InitialDirectory = modelFileDefaultFolder;
-                if (openFileJson.ShowDialog() == DialogResult.OK)
-                {
-                    ModelBase mb;
-                    try
-                    {
-                        mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
-                        lastFileName = openFileJson.FileName;
-                        SetModel(mb, Path.GetFileNameWithoutExtension(openFileJson.FileName));
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
-                        return;
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
-            }
-        }
+
 
         private void SetModel(ModelBase mb, string name, bool readFromControl = false)
         {
@@ -491,41 +442,17 @@ namespace SiliFish.UI
         }
         private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SaveModelAsJSON();
+
         }
 
         private void linkExportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SaveModelAsExcel();
         }
 
 
         private void linkImportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                openFileExcel.InitialDirectory = modelFileDefaultFolder;
-                if (openFileExcel.ShowDialog() == DialogResult.OK)
-                {
-                    ModelBase mb;
-                    try
-                    {
-                        mb = ModelFile.ReadFromExcel(openFileExcel.FileName);
-                        lastFileName = openFileExcel.FileName;
-                        SetModel(mb, Path.GetFileNameWithoutExtension(openFileExcel.FileName));
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
-                        return;
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
-            }
+
         }
 
         private void btnGenerateModel_Click(object sender, EventArgs e)
@@ -566,13 +493,120 @@ namespace SiliFish.UI
                 modelOutputControl.Highlight(selectedUnitArgs.unitsSelected.First(), selectedUnitArgs.enforce);
         }
 
-        private void btnNewModel_Click(object sender, EventArgs e)
+
+
+        private void miFileLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                openFileJson.InitialDirectory = modelFileDefaultFolder;
+                if (openFileJson.ShowDialog() == DialogResult.OK)
+                {
+                    ModelBase mb;
+                    try
+                    {
+                        mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
+                        lastFileName = openFileJson.FileName;
+                        SetModel(mb, Path.GetFileNameWithoutExtension(openFileJson.FileName));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
+                        return;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+        }
+
+        private void miFileSave_Click(object sender, EventArgs e)
+        {
+            SaveModelAsJSON();
+        }
+
+        private void miFileExport_Click(object sender, EventArgs e)
+        {
+            SaveModelAsExcel();
+        }
+
+        private void miFileImport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                openFileExcel.InitialDirectory = modelFileDefaultFolder;
+                if (openFileExcel.ShowDialog() == DialogResult.OK)
+                {
+                    ModelBase mb;
+                    try
+                    {
+                        mb = ModelFile.ReadFromExcel(openFileExcel.FileName);
+                        lastFileName = openFileExcel.FileName;
+                        SetModel(mb, Path.GetFileNameWithoutExtension(openFileExcel.FileName));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
+                        return;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+        }
+
+        private void miCompareModel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ModelTemplate == null) //TODO RunningModel comparison is not yet implemented
+                    return;
+                openFileJson.InitialDirectory = modelFileDefaultFolder;
+                if (openFileJson.ShowDialog() == DialogResult.OK)
+                {
+                    ModelBase mb;
+                    try
+                    {
+                        mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
+                        List<string> diffs = ModelTemplate.DiffersFrom(mb);
+                        if (diffs == null || diffs.Count == 0)
+                            MessageBox.Show("Models are identical", "");
+                        else
+                        {
+                            ControlContainer controlContainer = new ControlContainer();
+                            RichTextBox richTextBox = new RichTextBox();
+                            richTextBox.Text = string.Join("\r\n", diffs);
+                            controlContainer.AddControl(richTextBox, null);
+                            controlContainer.ShowDialog();
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
+                        return;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"There is a problem in generating the model template from the JSON file.\r\n{exc.Message}", "Error");
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+        }
+
+        private void miFileNewModel_Click(object sender, EventArgs e)
         {
             MainForm mf = new();
             mf.Show();
         }
 
-        private void btnClearModel_Click(object sender, EventArgs e)
+        private void miFileClearModel_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Do you want to start from a brand new template? All changes you have made will be cleared.", "Warning",
                 MessageBoxButtons.OKCancel) != DialogResult.OK)
@@ -582,6 +616,55 @@ namespace SiliFish.UI
             else
                 RunningModel = new();
             modelControl.SetModel(ModelTemplate);
+        }
+
+        private void miToolsCellularDynamics_Click(object sender, EventArgs e)
+        {
+            DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
+            frmDynamics = new();
+            frmDynamics.AddControl(dynControl, null);
+            dynControl.ContentChanged += frmDynamics.ChangeCaption;
+            frmDynamics.Text = "Cellular Dynamics Test";
+            frmDynamics.SaveVisible = false;
+            frmDynamics.Show();
+        }
+
+        private void miToolsSettings_Click(object sender, EventArgs e)
+        {
+            ControlContainer controlContainer = new()
+            {
+                Text = "Settings"
+            };
+            GlobalSettingsControl gsc = new(new GlobalSettingsProperties());
+            controlContainer.AddControl(gsc, null);
+            if (controlContainer.ShowDialog() == DialogResult.OK)
+                gsc.GSProperties.Save();//save to global.settings 
+            else
+                _ = GlobalSettingsProperties.Load();//reload from global.settings
+        }
+
+        private void miViewOutputFolder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", GlobalSettings.OutputFolder);
+            }
+            catch { }
+        }
+
+        private void miViewTempFolder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", GlobalSettings.TempFolder);
+            }
+            catch { }
+        }
+
+        private void miViewAbout_Click(object sender, EventArgs e)
+        {
+            About about = new();
+            about.ShowDialog();
         }
     }
 }

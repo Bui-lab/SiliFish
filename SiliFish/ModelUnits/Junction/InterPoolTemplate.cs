@@ -268,6 +268,39 @@ namespace SiliFish.ModelUnits.Junction
             }
             return $"{Name}{activeStatus}{arrows}";
         }
+
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            List<string> diffs = new();
+            InterPoolTemplate ipt = other as InterPoolTemplate;
+            if (Name != ipt.Name)
+                diffs.Add($"{ID} Name: {Name} vs {ipt.Name}");
+            if (Description != ipt.Description)
+                diffs.Add($"{ID} Description: {Description} vs {ipt.Description}");
+            if (SourcePool != ipt.SourcePool)
+                diffs.Add($"{ID} SourcePool: {SourcePool} vs {ipt.SourcePool}");
+            if (TargetPool != ipt.TargetPool)
+                diffs.Add($"{ID} TargetPool: {TargetPool} vs {ipt.TargetPool}");
+            if (CellReach.ToString() != ipt.CellReach.ToString())
+                diffs.Add($"{ID} Cell reach: {CellReach} vs {ipt.CellReach}");
+            if (Probability != ipt.Probability)
+                diffs.Add($"{ID} Probability: {Probability} vs {ipt.Probability}");
+            if (AxonReachMode != ipt.AxonReachMode)
+                diffs.Add($"{ID} AxonReachMode: {AxonReachMode} vs {ipt.AxonReachMode}");
+            if (ConnectionType != ipt.ConnectionType)
+                diffs.Add($"{ID} ConnectionType: {ConnectionType} vs {ipt.ConnectionType}");
+            if (CoreType != ipt.CoreType)
+                diffs.Add($"{ID} CoreType: {CoreType} vs {ipt.CoreType}");
+            if (!Parameters.SameAs(ipt.Parameters, out string diff))
+                diffs.Add($"{ID} Parameters: {diff}");
+            if (Active != ipt.Active)
+                diffs.Add($"{ID} Active: {Active} vs {ipt.Active}");
+            if (TimeLine_ms.ToString() !=  ipt.TimeLine_ms.ToString())
+                diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
+            if (diffs.Any())
+                return diffs;
+            return null;
+        }
         public override int CompareTo(ModelUnitBase otherbase)
         {
             InterPoolTemplate other = otherbase as InterPoolTemplate;
