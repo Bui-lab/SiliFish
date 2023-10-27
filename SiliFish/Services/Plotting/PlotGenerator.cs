@@ -14,6 +14,7 @@ using SiliFish.ModelUnits.Stim;
 using System.Reflection;
 using SiliFish.Services.Plotting.PlotGenerators;
 using SiliFish.Services.Plotting.PlotSelection;
+using SiliFish.Services.Kinematics;
 
 namespace SiliFish.Services.Plotting
 {
@@ -96,11 +97,9 @@ namespace SiliFish.Services.Plotting
         {
             errorMessage = string.Empty;
             List<Chart> charts = new();
-            double dt = model.RunParam.DeltaT;
-            int tSkip = model.RunParam.SkipDuration;
-            int iStart = (int)((tStart + tSkip) / dt);
             if (tEnd < 0) tEnd = model.RunParam.MaxTime;
-            int iEnd = (int)((tEnd + tSkip) / dt);
+            int iStart = model.RunParam.iIndex(tStart);
+            int iEnd = model.RunParam.iIndex(tEnd);
             if (iEnd < iStart || iEnd >= model.TimeArray.Length)
                 iEnd = model.TimeArray.Length - 1;
             if (iStart >= iEnd) return ("Invalid time range", null);
@@ -146,8 +145,10 @@ namespace SiliFish.Services.Plotting
             switch (Plot.PlotType)
             {
                 case PlotType.MembPotential:
+                case PlotType.MembPotentialWithSpikeFreq:
                     Title = "Membrane Potentials";
-                    PlotGeneratorMembranePotentials pg0 = new(this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd);
+                    PlotGeneratorMembranePotentials pg0 = new(this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd,
+                        Plot.PlotType == PlotType.MembPotentialWithSpikeFreq);
                     pg0.CreateCharts(charts);
                     break;
                 case PlotType.Current:

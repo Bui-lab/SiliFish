@@ -151,7 +151,7 @@ namespace SiliFish.Extensions
 
         public static bool SameAs(this Dictionary<string, Distribution> dictionary, Dictionary<string, Distribution> dic2, out string diff)
         {
-            diff = null;
+            diff = "";
             if (dictionary?.Count != dic2?.Count)
             {
                 diff = "Different lengths";
@@ -161,18 +161,17 @@ namespace SiliFish.Extensions
             {
                 if (!dic2.ContainsKey(key))
                 {
-                    diff = $"Missing value: {key}";
+                    diff += $"Missing value: {key}; ";
                     return false;
                 }
                 string s1 = dictionary[key]?.ToString() ?? "";
                 string s2 = dic2[key]?.ToString() ?? "";
                 if (s1 != s2)
                 {
-                    diff = $"{key}: {s1} vs {s2}";
-                    return false;
+                    diff += $"{key}: {s1} vs {s2}; ";
                 }
             }
-            return true;
+            return string.IsNullOrEmpty(diff);
         }
         public static Dictionary<string, double> GenerateSingleInstanceValues(this Dictionary<string, Distribution> dictionary)
         {

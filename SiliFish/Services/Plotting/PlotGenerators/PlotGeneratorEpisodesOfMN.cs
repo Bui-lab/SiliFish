@@ -85,7 +85,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yMax = yValues.Max() + 1
                     };
                     if (!AddChart(chart)) return;
-                }                //Episode Duration
+                }                
+                //Episode Duration
                 if (plotType == PlotType.EpisodesMN || plotType == PlotType.EpisodeDuration)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeDuration);

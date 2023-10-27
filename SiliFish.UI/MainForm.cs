@@ -579,9 +579,14 @@ namespace SiliFish.UI
                             MessageBox.Show("Models are identical", "");
                         else
                         {
-                            ControlContainer controlContainer = new ControlContainer();
-                            RichTextBox richTextBox = new RichTextBox();
-                            richTextBox.Text = string.Join("\r\n", diffs);
+                            ControlContainer controlContainer = new()//TODO hide save button
+                            { 
+                                Text = $"Comparing {ModelTemplate.ModelName} to {mb.ModelName}" 
+                            };
+                            RichTextBox richTextBox = new()
+                            {
+                                Text = string.Join("\r\n", diffs)
+                            };
                             controlContainer.AddControl(richTextBox, null);
                             controlContainer.ShowDialog();
                         }

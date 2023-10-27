@@ -21,6 +21,7 @@ using SiliFish.UI.Services;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Swimming;
 using System.Windows.Forms;
+using SiliFish.Services.Kinematics;
 
 namespace SiliFish.UI.Controls
 {
@@ -757,7 +758,11 @@ namespace SiliFish.UI.Controls
             string plotsubset = cellSelectionPlot.Visible ? cellSelectionPlot.PoolSubset : "";
             if (plotSelection is PlotSelectionMultiCells || plotSelection is PlotSelectionUnits)
             {
-                (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection);
+                int tSkip = RunningModel.RunParam.SkipDuration;
+                double dt = RunningModel.RunParam.DeltaT;
+                int iStart = (int)((tPlotStart+ tSkip) / dt);
+                int iEnd = (int)((tPlotEnd + tSkip) / dt);
+                (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection, iStart, iEnd);
             }
             
             if (lastPlot != null &&
@@ -937,8 +942,11 @@ namespace SiliFish.UI.Controls
 
                 if (plotSelection is not PlotSelectionMultiCells)
                     return;
-
-                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, (PlotSelectionMultiCells)plotSelection);
+                int tSkip = RunningModel.RunParam.SkipDuration;
+                double dt = RunningModel.RunParam.DeltaT;
+                int iStart = (int)((tPlotStart + tSkip) / dt);
+                int iEnd = (int)((tPlotEnd + tSkip) / dt);
+                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, (PlotSelectionMultiCells)plotSelection, iStart, iEnd);
 
                 (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotSelection,
                     tPlotStart, tPlotEnd);
@@ -1077,14 +1085,14 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null || !RunningModel.ModelRun) return;
             UseWaitCursor = true;
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
+            int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
+            int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
+            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection(), iSpikeStart, iSpikeEnd);
             Cells ??= new();
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
             Dictionary<Cell, List<int>> cellSpikes = new();
-            int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
-            int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
             Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices(iSpikeStart, iSpikeEnd)));
             int spikeCount = cellSpikes.Values.Sum(l => l.Count);
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
@@ -1161,7 +1169,7 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SwimmingKinematics.GenerateColumnsOfBursts(pooledCells, iSpikeStart, iSpikeEnd, episodeBreak);
+                List<TrainOfBursts> burstTrains = SpikeKinematics.GenerateColumnsOfBursts(pooledCells, iSpikeStart, iSpikeEnd, episodeBreak);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
                     foreach (var singleBurst in burstTrain.BurstList)

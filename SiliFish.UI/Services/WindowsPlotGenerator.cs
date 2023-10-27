@@ -5,12 +5,12 @@ using SiliFish.Helpers;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
-using SiliFish.Services;
 using SiliFish.UI;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using static OfficeOpenXml.ExcelErrorValue;
+using SiliFish.Services.Kinematics;
 
 namespace Services
 {
@@ -47,7 +47,7 @@ namespace Services
                 double yMax = cellPools.Max(cp => cp.GetCells().Max(c => c.MaxPotentialValue(iStart, iEnd)));
                 foreach (CellPool pool in cellPools)
                 {
-                    List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
+                    List<Cell> poolcells = pool.GetCells(cellSelection, iStart, iEnd).ToList();
                     double[,] voltageArray = new double[poolcells.Count, timeArray.Length];
                     if (!GlobalSettings.SameYAxis)
                     {
@@ -138,7 +138,7 @@ namespace Services
                 double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxCurrentValue(gap, chemin, chemout, iStart, iEnd)));
                 foreach (CellPool pool in pools)
                 {
-                    IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection);
+                    IEnumerable<Cell> sampleCells = pool.GetCells(cellSelection, iStart, iEnd);
                     foreach (Cell c in sampleCells)
                     {
                         if (!GlobalSettings.SameYAxis)
@@ -188,7 +188,7 @@ namespace Services
                 double yMax = pools.Max(cp => cp.GetCells().Max(c => c.MaxStimulusValue()));
                 foreach (CellPool pool in pools)
                 {
-                    List<Cell> poolcells = pool.GetCells(cellSelection).ToList();
+                    List<Cell> poolcells = pool.GetCells(cellSelection, iStart, iEnd).ToList();
                     if (!GlobalSettings.SameYAxis)
                     {
                         yMin = poolcells.Min(c => c.MinStimulusValue());
@@ -317,12 +317,9 @@ namespace Services
                 (Pools == null || !Pools.Any()))
                 return (null, null);
             UnitOfMeasure uom = model.Settings.UoM;
-            double dt = model.RunParam.DeltaT;
-            int tSkip = model.RunParam.SkipDuration;
-            int iStart = (int)((tStart + tSkip) / dt);
-            if (tEnd < 0)
-                tEnd = (int)model.TimeArray.Last();
-            int iEnd = (int)((tEnd + tSkip) / dt);
+            int iStart = model.RunParam.iIndex(tStart);
+            int iEnd = model.RunParam.iIndex(tEnd);
+
             double[] TimeArray = model.TimeArray;
             if (iEnd < iStart || iEnd >= TimeArray.Length)
                 iEnd = TimeArray.Length - 1;

@@ -8,7 +8,7 @@ using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.DataTypes
 {
-    public enum EpisodeStats { EpisodeDuration, BeatsPerEpisode, BeatFreq, InstantFreq, InlierInstantFreq}
+    public enum EpisodeStats { EpisodeDuration, BeatsPerEpisode, BeatFreq, InstantFreq, InlierInstantFreq }
     public class SwimmingEpisodes
     {
         private List<SwimmingEpisode> episodes = new();
@@ -16,7 +16,7 @@ namespace SiliFish.DataTypes
         public bool HasEpisodes => episodes.Any();
 
         public List<SwimmingEpisode> Episodes { get => episodes; }
-        
+
         public SwimmingEpisode this[int index]
         {
             get
@@ -66,7 +66,7 @@ namespace SiliFish.DataTypes
                 case EpisodeStats.InlierInstantFreq:
                     double[] xValuesFull = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
                     double[] yValuesFull = episodes.SelectMany(e => e.InstantFequency).ToArray();
-                    double median = episodes.SelectMany(e => e.InstantFequency).Order().ToArray()[yValuesFull.Count()/2];
+                    double median = episodes.SelectMany(e => e.InstantFequency).Order().ToArray()[yValuesFull.Count() / 2];
                     double avgDuration = yValuesFull.Average();
                     double stdDev = yValuesFull.StandardDeviation();
                     double stdError = stdDev / Math.Sqrt(yValuesFull.Length);

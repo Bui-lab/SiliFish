@@ -701,7 +701,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
 
 
-        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionInterface cellSelection)
+        public (List<Cell> Cells, List<CellPool> Pools) GetSubsetCellsAndPools(string poolIdentifier, PlotSelectionInterface cellSelection, int iStart = 0, int iEnd = -1)
         {
             List<CellPool> pools = null;
 
@@ -761,7 +761,7 @@ namespace SiliFish.ModelUnits.Architecture
                         pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
                                         && p.OnSide(mcs.SagittalPlane)).ToList();
                 }
-                List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs)).ToList();
+                List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs, iStart, iEnd)).ToList();
                 if (cells.Any())
                     return (cells, null);
                 return (null, pools);

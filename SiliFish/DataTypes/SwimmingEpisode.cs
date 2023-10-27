@@ -102,10 +102,22 @@ namespace SiliFish.DataTypes
             episodeEnded = true;
         }
 
-        public int NumOfBeats { get { return beats?.Count ?? 0; } }
+        public int NumOfBeats
+        {
+            get
+            {
+                if (beats != null)
+                {
+                    int leftBeats = beats.Count(b => b.Direction == SagittalPlane.Left);
+                    int rightBeats = beats.Count(b => b.Direction == SagittalPlane.Right);
+                    return Math.Max(leftBeats, rightBeats);
+                }
+                return 0;
+            }
+        }
 
-        public double[] InlierInstantFequency { get { return InlierBeats?.Select(b =>b.BeatEnd > b.BeatStart? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
-        public double[] InstantFequency { get { return beats?.Select(b => b.BeatEnd > b.BeatStart? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
+        public double[] InlierInstantFequency { get { return InlierBeats?.Select(b => b.BeatEnd > b.BeatStart ? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
+        public double[] InstantFequency { get { return beats?.Select(b => b.BeatEnd > b.BeatStart ? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
         public double BeatFrequency { get { return EpisodeDuration > 0 ? 1000 * NumOfBeats / EpisodeDuration : 0; } }
         public double EpisodeDuration { get { return episodeEnd - episodeStart; } }
 
@@ -130,9 +142,9 @@ namespace SiliFish.DataTypes
                     BeatStart = beats[i].BeatStart,
                     BeatEnd = midPoint
                 };
-                beats[i+1] = new Beat()
+                beats[i + 1] = new Beat()
                 {
-                    Direction = beats[i+1].Direction,
+                    Direction = beats[i + 1].Direction,
                     BeatStart = midPoint,
                     BeatEnd = beats[i + 1].BeatEnd
                 };
@@ -211,7 +223,7 @@ namespace SiliFish.DataTypes
                     episode.StartBeat(t, direction);
                     episode.EndBeat(beat_end);
                     episodes.AddEpisode(episode);
-                    
+
                 }
                 else if (last_t > 0)
                 {
@@ -237,7 +249,7 @@ namespace SiliFish.DataTypes
         }
 
 
-        
+
         public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, List<int> spikeIndices, double episodeBreak)
         {
             SwimmingEpisodes episodes = new();
@@ -290,6 +302,4 @@ namespace SiliFish.DataTypes
             return episodes;
         }
     }
-
-
 }

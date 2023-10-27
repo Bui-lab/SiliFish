@@ -113,7 +113,7 @@ namespace SiliFish.ModelUnits.Junction
                     $"{Description}\r\n" +
                     $"From {SourcePool} to {TargetPool}\r\n" +
                     $"Core:{CoreType}\r\n" +
-                    $"\t{string.Join(',', Parameters.Select((k, v) => k + ": " + v))}\r\n" +
+                    $"\t{string.Join(',', Parameters.Select((k, v) => k.Key + ": " + k.Value))}\r\n" +
                     $"Reach: {CellReach?.GetTooltip()}\r\n" +
                     $"Fixed Duration:{FixedDuration_ms: 0.###}\r\n" +
                     $"Delay:{Delay_ms: 0.###}\r\n" +
@@ -274,29 +274,29 @@ namespace SiliFish.ModelUnits.Junction
             List<string> diffs = new();
             InterPoolTemplate ipt = other as InterPoolTemplate;
             if (Name != ipt.Name)
-                diffs.Add($"{ID} Name: {Name} vs {ipt.Name}");
-            if (Description != ipt.Description)
-                diffs.Add($"{ID} Description: {Description} vs {ipt.Description}");
+                diffs.Add($"{Name} Name: {Name} vs {ipt.Name}");
+            if ((Description ?? "") != (ipt.Description ?? ""))
+                diffs.Add($"{Name} Description: {Description} vs {ipt.Description}");
             if (SourcePool != ipt.SourcePool)
-                diffs.Add($"{ID} SourcePool: {SourcePool} vs {ipt.SourcePool}");
+                diffs.Add($"{Name} SourcePool: {SourcePool} vs {ipt.SourcePool}");
             if (TargetPool != ipt.TargetPool)
-                diffs.Add($"{ID} TargetPool: {TargetPool} vs {ipt.TargetPool}");
+                diffs.Add($"{Name} TargetPool: {TargetPool} vs {ipt.TargetPool}");
             if (CellReach.ToString() != ipt.CellReach.ToString())
-                diffs.Add($"{ID} Cell reach: {CellReach} vs {ipt.CellReach}");
+                diffs.Add($"{Name} Cell reach: {CellReach} vs {ipt.CellReach}");
             if (Probability != ipt.Probability)
-                diffs.Add($"{ID} Probability: {Probability} vs {ipt.Probability}");
+                diffs.Add($"{Name} Probability: {Probability} vs {ipt.Probability}");
             if (AxonReachMode != ipt.AxonReachMode)
-                diffs.Add($"{ID} AxonReachMode: {AxonReachMode} vs {ipt.AxonReachMode}");
+                diffs.Add($"{Name} AxonReachMode: {AxonReachMode} vs {ipt.AxonReachMode}");
             if (ConnectionType != ipt.ConnectionType)
-                diffs.Add($"{ID} ConnectionType: {ConnectionType} vs {ipt.ConnectionType}");
+                diffs.Add($"{Name} ConnectionType: {ConnectionType} vs {ipt.ConnectionType}");
             if (CoreType != ipt.CoreType)
-                diffs.Add($"{ID} CoreType: {CoreType} vs {ipt.CoreType}");
+                diffs.Add($"{Name} CoreType: {CoreType} vs {ipt.CoreType}");
             if (!Parameters.SameAs(ipt.Parameters, out string diff))
-                diffs.Add($"{ID} Parameters: {diff}");
+                diffs.Add($"{Name} Parameters: {diff}");
             if (Active != ipt.Active)
-                diffs.Add($"{ID} Active: {Active} vs {ipt.Active}");
+                diffs.Add($"{Name} Active: {Active} vs {ipt.Active}");
             if (TimeLine_ms.ToString() !=  ipt.TimeLine_ms.ToString())
-                diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
+                diffs.Add($"{Name} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
             if (diffs.Any())
                 return diffs;
             return null;

@@ -84,7 +84,7 @@ namespace SiliFish.DynamicUnits.Firing
             }
         }
 
-        public Dictionary<double, double> FiringFrequency
+        public Dictionary<double, double> FiringFrequency //TODO this doesn;t look right - fix it
         {
             get
             {
@@ -175,6 +175,27 @@ namespace SiliFish.DynamicUnits.Firing
             TauRise = new();
             SpikeList = new();
             spikeDelay = double.NaN;
+            analyzed = false;
+        }
+
+        public DynamicsStats(ModelSettings settings, double[] V, double dt, double Vthreshold)
+        {
+            modelSettings = settings ?? new ModelSettings();//use default values
+            chatteringIrregularity = modelSettings.ChatteringIrregularity;
+            oneClusterMultiplier = modelSettings.OneClusterMultiplier;
+            tonicPadding = modelSettings.TonicPadding;
+            MaxBurstInterval_LowerRange = modelSettings.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = modelSettings.MaxBurstInterval_DefaultUpperRange;
+
+            this.dt = dt;
+            StimulusArray = null;
+            VList = V;
+            SecLists = new Dictionary<string, double[]>();
+            TauDecay = new();
+            TauRise = new();
+            SpikeList = new();
+            spikeDelay = double.NaN;
+            CreateSpikeList(Vthreshold);
             analyzed = false;
         }
         private bool HasClusters()//check whether there are two clusters of intervals: interspike & interburst
@@ -270,6 +291,17 @@ namespace SiliFish.DynamicUnits.Firing
             }
             firingPattern = FiringPattern.Mixed;
             return;
+        }
+
+        public void CreateSpikeList(double Vthreshold)
+        {
+            if (analyzed) return;
+            SpikeList.Clear();
+            foreach (int i in Enumerable.Range(1,VList.Length-1))
+            {
+                if (VList[i] > Vthreshold && VList[i] > VList[i-1] && VList[i]< VList[i+1])
+                    SpikeList.Add(i);
+            }
         }
         public void DefineSpikingPattern()
         {

@@ -274,7 +274,7 @@ namespace SiliFish.ModelUnits.Cells
         }
 
 
-        public IEnumerable<Cell> GetCells(PlotSelectionMultiCells cellSelection)
+        public IEnumerable<Cell> GetCells(PlotSelectionMultiCells cellSelection, int iStart, int iEnd)
         {
             if (cellSelection.SomiteSelection == PlotSomiteSelection.All && cellSelection.CellSelection == PlotCellSelection.All)
                 return Cells.AsEnumerable();
@@ -305,8 +305,8 @@ namespace SiliFish.ModelUnits.Cells
             }
             List<Cell> subList = Cells
                 .Where(c =>
-                (cellSelection.CellSelection != PlotCellSelection.Spiking || c.IsSpiking()) &&
-                (cellSelection.CellSelection != PlotCellSelection.NonSpiking || !c.IsSpiking()) &&
+                (cellSelection.CellSelection != PlotCellSelection.Spiking || c.IsSpiking(iStart, iEnd)) &&
+                (cellSelection.CellSelection != PlotCellSelection.NonSpiking || !c.IsSpiking(iStart, iEnd)) &&
                 (c.Somite < 0 || !som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)

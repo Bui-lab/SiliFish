@@ -35,36 +35,52 @@ namespace SiliFish.Definitions
 
     public enum PlotType
     {
-        [Display(Name = ""), 
-            Group("")] NotSet,
-        [Display(Name = "Memb. Potential"), 
-            Group("potential")] MembPotential,
-        [Display(Name = "Current"), 
-            Description("Gap and chemical currents"), 
-            Group("current")] Current,
+        [Display(Name = ""),
+            Group("")]
+        NotSet,
+        [Display(Name = "Memb. Potential"),
+            Group("potential")]
+        MembPotential,
+        [Display(Name = "Memb. Potential w/ Spike Freq."),
+            Group("potential")]
+        MembPotentialWithSpikeFreq,
+        [Display(Name = "Current"),
+            Description("Gap and chemical currents"),
+            Group("current")]
+        Current,
         [Display(Name = "Gap Current"),
-            Group("current")] GapCurrent,
+            Group("current")]
+        GapCurrent,
         [Display(Name = "Synaptic Current"),
-            Group("current")] ChemCurrent,
+            Group("current")]
+        ChemCurrent,
         [Display(Name = "Terminal Current"),
-            Group("current")] ChemOutCurrent,
+            Group("current")]
+        ChemOutCurrent,
         [Display(Name = "Stimuli")] Stimuli,
         [Display(Name = "Full Dynamics")] FullDyn,
         [Display(Name = "Muscle Tension")] Tension,
         [Display(Name = "Episodes (Tail)"),
-            Group("episode")] EpisodesTail,
-        [Display(Name = "Episodes (MN)"), 
-            Group("episode")] EpisodesMN,
+            Group("episode")]
+        EpisodesTail,
+        [Display(Name = "Episodes (MN)"),
+            Group("episode")]
+        EpisodesMN,
         [Display(Name = "Tail Movement"),
-            Group("episode")] TailMovement,
+            Group("episode")]
+        TailMovement,
         [Display(Name = "Episode Duration"),
-            Group("episode")] EpisodeDuration,
+            Group("episode")]
+        EpisodeDuration,
         [Display(Name = "Inst. Freq."),
-            Group("episode")] InstFreq,
+            Group("episode")]
+        InstFreq,
         [Display(Name = "Tail Beat Freq."),
-            Group("episode")] TailBeatFreq,
+            Group("episode")]
+        TailBeatFreq,
         [Display(Name = "Tail Beat/Episode"),
-            Group("episode")] TailBeatPerEpisode
+            Group("episode")]
+        TailBeatPerEpisode
     }
 
     public enum PlotSomiteSelection
