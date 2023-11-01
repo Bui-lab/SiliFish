@@ -1,5 +1,6 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
+using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace SiliFish.DynamicUnits
         public double Center => SpikeTimeList.Count > 0 ? (SpikeTimeList[0] + SpikeTimeList[^1]) / 2 : -1;
         public double WeightedCenter => SpikeTimeList.Count > 0 ? SpikeTimeList.Average(): -1;
 
-        public static List<BurstOrSpike> SpikesToBursts(ModelSettings settings, double dt, List<int> SpikeList, out double lastInterval)
+        public static List<BurstOrSpike> SpikesToBursts(KinemParam settings, double dt, List<int> SpikeList, out double lastInterval)
         {
             if (SpikeList == null || SpikeList.Count == 0)
             {

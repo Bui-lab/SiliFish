@@ -15,7 +15,7 @@ namespace SiliFish.DynamicUnits.Firing
     /// </summary>
     public class DynamicsStats
     {
-        private ModelSettings modelSettings;
+        private KinemParam kinemParams;
         private double chatteringIrregularity = 0.1;
         private double oneClusterMultiplier = 2;
         private double tonicPadding = 1;
@@ -26,6 +26,7 @@ namespace SiliFish.DynamicUnits.Firing
         public Cluster InterBurstCluster;
 
         private Dictionary<double, double> intervals = null;
+        private Dictionary<double, double> spikeFreqs = null;
         private bool analyzed = false;
         private bool followedByQuiescence;
         private bool decreasingIntervals;
@@ -84,11 +85,41 @@ namespace SiliFish.DynamicUnits.Firing
             }
         }
 
-        public Dictionary<double, double> FiringFrequency //TODO this doesn;t look right - fix it
+        public Dictionary<double, double> FiringFrequency 
         {
             get
             {
-                return Intervals_ms?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value > 0 ? 1000 / kvp.Value : 0);
+                if (spikeFreqs == null)
+                {
+                    spikeFreqs = new();
+                    if (SpikeList.Count > 1)
+                    {
+                        int iStart = 0;
+                        int iEnd = 1;
+                        while (iEnd <= SpikeList.Count - 1)
+                        {
+                            while (dt * (SpikeList[iEnd] - SpikeList[iEnd - 1]) < kinemParams.SpikeBreak)
+                            {
+                                iEnd++;
+                                if (iEnd == SpikeList.Count)
+                                    break;
+                            }
+                            if (iEnd == SpikeList.Count && iEnd - 1 == iStart)
+                                break;
+                            double start = SpikeList[iStart] * dt;
+                            double end = SpikeList[iEnd - 1] * dt;
+                            spikeFreqs.Add(SpikeList[iStart] * dt, (iEnd - 1 - iStart) * 1000 / (end - start));
+                            iStart = iEnd;
+                            iEnd++;
+                        }
+                        if (!spikeFreqs.Any())
+                        {
+                            spikeFreqs.Add(SpikeList[0] * dt, (double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt));
+                        }
+                    }
+
+                }
+                return spikeFreqs;
             }
         }
         private List<BurstOrSpike> burstsOrSpikes;
@@ -157,14 +188,14 @@ namespace SiliFish.DynamicUnits.Firing
         }
         public DynamicsStats()
         { }
-        public DynamicsStats(ModelSettings settings, double[] stimulus, double dt)
+        public DynamicsStats(KinemParam settings, double[] stimulus, double dt)
         {
-            modelSettings = settings ?? new ModelSettings();//use default values
-            chatteringIrregularity = modelSettings.ChatteringIrregularity;
-            oneClusterMultiplier = modelSettings.OneClusterMultiplier;
-            tonicPadding = modelSettings.TonicPadding;
-            MaxBurstInterval_LowerRange = modelSettings.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = modelSettings.MaxBurstInterval_DefaultUpperRange;
+            kinemParams = settings ?? new KinemParam();//use default values
+            chatteringIrregularity = kinemParams.ChatteringIrregularity;
+            oneClusterMultiplier = kinemParams.OneClusterMultiplier;
+            tonicPadding = kinemParams.TonicPadding;
+            MaxBurstInterval_LowerRange = kinemParams.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = kinemParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             int iMax = stimulus.Length;
@@ -178,14 +209,14 @@ namespace SiliFish.DynamicUnits.Firing
             analyzed = false;
         }
 
-        public DynamicsStats(ModelSettings settings, double[] V, double dt, double Vthreshold)
+        public DynamicsStats(KinemParam settings, double[] V, double dt, double Vthreshold)
         {
-            modelSettings = settings ?? new ModelSettings();//use default values
-            chatteringIrregularity = modelSettings.ChatteringIrregularity;
-            oneClusterMultiplier = modelSettings.OneClusterMultiplier;
-            tonicPadding = modelSettings.TonicPadding;
-            MaxBurstInterval_LowerRange = modelSettings.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = modelSettings.MaxBurstInterval_DefaultUpperRange;
+            kinemParams = settings ?? new KinemParam();//use default values
+            chatteringIrregularity = kinemParams.ChatteringIrregularity;
+            oneClusterMultiplier = kinemParams.OneClusterMultiplier;
+            tonicPadding = kinemParams.TonicPadding;
+            MaxBurstInterval_LowerRange = kinemParams.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = kinemParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             StimulusArray = null;
@@ -299,7 +330,7 @@ namespace SiliFish.DynamicUnits.Firing
             SpikeList.Clear();
             foreach (int i in Enumerable.Range(1,VList.Length-1))
             {
-                if (VList[i] > Vthreshold && VList[i] > VList[i-1] && VList[i]< VList[i+1])
+                if (VList[i] > Vthreshold && VList[i] > VList[i-1] && VList[i]> VList[i+1])
                     SpikeList.Add(i);
             }
         }
@@ -346,7 +377,7 @@ namespace SiliFish.DynamicUnits.Firing
                 }
             }
 
-            burstsOrSpikes = BurstOrSpike.SpikesToBursts(modelSettings, dt, SpikeList, out double lastInterval);
+            burstsOrSpikes = BurstOrSpike.SpikesToBursts(kinemParams, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))
                 lastInterval = quiescence;
             followedByQuiescence = lastStimulusTime - lastSpikeTime >= lastInterval + tonicPadding;

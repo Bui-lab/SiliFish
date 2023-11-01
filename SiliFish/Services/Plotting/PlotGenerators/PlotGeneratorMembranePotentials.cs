@@ -5,6 +5,7 @@ using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,18 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorMembranePotentials : PlotGeneratorOfCells
     {
-        private bool SpikeFrequency = false;
+        private KinemParam kinemParam;
+        private double dt;
+        private bool spikeFrequency = false;
         public PlotGeneratorMembranePotentials(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, 
+            KinemParam kinemParam, double dt,
             bool combinePools, bool combineSomites, bool combineCells,
             int iStart, int iEnd, bool spikeFrequency = false) :
             base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
-            SpikeFrequency = spikeFrequency;
+            this.spikeFrequency = spikeFrequency;
+            this.dt = dt;
+            this.kinemParam = kinemParam;
         }
         protected override void CreateCharts(PlotType _)
         {
@@ -52,25 +58,27 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     {
                         data[i] += cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                     }
-                    if (SpikeFrequency)//TODO number of plots doesnot consider these
+                    if (spikeFrequency)//TODO number of plots doesnot consider these
                     {
-                        DynamicsStats dynamics = new(null, cell.V, 0.1, cell.Core.Vthreshold);//TODO send ModelSettings and dt
-
-                        Chart spikeFreqChart = new()
+                        DynamicsStats dynamics = new(kinemParam, cell.V, dt, cell.Core.Vthreshold);
+                        Dictionary<double, double> FiringFrequency = dynamics.FiringFrequency;
+                        if (FiringFrequency.Count > 0)
                         {
-                            Title = $"{cell.ID} Spiking Freq.",
-                            Color = Color.Blue.ToRGBQuoted(),
-                            xData = dynamics.FiringFrequency.Keys.ToArray(),
-                            xMin = 0,
-                            xMax = timeArray[^1],
-                            yMin = 0,
-                            yData = dynamics.FiringFrequency.Values.ToArray(),
-                            yLabel = "Freq (Hz)",
-                            drawPoints = true
-                        };
-
-                        if (!AddChart(spikeFreqChart))
-                            return;
+                            Chart spikeFreqChart = new()
+                            {
+                                Title = $"{cell.ID} Spiking Freq.",
+                                Color = Color.Blue.ToRGBQuoted(),
+                                xData = FiringFrequency.Keys.ToArray(),
+                                xMin = 0,
+                                xMax = timeArray[^1],
+                                yMin = 0,
+                                yData = FiringFrequency.Values.ToArray(),
+                                yLabel = "Freq (Hz)",
+                                drawPoints = true
+                            };
+                            if (!AddChart(spikeFreqChart))
+                                return;
+                        }
                     }
                 }
                 if (!GlobalSettings.SameYAxis)

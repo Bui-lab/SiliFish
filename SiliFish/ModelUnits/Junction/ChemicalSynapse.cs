@@ -191,9 +191,9 @@ namespace SiliFish.ModelUnits.Junction
             double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
             bool excitatory = PreNeuron.CellPool.NTMode == NeuronClass.Glutamatergic || PreNeuron.CellPool.NTMode == NeuronClass.Cholinergic;
             double ISyn;
-            ModelSettings modelSettings = PreNeuron.Model.Settings;
+            KinemParam kinemParam = PreNeuron.Model.KinemParam;
             List<double> spikeArrivalTimes = PreNeuron.SpikeTrain.Select(t => (t + tt) * Core.DeltaT).ToList();
-            ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, spikeArrivalTimes, tIndex * Core.DeltaT, modelSettings, excitatory);
+            ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, spikeArrivalTimes, tIndex * Core.DeltaT, kinemParam, excitatory);
             if (inputCurrent != null)
                 inputCurrent[tIndex] = ISyn;
         }

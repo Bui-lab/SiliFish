@@ -1158,8 +1158,7 @@ namespace SiliFish.UI.Controls
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
-            //TODO a new episode break: burst break???
-            double episodeBreak = 10;// RunningModel.KinemParam.EpisodeBreak; 
+            double spikeBreak = RunningModel.KinemParam.SpikeBreak; 
             int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
             int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
 
@@ -1169,7 +1168,8 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SpikeKinematics.GenerateColumnsOfBursts(pooledCells, iSpikeStart, iSpikeEnd, episodeBreak);
+                List<TrainOfBursts> burstTrains = SpikeKinematics.GenerateColumnsOfBursts(RunningModel.KinemParam, RunningModel.RunParam.DeltaT,
+                    pooledCells, iSpikeStart, iSpikeEnd, spikeBreak);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
                     foreach (var singleBurst in burstTrain.BurstList)

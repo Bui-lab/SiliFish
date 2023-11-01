@@ -1,6 +1,7 @@
 ﻿using SiliFish.DynamicUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.Swimming;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace SiliFish.Services.Kinematics
         /// </summary>
         /// <param name="TimeArray"></param>
         /// <param name="cells">of a single cell pool and sagittal plane</param>
-        /// <param name="episodeBreak"></param>
+        /// <param name="spikeBreak"></param>
         /// <returns></returns>
-        public static List<TrainOfBursts> GenerateColumnsOfBursts(List<Cell> cells, int iStart, int iEnd, double episodeBreak)
+        public static List<TrainOfBursts> GenerateColumnsOfBursts(KinemParam settings, double dt, List<Cell> cells, int iStart, int iEnd, double spikeBreak)
         {
             //TODO works for only somite based models
             List<TrainOfBursts> trueTrains = new();
@@ -28,7 +29,7 @@ namespace SiliFish.Services.Kinematics
             {
                 List<int> spikes = cell.GetSpikeIndices(iStart, iEnd);
                 if (!spikes.Any()) continue;
-                List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(new ModelSettings(), 0.1, spikes, out double _);//TODO send the current model settings and dt
+                List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(settings, dt, spikes, out double _);
                 TrainOfBursts train = new(burstOrSpikes, cell.CellPool.ID, cell.Somite);
                 ungroupedTrains.Add(train);
             }
@@ -56,15 +57,15 @@ namespace SiliFish.Services.Kinematics
                     double end = curBurst.SpikeTimeList[^1];
                     (int caudaliID, string caudalsID, BurstOrSpike caudalBurst) = caudalTrain.BurstList
                         .FirstOrDefault(b =>
-                            start - episodeBreak <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + episodeBreak ||
-                            start - episodeBreak <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + episodeBreak
+                            start - spikeBreak <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + spikeBreak ||
+                            start - spikeBreak <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + spikeBreak
                             );
                     if (caudalBurst == null)
                         break;
                     trueTrain.BurstList.Add((caudaliID, caudalsID, caudalBurst));
                     caudalTrain.BurstList.RemoveAll(b =>
-                                start - episodeBreak <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + episodeBreak ||
-                                start - episodeBreak <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + episodeBreak);
+                                start - spikeBreak <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + spikeBreak ||
+                                start - spikeBreak <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + spikeBreak);
                     curTrain = caudalTrain;
                     curBurst = caudalBurst;
                 }
@@ -80,15 +81,15 @@ namespace SiliFish.Services.Kinematics
                     double end = curBurst.SpikeTimeList[^1];
                     (int rostraliID, string rostralsID, BurstOrSpike rostralBurst) = rostralTrain.BurstList
                         .FirstOrDefault(b =>
-                            start - 10 <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + 10 ||//TODO hardcoded
-                            start - 10 <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + 10
+                            start - spikeBreak <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + spikeBreak ||
+                            start - spikeBreak <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + spikeBreak
                             );
                     if (rostralBurst == null)
                         break;
                     trueTrain.BurstList.Add((rostraliID, rostralsID, rostralBurst));
                     rostralTrain.BurstList.RemoveAll(b =>
-                                start - 10 <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + 10 ||//TODO hardcoded
-                                start - 10 <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + 10);
+                                start - spikeBreak <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + spikeBreak ||
+                                start - spikeBreak <= b.Bursts.SpikeTimeList[^1] && b.Bursts.SpikeTimeList[^1] <= end + spikeBreak);
                     curTrain = rostralTrain;
                     curBurst = rostralBurst;
                 }

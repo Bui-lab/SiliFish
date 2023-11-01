@@ -230,14 +230,14 @@ namespace SiliFish.Services.Kinematics
                     {
                         side = LEFT;
                         lastEpisode.EndBeat(t);
-                        lastEpisode.StartBeat(t, SagittalPlane.Right);
+                        lastEpisode.StartBeat(t, SagittalPlane.Left);
                     }
 
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
                         lastEpisode.EndBeat(t);
-                        lastEpisode.StartBeat(t, SagittalPlane.Left);
+                        lastEpisode.StartBeat(t, SagittalPlane.Right);
                     }
                 }
                 i++;
