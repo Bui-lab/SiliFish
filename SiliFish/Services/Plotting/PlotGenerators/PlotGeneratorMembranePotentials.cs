@@ -61,7 +61,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     if (spikeFrequency)//TODO number of plots doesnot consider these
                     {
                         DynamicsStats dynamics = new(kinemParam, cell.V, dt, cell.Core.Vthreshold);
-                        Dictionary<double, double> FiringFrequency = dynamics.FiringFrequency;
+                        Dictionary<double, double> FiringFrequency = dynamics.FiringFrequency
+                            .Where(fr => fr.Key >= iStart && fr.Key <= iEnd).ToDictionary(fr => fr.Key, fr => fr.Value);
                         if (FiringFrequency.Count > 0)
                         {
                             Chart spikeFreqChart = new()
@@ -69,8 +70,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                                 Title = $"{cell.ID} Spiking Freq.",
                                 Color = Color.Blue.ToRGBQuoted(),
                                 xData = FiringFrequency.Keys.ToArray(),
-                                xMin = 0,
-                                xMax = timeArray[^1],
+                                xMin = timeArray[iStart],
+                                xMax = timeArray[iEnd] + 1,
                                 yMin = 0,
                                 yData = FiringFrequency.Values.ToArray(),
                                 yLabel = "Freq (Hz)",

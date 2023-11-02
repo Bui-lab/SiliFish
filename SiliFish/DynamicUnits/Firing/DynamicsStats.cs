@@ -108,13 +108,14 @@ namespace SiliFish.DynamicUnits.Firing
                                 break;
                             double start = SpikeList[iStart] * dt;
                             double end = SpikeList[iEnd - 1] * dt;
-                            spikeFreqs.Add(SpikeList[iStart] * dt, (iEnd - 1 - iStart) * 1000 / (end - start));
+                            if (end>start)
+                                spikeFreqs.Add(SpikeList[iStart], (iEnd - 1 - iStart) * 1000 / (end - start));
                             iStart = iEnd;
                             iEnd++;
                         }
                         if (!spikeFreqs.Any())
                         {
-                            spikeFreqs.Add(SpikeList[0] * dt, (double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt));
+                            spikeFreqs.Add(SpikeList[0], (double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt));
                         }
                     }
 
