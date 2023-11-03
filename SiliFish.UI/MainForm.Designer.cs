@@ -210,7 +210,7 @@ namespace SiliFish.UI
             miToolsCompareModel.Name = "miToolsCompareModel";
             miToolsCompareModel.Size = new Size(175, 22);
             miToolsCompareModel.Text = "Compare To Model";
-            miToolsCompareModel.Click += miCompareModel_Click;
+            miToolsCompareModel.Click += miToolsCompareModel_Click;
             // 
             // miToolsSep1
             // 

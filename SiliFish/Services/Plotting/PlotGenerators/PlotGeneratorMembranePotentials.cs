@@ -18,18 +18,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorMembranePotentials : PlotGeneratorOfCells
     {
-        private KinemParam kinemParam;
-        private double dt;
-        private bool spikeFrequency = false;
         public PlotGeneratorMembranePotentials(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, 
-            KinemParam kinemParam, double dt,
             bool combinePools, bool combineSomites, bool combineCells,
-            int iStart, int iEnd, bool spikeFrequency = false) :
+            int iStart, int iEnd) :
             base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
         {
-            this.spikeFrequency = spikeFrequency;
-            this.dt = dt;
-            this.kinemParam = kinemParam;
         }
         protected override void CreateCharts(PlotType _)
         {
@@ -58,29 +51,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     {
                         data[i] += cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                     }
-                    if (spikeFrequency)//TODO number of plots doesnot consider these
-                    {
-                        DynamicsStats dynamics = new(kinemParam, cell.V, dt, cell.Core.Vthreshold);
-                        Dictionary<double, double> FiringFrequency = dynamics.FiringFrequency
-                            .Where(fr => fr.Key >= iStart && fr.Key <= iEnd).ToDictionary(fr => fr.Key, fr => fr.Value);
-                        if (FiringFrequency.Count > 0)
-                        {
-                            Chart spikeFreqChart = new()
-                            {
-                                Title = $"{cell.ID} Spiking Freq.",
-                                Color = Color.Blue.ToRGBQuoted(),
-                                xData = FiringFrequency.Keys.ToArray(),
-                                xMin = timeArray[iStart],
-                                xMax = timeArray[iEnd] + 1,
-                                yMin = 0,
-                                yData = FiringFrequency.Values.ToArray(),
-                                yLabel = "Freq (Hz)",
-                                drawPoints = true
-                            };
-                            if (!AddChart(spikeFreqChart))
-                                return;
-                        }
-                    }
                 }
                 if (!GlobalSettings.SameYAxis)
                 {
@@ -100,9 +70,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     xMin = timeArray[iStart],
                     xMax = timeArray[iEnd] + 1
                 };
-
-
-
                 if (!AddChart(chartDataStruct))
                     return;
             }

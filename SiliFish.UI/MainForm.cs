@@ -561,7 +561,7 @@ namespace SiliFish.UI
             }
         }
 
-        private void miCompareModel_Click(object sender, EventArgs e)
+        private void miToolsCompareModel_Click(object sender, EventArgs e)
         {
             try
             {
@@ -588,7 +588,13 @@ namespace SiliFish.UI
                                 Text = string.Join("\r\n", diffs)
                             };
                             controlContainer.AddControl(richTextBox, null);
-                            controlContainer.ShowDialog();
+                            if (controlContainer.ShowDialog() == DialogResult.OK)
+                            {
+                                if (saveFileText.ShowDialog() == DialogResult.OK)
+                                {
+                                    FileUtil.SaveToFile(saveFileText.FileName, richTextBox.Text);
+                                }
+                            }
                         }
                     }
                     catch

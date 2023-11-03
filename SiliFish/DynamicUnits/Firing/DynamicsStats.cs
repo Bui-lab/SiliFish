@@ -1,4 +1,5 @@
-﻿using SiliFish.Definitions;
+﻿using OfficeOpenXml.ConditionalFormatting.Contracts;
+using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
@@ -26,7 +27,7 @@ namespace SiliFish.DynamicUnits.Firing
         public Cluster InterBurstCluster;
 
         private Dictionary<double, double> intervals = null;
-        private Dictionary<double, double> spikeFreqs = null;
+        private Dictionary<double, (double Freq, double End)> spikeFreqs = null;
         private bool analyzed = false;
         private bool followedByQuiescence;
         private bool decreasingIntervals;
@@ -85,7 +86,7 @@ namespace SiliFish.DynamicUnits.Firing
             }
         }
 
-        public Dictionary<double, double> FiringFrequency 
+        public Dictionary<double, (double Freq, double End)> FiringFrequency 
         {
             get
             {
@@ -108,14 +109,14 @@ namespace SiliFish.DynamicUnits.Firing
                                 break;
                             double start = SpikeList[iStart] * dt;
                             double end = SpikeList[iEnd - 1] * dt;
-                            if (end>start)
-                                spikeFreqs.Add(SpikeList[iStart], (iEnd - 1 - iStart) * 1000 / (end - start));
+                            if (end > start)
+                                spikeFreqs.Add(SpikeList[iStart], ((iEnd - 1 - iStart) * 1000 / (end - start), SpikeList[iEnd - 1]));
                             iStart = iEnd;
                             iEnd++;
                         }
                         if (!spikeFreqs.Any())
                         {
-                            spikeFreqs.Add(SpikeList[0], (double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt));
+                            spikeFreqs.Add(SpikeList[0], ((double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt), SpikeList[^1]));
                         }
                     }
 

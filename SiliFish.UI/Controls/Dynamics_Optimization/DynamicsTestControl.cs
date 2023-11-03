@@ -405,7 +405,7 @@ namespace SiliFish.UI.Controls
                     xMin = 0,
                     xMax = TimeArray[^1],
                     yMin = 0,
-                    yData = dynamics.FiringFrequency.Values.ToArray(),
+                    yData = dynamics.FiringFrequency.Values.Select(ff => ff.Freq).ToArray(),//TODO 
                     yLabel = "Freq (Hz)",
                     drawPoints = true
                 });

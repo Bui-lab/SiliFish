@@ -32,7 +32,6 @@ namespace SiliFish.Services.Plotting
             List<Chart> charts = new();
 
             PlotGeneratorMembranePotentials plotGeneratorMP = new(this, cells, TimeArray, 
-                kinemParam, dt,
                 combinePools, combineSomites: true, combineCells: true, iStart, iEnd);
             plotGeneratorMP.CreateCharts(charts);
             if (!string.IsNullOrEmpty(errorMessage))
@@ -89,7 +88,6 @@ namespace SiliFish.Services.Plotting
                     }
                 }
                 PlotGeneratorMembranePotentials plotGeneratorMP = new(this, cells.DistinctBy(c => c.ID).ToList(), TimeArray, 
-                    kinemParam, dt,
                     combinePools: false, combineSomites: true, combineCells: false, iStart, iEnd);
                 plotGeneratorMP.CreateCharts(charts);
                 if (!string.IsNullOrEmpty(errorMessage))
@@ -158,10 +156,16 @@ namespace SiliFish.Services.Plotting
                 case PlotType.MembPotential:
                 case PlotType.MembPotentialWithSpikeFreq:
                     Title = "Membrane Potentials";
+                    if (Plot.PlotType == PlotType.MembPotentialWithSpikeFreq)
+                    {
+                        Title = "Membrane Potentials w/Spike Freq";
+                        PlotGeneratorSpikeFrequency pg00 = new(this, Cells, model.TimeArray,
+                            model.KinemParam, model.RunParam.DeltaT,
+                            combinePools, combineSomites, combineCells, iStart, iEnd);
+                        pg00.CreateCharts(charts);
+                    }
                     PlotGeneratorMembranePotentials pg0 = new(this, Cells, model.TimeArray, 
-                        model.KinemParam, model.RunParam.DeltaT,
-                        combinePools, combineSomites, combineCells, iStart, iEnd,
-                        Plot.PlotType == PlotType.MembPotentialWithSpikeFreq);
+                        combinePools, combineSomites, combineCells, iStart, iEnd);
                     pg0.CreateCharts(charts);
                     break;
                 case PlotType.Current:
