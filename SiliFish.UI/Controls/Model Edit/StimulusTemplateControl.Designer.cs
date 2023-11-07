@@ -28,250 +28,311 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timeLineControl = new SiliFish.UI.Controls.TimeLineControl();
-            this.ddTargetPool = new System.Windows.Forms.ComboBox();
-            this.lTargetPool = new System.Windows.Forms.Label();
-            this.lSagittalPosition = new System.Windows.Forms.Label();
-            this.ddSagittalPosition = new System.Windows.Forms.ComboBox();
-            this.cbActive = new System.Windows.Forms.CheckBox();
-            this.lTargetCells = new System.Windows.Forms.Label();
-            this.lTargetSomites = new System.Windows.Forms.Label();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.stimControl = new SiliFish.UI.Controls.StimulusSettingsControl();
-            this.lAll = new System.Windows.Forms.Label();
-            this.cbAllSomites = new System.Windows.Forms.CheckBox();
-            this.cbAllCells = new System.Windows.Forms.CheckBox();
-            this.lRange = new System.Windows.Forms.Label();
-            this.eTargetSomites = new System.Windows.Forms.TextBox();
-            this.eTargetCells = new System.Windows.Forms.TextBox();
-            this.pTargetPool = new System.Windows.Forms.Panel();
-            this.pActive = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.pTargetPool.SuspendLayout();
-            this.pActive.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            timeLineControl = new TimeLineControl();
+            ddTargetPool = new ComboBox();
+            lTargetPool = new Label();
+            lSagittalPosition = new Label();
+            ddSagittalPosition = new ComboBox();
+            cbActive = new CheckBox();
+            lTargetCells = new Label();
+            lTargetSomites = new Label();
+            toolTip = new ToolTip(components);
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            stimControl = new StimulusSettingsControl();
+            lAll = new Label();
+            cbAllSomites = new CheckBox();
+            cbAllCells = new CheckBox();
+            lRange = new Label();
+            eTargetSomites = new TextBox();
+            eTargetCells = new TextBox();
+            pTargetPool = new Panel();
+            lms = new Label();
+            eDelayPerSomite = new TextBox();
+            lDelayPerSomite = new Label();
+            pActive = new Panel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            lms2 = new Label();
+            eDelaySagittal = new TextBox();
+            lDelaySagittal = new Label();
+            pTargetPool.SuspendLayout();
+            pActive.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // timeLineControl
             // 
-            this.timeLineControl.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.timeLineControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeLineControl.Location = new System.Drawing.Point(3, 297);
-            this.timeLineControl.Name = "timeLineControl";
-            this.timeLineControl.Size = new System.Drawing.Size(249, 146);
-            this.timeLineControl.TabIndex = 15;
+            timeLineControl.BackColor = Color.WhiteSmoke;
+            timeLineControl.Dock = DockStyle.Fill;
+            timeLineControl.Location = new Point(3, 341);
+            timeLineControl.Name = "timeLineControl";
+            timeLineControl.Size = new Size(249, 146);
+            timeLineControl.TabIndex = 15;
             // 
             // ddTargetPool
             // 
-            this.ddTargetPool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddTargetPool.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddTargetPool.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddTargetPool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddTargetPool.FormattingEnabled = true;
-            this.ddTargetPool.Location = new System.Drawing.Point(102, 8);
-            this.ddTargetPool.Name = "ddTargetPool";
-            this.ddTargetPool.Size = new System.Drawing.Size(144, 23);
-            this.ddTargetPool.TabIndex = 7;
+            ddTargetPool.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddTargetPool.BackColor = Color.WhiteSmoke;
+            ddTargetPool.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddTargetPool.FlatStyle = FlatStyle.Flat;
+            ddTargetPool.FormattingEnabled = true;
+            ddTargetPool.Location = new Point(102, 8);
+            ddTargetPool.Name = "ddTargetPool";
+            ddTargetPool.Size = new Size(144, 23);
+            ddTargetPool.TabIndex = 7;
             // 
             // lTargetPool
             // 
-            this.lTargetPool.AutoSize = true;
-            this.lTargetPool.Location = new System.Drawing.Point(3, 11);
-            this.lTargetPool.Name = "lTargetPool";
-            this.lTargetPool.Size = new System.Drawing.Size(66, 15);
-            this.lTargetPool.TabIndex = 6;
-            this.lTargetPool.Text = "Target Pool";
+            lTargetPool.AutoSize = true;
+            lTargetPool.Location = new Point(3, 11);
+            lTargetPool.Name = "lTargetPool";
+            lTargetPool.Size = new Size(66, 15);
+            lTargetPool.TabIndex = 6;
+            lTargetPool.Text = "Target Pool";
             // 
             // lSagittalPosition
             // 
-            this.lSagittalPosition.AutoSize = true;
-            this.lSagittalPosition.Location = new System.Drawing.Point(3, 107);
-            this.lSagittalPosition.Name = "lSagittalPosition";
-            this.lSagittalPosition.Size = new System.Drawing.Size(92, 15);
-            this.lSagittalPosition.TabIndex = 12;
-            this.lSagittalPosition.Text = "Sagittal Position";
+            lSagittalPosition.AutoSize = true;
+            lSagittalPosition.Location = new Point(3, 107);
+            lSagittalPosition.Name = "lSagittalPosition";
+            lSagittalPosition.Size = new Size(92, 15);
+            lSagittalPosition.TabIndex = 12;
+            lSagittalPosition.Text = "Sagittal Position";
             // 
             // ddSagittalPosition
             // 
-            this.ddSagittalPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddSagittalPosition.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddSagittalPosition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddSagittalPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddSagittalPosition.FormattingEnabled = true;
-            this.ddSagittalPosition.Location = new System.Drawing.Point(102, 104);
-            this.ddSagittalPosition.Name = "ddSagittalPosition";
-            this.ddSagittalPosition.Size = new System.Drawing.Size(144, 23);
-            this.ddSagittalPosition.TabIndex = 13;
+            ddSagittalPosition.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddSagittalPosition.BackColor = Color.WhiteSmoke;
+            ddSagittalPosition.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddSagittalPosition.FlatStyle = FlatStyle.Flat;
+            ddSagittalPosition.FormattingEnabled = true;
+            ddSagittalPosition.Location = new Point(102, 104);
+            ddSagittalPosition.Name = "ddSagittalPosition";
+            ddSagittalPosition.Size = new Size(144, 23);
+            ddSagittalPosition.TabIndex = 13;
             // 
             // cbActive
             // 
-            this.cbActive.AutoSize = true;
-            this.cbActive.Checked = true;
-            this.cbActive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActive.Location = new System.Drawing.Point(13, 6);
-            this.cbActive.Name = "cbActive";
-            this.cbActive.Size = new System.Drawing.Size(59, 19);
-            this.cbActive.TabIndex = 14;
-            this.cbActive.Text = "Active";
-            this.cbActive.UseVisualStyleBackColor = true;
+            cbActive.AutoSize = true;
+            cbActive.Checked = true;
+            cbActive.CheckState = CheckState.Checked;
+            cbActive.Location = new Point(13, 6);
+            cbActive.Name = "cbActive";
+            cbActive.Size = new Size(59, 19);
+            cbActive.TabIndex = 14;
+            cbActive.Text = "Active";
+            cbActive.UseVisualStyleBackColor = true;
             // 
             // lTargetCells
             // 
-            this.lTargetCells.AutoSize = true;
-            this.lTargetCells.Location = new System.Drawing.Point(3, 81);
-            this.lTargetCells.Name = "lTargetCells";
-            this.lTargetCells.Size = new System.Drawing.Size(75, 15);
-            this.lTargetCells.TabIndex = 10;
-            this.lTargetCells.Text = "Target Cell(s)";
+            lTargetCells.AutoSize = true;
+            lTargetCells.Location = new Point(3, 81);
+            lTargetCells.Name = "lTargetCells";
+            lTargetCells.Size = new Size(75, 15);
+            lTargetCells.TabIndex = 10;
+            lTargetCells.Text = "Target Cell(s)";
             // 
             // lTargetSomites
             // 
-            this.lTargetSomites.AutoSize = true;
-            this.lTargetSomites.Location = new System.Drawing.Point(3, 55);
-            this.lTargetSomites.Name = "lTargetSomites";
-            this.lTargetSomites.Size = new System.Drawing.Size(92, 15);
-            this.lTargetSomites.TabIndex = 8;
-            this.lTargetSomites.Text = "Target Somite(s)";
+            lTargetSomites.AutoSize = true;
+            lTargetSomites.Location = new Point(3, 55);
+            lTargetSomites.Name = "lTargetSomites";
+            lTargetSomites.Size = new Size(92, 15);
+            lTargetSomites.TabIndex = 8;
+            lTargetSomites.Text = "Target Somite(s)";
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(61, 4);
             // 
             // stimControl
             // 
-            this.stimControl.AutoSize = true;
-            this.stimControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.stimControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.stimControl.Location = new System.Drawing.Point(3, 3);
-            this.stimControl.MinimumSize = new System.Drawing.Size(200, 100);
-            this.stimControl.Name = "stimControl";
-            this.stimControl.Size = new System.Drawing.Size(231, 105);
-            this.stimControl.TabIndex = 16;
+            stimControl.AutoSize = true;
+            stimControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            stimControl.BackColor = Color.FromArgb(249, 249, 249);
+            stimControl.Location = new Point(3, 3);
+            stimControl.MinimumSize = new Size(200, 100);
+            stimControl.Name = "stimControl";
+            stimControl.Size = new Size(217, 100);
+            stimControl.TabIndex = 16;
             // 
             // lAll
             // 
-            this.lAll.AutoSize = true;
-            this.lAll.Location = new System.Drawing.Point(98, 36);
-            this.lAll.Name = "lAll";
-            this.lAll.Size = new System.Drawing.Size(21, 15);
-            this.lAll.TabIndex = 17;
-            this.lAll.Text = "All";
+            lAll.AutoSize = true;
+            lAll.Location = new Point(98, 36);
+            lAll.Name = "lAll";
+            lAll.Size = new Size(21, 15);
+            lAll.TabIndex = 17;
+            lAll.Text = "All";
             // 
             // cbAllSomites
             // 
-            this.cbAllSomites.AutoSize = true;
-            this.cbAllSomites.Location = new System.Drawing.Point(102, 55);
-            this.cbAllSomites.Name = "cbAllSomites";
-            this.cbAllSomites.Size = new System.Drawing.Size(15, 14);
-            this.cbAllSomites.TabIndex = 18;
-            this.cbAllSomites.UseVisualStyleBackColor = true;
-            this.cbAllSomites.CheckedChanged += new System.EventHandler(this.cbAllSomites_CheckedChanged);
+            cbAllSomites.AutoSize = true;
+            cbAllSomites.Location = new Point(102, 55);
+            cbAllSomites.Name = "cbAllSomites";
+            cbAllSomites.Size = new Size(15, 14);
+            cbAllSomites.TabIndex = 18;
+            cbAllSomites.UseVisualStyleBackColor = true;
+            cbAllSomites.CheckedChanged += cbAllSomites_CheckedChanged;
             // 
             // cbAllCells
             // 
-            this.cbAllCells.AutoSize = true;
-            this.cbAllCells.Location = new System.Drawing.Point(102, 81);
-            this.cbAllCells.Name = "cbAllCells";
-            this.cbAllCells.Size = new System.Drawing.Size(15, 14);
-            this.cbAllCells.TabIndex = 19;
-            this.cbAllCells.UseVisualStyleBackColor = true;
-            this.cbAllCells.CheckedChanged += new System.EventHandler(this.cbAllCells_CheckedChanged);
+            cbAllCells.AutoSize = true;
+            cbAllCells.Location = new Point(102, 81);
+            cbAllCells.Name = "cbAllCells";
+            cbAllCells.Size = new Size(15, 14);
+            cbAllCells.TabIndex = 19;
+            cbAllCells.UseVisualStyleBackColor = true;
+            cbAllCells.CheckedChanged += cbAllCells_CheckedChanged;
             // 
             // lRange
             // 
-            this.lRange.AutoSize = true;
-            this.lRange.Location = new System.Drawing.Point(123, 36);
-            this.lRange.Name = "lRange";
-            this.lRange.Size = new System.Drawing.Size(40, 15);
-            this.lRange.TabIndex = 20;
-            this.lRange.Text = "Range";
+            lRange.AutoSize = true;
+            lRange.Location = new Point(123, 36);
+            lRange.Name = "lRange";
+            lRange.Size = new Size(40, 15);
+            lRange.TabIndex = 20;
+            lRange.Text = "Range";
             // 
             // eTargetSomites
             // 
-            this.eTargetSomites.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTargetSomites.Location = new System.Drawing.Point(123, 52);
-            this.eTargetSomites.Name = "eTargetSomites";
-            this.eTargetSomites.ReadOnly = true;
-            this.eTargetSomites.Size = new System.Drawing.Size(121, 23);
-            this.eTargetSomites.TabIndex = 34;
-            this.eTargetSomites.Text = "example: 1, 3-5";
+            eTargetSomites.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eTargetSomites.Location = new Point(123, 52);
+            eTargetSomites.Name = "eTargetSomites";
+            eTargetSomites.ReadOnly = true;
+            eTargetSomites.Size = new Size(121, 23);
+            eTargetSomites.TabIndex = 34;
+            eTargetSomites.Text = "example: 1, 3-5";
             // 
             // eTargetCells
             // 
-            this.eTargetCells.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTargetCells.Location = new System.Drawing.Point(123, 77);
-            this.eTargetCells.Name = "eTargetCells";
-            this.eTargetCells.ReadOnly = true;
-            this.eTargetCells.Size = new System.Drawing.Size(121, 23);
-            this.eTargetCells.TabIndex = 35;
-            this.eTargetCells.Text = "example: 1, 3-5";
+            eTargetCells.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eTargetCells.Location = new Point(123, 77);
+            eTargetCells.Name = "eTargetCells";
+            eTargetCells.ReadOnly = true;
+            eTargetCells.Size = new Size(121, 23);
+            eTargetCells.TabIndex = 35;
+            eTargetCells.Text = "example: 1, 3-5";
             // 
             // pTargetPool
             // 
-            this.pTargetPool.Controls.Add(this.lTargetPool);
-            this.pTargetPool.Controls.Add(this.ddTargetPool);
-            this.pTargetPool.Controls.Add(this.eTargetCells);
-            this.pTargetPool.Controls.Add(this.ddSagittalPosition);
-            this.pTargetPool.Controls.Add(this.eTargetSomites);
-            this.pTargetPool.Controls.Add(this.lSagittalPosition);
-            this.pTargetPool.Controls.Add(this.lRange);
-            this.pTargetPool.Controls.Add(this.lTargetCells);
-            this.pTargetPool.Controls.Add(this.cbAllCells);
-            this.pTargetPool.Controls.Add(this.lTargetSomites);
-            this.pTargetPool.Controls.Add(this.cbAllSomites);
-            this.pTargetPool.Controls.Add(this.lAll);
-            this.pTargetPool.Location = new System.Drawing.Point(3, 114);
-            this.pTargetPool.Name = "pTargetPool";
-            this.pTargetPool.Size = new System.Drawing.Size(249, 139);
-            this.pTargetPool.TabIndex = 36;
+            pTargetPool.Controls.Add(lms2);
+            pTargetPool.Controls.Add(eDelaySagittal);
+            pTargetPool.Controls.Add(lDelaySagittal);
+            pTargetPool.Controls.Add(lms);
+            pTargetPool.Controls.Add(eDelayPerSomite);
+            pTargetPool.Controls.Add(lDelayPerSomite);
+            pTargetPool.Controls.Add(lTargetPool);
+            pTargetPool.Controls.Add(ddTargetPool);
+            pTargetPool.Controls.Add(eTargetCells);
+            pTargetPool.Controls.Add(ddSagittalPosition);
+            pTargetPool.Controls.Add(eTargetSomites);
+            pTargetPool.Controls.Add(lSagittalPosition);
+            pTargetPool.Controls.Add(lRange);
+            pTargetPool.Controls.Add(lTargetCells);
+            pTargetPool.Controls.Add(cbAllCells);
+            pTargetPool.Controls.Add(lTargetSomites);
+            pTargetPool.Controls.Add(cbAllSomites);
+            pTargetPool.Controls.Add(lAll);
+            pTargetPool.Location = new Point(3, 109);
+            pTargetPool.Name = "pTargetPool";
+            pTargetPool.Size = new Size(249, 188);
+            pTargetPool.TabIndex = 36;
+            // 
+            // lms
+            // 
+            lms.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lms.AutoSize = true;
+            lms.Location = new Point(215, 137);
+            lms.Name = "lms";
+            lms.Size = new Size(31, 15);
+            lms.TabIndex = 38;
+            lms.Text = "(ms)";
+            // 
+            // eDelayPerSomite
+            // 
+            eDelayPerSomite.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eDelayPerSomite.Location = new Point(102, 133);
+            eDelayPerSomite.Name = "eDelayPerSomite";
+            eDelayPerSomite.Size = new Size(107, 23);
+            eDelayPerSomite.TabIndex = 37;
+            // 
+            // lDelayPerSomite
+            // 
+            lDelayPerSomite.AutoSize = true;
+            lDelayPerSomite.Location = new Point(3, 137);
+            lDelayPerSomite.Name = "lDelayPerSomite";
+            lDelayPerSomite.Size = new Size(78, 15);
+            lDelayPerSomite.TabIndex = 36;
+            lDelayPerSomite.Text = "Delay/Somite";
             // 
             // pActive
             // 
-            this.pActive.Controls.Add(this.cbActive);
-            this.pActive.Location = new System.Drawing.Point(3, 259);
-            this.pActive.Name = "pActive";
-            this.pActive.Size = new System.Drawing.Size(246, 32);
-            this.pActive.TabIndex = 37;
+            pActive.Controls.Add(cbActive);
+            pActive.Location = new Point(3, 303);
+            pActive.Name = "pActive";
+            pActive.Size = new Size(246, 32);
+            pActive.TabIndex = 37;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.stimControl);
-            this.flowLayoutPanel1.Controls.Add(this.pTargetPool);
-            this.flowLayoutPanel1.Controls.Add(this.pActive);
-            this.flowLayoutPanel1.Controls.Add(this.timeLineControl);
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(255, 446);
-            this.flowLayoutPanel1.TabIndex = 38;
-            this.flowLayoutPanel1.WrapContents = false;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(stimControl);
+            flowLayoutPanel1.Controls.Add(pTargetPool);
+            flowLayoutPanel1.Controls.Add(pActive);
+            flowLayoutPanel1.Controls.Add(timeLineControl);
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(255, 490);
+            flowLayoutPanel1.TabIndex = 38;
+            flowLayoutPanel1.WrapContents = false;
+            // 
+            // lms2
+            // 
+            lms2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lms2.AutoSize = true;
+            lms2.Location = new Point(215, 163);
+            lms2.Name = "lms2";
+            lms2.Size = new Size(31, 15);
+            lms2.TabIndex = 41;
+            lms2.Text = "(ms)";
+            // 
+            // eDelaySagittal
+            // 
+            eDelaySagittal.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eDelaySagittal.Location = new Point(102, 159);
+            eDelaySagittal.Name = "eDelaySagittal";
+            eDelaySagittal.Size = new Size(107, 23);
+            eDelaySagittal.TabIndex = 40;
+            // 
+            // lDelaySagittal
+            // 
+            lDelaySagittal.AutoSize = true;
+            lDelaySagittal.Location = new Point(3, 163);
+            lDelaySagittal.Name = "lDelaySagittal";
+            lDelaySagittal.Size = new Size(78, 15);
+            lDelaySagittal.TabIndex = 39;
+            lDelaySagittal.Text = "Sagittal Delay";
             // 
             // StimulusTemplateControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Name = "StimulusTemplateControl";
-            this.Size = new System.Drawing.Size(255, 446);
-            this.pTargetPool.ResumeLayout(false);
-            this.pTargetPool.PerformLayout();
-            this.pActive.ResumeLayout(false);
-            this.pActive.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(249, 249, 249);
+            Controls.Add(flowLayoutPanel1);
+            Name = "StimulusTemplateControl";
+            Size = new Size(255, 446);
+            pTargetPool.ResumeLayout(false);
+            pTargetPool.PerformLayout();
+            pActive.ResumeLayout(false);
+            pActive.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -295,5 +356,11 @@
         private Panel pTargetPool;
         private Panel pActive;
         private FlowLayoutPanel flowLayoutPanel1;
+        private TextBox eDelayPerSomite;
+        private Label lDelayPerSomite;
+        private Label lms;
+        private Label lms2;
+        private TextBox eDelaySagittal;
+        private Label lDelaySagittal;
     }
 }

@@ -51,7 +51,9 @@ namespace SiliFish.ModelUnits
 
         public virtual void InitForSimulation(double dt)
         {
-            TimeLine_ind = new TimeLine(TimeLine_ms, 1/dt);
+            TimeLine_ind = new TimeLine(TimeLine_ms);
+            if (dt > 0)
+                TimeLine_ind.MultiplyBy(1 / dt);
         }
         public virtual bool IsActive(int timepoint)
         {

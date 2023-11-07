@@ -47,9 +47,9 @@ namespace SiliFish.UI.Controls
                 string sEnd = dgTimeLine[colEndTime.Index, rowIndex].Value?.ToString();
                 if (string.IsNullOrEmpty(sStart) && string.IsNullOrEmpty(sEnd))
                     continue;
-                if (!int.TryParse(sStart, out int start))
+                if (!double.TryParse(sStart, out double start))
                     start = 0;
-                if (!int.TryParse(sEnd, out int end))
+                if (!double.TryParse(sEnd, out double end))
                     end = -1;
                 tl.AddTimeRange(start, end > 0 ? end : null);
             }

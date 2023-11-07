@@ -17,6 +17,9 @@ namespace SiliFish.ModelUnits.Stim
         public string TargetCell { get; set; } = "All";
 
         public string LeftRight { get; set; }
+        public double DelayPerSomite { get; set; }
+        public double DelaySagittal { get; set; }
+
 
         public StimulusTemplate() { }
 
@@ -28,6 +31,8 @@ namespace SiliFish.ModelUnits.Stim
                 TargetSomite = TargetSomite,
                 TargetCell = TargetCell,
                 LeftRight = LeftRight,
+                DelayPerSomite = DelayPerSomite,
+                DelaySagittal = DelaySagittal,
                 Settings = Settings.Clone(),
                 TimeLine_ms = new(TimeLine_ms)
             };
@@ -52,11 +57,11 @@ namespace SiliFish.ModelUnits.Stim
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("TargetPool", "TargetSomite", "TargetCell", "LeftRight", "Active", StimulusSettings.ColumnNames, TimeLine.ColumnNames);
+            ListBuilder.Build<string>("TargetPool", "TargetSomite", "TargetCell", "LeftRight", "DelayPerSomite", "DelaySagittal", "Active",  StimulusSettings.ColumnNames, TimeLine.ColumnNames);
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(TargetPool, TargetSomite, TargetCell, LeftRight, Active, Settings.ExportValues(), TimeLine_ms.ExportValues());
+            return ListBuilder.Build<string>(TargetPool, TargetSomite, TargetCell, LeftRight, DelayPerSomite, DelaySagittal, Active, Settings.ExportValues(), TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
@@ -65,9 +70,13 @@ namespace SiliFish.ModelUnits.Stim
             TargetSomite = values[1];
             TargetCell = values[2];
             LeftRight = values[3];
-            Active = bool.Parse(values[4]);
-            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 5;
-            Settings.ImportValues(values.Take(new Range(5, lastSettingsCol)).ToList());
+            if (double.TryParse(values[4], out double d))
+                DelayPerSomite = d;
+            if (double.TryParse(values[5], out d))
+                DelaySagittal = d;
+            Active = bool.Parse(values[6]);
+            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 7;
+            Settings.ImportValues(values.Take(new Range(7, lastSettingsCol)).ToList());
             TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());
         }
     }

@@ -110,7 +110,7 @@ namespace SiliFish.ModelUnits.Stim
         }
 
         #region Generate different modes of stimuli
-        private void GenerateStepStimulus(List<(int start, int end)> timeRanges, Random rand)
+        private void GenerateStepStimulus(List<(double start, double end)> timeRanges, Random rand)
         {
             foreach (var (start, end) in timeRanges)
             {
@@ -124,10 +124,10 @@ namespace SiliFish.ModelUnits.Stim
             }
         }
 
-        private void GenerateRampStimulus(List<(int start, int end)> timeRanges)
+        private void GenerateRampStimulus(List<(double start, double end)> timeRanges)
         {
-            int firstStart = timeRanges[0].start;
-            int lastEnd = timeRanges[timeRanges.Count() - 1].end;
+            double firstStart = timeRanges[0].start;
+            double lastEnd = timeRanges[timeRanges.Count() - 1].end;
 
             if (lastEnd > firstStart)
                 tangent = (Settings.Value2 - Settings.Value1) / ((lastEnd - firstStart) / RunParam.DeltaT);
@@ -145,7 +145,7 @@ namespace SiliFish.ModelUnits.Stim
             }
         }
 
-        private void GenerateGaussianStimulus(List<(int start, int end)> timeRanges, Random rand)
+        private void GenerateGaussianStimulus(List<(double start, double end)> timeRanges, Random rand)
         {
             foreach (var (start, end) in timeRanges)
             {
@@ -157,7 +157,7 @@ namespace SiliFish.ModelUnits.Stim
                 }
             }
         }
-        private void GenerateSinusoidalStimulus(List<(int start, int end)> timeRanges)
+        private void GenerateSinusoidalStimulus(List<(double start, double end)> timeRanges)
         {
             if (Settings.Frequency is null ||  Settings.Frequency <= 0) return;
             double sinCycle = 1000 / (double)Settings.Frequency;//the period of the sin wave (period in ms)
@@ -174,7 +174,7 @@ namespace SiliFish.ModelUnits.Stim
                 }
             }
         }
-        private void GeneratePulseStimulus(List<(int start, int end)> timeRanges)
+        private void GeneratePulseStimulus(List<(double start, double end)> timeRanges)
         {
             if (Settings.Frequency is null || Settings.Frequency <= 0) return;
             if (Settings.Value2 <= GlobalSettings.Epsilon) return;
@@ -206,7 +206,7 @@ namespace SiliFish.ModelUnits.Stim
 
             }
         }
-        private void GenerateStimulus(List<(int start, int end)> timeRanges, Random rand)
+        private void GenerateStimulus(List<(double start, double end)> timeRanges, Random rand)
         {
             switch (Settings.Mode)
             {
@@ -233,7 +233,7 @@ namespace SiliFish.ModelUnits.Stim
             InitForSimulation(runParam.DeltaT);
             RunParam = runParam;
             values = new double[RunParam.iMax];
-            List<(int start, int end)> timeRanges = new(TimeLine_ms.GetTimeLine());
+            List<(double start, double end)> timeRanges = new(TimeLine_ms.GetTimeLine());
             if (!timeRanges.Any())
             {
                 timeRanges.Add((0, RunParam.MaxTime));

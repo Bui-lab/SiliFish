@@ -66,6 +66,8 @@ namespace SiliFish.UI.Controls
                 SagittalPlane sagittal = stim.LeftRight.GetValueFromName(SagittalPlane.Both);
                 ddSagittalPosition.Text = sagittal.ToString();
             }
+            eDelayPerSomite.Text = stim.DelayPerSomite.ToString("0.##");
+            eDelaySagittal.Text = stim.DelaySagittal.ToString("0.##");
             cbActive.Checked = stim.Active;
 
             if (stim.TimeLine_ms != null)
@@ -88,6 +90,8 @@ namespace SiliFish.UI.Controls
                 TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
                 TargetCell = cbAllCells.Checked ? "All cells" : eTargetCells.Text,
                 LeftRight = sagPlane.ToString(),
+                DelayPerSomite = double.Parse(eDelayPerSomite.Text),
+                DelaySagittal = double.Parse(eDelaySagittal.Text),
                 TimeLine_ms = timeLineControl.GetTimeLine(),
                 Active = cbActive.Checked
             };

@@ -70,7 +70,7 @@
             // 
             // colStartTime
             // 
-            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.Format = "N2";
             dataGridViewCellStyle1.NullValue = null;
             this.colStartTime.DefaultCellStyle = dataGridViewCellStyle1;
             this.colStartTime.HeaderText = "Start (ms)";
@@ -79,7 +79,7 @@
             // 
             // colEndTime
             // 
-            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.Format = "N2";
             this.colEndTime.DefaultCellStyle = dataGridViewCellStyle2;
             this.colEndTime.HeaderText = "End (ms)";
             this.colEndTime.Name = "colEndTime";
@@ -103,7 +103,7 @@
             // 
             // colRest
             // 
-            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.Format = "N2";
             this.colRest.DefaultCellStyle = dataGridViewCellStyle4;
             this.colRest.HeaderText = "Rest (ms)";
             this.colRest.Name = "colRest";

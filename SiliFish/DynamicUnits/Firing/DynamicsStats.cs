@@ -330,9 +330,9 @@ namespace SiliFish.DynamicUnits.Firing
         {
             if (analyzed) return;
             SpikeList.Clear();
-            foreach (int i in Enumerable.Range(1,VList.Length-1))
+            foreach (int i in Enumerable.Range(1, VList.Length - 2))
             {
-                if (VList[i] > Vthreshold && VList[i] > VList[i-1] && VList[i]> VList[i+1])
+                if (VList[i] > Vthreshold && VList[i] > VList[i - 1] && VList[i] > VList[i + 1])
                     SpikeList.Add(i);
             }
         }

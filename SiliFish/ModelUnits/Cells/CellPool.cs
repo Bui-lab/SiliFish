@@ -568,7 +568,11 @@ namespace SiliFish.ModelUnits.Cells
             foreach (Cell cell in GetCells()
                 .Where(c => (!somites.Any() || somites.Contains(c.Somite)) && (!seqs.Any() || seqs.Contains(c.Sequence))))
             {
-                Stimulus stimulus_ms = new(stimulus.Settings, cell, stimulus.TimeLine_ms);
+                TimeLine timeLine = new(stimulus.TimeLine_ms);
+                double rc_delay = stimulus.DelayPerSomite * (cell.Somite - 1);
+                double sg_delay = cell.PositionLeftRight== SagittalPlane.Right ? stimulus.DelaySagittal : 0;
+                timeLine.AddOffset(rc_delay + sg_delay);
+                Stimulus stimulus_ms = new(stimulus.Settings, cell, timeLine);
                 cell.Stimuli.Add(stimulus_ms);
             }
         }
