@@ -3,6 +3,7 @@ using SiliFish.ModelUnits;
 using SiliFish.UI.EventArguments;
 using System;
 using System.ComponentModel;
+using System.Windows.Forms;
 using Windows.Devices.SmartCards;
 
 namespace SiliFish.UI.Controls
@@ -283,6 +284,14 @@ namespace SiliFish.UI.Controls
                 AddItem();
             else if (e.KeyCode == Keys.Delete && miDeleteItem.Enabled)
                 DeleteItem();
+            else if (e.KeyValue == 'A' || e.KeyValue == 'a')
+            {
+                if (e.Modifiers == Keys.Control)
+                    foreach (var i in Enumerable.Range(0, listBox.Items.Count))
+                    {
+                        listBox.SetSelected(i, true);
+                    }
+            }
         }
         #endregion
 

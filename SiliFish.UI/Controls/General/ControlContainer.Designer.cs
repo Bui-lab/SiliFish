@@ -28,70 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pBottom = new System.Windows.Forms.Panel();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.pMain = new System.Windows.Forms.Panel();
-            this.pBottom.SuspendLayout();
-            this.SuspendLayout();
+            pBottom = new Panel();
+            btnCancel = new Button();
+            btnSave = new Button();
+            pMain = new Panel();
+            pBottom.SuspendLayout();
+            SuspendLayout();
             // 
             // pBottom
             // 
-            this.pBottom.Controls.Add(this.btnCancel);
-            this.pBottom.Controls.Add(this.btnSave);
-            this.pBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pBottom.Location = new System.Drawing.Point(0, 242);
-            this.pBottom.Name = "pBottom";
-            this.pBottom.Size = new System.Drawing.Size(318, 37);
-            this.pBottom.TabIndex = 23;
+            pBottom.Controls.Add(btnCancel);
+            pBottom.Controls.Add(btnSave);
+            pBottom.Dock = DockStyle.Bottom;
+            pBottom.Location = new Point(0, 242);
+            pBottom.Name = "pBottom";
+            pBottom.Size = new Size(318, 37);
+            pBottom.TabIndex = 23;
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(93, 6);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.Location = new Point(93, 6);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(75, 23);
+            btnCancel.TabIndex = 1;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnSave
             // 
-            this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(12, 6);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.DialogResult = DialogResult.OK;
+            btnSave.Location = new Point(12, 6);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(75, 23);
+            btnSave.TabIndex = 0;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // pMain
             // 
-            this.pMain.AutoSize = true;
-            this.pMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pMain.Location = new System.Drawing.Point(0, 0);
-            this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(318, 242);
-            this.pMain.TabIndex = 24;
+            pMain.AutoSize = true;
+            pMain.Dock = DockStyle.Fill;
+            pMain.Location = new Point(0, 0);
+            pMain.Name = "pMain";
+            pMain.Size = new Size(318, 242);
+            pMain.TabIndex = 24;
             // 
             // ControlContainer
             // 
-            this.AcceptButton = this.btnSave;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(318, 279);
-            this.Controls.Add(this.pMain);
-            this.Controls.Add(this.pBottom);
-            this.Name = "ControlContainer";
-            this.Text = "Form1";
-            this.pBottom.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = btnSave;
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            CancelButton = btnCancel;
+            ClientSize = new Size(318, 279);
+            Controls.Add(pMain);
+            Controls.Add(pBottom);
+            Name = "ControlContainer";
+            Text = "Form1";
+            Load += ControlContainer_Load;
+            pBottom.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

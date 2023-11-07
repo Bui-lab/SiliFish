@@ -70,6 +70,7 @@ namespace SiliFish.Services.Kinematics
             if (model.ModelDimensions.NumberOfSomites <= 0)
                 return GenerateSpineVelAndAngleNoSomite(model, startIndex, endIndex);
             bool useMuscleTension = model.KinemParam.UseMuscleTension;
+            double halfBodyWidth = model.ModelDimensions.BodyMedialLateralDistance / 2;
 
             int nmax = endIndex - startIndex + 1;
             int nSomite = model.ModelDimensions.NumberOfSomites;
@@ -108,7 +109,8 @@ namespace SiliFish.Services.Kinematics
                 {
                     double tensDiff =
                         useMuscleTension ?
-                        coef * (RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1])) :
+                        (coef/halfBodyWidth) *  (RightMuscleCells.Sum(c => Math.Abs(c.Coordinate.Y) * c.Tension[startIndex + i - 1]) - 
+                                LeftMuscleCells.Sum(c => Math.Abs(c.Coordinate.Y) * c.Tension[startIndex + i - 1])) :
                         coef * (RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]));
                     double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + tensDiff;
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;
@@ -167,16 +169,8 @@ namespace SiliFish.Services.Kinematics
         }
         public static (Coordinate[], SwimmingEpisodes) GetSwimmingEpisodesUsingMuscleCells(RunningModel model)
         {
-            /*Converted from the code written by Yann Roussel and Tuan Bui
-            This function calculates tail beat frequency based upon crossings of y = 0 as calculated from the body angles calculated
-            by VRMuscle and VLMuscle
-            :param dt: float, time step
-            :param lower_bound: int, bound used to discriminate swimming tail beats from noise
-            :param upper_bound: int, bound used to discriminate swimming tail beats from noise
-            :param delay: float, defines the time window during which we consider tail beats
-            :return: Four 1-D numpy arrays for number of tail beats, interbeat time intervals, start times and beat times
-            */
-
+            //Converted from the code written by Yann Roussel and Tuan Bui
+            
             Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(model, 0, model.TimeArray.Length - 1);
 
             //We will only use the tip of the tail to determine tail beats (if the x coordinate of the tip is smaller (or more negative)

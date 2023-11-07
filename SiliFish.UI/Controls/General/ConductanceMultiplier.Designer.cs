@@ -32,14 +32,18 @@
             lGapJuncMultiplier = new Label();
             numGapMult = new NumericUpDown();
             numChemMult = new NumericUpDown();
+            pGap = new Panel();
+            pChem = new Panel();
             ((System.ComponentModel.ISupportInitialize)numGapMult).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numChemMult).BeginInit();
+            pGap.SuspendLayout();
+            pChem.SuspendLayout();
             SuspendLayout();
             // 
             // lChemJncMultiplier
             // 
-            lChemJncMultiplier.AutoSize = true;
-            lChemJncMultiplier.Location = new Point(3, 42);
+            lChemJncMultiplier.Location = new Point(3, 5);
+            lChemJncMultiplier.Margin = new Padding(3, 5, 3, 0);
             lChemJncMultiplier.Name = "lChemJncMultiplier";
             lChemJncMultiplier.Size = new Size(100, 15);
             lChemJncMultiplier.TabIndex = 5;
@@ -47,45 +51,66 @@
             // 
             // lGapJuncMultiplier
             // 
-            lGapJuncMultiplier.AutoSize = true;
-            lGapJuncMultiplier.Location = new Point(4, 15);
+            lGapJuncMultiplier.Location = new Point(3, 5);
+            lGapJuncMultiplier.Margin = new Padding(3, 5, 3, 0);
             lGapJuncMultiplier.Name = "lGapJuncMultiplier";
-            lGapJuncMultiplier.Size = new Size(89, 15);
+            lGapJuncMultiplier.Size = new Size(100, 15);
             lGapJuncMultiplier.TabIndex = 4;
             lGapJuncMultiplier.Text = "Gap Junc. Mult.";
             // 
             // numGapMult
             // 
             numGapMult.DecimalPlaces = 2;
-            numGapMult.Location = new Point(115, 11);
+            numGapMult.Location = new Point(109, 3);
             numGapMult.Name = "numGapMult";
             numGapMult.Size = new Size(75, 23);
             numGapMult.TabIndex = 6;
             numGapMult.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numGapMult.ValueChanged += numGapMult_ValueChanged;
             // 
             // numChemMult
             // 
             numChemMult.DecimalPlaces = 2;
-            numChemMult.Location = new Point(115, 37);
+            numChemMult.Location = new Point(109, 5);
             numChemMult.Name = "numChemMult";
             numChemMult.Size = new Size(75, 23);
             numChemMult.TabIndex = 7;
             numChemMult.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numChemMult.ValueChanged += numChemMult_ValueChanged;
             // 
-            // ProjectionMultiplier
+            // pGap
+            // 
+            pGap.Controls.Add(numGapMult);
+            pGap.Controls.Add(lGapJuncMultiplier);
+            pGap.Dock = DockStyle.Top;
+            pGap.Location = new Point(0, 0);
+            pGap.Name = "pGap";
+            pGap.Size = new Size(198, 32);
+            pGap.TabIndex = 9;
+            // 
+            // pChem
+            // 
+            pChem.Controls.Add(numChemMult);
+            pChem.Controls.Add(lChemJncMultiplier);
+            pChem.Dock = DockStyle.Top;
+            pChem.Location = new Point(0, 32);
+            pChem.Name = "pChem";
+            pChem.Size = new Size(198, 33);
+            pChem.TabIndex = 10;
+            // 
+            // ConductanceMultiplier
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(numChemMult);
-            Controls.Add(numGapMult);
-            Controls.Add(lChemJncMultiplier);
-            Controls.Add(lGapJuncMultiplier);
-            Name = "ProjectionMultiplier";
-            Size = new Size(205, 72);
+            Controls.Add(pChem);
+            Controls.Add(pGap);
+            Name = "ConductanceMultiplier";
+            Size = new Size(198, 66);
             ((System.ComponentModel.ISupportInitialize)numGapMult).EndInit();
             ((System.ComponentModel.ISupportInitialize)numChemMult).EndInit();
+            pGap.ResumeLayout(false);
+            pChem.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -94,5 +119,7 @@
         private Label lGapJuncMultiplier;
         private NumericUpDown numGapMult;
         private NumericUpDown numChemMult;
+        private Panel pGap;
+        private Panel pChem;
     }
 }

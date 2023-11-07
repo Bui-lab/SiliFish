@@ -42,7 +42,7 @@ namespace SiliFish.UI
         public void ChangeCaption(object sender, EventArgs args)
         {
             ContentChangedArgs ccargs = args as ContentChangedArgs;
-            Text= ccargs.Caption;
+            Text = ccargs.Caption;
         }
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -59,6 +59,29 @@ namespace SiliFish.UI
                 MessageBox.Show($"There are errors on the form.\r\n{string.Join("\r\n", args.Errors)}", "Error");
                 this.DialogResult = DialogResult.None;
             }
+        }
+
+        private (int, int) GetLimits(Control ctrl)
+        {
+            int maxX = 0; int maxY = 0;
+            if (ctrl.Controls.Count > 0)
+            {
+                foreach (Control sub in ctrl.Controls)
+                {
+                    (int curX, int curY) = GetLimits(sub);
+                    maxX = Math.Max(maxX, ctrl.Left + curX);
+                    maxY = Math.Max(maxY, ctrl.Top + curY);
+                }
+            }
+            else return (ctrl.Right, ctrl.Bottom);
+            return (maxX, maxY);
+        }
+
+        private void ControlContainer_Load(object sender, EventArgs e)
+        {
+            (int curX, int curY) = GetLimits(pMain);
+            Width = curX + 40;
+            Height = curY + 2 * pBottom.Height + 10;
         }
     }
 }
