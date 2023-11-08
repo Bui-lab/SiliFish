@@ -93,10 +93,10 @@ namespace SiliFish.Services.Kinematics
             {
                 List<MuscleCell> LeftMuscleCells = model.MusclePools
                     .Where(mp => mp.PositionLeftRight == SagittalPlane.Left)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite + 1)).Cast<MuscleCell>().ToList();
+                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite + 1 && c.Coordinate.Y != 0)).Cast<MuscleCell>().ToList();
                 List<MuscleCell> RightMuscleCells = model.MusclePools
                     .Where(mp => mp.PositionLeftRight == SagittalPlane.Right)
-                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite + 1)).Cast<MuscleCell>().ToList();
+                    .SelectMany(mp => mp.GetCells().Where(c => c.Somite == somite + 1 && c.Coordinate.Y != 0)).Cast<MuscleCell>().ToList();
                 double R = LeftMuscleCells.Sum(c => c.R) + RightMuscleCells.Sum(c => c.R);
                 R /= LeftMuscleCells.Count + RightMuscleCells.Count;
                 double coef = kinemAlpha + kinemBeta * R;
@@ -109,8 +109,8 @@ namespace SiliFish.Services.Kinematics
                 {
                     double tensDiff =
                         useMuscleTension ?
-                        (coef/halfBodyWidth) *  (RightMuscleCells.Sum(c => Math.Abs(c.Coordinate.Y) * c.Tension[startIndex + i - 1]) - 
-                                LeftMuscleCells.Sum(c => Math.Abs(c.Coordinate.Y) * c.Tension[startIndex + i - 1])) :
+                        coef * halfBodyWidth * (RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1] / Math.Abs(c.Coordinate.Y)) -
+                                LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1] / Math.Abs(c.Coordinate.Y))) :
                         coef * (RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]));
                     double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + tensDiff;
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;

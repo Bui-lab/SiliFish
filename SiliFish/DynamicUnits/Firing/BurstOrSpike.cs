@@ -59,7 +59,46 @@ namespace SiliFish.DynamicUnits
                 burstOrSpike.SpikeTimeList.Add(curTime);
                 lastTime = curTime;
             }
-            return burstsOrSpikes;
+            //review bursts to remove the wide intervals that doesn't fit
+            List<BurstOrSpike> burstsOrSpikesFiltered = new();
+            foreach(BurstOrSpike burst in  burstsOrSpikes)
+            {
+                List<double> intervals = new();
+                if (burst.SpikeCount <= 2)
+                    burstsOrSpikesFiltered.Add(burst);
+                else
+                {
+                    for (int i = 1; i < burst.SpikeCount; i++)
+                    {
+                        intervals.Add(burst.SpikeTimeList[i] - burst.SpikeTimeList[i - 1]);
+                    }
+                    double maxInterval = intervals.Max();
+                    double avgInterval = (intervals.Sum() - maxInterval) / intervals.Count;
+                    if (maxInterval > avgInterval * 10) //split into 2 or 3 bursts
+                    {
+                        int ind = 0;
+                        BurstOrSpike b1 = new();
+                        b1.SpikeTimeList.Add(burst.SpikeTimeList[0]);
+                        burstsOrSpikesFiltered.Add(b1);
+                        while (ind < intervals.Count)
+                        {
+                            if (intervals[ind] > avgInterval * 10)
+                            {
+                                b1 = new();
+                                b1.SpikeTimeList.Add(burst.SpikeTimeList[++ind]);
+                                burstsOrSpikesFiltered.Add(b1);
+                            }
+                            else
+                            {
+                                b1.SpikeTimeList.Add(burst.SpikeTimeList[++ind]);
+                            }
+                        }
+                    }
+                    else
+                        burstsOrSpikesFiltered.Add(burst);
+                }
+            }
+            return burstsOrSpikesFiltered;
         }
 
     }

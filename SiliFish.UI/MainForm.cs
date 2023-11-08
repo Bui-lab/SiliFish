@@ -245,6 +245,8 @@ namespace SiliFish.UI
         {
             if (btnRun.Text == "Stop Run")
             {
+                if (MessageBox.Show("Do you want to stop the stimulation? You can access the values till the point it was executed.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    return;
                 if (RunningModel != null)
                     RunningModel.CancelRun = true;
                 return;
