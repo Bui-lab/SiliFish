@@ -59,20 +59,22 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         data[i] += cell.V?[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                     }
                     DynamicsStats dynamics = new(kinemParam, cell.V, dt, cell.Core.Vthreshold);
-                    Dictionary<double, (double Freq, double End)> FiringFrequency = dynamics.FiringFrequency
-                        .Where(fr => fr.Value.End >= iStart && fr.Key <= iEnd).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));
-                    if (FiringFrequency.Count > 0)
+                    Dictionary<double, (double Freq, double End)> SpikeFrequency = dynamics.SpikingFrequency
+                        .Where(fr => fr.Value.End >= iStart * dt && fr.Key <= iEnd * dt).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));
+                    Dictionary<double, (double Freq, double End)> BurstFrequency = dynamics.BurstingFrequency
+                        .Where(fr => fr.Value.End >= iStart * dt && fr.Key <= iEnd * dt).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));
+                    if (SpikeFrequency.Count > 0)
                     {
-                        double[] xData = new double[FiringFrequency.Count * 3];
-                        double[] yData = new double[FiringFrequency.Count * 3];
+                        double[] xData = new double[SpikeFrequency.Count * 3];
+                        double[] yData = new double[SpikeFrequency.Count * 3];
                         int i = 0;
-                        foreach (var ff in FiringFrequency)
+                        foreach (var ff in SpikeFrequency)
                         {
-                            xData[i] = ff.Key * dt;
+                            xData[i] = ff.Key;
                             yData[i++] = ff.Value.Freq;
-                            xData[i] = ff.Value.End * dt;
+                            xData[i] = ff.Value.End;
                             yData[i++] = ff.Value.Freq;
-                            xData[i] = ff.Value.End * dt + 1;
+                            xData[i] = ff.Value.End + dt;
                             yData[i++] = double.NaN;
                         }
                         Chart spikeFreqChart = new()
@@ -88,6 +90,35 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             drawPoints = true
                         };
                         if (!AddChart(spikeFreqChart))
+                            return;
+                    }
+                    if (BurstFrequency.Count > 0)
+                    {
+                        double[] xData = new double[BurstFrequency.Count * 3];
+                        double[] yData = new double[BurstFrequency.Count * 3];
+                        int i = 0;
+                        foreach (var ff in BurstFrequency)
+                        {
+                            xData[i] = ff.Key;
+                            yData[i++] = ff.Value.Freq;
+                            xData[i] = ff.Value.End;
+                            yData[i++] = ff.Value.Freq;
+                            xData[i] = ff.Value.End + dt;
+                            yData[i++] = double.NaN;
+                        }
+                        Chart burstFreqChart = new()
+                        {
+                            Title = $"{cell.ID} Burst Freq.",
+                            Color = Color.Blue.ToRGBQuoted(),
+                            xData = xData,
+                            xMin = timeArray[iStart],
+                            xMax = timeArray[iEnd] + 1,
+                            yMin = 0,
+                            yData = yData,
+                            yLabel = "Freq (Hz)",
+                            drawPoints = true
+                        };
+                        if (!AddChart(burstFreqChart))
                             return;
                     }
                 }

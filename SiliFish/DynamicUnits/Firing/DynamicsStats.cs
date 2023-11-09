@@ -28,6 +28,7 @@ namespace SiliFish.DynamicUnits.Firing
 
         private Dictionary<double, double> intervals = null;
         private Dictionary<double, (double Freq, double End)> spikeFreqs = null;
+        private Dictionary<double, (double Freq, double End)> burstFreqs = null;
         private bool analyzed = false;
         private bool followedByQuiescence;
         private bool decreasingIntervals;
@@ -86,7 +87,7 @@ namespace SiliFish.DynamicUnits.Firing
             }
         }
 
-        public Dictionary<double, (double Freq, double End)> FiringFrequency 
+        public Dictionary<double, (double Freq, double End)> SpikingFrequency 
         {
             get
             {
@@ -110,13 +111,13 @@ namespace SiliFish.DynamicUnits.Firing
                             double start = SpikeList[iStart] * dt;
                             double end = SpikeList[iEnd - 1] * dt;
                             if (end > start)
-                                spikeFreqs.Add(SpikeList[iStart], ((iEnd - 1 - iStart) * 1000 / (end - start), SpikeList[iEnd - 1]));
+                                spikeFreqs.Add(start, ((iEnd - 1 - iStart) * 1000 / (end - start), end));
                             iStart = iEnd;
                             iEnd++;
                         }
                         if (!spikeFreqs.Any())
                         {
-                            spikeFreqs.Add(SpikeList[0], ((double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt), SpikeList[^1]));
+                            spikeFreqs.Add(SpikeList[0] * dt, ((double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt), SpikeList[^1] * dt));
                         }
                     }
 
@@ -124,6 +125,46 @@ namespace SiliFish.DynamicUnits.Firing
                 return spikeFreqs;
             }
         }
+        public Dictionary<double, (double Freq, double End)> BurstingFrequency
+        {
+            get
+            {
+                if (burstFreqs == null)
+                {
+                    burstFreqs = new();
+                    if (BurstsOrSpikes.Count > 1)
+                    {
+                        int iStart = 0;
+                        int iEnd = 1;
+                        while (iEnd <= BurstsOrSpikes.Count - 1)
+                        {
+                            while ((BurstsOrSpikes[iEnd].Start - BurstsOrSpikes[iEnd - 1].End) < kinemParams.EpisodeBreak)
+                            {
+                                iEnd++;
+                                if (iEnd == BurstsOrSpikes.Count)
+                                    break;
+                            }
+                            if (iEnd == BurstsOrSpikes.Count && iEnd - 1 == iStart)
+                                break;
+                            double start = BurstsOrSpikes[iStart].Start;
+                            double end = BurstsOrSpikes[iEnd - 1].End;
+                            if (end > start)
+                                burstFreqs.Add(start, ((iEnd - 1 - iStart) * 1000 / (end - start), end));
+                            iStart = iEnd;
+                            iEnd++;
+                        }
+                        if (!burstFreqs.Any())
+                        {
+                            burstFreqs.Add(BurstsOrSpikes[0].Start, ((double)BurstsOrSpikes.Count * 1000 / ((BurstsOrSpikes[^1].End - BurstsOrSpikes[0].Start)), BurstsOrSpikes[^1].End));
+                        }
+                    }
+
+                }
+                return burstFreqs;
+            }
+        }
+
+
         private List<BurstOrSpike> burstsOrSpikes;
         public List<BurstOrSpike> BurstsOrSpikes
         {
@@ -340,8 +381,8 @@ namespace SiliFish.DynamicUnits.Firing
         {
             if (analyzed) return;
             burstsOrSpikes = new();
-            int stimulusStart = StimulusArray.ToList().FindIndex(i => i > 0);
-            int stimulusEnd = StimulusArray.ToList().FindLastIndex(i => i > 0);
+            int stimulusStart = StimulusArray?.ToList().FindIndex(i => i > 0) ?? 0;
+            int stimulusEnd = StimulusArray?.ToList().FindLastIndex(i => i > 0) ?? int.MaxValue;
 
             PreStimulusSpikeList = SpikeList.Where(s => s < stimulusStart).ToList();
             PostStimulusSpikeList = SpikeList.Where(s => s > stimulusEnd).ToList();

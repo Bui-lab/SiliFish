@@ -395,20 +395,35 @@ namespace SiliFish.UI.Controls
                     drawPoints = true
                 });
             }
-            if (cbSpikingFrequency.Checked && dynamics.FiringFrequency != null && dynamics.FiringFrequency.Any())
+            if (cbSpikingFrequency.Checked)
             {
-                charts.Add(new Chart
-                {
-                    Title = "Spiking Freq.",
-                    Color = Color.Blue.ToRGBQuoted(),
-                    xData = dynamics.FiringFrequency.Keys.ToArray(),
-                    xMin = 0,
-                    xMax = TimeArray[^1],
-                    yMin = 0,
-                    yData = dynamics.FiringFrequency.Values.Select(ff => ff.Freq).ToArray(),//TODO 
-                    yLabel = "Freq (Hz)",
-                    drawPoints = true
-                });
+                if (dynamics.SpikingFrequency != null && dynamics.SpikingFrequency.Any())
+                    charts.Add(new Chart
+                    {
+                        Title = "Spiking Freq.",
+                        Color = Color.Blue.ToRGBQuoted(),
+                        xData = dynamics.SpikingFrequency.Keys.Select(ff => ff).ToArray(),
+                        xMin = 0,
+                        xMax = TimeArray[^1],
+                        yMin = 0,
+                        yData = dynamics.SpikingFrequency.Values.Select(ff => ff.Freq).ToArray(),
+                        yLabel = "Freq (Hz)",
+                        drawPoints = true
+                    });
+                if (dynamics.BurstingFrequency != null && dynamics.BurstingFrequency.Any())
+                    charts.Add(new Chart
+                    {
+                        Title = "Burst Freq.",
+                        Color = Color.Blue.ToRGBQuoted(),
+                        xData = dynamics.BurstingFrequency.Keys.Select(ff => ff).ToArray(),
+                        xMin = 0,
+                        xMax = TimeArray[^1],
+                        yMin = 0,
+                        yData = dynamics.BurstingFrequency.Values.Select(ff => ff.Freq).ToArray(),
+                        yLabel = "Freq (Hz)",
+                        drawPoints = true
+                    });
+
             }
             if (cbStimulus.Checked)
             {
