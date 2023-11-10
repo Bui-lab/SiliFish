@@ -14,8 +14,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         protected readonly bool combineSomites;
         protected readonly bool combineCells;
 
-        protected PlotGeneratorOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells) :
-            base(plotGenerator, timeArray, iStart, iEnd)
+        protected PlotGeneratorOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
+            List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
         {
             this.cells = cells;
             this.combinePools = combinePools;

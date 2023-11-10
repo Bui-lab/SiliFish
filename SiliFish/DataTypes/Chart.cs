@@ -32,6 +32,8 @@ namespace SiliFish.DataTypes
 
         public string Title = "", xLabel = "Time (ms)", yLabel = "";
         public string Color = System.Drawing.Color.Red.ToRGBQuoted();
+        public int GroupSeq;
+        public int ChartSeq;
         public double[] xData = null;
         public double[] yData = null;
         //If multiple lines are plotted on the same chart, yMultiData is used instead of yData
@@ -76,6 +78,12 @@ namespace SiliFish.DataTypes
         }
         public Chart()
         {
+        }
+
+        public Chart(int groupSeq, int chartSeq)
+        {           
+            GroupSeq = groupSeq;
+            ChartSeq = chartSeq;
         }
 
         private void GenerateCsv()

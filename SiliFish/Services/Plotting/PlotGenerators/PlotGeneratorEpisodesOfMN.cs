@@ -19,8 +19,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         readonly SwimmingEpisodes episodes;
         readonly int somite;
         public PlotGeneratorEpisodesOfMN(PlotGenerator plotGenerator, double[] mnMaxPotentials, SwimmingEpisodes episodes, int somite,
-            double[] timeArray, int iStart, int iEnd) :
-            base(plotGenerator, timeArray, iStart, iEnd)
+            double[] timeArray, int iStart, int iEnd, int groupSeq) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
         {
             this.mnMaxPotentials = mnMaxPotentials;
             this.episodes = episodes;

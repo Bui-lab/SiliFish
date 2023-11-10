@@ -24,8 +24,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         public PlotGeneratorSpikeFrequency(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray,
             KinemParam kinemParam, double dt,
             bool combinePools, bool combineSomites, bool combineCells,
-            int iStart, int iEnd) :
-            base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
+            int iStart, int iEnd, int groupSeq) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, combinePools, combineSomites, combineCells)
         {
             this.dt = dt;
             this.kinemParam = kinemParam;

@@ -18,10 +18,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorMembranePotentials : PlotGeneratorOfCells
     {
-        public PlotGeneratorMembranePotentials(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray, 
+        public PlotGeneratorMembranePotentials(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray,
             bool combinePools, bool combineSomites, bool combineCells,
-            int iStart, int iEnd) :
-            base(plotGenerator, timeArray, iStart, iEnd, cells, combinePools, combineSomites, combineCells)
+            int iStart, int iEnd, int groupSeq) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, combinePools, combineSomites, combineCells)
         {
         }
         protected override void CreateCharts(PlotType _)

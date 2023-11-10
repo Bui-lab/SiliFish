@@ -18,8 +18,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         readonly Coordinate[] tail_tip_coord;
         readonly SwimmingEpisodes episodes;
         public PlotGeneratorEpisodesOfTail(PlotGenerator plotGenerator, Coordinate[] tail_tip_coord, SwimmingEpisodes episodes,
-            double[] timeArray, int iStart, int iEnd) :
-            base(plotGenerator, timeArray, iStart, iEnd)
+            double[] timeArray, int iStart, int iEnd, int groupSeq) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
         {
             this.tail_tip_coord = tail_tip_coord;
             this.episodes = episodes;

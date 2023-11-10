@@ -15,6 +15,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         protected readonly double[] timeArray;
         protected readonly int iStart;
         protected readonly int iEnd;
+        protected readonly int GroupSeq;
         public List<Chart> charts { get; set; }
         public bool AddChart(Chart chart)
         {
@@ -25,16 +26,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     charts.Add(chart);//add the first chart, even if it exceeds the limit
                 return false;
             }
+            chart.GroupSeq = GroupSeq;
+            chart.ChartSeq = charts.Count;
             charts.Add(chart);
             return true;
         }
-        public PlotGeneratorBase(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd)
+        public PlotGeneratorBase(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq)
         {
             charts = new();
             this.plotGenerator = plotGenerator;
             this.timeArray = timeArray;
             this.iStart = iStart;
             this.iEnd = iEnd;
+            GroupSeq = groupSeq;
         }
         protected abstract void CreateCharts(PlotType plotType);
         protected abstract void CreateCharts();
@@ -48,8 +52,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             CreateCharts();
             if (charts.Any())
+            {
+                int seq = 0;//TODO delete this and below
+                charts.ForEach(chart => { chart.GroupSeq = GroupSeq; chart.ChartSeq = seq++; });
                 chartList.AddRange(charts);
+            }
         }
     }
-
 }
