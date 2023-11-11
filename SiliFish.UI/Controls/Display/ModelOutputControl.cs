@@ -287,7 +287,10 @@ namespace SiliFish.UI.Controls
         {
             if (RunningModel == null) return;
             TwoDRenderer modelGenerator = new();
-            string html = modelGenerator.Create2DRendering(RunningModel, RunningModel.CellPools, (int)webView2DRender.Width, webView2DRender.Height,
+            List<CellPool> cellPools = RunningModel.CellPools;
+            if (cbHideNonspiking.Checked && RunningModel.ModelRun)
+                cellPools = RunningModel.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
+            string html = modelGenerator.Create2DRendering(RunningModel, cellPools, webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
@@ -296,12 +299,13 @@ namespace SiliFish.UI.Controls
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             rendered2D = true;
-
         }
         private void btn2DRender_Click(object sender, EventArgs e)
         {
             RenderIn2D();
         }
+
+
 
         private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -697,7 +701,7 @@ namespace SiliFish.UI.Controls
                 plot = (PlotDefinition)JsonUtil.ToObject(typeof(PlotDefinition), JSONString);
                 RunningModel.LinkPlotObjects(plot);
                 List<PlotDefinition> plots = listPlotHistory.GetItems<PlotDefinition>().ToList();
-                plots[ind]= plot;
+                plots[ind] = plot;
                 listPlotHistory.SetItems(plots);
             }
         }
@@ -760,11 +764,11 @@ namespace SiliFish.UI.Controls
             {
                 int tSkip = RunningModel.RunParam.SkipDuration;
                 double dt = RunningModel.RunParam.DeltaT;
-                int iStart = (int)((tPlotStart+ tSkip) / dt);
+                int iStart = (int)((tPlotStart + tSkip) / dt);
                 int iEnd = (int)((tPlotEnd + tSkip) / dt);
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection, iStart, iEnd);
             }
-            
+
             if (lastPlot != null &&
                 lastPlot.PlotSubset.Equals(plotsubset) &&
                 lastPlot.PlotType.Equals(PlotType) &&

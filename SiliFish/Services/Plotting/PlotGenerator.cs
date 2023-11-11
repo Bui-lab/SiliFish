@@ -31,20 +31,20 @@ namespace SiliFish.Services.Plotting
         {
             List<Chart> charts = new();
 
-            PlotGeneratorMembranePotentials plotGeneratorMP = new(this, cells, TimeArray,
-                combinePools, combineSomites: true, combineCells: true, iStart, iEnd, 0);
+            PlotGeneratorMembranePotentials plotGeneratorMP = new(this, TimeArray, iStart, iEnd, 0,
+                cells, combinePools, combineSomites: true, combineCells: true);
             plotGeneratorMP.CreateCharts(charts);
             if (!string.IsNullOrEmpty(errorMessage))
                 return charts;
 
-            PlotGeneratorCurrentsOfCells plotGeneratorCurrent = new(this, cells, TimeArray,
-                combinePools, combineSomites, combineCells, iStart, iEnd, 1, UoM);
+            PlotGeneratorCurrentsOfCells plotGeneratorCurrent = new(this, TimeArray,iStart, iEnd, 1,
+                 cells,combinePools, combineSomites, combineCells,  UoM);
             plotGeneratorCurrent.CreateCharts(charts);
             if (!string.IsNullOrEmpty(errorMessage))
                 return charts;
 
-            PlotGeneratorStimuli plotGeneratorStimuli = new(this, cells, TimeArray,
-                combinePools, combineSomites, combineCells, iStart, iEnd, 2, UoM);
+            PlotGeneratorStimuli plotGeneratorStimuli = new(this, TimeArray, iStart, iEnd, 2,
+                cells, combinePools, combineSomites, combineCells, UoM);
             plotGeneratorStimuli.CreateCharts(charts);
             if (!string.IsNullOrEmpty(errorMessage))
                 return charts;
@@ -52,8 +52,9 @@ namespace SiliFish.Services.Plotting
             List<Cell> muscleCells = cells?.Where(c => c is MuscleCell).ToList();
             if (muscleCells != null && muscleCells.Any())
             {
-                PlotGeneratorTension plotGeneratorTension = new(this, cells, TimeArray,
-                    combinePools, combineSomites, combineCells, iStart, iEnd, 3);
+                PlotGeneratorTension plotGeneratorTension = new(this, TimeArray, iStart, iEnd, 3,
+                    cells,
+                    combinePools, combineSomites, combineCells);
                 plotGeneratorTension.CreateCharts(charts);
             }
             return charts;
@@ -87,13 +88,14 @@ namespace SiliFish.Services.Plotting
                         }
                     }
                 }
-                PlotGeneratorMembranePotentials plotGeneratorMP = new(this, cells.DistinctBy(c => c.ID).ToList(), TimeArray,
-                    combinePools: false, combineSomites: true, combineCells: false, iStart, iEnd, 0);
+                PlotGeneratorMembranePotentials plotGeneratorMP = new(this, TimeArray, iStart, iEnd, 0,
+                    cells.DistinctBy(c => c.ID).ToList(),
+                    combinePools: false, combineSomites: true, combineCells: false);
                 plotGeneratorMP.CreateCharts(charts);
                 if (!string.IsNullOrEmpty(errorMessage))
                     return charts;
 
-                PlotGeneratorCurrentsOfJunctions plotGeneratorCurrentsOfJunctions = new(this, gapJunctions, synapses, TimeArray, iStart, iEnd, 1, UoM);
+                PlotGeneratorCurrentsOfJunctions plotGeneratorCurrentsOfJunctions = new(this, TimeArray, iStart, iEnd, 1, gapJunctions, synapses, UoM);
                 plotGeneratorCurrentsOfJunctions.CreateCharts(charts);
                 if (!string.IsNullOrEmpty(errorMessage))
                     return charts;
@@ -101,7 +103,7 @@ namespace SiliFish.Services.Plotting
             return charts;
         }
 
-        public (string, List<Chart>) GetPlotData(PlotDefinition Plot, RunningModel model, List<Cell> Cells, List<CellPool> Pools, 
+        public (string, List<Chart>) GetPlotData(PlotDefinition Plot, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             int tStart = 0, int tEnd = -1)
         {
             errorMessage = string.Empty;
@@ -132,7 +134,7 @@ namespace SiliFish.Services.Plotting
                 if (stims.Any())
                 {
                     List<Cell> targetCells = stims.Select(s => s.TargetCell).ToList();
-                    PlotGeneratorStimuli plotGeneratorStimuli = new(this, targetCells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd, 1, UoM);
+                    PlotGeneratorStimuli plotGeneratorStimuli = new(this, model.TimeArray, iStart, iEnd, 1, targetCells, combinePools, combineSomites, combineCells, UoM);
                     plotGeneratorStimuli.CreateCharts(charts);
                     return ("Stimuli", charts);
                 }
@@ -147,7 +149,7 @@ namespace SiliFish.Services.Plotting
             {
                 combinePools = cellSelection.CombinePools;
                 combineCells = cellSelection.CombineCells;
-                combineSomites = model.ModelDimensions.NumberOfSomites>0 && cellSelection.CombineSomites;
+                combineSomites = model.ModelDimensions.NumberOfSomites > 0 && cellSelection.CombineSomites;
                 combineJunctions = cellSelection.CombineJunctions;
             }
             string Title = "";
@@ -163,41 +165,46 @@ namespace SiliFish.Services.Plotting
                             model.KinemParam, model.RunParam.DeltaT,
                             combinePools, combineSomites, combineCells, iStart, iEnd, 0);
                         pg00.CreateCharts(charts);
+
+                        PlotGeneratorBurstFrequency pg01 = new(this, Cells, model.TimeArray,
+                            model.KinemParam, model.RunParam.DeltaT,
+                            combinePools, combineSomites, combineCells, iStart, iEnd, 1);
+                        pg01.CreateCharts(charts);
                     }
-                    PlotGeneratorMembranePotentials pg0 = new(this, Cells, model.TimeArray, 
-                        combinePools, combineSomites, combineCells, iStart, iEnd, 1);
+                    PlotGeneratorMembranePotentials pg0 = new(this, model.TimeArray, iStart, iEnd, 2,
+                        Cells, combinePools, combineSomites, combineCells);
                     pg0.CreateCharts(charts);
                     charts = charts.OrderBy(chart => chart.ChartSeq).ThenBy(chart => chart.GroupSeq).ToList();
                     break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
-                    PlotGeneratorCurrentsOfCells pg1 = new(this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd,0, UoM,
+                    PlotGeneratorCurrentsOfCells pg1 = new(this, model.TimeArray, iStart, iEnd, 0, Cells, combinePools, combineSomites, combineCells, UoM,
                         includeGap: true, includeChemIn: true, includeChemOut: false, combineJunctions: combineJunctions);
                     pg1.CreateCharts(charts);
                     break;
                 case PlotType.GapCurrent:
                     Title = "Incoming Gap Currents";
-                    PlotGeneratorCurrentsOfCells pg2 = new(this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd, 0, UoM,
+                    PlotGeneratorCurrentsOfCells pg2 = new(this, model.TimeArray, iStart, iEnd, 0, Cells, combinePools, combineSomites, combineCells, UoM,
                         includeGap: true, includeChemIn: false, includeChemOut: false, combineJunctions: combineJunctions);
                     pg2.CreateCharts(charts);
                     break;
                 case PlotType.ChemCurrent:
                     Title = "Incoming Synaptic Currents";
-                    PlotGeneratorCurrentsOfCells pg3 = new(this, Cells, model.TimeArray, combinePools, combineSomites, combineCells, iStart, iEnd, 0, UoM,
+                    PlotGeneratorCurrentsOfCells pg3 = new(this, model.TimeArray, iStart, iEnd, 0, Cells, combinePools, combineSomites, combineCells, UoM,
                         includeGap: false, includeChemIn: true, includeChemOut: false, combineJunctions: combineJunctions);
                     pg3.CreateCharts(charts);
                     break;
                 case PlotType.ChemOutCurrent:
                     Title = "Outgoing Synaptic Currents";
-                    PlotGeneratorCurrentsOfCells pg4 = new(this, Cells, model.TimeArray,
-                        combinePools, combineSomites, combineCells, iStart, iEnd, 0, UoM,
+                    PlotGeneratorCurrentsOfCells pg4 = new(this, model.TimeArray, iStart, iEnd, 0,
+                        Cells, combinePools, combineSomites, combineCells, UoM,
                         includeGap: false, includeChemIn: false, includeChemOut: true, combineJunctions: combineJunctions);
                     pg4.CreateCharts(charts);
                     break;
                 case PlotType.Stimuli:
                     Title = "Applied Stimulus";
-                    PlotGeneratorStimuli pg5 = new(this, Cells, model.TimeArray, 
-                        combinePools, combineSomites, combineCells, iStart, iEnd, 0, UoM);
+                    PlotGeneratorStimuli pg5 = new(this, model.TimeArray, iStart, iEnd, 0,
+                        Cells, combinePools, combineSomites, combineCells, UoM);
                     pg5.CreateCharts(charts);
                     break;
                 case PlotType.FullDyn:
@@ -208,25 +215,25 @@ namespace SiliFish.Services.Plotting
                     break;
                 case PlotType.Tension:
                     Title = "Muscle Tension";
-                    List<Cell> muscleCells = Cells.Where(c => c is MuscleCell).ToList();
-                    if (muscleCells.Any())
+                    List<Cell> muscleCells = Cells?.Where(c => c is MuscleCell).ToList();
+                    if (muscleCells != null && muscleCells.Any())
                     {
-                        PlotGeneratorTension plotGeneratorTension = new(this, muscleCells, model.TimeArray, 
-                            combinePools, combineSomites, combineCells, iStart, iEnd, 0);
+                        PlotGeneratorTension plotGeneratorTension = new(this, model.TimeArray, iStart, iEnd, 0,
+                            muscleCells, combinePools, combineSomites, combineCells);
                         plotGeneratorTension.CreateCharts(charts);
                     }
                     break;
                 case PlotType.EpisodesTail:
                     Title = "Tail Beat Episodes";
                     (Coordinate[] tail_tip_coord, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
-                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail = new(this, tail_tip_coord, episodes, model.TimeArray, iStart, iEnd, 0);
+                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail = new(this, model.TimeArray, iStart, iEnd, 0, tail_tip_coord, episodes);
                     plotGeneratorEpisodesTail.CreateCharts(charts);
                     break;
                 case PlotType.EpisodesMN:
                     Title = "Motoneuron Episodes";
                     int somite = Plot.Selection is PlotSelectionSomite pss ? pss.Somite : model.ModelDimensions.NumberOfSomites;
                     (double[] mnMaxPotentials, SwimmingEpisodes episodesMN) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, somite);
-                    PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN = new(this, mnMaxPotentials, episodesMN, somite, model.TimeArray, iStart, iEnd, 0);
+                    PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN = new(this, model.TimeArray, iStart, iEnd, 0, mnMaxPotentials, episodesMN, somite);
                     plotGeneratorEpisodesMN.CreateCharts(charts);
                     break;
                 case PlotType.TailMovement:
@@ -241,13 +248,13 @@ namespace SiliFish.Services.Plotting
                     }
                     Title = Plot.PlotType.ToString();
                     (Coordinate[] tail_tip_coord2, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
-                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, tail_tip_coord2, episodes2, model.TimeArray, iStart, iEnd, 0);
+                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, model.TimeArray, iStart, iEnd, 0, tail_tip_coord2, episodes2);
                     plotGeneratorEpisodesTail2.CreateCharts(charts, Plot.PlotType);
                     List<int> somites = model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
                     foreach (int s in somites)
                     {
                         (double[] mnMaxPotentials2, SwimmingEpisodes episodesMN2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, s);
-                        PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, mnMaxPotentials2, episodesMN2, s, model.TimeArray, iStart, iEnd, 1);
+                        PlotGeneratorEpisodesOfMN plotGeneratorEpisodesMN2 = new(this, model.TimeArray, iStart, iEnd, 1, mnMaxPotentials2, episodesMN2, s);
                         plotGeneratorEpisodesMN2.CreateCharts(charts, Plot.PlotType);
                     }
                     break;

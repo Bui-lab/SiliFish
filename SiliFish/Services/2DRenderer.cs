@@ -266,9 +266,9 @@ namespace SiliFish.Services
             html.Replace("__POOLS__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
             html.Replace("__NODE_SIZE__", "10");
 
-            List<InterPool> gapInterPools = model.GapPoolConnections;
-            List<InterPool> chemInterPools = model.ChemPoolConnections;
-            
+            List<InterPool> gapInterPools = model.GapPoolConnections.Where(gpc => pools.Any(p => p.ID == gpc.SourcePool) && pools.Any(p => p.ID == gpc.TargetPool)).ToList();
+            List<InterPool> chemInterPools = model.ChemPoolConnections.Where(cpc => pools.Any(p => p.ID == cpc.SourcePool) && pools.Any(p => p.ID == cpc.TargetPool)).ToList();
+
             int CountMax = 0;
             if (gapInterPools.Any())
                 CountMax = gapInterPools.Max(ip => ip.CountJunctions);

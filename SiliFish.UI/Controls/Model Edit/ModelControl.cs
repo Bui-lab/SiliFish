@@ -28,6 +28,7 @@ namespace SiliFish.UI.Controls
 
         private ModelBase Model;
 
+        private bool warnedImport = false;
         private bool modelUpdated = false;
         public bool ModelUpdated
         {
@@ -445,9 +446,11 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemsImport(object sender, EventArgs e)
         {
-            if (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Any() ||
-                Model is RunningModel runningModel && runningModel.CellPools.Any())
+            if (!warnedImport && 
+                (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Any() ||
+                Model is RunningModel runningModel && runningModel.CellPools.Any()))
             {
+                warnedImport = true;
                 string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
@@ -682,8 +685,9 @@ namespace SiliFish.UI.Controls
         private void listCells_ItemsImport(object sender, EventArgs e)
         {
             string unit = SelectedPool != null ? " of " + SelectedPool.ID : "";
-            if (SelectedUnitHasCell())
+            if (!warnedImport && SelectedUnitHasCell())
             {
+                warnedImport = true;
                 string msg = $"Importing will remove all existing cells{unit}. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
@@ -1044,9 +1048,11 @@ namespace SiliFish.UI.Controls
         {
             ModelUnitBase unit = SelectedUnit;
             string ofUnit = unit != null ? $"of {unit.ID} " : "full model ";
-            if (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
-                Model is RunningModel runningModel && runningModel.HasConnections())
+            if (!warnedImport && 
+                (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
+                Model is RunningModel runningModel && runningModel.HasConnections()))
             {
+                warnedImport = true;
                 string msg = $"Importing will remove all cell pool connections {ofUnit}and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
@@ -1414,8 +1420,9 @@ namespace SiliFish.UI.Controls
             string unit = selectedUnit?.ID ?? "the model";
             if (selectedUnit is CellPoolTemplate cpt)
                 unit = cpt.CellGroup;
-            if (SelectedUnitHasStimulus(SelectedUnit))
+            if (!warnedImport && SelectedUnitHasStimulus(SelectedUnit))
             {
+                warnedImport = true;
                 string msg = $"Importing will remove all existing stimuli of {unit}. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }

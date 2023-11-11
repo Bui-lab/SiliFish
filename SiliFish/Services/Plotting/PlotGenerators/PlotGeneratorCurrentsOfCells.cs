@@ -23,8 +23,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         private readonly bool includeChemOut;
         private readonly bool combineJunctions;
 
-        public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray,
-            bool combinePools, bool combineSomites, bool combineCells, int iStart, int iEnd, int groupSeq,
+        public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
+            List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells,
             UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true, bool combineJunctions = true) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, combinePools, combineSomites, combineCells)
         {
@@ -37,7 +37,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
         private void CreateIndividualJunctionsCharts()
         {
-            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools:false, combineSomites:false, combineCells:false);
+            IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools: false, combineSomites: false, combineCells: false);
             List<GapJunction> gapJunctions = new();
             List<ChemicalSynapse> synapses = new();
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
@@ -52,7 +52,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, 0, uoM);
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse }, uoM);
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -62,7 +62,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, 0, uoM);
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse }, uoM);
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -73,7 +73,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!gapJunction.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, new() { gapJunction }, null, timeArray, iStart, iEnd,1,  uoM);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, new() { gapJunction }, null, uoM);
                             junctionPG.CreateCharts(charts);
                         }
                     }
@@ -83,7 +83,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!synapse.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, null, new() { synapse }, timeArray, iStart, iEnd, 2, uoM);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, new() { synapse }, uoM);
                             junctionPG.CreateCharts(charts);
                         }
                     }

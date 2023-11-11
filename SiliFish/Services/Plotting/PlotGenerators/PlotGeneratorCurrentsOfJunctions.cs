@@ -16,8 +16,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         readonly List<GapJunction> gapJunctions;
         readonly List<ChemicalSynapse> synapses;
         private readonly UnitOfMeasure uoM;
-        public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses,
-            double[] timeArray, int iStart, int iEnd, int groupSeq, UnitOfMeasure uoM) :
+        public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, 
+            List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses, UnitOfMeasure uoM) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
         {
             this.gapJunctions = gapJunctions;

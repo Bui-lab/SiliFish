@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
             gr2DLegend = new GroupBox();
@@ -46,6 +46,7 @@
             label4 = new Label();
             webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p2DRender = new Panel();
+            cbHideNonspiking = new CheckBox();
             l2DLinkSize = new Label();
             ud2DLinkSize = new General.UpDownControl();
             l2DNodeSize = new Label();
@@ -306,10 +307,10 @@
             webView2DRender.CreationProperties = null;
             webView2DRender.DefaultBackgroundColor = Color.White;
             webView2DRender.Dock = DockStyle.Fill;
-            webView2DRender.Location = new Point(0, 40);
+            webView2DRender.Location = new Point(0, 63);
             webView2DRender.Name = "webView2DRender";
             webView2DRender.Padding = new Padding(10);
-            webView2DRender.Size = new Size(694, 727);
+            webView2DRender.Size = new Size(694, 704);
             webView2DRender.TabIndex = 1;
             webView2DRender.ZoomFactor = 1D;
             webView2DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
@@ -317,6 +318,7 @@
             // p2DRender
             // 
             p2DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p2DRender.Controls.Add(cbHideNonspiking);
             p2DRender.Controls.Add(l2DLinkSize);
             p2DRender.Controls.Add(ud2DLinkSize);
             p2DRender.Controls.Add(l2DNodeSize);
@@ -330,17 +332,28 @@
             p2DRender.Dock = DockStyle.Top;
             p2DRender.Location = new Point(0, 0);
             p2DRender.Name = "p2DRender";
-            p2DRender.Size = new Size(694, 40);
+            p2DRender.Size = new Size(694, 63);
             p2DRender.TabIndex = 2;
+            // 
+            // cbHideNonspiking
+            // 
+            cbHideNonspiking.AutoSize = true;
+            cbHideNonspiking.Location = new Point(8, 36);
+            cbHideNonspiking.Name = "cbHideNonspiking";
+            cbHideNonspiking.Size = new Size(120, 19);
+            cbHideNonspiking.TabIndex = 73;
+            cbHideNonspiking.Text = "Hide Non-spiking";
+            cbHideNonspiking.UseVisualStyleBackColor = true;
             // 
             // l2DLinkSize
             // 
             l2DLinkSize.AutoSize = true;
-            l2DLinkSize.Location = new Point(415, 13);
+            l2DLinkSize.Location = new Point(252, 36);
             l2DLinkSize.Name = "l2DLinkSize";
             l2DLinkSize.Size = new Size(64, 15);
             l2DLinkSize.TabIndex = 71;
             l2DLinkSize.Text = "Link Width";
+            l2DLinkSize.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // ud2DLinkSize
             // 
@@ -348,7 +361,7 @@
             ud2DLinkSize.Items.Add("  ");
             ud2DLinkSize.Items.Add("   ");
             ud2DLinkSize.Items.Add("    ");
-            ud2DLinkSize.Location = new Point(480, 9);
+            ud2DLinkSize.Location = new Point(317, 34);
             ud2DLinkSize.Name = "ud2DLinkSize";
             ud2DLinkSize.Size = new Size(19, 23);
             ud2DLinkSize.TabIndex = 70;
@@ -358,11 +371,12 @@
             // l2DNodeSize
             // 
             l2DNodeSize.AutoSize = true;
-            l2DNodeSize.Location = new Point(315, 13);
+            l2DNodeSize.Location = new Point(252, 10);
             l2DNodeSize.Name = "l2DNodeSize";
             l2DNodeSize.Size = new Size(59, 15);
             l2DNodeSize.TabIndex = 69;
             l2DNodeSize.Text = "Node Size";
+            l2DNodeSize.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // ud2DNodeSize
             // 
@@ -370,7 +384,7 @@
             ud2DNodeSize.Items.Add("  ");
             ud2DNodeSize.Items.Add("   ");
             ud2DNodeSize.Items.Add("    ");
-            ud2DNodeSize.Location = new Point(380, 9);
+            ud2DNodeSize.Location = new Point(317, 8);
             ud2DNodeSize.Name = "ud2DNodeSize";
             ud2DNodeSize.Size = new Size(19, 23);
             ud2DNodeSize.TabIndex = 68;
@@ -395,7 +409,7 @@
             // 
             cb2DGapJunc.Checked = true;
             cb2DGapJunc.CheckState = CheckState.Checked;
-            cb2DGapJunc.Location = new Point(239, 10);
+            cb2DGapJunc.Location = new Point(148, 36);
             cb2DGapJunc.Name = "cb2DGapJunc";
             cb2DGapJunc.Size = new Size(80, 20);
             cb2DGapJunc.TabIndex = 59;
@@ -419,7 +433,7 @@
             // 
             pLine2D.BackColor = Color.LightGray;
             pLine2D.Dock = DockStyle.Bottom;
-            pLine2D.Location = new Point(0, 39);
+            pLine2D.Location = new Point(0, 62);
             pLine2D.Name = "pLine2D";
             pLine2D.Size = new Size(694, 1);
             pLine2D.TabIndex = 24;
@@ -1203,9 +1217,9 @@
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle8;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -1213,8 +1227,8 @@
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle9;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -1222,8 +1236,8 @@
             // 
             // colRCTrainMidPoint
             // 
-            dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle10;
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
@@ -1231,8 +1245,8 @@
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle4.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle11;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -1240,9 +1254,9 @@
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Format = "N2";
+            dataGridViewCellStyle12.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle12;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -1250,8 +1264,8 @@
             // 
             // colRCTrainMidPointDelay
             // 
-            dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle13.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle13;
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
@@ -1259,8 +1273,8 @@
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle7.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle14.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle14;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
@@ -1857,5 +1871,6 @@
         private Label lms5;
         private Label label7;
         private Label lms6;
+        private CheckBox cbHideNonspiking;
     }
 }
