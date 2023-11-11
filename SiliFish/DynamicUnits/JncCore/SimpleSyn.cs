@@ -42,9 +42,9 @@ namespace SiliFish.DynamicUnits
             :base(copyFrom)
         {
         }
-        public override void InitForSimulation(double deltaT, double deltaTEuler)
+        public override void InitForSimulation(double deltaT)
         {
-            base.InitForSimulation(deltaT, deltaTEuler);
+            base.InitForSimulation(deltaT);
             ISynA = ISynB = 0;
         }
 
@@ -58,31 +58,27 @@ namespace SiliFish.DynamicUnits
         }
         public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent, KinemParam settings, bool excitatory)
         {
-            double IsynANew = ISynA, IsynBNew = ISynB;
-            double dtTracker = 0;
-            while (dtTracker < DeltaT)
+            double IsynANew;
+            double IsynBNew;
+            if (vPreSynapse > Vth)//pre-synaptic neuron spikes
             {
-                dtTracker += DeltaTEuler;
-                if (vPreSynapse > Vth)//pre-synaptic neuron spikes
-                {
-                    // mEPSC
-                    ISynA += (ERev - vPost) * Conductance;
-                    ISynB += (ERev - vPost) * Conductance;
-                    double dIsynA = -1 / TauD * ISynA;
-                    double dIsynB = -1 / TauR * ISynB;
-                    IsynANew = ISynA + DeltaTEuler * dIsynA;
-                    IsynBNew = ISynB + DeltaTEuler * dIsynB;
-                    break;
-                }
-                else
-                {
-                    // no synaptic event
-                    double dIsynA = -1 / TauD * ISynA;
-                    double dIsynB = -1 / TauR * ISynB;
-                    IsynANew = ISynA + DeltaTEuler * dIsynA;
-                    IsynBNew = ISynB + DeltaTEuler * dIsynB;
-                }
+                // mEPSC
+                ISynA += (ERev - vPost) * Conductance;
+                ISynB += (ERev - vPost) * Conductance;
+                double dIsynA = -1 / TauD * ISynA;
+                double dIsynB = -1 / TauR * ISynB;
+                IsynANew = ISynA + DeltaT * dIsynA;
+                IsynBNew = ISynB + DeltaT * dIsynB;
             }
+            else
+            {
+                // no synaptic event
+                double dIsynA = -1 / TauD * ISynA;
+                double dIsynB = -1 / TauR * ISynB;
+                IsynANew = ISynA + DeltaT * dIsynA;
+                IsynBNew = ISynB + DeltaT * dIsynB;
+            }
+
             ISynA = IsynANew;
             ISynB = IsynBNew;
             return ISynA - ISynB;

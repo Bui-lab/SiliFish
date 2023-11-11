@@ -130,22 +130,18 @@ namespace SiliFish.DynamicUnits
             double vNew, nNew, mNew, hNew;
             spike = false;
             
-            double dtTracker = 0;
-            while (dtTracker < deltaT)
-            {
-                dtTracker += deltaTEuler;
                 // ODE eqs
                 double Cdv = I - IK - INa - IL;
-                vNew = V + Cdv * deltaTEuler / Cm;
+                vNew = V + Cdv * deltaT / Cm;
 
                 double dn = alpha_n * (1 - n) - beta_n * n;
-                nNew = n + deltaTEuler * dn;
+                nNew = n + deltaT * dn;
 
                 double dm = alpha_m * (1 - m) - beta_m * m;
-                mNew = m + deltaTEuler * dm;
+                mNew = m + deltaT * dm;
 
                 double dh = alpha_h * (1 - h) - beta_h * h;
-                hNew = h + deltaTEuler * dh;
+                hNew = h + deltaT * dh;
 
                 V = vNew;
                 n = nNew;
@@ -153,7 +149,7 @@ namespace SiliFish.DynamicUnits
                 h = hNew;
                 if (V > Vmax)
                     spike = true;
-            }
+            
             return V;
         }
 

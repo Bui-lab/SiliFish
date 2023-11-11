@@ -60,8 +60,6 @@ namespace SiliFish.UI
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
             pSimulation = new Panel();
-            ldtEuler = new Label();
-            edtEuler = new NumericUpDown();
             eSkip = new NumericUpDown();
             lSkip = new Label();
             edt = new NumericUpDown();
@@ -96,7 +94,6 @@ namespace SiliFish.UI
             splitMain.SuspendLayout();
             pGenerateModel.SuspendLayout();
             pSimulation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)edtEuler).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eSkip).BeginInit();
             ((System.ComponentModel.ISupportInitialize)edt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eTimeEnd).BeginInit();
@@ -341,8 +338,6 @@ namespace SiliFish.UI
             // pSimulation
             // 
             pSimulation.BackColor = Color.FromArgb(236, 239, 241);
-            pSimulation.Controls.Add(ldtEuler);
-            pSimulation.Controls.Add(edtEuler);
             pSimulation.Controls.Add(eSkip);
             pSimulation.Controls.Add(lSkip);
             pSimulation.Controls.Add(edt);
@@ -359,26 +354,6 @@ namespace SiliFish.UI
             pSimulation.Name = "pSimulation";
             pSimulation.Size = new Size(543, 165);
             pSimulation.TabIndex = 1;
-            // 
-            // ldtEuler
-            // 
-            ldtEuler.AutoSize = true;
-            ldtEuler.Location = new Point(10, 113);
-            ldtEuler.Name = "ldtEuler";
-            ldtEuler.Size = new Size(48, 15);
-            ldtEuler.TabIndex = 39;
-            ldtEuler.Text = "Δt Euler";
-            // 
-            // edtEuler
-            // 
-            edtEuler.DecimalPlaces = 3;
-            edtEuler.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            edtEuler.Location = new Point(71, 110);
-            edtEuler.Name = "edtEuler";
-            edtEuler.Size = new Size(76, 23);
-            edtEuler.TabIndex = 38;
-            toolTip.SetToolTip(edtEuler, "(in milliseconds)");
-            edtEuler.Value = new decimal(new int[] { 1, 0, 0, 65536 });
             // 
             // eSkip
             // 
@@ -443,7 +418,7 @@ namespace SiliFish.UI
             // 
             linkExportOutput.AutoSize = true;
             linkExportOutput.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportOutput.Location = new Point(222, 114);
+            linkExportOutput.Location = new Point(80, 114);
             linkExportOutput.Name = "linkExportOutput";
             linkExportOutput.Size = new Size(82, 15);
             linkExportOutput.TabIndex = 27;
@@ -468,7 +443,7 @@ namespace SiliFish.UI
             btnRun.FlatAppearance.BorderColor = Color.LightGray;
             btnRun.FlatStyle = FlatStyle.Flat;
             btnRun.ForeColor = Color.White;
-            btnRun.Location = new Point(153, 110);
+            btnRun.Location = new Point(11, 110);
             btnRun.Name = "btnRun";
             btnRun.Size = new Size(63, 23);
             btnRun.TabIndex = 9;
@@ -606,7 +581,6 @@ namespace SiliFish.UI
             pGenerateModel.PerformLayout();
             pSimulation.ResumeLayout(false);
             pSimulation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)edtEuler).EndInit();
             ((System.ComponentModel.ISupportInitialize)eSkip).EndInit();
             ((System.ComponentModel.ISupportInitialize)edt).EndInit();
             ((System.ComponentModel.ISupportInitialize)eTimeEnd).EndInit();
@@ -637,8 +611,6 @@ namespace SiliFish.UI
         private Label lSkip;
         private SaveFileDialog saveFileImage;
         private Button btnCellularDynamics;
-        private Label ldtEuler;
-        private NumericUpDown edtEuler;
         private Button btnAbout;
         private ModelOutputControl modelOutputControl;
         private ModelControl modelControl;

@@ -54,8 +54,6 @@ namespace SiliFish.UI.Controls
         public event EventHandler ContentChanged;
 
         public double DeltaT { get; set; }
-        public double DeltaTEuler { get; set; }
-
         public string CoreType
         {
             get { return coreType; }
@@ -220,7 +218,6 @@ namespace SiliFish.UI.Controls
             CoreSolverSettings settings = new()
             {
                 DeltaT = DeltaT,
-                DeltaTEuler = DeltaTEuler,
                 SelectionType = ddGASelection.Text,
                 CrossOverType = ddGACrossOver.Text,
                 MutationType = ddGAMutation.Text,
@@ -273,7 +270,6 @@ namespace SiliFish.UI.Controls
                             CoreSolverSettings settings = new()
                             {
                                 DeltaT = DeltaT,
-                                DeltaTEuler = DeltaTEuler,
                                 SelectionType = selection,
                                 CrossOverType = crossover,
                                 MutationType = mutation,
@@ -343,7 +339,7 @@ namespace SiliFish.UI.Controls
 
         private void linkSuggestMinMax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT);
 
             if (core == null) return;
 
@@ -554,7 +550,7 @@ namespace SiliFish.UI.Controls
         {
             OnGetParams.Invoke(this, EventArgs.Empty);
             ReadFitnessFunctions();
-            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT, DeltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, Parameters, DeltaT);
             double fitness = CoreFitness.Evaluate(targetRheobaseFunction, fitnessFunctions, core);
             lOptimizationOutput.Text = $"Snapshot fitness: {fitness}";
         }
@@ -644,7 +640,7 @@ namespace SiliFish.UI.Controls
                 int iter = 0;
                 foreach (var bp in exhaustiveBestParameters)
                 {
-                    CellCore core = CellCore.CreateCore(CoreType, bp.Parameters, DeltaT, DeltaTEuler);
+                    CellCore core = CellCore.CreateCore(CoreType, bp.Parameters, DeltaT);
                     double rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
                     sw.WriteLine(string.Join(",", ++iter, string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
                 }

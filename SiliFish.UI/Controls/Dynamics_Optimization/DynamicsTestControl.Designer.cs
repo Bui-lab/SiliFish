@@ -46,7 +46,6 @@
             label1 = new Label();
             eRheobase = new TextBox();
             lRheobase = new Label();
-            edtEuler = new NumericUpDown();
             stimulusControl1 = new StimulusSettingsControl();
             rbSingleEntryStimulus = new RadioButton();
             rbRheobaseBasedStimulus = new RadioButton();
@@ -67,7 +66,6 @@
             pSep1 = new Panel();
             lms = new Label();
             lms2 = new Label();
-            lEulerdt = new Label();
             pFlow2 = new Panel();
             eMultipleStimulus = new TextBox();
             rbMultipleEntry = new RadioButton();
@@ -112,7 +110,6 @@
             ((System.ComponentModel.ISupportInitialize)eStepStartTime).BeginInit();
             grRheobase.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eRheobaseDuration).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)edtEuler).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
             splitMain.Panel2.SuspendLayout();
@@ -318,17 +315,6 @@
             lRheobase.Size = new Size(58, 15);
             lRheobase.TabIndex = 16;
             lRheobase.Text = "Rheobase";
-            // 
-            // edtEuler
-            // 
-            edtEuler.DecimalPlaces = 2;
-            edtEuler.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            edtEuler.Location = new Point(193, 62);
-            edtEuler.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
-            edtEuler.Name = "edtEuler";
-            edtEuler.Size = new Size(66, 23);
-            edtEuler.TabIndex = 26;
-            edtEuler.Value = new decimal(new int[] { 1, 0, 0, 65536 });
             // 
             // stimulusControl1
             // 
@@ -545,13 +531,11 @@
             pFlow1.Controls.Add(lPlotEndTime);
             pFlow1.Controls.Add(lStepEndTime);
             pFlow1.Controls.Add(eStepStartTime);
-            pFlow1.Controls.Add(edtEuler);
             pFlow1.Controls.Add(ePlotEndTime);
             pFlow1.Controls.Add(lms);
             pFlow1.Controls.Add(lms2);
             pFlow1.Controls.Add(lPlotdt);
             pFlow1.Controls.Add(eStepEndTime);
-            pFlow1.Controls.Add(lEulerdt);
             pFlow1.Location = new Point(3, 3);
             pFlow1.Name = "pFlow1";
             pFlow1.Size = new Size(277, 96);
@@ -583,15 +567,6 @@
             lms2.Size = new Size(31, 15);
             lms2.TabIndex = 28;
             lms2.Text = "(ms)";
-            // 
-            // lEulerdt
-            // 
-            lEulerdt.AutoSize = true;
-            lEulerdt.Location = new Point(139, 66);
-            lEulerdt.Name = "lEulerdt";
-            lEulerdt.Size = new Size(48, 15);
-            lEulerdt.TabIndex = 30;
-            lEulerdt.Text = "Euler Δt";
             // 
             // pFlow2
             // 
@@ -798,7 +773,6 @@
             // 
             gaControl.CoreType = null;
             gaControl.DeltaT = 0D;
-            gaControl.DeltaTEuler = 0D;
             gaControl.Dock = DockStyle.Fill;
             gaControl.Location = new Point(0, 0);
             gaControl.Name = "gaControl";
@@ -1014,7 +988,6 @@
             grRheobase.ResumeLayout(false);
             grRheobase.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eRheobaseDuration).EndInit();
-            ((System.ComponentModel.ISupportInitialize)edtEuler).EndInit();
             splitMain.Panel1.ResumeLayout(false);
             splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
@@ -1113,11 +1086,9 @@
         private GroupBox grFiring;
         private Controls.SensitivityAnalysisControl sensitivityAnalysisFiring;
         private Controls.SensitivityAnalysisControl sensitivityAnalysisRheobase;
-        private NumericUpDown edtEuler;
         private Label lms2;
         private Label lms;
         private Panel pRheobase;
-        private Label lEulerdt;
         private TextBox eMultipleStimulus;
         private Label lMultipleEntryNote;
         private RadioButton rbMultipleEntry;

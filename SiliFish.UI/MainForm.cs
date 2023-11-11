@@ -69,7 +69,6 @@ namespace SiliFish.UI
         {
             if (Model == null) return;
             edt.Value = (decimal)RunningModel.RunParam.DeltaT;
-            edtEuler.Value = (decimal)RunningModel.RunParam.DeltaTEuler;
             eSkip.Value = RunningModel.RunParam.SkipDuration;
             eTimeEnd.Value = RunningModel.RunParam.MaxTime;
         }
@@ -142,7 +141,6 @@ namespace SiliFish.UI
             GlobalSettings.LastRunSettings[lTimeEnd.Name] = eTimeEnd.Text;
             GlobalSettings.LastRunSettings[lSkip.Name] = eSkip.Text;
             GlobalSettings.LastRunSettings[ldt.Name] = edt.Text;
-            GlobalSettings.LastRunSettings[ldtEuler.Name] = edtEuler.Text;
         }
         private void GetLastRunSettings()
         {
@@ -153,7 +151,6 @@ namespace SiliFish.UI
                     eTimeEnd.Text = GlobalSettings.LastRunSettings[lTimeEnd.Name];
                     eSkip.Text = GlobalSettings.LastRunSettings[lSkip.Name];
                     edt.Text = GlobalSettings.LastRunSettings[ldt.Name];
-                    edtEuler.Text = GlobalSettings.LastRunSettings[ldtEuler.Name];
                 }
                 catch { }
             }
@@ -299,7 +296,6 @@ namespace SiliFish.UI
                 SkipDuration = (int)eSkip.Value,
                 MaxTime = (int)eTimeEnd.Value,
                 DeltaT = (double)edt.Value,
-                DeltaTEuler = (double)edtEuler.Value,
                 TrackJunctionCurrent = RunningModel.JunctionCurrentTrackingOn
             };
             btnRun.Text = "Stop Run";
@@ -582,8 +578,8 @@ namespace SiliFish.UI
                         else
                         {
                             ControlContainer controlContainer = new()//TODO hide save button
-                            { 
-                                Text = $"Comparing {ModelTemplate.ModelName} to {mb.ModelName}" 
+                            {
+                                Text = $"Comparing {ModelTemplate.ModelName} to {mb.ModelName}"
                             };
                             RichTextBox richTextBox = new()
                             {

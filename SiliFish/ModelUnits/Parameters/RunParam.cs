@@ -10,8 +10,6 @@ namespace SiliFish.ModelUnits.Parameters
         public int SkipDuration { get; set; } = GlobalSettings.SimulationSkipTime;
         public int MaxTime { get; set; } = GlobalSettings.SimulationEndTime;
         public double DeltaT { get; set; } = GlobalSettings.SimulationDeltaT;//The step size
-        public double DeltaTEuler { get; set; } = GlobalSettings.SimulationEulerDeltaT;//The step size for Euler method
-
         public int iIndex(double t)
         {
             int i = (int)((t + SkipDuration) / DeltaT);

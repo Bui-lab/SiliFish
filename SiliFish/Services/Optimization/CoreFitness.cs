@@ -79,7 +79,7 @@ namespace SiliFish.Services.Optimization
                 instanceValues.Add(key, values[iter++]);
             }
 
-            CellCore core = CellCore.CreateCore(CoreType, instanceValues, coreUnitSolver.Settings.DeltaT, coreUnitSolver.Settings.DeltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, instanceValues, coreUnitSolver.Settings.DeltaT);
             return Evaluate(TargetRheobaseFunction, FitnessFunctions, core);
         }
     }

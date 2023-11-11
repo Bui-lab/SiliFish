@@ -152,7 +152,6 @@ namespace SiliFish.ModelUnits.Junction
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
             
-            Core.DeltaTEuler = model.RunParam.DeltaTEuler;
             Core.DeltaT = model.RunParam.DeltaT;
         }
         public override string ToString()
@@ -164,7 +163,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             base.InitForSimulation(nmax, trackCurrent, dt);
             RunningModel model = PreNeuron.Model;
-            Core.InitForSimulation(dt, model.RunParam.DeltaTEuler);
+            Core.InitForSimulation(dt);
             
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / dt);

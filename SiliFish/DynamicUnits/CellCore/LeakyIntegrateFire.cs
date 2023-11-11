@@ -52,38 +52,26 @@ namespace SiliFish.DynamicUnits
         {
             double vNew;
             spike = false;
-            double dtTracker = 0;
-            bool rising = false;
-            while (dtTracker < deltaT)
+
+            if (V >= Vthreshold && V < Vmax)
             {
-                dtTracker += deltaTEuler;
-                if (V >= Vthreshold && V < Vmax)
-                {
-                    spike = true;
-                    V = Vmax;
-                    break;
-                }
-                else if (V >= Vmax)
-                {
-                    if (rising)//allow to reach the potential >=Vmax before going back to "c"
-                    {
-                        spike = true;
-                        break;
-                    }
-                    vNew = Vreset;
-                    V = vNew;
-                    break;
-                }
-                else
-                {
-                    // Cdv refers to Capacitance * dV/dt as in Izhikevich model
-                    // (Dynamical Systems in Neuroscience: page 268, Eq 8.1)
-                    double Cdv = I - (V - Vr)/R;
-                    vNew = V + Cdv * deltaTEuler / C;
-                    if (vNew > V) rising = true;//to prevent resetting to Vreset due to different Euler dt
-                    V = vNew;
-                }
+                spike = true;
+                V = Vmax;
             }
+            else if (V >= Vmax)
+            {
+                vNew = Vreset;
+                V = vNew;
+            }
+            else
+            {
+                // Cdv refers to Capacitance * dV/dt as in Izhikevich model
+                // (Dynamical Systems in Neuroscience: page 268, Eq 8.1)
+                double Cdv = I - (V - Vr) / R;
+                vNew = V + Cdv * deltaT / C;
+                V = vNew;
+            }
+
             return V;
         }
 

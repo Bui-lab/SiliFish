@@ -30,7 +30,6 @@ namespace SiliFish.Definitions
         public static int SimulationEndTime = 1000;
         public static int SimulationSkipTime = 0;
         public static double SimulationDeltaT = 0.1;
-        public static double SimulationEulerDeltaT = 0.1;
         public static bool JunctionLevelTracking = false;
         public static bool Randomization = true;
 
@@ -205,11 +204,6 @@ namespace SiliFish.Definitions
             DisplayName("Default δt"),
             Category("Simulation")]
         public double SimulationDeltaT { get { return GlobalSettings.SimulationDeltaT; } set { GlobalSettings.SimulationDeltaT= value; } }
-
-        [Description("In ms - the default time unit used in differential equations."),
-            DisplayName("Default Euler δt"),
-            Category("Simulation")]
-        public double SimulationEulerDeltaT { get { return GlobalSettings.SimulationEulerDeltaT; } set { GlobalSettings.SimulationEulerDeltaT = value; } }
 
         [Description("Whether junction level current tracking is on or off. For larger models turning it off is recommended."),
             DisplayName("Junction level current tracking"),

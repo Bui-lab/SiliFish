@@ -20,7 +20,6 @@ namespace SiliFish.Services.Optimization
 
         public string Version { get; set; }
         public double DeltaT { get; set; }
-        public double DeltaTEuler { get; set; }
         public string SelectionType { get; set; }
         public string CrossOverType { get; set; }
         public string MutationType { get; set; }

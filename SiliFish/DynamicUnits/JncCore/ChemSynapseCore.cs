@@ -60,7 +60,6 @@ namespace SiliFish.DynamicUnits.JncCore
         public ChemSynapseCore(ChemSynapseCore copyFrom)
         {
             DeltaT = copyFrom.DeltaT;
-            DeltaTEuler = copyFrom.DeltaTEuler;
             Conductance = copyFrom.Conductance; //unitary conductance
             SetParameters(copyFrom.GetParameters());
         }

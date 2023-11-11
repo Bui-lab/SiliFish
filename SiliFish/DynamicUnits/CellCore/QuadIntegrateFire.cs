@@ -23,30 +23,24 @@ namespace SiliFish.DynamicUnits
 
         public override double GetNextVal(double Stim, ref bool spike)
         {
-            double dtTracker = 0;
-            while (dtTracker < deltaT)
+            // ODE eqs
+            if (V >= Vthreshold && V < Vmax)
             {
-                dtTracker += deltaTEuler;
-                // ODE eqs
-                if (V >= Vthreshold && V < Vmax)
-                {
-                    spike = true;
-                    V = Vmax;
-                    break;
-                }
-                else if (V >= Vmax)
-                {
-                    spike = true;
-                    V = Vr;
-                    break;
-                }
-                else
-                {
-                    double dv = V * V + Stim;
-                    double vNew = V + dv * deltaTEuler;
-                    V = vNew;
-                }
+                spike = true;
+                V = Vmax;
             }
+            else if (V >= Vmax)
+            {
+                spike = true;
+                V = Vr;
+            }
+            else
+            {
+                double dv = V * V + Stim;
+                double vNew = V + dv * deltaT;
+                V = vNew;
+            }
+
             return V;
         }
         public override DynamicsStats SolveODE(double[] I)

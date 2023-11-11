@@ -24,12 +24,11 @@ namespace SiliFish.DynamicUnits.JncCore
         [JsonIgnore, Browsable(false)]
         public virtual string Identifier => throw new NotImplementedException();
         
-        public double DeltaT, DeltaTEuler;
+        public double DeltaT;
 
-        public virtual void InitForSimulation(double deltaT, double deltaTEuler)
+        public virtual void InitForSimulation(double deltaT)
         {
             this.DeltaT = deltaT;
-            this.DeltaTEuler = deltaTEuler;
         }
     }
 }

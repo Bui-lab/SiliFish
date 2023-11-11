@@ -38,14 +38,10 @@ namespace SiliFish.DynamicUnits
             return typeMap.Keys.Where(k => k != nameof(CellCore) && k!=nameof(ContractibleCellCore)).ToList();
         }
 
-        public static CellCore CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null, double? dt_euler = null)
+        public static CellCore CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null)
         {
             if (string.IsNullOrEmpty(coreType)) return null;
             CellCore core = (CellCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
-            if (dt_euler != null)
-                core.deltaTEuler = (double)dt_euler;
-            else if (core.deltaTEuler==0)
-                core.deltaTEuler = GlobalSettings.SimulationEulerDeltaT;
             if (dt_run != null)
                 core.deltaT = (double)dt_run;
             else if (core.deltaT == 0)
@@ -56,7 +52,6 @@ namespace SiliFish.DynamicUnits
         public static CellCore CreateCore(CellCore copyFrom)
         {
             CellCore core = (CellCore)Activator.CreateInstance(typeMap[copyFrom.CoreType], copyFrom.Parameters ?? new Dictionary<string, double>());
-            core.deltaTEuler = copyFrom.deltaTEuler;
             core.deltaT = copyFrom.deltaT;
             return core;
         }
@@ -73,7 +68,7 @@ namespace SiliFish.DynamicUnits
 
         #endregion
 
-        protected double deltaT, deltaTEuler;
+        protected double deltaT;
         protected double V = -70;//Keeps the current value of V 
         private double? rheobase;
 
@@ -99,10 +94,9 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore, Browsable(false)]
         public string CoreType => GetType().Name;
 
-        public virtual void Initialize(double deltaT, double deltaTEuler)
+        public virtual void Initialize(double deltaT)
         {
             this.deltaT = deltaT;
-            this.deltaTEuler = deltaTEuler;
             Initialize();
         }
         protected virtual void Initialize()

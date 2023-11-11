@@ -24,13 +24,11 @@ namespace SiliFish.UI.Controls
         private static string coreUnitFileDefaultFolder;
         private Random Random = new();
         private string coreType;
-        private double deltaT, deltaTEuler;
+        private double deltaT;
         private string tempFolder;
         private string outputFolder;
         private event EventHandler contentChanged;
         public double DeltaT { get => deltaT; set { deltaT = value; gaControl.DeltaT = value; } }
-        public double DeltaTEuler { get => deltaTEuler; set { deltaTEuler = value; gaControl.DeltaTEuler = value; } }
-
         public string CoreType
         {
             get { return coreType; }
@@ -175,7 +173,7 @@ namespace SiliFish.UI.Controls
             List<Chart> charts = new();
             ReadParameters();
             string param = sensitivityAnalysisFiring.SelectedParam;
-            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT);
 
             double[] values = sensitivityAnalysisFiring.GetValues(parameters[param]);
             double[] I = GenerateStimulus(stimulusControl1.GetStimulusSettings());
@@ -215,7 +213,7 @@ namespace SiliFish.UI.Controls
             string selectedParam = sensitivityAnalysisRheobase.SelectedParam;
             if (parameters.ContainsKey(selectedParam))
                 paramToTest = parameters.Where(kvp => kvp.Key.ToString() == selectedParam).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            CellCore core = CellCore.CreateCore(CoreType, parameters, DeltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, DeltaT);
 
             foreach (string param in paramToTest.Keys)//change one parameter at a time
             {
@@ -313,7 +311,6 @@ namespace SiliFish.UI.Controls
             parameters = pfParams.CreateDoubleDictionaryFromControls();
             gaControl.Parameters = parameters;
             DeltaT = (double)edt.Value;
-            DeltaTEuler = (double)edtEuler.Value;
         }
 
         #region Plotting
@@ -520,8 +517,7 @@ namespace SiliFish.UI.Controls
             RunParam runParam = new()
             {
                 MaxTime = plotEnd_ms,
-                DeltaT = DeltaT,
-                DeltaTEuler = DeltaT
+                DeltaT = DeltaT
             };
             Stimulus stim = new()
             {
@@ -535,7 +531,7 @@ namespace SiliFish.UI.Controls
         private void DynamicsRun()
         {
             ReadParameters();
-            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT);
             if (core != null)
             {
                 if (rbSingleEntryStimulus.Checked)
@@ -600,7 +596,7 @@ namespace SiliFish.UI.Controls
         private void CalculateRheobase()
         {
             ReadParameters();
-            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT);
             decimal limit = eRheobaseLimit.Value;
             decimal d = (decimal)core.CalculateRheoBase((double)limit, Math.Pow(0.1, 3), (int)eRheobaseDuration.Value, (double)edt.Value);
             if (d >= 0)
@@ -700,7 +696,7 @@ namespace SiliFish.UI.Controls
         private void linkSaveCoreUnit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ReadParameters();
-            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT, deltaTEuler);
+            CellCore core = CellCore.CreateCore(CoreType, parameters, deltaT);
             saveFileJson.InitialDirectory = coreUnitFileDefaultFolder;
             if (saveFileJson.ShowDialog() == DialogResult.OK)
             {

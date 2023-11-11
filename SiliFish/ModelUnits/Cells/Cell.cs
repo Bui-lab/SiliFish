@@ -229,7 +229,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.DeltaT, Model.RunParam.DeltaTEuler);
+            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.DeltaT);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;
@@ -358,7 +358,7 @@ namespace SiliFish.ModelUnits.Cells
             InitForSimulation(runParam.DeltaT);
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
-            Core.Initialize(runParam.DeltaT, runParam.DeltaTEuler);
+            Core.Initialize(runParam.DeltaT);
             spikeTrain.Clear();
             V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             Stimuli.InitForSimulation(Model.RunParam, Model.rand);

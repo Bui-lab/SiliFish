@@ -73,38 +73,25 @@ namespace SiliFish.DynamicUnits
         {
             double vNew, uNew;
             spike = false;
-            double dtTracker = 0;
-            bool rising = false;
-            while (dtTracker < deltaT)
+            if (V < Vmax)
             {
-                dtTracker += deltaTEuler;
-                if (V < Vmax)
-                {
-                    // ODE eqs
-                    // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
-                    double Cdv = 0.04 * V * V + 5 * V + 140 - u + I;
-                    vNew = V + Cdv * deltaTEuler;// / Cm;
-                    double du = a * (b * V - u);
-                    uNew = u + deltaTEuler * du;
-                    if (vNew > V) rising = true;//to prevent resetting to Vreset due to different Euler dt
-                    V = vNew;
-                    u = uNew;
-                }
-                else
-                {
-                    if (rising)//allow to reach the potential >=Vmax before going back to "c"
-                    {
-                        spike = true;
-                        break;
-                    }
-                    // Spike
-                    spike = true;
-                    vNew = c;
-                    uNew = u + d;
-                    V = vNew;
-                    u = uNew;
-                    break;
-                }
+                // ODE eqs
+                // Cdv refers to Capacitance * dV/dt as in Izhikevich model (Dynamical Systems in Neuroscience: page 273, Eq 8.5)
+                double Cdv = 0.04 * V * V + 5 * V + 140 - u + I;
+                vNew = V + Cdv * deltaT;// / Cm;
+                double du = a * (b * V - u);
+                uNew = u + deltaT * du;
+                V = vNew;
+                u = uNew;
+            }
+            else
+            {
+                // Spike
+                spike = true;
+                vNew = c;
+                uNew = u + d;
+                V = vNew;
+                u = uNew;
             }
             return V;
         }
