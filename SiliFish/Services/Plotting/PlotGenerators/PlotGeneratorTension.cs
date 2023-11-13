@@ -15,8 +15,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     internal class PlotGeneratorTension : PlotGeneratorOfCells
     {
         public PlotGeneratorTension(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, combinePools, combineSomites, combineCells)
+            List<Cell> cells, PlotSelectionInterface plotSelection) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
         }
         protected override void CreateCharts(PlotType _)

@@ -16,8 +16,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     {
         private readonly UnitOfMeasure uoM;
         public PlotGeneratorStimuli(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, 
-            List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells, UnitOfMeasure uoM) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, combinePools, combineSomites, combineCells)
+            List<Cell> cells, PlotSelectionInterface plotSelection, UnitOfMeasure uoM) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
             this.uoM = uoM;
         }

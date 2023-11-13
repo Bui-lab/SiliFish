@@ -38,6 +38,8 @@ namespace SiliFish.ModelUnits.Architecture
         }
         [JsonPropertyOrder(2)]
         public KinemParam KinemParam { get; set; } = new();
+        [JsonPropertyOrder(2)]
+        public DynamicsParam DynamicsParam { get; set; } = new();
 
         [JsonPropertyOrder(2)]
         public Dictionary<string, object> Parameters { get; set; } = new();

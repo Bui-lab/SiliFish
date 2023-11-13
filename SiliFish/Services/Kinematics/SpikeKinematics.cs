@@ -19,7 +19,7 @@ namespace SiliFish.Services.Kinematics
         /// <param name="TimeArray"></param>
         /// <param name="cells">of a single cell pool and sagittal plane</param>
         /// <returns></returns>
-        public static List<TrainOfBursts> GenerateColumnsOfBursts(KinemParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
+        public static List<TrainOfBursts> GenerateColumnsOfBursts(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
         {
             //TODO works for only somite based models
             List<TrainOfBursts> trueTrains = new();

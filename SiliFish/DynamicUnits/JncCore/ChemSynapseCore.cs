@@ -78,7 +78,7 @@ namespace SiliFish.DynamicUnits.JncCore
             ChemSynapseCore core = CreateCore(coreType, param);
             return core.CheckValues(ref errors);
         }
-        public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, KinemParam settings, bool excitatory)
+        public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {
             throw new NotImplementedException();
         }

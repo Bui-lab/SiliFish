@@ -1,4 +1,6 @@
-﻿using SiliFish.ModelUnits.Cells;
+﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits.Cells;
+using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +17,16 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         protected readonly bool combineCells;
 
         protected PlotGeneratorOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells) :
+            List<Cell> cells, PlotSelectionInterface cellSelection) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
         {
             this.cells = cells;
-            this.combinePools = combinePools;
-            this.combineSomites = combineSomites;
-            this.combineCells = combineCells;
+            if (cellSelection is PlotSelectionMultiCells cs)
+            {
+                combinePools = cs.CombinePools;
+                combineSomites = cs.CombineSomites;
+                combineCells = cs.CombineCells;
+            }
         }
     }
 }

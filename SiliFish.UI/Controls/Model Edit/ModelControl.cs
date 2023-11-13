@@ -159,6 +159,7 @@ namespace SiliFish.UI.Controls
             ddDefaultMuscleCellCore.Text = Model?.Settings.DefaultMuscleCellCore;
             propSettings.SelectedObject = Model?.Settings;
             propKinematics.SelectedObject = Model?.KinemParam;
+            propDynamics.SelectedObject = Model?.DynamicsParam;
             LoadParams(Model?.Parameters);
         }
 
@@ -446,7 +447,7 @@ namespace SiliFish.UI.Controls
 
         private void listCellPools_ItemsImport(object sender, EventArgs e)
         {
-            if (!warnedImport && 
+            if (!warnedImport &&
                 (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Any() ||
                 Model is RunningModel runningModel && runningModel.CellPools.Any()))
             {
@@ -1048,7 +1049,7 @@ namespace SiliFish.UI.Controls
         {
             ModelUnitBase unit = SelectedUnit;
             string ofUnit = unit != null ? $"of {unit.ID} " : "full model ";
-            if (!warnedImport && 
+            if (!warnedImport &&
                 (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
                 Model is RunningModel runningModel && runningModel.HasConnections()))
             {
@@ -1460,7 +1461,7 @@ namespace SiliFish.UI.Controls
                     if (mult == 0 && value == 0)
                         st.Active = false;
                     else if (mult != 0)
-                        st.Settings.Value1 *= mult;                        
+                        st.Settings.Value1 *= mult;
                     else
                         st.Settings.Value1 = value;
                 }
@@ -1569,5 +1570,6 @@ namespace SiliFish.UI.Controls
                     label.Text = label.Text.Remove(label.Text.Length - 14);
             }
         }
+
     }
 }

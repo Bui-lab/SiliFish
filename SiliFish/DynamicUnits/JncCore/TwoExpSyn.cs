@@ -62,7 +62,7 @@ namespace SiliFish.DynamicUnits
                 errors.Add($"Chemical synapse: Tau has 0 value.");
             return errors.Count == 0;
         }
-        public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, KinemParam settings, bool excitatory)
+        public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {
             if (!settings.AllowReverseCurrent && (excitatory && vPost>ERev || !excitatory && vPost < ERev))
             {

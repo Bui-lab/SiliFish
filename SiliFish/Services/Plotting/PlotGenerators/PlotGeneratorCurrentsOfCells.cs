@@ -24,9 +24,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         private readonly bool combineJunctions;
 
         public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<Cell> cells, bool combinePools, bool combineSomites, bool combineCells,
+            List<Cell> cells, PlotSelectionInterface plotSelection,
             UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true, bool combineJunctions = true) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, combinePools, combineSomites, combineCells)
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
             this.uoM = uoM;
             this.includeGap = includeGap;

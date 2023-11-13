@@ -17,7 +17,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         protected readonly int iEnd;
         protected readonly int GroupSeq;
         public List<Chart> charts { get; set; }
-        public bool AddChart(Chart chart)
+        public bool AddChart(Chart chart, int? chartSeq = null)
         {
             if (chart.NumOfDataPoints + plotGenerator.NumOfDataPoints > GlobalSettings.PlotDataPointLimit)
             {
@@ -27,7 +27,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 return false;
             }
             chart.GroupSeq = GroupSeq;
-            chart.ChartSeq = charts.Count;
+            chart.ChartSeq = chartSeq ?? charts.Count;
             charts.Add(chart);
             return true;
         }

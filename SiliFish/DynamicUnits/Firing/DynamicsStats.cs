@@ -16,7 +16,7 @@ namespace SiliFish.DynamicUnits.Firing
     /// </summary>
     public class DynamicsStats
     {
-        private KinemParam kinemParams;
+        private DynamicsParam dynamicsParams;
         private double chatteringIrregularity = 0.1;
         private double oneClusterMultiplier = 2;
         private double tonicPadding = 1;
@@ -100,7 +100,7 @@ namespace SiliFish.DynamicUnits.Firing
                         int iEnd = 1;
                         while (iEnd <= SpikeList.Count - 1)
                         {
-                            while (dt * (SpikeList[iEnd] - SpikeList[iEnd - 1]) < kinemParams.SpikeBreak)
+                            while (dt * (SpikeList[iEnd] - SpikeList[iEnd - 1]) < dynamicsParams.SpikeBreak)
                             {
                                 iEnd++;
                                 if (iEnd == SpikeList.Count)
@@ -138,7 +138,7 @@ namespace SiliFish.DynamicUnits.Firing
                         int iEnd = 1;
                         while (iEnd <= BurstsOrSpikes.Count - 1)
                         {
-                            while ((BurstsOrSpikes[iEnd].Start - BurstsOrSpikes[iEnd - 1].End) < kinemParams.EpisodeBreak)
+                            while ((BurstsOrSpikes[iEnd].Start - BurstsOrSpikes[iEnd - 1].End) < dynamicsParams.BurstBreak)
                             {
                                 iEnd++;
                                 if (iEnd == BurstsOrSpikes.Count)
@@ -231,14 +231,14 @@ namespace SiliFish.DynamicUnits.Firing
         }
         public DynamicsStats()
         { }
-        public DynamicsStats(KinemParam settings, double[] stimulus, double dt)
+        public DynamicsStats(DynamicsParam settings, double[] stimulus, double dt)
         {
-            kinemParams = settings ?? new KinemParam();//use default values
-            chatteringIrregularity = kinemParams.ChatteringIrregularity;
-            oneClusterMultiplier = kinemParams.OneClusterMultiplier;
-            tonicPadding = kinemParams.TonicPadding;
-            MaxBurstInterval_LowerRange = kinemParams.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = kinemParams.MaxBurstInterval_DefaultUpperRange;
+            dynamicsParams = settings ?? new DynamicsParam();//use default values
+            chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
+            oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
+            tonicPadding = dynamicsParams.TonicPadding;
+            MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             int iMax = stimulus.Length;
@@ -252,14 +252,14 @@ namespace SiliFish.DynamicUnits.Firing
             analyzed = false;
         }
 
-        public DynamicsStats(KinemParam settings, double[] V, double dt, double Vthreshold)
+        public DynamicsStats(DynamicsParam settings, double[] V, double dt, double Vthreshold)
         {
-            kinemParams = settings ?? new KinemParam();//use default values
-            chatteringIrregularity = kinemParams.ChatteringIrregularity;
-            oneClusterMultiplier = kinemParams.OneClusterMultiplier;
-            tonicPadding = kinemParams.TonicPadding;
-            MaxBurstInterval_LowerRange = kinemParams.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = kinemParams.MaxBurstInterval_DefaultUpperRange;
+            dynamicsParams = settings ?? new DynamicsParam();//use default values
+            chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
+            oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
+            tonicPadding = dynamicsParams.TonicPadding;
+            MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
+            MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             StimulusArray = null;
@@ -420,7 +420,7 @@ namespace SiliFish.DynamicUnits.Firing
                 }
             }
 
-            burstsOrSpikes = BurstOrSpike.SpikesToBursts(kinemParams, dt, SpikeList, out double lastInterval);
+            burstsOrSpikes = BurstOrSpike.SpikesToBursts(dynamicsParams, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))
                 lastInterval = quiescence;
             followedByQuiescence = lastStimulusTime - lastSpikeTime >= lastInterval + tonicPadding;

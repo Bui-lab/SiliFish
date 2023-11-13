@@ -94,6 +94,9 @@
             tabModel = new TabControl();
             saveFileCSV = new SaveFileDialog();
             openFileCSV = new OpenFileDialog();
+            tDynamics = new TabPage();
+            eDynamicsDescription = new TextBox();
+            propDynamics = new PropertyGrid();
             tJson.SuspendLayout();
             pModelJSONTop.SuspendLayout();
             tSettings.SuspendLayout();
@@ -139,6 +142,7 @@
             pDrawing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pbDrawing).BeginInit();
             tabModel.SuspendLayout();
+            tDynamics.SuspendLayout();
             SuspendLayout();
             // 
             // openFileJson
@@ -939,6 +943,7 @@
             tabModel.Controls.Add(tGeneral);
             tabModel.Controls.Add(tArchitecture);
             tabModel.Controls.Add(tKinematics);
+            tabModel.Controls.Add(tDynamics);
             tabModel.Controls.Add(tSettings);
             tabModel.Controls.Add(tJson);
             tabModel.Dock = DockStyle.Fill;
@@ -956,6 +961,40 @@
             // openFileCSV
             // 
             openFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
+            // tDynamics
+            // 
+            tDynamics.Controls.Add(propDynamics);
+            tDynamics.Controls.Add(eDynamicsDescription);
+            tDynamics.Location = new Point(4, 24);
+            tDynamics.Name = "tDynamics";
+            tDynamics.Size = new Size(682, 555);
+            tDynamics.TabIndex = 8;
+            tDynamics.Text = "Dynamics";
+            tDynamics.UseVisualStyleBackColor = true;
+            // 
+            // eDynamicsDescription
+            // 
+            eDynamicsDescription.BackColor = Color.FromArgb(236, 239, 241);
+            eDynamicsDescription.Dock = DockStyle.Bottom;
+            eDynamicsDescription.Location = new Point(0, 516);
+            eDynamicsDescription.Multiline = true;
+            eDynamicsDescription.Name = "eDynamicsDescription";
+            eDynamicsDescription.ReadOnly = true;
+            eDynamicsDescription.Size = new Size(682, 39);
+            eDynamicsDescription.TabIndex = 28;
+            eDynamicsDescription.Text = "Dynamics parameters are used in calculating firing related statistics.\r\nThey do not effect the how the model behaves and can be modified after the simulation.";
+            // 
+            // propDynamics
+            // 
+            propDynamics.BackColor = Color.FromArgb(207, 216, 220);
+            propDynamics.Dock = DockStyle.Fill;
+            propDynamics.HelpBackColor = Color.FromArgb(207, 216, 220);
+            propDynamics.HelpBorderColor = Color.FromArgb(0, 184, 212);
+            propDynamics.Location = new Point(0, 0);
+            propDynamics.Name = "propDynamics";
+            propDynamics.Size = new Size(682, 516);
+            propDynamics.TabIndex = 27;
             // 
             // ModelControl
             // 
@@ -1019,6 +1058,8 @@
             pDrawing.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pbDrawing).EndInit();
             tabModel.ResumeLayout(false);
+            tDynamics.ResumeLayout(false);
+            tDynamics.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1088,5 +1129,8 @@
         private ListBoxControl listIncoming;
         private ListBoxControl listOutgoing;
         private ListBoxControl listGap;
+        private TabPage tDynamics;
+        private PropertyGrid propDynamics;
+        private TextBox eDynamicsDescription;
     }
 }

@@ -1171,7 +1171,7 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SpikeKinematics.GenerateColumnsOfBursts(RunningModel.KinemParam, RunningModel.RunParam.DeltaT,
+                List<TrainOfBursts> burstTrains = SpikeKinematics.GenerateColumnsOfBursts(RunningModel.DynamicsParam, RunningModel.RunParam.DeltaT,
                     pooledCells, iSpikeStart, iSpikeEnd);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
