@@ -15,6 +15,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         protected readonly bool combinePools;
         protected readonly bool combineSomites;
         protected readonly bool combineCells;
+        protected readonly bool combineJunctions;
 
         protected PlotGeneratorOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
             List<Cell> cells, PlotSelectionInterface cellSelection) :
@@ -26,6 +27,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 combinePools = cs.CombinePools;
                 combineSomites = cs.CombineSomites;
                 combineCells = cs.CombineCells;
+                combineJunctions = cs.CombineJunctions;
             }
         }
     }

@@ -21,18 +21,16 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         private readonly bool includeGap;
         private readonly bool includeChemIn;
         private readonly bool includeChemOut;
-        private readonly bool combineJunctions;
 
         public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
             List<Cell> cells, PlotSelectionInterface plotSelection,
-            UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true, bool combineJunctions = true) :
+            UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
             this.uoM = uoM;
             this.includeGap = includeGap;
             this.includeChemIn = includeChemIn;
             this.includeChemOut = includeChemOut;
-            this.combineJunctions = combineJunctions;
         }
 
         private void CreateIndividualJunctionsCharts()

@@ -368,7 +368,7 @@ namespace SiliFish.UI
             // lSkip
             // 
             lSkip.AutoSize = true;
-            lSkip.Location = new Point(11, 61);
+            lSkip.Location = new Point(10, 61);
             lSkip.Name = "lSkip";
             lSkip.Size = new Size(29, 15);
             lSkip.TabIndex = 6;
@@ -402,9 +402,9 @@ namespace SiliFish.UI
             ldt.AutoSize = true;
             ldt.Location = new Point(10, 87);
             ldt.Name = "ldt";
-            ldt.Size = new Size(60, 15);
+            ldt.Size = new Size(19, 15);
             ldt.TabIndex = 32;
-            ldt.Text = "Δt Output";
+            ldt.Text = "Δt";
             // 
             // lRunTime
             // 
@@ -610,7 +610,6 @@ namespace SiliFish.UI
         private NumericUpDown eSkip;
         private Label lSkip;
         private SaveFileDialog saveFileImage;
-        private Button btnCellularDynamics;
         private Button btnAbout;
         private ModelOutputControl modelOutputControl;
         private ModelControl modelControl;
