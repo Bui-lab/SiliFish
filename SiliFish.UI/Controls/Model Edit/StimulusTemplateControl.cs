@@ -2,6 +2,7 @@
 using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using SiliFish.UI.EventArguments;
@@ -11,6 +12,7 @@ namespace SiliFish.UI.Controls
     public partial class StimulusTemplateControl : UserControl
     {
         private StimulusTemplate Stimulus;
+        private bool autoGenerateName = true;
         public StimulusTemplateControl()
         {
             InitializeComponent();
@@ -33,7 +35,9 @@ namespace SiliFish.UI.Controls
 
             stim ??= new();
             Stimulus = stim;
-
+            string name = stim.GeneratedName();
+            autoGenerateName = name == stim.Name;
+            eName.Text = stim.Name;
             stimControl.SetStimulusSettings(Stimulus.Settings);
             ddTargetPool.Items.AddRange(pools.ToArray());
             ddTargetPool.Text = stim.TargetPool;
@@ -85,6 +89,7 @@ namespace SiliFish.UI.Controls
                 sagPlane = SagittalPlane.Both;
             Stimulus = new StimulusTemplate()
             {
+                Name = eName.Text,
                 Settings = stimControl.GetStimulusSettings(),
                 TargetPool = ddTargetPool.Text,
                 TargetSomite = cbAllSomites.Checked ? "All somites" : eTargetSomites.Text,
@@ -126,6 +131,22 @@ namespace SiliFish.UI.Controls
         internal void SetSourcePool(CellPoolTemplate selectedPoolTemplate)
         {
             ddTargetPool.SelectedItem = selectedPoolTemplate;
+        }
+
+        private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateName();
+        }
+        private void UpdateName()
+        {
+            if (Stimulus == null) return;
+            if (autoGenerateName)
+                eName.Text = Stimulus.GeneratedName();
+        }
+
+        private void eName_Leave(object sender, EventArgs e)
+        {
+            autoGenerateName = string.IsNullOrEmpty(eName.Text) || eName.Text == Stimulus?.GeneratedName();
         }
     }
 }

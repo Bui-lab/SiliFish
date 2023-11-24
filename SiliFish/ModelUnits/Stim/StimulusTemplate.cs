@@ -7,12 +7,23 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Stim
 {
     public class StimulusTemplate : StimulusBase, IDataExporterImporter
     {
-        public string TargetPool { get; set; }
+        private string targetPool;
+        public string TargetPool
+        {
+            get { return targetPool; }
+            set
+            {
+                bool rename = GeneratedName() == Name;
+                targetPool = value;
+                if (rename) Name = GeneratedName();
+            }
+        }
         public string TargetSomite { get; set; } = "All";
         public string TargetCell { get; set; } = "All";
 
@@ -27,6 +38,7 @@ namespace SiliFish.ModelUnits.Stim
         {
             StimulusTemplate stim = new()
             {
+                Name = Name,
                 TargetPool = TargetPool,
                 TargetSomite = TargetSomite,
                 TargetCell = TargetCell,
@@ -38,6 +50,10 @@ namespace SiliFish.ModelUnits.Stim
             };
             return stim;
         }
+        public override string GeneratedName()
+        {
+            return $"Stim to {TargetPool}";
+        }        
         //TODO DiffersFrom is not implemented
         public override int CompareTo(ModelUnitBase otherbase)
         {
@@ -48,35 +64,37 @@ namespace SiliFish.ModelUnits.Stim
         {
             string timeline = TimeLine_ms != null && !TimeLine_ms.IsBlank() ? TimeLine_ms.ToString() : "";
             string active = Active ? "" : " (inactive)";
-            return $"{ID}: {Settings} {timeline} {active}".Replace("  ", " ");
+            return $"{ID}: {timeline} {active}".Replace("  ", " ");
         }
         [JsonIgnore]
-        public override string ID => $"Target: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
+        public override string ID => $"{Name}\r\nTarget: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
         [JsonIgnore]
-        public override string Tooltip => $"{ToString()}\r\n{Settings?.ToString()}\r\n{TimeLine_ms}";
+        public override string Tooltip => $"{ToString()}\r\nDelay/somite: {DelayPerSomite}\r\nSagittal Delay: {DelaySagittal}";
 
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
-            ListBuilder.Build<string>("TargetPool", "TargetSomite", "TargetCell", "LeftRight", "DelayPerSomite", "DelaySagittal", "Active",  StimulusSettings.ColumnNames, TimeLine.ColumnNames);
+            ListBuilder.Build<string>("Name", "TargetPool", "TargetSomite", "TargetCell", "LeftRight", "DelayPerSomite", "DelaySagittal", "Active",  StimulusSettings.ColumnNames, TimeLine.ColumnNames);
 
         public List<string> ExportValues()
         {
-            return ListBuilder.Build<string>(TargetPool, TargetSomite, TargetCell, LeftRight, DelayPerSomite, DelaySagittal, Active, Settings.ExportValues(), TimeLine_ms.ExportValues());
+            return ListBuilder.Build<string>(Name, TargetPool, TargetSomite, TargetCell, LeftRight, DelayPerSomite, DelaySagittal, Active, Settings.ExportValues(), TimeLine_ms.ExportValues());
         }
         public void ImportValues(List<string> values)
         {
             if (values.Count != ColumnNames.Count) return;
-            TargetPool = values[0];
-            TargetSomite = values[1];
-            TargetCell = values[2];
-            LeftRight = values[3];
-            if (double.TryParse(values[4], out double d))
+            int i = 0;
+            Name = values[i++];
+            TargetPool = values[i++];
+            TargetSomite = values[i++];
+            TargetCell = values[i++];
+            LeftRight = values[i++];
+            if (double.TryParse(values[i++], out double d))
                 DelayPerSomite = d;
-            if (double.TryParse(values[5], out d))
+            if (double.TryParse(values[i++], out d))
                 DelaySagittal = d;
-            Active = bool.Parse(values[6]);
-            int lastSettingsCol = StimulusSettings.ColumnNames.Count + 7;
-            Settings.ImportValues(values.Take(new Range(7, lastSettingsCol)).ToList());
+            Active = bool.Parse(values[i++]);
+            int lastSettingsCol = StimulusSettings.ColumnNames.Count + i;
+            Settings.ImportValues(values.Take(new Range(i, lastSettingsCol)).ToList());
             TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());
         }
     }

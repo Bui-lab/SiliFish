@@ -75,7 +75,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         foreach (var ff in SpikeBurstFrequency)
                         {
                             for (int i = (int)(ff.Key / dt); i < (int)(ff.Value.End / dt); i++)
-                                data[i] = string.Concat(data[i].AsSpan(0, data[i].Length - 4), ff.Value.Freq.ToString(GlobalSettings.PlotDataFormat), ",");
+                                data[i - iStart] = string.Concat(data[i - iStart].AsSpan(0, data[i - iStart].Length - 4), ff.Value.Freq.ToString(GlobalSettings.PlotDataFormat), ",");
                         }
                     }
                     if (chartExists)

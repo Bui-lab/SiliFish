@@ -47,24 +47,28 @@
             eTargetSomites = new TextBox();
             eTargetCells = new TextBox();
             pTargetPool = new Panel();
+            lms2 = new Label();
+            eDelaySagittal = new TextBox();
+            lDelaySagittal = new Label();
             lms = new Label();
             eDelayPerSomite = new TextBox();
             lDelayPerSomite = new Label();
             pActive = new Panel();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            lms2 = new Label();
-            eDelaySagittal = new TextBox();
-            lDelaySagittal = new Label();
+            panel1 = new Panel();
+            eName = new TextBox();
+            lName = new Label();
             pTargetPool.SuspendLayout();
             pActive.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // timeLineControl
             // 
             timeLineControl.BackColor = Color.WhiteSmoke;
             timeLineControl.Dock = DockStyle.Fill;
-            timeLineControl.Location = new Point(3, 341);
+            timeLineControl.Location = new Point(3, 378);
             timeLineControl.Name = "timeLineControl";
             timeLineControl.Size = new Size(249, 146);
             timeLineControl.TabIndex = 15;
@@ -80,6 +84,7 @@
             ddTargetPool.Name = "ddTargetPool";
             ddTargetPool.Size = new Size(144, 23);
             ddTargetPool.TabIndex = 7;
+            ddTargetPool.SelectedIndexChanged += ddTargetPool_SelectedIndexChanged;
             // 
             // lTargetPool
             // 
@@ -151,7 +156,7 @@
             stimControl.AutoSize = true;
             stimControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             stimControl.BackColor = Color.FromArgb(249, 249, 249);
-            stimControl.Location = new Point(3, 3);
+            stimControl.Location = new Point(3, 40);
             stimControl.MinimumSize = new Size(200, 100);
             stimControl.Name = "stimControl";
             stimControl.Size = new Size(217, 100);
@@ -235,10 +240,37 @@
             pTargetPool.Controls.Add(lTargetSomites);
             pTargetPool.Controls.Add(cbAllSomites);
             pTargetPool.Controls.Add(lAll);
-            pTargetPool.Location = new Point(3, 109);
+            pTargetPool.Location = new Point(3, 146);
             pTargetPool.Name = "pTargetPool";
             pTargetPool.Size = new Size(249, 188);
             pTargetPool.TabIndex = 36;
+            // 
+            // lms2
+            // 
+            lms2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lms2.AutoSize = true;
+            lms2.Location = new Point(215, 163);
+            lms2.Name = "lms2";
+            lms2.Size = new Size(31, 15);
+            lms2.TabIndex = 41;
+            lms2.Text = "(ms)";
+            // 
+            // eDelaySagittal
+            // 
+            eDelaySagittal.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eDelaySagittal.Location = new Point(102, 159);
+            eDelaySagittal.Name = "eDelaySagittal";
+            eDelaySagittal.Size = new Size(107, 23);
+            eDelaySagittal.TabIndex = 40;
+            // 
+            // lDelaySagittal
+            // 
+            lDelaySagittal.AutoSize = true;
+            lDelaySagittal.Location = new Point(3, 163);
+            lDelaySagittal.Name = "lDelaySagittal";
+            lDelaySagittal.Size = new Size(78, 15);
+            lDelaySagittal.TabIndex = 39;
+            lDelaySagittal.Text = "Sagittal Delay";
             // 
             // lms
             // 
@@ -270,7 +302,7 @@
             // pActive
             // 
             pActive.Controls.Add(cbActive);
-            pActive.Location = new Point(3, 303);
+            pActive.Location = new Point(3, 340);
             pActive.Name = "pActive";
             pActive.Size = new Size(246, 32);
             pActive.TabIndex = 37;
@@ -279,6 +311,7 @@
             // 
             flowLayoutPanel1.AutoSize = true;
             flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(panel1);
             flowLayoutPanel1.Controls.Add(stimControl);
             flowLayoutPanel1.Controls.Add(pTargetPool);
             flowLayoutPanel1.Controls.Add(pActive);
@@ -286,36 +319,37 @@
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(255, 490);
+            flowLayoutPanel1.Size = new Size(255, 527);
             flowLayoutPanel1.TabIndex = 38;
             flowLayoutPanel1.WrapContents = false;
             // 
-            // lms2
+            // panel1
             // 
-            lms2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lms2.AutoSize = true;
-            lms2.Location = new Point(215, 163);
-            lms2.Name = "lms2";
-            lms2.Size = new Size(31, 15);
-            lms2.TabIndex = 41;
-            lms2.Text = "(ms)";
+            panel1.Controls.Add(eName);
+            panel1.Controls.Add(lName);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(3, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(249, 31);
+            panel1.TabIndex = 38;
             // 
-            // eDelaySagittal
+            // eName
             // 
-            eDelaySagittal.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            eDelaySagittal.Location = new Point(102, 159);
-            eDelaySagittal.Name = "eDelaySagittal";
-            eDelaySagittal.Size = new Size(107, 23);
-            eDelaySagittal.TabIndex = 40;
+            eName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eName.Location = new Point(102, 4);
+            eName.Name = "eName";
+            eName.Size = new Size(142, 23);
+            eName.TabIndex = 27;
+            eName.Leave += eName_Leave;
             // 
-            // lDelaySagittal
+            // lName
             // 
-            lDelaySagittal.AutoSize = true;
-            lDelaySagittal.Location = new Point(3, 163);
-            lDelaySagittal.Name = "lDelaySagittal";
-            lDelaySagittal.Size = new Size(78, 15);
-            lDelaySagittal.TabIndex = 39;
-            lDelaySagittal.Text = "Sagittal Delay";
+            lName.AutoSize = true;
+            lName.Location = new Point(3, 7);
+            lName.Name = "lName";
+            lName.Size = new Size(39, 15);
+            lName.TabIndex = 26;
+            lName.Text = "Name";
             // 
             // StimulusTemplateControl
             // 
@@ -331,6 +365,8 @@
             pActive.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -362,5 +398,8 @@
         private Label lms2;
         private TextBox eDelaySagittal;
         private Label lDelaySagittal;
+        private Panel panel1;
+        private TextBox eName;
+        private Label lName;
     }
 }

@@ -19,8 +19,7 @@ namespace SiliFish.ModelUnits.Junction
     public class InterPoolTemplate : InterPoolBase
     {
         #region Private fields
-        private string _Name;
-        private string poolSource, poolTarget;
+        private string sourcePool, targetPool;
         private string coreType;
         private Dictionary<string, object> parameters;
         
@@ -29,16 +28,7 @@ namespace SiliFish.ModelUnits.Junction
         #region Properties
         [JsonIgnore]
         public override string ID => $"{Name} [{ConnectionType}]/{AxonReachMode} {CellReach.Projection}";
-        public string Name
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_Name))
-                    _Name = GeneratedName();
-                return _Name;
-            }
-            set { _Name = value; }
-        }
+
 
         public string Description { get; set; }
         public double Probability { get; set; } = 1;
@@ -55,21 +45,21 @@ namespace SiliFish.ModelUnits.Junction
 
         public override string SourcePool
         {
-            get { return poolSource; }
+            get { return sourcePool; }
             set
             {
                 bool rename = GeneratedName() == Name;
-                poolSource = value;
+                sourcePool = value;
                 if (rename) Name = GeneratedName();
             }
         }
         public override string TargetPool
         {
-            get { return poolTarget; }
+            get { return targetPool; }
             set
             {
                 bool rename = GeneratedName() == Name;
-                poolTarget = value;
+                targetPool = value;
                 if (rename) Name = GeneratedName();
             }
         }
@@ -321,7 +311,7 @@ namespace SiliFish.ModelUnits.Junction
                 errors.Insert(errorCount, $"{ID}:");
             return errors.Count == 0;
         }
-        public string GeneratedName()
+        public override string GeneratedName()
         {
             return $"{(!string.IsNullOrEmpty(SourcePool) ? SourcePool : "__")}-->{(!string.IsNullOrEmpty(TargetPool) ? TargetPool : "__")}";
         }
