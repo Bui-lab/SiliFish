@@ -29,7 +29,7 @@ namespace SiliFish.ModelUnits.Architecture
             List<string> differences = new();
             if (other is ModelTemplate om)
             {
-                //TODO handle new cp in "other"
+                #region CellPoolTemplates
                 foreach (CellPoolTemplate cpt1 in CellPoolTemplates)
                 {
                     CellPoolTemplate cpt2 = om.CellPoolTemplates.FirstOrDefault(cp => cp.CellGroup == cpt1.CellGroup);
@@ -42,7 +42,14 @@ namespace SiliFish.ModelUnits.Architecture
                             differences.AddRange(diff);
                     }
                 }
-                //TODO handle new junction in "other"
+                foreach (CellPoolTemplate cpt3 in om.CellPoolTemplates)
+                {
+                    CellPoolTemplate cpt4 = CellPoolTemplates.FirstOrDefault(cp => cp.CellGroup == cpt3.CellGroup);
+                    if (cpt4 is null)
+                        differences.Add($"Deleted cell pool: {cpt3.CellGroup}");
+                }
+                #endregion
+                #region InterPoolTemplates
                 foreach (InterPoolTemplate ipt1 in InterPoolTemplates)
                 {
                     InterPoolTemplate ipt2 = om.InterPoolTemplates.FirstOrDefault(ip => ip.ID == ipt1.ID);
@@ -55,6 +62,33 @@ namespace SiliFish.ModelUnits.Architecture
                             differences.AddRange(diff);
                     }
                 }
+                foreach (InterPoolTemplate ipt3 in om.InterPoolTemplates)
+                {
+                    InterPoolTemplate ipt4 = InterPoolTemplates.FirstOrDefault(ip => ip.ID == ipt3.ID);
+                    if (ipt4 is null)
+                        differences.Add($"Deleted cell junction: {ipt3.ID}");
+                }
+                #endregion
+                #region StimulusTemplates
+                foreach (StimulusTemplate st1 in StimulusTemplates)
+                {
+                    StimulusTemplate st2 = om.StimulusTemplates.FirstOrDefault(ip => ip.ID == st1.ID);
+                    if (st2 is null)
+                        differences.Add($"New stimulus: {st1.ID}");
+                    else
+                    {
+                        List<string> diff = st1.DiffersFrom(st2);
+                        if (diff != null)
+                            differences.AddRange(diff);
+                    }
+                }
+                foreach (StimulusTemplate st3 in om.StimulusTemplates)
+                {
+                    StimulusTemplate st4 = StimulusTemplates.FirstOrDefault(ip => ip.ID == st3.ID);
+                    if (st4 is null)
+                        differences.Add($"Deleted stimulus: {st3.ID}");
+                }
+                #endregion
             }
             else
             {

@@ -21,7 +21,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            string yAxis = "Memb. Potential (mV)";
+            string yAxis = "Memb. Pot. (mV)";
             if (cells != null)
             {
                 double yMin = cells.Min(c => c.MinPotentialValue(iStart, iEnd));

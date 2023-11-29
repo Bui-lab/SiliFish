@@ -564,7 +564,10 @@ namespace SiliFish.UI
             try
             {
                 if (ModelTemplate == null) //TODO RunningModel comparison is not yet implemented
+                {
+                    MessageBox.Show("Model comparison is currently available for model templates only.", "Future Feature");
                     return;
+                }
                 openFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (openFileJson.ShowDialog() == DialogResult.OK)
                 {
@@ -577,7 +580,8 @@ namespace SiliFish.UI
                             MessageBox.Show("Models are identical", "");
                         else
                         {
-                            ControlContainer controlContainer = new()//TODO hide save button
+                            //TODO same thing exists in ModelControl
+                            ControlContainer controlContainer = new()//TODO rename save button
                             {
                                 Text = $"Comparing {ModelTemplate.ModelName} to {mb.ModelName}"
                             };
