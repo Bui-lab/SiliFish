@@ -189,6 +189,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     string csvData = "`" + synInTitle[..^1] + "\n" + string.Join("\n", synInData.Select(line => line[..^1]).ToArray()) + "`";
                     Chart chart = new()
                     {
+                        GroupSeq = GroupSeq, 
                         CsvData = csvData,
                         Color = string.Join(',', colorPerInSynChart),
                         Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
@@ -212,6 +213,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     string csvData = "`" + gapTitle[..^1] + "\n" + string.Join("\n", gapData.Select(line => line[..^1]).ToArray()) + "`";
                     Chart chart = new()
                     {
+                        GroupSeq = GroupSeq + 1,
                         CsvData = csvData,
                         Color = string.Join(',', colorPerGapChart),
                         Title = $"`{cellGroup.Key} Gap Currents`",
@@ -235,6 +237,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     string csvData = "`" + synOutTitle[..^1] + "\n" + string.Join("\n", synOutData.Select(line => line[..^1]).ToArray()) + "`";
                     Chart chart = new()
                     {
+                        GroupSeq = GroupSeq + 2,
                         CsvData = csvData,
                         Color = string.Join(',', colorPerOutSynChart),
                         Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",

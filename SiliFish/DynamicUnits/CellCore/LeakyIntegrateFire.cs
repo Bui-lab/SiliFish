@@ -50,7 +50,6 @@ namespace SiliFish.DynamicUnits
 
         public override double GetNextVal(double I, ref bool spike)
         {
-            double vNew;
             spike = false;
 
             if (V >= Vthreshold && V < Vmax)
@@ -60,16 +59,12 @@ namespace SiliFish.DynamicUnits
             }
             else if (V >= Vmax)
             {
-                vNew = Vreset;
-                V = vNew;
+                V = Vreset;
             }
             else
             {
-                // Cdv refers to Capacitance * dV/dt as in Izhikevich model
-                // (Dynamical Systems in Neuroscience: page 268, Eq 8.1)
-                double Cdv = I - (V - Vr) / R;
-                vNew = V + Cdv * deltaT / C;
-                V = vNew;
+                double dv = -1 / (R * C) * (V - Vr) + I / C;
+                V += dv * deltaT;
             }
 
             return V;

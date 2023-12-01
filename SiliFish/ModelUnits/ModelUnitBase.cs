@@ -7,11 +7,24 @@ using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits
 {
     public abstract class ModelUnitBase : IComparable<ModelUnitBase>
     {
+        private string _Name;
+        public virtual string Name
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_Name))
+                    _Name = GeneratedName();
+                return _Name;
+            }
+            set { _Name = value; }
+        }
+
         [JsonIgnore]
         public virtual string ID { get; }
         [JsonIgnore]
@@ -34,6 +47,10 @@ namespace SiliFish.ModelUnits
         {
             errors ??= new();
             return errors.Count == 0;
+        }
+        public virtual string GeneratedName()
+        {
+            return _Name;
         }
 
         public virtual ModelUnitBase CreateCopy()

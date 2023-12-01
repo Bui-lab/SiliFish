@@ -43,7 +43,7 @@ namespace SiliFish.Services.Plotting
             if (!string.IsNullOrEmpty(errorMessage))
                 return charts;
 
-            PlotGeneratorStimuli plotGeneratorStimuli = new(this, TimeArray, iStart, iEnd, 2,
+            PlotGeneratorStimuli plotGeneratorStimuli = new(this, TimeArray, iStart, iEnd, 4,
                 cells, plotSelection, UoM);
             plotGeneratorStimuli.CreateCharts(charts);
             if (!string.IsNullOrEmpty(errorMessage))
@@ -52,7 +52,7 @@ namespace SiliFish.Services.Plotting
             List<Cell> muscleCells = cells?.Where(c => c is MuscleCell).ToList();
             if (muscleCells != null && muscleCells.Any())
             {
-                PlotGeneratorTension plotGeneratorTension = new(this, TimeArray, iStart, iEnd, 3,
+                PlotGeneratorTension plotGeneratorTension = new(this, TimeArray, iStart, iEnd, 5,
                     cells,
                     plotSelection);
                 plotGeneratorTension.CreateCharts(charts);
@@ -205,6 +205,7 @@ namespace SiliFish.Services.Plotting
                     charts = CreateFullDynamicsCharts(model.TimeArray, Cells,
                         model.KinemParam, model.RunParam.DeltaT,
                         Plot.Selection, iStart, iEnd, UoM);
+                    charts = charts.OrderBy(chart => chart.GroupSeq).ThenBy(chart => chart.ChartSeq).ToList();
                     break;
                 case PlotType.Tension:
                     Title = "Muscle Tension";

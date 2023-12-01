@@ -63,7 +63,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     CsvData = csvData,
                     Color = string.Join(',', colorPerChart),
                     Title = $"`{cellGroup.Key} Membrane Potential`",
-                    yLabel = "`Memb. Potential (mV)`",
+                    yLabel = "`Memb. Pot. (mV)`",
                     yMin = yMin,
                     yMax = yMax,
                     xMin = timeArray[iStart],

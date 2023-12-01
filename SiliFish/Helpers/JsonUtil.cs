@@ -34,7 +34,7 @@ namespace SiliFish.Helpers
                 };
                 return JsonSerializer.Deserialize(jsonstring, content, options);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 return null;
             }

@@ -28,6 +28,11 @@ namespace SiliFish.Services.Optimization
             }
             return true;
         }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
     public class CoreSolver
     {

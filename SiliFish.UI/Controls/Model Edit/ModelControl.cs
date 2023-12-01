@@ -475,42 +475,89 @@ namespace SiliFish.UI.Controls
             {
                 Text = "Conductance Multiplier"
             };
+            List<string> changes = new();
+
             ConductanceMultiplier multiplier = new();
             controlContainer.AddControl(multiplier, null);
             if (controlContainer.ShowDialog() == DialogResult.OK)
             {
                 double mult = multiplier.GapMultiplier;
-                foreach (var cp in listCellPools.SelectedItems)
+                if (mult != 1)
                 {
-                    if (cp is not CellPoolTemplate poolTemplate) continue;
-                    if (mult != 1)
+                    foreach (var cp in listCellPools.SelectedItems)
                     {
+                        if (cp is not CellPoolTemplate poolTemplate) continue;
                         if (mult == 0)
+                        {
+                            Model.GetGapProjections()
+                                .Where(c => (c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup) && c.Active)
+                                .ToList()
+                                .ForEach(c => changes.Add($"{c.ID} deactivated"));
                             Model.GetGapProjections()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
                                 .ToList()
                                 .ForEach(c => c.Active = false);
+                        }
                         else
+                        {
+                            int count = Model.GetGapProjections()
+                                .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup).Count();
                             Model.GetGapProjections()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
                                 .ToList()
                                 .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
+                            changes.Add($"Conductance value of {count} gap junctions of {poolTemplate.CellGroup} multiplied by {mult}");
+                        }
                     }
-                    mult = multiplier.ChemMultiplier;
-                    if (mult != 1)
+                }
+                mult = multiplier.ChemMultiplier;
+                if (mult != 1)
+                {
+                    foreach (var cp in listCellPools.SelectedItems)
                     {
+                        if (cp is not CellPoolTemplate poolTemplate) continue;
                         if (mult == 0)
+                        {
+                            Model.GetChemicalProjections()
+                                .Where(c => c.SourcePool == poolTemplate.CellGroup && c.Active)
+                                .ToList()
+                                .ForEach(c => changes.Add($"{c.ID} deactivated"));
                             Model.GetChemicalProjections()
                                  .Where(c => c.SourcePool == poolTemplate.CellGroup)
                                  .ToList()
                                  .ForEach(c => c.Active = false);
+                        }
                         else
+                        {
+                            int count = Model.GetChemicalProjections()
+                                .Where(c => c.SourcePool == poolTemplate.CellGroup).Count();
                             Model.GetChemicalProjections()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup)
                                 .ToList()
                                 .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
+                            changes.Add($"Conductance value of {count} chem junctions originating from {poolTemplate.CellGroup} multiplied by {mult}");
+                        }
                     }
                 }
+
+                //TODO same thing exists in MainForm
+                ControlContainer controlContainer2 = new()//TODO rename save button
+                {
+                    Text = $"Modified projection conductance values"
+                };
+                RichTextBox richTextBox = new()
+                {
+                    Text = string.Join("\r\n", changes)
+                };
+                controlContainer2.AddControl(richTextBox, null);
+                controlContainer2.ShowDialog();
+                /* if (controlContainer2.ShowDialog() == DialogResult.OK)
+                 {
+                     if (saveFileText.ShowDialog() == DialogResult.OK)
+                     {
+                         FileUtil.SaveToFile(saveFileText.FileName, richTextBox.Text);
+                     }
+                 }*/
                 RefreshProjections();
                 ModelIsUpdated();
             }
@@ -1162,6 +1209,7 @@ namespace SiliFish.UI.Controls
             bool gap = lb == listGap;
             ConductanceMultiplier multiplier = new(gap);
             controlContainer.AddControl(multiplier, null);
+            List<string> changes = new();
             if (controlContainer.ShowDialog() == DialogResult.OK)
             {
                 double mult = gap ? multiplier.GapMultiplier : multiplier.ChemMultiplier;
@@ -1171,19 +1219,53 @@ namespace SiliFish.UI.Controls
                     if (jnc is InterPoolTemplate jncTemplate)
                     {
                         if (mult == 0)
+                        {
                             jncTemplate.Active = false;
+                            changes.Add($"{jncTemplate.ID} deactivated");
+                        }
                         else
+                        {
+                            double prevConductance = jncTemplate.Parameters["Conductance"].UniqueValue;
                             jncTemplate.Parameters["Conductance"].Multiply(mult);
+                            double newConductance = jncTemplate.Parameters["Conductance"].UniqueValue;
+                            changes.Add($"{jncTemplate.ID} conductance changed from {prevConductance} to {newConductance}");
+                        }
                     }
                     else if (jnc is JunctionBase junct)
                     {
                         if (mult == 0)
+                        {
                             junct.Active = false;
+                            changes.Add($"{junct.ID} deactivated");
+                        }
                         else
+                        {
+                            double prevConductance = junct.Core.Conductance;
                             junct.Core.Conductance *= mult;
+                            double newConductance = junct.Core.Conductance;
+                            changes.Add($"{junct.ID} conductance changed from {prevConductance} to {newConductance}");
+                        }
                     }
-
                 }
+                //TODO same thing exists in MainForm
+                ControlContainer controlContainer2 = new()//TODO rename save button
+                {
+                    Text = $"Modified projection conductance values"
+                };
+                RichTextBox richTextBox = new()
+                {
+                    Text = string.Join("\r\n", changes)
+                };
+                controlContainer2.AddControl(richTextBox, null);
+                controlContainer2.ShowDialog();
+                /* if (controlContainer2.ShowDialog() == DialogResult.OK)
+                 {
+                     if (saveFileText.ShowDialog() == DialogResult.OK)
+                     {
+                         FileUtil.SaveToFile(saveFileText.FileName, richTextBox.Text);
+                     }
+                 }*/
+
                 RefreshProjections();
                 ModelIsUpdated();
             }

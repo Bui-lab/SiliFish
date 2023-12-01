@@ -26,7 +26,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     charts.Add(chart);//add the first chart, even if it exceeds the limit
                 return false;
             }
-            chart.GroupSeq = GroupSeq;
+            if (chart.GroupSeq < GroupSeq)
+                chart.GroupSeq = GroupSeq;
             chart.ChartSeq = chartSeq ?? charts.Count;
             charts.Add(chart);
             return true;
