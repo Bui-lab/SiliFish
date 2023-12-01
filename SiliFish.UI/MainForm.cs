@@ -433,20 +433,6 @@ namespace SiliFish.UI
                 return false;
             }
         }
-        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        private void linkExportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
-
-
-        private void linkImportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
 
         private void btnGenerateModel_Click(object sender, EventArgs e)
         {
