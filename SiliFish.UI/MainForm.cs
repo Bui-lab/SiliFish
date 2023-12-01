@@ -323,11 +323,6 @@ namespace SiliFish.UI
         #endregion
 
         ControlContainer frmDynamics;
-        private void btnCellularDynamics_Click(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void SetCurrentMode(RunMode mode, string name)
         {
@@ -437,20 +432,6 @@ namespace SiliFish.UI
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
                 return false;
             }
-        }
-        private void linkSaveModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        private void linkExportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
-
-
-        private void linkImportModel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
         }
 
         private void btnGenerateModel_Click(object sender, EventArgs e)
