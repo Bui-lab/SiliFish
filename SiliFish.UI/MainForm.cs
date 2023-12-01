@@ -323,11 +323,6 @@ namespace SiliFish.UI
         #endregion
 
         ControlContainer frmDynamics;
-        private void btnCellularDynamics_Click(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void SetCurrentMode(RunMode mode, string name)
         {
