@@ -80,7 +80,7 @@ namespace SiliFish.Services.Kinematics
                     double end = curBurst.SpikeTimeList[^1];
                     (int rostraliID, string rostralsID, BurstOrSpike rostralBurst) = rostralTrain.BurstList
                         .FirstOrDefault(b =>
-                            end - negDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= start + posDelay
+                            start - posDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + negDelay
                             );
                     if (rostralBurst == null)
                         break;
