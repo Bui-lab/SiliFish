@@ -3,14 +3,15 @@
   <Class Name="SiliFish.ModelUnits.Stim.StimulusTemplate">
     <Position X="1.5" Y="6.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAgBAAAAAgAwEAAABAAAAAAAAAAAAAAAAMAAAAAA=</HashCode>
+      <HashCode>AAAAAgBAAAACgAwEAAAhAAAAAABAAAAAAAABMAAgQAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusTemplate.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.StimulusBase" Collapsed="true">
     <Position X="1.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusBase.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -20,15 +21,16 @@
   <Class Name="SiliFish.ModelUnits.Stim.StimulusSettings" Collapsed="true">
     <Position X="2" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIAAAAAEAAAAAAAAAAAAAAAAAAAgAAAAABA=</HashCode>
+      <HashCode>AAAAAAAAAIACAAAEAAAAAAAAAIAAAAAAAAAgIAAAQBA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusSettings.cs</FileName>
       <NewMemberFileName>ModelUnits\Stim\Stimulus.cs</NewMemberFileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.Stimuli">
     <Position X="7.25" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAIAAAAAAAAAABgABAAABAAIAAAAAAAAAAAgIAAAAAA=</HashCode>
+      <HashCode>BAIAAAAAAAAAABgABAAQBAAIAAAAAAAAAAAgIABAAAA=</HashCode>
       <FileName>ModelUnits\Stim\Stimuli.cs</FileName>
       <NewMemberFileName>ModelUnits\Stim\Stimulus.cs</NewMemberFileName>
     </TypeIdentifier>
@@ -39,29 +41,10 @@
   <Class Name="SiliFish.ModelUnits.Stim.Stimulus">
     <Position X="4.25" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BIAAAgAANBAAAUgEKAAAAAIBAAACACAAAABgigAACAA=</HashCode>
+      <HashCode>FAAAAiAANAACAEgEKAAAAAAAAABCACAAAABhogAAQAA=</HashCode>
       <FileName>ModelUnits\Stim\Stimulus.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="SiliFish.ModelUnits.Architecture.ModelTemplate" Collapsed="true">
-    <Position X="1.5" Y="10" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAACICAFMAAQAAQAAApClAAAAgAAAEGAAAAEBAAAI=</HashCode>
-      <FileName>ModelUnits\Architecture\ModelTemplate.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="AppliedStimuli" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="SiliFish.ModelUnits.Cells.Cell" Collapsed="true">
-    <Position X="10.5" Y="4.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>BYIAACKCAFIAhgAkWAggECJAAAASIEAQSBqAMAFw4AM=</HashCode>
-      <FileName>ModelUnits\Cells\Cell.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Stimuli" />
-    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
