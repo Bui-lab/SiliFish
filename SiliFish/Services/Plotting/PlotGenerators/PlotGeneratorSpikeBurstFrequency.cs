@@ -74,7 +74,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             data[i] += "NaN,";
                         foreach (var ff in SpikeBurstFrequency)
                         {
-                            for (int i = (int)(ff.Key / dt); i < (int)(ff.Value.End / dt); i++)
+                            for (int i = Math.Max((int)(ff.Key / dt), iStart); i < Math.Min((int)(ff.Value.End / dt), iEnd); i++)
                                 data[i - iStart] = string.Concat(data[i - iStart].AsSpan(0, data[i - iStart].Length - 4), ff.Value.Freq.ToString(GlobalSettings.PlotDataFormat), ",");
                         }
                     }
