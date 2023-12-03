@@ -256,7 +256,8 @@ namespace SiliFish.Services.Kinematics
             leftSpikes.Sort();
             rightSpikes.Sort();
 
-            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, leftSpikes, rightSpikes, episodeBreak);
+            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, model.DynamicsParam, model.RunParam.DeltaT, 
+                leftSpikes, rightSpikes, episodeBreak);
             double[] range = new double[model.TimeArray.Length - iSkip];
             foreach (SwimmingEpisode episode in Episodes.Episodes)
             {

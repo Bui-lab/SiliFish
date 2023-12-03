@@ -72,7 +72,7 @@ namespace SiliFish.ModelUnits.Stim
         public Stimulus() { }
         public Stimulus(StimulusSettings settings, Cell cell, TimeLine tl)
         {
-            Settings = settings;
+            Settings = settings.Clone();
             TargetCell = cell;
             TimeLine_ms = new(tl);
         }

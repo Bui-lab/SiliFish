@@ -43,14 +43,14 @@ namespace SiliFish.DynamicUnits
                 double curInterval = Math.Round(curTime - lastTime, sensitivity);
                 if (lastInterval is not double.NaN && curInterval < lastInterval - dt)//dt is used instead of epsilon, as the sensitivity is set by dt
                     spreadingOut = false;
-                if ((lastInterval is double.NaN && curInterval > settings.MaxBurstInterval_DefaultLowerRange) ||
-                    (spreadingOut && curInterval >= settings.MaxBurstInterval_DefaultUpperRange + GlobalSettings.Epsilon) ||
-                    (!spreadingOut && curInterval >= settings.MaxBurstInterval_DefaultLowerRange + GlobalSettings.Epsilon))
+                if ((lastInterval is double.NaN && curInterval > settings?.MaxBurstInterval_DefaultLowerRange) ||
+                    (spreadingOut && curInterval >= settings?.MaxBurstInterval_DefaultUpperRange + GlobalSettings.Epsilon) ||
+                    (!spreadingOut && curInterval >= settings?.MaxBurstInterval_DefaultLowerRange + GlobalSettings.Epsilon))
                 {
                     burstOrSpike = new();
-                    burstsOrSpikes.Add(burstOrSpike);
-                    spreadingOut = true;
+                    spreadingOut = lastInterval > 0;
                     lastInterval = double.NaN;
+                    burstsOrSpikes.Add(burstOrSpike);
                 }
                 else
                 {

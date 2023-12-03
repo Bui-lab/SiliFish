@@ -1,6 +1,8 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -162,12 +164,19 @@ namespace SiliFish.DataTypes
         /// <param name="rightIndices">indices including the skiped period</param>
         /// <param name="episodeBreak"></param>
         /// <returns></returns>
-        public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
+        public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, DynamicsParam settings, double dt, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
         {
             SwimmingEpisodes episodes = new();
+            if (!leftIndices.Any() || !rightIndices.Any())
+                return episodes;
             bool inEpisode = false;
             SwimmingEpisode episode = null;
             double last_t = -1;
+            List<BurstOrSpike> leftBurstOrSpikes = BurstOrSpike.SpikesToBursts(settings, dt, leftIndices, out double _);
+            List<BurstOrSpike> rightBurstOrSpikes = BurstOrSpike.SpikesToBursts(settings, dt, rightIndices, out double _);
+            leftIndices = leftBurstOrSpikes.Select(b => (int)(b.Center / dt)).ToList();
+            rightIndices = rightBurstOrSpikes.Select(b => (int)(b.Center / dt)).ToList();
+
             //remove all the matching spikes on both sides
             List<int> common = leftIndices.Intersect(rightIndices).ToList();
             leftIndices.RemoveAll(common.Contains);
