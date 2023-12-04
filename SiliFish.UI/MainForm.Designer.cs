@@ -86,6 +86,7 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
+            miToolsGenerateStatsData = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -197,7 +198,7 @@ namespace SiliFish.UI
             // 
             // mTools
             // 
-            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsSettings });
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsGenerateStatsData, miToolsSep2, miToolsSettings });
             mTools.Name = "mTools";
             mTools.Size = new Size(46, 19);
             mTools.Text = "Tools";
@@ -205,31 +206,31 @@ namespace SiliFish.UI
             // miToolsCompareModel
             // 
             miToolsCompareModel.Name = "miToolsCompareModel";
-            miToolsCompareModel.Size = new Size(175, 22);
+            miToolsCompareModel.Size = new Size(180, 22);
             miToolsCompareModel.Text = "Compare To Model";
             miToolsCompareModel.Click += miToolsCompareModel_Click;
             // 
             // miToolsSep1
             // 
             miToolsSep1.Name = "miToolsSep1";
-            miToolsSep1.Size = new Size(172, 6);
+            miToolsSep1.Size = new Size(177, 6);
             // 
             // miToolsCellularDynamics
             // 
             miToolsCellularDynamics.Name = "miToolsCellularDynamics";
-            miToolsCellularDynamics.Size = new Size(175, 22);
+            miToolsCellularDynamics.Size = new Size(180, 22);
             miToolsCellularDynamics.Text = "Cellular Dynamics";
             miToolsCellularDynamics.Click += miToolsCellularDynamics_Click;
             // 
             // miToolsSep2
             // 
             miToolsSep2.Name = "miToolsSep2";
-            miToolsSep2.Size = new Size(172, 6);
+            miToolsSep2.Size = new Size(177, 6);
             // 
             // miToolsSettings
             // 
             miToolsSettings.Name = "miToolsSettings";
-            miToolsSettings.Size = new Size(175, 22);
+            miToolsSettings.Size = new Size(180, 22);
             miToolsSettings.Text = "Settings";
             miToolsSettings.Click += miToolsSettings_Click;
             // 
@@ -551,6 +552,13 @@ namespace SiliFish.UI
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             // 
+            // miToolsGenerateStatsData
+            // 
+            miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
+            miToolsGenerateStatsData.Size = new Size(180, 22);
+            miToolsGenerateStatsData.Text = "Generate Stats Data";
+            miToolsGenerateStatsData.Click += miToolsGenerateStatsData_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -642,5 +650,6 @@ namespace SiliFish.UI
         private ToolStripMenuItem miViewAbout;
         private ToolStripMenuItem miToolsSettings;
         private ToolStripSeparator miToolsSep2;
+        private ToolStripMenuItem miToolsGenerateStatsData;
     }
 }

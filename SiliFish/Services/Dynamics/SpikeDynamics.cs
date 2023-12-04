@@ -1,18 +1,35 @@
 ﻿using SiliFish.DynamicUnits;
+using SiliFish.DynamicUnits.Firing;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
-using SiliFish.Swimming;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SiliFish.Services.Kinematics
+namespace SiliFish.Services.Dynamics
 {
-    public class SpikeKinematics
+    public class SpikeDynamics
     {
+        public static (DynamicsStats, (double AvgV, double AvgVPos, double AvgVNeg)) GenerateSpikeStats(DynamicsParam settings, double dt, Cell cell, int iStart, int iEnd)
+        {
+            List<int> spikes = cell.GetSpikeIndices(iStart, iEnd, (int)(settings.BurstBreak / dt));
+            if (!spikes.Any()) return (null, (0, 0, 0));
+            if (spikes[^1] > iEnd)
+                iEnd = spikes[^1];
+            if (iEnd >= cell.V.Length)
+                iEnd = cell.V.Length - 1;
+            DynamicsStats dyn = new(settings, cell.V[0..iEnd], dt, cell.Core.Vthreshold, iStart, iEnd);
+            double avgV = cell.V[iStart..iEnd].Average();
+            double avgVPos = cell.V[iStart..iEnd].Any(v => v >= cell.Core.Vr) ?
+                cell.V[iStart..iEnd].Where(v => v >= cell.Core.Vr).Average() : 0;
+            double avgVNeg = cell.V[iStart..iEnd].Any(v => v < cell.Core.Vr) ?
+                cell.V[iStart..iEnd].Where(v => v < cell.Core.Vr).Average() : 0;
+            return (dyn, (avgV, avgVPos, avgVNeg));
+        }
+
         /// <summary>
         /// Looking at the earliest episode, starts with the earliest somite, and goes caudal and rostral to find the episodes that belong to the same undulatory movement
         /// </summary>

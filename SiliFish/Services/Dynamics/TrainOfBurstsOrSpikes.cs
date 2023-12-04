@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SiliFish.DynamicUnits;
 using SiliFish.ModelUnits.Cells;
 
-namespace SiliFish.Swimming
+namespace SiliFish.Services.Dynamics
 {
     /// <summary>
     /// Class that keeps the train of bursts per cell/pool, or from rostral to caudal

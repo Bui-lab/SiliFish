@@ -45,6 +45,21 @@ namespace SiliFish.Helpers
             File.WriteAllText(path, content);
         }
 
+        public static void SaveToCSVFile(string filename, List<string> ColumnNames, List<List<string>> Values)
+        {
+            if (filename == null || ColumnNames == null || Values == null)
+                return;
+
+            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+            using StreamWriter sw = new(fs);
+            sw.WriteLine(string.Join(',', ColumnNames));
+
+            foreach (List<string> words in Values)
+            {
+                string row = string.Join(',', words.Select(w => Util.CSVEncode(w)).ToList());
+                sw.WriteLine(row);
+            }
+        }
         public static string SaveToTempFolder(string filename, string content)
         {
             filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));

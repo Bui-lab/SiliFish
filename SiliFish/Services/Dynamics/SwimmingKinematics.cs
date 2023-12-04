@@ -9,9 +9,8 @@ using SiliFish.ModelUnits.Parameters;
 using SiliFish.DynamicUnits;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using SiliFish.Swimming;
 
-namespace SiliFish.Services.Kinematics
+namespace SiliFish.Services.Dynamics
 {
     public static class SwimmingKinematics
     {

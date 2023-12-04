@@ -59,9 +59,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     bool chartExists = false;
                     foreach (Cell cell in cellGroup)
                     {
-                        DynamicsStats dynamics = new(dynamicsParam, cell.V, dt, cell.Core.Vthreshold);
-                        Dictionary<double, (double Freq, double End)> SpikeBurstFrequency = 
-                            (burst?dynamics.BurstingFrequency:dynamics.SpikingFrequency)
+                        DynamicsStats dynamics = new(dynamicsParam, cell.V, dt, cell.Core.Vthreshold, iStart, iEnd);
+                        Dictionary<double, (double Freq, double End)> SpikeBurstFrequency =
+                            (burst ? dynamics.BurstingFrequency_Grouped : dynamics.SpikeFrequency_Grouped)
                             .Where(fr => fr.Value.End >= iStart * dt && fr.Key <= iEnd * dt).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));
                         if (SpikeBurstFrequency.Count == 0)
                             continue;
@@ -104,9 +104,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     Cell cell = cellGroup.First();
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
-                    DynamicsStats dynamics = new(dynamicsParam, cell.V, dt, cell.Core.Vthreshold);
+                    DynamicsStats dynamics = new(dynamicsParam, cell.V, dt, cell.Core.Vthreshold, iStart, iEnd);
                     Dictionary<double, (double Freq, double End)> SpikeBurstFrequency = 
-                        (burst ? dynamics.BurstingFrequency : dynamics.SpikingFrequency)
+                        (burst ? dynamics.BurstingFrequency_Grouped : dynamics.SpikeFrequency_Grouped)
                         .Where(fr => fr.Value.End >= iStart * dt && fr.Key <= iEnd * dt).ToDictionary(fr => fr.Key, fr => (fr.Value.Freq, fr.Value.End));
                     if (SpikeBurstFrequency.Count > 0)
                     {

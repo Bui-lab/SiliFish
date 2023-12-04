@@ -20,6 +20,8 @@ namespace SiliFish.DynamicUnits.Firing
         private double chatteringIrregularity = 0.1;
         private double oneClusterMultiplier = 2;
         private double tonicPadding = 1;
+        private int analysisStart = 0;
+        private int analysisEnd = int.MaxValue;
 
         private double dt;
 
@@ -87,7 +89,7 @@ namespace SiliFish.DynamicUnits.Firing
             }
         }
 
-        public Dictionary<double, (double Freq, double End)> SpikingFrequency 
+        public Dictionary<double, (double Freq, double End)> SpikeFrequency_Grouped 
         {
             get
             {
@@ -125,7 +127,20 @@ namespace SiliFish.DynamicUnits.Firing
                 return spikeFreqs;
             }
         }
-        public Dictionary<double, (double Freq, double End)> BurstingFrequency
+        public double SpikeFrequency_Overall
+        {
+            get 
+            {
+                if (SpikeList.Count > 1)
+                {
+                    double start = SpikeList[0] * dt;
+                    double end = SpikeList[^1] * dt;
+                    return SpikeList.Count * 1000 / (end - start);
+                }
+                return 0;
+            }
+        }
+        public Dictionary<double, (double Freq, double End)> BurstingFrequency_Grouped
         {
             get
             {
@@ -164,6 +179,19 @@ namespace SiliFish.DynamicUnits.Firing
             }
         }
 
+        public double BurstingFrequency_Overall
+        {
+            get
+            {
+                if (BurstsOrSpikes.Count > 1)
+                {
+                    double start = BurstsOrSpikes[0].SpikeTimeList[0];
+                    double end = BurstsOrSpikes[^1].SpikeTimeList[^1];
+                    return BurstsOrSpikes.Count * 1000 / (end - start);
+                }
+                return 0;
+            }
+        }
 
         private List<BurstOrSpike> burstsOrSpikes;
         public List<BurstOrSpike> BurstsOrSpikes
@@ -252,7 +280,7 @@ namespace SiliFish.DynamicUnits.Firing
             analyzed = false;
         }
 
-        public DynamicsStats(DynamicsParam settings, double[] V, double dt, double Vthreshold)
+        public DynamicsStats(DynamicsParam settings, double[] V, double dt, double Vthreshold, int analysisStart, int analysisEnd)
         {
             dynamicsParams = settings ?? new DynamicsParam();//use default values
             chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
@@ -271,6 +299,8 @@ namespace SiliFish.DynamicUnits.Firing
             spikeDelay = double.NaN;
             CreateSpikeList(Vthreshold);
             analyzed = false;
+            this.analysisStart = analysisStart;
+            this.analysisEnd = analysisEnd;
         }
         private bool HasClusters()//check whether there are two clusters of intervals: interspike & interburst
         {
@@ -381,8 +411,8 @@ namespace SiliFish.DynamicUnits.Firing
         {
             if (analyzed) return;
             burstsOrSpikes = new();
-            int stimulusStart = StimulusArray?.ToList().FindIndex(i => i > 0) ?? 0;
-            int stimulusEnd = StimulusArray?.ToList().FindLastIndex(i => i > 0) ?? int.MaxValue;
+            int stimulusStart = StimulusArray?.ToList().FindIndex(i => i > 0) ?? analysisStart;
+            int stimulusEnd = StimulusArray?.ToList().FindLastIndex(i => i > 0) ?? analysisEnd;
 
             PreStimulusSpikeList = SpikeList.Where(s => s < stimulusStart).ToList();
             PostStimulusSpikeList = SpikeList.Where(s => s > stimulusEnd).ToList();

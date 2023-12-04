@@ -207,9 +207,9 @@ namespace SiliFish.ModelUnits.Cells
         {
             return V.HasSpike(Core.Vmax, iStart, iEnd);
         }
-        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
-            return V.GetSpikeIndices(Core.Vthreshold * 1.1, iStart, iEnd);//URGENT this is a random multiplier 
+            return V.GetSpikeIndices(Core.Vthreshold * 1.1, iStart, iEnd, buffer);//URGENT this is a random multiplier 
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {

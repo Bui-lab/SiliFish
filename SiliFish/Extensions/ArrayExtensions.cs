@@ -105,15 +105,17 @@ namespace SiliFish.Extensions
             int ind = Array.FindIndex(thisArray, iStart, iEnd-iStart, value => value >= threshold);
             return ind >= 0;
         }
-        public static List<int> GetSpikeIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
+        public static List<int> GetSpikeIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1, int buffer = 0)
         {
             List<int> indices = new();
             if (iEnd < 0 || iEnd >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
-
+            int lastInd = 0;
             while (true)
             {
                 int ind = Array.FindIndex(thisArray, iStart, value => value >= threshold);
+                if (lastInd + buffer > iEnd)
+                    iEnd = lastInd + buffer;
                 if (ind > iEnd || ind < 0) break;
                 while (ind < iEnd - 1 && thisArray[ind + 1] > thisArray[ind]) //find the peak
                     ind++;

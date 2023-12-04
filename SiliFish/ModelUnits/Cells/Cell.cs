@@ -420,7 +420,7 @@ namespace SiliFish.ModelUnits.Cells
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1)
+        public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);

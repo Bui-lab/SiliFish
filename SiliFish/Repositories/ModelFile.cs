@@ -2,6 +2,7 @@
 using OfficeOpenXml;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
+using SiliFish.DynamicUnits.Firing;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -11,6 +12,7 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -421,16 +423,13 @@ namespace SiliFish.Repositories
 
         #region CSV Functions
 
-        public static void SaveToFile(RunningModel model, string filename)
+        public static void SaveDataToFile(RunningModel model, string filename)
         {
             if (!model.ModelRun)
             {
                 return;
             }
             bool jncTracking = model.JunctionCurrentTrackingOn;
-            List<string> cell_names = new();
-            cell_names.AddRange(model.NeuronPools.OrderBy(np => np.CellGroup).Select(np => np.CellGroup).Distinct());
-            cell_names.AddRange(model.MusclePools.Select(k => k.CellGroup).Distinct());
 
             Dictionary<string, double[]> Vdata_list = new();
             Dictionary<string, double[]> Gapdata_list = new();
@@ -470,6 +469,7 @@ namespace SiliFish.Repositories
                 SaveModelDynamicsToCSV(filename: filename, Time: model.TimeArray, Values: Vdata_list);
             }
         }
+
         public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
             if (filename == null || Time == null || Values == null)
@@ -486,7 +486,72 @@ namespace SiliFish.Repositories
                 sw.WriteLine(row);
             }
         }
+        public static void SaveStatsDataToFile(RunningModel model, string filename)
+        {
+            if (!model.ModelRun)
+            {
+                return;
+            }
+            bool jncTracking = model.JunctionCurrentTrackingOn;
+            List<string> columnNames = new () { "Cell Pool", "Sagittal", "Somite", "Cell Name", 
+                "Stim Start", "Stim End", "Stim Details",
+                "Spike Count", "First Spike", "Last Spike", "Spike Freq",
+                 "Burst Count", "Burst Freq",
+                "Vrest", "Avg V", "Avg V > Vrest", "Avg V < Vrest"};
+            List<List<string>> values = new();
+            double dt = model.RunParam.DeltaT;
+            foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
+            {
+                foreach (Cell c in pool.GetCells())
+                {
+                    foreach (var grStim in model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End)))
+                    {
+                        (double start, double end) key = grStim.Key;
+                        if (key.start > model.RunParam.MaxTime)
+                            continue;
+                        string stimDetails ="";
+                        foreach (StimulusTemplate stim in grStim)
+                        {
+                            stimDetails += stim.ToString() + "\r\n";
+                        }
+                        List<string> cellValues = new();
+                        cellValues.AddRange(new List<string>() { pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(), c.ID });
+                        cellValues.AddRange(new List<string>() { 
+                            key.start.ToString(GlobalSettings.PlotDataFormat),
+                            key.end.ToString(GlobalSettings.PlotDataFormat),
+                            stimDetails});
+                        (DynamicsStats dyn, (double AvgV, double AvgVPos, double AvgVNeg)) =
+                            SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, (int)(key.start / dt), (int)(key.end / dt));
+                        dyn?.DefineSpikingPattern();
+                        if (dyn != null && dyn.SpikeList.Any())
+                            cellValues.AddRange(new List<string>()
+                                {   dyn.SpikeList.Count.ToString(),
+                                    (dyn.SpikeList[0]*dt).ToString(),
+                                    (dyn.SpikeList[^1]*dt).ToString(),
+                                    dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
+                        else
+                            cellValues.AddRange(new List<string>() { "0", "", "", "0" });
 
+                        if (dyn != null && dyn.BurstsOrSpikes.Any())
+                            cellValues.AddRange(new List<string>()
+                                {   dyn.BurstsOrSpikes.Count.ToString(),
+                                    dyn.BurstingFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
+                        else
+                            cellValues.AddRange(new List<string>() { "0", "0" });
+                        cellValues.AddRange(new List<string>()
+                            {
+                                c.Core.Vr.ToString(GlobalSettings.PlotDataFormat),
+                                AvgV.ToString(GlobalSettings.PlotDataFormat),
+                                AvgVPos.ToString(GlobalSettings.PlotDataFormat),
+                                AvgVNeg.ToString(GlobalSettings.PlotDataFormat)
+                             });
+                        values.Add(cellValues);
+                    }
+                }
+            }
+            FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+            FileUtil.ShowFile(filename);
+        }
         public static void SaveTailMovementToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord)
         {
             if (filename == null || tail_tip_coord == null)

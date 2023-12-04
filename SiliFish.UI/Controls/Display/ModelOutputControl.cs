@@ -19,9 +19,8 @@ using SiliFish.Services.Plotting.PlotSelection;
 using System.Diagnostics;
 using SiliFish.UI.Services;
 using SiliFish.ModelUnits.Parameters;
-using SiliFish.Swimming;
 using System.Windows.Forms;
-using SiliFish.Services.Kinematics;
+using SiliFish.Services.Dynamics;
 
 namespace SiliFish.UI.Controls
 {
@@ -1171,7 +1170,7 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SpikeKinematics.GenerateColumnsOfBursts(RunningModel.DynamicsParam, RunningModel.RunParam.DeltaT,
+                List<TrainOfBursts> burstTrains = SpikeDynamics.GenerateColumnsOfBursts(RunningModel.DynamicsParam, RunningModel.RunParam.DeltaT,
                     pooledCells, iSpikeStart, iSpikeEnd);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {

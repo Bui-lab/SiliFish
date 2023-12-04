@@ -2,7 +2,7 @@
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
-using SiliFish.Services.Kinematics;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Linq;

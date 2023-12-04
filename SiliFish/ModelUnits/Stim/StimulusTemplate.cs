@@ -97,5 +97,18 @@ namespace SiliFish.ModelUnits.Stim
             Settings.ImportValues(values.Take(new Range(i, lastSettingsCol)).ToList());
             TimeLine_ms.ImportValues(values.Take(new Range(lastSettingsCol, values.Count)).ToList());
         }
+
+        public List<StimulusTemplate> CreateSpreadedCopy()
+        {
+            List<StimulusTemplate> spreaded=new();
+            foreach (var (start, end) in TimeLine_ms.GetTimeLine())
+            {
+                StimulusTemplate st = (StimulusTemplate)CreateCopy();
+                st.TimeLine_ms.Clear();
+                st.TimeLine_ms.AddTimeRange(start, end);
+                spreaded.Add(st);
+            }
+            return spreaded;
+        }
     }
 }

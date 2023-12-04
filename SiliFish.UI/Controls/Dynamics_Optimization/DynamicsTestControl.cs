@@ -394,29 +394,29 @@ namespace SiliFish.UI.Controls
             }
             if (cbSpikingFrequency.Checked)
             {
-                if (dynamics.SpikingFrequency != null && dynamics.SpikingFrequency.Any())
+                if (dynamics.SpikeFrequency_Grouped != null && dynamics.SpikeFrequency_Grouped.Any())
                     charts.Add(new Chart
                     {
                         Title = "Spiking Freq.",
                         Color = Color.Blue.ToRGBQuoted(),
-                        xData = dynamics.SpikingFrequency.Keys.Select(ff => ff).ToArray(),
+                        xData = dynamics.SpikeFrequency_Grouped.Keys.Select(ff => ff).ToArray(),
                         xMin = 0,
                         xMax = TimeArray[^1],
                         yMin = 0,
-                        yData = dynamics.SpikingFrequency.Values.Select(ff => ff.Freq).ToArray(),
+                        yData = dynamics.SpikeFrequency_Grouped.Values.Select(ff => ff.Freq).ToArray(),
                         yLabel = "Freq (Hz)",
                         drawPoints = true
                     });
-                if (dynamics.BurstingFrequency != null && dynamics.BurstingFrequency.Any())
+                if (dynamics.BurstingFrequency_Grouped != null && dynamics.BurstingFrequency_Grouped.Any())
                     charts.Add(new Chart
                     {
                         Title = "Burst Freq.",
                         Color = Color.Blue.ToRGBQuoted(),
-                        xData = dynamics.BurstingFrequency.Keys.Select(ff => ff).ToArray(),
+                        xData = dynamics.BurstingFrequency_Grouped.Keys.Select(ff => ff).ToArray(),
                         xMin = 0,
                         xMax = TimeArray[^1],
                         yMin = 0,
-                        yData = dynamics.BurstingFrequency.Values.Select(ff => ff.Freq).ToArray(),
+                        yData = dynamics.BurstingFrequency_Grouped.Values.Select(ff => ff.Freq).ToArray(),
                         yLabel = "Freq (Hz)",
                         drawPoints = true
                     });

@@ -316,7 +316,7 @@ namespace SiliFish.UI
                 return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveToFile(RunningModel, saveFileCSV.FileName);
+                ModelFile.SaveDataToFile(RunningModel, saveFileCSV.FileName);
             }
         }
 
@@ -327,6 +327,7 @@ namespace SiliFish.UI
         private void SetCurrentMode(RunMode mode, string name)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
+            miToolsGenerateStatsData.Visible = mode == RunMode.RunningModel;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
             pSimulation.Visible = mode == RunMode.RunningModel;
             pGenerateModel.Visible = mode == RunMode.Template;
@@ -622,7 +623,17 @@ namespace SiliFish.UI
             frmDynamics.SaveVisible = false;
             frmDynamics.Show();
         }
-
+        private void miToolsGenerateStatsData_Click(object sender, EventArgs e)
+        {
+            string msg = "Exporting the stats data may take a while depending on the duration of the simulation and the number of cells." +
+                " Do you want to continue?";
+            if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                ModelFile.SaveStatsDataToFile(RunningModel, saveFileCSV.FileName);
+            }
+        }
         private void miToolsSettings_Click(object sender, EventArgs e)
         {
             ControlContainer controlContainer = new()
@@ -660,5 +671,7 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
+
+
     }
 }

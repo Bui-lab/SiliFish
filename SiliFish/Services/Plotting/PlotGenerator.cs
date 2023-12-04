@@ -14,7 +14,7 @@ using SiliFish.ModelUnits.Stim;
 using System.Reflection;
 using SiliFish.Services.Plotting.PlotGenerators;
 using SiliFish.Services.Plotting.PlotSelection;
-using SiliFish.Services.Kinematics;
+using SiliFish.Services.Dynamics;
 using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.Services.Plotting

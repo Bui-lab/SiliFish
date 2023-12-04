@@ -10,7 +10,7 @@ using SiliFish.ModelUnits.Junction;
 using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using static OfficeOpenXml.ExcelErrorValue;
-using SiliFish.Services.Kinematics;
+using SiliFish.Services.Dynamics;
 
 namespace Services
 {

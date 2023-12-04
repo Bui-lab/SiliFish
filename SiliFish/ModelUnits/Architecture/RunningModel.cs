@@ -37,6 +37,10 @@ namespace SiliFish.ModelUnits.Architecture
 
         [JsonIgnore]
         [Browsable(false)]
+        public List<StimulusTemplate> StimulusTemplates { get; set; }//used in creating stats data
+
+        [JsonIgnore]
+        [Browsable(false)]
         public List<CellPool> CellPools
         {
             get
@@ -202,9 +206,6 @@ namespace SiliFish.ModelUnits.Architecture
 
         public RunningModel(ModelTemplate swimmingModelTemplate)
         {
-            neuronPools.Clear();
-            musclePools.Clear();
-
             initialized = false;
 
             if (swimmingModelTemplate == null) return;
@@ -262,10 +263,13 @@ namespace SiliFish.ModelUnits.Architecture
             #endregion
 
             #region Generate Stimuli
+            StimulusTemplates = new();
             if (swimmingModelTemplate.StimulusTemplates?.Count > 0)
             {
                 foreach (StimulusTemplate stimulus in swimmingModelTemplate.StimulusTemplates.Where(stim => stim.Active))
                 {
+                    StimulusTemplates.AddRange(stimulus.CreateSpreadedCopy());
+
                     if (stimulus.LeftRight.Contains("Left") || stimulus.LeftRight == "Both")
                     {
                         CellPool target = neuronPools.Union(musclePools).FirstOrDefault(np => np.CellGroup == stimulus.TargetPool && np.PositionLeftRight == SagittalPlane.Left);
