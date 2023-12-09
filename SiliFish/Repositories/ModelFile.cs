@@ -15,6 +15,7 @@ using SiliFish.Services;
 using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -486,14 +487,11 @@ namespace SiliFish.Repositories
                 sw.WriteLine(row);
             }
         }
-        public static void SaveStatsDataToFile(RunningModel model, string filename)
+
+        private static void SaveSpikeFreqStats(RunningModel model, string filename)
         {
-            if (!model.ModelRun)
-            {
-                return;
-            }
             bool jncTracking = model.JunctionCurrentTrackingOn;
-            List<string> columnNames = new () { "Cell Pool", "Sagittal", "Somite", "Cell Name", 
+            List<string> columnNames = new() { "Cell Pool", "Sagittal", "Somite", "Cell Name",
                 "Stim Start", "Stim End", "Stim Details",
                 "Spike Count", "First Spike", "Last Spike", "Spike Freq",
                  "Burst Count", "Burst Freq",
@@ -509,14 +507,14 @@ namespace SiliFish.Repositories
                         (double start, double end) key = grStim.Key;
                         if (key.start > model.RunParam.MaxTime)
                             continue;
-                        string stimDetails ="";
+                        string stimDetails = "";
                         foreach (StimulusTemplate stim in grStim)
                         {
                             stimDetails += stim.ToString() + "\r\n";
                         }
                         List<string> cellValues = new();
                         cellValues.AddRange(new List<string>() { pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(), c.ID });
-                        cellValues.AddRange(new List<string>() { 
+                        cellValues.AddRange(new List<string>() {
                             key.start.ToString(GlobalSettings.PlotDataFormat),
                             key.end.ToString(GlobalSettings.PlotDataFormat),
                             stimDetails});
@@ -551,8 +549,42 @@ namespace SiliFish.Repositories
                     }
                 }
             }
+            filename = FileUtil.AppendToFileName(filename, "SpikeStats");
             FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
             FileUtil.ShowFile(filename);
+        }
+
+        private static void SaveSpikes(RunningModel model, string filename)
+        {
+            List<string> columnNames = new() { "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time"};
+            List<List<string>> values = new();
+            double dt = model.RunParam.DeltaT;
+
+            foreach (Cell cell in model.GetCells())
+            {
+                foreach (int spikeIndex in cell.GetSpikeIndices())
+                {
+                    List<string> cellValues = new();
+                    cellValues.AddRange(new List<string>() { cell.CellGroup,
+                        cell.PositionLeftRight.ToString(),
+                        cell.Somite.ToString(),
+                        cell.Sequence.ToString(),
+                        cell.ID,
+                    model.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)});
+                    values.Add(cellValues);
+                }
+            }
+            filename = FileUtil.AppendToFileName(filename, "Spikes");
+            FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+            FileUtil.ShowFile(filename);
+        }
+ 
+        public static void SaveStatsDataToFile(RunningModel model, string filename)
+        {
+            if (!model.ModelRun)
+                return;
+            SaveSpikeFreqStats(model, filename);
+            SaveSpikes(model, filename);
         }
         public static void SaveTailMovementToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord)
         {
