@@ -558,7 +558,6 @@ namespace SiliFish.Repositories
         {
             List<string> columnNames = new() { "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time"};
             List<List<string>> values = new();
-            double dt = model.RunParam.DeltaT;
 
             foreach (Cell cell in model.GetCells())
             {
@@ -578,13 +577,55 @@ namespace SiliFish.Repositories
             FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
             FileUtil.ShowFile(filename);
         }
- 
+
+        private static void SaveTailBeatFrequencies(RunningModel model, string filename)
+        {
+            (Coordinate[] _, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+            List<string> columnNames = new() { "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq" };
+            List<List<string>> values = new();
+
+            int counter = 0;
+            foreach (SwimmingEpisode episode in episodes.Episodes)
+            {
+                List<string> episodeValues = new();
+                episodeValues.AddRange(new List<string>() { "Tail",
+                        "",
+                        counter++.ToString(),
+                        episode.Start.ToString(),
+                        episode.End.ToString(),
+                        episode.NumOfBeats.ToString(),
+                        episode.BeatFrequency.ToString()});
+                values.Add(episodeValues);
+            }
+            for (int somite = 1; somite <= model.ModelDimensions.NumberOfSomites; somite++)
+            {
+                counter = 0;
+                (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, somite);
+                foreach (SwimmingEpisode episode in episodes2.Episodes)
+                {
+                    List<string> episodeValues = new();
+                    episodeValues.AddRange(new List<string>() { "MN",
+                        somite.ToString(),
+                        counter++.ToString(),
+                        episode.Start.ToString(),
+                        episode.End.ToString(),
+                        episode.NumOfBeats.ToString(),
+                        episode.BeatFrequency.ToString()});
+                    values.Add(episodeValues);
+                }
+
+            }
+            filename = FileUtil.AppendToFileName(filename, "TBF");
+            FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+            FileUtil.ShowFile(filename);
+        }
         public static void SaveStatsDataToFile(RunningModel model, string filename)
         {
             if (!model.ModelRun)
                 return;
             SaveSpikeFreqStats(model, filename);
             SaveSpikes(model, filename);
+            SaveTailBeatFrequencies(model, filename);
         }
         public static void SaveTailMovementToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord)
         {

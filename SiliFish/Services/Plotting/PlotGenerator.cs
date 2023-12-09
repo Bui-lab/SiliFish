@@ -231,6 +231,7 @@ namespace SiliFish.Services.Plotting
                     plotGeneratorEpisodesMN.CreateCharts(charts);
                     break;
                 case PlotType.TailMovement:
+                case PlotType.TailMovementFreq:
                 case PlotType.EpisodeDuration:
                 case PlotType.InstFreq:
                 case PlotType.TailBeatFreq:
