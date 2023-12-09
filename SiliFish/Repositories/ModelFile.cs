@@ -584,7 +584,7 @@ namespace SiliFish.Repositories
             List<string> columnNames = new() { "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq" };
             List<List<string>> values = new();
 
-            int counter = 0;
+            int counter = 1;
             foreach (SwimmingEpisode episode in episodes.Episodes)
             {
                 List<string> episodeValues = new();
@@ -599,7 +599,7 @@ namespace SiliFish.Repositories
             }
             for (int somite = 1; somite <= model.ModelDimensions.NumberOfSomites; somite++)
             {
-                counter = 0;
+                counter = 1;
                 (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, somite);
                 foreach (SwimmingEpisode episode in episodes2.Episodes)
                 {

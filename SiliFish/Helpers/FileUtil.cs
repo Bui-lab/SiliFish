@@ -85,8 +85,9 @@ namespace SiliFish.Helpers
         public static string AppendToFileName(string filename, string postfix)
         {
             string ext = Path.GetExtension(filename);
+            string path=Path.GetDirectoryName(filename);    
             string prefix = Path.GetFileNameWithoutExtension(filename);
-            filename = $"{prefix}{postfix.Trim()}.{ext}";
+            filename = Path.Combine(path, prefix + postfix+ext);
             return filename;
         }
         private static string GetUniqueFileName(string filename, string path)
