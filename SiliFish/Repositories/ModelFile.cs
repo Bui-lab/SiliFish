@@ -527,9 +527,9 @@ namespace SiliFish.Repositories
                         dyn?.DefineSpikingPattern();
                         if (dyn != null && dyn.SpikeList.Any())
                             cellValues.AddRange(new List<string>()
-                                {   dyn.SpikeList.Count.ToString(),
-                                    (dyn.SpikeList[0]*dt).ToString(),
-                                    (dyn.SpikeList[^1]*dt).ToString(),
+                                {   dyn.SpikeList.Count.ToString(GlobalSettings.PlotDataFormat),
+                                    (dyn.SpikeList[0]*dt).ToString(GlobalSettings.PlotDataFormat),
+                                    (dyn.SpikeList[^1]*dt).ToString(GlobalSettings.PlotDataFormat),
                                     dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
                         else
                             cellValues.AddRange(new List<string>() { "0", "", "", "0" });
