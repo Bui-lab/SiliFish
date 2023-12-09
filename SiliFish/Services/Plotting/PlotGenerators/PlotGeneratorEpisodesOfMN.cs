@@ -32,9 +32,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             CreateCharts(PlotType.EpisodesMN);
         }
         protected override void CreateCharts(PlotType plotType)
-        { 
-            if (mnMaxPotentials.Min() == mnMaxPotentials.Max() && mnMaxPotentials[0] == 0) 
-                return; 
+        {
+            if (mnMaxPotentials.Min() == mnMaxPotentials.Max() && mnMaxPotentials[0] == 0)
+                return;
             double[] Time = timeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;
             double[] yValues = mnMaxPotentials[iStart..(iEnd + 1)];
@@ -42,7 +42,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             string[] data;
 
             //Tail Movement
-            if (plotType == PlotType.EpisodesMN || plotType == PlotType.TailMovement)
+            if (plotType is PlotType.EpisodesMN or PlotType.TailMovement or PlotType.TailMovementFreq)
             {
                 title = "Time,Y-Axis";
                 data = new string[iEnd - iStart + 2];
@@ -65,7 +65,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             if (episodes.HasEpisodes)
             {
                 //Tail Beat Frequency
-                if (plotType == PlotType.EpisodesMN || plotType == PlotType.TailBeatFreq)
+                if (plotType is PlotType.EpisodesMN or PlotType.TailBeatFreq or PlotType.TailMovementFreq)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
                     title = "Time,Tail Beat Freq.";

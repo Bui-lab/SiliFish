@@ -69,6 +69,9 @@ namespace SiliFish.Definitions
         [Display(Name = "Tail Movement"),
             Group("episode")]
         TailMovement,
+        [Display(Name = "Tail Movement & Freq"),
+            Group("episode")]
+        TailMovementFreq,
         [Display(Name = "Episode Duration"),
             Group("episode")]
         EpisodeDuration,

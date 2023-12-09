@@ -17,7 +17,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     {
         readonly Coordinate[] tail_tip_coord;
         readonly SwimmingEpisodes episodes;
-        public PlotGeneratorEpisodesOfTail(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, 
+        public PlotGeneratorEpisodesOfTail(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
             Coordinate[] tail_tip_coord, SwimmingEpisodes episodes) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
         {
@@ -38,7 +38,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             string[] data;
 
             //Tail Movement
-            if (plotType == PlotType.EpisodesTail || plotType == PlotType.TailMovement)
+            if (plotType is PlotType.EpisodesTail or PlotType.TailMovement or PlotType.TailMovementFreq)
             {
                 title = "Time,Y-Axis";
                 data = new string[iEnd - iStart + 2];
@@ -60,7 +60,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             if (episodes.HasEpisodes)
             {
                 //Tail Beat Frequency
-                if (plotType == PlotType.EpisodesTail || plotType == PlotType.TailBeatFreq)
+                if (plotType is PlotType.EpisodesTail or PlotType.TailBeatFreq or PlotType.TailMovementFreq)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
                     title = "Time,Tail Beat Freq.";
