@@ -8,6 +8,8 @@ using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
 
+//Modified from the code written by Yann Roussel and Tuan Bui
+
 namespace SiliFish.DynamicUnits
 {
     public class Leaky_Integrator : ContractibleCellCore

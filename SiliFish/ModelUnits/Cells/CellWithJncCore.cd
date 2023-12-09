@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SiliFish.DynamicUnits.JncCore.ChemSynapseCore" Collapsed="true">
+    <Position X="5.5" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAgMAAgCA=</HashCode>
+      <FileName>DynamicUnits\JncCore\ChemSynapseCore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.JncCore.ElecSynapseCore" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAgIAAACA=</HashCode>
+      <FileName>DynamicUnits\JncCore\ElecSynapseCore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.JncCore.JunctionCore" Collapsed="true">
+    <Position X="6.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RAABAAAAAAAAAAAAAAAAABAAAAAAIBAAAABAQAAAAAA=</HashCode>
+      <FileName>DynamicUnits\JncCore\JunctionCore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.SimpleGap" Collapsed="true">
+    <Position X="9" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAABAAAAAEAAAAAAAAEIAAAAAAAAABAAAAAAQAAAAAE=</HashCode>
+      <FileName>DynamicUnits\JncCore\SimpleGap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.SimpleSyn" Collapsed="true">
+    <Position X="4.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAABAAAAAEAAAAAAAAAIAAAIgAEAAhAEAAAAQEAAAAA=</HashCode>
+      <FileName>DynamicUnits\JncCore\SimpleSyn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.DynamicUnits.TwoExpSyn" Collapsed="true">
+    <Position X="6.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAgBBAAAA0AAAAAAAAAIAAAAgAEAABAAAAAQQEAAAAA=</HashCode>
+      <FileName>DynamicUnits\JncCore\TwoExpSyn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.JunctionBase" Collapsed="true">
+    <Position X="6.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BgAACAAAAAAAAQABAAGgAQAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction\JunctionBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Core" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -535,6 +535,7 @@ namespace SiliFish.UI.Controls
         /// <param name="e"></param>
         private void lPlotPlot_DoubleClick(object sender, EventArgs e)
         {
+
             ddPlot.SelectedIndex = 1;
             cellSelectionPlot.ResetSelection();
         }
@@ -671,6 +672,7 @@ namespace SiliFish.UI.Controls
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
         {
             if (sender is not PlotDefinition plot) return;
+            if (!RunningModel.ModelRun) return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
             tPlotStart = (int)ePlotStart.Value;
@@ -740,7 +742,7 @@ namespace SiliFish.UI.Controls
                             RunningModel.LinkPlotObjects(plot);
                         }
                     }
-                    plotList.RemoveAll(pl => pl.Selection == null);
+                    //plotList.RemoveAll(pl => pl.Selection == null); this removes Episodes plot as well - why was it added in the first place?
                     listPlotHistory.SetItems(plotList);
                 }
             }

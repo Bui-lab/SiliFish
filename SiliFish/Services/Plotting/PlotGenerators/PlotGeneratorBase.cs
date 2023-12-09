@@ -53,11 +53,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             CreateCharts();
             if (charts.Any())
-            {
-                int seq = 0;//TODO delete this and below
-                charts.ForEach(chart => { chart.GroupSeq = GroupSeq; chart.ChartSeq = seq++; });
                 chartList.AddRange(charts);
-            }
         }
     }
 }

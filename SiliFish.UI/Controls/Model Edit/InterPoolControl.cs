@@ -195,7 +195,8 @@ namespace SiliFish.UI.Controls
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
-            ddCoreType.Items.AddRange(ChemSynapseCore.GetSynapseTypes().ToArray());//TODO handle gap core as well fill before connection types
+            ddCoreType.Items.AddRange(ChemSynapseCore.GetSynapseTypes().ToArray());
+            ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray());
 
             ddConnectionType.Items.Clear();
             ddConnectionType.Items.Add(ConnectionType.Gap);
@@ -336,11 +337,8 @@ namespace SiliFish.UI.Controls
             interPoolTemplate.Description = eDescription.Text;
             interPoolTemplate.Probability = (double)numProbability.Value;
 
-            if (interPoolTemplate.ConnectionType != ConnectionType.Gap)
-            {
-                interPoolTemplate.CoreType = ddCoreType.Text;
-                interPoolTemplate.Parameters = GridToParamDict();
-            }
+            interPoolTemplate.CoreType = ddCoreType.Text;
+            interPoolTemplate.Parameters = GridToParamDict();
 
             interPoolTemplate.Active = cbActive.Checked;
             interPoolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();

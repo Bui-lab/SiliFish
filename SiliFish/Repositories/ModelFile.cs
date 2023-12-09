@@ -520,8 +520,10 @@ namespace SiliFish.Repositories
                             key.start.ToString(GlobalSettings.PlotDataFormat),
                             key.end.ToString(GlobalSettings.PlotDataFormat),
                             stimDetails});
+                        int iStart = (int)(key.start / dt);
+                        int iEnd = key.end < 0 ? -1 : (int)(key.end / dt);
                         (DynamicsStats dyn, (double AvgV, double AvgVPos, double AvgVNeg)) =
-                            SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, (int)(key.start / dt), (int)(key.end / dt));
+                            SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
                         dyn?.DefineSpikingPattern();
                         if (dyn != null && dyn.SpikeList.Any())
                             cellValues.AddRange(new List<string>()

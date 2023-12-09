@@ -192,20 +192,4 @@ namespace SiliFish.ModelUnits.Junction
                 inputCurrent[tIndex] = IGap;
         }
     }
-    /*            if (!IsActive(tIndex))
-               {
-                   Core.ZeroISyn();
-                   if (inputCurrent != null)
-                       inputCurrent[tIndex] = 0;
-                   return;
-               }
-               RunningModel model = PreNeuron.Model;
-
-               int tt = duration;
-               double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
-               double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
-               double t_t0 = PreNeuron.LastSpike >= 0 ? (tIndex - PreNeuron.LastSpike) * model.RunParam.DeltaT : 0;//Time since the last spike
-               double ISyn = (Core as ChemSynapseCore).GetNextVal(vPreSynapse, vPost, t_t0);
-               if (inputCurrent != null)
-                   inputCurrent[tIndex] = ISyn;*/
 }

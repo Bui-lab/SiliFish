@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
 
+//Modified from the code written by Yann Roussel and Tuan Bui
+
 namespace SiliFish.DynamicUnits
 {
     public class Izhikevich_5P : CellCore

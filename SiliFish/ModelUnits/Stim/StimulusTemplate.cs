@@ -67,7 +67,7 @@ namespace SiliFish.ModelUnits.Stim
             return $"{ID}: {timeline} {active}".Replace("  ", " ");
         }
         [JsonIgnore]
-        public override string ID => $"{Name}\r\nTarget: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
+        public override string ID => $"{Name} \r\nTarget: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
         [JsonIgnore]
         public override string Tooltip => $"{ToString()}\r\nDelay/somite: {DelayPerSomite}\r\nSagittal Delay: {DelaySagittal}";
 

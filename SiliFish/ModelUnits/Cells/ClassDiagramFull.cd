@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SiliFish.ModelUnits.Cells.Cell" Collapsed="true">
+    <Position X="10" Y="3.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Stimuli" Type="SiliFish.ModelUnits.Stim.Stimuli" ManuallyRouted="true">
+      <Path>
+        <Point X="10" Y="4.031" />
+        <Point X="8" Y="4.031" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="GapJunctions" Type="SiliFish.ModelUnits.Junction.GapJunction" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.562" Y="4.441" />
+        <Point X="10.562" Y="4.771" />
+        <Point X="8.688" Y="4.771" />
+        <Point X="8.688" Y="6.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.112" Y="2.078" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>FAIASCKKAEIChhBkWAghEGJBAAFSIFAYWB6AMAF04AM=</HashCode>
+      <FileName>ModelUnits\Cells\Cell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Stimuli" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="GapJunctions" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Orientation="Right" Position="0.254" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.CellPool" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <AssociationLine Name="Cells" Type="SiliFish.ModelUnits.Cells.Cell">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.384" Y="0.27" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Projections" Type="SiliFish.ModelUnits.Junction.JunctionBase" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="2.846" />
+        <Point X="7.333" Y="2.846" Type="JumpStart" />
+        <Point X="7.167" Y="2.846" Type="JumpEnd" />
+        <Point X="6.125" Y="2.846" />
+        <Point X="6.125" Y="5.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-3.788" Y="2.355" Height="0.182" Width="0.93" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QAAAQmICAEoQDBAEAEIQwABBBDAAoAhkEAiAgAAAiAA=</HashCode>
+      <FileName>ModelUnits\Cells\CellPool.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Cells" />
+      <Property Name="Projections" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.CellPoolTemplate" Collapsed="true">
+    <Position X="3.25" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIAAACAgAEAioAUmCAAEgEIAMBABCBsUCIAAtECAQAE=</HashCode>
+      <FileName>ModelUnits\Cells\CellPoolTemplate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.MuscleCell" Collapsed="true">
+    <Position X="11.25" Y="5.5" Width="1.25" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Method Name="MuscleCell" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Field Name="tension" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="EndPlates" Type="SiliFish.ModelUnits.Junction.ChemicalSynapse" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.875" Y="6.191" />
+        <Point X="11.875" Y="8.062" />
+        <Point X="6" Y="8.062" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="5.725" Y="1.475" Height="0.182" Width="0.861" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>FAIAQiAIAAAAAAAACAABEKAAAAGAIAAAEFSAEAAAgQA=</HashCode>
+      <FileName>ModelUnits\Cells\MuscleCell.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="EndPlates" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Cells.Neuron" Collapsed="true">
+    <Position X="9.75" Y="5.5" Width="1.25" />
+    <Members>
+      <Method Name="AddChemicalSynapse" Hidden="true" />
+      <Method Name="CalculateCellularOutputs" Hidden="true" />
+      <Method Name="CalculateMembranePotential" Hidden="true" />
+      <Method Name="CheckValues" Hidden="true" />
+      <Method Name="CreateChemicalSynapse" Hidden="true" />
+      <Method Name="CreateCopy" Hidden="true" />
+      <Method Name="DeleteJunctions" Hidden="true" />
+      <Method Name="GetConnectionRange" Hidden="true" />
+      <Method Name="GetIncomingSynapticCurrents" Hidden="true" />
+      <Method Name="GetOutgoingSynapticCurrents" Hidden="true" />
+      <Method Name="GetSpikeIndices" Hidden="true" />
+      <Method Name="HasConnections" Hidden="true" />
+      <Method Name="InitForSimulation" Hidden="true" />
+      <Method Name="IsSpiking" Hidden="true" />
+      <Method Name="LinkObjects" Hidden="true" />
+      <Method Name="MaxSynInCurrentValue" Hidden="true" />
+      <Method Name="MaxSynOutCurrentValue" Hidden="true" />
+      <Method Name="MinSynInCurrentValue" Hidden="true" />
+      <Method Name="MinSynOutCurrentValue" Hidden="true" />
+      <Method Name="Neuron" Hidden="true" />
+      <Method Name="RemoveJunction" Hidden="true" />
+      <Method Name="SortJunctions" Hidden="true" />
+      <Method Name="SortJunctionsBySource" Hidden="true" />
+      <Method Name="SortJunctionsByTarget" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Terminals" Type="SiliFish.ModelUnits.Junction.ChemicalSynapse" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.547" Y="6.191" />
+        <Point X="10.547" Y="7.812" />
+        <Point X="6" Y="7.812" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="4.337" Y="1.192" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Synapses" Type="SiliFish.ModelUnits.Junction.ChemicalSynapse" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.031" Y="6.191" />
+        <Point X="10.031" Y="7.625" />
+        <Point X="6" Y="7.625" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="3.187" Y="1.199" Height="0.182" Width="0.817" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>FAIAQiIKAEABBAAACAABECBAAAEAIAAAADSAEAAggAA=</HashCode>
+      <FileName>ModelUnits\Cells\Neuron.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Terminals" />
+      <Property Name="Synapses" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.JunctionBase" Collapsed="true">
+    <Position X="5.5" Y="5.5" Width="1.5" />
+    <InheritanceLine Type="SiliFish.ModelUnits.Junction.InterPoolBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.5" Y="4.441" />
+        <Point X="4.5" Y="5.234" />
+        <Point X="5.812" Y="5.234" />
+        <Point X="5.812" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>BgAACAAAAAAAAQABAAGgAQAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>ModelUnits\Junction\JunctionBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.ChemicalSynapse" Collapsed="true">
+    <Position X="4.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAACICAEAAgAAEQAABAAAAAAAAAEAAAAAQKAAAQAA=</HashCode>
+      <FileName>ModelUnits\Junction\ChemicalSynapse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.GapJunction" Collapsed="true">
+    <Position X="7.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAACICAAAQgAIEAAABAAAAAAAAAEAAAIAQqACAQAA=</HashCode>
+      <FileName>ModelUnits\Junction\GapJunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Architecture.ModelTemplate" Collapsed="true">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <AssociationLine Name="CellPoolTemplates" Type="SiliFish.ModelUnits.Cells.CellPoolTemplate" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.95" Y="1.441" />
+        <Point X="1.95" Y="2.846" />
+        <Point X="3.25" Y="2.846" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.161" Y="0.857" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="InterPoolTemplates" Type="SiliFish.ModelUnits.Junction.InterPoolTemplate">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.167" Y="2.103" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>wAAAQCICAFMAARAAQAAQpCBAAAAgAAAEGAAAAEBAQII=</HashCode>
+      <FileName>ModelUnits\Architecture\ModelTemplate.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CellPoolTemplates" />
+      <Property Name="InterPoolTemplates" />
+      <Property Name="StimulusTemplates" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Architecture.RunningModel" Collapsed="true">
+    <Position X="10" Y="0.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="NeuronPools" Type="SiliFish.ModelUnits.Cells.CellPool">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.042" Y="0.658" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="MusclePools" Type="SiliFish.ModelUnits.Cells.CellPool">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.801" Y="0.673" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>xUAISCCoJFoVARAUAQIwoAAIAFAAEAAcGAIEAmBgyfI=</HashCode>
+      <FileName>ModelUnits\Architecture\RunningModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="NeuronPools" />
+      <Property Name="MusclePools" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.InterPoolTemplate" Collapsed="true">
+    <Position X="1" Y="5.5" Width="2.25" />
+    <InheritanceLine Type="SiliFish.ModelUnits.Junction.InterPoolBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.5" Y="4.441" />
+        <Point X="4.5" Y="5.236" />
+        <Point X="2.75" Y="5.236" />
+        <Point X="2.75" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAACCAAAFAjgAUECEABAIAIRABBAEAkAIABJECAQAA=</HashCode>
+      <FileName>ModelUnits\Junction\InterPoolTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stim.StimulusTemplate" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgBAAAACgAwGAAAhAAAAAABAAAAAAAABMAAgQAA=</HashCode>
+      <FileName>ModelUnits\Stim\StimulusTemplate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Junction.InterPoolBase" Collapsed="true">
+    <Position X="3.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgCAKAgACAAAAAAABACAAAAAAAEAAAAAQIAAEQAA=</HashCode>
+      <FileName>ModelUnits\Junction\InterPoolBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stim.StimulusBase" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>ModelUnits\Stim\StimulusBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stim.Stimuli" Collapsed="true">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <AssociationLine Name="ListOfStimulus" Type="SiliFish.ModelUnits.Stim.Stimulus">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.891" Y="1.129" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>BAIAAAAAAAAAABgABAAQBAAIAAAAAAAAAAAgIABAAAA=</HashCode>
+      <FileName>ModelUnits\Stim\Stimuli.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ListOfStimulus" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SiliFish.ModelUnits.Stim.Stimulus" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAAAAiAANAACAEgEKAAAAAAAAABCACAAAABhogAAQAA=</HashCode>
+      <FileName>ModelUnits\Stim\Stimulus.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.1" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -31,7 +31,6 @@ namespace SiliFish.ModelUnits.Architecture
         protected bool model_run = false;
         protected bool initialized = false;
         protected double[] Time;
-
         protected List<CellPool> neuronPools = new();
         protected List<CellPool> musclePools = new();
 
@@ -215,6 +214,7 @@ namespace SiliFish.ModelUnits.Architecture
             ModelDimensions = swimmingModelTemplate.ModelDimensions.Clone();
             Settings = swimmingModelTemplate.Settings.Clone();
             KinemParam = swimmingModelTemplate.KinemParam.Clone();
+            DynamicsParam = swimmingModelTemplate.DynamicsParam.Clone();
             SetParameters(swimmingModelTemplate.Parameters);
 
             #region Generate pools and cells

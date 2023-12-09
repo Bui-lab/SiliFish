@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Text.Json.Serialization;
 
+//Modified from the code written by Yann Roussel and Tuan Bui
+
 namespace SiliFish.DynamicUnits
 {
     public class SimpleGap: ElecSynapseCore

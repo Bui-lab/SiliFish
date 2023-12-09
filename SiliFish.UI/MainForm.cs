@@ -155,29 +155,12 @@ namespace SiliFish.UI
                 catch { }
             }
         }
-        #region Settings
-        private void linkOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        private void linkOpenTempFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        #endregion
 
         #region General Form Functions
         private void btnAbout_Click(object sender, EventArgs e)
         {
             About about = new();
             about.ShowDialog();
-        }
-
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-
         }
 
         #endregion

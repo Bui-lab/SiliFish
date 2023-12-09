@@ -10,6 +10,8 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Text.Json.Serialization;
 
+//Modified from the code written by Yann Roussel and Tuan Bui
+
 namespace SiliFish.DynamicUnits
 {
     public class SimpleSyn: ChemSynapseCore
@@ -58,8 +60,6 @@ namespace SiliFish.DynamicUnits
         }
         public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent, DynamicsParam settings, bool excitatory)
         {
-            double IsynANew;
-            double IsynBNew;
             if (vPreSynapse > Vth)//pre-synaptic neuron spikes
             {
                 // mEPSC
@@ -67,20 +67,18 @@ namespace SiliFish.DynamicUnits
                 ISynB += (ERev - vPost) * Conductance;
                 double dIsynA = -1 / TauD * ISynA;
                 double dIsynB = -1 / TauR * ISynB;
-                IsynANew = ISynA + DeltaT * dIsynA;
-                IsynBNew = ISynB + DeltaT * dIsynB;
+                ISynA += DeltaT * dIsynA;
+                ISynB += DeltaT * dIsynB;
             }
             else
             {
                 // no synaptic event
                 double dIsynA = -1 / TauD * ISynA;
                 double dIsynB = -1 / TauR * ISynB;
-                IsynANew = ISynA + DeltaT * dIsynA;
-                IsynBNew = ISynB + DeltaT * dIsynB;
+                ISynA += DeltaT * dIsynA;
+                ISynB += DeltaT * dIsynB;
             }
 
-            ISynA = IsynANew;
-            ISynB = IsynBNew;
             return ISynA - ISynB;
         }
         public override bool CausesReverseCurrent(double V, bool excitatory)
