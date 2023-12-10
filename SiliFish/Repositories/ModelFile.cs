@@ -424,188 +424,211 @@ namespace SiliFish.Repositories
 
         #region CSV Functions
 
-        public static void SaveDataToFile(RunningModel model, string filename)
+        public static bool SaveDataToFile(RunningModel model, string filename)
         {
-            if (!model.ModelRun)
+            try
             {
-                return;
-            }
-            bool jncTracking = model.JunctionCurrentTrackingOn;
-
-            Dictionary<string, double[]> Vdata_list = new();
-            Dictionary<string, double[]> Gapdata_list = new();
-            Dictionary<string, double[]> Syndata_list = new();
-            foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
-            {
-                //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
-                foreach (Cell c in pool.GetCells())
+                if (!model.ModelRun)
                 {
-                    Vdata_list.Add(c.ID, c.V);
-                    if (jncTracking)
+                    return false;
+                }
+                bool jncTracking = model.JunctionCurrentTrackingOn;
+
+                Dictionary<string, double[]> Vdata_list = new();
+                Dictionary<string, double[]> Gapdata_list = new();
+                Dictionary<string, double[]> Syndata_list = new();
+                foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
+                {
+                    //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
+                    foreach (Cell c in pool.GetCells())
                     {
-                        c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                        if (c is MuscleCell)
+                        Vdata_list.Add(c.ID, c.V);
+                        if (jncTracking)
                         {
-                            (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
-                        }
-                        else if (c is Neuron)
-                        {
-                            (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                            c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                            if (c is MuscleCell)
+                            {
+                                (c as MuscleCell).EndPlates.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                            }
+                            else if (c is Neuron)
+                            {
+                                (c as Neuron).Synapses.ForEach(jnc => Syndata_list.TryAdd(jnc.ID, jnc.InputCurrent));
+                            }
                         }
                     }
+
                 }
-
+                if (jncTracking)
+                {
+                    string Vfilename = Path.ChangeExtension(filename, "V.csv");
+                    SaveModelDynamicsToCSV(filename: Vfilename, Time: model.TimeArray, Values: Vdata_list);
+                    string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
+                    string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
+                    SaveModelDynamicsToCSV(filename: Gapfilename, Time: model.TimeArray, Values: Gapdata_list);
+                    SaveModelDynamicsToCSV(filename: Synfilename, Time: model.TimeArray, Values: Syndata_list);
+                }
+                else
+                {
+                    SaveModelDynamicsToCSV(filename: filename, Time: model.TimeArray, Values: Vdata_list);
+                }
+                return true;
             }
-            if (jncTracking)
+            catch (Exception ex)
             {
-                string Vfilename = Path.ChangeExtension(filename, "V.csv");
-                SaveModelDynamicsToCSV(filename: Vfilename, Time: model.TimeArray, Values: Vdata_list);
-                string Gapfilename = Path.ChangeExtension(filename, "Gap.csv");
-                string Synfilename = Path.ChangeExtension(filename, "Syn.csv");
-                SaveModelDynamicsToCSV(filename: Gapfilename, Time: model.TimeArray, Values: Gapdata_list);
-                SaveModelDynamicsToCSV(filename: Synfilename, Time: model.TimeArray, Values: Syndata_list);
-            }
-            else
-            {
-                SaveModelDynamicsToCSV(filename: filename, Time: model.TimeArray, Values: Vdata_list);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
             }
         }
 
-        public static void SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
+        public static bool SaveModelDynamicsToCSV(string filename, double[] Time, Dictionary<string, double[]> Values)
         {
-            if (filename == null || Time == null || Values == null)
-                return;
-
-            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
-            using StreamWriter sw = new(fs);
-            sw.WriteLine("Time," + string.Join(',', Values.Keys));
-
-            for (int t = 0; t < Time.Length; t++)
+            try
             {
-                string row = Time[t].ToString() + ',' +
-                    string.Join(',', Values.Select(item => item.Value[t].ToString(GlobalSettings.PlotDataFormat)));
-                sw.WriteLine(row);
+                if (filename == null || Time == null || Values == null)
+                    return false;
+
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                sw.WriteLine("Time," + string.Join(',', Values.Keys));
+
+                for (int t = 0; t < Time.Length; t++)
+                {
+                    string row = Time[t].ToString() + ',' +
+                        string.Join(',', Values.Select(item => item.Value[t].ToString(GlobalSettings.PlotDataFormat)));
+                    sw.WriteLine(row);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
             }
         }
 
-        private static void SaveSpikeFreqStats(RunningModel model, string filename)
+        private static bool SaveSpikeFreqStats(RunningModel model, string filename)
         {
-            bool jncTracking = model.JunctionCurrentTrackingOn;
-            List<string> columnNames = new() { "Cell Pool", "Sagittal", "Somite", "Cell Name",
+            try
+            {
+                bool jncTracking = model.JunctionCurrentTrackingOn;
+                List<string> columnNames = new() { "RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name",
                 "Stim Start", "Stim End", "Stim Details",
                 "Spike Count", "First Spike", "Last Spike", "Spike Freq",
                  "Burst Count", "Burst Freq",
                 "Vrest", "Avg V", "Avg V > Vrest", "Avg V < Vrest"};
-            List<List<string>> values = new();
-            double dt = model.RunParam.DeltaT;
-            foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
-            {
-                foreach (Cell c in pool.GetCells())
+                List<List<string>> values = new();
+                double dt = model.RunParam.DeltaT;
+                int counter = 0;
+                foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
                 {
-                    foreach (var grStim in model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End)))
+                    foreach (Cell c in pool.GetCells())
                     {
-                        (double start, double end) key = grStim.Key;
-                        if (key.start > model.RunParam.MaxTime)
-                            continue;
-                        string stimDetails = "";
-                        foreach (StimulusTemplate stim in grStim)
+                        foreach (var grStim in model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End)))
                         {
-                            stimDetails += stim.ToString() + "\r\n";
-                        }
-                        List<string> cellValues = new();
-                        cellValues.AddRange(new List<string>() { pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(), c.ID });
-                        cellValues.AddRange(new List<string>() {
+                            (double start, double end) key = grStim.Key;
+                            if (key.start > model.RunParam.MaxTime)
+                                continue;
+                            string stimDetails = "";
+                            foreach (StimulusTemplate stim in grStim)
+                            {
+                                stimDetails += stim.ToString() + "\r\n";
+                            }
+                            List<string> cellValues = new();
+                            cellValues.AddRange(new List<string>() { (++counter).ToString(), pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(),"1", c.ID });
+                            cellValues.AddRange(new List<string>() {
                             key.start.ToString(GlobalSettings.PlotDataFormat),
                             key.end.ToString(GlobalSettings.PlotDataFormat),
                             stimDetails});
-                        int iStart = (int)(key.start / dt);
-                        int iEnd = key.end < 0 ? -1 : (int)(key.end / dt);
-                        (DynamicsStats dyn, (double AvgV, double AvgVPos, double AvgVNeg)) =
-                            SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
-                        dyn?.DefineSpikingPattern();
-                        if (dyn != null && dyn.SpikeList.Any())
-                            cellValues.AddRange(new List<string>()
+                            int iStart = (int)(key.start / dt);
+                            int iEnd = key.end < 0 ? -1 : (int)(key.end / dt);
+                            (DynamicsStats dyn, (double AvgV, double AvgVPos, double AvgVNeg)) =
+                                SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
+                            dyn?.DefineSpikingPattern();
+                            if (dyn != null && dyn.SpikeList.Any())
+                                cellValues.AddRange(new List<string>()
                                 {   dyn.SpikeList.Count.ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[0]*dt).ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[^1]*dt).ToString(GlobalSettings.PlotDataFormat),
                                     dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
-                        else
-                            cellValues.AddRange(new List<string>() { "0", "", "", "0" });
+                            else
+                                cellValues.AddRange(new List<string>() { "0", "", "", "0" });
 
-                        if (dyn != null && dyn.BurstsOrSpikes.Any())
-                            cellValues.AddRange(new List<string>()
+                            if (dyn != null && dyn.BurstsOrSpikes.Any())
+                                cellValues.AddRange(new List<string>()
                                 {   dyn.BurstsOrSpikes.Count.ToString(),
                                     dyn.BurstingFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
-                        else
-                            cellValues.AddRange(new List<string>() { "0", "0" });
-                        cellValues.AddRange(new List<string>()
+                            else
+                                cellValues.AddRange(new List<string>() { "0", "0" });
+                            cellValues.AddRange(new List<string>()
                             {
                                 c.Core.Vr.ToString(GlobalSettings.PlotDataFormat),
                                 AvgV.ToString(GlobalSettings.PlotDataFormat),
                                 AvgVPos.ToString(GlobalSettings.PlotDataFormat),
                                 AvgVNeg.ToString(GlobalSettings.PlotDataFormat)
                              });
+                            values.Add(cellValues);
+                        }
+                    }
+                }
+                filename = FileUtil.AppendToFileName(filename, "SpikeStats");
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        private static bool SaveSpikes(RunningModel model, string filename)
+        {
+            try
+            {
+                List<string> columnNames = new() { "RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time" };
+                List<List<string>> values = new();
+                int counter = 0;
+                foreach (Cell cell in model.GetCells())
+                {
+                    foreach (int spikeIndex in cell.GetSpikeIndices())
+                    {
+                        List<string> cellValues = new();
+                        cellValues.AddRange(new List<string>() { 
+                            (++counter).ToString(),
+                            cell.CellGroup,
+                            cell.PositionLeftRight.ToString(),
+                            cell.Somite.ToString(),
+                            cell.Sequence.ToString(),
+                            cell.ID,
+                            model.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)});
                         values.Add(cellValues);
                     }
                 }
+                filename = FileUtil.AppendToFileName(filename, "Spikes");
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
             }
-            filename = FileUtil.AppendToFileName(filename, "SpikeStats");
-            FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-            FileUtil.ShowFile(filename);
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
         }
 
-        private static void SaveSpikes(RunningModel model, string filename)
+        private static bool SaveTailBeatFrequencies(RunningModel model, string filename)
         {
-            List<string> columnNames = new() { "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time"};
-            List<List<string>> values = new();
-
-            foreach (Cell cell in model.GetCells())
+            try
             {
-                foreach (int spikeIndex in cell.GetSpikeIndices())
-                {
-                    List<string> cellValues = new();
-                    cellValues.AddRange(new List<string>() { cell.CellGroup,
-                        cell.PositionLeftRight.ToString(),
-                        cell.Somite.ToString(),
-                        cell.Sequence.ToString(),
-                        cell.ID,
-                    model.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)});
-                    values.Add(cellValues);
-                }
-            }
-            filename = FileUtil.AppendToFileName(filename, "Spikes");
-            FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-            FileUtil.ShowFile(filename);
-        }
+                (Coordinate[] _, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
+                List<string> columnNames = new() { "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq" };
+                List<List<string>> values = new();
 
-        private static void SaveTailBeatFrequencies(RunningModel model, string filename)
-        {
-            (Coordinate[] _, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
-            List<string> columnNames = new() { "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq" };
-            List<List<string>> values = new();
-
-            int counter = 1;
-            foreach (SwimmingEpisode episode in episodes.Episodes)
-            {
-                List<string> episodeValues = new();
-                episodeValues.AddRange(new List<string>() { "Tail",
-                        "",
-                        counter++.ToString(),
-                        episode.Start.ToString(),
-                        episode.End.ToString(),
-                        episode.NumOfBeats.ToString(),
-                        episode.BeatFrequency.ToString()});
-                values.Add(episodeValues);
-            }
-            for (int somite = 1; somite <= model.ModelDimensions.NumberOfSomites; somite++)
-            {
-                counter = 1;
-                (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, somite);
-                foreach (SwimmingEpisode episode in episodes2.Episodes)
+                int counter = 1;
+                foreach (SwimmingEpisode episode in episodes.Episodes)
                 {
                     List<string> episodeValues = new();
-                    episodeValues.AddRange(new List<string>() { "MN",
-                        somite.ToString(),
+                    episodeValues.AddRange(new List<string>() { "Tail",
+                        "",
                         counter++.ToString(),
                         episode.Start.ToString(),
                         episode.End.ToString(),
@@ -613,11 +636,33 @@ namespace SiliFish.Repositories
                         episode.BeatFrequency.ToString()});
                     values.Add(episodeValues);
                 }
+                for (int somite = 1; somite <= model.ModelDimensions.NumberOfSomites; somite++)
+                {
+                    counter = 1;
+                    (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, somite);
+                    foreach (SwimmingEpisode episode in episodes2.Episodes)
+                    {
+                        List<string> episodeValues = new();
+                        episodeValues.AddRange(new List<string>() { "MN",
+                        somite.ToString(),
+                        counter++.ToString(),
+                        episode.Start.ToString(),
+                        episode.End.ToString(),
+                        episode.NumOfBeats.ToString(),
+                        episode.BeatFrequency.ToString()});
+                        values.Add(episodeValues);
+                    }
 
+                }
+                filename = FileUtil.AppendToFileName(filename, "TBF");
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
             }
-            filename = FileUtil.AppendToFileName(filename, "TBF");
-            FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-            FileUtil.ShowFile(filename);
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
         }
         public static void SaveStatsDataToFile(RunningModel model, string filename)
         {
@@ -627,85 +672,82 @@ namespace SiliFish.Repositories
             SaveSpikes(model, filename);
             SaveTailBeatFrequencies(model, filename);
         }
-        public static void SaveTailMovementToCSV(string filename, double[] Time, Coordinate[] tail_tip_coord)
-        {
-            if (filename == null || tail_tip_coord == null)
-                return;
-
-            string tailFilename = Path.ChangeExtension(filename, "TailTip.csv");
-            using FileStream fsTail = File.Open(tailFilename, FileMode.Create, FileAccess.Write);
-            using StreamWriter swTail = new(fsTail);
-            swTail.WriteLine("Time,X,Y,Z");
-            for (int t = 0; t < Time.Length; t++)
-            {
-                if (t >= tail_tip_coord.Length)
-                    break;
-                string row = $"{Time[t]:0.##},{tail_tip_coord[t].X:0.000},{tail_tip_coord[t].Y:0.000},{tail_tip_coord[t].Z:0.000}";
-                swTail.WriteLine(row);
-            }
-        }
 
         public static void SaveEpisodesToCSV(string filename, int run, SwimmingEpisodes episodes)
         {
             if (filename == null || episodes == null)
                 return;
 
-            string episodeFilename = Path.ChangeExtension(filename, "Episodes.csv");
-            string beatsFilename = Path.ChangeExtension(filename, "Beats.csv");
-            using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Append, FileAccess.Write);
-            using FileStream fsBeats = File.Open(beatsFilename, FileMode.Append, FileAccess.Write);
-            using StreamWriter swEpisode = new(fsEpisode);
-            using StreamWriter swBeats = new(fsBeats);
-            if (run == 1)
+            try
             {
-                swEpisode.WriteLine("Run,Episode,Start,Finish,Duration,Time to Next,Tail Beat Freq.,# of Tail Beats");
-                swBeats.WriteLine("Run,Episode,Beat,Start,Finish,Instan.Freq.");
-            }
-            int epiCounter = 1;
-            foreach (SwimmingEpisode episode in episodes.Episodes)
-            {
-                double? timeToNext = null;
-                if (epiCounter < episodes.EpisodeCount - 2)
+                string episodeFilename = Path.ChangeExtension(filename, "Episodes.csv");
+                string beatsFilename = Path.ChangeExtension(filename, "Beats.csv");
+                using FileStream fsEpisode = File.Open(episodeFilename, FileMode.Append, FileAccess.Write);
+                using FileStream fsBeats = File.Open(beatsFilename, FileMode.Append, FileAccess.Write);
+                using StreamWriter swEpisode = new(fsEpisode);
+                using StreamWriter swBeats = new(fsBeats);
+                if (run == 1)
                 {
-                    SwimmingEpisode nextEpisode = episodes[epiCounter];//1-based index is used
-                    timeToNext = nextEpisode.Start - episode.End;
+                    swEpisode.WriteLine("Run,Episode,Start,Finish,Duration,Time to Next,Tail Beat Freq.,# of Tail Beats");
+                    swBeats.WriteLine("Run,Episode,Beat,Start,Finish,Instan.Freq.");
                 }
-                string epiRow = $"{run}," +
-                    $"{epiCounter}," +
-                    $"{episode.Start:0.####}," +
-                    $"{episode.End:0.####}," +
-                    $"{episode.EpisodeDuration:0.####}," +
-                    $"{timeToNext?.ToString() ?? ""}," +
-                    $"{episode.BeatFrequency}," +
-                    $"{episode.Beats.Count}";
-                swEpisode.WriteLine(epiRow);
-                int beatCounter = 1;
-                foreach (Beat b in episode.Beats)
+                int epiCounter = 1;
+                foreach (SwimmingEpisode episode in episodes.Episodes)
                 {
-                    string beatRow = $"{run}," +
+                    double? timeToNext = null;
+                    if (epiCounter < episodes.EpisodeCount - 2)
+                    {
+                        SwimmingEpisode nextEpisode = episodes[epiCounter];//1-based index is used
+                        timeToNext = nextEpisode.Start - episode.End;
+                    }
+                    string epiRow = $"{run}," +
                         $"{epiCounter}," +
-                        $"{beatCounter++}," +
-                        $"{b.BeatStart:0.####}," +
-                        $"{b.BeatEnd:0.####}," +
-                        $"{1000 / (b.BeatEnd - b.BeatStart):0.####}";
-                    swBeats.WriteLine(beatRow);
+                        $"{episode.Start:0.####}," +
+                        $"{episode.End:0.####}," +
+                        $"{episode.EpisodeDuration:0.####}," +
+                        $"{timeToNext?.ToString() ?? ""}," +
+                        $"{episode.BeatFrequency}," +
+                        $"{episode.Beats.Count}";
+                    swEpisode.WriteLine(epiRow);
+                    int beatCounter = 1;
+                    foreach (Beat b in episode.Beats)
+                    {
+                        string beatRow = $"{run}," +
+                            $"{epiCounter}," +
+                            $"{beatCounter++}," +
+                            $"{b.BeatStart:0.####}," +
+                            $"{b.BeatEnd:0.####}," +
+                            $"{1000 / (b.BeatEnd - b.BeatStart):0.####}";
+                        swBeats.WriteLine(beatRow);
+                    }
+                    epiCounter++;
                 }
-                epiCounter++;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
         public static void SaveAnimation(string filename, Dictionary<string, Coordinate[]> somiteCoordinates, double[] Time, int startIndex)
         {
-            using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
-            using StreamWriter sw = new(fs);
-            string columnHeaders = string.Join(',', somiteCoordinates.Keys.Select(k => k + "-X," + k + "-Y'"));
-            sw.WriteLine(columnHeaders);
-            int nmax = Time.Length - 1;
-            foreach (var i in Enumerable.Range(1, nmax))
+            try
             {
-                string rowStart = (Time[startIndex + i - 1]).ToString("0.##");
-                string row = rowStart + string.Join(',', somiteCoordinates.Select(item => item.Value[i].X + "," + item.Value[i].X));
-                sw.WriteLine(row);
+                using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
+                using StreamWriter sw = new(fs);
+                string columnHeaders = string.Join(',', somiteCoordinates.Keys.Select(k => k + "-X," + k + "-Y'"));
+                sw.WriteLine(columnHeaders);
+                int nmax = Time.Length - 1;
+                foreach (var i in Enumerable.Range(1, nmax))
+                {
+                    string rowStart = (Time[startIndex + i - 1]).ToString("0.##");
+                    string row = rowStart + string.Join(',', somiteCoordinates.Select(item => item.Value[i].X + "," + item.Value[i].X));
+                    sw.WriteLine(row);
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
