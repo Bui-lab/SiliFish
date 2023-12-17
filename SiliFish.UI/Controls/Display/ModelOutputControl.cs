@@ -339,6 +339,13 @@ namespace SiliFish.UI.Controls
             else
                 await webView2DRender.ExecuteScriptAsync("HideGapJunc();");
         }
+        private async void cb2DShowUnselectedNodes_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb2DShowUnselectedNodes.Checked)
+                await webView2DRender.ExecuteScriptAsync("ShowInactiveNodes();");
+            else
+                await webView2DRender.ExecuteScriptAsync("HideInactiveNodes();");
+        }
         private void cb2DLegend_CheckedChanged(object sender, EventArgs e)
         {
             gr2DLegend.Visible = cb2DLegend.Checked;

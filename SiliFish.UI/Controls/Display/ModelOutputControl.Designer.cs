@@ -170,6 +170,7 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            cb2DShowUnselectedNodes = new CheckBox();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             gr2DLegend.SuspendLayout();
@@ -318,6 +319,7 @@
             // p2DRender
             // 
             p2DRender.BackColor = Color.FromArgb(236, 239, 241);
+            p2DRender.Controls.Add(cb2DShowUnselectedNodes);
             p2DRender.Controls.Add(cbHideNonspiking);
             p2DRender.Controls.Add(l2DLinkSize);
             p2DRender.Controls.Add(ud2DLinkSize);
@@ -397,7 +399,7 @@
             cb2DLegend.AutoSize = true;
             cb2DLegend.Checked = true;
             cb2DLegend.CheckState = CheckState.Checked;
-            cb2DLegend.Location = new Point(544, 11);
+            cb2DLegend.Location = new Point(511, 13);
             cb2DLegend.Name = "cb2DLegend";
             cb2DLegend.Size = new Size(65, 19);
             cb2DLegend.TabIndex = 60;
@@ -1671,6 +1673,18 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // cb2DShowUnselectedNodes
+            // 
+            cb2DShowUnselectedNodes.Checked = true;
+            cb2DShowUnselectedNodes.CheckState = CheckState.Checked;
+            cb2DShowUnselectedNodes.Location = new Point(511, 37);
+            cb2DShowUnselectedNodes.Name = "cb2DShowUnselectedNodes";
+            cb2DShowUnselectedNodes.Size = new Size(180, 20);
+            cb2DShowUnselectedNodes.TabIndex = 74;
+            cb2DShowUnselectedNodes.Text = "Show Unselected Nodes";
+            cb2DShowUnselectedNodes.UseVisualStyleBackColor = true;
+            cb2DShowUnselectedNodes.CheckedChanged += cb2DShowUnselectedNodes_CheckedChanged;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1872,5 +1886,6 @@
         private Label label7;
         private Label lms6;
         private CheckBox cbHideNonspiking;
+        private CheckBox cb2DShowUnselectedNodes;
     }
 }

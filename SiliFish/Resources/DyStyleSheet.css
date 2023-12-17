@@ -90,10 +90,6 @@
     /* font-size: based on titleHeight option */
 }
 
-.dygraph-xlabel {
-    text-align: center;
-    /* font-size: based on xLabelHeight option */
-}
 
 /* For y-axis label */
 .dygraph-label-rotate-left {
