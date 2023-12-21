@@ -48,35 +48,45 @@ namespace SiliFish.Services.Plotting
                 string chartDivs = "";
                 string eventListeners = "";
                 List<string> chartHTML = new();
+                Dictionary<string, (double MinY, double MaxY)> yRanges = new();
+                if (GlobalSettings.SameYAxis)
+                {
+                    foreach (string yLabel in charts.Select(c => c.yLabel).Distinct())
+                    {
+                        yRanges.Add(yLabel, (charts.Where(c => c.yLabel == yLabel).Min(c => c.yMin), charts.Where(c => c.yLabel == yLabel).Max(c => c.yMax)));
+                    }
+                }
                 if (charts != null)
                 {
                     foreach (int chartIndex in Enumerable.Range(0, charts.Count))
                     {
                         chartDivs += chartDiv.Replace("__CHART_INDEX__", chartIndex.ToString());
                         eventListeners += eventListener.Replace("__CHART_INDEX__", chartIndex.ToString());
-                        StringBuilder chart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
-                        chart.Replace("__CHART_INDEX__", chartIndex.ToString());
-                        chart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
-                        chart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
-                        chart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
-                        double yMin = charts[chartIndex].yMin;
+                        StringBuilder sbChart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
+                        sbChart.Replace("__CHART_INDEX__", chartIndex.ToString());
+                        sbChart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
+                        sbChart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
+                        sbChart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
+                        Chart chart = charts[chartIndex];
+                        double yMin = yRanges.Any() ? yRanges[chart.yLabel].MinY : chart.yMin;
                         if (yMin == double.NegativeInfinity) yMin = double.MinValue;
                         if (yMin == double.PositiveInfinity) yMin = double.MaxValue;
-                        double yMax = charts[chartIndex].yMax;
+                        double yMax = yRanges.Any() ? yRanges[chart.yLabel].MaxY : chart.yMax;
                         if (yMax == double.NegativeInfinity) yMax = double.MinValue;
                         if (yMax == double.PositiveInfinity) yMax = double.MaxValue;
 
-                        chart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.PlotDataFormat));
-                        chart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.PlotDataFormat));
-                        chart.Replace("__Y_MIN__", yMin.ToString(GlobalSettings.PlotDataFormat));
-                        chart.Replace("__Y_MAX__", yMax.ToString(GlobalSettings.PlotDataFormat));
-                        chart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
-                        chart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
-                        chart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
-                        chart.Replace("__SHOW_ZERO__", showZeroValues.ToString().ToLower());
-                        chart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
-                        chart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
-                        chartHTML.Add(chart.ToString());
+                        sbChart.Replace("__X_MIN__", charts[chartIndex].xMin.ToString(GlobalSettings.PlotDataFormat));
+                        sbChart.Replace("__X_MAX__", charts[chartIndex].xMax.ToString(GlobalSettings.PlotDataFormat));
+                        sbChart.Replace("__Y_MIN__", yMin.ToString(GlobalSettings.PlotDataFormat));
+                        sbChart.Replace("__Y_MAX__", yMax.ToString(GlobalSettings.PlotDataFormat));
+                        sbChart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
+                        sbChart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
+                        sbChart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
+                        sbChart.Replace("__POINT_SIZE__", "3");//TODO hardcoded
+                        sbChart.Replace("__SHOW_ZERO__", showZeroValues.ToString().ToLower());
+                        sbChart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
+                        sbChart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");
+                        chartHTML.Add(sbChart.ToString());
                     }
                 }
                 html.Replace("__CHART_DIVS__", chartDivs);

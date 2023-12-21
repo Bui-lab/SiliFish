@@ -12,6 +12,7 @@ var g__CHART_INDEX__ = new Dygraph(
         valueRange: [__Y_MIN__, __Y_MAX__],
         dateWindow: [__X_MIN__, __X_MAX__],
         drawPoints: __DRAW_POINTS__,
+        pointSize: __POINT_SIZE__,
         labelsShowZeroValues: __SHOW_ZERO__,
         yRangePad: 3
     }

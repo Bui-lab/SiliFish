@@ -203,15 +203,15 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Architecture.ModelTemplate" Collapsed="true">
-    <Position X="0.75" Y="0.75" Width="1.5" />
+    <Position X="0.75" Y="0.75" Width="1.75" />
     <AssociationLine Name="CellPoolTemplates" Type="SiliFish.ModelUnits.Cells.CellPoolTemplate" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="1.95" Y="1.441" />
-        <Point X="1.95" Y="2.846" />
+        <Point X="2.15" Y="1.441" />
+        <Point X="2.15" Y="2.846" />
         <Point X="3.25" Y="2.846" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.161" Y="0.857" />
+        <Position X="-0.306" Y="0.809" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="InterPoolTemplates" Type="SiliFish.ModelUnits.Junction.InterPoolTemplate">
@@ -245,7 +245,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>xUAISCCoJFoVARAUAQIwoAAIAFAAEAAcGAIEAmBgyfI=</HashCode>
+      <HashCode>xUAISDCoJFoVARAUAQIwoAAIAFAAEAAcGAIEAmBgyfI=</HashCode>
       <FileName>ModelUnits\Architecture\RunningModel.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -269,7 +269,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Stim.StimulusTemplate" Collapsed="true">
-    <Position X="4" Y="0.5" Width="1.5" />
+    <Position X="4" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAgBAAAACgAwGAAAhAAAAAABAAAAAAAABMAAgQAA=</HashCode>
       <FileName>ModelUnits\Stim\StimulusTemplate.cs</FileName>
@@ -314,5 +314,5 @@
     </TypeIdentifier>
     <Lollipop Orientation="Left" Position="0.1" />
   </Class>
-  <Font Name="Segoe UI" Size="9" />
+  <Font Name="Segoe UI" Size="11" />
 </ClassDiagram>

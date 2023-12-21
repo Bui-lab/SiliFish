@@ -1351,7 +1351,15 @@ namespace SiliFish.UI.Controls
             tabOutputs_SelectedIndexChanged(sender, e);
         }
 
+        private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
+        {
+            p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
+        }
 
+        private void cb3DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
+        {
+            p3DRenderOptions.Visible = cb3DRenderShowOptions.Checked;
+        }
     }
 
 }

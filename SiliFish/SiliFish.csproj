@@ -5,7 +5,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyVersion></AssemblyVersion>
-    <Version>2.6.0</Version>
+    <Version>2.7.0</Version>
 	  <NoWarn>$(NoWarn);SYSLIB1045</NoWarn>
   </PropertyGroup>
 

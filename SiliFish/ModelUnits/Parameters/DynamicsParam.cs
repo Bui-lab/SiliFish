@@ -37,25 +37,25 @@ namespace SiliFish.ModelUnits.Parameters
         public double ChatteringIrregularity { get; set; } = 0.1;
 
         [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
-            "Used if the interval within spikes are not increasing with time."),
+            "Used if the intervals between spikes are not increasing with time."),
             DisplayName("Max Burst Interval - no spread"),
             Category("Firing Patterns")]
         public double MaxBurstInterval_DefaultLowerRange { get; set; } = 5;
 
         [Description("In ms, the maximum interval two spikes can have to be considered as part of a burst. " +
-            "Used if the interval within spikes are increasing with time."),
+            "Used if the intervals between spikes are increasing with time."),
             DisplayName("Max Burst Interval - spread"),
             Category("Firing Patterns")]
         public double MaxBurstInterval_DefaultUpperRange { get; set; } = 30;
 
 
         [Description("Centroid2 (average duration between bursts) < Centroid1 (average duration between spikes) * OneClusterMultiplier " +
-            "means there is only one cluster (all spikes are part of a burst)"),
+            "means there is only one cluster (all spikes are part of a burst)."),
             DisplayName("One Cluster Multiplier"),
             Category("Firing Patterns")]
         public double OneClusterMultiplier { get; set; } = 2;
 
-        [Description("In ms, the range between the last spike and the end of current to be considered as tonic firing"),
+        [Description("In ms, the range between the last spike and the end of current to be considered as tonic firing."),
             DisplayName("Tonic Padding"),
             Category("Firing Patterns")]
         public double TonicPadding { get; set; } = 1;
