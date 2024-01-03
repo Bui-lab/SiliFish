@@ -245,6 +245,7 @@ namespace SiliFish.UI.Controls
                 SetDropDownValue(ddSourcePool, interPoolTemplate.SourcePool);
                 SetDropDownValue(ddTargetPool, interPoolTemplate.TargetPool);
                 ddAxonReachMode.Text = interPoolTemplate.AxonReachMode.ToString();
+                ddReachMode.SelectedIndex = interPoolTemplate.CellReach.SomiteBased ? 0 : 1;
                 interPoolTemplate.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
                 ddConnectionType.Text = interPoolTemplate.ConnectionType.ToString();
                 ddDistanceMode.Text = interPoolTemplate.DistanceMode.ToString();

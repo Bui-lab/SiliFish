@@ -89,8 +89,7 @@
             tPlotHTML = new TabPage();
             webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             tPlotWindows = new TabPage();
-            splitPlotWindows = new SplitContainer();
-            pictureBoxLeft = new PictureBox();
+            pictureBox = new PictureBox();
             cmPlotImageSave = new ContextMenuStrip(components);
             cmiPlotImageSave = new ToolStripMenuItem();
             pPlot = new Panel();
@@ -173,7 +172,7 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            pictureBoxRight = new PictureBox();
+            pPictureBox = new Panel();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
@@ -190,11 +189,7 @@
             tPlotHTML.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewPlot).BeginInit();
             tPlotWindows.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitPlotWindows).BeginInit();
-            splitPlotWindows.Panel1.SuspendLayout();
-            splitPlotWindows.Panel2.SuspendLayout();
-            splitPlotWindows.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLeft).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             cmPlotImageSave.SuspendLayout();
             pPlot.SuspendLayout();
             cmPlot.SuspendLayout();
@@ -221,7 +216,7 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).BeginInit();
             cmAnimation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxRight).BeginInit();
+            pPictureBox.SuspendLayout();
             SuspendLayout();
             // 
             // tabOutputs
@@ -854,7 +849,8 @@
             // 
             // tPlotWindows
             // 
-            tPlotWindows.Controls.Add(splitPlotWindows);
+            tPlotWindows.AutoScroll = true;
+            tPlotWindows.Controls.Add(pPictureBox);
             tPlotWindows.Location = new Point(4, 24);
             tPlotWindows.Name = "tPlotWindows";
             tPlotWindows.Padding = new Padding(3);
@@ -862,40 +858,15 @@
             tPlotWindows.TabIndex = 0;
             tPlotWindows.Text = "Image Plots";
             // 
-            // splitPlotWindows
+            // pictureBox
             // 
-            splitPlotWindows.BackColor = Color.Gray;
-            splitPlotWindows.BorderStyle = BorderStyle.FixedSingle;
-            splitPlotWindows.Dock = DockStyle.Fill;
-            splitPlotWindows.Location = new Point(3, 3);
-            splitPlotWindows.Name = "splitPlotWindows";
-            // 
-            // splitPlotWindows.Panel1
-            // 
-            splitPlotWindows.Panel1.AutoScroll = true;
-            splitPlotWindows.Panel1.BackColor = Color.White;
-            splitPlotWindows.Panel1.Controls.Add(pictureBoxLeft);
-            // 
-            // splitPlotWindows.Panel2
-            // 
-            splitPlotWindows.Panel2.AutoScroll = true;
-            splitPlotWindows.Panel2.BackColor = Color.White;
-            splitPlotWindows.Panel2.Controls.Add(pictureBoxRight);
-            splitPlotWindows.Size = new Size(674, 587);
-            splitPlotWindows.SplitterDistance = 312;
-            splitPlotWindows.SplitterWidth = 2;
-            splitPlotWindows.TabIndex = 0;
-            // 
-            // pictureBoxLeft
-            // 
-            pictureBoxLeft.ContextMenuStrip = cmPlotImageSave;
-            pictureBoxLeft.Dock = DockStyle.Fill;
-            pictureBoxLeft.Location = new Point(0, 0);
-            pictureBoxLeft.Name = "pictureBoxLeft";
-            pictureBoxLeft.Size = new Size(310, 585);
-            pictureBoxLeft.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBoxLeft.TabIndex = 0;
-            pictureBoxLeft.TabStop = false;
+            pictureBox.ContextMenuStrip = cmPlotImageSave;
+            pictureBox.Location = new Point(0, 0);
+            pictureBox.Name = "pictureBox";
+            pictureBox.Size = new Size(104, 45);
+            pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBox.TabIndex = 0;
+            pictureBox.TabStop = false;
             // 
             // cmPlotImageSave
             // 
@@ -1718,16 +1689,16 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // pictureBoxRight
+            // pPictureBox
             // 
-            pictureBoxRight.ContextMenuStrip = cmPlotImageSave;
-            pictureBoxRight.Dock = DockStyle.Fill;
-            pictureBoxRight.Location = new Point(0, 0);
-            pictureBoxRight.Name = "pictureBoxRight";
-            pictureBoxRight.Size = new Size(358, 585);
-            pictureBoxRight.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBoxRight.TabIndex = 1;
-            pictureBoxRight.TabStop = false;
+            pPictureBox.AutoScroll = true;
+            pPictureBox.AutoSize = true;
+            pPictureBox.Controls.Add(pictureBox);
+            pPictureBox.Dock = DockStyle.Fill;
+            pPictureBox.Location = new Point(3, 3);
+            pPictureBox.Name = "pPictureBox";
+            pPictureBox.Size = new Size(674, 587);
+            pPictureBox.TabIndex = 1;
             // 
             // ModelOutputControl
             // 
@@ -1757,13 +1728,8 @@
             tPlotHTML.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewPlot).EndInit();
             tPlotWindows.ResumeLayout(false);
-            splitPlotWindows.Panel1.ResumeLayout(false);
-            splitPlotWindows.Panel1.PerformLayout();
-            splitPlotWindows.Panel2.ResumeLayout(false);
-            splitPlotWindows.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)splitPlotWindows).EndInit();
-            splitPlotWindows.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLeft).EndInit();
+            tPlotWindows.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             cmPlotImageSave.ResumeLayout(false);
             pPlot.ResumeLayout(false);
             pPlot.PerformLayout();
@@ -1793,7 +1759,8 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).EndInit();
             cmAnimation.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBoxRight).EndInit();
+            pPictureBox.ResumeLayout(false);
+            pPictureBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1803,8 +1770,6 @@
         private TabPage tPlot;
         private TabControl tabPlotSub;
         private TabPage tPlotWindows;
-        private SplitContainer splitPlotWindows;
-        private PictureBox pictureBoxLeft;
         private TabPage tPlotHTML;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlot;
         private Panel pPlot;
@@ -1935,6 +1900,7 @@
         private Panel p2DRenderOptions;
         private CheckBox cb2DRenderShowOptions;
         private CheckBox cb3DRenderShowOptions;
-        private PictureBox pictureBoxRight;
+        private PictureBox pictureBox;
+        private Panel pPictureBox;
     }
 }

@@ -9,6 +9,7 @@ using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,18 +107,15 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
-                string gapTitle = "Time,";
-                string synInTitle = "Time,";
-                string synOutTitle = "Time,";
-                List<string> gapData = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-                List<string> synInData = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-                List<string> synOutData = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-                List<string> colorPerGapChart = new();
-                List<string> colorPerInSynChart = new();
-                List<string> colorPerOutSynChart = new();
-                bool gapExists = false;
-                bool synInExists = false;
-                bool synOutExists = false;
+                Dictionary<string, List<double[]>> yMultiData = new() { { "SynIn", new() }, { "SynOut", new() }, { "Gap", new() } };
+                Dictionary<string, double[]> yData = new() { { "SynIn", null }, { "SynOut", null }, { "Gap", null } };
+                Dictionary<string, string> title = new() { { "SynIn", "Time," }, { "SynOut", "Time," }, { "Gap", "Time," } };
+                Dictionary<string, List<string>> xData = new() {
+                    { "SynIn", new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","))},
+                    { "SynOut", new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","))},
+                    { "Gap", new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","))} };
+                Dictionary<string, List<Color>> colorPerChart = new() { { "SynIn", new() }, { "SynOut", new() }, { "Gap", new() } };
+                Dictionary<string, bool> exists = new() { { "SynIn", false }, { "SynOut", false }, { "Gap", false } };
 
                 foreach (Cell cell in cellGroup)
                 {
@@ -129,14 +127,15 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         bool useIdentifier = synapses.GroupBy(j => j.ID).Count() != synapses.Count;
                         foreach (ChemicalSynapse jnc in synapses)
                         {
-                            synInExists = true;
+                            exists["SynIn"] = true;
                             if (combineCells)
-                                synInTitle += jnc.ID + ",";
+                                title["SynIn"] += jnc.ID + ",";
                             else
-                                synInTitle += $"{jnc.PreNeuron.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")} ,";
-                            colorPerInSynChart.Add(jnc.PreNeuron.CellPool.Color.ToRGBQuoted());
+                                title["SynIn"] += $"{jnc.PreNeuron.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")} ,";
+                            colorPerChart["SynIn"].Add(jnc.PreNeuron.CellPool.Color);
+                            yMultiData["SynIn"].Add(jnc.InputCurrent[iStart..iEnd]);
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                synInData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                                xData["SynIn"][i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                         }
                     }
                     if (includeGap)
@@ -145,12 +144,13 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         bool useIdentifier = gapJunctions.GroupBy(j => j.ID).Count() != gapJunctions.Count;
                         foreach (GapJunction jnc in gapJunctions)
                         {
-                            gapExists = true;
+                            exists["Gap"] = true;
                             Cell otherCell = jnc.Cell1 == cell ? jnc.Cell2 : jnc.Cell1;
-                            gapTitle += $"Gap: {jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
-                            colorPerGapChart.Add(otherCell.CellPool.Color.ToRGBQuoted());
+                            title["Gap"] += $"Gap: {jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
+                            colorPerChart["Gap"].Add(otherCell.CellPool.Color);
+                            yMultiData["Gap"].Add(jnc.InputCurrent[iStart..iEnd]);
                             foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                gapData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                                xData["Gap"][i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                         }
                     }
                     if (includeChemOut)
@@ -160,14 +160,15 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             bool useIdentifier = neuron2.Terminals.GroupBy(j => j.ID).Count() != neuron2.Terminals.Count;
                             foreach (ChemicalSynapse jnc in neuron2.Terminals)
                             {
-                                synOutExists = true;
+                                exists["SynOut"] = true;
                                 if (combineCells)
-                                    synOutTitle += jnc.ID + ",";
-                                else 
-                                    synOutTitle += $"{jnc.PostCell.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")} ,";
-                                colorPerOutSynChart.Add(jnc.PostCell.CellPool.Color.ToRGBQuoted());
+                                    title["SynOut"] += jnc.ID + ",";
+                                else
+                                    title["SynOut"] += $"{jnc.PostCell.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")} ,";
+                                colorPerChart["SynOut"].Add(jnc.PostCell.CellPool.Color);
+                                yMultiData["SynOut"].Add(jnc.InputCurrent[iStart..iEnd]);
                                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                                    synOutData[i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                                    xData["SynOut"][i] += jnc.InputCurrent[iStart + i].ToString(GlobalSettings.PlotDataFormat) + ",";
                             }
                         }
                     }
@@ -176,9 +177,16 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 double yMin = cells.Min(c => c.MinCurrentValue(includeGap, includeChemIn, includeChemOut, iStart, iEnd));
                 double yMax = cells.Max(c => c.MaxCurrentValue(includeGap, includeChemIn, includeChemOut, iStart, iEnd));
                 Util.SetYRange(ref yMin, ref yMax);
+                foreach (string key in yMultiData.Keys)
+                {
+                    if (yMultiData[key].Count == 1)
+                    {
+                        yData[key] = yMultiData[key].FirstOrDefault();
+                        yMultiData[key] = null;
+                    }
+                }
 
-
-                if (synInExists)
+                if (exists["SynIn"])
                 {
                     if (!GlobalSettings.SameYAxis)
                     {
@@ -187,22 +195,25 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         Util.SetYRange(ref yMin, ref yMax);
                     }
 
-                    string csvData = "`" + synInTitle[..^1] + "\n" + string.Join("\n", synInData.Select(line => line[..^1]).ToArray()) + "`";
+                    string csvData = title["SynIn"][..^1] + "\n" + string.Join("\n", xData["SynIn"].Select(line => line[..^1]).ToArray());
                     Chart chart = new()
                     {
-                        GroupSeq = GroupSeq, 
+                        GroupSeq = GroupSeq,
                         CsvData = csvData,
-                        Color = string.Join(',', colorPerInSynChart),
-                        Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
+                        Colors = colorPerChart["SynIn"],
+                        Title = $"{cellGroup.Key} Incoming Synaptic Currents",
+                        yLabel = $"Current ({Util.GetUoM(UoM, Measure.Current)})",
+                        xMin = timeArray[iStart],
+                        xMax = timeArray[iEnd] + 1,
+                        xData = timeArray[iStart..iEnd],
                         yMin = yMin,
                         yMax = yMax,
-                        xMin = timeArray[iStart],
-                        xMax = timeArray[iEnd] + 1
+                        yData = yData["SynIn"],
+                        yMultiData = yMultiData["SynIn"]
                     };
                     if (!AddChart(chart)) return;
                 }
-                 if (gapExists)
+                if (exists["Gap"])
                 {
                     if (!GlobalSettings.SameYAxis)
                     {
@@ -211,22 +222,25 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         Util.SetYRange(ref yMin, ref yMax);
                     }
 
-                    string csvData = "`" + gapTitle[..^1] + "\n" + string.Join("\n", gapData.Select(line => line[..^1]).ToArray()) + "`";
+                    string csvData = title["Gap"][..^1] + "\n" + string.Join("\n", xData["Gap"].Select(line => line[..^1]).ToArray());
                     Chart chart = new()
                     {
                         GroupSeq = GroupSeq + 1,
                         CsvData = csvData,
-                        Color = string.Join(',', colorPerGapChart),
-                        Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
+                        Colors = colorPerChart["Gap"],
+                        Title = $"{cellGroup.Key} Gap Currents",
+                        yLabel = $"Current ({Util.GetUoM(UoM, Measure.Current)})",
+                        xMin = timeArray[iStart],
+                        xMax = timeArray[iEnd] + 1,
+                        xData = timeArray[iStart..iEnd],
                         yMin = yMin,
                         yMax = yMax,
-                        xMin = timeArray[iStart],
-                        xMax = timeArray[iEnd] + 1
+                        yData = yData["Gap"],
+                        yMultiData = yMultiData["Gap"]
                     };
                     if (!AddChart(chart)) return;
-                }               
-                if (synOutExists)
+                }
+                if (exists["SynOut"])
                 {
                     if (!GlobalSettings.SameYAxis)
                     {
@@ -235,18 +249,21 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         Util.SetYRange(ref yMin, ref yMax);
                     }
 
-                    string csvData = "`" + synOutTitle[..^1] + "\n" + string.Join("\n", synOutData.Select(line => line[..^1]).ToArray()) + "`";
+                    string csvData = title["SynOut"][..^1] + "\n" + string.Join("\n", xData["SynOut"].Select(line => line[..^1]).ToArray());
                     Chart chart = new()
                     {
                         GroupSeq = GroupSeq + 2,
                         CsvData = csvData,
-                        Color = string.Join(',', colorPerOutSynChart),
-                        Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
+                        Colors = colorPerChart["SynOut"],
+                        Title = $"{cellGroup.Key} Outgoing Synaptic Currents",
+                        yLabel = $"Current ({Util.GetUoM(UoM, Measure.Current)})",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],
-                        xMax = timeArray[iEnd] + 1
+                        xMax = timeArray[iEnd] + 1,
+                        xData = timeArray[iStart..iEnd],
+                        yData = yData["SynOut"],
+                        yMultiData = yMultiData["SynOut"]
                     };
                     if (!AddChart(chart)) return;
                 }

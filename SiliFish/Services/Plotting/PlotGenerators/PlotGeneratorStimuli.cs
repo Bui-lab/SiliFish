@@ -6,6 +6,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,9 +37,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
+                List<double[]> yMultiData = new();
+                double[] yData = null;
                 string columnTitles = "Time,";
                 List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-                List<string> colorPerChart = new();
+                List<Color> colorPerChart = new();
                 bool stimExists = false;
 
 
@@ -46,9 +49,14 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
                     stimExists = true;
                     columnTitles += cell.ID + ",";
-                    colorPerChart.Add(cell.CellPool.Color.ToRGBQuoted());
+                    colorPerChart.Add(cell.CellPool.Color);
+                    yData = new double[iEnd - iStart + 1];
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
-                        data[i] += cell.Stimuli.GetStimulus(iStart + i).ToString(GlobalSettings.PlotDataFormat) + ",";
+                    {
+                        yData[i] = cell.Stimuli.GetStimulus(iStart + i);
+                        data[i] += yData[i].ToString(GlobalSettings.PlotDataFormat) + ",";
+                    }
+                    yMultiData.Add(yData);
                 }
                 if (stimExists)
                 {
@@ -58,17 +66,25 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yMax = cellGroup.Max(c => c.MaxStimulusValue());
                         Util.SetYRange(ref yMin, ref yMax);
                     }
-                    string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+                if (yMultiData.Count == 1)
+                {
+                    yData = yMultiData.FirstOrDefault();
+                    yMultiData = null;
+                }
+                    string csvData = columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray());
                     Chart chart = new()
                     {
                         CsvData = csvData,
-                        Color = string.Join(',', colorPerChart),
-                        Title = $"`{cellGroup.Key} Applied Stimuli`",
-                        yLabel = $"`Stimulus ({Util.GetUoM(UoM, Measure.Current)})`",
+                        Colors = colorPerChart,
+                        Title = $"{cellGroup.Key} Applied Stimuli",
+                        yLabel = $"Stimulus ({Util.GetUoM(UoM, Measure.Current)})",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],
-                        xMax = timeArray[iEnd] + 1
+                    xMax = timeArray[iEnd] + 1,
+                    xData = timeArray[iStart..iEnd],
+                    yData = yData,
+                    yMultiData = yMultiData
                     };
                     if (!AddChart(chart))
                         return;

@@ -1,6 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Claims;
 
@@ -23,15 +24,16 @@ namespace SiliFish.DataTypes
                 csvData = value;
                 long numOfLines = csvData.LongCount(c => c == '\n');
                 int firstLineEnd = csvData.IndexOf('\n');
-                string firstLine = csvData.Substring(0, firstLineEnd);
+                string firstLine = csvData[..firstLineEnd];
                 int numOfColumns = firstLine.Count(c => c == ',');
                 numOfPoints = numOfLines * numOfColumns;
             }
         }
-        public long NumOfDataPoints => numOfPoints;
+        public readonly long NumOfDataPoints => numOfPoints;
 
         public string Title = "", xLabel = "Time (ms)", yLabel = "";
-        public string Color = System.Drawing.Color.Red.ToRGBQuoted();
+        public List<Color> Colors = new ();
+        public readonly string csvColors => string.Join(',', Colors.Select(c => c.ToRGBQuoted()).ToList());
         public int GroupSeq;
         public int ChartSeq;
         public double[] xData = null;
@@ -46,17 +48,17 @@ namespace SiliFish.DataTypes
         private double? yMinSet = null, yMaxSet = null;
         public double xMin
         {
-            get { return xMinSet ?? xData.Min(); }
+            readonly get { return xMinSet ?? xData.Min(); }
             set { xMinSet = value; }
         }
         public double xMax
         {
-            get { return xMaxSet ?? xData.Max(); }
+            readonly get { return xMaxSet ?? xData.Max(); }
             set { xMaxSet = value; }
         }
         public double yMin
         {
-            get
+            readonly get
             {
                 return yMinSet ??
                     yData?.Min() ??
@@ -67,7 +69,7 @@ namespace SiliFish.DataTypes
         }
         public double yMax 
         {
-            get
+            readonly get
             {
                 return yMaxSet ??
                     yData?.Max() ??
@@ -108,7 +110,7 @@ namespace SiliFish.DataTypes
                         data[i] += singleyData[i].ToString(GlobalSettings.PlotDataFormat) + ",";
                 }
             }
-            csvData = $"`{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
+            csvData = $"{columnTitles}\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray());
         }
     }
 

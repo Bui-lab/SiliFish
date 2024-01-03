@@ -184,7 +184,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = values[iter].ToString("0.###"),
-                    Color = Color.Purple.ToRGBQuoted(),
+                    Colors = new() { Color.Purple },
                     xData = TimeArray,
                     yData = stat.VList,
                     xLabel = param,
@@ -223,7 +223,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = param,
-                    Color = Color.Purple.ToRGBQuoted(),
+                    Colors = new() { Color.Purple },
                     xData = values,
                     yData = rheos,
                     xLabel = param,
@@ -326,7 +326,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = $"V ({firingRhythm} {firingPattern})",
-                    Color = Color.Purple.ToRGBQuoted(),
+                    Colors = new() { Color.Purple },
                     xData = TimeArray,
                     yData = dynamics.VList,
                     yLabel = "V (mV)"
@@ -339,7 +339,7 @@ namespace SiliFish.UI.Controls
                     charts.Add(new Chart
                     {
                         Title = key,
-                        Color = Color.Blue.ToRGBQuoted(),
+                        Colors = new() { Color.Blue },
                         xData = TimeArray,
                         yData = dynamics.SecLists[key],
                         yLabel = key
@@ -352,7 +352,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = "Tau rise",
-                    Color = Color.Green.ToRGBQuoted(),
+                    Colors = new() { Color.Green },
                     xData = dynamics.TauRise.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
@@ -367,7 +367,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = "Tau decay",
-                    Color = Color.Green.ToRGBQuoted(),
+                    Colors = new() { Color.Green },
                     xData = dynamics.TauDecay.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
@@ -382,7 +382,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = "Intervals",
-                    Color = Color.Blue.ToRGBQuoted(),
+                    Colors = new() { Color.Blue },
                     xData = dynamics.Intervals_ms.Keys.ToArray(),
                     xMin = 0,
                     xMax = TimeArray[^1],
@@ -398,7 +398,7 @@ namespace SiliFish.UI.Controls
                     charts.Add(new Chart
                     {
                         Title = "Spiking Freq.",
-                        Color = Color.Blue.ToRGBQuoted(),
+                        Colors = new() { Color.Blue },
                         xData = dynamics.SpikeFrequency_Grouped.Keys.Select(ff => ff).ToArray(),
                         xMin = 0,
                         xMax = TimeArray[^1],
@@ -411,7 +411,7 @@ namespace SiliFish.UI.Controls
                     charts.Add(new Chart
                     {
                         Title = "Burst Freq.",
-                        Color = Color.Blue.ToRGBQuoted(),
+                        Colors = new() { Color.Blue },
                         xData = dynamics.BurstingFrequency_Grouped.Keys.Select(ff => ff).ToArray(),
                         xMin = 0,
                         xMax = TimeArray[^1],
@@ -427,7 +427,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = "Stimulus",
-                    Color = Color.Red.ToRGBQuoted(),
+                    Colors = new() { Color.Red },
                     xData = TimeArray,
                     yData = dynamics.StimulusArray,
                     yLabel = $"I ({Util.GetUoM(UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens, Measure.Current)})"
@@ -457,7 +457,7 @@ namespace SiliFish.UI.Controls
                 charts.Add(new Chart
                 {
                     Title = $"{key} ({firingRhythm} {firingPattern})",
-                    Color = Color.Purple.ToRGBQuoted(),
+                    Colors = new() { Color.Purple },
                     xData = TimeArray,
                     yData = dynamics.VList,
                     yLabel = "V (mV)"
@@ -466,7 +466,7 @@ namespace SiliFish.UI.Controls
             charts.Add(new Chart
             {
                 Title = $"Stimulus",
-                Color = Color.Red.ToRGBQuoted(),
+                Colors = new() { Color.Red },
                 xData = TimeArray,
                 yMultiData = I,
                 yLabel = string.Join(',', columnNames)

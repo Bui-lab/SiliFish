@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using SiliFish.Services.Plotting.PlotGenerators;
+using SiliFish.Extensions;
 
 namespace SiliFish.Services.Plotting
 {
@@ -64,8 +65,8 @@ namespace SiliFish.Services.Plotting
                         eventListeners += eventListener.Replace("__CHART_INDEX__", chartIndex.ToString());
                         StringBuilder sbChart = new(ReadEmbeddedText("SiliFish.Resources.DyChart.js"));
                         sbChart.Replace("__CHART_INDEX__", chartIndex.ToString());
-                        sbChart.Replace("__CHART_DATA__", charts[chartIndex].CsvData);
-                        sbChart.Replace("__CHART_COLORS__", charts[chartIndex].Color);
+                        sbChart.Replace("__CHART_DATA__", Util.JavaScriptEncode(charts[chartIndex].CsvData));
+                        sbChart.Replace("__CHART_COLORS__", charts[chartIndex].csvColors);
                         sbChart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
                         Chart chart = charts[chartIndex];
                         double yMin = yRanges.Any() ? yRanges[chart.yLabel].MinY : chart.yMin;
@@ -82,7 +83,7 @@ namespace SiliFish.Services.Plotting
                         sbChart.Replace("__Y_LABEL__", Util.JavaScriptEncode(charts[chartIndex].yLabel));
                         sbChart.Replace("__X_LABEL__", Util.JavaScriptEncode(charts[chartIndex].xLabel));
                         sbChart.Replace("__DRAW_POINTS__", charts[chartIndex].ScatterPlot || charts[chartIndex].drawPoints ? "true" : "false");
-                        sbChart.Replace("__POINT_SIZE__", "3");//TODO hardcoded
+                        sbChart.Replace("__POINT_SIZE__", GlobalSettings.PlotPointSize.ToString());
                         sbChart.Replace("__SHOW_ZERO__", showZeroValues.ToString().ToLower());
                         sbChart.Replace("__LOG_SCALE__", charts[chartIndex].logScale ? "true" : "false");
                         sbChart.Replace("__SCATTER_PLOT__", charts[chartIndex].ScatterPlot ? "drawPoints: true,strokeWidth: 0," : "");

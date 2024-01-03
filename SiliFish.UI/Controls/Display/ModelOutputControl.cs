@@ -68,15 +68,13 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             WebViewInitializations();
-            splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
 
             PopulatePlotTypes();
             SetEnablesBasedOnPlot();
 
 
-            pictureBoxLeft.MouseWheel += PictureBox_MouseWheel;
-            pictureBoxRight.MouseWheel += PictureBox_MouseWheel;
-
+            pictureBox.MouseWheel += PictureBox_MouseWheel;
+            
             cellSelectionPlot.SelectionChanged += CellSelectionPlot_SelectionChanged;
 
             dd3DViewpoint.SelectedIndex = 0;
@@ -267,7 +265,7 @@ namespace SiliFish.UI.Controls
             }
             catch { }
         }
-        private async void ClearBrowserCache(WebView2 webView)
+        private static async void ClearBrowserCache(WebView2 webView)
         {
             await webView.CoreWebView2.Profile.ClearBrowsingDataAsync();
         }
@@ -553,7 +551,7 @@ namespace SiliFish.UI.Controls
                 {
                     IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.CombinePools, multiCells.CombineSomites, multiCells.CombineCells);
                     if (PlotType == PlotType.Stimuli)
-                        numOfPlots = cellGroups.Count(cg => cg.Count(c => c.HasStimulus()) > 0);
+                        numOfPlots = cellGroups.Count(cg => cg.Any(c => c.HasStimulus()));
                     else
                         numOfPlots = cellGroups.Count();
                 }
@@ -954,53 +952,20 @@ namespace SiliFish.UI.Controls
                 
                 (string Title, Charts) = GenerateCharts();
 
-                List<Image> leftImages = WindowsPlotGenerator.PlotCharts(Charts);
-                List<Image> rightImages = null;
-                /*                if (plotSelection is not PlotSelectionMultiCells)
-                    return;
-                int tSkip = RunningModel.RunParam.SkipDuration;
-                double dt = RunningModel.RunParam.DeltaT;
-                int iStart = (int)((tPlotStart + tSkip) / dt);
-                int iEnd = (int)((tPlotEnd + tSkip) / dt);
-                (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, (PlotSelectionMultiCells)plotSelection, iStart, iEnd);
+                List<Image> Images = WindowsPlotGenerator.PlotCharts(Charts);
+                
+                Images?.RemoveAll(img => img == null);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(Charts, PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotSelection,
-                    tPlotStart, tPlotEnd);
-*/
-                leftImages?.RemoveAll(img => img == null);
-                rightImages?.RemoveAll(img => img == null);
+                int ncol = 1; // Images?.Count > 5 ? 2 : 1;
+                int nrow = (int)Math.Ceiling((decimal)(Images?.Count ?? 0) / ncol);
 
-                int ncol = leftImages?.Count > 5 ? 2 : 1;
-                int nrow = (int)Math.Ceiling((decimal)(leftImages?.Count ?? 0) / ncol);
-
-                if (leftImages != null && leftImages.Any())
+                if (Images != null && Images.Any())
                 {
-                    pictureBoxLeft.Image = ImageHelperWindows.MergeImages(leftImages, nrow, ncol);
-                    splitPlotWindows.Panel1Collapsed = false;
+                    pictureBox.Image = ImageHelperWindows.MergeImages(Images, nrow, ncol);
                 }
-                else
-                {
-                    pictureBoxLeft.Image = null;
-                    splitPlotWindows.Panel1Collapsed = true;
-                }
-                if (rightImages != null && rightImages.Any())
-                {
-                    ncol = rightImages?.Count > 5 ? 2 : 1;
-                    nrow = (int)Math.Ceiling((decimal)(rightImages?.Count ?? 0) / ncol);
-                    pictureBoxRight.Image = ImageHelperWindows.MergeImages(rightImages, nrow, ncol);
-                    splitPlotWindows.Panel2Collapsed = false;
-                    splitPlotWindows.SplitterDistance = splitPlotWindows.Width / 2;
-                }
-                else
-                {
-                    pictureBoxRight.Image = null;
-                    splitPlotWindows.Panel2Collapsed = true;
-                }
-                pictureBoxLeft.Tag = null;//for proper zooming it has to be reset
-                pictureBoxRight.Tag = null;//for proper zooming it has to be reset
+                pictureBox.Tag = null;//for proper zooming it has to be reset
                 toolTip.SetToolTip(cmPlot, $"Last plot: {DateTime.Now:t}");
-                toolTip.SetToolTip(pictureBoxLeft, $"Last plot: {DateTime.Now:t}");
-                toolTip.SetToolTip(pictureBoxRight, $"Last plot: {DateTime.Now:t}");
+                toolTip.SetToolTip(pictureBox, $"Last plot: {DateTime.Now:t}");
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = false;
                 cmPlot.Enabled = true;
@@ -1029,18 +994,7 @@ namespace SiliFish.UI.Controls
                 {
                     string ext = Path.GetExtension(saveFileImage.FileName);
                     ImageFormat imgFormat = ImageFormat.Png;
-                    string leftFile = saveFileImage.FileName;
-                    string rightFile = saveFileImage.FileName;
-
-                    if (pictureBoxLeft.Image != null && pictureBoxRight.Image != null)
-                    {
-                        string s = Path.GetFileNameWithoutExtension(leftFile);
-                        string path = Path.GetDirectoryName(leftFile);
-                        leftFile = $"{path}\\{s}_Left{ext}";
-                        rightFile = $"{path}\\{s}_Right{ext}";
-                    }
-                    pictureBoxLeft.Image?.Save(leftFile, imgFormat);
-                    pictureBoxRight.Image?.Save(rightFile, imgFormat);
+                    pictureBox.Image?.Save(saveFileImage.FileName, imgFormat);
                 }
             }
             catch (Exception exc)
@@ -1054,27 +1008,7 @@ namespace SiliFish.UI.Controls
         #region Spike Stats
         private void linkExportSpikes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                bool saved = false;
-                try
-                {
-                    FileUtil.SaveToFile(saveFileCSV.FileName, dgSpikeStats.ExportToStringBuilder().ToString());
-                    saved = true;
-                    FileUtil.ShowFile(saveFileCSV.FileName);
-                }
-                catch (Exception exc)
-                {
-                    if (!saved)
-                    {
-                        MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
-                    }
-                    else
-                    {
-                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.", "Information");
-                    }
-                }
-            }
+            UtilWindows.SaveTextFile(saveFileCSV, dgSpikeStats.ExportToStringBuilder().ToString());
         }
 
         private int AddCellToSpikeGrid(Cell cell)
@@ -1178,17 +1112,17 @@ namespace SiliFish.UI.Controls
                     pooledCells, iSpikeStart, iSpikeEnd);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
-                    foreach (var singleBurst in burstTrain.BurstList)
+                    foreach (var (iID, sID, Bursts) in burstTrain.BurstList)
                     {
                         dgRCTrains.RowCount++;
                         int rowIndex = dgRCTrains.RowCount - 1;
                         dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iID;
-                        dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = singleBurst.sID;
-                        dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = singleBurst.iID;
-                        dgRCTrains[colRCTrainStart.Index, rowIndex].Value = singleBurst.Bursts.Start;
-                        dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = singleBurst.Bursts.End;
-                        dgRCTrains[colRCTrainMidPoint.Index, rowIndex].Value = singleBurst.Bursts.Center;
-                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = singleBurst.Bursts.WeightedCenter;
+                        dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = sID;
+                        dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = iID;
+                        dgRCTrains[colRCTrainStart.Index, rowIndex].Value = Bursts.Start;
+                        dgRCTrains[colRCTrainEnd.Index, rowIndex].Value = Bursts.End;
+                        dgRCTrains[colRCTrainMidPoint.Index, rowIndex].Value = Bursts.Center;
+                        dgRCTrains[colRCTrainCenter.Index, rowIndex].Value = Bursts.WeightedCenter;
                     }
                 }
             }
@@ -1222,28 +1156,8 @@ namespace SiliFish.UI.Controls
             UseWaitCursor = false;
         }
         private void linkExportRCTrains_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {//TODO this code is repeated in linkExportSpikes as well. Write a function
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
-            {
-                bool saved = false;
-                try
-                {
-                    FileUtil.SaveToFile(saveFileCSV.FileName, dgRCTrains.ExportToStringBuilder().ToString());
-                    saved = true;
-                    FileUtil.ShowFile(saveFileCSV.FileName);
-                }
-                catch (Exception exc)
-                {
-                    if (!saved)
-                    {
-                        MessageBox.Show("There is a problem in saving the file:" + exc.Message, "Error");
-                    }
-                    else
-                    {
-                        MessageBox.Show($"File {saveFileCSV.FileName} is saved.", "Information");
-                    }
-                }
-            }
+        {
+            UtilWindows.SaveTextFile(saveFileCSV, dgRCTrains.ExportToStringBuilder().ToString());
         }
 
         private void dgRCTrains_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)

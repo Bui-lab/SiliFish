@@ -20,7 +20,7 @@ namespace SiliFish.UI.Controls
         private Cell sourceCell;
         private Cell targetCell;
 
-        public JunctionControl(RunningModel model)
+        public JunctionControl(RunningModel model)//TODO junction control is not fully functional
         {
             InitializeComponent();
             Model = model;
@@ -77,8 +77,6 @@ namespace SiliFish.UI.Controls
             }
         }
 
-
-
         private void LoadSelectedSourceValues()
         {
             if (ddSourcePool.SelectedItem is CellPool pool)
@@ -86,25 +84,8 @@ namespace SiliFish.UI.Controls
                 sourcePool = pool;
                 sourceCell = null;
                 UtilWindows.FillCells(ddSourceCell, sourcePool);
-
-                /*TODO add a SetNT function to synapse core class
-                    switch (pool.NTMode)//fill default values, based on the NT
-                {
-                    case NeuronClass.Glycinergic:
-                        synapseControl.EReversal = settings.E_gly;
-                        break;
-                    case NeuronClass.GABAergic:
-                        synapseControl.EReversal = settings.E_gaba;
-                        break;
-                    case NeuronClass.Glutamatergic:
-                        synapseControl.EReversal = settings.E_glu;
-                        break;
-                    case NeuronClass.Cholinergic:
-                        synapseControl.EReversal = settings.E_ach;
-                        break;
-                    default:
-                        break;
-                }*/
+                if (junction?.Core is ChemSynapseCore csc)
+                    csc.SetNeuroTransmitter(pool.Model.Settings, pool.NTMode);
             }
         }
         private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)

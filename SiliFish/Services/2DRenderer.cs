@@ -176,10 +176,10 @@ namespace SiliFish.Services
                 double bufferY = supraMaxY - msMinY + (msMaxY - msMinY) / 10;
                 foreach (var pc in PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)))
                 {
-                    if (posPools.ContainsKey(pc.Key))
-                        posPools[pc.Key] = (posPools[pc.Key].Item1, posPools[pc.Key].Item2 - bufferY);
-                    if (negPools.ContainsKey(pc.Key))
-                        negPools[pc.Key] = (negPools[pc.Key].Item1, negPools[pc.Key].Item2 - bufferY);
+                    if (posPools.TryGetValue(pc.Key, out (double, double) valueP))
+                        posPools[pc.Key] = (valueP.Item1, valueP.Item2 - bufferY);
+                    if (negPools.TryGetValue(pc.Key, out (double, double) valueN))
+                        negPools[pc.Key] = (valueN.Item1, valueN.Item2 - bufferY);
                 }
             }
             if (musclePools.Any() && spinalPools.Any() && muscleMinX < spinalMaxX)
@@ -187,10 +187,10 @@ namespace SiliFish.Services
                 double bufferX = spinalMaxX - muscleMinX + (spinalMaxX - spinalMinX);
                 foreach (var pc in PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)))
                 {
-                    if (posPools.ContainsKey(pc.Key))
-                        posPools[pc.Key] = (posPools[pc.Key].Item1 + bufferX, posPools[pc.Key].Item2);
-                    if (negPools.ContainsKey(pc.Key))
-                        negPools[pc.Key] = (negPools[pc.Key].Item1 + bufferX, negPools[pc.Key].Item2);
+                    if (posPools.TryGetValue(pc.Key, out (double, double) valueP))
+                        posPools[pc.Key] = (valueP.Item1 + bufferX, valueP.Item2);
+                    if (negPools.TryGetValue(pc.Key, out (double, double) valueN))
+                        negPools[pc.Key] = (valueN.Item1 + bufferX, valueN.Item2);
                 }
             }
 

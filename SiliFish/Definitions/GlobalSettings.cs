@@ -37,6 +37,7 @@ namespace SiliFish.Definitions
         public static bool ShowZeroValues = true;
         public static int DefaultPlotWidth = 800;
         public static int DefaultPlotHeight = 200;
+        public static int PlotPointSize = 3;
 
         public static int MaxNumberOfUnits = 100;
 
@@ -148,6 +149,11 @@ namespace SiliFish.Definitions
             DisplayName("Default plot height"),
             Category("Plotting")]
         public int DefaultPlotHeight { get { return GlobalSettings.DefaultPlotHeight; } set { GlobalSettings.DefaultPlotHeight = value; } }
+
+        [Description("In pixels."),
+            DisplayName("Size of the points on the scatterplots"),
+            Category("Plotting")]
+        public int PlotPointSize { get { return GlobalSettings.PlotPointSize; } set { GlobalSettings.PlotPointSize = value; } }
         #endregion
 
         #region Dynamics
@@ -172,11 +178,11 @@ namespace SiliFish.Definitions
             DisplayName("Suggested Min Value"),
             Category("Genetic Algorithm")]
         public double GeneticAlgorithmMinValue { get { return GlobalSettings.GeneticAlgorithmMinValue; } set { GlobalSettings.GeneticAlgorithmMinValue = value; } }
-        [Description("Valid for all parameters."),
-            DisplayName("Suggested Max Value"),
-            Category("Genetic Algorithm")]
-        public double GeneticAlgorithmMaxValue { get { return GlobalSettings.GeneticAlgorithmMaxValue; } set { GlobalSettings.GeneticAlgorithmMaxValue = value; } }
 
+        [Description("Valid for all parameters."),
+                   DisplayName("Suggested Max Value"),
+                   Category("Genetic Algorithm")]
+        public double GeneticAlgorithmMaxValue { get { return GlobalSettings.GeneticAlgorithmMaxValue; } set { GlobalSettings.GeneticAlgorithmMaxValue = value; } }
 
         [Description("Valid for all exhaustive search."),
             DisplayName("# of solutions per each setting combination"),

@@ -525,8 +525,8 @@ namespace SiliFish.Repositories
                     {
                         foreach (var grStim in model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End)))
                         {
-                            (double start, double end) key = grStim.Key;
-                            if (key.start > model.RunParam.MaxTime)
+                            (double start, double end) = grStim.Key;
+                            if (start > model.RunParam.MaxTime)
                                 continue;
                             string stimDetails = "";
                             foreach (StimulusTemplate stim in grStim)
@@ -536,11 +536,11 @@ namespace SiliFish.Repositories
                             List<string> cellValues = new();
                             cellValues.AddRange(new List<string>() { (++counter).ToString(), pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(),"1", c.ID });
                             cellValues.AddRange(new List<string>() {
-                            key.start.ToString(GlobalSettings.PlotDataFormat),
-                            key.end.ToString(GlobalSettings.PlotDataFormat),
+                            start.ToString(GlobalSettings.PlotDataFormat),
+                            end.ToString(GlobalSettings.PlotDataFormat),
                             stimDetails});
-                            int iStart = (int)(key.start / dt);
-                            int iEnd = key.end < 0 ? -1 : (int)(key.end / dt);
+                            int iStart = (int)(start / dt);
+                            int iEnd = end < 0 ? -1 : (int)(end / dt);
                             (DynamicsStats dyn, (double AvgV, double AvgVPos, double AvgVNeg)) =
                                 SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
                             dyn?.DefineSpikingPattern();

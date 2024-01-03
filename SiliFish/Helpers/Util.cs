@@ -153,21 +153,15 @@ namespace SiliFish.Helpers
 
         static public string GetUoM(UnitOfMeasure uom, Measure measure)
         {
-            switch (measure)
+            return measure switch
             {
-                case Measure.Voltage:
-                    return "mV";
-                case Measure.Current:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" : "nA";
-                case Measure.Resistance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "GΩ" : "MΩ";
-                case Measure.Capacitance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pF" : "nF";
-                case Measure.Conductance:
-                    return uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "nS" : "µS";
-
-            }
-            return "";
+                Measure.Voltage => "mV",
+                Measure.Current => uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" : "nA",
+                Measure.Resistance => uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "GΩ" : "MΩ",
+                Measure.Capacitance => uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pF" : "nF",
+                Measure.Conductance => uom == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "nS" : "µS",
+                _ => "",
+            };
         }
 
         static public double[] GenerateValues(double origValue, double minMultiplier, double maxMultiplier, int numOfPoints, bool logScale)

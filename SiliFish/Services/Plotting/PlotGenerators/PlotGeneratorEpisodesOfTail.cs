@@ -44,16 +44,18 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 data = new string[iEnd - iStart + 2];
                 foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                     data[i] = xValues[i] + "," + yValues[i];
-                csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                csvData = title + "\n" + string.Join("\n", data);
                 Chart chart = new()
                 {
                     CsvData = csvData,
-                    Title = $"`Tail Movement`",
-                    yLabel = "`Y-Coordinate`",
+                    Title = $"Tail Movement",
+                    yLabel = "Y-Coordinate",
                     xMin = Time[0],
                     xMax = Time[^1] + 1,
                     yMin = yValues.Min() - 1,
-                    yMax = yValues.Max() + 1
+                    yMax = yValues.Max() + 1,
+                    xData = xValues,
+                    yData = yValues
                 };
                 if (!AddChart(chart)) return;
             }
@@ -67,17 +69,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     data = new string[episodes.EpisodeCount];
                     foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    Chart chart = new Chart
+                    csvData = title + "\n" + string.Join("\n", data);
+                    Chart chart = new()
                     {
                         CsvData = csvData,
-                        Title = $"`Tail Beat Frequency`",
-                        yLabel = "`Freq (Hz)`",
+                        Title = $"Tail Beat Frequency",
+                        yLabel = "Freq (Hz)",
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
                         yMin = 0,
-                        yMax = yValues.Max() + 1
+                        yMax = yValues.Max() + 1,
+                        xData = xValues,
+                        yData = yValues
                     };
                     if (!AddChart(chart)) return;
                 }
@@ -89,17 +93,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     data = new string[episodes.EpisodeCount];
                     foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    Chart chart = new Chart
+                    csvData = title + "\n" + string.Join("\n", data);
+                    Chart chart = new()
                     {
                         CsvData = csvData,
-                        Title = $"`Episode Duration`",
-                        yLabel = "`Duration (ms)`",
+                        Title = $"Episode Duration",
+                        yLabel = "Duration (ms)",
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
                         yMin = 0,
-                        yMax = yValues.Max() + 1
+                        yMax = yValues.Max() + 1,
+                        xData = xValues,
+                        yData = yValues
                     };
                     if (!AddChart(chart)) return;
 
@@ -111,17 +117,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         data = new string[episodes.EpisodeCount];
                         foreach (int i in Enumerable.Range(0, episodes.EpisodeCount - 1))
                             data[i] = xValues[i] + "," + yValues[i];
-                        csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
+                        csvData = title + "\n" + string.Join("\n", data);
                         chart = new Chart
                         {
                             CsvData = csvData,
-                            Title = $"`Episode Intervals`",
-                            yLabel = "`Interval (ms)`",
+                            Title = $"Episode Intervals",
+                            yLabel = "Interval (ms)",
                             ScatterPlot = true,
                             xMin = Time[0],
                             xMax = Time[^1] + 1,
                             yMin = 0,
-                            yMax = yValues.Max() + 1
+                            yMax = yValues.Max() + 1,
+                            xData = xValues,
+                            yData = yValues
                         };
                         if (!AddChart(chart)) return;
                     }
@@ -134,17 +142,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     data = new string[episodes.EpisodeCount];
                     foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    Chart chart = new Chart
+                    csvData = title + "\n" + string.Join("\n", data);
+                    Chart chart = new()
                     {
                         CsvData = csvData,
-                        Title = $"`Tail Beat/Episode`",
-                        yLabel = "`Count`",
+                        Title = $"Tail Beat/Episode",
+                        yLabel = "Count",
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
                         yMin = 0,
-                        yMax = yValues.Max() + 1
+                        yMax = yValues.Max() + 1,
+                        xData = xValues,
+                        yData = yValues
                     };
                     if (!AddChart(chart)) return;
                 }
@@ -156,17 +166,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     data = new string[xValues.Length];
                     foreach (int i in Enumerable.Range(0, xValues.Length))
                         data[i] = xValues[i] + "," + yValues[i];
-                    csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                    Chart chart = new Chart
+                    csvData = title + "\n" + string.Join("\n", data);
+                    Chart chart = new()
                     {
                         CsvData = csvData,
-                        Title = $"`Instantenous Frequency`",
-                        yLabel = "`Freq (Hz)`",
+                        Title = $"Instantenous Frequency",
+                        yLabel = "Freq (Hz)",
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
                         yMin = 0,
-                        yMax = yValues.Max() + 1
+                        yMax = yValues.Max() + 1,
+                        xData = xValues,
+                        yData = yValues
                     };
                     if (!AddChart(chart)) return;
                 }
@@ -181,17 +193,19 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         data = new string[xValues.Length];
                         foreach (int i in Enumerable.Range(0, xValues.Length))
                             data[i] = xValues[i] + "," + yValues[i];
-                        csvData = "`" + title + "\n" + string.Join("\n", data) + "`";
-                        Chart chart = new Chart
+                        csvData = title + "\n" + string.Join("\n", data);
+                        Chart chart = new()
                         {
                             CsvData = csvData,
-                            Title = $"`Instantenous Frequency (Outliers Removed)`",
-                            yLabel = "`Freq (Hz)`",
+                            Title = $"Instantenous Frequency (Outliers Removed)",
+                            yLabel = "Freq (Hz)",
                             ScatterPlot = true,
                             xMin = Time[0],
                             xMax = Time[^1] + 1,
                             yMin = 0,
-                            yMax = yValues.Max() + 1
+                            yMax = yValues.Max() + 1,
+                            xData = xValues,
+                            yData = yValues
                         };
                         if (!AddChart(chart)) return;
                     }

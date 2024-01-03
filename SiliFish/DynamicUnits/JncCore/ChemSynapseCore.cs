@@ -87,5 +87,26 @@ namespace SiliFish.DynamicUnits.JncCore
         {
             throw new NotImplementedException();
         }
+
+        public virtual void SetNeuroTransmitter(ModelSettings settings, NeuronClass neuronClass)
+        {
+            switch (neuronClass)//fill default values, based on the NT
+            {
+                case NeuronClass.Glycinergic:
+                    ERev = settings.E_gly;
+                    break;
+                case NeuronClass.GABAergic:
+                    ERev = settings.E_gaba;
+                    break;
+                case NeuronClass.Glutamatergic:
+                    ERev = settings.E_glu;
+                    break;
+                case NeuronClass.Cholinergic:
+                    ERev = settings.E_ach;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

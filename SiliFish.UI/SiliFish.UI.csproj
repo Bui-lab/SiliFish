@@ -44,6 +44,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Include="C:\Projects\BuiLab\SiliFish\.editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
@@ -113,5 +114,9 @@
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="powershell -Command &quot;((Get-Date).ToUniversalTime()).ToString(\&quot;s\&quot;) | Out-File '$(ProjectDir)Resources\BuildDate.txt'" />
   </Target>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Projects\BuiLab\SiliFish\.editorconfig" />
+  </ItemGroup>
 
 </Project>
