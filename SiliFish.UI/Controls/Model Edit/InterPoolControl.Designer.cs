@@ -76,6 +76,8 @@
             timeLineControl = new TimeLineControl();
             tAttachments = new TabPage();
             attachmentList = new AttachmentListControl();
+            ddReachMode = new ComboBox();
+            lReachMode = new Label();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMinAscReach).BeginInit();
@@ -133,7 +135,7 @@
             // lMinReach
             // 
             lMinReach.AutoSize = true;
-            lMinReach.Location = new Point(100, 45);
+            lMinReach.Location = new Point(100, 78);
             lMinReach.Name = "lMinReach";
             lMinReach.Size = new Size(28, 15);
             lMinReach.TabIndex = 2;
@@ -224,7 +226,7 @@
             // lMaxReach
             // 
             lMaxReach.AutoSize = true;
-            lMaxReach.Location = new Point(155, 42);
+            lMaxReach.Location = new Point(155, 78);
             lMaxReach.Name = "lMaxReach";
             lMaxReach.Size = new Size(30, 15);
             lMaxReach.TabIndex = 4;
@@ -271,7 +273,7 @@
             // 
             // numMinAscReach
             // 
-            numMinAscReach.Location = new Point(100, 62);
+            numMinAscReach.Location = new Point(100, 95);
             numMinAscReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMinAscReach.Name = "numMinAscReach";
             numMinAscReach.Size = new Size(50, 23);
@@ -280,7 +282,7 @@
             // 
             // numMaxAscReach
             // 
-            numMaxAscReach.Location = new Point(155, 62);
+            numMaxAscReach.Location = new Point(155, 95);
             numMaxAscReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMaxAscReach.Name = "numMaxAscReach";
             numMaxAscReach.Size = new Size(50, 23);
@@ -289,7 +291,7 @@
             // 
             // numMaxDescReach
             // 
-            numMaxDescReach.Location = new Point(155, 89);
+            numMaxDescReach.Location = new Point(155, 122);
             numMaxDescReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMaxDescReach.Name = "numMaxDescReach";
             numMaxDescReach.Size = new Size(50, 23);
@@ -298,7 +300,7 @@
             // 
             // numMinDescReach
             // 
-            numMinDescReach.Location = new Point(100, 89);
+            numMinDescReach.Location = new Point(100, 122);
             numMinDescReach.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numMinDescReach.Name = "numMinDescReach";
             numMinDescReach.Size = new Size(50, 23);
@@ -376,13 +378,14 @@
             // 
             // ddDistanceMode
             // 
+            ddDistanceMode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ddDistanceMode.BackColor = Color.WhiteSmoke;
             ddDistanceMode.DropDownStyle = ComboBoxStyle.DropDownList;
             ddDistanceMode.FlatStyle = FlatStyle.Flat;
             ddDistanceMode.FormattingEnabled = true;
-            ddDistanceMode.Location = new Point(100, 16);
+            ddDistanceMode.Location = new Point(100, 18);
             ddDistanceMode.Name = "ddDistanceMode";
-            ddDistanceMode.Size = new Size(157, 23);
+            ddDistanceMode.Size = new Size(140, 23);
             ddDistanceMode.TabIndex = 1;
             // 
             // lDistanceMode
@@ -406,6 +409,8 @@
             // 
             // grReach
             // 
+            grReach.Controls.Add(ddReachMode);
+            grReach.Controls.Add(lReachMode);
             grReach.Controls.Add(cbDescending);
             grReach.Controls.Add(cbAscending);
             grReach.Controls.Add(lUoD2);
@@ -421,7 +426,7 @@
             grReach.Dock = DockStyle.Top;
             grReach.Location = new Point(3, 3);
             grReach.Name = "grReach";
-            grReach.Size = new Size(246, 124);
+            grReach.Size = new Size(246, 153);
             grReach.TabIndex = 1;
             grReach.TabStop = false;
             grReach.Text = "Reach";
@@ -431,7 +436,7 @@
             cbDescending.AutoSize = true;
             cbDescending.Checked = true;
             cbDescending.CheckState = CheckState.Checked;
-            cbDescending.Location = new Point(8, 89);
+            cbDescending.Location = new Point(8, 122);
             cbDescending.Name = "cbDescending";
             cbDescending.Size = new Size(88, 19);
             cbDescending.TabIndex = 26;
@@ -444,7 +449,7 @@
             cbAscending.AutoSize = true;
             cbAscending.Checked = true;
             cbAscending.CheckState = CheckState.Checked;
-            cbAscending.Location = new Point(8, 66);
+            cbAscending.Location = new Point(8, 99);
             cbAscending.Name = "cbAscending";
             cbAscending.Size = new Size(82, 19);
             cbAscending.TabIndex = 25;
@@ -455,7 +460,7 @@
             // lUoD2
             // 
             lUoD2.AutoSize = true;
-            lUoD2.Location = new Point(211, 91);
+            lUoD2.Location = new Point(211, 124);
             lUoD2.Name = "lUoD2";
             lUoD2.Size = new Size(48, 15);
             lUoD2.TabIndex = 24;
@@ -464,7 +469,7 @@
             // lUoD1
             // 
             lUoD1.AutoSize = true;
-            lUoD1.Location = new Point(211, 67);
+            lUoD1.Location = new Point(211, 100);
             lUoD1.Name = "lUoD1";
             lUoD1.Size = new Size(48, 15);
             lUoD1.TabIndex = 23;
@@ -565,10 +570,10 @@
             dgDynamics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             dgDynamics.BackColor = Color.WhiteSmoke;
             dgDynamics.Dock = DockStyle.Fill;
-            dgDynamics.Location = new Point(3, 127);
+            dgDynamics.Location = new Point(3, 156);
             dgDynamics.MinimumSize = new Size(100, 100);
             dgDynamics.Name = "dgDynamics";
-            dgDynamics.Size = new Size(246, 401);
+            dgDynamics.Size = new Size(246, 372);
             dgDynamics.TabIndex = 4;
             dgDynamics.Leave += dgDynamics_Leave;
             // 
@@ -578,7 +583,7 @@
             tTimeline.Location = new Point(4, 24);
             tTimeline.Name = "tTimeline";
             tTimeline.Padding = new Padding(3);
-            tTimeline.Size = new Size(280, 531);
+            tTimeline.Size = new Size(252, 531);
             tTimeline.TabIndex = 1;
             tTimeline.Text = "Timeline";
             tTimeline.UseVisualStyleBackColor = true;
@@ -590,7 +595,7 @@
             timeLineControl.Dock = DockStyle.Fill;
             timeLineControl.Location = new Point(3, 3);
             timeLineControl.Name = "timeLineControl";
-            timeLineControl.Size = new Size(274, 525);
+            timeLineControl.Size = new Size(246, 525);
             timeLineControl.TabIndex = 24;
             // 
             // tAttachments
@@ -598,7 +603,7 @@
             tAttachments.Controls.Add(attachmentList);
             tAttachments.Location = new Point(4, 24);
             tAttachments.Name = "tAttachments";
-            tAttachments.Size = new Size(280, 531);
+            tAttachments.Size = new Size(252, 531);
             tAttachments.TabIndex = 2;
             tAttachments.Text = "Attachments";
             tAttachments.UseVisualStyleBackColor = true;
@@ -608,8 +613,31 @@
             attachmentList.Dock = DockStyle.Fill;
             attachmentList.Location = new Point(0, 0);
             attachmentList.Name = "attachmentList";
-            attachmentList.Size = new Size(280, 531);
+            attachmentList.Size = new Size(252, 531);
             attachmentList.TabIndex = 0;
+            // 
+            // ddReachMode
+            // 
+            ddReachMode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddReachMode.BackColor = Color.WhiteSmoke;
+            ddReachMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddReachMode.FlatStyle = FlatStyle.Flat;
+            ddReachMode.FormattingEnabled = true;
+            ddReachMode.Items.AddRange(new object[] { "# of somites", "unit of length" });
+            ddReachMode.Location = new Point(100, 47);
+            ddReachMode.Name = "ddReachMode";
+            ddReachMode.Size = new Size(140, 23);
+            ddReachMode.TabIndex = 28;
+            ddReachMode.SelectedIndexChanged += ddReachMode_SelectedIndexChanged;
+            // 
+            // lReachMode
+            // 
+            lReachMode.AutoSize = true;
+            lReachMode.Location = new Point(4, 51);
+            lReachMode.Name = "lReachMode";
+            lReachMode.Size = new Size(73, 15);
+            lReachMode.TabIndex = 27;
+            lReachMode.Text = "Reach Mode";
             // 
             // InterPoolControl
             // 
@@ -691,5 +719,7 @@
         private ComboBox ddCoreType;
         private Label lCoreType;
         private DistributionDataGrid dgDynamics;
+        private ComboBox ddReachMode;
+        private Label lReachMode;
     }
 }

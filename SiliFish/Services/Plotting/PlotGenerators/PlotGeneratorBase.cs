@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     internal abstract class PlotGeneratorBase
     {
         protected PlotGenerator plotGenerator;
+        readonly protected PlotSelectionInterface plotSelection;
         protected readonly double[] timeArray;
         protected readonly int iStart;
         protected readonly int iEnd;
@@ -32,10 +34,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             charts.Add(chart);
             return true;
         }
-        public PlotGeneratorBase(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq)
+        public PlotGeneratorBase(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, PlotSelectionInterface plotSelection)
         {
             charts = new();
             this.plotGenerator = plotGenerator;
+            this.plotSelection = plotSelection;
             this.timeArray = timeArray;
             this.iStart = iStart;
             this.iEnd = iEnd;

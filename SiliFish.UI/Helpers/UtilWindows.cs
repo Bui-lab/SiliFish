@@ -2,9 +2,10 @@
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
+using SiliFish.DataTypes;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using SiliFish.Extensions;
 
 namespace SiliFish.UI
 {
@@ -151,6 +152,47 @@ namespace SiliFish.UI
             image.Tag = title;
             return image;
         }
+
+        public static Image CreateLinePlot(string title, Chart chart, int width = 1024, int height = 480, bool absoluteYRange = false)
+        {
+            if (chart.xData == null || (chart.yData == null && chart.yMultiData == null))
+                return null;
+
+            double dMin = chart.yMin;
+            double dMax = chart.yMax;
+            Util.SetYRange(ref dMin, ref dMax);
+            Color color = Color.Black;
+            color = color.FromHex(chart.Color);
+            PlotModel model = CreateModel(title, chart.xData[0], chart.xData[^1], chart.yLabel, dMin, dMax, absoluteYRange);
+            byte a = 255;
+            LineSeries ls = new()
+            {
+                Color = OxyColor.FromAColor(a, OxyColor.FromRgb(color.R, color.G, color.B))
+            };
+            for (int i = 0; i < chart.xData.Length; i++)
+            {
+                if (chart.yData.Length > i)
+                    ls.Points.Add(new DataPoint(chart.xData[i], chart.yData[i]));
+                else if (chart.yMultiData != null)
+                {
+                    foreach (double[] yData in chart.yMultiData)
+                    {
+                        if (yData.Length > i)
+                            ls.Points.Add(new DataPoint(chart.xData[i], yData[i]));
+                    }
+                }
+            }
+            model.Series.Add(ls);
+
+            var stream = new MemoryStream();
+            var pngExporter = new PngExporter { Width = width, Height = height };
+            pngExporter.Export(model, stream);
+            Image image = Image.FromStream(stream);
+            image.Tag = title;
+            return image;
+        }
+
+
 
         public static Image CreateLinePlot(string title, double[] data,
             double[] Time, int iStart, int iEnd,

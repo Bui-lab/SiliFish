@@ -14,12 +14,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorStimuli : PlotGeneratorOfCells
     {
-        private readonly UnitOfMeasure uoM;
         public PlotGeneratorStimuli(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, 
-            List<Cell> cells, PlotSelectionInterface plotSelection, UnitOfMeasure uoM) :
+            List<Cell> cells, PlotSelectionInterface plotSelection) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
-            this.uoM = uoM;
         }
         protected override void CreateCharts(PlotType _)
         {
@@ -29,6 +27,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             if (cells == null || !cells.Any())
                 return;
+            UnitOfMeasure UoM = plotGenerator.UoM;
+
             double yMin = cells.Min(c => c.MinStimulusValue());
             double yMax = cells.Max(c => c.MaxStimulusValue());
             Util.SetYRange(ref yMin, ref yMax);
@@ -64,7 +64,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         CsvData = csvData,
                         Color = string.Join(',', colorPerChart),
                         Title = $"`{cellGroup.Key} Applied Stimuli`",
-                        yLabel = $"`Stimulus ({Util.GetUoM(uoM, Measure.Current)})`",
+                        yLabel = $"`Stimulus ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],

@@ -10,6 +10,7 @@ using SiliFish.UI.Controls;
 using SiliFish.UI.Definitions;
 using SiliFish.UI.EventArguments;
 using System.Diagnostics.Eventing.Reader;
+using SiliFish.UI.Services;
 
 namespace SiliFish.UI
 {
@@ -544,25 +545,7 @@ namespace SiliFish.UI
                         if (diffs == null || diffs.Count == 0)
                             MessageBox.Show("Models are identical", "");
                         else
-                        {
-                            //TODO same thing exists in ModelControl
-                            ControlContainer controlContainer = new()//TODO rename save button
-                            {
-                                Text = $"Comparing {ModelTemplate.ModelName} to {mb.ModelName}"
-                            };
-                            RichTextBox richTextBox = new()
-                            {
-                                Text = string.Join("\r\n", diffs)
-                            };
-                            controlContainer.AddControl(richTextBox, null);
-                            if (controlContainer.ShowDialog() == DialogResult.OK)
-                            {
-                                if (saveFileText.ShowDialog() == DialogResult.OK)
-                                {
-                                    FileUtil.SaveToFile(saveFileText.FileName, richTextBox.Text);
-                                }
-                            }
-                        }
+                            TextDisplayer.Display($"Comparing {ModelTemplate.ModelName} to {mb.ModelName}", diffs, saveFileText);
                     }
                     catch
                     {

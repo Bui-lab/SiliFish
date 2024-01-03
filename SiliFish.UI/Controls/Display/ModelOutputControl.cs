@@ -16,10 +16,7 @@ using SiliFish.ModelUnits;
 using SiliFish.Services.Plotting;
 using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
-using System.Diagnostics;
 using SiliFish.UI.Services;
-using SiliFish.ModelUnits.Parameters;
-using System.Windows.Forms;
 using SiliFish.Services.Dynamics;
 
 namespace SiliFish.UI.Controls
@@ -61,7 +58,7 @@ namespace SiliFish.UI.Controls
         PlotType PlotType = PlotType.MembPotential;
         PlotSelectionInterface plotSelection;
         private string tempFile;
-        List<Chart> LastPlottedCharts;
+        List<Chart> Charts;
         RunningModel RunningModel = null;
         bool rendered2D = false;
         bool rendered3D = false;
@@ -582,12 +579,14 @@ namespace SiliFish.UI.Controls
                     numOfPlots *= 5;
                 else if (PlotType == PlotType.Current)
                     numOfPlots *= 3;
+                else if (PlotType == PlotType.MembPotentialWithSpikeFreq)
+                    numOfPlots *= 3;
                 else if (PlotType.GetGroup() == "episode")
                 {
                     if (PlotType == PlotType.EpisodesMN || PlotType == PlotType.EpisodesTail)
                         numOfPlots = 7;
                     else
-                        numOfPlots = RunningModel.ModelDimensions.NumberOfSomites + 1;//TODO covers only somite based - add VR related functions to model
+                        numOfPlots = RunningModel.ModelDimensions.NumberOfSomites + 1;
                 }
                 toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
             }
@@ -652,9 +651,9 @@ namespace SiliFish.UI.Controls
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!LastPlottedCharts.Any()) return;
+            if (!Charts.Any()) return;
 
-            if (LastPlottedCharts.Count > 1)
+            if (Charts.Count > 1)
             {
                 string msg = "Every plot data will be saved as a separate CSV file. Plot names will be appended to the file name selected.";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
@@ -663,7 +662,7 @@ namespace SiliFish.UI.Controls
             List<string> fileNames = new();
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                foreach (Chart chart in LastPlottedCharts)
+                foreach (Chart chart in Charts)
                 {
                     string title = chart.Title.Replace("'", "_").Replace("\"", "_").Replace("`", "_").Replace("/", "_");
                     string ext = Path.GetExtension(saveFileCSV.FileName);
@@ -758,13 +757,9 @@ namespace SiliFish.UI.Controls
                 MessageBox.Show("There is a problem in loading the file:" + exc.Message, "Error");
             }
         }
-        #endregion
-
-        #region HTML Plots
-        private void PlotHTML()
+        private (string Title, List<Chart>) GenerateCharts()
         {
-            if (RunningModel == null) return;
-            htmlPlot = "";
+            if (RunningModel == null) return ("", null);
 
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
             string plotsubset = cellSelectionPlot.Visible ? cellSelectionPlot.PoolSubset : "";
@@ -798,16 +793,14 @@ namespace SiliFish.UI.Controls
                 Selection = plotSelection
             };
             PlotGenerator PG = new();
-            (string Title, LastPlottedCharts) = PG.GetPlotData(lastPlot, RunningModel, Cells, Pools, tPlotStart, tPlotEnd);
+            (string Title, Charts) = PG.GetPlotData(lastPlot, RunningModel, Cells, Pools, tPlotStart, tPlotEnd);
             errorMessage = PG.errorMessage;
-
-            htmlPlot = DyChartGenerator.Plot(Title, LastPlottedCharts, GlobalSettings.ShowZeroValues,
-                GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
-            Invoke(CompletePlotHTML);
+            return (Title, Charts);
         }
-        private void btnPlotHTML_Click(object sender, EventArgs e)
+
+        private bool PrePlotCheck()
         {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
+            if (RunningModel == null || !RunningModel.ModelRun) return false;
             SaveLastPlotSettings();
 
             GetPlotSubset();
@@ -816,7 +809,7 @@ namespace SiliFish.UI.Controls
                 string msg = $"Plotting {numOfPlots} charts will use a lot of resources. Do you want to continue?\r\n" +
                     $"(You can set the number of plots that triggers this warning through the 'Settings' button above)";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
-                    return;
+                    return false;
             }
             if (!MainForm.currentPlotWarning &&
                 !RunningModel.JunctionCurrentTrackingOn && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
@@ -825,10 +818,27 @@ namespace SiliFish.UI.Controls
                 string msg = $"Plotting current information (including Full Dynamics) will require to regenerate the current arrays for the whole simulation for the selected cells. " +
                     $"It can use a lot of memory. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
-                    return;
+                    return false;
             }
             if (PlotType.GetGroup() == "episode")
                 RunningModel.SetAnimationParameters(RunningModel.KinemParam);
+            return true;
+        }
+        #endregion
+
+        #region HTML Plots
+        private void PlotHTML()
+        {
+            htmlPlot = "";
+            (string Title, Charts) = GenerateCharts();
+            htmlPlot = DyChartGenerator.Plot(Title, Charts, GlobalSettings.ShowZeroValues,
+                GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
+            Invoke(CompletePlotHTML);
+        }
+        private void btnPlotHTML_Click(object sender, EventArgs e)
+        {
+            if (!PrePlotCheck())
+                return;
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
             UseWaitCursor = true;
@@ -891,15 +901,8 @@ namespace SiliFish.UI.Controls
         /// <param name="unitsToPlot"></param>
         internal void Plot(List<ModelUnitBase> unitsToPlot)
         {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
-            if (unitsToPlot == null || !unitsToPlot.Any()) return;
-            plotSelection = null;
             SetPlotSelectionToUnits(unitsToPlot);
-
-            tPlotStart = (int)ePlotStart.Value;
-            tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > RunningModel.RunParam.MaxTime)
-                tPlotEnd = RunningModel.RunParam.MaxTime;
+            if (!PrePlotCheck()) return;
 
             tabOutputs.SelectedTab = tPlot;
             tabPlotSub.SelectedTab = tPlotHTML;
@@ -940,19 +943,20 @@ namespace SiliFish.UI.Controls
         {
             try
             {
-                if (RunningModel == null || !RunningModel.ModelRun) return;
-                SaveLastPlotSettings();
+                if (!PrePlotCheck())
+                    return;
 
-                GetPlotSubset();
-                if (PlotType.GetGroup() == "episode")
-                    RunningModel.SetAnimationParameters(RunningModel.KinemParam);
                 tabOutputs.SelectedTab = tPlot;
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
                 cmPlot.Enabled = false;
-                btnPlotHTML.Enabled = false;
+                btnPlotHTML.Enabled = false;                
+                
+                (string Title, Charts) = GenerateCharts();
 
-                if (plotSelection is not PlotSelectionMultiCells)
+                List<Image> leftImages = WindowsPlotGenerator.PlotCharts(Charts);
+                List<Image> rightImages = null;
+                /*                if (plotSelection is not PlotSelectionMultiCells)
                     return;
                 int tSkip = RunningModel.RunParam.SkipDuration;
                 double dt = RunningModel.RunParam.DeltaT;
@@ -960,9 +964,9 @@ namespace SiliFish.UI.Controls
                 int iEnd = (int)((tPlotEnd + tSkip) / dt);
                 (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, (PlotSelectionMultiCells)plotSelection, iStart, iEnd);
 
-                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotSelection,
+                (List<Image> leftImages, List<Image> rightImages) = WindowsPlotGenerator.Plot(Charts, PlotType, RunningModel, Cells, Pools, (PlotSelectionMultiCells)plotSelection,
                     tPlotStart, tPlotEnd);
-
+*/
                 leftImages?.RemoveAll(img => img == null);
                 rightImages?.RemoveAll(img => img == null);
 
@@ -1010,21 +1014,12 @@ namespace SiliFish.UI.Controls
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-        private void btnPlotWindows_Click(object sender, EventArgs e)
-        {
-            PlotWindows();
-        }
 
         private void cmiNonInteractivePlot_Click(object sender, EventArgs e)
         {
             PlotWindows();
         }
 
-
-        private void linkSavePlots_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
 
         private void cmiPlotImageSave_Click(object sender, EventArgs e)
         {

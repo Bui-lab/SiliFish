@@ -38,7 +38,6 @@ namespace SiliFish.Services.Dynamics
         /// <returns></returns>
         public static List<TrainOfBursts> GenerateColumnsOfBursts(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
         {
-            //TODO works for only somite based models
             List<TrainOfBursts> trueTrains = new();
             List<TrainOfBursts> ungroupedTrains = new();
             foreach (Cell cell in cells)

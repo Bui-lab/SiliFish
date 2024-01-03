@@ -3,6 +3,7 @@ using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,12 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     {
         readonly List<GapJunction> gapJunctions;
         readonly List<ChemicalSynapse> synapses;
-        private readonly UnitOfMeasure uoM;
         public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, 
-            List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses, UnitOfMeasure uoM) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
+            List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses) :
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, plotSelection: null)
         {
             this.gapJunctions = gapJunctions;
             this.synapses = synapses;
-            this.uoM = uoM;
         }
         protected override void CreateCharts(PlotType _)
         {
@@ -30,6 +29,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         protected override void CreateCharts()
         {
+            UnitOfMeasure UoM = plotGenerator.UoM;
+
             List<Chart> gapCharts = new();
             List<Chart> synCharts = new();
 
@@ -75,8 +76,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             }
 
             string csvData = "`" + columnTitles[..^1] + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray()) + "`";
-            string ampere = uoM == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" :
-                uoM == UnitOfMeasure.milliVolt_nanoAmpere_MegaOhm_nanoFarad_microSiemens ? "nA" : "";
+            string ampere = UoM == UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens ? "pA" :
+                UoM == UnitOfMeasure.milliVolt_nanoAmpere_MegaOhm_nanoFarad_microSiemens ? "nA" : "";
             string title = $"`{columnTitles[5..].TrimEnd(',')}`";
             if (title.Length > 50)
             {

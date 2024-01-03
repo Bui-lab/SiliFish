@@ -17,7 +17,6 @@ namespace SiliFish.UI.Controls
         private ModelSettings settings;
         private bool autoGenerateName = true;
         private InterPoolTemplate interPoolTemplate;
-        private bool SomiteBased = false;
         private bool skipCoreTypeChange = false;
 
         public void CheckValues(object sender, EventArgs args)
@@ -188,10 +187,9 @@ namespace SiliFish.UI.Controls
             numMinDescReach.Enabled = numMaxDescReach.Enabled = cbDescending.Checked;
         }
 
-        public InterPoolControl(bool somiteBased, ModelSettings settings)
+        public InterPoolControl(ModelSettings settings)
         {
             InitializeComponent();
-            SomiteBased = somiteBased;
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
@@ -202,28 +200,7 @@ namespace SiliFish.UI.Controls
             ddConnectionType.Items.Add(ConnectionType.Gap);
             ddConnectionType.Items.Add(ConnectionType.Synapse);
             ddConnectionType.Items.Add(ConnectionType.NMJ);
-            if (SomiteBased)
-            {
-                lUoD1.Text = lUoD2.Text = "somites";
-                toolTip1.SetToolTip(numMinAscReach, "Set 0 for within somite projections");
-                toolTip1.SetToolTip(numMinDescReach, "Set 0 for within somite projections");
-                toolTip1.SetToolTip(lMinReach, "Set 0 for within somite projections");
-                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
-                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 1;//a single somite can represent multiple somites of the fish
-                numMinAscReach.Increment = numMinDescReach.Increment =
-                    numMaxAscReach.Increment = numMaxDescReach.Increment = 1;
-            }
-            else
-            {
-                lUoD1.Text = lUoD2.Text = "";
-                toolTip1.SetToolTip(numMinAscReach, "");
-                toolTip1.SetToolTip(numMinDescReach, "");
-                toolTip1.SetToolTip(lMinReach, "");
-                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
-                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 3;
-                numMinAscReach.Increment = numMinDescReach.Increment =
-                    numMaxAscReach.Increment = numMaxDescReach.Increment = (decimal)0.1;
-            }
+            ddReachMode.SelectedIndex = 0;
 
             this.settings = settings;
         }
@@ -233,7 +210,7 @@ namespace SiliFish.UI.Controls
             string activeStatus = !cbActive.Checked ? " (inactive)" :
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
-            return String.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
+            return string.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
         }
 
         public void SetSourcePool(CellPoolTemplate pool)
@@ -308,7 +285,7 @@ namespace SiliFish.UI.Controls
         {
             interPoolTemplate.SourcePool = GetDropDownValue(ddSourcePool);
             interPoolTemplate.TargetPool = GetDropDownValue(ddTargetPool);
-
+            bool somiteBased = ddReachMode.SelectedIndex == 0;
             double? fixedDuration = null;
             if (!string.IsNullOrEmpty(eFixedDuration.Text) && double.TryParse(eFixedDuration.Text, out double fd))
                 fixedDuration = fd;
@@ -325,7 +302,7 @@ namespace SiliFish.UI.Controls
                 MaxDescReach = (double)numMaxDescReach.Value,
                 MaxIncoming = (int)numMaxIncoming.Value,
                 MaxOutgoing = (int)numMaxOutgoing.Value,
-                SomiteBased = SomiteBased
+                SomiteBased = somiteBased
             };
 
             interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
@@ -371,6 +348,36 @@ namespace SiliFish.UI.Controls
         private void splitContainerMain_Panel1_SizeChanged(object sender, EventArgs e)
         {
             splitContainerMain.Panel1.Refresh();//the drop down boxes do not refresh properly otherwise - still doesn;t work
+        }
+
+        private void ddReachMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lUoD1.Text = ddReachMode.Text;
+            lUoD2.Text = ddReachMode.Text;
+            bool somiteBased = ddReachMode.SelectedIndex == 0;
+            if (somiteBased)
+            {
+                toolTip1.SetToolTip(numMinAscReach, "Set 0 for within somite projections");
+                toolTip1.SetToolTip(numMinDescReach, "Set 0 for within somite projections");
+                toolTip1.SetToolTip(lMinReach, "Set 0 for within somite projections");
+                //a single somite of the model can represent multiple somites of the fish
+                //therefore, decimal places are allowed so that no data is lost
+                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 1;
+                numMinAscReach.Increment = numMinDescReach.Increment =
+                    numMaxAscReach.Increment = numMaxDescReach.Increment = 1;
+            }
+            else
+            {
+                toolTip1.SetToolTip(numMinAscReach, "");
+                toolTip1.SetToolTip(numMinDescReach, "");
+                toolTip1.SetToolTip(lMinReach, "");
+                numMinAscReach.DecimalPlaces = numMinDescReach.DecimalPlaces =
+                    numMaxAscReach.DecimalPlaces = numMaxDescReach.DecimalPlaces = 3;
+                numMinAscReach.Increment = numMinDescReach.Increment =
+                    numMaxAscReach.Increment = numMaxDescReach.Increment = (decimal)0.1;
+            }
+
         }
     }
 }

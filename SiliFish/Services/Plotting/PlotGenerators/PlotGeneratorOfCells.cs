@@ -19,7 +19,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
         protected PlotGeneratorOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
             List<Cell> cells, PlotSelectionInterface cellSelection) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq)
+            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cellSelection)
         {
             this.cells = cells;
             if (cellSelection is PlotSelectionMultiCells cs)

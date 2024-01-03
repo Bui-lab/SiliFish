@@ -16,7 +16,17 @@ namespace Services
 {
     public class WindowsPlotGenerator
     {
-        private static (List<Image>, List<Image>) PlotMembranePotentials(double[] timeArray, List<Cell> cells, List<CellPool> cellPools,
+        public static List<Image> PlotCharts(List<Chart> Charts)
+        {
+            List<Image> images = new();
+            foreach (Chart chart in Charts)
+            {
+                images.Add(UtilWindows.CreateLinePlot(chart.Title, chart));
+            }
+
+            return images;
+        }
+        private static (List<Image>, List<Image>) PlotMembranePotentials(List<Chart> Charts, double[] timeArray, List<Cell> cells, List<CellPool> cellPools,
                     PlotSelectionMultiCells cellSelection, int iStart, int iEnd)
         {
             List<Image> leftImages = new();
@@ -226,7 +236,7 @@ namespace Services
         {
             List<Image> leftImages = new();
             List<Image> rightImages = new();
-            (List<Image> leftImagesSub, List<Image> rightImagesSub) = PlotMembranePotentials(timeArray, cells, pools, cellSelection, iStart, iEnd);
+            (List<Image> leftImagesSub, List<Image> rightImagesSub) = PlotMembranePotentials(null, timeArray, cells, pools, cellSelection, iStart, iEnd);
             leftImages = leftImages.Concat(leftImagesSub).ToList();
             rightImages = rightImages.Concat(rightImagesSub).ToList();
 
@@ -309,7 +319,7 @@ namespace Services
             return (leftImages, null);
         }
 
-        public static (List<Image>, List<Image>) Plot(PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
+        public static (List<Image>, List<Image>) Plot(List<Chart> Charts, PlotType PlotType, RunningModel model, List<Cell> Cells, List<CellPool> Pools,
             PlotSelectionInterface cellSelectionInterface, int tStart = 0, int tEnd = -1)
         {
             if (PlotType.GetGroup() != "episode" &&
@@ -329,7 +339,7 @@ namespace Services
                 switch (PlotType)
                 {
                     case PlotType.MembPotential:
-                        return PlotMembranePotentials(TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
+                        return PlotMembranePotentials(Charts, TimeArray, Cells, Pools, cellSelection, iStart, iEnd);
                     case PlotType.Current:
                             return PlotCurrents(TimeArray, Cells, Pools, cellSelection, iStart, iEnd, gap: true, chemin: true, chemout: true, uom);
                     case PlotType.GapCurrent:

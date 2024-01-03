@@ -32,12 +32,16 @@ namespace SiliFish.ModelUnits.Junction
         protected virtual int nMax => throw new NotImplementedException();
 
         [JsonIgnore, Browsable(false)]
+        protected virtual double dt => throw new NotImplementedException();
+
+
+        [JsonIgnore, Browsable(false)]
         public double[] InputCurrent 
         {
             get
             {
                 if (inputCurrent == null)
-                    PopulateCurrentArray(0.1);//TODO added a constant value temporarily
+                    PopulateCurrentArray(dt);
                 return inputCurrent;
             }
         }

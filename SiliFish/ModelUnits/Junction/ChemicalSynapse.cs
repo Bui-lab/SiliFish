@@ -25,6 +25,7 @@ namespace SiliFish.ModelUnits.Junction
         private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
                               //calculated at InitForSimulation, and used only during simulation
         protected override int nMax => PreNeuron.V.Length;
+        protected override double dt => PreNeuron?.Model.RunParam.DeltaT ?? 0.1;
 
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell

@@ -169,7 +169,7 @@ namespace SiliFish.Services
                 html.Replace("__SOMITES__", "");
             else
             {
-                List<int> somites= Util.ParseRange(somiteRange, 1, MD.NumberOfSomites);
+                List<int> somites = Util.ParseRange(somiteRange, 1, MD.NumberOfSomites);
                 html.Replace("__SOMITES__", String.Join(',', somites));
             }
             int numOfCells = model.GetNumberOfCells();

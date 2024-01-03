@@ -14,60 +14,9 @@ namespace SiliFish.Services.Dynamics
 {
     public static class SwimmingKinematics
     {
-        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngleNoSomite(RunningModel model, int startIndex, int endIndex)
-        {
-            if (!model.ModelRun) return (null, null);
-            List<Cell> LeftMuscleCells = model.MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Left).SelectMany(mp => mp.GetCells()).ToList();
-            List<Cell> RightMuscleCells = model.MusclePools.Where(mp => mp.PositionLeftRight == SagittalPlane.Right).SelectMany(mp => mp.GetCells()).ToList();
-
-            int nmax = endIndex - startIndex + 1;
-            int nMuscle = Math.Min(LeftMuscleCells.Count, RightMuscleCells.Count);
-            if (nMuscle == 0) return (null, null);
-            // Allocating arrays for velocity and position
-            double[,] vel = new double[nMuscle, nmax];
-            double[,] angle = new double[nMuscle, nmax];
-            // Setting constants and initial values for vel. and pos.
-            double vel0 = 0.0;
-            double angle0 = 0.0;
-            double dt = model.RunParam.DeltaT;
-            int k = 0;
-
-            double kinemAlpha = model.KinemParam.Alpha;
-            double kinemBeta = model.KinemParam.Beta;
-            double kinemConvCoef = model.KinemParam.ConvCoef;
-            double kinemW0 = model.KinemParam.w0;
-            double kinemZeta = model.KinemParam.Zeta;
-
-            foreach (MuscleCell leftMuscle in LeftMuscleCells.OrderBy(c => c.Sequence))
-            {
-                MuscleCell rightMuscle = (MuscleCell)RightMuscleCells.FirstOrDefault(c => c.Sequence == leftMuscle.Sequence);
-                if (rightMuscle == null)
-                    continue;
-                vel[k, 0] = vel0;
-                angle[k, 0] = angle0;
-                angle[nMuscle - 1, 0] = 0.0;
-                double R = (leftMuscle.R + rightMuscle.R) / 2;
-                double coef = kinemAlpha + kinemBeta * R;
-                if (Math.Abs(coef) < 0.0001)
-                    coef = kinemConvCoef;
-                foreach (var i in Enumerable.Range(1, nmax - 1))
-                {
-                    double voltDiff = rightMuscle.V[startIndex + i - 1] - leftMuscle.V[startIndex + i - 1];
-                    double acc = -Math.Pow(kinemW0, 2) * angle[k, i - 1] - 2 * vel[k, i - 1] * kinemZeta * kinemW0 + coef * voltDiff;
-                    vel[k, i] = vel[k, i - 1] + acc * dt;
-                    angle[k, i] = angle[k, i - 1] + vel[k, i - 1] * dt;
-                }
-                k++;
-            }
-
-            return (vel, angle);
-        }
-
         private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(RunningModel model, int startIndex, int endIndex)
         {
             if (!model.ModelRun) return (null, null);
-            if (model.ModelDimensions.NumberOfSomites <= 0)
-                return GenerateSpineVelAndAngleNoSomite(model, startIndex, endIndex);
             bool useMuscleTension = model.KinemParam.UseMuscleTension;
             double halfBodyWidth = model.ModelDimensions.BodyMedialLateralDistance / 2;
 

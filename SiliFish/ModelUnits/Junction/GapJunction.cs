@@ -34,12 +34,9 @@ namespace SiliFish.ModelUnits.Junction
         private int duration2; 
         private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
-                                                //
-                                                //Voltage Diff * 1/2 * conductance will give the momentary current value
-        private double VoltageDiff { get { return VoltageDiffFrom2To1 - VoltageDiffFrom1To2; } }
 
         protected override int nMax => Cell1.V.Length;
-
+        protected override double dt => Cell1?.Model.RunParam.DeltaT ?? 0.1;
 
         public Cell Cell1;
         public Cell Cell2;

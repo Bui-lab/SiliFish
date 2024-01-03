@@ -16,6 +16,7 @@ using System.Diagnostics;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Controls.Model_Edit;
 using SiliFish.UI.Controls.General;
+using SiliFish.UI.Services;
 
 namespace SiliFish.UI.Controls
 {
@@ -540,24 +541,7 @@ namespace SiliFish.UI.Controls
                     }
                 }
 
-                //TODO same thing exists in MainForm
-                ControlContainer controlContainer2 = new()//TODO rename save button
-                {
-                    Text = $"Modified projection conductance values"
-                };
-                RichTextBox richTextBox = new()
-                {
-                    Text = string.Join("\r\n", changes)
-                };
-                controlContainer2.AddControl(richTextBox, null);
-                controlContainer2.ShowDialog();
-                /* if (controlContainer2.ShowDialog() == DialogResult.OK)
-                 {
-                     if (saveFileText.ShowDialog() == DialogResult.OK)
-                     {
-                         FileUtil.SaveToFile(saveFileText.FileName, richTextBox.Text);
-                     }
-                 }*/
+                TextDisplayer.Display($"Modified projection conductance values", changes);
                 RefreshProjections();
                 ModelIsUpdated();
             }
@@ -911,7 +895,7 @@ namespace SiliFish.UI.Controls
             if (CurrentMode == RunMode.Template)
             {
                 ControlContainer frmControl = new(ParentForm.Location);
-                InterPoolControl ipControl = new(Model.ModelDimensions.NumberOfSomites > 0, Model.Settings);
+                InterPoolControl ipControl = new(Model.Settings);
                 ModelTemplate modelTemplate = Model as ModelTemplate;
                 InterPoolTemplate interPoolTemplate = interpool as InterPoolTemplate;
                 ipControl.WriteDataToControl(modelTemplate.CellPoolTemplates, interPoolTemplate);
@@ -1247,25 +1231,7 @@ namespace SiliFish.UI.Controls
                         }
                     }
                 }
-                //TODO same thing exists in MainForm
-                ControlContainer controlContainer2 = new()//TODO rename save button
-                {
-                    Text = $"Modified projection conductance values"
-                };
-                RichTextBox richTextBox = new()
-                {
-                    Text = string.Join("\r\n", changes)
-                };
-                controlContainer2.AddControl(richTextBox, null);
-                controlContainer2.ShowDialog();
-                /* if (controlContainer2.ShowDialog() == DialogResult.OK)
-                 {
-                     if (saveFileText.ShowDialog() == DialogResult.OK)
-                     {
-                         FileUtil.SaveToFile(saveFileText.FileName, richTextBox.Text);
-                     }
-                 }*/
-
+                TextDisplayer.Display($"Modified projection conductance values", changes);
                 RefreshProjections();
                 ModelIsUpdated();
             }

@@ -438,16 +438,13 @@ namespace SiliFish.ModelUnits.Architecture
         public (List<Cell> LeftMNs, List<Cell> RightMNs) GetMotoNeurons(int SomiteSeq)
         {
             List<Cell> motoNeurons = MotoNeurons;
-            int NumberOfSomites = ModelDimensions.NumberOfSomites;
             List<Cell> leftMNs = motoNeurons
                                 .Where(c => c.PositionLeftRight == SagittalPlane.Left &&
-                                        (NumberOfSomites > 0 && c.Somite == SomiteSeq
-                                                || NumberOfSomites <= 0 && c.Sequence == SomiteSeq))
+                                        c.Somite == SomiteSeq)
                                 .ToList();
             List<Cell> rightMNs = motoNeurons
                                 .Where(c => c.PositionLeftRight == SagittalPlane.Right &&
-                                        (NumberOfSomites > 0 && c.Somite == SomiteSeq
-                                                || NumberOfSomites <= 0 && c.Sequence == SomiteSeq))
+                                        c.Somite == SomiteSeq)
                                 .ToList();
             return (leftMNs, rightMNs);
         }
@@ -795,19 +792,15 @@ namespace SiliFish.ModelUnits.Architecture
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, InterPoolTemplate template)
         {
             if (pool1 == null || pool2 == null) return;
-            CellReach cr = template.CellReach;
-            cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaGapJunction(pool2, cr, timeline, template.Parameters, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaGapJunction(pool2, template.CellReach, timeline, template.Parameters, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         protected void PoolToPoolChemSynapse(CellPool pool1, CellPool pool2, InterPoolTemplate template)
         {
             if (pool1 == null || pool2 == null) return;
-            CellReach cr = template.CellReach;
-            cr.SomiteBased = ModelDimensions.NumberOfSomites > 0;
             TimeLine timeline = template.TimeLine_ms;
-            pool1.ReachToCellPoolViaChemSynapse(pool2, cr, template.CoreType, template.Parameters, timeline, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
+            pool1.ReachToCellPoolViaChemSynapse(pool2, template.CellReach, template.CoreType, template.Parameters, timeline, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
         private void CalculateCellularOutputs(int t)

@@ -298,7 +298,7 @@ namespace SiliFish.ModelUnits.Cells
                 diffs.Add($"{ID} PerSomiteOrTotal: {PerSomiteOrTotal} vs {cpt.PerSomiteOrTotal}");
             if (SomiteRange != cpt.SomiteRange)
                 diffs.Add($"{ID} SomiteRange: {SomiteRange} vs {cpt.SomiteRange}");
-            if (SpatialDistribution.ToString() != cpt.SpatialDistribution.ToString())//TODO missing implementation
+            if (SpatialDistribution.ToString() != cpt.SpatialDistribution.ToString())
                 diffs.Add($"{ID} SpatialDistribution: {SpatialDistribution} vs {cpt.SpatialDistribution}");
             if (DescendingAxonLength?.ToString()!=cpt.DescendingAxonLength?.ToString())
                 diffs.Add($"{ID} DescendingAxonLength: {DescendingAxonLength} vs {cpt.DescendingAxonLength}");

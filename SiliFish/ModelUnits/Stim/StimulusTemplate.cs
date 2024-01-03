@@ -1,9 +1,11 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
@@ -54,12 +56,34 @@ namespace SiliFish.ModelUnits.Stim
         {
             return $"Stim to {TargetPool}";
         }        
-        //TODO DiffersFrom is not implemented
         public override int CompareTo(ModelUnitBase otherbase)
         {
             StimulusTemplate other = otherbase as StimulusTemplate;
             return TargetPool.CompareTo(other.TargetPool);
         }
+
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            List<string> diffs = base.DiffersFrom(other) ?? new();
+            StimulusTemplate st = other as StimulusTemplate;
+            if (TargetPool != st.TargetPool)
+                diffs.Add($"{ID} TargetPool: {TargetPool} vs {st.TargetPool}");
+            if (TargetSomite != st.TargetSomite)
+                diffs.Add($"{ID} TargetSomite: {TargetSomite} vs {st.TargetSomite}");
+            if (TargetCell != st.TargetCell)
+                diffs.Add($"{ID} TargetCell: {TargetCell} vs {st.TargetCell}");
+            if (LeftRight != st.LeftRight)
+                diffs.Add($"{ID} LeftRight: {LeftRight} vs {st.LeftRight}");
+            if (DelayPerSomite != st.DelayPerSomite)
+                diffs.Add($"{ID} DelayPerSomite: {DelayPerSomite} vs {st.DelayPerSomite}");
+            if (DelaySagittal != st.DelaySagittal)
+                diffs.Add($"{ID} DelaySagittal: {DelaySagittal} vs {st.DelaySagittal}");
+
+            if (diffs.Any())
+                return diffs;
+            return null;
+        }
+
         public override string ToString()
         {
             string timeline = TimeLine_ms != null && !TimeLine_ms.IsBlank() ? TimeLine_ms.ToString() : "";

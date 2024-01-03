@@ -44,6 +44,11 @@ namespace SiliFish.DataTypes
         }
         public string GetTooltip()
         {
+            return ToString();
+        }
+
+        public override string ToString()
+        {
             if (Y_AngleDistribution != null && Y_AngleDistribution.Angular)
                 return $"X: {XDistribution}\r\nAngle: {Y_AngleDistribution}\r\nRadius:{Z_RadiusDistribution}";
             else

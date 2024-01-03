@@ -239,36 +239,33 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (somiteSelection.SomiteSelection == PlotSomiteSelection.All)
                 return Cells.Select(c => c.Somite).Distinct().AsEnumerable();
-            
+
             List<int> som = new();
-            if (Model.ModelDimensions.NumberOfSomites > 0)
+            if (somiteSelection.SomiteSelection == PlotSomiteSelection.Single)
             {
-                if (somiteSelection.SomiteSelection == PlotSomiteSelection.Single)
-                {
-                    som.Add(somiteSelection.NSomite);
-                }
-                else if (somiteSelection.SomiteSelection == PlotSomiteSelection.FirstMiddleLast)
-                {
-                    int minSom = Cells.Select(c => c.Somite).Min();
-                    int maxSom = Cells.Select(c => c.Somite).Max();
-                    som.Add(minSom);
-                    som.Add(maxSom);
-                    som.Add((minSom + maxSom) / 2);
-                }
-                else if (somiteSelection.SomiteSelection == PlotSomiteSelection.Random)
-                {
-                    IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
-                    if (somites.Count() > somiteSelection.NSomite)
-                        som.AddRange(somites.OrderBy(s => Model.rand.Next()).Select(s => s).Take(somiteSelection.NSomite));
-                }
-                else if (somiteSelection.SomiteSelection == PlotSomiteSelection.RostralTo)
-                {
-                    som.AddRange(Enumerable.Range(1, somiteSelection.NSomite));
-                }
-                else if (somiteSelection.SomiteSelection == PlotSomiteSelection.CaudalTo)
-                {
-                    som.AddRange(Enumerable.Range(somiteSelection.NSomite, Model.ModelDimensions.NumberOfSomites - somiteSelection.NSomite + 1));
-                }
+                som.Add(somiteSelection.NSomite);
+            }
+            else if (somiteSelection.SomiteSelection == PlotSomiteSelection.FirstMiddleLast)
+            {
+                int minSom = Cells.Select(c => c.Somite).Min();
+                int maxSom = Cells.Select(c => c.Somite).Max();
+                som.Add(minSom);
+                som.Add(maxSom);
+                som.Add((minSom + maxSom) / 2);
+            }
+            else if (somiteSelection.SomiteSelection == PlotSomiteSelection.Random)
+            {
+                IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
+                if (somites.Count() > somiteSelection.NSomite)
+                    som.AddRange(somites.OrderBy(s => Model.rand.Next()).Select(s => s).Take(somiteSelection.NSomite));
+            }
+            else if (somiteSelection.SomiteSelection == PlotSomiteSelection.RostralTo)
+            {
+                som.AddRange(Enumerable.Range(1, somiteSelection.NSomite));
+            }
+            else if (somiteSelection.SomiteSelection == PlotSomiteSelection.CaudalTo)
+            {
+                som.AddRange(Enumerable.Range(somiteSelection.NSomite, Model.ModelDimensions.NumberOfSomites - somiteSelection.NSomite + 1));
             }
             return som;
         }
@@ -327,7 +324,7 @@ namespace SiliFish.ModelUnits.Cells
                 new List<int>() { -1 };
 
             double somiteLength = 0;
-            if (PerSomiteOrTotal == CountingMode.Total && MD.NumberOfSomites > 0)
+            if (PerSomiteOrTotal == CountingMode.Total)
             {
                 somiteLength = MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
             }
@@ -350,8 +347,8 @@ namespace SiliFish.ModelUnits.Cells
                 foreach (int i in Enumerable.Range(0, n))
                 {
                     int actualSomite = somite;
-                    //if the model is somite based but the distribution is based on the total length, calculate the somite index
-                    if (somite < 0 && MD.NumberOfSomites > 0)
+                    //if the distribution is based on the total length, calculate the somite index
+                    if (somite < 0)
                     {
                         double x = coordinates[i].X;
                         actualSomite = 0;
@@ -398,11 +395,7 @@ namespace SiliFish.ModelUnits.Cells
         public int GetMaxCellSequence(int somite)
         {
             if (Cells != null && Cells.Any())
-            {
-                if (Model.ModelDimensions.NumberOfSomites <= 0)
-                    return Cells.Max(c => c.Sequence);
                 return Cells.Where(c => c.Somite == somite).Max(c => c.Sequence);
-            }
             return 0;
         }
 

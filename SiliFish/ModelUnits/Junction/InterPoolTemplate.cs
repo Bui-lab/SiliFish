@@ -28,8 +28,6 @@ namespace SiliFish.ModelUnits.Junction
         #region Properties
         [JsonIgnore]
         public override string ID => $"{Name} [{ConnectionType}]/{AxonReachMode} {CellReach.Projection}";
-
-
         public string Description { get; set; }
         public double Probability { get; set; } = 1;
         public bool JncActive //to be used in creating the model

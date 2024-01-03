@@ -17,17 +17,15 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorCurrentsOfCells : PlotGeneratorOfCells
     {
-        private readonly UnitOfMeasure uoM;
         private readonly bool includeGap;
         private readonly bool includeChemIn;
         private readonly bool includeChemOut;
 
         public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
             List<Cell> cells, PlotSelectionInterface plotSelection,
-            UnitOfMeasure uoM, bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true) :
+            bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
-            this.uoM = uoM;
             this.includeGap = includeGap;
             this.includeChemIn = includeChemIn;
             this.includeChemOut = includeChemOut;
@@ -35,6 +33,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
         private void CreateIndividualJunctionsCharts()
         {
+            UnitOfMeasure UoM = plotGenerator.UoM;
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools: false, combineSomites: false, combineCells: false);
             List<GapJunction> gapJunctions = new();
             List<ChemicalSynapse> synapses = new();
@@ -50,7 +49,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse }, uoM);
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse });
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -60,7 +59,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse }, uoM);
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse });
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -71,7 +70,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!gapJunction.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, new() { gapJunction }, null, uoM);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, new() { gapJunction }, null);
                             junctionPG.CreateCharts(charts);
                         }
                     }
@@ -81,7 +80,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!synapse.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, new() { synapse }, uoM);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, new() { synapse });
                             junctionPG.CreateCharts(charts);
                         }
                     }
@@ -102,6 +101,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 CreateIndividualJunctionsCharts();
                 return;
             }
+            UnitOfMeasure UoM = plotGenerator.UoM;
+
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
@@ -193,7 +194,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         CsvData = csvData,
                         Color = string.Join(',', colorPerInSynChart),
                         Title = $"`{cellGroup.Key} Incoming Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(uoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],
@@ -217,7 +218,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         CsvData = csvData,
                         Color = string.Join(',', colorPerGapChart),
                         Title = $"`{cellGroup.Key} Gap Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(uoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],
@@ -241,7 +242,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         CsvData = csvData,
                         Color = string.Join(',', colorPerOutSynChart),
                         Title = $"`{cellGroup.Key} Outgoing Synaptic Currents`",
-                        yLabel = $"`Current ({Util.GetUoM(uoM, Measure.Current)})`",
+                        yLabel = $"`Current ({Util.GetUoM(UoM, Measure.Current)})`",
                         yMin = yMin,
                         yMax = yMax,
                         xMin = timeArray[iStart],

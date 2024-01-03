@@ -34,7 +34,7 @@ namespace SiliFish.ModelUnits
         public int MaxIncoming { get; set; } = 0;
 
         public bool Autapse { get; set; } = false;
-        public bool SomiteBased { get; set; } = false;
+        public bool SomiteBased { get; set; } = true;
 
         public string Projection => Ascending && Descending ? "Bifurcating" : Ascending ? "Ascending" : Descending ? "Descending" : "N/A";
 

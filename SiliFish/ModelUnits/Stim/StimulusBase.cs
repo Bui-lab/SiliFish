@@ -13,5 +13,21 @@ namespace SiliFish.ModelUnits.Stim
 
         public StimulusBase() { }
 
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            List<string> diffs = new();
+            StimulusBase st = other as StimulusBase;
+            if (Settings.ToString() != st.Settings.ToString())
+                diffs.Add($"{ID} Settings: {Settings} vs {st.Settings}");
+            if (Active != st.Active)
+                diffs.Add($"{ID} Active: {Active} vs {st.Active}");
+            if (TimeLine_ms.ToString() != st.TimeLine_ms.ToString())
+                diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {st.TimeLine_ms}");
+
+            if (diffs.Any())
+                return diffs;
+            return null;
+        }
+
     }
 }
