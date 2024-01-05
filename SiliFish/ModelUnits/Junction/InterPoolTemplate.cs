@@ -259,34 +259,34 @@ namespace SiliFish.ModelUnits.Junction
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> diffs = new();
+            List<string> differences = new();
             InterPoolTemplate ipt = other as InterPoolTemplate;
             if (Name != ipt.Name)
-                diffs.Add($"{Name} Name: {Name} vs {ipt.Name}");
+                differences.Add($"{Name} Name: {Name} vs {ipt.Name}");
             if ((Description ?? "") != (ipt.Description ?? ""))
-                diffs.Add($"{Name} Description: {Description} vs {ipt.Description}");
+                differences.Add($"{Name} Description: {Description} vs {ipt.Description}");
             if (SourcePool != ipt.SourcePool)
-                diffs.Add($"{Name} SourcePool: {SourcePool} vs {ipt.SourcePool}");
+                differences.Add($"{Name} SourcePool: {SourcePool} vs {ipt.SourcePool}");
             if (TargetPool != ipt.TargetPool)
-                diffs.Add($"{Name} TargetPool: {TargetPool} vs {ipt.TargetPool}");
+                differences.Add($"{Name} TargetPool: {TargetPool} vs {ipt.TargetPool}");
             if (CellReach.ToString() != ipt.CellReach.ToString())
-                diffs.Add($"{Name} Cell reach: {CellReach} vs {ipt.CellReach}");
+                differences.Add($"{Name} Cell reach: {CellReach} vs {ipt.CellReach}");
             if (Probability != ipt.Probability)
-                diffs.Add($"{Name} Probability: {Probability} vs {ipt.Probability}");
+                differences.Add($"{Name} Probability: {Probability} vs {ipt.Probability}");
             if (AxonReachMode != ipt.AxonReachMode)
-                diffs.Add($"{Name} AxonReachMode: {AxonReachMode} vs {ipt.AxonReachMode}");
+                differences.Add($"{Name} AxonReachMode: {AxonReachMode} vs {ipt.AxonReachMode}");
             if (ConnectionType != ipt.ConnectionType)
-                diffs.Add($"{Name} ConnectionType: {ConnectionType} vs {ipt.ConnectionType}");
+                differences.Add($"{Name} ConnectionType: {ConnectionType} vs {ipt.ConnectionType}");
             if (CoreType != ipt.CoreType)
-                diffs.Add($"{Name} CoreType: {CoreType} vs {ipt.CoreType}");
+                differences.Add($"{Name} CoreType: {CoreType} vs {ipt.CoreType}");
             if (!Parameters.SameAs(ipt.Parameters, out string diff))
-                diffs.Add($"{Name} Parameters: {diff}");
+                differences.Add($"{Name} Parameters: {diff}");
             if (Active != ipt.Active)
-                diffs.Add($"{Name} Active: {Active} vs {ipt.Active}");
+                differences.Add($"{Name} Active: {Active} vs {ipt.Active}");
             if (TimeLine_ms.ToString() !=  ipt.TimeLine_ms.ToString())
-                diffs.Add($"{Name} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
-            if (diffs.Any())
-                return diffs;
+                differences.Add($"{Name} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
+            if (differences.Any())
+                return differences;
             return null;
         }
         public override int CompareTo(ModelUnitBase otherbase)

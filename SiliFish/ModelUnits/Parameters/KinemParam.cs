@@ -1,4 +1,5 @@
 ﻿using SiliFish.Extensions;
+using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -79,5 +80,6 @@ namespace SiliFish.ModelUnits.Parameters
                 $"Conv. Coef: {convCoef:0.###}; Alpha {Alpha:0.###}; Beta {Beta:0.###}";
             return details;
         }
+
     }
 }

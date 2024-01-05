@@ -529,27 +529,32 @@ namespace SiliFish.UI
         {
             try
             {
-                if (ModelTemplate == null) //TODO RunningModel comparison is not yet implemented
-                {
-                    MessageBox.Show("Model comparison is currently available for model templates only.", "Future Feature");
-                    return;
-                }
                 openFileJson.InitialDirectory = modelFileDefaultFolder;
                 if (openFileJson.ShowDialog() == DialogResult.OK)
                 {
+                    ModelBase currentModel = (ModelBase)ModelTemplate ?? RunningModel;
                     ModelBase mb;
                     try
                     {
                         mb = ModelFile.Load(openFileJson.FileName, out List<string> issues);
-                        List<string> diffs = ModelTemplate.DiffersFrom(mb);
-                        if (diffs == null || diffs.Count == 0)
-                            MessageBox.Show("Models are identical", "");
-                        else
-                            TextDisplayer.Display($"Comparing {ModelTemplate.ModelName} to {mb.ModelName}", diffs, saveFileText);
                     }
                     catch
                     {
                         MessageBox.Show("Selected file is not a valid Model or Template file.", "Error");
+                        return;
+                    }
+                    try
+                    {
+                        List<string> diffs = currentModel.DiffersFrom(mb);
+                        if (diffs == null || diffs.Count == 0)
+                            MessageBox.Show("Models are identical", "");
+                        else
+                            TextDisplayer.Display($"Comparing {currentModel.ModelName} to {mb.ModelName}", diffs, saveFileText);
+                    }
+                    catch (Exception exc)
+                    {
+                        MessageBox.Show("There is a problem in model comparison.", "Error");
+                        ExceptionHandler.ExceptionHandling("Model comparison", exc);
                         return;
                     }
                 }

@@ -130,8 +130,6 @@ namespace SiliFish.Services
                 html.Replace("__ONLINE_3D_SCRIPT__", "<script src=\"https://unpkg.com/3d-force-graph@1\"></script>" +
                     "<script src=\"https://unpkg.com/d3-dsv\"></script>" +
                     "<script src=\"https://unpkg.com/three\"></script>");
-                //TODO how to keep up to date? https://unpkg.com/three@0.152.2/build/three.module.js
-
             }
             else
             {

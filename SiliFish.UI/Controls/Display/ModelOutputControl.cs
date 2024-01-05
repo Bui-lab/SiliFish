@@ -1056,8 +1056,6 @@ namespace SiliFish.UI.Controls
             tabSpikesRCTrains.SelectedTab = tSpikes;
             UseWaitCursor = false;
         }
-
-        private int lastHistogramColumn = -1;//TODO find a more elegant solution to this
         private void GenerateHistogramOfRCColumn(int colIndex)
         {
             double[] dataPoints = dgRCTrains.Rows
@@ -1072,15 +1070,7 @@ namespace SiliFish.UI.Controls
             }
             double mean = dataPoints.Average();
             double std = dataPoints.StandardDeviation();
-            if (lastHistogramColumn == colIndex) //display only the range between ± 2SD
-            {
-                dataPoints = dataPoints
-                    .Where(dp => dp >= mean - 2 * std && dp <= mean + 2 * std)
-                    .Select(dp => Math.Round(dp, 2))
-                    .ToArray();
-            }
-            else
-                dataPoints = dataPoints.Select(dp => Math.Round(dp, 2)).ToArray();
+            dataPoints = dataPoints.Select(dp => Math.Round(dp, 2)).ToArray();
 
             string title = $"{dgRCTrains.Columns[colIndex].HeaderText} {mean:0.##}±{std:0.##}";
             double width = webViewRCTrains.ClientSize.Width;
@@ -1088,7 +1078,6 @@ namespace SiliFish.UI.Controls
             string histHtml = HistogramGenerator.GenerateHistogram(dataPoints, title, width, height);
             bool navigated = false;
             webViewRCTrains.NavigateTo(histHtml, title, GlobalSettings.TempFolder, ref tempFile, ref navigated);
-            lastHistogramColumn = colIndex;
         }
         private void btnListRCTrains_Click(object sender, EventArgs e)
         {

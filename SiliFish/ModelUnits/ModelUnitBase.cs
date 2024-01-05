@@ -6,6 +6,7 @@ using SiliFish.Services;
 using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
@@ -36,6 +37,32 @@ namespace SiliFish.ModelUnits
 
         public virtual List<string> DiffersFrom(ModelUnitBase other)
         {
+            return null;
+        }
+
+        public static List<string> ListDiffersFrom(List<ModelUnitBase> firstList, List<ModelUnitBase> secondList)
+        {
+            List<string> differences = new();
+            foreach (ModelUnitBase c1 in firstList)
+            {
+                ModelUnitBase c2 = secondList.FirstOrDefault(cp => cp.ID == c1.ID);
+                if (c2 is null)
+                    differences.Add($"New {c1.GetType()}: {c1.ID}");
+                else
+                {
+                    List<string> diff = c1.DiffersFrom(c2);
+                    if (diff != null)
+                        differences.AddRange(diff);
+                }
+            }
+            foreach (ModelUnitBase c3 in secondList)
+            {
+                ModelUnitBase c4 = firstList.FirstOrDefault(cp => cp.ID == c3.ID);
+                if (c4 is null)
+                    differences.Add($"Deleted {c3.GetType()}: {c3.ID}");
+            }
+            if (differences.Any())
+                return differences;
             return null;
         }
         public virtual int CompareTo(ModelUnitBase other)

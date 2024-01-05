@@ -324,6 +324,26 @@ namespace SiliFish.ModelUnits.Architecture
             }
 
         }
+
+        public override List<string> DiffersFrom(ModelBase other)
+        {
+            List<string> differences = new();
+            if (other is RunningModel om)
+            {
+                differences = base.DiffersFrom(other) ?? new();
+                List<string> diffs = ModelUnitBase.ListDiffersFrom(CellPools.Select(c => c as ModelUnitBase).ToList(),
+                    om.CellPools.Select(c => c as ModelUnitBase).ToList());
+                if (diffs != null)
+                    differences.AddRange(diffs);
+            }
+            else
+            {
+                differences.Add("Models not comparable.");
+            }
+            if (differences.Any())
+                return differences;
+            return null;
+        }
         public void BackwardCompatibility_Stimulus()
         {
             try

@@ -134,6 +134,19 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            if (other is not CellPool ocp) 
+                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" }; 
+            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> diffs = ListDiffersFrom(Cells.Select(c => c as ModelUnitBase).ToList(),
+                ocp.Cells.Select(c => c as ModelUnitBase).ToList());
+            if (diffs != null)
+                differences.AddRange(diffs);
+            if (differences.Any())
+                return differences;
+            return null;
+        }
         public override string ToString()
         {
             return ID + (Active ? "" : " (inactive)");

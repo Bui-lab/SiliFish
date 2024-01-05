@@ -47,6 +47,8 @@ namespace SiliFish.ModelUnits.Stim
         [JsonIgnore]
         public override string Tooltip => $"{ToString()}\r\nTimeLine: {TimeLine_ms}";
 
+        public override string ID => $"{TargetCell.ID} {Settings} {TimeLine_ms}";
+
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("TargetPool", "TargetCell", StimulusSettings.ColumnNames, TimeLine.ColumnNames);

@@ -1,6 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
@@ -26,82 +27,38 @@ namespace SiliFish.ModelUnits.Architecture
 
         public override List<string> DiffersFrom(ModelBase other)
         {
-            List<string> differences = new();
+            List<string> differences = base.DiffersFrom(other) ?? new();
             if (other is ModelTemplate om)
             {
-                #region CellPoolTemplates
-                foreach (CellPoolTemplate cpt1 in CellPoolTemplates)
-                {
-                    CellPoolTemplate cpt2 = om.CellPoolTemplates.FirstOrDefault(cp => cp.CellGroup == cpt1.CellGroup);
-                    if (cpt2 is null)
-                        differences.Add($"New cell pool: {cpt1.CellGroup}");
-                    else
-                    {
-                        List<string> diff = cpt1.DiffersFrom(cpt2);
-                        if (diff != null)
-                            differences.AddRange(diff);
-                    }
-                }
-                foreach (CellPoolTemplate cpt3 in om.CellPoolTemplates)
-                {
-                    CellPoolTemplate cpt4 = CellPoolTemplates.FirstOrDefault(cp => cp.CellGroup == cpt3.CellGroup);
-                    if (cpt4 is null)
-                        differences.Add($"Deleted cell pool: {cpt3.CellGroup}");
-                }
-                #endregion
-                #region InterPoolTemplates
-                foreach (InterPoolTemplate ipt1 in InterPoolTemplates)
-                {
-                    InterPoolTemplate ipt2 = om.InterPoolTemplates.FirstOrDefault(ip => ip.ID == ipt1.ID);
-                    if (ipt2 is null)
-                        differences.Add($"New cell junction: {ipt1.ID}");
-                    else
-                    {
-                        List<string> diff = ipt1.DiffersFrom(ipt2);
-                        if (diff != null)
-                            differences.AddRange(diff);
-                    }
-                }
-                foreach (InterPoolTemplate ipt3 in om.InterPoolTemplates)
-                {
-                    InterPoolTemplate ipt4 = InterPoolTemplates.FirstOrDefault(ip => ip.ID == ipt3.ID);
-                    if (ipt4 is null)
-                        differences.Add($"Deleted cell junction: {ipt3.ID}");
-                }
-                #endregion
-                #region StimulusTemplates
-                foreach (StimulusTemplate st1 in StimulusTemplates)
-                {
-                    StimulusTemplate st2 = om.StimulusTemplates.FirstOrDefault(ip => ip.ID == st1.ID);
-                    if (st2 is null)
-                        differences.Add($"New stimulus: {st1.ID}");
-                    else
-                    {
-                        List<string> diff = st1.DiffersFrom(st2);
-                        if (diff != null)
-                            differences.AddRange(diff);
-                    }
-                }
-                foreach (StimulusTemplate st3 in om.StimulusTemplates)
-                {
-                    StimulusTemplate st4 = StimulusTemplates.FirstOrDefault(ip => ip.ID == st3.ID);
-                    if (st4 is null)
-                        differences.Add($"Deleted stimulus: {st3.ID}");
-                }
-                #endregion
+                List<string> diffs = ModelUnitBase.ListDiffersFrom(CellPoolTemplates.Select(c => c as ModelUnitBase).ToList(),
+                    om.CellPoolTemplates.Select(c => c as ModelUnitBase).ToList());
+                if (diffs != null)
+                    differences.AddRange(diffs);
+
+                diffs = ModelUnitBase.ListDiffersFrom(InterPoolTemplates.Select(c => c as ModelUnitBase).ToList(),
+                    om.InterPoolTemplates.Select(c => c as ModelUnitBase).ToList());
+                if (diffs != null)
+                    differences.AddRange(diffs);
+
+                diffs = ModelUnitBase.ListDiffersFrom(StimulusTemplates.Select(c => c as ModelUnitBase).ToList(),
+                    om.StimulusTemplates.Select(c => c as ModelUnitBase).ToList());
+                if (diffs != null)
+                    differences.AddRange(diffs);
             }
             else
             {
                 differences.Add("Models not comparable.");
             }
-            return differences;
+            if (differences.Any())
+                return differences;
+            return null;
         }
         public void BackwardCompatibility_Stimulus()
         {
             try
             {
                 if (StimulusTemplates == null) return;
-                foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == Definitions.StimulusMode.Sinusoidal))
+                foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == StimulusMode.Sinusoidal))
                 {
                     if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
                     { 
@@ -109,7 +66,7 @@ namespace SiliFish.ModelUnits.Architecture
                         stim.Settings.Value2 = 0;
                     } 
                 }
-                foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == Definitions.StimulusMode.Pulse))
+                foreach (StimulusTemplate stim in StimulusTemplates.Where(s => s.Settings.Mode == StimulusMode.Pulse))
                 {
                     if (stim.Settings.Frequency == null || stim.Settings.Frequency == 0)
                     {
@@ -128,7 +85,7 @@ namespace SiliFish.ModelUnits.Architecture
         #region CellPools
         public override List<CellPoolTemplate> GetCellPools()
         {
-            return CellPoolTemplates.Select(cp => (CellPoolTemplate)cp).ToList();
+            return CellPoolTemplates;
         }
         public override bool AddCellPool(CellPoolTemplate cellPool)
         {
@@ -364,6 +321,10 @@ namespace SiliFish.ModelUnits.Architecture
             foreach (InterPoolTemplate ip in InterPoolTemplates)
             {
                 ip.BackwardCompatibility();
+            }
+            if (string.Compare(Version, "2.2.4") < 0)//frequency to stimulus is added on 2.2.4
+            {
+                BackwardCompatibility_Stimulus();
             }
         }
 

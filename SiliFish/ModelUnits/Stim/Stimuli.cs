@@ -13,16 +13,15 @@ namespace SiliFish.ModelUnits.Stim
     {
         public List<Stimulus> ListOfStimulus { get; set; } = new();
 
-        public Stimuli()
-        {
-        }
-
-        [JsonIgnore]
+             [JsonIgnore]
         public double MinValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Min(s => s.MinValue) : 0; } }
         [JsonIgnore]
         public double MaxValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Max(s => s.MaxValue) : 0; } }
         [JsonIgnore]
-        public bool HasStimulus { get { return ListOfStimulus.Any(); } }
+        public bool HasStimulus { get { return ListOfStimulus.Any(); } }       
+        public Stimuli()
+        {
+        }
 
         public double GetStimulus(int timeIndex)
         {

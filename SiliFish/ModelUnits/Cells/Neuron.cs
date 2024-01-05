@@ -91,6 +91,26 @@ namespace SiliFish.ModelUnits.Cells
             };
             return neuron;
         }
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            if (other is not Neuron oc)
+                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" };
+
+            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> diffs = ListDiffersFrom(Terminals.Select(c => c as ModelUnitBase).ToList(), 
+                oc.Terminals.Select(c => c as ModelUnitBase).ToList());
+            if (diffs != null)
+                differences.AddRange(diffs);
+            diffs = ListDiffersFrom(Synapses.Select(c => c as ModelUnitBase).ToList(),
+                oc.Synapses.Select(c => c as ModelUnitBase).ToList());
+            if (diffs != null)
+                differences.AddRange(diffs);
+
+            if (differences.Any())
+                return differences;
+            return null;
+        }
+
         public override void LinkObjects(RunningModel model, CellPool pool)
         {
             base.LinkObjects(model, pool);

@@ -64,23 +64,23 @@ namespace SiliFish.ModelUnits.Stim
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> diffs = base.DiffersFrom(other) ?? new();
+            List<string> differences = base.DiffersFrom(other) ?? new();
             StimulusTemplate st = other as StimulusTemplate;
             if (TargetPool != st.TargetPool)
-                diffs.Add($"{ID} TargetPool: {TargetPool} vs {st.TargetPool}");
+                differences.Add($"{ID} TargetPool: {TargetPool} vs {st.TargetPool}");
             if (TargetSomite != st.TargetSomite)
-                diffs.Add($"{ID} TargetSomite: {TargetSomite} vs {st.TargetSomite}");
+                differences.Add($"{ID} TargetSomite: {TargetSomite} vs {st.TargetSomite}");
             if (TargetCell != st.TargetCell)
-                diffs.Add($"{ID} TargetCell: {TargetCell} vs {st.TargetCell}");
+                differences.Add($"{ID} TargetCell: {TargetCell} vs {st.TargetCell}");
             if (LeftRight != st.LeftRight)
-                diffs.Add($"{ID} LeftRight: {LeftRight} vs {st.LeftRight}");
+                differences.Add($"{ID} LeftRight: {LeftRight} vs {st.LeftRight}");
             if (DelayPerSomite != st.DelayPerSomite)
-                diffs.Add($"{ID} DelayPerSomite: {DelayPerSomite} vs {st.DelayPerSomite}");
+                differences.Add($"{ID} DelayPerSomite: {DelayPerSomite} vs {st.DelayPerSomite}");
             if (DelaySagittal != st.DelaySagittal)
-                diffs.Add($"{ID} DelaySagittal: {DelaySagittal} vs {st.DelaySagittal}");
+                differences.Add($"{ID} DelaySagittal: {DelaySagittal} vs {st.DelaySagittal}");
 
-            if (diffs.Any())
-                return diffs;
+            if (differences.Any())
+                return differences;
             return null;
         }
 

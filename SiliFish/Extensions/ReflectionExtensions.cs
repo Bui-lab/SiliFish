@@ -1,5 +1,8 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.ModelUnits.Architecture;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace SiliFish.Extensions
@@ -27,5 +30,21 @@ namespace SiliFish.Extensions
             catch { return (defValue, true); }
         }
 
+        public static List<string> DiffersFrom(this object obj, object other)
+        {
+            if (other.GetType() != obj.GetType()) 
+                return new() { "Incompatible classes." };
+            List<string> differences = new();
+            foreach (PropertyInfo prop in obj.GetType().GetProperties())
+            {
+                var v1 = prop.GetValue(obj, null);
+                var v2 = prop.GetValue(other, null);
+                if (v1?.ToString() != v2?.ToString())
+                    differences.Add($"{prop.Name}: {v1} vs {v2}");
+            }
+            if (differences.Any())
+                return differences;
+            return null;
+        }
     }
 }

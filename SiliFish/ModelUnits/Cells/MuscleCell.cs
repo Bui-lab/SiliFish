@@ -97,6 +97,22 @@ namespace SiliFish.ModelUnits.Cells
             return muscleCell;
         }
 
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            if (other is not MuscleCell oc)
+                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" }; 
+
+            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> diffs = ListDiffersFrom(EndPlates.Select(c => c as ModelUnitBase).ToList(),
+                oc.EndPlates.Select(c => c as ModelUnitBase).ToList());
+            if (diffs != null)
+                differences.AddRange(diffs);
+
+            if (differences.Any())
+                return differences;
+            return null;
+        }
+
         #region Connection functions
         public override void AddChemicalSynapse(ChemicalSynapse jnc)
         {

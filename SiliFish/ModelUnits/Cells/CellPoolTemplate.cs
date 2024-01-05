@@ -270,49 +270,49 @@ namespace SiliFish.ModelUnits.Cells
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> diffs = new();
+            List<string> differences = new();
             CellPoolTemplate cpt = other as CellPoolTemplate;
             if (CellGroup != cpt.CellGroup)
-                diffs.Add($"{ID} CellGroup: {CellGroup} vs {cpt.CellGroup}");
+                differences.Add($"{ID} CellGroup: {CellGroup} vs {cpt.CellGroup}");
             if ((Description ?? "") != (cpt.Description ?? ""))
-                diffs.Add($"{ID} Description: {Description} vs {cpt.Description}");
+                differences.Add($"{ID} Description: {Description} vs {cpt.Description}");
             if (CellType != cpt.CellType)
-                diffs.Add($"{ID} CellType: {CellType} vs {cpt.CellType}");
+                differences.Add($"{ID} CellType: {CellType} vs {cpt.CellType}");
             if (CoreType != cpt.CoreType)
-                diffs.Add($"{ID} CoreType: {CoreType} vs {cpt.CoreType}");
+                differences.Add($"{ID} CoreType: {CoreType} vs {cpt.CoreType}");
             if (NTMode != cpt.NTMode)
-                diffs.Add($"{ID} NTMode: {NTMode} vs {cpt.NTMode}");
+                differences.Add($"{ID} NTMode: {NTMode} vs {cpt.NTMode}");
             if (Color != cpt.Color)
-                diffs.Add($"{ID} Color: {Color} vs {cpt.Color}");
+                differences.Add($"{ID} Color: {Color} vs {cpt.Color}");
             if (!Parameters.SameAs(cpt.Parameters, out string diff))
-                diffs.Add($"{ID} Parameters: {diff}");
+                differences.Add($"{ID} Parameters: {diff}");
             if (BodyLocation != cpt.BodyLocation)
-                diffs.Add($"{ID} BodyLocation: {BodyLocation} vs {cpt.BodyLocation}");
+                differences.Add($"{ID} BodyLocation: {BodyLocation} vs {cpt.BodyLocation}");
             if (PositionLeftRight != cpt.PositionLeftRight)
-                diffs.Add($"{ID} PositionLeftRight: {PositionLeftRight} vs {cpt.PositionLeftRight}");
+                differences.Add($"{ID} PositionLeftRight: {PositionLeftRight} vs {cpt.PositionLeftRight}");
             if (ColumnIndex2D != cpt.ColumnIndex2D)
-                diffs.Add($"{ID} ColumnIndex2D: {ColumnIndex2D} vs {cpt.ColumnIndex2D}");
+                differences.Add($"{ID} ColumnIndex2D: {ColumnIndex2D} vs {cpt.ColumnIndex2D}");
             if (NumOfCells != cpt.NumOfCells)
-                diffs.Add($"{ID} NumOfCells: {NumOfCells} vs {cpt.NumOfCells}");
+                differences.Add($"{ID} NumOfCells: {NumOfCells} vs {cpt.NumOfCells}");
             if (PerSomiteOrTotal != cpt.PerSomiteOrTotal)
-                diffs.Add($"{ID} PerSomiteOrTotal: {PerSomiteOrTotal} vs {cpt.PerSomiteOrTotal}");
+                differences.Add($"{ID} PerSomiteOrTotal: {PerSomiteOrTotal} vs {cpt.PerSomiteOrTotal}");
             if (SomiteRange != cpt.SomiteRange)
-                diffs.Add($"{ID} SomiteRange: {SomiteRange} vs {cpt.SomiteRange}");
+                differences.Add($"{ID} SomiteRange: {SomiteRange} vs {cpt.SomiteRange}");
             if (SpatialDistribution.ToString() != cpt.SpatialDistribution.ToString())
-                diffs.Add($"{ID} SpatialDistribution: {SpatialDistribution} vs {cpt.SpatialDistribution}");
+                differences.Add($"{ID} SpatialDistribution: {SpatialDistribution} vs {cpt.SpatialDistribution}");
             if (DescendingAxonLength?.ToString()!=cpt.DescendingAxonLength?.ToString())
-                diffs.Add($"{ID} DescendingAxonLength: {DescendingAxonLength} vs {cpt.DescendingAxonLength}");
+                differences.Add($"{ID} DescendingAxonLength: {DescendingAxonLength} vs {cpt.DescendingAxonLength}");
             if (AscendingAxonLength?.ToString() != cpt.AscendingAxonLength?.ToString())
-                diffs.Add($"{ID} AscendingAxonLength: {AscendingAxonLength} vs {cpt.AscendingAxonLength}");
+                differences.Add($"{ID} AscendingAxonLength: {AscendingAxonLength} vs {cpt.AscendingAxonLength}");
             if (ConductionVelocity?.ToString() != cpt.ConductionVelocity?.ToString())
-                diffs.Add($"{ID} ConductionVelocity: {ConductionVelocity} vs {cpt.ConductionVelocity}");
+                differences.Add($"{ID} ConductionVelocity: {ConductionVelocity} vs {cpt.ConductionVelocity}");
             if (Active != cpt.Active)
-                diffs.Add($"{ID} Active: {Active} vs {cpt.Active}");
+                differences.Add($"{ID} Active: {Active} vs {cpt.Active}");
             if (TimeLine_ms.ToString() != cpt.TimeLine_ms.ToString())
-                diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {cpt.TimeLine_ms}");
+                differences.Add($"{ID} TimeLine: {TimeLine_ms} vs {cpt.TimeLine_ms}");
 
-            if (diffs.Any())
-                return diffs;
+            if (differences.Any())
+                return differences;
             return null;
         }
         public override int CompareTo(ModelUnitBase otherbase)

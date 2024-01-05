@@ -53,11 +53,22 @@ namespace SiliFish.UI.Controls.Display
                 selectedUnits = value;
                 if (value != null && value.Any())
                 {
-                    //TODO update the selection if there are let's say single pool, but multiple cells etc
-                    if (!ddPools.Items.Contains("Selection"))
-                        ddPools.Items.Add("Selection");
-                    ddPools.SelectedItem = "Selection";
-                    ddSagittal.Enabled = false;
+                    List<CellPool> cellPools = value.Where(c => c is CellPool).Select(c => c as CellPool).
+                        Union(value.Where(c => c is Cell).Select(c => (c as Cell).CellPool)).Distinct().ToList();
+                    if (cellPools.Count == 1 || (cellPools.Count == 2 && cellPools[0].CellGroup == cellPools[1].CellGroup))
+                    {
+                        ddPools.SelectedItem = cellPools[0].CellGroup;
+                        ddSagittal.SelectedItem = cellPools.Count == 1 ?
+                            cellPools[0].PositionLeftRight.ToString() :
+                            "Left/Right";
+                    }
+                    else
+                    {
+                        if (!ddPools.Items.Contains("Selection"))
+                            ddPools.Items.Add("Selection");
+                        ddPools.SelectedItem = "Selection";
+                        ddSagittal.Enabled = false;
+                    }
                 }
                 else
                 {
@@ -65,7 +76,6 @@ namespace SiliFish.UI.Controls.Display
                         ddPools.Items.Remove("Selection");
                     ddSagittal.Enabled = true;
                 }
-
             }
         }
         public RunningModel RunningModel

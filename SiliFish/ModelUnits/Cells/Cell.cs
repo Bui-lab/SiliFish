@@ -241,6 +241,43 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
+        public override List<string> DiffersFrom(ModelUnitBase other)
+        {
+            if (other is not Cell oc)
+                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" }; List<string> diffs;
+            List<string> differences = base.DiffersFrom(other) ?? new();
+            if (Coordinate.ToString() != oc.Coordinate.ToString())
+                differences.Add($"{ID} Coordinates: {Coordinate} versus {oc.Coordinate}");
+
+            if (Core?.CoreType != oc.Core?.CoreType)
+            {
+                differences.Add($"{ID} Core: {Core?.CoreType} versus {oc.Core?.CoreType}");
+            }
+            else
+            {
+                diffs = Core.DiffersFrom(oc.Core);
+                if (diffs != null)
+                    differences.AddRange(diffs);
+            }
+            if (ConductionVelocity != oc.ConductionVelocity)
+                differences.Add($"{ID} Conduction velocity: {ConductionVelocity} versus {oc.ConductionVelocity}");
+            if (AscendingAxonLength != oc.AscendingAxonLength)
+                differences.Add($"{ID} Ascending axon length: {AscendingAxonLength} versus {oc.AscendingAxonLength}");
+            if (DescendingAxonLength != oc.DescendingAxonLength)
+                differences.Add($"{ID} Descending axon length: {DescendingAxonLength} versus {oc.DescendingAxonLength}");
+            diffs = ListDiffersFrom(Stimuli.ListOfStimulus.Select(c => c as ModelUnitBase).ToList(),
+                oc.Stimuli.ListOfStimulus.Select(c => c as ModelUnitBase).ToList());
+            if (diffs != null)
+                differences.AddRange(diffs);
+            diffs = ListDiffersFrom(GapJunctions.Select(c => c as ModelUnitBase).ToList(),
+                oc.GapJunctions.Select(c => c as ModelUnitBase).ToList());
+            if (diffs != null)
+                differences.AddRange(diffs);
+
+            if (differences.Any())
+                return differences;
+            return null;
+        }
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);

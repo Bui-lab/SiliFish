@@ -1,4 +1,5 @@
 ﻿using SiliFish.DataTypes;
+using SiliFish.Extensions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
@@ -50,7 +51,25 @@ namespace SiliFish.ModelUnits.Architecture
 
         public virtual List<string> DiffersFrom(ModelBase other)
         {
-            throw new NotImplementedException();
+            List<string> differences = new();
+            if (Version != other.Version)
+                differences.Add($"Version: {Version} vs {other.Version}");
+            if (ModelName != other.ModelName)
+                differences.Add($"Name: {ModelName} vs {other.ModelName}");
+            if (ModelDescription != other.ModelDescription)
+                differences.Add($"Description: {ModelDescription} vs {other.ModelDescription}");
+            if (Settings.DiffersFrom(other.settings) != null)
+                differences.AddRange(Settings.DiffersFrom(other.settings));
+            List<string> diffs = ModelDimensions.DiffersFrom(other.ModelDimensions);
+            if (diffs != null) differences.AddRange(diffs);
+
+            diffs = KinemParam.DiffersFrom(other.KinemParam);
+            if (diffs != null) differences.AddRange(diffs);
+
+            diffs = DynamicsParam.DiffersFrom(other.DynamicsParam);
+            if (diffs != null) differences.AddRange(diffs);
+
+            return differences;
         }
         public virtual bool CheckValues(ref List<string> errors) 
         {

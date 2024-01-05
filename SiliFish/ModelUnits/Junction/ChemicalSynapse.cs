@@ -146,14 +146,15 @@ namespace SiliFish.ModelUnits.Junction
             Source ??= PreNeuron.ID;
             if (!PreNeuron.Terminals.Contains(this))
                 PreNeuron.Terminals.Add(this);
-            
+
             PostCell = model.GetCell(Target);
             if (PostCell is Neuron n)
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
-            
-            Core.DeltaT = model.RunParam.DeltaT;
+
+            if (Core != null)
+                Core.DeltaT = model.RunParam.DeltaT;
         }
         public override string ToString()
         {
