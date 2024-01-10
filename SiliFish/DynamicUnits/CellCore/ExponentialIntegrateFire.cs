@@ -15,30 +15,29 @@ namespace SiliFish.DynamicUnits
     /// Chapter 8 - Simplified Models of Neurons
     /// https://doi.org/10.1017/CBO9780511975899.009 
     /// </summary>
-    public class QuadraticIntegrateAndFire : CellCore
+    public class ExponentialIntegrateAndFire : CellCore
     {
         [Description("Membrane resistance")]
         public double Rm { get; set; } = 10;
 
         [Description("Membrane capacitance")]
-        public double Cm { get; set; } = 20;
+        public double Cm { get; set; } = 1;
 
         [Description("Threshold membrane potential.")]
         public double Vt { get; set; } = -57;
-        private double R;
+
+        [Description("Spike slope factor.")]
+        public double SSF { get; set; } = 3;
         protected override void Initialize()
         {
             V = Vr;
-            R = Rm * (Vt - Vr);
-            if (Math.Abs(R) < double.Epsilon)
-                R = double.Epsilon;
         }
-        public QuadraticIntegrateAndFire()
+        public ExponentialIntegrateAndFire()
         {
             Initialize();
         }
 
-        public QuadraticIntegrateAndFire(Dictionary<string, double> paramExternal)
+        public ExponentialIntegrateAndFire(Dictionary<string, double> paramExternal)
         {
             SetParameters(paramExternal);
             Initialize();
@@ -59,7 +58,7 @@ namespace SiliFish.DynamicUnits
             }
             else
             {
-                double Cdv = -(V - Vr) * (Vt - V) / R + Stim;
+                double Cdv = -(V - Vr - SSF * Math.Exp((V - Vt)/SSF))/Rm + Stim;
                 double vNew = V + Cdv * deltaT / Cm;
                 V = vNew;
             }

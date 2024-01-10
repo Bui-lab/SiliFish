@@ -18,6 +18,24 @@ namespace SiliFish.DynamicUnits
             get { return GetParameters(); }
             set { SetParameters(value); }
         }
+        public Dictionary<string, string> ParameterDescriptions
+        {
+            get { return GetParameterDescriptions(); }
+        }
+        public virtual Dictionary<string, string> GetParameterDescriptions()
+        {
+            Dictionary<string, string> descDict = new();
+
+            foreach (PropertyInfo prop in GetType().GetProperties())
+            {
+                if (prop.GetCustomAttribute<BrowsableAttribute>()?.Equals(BrowsableAttribute.No) ?? false)
+                    continue;
+                string desc = prop.GetCustomAttribute<DescriptionAttribute>()?.Description;
+                if (!string.IsNullOrEmpty(desc))
+                    descDict[prop.Name] = desc;
+            }
+            return descDict;
+        }
         public virtual Dictionary<string, double> GetParameters()
         {
             Dictionary<string, double> paramDict = new();

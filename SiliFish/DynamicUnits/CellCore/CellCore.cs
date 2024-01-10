@@ -23,6 +23,7 @@ namespace SiliFish.DynamicUnits
     [JsonDerivedType(typeof(Izhikevich_9P), typeDiscriminator: "izhikevich9p")]
     [JsonDerivedType(typeof(Leaky_Integrator), typeDiscriminator: "leakyintegrator")]
     [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
+    [JsonDerivedType(typeof(ExponentialIntegrateAndFire), typeDiscriminator: "expif")]
     [JsonDerivedType(typeof(LeakyIntegrateAndFire), typeDiscriminator: "leakyintegratefire")]
     public class CellCore: BaseCore
     {
@@ -84,11 +85,15 @@ namespace SiliFish.DynamicUnits
         [Description("The resting membrane potential.")]
         public double Vr { get; set; } = -70;
 
+
         [Description("The peak membrane potential of single spike.")]
         public double Vmax { get; set; } = 30;
 
         [JsonIgnore, Browsable(false)]
         public virtual double Vthreshold { get; set; }
+        
+        [JsonIgnore, Browsable(false)]
+        public virtual double Vreset { get => Vr; set => Vr = value; }
 
 
         [JsonIgnore, Browsable(false)]
@@ -175,11 +180,69 @@ namespace SiliFish.DynamicUnits
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
+
+        public virtual DynamicsStats CreateDynamicsStats(double[] I)
+        {
+            DynamicsStats dyn = new(null, I, deltaT);
+            return dyn;
+        }
+        public virtual void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        {
+        }
         public virtual DynamicsStats SolveODE(double[] I)
         {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
+            Initialize();
+            bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
+            double decayStart = 0, riseStart = 0;
+            int iMax = I.Length;
+            DynamicsStats dyn = CreateDynamicsStats(I);
+
+            bool spike = false;
+            for (int tIndex = 0; tIndex < iMax; tIndex++)
+            {
+                GetNextVal(I[tIndex], ref spike);
+                dyn.VList[tIndex] = V;
+                UpdateDynamicStats(dyn, tIndex);
+                //if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
+                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
+                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * Vreset)
+                {
+                    dyn.TauDecay.Add(deltaT * tIndex, deltaT * (tIndex - decayStart));
+                    tauDecaySet = true;
+                }
+                //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
+                //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
+                else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * Vmax + 0.37 * Vr)
+                {
+                    dyn.TauRise.Add(deltaT * tIndex, deltaT * (tIndex - riseStart));
+                    tauRiseSet = true;
+                    riseStart = 0;
+                }
+                else if (!onRise && (V - Vr > 0))//Vr is used instead of Vt
+                {
+                    onRise = true;
+                    tauRiseSet = false;
+                    riseStart = tIndex;
+                }
+                else if (onDecay && tIndex > 0 && V > dyn.VList[tIndex - 1])
+                {
+                    onDecay = false;
+                    tauDecaySet = false;
+                }
+                if (spike)
+                {
+                    if (tIndex > 0)
+                        dyn.SpikeList.Add(tIndex - 1);
+                    onRise = false;
+                    tauRiseSet = false;
+                    onDecay = true;
+                    tauDecaySet = false;
+                    decayStart = tIndex;
+                }
+            }
+            dyn.DefineSpikingPattern();
+
+            return dyn;
         }
 
         public virtual DynamicsStats DynamicsTest(double[] I)

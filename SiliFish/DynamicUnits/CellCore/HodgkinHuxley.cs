@@ -7,6 +7,8 @@ namespace SiliFish.DynamicUnits
     /// Model based on Neuronal Dynamics
     /// From Single Neurons to Networks and Models of Cognition
     /// Chapter 2
+    /// https://www.cambridge.org/core/books/abs/neuronal-dynamics/preface/5E2EF649D53AD9A59C388F14471559B4
+    /// https://neuronaldynamics.epfl.ch/online/errata.html
     /// </summary>
     public class HodgkinHuxley : HodgkinHuxleyClassic
     {
@@ -19,13 +21,6 @@ namespace SiliFish.DynamicUnits
         private static double E_L_suggestedMinHH = -70;
         private static double E_L_suggestedMaxHH = -60;
 
-        /*protected override double alpha_n { get { return 0.01 * (V + 55) / (1 - Math.Exp((V + 55) / 10)); } }
-        protected override double beta_n { get { return 0.125 * Math.Exp(- (V + 65) / 80); } }
-        protected override double alpha_m { get { return 0.1 * (V + 40) / (1 - Math.Exp((V + 40) / 10)); } }
-        protected override double beta_m { get { return 4 * Math.Exp(- (V + 65)/ 18); } }
-        protected override double alpha_h { get { return 0.07 * Math.Exp(- (V + 65) / 20); } }
-        protected override double beta_h { get { return 1 / (Math.Exp((V + 35) / 10) + 1); } }
-        */
         protected override double alpha_n { get { return 0.02 * (V - 25) / (1 - Math.Exp(-1 * (V - 25) / 9)); } }
         protected override double beta_n { get { return -0.002 * (V - 25) / (1 - Math.Exp((V - 25) / 9)); } }
         protected override double alpha_m { get { return 0.182 * (V + 35) / (1 - Math.Exp(-1 * (V + 35) / 9)); } }
@@ -52,7 +47,8 @@ namespace SiliFish.DynamicUnits
             // threshold membrane potential 
             Vt = -57;
             Cm = 1; //the membrane capacitance
-            V = Vr = -65;
+            Vr = -65;
+            base.Initialize();
     }
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {

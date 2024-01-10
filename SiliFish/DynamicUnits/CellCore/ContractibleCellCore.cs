@@ -23,6 +23,9 @@ namespace SiliFish.DynamicUnits
         [Description("Maximum tension")]
         public double Tmax { get; set; }
 
+        [Description("Contraction threshold potential to determine rheobase for non-spiking cores")]
+        public double Vcontraction { get; set; } = GlobalSettings.BiologicalMaxPotential;
+
         [Description("Slope factor")]// [Dulhunty 1992 (Prog. Biophys)]
         public double ka { get; set; }
 

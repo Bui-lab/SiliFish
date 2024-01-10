@@ -1,5 +1,6 @@
 ﻿using SiliFish.Extensions;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace Extensions
 {
@@ -34,7 +35,9 @@ namespace Extensions
             }
         }
 
-        public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel, Dictionary<string, double> ParamDict)
+        public static void CreateNumericUpDownControlsForDictionary(this FlowLayoutPanel flowPanel, 
+            Dictionary<string, double> ParamDict, Dictionary<string, string> DescDict,
+            ToolTip toolTip)
         {
             try
             {
@@ -44,13 +47,12 @@ namespace Extensions
                 flowPanel.FlowDirection = FlowDirection.LeftToRight;
                 foreach (string key in ParamDict.Keys)
                 {
-
                     Label lbl = new()
                     {
                         Text = key,
                         Height = 23,
-                        Width = 6 * maxLen + 5,
-                        TextAlign = ContentAlignment.MiddleLeft,
+                        Width = 8 * maxLen + 5,
+                        TextAlign = ContentAlignment.BottomLeft,                      
                         TabIndex = tabIndex++
                     };
                     flowPanel.Controls.Add(lbl);
@@ -71,6 +73,12 @@ namespace Extensions
                         TabIndex = tabIndex++
                     };
                     flowPanel.Controls.Add(numBox);
+                    string tooltip = DescDict[key];
+                    if (!string.IsNullOrEmpty(tooltip))
+                    {
+                        toolTip.SetToolTip(lbl, tooltip);
+                        toolTip.SetToolTip(numBox, tooltip);
+                    }
                     flowPanel.SetFlowBreak(numBox, true);
                 }
             }

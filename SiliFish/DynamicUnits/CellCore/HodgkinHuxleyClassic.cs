@@ -70,8 +70,9 @@ namespace SiliFish.DynamicUnits
         protected virtual double alpha_m { get { return 0.1 * (25 - V) / (Math.Exp((25 - V) / 10) - 1); } }
         protected virtual double beta_m { get { return 4 * Math.Exp(-V / 18); } }
         protected virtual double alpha_h { get { return 0.07 * Math.Exp(-V / 20); } }
-        protected virtual double beta_h { get { return 1 / (Math.Exp((10 - V) / 10) + 1); } }
+        protected virtual double beta_h { get { return 1 / (Math.Exp((30 - V) / 10) + 1); } }
 
+        protected double minE, maxE;
         public HodgkinHuxleyClassic()
         {
             Initialize();
@@ -80,7 +81,7 @@ namespace SiliFish.DynamicUnits
         {
             this.Vr = Vr;
             this.Vmax = Vmax;
-            V = Vr;
+            Initialize();
         }
         public HodgkinHuxleyClassic(Dictionary<string, double> paramExternal)
         {
@@ -89,7 +90,9 @@ namespace SiliFish.DynamicUnits
         }
         protected override void Initialize()
         {
-            V = Vr = 0;
+            V = Vr;
+            minE = Math.Min(E_Na, Math.Min(E_K, E_L));
+            maxE = Math.Max(E_Na, Math.Max(E_K, E_L));
         }
 
         [JsonIgnore, Browsable(false)] 
@@ -129,36 +132,40 @@ namespace SiliFish.DynamicUnits
         {
             double vNew, nNew, mNew, hNew;
             spike = false;
-            
-                // ODE eqs
-                double Cdv = I - IK - INa - IL;
-                vNew = V + Cdv * deltaT / Cm;
+            if (V > Vmax)
+                V = Vr;
 
-                double dn = alpha_n * (1 - n) - beta_n * n;
-                nNew = n + deltaT * dn;
+            // ODE eqs
+            double Cdv = I - IK - INa - IL;
+            vNew = V + Cdv * deltaT / Cm;
 
-                double dm = alpha_m * (1 - m) - beta_m * m;
-                mNew = m + deltaT * dm;
+            double dn = alpha_n * (1 - n) - beta_n * n;
+            nNew = n + deltaT * dn;
 
-                double dh = alpha_h * (1 - h) - beta_h * h;
-                hNew = h + deltaT * dh;
+            double dm = alpha_m * (1 - m) - beta_m * m;
+            mNew = m + deltaT * dm;
 
-                V = vNew;
-                n = nNew;
-                m = mNew;
-                h = hNew;
-                if (V > Vmax)
-                    spike = true;
-            
+            double dh = alpha_h * (1 - h) - beta_h * h;
+            hNew = h + deltaT * dh;
+
+            V = vNew;
+            n = nNew;
+            m = mNew;
+            h = hNew;
+            if (V > Vmax)
+            {
+                if (V > maxE)
+                    V = maxE;
+                spike = true;
+            }
+            if (V < minE)
+                V = minE;
+
             return V;
         }
 
-        public override DynamicsStats SolveODE(double[] I)
+        public override DynamicsStats CreateDynamicsStats(double[] I)
         {
-            Initialize();
-            bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
-            double decayStart = 0, riseStart = 0;
-            int iMax = I.Length;
             DynamicsStats dyn = new(null, I, deltaT);
             dyn.SecLists.Add("n", new double[I.Length]);
             dyn.SecLists.Add("m", new double[I.Length]);
@@ -166,64 +173,22 @@ namespace SiliFish.DynamicUnits
             dyn.SecLists.Add("I_K", new double[I.Length]);
             dyn.SecLists.Add("I_Na", new double[I.Length]);
             dyn.SecLists.Add("I_L", new double[I.Length]);
+            return dyn;
+        }
+        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        {
             double[] nList = dyn.SecLists["n"];
             double[] mList = dyn.SecLists["m"];
             double[] hList = dyn.SecLists["h"];
             double[] I_KList = dyn.SecLists["I_K"];
             double[] I_NaList = dyn.SecLists["I_Na"];
             double[] I_LList = dyn.SecLists["I_L"];
-
-            bool spike = false;
-            for (int tIndex = 0; tIndex < iMax; tIndex++)
-            {
-                GetNextVal(I[tIndex], ref spike);
-                dyn.VList[tIndex] = V;
-                nList[tIndex] = n;
-                mList[tIndex] = m;
-                hList[tIndex] = h;
-                I_KList[tIndex] = IK;
-                I_NaList[tIndex] = INa;
-                I_LList[tIndex] = IL;
-                //if passed the 0.37 of the drop (the difference between Vmax and Vreset): 
-                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 Vr
-                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * Vr)
-                {
-                    dyn.TauDecay.Add(deltaT * tIndex, deltaT * (tIndex - decayStart));
-                    tauDecaySet = true;
-                }
-                //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
-                //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
-                else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * Vmax + 0.37 * Vr)
-                {
-                    dyn.TauRise.Add(deltaT * tIndex, deltaT * (tIndex - riseStart));
-                    tauRiseSet = true;
-                    riseStart = 0;
-                }
-                else if (!onRise && (V - Vt > 0))
-                {
-                    onRise = true;
-                    tauRiseSet = false;
-                    riseStart = tIndex;
-                }
-                else if (onDecay && tIndex > 0 && V > dyn.VList[tIndex - 1])
-                {
-                    onDecay = false;
-                    tauDecaySet = false;
-                }
-                if (spike)
-                {
-                    if (tIndex > 0)
-                        dyn.SpikeList.Add(tIndex - 1);
-                    onRise = false;
-                    tauRiseSet = false;
-                    onDecay = true;
-                    tauDecaySet = false;
-                    decayStart = tIndex;
-                }
-            }
-            dyn.DefineSpikingPattern();
-
-            return dyn;
+            nList[tIndex] = n;
+            mList[tIndex] = m;
+            hList[tIndex] = h;
+            I_KList[tIndex] = IK;
+            I_NaList[tIndex] = INa;
+            I_LList[tIndex] = IL;
         }
 
     }

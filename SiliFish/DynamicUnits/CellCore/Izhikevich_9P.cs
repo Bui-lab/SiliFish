@@ -63,6 +63,8 @@ namespace SiliFish.DynamicUnits
 
         [JsonIgnore, Browsable(false)]
         public override double Vthreshold { get => Vt; set => Vt = value; }
+        [JsonIgnore, Browsable(false)]
+        public override double Vreset { get => c; set => c = value; }
 
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
@@ -120,62 +122,17 @@ namespace SiliFish.DynamicUnits
             return V;
         }
 
-        public override DynamicsStats SolveODE(double[] I)
+        public override DynamicsStats CreateDynamicsStats(double[] I)
         {
-            Initialize();
-            bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
-            double decayStart = 0, riseStart = 0;
-            int iMax = I.Length;
             DynamicsStats dyn = new(null, I, deltaT);
             dyn.SecLists.Add("u", new double[I.Length]);
-            double[] feedbackCurrent = dyn.SecLists["u"];
-
-            bool spike = false;
-            for (int tIndex = 0; tIndex < iMax; tIndex++)
-            {
-                GetNextVal(I[tIndex], ref spike);
-                dyn.VList[tIndex] = V;
-                feedbackCurrent[tIndex] = u;
-                //if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
-                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
-                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * c)
-                {
-                    dyn.TauDecay.Add(deltaT * tIndex, deltaT * (tIndex - decayStart));
-                    tauDecaySet = true;
-                }
-                //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
-                //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
-                else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * Vmax + 0.37 * Vr)
-                {
-                    dyn.TauRise.Add(deltaT * tIndex, deltaT * (tIndex - riseStart));
-                    tauRiseSet = true;
-                    riseStart = 0;
-                }
-                else if (!onRise && (V - Vt > 0))
-                {
-                    onRise = true;
-                    tauRiseSet = false;
-                    riseStart = tIndex;
-                }
-                else if (onDecay && tIndex > 0 && V > dyn.VList[tIndex - 1])
-                {
-                    onDecay = false;
-                    tauDecaySet = false;
-                }
-                if (spike)
-                {
-                    if (tIndex > 0)
-                        dyn.SpikeList.Add(tIndex - 1);
-                    onRise = false;
-                    tauRiseSet = false;
-                    onDecay = true;
-                    tauDecaySet = false;
-                    decayStart = tIndex;
-                }
-            }
-            dyn.DefineSpikingPattern();
-
             return dyn;
         }
+        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        {
+            double[] feedbackCurrent = dyn.SecLists["u"];
+            feedbackCurrent[tIndex] = u;
+        }
+
     }
 }

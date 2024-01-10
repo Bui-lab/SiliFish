@@ -74,22 +74,22 @@ namespace SiliFish.DynamicUnits
             double vNew = V + dv * deltaT;
             V = vNew;
             if (V >= Vmax) V = Vmax;
+            if (V > Vcontraction) spike = true;
             return V;
         }
-        public override DynamicsStats SolveODE(double[] I)
+        public override DynamicsStats CreateDynamicsStats(double[] I)
         {
-            int iMax = I.Length;
             DynamicsStats dyn = new(null, I, deltaT);
             dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
-            double[] tensionList = dyn.SecLists["Rel. Tension"];
-            bool spike = false;
-            for (int t = 0; t < iMax; t++)
-            {
-                GetNextVal(I[t], ref spike);
-                dyn.VList[t] = V;
-                tensionList[t] = CalculateRelativeTension(V);
-            }
+            dyn.SecLists.Add("Tension", new double[I.Length]);
             return dyn;
+        }
+        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        {
+            double[] RelTensionList = dyn.SecLists["Rel. Tension"];
+            double[] TensionList = dyn.SecLists["Tension"];
+            RelTensionList[tIndex] = CalculateRelativeTension(V);
+            TensionList[tIndex] = RelTensionList[tIndex] * Tmax;
         }
     }
 

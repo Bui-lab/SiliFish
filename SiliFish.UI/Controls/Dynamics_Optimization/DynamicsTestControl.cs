@@ -82,34 +82,40 @@ namespace SiliFish.UI.Controls
             {
                 parameters = value;
                 gaControl.Parameters = parameters;
-                if (parameters == null)
-                {
-                    pfParams.Controls.Clear();
-                    sensitivityAnalysisRheobase.SetParameters(false, null);
-                    sensitivityAnalysisFiring.SetParameters(false, null);
-                }
-                else
-                {
-                    pfParams.CreateNumericUpDownControlsForDictionary(parameters);
-                    foreach (Control control in pfParams.Controls)
-                    {
-                        if (control is TextBox textBox)
-                            textBox.TextChanged += TextBox_TextChanged;
-                        else if (control is NumericUpDown numBox)
-                            numBox.ValueChanged += NumBox_ValueChanged;
-                    }
-                    if (updateParamNames)
-                    {
-                        updateParamNames = false;
-                        sensitivityAnalysisRheobase.SetParameters(true, parameters.Keys.ToArray());
-                        sensitivityAnalysisFiring.SetParameters(false, parameters.Keys.ToArray());
-                        gaControl.ResetParameters(parameters);
-                    }
-                    FirstRun();
-                }
+                GenerateCoreControls();
             }
         }
 
+        private void GenerateCoreControls()
+        {
+            if (parameters == null)
+            {
+                pfParams.Controls.Clear();
+                sensitivityAnalysisRheobase.SetParameters(false, null);
+                sensitivityAnalysisFiring.SetParameters(false, null);
+            }
+            else
+            {
+                CellCore core = CellCore.CreateCore(coreType, null);
+                Dictionary<string, string> descDict = core.GetParameterDescriptions();
+                pfParams.CreateNumericUpDownControlsForDictionary(parameters, descDict, toolTip1);
+                foreach (Control control in pfParams.Controls)
+                {
+                    if (control is TextBox textBox)
+                        textBox.TextChanged += TextBox_TextChanged;
+                    else if (control is NumericUpDown numBox)
+                        numBox.ValueChanged += NumBox_ValueChanged;
+                }
+                if (updateParamNames)
+                {
+                    updateParamNames = false;
+                    sensitivityAnalysisRheobase.SetParameters(true, parameters.Keys.ToArray());
+                    sensitivityAnalysisFiring.SetParameters(false, parameters.Keys.ToArray());
+                    gaControl.ResetParameters(parameters);
+                }
+                FirstRun();
+            }
+        }
         private void NumBox_ValueChanged(object sender, EventArgs e)
         {
             if (cbAutoDrawPlots.Checked && sender is NumericUpDown)
