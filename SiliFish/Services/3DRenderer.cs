@@ -65,7 +65,7 @@ namespace SiliFish.Services
             string sX = newX.ToString(GlobalSettings.CoordinateFormat);
             string sY = newY.ToString(GlobalSettings.CoordinateFormat);
             string sZ = newZ.ToString(GlobalSettings.CoordinateFormat);
-            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellGroup}\",\"s\":{cell.Somite},\"crd\":\"{cell.Coordinate}\",fx:{sX},fy:{sY},fz:{sZ}  }}";
+            return $"{{\"id\":\"{cell.ID}\",\"g\":\"{cell.CellPool}\",\"s\":{cell.Somite},\"crd\":\"{cell.Coordinate}\",fx:{sX},fy:{sY},fz:{sZ}  }}";
         }
         private string CreateNodeDataPoints(CellPool pool, int minSomite, int maxSomite)
         {
@@ -215,7 +215,7 @@ namespace SiliFish.Services
             html.Replace("__DORSAL_HEAD__", dorsalHead);
 
             List<string> colors = new();
-            pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
+            pools.ForEach(pool => colors.Add($"\"{pool.ID}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 
             return html.ToString();

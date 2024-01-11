@@ -31,7 +31,9 @@ namespace SiliFish.DynamicUnits.Firing
         private Dictionary<double, double> intervals = null;
         private Dictionary<double, (double Freq, double End)> spikeFreqs = null;
         private Dictionary<double, (double Freq, double End)> burstFreqs = null;
-        private bool analyzed = false;
+        private bool tausCalculated = false;
+        public bool SpikesCreated = false;
+        private bool patternized = false;
         private bool followedByQuiescence;
         private bool decreasingIntervals;
         private bool increasingIntervals;
@@ -198,7 +200,7 @@ namespace SiliFish.DynamicUnits.Firing
         {
             get
             {
-                if (!analyzed)
+                if (!patternized)
                     DefineSpikingPattern();
                 return burstsOrSpikes;
             }
@@ -277,7 +279,7 @@ namespace SiliFish.DynamicUnits.Firing
             TauRise = new();
             SpikeList = new();
             spikeDelay = double.NaN;
-            analyzed = false;
+            patternized = false;
         }
 
         public DynamicsStats(DynamicsParam settings, double[] V, double dt, double Vthreshold, int analysisStart, int analysisEnd)
@@ -298,7 +300,7 @@ namespace SiliFish.DynamicUnits.Firing
             SpikeList = new();
             spikeDelay = double.NaN;
             CreateSpikeList(Vthreshold);
-            analyzed = false;
+            patternized = false;
             this.analysisStart = analysisStart;
             this.analysisEnd = analysisEnd;
         }
@@ -399,17 +401,76 @@ namespace SiliFish.DynamicUnits.Firing
 
         public void CreateSpikeList(double Vthreshold)
         {
-            if (analyzed) return;
+            if (SpikesCreated) return;
             SpikeList.Clear();
-            foreach (int i in Enumerable.Range(1, VList.Length - 2))
+            for (int i = 1; i <= VList.Length - 2; i++)
             {
                 if (VList[i] > Vthreshold && VList[i] > VList[i - 1] && VList[i] > VList[i + 1])
                     SpikeList.Add(i);
+                while (VList[i] > Vthreshold && i <= VList.Length - 2)
+                    i++;
             }
+            SpikesCreated = true;
+        }
+
+        public void CalculateTaus(CellCore cellCore, double deltaT)
+        {
+            if (tausCalculated) return;
+            CreateSpikeList(cellCore.Vthreshold);
+            bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
+            double decayStart = 0, riseStart = 0;
+            TauDecay.Clear();
+            TauRise.Clear();
+            bool spike;
+            double V;
+            double Vstart = cellCore.Vr;
+            int iMax = VList.Length;
+            for (int tIndex = 0; tIndex < iMax; tIndex++)
+            {
+                V = VList[tIndex];
+                spike = SpikeList.Contains(tIndex);
+                //if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
+                //V <= Vmax - 0.37 * (Vmax - Vreset) => V <= 0.63 Vmax + 0.37 Vreset
+                if (onDecay && !tauDecaySet && V <= 0.63 * cellCore.Vmax + 0.37 * cellCore.Vreset)
+                {
+                    TauDecay.Add(deltaT * tIndex, deltaT * (tIndex - decayStart));
+                    tauDecaySet = true;
+                }
+                //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
+                //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
+                //Vstart is used instead of Vr
+                else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * cellCore.Vmax + 0.37 * Vstart)
+                {
+                    TauRise.Add(deltaT * tIndex, deltaT * (tIndex - riseStart));
+                    tauRiseSet = true;
+                    riseStart = 0;
+                }
+                else if (!onRise && tIndex > 0 && V > VList[tIndex - 1] + GlobalSettings.VNoise && (V - cellCore.Vr > GlobalSettings.VNoise))//Vr is used instead of Vt
+                {
+                    onRise = true;
+                    Vstart = V;
+                    tauRiseSet = false;
+                    riseStart = tIndex;
+                }
+                else if (onDecay && tIndex > 0 && V > VList[tIndex - 1])
+                {
+                    onDecay = false;
+                    tauDecaySet = false;
+                }
+                if (spike)
+                {
+                    onRise = false;
+                    tauRiseSet = false;
+                    onDecay = true;
+                    tauDecaySet = false;
+                    decayStart = tIndex;
+                }
+            }
+            tausCalculated = true;
         }
         public void DefineSpikingPattern()
         {
-            if (analyzed) return;
+            if (patternized) return;
             burstsOrSpikes = new();
             int stimulusStart = StimulusArray?.ToList().FindIndex(i => i > 0) ?? analysisStart;
             int stimulusEnd = StimulusArray?.ToList().FindLastIndex(i => i > 0) ?? analysisEnd;
@@ -421,7 +482,7 @@ namespace SiliFish.DynamicUnits.Firing
             if (SpikeList.Count == 0)
             {
                 firingPattern = FiringPattern.NoSpike;
-                analyzed = true;
+                patternized = true;
                 return;
             }
             double firstStimulusTime = stimulusStart * dt;
@@ -431,14 +492,31 @@ namespace SiliFish.DynamicUnits.Firing
             double lastSpikeTime = SpikeList[^1] * dt;
             double quiescence = tonicPadding;
             if (Intervals_ms.Values.Any())
+            {
                 quiescence = Intervals_ms.Values.Average();
+                if (intervals.Count > 1)
+                {
+                    decreasingIntervals = increasingIntervals = true;
+                    double[] intervalValues = intervals.Values.ToArray();
+                    for (int i = 0; i < intervals.Count -1; i++)
+                    {
+                        if (intervalValues[i] < intervalValues[i + 1] - GlobalSettings.Epsilon)
+                            decreasingIntervals = false;
+                        if (intervalValues[i] > intervalValues[i + 1] + GlobalSettings.Epsilon)
+                            increasingIntervals = false;
+                        if (!increasingIntervals && !decreasingIntervals)
+                            break;
+                    }
+                }
+            }
             followedByQuiescence = lastStimulusTime - lastSpikeTime >= quiescence;
+
 
             if (SpikeList.Count == 1)
             {
                 firingRhythm = FiringRhythm.Phasic;
                 firingPattern = FiringPattern.Spiking;
-                analyzed = true;
+                patternized = true;
                 return;
             }
             bool hasClusters = HasClusters();
@@ -455,7 +533,7 @@ namespace SiliFish.DynamicUnits.Firing
                 lastInterval = quiescence;
             followedByQuiescence = lastStimulusTime - lastSpikeTime >= lastInterval + tonicPadding;
             SetFiringPatternOfList();
-            analyzed = true;
+            patternized = true;
         }
 
 

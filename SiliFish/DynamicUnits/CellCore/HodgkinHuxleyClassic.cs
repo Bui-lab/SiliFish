@@ -175,7 +175,7 @@ namespace SiliFish.DynamicUnits
             dyn.SecLists.Add("I_L", new double[I.Length]);
             return dyn;
         }
-        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        public override void UpdateAdditionalDynamicStats(DynamicsStats dyn, int tIndex)
         {
             double[] nList = dyn.SecLists["n"];
             double[] mList = dyn.SecLists["m"];

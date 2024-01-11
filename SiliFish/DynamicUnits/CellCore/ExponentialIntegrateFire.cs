@@ -45,6 +45,7 @@ namespace SiliFish.DynamicUnits
 
         public override double GetNextVal(double Stim, ref bool spike)
         {
+            spike = false;
             // ODE eqs
             if (V >= Vt && V < Vmax)
             {

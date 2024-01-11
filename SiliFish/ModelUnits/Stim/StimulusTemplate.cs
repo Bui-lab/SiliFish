@@ -55,7 +55,7 @@ namespace SiliFish.ModelUnits.Stim
         public override string GeneratedName()
         {
             return $"Stim to {TargetPool}";
-        }        
+        }
         public override int CompareTo(ModelUnitBase otherbase)
         {
             StimulusTemplate other = otherbase as StimulusTemplate;

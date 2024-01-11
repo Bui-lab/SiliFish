@@ -137,7 +137,7 @@ namespace SiliFish.DynamicUnits
             }
             return spike;
         }
-        public virtual double CalculateRheoBase(double maxRheobase, double sensitivity, double infinity_ms, double dt, double warmup_ms = 100, double cooldown_ms = 100)
+        public virtual double CalculateRheoBase(double maxRheobase, double sensitivity, double infinity_ms, double dt, double warmup_ms = 10, double cooldown_ms = 10)
         {
             Initialize();
             int infinity = (int)(infinity_ms / dt);
@@ -153,7 +153,7 @@ namespace SiliFish.DynamicUnits
             {
                 foreach (int i in Enumerable.Range(warmup, infinity))
                     I[i] = curI;
-                if (DoesSpike(I, warmup))
+                if (DoesSpike(I, warmup - 1))
                 {
                     rheobase = curI;
                     curI = (curI + minI) / 2;
@@ -168,7 +168,7 @@ namespace SiliFish.DynamicUnits
             {
                 foreach (int i in Enumerable.Range(warmup, infinity))
                     I[i] = minI;
-                if (DoesSpike(I, warmup))
+                if (DoesSpike(I, warmup - 1))
                     rheobase = minI;
             }
             return (double)rheobase;
@@ -186,14 +186,12 @@ namespace SiliFish.DynamicUnits
             DynamicsStats dyn = new(null, I, deltaT);
             return dyn;
         }
-        public virtual void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        public virtual void UpdateAdditionalDynamicStats(DynamicsStats dyn, int tIndex)
         {
         }
         public virtual DynamicsStats SolveODE(double[] I)
         {
             Initialize();
-            bool onRise = false, tauRiseSet = false, onDecay = false, tauDecaySet = false;
-            double decayStart = 0, riseStart = 0;
             int iMax = I.Length;
             DynamicsStats dyn = CreateDynamicsStats(I);
 
@@ -202,44 +200,12 @@ namespace SiliFish.DynamicUnits
             {
                 GetNextVal(I[tIndex], ref spike);
                 dyn.VList[tIndex] = V;
-                UpdateDynamicStats(dyn, tIndex);
-                //if passed the 0.37 of the drop (the difference between Vmax and Vreset (or c)): 
-                //V <= Vmax - 0.37 * (Vmax - c) => V <= 0.63 Vmax - 0.37 c
-                if (onDecay && !tauDecaySet && V <= 0.63 * Vmax - 0.37 * Vreset)
-                {
-                    dyn.TauDecay.Add(deltaT * tIndex, deltaT * (tIndex - decayStart));
-                    tauDecaySet = true;
-                }
-                //if passed the 0.63 of the rise (the difference between between Vmax and Vr): 
-                //V >= 0.63 * (Vmax - Vr) + Vr => V >= 0.63 Vmax + 0.37 Vr
-                else if (onRise && !tauRiseSet && riseStart > 0 && V >= 0.63 * Vmax + 0.37 * Vr)
-                {
-                    dyn.TauRise.Add(deltaT * tIndex, deltaT * (tIndex - riseStart));
-                    tauRiseSet = true;
-                    riseStart = 0;
-                }
-                else if (!onRise && (V - Vr > 0))//Vr is used instead of Vt
-                {
-                    onRise = true;
-                    tauRiseSet = false;
-                    riseStart = tIndex;
-                }
-                else if (onDecay && tIndex > 0 && V > dyn.VList[tIndex - 1])
-                {
-                    onDecay = false;
-                    tauDecaySet = false;
-                }
-                if (spike)
-                {
-                    if (tIndex > 0)
-                        dyn.SpikeList.Add(tIndex - 1);
-                    onRise = false;
-                    tauRiseSet = false;
-                    onDecay = true;
-                    tauDecaySet = false;
-                    decayStart = tIndex;
-                }
+                if (spike) 
+                    dyn.SpikeList.Add(tIndex);
+                UpdateAdditionalDynamicStats(dyn, tIndex);
             }
+            dyn.SpikesCreated = true;
+            dyn.CalculateTaus(this, deltaT);
             dyn.DefineSpikingPattern();
 
             return dyn;

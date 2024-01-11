@@ -20,15 +20,26 @@ namespace SiliFish.ModelUnits.Cells
         private double[] tension = null;
 
         [JsonIgnore]
-        public double R { get { return (Core as Leaky_Integrator).R; } set { } }
+        public double R
+        {
+            get
+            {
+                if (Core is Leaky_Integrator clr)
+                    return clr.R;
+                if (Core is LeakyIntegrateAndFire clrf)
+                    return clrf.R;
+                return 0;
+            }
+        }        
+        
         [JsonIgnore]
-        public double[] RelativeTension { get { return (Core as Leaky_Integrator).CalculateRelativeTension(V); } }
+        public double[] RelativeTension { get { return (Core as ContractibleCellCore).CalculateRelativeTension(V); } }
         [JsonIgnore]
         public double[] Tension 
         { 
             get 
             { 
-                tension ??= (Core as Leaky_Integrator).CalculateTension(V);
+                tension ??= (Core as ContractibleCellCore).CalculateTension(V);
                 return tension;
             } 
         }

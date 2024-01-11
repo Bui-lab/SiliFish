@@ -4,15 +4,25 @@ using SiliFish.ModelUnits.Parameters;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.DynamicUnits
 {
-    public class LeakyIntegrateAndFire : Leaky_Integrator
+    public class LeakyIntegrateAndFire : ContractibleCellCore
     {
+        [Description("Resistance")]
+        public double R { get; set; } = 10;
+
+        [Description("Capacitance")]
+        public double C { get; set; } = 1;
+
+        [JsonIgnore, Browsable(false)]
+        public double TimeConstant { get { return R * C; } }
+
         [Description("The threshold membrane potential for a spike.")]
         public double Vt { get; set; } = -57;
-        [Description("Reset membrane potential after a spike.")]
+        [Description("Reset membrane potential after a spike."), Browsable(true)]
         public override double Vreset { get; set; } = -50;
 
         [JsonIgnore, Browsable(false)]
@@ -68,7 +78,7 @@ namespace SiliFish.DynamicUnits
             dyn.SecLists.Add("Rel. Tension", new double[I.Length]);
             return dyn;
         }
-        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        public override void UpdateAdditionalDynamicStats(DynamicsStats dyn, int tIndex)
         {
             double[] tensionList = dyn.SecLists["Rel. Tension"];
             tensionList[tIndex] = CalculateRelativeTension(V);

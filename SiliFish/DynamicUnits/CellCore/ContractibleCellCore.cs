@@ -21,13 +21,10 @@ namespace SiliFish.DynamicUnits
         public double Va { get; set; }
 
         [Description("Maximum tension")]
-        public double Tmax { get; set; }
-
-        [Description("Contraction threshold potential to determine rheobase for non-spiking cores")]
-        public double Vcontraction { get; set; } = GlobalSettings.BiologicalMaxPotential;
+        public double Tmax { get; set; } = 1;
 
         [Description("Slope factor")]// [Dulhunty 1992 (Prog. Biophys)]
-        public double ka { get; set; }
+        public double ka { get; set; } = 1;
 
         //formula from [Dulhunty 1992 (Prog. Biophys)]
         public double CalculateRelativeTension(double? Vm = null) //if Vm is null, current V value is used
