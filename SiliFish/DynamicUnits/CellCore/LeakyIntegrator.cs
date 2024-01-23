@@ -15,13 +15,18 @@ namespace SiliFish.DynamicUnits
     public class Leaky_Integrator : ContractibleCellCore
     {
         [Description("Resistance")]
-        public double R { get; set; } 
+        public double R { get; set; } = 10;
 
         [Description("Capacitance")]
-        public double C { get; set; }
+        public double C { get; set; } = 1;
 
         [JsonIgnore, Browsable(false)]
         public double TimeConstant { get { return R * C; } }
+
+        [Description("Contraction threshold potential to determine rheobase for non-spiking cores")]
+        public double Vcontraction { get; set; } = GlobalSettings.BiologicalMaxPotential;
+
+        public override double Vthreshold { get => Vcontraction; set => Vcontraction = value; }
         protected override void Initialize()
         {
             V = Vr;
@@ -68,13 +73,14 @@ namespace SiliFish.DynamicUnits
         public override double GetNextVal(double Stim, ref bool spike)
         {
             double I = Stim;
-
+            spike = false;
             // ODE eqs
             double dv = (-1 / (R * C)) * (V - Vr) + I / C;
             double vNew = V + dv * deltaT;
+            if (V < Vcontraction && vNew >= Vcontraction) 
+                spike = true;
             V = vNew;
             if (V >= Vmax) V = Vmax;
-            if (V > Vcontraction) spike = true;
             return V;
         }
         public override DynamicsStats CreateDynamicsStats(double[] I)
@@ -84,7 +90,7 @@ namespace SiliFish.DynamicUnits
             dyn.SecLists.Add("Tension", new double[I.Length]);
             return dyn;
         }
-        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        public override void UpdateAdditionalDynamicStats(DynamicsStats dyn, int tIndex)
         {
             double[] RelTensionList = dyn.SecLists["Rel. Tension"];
             double[] TensionList = dyn.SecLists["Tension"];

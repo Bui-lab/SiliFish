@@ -128,7 +128,7 @@ namespace SiliFish.DynamicUnits
             dyn.SecLists.Add("u", new double[I.Length]);
             return dyn;
         }
-        public override void UpdateDynamicStats(DynamicsStats dyn, int tIndex)
+        public override void UpdateAdditionalDynamicStats(DynamicsStats dyn, int tIndex)
         {
             double[] feedbackCurrent = dyn.SecLists["u"];
             feedbackCurrent[tIndex] = u;

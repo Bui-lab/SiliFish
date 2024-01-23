@@ -123,37 +123,46 @@ namespace SiliFish.UI.Controls
             ItemsSort?.Invoke(this, new EventArgs());
         }
 
-        private void SetActive(object item, int index, bool active)
+        private void SetActive(object item, int index, bool active, bool invoke)
         {
             item.SetPropertyValue("Active", active);
             listBox.Items[index] = item;//to refresh text
-            ItemToggleActive?.Invoke(item, new EventArgs());
+            if (invoke)
+                ItemToggleActive?.Invoke(item, new EventArgs());
         }
         private void miActivate_Click(object sender, EventArgs e)
         {
+            bool invoke = listBox.SelectedItems.Count == 1;
             foreach (int ind in listBox.SelectedIndices.Cast<int>().ToList())
             {
-                SetActive(listBox.Items[ind], ind, true);
+                SetActive(listBox.Items[ind], ind, true, invoke);
             }
+            if (!invoke)
+                ItemToggleActive?.Invoke(null, new EventArgs());
         }
 
         private void miDeactivate_Click(object sender, EventArgs e)
         {
+            bool invoke = listBox.SelectedItems.Count == 1;
             foreach (int ind in listBox.SelectedIndices.Cast<int>().ToList())
             {
-                SetActive(listBox.Items[ind], ind, false);
+                SetActive(listBox.Items[ind], ind, false, invoke);
             }
+            if (!invoke)
+                ItemToggleActive?.Invoke(null, new EventArgs());
         }
         private void miActivateAll_Click(object sender, EventArgs e)
         {
             foreach (int index in Enumerable.Range(0, listBox.Items.Count))
-                SetActive(listBox.Items[index], index, true);
+                SetActive(listBox.Items[index], index, active: true, invoke: false);
+            ItemToggleActive?.Invoke(null, new EventArgs());
         }
 
         private void miDeactivateAll_Click(object sender, EventArgs e)
         {
             foreach (int index in Enumerable.Range(0, listBox.Items.Count))
-                SetActive(listBox.Items[index], index, false);
+                SetActive(listBox.Items[index], index, active: false, invoke: false);
+            ItemToggleActive?.Invoke(null, new EventArgs());
         }
 
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)

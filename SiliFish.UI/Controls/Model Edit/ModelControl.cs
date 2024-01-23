@@ -1388,7 +1388,7 @@ namespace SiliFish.UI.Controls
         {
             if (listStimuli.SelectedIndices.Any())
             {
-                if (MessageBox.Show("Do you want to delete selected stimuli?", "Confirmation") != DialogResult.OK)
+                if (MessageBox.Show("Do you want to delete selected stimuli?", "Confirmation", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
                 foreach (object obj in listStimuli.SelectedItems)
                 {

@@ -525,7 +525,7 @@ namespace SiliFish.UI.Controls
                 if (tabOutputs.SelectedTab == t2DRender)
                     await webView2DRender.ExecuteScriptAsync($"SelectCellPool('{pool.ID}');");
                 else
-                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.CellGroup}');");//TODO for 3 D - both left and right pools are displayed
+                    await webView3DRender.ExecuteScriptAsync($"SelectCellPool('{pool.ID}');");
             }
             else if (unitToPlot is Cell cell)
             {
@@ -791,20 +791,15 @@ namespace SiliFish.UI.Controls
                 (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection, iStart, iEnd);
             }
 
-            if (lastPlot != null &&
-                lastPlot.PlotSubset.Equals(plotsubset) &&
-                lastPlot.PlotType.Equals(PlotType) &&
-                lastPlot.Selection != null && lastPlot.Selection.Equals(plotSelection))//replot the same plot
+            if (lastPlot != null && lastPlot.PlotType.Equals(PlotType) &&
+                lastPlot.Selection is PlotSelectionMultiCells lpsm && plotSelection is PlotSelectionMultiCells psm)
             {
-                if (lastPlot.Selection is PlotSelectionMultiCells lpsm && plotSelection is PlotSelectionMultiCells psm)
+                if (PlotType.GetGroup() == "current" && lpsm.Equals(psm))
                 {
-                    //TODO lpsm.Equals(psm) returns false even if they are equal. Investigate
-                    if (PlotType.GetGroup() == "current")
-                    {
-                        psm.CombineJunctions = !lpsm.CombineJunctions;
-                    }
+                    psm.CombineJunctions = !lpsm.CombineJunctions;
                 }
             }
+
             lastPlot = new()
             {
                 PlotSubset = plotsubset,

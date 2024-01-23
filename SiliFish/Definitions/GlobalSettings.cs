@@ -17,6 +17,7 @@ namespace SiliFish.Definitions
         public static string TempFolder = Path.GetTempPath() + "SiliFish";
         public static string OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         public static double Epsilon = 0.00001;
+        public static double VNoise = 0.001;
         public static double BiologicalMinPotential = -100;
         public static double BiologicalMaxPotential = 100;
         public static double FileSizeWarningLimit = 20;//in MB
@@ -91,6 +92,11 @@ namespace SiliFish.Definitions
 
         [Description("The maximum value between two numbers to consider them equal."), Category("Const")]
         public double Epsilon { get { return GlobalSettings.Epsilon; } set { GlobalSettings.Epsilon = value; } }
+
+        [Description("The minimum value consider it noise rather than a change in membrane potential."), 
+            DisplayName("Memb. Pot. Noise"),
+            Category("Const")]
+        public double VNoise { get { return GlobalSettings.VNoise; } set { GlobalSettings.VNoise = value; } }
 
         [Description("The maximum memory usage (in GB) allowed before the user is given the option to turn off junction level current tracking."), 
             DisplayName("Memory warning limit"),

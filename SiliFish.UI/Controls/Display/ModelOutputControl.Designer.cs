@@ -236,10 +236,10 @@
             // 
             // t2DRender
             // 
-            t2DRender.Controls.Add(webView2DRender);
             t2DRender.Controls.Add(p2DRenderOptions);
             t2DRender.Controls.Add(gr2DLegend);
             t2DRender.Controls.Add(p2DRender);
+            t2DRender.Controls.Add(webView2DRender);
             t2DRender.Location = new Point(4, 24);
             t2DRender.Name = "t2DRender";
             t2DRender.Size = new Size(694, 767);
@@ -254,10 +254,10 @@
             webView2DRender.CreationProperties = null;
             webView2DRender.DefaultBackgroundColor = Color.White;
             webView2DRender.Dock = DockStyle.Fill;
-            webView2DRender.Location = new Point(0, 125);
+            webView2DRender.Location = new Point(0, 0);
             webView2DRender.Name = "webView2DRender";
             webView2DRender.Padding = new Padding(10);
-            webView2DRender.Size = new Size(694, 642);
+            webView2DRender.Size = new Size(694, 767);
             webView2DRender.TabIndex = 1;
             webView2DRender.ZoomFactor = 1D;
             webView2DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
@@ -505,10 +505,10 @@
             // 
             // t3DRender
             // 
-            t3DRender.Controls.Add(webView3DRender);
             t3DRender.Controls.Add(p3DRenderOptions);
             t3DRender.Controls.Add(gr3DLegend);
             t3DRender.Controls.Add(p3DRender);
+            t3DRender.Controls.Add(webView3DRender);
             t3DRender.Location = new Point(4, 24);
             t3DRender.Name = "t3DRender";
             t3DRender.Size = new Size(694, 767);
@@ -523,10 +523,10 @@
             webView3DRender.CreationProperties = null;
             webView3DRender.DefaultBackgroundColor = Color.White;
             webView3DRender.Dock = DockStyle.Fill;
-            webView3DRender.Location = new Point(0, 125);
+            webView3DRender.Location = new Point(0, 0);
             webView3DRender.Name = "webView3DRender";
             webView3DRender.Padding = new Padding(10);
-            webView3DRender.Size = new Size(694, 642);
+            webView3DRender.Size = new Size(694, 767);
             webView3DRender.TabIndex = 0;
             webView3DRender.ZoomFactor = 1D;
             webView3DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
