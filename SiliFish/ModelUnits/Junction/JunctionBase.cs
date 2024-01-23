@@ -90,14 +90,15 @@ namespace SiliFish.ModelUnits.Junction
             int nmax = nMax;
             if (inputCurrent != null)
                 return;//Already populated
-            InitForSimulation(nmax, true, dt);
+            int uniqueID = 0;
+            InitForSimulation(nmax, true, dt, ref uniqueID);
             if (!Active) return;
             foreach (var index in Enumerable.Range(1, nmax - 1))
             {
                 NextStep(index);
             }
         }
-        public virtual void InitForSimulation(int nmax, bool trackCurrent, double dt)
+        public virtual void InitForSimulation(int nmax, bool trackCurrent, double dt, ref int _)
         {
             InitForSimulation(dt);
             if (trackCurrent)
@@ -108,6 +109,5 @@ namespace SiliFish.ModelUnits.Junction
             else
                 inputCurrent = null;
         }
-
     }
 }

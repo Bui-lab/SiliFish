@@ -11,11 +11,13 @@ using SiliFish.UI.Definitions;
 using SiliFish.UI.EventArguments;
 using System.Diagnostics.Eventing.Reader;
 using SiliFish.UI.Services;
+using SiliFish.UI.Dialogs;
 
 namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
+        private bool multiRunMode = false;
         private static bool showAboutForm = true;
         public static bool currentPlotWarning = false;
         private DateTime runStart;
@@ -179,7 +181,7 @@ namespace SiliFish.UI
             }
             finally
             {
-                if (RunningModel != null)//the window might have been closed
+                if (!multiRunMode && RunningModel != null)//the window might have been closed
                 {
                     if (RunningModel.ModelRun)
                         Invoke(CompleteRun);
@@ -222,21 +224,9 @@ namespace SiliFish.UI
             modelOutputControl.SetRunningModel(RunningModel);
             modelOutputControl.CompleteRun();
         }
-        private void btnRun_Click(object sender, EventArgs e)
+
+        private bool PreRun()
         {
-            if (btnRun.Text == "Stop Run")
-            {
-                if (MessageBox.Show("Do you want to stop the stimulation? You can access the values till the point it was executed.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                    return;
-                if (RunningModel != null)
-                    RunningModel.CancelRun = true;
-                return;
-            }
-            if (RunningModel?.ModelRun ?? false)
-            {
-                if (MessageBox.Show("Do you want to run the stimulation? Old simulation values will be lost.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                    return;
-            }
             SaveLastRunSettings();
             runStart = DateTime.Now;
             lRunTime.Text = "";
@@ -246,13 +236,13 @@ namespace SiliFish.UI
             timerRun.Enabled = true;
 
             RefreshModel();
-            if (RunningModel == null) return;
+            if (RunningModel == null) return false;
             List<string> errors = new();
             if (!RunningModel.CheckValues(ref errors))
             {
                 MessageBox.Show($"There are errors in the model. Please correct them before running a simulation: \r\n" +
                     $"{string.Join("\r\n", errors)}", "Error");
-                return;
+                return false;
             }
             RunningModel.JunctionCurrentTrackingOn = GlobalSettings.JunctionLevelTracking;
             if (GlobalSettings.JunctionLevelTracking)
@@ -272,7 +262,7 @@ namespace SiliFish.UI
                     else if (dlg == DialogResult.No)
                         RunningModel.JunctionCurrentTrackingOn = true;
                     else
-                        return;
+                        return false;
                 }
             }
             RunningModel.RunParam = new()
@@ -283,6 +273,26 @@ namespace SiliFish.UI
                 TrackJunctionCurrent = RunningModel.JunctionCurrentTrackingOn
             };
             btnRun.Text = "Stop Run";
+            return true;
+        }
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            if (btnRun.Text == "Stop Run")
+            {
+                if (MessageBox.Show("Do you want to stop the stimulation? You can access the values till the point it was executed.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    return;
+                if (RunningModel != null)
+                    RunningModel.CancelRun = true;
+                return;
+            }
+            if (RunningModel?.ModelRun ?? false)
+            {
+                if (MessageBox.Show("Do you want to run the stimulation? Old simulation values will be lost.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    return;
+            }
+            if (!PreRun())
+                return;
+
             Task.Run(RunModel);
         }
 
@@ -594,15 +604,87 @@ namespace SiliFish.UI
             frmDynamics.SaveVisible = false;
             frmDynamics.Show();
         }
-        private void miToolsGenerateStatsData_Click(object sender, EventArgs e)
+
+        private bool StatsWarning()
         {
             string msg = "Exporting the stats data may take a while depending on the duration of the simulation and the number of cells." +
                 " Do you want to continue?";
             if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                return;
+                return false;
+            return true;
+
+        }
+        private void miToolsStatsSpikeStats_Click(object sender, EventArgs e)
+        {
+            if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveStatsDataToFile(RunningModel, saveFileCSV.FileName);
+                ModelFile.SaveSpikeFreqStats(RunningModel, saveFileCSV.FileName);
+            }
+        }
+
+        private void miToolsStatsSpikes_Click(object sender, EventArgs e)
+        {
+            if (!StatsWarning()) return;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                ModelFile.SaveSpikes(RunningModel, saveFileCSV.FileName);
+            }
+        }
+
+        private void miToolsStatsTBFs_Click(object sender, EventArgs e)
+        {
+            if (!StatsWarning()) return;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                ModelFile.SaveTBFs(RunningModel, saveFileCSV.FileName);
+            }
+        }
+
+        private void miToolsStatsFull_Click(object sender, EventArgs e)
+        {
+            if (!StatsWarning()) return;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                ModelFile.SaveFullStats(RunningModel, saveFileCSV.FileName);
+            }
+        }
+        private void miToolsRunForStats_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //TODO run in another thread - use the progress bar
+                RunTimeStatsDialog runTimeStatsDialog = new();
+                runTimeStatsDialog.ShowDialog();
+                int num = runTimeStatsDialog.NumOfSimulations;
+                if (num <= 0) return;
+                if (!PreRun()) return;
+                Application.DoEvents();
+                multiRunMode = true;
+                List<string> list = [];
+                for (int i = 0; i < num; i++)
+                {
+                    DateTime curStart = DateTime.Now;
+                    RunModel();
+                    TimeSpan ts = DateTime.Now - curStart;
+                    list.Add($"Simulation {i + 1}: {ts}");
+                }
+                if (RunningModel != null)//the window might have been closed
+                {
+                    if (RunningModel.ModelRun)
+                        CompleteRun();
+                    else
+                        CancelRun();
+                }
+                TextDisplayer.Display($"Run time stats", list, saveFileText);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+            finally
+            {
+                multiRunMode = false;
             }
         }
         private void miToolsSettings_Click(object sender, EventArgs e)

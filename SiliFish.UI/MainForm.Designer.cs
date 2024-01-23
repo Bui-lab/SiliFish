@@ -49,6 +49,14 @@ namespace SiliFish.UI
             miToolsSep1 = new ToolStripSeparator();
             miToolsCellularDynamics = new ToolStripMenuItem();
             miToolsSep2 = new ToolStripSeparator();
+            miToolsGenerateStatsData = new ToolStripMenuItem();
+            miToolsStatsSpikeStats = new ToolStripMenuItem();
+            miToolsStatsSpikes = new ToolStripMenuItem();
+            miToolsStatsTBFs = new ToolStripMenuItem();
+            miToolsSep3 = new ToolStripSeparator();
+            miToolsStatsFull = new ToolStripMenuItem();
+            miToolsRunForStats = new ToolStripMenuItem();
+            miToolsSepStats = new ToolStripSeparator();
             miToolsSettings = new ToolStripMenuItem();
             mView = new ToolStripMenuItem();
             miViewOutputFolder = new ToolStripMenuItem();
@@ -86,7 +94,6 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
-            miToolsGenerateStatsData = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -198,7 +205,7 @@ namespace SiliFish.UI
             // 
             // mTools
             // 
-            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsGenerateStatsData, miToolsSep2, miToolsSettings });
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolsRunForStats, miToolsSepStats, miToolsSettings });
             mTools.Name = "mTools";
             mTools.Size = new Size(46, 19);
             mTools.Text = "Tools";
@@ -226,6 +233,58 @@ namespace SiliFish.UI
             // 
             miToolsSep2.Name = "miToolsSep2";
             miToolsSep2.Size = new Size(177, 6);
+            // 
+            // miToolsGenerateStatsData
+            // 
+            miToolsGenerateStatsData.DropDownItems.AddRange(new ToolStripItem[] { miToolsStatsSpikeStats, miToolsStatsSpikes, miToolsStatsTBFs, miToolsSep3, miToolsStatsFull });
+            miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
+            miToolsGenerateStatsData.Size = new Size(180, 22);
+            miToolsGenerateStatsData.Text = "Generate Stats Data";
+            // 
+            // miToolsStatsSpikeStats
+            // 
+            miToolsStatsSpikeStats.Name = "miToolsStatsSpikeStats";
+            miToolsStatsSpikeStats.Size = new Size(188, 22);
+            miToolsStatsSpikeStats.Text = "Spike Frequency Stats";
+            miToolsStatsSpikeStats.Click += miToolsStatsSpikeStats_Click;
+            // 
+            // miToolsStatsSpikes
+            // 
+            miToolsStatsSpikes.Name = "miToolsStatsSpikes";
+            miToolsStatsSpikes.Size = new Size(188, 22);
+            miToolsStatsSpikes.Text = "Spikes";
+            miToolsStatsSpikes.Click += miToolsStatsSpikes_Click;
+            // 
+            // miToolsStatsTBFs
+            // 
+            miToolsStatsTBFs.Name = "miToolsStatsTBFs";
+            miToolsStatsTBFs.Size = new Size(188, 22);
+            miToolsStatsTBFs.Text = "Tail Beat Frequencies";
+            miToolsStatsTBFs.Click += miToolsStatsTBFs_Click;
+            // 
+            // miToolsSep3
+            // 
+            miToolsSep3.Name = "miToolsSep3";
+            miToolsSep3.Size = new Size(185, 6);
+            // 
+            // miToolsStatsFull
+            // 
+            miToolsStatsFull.Name = "miToolsStatsFull";
+            miToolsStatsFull.Size = new Size(188, 22);
+            miToolsStatsFull.Text = "Full Stats";
+            miToolsStatsFull.Click += miToolsStatsFull_Click;
+            // 
+            // miToolsRunForStats
+            // 
+            miToolsRunForStats.Name = "miToolsRunForStats";
+            miToolsRunForStats.Size = new Size(180, 22);
+            miToolsRunForStats.Text = "Run for Statistics";
+            miToolsRunForStats.Click += miToolsRunForStats_Click;
+            // 
+            // miToolsSepStats
+            // 
+            miToolsSepStats.Name = "miToolsSepStats";
+            miToolsSepStats.Size = new Size(177, 6);
             // 
             // miToolsSettings
             // 
@@ -313,7 +372,7 @@ namespace SiliFish.UI
             btnGenerateModel.BackColor = Color.FromArgb(96, 125, 139);
             btnGenerateModel.FlatAppearance.BorderColor = Color.LightGray;
             btnGenerateModel.FlatStyle = FlatStyle.Popup;
-            btnGenerateModel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btnGenerateModel.Font = new Font("Segoe UI", 12F);
             btnGenerateModel.ForeColor = Color.White;
             btnGenerateModel.Location = new Point(5, 5);
             btnGenerateModel.Name = "btnGenerateModel";
@@ -464,7 +523,7 @@ namespace SiliFish.UI
             // lRunParameters
             // 
             lRunParameters.AutoSize = true;
-            lRunParameters.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lRunParameters.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lRunParameters.Location = new Point(8, 8);
             lRunParameters.Name = "lRunParameters";
             lRunParameters.Size = new Size(133, 15);
@@ -551,13 +610,6 @@ namespace SiliFish.UI
             // openFileExcel
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
-            // 
-            // miToolsGenerateStatsData
-            // 
-            miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
-            miToolsGenerateStatsData.Size = new Size(180, 22);
-            miToolsGenerateStatsData.Text = "Generate Stats Data";
-            miToolsGenerateStatsData.Click += miToolsGenerateStatsData_Click;
             // 
             // MainForm
             // 
@@ -651,5 +703,12 @@ namespace SiliFish.UI
         private ToolStripMenuItem miToolsSettings;
         private ToolStripSeparator miToolsSep2;
         private ToolStripMenuItem miToolsGenerateStatsData;
+        private ToolStripMenuItem miToolsRunForStats;
+        private ToolStripSeparator miToolsSepStats;
+        private ToolStripMenuItem miToolsStatsSpikeStats;
+        private ToolStripMenuItem miToolsStatsSpikes;
+        private ToolStripMenuItem miToolsStatsTBFs;
+        private ToolStripSeparator miToolsSep3;
+        private ToolStripMenuItem miToolsStatsFull;
     }
 }

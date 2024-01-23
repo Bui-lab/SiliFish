@@ -38,7 +38,7 @@ namespace SiliFish.ModelUnits.Cells
             return (Cell)Activator.CreateInstance(GetTypeOfCell(cellType));
         }
         protected virtual string Discriminator => "cell";
-        protected List<int> spikeTrain = new();
+        protected List<int> spikeTrain = [];
 
         public CellPool CellPool;
         public Coordinate Coordinate;
@@ -188,7 +188,7 @@ namespace SiliFish.ModelUnits.Cells
             ConductionVelocity = double.Parse(values[iter++]);
             string coreType = values[iter++].Trim();
             iter++;//skip rheobase
-            Dictionary<string, double> parameters = new();
+            Dictionary<string, double> parameters = [];
             for (int i = 1; i <= CellCore.CoreParamMaxCount; i++)
             {
                 if (iter > values.Count - 2) break;
@@ -202,7 +202,7 @@ namespace SiliFish.ModelUnits.Cells
             Core = CellCore.CreateCore(coreType, parameters);
             Active = bool.Parse(values[iter++]);
             if (iter < values.Count)
-                TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
+                TimeLine_ms.ImportValues([values[iter++]]);
         }
         
 
@@ -244,8 +244,9 @@ namespace SiliFish.ModelUnits.Cells
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
             if (other is not Cell oc)
-                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" }; List<string> diffs;
-            List<string> differences = base.DiffersFrom(other) ?? new();
+                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"]; 
+            List<string> diffs;
+            List<string> differences = base.DiffersFrom(other) ?? [];
             if (Coordinate.ToString() != oc.Coordinate.ToString())
                 differences.Add($"{ID} Coordinates: {Coordinate} versus {oc.Coordinate}");
 
@@ -274,7 +275,7 @@ namespace SiliFish.ModelUnits.Cells
             if (diffs != null)
                 differences.AddRange(diffs);
 
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -376,7 +377,7 @@ namespace SiliFish.ModelUnits.Cells
         public virtual void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
             if (!gap) return;
-            while (GapJunctions.Any())
+            while (GapJunctions.Count != 0)
             {
                 GapJunction jnc = GapJunctions.First();
                 jnc.Cell2.RemoveJunction(jnc);
@@ -385,22 +386,22 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual bool HasConnections(bool gap, bool chemin, bool chemout)
         {
-            return gap && GapJunctions.Any();
+            return gap && GapJunctions.Count != 0;
         }
         #endregion
 
         #region RunTime
-        public virtual void InitForSimulation(RunParam runParam)
+        public virtual void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
             InitForSimulation(runParam.DeltaT);
             if (ConductionVelocity < GlobalSettings.Epsilon)
                 ConductionVelocity = Model.Settings.cv;
-            Core.Initialize(runParam.DeltaT);
+            Core.Initialize(runParam.DeltaT, ref uniqueID);
             spikeTrain.Clear();
             V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             Stimuli.InitForSimulation(Model.RunParam, Model.rand);
             foreach (GapJunction jnc in GapJunctions)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT, ref uniqueID);
         }
         public virtual void NextStep(int t, double stim, double minV, double maxV)
         {
@@ -486,11 +487,11 @@ namespace SiliFish.ModelUnits.Cells
 
         public virtual double MinGapCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Min(jnc => jnc.InputCurrent?.MinValue(iStart, iEnd) ?? 0) : 0;
+            return GapJunctions != null && GapJunctions.Count != 0 ? GapJunctions.Min(jnc => jnc.InputCurrent?.MinValue(iStart, iEnd) ?? 0) : 0;
         }
         public virtual double MaxGapCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return GapJunctions != null && GapJunctions.Any() ? GapJunctions.Max(jnc => jnc.InputCurrent?.MaxValue(iStart, iEnd) ?? 0) : 0;
+            return GapJunctions != null && GapJunctions.Count != 0 ? GapJunctions.Max(jnc => jnc.InputCurrent?.MaxValue(iStart, iEnd) ?? 0) : 0;
         }
 
         public virtual double MinSynInCurrentValue(int iStart = 0, int iEnd = -1)
@@ -521,8 +522,8 @@ namespace SiliFish.ModelUnits.Cells
 
         public virtual (Dictionary<string, Color>, Dictionary<string, List<double>>) GetGapCurrents()
         {
-            Dictionary<string, Color> colors = new();
-            Dictionary<string, List<double>> AffarentCurrents = new();
+            Dictionary<string, Color> colors = [];
+            Dictionary<string, List<double>> AffarentCurrents = [];
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell2 == this))
             {
                 colors.TryAdd(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);

@@ -40,9 +40,9 @@ namespace SiliFish.ModelUnits.Cells
 
         public Neuron()
         {
-            GapJunctions = new List<GapJunction>();
-            Synapses = new List<ChemicalSynapse>();
-            Terminals = new List<ChemicalSynapse>();
+            GapJunctions = [];
+            Synapses = [];
+            Terminals = [];
         }
         /// <summary>
         /// Used as a template
@@ -56,9 +56,9 @@ namespace SiliFish.ModelUnits.Cells
             Somite = somite;
             Sequence = seq;
             Core = CellCore.CreateCore(coreType, cellParams, model.RunParam.DeltaT);
-            GapJunctions = new List<GapJunction>();
-            Synapses = new List<ChemicalSynapse>();
-            Terminals = new List<ChemicalSynapse>();
+            GapJunctions = [];
+            Synapses = [];
+            Terminals = [];
             TimeLine_ms = timeline;
             ConductionVelocity = cv;
             AscendingAxonLength = ascAxon;
@@ -94,9 +94,9 @@ namespace SiliFish.ModelUnits.Cells
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
             if (other is not Neuron oc)
-                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" };
+                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"];
 
-            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> differences = base.DiffersFrom(other) ?? [];
             List<string> diffs = ListDiffersFrom(Terminals.Select(c => c as ModelUnitBase).ToList(), 
                 oc.Terminals.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)
@@ -106,7 +106,7 @@ namespace SiliFish.ModelUnits.Cells
             if (diffs != null)
                 differences.AddRange(diffs);
 
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -193,7 +193,7 @@ namespace SiliFish.ModelUnits.Cells
             base.DeleteJunctions(gap, chemin, chemout);
             if (chemin)
             {
-                while (Synapses.Any())
+                while (Synapses.Count != 0)
                 {
                     ChemicalSynapse jnc = Synapses.First();
                     jnc.PreNeuron.RemoveJunction(jnc);
@@ -202,7 +202,7 @@ namespace SiliFish.ModelUnits.Cells
             }
             if (chemout)
             {
-                while (Terminals.Any())
+                while (Terminals.Count != 0)
                 {
                     ChemicalSynapse jnc = Terminals.First();
                     jnc.PostCell.RemoveJunction(jnc);
@@ -214,19 +214,19 @@ namespace SiliFish.ModelUnits.Cells
 
         public override bool HasConnections(bool gap, bool chemin, bool chemout)
         {
-            return gap && GapJunctions.Any() ||
-                chemin && Synapses.Any() ||
-                chemout && Terminals.Any();
+            return gap && GapJunctions.Count != 0 ||
+                chemin && Synapses.Count != 0 ||
+                chemout && Terminals.Count != 0;
         }
 
         #endregion
 
         #region Runtime
-        public override void InitForSimulation(RunParam runParam)
+        public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
-            base.InitForSimulation(runParam);
+            base.InitForSimulation(runParam, ref uniqueID);
             foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT);
+                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT, ref uniqueID);
 
         }
 
@@ -286,20 +286,20 @@ namespace SiliFish.ModelUnits.Cells
 
         public override double MinSynInCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return Synapses != null && Synapses.Any() ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Synapses != null && Synapses.Count != 0 ? Synapses.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
         }
         public override double MaxSynInCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return Synapses != null && Synapses.Any() ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Synapses != null && Synapses.Count != 0 ? Synapses.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
         }
 
         public override double MinSynOutCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return Terminals != null && Terminals.Any() ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
+            return Terminals != null && Terminals.Count != 0 ? Terminals.Min(jnc => jnc.InputCurrent.MinValue(iStart, iEnd)) : 0;
         }
         public override double MaxSynOutCurrentValue(int iStart = 0, int iEnd = -1)
         {
-            return Terminals != null && Terminals.Any() ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
+            return Terminals != null && Terminals.Count != 0 ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
         }
         public override bool IsSpiking(int iStart = 0, int iEnd = -1)
         {
@@ -311,8 +311,8 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
-            Dictionary<string, Color> colors = new();
-            Dictionary<string, List<double>> AffarentCurrents = new();
+            Dictionary<string, Color> colors = [];
+            Dictionary<string, List<double>> AffarentCurrents = [];
             foreach (ChemicalSynapse jnc in Synapses)
             {
                 colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
@@ -322,8 +322,8 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetOutgoingSynapticCurrents()
         {
-            Dictionary<string, Color> colors = new();
-            Dictionary<string, List<double>> EfferentCurrents = new();
+            Dictionary<string, Color> colors = [];
+            Dictionary<string, List<double>> EfferentCurrents = [];
             foreach (ChemicalSynapse jnc in Terminals)
             {
                 colors.TryAdd(jnc.PostCell.ID, jnc.PostCell.CellPool.Color);

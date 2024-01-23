@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.DataTypes
 {
@@ -66,7 +63,7 @@ namespace SiliFish.DataTypes
                 case EpisodeStats.InlierInstantFreq:
                     double[] xValuesFull = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
                     double[] yValuesFull = episodes.SelectMany(e => e.InstantFequency).ToArray();
-                    double median = episodes.SelectMany(e => e.InstantFequency).Order().ToArray()[yValuesFull.Count() / 2];
+                    double median = episodes.SelectMany(e => e.InstantFequency).Order().ToArray()[yValuesFull.Length / 2];
                     double avgDuration = yValuesFull.Average();
                     double stdDev = yValuesFull.StandardDeviation();
                     double stdError = stdDev / Math.Sqrt(yValuesFull.Length);

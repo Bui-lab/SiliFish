@@ -65,7 +65,7 @@ namespace SiliFish.ModelUnits.Junction
                 Target = values[iter++].Trim();
                 iter++; //junction type is already read before junction creation
                 string coreType = values[iter++].Trim();
-                Dictionary<string, double> parameters = new();
+                Dictionary<string, double> parameters = [];
                 for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
                     if (iter > values.Count - 2) break;
@@ -85,7 +85,7 @@ namespace SiliFish.ModelUnits.Junction
                     Delay_ms = dd;
                 Active = bool.Parse(values[iter++]);
                 if (iter < values.Count)
-                    TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
+                    TimeLine_ms.ImportValues([values[iter++]]);
             }
             catch (Exception ex)
             {
@@ -161,11 +161,11 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public override void InitForSimulation(int nmax, bool trackCurrent, double dt)
+        public override void InitForSimulation(int nmax, bool trackCurrent, double dt, ref int uniqueID)
         {
-            base.InitForSimulation(nmax, trackCurrent, dt);
+            base.InitForSimulation(nmax, trackCurrent, dt, ref uniqueID);
             RunningModel model = PreNeuron.Model;
-            Core.InitForSimulation(dt);
+            Core.InitForSimulation(dt, ref uniqueID);
             
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / dt);

@@ -18,6 +18,7 @@ using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
+using System.ComponentModel;
 
 namespace SiliFish.UI.Controls
 {
@@ -61,8 +62,9 @@ namespace SiliFish.UI.Controls
         List<Chart> Charts;
         RunningModel RunningModel = null;
         bool rendered2D = false;
+        bool rendered2DFull = false; //whether the 2D rendering is done by hiding in inactive nodes - will need rerendering
         bool rendered3D = false;
-
+        TwoDRenderer TwoDRenderer = new();
 
         public ModelOutputControl()
         {
@@ -74,7 +76,7 @@ namespace SiliFish.UI.Controls
 
 
             pictureBox.MouseWheel += PictureBox_MouseWheel;
-            
+
             cellSelectionPlot.SelectionChanged += CellSelectionPlot_SelectionChanged;
 
             dd3DViewpoint.SelectedIndex = 0;
@@ -277,14 +279,17 @@ namespace SiliFish.UI.Controls
 
         #region Outputs
         #region 2D Rendering
-        private void RenderIn2D()
+        private void RenderIn2D(bool refresh)
         {
             if (RunningModel == null) return;
-            TwoDRenderer modelGenerator = new();
+
+            //If the full rendering has never been done, a brand new 2D rendering need to be created rather than refreshing the old one
+            if (refresh && !cb2DHideNonspiking.Checked && !rendered2DFull)
+                refresh = false;
             List<CellPool> cellPools = RunningModel.CellPools;
-            if (cbHideNonspiking.Checked && RunningModel.ModelRun)
+            if (cb2DHideNonspiking.Checked && RunningModel.ModelRun)
                 cellPools = RunningModel.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
-            string html = modelGenerator.Create2DRendering(RunningModel, cellPools, webView2DRender.Width, webView2DRender.Height,
+            string html = TwoDRenderer.Create2DRendering(RunningModel, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
@@ -293,14 +298,15 @@ namespace SiliFish.UI.Controls
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             rendered2D = true;
+            if (!refresh)
+            {
+                rendered2DFull = !cb2DHideNonspiking.Checked;
+            }
         }
         private void btn2DRender_Click(object sender, EventArgs e)
         {
-            RenderIn2D();
+            RenderIn2D(false);
         }
-
-
-
         private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -345,6 +351,33 @@ namespace SiliFish.UI.Controls
         {
             gr2DLegend.Visible = cb2DLegend.Checked;
         }
+        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DNodeSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (ud2DNodeSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+
+        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DLinkSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
+            if (ud2DLinkSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
+        }
+        private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
+        {
+            p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
+        }
+
+
+        private void cb2DHideNonspiking_CheckedChanged(object sender, EventArgs e)
+        {
+            RenderIn2D(true);
+        }
+
+
         #endregion
 
         #region 3D Rendering
@@ -510,22 +543,10 @@ namespace SiliFish.UI.Controls
             if (ud3DNodeSize.DownClick)
                 await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
         }
-        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        private void cb3DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
         {
-            if (ud2DNodeSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (ud2DNodeSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+            p3DRenderOptions.Visible = cb3DRenderShowOptions.Checked;
         }
-
-        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud2DLinkSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
-            if (ud2DLinkSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
-        }
-
         #endregion
         #region HTML and Windows Plots - Common Functions
 
@@ -948,12 +969,12 @@ namespace SiliFish.UI.Controls
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
                 cmPlot.Enabled = false;
-                btnPlotHTML.Enabled = false;                
-                
+                btnPlotHTML.Enabled = false;
+
                 (string Title, Charts) = GenerateCharts();
 
                 List<Image> Images = WindowsPlotGenerator.PlotCharts(Charts);
-                
+
                 Images?.RemoveAll(img => img == null);
 
                 int ncol = 1; // Images?.Count > 5 ? 2 : 1;
@@ -1165,6 +1186,8 @@ namespace SiliFish.UI.Controls
         double[] lastAnimationTimeArray;
         Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
 
+        public object ModelGenerator { get; private set; }
+
         private void Animate()
         {
             try
@@ -1239,7 +1262,7 @@ namespace SiliFish.UI.Controls
         private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
-                RenderIn2D();
+                RenderIn2D(false);
             else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
                 RenderIn3D();
         }
@@ -1249,15 +1272,7 @@ namespace SiliFish.UI.Controls
             tabOutputs_SelectedIndexChanged(sender, e);
         }
 
-        private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
-        {
-            p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
-        }
 
-        private void cb3DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
-        {
-            p3DRenderOptions.Visible = cb3DRenderShowOptions.Checked;
-        }
     }
 
 }

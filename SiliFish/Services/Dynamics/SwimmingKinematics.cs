@@ -102,7 +102,7 @@ namespace SiliFish.Services.Dynamics
                 }
             }
 
-            Dictionary<string, Coordinate[]> somiteCoordinates = new();
+            Dictionary<string, Coordinate[]> somiteCoordinates = [];
             foreach (int somiteIndex in Enumerable.Range(0, nSpineNode))
             {
                 string somite = "S" + somiteIndex.ToString("000"); //for proper sorting
@@ -194,8 +194,8 @@ namespace SiliFish.Services.Dynamics
         {
             (List<Cell> leftMNs, List<Cell> rightMNs) = model.GetMotoNeurons(somite);
             double episodeBreak = model.KinemParam.EpisodeBreak;
-            List<int> leftSpikes = new();
-            List<int> rightSpikes = new();
+            List<int> leftSpikes = [];
+            List<int> rightSpikes = [];
             int iSkip = (int)(model.RunParam.SkipDuration / model.RunParam.DeltaT);
             foreach (Cell c in leftMNs)
                 leftSpikes.AddRange(c.GetSpikeIndices(iSkip));

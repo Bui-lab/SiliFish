@@ -39,7 +39,7 @@ namespace SiliFish.Helpers
             string filename = Path.GetFileName(path);
             string newfilename= string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
             if (!filename.Equals(newfilename))
-                path.Replace(filename, newfilename);
+                path = path.Replace(filename, newfilename);
             path = string.Join("_", path.Split(Path.GetInvalidPathChars()));
 
             File.WriteAllText(path, content);

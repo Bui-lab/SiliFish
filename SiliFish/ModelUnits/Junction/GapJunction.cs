@@ -151,9 +151,9 @@ namespace SiliFish.ModelUnits.Junction
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public override void InitForSimulation(int nmax, bool trackCurrent, double dt)
+        public override void InitForSimulation(int nmax, bool trackCurrent, double dt, ref int uniqueID)
         {
-            base.InitForSimulation(nmax, trackCurrent, dt);
+            base.InitForSimulation(nmax, trackCurrent, dt, ref uniqueID);
             RunningModel model = Cell1.Model;
             if (FixedDuration_ms != null)
                 duration1 = duration2 = (int)(FixedDuration_ms / dt);

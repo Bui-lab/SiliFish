@@ -24,6 +24,7 @@ namespace SiliFish.Services
         double XMax = double.MinValue, YMax = double.MinValue;
         double XOffset, YOffset;
         double WeightMult;
+        Dictionary<string, (double, double)> HiddenPoolCoordinates;
         Dictionary<string, (double, double)> PoolCoordinates;
         Dictionary<(string, string), int> LinkCounter =new();
 
@@ -136,18 +137,35 @@ namespace SiliFish.Services
             return spreadedPools;
         }
 
-        private List<string> CreatePoolNodes(List<CellPool> pools, int width, int height)
+        private List<string> CreatePoolNodes(List<CellPool> pools, bool refresh, int width, int height)
         {
             if (pools == null || pools.Count == 0)
                 return null;
-            PoolCoordinates = new();
             XMult = 1;
             YMult = 1;
             XOffset = 0;
             YOffset = 0;
 
-            pools.ForEach(GetNewCoordinates);
-
+            if (refresh)
+            {
+                foreach (var item in PoolCoordinates)
+                {
+                    HiddenPoolCoordinates.TryAdd(item.Key, item.Value);                    
+                }
+                PoolCoordinates.Clear();
+                foreach (CellPool pool in pools)
+                {
+                    if (HiddenPoolCoordinates.TryGetValue(pool.CellGroup, out (double, double) value))
+                        PoolCoordinates.TryAdd(pool.CellGroup, value);
+                    else GetNewCoordinates(pool);
+                }
+            }
+            else
+            {
+                HiddenPoolCoordinates = [];
+                PoolCoordinates = [];
+                pools.ForEach(GetNewCoordinates);
+            }
             Dictionary<string, (double, double)> posPools = PoolCoordinates
                 .Where(v => v.Value.Item1 >= 0)
                 .OrderBy(v => Math.Abs(v.Value.Item1)).ToDictionary(t => t.Key, t => t.Value);
@@ -230,7 +248,7 @@ namespace SiliFish.Services
             return nodes;
         }
 
-        public string Create2DRendering(RunningModel model, List<CellPool> pools, int width, int height, bool showGap, bool showChem)
+        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem)
         {
             if (pools == null || pools.Count == 0)
                 return null;
@@ -258,7 +276,7 @@ namespace SiliFish.Services
             html.Replace("__TITLE__", HttpUtility.HtmlEncode(title));
             html.Replace("__LEFT_HEADER__", HttpUtility.HtmlEncode(title));
 
-            List<string> nodes = CreatePoolNodes(pools, width, height);
+            List<string> nodes = CreatePoolNodes(pools, refresh, width, height);
             (string head, string tail, string spine) = CreateSpine();
             nodes.Add(head);
             nodes.Add(tail);

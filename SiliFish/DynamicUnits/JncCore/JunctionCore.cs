@@ -26,8 +26,9 @@ namespace SiliFish.DynamicUnits.JncCore
         
         public double DeltaT;
 
-        public virtual void InitForSimulation(double deltaT)
+        public virtual void InitForSimulation(double deltaT, ref int uniqueID)
         {
+            UniqueId = uniqueID++;
             this.DeltaT = deltaT;
         }
     }

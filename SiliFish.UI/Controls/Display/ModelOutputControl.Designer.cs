@@ -30,19 +30,19 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
             webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p2DRenderOptions = new Panel();
             cb2DShowUnselectedNodes = new CheckBox();
-            cbHideNonspiking = new CheckBox();
+            cb2DHideNonspiking = new CheckBox();
             cb2DLegend = new CheckBox();
             l2DLinkSize = new Label();
             cb2DChemJunc = new CheckBox();
@@ -89,6 +89,7 @@
             tPlotHTML = new TabPage();
             webViewPlot = new Microsoft.Web.WebView2.WinForms.WebView2();
             tPlotWindows = new TabPage();
+            pPictureBox = new Panel();
             pictureBox = new PictureBox();
             cmPlotImageSave = new ContextMenuStrip(components);
             cmiPlotImageSave = new ToolStripMenuItem();
@@ -172,7 +173,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            pPictureBox = new Panel();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
@@ -189,6 +189,7 @@
             tPlotHTML.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewPlot).BeginInit();
             tPlotWindows.SuspendLayout();
+            pPictureBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             cmPlotImageSave.SuspendLayout();
             pPlot.SuspendLayout();
@@ -216,7 +217,6 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).BeginInit();
             cmAnimation.SuspendLayout();
-            pPictureBox.SuspendLayout();
             SuspendLayout();
             // 
             // tabOutputs
@@ -266,7 +266,7 @@
             // 
             p2DRenderOptions.BackColor = Color.FromArgb(236, 239, 241);
             p2DRenderOptions.Controls.Add(cb2DShowUnselectedNodes);
-            p2DRenderOptions.Controls.Add(cbHideNonspiking);
+            p2DRenderOptions.Controls.Add(cb2DHideNonspiking);
             p2DRenderOptions.Controls.Add(cb2DLegend);
             p2DRenderOptions.Controls.Add(l2DLinkSize);
             p2DRenderOptions.Controls.Add(cb2DChemJunc);
@@ -293,15 +293,16 @@
             cb2DShowUnselectedNodes.UseVisualStyleBackColor = true;
             cb2DShowUnselectedNodes.CheckedChanged += cb2DShowUnselectedNodes_CheckedChanged;
             // 
-            // cbHideNonspiking
+            // cb2DHideNonspiking
             // 
-            cbHideNonspiking.AutoSize = true;
-            cbHideNonspiking.Location = new Point(8, 6);
-            cbHideNonspiking.Name = "cbHideNonspiking";
-            cbHideNonspiking.Size = new Size(120, 19);
-            cbHideNonspiking.TabIndex = 73;
-            cbHideNonspiking.Text = "Hide Non-spiking";
-            cbHideNonspiking.UseVisualStyleBackColor = true;
+            cb2DHideNonspiking.AutoSize = true;
+            cb2DHideNonspiking.Location = new Point(8, 6);
+            cb2DHideNonspiking.Name = "cb2DHideNonspiking";
+            cb2DHideNonspiking.Size = new Size(120, 19);
+            cb2DHideNonspiking.TabIndex = 73;
+            cb2DHideNonspiking.Text = "Hide Non-spiking";
+            cb2DHideNonspiking.UseVisualStyleBackColor = true;
+            cb2DHideNonspiking.CheckedChanged += cb2DHideNonspiking_CheckedChanged;
             // 
             // cb2DLegend
             // 
@@ -858,6 +859,17 @@
             tPlotWindows.TabIndex = 0;
             tPlotWindows.Text = "Image Plots";
             // 
+            // pPictureBox
+            // 
+            pPictureBox.AutoScroll = true;
+            pPictureBox.AutoSize = true;
+            pPictureBox.Controls.Add(pictureBox);
+            pPictureBox.Dock = DockStyle.Fill;
+            pPictureBox.Location = new Point(3, 3);
+            pPictureBox.Name = "pPictureBox";
+            pPictureBox.Size = new Size(674, 587);
+            pPictureBox.TabIndex = 1;
+            // 
             // pictureBox
             // 
             pictureBox.ContextMenuStrip = cmPlotImageSave;
@@ -1128,7 +1140,6 @@
             dgSpikeStats.Location = new Point(3, 3);
             dgSpikeStats.Name = "dgSpikeStats";
             dgSpikeStats.ReadOnly = true;
-            dgSpikeStats.RowTemplate.Height = 25;
             dgSpikeStats.Size = new Size(680, 613);
             dgSpikeStats.TabIndex = 7;
             // 
@@ -1207,7 +1218,6 @@
             dgRCTrains.Location = new Point(0, 0);
             dgRCTrains.Name = "dgRCTrains";
             dgRCTrains.ReadOnly = true;
-            dgRCTrains.RowTemplate.Height = 25;
             dgRCTrains.Size = new Size(680, 306);
             dgRCTrains.TabIndex = 8;
             dgRCTrains.ColumnHeaderMouseDoubleClick += dgRCTrains_ColumnHeaderMouseDoubleClick;
@@ -1235,9 +1245,9 @@
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle8;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -1245,8 +1255,8 @@
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle9;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -1254,8 +1264,8 @@
             // 
             // colRCTrainMidPoint
             // 
-            dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle10;
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
@@ -1263,8 +1273,8 @@
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle4.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle11;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -1272,9 +1282,9 @@
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Format = "N2";
+            dataGridViewCellStyle12.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle12;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -1282,8 +1292,8 @@
             // 
             // colRCTrainMidPointDelay
             // 
-            dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle13.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle13;
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
@@ -1291,8 +1301,8 @@
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle7.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle14.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle14;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
@@ -1689,17 +1699,6 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // pPictureBox
-            // 
-            pPictureBox.AutoScroll = true;
-            pPictureBox.AutoSize = true;
-            pPictureBox.Controls.Add(pictureBox);
-            pPictureBox.Dock = DockStyle.Fill;
-            pPictureBox.Location = new Point(3, 3);
-            pPictureBox.Name = "pPictureBox";
-            pPictureBox.Size = new Size(674, 587);
-            pPictureBox.TabIndex = 1;
-            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1729,6 +1728,8 @@
             ((System.ComponentModel.ISupportInitialize)webViewPlot).EndInit();
             tPlotWindows.ResumeLayout(false);
             tPlotWindows.PerformLayout();
+            pPictureBox.ResumeLayout(false);
+            pPictureBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             cmPlotImageSave.ResumeLayout(false);
             pPlot.ResumeLayout(false);
@@ -1759,8 +1760,6 @@
             ((System.ComponentModel.ISupportInitialize)eAnimationEnd).EndInit();
             ((System.ComponentModel.ISupportInitialize)eAnimationStart).EndInit();
             cmAnimation.ResumeLayout(false);
-            pPictureBox.ResumeLayout(false);
-            pPictureBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -1895,7 +1894,7 @@
         private Label lms5;
         private Label label7;
         private Label lms6;
-        private CheckBox cbHideNonspiking;
+        private CheckBox cb2DHideNonspiking;
         private CheckBox cb2DShowUnselectedNodes;
         private Panel p2DRenderOptions;
         private CheckBox cb2DRenderShowOptions;

@@ -12,6 +12,7 @@ namespace SiliFish.DynamicUnits
 {
     abstract public class BaseCore
     {
+        public int UniqueId { get; set; } = -1;//Unique ID to be saved to the database
         [JsonIgnore, Browsable(false)]
         public Dictionary<string, double> Parameters
         {
@@ -24,7 +25,7 @@ namespace SiliFish.DynamicUnits
         }
         public virtual Dictionary<string, string> GetParameterDescriptions()
         {
-            Dictionary<string, string> descDict = new();
+            Dictionary<string, string> descDict = [];
 
             foreach (PropertyInfo prop in GetType().GetProperties())
             {
@@ -38,7 +39,7 @@ namespace SiliFish.DynamicUnits
         }
         public virtual Dictionary<string, double> GetParameters()
         {
-            Dictionary<string, double> paramDict = new();
+            Dictionary<string, double> paramDict = [];
 
             foreach (PropertyInfo prop in GetType().GetProperties())
             {
@@ -67,7 +68,7 @@ namespace SiliFish.DynamicUnits
 
         public virtual bool CheckValues(ref List<string> errors)
         {
-            errors ??= new();
+            errors ??= [];
             return errors.Count == 0;
         }
 

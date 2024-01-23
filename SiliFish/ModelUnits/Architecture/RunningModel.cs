@@ -29,10 +29,11 @@ namespace SiliFish.ModelUnits.Architecture
         private int iMax = 1;
 
         protected bool model_run = false;
+        protected bool db_mode = false;
         protected bool initialized = false;
         protected double[] Time;
-        protected List<CellPool> neuronPools = new();
-        protected List<CellPool> musclePools = new();
+        protected List<CellPool> neuronPools = [];
+        protected List<CellPool> musclePools = [];
 
         [JsonIgnore]
         [Browsable(false)]
@@ -113,7 +114,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             get
             {
-                List<InterPool> interPools = new();
+                List<InterPool> interPools = [];
                 foreach (CellPool sourcePool in CellPools)
                 {
                     string source = sourcePool.ID;
@@ -150,7 +151,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             get
             {
-                List<InterPool> interPools = new();
+                List<InterPool> interPools = [];
                 foreach (CellPool sourcePool in NeuronPools)
                 {
                     string source = sourcePool.ID;
@@ -263,7 +264,7 @@ namespace SiliFish.ModelUnits.Architecture
             #endregion
 
             #region Generate Stimuli
-            StimulusTemplates = new();
+            StimulusTemplates = [];
             if (swimmingModelTemplate.StimulusTemplates?.Count > 0)
             {
                 foreach (StimulusTemplate stimulus in swimmingModelTemplate.StimulusTemplates.Where(stim => stim.Active))
@@ -327,10 +328,10 @@ namespace SiliFish.ModelUnits.Architecture
 
         public override List<string> DiffersFrom(ModelBase other)
         {
-            List<string> differences = new();
+            List<string> differences = [];
             if (other is RunningModel om)
             {
-                differences = base.DiffersFrom(other) ?? new();
+                differences = base.DiffersFrom(other) ?? [];
                 List<string> diffs = ModelUnitBase.ListDiffersFrom(CellPools.Select(c => c as ModelUnitBase).ToList(),
                     om.CellPools.Select(c => c as ModelUnitBase).ToList());
                 if (diffs != null)
@@ -340,7 +341,7 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 differences.Add("Models not comparable.");
             }
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -381,13 +382,13 @@ namespace SiliFish.ModelUnits.Architecture
                     List<GapJunction> descendingGapList = cell.GapJunctions.
                         Where(jnc => jnc.Cell1.ID == cell.ID && cell.Coordinate.X < jnc.Cell2.Coordinate.X ||
                             jnc.Cell2.ID == cell.ID && cell.Coordinate.X < jnc.Cell1.Coordinate.X)?.ToList();
-                    double descGap = descendingGapList.Any() ? 
+                    double descGap = descendingGapList.Count != 0 ?
                         descendingGapList.Max(jnc => Util.Distance(jnc.Cell1.Coordinate, jnc.Cell2.Coordinate, jnc.DistanceMode)) : 0;
                     double descChem = 0;
                     if ( cell is Neuron neuron)
                     {
                         List<ChemicalSynapse> descendingChemList = neuron.Terminals.Where(jnc => cell.Coordinate.X < jnc.PostCell.Coordinate.X).ToList();
-                        if (descendingChemList.Any())
+                        if (descendingChemList.Count != 0)
                             descChem = descendingChemList.Max(jnc => Util.Distance(cell.Coordinate, jnc.PostCell.Coordinate, jnc.DistanceMode));
                     }
                     cell.DescendingAxonLength = Math.Max(descChem, descGap);
@@ -395,13 +396,13 @@ namespace SiliFish.ModelUnits.Architecture
                     List<GapJunction> ascendingGapList = cell.GapJunctions.
                         Where(jnc => jnc.Cell1 == cell && cell.Coordinate.X > jnc.Cell2.Coordinate.X ||
                             jnc.Cell2 == cell && cell.Coordinate.X > jnc.Cell1.Coordinate.X).ToList();
-                    double ascGap = ascendingGapList.Any() ?
+                    double ascGap = ascendingGapList.Count != 0 ?
                         ascendingGapList.Max(jnc => Util.Distance(jnc.Cell1.Coordinate, jnc.Cell2.Coordinate, jnc.DistanceMode)) : 0;
                     double ascChem = 0;
                     if (cell is Neuron neuron2)
                     {
                         List<ChemicalSynapse> ascendingChemList = neuron2.Terminals.Where(jnc => cell.Coordinate.X < jnc.PostCell.Coordinate.X).ToList();
-                        if (ascendingChemList.Any())
+                        if (ascendingChemList.Count != 0)
                             ascChem = ascendingChemList.Max(jnc => Util.Distance(cell.Coordinate, jnc.PostCell.Coordinate, jnc.DistanceMode));
                     }
                     cell.AscendingAxonLength = Math.Max(ascChem, ascGap);
@@ -486,14 +487,14 @@ namespace SiliFish.ModelUnits.Architecture
 
         public bool HasCells()
         {
-            return GetCells().Any();
+            return GetCells().Count != 0;
         }
         #endregion
         #region Cell Pool
 
         public List<CellPool> GenerateCellPoolsFrom(CellPoolTemplate cellPoolTemplate)
         {
-            List<CellPool> cellPoolList = new();
+            List<CellPool> cellPoolList = [];
             if (cellPoolTemplate.PositionLeftRight == SagittalPlane.Both || cellPoolTemplate.PositionLeftRight == SagittalPlane.Left)
             {
                 CellPool pool = new(this, cellPoolTemplate, SagittalPlane.Left);
@@ -559,7 +560,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override List<InterPoolBase> GetGapProjections()
         {
-            List<InterPoolBase> listProjections = new();
+            List<InterPoolBase> listProjections = [];
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
@@ -569,7 +570,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override List<InterPoolBase> GetChemicalProjections()
         {
-            List<InterPoolBase> listProjections = new();
+            List<InterPoolBase> listProjections = [];
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 if (cell is Neuron neuron)
@@ -602,7 +603,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override List<StimulusBase> GetStimuli()
         {
-            List<StimulusBase> listStimuli = new();
+            List<StimulusBase> listStimuli = [];
             foreach (CellPool cellPool in CellPools)
             {
                 listStimuli.AddRange(cellPool.GetStimuli());
@@ -740,9 +741,9 @@ namespace SiliFish.ModelUnits.Architecture
                 if (unitsSelection.Units?.FirstOrDefault() is InterPool)
                 {
                     List<InterPool> interpools = unitsSelection.Units.Where(x => x is InterPool).Cast<InterPool>().ToList();
-                    if (interpools.Any())
+                    if (interpools.Count != 0)
                     {
-                        pools = new();
+                        pools = [];
                         foreach (InterPool ip in interpools)
                             pools.AddRange(CellPools.Where(c => c.ID == ip.SourcePool || c.ID == ip.TargetPool).ToList());
                         pools = pools.Distinct().ToList();
@@ -783,13 +784,12 @@ namespace SiliFish.ModelUnits.Architecture
                                         && p.OnSide(mcs.SagittalPlane)).ToList();
                 }
                 List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs, iStart, iEnd)).ToList();
-                if (cells.Any())
+                if (cells.Count != 0)
                     return (cells, null);
                 return (null, pools);
             }
             return (null, pools);
         }
-
 
 
         protected virtual void InitForSimulation()
@@ -799,13 +799,15 @@ namespace SiliFish.ModelUnits.Architecture
                 !musclePools.Any(p => p.GetCells().Any())) //No cells
                 return;
             Time = new double[RunParam.iMax];
+            int uniqueID = 1;
             foreach (CellPool neurons in neuronPools)
                 foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
-                    neuron.InitForSimulation(RunParam);
+                    neuron.InitForSimulation(RunParam, ref uniqueID);
 
             foreach (CellPool muscleCells in musclePools)
                 foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
-                    mc.InitForSimulation(RunParam);
+                    mc.InitForSimulation(RunParam, ref uniqueID);
+
             initialized = true;
         }
 
