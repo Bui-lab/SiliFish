@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SiliFish.ModelUnits.Architecture
 {
-    public class Simulation(RunningModel runningModel)
+    public class Simulation(RunningModel runningModel, RunParam runParam)
     {
         public Random randomNumGenerator { get; private set; } = null;
         private int iMax => RunParam.iMax;
@@ -22,7 +22,7 @@ namespace SiliFish.ModelUnits.Architecture
         protected bool model_run = false;
 
         [JsonPropertyOrder(2)]
-        public RunParam RunParam { get; set; } = new();
+        public RunParam RunParam { get; set; } = runParam;
         [JsonIgnore]
         [Browsable(false)]
         public bool SimulationRun { get { return model_run; } }

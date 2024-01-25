@@ -162,7 +162,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             base.InitForSimulation(runParam, ref uniqueID);
             RunningModel model = PreNeuron.Model;
-            Core?.InitForSimulation(dt, ref uniqueID);//TODO Core null
+            Core.InitForSimulation(dt, ref uniqueID);
             
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / dt);

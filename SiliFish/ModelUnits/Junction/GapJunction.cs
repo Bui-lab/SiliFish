@@ -144,7 +144,6 @@ namespace SiliFish.ModelUnits.Junction
             Cell2 = model.GetCell(Target);
             if (!Cell2.GapJunctions.Contains(this))
                 Cell2.GapJunctions.Add(this);
-            //Core = ElecSynapseCore.CreateCore(Core.CoreType, Core.Parameters);
         }
         public override string ToString()
         {

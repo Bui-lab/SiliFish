@@ -175,10 +175,13 @@ namespace SiliFish.UI
         #endregion
 
         #region Simulation
-
+        private void completeRunsAction(List<Simulation> simulations, bool cancelled)
+        {
+            Invoke(CompleteRuns, simulations, cancelled);
+        }
         private void CompleteRuns(List<Simulation> simulations, bool cancelled)
         {
-            multiRunMode = false; 
+            multiRunMode = false;
             UseWaitCursor = false;
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
@@ -202,17 +205,17 @@ namespace SiliFish.UI
                     {
                         list.Add($"Simulation {i++}: {simulation.RunTime}");
                     }
-                    TextDisplayer.Display($"Run time stats", list, saveFileText);
-                    simText = $"Number of simulations: {simulations.Count}\r\n";
+                    simText = $" - Number of simulations: {simulations.Count}";
                 }
                 TimeSpan ts = DateTime.Now - runStart;
-                lRunTime.Text = $"Last run: {runStart:t}\r\n" +
+                lRunTime.Text = $"Last run: {runStart:t} {simText}\r\n" +
                     $"Model: {runningModel.ModelName}\r\n" +
-                    simText +
                     $"# of cells: {runningModel.GetNumberOfCells():n0}; # of conn.: {runningModel.GetNumberOfConnections():n0}\r\n" +
                     $"Simulation time: {Util.TimeSpanToString(ts)}";
                 modelOutputControl.SetRunningModel(modelSimulator.LastSimulation, runningModel);
                 modelOutputControl.CompleteRun(modelSimulator.LastSimulation.RunParam);
+                if (list.Count > 0)
+                    TextDisplayer.Display($"Run time stats", list, saveFileText);
             }
         }
         private bool PreRun()
@@ -268,7 +271,7 @@ namespace SiliFish.UI
 
         private void RunSimulation()
         {
-            modelSimulator = new(runningModel, numSimulations, parallelRun, CompleteRuns);
+            modelSimulator = new(runningModel, runParam, numSimulations, parallelRun, completeRunsAction);
             modelSimulator.Run();
         }
         private void btnRun_Click(object sender, EventArgs e)
@@ -319,7 +322,8 @@ namespace SiliFish.UI
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
             miToolsGenerateStatsData.Visible =
-                miToolsRunForStats.Visible = 
+                miToolMultipleRun.Visible = 
+                miToolsRunForStats.Visible =
                 miToolsSepStats.Visible =
                     mode == RunMode.RunningModel;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
@@ -535,7 +539,7 @@ namespace SiliFish.UI
             }
         }
 
- 
+
         private void miFileNewModel_Click(object sender, EventArgs e)
         {
             MainForm mf = new();
@@ -554,7 +558,7 @@ namespace SiliFish.UI
             modelControl.SetModel(modelTemplate);
         }
 
-       private void miToolsCompareModel_Click(object sender, EventArgs e)
+        private void miToolsCompareModel_Click(object sender, EventArgs e)
         {
             try
             {
@@ -652,6 +656,29 @@ namespace SiliFish.UI
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 ModelFile.SaveFullStats(modelSimulator.LastSimulation, saveFileCSV.FileName);
+            }
+        }
+
+        private void miToolMultipleRun_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                MultipleRunDialog runTimeStatsDialog = new(runTimeStats: false);
+                runTimeStatsDialog.ShowDialog();
+                numSimulations = runTimeStatsDialog.NumOfSimulations;
+                if (numSimulations <= 0) return;
+                if (!PreRun()) return;
+                parallelRun = true;
+                Application.DoEvents();
+                RunSimulation();
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+            finally
+            {
+                multiRunMode = false;
             }
         }
         private void miToolsRunForStats_Click(object sender, EventArgs e)
