@@ -1,6 +1,6 @@
 ﻿namespace SiliFish.UI.Dialogs
 {
-    partial class RunTimeStatsDialog
+    partial class MultipleRunDialog
     {
         /// <summary>
         /// Required designer variable.

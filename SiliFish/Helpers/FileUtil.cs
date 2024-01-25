@@ -62,7 +62,6 @@ namespace SiliFish.Helpers
         }
         public static string SaveToTempFolder(string filename, string content)
         {
-            filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
             filename = string.Concat("~", filename.AsSpan(1));
             if (!Directory.Exists(GlobalSettings.TempFolder))
             {
@@ -72,7 +71,7 @@ namespace SiliFish.Helpers
                 }
                 catch (Exception ex)
                 {
-                    ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                    ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                     throw;
                 }
             }
@@ -132,6 +131,11 @@ namespace SiliFish.Helpers
             p.Start();
 
         }
-
+        public static string GetUniqueFileName()
+        {
+            string filename = Guid.NewGuid().ToString();
+            filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+            return filename;
+        }
     }
 }

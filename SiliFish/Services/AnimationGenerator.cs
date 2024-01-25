@@ -112,28 +112,28 @@ namespace SiliFish.Services
         }
 
 
-        public static string GenerateAnimation(RunningModel model, int tStart, int tEnd, double animdt, out Dictionary<string, Coordinate[]> spineCoordinates)
+        public static string GenerateAnimation(Simulation simulation, int tStart, int tEnd, double animdt, out Dictionary<string, Coordinate[]> spineCoordinates)
         {
             spineCoordinates = null;
-            if (model == null || !model.ModelRun)
+            if (simulation == null || !simulation.SimulationRun)
                 return null;
 
-            int tMax = model.RunParam.MaxTime;
-            int tSkip = model.RunParam.SkipDuration;
-            double dt = model.RunParam.DeltaT;
+            int tMax = simulation.RunParam.MaxTime;
+            int tSkip = simulation.RunParam.SkipDuration;
+            double dt = simulation.RunParam.DeltaT;
 
             if (tEnd < tStart || tEnd > tMax)
                 tEnd = tMax;
             int iStart = (int)((tStart + tSkip) / dt);
             int iEnd = (int)((tEnd + tSkip) / dt);
-            if (iEnd >= model.TimeArray.Length)
-                iEnd = model.TimeArray.Length - 1;
+            if (iEnd >= simulation.Model.TimeArray.Length)
+                iEnd = simulation.Model.TimeArray.Length - 1;
 
-            spineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(model, iStart, iEnd);
-            return CreateTimeSeries(title: model.ModelName + "Animation.html",
-                model.KinemParam.GetAnimationDetails(),
+            spineCoordinates = SwimmingKinematics.GenerateSpineCoordinates(simulation, iStart, iEnd);
+            return CreateTimeSeries(title: simulation.Model.ModelName + "Animation.html",
+                simulation.Model.KinemParam.GetAnimationDetails(),
                 spineCoordinates,
-                model.TimeArray,
+                simulation.Model.TimeArray,
                 iStart,
                 iEnd,
                 dt,

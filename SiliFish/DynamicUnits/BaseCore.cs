@@ -14,11 +14,15 @@ namespace SiliFish.DynamicUnits
     {
         public int UniqueId { get; set; } = -1;//Unique ID to be saved to the database
         [JsonIgnore, Browsable(false)]
+        public string CoreType => GetType().Name;
+
+        [JsonIgnore, Browsable(false)]
         public Dictionary<string, double> Parameters
         {
             get { return GetParameters(); }
             set { SetParameters(value); }
         }
+        [JsonIgnore, Browsable(false)]
         public Dictionary<string, string> ParameterDescriptions
         {
             get { return GetParameterDescriptions(); }

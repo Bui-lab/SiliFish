@@ -18,7 +18,6 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
-        public Random rand = null;
         private ModelSettings settings = new();
 
         public string Version { get; set; }
@@ -33,8 +32,7 @@ namespace SiliFish.ModelUnits.Architecture
             set
             {
                 settings = value;
-                rand = new Random(settings.Seed);
-                Distribution.Random = rand;
+                Distribution.Random = new Random(settings.Seed);
             }
         }
         [JsonPropertyOrder(2)]

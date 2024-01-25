@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using OfficeOpenXml;
 using SiliFish.Database;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
@@ -25,18 +26,19 @@ namespace SiliFish.Repositories
 {
     public static class ModelStats
     {
-        public static (List<string>, List<List<string>>) GenerateSpikeFreqStats(RunningModel model)
+        public static (List<string>, List<List<string>>) GenerateSpikeFreqStats(Simulation simulation)
         {
             try
             {
+                RunningModel model = simulation.Model;
                 bool jncTracking = model.JunctionCurrentTrackingOn;
-                List<string> columnNames = new() { "RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name",
+                List<string> columnNames = [ "RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name",
                 "Stim Start", "Stim End", "Stim Details",
                 "Spike Count", "First Spike", "Last Spike", "Spike Freq",
                  "Burst Count", "Burst Freq",
-                "Vrest", "Avg V", "Avg V > Vrest", "Avg V < Vrest"};
-                List<List<string>> values = new();
-                double dt = model.RunParam.DeltaT;
+                "Vrest", "Avg V", "Avg V > Vrest", "Avg V < Vrest"];
+                List<List<string>> values = [];
+                double dt = simulation.RunParam.DeltaT;
                 int counter = 0;
                 foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
                 {
@@ -45,7 +47,7 @@ namespace SiliFish.Repositories
                         foreach (var grStim in model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End)))
                         {
                             (double start, double end) = grStim.Key;
-                            if (start > model.RunParam.MaxTime)
+                            if (start > simulation.RunParam.MaxTime)
                                 continue;
                             string stimDetails = "";
                             foreach (StimulusTemplate stim in grStim)
@@ -98,14 +100,14 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static (List<string>, List<List<string>>) GenerateSpikes(RunningModel model)
+        public static (List<string>, List<List<string>>) GenerateSpikes(Simulation simulation)
         {
             try
             {
-                List<string> columnNames = new() { "RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time" };
-                List<List<string>> values = new();
+                List<string> columnNames = ["RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time"];
+                List<List<string>> values = [];
                 int counter = 0;
-                foreach (Cell cell in model.GetCells())
+                foreach (Cell cell in simulation.Model.GetCells())
                 {
                     foreach (int spikeIndex in cell.GetSpikeIndices())
                     {
@@ -117,7 +119,7 @@ namespace SiliFish.Repositories
                             cell.Somite.ToString(),
                             cell.Sequence.ToString(),
                             cell.ID,
-                            model.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)});
+                            simulation.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)});
                         values.Add(cellValues);
                     }
                 }
@@ -130,13 +132,13 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static (List<string>, List<List<string>>) GenerateTBFs(RunningModel model)
+        public static (List<string>, List<List<string>>) GenerateTBFs(Simulation simulation)
         {
             try
             {
-                (Coordinate[] _, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(model);
-                List<string> columnNames = new() { "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq" };
-                List<List<string>> values = new();
+                (Coordinate[] _, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
+                List<string> columnNames = [ "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq"];
+                List<List<string>> values = [];
 
                 int counter = 1;
                 foreach (SwimmingEpisode episode in episodes.Episodes)
@@ -151,10 +153,10 @@ namespace SiliFish.Repositories
                         episode.BeatFrequency.ToString()});
                     values.Add(episodeValues);
                 }
-                for (int somite = 1; somite <= model.ModelDimensions.NumberOfSomites; somite++)
+                for (int somite = 1; somite <= simulation.Model.ModelDimensions.NumberOfSomites; somite++)
                 {
                     counter = 1;
-                    (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(model, somite);
+                    (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, somite);
                     foreach (SwimmingEpisode episode in episodes2.Episodes)
                     {
                         List<string> episodeValues = new();

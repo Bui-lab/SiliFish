@@ -9,14 +9,16 @@ using SiliFish.ModelUnits.Parameters;
 using SiliFish.DynamicUnits;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using GeneticSharp;
 
 namespace SiliFish.Services.Dynamics
 {
     public static class SwimmingKinematics
     {
-        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(RunningModel model, int startIndex, int endIndex)
+        private static (double[,] vel, double[,] angle) GenerateSpineVelAndAngle(Simulation simulation, int startIndex, int endIndex)
         {
-            if (!model.ModelRun) return (null, null);
+            if (!simulation.SimulationRun) return (null, null);
+            RunningModel model = simulation.Model;
             bool useMuscleTension = model.KinemParam.UseMuscleTension;
             double halfBodyWidth = model.ModelDimensions.BodyMedialLateralDistance / 2;
 
@@ -29,7 +31,7 @@ namespace SiliFish.Services.Dynamics
             // Setting constants and initial values for vel. and pos.
             double vel0 = 0.0;
             double angle0 = 0.0;
-            double dt = model.RunParam.DeltaT;
+            double dt = model.DeltaT;
 
             double kinemAlpha = model.KinemParam.Alpha;
             double kinemBeta = model.KinemParam.Beta;
@@ -77,9 +79,11 @@ namespace SiliFish.Services.Dynamics
         /// <param name="startIndex"></param>
         /// <param name="endIndex"></param>
         /// <returns></returns>
-        public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(RunningModel model, int startIndex, int endIndex)
+        public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(Simulation simulation, int startIndex, int endIndex)
         {
-            (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(model, startIndex, endIndex);
+            if (!simulation.SimulationRun) return null;
+            RunningModel model = simulation.Model;
+            (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(simulation, startIndex, endIndex);
 
             if (vel == null || angle == null ||
                 vel?.GetLength(0) != angle?.GetLength(0) ||
@@ -115,11 +119,12 @@ namespace SiliFish.Services.Dynamics
             }
             return somiteCoordinates;
         }
-        public static (Coordinate[], SwimmingEpisodes) GetSwimmingEpisodesUsingMuscleCells(RunningModel model)
+        public static (Coordinate[], SwimmingEpisodes) GetSwimmingEpisodesUsingMuscleCells(Simulation simulation)
         {
             //Converted from the code written by Yann Roussel and Tuan Bui
-            
-            Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(model, 0, model.TimeArray.Length - 1);
+            if (!simulation.SimulationRun) return (null, null);
+            RunningModel model = simulation.Model;
+            Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(simulation, 0, model.TimeArray.Length - 1);
 
             //We will only use the tip of the tail to determine tail beats (if the x coordinate of the tip is smaller (or more negative)
             //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
@@ -131,8 +136,8 @@ namespace SiliFish.Services.Dynamics
             const int LEFT = -1;
             const int RIGHT = 1;
             int nMax = model.TimeArray.Length;
-            double dt = model.RunParam.DeltaT;
-            double offset = model.RunParam.SkipDuration;
+            double dt = simulation.RunParam.DeltaT;
+            double offset = simulation.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.EpisodeBreak / dt);
             SwimmingEpisodes episodes = new();
             SwimmingEpisode lastEpisode = null;
@@ -190,13 +195,14 @@ namespace SiliFish.Services.Dynamics
         }
 
 
-        public static (double[], SwimmingEpisodes) GetSwimmingEpisodesUsingMotoNeurons(RunningModel model, int somite)
+        public static (double[], SwimmingEpisodes) GetSwimmingEpisodesUsingMotoNeurons(Simulation simulation, int somite)
         {
+            RunningModel model = simulation.Model;
             (List<Cell> leftMNs, List<Cell> rightMNs) = model.GetMotoNeurons(somite);
             double episodeBreak = model.KinemParam.EpisodeBreak;
             List<int> leftSpikes = [];
             List<int> rightSpikes = [];
-            int iSkip = (int)(model.RunParam.SkipDuration / model.RunParam.DeltaT);
+            int iSkip = (int)(simulation.RunParam.SkipDuration / simulation.RunParam.DeltaT);
             foreach (Cell c in leftMNs)
                 leftSpikes.AddRange(c.GetSpikeIndices(iSkip));
             foreach (Cell c in rightMNs)
@@ -204,15 +210,15 @@ namespace SiliFish.Services.Dynamics
             leftSpikes.Sort();
             rightSpikes.Sort();
 
-            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, model.DynamicsParam, model.RunParam.DeltaT, 
+            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, model.DynamicsParam, simulation.RunParam.DeltaT, 
                 leftSpikes, rightSpikes, episodeBreak);
             double[] range = new double[model.TimeArray.Length - iSkip];
             foreach (SwimmingEpisode episode in Episodes.Episodes)
             {
                 foreach (Beat beat in episode.Beats)
                 {
-                    int startInd = model.RunParam.iIndex(beat.BeatStart);
-                    int endInd = model.RunParam.iIndex(beat.BeatEnd);
+                    int startInd = simulation.RunParam.iIndex(beat.BeatStart);
+                    int endInd = simulation.RunParam.iIndex(beat.BeatEnd);
                     int middleInd = (startInd + endInd) / 2;
                     if (beat.Direction == SagittalPlane.Left)
                     {

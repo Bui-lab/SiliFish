@@ -35,8 +35,8 @@ namespace SiliFish.ModelUnits.Junction
         private double VoltageDiffFrom1To2 = 0; //momentary voltage difference that causes outgoing current
         private double VoltageDiffFrom2To1 = 0; //momentary voltage difference that causes incoming current
 
-        protected override int nMax => Cell1.V.Length;
-        protected override double dt => Cell1?.Model.RunParam.DeltaT ?? 0.1;
+        protected override int nMax => Cell1?.V.Length ?? 0;
+        protected override double dt => Cell1?.Model.DeltaT ?? 0.1;
 
         public Cell Cell1;
         public Cell Cell2;
@@ -144,23 +144,23 @@ namespace SiliFish.ModelUnits.Junction
             Cell2 = model.GetCell(Target);
             if (!Cell2.GapJunctions.Contains(this))
                 Cell2.GapJunctions.Add(this);
-
+            //Core = ElecSynapseCore.CreateCore(Core.CoreType, Core.Parameters);
         }
         public override string ToString()
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public override void InitForSimulation(int nmax, bool trackCurrent, double dt, ref int uniqueID)
+        public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
-            base.InitForSimulation(nmax, trackCurrent, dt, ref uniqueID);
+            base.InitForSimulation(runParam, ref uniqueID);
             RunningModel model = Cell1.Model;
             if (FixedDuration_ms != null)
                 duration1 = duration2 = (int)(FixedDuration_ms / dt);
             else
             {
                 double distance = Util.Distance(Cell1.Coordinate, Cell2.Coordinate, DistanceMode);
-                int delay = (int)((Delay_ms ?? model.Settings.gap_delay) / model.RunParam.DeltaT);
+                int delay = (int)((Delay_ms ?? model.Settings.gap_delay) / runParam.DeltaT);
                 duration1 = Math.Max((int)Math.Round(distance / (Cell1.ConductionVelocity * dt)), 1);
                 duration1 += delay;
                 duration2 = Math.Max((int)Math.Round(distance / (Cell2.ConductionVelocity * dt)), 1);

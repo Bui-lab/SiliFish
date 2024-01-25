@@ -21,7 +21,7 @@ namespace SiliFish.UI.Extensions
                 }
                 else if (html.Length > 1_000_000 && !string.IsNullOrEmpty(tempFolder))
                 {
-                    tempFile = Guid.NewGuid().ToString() + ".html";
+                    tempFile = FileUtil.GetUniqueFileName() + ".html";
                     tempFile = FileUtil.SaveToTempFolder(tempFile, html);
                     GlobalSettings.TempFiles.Add(tempFile);
                     htmlContainer.CoreWebView2.Navigate(tempFile);

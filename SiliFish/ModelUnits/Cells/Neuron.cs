@@ -55,7 +55,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCore.CreateCore(coreType, cellParams, model.RunParam.DeltaT);
+            Core = CellCore.CreateCore(coreType, cellParams);
             GapJunctions = [];
             Synapses = [];
             Terminals = [];
@@ -225,8 +225,8 @@ namespace SiliFish.ModelUnits.Cells
         public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
             base.InitForSimulation(runParam, ref uniqueID);
-            foreach (ChemicalSynapse jnc in this.Synapses)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT, ref uniqueID);
+            foreach (ChemicalSynapse jnc in Synapses)
+                jnc.InitForSimulation(runParam, ref uniqueID);
 
         }
 

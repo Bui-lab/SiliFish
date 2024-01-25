@@ -229,7 +229,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, Model.RunParam.DeltaT);
+            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters);//TODO check whether I need this
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;
@@ -399,9 +399,9 @@ namespace SiliFish.ModelUnits.Cells
             Core.Initialize(runParam.DeltaT, ref uniqueID);
             spikeTrain.Clear();
             V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
-            Stimuli.InitForSimulation(Model.RunParam, Model.rand);
+            Stimuli.InitForSimulation(runParam, Model.randomNumGenerator);
             foreach (GapJunction jnc in GapJunctions)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT, ref uniqueID);
+                jnc.InitForSimulation(runParam, ref uniqueID);
         }
         public virtual void NextStep(int t, double stim, double minV, double maxV)
         {

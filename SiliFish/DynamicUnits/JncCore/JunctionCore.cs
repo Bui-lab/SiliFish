@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
+    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "twoexpsyn")]
+    [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simplesyn")]
+    [JsonDerivedType(typeof(SimpleGap), typeDiscriminator: "simplegap")]
     public class JunctionCore: BaseCore
     {
         public static int CoreParamMaxCount = 10;

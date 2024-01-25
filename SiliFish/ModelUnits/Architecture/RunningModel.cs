@@ -2,6 +2,7 @@
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
+using SiliFish.Helpers.JsonConverters;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
@@ -17,20 +18,22 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.ModelUnits.Architecture
 {
     public class RunningModel : ModelBase
-    {      
-        private int iProgress = 0;
-        private int iMax = 1;
+    {
+        public double DeltaT { get; private set; }
+        public int SkipDuration { get; private set; }
+        public int MaxTime { get; private set; }
+        public Random randomNumGenerator { get; private set; } 
 
-        protected bool model_run = false;
         protected bool db_mode = false;
-        protected bool initialized = false;
         protected double[] Time;
         protected List<CellPool> neuronPools = [];
         protected List<CellPool> musclePools = [];
@@ -180,21 +183,11 @@ namespace SiliFish.ModelUnits.Architecture
                 return interPools;
             }
         }
-        [JsonPropertyOrder(2)]
-        public RunParam RunParam { get; set; } = new();
 
         [JsonIgnore]
         [Browsable(false)]
         public double[] TimeArray { get { return Time; } }
 
-        [JsonIgnore]
-        [Browsable(false)]
-        public bool ModelRun { get { return model_run; } }
-
-        [JsonIgnore]
-        [Browsable(false)]
-        public bool CancelRun { get; set; } = false;
-        public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         [JsonIgnore]
         [Browsable(false)]
@@ -206,8 +199,6 @@ namespace SiliFish.ModelUnits.Architecture
 
         public RunningModel(ModelTemplate swimmingModelTemplate)
         {
-            initialized = false;
-
             if (swimmingModelTemplate == null) return;
 
             ModelName = swimmingModelTemplate.ModelName;
@@ -217,6 +208,7 @@ namespace SiliFish.ModelUnits.Architecture
             KinemParam = swimmingModelTemplate.KinemParam.Clone();
             DynamicsParam = swimmingModelTemplate.DynamicsParam.Clone();
             SetParameters(swimmingModelTemplate.Parameters);
+            randomNumGenerator = new Random(Settings.Seed);
 
             #region Generate pools and cells
             foreach (CellPoolTemplate cellPoolTemplate in swimmingModelTemplate.CellPoolTemplates.Where(cp => cp.Active))
@@ -286,6 +278,17 @@ namespace SiliFish.ModelUnits.Architecture
             #endregion
         }
 
+        public RunningModel CreateCopy()
+        {
+            JsonSerializerOptions options = new()
+            {
+                Converters = { new ColorJsonConverter() },
+                WriteIndented = true
+            };
+            string jsonstring = JsonSerializer.Serialize(this, options);
+            List<string> issues = [];
+            return (RunningModel)ModelFile.ReadFromJson(jsonstring, out issues);//TODO exception handling if there are issues
+        }
         /// <summary>
         ///Needs to be run after created from JSON 
         /// </summary>
@@ -792,23 +795,30 @@ namespace SiliFish.ModelUnits.Architecture
         }
 
 
-        protected virtual void InitForSimulation()
+        public virtual bool InitForSimulation(RunParam runParam, Random random)
         {
-            if (RunParam.iMax <= 0) return;
+            if (runParam.iMax <= 0) return false;
+            DeltaT = runParam.DeltaT;
+            SkipDuration = runParam.SkipDuration;
+            MaxTime = runParam.MaxTime;
+            randomNumGenerator = random;
             if (!neuronPools.Any(p => p.GetCells().Any()) &&
                 !musclePools.Any(p => p.GetCells().Any())) //No cells
-                return;
-            Time = new double[RunParam.iMax];
+                return false;
+            Time = new double[runParam.iMax];
+            for (int i = 0; i < runParam.iMax; i++)
+                Time[i] = runParam.GetTimeOfIndex(i);
+
             int uniqueID = 1;
             foreach (CellPool neurons in neuronPools)
                 foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
-                    neuron.InitForSimulation(RunParam, ref uniqueID);
+                    neuron.InitForSimulation(runParam, ref uniqueID);
 
             foreach (CellPool muscleCells in musclePools)
                 foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
-                    mc.InitForSimulation(RunParam, ref uniqueID);
+                    mc.InitForSimulation(runParam, ref uniqueID);
 
-            initialized = true;
+            return true;
         }
 
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, InterPoolTemplate template)
@@ -825,66 +835,6 @@ namespace SiliFish.ModelUnits.Architecture
             pool1.ReachToCellPoolViaChemSynapse(pool2, template.CellReach, template.CoreType, template.Parameters, timeline, template.Probability, template.DistanceMode, template.Delay_ms, template.FixedDuration_ms);
         }
 
-        private void CalculateCellularOutputs(int t)
-        {
-            try
-            {
-                foreach (CellPool pool in CellPools.Where(cp => cp.IsActive(t)))
-                {
-                    foreach (Cell cell in pool.GetCells().Where(c => c.IsActive(t)))
-                        cell.CalculateCellularOutputs(t);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
-
-        private void CalculateMembranePotentialsFromCurrents(int timeIndex)
-        {
-            foreach (CellPool pool in CellPools.Where(cp => cp.IsActive(timeIndex)))
-            {
-                foreach (Cell cell in pool.GetCells().Where(c => c.Active))
-                    cell.CalculateMembranePotential(timeIndex);
-            }
-        }
-        public virtual void RunModel()
-        {
-            try
-            {
-                iProgress = 0;
-                model_run = false;
-                rand ??= new Random(Settings.Seed);
-                iMax = RunParam.iMax;
-
-                InitForSimulation();
-                if (CancelRun)
-                    return;
-                if (!initialized)
-                    return;
-                //# This loop is the main loop where we solve the ordinary differential equations at every time point
-                Time[0] = Math.Round((double)-1 * RunParam.SkipDuration, 2);
-                foreach (var index in Enumerable.Range(1, iMax - 1))
-                {
-                    iProgress = index;
-                    Time[index] = RunParam.GetTimeOfIndex(index);
-                    if (CancelRun)
-                    {
-                        CancelRun = false;
-                        break;
-                    }
-                    CalculateCellularOutputs(index);
-                    CalculateMembranePotentialsFromCurrents(index);
-                }
-                model_run = true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-            }
-        }
 
     }
 

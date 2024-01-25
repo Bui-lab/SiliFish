@@ -24,8 +24,8 @@ namespace SiliFish.ModelUnits.Junction
     {
         private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
                               //calculated at InitForSimulation, and used only during simulation
-        protected override int nMax => PreNeuron.V.Length;
-        protected override double dt => PreNeuron?.Model.RunParam.DeltaT ?? 0.1;
+        protected override int nMax => PreNeuron?.V.Length ?? 0;
+        protected override double dt => PreNeuron?.Model.DeltaT ?? 0.1;
 
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
@@ -152,20 +152,17 @@ namespace SiliFish.ModelUnits.Junction
                 n.Synapses.Add(this);
             else if (PostCell is MuscleCell m)
                 m.EndPlates.Add(this);
-
-            if (Core != null)
-                Core.DeltaT = model.RunParam.DeltaT;
         }
         public override string ToString()
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
             return $"{ID}{activeStatus}";
         }
-        public override void InitForSimulation(int nmax, bool trackCurrent, double dt, ref int uniqueID)
+        public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
-            base.InitForSimulation(nmax, trackCurrent, dt, ref uniqueID);
+            base.InitForSimulation(runParam, ref uniqueID);
             RunningModel model = PreNeuron.Model;
-            Core.InitForSimulation(dt, ref uniqueID);
+            Core?.InitForSimulation(dt, ref uniqueID);//TODO Core null
             
             if (FixedDuration_ms != null)
                 duration = (int)(FixedDuration_ms / dt);

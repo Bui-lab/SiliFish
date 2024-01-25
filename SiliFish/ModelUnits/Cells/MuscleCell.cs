@@ -74,7 +74,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCore.CreateCore(coreType, cellParams, model.RunParam.DeltaT);
+            Core = CellCore.CreateCore(coreType, cellParams);
             EndPlates = [];
             GapJunctions = [];
             ConductionVelocity = cv;
@@ -178,7 +178,7 @@ namespace SiliFish.ModelUnits.Cells
             base.InitForSimulation(runParam, ref uniqueID);
             tension = null;
             foreach (ChemicalSynapse jnc in this.EndPlates)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT, ref uniqueID);
+                jnc.InitForSimulation(runParam, ref uniqueID);
         }
 
         public override void CalculateMembranePotential(int timeIndex)

@@ -419,11 +419,11 @@ namespace SiliFish.Repositories
 
         #region CSV Functions
 
-        public static bool SaveSpikeFreqStats(RunningModel model, string filename)
+        public static bool SaveSpikeFreqStats(Simulation simulation, string filename)
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeFreqStats(model);
+                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeFreqStats(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -433,26 +433,11 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
-        public static bool SaveSpikes(RunningModel model, string filename)
+        public static bool SaveSpikes(Simulation simulation, string filename)
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikes(model);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-
-        public static bool SaveTBFs(RunningModel model, string filename)
-        {
-            try
-            {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateTBFs(model);
+                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikes(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -463,15 +448,30 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static bool SaveFullStats(RunningModel model, string filename)
+        public static bool SaveTBFs(Simulation simulation, string filename)
         {
             try
             {
-                if (!SaveSpikeFreqStats(model, FileUtil.AppendToFileName(filename, "SpikeStats")))
+                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateTBFs(simulation);
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+
+        public static bool SaveFullStats(Simulation simulation, string filename)
+        {
+            try
+            {
+                if (!SaveSpikeFreqStats(simulation, FileUtil.AppendToFileName(filename, "SpikeStats")))
                     return false;
-                if (!SaveSpikes(model, FileUtil.AppendToFileName(filename, "Spikes")))
+                if (!SaveSpikes(simulation, FileUtil.AppendToFileName(filename, "Spikes")))
                     return false;
-                if (!SaveTBFs(model, FileUtil.AppendToFileName(filename, "TBFs")))
+                if (!SaveTBFs(simulation, FileUtil.AppendToFileName(filename, "TBFs")))
                     return false;
                 return true;
             }
@@ -487,15 +487,11 @@ namespace SiliFish.Repositories
         {
             try
             {
-                if (!model.ModelRun)
-                {
-                    return false;
-                }
                 bool jncTracking = model.JunctionCurrentTrackingOn;
 
-                Dictionary<string, double[]> Vdata_list = new();
-                Dictionary<string, double[]> Gapdata_list = new();
-                Dictionary<string, double[]> Syndata_list = new();
+                Dictionary<string, double[]> Vdata_list = [];
+                Dictionary<string, double[]> Gapdata_list = [];
+                Dictionary<string, double[]> Syndata_list = [];
                 foreach (CellPool pool in model.NeuronPools.Union(model.MusclePools).OrderBy(p => p.PositionLeftRight).ThenBy(p => p.CellGroup))
                 {
                     //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
@@ -1533,7 +1529,7 @@ namespace SiliFish.Repositories
         public static void SaveToDB(string dbName, ModelBase model)
         {
             model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            DataContext dataContext = new();
+            SFDataContext dataContext = new();
 
 /*            workSheet.Cells[rowindex, 1].Value = "Model";
             workSheet.Cells[rowindex++, 2].Value = model is RunningModel ? "Running Model" : "Model Template";

@@ -96,8 +96,7 @@ namespace SiliFish.DynamicUnits
         public virtual double Vreset { get => Vr; set => Vr = value; }
 
 
-        [JsonIgnore, Browsable(false)]
-        public string CoreType => GetType().Name;
+
 
         public virtual void Initialize(double deltaT, ref int uniqueID)
         {
