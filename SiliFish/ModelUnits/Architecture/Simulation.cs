@@ -16,6 +16,7 @@ namespace SiliFish.ModelUnits.Architecture
 {
     public class Simulation(RunningModel runningModel, RunParam runParam)
     {
+        [JsonIgnore]
         public Random randomNumGenerator { get; private set; } = null;
         private int iMax => RunParam.iMax;
         private int iProgress = 0;

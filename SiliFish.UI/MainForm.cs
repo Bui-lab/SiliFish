@@ -15,6 +15,7 @@ using SiliFish.UI.Dialogs;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using System;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.Database;
 
 namespace SiliFish.UI
 {
@@ -31,6 +32,7 @@ namespace SiliFish.UI
         private RunningModel runningModel = null;
         private RunParam runParam = new();
         private ModelSimulator modelSimulator;
+        private SFDataContext sFDataContext = null;
         public ModelBase Model
         {
             get
@@ -321,8 +323,9 @@ namespace SiliFish.UI
         private void SetCurrentMode(RunMode mode, string name)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
+            miFileSaveSimulationResults.Visible = 
             miToolsGenerateStatsData.Visible =
-                miToolMultipleRun.Visible = 
+                miToolMultipleRun.Visible =
                 miToolsRunForStats.Visible =
                 miToolsSepStats.Visible =
                     mode == RunMode.RunningModel;
@@ -504,6 +507,22 @@ namespace SiliFish.UI
         private void miFileSave_Click(object sender, EventArgs e)
         {
             SaveModelAsJSON();
+        }
+
+        private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
+        {
+            if (modelSimulator == null || !modelSimulator.ModelRun || modelSimulator.LastSimulation == null)
+            {
+                MessageBox.Show("There is no simulation to be saved.");
+                return;
+            }
+            sFDataContext ??= new();
+            foreach (Simulation simulation in modelSimulator.SimulationList)
+            {
+                SimulationRecord sim = new(simulation.Start, simulation.End, modelSimulator.Description, JsonUtil.ToJson(simulation.Model));
+                sFDataContext.Add(sim);
+            }
+            sFDataContext.SaveChanges();
         }
 
         private void miFileExport_Click(object sender, EventArgs e)
@@ -740,7 +759,6 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
-
 
     }
 }

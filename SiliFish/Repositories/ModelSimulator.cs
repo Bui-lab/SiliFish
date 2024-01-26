@@ -11,42 +11,36 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Repositories
 {
-    public class ModelSimulator
+    public class ModelSimulator(RunningModel runningModel, RunParam runParam, int numSimulations, bool parallelRun, Action<List<Simulation>, bool> completionAction)
     {
-        private List<Simulation> simulationList;
-        private RunningModel runningModel;
-        private RunParam runParam;
-        private int numSimulations;
+        private RunningModel runningModel = runningModel;
+        private RunParam runParam = runParam;
+        private int numSimulations = numSimulations;
         private int runSimulations = 0;
-        private bool parallelRun = false;
-        public Action<List<Simulation>, bool> simulationCompletionAction;
-        public Simulation LastSimulation => simulationList?.Count > 0 ? simulationList.Last() : null;
+        private bool parallelRun = parallelRun;
+        private string runmode => parallelRun ? "parallel" : "series";
+        private DateTime startTime, endTime;
+        public Action<List<Simulation>, bool> simulationCompletionAction = completionAction;
+        public List<Simulation> SimulationList { get; private set; }
+        public Simulation LastSimulation => SimulationList?.Count > 0 ? SimulationList.Last() : null;
 
-        public bool ModelRun { get; set; }
+        public bool ModelRun { get; set; } = false;
         public bool Cancelled { get; set; }
 
-        public double GetProgress() => simulationList?.Sum(s => s.GetProgress())/numSimulations ?? 0;
-
-        public ModelSimulator(RunningModel runningModel, RunParam runParam, int numSimulations, bool parallelRun, Action<List<Simulation>, bool> completionAction) 
-        { 
-            this.runningModel = runningModel;
-            this.runParam = runParam;
-            this.numSimulations = numSimulations;
-            this.parallelRun = parallelRun;
-            ModelRun = false;
-            simulationCompletionAction = completionAction;
-        }
-
+        public double GetProgress() => SimulationList?.Sum(s => s.GetProgress())/numSimulations ?? 0;
+        public string Description => $"{numSimulations} simulations run in {runmode}. Total duration: {endTime - startTime}";
         private void RunMultipleSimulations()
         {
             try
             {
+                startTime = DateTime.Now;
                 for (int i = 0; i < numSimulations; i++)
                 {
                     Simulation simulation = new(runningModel, runParam);
-                    simulationList.Add(simulation);
+                    SimulationList.Add(simulation);
                     simulation.RunModel();
                 }
+                endTime = DateTime.Now;
             }
             catch (Exception ex)
             {
@@ -55,7 +49,7 @@ namespace SiliFish.Repositories
             finally
             {
                 ModelRun = true;
-                simulationCompletionAction?.Invoke(simulationList, Cancelled);
+                simulationCompletionAction?.Invoke(SimulationList, Cancelled);
             }
         }
         private void RunSingleSimulation(Simulation simulation)
@@ -72,7 +66,10 @@ namespace SiliFish.Repositories
             {
                 ModelRun = true;//is set to true even if a single simulation is completed
                 if (++runSimulations == numSimulations)
-                    simulationCompletionAction?.Invoke(simulationList, Cancelled);
+                {
+                    endTime = DateTime.Now;
+                    simulationCompletionAction?.Invoke(SimulationList, Cancelled);
+                }
             }
         }
 
@@ -83,17 +80,18 @@ namespace SiliFish.Repositories
                 if (runningModel == null || numSimulations <= 0)
                     return;
                 ModelRun = false;
-                simulationList = [];
+                SimulationList = [];
                 runSimulations = 0;
                 //Run multiple simulations with a different seed each time - for model statistics
                 if (parallelRun)
                 {
+                    startTime = DateTime.Now;
                     Random rand = new(runningModel.Settings.Seed);
                     for (int i = 0; i < numSimulations; i++)
                     {
                         RunningModel running = runningModel.CreateCopy();
                         Simulation simulation = new(running, runParam);
-                        simulationList.Add(simulation);
+                        SimulationList.Add(simulation);
                         running.Settings.Seed = rand.Next();
                         Task.Run(() => RunSingleSimulation(simulation));
                     }
@@ -115,8 +113,8 @@ namespace SiliFish.Repositories
             try
             {
                 Cancelled = true;
-                simulationList.ForEach(simulation => simulation.SimulationCancelled = true);
-                simulationCompletionAction?.Invoke(simulationList, Cancelled);
+                SimulationList.ForEach(simulation => simulation.SimulationCancelled = true);
+                simulationCompletionAction?.Invoke(SimulationList, Cancelled);
             }
             catch (Exception ex)
             {

@@ -24,6 +24,11 @@ public class SFDataContext: DbContext
         optionsBuilder.UseSqlite($"Data Source={DbFileName}");
     }
 
+    public override int SaveChanges()
+    {
+        Database.EnsureCreated();
+        return base.SaveChanges();
+    }
     public SFDataContext(bool temp = false)
     {
         if (temp)
