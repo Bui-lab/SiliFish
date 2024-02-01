@@ -668,8 +668,8 @@ namespace SiliFish.UI.Controls
 
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > model.RunParam.MaxTime)
-                tPlotEnd = model.RunParam.MaxTime;
+            if (tPlotEnd > model.MaxTime)
+                tPlotEnd = model.MaxTime;
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -810,7 +810,7 @@ namespace SiliFish.UI.Controls
                 Selection = plotSelection
             };
             PlotGenerator PG = new();
-            (string Title, Charts) = PG.GetPlotData(lastPlot, simulation.Model, Cells, Pools, tPlotStart, tPlotEnd);
+            (string Title, Charts) = PG.GetPlotData(lastPlot, simulation, Cells, Pools, tPlotStart, tPlotEnd);
             errorMessage = PG.errorMessage;
             return (Title, Charts);
         }
@@ -1191,7 +1191,7 @@ namespace SiliFish.UI.Controls
             try
             {
                 if (simulation == null || !simulation.SimulationRun) return;
-                htmlAnimation = AnimationGenerator.GenerateAnimation(simulation.Model, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
+                htmlAnimation = AnimationGenerator.GenerateAnimation(simulation, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
                 Invoke(CompleteAnimation);
             }
             catch { Invoke(CancelAnimation); }
