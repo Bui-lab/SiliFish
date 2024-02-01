@@ -18,6 +18,8 @@ using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
+using System.ComponentModel;
+using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.UI.Controls
 {
@@ -59,10 +61,12 @@ namespace SiliFish.UI.Controls
         PlotSelectionInterface plotSelection;
         private string tempFile;
         List<Chart> Charts;
-        RunningModel RunningModel = null;
+        Simulation simulation = null;
+        RunningModel model = null;
         bool rendered2D = false;
+        bool rendered2DFull = false; //whether the 2D rendering is done by hiding in inactive nodes - will need rerendering
         bool rendered3D = false;
-
+        TwoDRenderer TwoDRenderer = new();
 
         public ModelOutputControl()
         {
@@ -74,7 +78,7 @@ namespace SiliFish.UI.Controls
 
 
             pictureBox.MouseWheel += PictureBox_MouseWheel;
-            
+
             cellSelectionPlot.SelectionChanged += CellSelectionPlot_SelectionChanged;
 
             dd3DViewpoint.SelectedIndex = 0;
@@ -120,14 +124,15 @@ namespace SiliFish.UI.Controls
                 cellSelectionPlot.CombineOptionsVisible = true;
             }
         }
-        public void SetRunningModel(RunningModel model)
+        public void SetRunningModel(Simulation simulation, RunningModel model)
         {
             if (model == null) return;
-            RunningModel = model;
+            this.simulation = simulation;
+            this.model = model;
             cellSelectionPlot.RunningModel = model;
             cellSelectionSpike.RunningModel = model;
             PopulatePlotTypes();
-            int NumberOfSomites = RunningModel.ModelDimensions.NumberOfSomites;
+            int NumberOfSomites = model.ModelDimensions.NumberOfSomites;
             if (NumberOfSomites > 0)
             {
                 cb3DAllSomites.Visible = true;
@@ -159,14 +164,14 @@ namespace SiliFish.UI.Controls
                 catch { }
             }
         }
-        public void CompleteRun()
+        public void CompleteRun(RunParam runParam)
         {
-            decimal dt = (decimal)RunningModel.RunParam.DeltaT;
+            decimal dt = (decimal)runParam.DeltaT;
             eAnimationdt.Minimum = dt;
             eAnimationdt.Increment = dt;
             eAnimationdt.Value = dt; //10 * dt;
 
-            decimal tMax = (decimal)RunningModel.RunParam.MaxTime;
+            decimal tMax = (decimal)runParam.MaxTime;
             ePlotEnd.Value = eSpikeEnd.Value = tMax;
             eAnimationEnd.Value = tMax;
 
@@ -277,15 +282,18 @@ namespace SiliFish.UI.Controls
 
         #region Outputs
         #region 2D Rendering
-        private void RenderIn2D()
+        private void RenderIn2D(bool refresh)
         {
-            if (RunningModel == null) return;
-            TwoDRenderer modelGenerator = new();
-            List<CellPool> cellPools = RunningModel.CellPools;
-            if (cbHideNonspiking.Checked && RunningModel.ModelRun)
-                cellPools = RunningModel.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
-            string html = modelGenerator.Create2DRendering(RunningModel, cellPools, webView2DRender.Width, webView2DRender.Height,
-                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
+            if (model == null) return;
+
+            //If the full rendering has never been done, a brand new 2D rendering need to be created rather than refreshing the old one
+            if (refresh && !cb2DHideNonspiking.Checked && !rendered2DFull)
+                refresh = false;
+            List<CellPool> cellPools = model.CellPools;
+            if (cb2DHideNonspiking.Checked && simulation!=null && simulation.SimulationRun)
+                cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
+            string html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
+                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
             bool navigated = false;
@@ -293,14 +301,15 @@ namespace SiliFish.UI.Controls
             if (!navigated)
                 Warner.LargeFileWarning(tempFile);
             rendered2D = true;
+            if (!refresh)
+            {
+                rendered2DFull = !cb2DHideNonspiking.Checked;
+            }
         }
         private void btn2DRender_Click(object sender, EventArgs e)
         {
-            RenderIn2D();
+            RenderIn2D(false);
         }
-
-
-
         private async void linkSaveHTML2D_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -345,6 +354,33 @@ namespace SiliFish.UI.Controls
         {
             gr2DLegend.Visible = cb2DLegend.Checked;
         }
+        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DNodeSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
+            if (ud2DNodeSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+        }
+
+        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (ud2DLinkSize.UpClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
+            if (ud2DLinkSize.DownClick)
+                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
+        }
+        private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
+        {
+            p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
+        }
+
+
+        private void cb2DHideNonspiking_CheckedChanged(object sender, EventArgs e)
+        {
+            RenderIn2D(true);
+        }
+
+
         #endregion
 
         #region 3D Rendering
@@ -354,10 +390,10 @@ namespace SiliFish.UI.Controls
             try
             {
                 ThreeDRenderer threeDRenderer = new();
-                string html = threeDRenderer.RenderIn3D(RunningModel, RunningModel.CellPools,
+                string html = threeDRenderer.RenderIn3D(model, model.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     webView3DRender.Width, webView3DRender.Height,
-                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked, offline: cb3DOffline.Checked);
+                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
                 bool navigated = false;
                 webView3DRender.NavigateTo(html, "3DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
                 if (!navigated)
@@ -376,12 +412,12 @@ namespace SiliFish.UI.Controls
         }
         private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
         {
-            if (RunningModel == null) return;
+            if (model == null) return;
             e3DSomiteRange.Visible = !cb3DAllSomites.Checked;
             string func = $"SetSomites([]);";
             if (!cb3DAllSomites.Checked)
             {
-                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, model.ModelDimensions.NumberOfSomites);
                 func = $"SetSomites([{string.Join(',', somites)}]);";
             }
             await webView3DRender.ExecuteScriptAsync(func);
@@ -395,10 +431,10 @@ namespace SiliFish.UI.Controls
 
         private async void e3DSomiteRange_Leave(object sender, EventArgs e)
         {
-            if (RunningModel == null) return;
+            if (model == null) return;
             if (lastSomiteSelection != e3DSomiteRange.Text)
             {
-                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, RunningModel.ModelDimensions.NumberOfSomites);
+                List<int> somites = Util.ParseRange(e3DSomiteRange.Text, 1, model.ModelDimensions.NumberOfSomites);
                 string func = $"SetSomites([{string.Join(',', somites)}]);";
                 await webView3DRender.ExecuteScriptAsync(func);
             }
@@ -477,7 +513,7 @@ namespace SiliFish.UI.Controls
         }
         internal async void Highlight(ModelUnitBase unitToPlot, bool force)
         {
-            if (RunningModel == null) return;
+            if (model == null) return;
             if (unitToPlot == null) return;
             if (tabOutputs.SelectedTab != t2DRender && tabOutputs.SelectedTab != t3DRender)
             {
@@ -510,22 +546,10 @@ namespace SiliFish.UI.Controls
             if (ud3DNodeSize.DownClick)
                 await webView3DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
         }
-        private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
+        private void cb3DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
         {
-            if (ud2DNodeSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(1.1);");
-            if (ud2DNodeSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetNodeSizeMultiplier(0.9);");
+            p3DRenderOptions.Visible = cb3DRenderShowOptions.Checked;
         }
-
-        private async void ud2DLinkSize_SelectedItemChanged(object sender, EventArgs e)
-        {
-            if (ud2DLinkSize.UpClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(1.1);");
-            if (ud2DLinkSize.DownClick)
-                await webView2DRender.ExecuteScriptAsync("SetLinkSizeMultiplier(0.9);");
-        }
-
         #endregion
         #region HTML and Windows Plots - Common Functions
 
@@ -584,14 +608,14 @@ namespace SiliFish.UI.Controls
                     if (PlotType == PlotType.EpisodesMN || PlotType == PlotType.EpisodesTail)
                         numOfPlots = 7;
                     else
-                        numOfPlots = RunningModel.ModelDimensions.NumberOfSomites + 1;
+                        numOfPlots = model.ModelDimensions.NumberOfSomites + 1;
                 }
                 toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
             }
         }
         private void DisplayNumberOfPlots()
         {
-            if (RunningModel == null) return;
+            if (model == null) return;
             GlobalSettings.LastPlotSettings.Clear();//to prevent overwriting the plot changes during a run
 
             if (PlotType == PlotType.EpisodesTail || PlotType == PlotType.EpisodesMN)
@@ -601,7 +625,7 @@ namespace SiliFish.UI.Controls
                 return;
             }
             GetPlotSubset();
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, plotSelection);
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionPlot.PoolSubset, plotSelection);
             DisplayNumberOfPlots(Cells, Pools);
         }
 
@@ -644,8 +668,8 @@ namespace SiliFish.UI.Controls
 
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > RunningModel.RunParam.MaxTime)
-                tPlotEnd = RunningModel.RunParam.MaxTime;
+            if (tPlotEnd > model.MaxTime)
+                tPlotEnd = model.MaxTime;
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -676,13 +700,13 @@ namespace SiliFish.UI.Controls
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)
         {
             if (sender is not PlotDefinition plot) return;
-            if (!RunningModel.ModelRun) return;
+            if (!simulation.SimulationRun) return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > RunningModel.RunParam.MaxTime)
-                tPlotEnd = RunningModel.RunParam.MaxTime;
+            if (tPlotEnd > simulation.RunParam.MaxTime)
+                tPlotEnd = simulation.RunParam.MaxTime;
 
             cellSelectionPlot.SetPlot(plot);
             if (plot.Selection is PlotSelectionUnits selectedUnits)
@@ -704,7 +728,7 @@ namespace SiliFish.UI.Controls
             {
                 string JSONString = richTextBox.Text;
                 plot = (PlotDefinition)JsonUtil.ToObject(typeof(PlotDefinition), JSONString);
-                RunningModel.LinkPlotObjects(plot);
+                model.LinkPlotObjects(plot);
                 List<PlotDefinition> plots = listPlotHistory.GetItems<PlotDefinition>().ToList();
                 plots[ind] = plot;
                 listPlotHistory.SetItems(plots);
@@ -743,7 +767,7 @@ namespace SiliFish.UI.Controls
                     {
                         foreach (PlotDefinition plot in plotList)
                         {
-                            RunningModel.LinkPlotObjects(plot);
+                            model.LinkPlotObjects(plot);
                         }
                     }
                     //plotList.RemoveAll(pl => pl.Selection == null); this removes Episodes plot as well - why was it added in the first place?
@@ -757,17 +781,17 @@ namespace SiliFish.UI.Controls
         }
         private (string Title, List<Chart>) GenerateCharts()
         {
-            if (RunningModel == null) return ("", null);
+            if (simulation == null || model == null) return ("", null);
 
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
             string plotsubset = cellSelectionPlot.Visible ? cellSelectionPlot.PoolSubset : "";
             if (plotSelection is PlotSelectionMultiCells || plotSelection is PlotSelectionUnits)
             {
-                int tSkip = RunningModel.RunParam.SkipDuration;
-                double dt = RunningModel.RunParam.DeltaT;
+                int tSkip = simulation.RunParam.SkipDuration;
+                double dt = simulation.RunParam.DeltaT;
                 int iStart = (int)((tPlotStart + tSkip) / dt);
                 int iEnd = (int)((tPlotEnd + tSkip) / dt);
-                (Cells, Pools) = RunningModel.GetSubsetCellsAndPools(plotsubset, plotSelection, iStart, iEnd);
+                (Cells, Pools) = model.GetSubsetCellsAndPools(plotsubset, plotSelection, iStart, iEnd);
             }
 
             if (lastPlot != null && lastPlot.PlotType.Equals(PlotType) &&
@@ -786,14 +810,14 @@ namespace SiliFish.UI.Controls
                 Selection = plotSelection
             };
             PlotGenerator PG = new();
-            (string Title, Charts) = PG.GetPlotData(lastPlot, RunningModel, Cells, Pools, tPlotStart, tPlotEnd);
+            (string Title, Charts) = PG.GetPlotData(lastPlot, simulation, Cells, Pools, tPlotStart, tPlotEnd);
             errorMessage = PG.errorMessage;
             return (Title, Charts);
         }
 
         private bool PrePlotCheck()
         {
-            if (RunningModel == null || !RunningModel.ModelRun) return false;
+            if (simulation == null || !simulation.SimulationRun) return false;
             SaveLastPlotSettings();
 
             GetPlotSubset();
@@ -805,7 +829,7 @@ namespace SiliFish.UI.Controls
                     return false;
             }
             if (!MainForm.currentPlotWarning &&
-                !RunningModel.JunctionCurrentTrackingOn && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
+                !model.JunctionCurrentTrackingOn && (PlotType.GetGroup() == "current" || PlotType == PlotType.FullDyn))
             {
                 MainForm.currentPlotWarning = true;
                 string msg = $"Plotting current information (including Full Dynamics) will require to regenerate the current arrays for the whole simulation for the selected cells. " +
@@ -814,7 +838,7 @@ namespace SiliFish.UI.Controls
                     return false;
             }
             if (PlotType.GetGroup() == "episode")
-                RunningModel.SetAnimationParameters(RunningModel.KinemParam);
+                model.SetAnimationParameters(model.KinemParam);
             return true;
         }
         #endregion
@@ -943,12 +967,12 @@ namespace SiliFish.UI.Controls
                 tabPlotSub.SelectedTab = tPlotWindows;
                 UseWaitCursor = true;
                 cmPlot.Enabled = false;
-                btnPlotHTML.Enabled = false;                
-                
+                btnPlotHTML.Enabled = false;
+
                 (string Title, Charts) = GenerateCharts();
 
                 List<Image> Images = WindowsPlotGenerator.PlotCharts(Charts);
-                
+
                 Images?.RemoveAll(img => img == null);
 
                 int ncol = 1; // Images?.Count > 5 ? 2 : 1;
@@ -1019,11 +1043,11 @@ namespace SiliFish.UI.Controls
         }
         private void btnListSpikes_Click(object sender, EventArgs e)
         {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
+            if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
-            int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
-            int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection(), iSpikeStart, iSpikeEnd);
+            int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
+            int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection(), iSpikeStart, iSpikeEnd);
             Cells ??= new();
             if (Pools != null)
                 foreach (CellPool pool in Pools)
@@ -1044,7 +1068,7 @@ namespace SiliFish.UI.Controls
                 foreach (int spikeIndex in spikes)
                 {
                     int rowIndex = AddCellToSpikeGrid(cell);
-                    dgSpikeStats[colSpikeTime.Index, rowIndex].Value = RunningModel.TimeArray[spikeIndex];
+                    dgSpikeStats[colSpikeTime.Index, rowIndex].Value = model.TimeArray[spikeIndex];
                 }
             }
             linkExportSpikes.Enabled = true;
@@ -1076,15 +1100,15 @@ namespace SiliFish.UI.Controls
         }
         private void btnListRCTrains_Click(object sender, EventArgs e)
         {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
+            if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
-            (List<Cell> Cells, List<CellPool> Pools) = RunningModel.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
             Cells ??= new();
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
-            int iSpikeStart = RunningModel.RunParam.iIndex((double)eSpikeStart.Value);
-            int iSpikeEnd = RunningModel.RunParam.iIndex((double)eSpikeEnd.Value);
+            int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
+            int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
 
             List<string> pools = Cells.Select(c => c.CellPool.ID).Distinct().ToList();
 
@@ -1092,7 +1116,7 @@ namespace SiliFish.UI.Controls
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
-                List<TrainOfBursts> burstTrains = SpikeDynamics.GenerateColumnsOfBursts(RunningModel.DynamicsParam, RunningModel.RunParam.DeltaT,
+                List<TrainOfBursts> burstTrains = SpikeDynamics.GenerateColumnsOfBursts(model.DynamicsParam, simulation.RunParam.DeltaT,
                     pooledCells, iSpikeStart, iSpikeEnd);
                 foreach (TrainOfBursts burstTrain in burstTrains)
                 {
@@ -1160,12 +1184,14 @@ namespace SiliFish.UI.Controls
         double[] lastAnimationTimeArray;
         Dictionary<string, Coordinate[]> lastAnimationSpineCoordinates;
 
+        public object ModelGenerator { get; private set; }
+
         private void Animate()
         {
             try
             {
-                if (RunningModel == null || !RunningModel.ModelRun) return;
-                htmlAnimation = AnimationGenerator.GenerateAnimation(RunningModel, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
+                if (simulation == null || !simulation.SimulationRun) return;
+                htmlAnimation = AnimationGenerator.GenerateAnimation(simulation, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
                 Invoke(CompleteAnimation);
             }
             catch { Invoke(CancelAnimation); }
@@ -1189,21 +1215,21 @@ namespace SiliFish.UI.Controls
         }
         private void btnAnimate_Click(object sender, EventArgs e)
         {
-            if (RunningModel == null || !RunningModel.ModelRun) return;
+            if (simulation == null || !simulation.SimulationRun) return;
 
             btnAnimate.Enabled = false;
 
             tAnimStart = (int)eAnimationStart.Value;
             tAnimEnd = (int)eAnimationEnd.Value;
-            if (tAnimStart > RunningModel.RunParam.MaxTime || tAnimStart < 0)
+            if (tAnimStart > simulation.RunParam.MaxTime || tAnimStart < 0)
                 tAnimStart = 0;
-            if (tAnimEnd > RunningModel.RunParam.MaxTime)
-                tAnimEnd = RunningModel.RunParam.MaxTime;
-            double dt = RunningModel.RunParam.DeltaT;
+            if (tAnimEnd > simulation.RunParam.MaxTime)
+                tAnimEnd = simulation.RunParam.MaxTime;
+            double dt = simulation.RunParam.DeltaT;
             lastAnimationStartIndex = (int)(tAnimStart / dt);
             int lastAnimationEndIndex = (int)(tAnimEnd / dt);
-            lastAnimationTimeArray = RunningModel.TimeArray;
-            RunningModel.SetAnimationParameters(RunningModel.KinemParam);
+            lastAnimationTimeArray = model.TimeArray;
+            model.SetAnimationParameters(model.KinemParam);
 
             tAnimdt = eAnimationdt.Value;
             Invoke(Animate);
@@ -1234,7 +1260,7 @@ namespace SiliFish.UI.Controls
         private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
-                RenderIn2D();
+                RenderIn2D(false);
             else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
                 RenderIn3D();
         }
@@ -1244,15 +1270,7 @@ namespace SiliFish.UI.Controls
             tabOutputs_SelectedIndexChanged(sender, e);
         }
 
-        private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
-        {
-            p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
-        }
 
-        private void cb3DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
-        {
-            p3DRenderOptions.Visible = cb3DRenderShowOptions.Checked;
-        }
     }
 
 }

@@ -42,7 +42,7 @@ namespace SiliFish.DynamicUnits
         public static CellCore CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null)
         {
             if (string.IsNullOrEmpty(coreType)) return null;
-            CellCore core = (CellCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            CellCore core = (CellCore)Activator.CreateInstance(typeMap[coreType], parameters ?? []);
             if (dt_run != null)
                 core.deltaT = (double)dt_run;
             else if (core.deltaT == 0)
@@ -52,7 +52,7 @@ namespace SiliFish.DynamicUnits
 
         public static CellCore CreateCore(CellCore copyFrom)
         {
-            CellCore core = (CellCore)Activator.CreateInstance(typeMap[copyFrom.CoreType], copyFrom.Parameters ?? new Dictionary<string, double>());
+            CellCore core = (CellCore)Activator.CreateInstance(typeMap[copyFrom.CoreType], copyFrom.Parameters ?? []);
             core.deltaT = copyFrom.deltaT;
             return core;
         }
@@ -96,11 +96,11 @@ namespace SiliFish.DynamicUnits
         public virtual double Vreset { get => Vr; set => Vr = value; }
 
 
-        [JsonIgnore, Browsable(false)]
-        public string CoreType => GetType().Name;
 
-        public virtual void Initialize(double deltaT)
+
+        public virtual void Initialize(double deltaT, ref int uniqueID)
         {
+            UniqueId = uniqueID++;
             this.deltaT = deltaT;
             Initialize();
         }
@@ -274,7 +274,7 @@ namespace SiliFish.DynamicUnits
         }
         public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
-            errors ??= new();
+            errors ??= [];
             BaseCore core = CreateCore(coreType, param);
             return core.CheckValues(ref errors);
         }

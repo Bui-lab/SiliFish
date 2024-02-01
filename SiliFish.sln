@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{DF1638C5
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\GithubNotes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\GithubNotes.txt
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\ModelNotes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\ModelNotes.txt
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\QuickNotes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\QuickNotes.txt
+		..\..\..\Users\Emi\SiliFish\Output\SiliFish.DB = ..\..\..\Users\Emi\SiliFish\Output\SiliFish.DB
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Themes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Themes.txt
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Todo.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Todo.txt
 	EndProjectSection
@@ -22,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		3rd PARTY LICENSE = 3rd PARTY LICENSE
 		LICENSE = LICENSE
 		README.md = README.md
+		..\..\..\Users\Emi\SiliFish\Output\SiliFish.DB = ..\..\..\Users\Emi\SiliFish\Output\SiliFish.DB
 	EndProjectSection
 EndProject
 Global

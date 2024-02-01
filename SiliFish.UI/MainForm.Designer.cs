@@ -49,6 +49,15 @@ namespace SiliFish.UI
             miToolsSep1 = new ToolStripSeparator();
             miToolsCellularDynamics = new ToolStripMenuItem();
             miToolsSep2 = new ToolStripSeparator();
+            miToolsGenerateStatsData = new ToolStripMenuItem();
+            miToolsStatsSpikeStats = new ToolStripMenuItem();
+            miToolsStatsSpikes = new ToolStripMenuItem();
+            miToolsStatsTBFs = new ToolStripMenuItem();
+            miToolsSep3 = new ToolStripSeparator();
+            miToolsStatsFull = new ToolStripMenuItem();
+            miToolMultipleRun = new ToolStripMenuItem();
+            miToolsRunForStats = new ToolStripMenuItem();
+            miToolsSepStats = new ToolStripSeparator();
             miToolsSettings = new ToolStripMenuItem();
             mView = new ToolStripMenuItem();
             miViewOutputFolder = new ToolStripMenuItem();
@@ -86,7 +95,7 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
-            miToolsGenerateStatsData = new ToolStripMenuItem();
+            miFileSaveSimulationResults = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -138,7 +147,7 @@ namespace SiliFish.UI
             // 
             // mFile
             // 
-            mFile.DropDownItems.AddRange(new ToolStripItem[] { miFileLoad, miFileSave, miFileSep1, miFileExport, miFileImport, miFileSep2, miFileNewModel, miFileClearModel });
+            mFile.DropDownItems.AddRange(new ToolStripItem[] { miFileLoad, miFileSave, miFileSaveSimulationResults, miFileSep1, miFileExport, miFileImport, miFileSep2, miFileNewModel, miFileClearModel });
             mFile.Name = "mFile";
             mFile.Size = new Size(37, 19);
             mFile.Text = "File";
@@ -146,7 +155,7 @@ namespace SiliFish.UI
             // miFileLoad
             // 
             miFileLoad.Name = "miFileLoad";
-            miFileLoad.Size = new Size(169, 22);
+            miFileLoad.Size = new Size(270, 22);
             miFileLoad.Text = "Load";
             miFileLoad.Click += miFileLoad_Click;
             // 
@@ -154,51 +163,51 @@ namespace SiliFish.UI
             // 
             miFileSave.Name = "miFileSave";
             miFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            miFileSave.Size = new Size(169, 22);
+            miFileSave.Size = new Size(270, 22);
             miFileSave.Text = "Save";
             miFileSave.Click += miFileSave_Click;
             // 
             // miFileSep1
             // 
             miFileSep1.Name = "miFileSep1";
-            miFileSep1.Size = new Size(166, 6);
+            miFileSep1.Size = new Size(267, 6);
             // 
             // miFileExport
             // 
             miFileExport.Name = "miFileExport";
-            miFileExport.Size = new Size(169, 22);
+            miFileExport.Size = new Size(270, 22);
             miFileExport.Text = "Export to Excel";
             miFileExport.Click += miFileExport_Click;
             // 
             // miFileImport
             // 
             miFileImport.Name = "miFileImport";
-            miFileImport.Size = new Size(169, 22);
+            miFileImport.Size = new Size(270, 22);
             miFileImport.Text = "Import from Excel";
             miFileImport.Click += miFileImport_Click;
             // 
             // miFileSep2
             // 
             miFileSep2.Name = "miFileSep2";
-            miFileSep2.Size = new Size(166, 6);
+            miFileSep2.Size = new Size(267, 6);
             // 
             // miFileNewModel
             // 
             miFileNewModel.Name = "miFileNewModel";
-            miFileNewModel.Size = new Size(169, 22);
+            miFileNewModel.Size = new Size(270, 22);
             miFileNewModel.Text = "New Model";
             miFileNewModel.Click += miFileNewModel_Click;
             // 
             // miFileClearModel
             // 
             miFileClearModel.Name = "miFileClearModel";
-            miFileClearModel.Size = new Size(169, 22);
+            miFileClearModel.Size = new Size(270, 22);
             miFileClearModel.Text = "Clear Model";
             miFileClearModel.Click += miFileClearModel_Click;
             // 
             // mTools
             // 
-            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsGenerateStatsData, miToolsSep2, miToolsSettings });
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolMultipleRun, miToolsRunForStats, miToolsSepStats, miToolsSettings });
             mTools.Name = "mTools";
             mTools.Size = new Size(46, 19);
             mTools.Text = "Tools";
@@ -206,31 +215,90 @@ namespace SiliFish.UI
             // miToolsCompareModel
             // 
             miToolsCompareModel.Name = "miToolsCompareModel";
-            miToolsCompareModel.Size = new Size(180, 22);
+            miToolsCompareModel.Size = new Size(207, 22);
             miToolsCompareModel.Text = "Compare To Model";
             miToolsCompareModel.Click += miToolsCompareModel_Click;
             // 
             // miToolsSep1
             // 
             miToolsSep1.Name = "miToolsSep1";
-            miToolsSep1.Size = new Size(177, 6);
+            miToolsSep1.Size = new Size(204, 6);
             // 
             // miToolsCellularDynamics
             // 
             miToolsCellularDynamics.Name = "miToolsCellularDynamics";
-            miToolsCellularDynamics.Size = new Size(180, 22);
+            miToolsCellularDynamics.Size = new Size(207, 22);
             miToolsCellularDynamics.Text = "Cellular Dynamics";
             miToolsCellularDynamics.Click += miToolsCellularDynamics_Click;
             // 
             // miToolsSep2
             // 
             miToolsSep2.Name = "miToolsSep2";
-            miToolsSep2.Size = new Size(177, 6);
+            miToolsSep2.Size = new Size(204, 6);
+            // 
+            // miToolsGenerateStatsData
+            // 
+            miToolsGenerateStatsData.DropDownItems.AddRange(new ToolStripItem[] { miToolsStatsSpikeStats, miToolsStatsSpikes, miToolsStatsTBFs, miToolsSep3, miToolsStatsFull });
+            miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
+            miToolsGenerateStatsData.Size = new Size(207, 22);
+            miToolsGenerateStatsData.Text = "Generate Stats Data";
+            // 
+            // miToolsStatsSpikeStats
+            // 
+            miToolsStatsSpikeStats.Name = "miToolsStatsSpikeStats";
+            miToolsStatsSpikeStats.Size = new Size(188, 22);
+            miToolsStatsSpikeStats.Text = "Spike Frequency Stats";
+            miToolsStatsSpikeStats.Click += miToolsStatsSpikeStats_Click;
+            // 
+            // miToolsStatsSpikes
+            // 
+            miToolsStatsSpikes.Name = "miToolsStatsSpikes";
+            miToolsStatsSpikes.Size = new Size(188, 22);
+            miToolsStatsSpikes.Text = "Spikes";
+            miToolsStatsSpikes.Click += miToolsStatsSpikes_Click;
+            // 
+            // miToolsStatsTBFs
+            // 
+            miToolsStatsTBFs.Name = "miToolsStatsTBFs";
+            miToolsStatsTBFs.Size = new Size(188, 22);
+            miToolsStatsTBFs.Text = "Tail Beat Frequencies";
+            miToolsStatsTBFs.Click += miToolsStatsTBFs_Click;
+            // 
+            // miToolsSep3
+            // 
+            miToolsSep3.Name = "miToolsSep3";
+            miToolsSep3.Size = new Size(185, 6);
+            // 
+            // miToolsStatsFull
+            // 
+            miToolsStatsFull.Name = "miToolsStatsFull";
+            miToolsStatsFull.Size = new Size(188, 22);
+            miToolsStatsFull.Text = "Full Stats";
+            miToolsStatsFull.Click += miToolsStatsFull_Click;
+            // 
+            // miToolMultipleRun
+            // 
+            miToolMultipleRun.Name = "miToolMultipleRun";
+            miToolMultipleRun.Size = new Size(207, 22);
+            miToolMultipleRun.Text = "Run Multiple Simulations";
+            miToolMultipleRun.Click += miToolMultipleRun_Click;
+            // 
+            // miToolsRunForStats
+            // 
+            miToolsRunForStats.Name = "miToolsRunForStats";
+            miToolsRunForStats.Size = new Size(207, 22);
+            miToolsRunForStats.Text = "Run for Statistics";
+            miToolsRunForStats.Click += miToolsRunForStats_Click;
+            // 
+            // miToolsSepStats
+            // 
+            miToolsSepStats.Name = "miToolsSepStats";
+            miToolsSepStats.Size = new Size(204, 6);
             // 
             // miToolsSettings
             // 
             miToolsSettings.Name = "miToolsSettings";
-            miToolsSettings.Size = new Size(180, 22);
+            miToolsSettings.Size = new Size(207, 22);
             miToolsSettings.Text = "Settings";
             miToolsSettings.Click += miToolsSettings_Click;
             // 
@@ -313,7 +381,7 @@ namespace SiliFish.UI
             btnGenerateModel.BackColor = Color.FromArgb(96, 125, 139);
             btnGenerateModel.FlatAppearance.BorderColor = Color.LightGray;
             btnGenerateModel.FlatStyle = FlatStyle.Popup;
-            btnGenerateModel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btnGenerateModel.Font = new Font("Segoe UI", 12F);
             btnGenerateModel.ForeColor = Color.White;
             btnGenerateModel.Location = new Point(5, 5);
             btnGenerateModel.Name = "btnGenerateModel";
@@ -464,7 +532,7 @@ namespace SiliFish.UI
             // lRunParameters
             // 
             lRunParameters.AutoSize = true;
-            lRunParameters.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lRunParameters.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lRunParameters.Location = new Point(8, 8);
             lRunParameters.Name = "lRunParameters";
             lRunParameters.Size = new Size(133, 15);
@@ -552,12 +620,12 @@ namespace SiliFish.UI
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             // 
-            // miToolsGenerateStatsData
+            // miFileSaveSimulationResults
             // 
-            miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
-            miToolsGenerateStatsData.Size = new Size(180, 22);
-            miToolsGenerateStatsData.Text = "Generate Stats Data";
-            miToolsGenerateStatsData.Click += miToolsGenerateStatsData_Click;
+            miFileSaveSimulationResults.Name = "miFileSaveSimulationResults";
+            miFileSaveSimulationResults.Size = new Size(270, 22);
+            miFileSaveSimulationResults.Text = "Save Simulation Results (to database)";
+            miFileSaveSimulationResults.Click += miFileSaveSimulationResults_Click;
             // 
             // MainForm
             // 
@@ -651,5 +719,14 @@ namespace SiliFish.UI
         private ToolStripMenuItem miToolsSettings;
         private ToolStripSeparator miToolsSep2;
         private ToolStripMenuItem miToolsGenerateStatsData;
+        private ToolStripMenuItem miToolsRunForStats;
+        private ToolStripSeparator miToolsSepStats;
+        private ToolStripMenuItem miToolsStatsSpikeStats;
+        private ToolStripMenuItem miToolsStatsSpikes;
+        private ToolStripMenuItem miToolsStatsTBFs;
+        private ToolStripSeparator miToolsSep3;
+        private ToolStripMenuItem miToolsStatsFull;
+        private ToolStripMenuItem miToolMultipleRun;
+        private ToolStripMenuItem miFileSaveSimulationResults;
     }
 }

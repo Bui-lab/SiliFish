@@ -61,8 +61,8 @@ namespace SiliFish.ModelUnits.Cells
 
         public MuscleCell()
         {
-            GapJunctions = new();
-            EndPlates = new();
+            GapJunctions = [];
+            EndPlates = [];
         }
         /// <summary>
         /// Used as a template
@@ -74,9 +74,9 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCore.CreateCore(coreType, cellParams, model.RunParam.DeltaT);
-            EndPlates = new List<ChemicalSynapse>();
-            GapJunctions = new List<GapJunction>();
+            Core = CellCore.CreateCore(coreType, cellParams);
+            EndPlates = [];
+            GapJunctions = [];
             ConductionVelocity = cv;
             AscendingAxonLength = ascAxon;
             DescendingAxonLength = descAxon;
@@ -111,15 +111,15 @@ namespace SiliFish.ModelUnits.Cells
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
             if (other is not MuscleCell oc)
-                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" }; 
+                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"]; 
 
-            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> differences = base.DiffersFrom(other) ?? [];
             List<string> diffs = ListDiffersFrom(EndPlates.Select(c => c as ModelUnitBase).ToList(),
                 oc.EndPlates.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)
                 differences.AddRange(diffs);
 
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -157,7 +157,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             base.DeleteJunctions(gap, chemin, chemout);
             if (!chemin) return;
-            while (EndPlates.Any())
+            while (EndPlates.Count != 0)
             {
                 ChemicalSynapse jnc = EndPlates.First();
                 jnc.PreNeuron.Terminals.Remove(jnc);
@@ -166,19 +166,19 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override bool HasConnections(bool gap, bool chemin, bool chemout)
         {
-            return gap && GapJunctions.Any() ||
-                chemin && EndPlates.Any();
+            return gap && GapJunctions.Count != 0 ||
+                chemin && EndPlates.Count != 0;
         }
 
         #endregion
 
         #region Runtime
-        public override void InitForSimulation(RunParam runParam)
+        public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
-            base.InitForSimulation(runParam);
+            base.InitForSimulation(runParam, ref uniqueID);
             tension = null;
             foreach (ChemicalSynapse jnc in this.EndPlates)
-                jnc.InitForSimulation(runParam.iMax, runParam.TrackJunctionCurrent, runParam.DeltaT);
+                jnc.InitForSimulation(runParam, ref uniqueID);
         }
 
         public override void CalculateMembranePotential(int timeIndex)
@@ -240,8 +240,8 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
-            Dictionary<string, Color> colors = new();
-            Dictionary<string, List<double>> AffarentCurrents = new();
+            Dictionary<string, Color> colors = [];
+            Dictionary<string, List<double>> AffarentCurrents = [];
             foreach (ChemicalSynapse jnc in EndPlates)
             {
                 colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);

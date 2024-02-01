@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
-    [JsonDerivedType(typeof(JunctionCore), typeDiscriminator: "junctioncore")]
-    [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simple")]
-    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "twoexp")]
-    [JsonDerivedType(typeof(SimpleGap), typeDiscriminator: "simple")]
+    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "twoexpsyn")]
+    [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simplesyn")]
+    [JsonDerivedType(typeof(SimpleGap), typeDiscriminator: "simplegap")]
     public class JunctionCore: BaseCore
     {
         public static int CoreParamMaxCount = 10;
@@ -30,8 +29,9 @@ namespace SiliFish.DynamicUnits.JncCore
         
         public double DeltaT;
 
-        public virtual void InitForSimulation(double deltaT)
+        public virtual void InitForSimulation(double deltaT, ref int uniqueID)
         {
+            UniqueId = uniqueID++;
             this.DeltaT = deltaT;
         }
     }

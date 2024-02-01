@@ -1,13 +1,9 @@
-﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Stim;
+﻿using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
-using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.DataTypes
 {

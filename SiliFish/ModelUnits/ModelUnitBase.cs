@@ -42,7 +42,7 @@ namespace SiliFish.ModelUnits
 
         public static List<string> ListDiffersFrom(List<ModelUnitBase> firstList, List<ModelUnitBase> secondList)
         {
-            List<string> differences = new();
+            List<string> differences = [];
             foreach (ModelUnitBase c1 in firstList)
             {
                 ModelUnitBase c2 = secondList.FirstOrDefault(cp => cp.ID == c1.ID);
@@ -61,7 +61,7 @@ namespace SiliFish.ModelUnits
                 if (c4 is null)
                     differences.Add($"Deleted {c3.GetType()}: {c3.ID}");
             }
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -72,7 +72,7 @@ namespace SiliFish.ModelUnits
 
         public virtual bool CheckValues(ref List<string> errors)
         {
-            errors ??= new();
+            errors ??= [];
             return errors.Count == 0;
         }
         public virtual string GeneratedName()

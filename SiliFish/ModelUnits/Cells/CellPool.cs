@@ -270,7 +270,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 IEnumerable<int> somites = Cells.Select(c => c.Somite).Distinct();
                 if (somites.Count() > somiteSelection.NSomite)
-                    som.AddRange(somites.OrderBy(s => Model.rand.Next()).Select(s => s).Take(somiteSelection.NSomite));
+                    som.AddRange(somites.OrderBy(s => Model.randomNumGenerator.Next()).Select(s => s).Take(somiteSelection.NSomite));
             }
             else if (somiteSelection.SomiteSelection == PlotSomiteSelection.RostralTo)
             {
@@ -311,7 +311,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 IEnumerable<int> seqs = Cells.Select(c => c.Sequence).Distinct();
                 if (seqs.Count() > cellSelection.NCell)
-                    seq.AddRange(seqs.OrderBy(s => Model.rand.Next()).Select(s => s).Take(cellSelection.NCell));
+                    seq.AddRange(seqs.OrderBy(s => Model.randomNumGenerator.Next()).Select(s => s).Take(cellSelection.NCell));
             }
             List<Cell> subList = Cells
                 .Where(c =>
@@ -343,7 +343,7 @@ namespace SiliFish.ModelUnits.Cells
             }
             foreach (int somite in somites)
             {
-                Coordinate[] coordinates = GenerateCoordinates(Model.rand, MD, n, somite);
+                Coordinate[] coordinates = GenerateCoordinates(Model.randomNumGenerator, MD, n, somite);
                 Dictionary<string, double[]> paramValues = Parameters.GenerateMultipleInstanceValues(n, ordered: false);
 
                 double defaultCV = Model.Settings.cv;
@@ -457,7 +457,7 @@ namespace SiliFish.ModelUnits.Cells
                         if (existing >= maxIncoming)
                             continue;
                     }
-                    double r = Model.rand.NextDouble();
+                    double r = Model.randomNumGenerator.NextDouble();
                     if (probability < r)
                         continue;
                     if (reach.WithinReach(pre, post))
@@ -521,7 +521,7 @@ namespace SiliFish.ModelUnits.Cells
                                 continue;
                         }
                     }
-                    double r = Model.rand.NextDouble();
+                    double r = Model.randomNumGenerator.NextDouble();
                     if (probability < r)
                         continue;
                     if (reach.WithinReach(pre, post))

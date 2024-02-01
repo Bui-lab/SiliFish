@@ -6,6 +6,7 @@ using SiliFish.DynamicUnits.JncCore;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
+using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
@@ -31,6 +32,9 @@ namespace SiliFish.ModelUnits.Junction
 
         [JsonIgnore, Browsable(false)]
         protected virtual double dt => throw new NotImplementedException();
+
+        [JsonIgnore, Browsable(false)]
+        protected virtual int iMax => throw new NotImplementedException();
 
 
         [JsonIgnore, Browsable(false)]
@@ -85,27 +89,33 @@ namespace SiliFish.ModelUnits.Junction
         //if current tracking is Off, the current array can be populated after the simulation for an individual junction
         private void PopulateCurrentArray(double dt)
         {
-            int nmax = nMax;
             if (inputCurrent != null)
                 return;//Already populated
-            InitForSimulation(nmax, true, dt);
+            int uniqueID = 0;
+            RunParam runParam = new()
+            {
+                DeltaT = dt,
+                TrackJunctionCurrent = true,
+                MaxTime = nMax,
+                SkipDuration = 0//runparam is temporarily used for the above parameters, skip duration is not relevant
+            };
+            InitForSimulation(runParam, ref uniqueID);
             if (!Active) return;
-            foreach (var index in Enumerable.Range(1, nmax - 1))
+            foreach (var index in Enumerable.Range(1, nMax - 1))
             {
                 NextStep(index);
             }
         }
-        public virtual void InitForSimulation(int nmax, bool trackCurrent, double dt)
+        public virtual void InitForSimulation(RunParam runParam, ref int _)
         {
-            InitForSimulation(dt);
-            if (trackCurrent)
+            InitForSimulation(runParam.DeltaT);
+            if (runParam.TrackJunctionCurrent)
             {
-                inputCurrent = new double[nmax];
+                inputCurrent = new double[runParam.iMax];
                 inputCurrent[0] = 0;
             }
             else
                 inputCurrent = null;
         }
-
     }
 }

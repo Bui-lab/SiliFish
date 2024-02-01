@@ -18,7 +18,6 @@ namespace SiliFish.ModelUnits.Architecture
     [JsonDerivedType(typeof(ModelTemplate), typeDiscriminator: "modeltemplate")]
     public class ModelBase
     {
-        public Random rand = null;
         private ModelSettings settings = new();
 
         public string Version { get; set; }
@@ -33,8 +32,7 @@ namespace SiliFish.ModelUnits.Architecture
             set
             {
                 settings = value;
-                rand = new Random(settings.Seed);
-                Distribution.Random = rand;
+                Distribution.Random = new Random(settings.Seed);
             }
         }
         [JsonPropertyOrder(2)]
@@ -43,7 +41,7 @@ namespace SiliFish.ModelUnits.Architecture
         public DynamicsParam DynamicsParam { get; set; } = new();
 
         [JsonPropertyOrder(2)]
-        public Dictionary<string, object> Parameters { get; set; } = new();
+        public Dictionary<string, object> Parameters { get; set; } = [];
 
         public ModelBase()
         {
@@ -51,7 +49,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public virtual List<string> DiffersFrom(ModelBase other)
         {
-            List<string> differences = new();
+            List<string> differences = [];
             if (Version != other.Version)
                 differences.Add($"Version: {Version} vs {other.Version}");
             if (ModelName != other.ModelName)
@@ -73,7 +71,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual bool CheckValues(ref List<string> errors) 
         {
-            errors ??= new();
+            errors ??= [];
             if (ModelDimensions.NumberOfSomites <= 0)
             {
                 errors.Add("Number of somites has to be greater than 0.");
@@ -89,7 +87,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public virtual void BackwardCompatibility()
         {
-            if (Parameters == null || !Parameters.Any())
+            if (Parameters == null || Parameters.Count == 0)
                 return;
             if (Parameters.TryGetValue("General.Name", out object value))
             {

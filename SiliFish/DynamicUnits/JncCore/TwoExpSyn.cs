@@ -45,9 +45,9 @@ namespace SiliFish.DynamicUnits
             : base(copyFrom)
         {
         }
-        public override void InitForSimulation(double deltaT)
+        public override void InitForSimulation(double deltaT, ref int uniqueID)
         {
-            base.InitForSimulation(deltaT);
+            base.InitForSimulation(deltaT, ref uniqueID);
             iSyn = 0;
             tLastSignificantSpike = -1;
         }
