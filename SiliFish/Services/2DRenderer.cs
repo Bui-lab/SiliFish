@@ -248,7 +248,7 @@ namespace SiliFish.Services
             return nodes;
         }
 
-        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem)
+        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem, bool offline)
         {
             if (pools == null || pools.Count == 0)
                 return null;
@@ -260,7 +260,7 @@ namespace SiliFish.Services
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
             html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
-            if (Util.CheckOnlineStatus())
+            if (!offline && Util.CheckOnlineStatus())
             {
                 html.Replace("__OFFLINE_2D_SCRIPT__", "");
                 html.Replace("__ONLINE_2D_SCRIPT__", "<script src=\"https://unpkg.com/force-graph\"></script>" +

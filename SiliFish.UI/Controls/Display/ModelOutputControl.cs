@@ -293,7 +293,7 @@ namespace SiliFish.UI.Controls
             if (cb2DHideNonspiking.Checked && simulation!=null && simulation.SimulationRun)
                 cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
             string html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
-                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
+                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
             bool navigated = false;
@@ -393,7 +393,7 @@ namespace SiliFish.UI.Controls
                 string html = threeDRenderer.RenderIn3D(model, model.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     webView3DRender.Width, webView3DRender.Height,
-                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
+                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked, offline: cb3DOffline.Checked);
                 bool navigated = false;
                 webView3DRender.NavigateTo(html, "3DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
                 if (!navigated)
@@ -668,8 +668,8 @@ namespace SiliFish.UI.Controls
 
             tPlotStart = (int)ePlotStart.Value;
             tPlotEnd = (int)ePlotEnd.Value;
-            if (tPlotEnd > model.MaxTime)
-                tPlotEnd = model.MaxTime;
+            if (tPlotEnd > model.RunParam.MaxTime)
+                tPlotEnd = model.RunParam.MaxTime;
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -810,7 +810,7 @@ namespace SiliFish.UI.Controls
                 Selection = plotSelection
             };
             PlotGenerator PG = new();
-            (string Title, Charts) = PG.GetPlotData(lastPlot, simulation, Cells, Pools, tPlotStart, tPlotEnd);
+            (string Title, Charts) = PG.GetPlotData(lastPlot, simulation.Model, Cells, Pools, tPlotStart, tPlotEnd);
             errorMessage = PG.errorMessage;
             return (Title, Charts);
         }
@@ -1191,7 +1191,7 @@ namespace SiliFish.UI.Controls
             try
             {
                 if (simulation == null || !simulation.SimulationRun) return;
-                htmlAnimation = AnimationGenerator.GenerateAnimation(simulation, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
+                htmlAnimation = AnimationGenerator.GenerateAnimation(simulation.Model, tAnimStart, tAnimEnd, (double)tAnimdt, out lastAnimationSpineCoordinates);
                 Invoke(CompleteAnimation);
             }
             catch { Invoke(CancelAnimation); }
