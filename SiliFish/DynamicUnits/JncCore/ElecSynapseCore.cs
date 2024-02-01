@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
-    [JsonDerivedType(typeof(SimpleGap), typeDiscriminator: "simple")]
     public class ElecSynapseCore : JunctionCore
     {
         #region Static members and functions

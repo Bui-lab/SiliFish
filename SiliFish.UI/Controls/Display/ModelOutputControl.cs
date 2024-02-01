@@ -285,7 +285,7 @@ namespace SiliFish.UI.Controls
             if (cbHideNonspiking.Checked && RunningModel.ModelRun)
                 cellPools = RunningModel.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
             string html = modelGenerator.Create2DRendering(RunningModel, cellPools, webView2DRender.Width, webView2DRender.Height,
-                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked);
+                showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
             bool navigated = false;
@@ -357,7 +357,7 @@ namespace SiliFish.UI.Controls
                 string html = threeDRenderer.RenderIn3D(RunningModel, RunningModel.CellPools,
                     somiteRange: cb3DAllSomites.Checked ? "All" : e3DSomiteRange.Text,
                     webView3DRender.Width, webView3DRender.Height,
-                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked);
+                    showGap: cb3DGapJunc.Checked, showChem: cb3DChemJunc.Checked, offline: cb3DOffline.Checked);
                 bool navigated = false;
                 webView3DRender.NavigateTo(html, "3DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
                 if (!navigated)

@@ -112,7 +112,7 @@ namespace SiliFish.Services
 
         public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, 
             int width, int _, 
-            bool showGap, bool showChem)
+            bool showGap, bool showChem, bool offline)
         {
             if (pools == null || pools.Count == 0)
                 return null;
@@ -124,7 +124,7 @@ namespace SiliFish.Services
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
             html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
-            if (Util.CheckOnlineStatus())
+            if (!offline && Util.CheckOnlineStatus())
             {
                 html.Replace("__OFFLINE_3D_SCRIPT__", "");
                 html.Replace("__ONLINE_3D_SCRIPT__", "<script src=\"https://unpkg.com/3d-force-graph@1\"></script>" +

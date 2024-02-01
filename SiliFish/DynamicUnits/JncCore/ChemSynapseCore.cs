@@ -14,8 +14,6 @@ using System.Threading.Tasks;
 
 namespace SiliFish.DynamicUnits.JncCore
 {
-    [JsonDerivedType(typeof(SimpleSyn), typeDiscriminator: "simple")]
-    [JsonDerivedType(typeof(TwoExpSyn), typeDiscriminator: "twoexp")]
     public class ChemSynapseCore: JunctionCore
     {
         #region Static members and functions

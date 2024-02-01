@@ -7,6 +7,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     CsvData = csvData,
                     Title = $"VR Output - Somite {somite}",
                     yLabel = "Y-Coordinate",
+                    Colors = new() { Color.Red },
                     xMin = Time[0],
                     xMax = Time[^1] + 1,
                     yMin = yValues.Min() - 1,
@@ -80,6 +82,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         CsvData = csvData,
                         Title = $"Tail Beat Freq. - Somite  {somite} ",
                         yLabel = "Freq (Hz)",
+                        Colors = new() { Color.Red },
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,

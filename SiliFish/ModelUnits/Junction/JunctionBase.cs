@@ -22,8 +22,6 @@ namespace SiliFish.ModelUnits.Junction
 {
     public class JunctionBase : InterPoolBase
     {
-        [JsonIgnore]
-
         public JunctionCore Core { get; set; }
 
         protected double[] inputCurrent; //Current array 

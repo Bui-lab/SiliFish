@@ -124,8 +124,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Core.Conductance);
-                            double maxConductance = list.Max(c => c.Core.Conductance);
+                            double minConductance = list.Min(c => c.Core?.Conductance ?? 0);
+                            double maxConductance = list.Max(c => c.Core?.Conductance ?? 0);
                             interPools.Add(new InterPool()
                             {
                                 SourcePool = source,
@@ -161,8 +161,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Core.Conductance);
-                            double maxConductance = list.Max(c => c.Core.Conductance);
+                            double minConductance = list.Min(c => c.Core?.Conductance ?? 0);
+                            double maxConductance = list.Max(c => c.Core?.Conductance ?? 0);
 
                             interPools.Add(new InterPool()
                             {

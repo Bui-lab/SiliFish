@@ -18,6 +18,7 @@ namespace SiliFish.DynamicUnits
             get { return GetParameters(); }
             set { SetParameters(value); }
         }
+        [JsonIgnore]
         public Dictionary<string, string> ParameterDescriptions
         {
             get { return GetParameterDescriptions(); }
