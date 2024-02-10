@@ -154,7 +154,7 @@ namespace SiliFish.UI.Controls
 
         private void CompleteExhaustiveOptimization()
         {
-            if (exhaustiveBestParameters.Any())
+            if (exhaustiveBestParameters.Count != 0)
             {
                 btnOptimizePrev.Visible =
                 btnOptimizeNext.Visible = true;
@@ -179,7 +179,7 @@ namespace SiliFish.UI.Controls
             exhaustiveSolverIterator = 0;
             btnOptimize.Enabled = btnOptimizeExhaustive.Enabled = true;
             if (solverOutput == null) return;
-            if (exhaustiveSearch && exhaustiveBestParameters.Any())
+            if (exhaustiveSearch && exhaustiveBestParameters.Count != 0)
                 Parameters = exhaustiveBestParameters[0].Parameters;
             else
                 Parameters = solverOutput.Values;
@@ -187,7 +187,7 @@ namespace SiliFish.UI.Controls
                 optimizationProgress.Close();
             optimizationProgress = null;
             OnCompleteOptimization?.Invoke(this, EventArgs.Empty);
-            if (exhaustiveSearch && exhaustiveBestParameters.Any())
+            if (exhaustiveSearch && exhaustiveBestParameters.Count != 0)
                 lOptimizationOutput.Text = $"Current fitness: {exhaustiveBestParameters[0].Fitness}\r\n" +
                 $"Opimization duration: {optimizationDuration:g}";
             else
@@ -630,7 +630,7 @@ namespace SiliFish.UI.Controls
 
         private void linkExportExhOptRes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (exhaustiveBestParameters.Any() == false) return;
+            if (exhaustiveBestParameters.Count != 0 == false) return;
             saveFileCSV.InitialDirectory = GAFileDefaultFolder;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {

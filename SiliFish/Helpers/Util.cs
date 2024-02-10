@@ -1,17 +1,18 @@
-﻿using SiliFish.DataTypes;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Permissions;
 
 
 namespace SiliFish.Helpers
 {
     public class Util
     {
-
         public static string JavaScriptEncode(string s)
         {
             if (string.IsNullOrEmpty(s))
@@ -185,6 +186,45 @@ namespace SiliFish.Helpers
                     values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
             }
             return values;
+        }
+
+        static public (double[], List<double[]> yMultiData) MergeXYArrays(double[] xArray1, double[] yArray1, double[] xArray2, double[] yArray2)
+        {
+            if (xArray1.Length != yArray1.Length || xArray2.Length != yArray2.Length)
+                throw new Exception("Merging XY arrays with different lengths");
+            List<double> xList = [];
+            List<double[]> yMultiData = [];
+            int ind1 = 0;
+            int ind2 = 0;
+            while (ind1 < xArray1.Length && ind2 < xArray2.Length)
+            {
+                if (xArray1[ind1] == xArray2[ind2])
+                {
+                    xList.Add(xArray1[ind1]);
+                    yMultiData.Add([yArray1[ind1++], yArray2[ind2++]]);
+                }
+                else if (xArray1[ind1] < xArray2[ind2])
+                {
+                    xList.Add(xArray1[ind1]);
+                    yMultiData.Add([yArray1[ind1++], double.NaN]);
+                }
+                else //if (xArray1[ind1] > xArray2[ind2])
+                {
+                    xList.Add(xArray2[ind2]);
+                    yMultiData.Add([double.NaN, yArray2[ind2++]]);
+                }
+            }
+            while (ind1 < xArray1.Length)
+            {
+                xList.Add(xArray1[ind1]);
+                yMultiData.Add([yArray1[ind1++], double.NaN]);
+            }
+            while (ind2 < xArray2.Length)
+            {
+                xList.Add(xArray2[ind2]);
+                yMultiData.Add([double.NaN, yArray2[ind2++]]);
+            }
+            return (xList.ToArray(), yMultiData);
         }
     }
 }

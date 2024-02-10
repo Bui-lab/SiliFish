@@ -73,7 +73,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public List<string> DiffersFrom(ModelDimensions other)
         {
-            List<string> differences = new();
+            List<string> differences = [];
             if (NumberOfSomites  != other.NumberOfSomites)
                 differences.Add($"Number of somites: {NumberOfSomites} vs {other.NumberOfSomites}");
             if (SupraSpinalRostralCaudalDistance  != other.SupraSpinalRostralCaudalDistance)
@@ -94,7 +94,7 @@ namespace SiliFish.ModelUnits.Architecture
                 differences.Add($"Body mediolateral distance: {BodyMedialLateralDistance} vs {other.BodyMedialLateralDistance}");
             if (BodyDorsalVentralDistance  != other.BodyDorsalVentralDistance)
                 differences.Add($"Body dorsoventral distance: {BodyDorsalVentralDistance} vs {other.BodyDorsalVentralDistance}");
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }

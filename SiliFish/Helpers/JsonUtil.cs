@@ -14,25 +14,21 @@ namespace SiliFish.Helpers
     
     public static class JsonUtil
     {
-        public static string ToJson(object content)
-        {
-            var options = new JsonSerializerOptions()
+        public static JsonSerializerOptions SerializerOptions = new()
             {
                 Converters = { new ColorJsonConverter() },
                 WriteIndented = true
             };
-            string jsonstring = JsonSerializer.Serialize(content, options);
+        public static string ToJson(object content)
+        {
+            string jsonstring = JsonSerializer.Serialize(content, SerializerOptions);
             return jsonstring;
         }
         public static object ToObject(Type content, string jsonstring)
         {
             try
             {
-                var options = new JsonSerializerOptions()
-                {
-                    Converters = { new ColorJsonConverter() }
-                };
-                return JsonSerializer.Deserialize(jsonstring, content, options);
+                return JsonSerializer.Deserialize(jsonstring, content, SerializerOptions);
             }
             catch(Exception)
             {
@@ -42,19 +38,13 @@ namespace SiliFish.Helpers
 
         public static void SaveToJsonFile(string path, object content)
         {
-            var options = new JsonSerializerOptions()
-            {
-                Converters = { new ColorJsonConverter() },
-
-                WriteIndented = true
-            };
-            string jsonstring = JsonSerializer.Serialize(content, options);
+            string jsonstring = JsonSerializer.Serialize(content, SerializerOptions);
             FileUtil.SaveToFile(path, jsonstring);
         }
         public static int FindOpeningBracket(string json, int searchend)
         {
             int endCounter = 0;
-            char[] curlies = new char[] { '{', '}' };
+            char[] curlies = ['{', '}'];
             while (searchend > 0)
             {
                 int curly = json.LastIndexOfAny(curlies, searchend - 1);

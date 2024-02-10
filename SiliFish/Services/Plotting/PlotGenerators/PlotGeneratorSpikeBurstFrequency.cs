@@ -42,7 +42,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         protected override void CreateCharts()
         {
-            if (cells == null || !cells.Any())
+            if (cells == null || cells.Count == 0)
                 return;
             int chartSeq = 0;
 
@@ -51,10 +51,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             {
                 string columnTitles = "Time,";
                 List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-                List<Color> colorPerChart = new();
+                List<Color> colorPerChart = [];
                 if (cellGroup.Count() > 1)
                 {
-                    List<double[]> yMultiData = new();
+                    List<double[]> yMultiData = [];
                     double[] yData = null;
                     double yMin = double.MaxValue;
                     double yMax = double.MinValue;
@@ -143,7 +143,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         Chart burstFreqChart = new()
                         {
                             Title = $"{cell.ID} {title} Freq.",
-                            Colors = new() { cell.CellPool.Color },
+                            Colors = [cell.CellPool.Color],
                             xData = xData,
                             xMin = timeArray[iStart],
                             xMax = timeArray[iEnd] + 1,

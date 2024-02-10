@@ -49,11 +49,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             }
 
             Util.SetYRange(ref yMin, ref yMax);
-            List<double[]> yMultiData = new();
+            List<double[]> yMultiData = [];
             double[] yData = null;
             string columnTitles = "Time,";
             List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-            List<Color> colorPerChart = new();
+            List<Color> colorPerChart = [];
 
             if (gapJunctions != null)
             {

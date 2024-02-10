@@ -69,10 +69,10 @@ namespace SiliFish.Services.Plotting
                         sbChart.Replace("__CHART_COLORS__", charts[chartIndex].csvColors);
                         sbChart.Replace("__CHART_TITLE__", Util.JavaScriptEncode(charts[chartIndex].Title));
                         Chart chart = charts[chartIndex];
-                        double yMin = yRanges.Any() ? yRanges[chart.yLabel].MinY : chart.yMin;
+                        double yMin = yRanges.Count != 0 ? yRanges[chart.yLabel].MinY : chart.yMin;
                         if (yMin == double.NegativeInfinity) yMin = double.MinValue;
                         if (yMin == double.PositiveInfinity) yMin = double.MaxValue;
-                        double yMax = yRanges.Any() ? yRanges[chart.yLabel].MaxY : chart.yMax;
+                        double yMax = yRanges.Count != 0 ? yRanges[chart.yLabel].MaxY : chart.yMax;
                         if (yMax == double.NegativeInfinity) yMax = double.MinValue;
                         if (yMax == double.PositiveInfinity) yMax = double.MaxValue;
 

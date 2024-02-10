@@ -32,7 +32,7 @@ namespace SiliFish.ModelUnits.Stim
         {
             double[] ret = new double[nmax];
             foreach (Stimulus s in ListOfStimulus.Where(s => s.Active))
-                ret = ret.AddArray(s.GetValues(nmax));
+                ret = ret.SumUp(s.GetValues(nmax));
             return ret;
         }
         public virtual void InitForSimulation(RunParam runParam, Random rand)

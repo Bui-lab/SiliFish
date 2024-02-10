@@ -25,7 +25,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         protected override void CreateCharts()
         {
-            if (cells == null || !cells.Any())
+            if (cells == null || cells.Count == 0)
                 return;
             UnitOfMeasure UoM = plotGenerator.UoM;
 
@@ -42,7 +42,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             plotGeneratorStimuli.CreateCharts(charts);
 
             List<Cell> muscleCells = cells?.Where(c => c is MuscleCell).ToList();
-            if (muscleCells != null && muscleCells.Any())
+            if (muscleCells != null && muscleCells.Count != 0)
             {
                 PlotGeneratorTension plotGeneratorTension = new(plotGenerator, timeArray, iStart, iEnd, 5,
                     cells,

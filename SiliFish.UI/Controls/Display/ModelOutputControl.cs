@@ -154,7 +154,7 @@ namespace SiliFish.UI.Controls
         }
         private void GetLastPlotSettings()
         {
-            if (GlobalSettings.LastPlotSettings.Any())
+            if (GlobalSettings.LastPlotSettings.Count != 0)
             {
                 try
                 {
@@ -569,7 +569,7 @@ namespace SiliFish.UI.Controls
         private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
         {
             numOfPlots = Cells?.Count ?? 0 + Pools?.Count ?? 0;
-            if (Cells != null && Cells.Any())
+            if (Cells != null && Cells.Count != 0)
             {
                 if (plotSelection is PlotSelectionMultiCells multiCells)
                 {
@@ -587,7 +587,7 @@ namespace SiliFish.UI.Controls
                         numOfPlots = Cells.Count;
                 }
             }
-            else if (Pools != null && Pools.Any())
+            else if (Pools != null && Pools.Count != 0)
             {
                 if (PlotType == PlotType.Stimuli)
                     numOfPlots = Pools.Count(p => p.HasStimulus());
@@ -673,7 +673,7 @@ namespace SiliFish.UI.Controls
         }
         private void linkExportPlotData_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!Charts.Any()) return;
+            if (Charts.Count == 0) return;
 
             if (Charts.Count > 1)
             {
@@ -681,7 +681,7 @@ namespace SiliFish.UI.Controls
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
-            List<string> fileNames = new();
+            List<string> fileNames = [];
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 foreach (Chart chart in Charts)
@@ -729,7 +729,7 @@ namespace SiliFish.UI.Controls
                 string JSONString = richTextBox.Text;
                 plot = (PlotDefinition)JsonUtil.ToObject(typeof(PlotDefinition), JSONString);
                 model.LinkPlotObjects(plot);
-                List<PlotDefinition> plots = listPlotHistory.GetItems<PlotDefinition>().ToList();
+                List<PlotDefinition> plots = [.. listPlotHistory.GetItems<PlotDefinition>()];
                 plots[ind] = plot;
                 listPlotHistory.SetItems(plots);
             }
@@ -978,7 +978,7 @@ namespace SiliFish.UI.Controls
                 int ncol = 1; // Images?.Count > 5 ? 2 : 1;
                 int nrow = (int)Math.Ceiling((decimal)(Images?.Count ?? 0) / ncol);
 
-                if (Images != null && Images.Any())
+                if (Images != null && Images.Count != 0)
                 {
                     pictureBox.Image = ImageHelperWindows.MergeImages(Images, nrow, ncol);
                 }
@@ -1048,11 +1048,11 @@ namespace SiliFish.UI.Controls
             int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
             int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
             (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection(), iSpikeStart, iSpikeEnd);
-            Cells ??= new();
+            Cells ??= [];
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
-            Dictionary<Cell, List<int>> cellSpikes = new();
+            Dictionary<Cell, List<int>> cellSpikes = [];
             Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices(iSpikeStart, iSpikeEnd)));
             int spikeCount = cellSpikes.Values.Sum(l => l.Count);
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
@@ -1082,7 +1082,7 @@ namespace SiliFish.UI.Controls
                 .Where(r => r.Cells[colIndex].Value != null)
                 .Select(r => double.Parse(r.Cells[colIndex].Value.ToString()))
                 .ToArray();
-            if (!dataPoints.Any())
+            if (dataPoints.Length == 0)
             {
                 webViewRCTrains.NavigateToString("");
                 return;
@@ -1103,7 +1103,7 @@ namespace SiliFish.UI.Controls
             if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
             (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
-            Cells ??= new();
+            Cells ??= [];
             if (Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);

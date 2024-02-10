@@ -51,7 +51,7 @@ namespace SiliFish.UI.Controls.Display
             set
             {
                 selectedUnits = value;
-                if (value != null && value.Any())
+                if (value != null && value.Count != 0)
                 {
                     List<CellPool> cellPools = value.Where(c => c is CellPool).Select(c => c as CellPool).
                         Union(value.Where(c => c is Cell).Select(c => (c as Cell).CellPool)).Distinct().ToList();
@@ -115,8 +115,8 @@ namespace SiliFish.UI.Controls.Display
             string prevSelection = ddPools.Text;
             ddPools.Items.Clear();
             ddPools.Text = "";
-            List<string> itemList = new()
-            {
+            List<string> itemList =
+            [
                 Const.AllPools,
                 Const.SupraSpinal,
                 Const.Spinal,
@@ -127,8 +127,8 @@ namespace SiliFish.UI.Controls.Display
                 Const.Neurons,
                 Const.ExcitatoryNeurons,
                 Const.InhibitoryNeurons
-            };
-            if (runningModel == null || !runningModel.CellPools.Any()) return;
+            ];
+            if (runningModel == null || runningModel.CellPools.Count == 0) return;
             itemList.AddRange(runningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p).ToArray());
 
             ddPools.Items.AddRange(itemList.Distinct().ToArray());
@@ -288,16 +288,16 @@ namespace SiliFish.UI.Controls.Display
                 (List<Cell> CellsFull, List<CellPool> PoolsFull) = runningModel.GetSubsetCellsAndPools(PoolSubset, selForMaxNumbers);
 
                 eSomiteSelection.Maximum =
-                    PoolsFull != null && PoolsFull.Any() ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
-                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Somite) :
-                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSomite()) :
-                    Cells != null && Cells.Any() ? Cells.Max(c => c.Somite) : 0;
+                    PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
+                    CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Somite) :
+                    Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSomite()) :
+                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) : 0;
 
                 eCellSelection.Maximum =
-                    PoolsFull != null && PoolsFull.Any() ? PoolsFull.Max(p => p.GetMaxCellSequence()) :
-                    CellsFull != null && CellsFull.Any() ? CellsFull.Max(c => c.Sequence) :
-                    Pools != null && Pools.Any() ? Pools.Max(p => p.GetMaxCellSequence()) :
-                    Cells != null && Cells.Any() ? Cells.Max(c => c.Sequence) : 0;
+                    PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSequence()) :
+                    CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Sequence) :
+                    Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSequence()) :
+                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Sequence) : 0;
             }
             if (ddPools.Focused)
             {
@@ -350,7 +350,7 @@ namespace SiliFish.UI.Controls.Display
         {
             PlotSelectionInterface selection;
             int NumberOfSomites = runningModel?.ModelDimensions.NumberOfSomites ?? 0;
-            if (SelectedUnits != null && SelectedUnits.Any())
+            if (SelectedUnits != null && SelectedUnits.Count != 0)
             {
                 selection = new PlotSelectionUnits()
                 {

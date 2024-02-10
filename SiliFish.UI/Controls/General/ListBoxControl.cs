@@ -255,7 +255,7 @@ namespace SiliFish.UI.Controls
             if (listBox.Items.Count == 0)
             {
                 miHideInactive.Visible = false;
-                miShowAll.Visible = HiddenItems.Any();
+                miShowAll.Visible = HiddenItems.Count != 0;
             }
             else
             {

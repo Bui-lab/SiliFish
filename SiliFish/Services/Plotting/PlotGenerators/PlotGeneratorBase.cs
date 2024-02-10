@@ -36,7 +36,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         public PlotGeneratorBase(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq, PlotSelectionInterface plotSelection)
         {
-            charts = new();
+            charts = [];
             this.plotGenerator = plotGenerator;
             this.plotSelection = plotSelection;
             this.timeArray = timeArray;
@@ -49,13 +49,13 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         public void CreateCharts(List<Chart> chartList, PlotType plotType)
         {
             CreateCharts(plotType);
-            if (charts.Any())
+            if (charts.Count != 0)
                 chartList.AddRange(charts);
         }
         public void CreateCharts(List<Chart> chartList)
         {
             CreateCharts();
-            if (charts.Any())
+            if (charts.Count != 0)
                 chartList.AddRange(charts);
         }
     }

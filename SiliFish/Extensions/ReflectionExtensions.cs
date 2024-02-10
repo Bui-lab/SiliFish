@@ -1,9 +1,8 @@
-﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits.Architecture;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace SiliFish.Extensions
 {
@@ -33,8 +32,8 @@ namespace SiliFish.Extensions
         public static List<string> DiffersFrom(this object obj, object other)
         {
             if (other.GetType() != obj.GetType()) 
-                return new() { "Incompatible classes." };
-            List<string> differences = new();
+                return ["Incompatible classes."];
+            List<string> differences = [];
             foreach (PropertyInfo prop in obj.GetType().GetProperties())
             {
                 var v1 = prop.GetValue(obj, null);
@@ -42,9 +41,24 @@ namespace SiliFish.Extensions
                 if (v1?.ToString() != v2?.ToString())
                     differences.Add($"{prop.Name}: {v1} vs {v2}");
             }
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
+        }
+
+
+        //TODO standardize the below function -
+        //check https://stackoverflow.com/questions/39201271/get-all-properties-marked-with-jsonignore-attribute
+        public static string GetProperties(this object obj, string seperator)
+        
+        {
+            List<string> properties = [];
+            foreach (PropertyInfo prop in obj.GetType().GetProperties()
+                .Where(property => !property.GetCustomAttributes(false).OfType<JsonIgnoreAttribute>().Any()))
+            {
+                properties.Add($"{prop.Name}: {prop.GetValue(obj)}");
+            }
+            return string.Join(seperator, [.. properties]);
         }
     }
 }

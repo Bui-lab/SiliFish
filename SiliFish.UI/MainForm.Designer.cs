@@ -38,6 +38,7 @@ namespace SiliFish.UI
             mFile = new ToolStripMenuItem();
             miFileLoad = new ToolStripMenuItem();
             miFileSave = new ToolStripMenuItem();
+            miFileSaveSimulationResults = new ToolStripMenuItem();
             miFileSep1 = new ToolStripSeparator();
             miFileExport = new ToolStripMenuItem();
             miFileImport = new ToolStripMenuItem();
@@ -95,7 +96,6 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
-            miFileSaveSimulationResults = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -166,6 +166,13 @@ namespace SiliFish.UI
             miFileSave.Size = new Size(270, 22);
             miFileSave.Text = "Save";
             miFileSave.Click += miFileSave_Click;
+            // 
+            // miFileSaveSimulationResults
+            // 
+            miFileSaveSimulationResults.Name = "miFileSaveSimulationResults";
+            miFileSaveSimulationResults.Size = new Size(270, 22);
+            miFileSaveSimulationResults.Text = "Save Simulation Results (to database)";
+            miFileSaveSimulationResults.Click += miFileSaveSimulationResults_Click;
             // 
             // miFileSep1
             // 
@@ -619,13 +626,6 @@ namespace SiliFish.UI
             // openFileExcel
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
-            // 
-            // miFileSaveSimulationResults
-            // 
-            miFileSaveSimulationResults.Name = "miFileSaveSimulationResults";
-            miFileSaveSimulationResults.Size = new Size(270, 22);
-            miFileSaveSimulationResults.Text = "Save Simulation Results (to database)";
-            miFileSaveSimulationResults.Click += miFileSaveSimulationResults_Click;
             // 
             // MainForm
             // 

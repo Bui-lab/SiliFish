@@ -1,4 +1,5 @@
 ﻿using OfficeOpenXml.ConditionalFormatting.Contracts;
+using SiliFish.Database;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
@@ -80,7 +81,7 @@ namespace SiliFish.DynamicUnits.Firing
             {
                 if (intervals == null)
                 {
-                    intervals = new();
+                    intervals = [];
                     if (SpikeList.Count > 1)
                     {
                         foreach (int i in Enumerable.Range(0, SpikeList.Count - 1))
@@ -97,7 +98,7 @@ namespace SiliFish.DynamicUnits.Firing
             {
                 if (spikeFreqs == null)
                 {
-                    spikeFreqs = new();
+                    spikeFreqs = [];
                     if (SpikeList.Count > 1)
                     {
                         int iStart = 0;
@@ -119,7 +120,7 @@ namespace SiliFish.DynamicUnits.Firing
                             iStart = iEnd;
                             iEnd++;
                         }
-                        if (!spikeFreqs.Any())
+                        if (spikeFreqs.Count == 0)
                         {
                             spikeFreqs.Add(SpikeList[0] * dt, ((double)SpikeList.Count * 1000 / ((SpikeList[^1] - SpikeList[0]) * dt), SpikeList[^1] * dt));
                         }
@@ -148,7 +149,7 @@ namespace SiliFish.DynamicUnits.Firing
             {
                 if (burstFreqs == null)
                 {
-                    burstFreqs = new();
+                    burstFreqs = [];
                     if (BurstsOrSpikes.Count > 1)
                     {
                         int iStart = 0;
@@ -170,7 +171,7 @@ namespace SiliFish.DynamicUnits.Firing
                             iStart = iEnd;
                             iEnd++;
                         }
-                        if (!burstFreqs.Any())
+                        if (burstFreqs.Count == 0)
                         {
                             burstFreqs.Add(BurstsOrSpikes[0].Start, ((double)BurstsOrSpikes.Count * 1000 / ((BurstsOrSpikes[^1].End - BurstsOrSpikes[0].Start)), BurstsOrSpikes[^1].End));
                         }
@@ -247,7 +248,7 @@ namespace SiliFish.DynamicUnits.Firing
         }
         public double SpikeCoverage(bool ignoreDelay)
         {
-            if (!SpikeList.Any())
+            if (SpikeList.Count == 0)
                 return 0;
             int firstIIndex = StimulusArray.ToList().FindIndex(i => i > 0);
             if (firstIIndex == -1)
@@ -274,10 +275,10 @@ namespace SiliFish.DynamicUnits.Firing
             int iMax = stimulus.Length;
             StimulusArray = stimulus;
             VList = new double[iMax];
-            SecLists = new Dictionary<string, double[]>();
-            TauDecay = new();
-            TauRise = new();
-            SpikeList = new();
+            SecLists = [];
+            TauDecay = [];
+            TauRise = [];
+            SpikeList = [];
             spikeDelay = double.NaN;
             patternized = false;
         }
@@ -294,10 +295,10 @@ namespace SiliFish.DynamicUnits.Firing
             this.dt = dt;
             StimulusArray = null;
             VList = V;
-            SecLists = new Dictionary<string, double[]>();
-            TauDecay = new();
-            TauRise = new();
-            SpikeList = new();
+            SecLists = [];
+            TauDecay = [];
+            TauRise = [];
+            SpikeList = [];
             spikeDelay = double.NaN;
             CreateSpikeList(Vthreshold);
             patternized = false;
@@ -471,7 +472,7 @@ namespace SiliFish.DynamicUnits.Firing
         public void DefineSpikingPattern()
         {
             if (patternized) return;
-            burstsOrSpikes = new();
+            burstsOrSpikes = [];
             int stimulusStart = StimulusArray?.ToList().FindIndex(i => i > 0) ?? analysisStart;
             int stimulusEnd = StimulusArray?.ToList().FindLastIndex(i => i > 0) ?? analysisEnd;
 
@@ -491,13 +492,13 @@ namespace SiliFish.DynamicUnits.Firing
             double lastStimulusTime = stimulusEnd * dt;
             double lastSpikeTime = SpikeList[^1] * dt;
             double quiescence = tonicPadding;
-            if (Intervals_ms.Values.Any())
+            if (Intervals_ms.Values.Count != 0)
             {
                 quiescence = Intervals_ms.Values.Average();
                 if (intervals.Count > 1)
                 {
                     decreasingIntervals = increasingIntervals = true;
-                    double[] intervalValues = intervals.Values.ToArray();
+                    double[] intervalValues = [.. intervals.Values];
                     for (int i = 0; i < intervals.Count -1; i++)
                     {
                         if (intervalValues[i] < intervalValues[i + 1] - GlobalSettings.Epsilon)

@@ -44,8 +44,9 @@ namespace SiliFish.Definitions
 
         public static int RheobaseInfinity = 500;
         public static int RheobaseLimit = 1000;
-
         public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
+        public static int RollingFreqBeatCount = 5;
+
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
         public static int GeneticAlgorithmSolutionCount = 3;
@@ -177,6 +178,11 @@ namespace SiliFish.Definitions
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]
         public double[] RheobaseTestMultipliers { get { return GlobalSettings.RheobaseTestMultipliers; } set { GlobalSettings.RheobaseTestMultipliers = value; } }
+
+        [Description("The number of beats to the left and right to calculate the rolling TBF."),
+            DisplayName("Rolling Freq. Beat Count"),
+            Category("Dynamics")]
+        public int RollingFreqBeatCount { get { return GlobalSettings.RollingFreqBeatCount; } set { GlobalSettings.RollingFreqBeatCount = value; } }
         #endregion
 
         #region Genetic Algorithm

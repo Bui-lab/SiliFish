@@ -7,14 +7,14 @@ namespace SiliFish.Extensions
 {
     public static class ArrayExtensions
     {
-        public static double[] AddArray(this double[] thisArray, double[] array)
+        public static double[] SumUp(this double[] thisArray, double[] array)
         {
             return thisArray.Zip(array, (x, y) => x + y).ToArray();
         }
 
         public static double MinValue(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
-            if (thisArray == null || !thisArray.Any())
+            if (thisArray == null || thisArray.Length == 0)
                 return 0;
             if (iEnd == -1 && iStart == 0)
                 return thisArray.Min();
@@ -23,11 +23,12 @@ namespace SiliFish.Extensions
             if (iEnd <= -1 || iEnd >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
             if (iStart > iEnd) return 0;
+            if (iStart == iEnd) return thisArray[iStart];
             return thisArray.Skip(iStart).Take(iEnd - iStart).Min();
         }
         public static double MaxValue(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
-            if (thisArray == null || !thisArray.Any())
+            if (thisArray == null || thisArray.Length == 0)
                 return 0;
             if (iEnd == -1 && iStart == 0)
                 return thisArray.Max();
@@ -36,12 +37,13 @@ namespace SiliFish.Extensions
             if (iEnd <= -1 || iEnd >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
             if (iStart > iEnd) return 0;
+            if (iStart == iEnd) return thisArray[iStart];
             return thisArray.Skip(iStart).Take(iEnd - iStart).Max();
         }
 
         public static double AverageValue(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
-            if (thisArray == null || !thisArray.Any())
+            if (thisArray == null || thisArray.Length == 0)
                 return 0;
             if (iEnd == -1 && iStart == 0)
                 return thisArray.Average();
@@ -50,12 +52,13 @@ namespace SiliFish.Extensions
             if (iEnd <= -1 || iEnd >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
             if (iStart > iEnd) return 0;
+            if (iStart == iEnd) return thisArray[iStart];
             return thisArray.Skip(iStart).Take(iEnd - iStart).Average();
         }
 
         public static double StandardDeviation(this double[] thisArray, int iStart = 0, int iEnd = -1)
         {
-            if (thisArray == null || !thisArray.Any())
+            if (thisArray == null || thisArray.Length == 0)
                 return 0;
             double avg = thisArray.AverageValue(iStart, iEnd);
             
@@ -65,7 +68,7 @@ namespace SiliFish.Extensions
                 iEnd = thisArray.Length - 1;
             if (iEnd <= -1 || iEnd >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
-            if (iStart > iEnd) return 0;
+            if (iStart >= iEnd) return 0;
             return Math.Sqrt(thisArray.Skip(iStart).Take(iEnd - iStart).Average(v => Math.Pow(v - avg, 2)));
         }
 
@@ -100,14 +103,14 @@ namespace SiliFish.Extensions
         }
         public static bool HasSpike(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1)
         {
-            if (thisArray == null) return false;
+            if (thisArray == null || thisArray.Length == 0) return false;
             iEnd = iEnd < 0 ? thisArray.Length - 1 : iEnd;
             int ind = Array.FindIndex(thisArray, iStart, iEnd-iStart, value => value >= threshold);
             return ind >= 0;
         }
         public static List<int> GetSpikeIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1, int buffer = 0)
         {
-            List<int> indices = new();
+            List<int> indices = [];
             if (iEnd < 0 || iEnd >= thisArray.Length)
                 iEnd = thisArray.Length - 1;
             int lastInd = 0;
@@ -129,7 +132,7 @@ namespace SiliFish.Extensions
 
         public static int GetSpikeStart(this double[] thisArray, double threshold, int tIndex)
         {
-            List<int> indices = new();
+            List<int> indices = [];
             if (tIndex < 0) return tIndex;
             if (tIndex >= thisArray.Length)
                 tIndex = thisArray.Length - 1;

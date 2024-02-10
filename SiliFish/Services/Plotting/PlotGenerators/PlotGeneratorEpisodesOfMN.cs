@@ -55,7 +55,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     CsvData = csvData,
                     Title = $"VR Output - Somite {somite}",
                     yLabel = "Y-Coordinate",
-                    Colors = new() { Color.Red },
+                    Colors = [Color.Red],
                     xMin = Time[0],
                     xMax = Time[^1] + 1,
                     yMin = yValues.Min() - 1,
@@ -82,7 +82,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         CsvData = csvData,
                         Title = $"Tail Beat Freq. - Somite  {somite} ",
                         yLabel = "Freq (Hz)",
-                        Colors = new() { Color.Red },
+                        Colors = [Color.Red],
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
@@ -196,7 +196,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
 
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InlierInstantFreq);
-                    if (xValues.Any())
+                    if (xValues.Length != 0)
                     {
                         title = "Time,Instant. Freq.";
                         data = new string[xValues.Length];

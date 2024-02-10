@@ -379,7 +379,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_ItemDelete(object sender, EventArgs e)
         {
-            if (listCellPools.SelectedIndices.Any())
+            if (listCellPools.SelectedIndices.Count != 0)
             {
                 string msg = "Deleting a cell pool will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
@@ -449,8 +449,8 @@ namespace SiliFish.UI.Controls
         private void listCellPools_ItemsImport(object sender, EventArgs e)
         {
             if (!warnedImport &&
-                (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Any() ||
-                Model is RunningModel runningModel && runningModel.CellPools.Any()))
+                (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Count != 0 ||
+                Model is RunningModel runningModel && runningModel.CellPools.Count != 0))
             {
                 warnedImport = true;
                 string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
@@ -635,7 +635,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCells_ItemDelete(object sender, EventArgs e)
         {
-            if (listCells.SelectedIndices.Any())
+            if (listCells.SelectedIndices.Count != 0)
             {
                 string msg = "Deleting a cell will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
@@ -956,7 +956,7 @@ namespace SiliFish.UI.Controls
                 lbc == listGap ? OpenConnectionDialog(null, true, setGap: true) :
                 OpenConnectionDialog(null, true);
 
-            if (jncs != null && jncs.Any())
+            if (jncs != null && jncs.Count != 0)
             {
                 foreach (InterPoolBase jb in jncs)
                 {
@@ -980,7 +980,7 @@ namespace SiliFish.UI.Controls
             else if (sender is InterPoolTemplate ipt)
                 jnc = new InterPoolTemplate(ipt);
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, true);
-            if (jncs != null && jncs.Any())
+            if (jncs != null && jncs.Count != 0)
             {
                 foreach (InterPoolBase jb in jncs)
                 {
@@ -996,7 +996,7 @@ namespace SiliFish.UI.Controls
         private void listConnections_ItemDelete(object sender, EventArgs e)
         {
             ListBoxControl lbc = sender as ListBoxControl;
-            if (lbc.SelectedIndices.Any())
+            if (lbc.SelectedIndices.Count != 0)
             {
                 foreach (var item in lbc.SelectedItems)
                     if (item is InterPoolTemplate ipt)
@@ -1011,7 +1011,7 @@ namespace SiliFish.UI.Controls
         {
             if (sender is not InterPoolBase jnc) return;
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, false);
-            if (jncs != null && jncs.Any())
+            if (jncs != null && jncs.Count != 0)
             {
                 RefreshProjections();
                 ModelIsUpdated();
@@ -1386,7 +1386,7 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemDelete(object sender, EventArgs e)
         {
-            if (listStimuli.SelectedIndices.Any())
+            if (listStimuli.SelectedIndices.Count != 0)
             {
                 if (MessageBox.Show("Do you want to delete selected stimuli?", "Confirmation", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
@@ -1444,7 +1444,7 @@ namespace SiliFish.UI.Controls
             if (unit is Cell cell)
                 return cell.Stimuli.HasStimulus;
             if (unit is CellPool cellPool)
-                return cellPool.GetStimuli().Any();
+                return cellPool.GetStimuli().Count != 0;
             if (unit is CellPoolTemplate cellPoolTemplate)
                 return (Model as ModelTemplate).StimulusTemplates.FirstOrDefault(stim => stim.TargetPool == cellPoolTemplate.CellGroup) != null;
             return false;

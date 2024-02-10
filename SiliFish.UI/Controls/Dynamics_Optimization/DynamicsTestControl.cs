@@ -353,7 +353,7 @@ namespace SiliFish.UI.Controls
                 }
             }
 
-            if (cbTauRise.Checked && dynamics.TauRise.Any())
+            if (cbTauRise.Checked && dynamics.TauRise.Count != 0)
             {
                 charts.Add(new Chart
                 {
@@ -368,7 +368,7 @@ namespace SiliFish.UI.Controls
                     drawPoints = true
                 });
             }
-            if (cbTauDecay.Checked && dynamics.TauDecay.Any())
+            if (cbTauDecay.Checked && dynamics.TauDecay.Count != 0)
             {
                 charts.Add(new Chart
                 {
@@ -383,7 +383,7 @@ namespace SiliFish.UI.Controls
                     drawPoints = true
                 });
             }
-            if (cbInterval.Checked && dynamics.Intervals_ms != null && dynamics.Intervals_ms.Any())
+            if (cbInterval.Checked && dynamics.Intervals_ms != null && dynamics.Intervals_ms.Count != 0)
             {
                 charts.Add(new Chart
                 {
@@ -400,7 +400,7 @@ namespace SiliFish.UI.Controls
             }
             if (cbSpikingFrequency.Checked)
             {
-                if (dynamics.SpikeFrequency_Grouped != null && dynamics.SpikeFrequency_Grouped.Any())
+                if (dynamics.SpikeFrequency_Grouped != null && dynamics.SpikeFrequency_Grouped.Count != 0)
                     charts.Add(new Chart
                     {
                         Title = "Spiking Freq.",
@@ -413,7 +413,7 @@ namespace SiliFish.UI.Controls
                         yLabel = "Freq (Hz)",
                         drawPoints = true
                     });
-                if (dynamics.BurstingFrequency_Grouped != null && dynamics.BurstingFrequency_Grouped.Any())
+                if (dynamics.BurstingFrequency_Grouped != null && dynamics.BurstingFrequency_Grouped.Count != 0)
                     charts.Add(new Chart
                     {
                         Title = "Burst Freq.",
@@ -439,7 +439,7 @@ namespace SiliFish.UI.Controls
                     yLabel = $"I ({Util.GetUoM(UnitOfMeasure.milliVolt_picoAmpere_GigaOhm_picoFarad_nanoSiemens, Measure.Current)})"
                 });
             }
-            int numCharts = charts.Any() ? charts.Count : 1;
+            int numCharts = charts.Count != 0 ? charts.Count : 1;
             string mainTitle = "Dynamics Test Results";
             string html = DyChartGenerator.PlotLineCharts(charts,
                 mainTitle, synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
@@ -477,7 +477,7 @@ namespace SiliFish.UI.Controls
                 yMultiData = I,
                 yLabel = string.Join(',', columnNames)
             });
-            int numCharts = charts.Any() ? charts.Count : 1;
+            int numCharts = charts.Count != 0 ? charts.Count : 1;
             string mainTitle = "Dynamics Test Results";
             string html = DyChartGenerator.PlotLineCharts(charts,
                 mainTitle, synchronized: true, showZeroValues: GlobalSettings.ShowZeroValues,
@@ -570,7 +570,7 @@ namespace SiliFish.UI.Controls
                                 columnNames.Add($"Stim_{columnNames.Count + 1}");
                             }
                     }
-                    if (stimValues.Any())
+                    if (stimValues.Count != 0)
                     {
                         List<double[]> I = new();
                         int iter = 0;

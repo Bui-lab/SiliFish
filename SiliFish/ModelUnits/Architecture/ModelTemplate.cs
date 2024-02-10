@@ -17,17 +17,17 @@ namespace SiliFish.ModelUnits.Architecture
     public class ModelTemplate : ModelBase
     {
         [JsonPropertyOrder(1)]
-        public List<CellPoolTemplate> CellPoolTemplates { get; set; } = new();
+        public List<CellPoolTemplate> CellPoolTemplates { get; set; } = [];
         [JsonPropertyOrder(1)]
-        public List<InterPoolTemplate> InterPoolTemplates { get; set; } = new();
+        public List<InterPoolTemplate> InterPoolTemplates { get; set; } = [];
         [JsonPropertyOrder(1)]
-        public List<StimulusTemplate> StimulusTemplates { get; set; } = new();
+        public List<StimulusTemplate> StimulusTemplates { get; set; } = [];
 
         public ModelTemplate() { }
 
         public override List<string> DiffersFrom(ModelBase other)
         {
-            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> differences = base.DiffersFrom(other) ?? [];
             if (other is ModelTemplate om)
             {
                 List<string> diffs = ModelUnitBase.ListDiffersFrom(CellPoolTemplates.Select(c => c as ModelUnitBase).ToList(),
@@ -49,7 +49,7 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 differences.Add("Models not comparable.");
             }
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -109,7 +109,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public bool HasConnections()
         {
-            return InterPoolTemplates.Any();
+            return InterPoolTemplates.Count != 0;
         }
 
         public override List<InterPoolBase> GetChemicalProjections()
@@ -195,7 +195,7 @@ namespace SiliFish.ModelUnits.Architecture
         #region Stimulus
         public bool HasStimulus()
         {
-            return StimulusTemplates.Any();
+            return StimulusTemplates.Count != 0;
         }
         public override List<StimulusBase> GetStimuli()
         {
@@ -270,7 +270,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {
-            List<InterPoolTemplate> iptNewList = new();
+            List<InterPoolTemplate> iptNewList = [];
             foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.SourcePool == poolSource.CellGroup))
             {
                 InterPoolTemplate iptCopy = new(ipt)

@@ -453,6 +453,7 @@ namespace SiliFish.UI
                 return;
             }
             MainForm mf = new(new RunningModel(modelTemplate));
+            mf.WindowState = FormWindowState.Maximized;
             UseWaitCursor = false;
             mf.Show();
         }

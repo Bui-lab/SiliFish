@@ -268,7 +268,7 @@ namespace SiliFish.UI.Controls
                     return;
                 //the core is saved as an array to benefit from $type tag added by the JsonSerializer
                 CellCore[] arr = (CellCore[])JsonUtil.ToObject(typeof(CellCore[]), JSONString);
-                if (arr != null && arr.Any())
+                if (arr != null && arr.Length != 0)
                 {
                     CellCore core = arr[0];
                     if (core != null)
