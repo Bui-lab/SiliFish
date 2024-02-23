@@ -39,7 +39,7 @@ namespace SiliFish.DataTypes
                 if (episodes[^1].Beats.Count == 0)
                     episodes.RemoveAt(episodes.Count - 1);
                 else
-                    episodes[^1].EndEpisode(last_t);//TODO peak?
+                    episodes[^1].EndEpisode(last_t);
             }
         }
 

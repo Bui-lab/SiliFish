@@ -1524,60 +1524,6 @@ namespace SiliFish.Repositories
             package.Save();
         }
 
-        public static void SaveToDB(string dbName, ModelBase model)
-        {
-            model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            SFDataContext dataContext = new();
-
-/*          TODO  workSheet.Cells[rowindex, 1].Value = "Model";
-            workSheet.Cells[rowindex++, 2].Value = model is RunningModel ? "Running Model" : "Model Template";
-            workSheet.Cells[rowindex, 1].Value = "Version";
-            workSheet.Cells[rowindex++, 2].Value = model.Version;
-            workSheet.Cells[rowindex, 1].Value = "Name";
-            workSheet.Cells[rowindex++, 2].Value = model.ModelName;
-            workSheet.Cells[rowindex, 1].Value = "Description";
-            workSheet.Cells[rowindex++, 2].Value = model.ModelDescription;
-
-            workSheet = package.Workbook.Worksheets.Add("Model Dimensions");
-            rowindex = 1;
-            foreach (var prop in model.ModelDimensions.GetType().GetProperties())
-            {
-                workSheet.Cells[rowindex, 1].Value = prop.Name;
-                workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.ModelDimensions);
-            }
-
-            workSheet = package.Workbook.Worksheets.Add("Model Settings");
-            rowindex = 1;
-            foreach (var prop in model.Settings.GetType().GetProperties())
-            {
-                workSheet.Cells[rowindex, 1].Value = prop.Name;
-                workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
-            }
-
-            workSheet = package.Workbook.Worksheets.Add("Kinem Params");
-            rowindex = 1;
-            foreach (var prop in model.Settings.GetType().GetProperties())
-            {
-                workSheet.Cells[rowindex, 1].Value = prop.Name;
-                workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
-            }
-
-            if (model.Parameters != null && model.Parameters.Count != 0)
-            {
-                workSheet = package.Workbook.Worksheets.Add("Parameters");
-                rowindex = 1;
-                foreach (var prop in model.Parameters)
-                {
-                    workSheet.Cells[rowindex, 1].Value = prop.Key;
-                    workSheet.Cells[rowindex++, 2].Value = prop.Value;
-                }
-            }
-            CreateCellPoolsWorkSheet(model, package.Workbook);
-            CreateCellsWorkSheet(model, package.Workbook);
-            CreateJunctionsWorkSheet(model, package.Workbook);
-            CreateStimuliWorkSheet(model, package.Workbook);
-            package.Save();*/
-        }
 
         public static List<string> ReadXLCellsFromLine(ExcelWorksheet worksheet, int line, int maxCol = -1)
         {

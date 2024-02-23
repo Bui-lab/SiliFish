@@ -61,6 +61,9 @@ namespace SiliFish.ModelUnits.Junction
                 if (rename) Name = GeneratedName();
             }
         }
+
+        [JsonIgnore]
+        public override double Duration_ms => double.NaN;
         public string CoreType
         {
             get => coreType;

@@ -31,7 +31,6 @@ namespace SiliFish.UI
         private RunningModel runningModel = null;
         private RunParam runParam = new();
         private ModelSimulator modelSimulator;
-        private SFDataContext sFDataContext = null;
         public ModelBase Model
         {
             get
@@ -81,11 +80,6 @@ namespace SiliFish.UI
             edt.Value = (decimal)runParam.DeltaT;
             eSkip.Value = runParam.SkipDuration;
             eTimeEnd.Value = runParam.MaxTime;
-        }
-        private void RefreshModel()
-        {
-            runningModel = modelControl.GetModel() as RunningModel;
-            modelOutputControl.SetRunningModel(null, runningModel);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -235,8 +229,10 @@ namespace SiliFish.UI
             SetProgressVisibility(true);
             timerRun.Enabled = true;
 
-            RefreshModel();//TODO why do we refresh model? PopulatePools creates issues
+            runningModel = modelControl.GetModel() as RunningModel;
             if (runningModel == null) return false;
+            modelOutputControl.SetRunningModel(null, runningModel);
+
             List<string> errors = [];
             if (!runningModel.CheckValues(ref errors))
             {
@@ -323,7 +319,6 @@ namespace SiliFish.UI
 
         #endregion
 
-        ControlContainer frmDynamics;
 
         private void SetCurrentMode(RunMode mode, string name)
         {
@@ -524,26 +519,7 @@ namespace SiliFish.UI
                 MessageBox.Show("There is no simulation to be saved.");
                 return;
             }
-            sFDataContext ??= new();
-            foreach (Simulation simulation in modelSimulator.SimulationList)
-            {
-                RunningModel model = simulation.Model;
-                if (model.DbId == 0)
-                {
-                    string stats = $"{simulation.Model.GetNumberOfCells():n0} cells; {simulation.Model.GetNumberOfConnections():n0} connections";
-                    ModelRecord modelRecord = new(simulation.Model.ModelName, DateTime.Now, stats);
-                    sFDataContext.Add(modelRecord);
-                    sFDataContext.SaveChanges();
-                    model.DbId = modelRecord.Id;
-                }
-                SimulationRecord sim = new(model.DbId,
-                                           simulation.Start,
-                                           simulation.End,
-                                           $"{simulation.Description} {modelSimulator.Description}",
-                                           modelSimulator.RunParamDescription);
-                sFDataContext.Add(sim);
-            }
-            sFDataContext.SaveChanges();
+            SimulationDB.SaveToDB(modelSimulator);
         }
 
         private void miFileExport_Click(object sender, EventArgs e)
@@ -641,7 +617,7 @@ namespace SiliFish.UI
         private void miToolsCellularDynamics_Click(object sender, EventArgs e)
         {
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
-            frmDynamics = new()
+            ControlContainer frmDynamics = new()
             {
                 WindowState = FormWindowState.Maximized
             };
