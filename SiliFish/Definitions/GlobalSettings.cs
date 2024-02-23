@@ -22,6 +22,7 @@ namespace SiliFish.Definitions
         public static double BiologicalMaxPotential = 100;
         public static double FileSizeWarningLimit = 20;//in MB
         public static double MemoryWarningLimit = 10;//in GB
+        public static bool UseDBForMemory = false;
 
         public static long PlotDataPointLimit = (long)5E6;
         public static int PlotWarningNumber = 10;
@@ -44,20 +45,21 @@ namespace SiliFish.Definitions
 
         public static int RheobaseInfinity = 500;
         public static int RheobaseLimit = 1000;
-
         public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
+        public static int RollingFreqBeatCount = 5;
+
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
         public static int GeneticAlgorithmSolutionCount = 3;
         public static int GeneticAlgorithmExhaustiveSolutionCount = 30;
 
         [JsonIgnore, Browsable(false)]
-        public static List<string> TempFiles = new();
+        public static List<string> TempFiles = [];
 
         [JsonIgnore, Browsable(false)]
-        public static Dictionary<string, string> LastPlotSettings = new();
+        public static Dictionary<string, string> LastPlotSettings = [];
         [JsonIgnore, Browsable(false)]
-        public static Dictionary<string, string> LastRunSettings = new();
+        public static Dictionary<string, string> LastRunSettings = [];
 
     }
     public class GlobalSettingsProperties
@@ -102,6 +104,11 @@ namespace SiliFish.Definitions
             DisplayName("Memory warning limit"),
             Category("Const")]
         public double MemoryWarningLimit { get { return GlobalSettings.MemoryWarningLimit; } set { GlobalSettings.MemoryWarningLimit = value; } }
+
+        [Description("If set to true, simulation data will be kept mainly in a temporary database to prevent memory bottleneck for large models."),
+            DisplayName("Use DB for memory"),
+            Category("Const")]
+        public bool UseDBForMemory { get { return GlobalSettings.UseDBForMemory; } set { GlobalSettings.UseDBForMemory = value; } }
 
 
         [Description("The maximum file size (in MB) to be displayed on the HTML windows. " +
@@ -177,6 +184,11 @@ namespace SiliFish.Definitions
             DisplayName("Rheobase multipliers"),
             Category("Dynamics")]
         public double[] RheobaseTestMultipliers { get { return GlobalSettings.RheobaseTestMultipliers; } set { GlobalSettings.RheobaseTestMultipliers = value; } }
+
+        [Description("The number of beats to the left and right to calculate the rolling TBF."),
+            DisplayName("Rolling Freq. Beat Count"),
+            Category("Dynamics")]
+        public int RollingFreqBeatCount { get { return GlobalSettings.RollingFreqBeatCount; } set { GlobalSettings.RollingFreqBeatCount = value; } }
         #endregion
 
         #region Genetic Algorithm

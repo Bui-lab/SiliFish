@@ -17,20 +17,35 @@ using OfficeOpenXml.Core.Worksheet.Fill;
 using System.Reflection;
 using SiliFish.DynamicUnits.JncCore;
 using System.Text;
+using SiliFish.Extensions;
 
 namespace SiliFish.ModelUnits.Junction
 {
     public class ChemicalSynapse : JunctionBase
     {
-        private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
-                              //calculated at InitForSimulation, and used only during simulation
-        protected override int nMax => PreNeuron?.V.Length ?? 0;
-        protected override double dt => PreNeuron?.Model.DeltaT ?? 0.1;
-
         public Neuron PreNeuron;
         public Cell PostCell; //can be a neuron or a muscle cell
+        private int duration; //The number of time units (dt) it will take for the current to travel from one neuron to the other
+                              //calculated at InitForSimulation, and used only during simulation
+        protected override int nMax => PreNeuron?.V.AsArray().Length ?? 0;
+        protected override double dt => PreNeuron?.Model.DeltaT ?? 0.1;
+        public override int iDuration => duration;
 
-        public override string SourcePool
+        public override double Duration_ms
+        {
+            get
+            {
+                if (FixedDuration_ms != null)
+                    return (double)FixedDuration_ms;
+                else
+                {
+                    double distance = Util.Distance(PreNeuron.Coordinate, PostCell.Coordinate, DistanceMode);
+                    return (distance / PreNeuron.ConductionVelocity) + (Delay_ms ?? 0);
+                }
+            }
+        }
+
+public override string SourcePool
         {
             get => PreNeuron.CellPool.ID;
             set { }
@@ -50,7 +65,7 @@ namespace SiliFish.ModelUnits.Junction
             ConnectionType.Synapse, Core.SynapseType,
             csvExportCoreValues,
                 DistanceMode,
-                FixedDuration_ms, Delay_ms,
+                FixedDuration_ms, Delay_ms, Duration_ms,
                 Active,
                 TimeLine_ms?.ExportValues());
         }
@@ -83,6 +98,7 @@ namespace SiliFish.ModelUnits.Junction
                     FixedDuration_ms = d;
                 if (double.TryParse(values[iter++], out double dd))
                     Delay_ms = dd;
+                iter++;//Duration_ms is readonly
                 Active = bool.Parse(values[iter++]);
                 if (iter < values.Count)
                     TimeLine_ms.ImportValues([values[iter++]]);
@@ -185,8 +201,8 @@ namespace SiliFish.ModelUnits.Junction
                 return;
             }
             int tt = duration;
-            double vPreSynapse = tt <= tIndex ? PreNeuron.V[tIndex - tt] : PreNeuron.RestingMembranePotential;
-            double vPost = tIndex > 0 ? PostCell.V[tIndex - 1] : PostCell.RestingMembranePotential;
+            double vPreSynapse = tt <= tIndex ? PreNeuron.V.GetValue(tIndex - tt) : PreNeuron.RestingMembranePotential;
+            double vPost = tIndex > 0 ? PostCell.V.GetValue(tIndex - 1) : PostCell.RestingMembranePotential;
             bool excitatory = PreNeuron.CellPool.NTMode == NeuronClass.Glutamatergic || PreNeuron.CellPool.NTMode == NeuronClass.Cholinergic;
             double ISyn;
             DynamicsParam dynamics = PreNeuron.Model.DynamicsParam;

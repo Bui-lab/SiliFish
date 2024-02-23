@@ -129,7 +129,7 @@ namespace SiliFish.DataTypes
         /// <returns></returns>
         protected virtual Dictionary<string, string> ConvertToDictionary()
         {
-            Dictionary<string, string> keyValuePairs = new();
+            Dictionary<string, string> keyValuePairs = [];
             foreach (PropertyInfo prop in GetType().GetProperties())
             {
                 if (prop.GetCustomAttribute<BrowsableAttribute>()?.Equals(BrowsableAttribute.No) ?? false)
@@ -149,7 +149,7 @@ namespace SiliFish.DataTypes
                     return new Constant_NoDistribution(value);
                 else return null;
             }
-            Dictionary<string, string> keyValuePairs = new();
+            Dictionary<string, string> keyValuePairs = [];
             foreach (string value in values) 
             {
                 string[] keyAndValue = value.Split(':');
@@ -381,7 +381,7 @@ namespace SiliFish.DataTypes
             Random ??= new Random();
             double[] arr = Random.Gauss(Mean * Range / 100, Stddev * Range / 100, n, LowerLimit, UpperLimit);
             if (ordered)
-                return arr.Order().ToArray();
+                return [.. arr.Order()];
             return arr;
         }
     }
@@ -439,7 +439,7 @@ namespace SiliFish.DataTypes
             double stdDev2= Stddev2 * Range / 100;
             double[] arr = Random.Bimodal(mean1, stdDev1, mean2, stdDev2, Mode1Weight, n, LowerLimit, UpperLimit);
             if (ordered)
-                return arr.Order().ToArray();
+                return [.. arr.Order()];
             return arr;
         }
     }

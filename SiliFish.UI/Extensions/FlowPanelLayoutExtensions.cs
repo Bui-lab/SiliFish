@@ -87,7 +87,7 @@ namespace Extensions
 
         public static Dictionary<string, double> CreateDoubleDictionaryFromControls(this FlowLayoutPanel flowPanel)
         {
-            Dictionary<string, double> ParamDict = new();
+            Dictionary<string, double> ParamDict = [];
             string lastKey = "";
             foreach (Control control in flowPanel.Controls)
             {

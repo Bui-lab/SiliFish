@@ -11,14 +11,14 @@ namespace SiliFish.ModelUnits.Stim
 {
     public class Stimuli
     {
-        public List<Stimulus> ListOfStimulus { get; set; } = new();
+        public List<Stimulus> ListOfStimulus { get; set; } = [];
 
              [JsonIgnore]
-        public double MinValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Min(s => s.MinValue) : 0; } }
+        public double MinValue { get { return ListOfStimulus.Count != 0 ? ListOfStimulus.Min(s => s.MinValue) : 0; } }
         [JsonIgnore]
-        public double MaxValue { get { return ListOfStimulus.Any() ? ListOfStimulus.Max(s => s.MaxValue) : 0; } }
+        public double MaxValue { get { return ListOfStimulus.Count != 0 ? ListOfStimulus.Max(s => s.MaxValue) : 0; } }
         [JsonIgnore]
-        public bool HasStimulus { get { return ListOfStimulus.Any(); } }       
+        public bool HasStimulus { get { return ListOfStimulus.Count != 0; } }       
         public Stimuli()
         {
         }
@@ -32,7 +32,7 @@ namespace SiliFish.ModelUnits.Stim
         {
             double[] ret = new double[nmax];
             foreach (Stimulus s in ListOfStimulus.Where(s => s.Active))
-                ret = ret.AddArray(s.GetValues(nmax));
+                ret = ret.SumUp(s.GetValues(nmax));
             return ret;
         }
         public virtual void InitForSimulation(RunParam runParam, Random rand)

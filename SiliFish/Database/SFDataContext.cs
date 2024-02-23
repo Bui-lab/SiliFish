@@ -15,8 +15,9 @@ public class SFDataContext: DbContext
 {
     public string DbFileName { get; set; } = $"{GlobalSettings.OutputFolder}//SiliFish.sqlite";
     public DbSet<SimulationRecord> Simulations { get; set; }
-    public DbSet<CoreRecord> Cores { get; set; }
-    public DbSet<CoreValueRecord> Values { get; set; }
+    public DbSet<ModelRecord> Models { get; set; }
+    public DbSet<UnitRecord> Cores { get; set; }
+    public DbSet<UnitValueRecord> Values { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -24,16 +25,17 @@ public class SFDataContext: DbContext
         optionsBuilder.UseSqlite($"Data Source={DbFileName}");
     }
 
-    public override int SaveChanges()
-    {
-        Database.EnsureCreated();
-        return base.SaveChanges();
-    }
     public SFDataContext(bool temp = false)
     {
         if (temp)
         {
             DbFileName = $"{GlobalSettings.TempFolder}\\{FileUtil.GetUniqueFileName()}.sqlite";
+            GlobalSettings.TempFiles.Add(DbFileName);//to ensure deletion at the end
         }
+    }
+
+    public SFDataContext(string dbName)
+    {
+        DbFileName = dbName;
     }
 }

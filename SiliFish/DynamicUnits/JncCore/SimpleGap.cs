@@ -50,7 +50,7 @@ namespace SiliFish.DynamicUnits
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
-            errors ??= new();
+            errors ??= [];
             return errors.Count == 0;
         }
 

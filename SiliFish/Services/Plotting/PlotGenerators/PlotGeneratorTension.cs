@@ -26,7 +26,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         protected override void CreateCharts()
         {
-            if (cells == null || !cells.Any())
+            if (cells == null || cells.Count == 0)
                 return;
             double yMin = 0;
             double yMax = 1.2;
@@ -36,11 +36,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cellList, combinePools, combineSomites, combineCells);
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
-                List<double[]> yMultiData = new();
+                List<double[]> yMultiData = [];
                 double[] yData = null;
                 string columnTitles = "Time,";
                 List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-                List<Color> colorPerChart = new();
+                List<Color> colorPerChart = [];
                 foreach (Cell cell in cellGroup)
                 {
                     MuscleCell muscleCell = cell as MuscleCell;

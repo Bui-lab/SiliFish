@@ -40,9 +40,9 @@ namespace SiliFish.ModelUnits
 
         #endregion
         [JsonIgnore, Browsable(false)]
-        public static List<string> ColumnNames { get; } = new() {"Asc.", " Min Asc. Reach", " Max Asc. Reach",
+        public static List<string> ColumnNames { get; } = ["Asc.", " Min Asc. Reach", " Max Asc. Reach",
             " Desc.", " Min Desc. Reach", " Max Desc. Reach",
-            "Max Out", " Max In", " Autapse", " Somite Based"};
+            "Max Out", " Max In", " Autapse", " Somite Based"];
 
         public List<string> ExportValues()
         {

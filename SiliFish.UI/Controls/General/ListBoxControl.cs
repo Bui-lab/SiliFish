@@ -11,7 +11,7 @@ namespace SiliFish.UI.Controls
 
     public partial class ListBoxControl : UserControl
     {
-        private List<object> HiddenItems = new();
+        private List<object> HiddenItems = [];
         private bool IsInactiveHidden = false;
 
         public event EventHandler ItemAdd;
@@ -255,7 +255,7 @@ namespace SiliFish.UI.Controls
             if (listBox.Items.Count == 0)
             {
                 miHideInactive.Visible = false;
-                miShowAll.Visible = HiddenItems.Any();
+                miShowAll.Visible = HiddenItems.Count != 0;
             }
             else
             {
@@ -306,12 +306,9 @@ namespace SiliFish.UI.Controls
 
         public List<object> GetItems(bool includeHidden)
         {
-            if (!includeHidden || !HiddenItems.Any())
+            if (!includeHidden || HiddenItems.Count == 0)
                 return listBox.Items.Cast<object>().ToList();
-            List<object> fullList = new();
-            fullList.AddRange(listBox.Items.Cast<object>().ToList());
-            foreach (object obj in HiddenItems)
-                fullList.Add(obj);
+            List<object> fullList = [.. listBox.Items.Cast<object>().ToList(), .. HiddenItems];
             return fullList;
         }
 

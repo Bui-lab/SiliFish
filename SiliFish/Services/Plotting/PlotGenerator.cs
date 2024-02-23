@@ -29,7 +29,7 @@ namespace SiliFish.Services.Plotting
             int tStart = 0, int tEnd = -1)
         {
             errorMessage = string.Empty;
-            List<Chart> charts = new();
+            List<Chart> charts = [];
             if (tEnd < 0) tEnd = simulation.RunParam.MaxTime;
             int iStart = simulation.RunParam.iIndex(tStart);
             int iEnd = simulation.RunParam.iIndex(tEnd);
@@ -42,7 +42,7 @@ namespace SiliFish.Services.Plotting
             if (Plot.Selection is PlotSelectionUnits unitSelection)
             {
                 List<JunctionBase> junctions = unitSelection.Units.Where(x => x is JunctionBase).Cast<JunctionBase>().ToList();
-                if (junctions.Any())
+                if (junctions.Count != 0)
                 {
                     PlotGeneratorJunctions plotGeneratorJunctions = new(this, simulation.Model.TimeArray, iStart, iEnd, 0,
                         junctions, Plot.Selection);
@@ -51,7 +51,7 @@ namespace SiliFish.Services.Plotting
                 }
 
                 List<Stimulus> stims = unitSelection.Units.Where(x => x is Stimulus).Cast<Stimulus>().ToList();
-                if (stims.Any())
+                if (stims.Count != 0)
                 {
                     List<Cell> targetCells = stims.Select(s => s.TargetCell).ToList();
                     PlotGeneratorStimuli plotGeneratorStimuli = new(this, simulation.Model.TimeArray, iStart, iEnd, 1, targetCells, Plot.Selection);
@@ -62,8 +62,8 @@ namespace SiliFish.Services.Plotting
             }
 
             if (Plot.PlotType.GetGroup() != "episode" &&
-                (Cells == null || !Cells.Any()) &&
-                (Pools == null || !Pools.Any()))
+                (Cells == null || Cells.Count == 0) &&
+                (Pools == null || Pools.Count == 0))
                 return (null, null);
             string Title = "";
             switch (Plot.PlotType)
@@ -87,7 +87,7 @@ namespace SiliFish.Services.Plotting
                     PlotGeneratorMembranePotentials pg0 = new(this, simulation.Model.TimeArray, iStart, iEnd, 2,
                         Cells, Plot.Selection);
                     pg0.CreateCharts(charts);
-                    charts = charts.OrderBy(chart => chart.ChartSeq).ThenBy(chart => chart.GroupSeq).ToList();
+                    charts = [.. charts.OrderBy(chart => chart.ChartSeq).ThenBy(chart => chart.GroupSeq)];
                     break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
@@ -125,12 +125,12 @@ namespace SiliFish.Services.Plotting
                     PlotGeneratorFullDynamics pg6 = new(this, simulation.Model.TimeArray, iStart, iEnd,
                         Cells, Plot.Selection);
                     pg6.CreateCharts(charts);
-                    charts = charts.OrderBy(chart => chart.GroupSeq).ThenBy(chart => chart.ChartSeq).ToList();
+                    charts = [.. charts.OrderBy(chart => chart.GroupSeq).ThenBy(chart => chart.ChartSeq)];
                     break;
                 case PlotType.Tension:
                     Title = "Muscle Tension";
                     List<Cell> muscleCells = Cells?.Where(c => c is MuscleCell).ToList();
-                    if (muscleCells != null && muscleCells.Any())
+                    if (muscleCells != null && muscleCells.Count != 0)
                     {
                         PlotGeneratorTension plotGeneratorTension = new(this, simulation.Model.TimeArray, iStart, iEnd, 0,
                             muscleCells, Plot.Selection);
@@ -156,12 +156,12 @@ namespace SiliFish.Services.Plotting
                 case PlotType.InstFreq:
                 case PlotType.TailBeatFreq:
                 case PlotType.TailBeatPerEpisode:
-                    if (!simulation.Model.MusclePools.Any())
+                    if (simulation.Model.MusclePools.Count == 0)
                     {
                         charts = null;
                         break;
                     }
-                    Title = Plot.PlotType.ToString();
+                    Title = Plot.PlotType.GetDisplayName();
                     (Coordinate[] tail_tip_coord2, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
                     PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, tail_tip_coord2, episodes2);
                     plotGeneratorEpisodesTail2.CreateCharts(charts, Plot.PlotType);

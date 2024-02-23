@@ -55,7 +55,7 @@ namespace SiliFish.DynamicUnits
         public override bool CheckValues(ref List<string> errors)
         {
             base.CheckValues(ref errors);
-            errors ??= new();
+            errors ??= [];
             if (SlowComponent < 0 || SlowComponent > 1)
                 errors.Add($"Chemical synapse: slow component valid range is [0-1].");
             if (TauDFast * (1 - SlowComponent) + TauDSlow * SlowComponent < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)

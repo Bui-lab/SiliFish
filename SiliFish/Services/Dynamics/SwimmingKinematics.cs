@@ -10,6 +10,7 @@ using SiliFish.DynamicUnits;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using GeneticSharp;
+using SiliFish.Extensions;
 
 namespace SiliFish.Services.Dynamics
 {
@@ -61,7 +62,7 @@ namespace SiliFish.Services.Dynamics
                         useMuscleTension ?
                         coef / halfBodyWidth * (RightMuscleCells.Sum(c => c.Tension[startIndex + i - 1] * Math.Abs(c.Coordinate.Y)) -
                                 LeftMuscleCells.Sum(c => c.Tension[startIndex + i - 1] * Math.Abs(c.Coordinate.Y))) :
-                        coef * (RightMuscleCells.Sum(c => c.V[startIndex + i - 1]) - LeftMuscleCells.Sum(c => c.V[startIndex + i - 1]));
+                        coef * (RightMuscleCells.Sum(c => c.V.GetValue(startIndex + i - 1)) - LeftMuscleCells.Sum(c => c.V.GetValue(startIndex + i - 1)));
                     double acc = -Math.Pow(kinemW0, 2) * angle[somite, i - 1] - 2 * vel[somite, i - 1] * kinemZeta * kinemW0 + tensDiff;
                     vel[somite, i] = vel[somite, i - 1] + acc * dt;
                     angle[somite, i] = angle[somite, i - 1] + vel[somite, i - 1] * dt;
@@ -142,6 +143,7 @@ namespace SiliFish.Services.Dynamics
             SwimmingEpisodes episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);
+            int beat_peak = -1;
             while (i < nMax)
             {
                 int iMax = Math.Min(i + delay, nMax);
@@ -150,7 +152,7 @@ namespace SiliFish.Services.Dynamics
                 if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
                 {
                     side = 0;
-                    lastEpisode?.EndEpisode(t);
+                    lastEpisode?.EndEpisode(t, model.TimeArray[beat_peak]);
                     lastEpisode = null;
                     i = iMax;
                     continue;
@@ -161,12 +163,14 @@ namespace SiliFish.Services.Dynamics
                     if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
                     {
                         lastEpisode = new SwimmingEpisode(t);
+                        beat_peak = i;
                         episodes.AddEpisode(lastEpisode);
                         side = LEFT;
                     }
                     else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
                     {
                         lastEpisode = new SwimmingEpisode(t);
+                        beat_peak = i;
                         episodes.AddEpisode(lastEpisode);
                         side = RIGHT;
                     }
@@ -176,16 +180,20 @@ namespace SiliFish.Services.Dynamics
                     if (tail_tip_coord[i].X < left_bound && side == RIGHT)
                     {
                         side = LEFT;
-                        lastEpisode.EndBeat(t);
+                        lastEpisode.EndBeat(t, model.TimeArray[beat_peak]);
                         lastEpisode.StartBeat(t, SagittalPlane.Left);
                     }
 
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;
-                        lastEpisode.EndBeat(t);
+                        lastEpisode.EndBeat(t, model.TimeArray[beat_peak]);
                         lastEpisode.StartBeat(t, SagittalPlane.Right);
                     }
+                    else if (side == RIGHT && tail_tip_coord[i].X > tail_tip_coord[beat_peak].X)
+                        beat_peak = i;
+                    else if (side == LEFT && tail_tip_coord[i].X < tail_tip_coord[beat_peak].X)//negative value
+                        beat_peak = i;
                 }
                 i++;
             }
@@ -210,7 +218,7 @@ namespace SiliFish.Services.Dynamics
             leftSpikes.Sort();
             rightSpikes.Sort();
 
-            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodes(model.TimeArray, model.DynamicsParam, simulation.RunParam.DeltaT, 
+            SwimmingEpisodes Episodes = SwimmingEpisode.GenerateEpisodesByMNSpikes(model.TimeArray, model.DynamicsParam, simulation.RunParam.DeltaT, 
                 leftSpikes, rightSpikes, episodeBreak);
             double[] range = new double[model.TimeArray.Length - iSkip];
             foreach (SwimmingEpisode episode in Episodes.Episodes)
@@ -222,12 +230,12 @@ namespace SiliFish.Services.Dynamics
                     int middleInd = (startInd + endInd) / 2;
                     if (beat.Direction == SagittalPlane.Left)
                     {
-                        double value = leftMNs.Max(MN => MN.V.Skip(startInd).Take(endInd - startInd + 1).Max());
+                        double value = leftMNs.Max(MN => MN.V.MaxValue(startInd, endInd));
                         range[middleInd - iSkip] = -value;
                     }
                     else //if (beat.Direction == SagittalPlane.Right)
                     {
-                        double value = rightMNs.Max(MN => MN.V.Skip(startInd).Take(endInd - startInd + 1).Max());
+                        double value = rightMNs.Max(MN => MN.V.MaxValue(startInd, endInd));
                         range[middleInd - iSkip] = value;
                     }
                 }

@@ -12,6 +12,7 @@ using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -24,6 +25,8 @@ namespace SiliFish.ModelUnits.Junction
     public class JunctionBase : InterPoolBase
     {
         public JunctionCore Core { get; set; }
+
+        public virtual int iDuration => throw new NotImplementedException();
 
         protected double[] inputCurrent; //Current array 
 
@@ -106,6 +109,21 @@ namespace SiliFish.ModelUnits.Junction
                 NextStep(index);
             }
         }
+
+        public virtual void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        {
+
+        }
+        public virtual void MemoryAllocation(RunParam runParam, DBLink dbLink)
+        {
+
+        }
+
+        public virtual void MemoryFlush()
+        {
+
+        }
+
         public virtual void InitForSimulation(RunParam runParam, ref int _)
         {
             InitForSimulation(runParam.DeltaT);

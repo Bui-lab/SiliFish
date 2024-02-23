@@ -10,7 +10,19 @@ namespace SiliFish.Definitions
 
     //To fill dropdown with enum:
     //ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
-   
+
+    public enum SimulationState
+    {
+        [Display(Name = "Not Started")] 
+        NotStarted, 
+        Initializing, 
+        Cancelled, 
+        Running, 
+        Finalizing,
+        [Display(Name = "Saving to temporary database")]
+        DataDump,
+        Completed
+    }
     public enum CellType { Neuron, MuscleCell }
     public enum FiringRhythm { NoSpike, Phasic, Tonic }
     public enum FiringPattern { NoSpike, Spiking, Bursting, Chattering, Mixed }
@@ -31,7 +43,6 @@ namespace SiliFish.Definitions
         Left, Right,
         [Display(Name = "Left/Right")] Both
     }
-
 
     public enum PlotType
     {

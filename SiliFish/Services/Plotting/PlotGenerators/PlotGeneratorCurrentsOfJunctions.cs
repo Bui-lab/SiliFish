@@ -32,8 +32,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             UnitOfMeasure UoM = plotGenerator.UoM;
 
-            List<Chart> gapCharts = new();
-            List<Chart> synCharts = new();
+            List<Chart> gapCharts = [];
+            List<Chart> synCharts = [];
 
             double yMin = double.MaxValue;
             double yMax = double.MinValue;
@@ -49,11 +49,11 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             }
 
             Util.SetYRange(ref yMin, ref yMax);
-            List<double[]> yMultiData = new();
+            List<double[]> yMultiData = [];
             double[] yData = null;
             string columnTitles = "Time,";
             List<string> data = new(timeArray.Skip(iStart).Take(iEnd - iStart + 1).Select(t => t.ToString(GlobalSettings.PlotDataFormat) + ","));
-            List<Color> colorPerChart = new();
+            List<Color> colorPerChart = [];
 
             if (gapJunctions != null)
             {

@@ -1,4 +1,5 @@
-﻿using SiliFish.DataTypes;
+﻿using SiliFish.Database;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
@@ -15,6 +16,7 @@ using System.Data.Common;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace SiliFish.ModelUnits.Cells
 {
@@ -128,7 +130,7 @@ namespace SiliFish.ModelUnits.Cells
 
         #region Simulation Values
         [JsonIgnore]
-        public double[] V; //Membrane potential vector
+        public ValueCapsule V; //Membrane potential array or link to db
         #endregion
         [JsonIgnore]
         public virtual double RestingMembranePotential { get {
@@ -193,11 +195,9 @@ namespace SiliFish.ModelUnits.Cells
             {
                 if (iter > values.Count - 2) break;
                 string paramkey = values[iter++].Trim();
-                double.TryParse(values[iter++].Trim(), out double paramvalue);
-                if (!string.IsNullOrEmpty(paramkey))
-                {
-                    parameters.Add(paramkey, paramvalue);
-                }
+                if (double.TryParse(values[iter++].Trim(), out double paramvalue))
+                    if (!string.IsNullOrEmpty(paramkey))
+                        parameters.Add(paramkey, paramvalue);
             }
             Core = CellCore.CreateCore(coreType, parameters);
             Active = bool.Parse(values[iter++]);
@@ -212,7 +212,7 @@ namespace SiliFish.ModelUnits.Cells
             if (values.Length != ColumnNames.Count) return null;
             string discriminator = values[0];
             Cell cell = CreateCell(discriminator);
-            cell.ImportValues(row.Split(",").ToList());
+            cell.ImportValues([.. row.Split(",")]);
             return cell;
         }
         public Cell()
@@ -307,11 +307,11 @@ namespace SiliFish.ModelUnits.Cells
         }
         public virtual void SortJunctionsBySource()
         {
-            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell1.ID).ToList();
+            GapJunctions = [.. GapJunctions.OrderBy(jnc => jnc.Cell1.ID)];
         }
         public virtual void SortJunctionsByTarget()
         {
-            GapJunctions = GapJunctions.OrderBy(jnc => jnc.Cell2.ID).ToList();
+            GapJunctions = [.. GapJunctions.OrderBy(jnc => jnc.Cell2.ID)];
         }
 
         public virtual void SortStimuli()
@@ -349,6 +349,11 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Connection Functions
+        //calculates the maximum duration for each of its junctions in terms delta t
+        public virtual int TimeDistance()
+        {
+            return GapJunctions?.Select(junc => junc.iDuration).DefaultIfEmpty().Max() ?? 0;
+        }
         public GapJunction CreateGapJunction(Cell n2, Dictionary<string, double> synParams, DistanceMode distanceMode)
         {
             GapJunction jnc = new(this, n2, nameof(SimpleGap), synParams, distanceMode);
@@ -391,6 +396,29 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region RunTime
+
+        public virtual void MemoryAllocation(RunParam runParam, DBLink dBLink)
+        {
+            if (dBLink == null)
+            {
+                V = new ValueCapsule("Memb. Pot.", runParam.iMax, Core.Vr);
+            }
+            else
+            {
+                UnitRecord coreRecord = new(dBLink.SimulationID, GetType().Name, ID, JsonUtil.ToJson(this));
+                SFDataContext dataContext = new(dBLink.DBName);
+                dataContext.Add(coreRecord);
+                dataContext.SaveChanges();
+                V = new ValueCapsule("Memb. Pot.", runParam.iMax, coreRecord.Id,
+                    dBLink.RollingWindow, dBLink.WindowMultiplier,
+                    Core.Vr, dBLink.DBName, dBLink.DatabaseDumper);
+            }
+        }
+
+        public virtual void MemoryFlush ()
+        {
+            V.Flush();
+        }
         public virtual void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
             InitForSimulation(runParam.DeltaT);
@@ -398,11 +426,17 @@ namespace SiliFish.ModelUnits.Cells
                 ConductionVelocity = Model.Settings.cv;
             Core.Initialize(runParam.DeltaT, ref uniqueID);
             spikeTrain.Clear();
-            V = Enumerable.Repeat(Core.Vr, runParam.iMax).ToArray();
             Stimuli.InitForSimulation(runParam, Model.randomNumGenerator);
             foreach (GapJunction jnc in GapJunctions)
                 jnc.InitForSimulation(runParam, ref uniqueID);
         }
+        public virtual void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        {
+            V.FinalizeSimulation(runParam, dbLink);
+            foreach (GapJunction jnc in GapJunctions)
+                jnc.FinalizeSimulation(runParam, dbLink);
+        }
+
         public virtual void NextStep(int t, double stim, double minV, double maxV)
         {
             bool spike = false;
@@ -413,7 +447,7 @@ namespace SiliFish.ModelUnits.Cells
                 v = minV;
             else if (v > maxV)
                 v = maxV;
-            V[t] = v;
+            V.SetValue(t, v);
         }
         
         public virtual void CalculateCellularOutputs(int t)
@@ -463,11 +497,6 @@ namespace SiliFish.ModelUnits.Cells
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
-        }
-
-        public int GetSpikeStart(int tIndex)
-        {
-            return V?.GetSpikeStart(Core.Vthreshold, tIndex) ?? -1;
         }
 
         public virtual double MinCurrentValue(bool gap, bool chemin, bool chemout, int iStart = 0, int iEnd = -1)
@@ -527,7 +556,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell2 == this))
             {
                 colors.TryAdd(jnc.Cell1.ID, jnc.Cell1.CellPool.Color);
-                AffarentCurrents.AddObject(jnc.Cell1.ID, jnc.InputCurrent.ToList());
+                AffarentCurrents.AddObject(jnc.Cell1.ID, [.. jnc.InputCurrent]);
             }
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == this))
             {

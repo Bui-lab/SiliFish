@@ -7,6 +7,7 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +51,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     CsvData = csvData,
                     Title = $"Tail Movement",
                     yLabel = "Y-Coordinate",
+                    Colors = [ Color.Red ],
                     xMin = Time[0],
                     xMax = Time[^1] + 1,
                     yMin = yValues.Min() - 1,
@@ -65,23 +67,36 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 if (plotType is PlotType.EpisodesTail or PlotType.TailBeatFreq or PlotType.TailMovementFreq)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq);
-                    title = "Time,Tail Beat Freq.";
-                    data = new string[episodes.EpisodeCount];
-                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = title + "\n" + string.Join("\n", data);
+                    (double[] xValues2, double[] yValues2) = episodes.GetXYValues(EpisodeStats.RollingFreq);
+                    double yMax = Math.Max(yValues.Max(), yValues2.Max());
+                    (double[] xData, List<double[]> yMultiData) = Util.MergeXYArrays(xValues, yValues, xValues2, yValues2);
+                    List<Color> colorPerChart = [Color.Red, Color.Purple];
+                    title = "Time,Summary TBF,Rolling TBF";
+                    int len = xData.Length;
+                    data = new string[len];
+                    foreach (int i in Enumerable.Range(0, xData.Length))
+                    {
+                        data[i] = xData[i].ToString(GlobalSettings.PlotDataFormat);
+                        foreach (int j in Enumerable.Range(0, yMultiData[0].Length))
+                        {
+                            data[i] += "," + yMultiData[i][j].ToString(GlobalSettings.PlotDataFormat);
+                        }
+                    }
+                    csvData = title + "\n" + string.Join("\n", data.Select(line => line[..^1]).ToArray());
                     Chart chart = new()
                     {
                         CsvData = csvData,
+                        Colors = colorPerChart,
                         Title = $"Tail Beat Frequency",
                         yLabel = "Freq (Hz)",
                         ScatterPlot = true,
+                        xData = xData,
+                        yData = null,
+                        yMultiData = yMultiData,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
                         yMin = 0,
-                        yMax = yValues.Max() + 1,
-                        xData = xValues,
-                        yData = yValues
+                        yMax = yMax
                     };
                     if (!AddChart(chart)) return;
                 }
@@ -187,7 +202,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
 
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InlierInstantFreq);
-                    if (xValues.Any())
+                    if (xValues.Length != 0)
                     {
                         title = "Time,Instant. Freq.";
                         data = new string[xValues.Length];

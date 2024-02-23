@@ -90,7 +90,7 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         [JsonPropertyOrder(3)]
-        public List<string> Attachments { get; set; } = new();
+        public List<string> Attachments { get; set; } = [];
 
         [JsonIgnore]
         public override string Tooltip
@@ -149,7 +149,7 @@ namespace SiliFish.ModelUnits.Junction
                 AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
                 ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
                 CoreType = values[iter++].Trim();
-                parameters = new();
+                parameters = [];
                 for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
                 {
                     if (iter > values.Count - 2) break;
@@ -172,7 +172,7 @@ namespace SiliFish.ModelUnits.Junction
                 if (bool.TryParse(values[iter++], out bool b))
                     Active = b;
                 if (iter < values.Count)
-                    TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
+                    TimeLine_ms.ImportValues([values[iter++]]);
             }
             catch (Exception ex)
             {
@@ -259,7 +259,7 @@ namespace SiliFish.ModelUnits.Junction
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> differences = new();
+            List<string> differences = [];
             InterPoolTemplate ipt = other as InterPoolTemplate;
             if (Name != ipt.Name)
                 differences.Add($"{Name} Name: {Name} vs {ipt.Name}");
@@ -285,7 +285,7 @@ namespace SiliFish.ModelUnits.Junction
                 differences.Add($"{Name} Active: {Active} vs {ipt.Active}");
             if (TimeLine_ms.ToString() !=  ipt.TimeLine_ms.ToString())
                 differences.Add($"{Name} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }

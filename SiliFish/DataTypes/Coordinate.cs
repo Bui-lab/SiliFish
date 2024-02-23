@@ -32,10 +32,10 @@ namespace SiliFish.DataTypes
 
 
         [JsonIgnore, Browsable(false)]
-        public static List<string> ColumnNames { get; } = new() { "X", "Y", "Z" };
+        public static List<string> ColumnNames { get; } = ["X", "Y", "Z"];
 
         public List<string> ExportValues() =>
-            new() { X.ToString(), Y.ToString(), Z.ToString() };
+            [X.ToString(), Y.ToString(), Z.ToString()];
 
         public void ImportValues(List<string> values)
         {

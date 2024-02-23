@@ -22,7 +22,7 @@ namespace SiliFish.UI.Controls
         public void CheckValues(object sender, EventArgs args)
         {
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
-            checkValuesArgs.Errors = new();
+            checkValuesArgs.Errors = [];
             if (ddSourcePool.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("No source pool selected.");
             if (ddTargetPool.SelectedIndex < 0)
@@ -144,7 +144,7 @@ namespace SiliFish.UI.Controls
             ddCoreType.Items.Clear();
             ddCoreType.Items.AddRange(interPoolTemplate.ConnectionType == ConnectionType.Gap ?
                 ElecSynapseCore.GetSynapseTypes().ToArray() :
-                ChemSynapseCore.GetSynapseTypes().ToArray());
+                [.. ChemSynapseCore.GetSynapseTypes()]);
             ddCoreType.Text = lastSelection;
             UpdateName();
         }

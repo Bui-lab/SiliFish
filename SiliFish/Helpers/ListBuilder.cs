@@ -16,7 +16,7 @@ namespace SiliFish.Helpers
                 throw new ArgumentNullException(nameof(items));
             }
 
-            List<T> list = new();
+            List<T> list = [];
             foreach (object item in items)
             {
                 if (item is IEnumerable<T> tList)

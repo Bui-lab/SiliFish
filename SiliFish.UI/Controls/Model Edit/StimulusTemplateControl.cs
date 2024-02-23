@@ -120,7 +120,7 @@ namespace SiliFish.UI.Controls
         internal void CheckValues(object sender, EventArgs args)
         {
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
-            checkValuesArgs.Errors = new();
+            checkValuesArgs.Errors = [];
             if (ddTargetPool.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("No target pool selected.");
             if (ddSagittalPosition.SelectedIndex < 0)

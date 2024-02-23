@@ -170,7 +170,10 @@ namespace SiliFish.UI.Controls
         {
             Dictionary<string, double> dparams = cell.Core.GetParameters();
             DynamicsTestControl dynControl = new(cell.Core.CoreType, dparams, testMode: false);
-            frmDynamicControl = new();
+            frmDynamicControl = new()
+            {
+                WindowState = FormWindowState.Maximized
+            };
             frmDynamicControl.AddControl(dynControl, null);
             frmDynamicControl.Text = cell.ID;
             frmDynamicControl.SaveVisible = false;
@@ -205,7 +208,7 @@ namespace SiliFish.UI.Controls
         internal void CheckValues(object sender, EventArgs args)
         {
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
-            checkValuesArgs.Errors = new();
+            checkValuesArgs.Errors = [];
             if (ddCellType.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Cell type not defined.");
             if (ddCoreType.SelectedIndex < 0)

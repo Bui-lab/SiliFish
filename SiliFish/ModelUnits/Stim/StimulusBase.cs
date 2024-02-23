@@ -15,7 +15,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> diffs = new();
+            List<string> diffs = [];
             StimulusBase st = other as StimulusBase;
             if (Settings.ToString() != st.Settings.ToString())
                 diffs.Add($"{ID} Settings: {Settings} vs {st.Settings}");
@@ -24,7 +24,7 @@ namespace SiliFish.ModelUnits.Stim
             if (TimeLine_ms.ToString() != st.TimeLine_ms.ToString())
                 diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {st.TimeLine_ms}");
 
-            if (diffs.Any())
+            if (diffs.Count != 0)
                 return diffs;
             return null;
         }

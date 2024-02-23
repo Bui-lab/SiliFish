@@ -14,14 +14,14 @@ namespace SiliFish.DataTypes
         public Distribution Z_RadiusDistribution { get; set; }
 
         [JsonIgnore, Browsable(false)]
-        public static List<string> ColumnNames { get; } = new() { "XDistribution", "YDistribution", "ZDistribution" };
+        public static List<string> ColumnNames { get; } = ["XDistribution", "YDistribution", "ZDistribution"];
 
         public List<string> ExportValues() =>
-            new() {
+            [
                 XDistribution.CSVCellExportValues,
                 Y_AngleDistribution.CSVCellExportValues,
                 Z_RadiusDistribution.CSVCellExportValues
-            };
+            ];
 
         public void ImportValues(List<string> values)
         {

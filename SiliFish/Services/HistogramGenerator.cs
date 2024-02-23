@@ -21,7 +21,7 @@ namespace SiliFish.Services
         private static string CreateTimeDataPoints(Dictionary<string, Coordinate[]> somiteCoordinates, int timeIndex)
         {
             if (somiteCoordinates == null) return "";
-            List<string> somites = new();
+            List<string> somites = [];
             foreach (string somite in somiteCoordinates.Keys)
             {
                 Coordinate coor = somiteCoordinates[somite][timeIndex];

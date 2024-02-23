@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{DF1638C5
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\GithubNotes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\GithubNotes.txt
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\ModelNotes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\ModelNotes.txt
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\QuickNotes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\QuickNotes.txt
-		..\..\..\Users\Emi\SiliFish\Output\SiliFish.DB = ..\..\..\Users\Emi\SiliFish\Output\SiliFish.DB
+		..\..\..\Users\Emi\SiliFish\Output\SiliFish.sqlite = ..\..\..\Users\Emi\SiliFish\Output\SiliFish.sqlite
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Themes.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Themes.txt
 		..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Todo.txt = ..\..\..\Master\OneDrive - University of Ottawa\SiliFish Files\Notes\Todo.txt
 	EndProjectSection

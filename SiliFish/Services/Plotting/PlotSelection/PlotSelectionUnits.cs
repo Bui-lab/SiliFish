@@ -22,8 +22,8 @@ namespace SiliFish.Services.Plotting.PlotSelection
             get
             {
                 if (unitTags != null) return unitTags;
-                unitTags = new List<Tuple<string, string>>();
-                if (Units == null || !Units.Any()) return unitTags;
+                unitTags = [];
+                if (Units == null || Units.Count == 0) return unitTags;
                 foreach (ModelUnitBase unit in Units)
                 {
                     unitTags.Add(Tuple.Create(unit.GetType().Name, unit.ID));
@@ -47,7 +47,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
         public override int GetHashCode() => base.GetHashCode();
         public override string ToString()
         {
-            if (Units == null || !Units.Any()) return "";
+            if (Units == null || Units.Count == 0) return "";
             return string.Join("; ", Units.Select(unit => unit.ID));
         }
         public override bool Equals(object obj)
@@ -68,7 +68,7 @@ namespace SiliFish.Services.Plotting.PlotSelection
         }
         public void AddUnit(ModelUnitBase unit)
         {
-            Units ??= new();
+            Units ??= [];
             Units.Add(unit);
         }
     }

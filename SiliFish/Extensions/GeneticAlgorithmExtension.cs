@@ -10,21 +10,21 @@ namespace SiliFish.Extensions
     {
         public static List<Type> GetSelectionBases()
         {
-            List<Type> selectionBases = new()
-            {
+            List<Type> selectionBases =
+            [
                 typeof(EliteSelection),
                 typeof(RouletteWheelSelection),
                 typeof(StochasticUniversalSamplingSelection),
                 typeof(TournamentSelection),
                 typeof(TruncationSelection)
-            };
+            ];
             return selectionBases;
         }
 
         public static List<Type> GetCrossoverBases()
         {
-            List<Type> crossoverBases = new()
-            {
+            List<Type> crossoverBases =
+            [
                 //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(AlternatingPositionCrossover),
                 //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(CutAndSpliceCrossover),
                 //can be only used with ordered chromosomes. The specified chromosome has repeated genes - typeof(CycleCrossover),
@@ -37,14 +37,14 @@ namespace SiliFish.Extensions
                 typeof(TwoPointCrossover),
                 typeof(UniformCrossover),
                 typeof(VotingRecombinationCrossover)
-            };
+            ];
             return crossoverBases;
         }
 
         public static List<Type> GetMutationBases()
         {
-            List<Type> mutationBases = new()
-            {
+            List<Type> mutationBases =
+            [
                 typeof(DisplacementMutation),
                 typeof(FlipBitMutation),
                 typeof(InsertionMutation),
@@ -52,19 +52,19 @@ namespace SiliFish.Extensions
                 typeof(ReverseSequenceMutation),
                 typeof(TworsMutation),
                 typeof(UniformMutation)
-            };
+            ];
             return mutationBases;
         }
 
         public static List<Type> GetReinsertionBases()
         {
-            List<Type> mutationBases = new()
-            {
+            List<Type> mutationBases =
+            [
                 typeof(ElitistReinsertion),
                 //Cannot expand the number of chromosome in population typeof(FitnessBasedReinsertion),
                 //Cannot expand the number of chromosome in population typeof(PureReinsertion),
                 typeof(UniformReinsertion)
-            };
+            ];
             return mutationBases;
         }
 
@@ -83,13 +83,13 @@ namespace SiliFish.Extensions
         }
         public static List<Type> GetTerminationBases()
         {
-            List<Type> terminationBases = new()
-            {
+            List<Type> terminationBases =
+            [
                 typeof(GenerationNumberTermination),
                 typeof(TimeEvolvingTermination),
                 typeof(FitnessStagnationTermination),
                 typeof(FitnessThresholdTermination)
-            };
+            ];
 
             //terminationBases.Add(typeof(AndTermination));
             //terminationBases.Add(typeof(OrTermination));

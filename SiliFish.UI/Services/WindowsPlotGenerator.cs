@@ -134,7 +134,7 @@ namespace Services
         }
         public static List<Image> PlotCharts(List<Chart> Charts)
         {
-            List<Image> images = new();
+            List<Image> images = [];
             foreach (Chart chart in Charts)
             {
                 if (chart.ScatterPlot)

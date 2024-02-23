@@ -57,8 +57,7 @@ namespace SiliFish.UI.Controls
         internal void CheckValues(object sender, EventArgs args)
         {
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
-            checkValuesArgs.Errors = new();
-            checkValuesArgs.Errors.AddRange(stimControl.CheckValues());
+            checkValuesArgs.Errors = [.. stimControl.CheckValues()];
         }
         internal void SetTargetCellOrPool(Cell selectedCell, CellPool cellPool)
         {

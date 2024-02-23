@@ -10,7 +10,7 @@ namespace SiliFish.DataTypes
     public struct Beat
     {
         public SagittalPlane Direction;
-        public double BeatStart, BeatEnd;
+        public double BeatStart, BeatEnd, BeatPeak;
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace SiliFish.DataTypes
         public SwimmingEpisode(double start)
         {
             episodeStart = start;
-            beats = new();
+            beats = [];
             lastBeatStart = start;
         }
         public SwimmingEpisode(double start, double end)
@@ -64,7 +64,7 @@ namespace SiliFish.DataTypes
             episodeStart = start;
             episodeEnd = end;
             episodeEnded = true;
-            beats = new();
+            beats = [];
             lastBeatStart = start;
         }
 
@@ -82,6 +82,18 @@ namespace SiliFish.DataTypes
             lastBeatStart = start;
             lastbeatDirection = direction;
         }
+        public void EndBeat(double e, double peak)
+        {
+            if (lastBeatStart < 0) return;
+            beats.Add(new Beat()
+            {
+                Direction = lastbeatDirection,
+                BeatStart = lastBeatStart,
+                BeatEnd = e,
+                BeatPeak = peak
+            });
+            lastBeatStart = -1;
+        }
         public void EndBeat(double e)
         {
             if (lastBeatStart < 0) return;
@@ -89,9 +101,17 @@ namespace SiliFish.DataTypes
             {
                 Direction = lastbeatDirection,
                 BeatStart = lastBeatStart,
+                BeatPeak = e, //TODO check the validity 
                 BeatEnd = e
             });
             lastBeatStart = -1;
+        }
+
+        public void EndEpisode(double e, double lastpeak)
+        {
+            EndBeat(e, lastpeak);
+            episodeEnd = e;
+            episodeEnded = true;
         }
 
         public void EndEpisode(double e)
@@ -118,6 +138,58 @@ namespace SiliFish.DataTypes
         public double[] InlierInstantFequency { get { return InlierBeats?.Select(b => b.BeatEnd > b.BeatStart ? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
         public double[] InstantFequency { get { return beats?.Select(b => b.BeatEnd > b.BeatStart ? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
         public double BeatFrequency { get { return EpisodeDuration > 0 ? 1000 * NumOfBeats / EpisodeDuration : 0; } }
+
+        public (double[] Keys, double[] Values) RollingBeatFrequency
+        {
+            get
+            {
+                double[] keys = new double[beats.Count];
+                double[] values = new double[beats.Count];
+                int window = GlobalSettings.RollingFreqBeatCount;
+                if (window <= 0)
+                    return (Beats.Select(b => b.BeatStart).ToArray(), InstantFequency);
+                for (int i = 0; i < beats.Count; i++)
+                {
+                    int j = i - 1;
+                    int startIndex = i;
+                    int endIndex = i;
+                    int beatCounter = 0;
+                    int leftCounter = 0, rightCounter = 0;
+                    Beat curBeat = beats[i];
+                    while (beatCounter < window && j >= 0)
+                    {
+                        if (beats[j].Direction == curBeat.Direction) 
+                        {
+                            beatCounter++;
+                            startIndex = j;
+                            if (curBeat.Direction == SagittalPlane.Left) 
+                                leftCounter++;
+                            else 
+                                rightCounter++;
+                        }
+                        j--;
+                    }
+                    j = i + 1;
+                    beatCounter = 0;
+                    while (beatCounter < window && j < beats.Count)
+                    {
+                        if (beats[j].Direction == curBeat.Direction)
+                        {
+                            beatCounter++;
+                            endIndex = j;
+                            if (curBeat.Direction == SagittalPlane.Left)
+                                leftCounter++;
+                            else
+                                rightCounter++;
+                        }
+                        j++;
+                    }
+                    keys[i] = beats[i].BeatPeak;
+                    values[i] = Math.Max(leftCounter, rightCounter) * 1000 /(beats[endIndex].BeatPeak - beats[startIndex].BeatPeak);
+                }
+                return (keys, values);
+            }
+        }
         public double EpisodeDuration { get { return episodeEnd - episodeStart; } }
 
         public double Start { get { return episodeStart; } }
@@ -139,12 +211,14 @@ namespace SiliFish.DataTypes
                 {
                     Direction = beats[i].Direction,
                     BeatStart = beats[i].BeatStart,
+                    BeatPeak = beats[i].BeatPeak,
                     BeatEnd = midPoint
                 };
                 beats[i + 1] = new Beat()
                 {
                     Direction = beats[i + 1].Direction,
                     BeatStart = midPoint,
+                    BeatPeak = beats[i + 1].BeatPeak,
                     BeatEnd = beats[i + 1].BeatEnd
                 };
             }
@@ -161,10 +235,10 @@ namespace SiliFish.DataTypes
         /// <param name="rightIndices">indices including the skiped period</param>
         /// <param name="episodeBreak"></param>
         /// <returns></returns>
-        public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, DynamicsParam settings, double dt, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
+        public static SwimmingEpisodes GenerateEpisodesByMNSpikes(double[] TimeArray, DynamicsParam settings, double dt, List<int> leftIndices, List<int> rightIndices, double episodeBreak)
         {
             SwimmingEpisodes episodes = new();
-            if (!leftIndices.Any() || !rightIndices.Any())
+            if (leftIndices.Count == 0 || rightIndices.Count == 0)
                 return episodes;
             bool inEpisode = false;
             SwimmingEpisode episode = null;
@@ -245,60 +319,6 @@ namespace SiliFish.DataTypes
                     else
                     {
                         episode.StartBeat(t, direction);
-                        episode.EndBeat(beat_end);
-                    }
-                }
-                last_t = beat_end;
-            }
-            episodes.Smooth(last_t);
-            return episodes;
-        }
-
-
-
-        public static SwimmingEpisodes GenerateEpisodes(double[] TimeArray, List<int> spikeIndices, double episodeBreak)
-        {
-            SwimmingEpisodes episodes = new();
-            bool inEpisode = false;
-            SwimmingEpisode episode = null;
-            double last_t = -1;
-            int indexOfInd = 0;
-            while (indexOfInd < spikeIndices.Count)
-            {
-                int ind = spikeIndices[indexOfInd++];
-                double t = TimeArray[ind];
-                double beat_end = t;
-                while (indexOfInd < spikeIndices.Count)
-                {
-                    beat_end = TimeArray[spikeIndices[indexOfInd++]];
-                    if (beat_end - t > episodeBreak)
-                    {
-                        indexOfInd -= 2;
-                        beat_end = TimeArray[spikeIndices[indexOfInd++]];
-                        break;
-                    }
-                }
-
-                if (!inEpisode)
-                {
-                    inEpisode = true;
-                    episode = new(t);
-                    episode.StartBeat(t, SagittalPlane.Both);
-                    episode.EndBeat(beat_end);
-                    episodes.AddEpisode(episode);
-
-                }
-                else if (last_t > 0)
-                {
-                    if ((t - last_t) > episodeBreak)
-                    {
-                        episode.EndEpisode(last_t);
-                        inEpisode = false;
-                        episode = null;
-                    }
-                    else
-                    {
-                        episode.StartBeat(t, SagittalPlane.Both);
                         episode.EndBeat(beat_end);
                     }
                 }

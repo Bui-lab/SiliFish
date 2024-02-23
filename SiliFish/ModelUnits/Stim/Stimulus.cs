@@ -236,7 +236,7 @@ namespace SiliFish.ModelUnits.Stim
             RunParam = runParam;
             values = new double[RunParam.iMax];
             List<(double start, double end)> timeRanges = new(TimeLine_ms.GetTimeLine());
-            if (!timeRanges.Any())
+            if (timeRanges.Count == 0)
             {
                 timeRanges.Add((0, RunParam.MaxTime));
             }

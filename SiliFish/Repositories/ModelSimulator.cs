@@ -1,4 +1,7 @@
 ﻿using GeneticSharp;
+using SiliFish.Definitions;
+using SiliFish.Extensions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services;
@@ -7,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiliFish.Repositories
@@ -28,7 +32,22 @@ namespace SiliFish.Repositories
         public bool Cancelled { get; set; }
 
         public double GetProgress() => SimulationList?.Sum(s => s.GetProgress())/numSimulations ?? 0;
+        public string GetStatus()
+        {
+            string state = string.Empty;
+            SimulationState latestState = SimulationState.Completed;
+            foreach (Simulation simulation in SimulationList)
+            {
+                if (simulation.state <= latestState)
+                {
+                    latestState = simulation.state;
+                    state = latestState.GetDisplayName();
+                }
+            }
+            return state;
+        }
         public string Description => $"{numSimulations} simulations run in {runmode}. Total duration: {endTime - startTime}";
+        public string RunParamDescription => runParam.Description;
         private void RunMultipleSimulations()
         {
             try
@@ -79,6 +98,9 @@ namespace SiliFish.Repositories
             {
                 if (runningModel == null || numSimulations <= 0)
                     return;
+
+                List<Thread> threadList = [];
+
                 ModelRun = false;
                 SimulationList = [];
                 runSimulations = 0;
@@ -93,13 +115,18 @@ namespace SiliFish.Repositories
                         Simulation simulation = new(running, runParam);
                         SimulationList.Add(simulation);
                         running.Settings.Seed = rand.Next();
-                        Task.Run(() => RunSingleSimulation(simulation));
+                        Thread thread = new(() => RunSingleSimulation(simulation));
+                        thread.Start();
+                        threadList.Add(thread);
+                            //Task.Run(() => RunSingleSimulation(simulation));
                     }
                 }
                 //Run multiple simulations with the same model - for runtime statistics
                 else
                 {
-                    Task.Run(RunMultipleSimulations);
+                    Thread thread = new(RunMultipleSimulations);
+                    thread.Start();
+                    threadList.Add(thread);
                 }
             }
             catch (Exception ex)

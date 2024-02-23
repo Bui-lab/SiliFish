@@ -64,7 +64,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> differences = base.DiffersFrom(other) ?? new();
+            List<string> differences = base.DiffersFrom(other) ?? [];
             StimulusTemplate st = other as StimulusTemplate;
             if (TargetPool != st.TargetPool)
                 differences.Add($"{ID} TargetPool: {TargetPool} vs {st.TargetPool}");
@@ -79,7 +79,7 @@ namespace SiliFish.ModelUnits.Stim
             if (DelaySagittal != st.DelaySagittal)
                 differences.Add($"{ID} DelaySagittal: {DelaySagittal} vs {st.DelaySagittal}");
 
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -124,7 +124,7 @@ namespace SiliFish.ModelUnits.Stim
 
         public List<StimulusTemplate> CreateSpreadedCopy()
         {
-            List<StimulusTemplate> spreaded=new();
+            List<StimulusTemplate> spreaded=[];
             foreach (var (start, end) in TimeLine_ms.GetTimeLine())
             {
                 StimulusTemplate st = (StimulusTemplate)CreateCopy();

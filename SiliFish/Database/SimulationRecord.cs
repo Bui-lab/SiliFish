@@ -1,25 +1,31 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static SiliFish.Database.SFDataContext;
 
 namespace SiliFish.Database
 {
+    [PrimaryKey(nameof(Id))]
     public class SimulationRecord
     {
-        [Key]
-        public int SimulationId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int ModelID { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public string ModelJson { get; set; } = string.Empty;
-        public List<CoreRecord> Cores { get; } = [];
-        public SimulationRecord(DateTime start, DateTime end, string description, string modelJson) 
+        public string Description { get; set; }
+        public string RunParam { get; set; }
+        public List<UnitRecord> Cores { get; } = [];
+        public SimulationRecord() { }
+        public SimulationRecord(int modelID, DateTime start, DateTime end, string description, string runparam)
         {
+            ModelID = modelID;
             Start = start;
             End = end;
             Description = description;
-            ModelJson = modelJson;
+            RunParam = runparam;
         }
     }
 }

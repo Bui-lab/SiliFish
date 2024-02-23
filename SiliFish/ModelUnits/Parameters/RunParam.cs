@@ -1,10 +1,14 @@
-﻿using SiliFish.Definitions;
+﻿using SiliFish.Database;
+using SiliFish.Definitions;
+using SiliFish.Extensions;
+using SiliFish.Repositories;
 using System;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Parameters
 {
-    public struct RunParam
+    public class RunParam
     {
         public bool TrackJunctionCurrent { get; set; } = true;
         public int SkipDuration { get; set; } = GlobalSettings.SimulationSkipTime;
@@ -21,6 +25,9 @@ namespace SiliFish.ModelUnits.Parameters
         public int iMax { get { return Convert.ToInt32((MaxTime + SkipDuration) / DeltaT + 1); } }
         public double GetTimeOfIndex(int index)
         { return Math.Round(DeltaT * index - SkipDuration, 2); }
+
+        [JsonIgnore]
+        public string Description => this.GetProperties("; ");
         public RunParam() { }
     }
 }

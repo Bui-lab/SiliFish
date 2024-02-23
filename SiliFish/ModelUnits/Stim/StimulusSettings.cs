@@ -23,9 +23,10 @@ namespace SiliFish.ModelUnits.Stim
         public double Value1 { get; set; }
         public double Value2 { get; set; }
         public double? Frequency { get; set; }
+        public TimeLine TimeLine_ms { get; set; } = new TimeLine();
 
         [JsonIgnore, Browsable(false)]
-        public static List<string> ColumnNames = new[] { "Mode", "Value1", "Value2", "Frequency" }.ToList();
+        public static List<string> ColumnNames = ["Mode", "Value1", "Value2", "Frequency"];
 
         public List<string> ExportValues()
         {
@@ -44,13 +45,7 @@ namespace SiliFish.ModelUnits.Stim
         public StimulusSettings()
         {
         }
-        public StimulusSettings(StimulusMode mode, double value1, double value2, double freq)
-        {
-            Mode = mode;
-            Value1 = value1;
-            Value2 = value2;
-            Frequency = freq; 
-        }
+
         public StimulusSettings Clone()
         {
             return (StimulusSettings)MemberwiseClone();

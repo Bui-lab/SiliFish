@@ -51,7 +51,7 @@ namespace SiliFish.UI.Controls
 
         public List<string> GetAttachments()
         {
-            List<string> list=new();
+            List<string> list=[];
             foreach (var att in listAttachments.Items)
             {
                 list.Add(att.ToString());

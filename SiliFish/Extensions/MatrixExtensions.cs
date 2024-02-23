@@ -65,7 +65,7 @@ namespace SiliFish.Extensions
         public static List<string> ConvertRowToList(this double[,] matrix, int row)
         {
             int numofcols = matrix.GetLength(1);
-            List<string> strlist = new();
+            List<string> strlist = [];
             for (int j = 0; j < numofcols; j++)
                 strlist.Add(matrix[row, j].ToString());
             return strlist;

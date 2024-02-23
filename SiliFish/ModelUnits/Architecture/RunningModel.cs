@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -22,12 +23,15 @@ using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.ModelUnits.Architecture
 {
     public class RunningModel : ModelBase
     {
+        [JsonIgnore]
+        public int DbId { get; set; }
         public double DeltaT { get; private set; }
         public int SkipDuration { get; private set; }
         public int MaxTime { get; private set; }
@@ -128,8 +132,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Core.Conductance);
-                            double maxConductance = list.Max(c => c.Core.Conductance);
+                            double minConductance = list.Min(c => c.Core?.Conductance ?? 0);
+                            double maxConductance = list.Max(c => c.Core?.Conductance ?? 0);
                             interPools.Add(new InterPool()
                             {
                                 SourcePool = source,
@@ -165,8 +169,8 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Core.Conductance);
-                            double maxConductance = list.Max(c => c.Core.Conductance);
+                            double minConductance = list.Min(c => c.Core?.Conductance ?? 0);
+                            double maxConductance = list.Max(c => c.Core?.Conductance ?? 0);
 
                             interPools.Add(new InterPool()
                             {
@@ -280,14 +284,8 @@ namespace SiliFish.ModelUnits.Architecture
 
         public RunningModel CreateCopy()
         {
-            JsonSerializerOptions options = new()
-            {
-                Converters = { new ColorJsonConverter() },
-                WriteIndented = true
-            };
-            string jsonstring = JsonSerializer.Serialize(this, options);
-            List<string> issues = [];
-            return (RunningModel)ModelFile.ReadFromJson(jsonstring, out issues);//TODO exception handling if there are issues
+            string jsonstring = JsonSerializer.Serialize(this, JsonUtil.SerializerOptions);
+            return (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);//TODO exception handling if there are issues
         }
         /// <summary>
         ///Needs to be run after created from JSON 
@@ -691,10 +689,26 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public virtual int GetNumberOfConnections()
         {
-            return CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count + ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));
+            int gapJunctions = CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count));
+            int chemJunctions = CellPools.Sum(p => p.Cells.Sum(c => ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));
+            return gapJunctions/2 + chemJunctions; //gap junctions are counted twice
         }
 
-        
+        public virtual int GetMemoryRequirementPerDeltaT()
+        {
+            return GetNumberOfCells() * 8; //8 bytes for double 
+        }
+        public virtual (int RollingWindow, int Capacity) CheckMemory()
+        {
+            double maxDuration = CellPools.Max(p => p.Cells.Max(c => c.TimeDistance()));
+            int rollingWindow = (int)Math.Ceiling(maxDuration / (100 * DeltaT)) * 100;
+            GCMemoryInfo memoryInfo = GC.GetGCMemoryInfo();
+            long availableMemory = memoryInfo.TotalAvailableMemoryBytes - memoryInfo.MemoryLoadBytes;
+            double rollingWindowMemory = rollingWindow * GetMemoryRequirementPerDeltaT();
+            int capacity = (int)Math.Floor(availableMemory / (rollingWindowMemory * 2));
+            return (rollingWindow, capacity);
+        }
+
         /// <summary>
         /// Parameter Desc keeps some descriptive text for the relevant parameters
         /// for easy user entry
@@ -794,31 +808,80 @@ namespace SiliFish.ModelUnits.Architecture
             return (null, pools);
         }
 
-
-        public virtual bool InitForSimulation(RunParam runParam, Random random)
+        private bool MemoryAllocation(RunParam runParam, DBLink dBLink)
         {
-            if (runParam.iMax <= 0) return false;
-            DeltaT = runParam.DeltaT;
-            SkipDuration = runParam.SkipDuration;
-            MaxTime = runParam.MaxTime;
-            randomNumGenerator = random;
-            if (!neuronPools.Any(p => p.GetCells().Any()) &&
-                !musclePools.Any(p => p.GetCells().Any())) //No cells
-                return false;
-            Time = new double[runParam.iMax];
-            for (int i = 0; i < runParam.iMax; i++)
-                Time[i] = runParam.GetTimeOfIndex(i);
-
-            int uniqueID = 1;
-            foreach (CellPool neurons in neuronPools)
-                foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
-                    neuron.InitForSimulation(runParam, ref uniqueID);
-
-            foreach (CellPool muscleCells in musclePools)
-                foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
-                    mc.InitForSimulation(runParam, ref uniqueID);
-
+            foreach (Cell cell in GetCells())
+                cell.MemoryAllocation(runParam, dBLink);
             return true;
+        }
+
+        private bool MemoryFlush()//TODO - either automatically during plotting, or enforced by the user
+        {
+            foreach (Cell cell in GetCells())
+                cell.MemoryFlush();
+            return true;
+        }
+
+
+        public virtual bool InitForSimulation(RunParam runParam, ref DBLink dbLink, Random random)
+        {
+            try
+            {
+                if (runParam.iMax <= 0) return false;
+                DeltaT = runParam.DeltaT;
+                SkipDuration = runParam.SkipDuration;
+                MaxTime = runParam.MaxTime;
+                randomNumGenerator = random;
+                if (!neuronPools.Any(p => p.GetCells().Any()) &&
+                    !musclePools.Any(p => p.GetCells().Any())) //No cells
+                    return false;
+                Time = new double[runParam.iMax];
+                for (int i = 0; i < runParam.iMax; i++)
+                    Time[i] = runParam.GetTimeOfIndex(i);
+
+                int uniqueID = 1;
+
+                foreach (CellPool neurons in neuronPools)
+                    foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
+                        neuron.InitForSimulation(runParam, ref uniqueID);
+
+                foreach (CellPool muscleCells in musclePools)
+                    foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
+                        mc.InitForSimulation(runParam, ref uniqueID);
+
+                if (dbLink != null)
+                {
+                    (dbLink.RollingWindow, dbLink.WindowMultiplier) = CheckMemory();
+                    if (dbLink.RollingWindow * dbLink.WindowMultiplier > runParam.iMax)
+                        dbLink = null;
+                }
+                return MemoryAllocation(runParam, dbLink);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
+        public virtual bool FinalizeSimulation(RunParam runParam, DBLink dBLink)
+        {
+            try
+            {
+                DbId = 0;//to prevent using the same ID when saving to the actual database
+                foreach (CellPool neurons in neuronPools)
+                    foreach (Neuron neuron in neurons.GetCells().Cast<Neuron>())
+                        neuron.FinalizeSimulation(runParam, dBLink);
+
+                foreach (CellPool muscleCells in musclePools)
+                    foreach (MuscleCell mc in muscleCells.GetCells().Cast<MuscleCell>())
+                        mc.FinalizeSimulation(runParam, dBLink);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
         }
 
         protected void PoolToPoolGapJunction(CellPool pool1, CellPool pool2, InterPoolTemplate template)

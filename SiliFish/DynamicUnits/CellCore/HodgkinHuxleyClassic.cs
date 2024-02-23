@@ -1,7 +1,7 @@
-﻿using SiliFish.DynamicUnits.Firing;
-using SiliFish.Extensions;
+﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

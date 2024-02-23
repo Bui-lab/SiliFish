@@ -124,7 +124,7 @@ namespace SiliFish.UI.Controls
         }
         internal List<string> CheckValues()
         {
-            List<string> errors = new();
+            List<string> errors = [];
             if (ddStimulusMode.SelectedIndex < 0)
                 errors.Add("Stimulus mode not defined.");
             return errors;

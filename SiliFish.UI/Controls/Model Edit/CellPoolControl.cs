@@ -268,7 +268,7 @@ namespace SiliFish.UI.Controls
                     return;
                 //the core is saved as an array to benefit from $type tag added by the JsonSerializer
                 CellCore[] arr = (CellCore[])JsonUtil.ToObject(typeof(CellCore[]), JSONString);
-                if (arr != null && arr.Any())
+                if (arr != null && arr.Length != 0)
                 {
                     CellCore core = arr[0];
                     if (core != null)
@@ -290,7 +290,10 @@ namespace SiliFish.UI.Controls
             poolBase.CoreType = ddCoreType.Text;
             DynamicsTestControl dynControl = new(poolBase.CoreType, dparams, testMode: false);
             dynControl.UseUpdatedParametersRequested += Dyncontrol_UseUpdatedParams;
-            frmDynamicControl = new();
+            frmDynamicControl = new()
+            {
+                WindowState = FormWindowState.Maximized
+            };
             frmDynamicControl.AddControl(dynControl, null);
             dynControl.ContentChanged += frmDynamicControl.ChangeCaption;
             frmDynamicControl.Text = eGroupName.Text;
@@ -349,7 +352,7 @@ namespace SiliFish.UI.Controls
         public void CheckValues(object sender, EventArgs args)
         {
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
-            checkValuesArgs.Errors = new();
+            checkValuesArgs.Errors = [];
             if (ddCellType.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Cell type not defined.");
             if (ddCoreType.SelectedIndex < 0)

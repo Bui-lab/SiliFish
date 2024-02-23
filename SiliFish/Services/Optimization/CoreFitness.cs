@@ -1,7 +1,7 @@
 ﻿using GeneticSharp;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
-using SiliFish.DynamicUnits.Firing;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,13 +48,12 @@ namespace SiliFish.Services.Optimization
                 .ToList();
 
             //generate a dictionary of DynamicStats - to prevent multiple runs
-            Dictionary<double, DynamicsStats> stats = new();
+            Dictionary<double, DynamicsStats> stats = [];
             foreach (double current in currentValues)
             {
                 DynamicsStats stat = core.DynamicsTest(current, infinity: GlobalSettings.RheobaseInfinity, dt: 0.1, warmup:warmup, includePostStimulus: includePostStimulus);
                 stats.Add(current, stat);
             }
-
 
             foreach (FitnessFunction function in fitnessFunctions)
             {
@@ -72,7 +71,7 @@ namespace SiliFish.Services.Optimization
             var values = fc.ToFloatingPoints();
             int iter = 0;
             string valueStr = "";
-            Dictionary<string, double> instanceValues = new();
+            Dictionary<string, double> instanceValues = [];
             foreach (string key in coreUnitSolver.Settings.SortedKeys)
             {
                 valueStr += $"{key}: {values[iter]}; ";

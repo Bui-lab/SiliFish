@@ -90,7 +90,7 @@ namespace SiliFish.UI.Controls
         /// <param name="ParamDict"></param>
         private void LoadParams(Dictionary<string, object> ParamDict)
         {
-            List<TabPage> obsoloteTabpages = new();
+            List<TabPage> obsoloteTabpages = [];
             foreach (TabPage tp in tabModel.TabPages)
             {
                 if (tp.Tag?.ToString() == "Param")
@@ -103,7 +103,7 @@ namespace SiliFish.UI.Controls
 
             if (ParamDict == null) return;
 
-            List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? new List<string>();
+            List<string> paramGroups = ParamDict?.Keys.Where(k => k.IndexOf('.') > 0).Select(k => k[..k.IndexOf('.')]).Distinct().ToList() ?? [];
             int tabIndex = 1;
             var _ = tabModel.Handle;//requires for the insert command to work
             foreach (string group in paramGroups)
@@ -194,7 +194,7 @@ namespace SiliFish.UI.Controls
         }
         private Dictionary<string, object> ReadParams()
         {
-            Dictionary<string, object> ParamDict = new();
+            Dictionary<string, object> ParamDict = [];
             foreach (TabPage page in tabModel.TabPages)
             {
                 if (page.Tag?.ToString() != "Param")
@@ -379,7 +379,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCellPools_ItemDelete(object sender, EventArgs e)
         {
-            if (listCellPools.SelectedIndices.Any())
+            if (listCellPools.SelectedIndices.Count != 0)
             {
                 string msg = "Deleting a cell pool will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
@@ -449,8 +449,8 @@ namespace SiliFish.UI.Controls
         private void listCellPools_ItemsImport(object sender, EventArgs e)
         {
             if (!warnedImport &&
-                (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Any() ||
-                Model is RunningModel runningModel && runningModel.CellPools.Any()))
+                (Model is ModelTemplate modelTemplate && modelTemplate.CellPoolTemplates.Count != 0 ||
+                Model is RunningModel runningModel && runningModel.CellPools.Count != 0))
             {
                 warnedImport = true;
                 string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
@@ -476,7 +476,7 @@ namespace SiliFish.UI.Controls
             {
                 Text = "Conductance Multiplier"
             };
-            List<string> changes = new();
+            List<string> changes = [];
 
             ConductanceMultiplier multiplier = new();
             controlContainer.AddControl(multiplier, null);
@@ -635,7 +635,7 @@ namespace SiliFish.UI.Controls
         }
         private void listCells_ItemDelete(object sender, EventArgs e)
         {
-            if (listCells.SelectedIndices.Any())
+            if (listCells.SelectedIndices.Count != 0)
             {
                 string msg = "Deleting a cell will remove all of its connections and applied stimuli as well. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
@@ -787,12 +787,12 @@ namespace SiliFish.UI.Controls
             splitChemicalJunctions.Panel1Collapsed = true;
             if (Model is RunningModel rm)
             {
-                List<InterPool> chemInterPools = rm.ChemPoolConnections.ToList();
+                List<InterPool> chemInterPools = [.. rm.ChemPoolConnections];
                 if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
-                List<InterPool> gapInterPools = rm.GapPoolConnections.ToList();
+                List<InterPool> gapInterPools = [.. rm.GapPoolConnections];
                 if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
@@ -912,7 +912,7 @@ namespace SiliFish.UI.Controls
                 {
                     interPoolTemplate = ipControl.ReadDataFromControl();
                     modelTemplate.LinkObjects(interPoolTemplate);
-                    return new List<InterPoolBase> { interPoolTemplate };
+                    return [interPoolTemplate];
                 }
             }
             else
@@ -956,7 +956,7 @@ namespace SiliFish.UI.Controls
                 lbc == listGap ? OpenConnectionDialog(null, true, setGap: true) :
                 OpenConnectionDialog(null, true);
 
-            if (jncs != null && jncs.Any())
+            if (jncs != null && jncs.Count != 0)
             {
                 foreach (InterPoolBase jb in jncs)
                 {
@@ -980,7 +980,7 @@ namespace SiliFish.UI.Controls
             else if (sender is InterPoolTemplate ipt)
                 jnc = new InterPoolTemplate(ipt);
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, true);
-            if (jncs != null && jncs.Any())
+            if (jncs != null && jncs.Count != 0)
             {
                 foreach (InterPoolBase jb in jncs)
                 {
@@ -996,7 +996,7 @@ namespace SiliFish.UI.Controls
         private void listConnections_ItemDelete(object sender, EventArgs e)
         {
             ListBoxControl lbc = sender as ListBoxControl;
-            if (lbc.SelectedIndices.Any())
+            if (lbc.SelectedIndices.Count != 0)
             {
                 foreach (var item in lbc.SelectedItems)
                     if (item is InterPoolTemplate ipt)
@@ -1011,7 +1011,7 @@ namespace SiliFish.UI.Controls
         {
             if (sender is not InterPoolBase jnc) return;
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, false);
-            if (jncs != null && jncs.Any())
+            if (jncs != null && jncs.Count != 0)
             {
                 RefreshProjections();
                 ModelIsUpdated();
@@ -1193,7 +1193,7 @@ namespace SiliFish.UI.Controls
             bool gap = lb == listGap;
             ConductanceMultiplier multiplier = new(gap);
             controlContainer.AddControl(multiplier, null);
-            List<string> changes = new();
+            List<string> changes = [];
             if (controlContainer.ShowDialog() == DialogResult.OK)
             {
                 double mult = gap ? multiplier.GapMultiplier : multiplier.ChemMultiplier;
@@ -1386,7 +1386,7 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemDelete(object sender, EventArgs e)
         {
-            if (listStimuli.SelectedIndices.Any())
+            if (listStimuli.SelectedIndices.Count != 0)
             {
                 if (MessageBox.Show("Do you want to delete selected stimuli?", "Confirmation", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
@@ -1444,7 +1444,7 @@ namespace SiliFish.UI.Controls
             if (unit is Cell cell)
                 return cell.Stimuli.HasStimulus;
             if (unit is CellPool cellPool)
-                return cellPool.GetStimuli().Any();
+                return cellPool.GetStimuli().Count != 0;
             if (unit is CellPoolTemplate cellPoolTemplate)
                 return (Model as ModelTemplate).StimulusTemplates.FirstOrDefault(stim => stim.TargetPool == cellPoolTemplate.CellGroup) != null;
             return false;

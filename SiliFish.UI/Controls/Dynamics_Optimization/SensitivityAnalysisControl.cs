@@ -1,4 +1,6 @@
-﻿using SiliFish.Helpers;
+﻿using OfficeOpenXml.FormulaParsing.Ranges;
+using SiliFish.DataTypes;
+using SiliFish.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,8 +45,23 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        public bool LogScale { get => cbLogScale.Checked; }
+        private bool LogScale { get => cbLogScale.Checked; }
         public string SelectedParam { get => ddParameter.Text; }
+
+        public NumberRangeDefinition Range
+        {
+            get
+            {
+                NumberRangeDefinition rangeDefinition = new()
+                {
+                    MinMultiplier = MinMultiplier,
+                    MaxMultiplier = MaxMultiplier,
+                    NumOfPoints = NumOfPoints,
+                    LogScale = LogScale
+                };
+                return rangeDefinition;
+            }
+        }
         public SensitivityAnalysisControl()
         {
             InitializeComponent();
@@ -52,6 +69,8 @@ namespace SiliFish.UI.Controls
 
         public void SetParameters(bool includeAll, string[] parameters)
         {
+            pParameters.Visible = true;
+            pSingleParam.Visible = false;
             ddParameter.Items.Clear();
             if (parameters == null)
                 return;
@@ -61,13 +80,28 @@ namespace SiliFish.UI.Controls
             ddParameter.SelectedIndex = 0;
         }
 
+        public void SetParameter(string parameter, double value)
+        {
+            pParameters.Visible = false;
+            pSingleParam.Visible = true;
+            lSingleParameter.Text = parameter;  
+            eParameter.Text = value.ToString();
+        }
+
         public double[] GetValues(double origValue)
         {
-            return Util.GenerateValues(origValue, MinMultiplier, MaxMultiplier, NumOfPoints, cbLogScale.Checked);
+            return Util.GenerateValues(origValue, Range);
+        }
+        public double[] GetValues()
+        {
+            if (double.TryParse(eParameter.Text, out double d))
+                return Util.GenerateValues(d, Range);
+            return null;
         }
         private void btnRunAnalysis_Click(object sender, EventArgs e)
         {
             runAnalysis?.Invoke(this, EventArgs.Empty);
         }
+
     }
 }

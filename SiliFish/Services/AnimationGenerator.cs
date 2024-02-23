@@ -21,7 +21,7 @@ namespace SiliFish.Services
         private static string CreateTimeDataPoints(Dictionary<string, Coordinate[]> somiteCoordinates, int timeIndex)
         {
             if (somiteCoordinates == null) return "";
-            List<string> somites = new();
+            List<string> somites = [];
             foreach (string somite in somiteCoordinates.Keys)
             {
                 Coordinate coor = somiteCoordinates[somite][timeIndex];
@@ -85,8 +85,8 @@ namespace SiliFish.Services
 
             int jump = (int)(animdt / dt);
             if (jump < 1) jump = 1;
-            List<string> timeSeries = new();
-            Dictionary<int, string> somitePoints = new();
+            List<string> timeSeries = [];
+            Dictionary<int, string> somitePoints = [];
             foreach (int timeIndex in Enumerable.Range(0, (iEnd - iStart + 1) / jump))
             {
                 string curPos = CreateTimeDataPoints(somiteCoordinates, timeIndex * jump);

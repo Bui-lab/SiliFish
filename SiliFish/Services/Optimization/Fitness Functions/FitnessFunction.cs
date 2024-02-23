@@ -1,6 +1,6 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.DynamicUnits.Firing;
 using SiliFish.Extensions;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Linq;

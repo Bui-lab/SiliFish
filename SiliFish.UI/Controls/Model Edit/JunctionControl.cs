@@ -71,7 +71,7 @@ namespace SiliFish.UI.Controls
                     ddCoreType.Items.Clear();
                     ddCoreType.Items.AddRange(prevType == ConnectionType.Gap ?
                         ElecSynapseCore.GetSynapseTypes().ToArray() :
-                        ChemSynapseCore.GetSynapseTypes().ToArray());
+                        [.. ChemSynapseCore.GetSynapseTypes()]);
                     ddCoreType.Text = lastSelection;
                 }
             }
@@ -136,7 +136,7 @@ namespace SiliFish.UI.Controls
             ddCoreType.Items.Clear();
             ddCoreType.Items.AddRange(ConnectionType == ConnectionType.Gap ?
                 ElecSynapseCore.GetSynapseTypes().ToArray() :
-                ChemSynapseCore.GetSynapseTypes().ToArray());
+                [.. ChemSynapseCore.GetSynapseTypes()]);
             ddCoreType.Text = lastSelection;
 
         }
@@ -239,7 +239,7 @@ namespace SiliFish.UI.Controls
         internal void CheckValues(object sender, EventArgs args)
         {
             CheckValuesArgs checkValuesArgs = args as CheckValuesArgs;
-            checkValuesArgs.Errors = new();
+            checkValuesArgs.Errors = [];
             if (ddSourcePool.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("No source pool selected.");
             else if (ddSourceCell.SelectedIndex < 0)
@@ -274,7 +274,7 @@ namespace SiliFish.UI.Controls
             if (!string.IsNullOrEmpty(eSynDelay.Text) && double.TryParse(eSynDelay.Text, out double sd))
                 delay = sd;
             DistanceMode distanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
-            List<JunctionBase> junctions = new();
+            List<JunctionBase> junctions = [];
             if (junction != null)
             {
                 junctions.Add(junction);
@@ -283,12 +283,12 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                List<Cell> targetCells = new();
+                List<Cell> targetCells = [];
                 if (targetCell != null)
                     targetCells.Add(targetCell);
                 else
                     targetCells.AddRange(targetPool.GetCells());
-                List<Cell> sourceCells = new();
+                List<Cell> sourceCells = [];
                 if (sourceCell != null)
                     sourceCells.Add(sourceCell);
                 else

@@ -39,7 +39,7 @@ namespace SiliFish.ModelUnits.Cells
         { 
             get 
             { 
-                tension ??= (Core as ContractibleCellCore).CalculateTension(V);
+                tension ??= (Core as ContractibleCellCore).CalculateTension(V.AsArray());
                 return tension;
             } 
         }
@@ -125,6 +125,10 @@ namespace SiliFish.ModelUnits.Cells
         }
 
         #region Connection functions
+        public override int TimeDistance()
+        {
+            return Math.Max(EndPlates?.Select(junc => junc.iDuration).DefaultIfEmpty().Max() ?? 0, base.TimeDistance());
+        }
         public override void AddChemicalSynapse(ChemicalSynapse jnc)
         {
             EndPlates.Add(jnc);
@@ -173,14 +177,32 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Runtime
+
+        public override void MemoryAllocation(RunParam runParam, DBLink dBLink)
+        {
+            base.MemoryAllocation(runParam, dBLink);
+            foreach (ChemicalSynapse jnc in EndPlates)
+                jnc.MemoryAllocation(runParam, dBLink);
+        }
+        public override void MemoryFlush()
+        {
+            base.MemoryFlush();
+            foreach (ChemicalSynapse jnc in EndPlates)
+                jnc.MemoryFlush();
+        }
         public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
             base.InitForSimulation(runParam, ref uniqueID);
             tension = null;
-            foreach (ChemicalSynapse jnc in this.EndPlates)
+            foreach (ChemicalSynapse jnc in EndPlates)
                 jnc.InitForSimulation(runParam, ref uniqueID);
         }
-
+        public override void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        {
+            base.FinalizeSimulation(runParam, dbLink);
+            foreach (ChemicalSynapse jnc in EndPlates)
+                jnc.FinalizeSimulation(runParam, dbLink);
+        }
         public override void CalculateMembranePotential(int timeIndex)
         {
             double ISyn = 0, IGap = 0, stim = 0;
@@ -232,11 +254,13 @@ namespace SiliFish.ModelUnits.Cells
 
         public override bool IsSpiking(int iStart = 0, int iEnd = -1)
         {
-            return V.HasSpike(Core.Vmax, iStart, iEnd);
+            if (V == null)
+                return false;
+            return V.AsArray().HasSpike(Core.Vmax, iStart, iEnd);
         }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
-            return V.GetSpikeIndices(Core.Vthreshold * 1.1, iStart, iEnd, buffer);//URGENT this is a random multiplier 
+            return V.AsArray().GetSpikeIndices(Core.Vthreshold * 1.1, iStart, iEnd, buffer);//URGENT this is a random multiplier 
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
@@ -245,7 +269,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (ChemicalSynapse jnc in EndPlates)
             {
                 colors.TryAdd(jnc.PreNeuron.ID, jnc.PostCell.CellPool.Color);
-                AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
+                AffarentCurrents.AddObject(jnc.PreNeuron.ID, [.. jnc.InputCurrent]);
             }
             return (colors, AffarentCurrents);
         }

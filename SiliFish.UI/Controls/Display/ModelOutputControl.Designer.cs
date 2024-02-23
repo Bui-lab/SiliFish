@@ -39,7 +39,6 @@
             DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
-            webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p2DRenderOptions = new Panel();
             cb2DShowUnselectedNodes = new CheckBox();
             cb2DHideNonspiking = new CheckBox();
@@ -60,8 +59,8 @@
             pLine2D = new Panel();
             linkSaveHTML2D = new LinkLabel();
             btn2DRender = new Button();
+            webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             t3DRender = new TabPage();
-            webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             p3DRenderOptions = new Panel();
             l3DNodeSize = new Label();
             cb3DShowUnselectedNodes = new CheckBox();
@@ -84,6 +83,7 @@
             pLine3D = new Panel();
             linkSaveHTML3D = new LinkLabel();
             btn3DRender = new Button();
+            webView3DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             tPlot = new TabPage();
             tabPlotSub = new TabControl();
             tPlotHTML = new TabPage();
@@ -173,17 +173,19 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            cb2DOffline = new CheckBox();
+            cb3DOffline = new CheckBox();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
             p2DRenderOptions.SuspendLayout();
             gr2DLegend.SuspendLayout();
             p2DRender.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView2DRender).BeginInit();
             t3DRender.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView3DRender).BeginInit();
             p3DRenderOptions.SuspendLayout();
             gr3DLegend.SuspendLayout();
             p3DRender.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView3DRender).BeginInit();
             tPlot.SuspendLayout();
             tabPlotSub.SuspendLayout();
             tPlotHTML.SuspendLayout();
@@ -247,24 +249,10 @@
             t2DRender.Text = "2D Rendering";
             t2DRender.UseVisualStyleBackColor = true;
             // 
-            // webView2DRender
-            // 
-            webView2DRender.AllowExternalDrop = true;
-            webView2DRender.BackColor = Color.White;
-            webView2DRender.CreationProperties = null;
-            webView2DRender.DefaultBackgroundColor = Color.White;
-            webView2DRender.Dock = DockStyle.Fill;
-            webView2DRender.Location = new Point(0, 0);
-            webView2DRender.Name = "webView2DRender";
-            webView2DRender.Padding = new Padding(10);
-            webView2DRender.Size = new Size(694, 767);
-            webView2DRender.TabIndex = 1;
-            webView2DRender.ZoomFactor = 1D;
-            webView2DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
-            // 
             // p2DRenderOptions
             // 
             p2DRenderOptions.BackColor = Color.FromArgb(236, 239, 241);
+            p2DRenderOptions.Controls.Add(cb2DOffline);
             p2DRenderOptions.Controls.Add(cb2DShowUnselectedNodes);
             p2DRenderOptions.Controls.Add(cb2DHideNonspiking);
             p2DRenderOptions.Controls.Add(cb2DLegend);
@@ -503,6 +491,21 @@
             btn2DRender.UseVisualStyleBackColor = false;
             btn2DRender.Click += btn2DRender_Click;
             // 
+            // webView2DRender
+            // 
+            webView2DRender.AllowExternalDrop = true;
+            webView2DRender.BackColor = Color.White;
+            webView2DRender.CreationProperties = null;
+            webView2DRender.DefaultBackgroundColor = Color.White;
+            webView2DRender.Dock = DockStyle.Fill;
+            webView2DRender.Location = new Point(0, 0);
+            webView2DRender.Name = "webView2DRender";
+            webView2DRender.Padding = new Padding(10);
+            webView2DRender.Size = new Size(694, 767);
+            webView2DRender.TabIndex = 1;
+            webView2DRender.ZoomFactor = 1D;
+            webView2DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
+            // 
             // t3DRender
             // 
             t3DRender.Controls.Add(p3DRenderOptions);
@@ -516,24 +519,10 @@
             t3DRender.Text = "3D Rendering";
             t3DRender.UseVisualStyleBackColor = true;
             // 
-            // webView3DRender
-            // 
-            webView3DRender.AllowExternalDrop = true;
-            webView3DRender.BackColor = Color.White;
-            webView3DRender.CreationProperties = null;
-            webView3DRender.DefaultBackgroundColor = Color.White;
-            webView3DRender.Dock = DockStyle.Fill;
-            webView3DRender.Location = new Point(0, 0);
-            webView3DRender.Name = "webView3DRender";
-            webView3DRender.Padding = new Padding(10);
-            webView3DRender.Size = new Size(694, 767);
-            webView3DRender.TabIndex = 0;
-            webView3DRender.ZoomFactor = 1D;
-            webView3DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
-            // 
             // p3DRenderOptions
             // 
             p3DRenderOptions.BackColor = Color.FromArgb(236, 239, 241);
+            p3DRenderOptions.Controls.Add(cb3DOffline);
             p3DRenderOptions.Controls.Add(l3DNodeSize);
             p3DRenderOptions.Controls.Add(cb3DShowUnselectedNodes);
             p3DRenderOptions.Controls.Add(ud3DNodeSize);
@@ -799,6 +788,21 @@
             btn3DRender.Text = "Render";
             btn3DRender.UseVisualStyleBackColor = false;
             btn3DRender.Click += btn3DRender_Click;
+            // 
+            // webView3DRender
+            // 
+            webView3DRender.AllowExternalDrop = true;
+            webView3DRender.BackColor = Color.White;
+            webView3DRender.CreationProperties = null;
+            webView3DRender.DefaultBackgroundColor = Color.White;
+            webView3DRender.Dock = DockStyle.Fill;
+            webView3DRender.Location = new Point(0, 0);
+            webView3DRender.Name = "webView3DRender";
+            webView3DRender.Padding = new Padding(10);
+            webView3DRender.Size = new Size(694, 767);
+            webView3DRender.TabIndex = 0;
+            webView3DRender.ZoomFactor = 1D;
+            webView3DRender.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
             // tPlot
             // 
@@ -1699,6 +1703,28 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // cb2DOffline
+            // 
+            cb2DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cb2DOffline.AutoSize = true;
+            cb2DOffline.Location = new Point(625, 30);
+            cb2DOffline.Name = "cb2DOffline";
+            cb2DOffline.Size = new Size(62, 19);
+            cb2DOffline.TabIndex = 75;
+            cb2DOffline.Text = "Offline";
+            cb2DOffline.UseVisualStyleBackColor = true;
+            // 
+            // cb3DOffline
+            // 
+            cb3DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cb3DOffline.AutoSize = true;
+            cb3DOffline.Location = new Point(625, 29);
+            cb3DOffline.Name = "cb3DOffline";
+            cb3DOffline.Size = new Size(62, 19);
+            cb3DOffline.TabIndex = 76;
+            cb3DOffline.Text = "Offline";
+            cb3DOffline.UseVisualStyleBackColor = true;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1709,19 +1735,19 @@
             Load += ModelOutputControl_Load;
             tabOutputs.ResumeLayout(false);
             t2DRender.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView2DRender).EndInit();
             p2DRenderOptions.ResumeLayout(false);
             p2DRenderOptions.PerformLayout();
             gr2DLegend.ResumeLayout(false);
             p2DRender.ResumeLayout(false);
             p2DRender.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)webView2DRender).EndInit();
             t3DRender.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView3DRender).EndInit();
             p3DRenderOptions.ResumeLayout(false);
             p3DRenderOptions.PerformLayout();
             gr3DLegend.ResumeLayout(false);
             p3DRender.ResumeLayout(false);
             p3DRender.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)webView3DRender).EndInit();
             tPlot.ResumeLayout(false);
             tabPlotSub.ResumeLayout(false);
             tPlotHTML.ResumeLayout(false);
@@ -1901,5 +1927,7 @@
         private CheckBox cb3DRenderShowOptions;
         private PictureBox pictureBox;
         private Panel pPictureBox;
+        private CheckBox cb2DOffline;
+        private CheckBox cb3DOffline;
     }
 }

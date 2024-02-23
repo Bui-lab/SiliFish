@@ -159,7 +159,7 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public override string ID { get { return Position + "_" + CellGroup; } }
 
-        public List<string> Attachments { get; set; } = new();
+        public List<string> Attachments { get; set; } = [];
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("CellGroup", "CellType", "NTMode",
@@ -217,7 +217,7 @@ namespace SiliFish.ModelUnits.Cells
             ConductionVelocity = Distribution.CreateDistributionObjectFromCSVCell(values[iter++]);
             CoreType = values[iter++].Trim();
             iter++;//skip rheobase
-            parameters = new();
+            parameters = [];
             for (int i = 1; i <= CellCore.CoreParamMaxCount; i++)
             {
                 if (iter > values.Count - 2) break;
@@ -232,7 +232,7 @@ namespace SiliFish.ModelUnits.Cells
             ColorConverter cc = new();
             Color = (Color)cc.ConvertFromString(values[iter++]);
             if (iter < values.Count)
-                TimeLine_ms.ImportValues(new[] { values[iter++] }.ToList());
+                TimeLine_ms.ImportValues([values[iter++]]);
         }
     
 
@@ -270,7 +270,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
-            List<string> differences = new();
+            List<string> differences = [];
             CellPoolTemplate cpt = other as CellPoolTemplate;
             if (CellGroup != cpt.CellGroup)
                 differences.Add($"{ID} CellGroup: {CellGroup} vs {cpt.CellGroup}");
@@ -311,7 +311,7 @@ namespace SiliFish.ModelUnits.Cells
             if (TimeLine_ms.ToString() != cpt.TimeLine_ms.ToString())
                 differences.Add($"{ID} TimeLine: {TimeLine_ms} vs {cpt.TimeLine_ms}");
 
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -352,7 +352,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 List<InterPoolTemplate> ascIPT = model.InterPoolTemplates
                     .Where(ipt => ipt.SourcePool == CellGroup && ipt.CellReach.Ascending).ToList();
-                double ascending = ascIPT!=null &&  ascIPT.Any() ? ascIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
+                double ascending = ascIPT!=null &&  ascIPT.Count != 0 ? ascIPT.Max(ipt => ipt.CellReach.MaxAscReach) : double.NaN;
                 if (!double.IsNaN(ascending))
                     AscendingAxonLength = new Constant_NoDistribution(ascending);
             }
@@ -360,7 +360,7 @@ namespace SiliFish.ModelUnits.Cells
             {
                 List<InterPoolTemplate> descIPT = model.InterPoolTemplates
                     .Where(ipt => ipt.SourcePool == CellGroup && ipt.CellReach.Descending).ToList();
-                double descending = descIPT != null && descIPT.Any() ? descIPT.Max(ipt => ipt.CellReach.MaxDescReach) : double.NaN;
+                double descending = descIPT != null && descIPT.Count != 0 ? descIPT.Max(ipt => ipt.CellReach.MaxDescReach) : double.NaN;
                 if (!double.IsNaN(descending))
                     DescendingAxonLength = new Constant_NoDistribution(descending);
             }

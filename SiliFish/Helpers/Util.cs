@@ -74,9 +74,9 @@ namespace SiliFish.Helpers
 
         public static List<int> ParseContinousRange(string s)
         {
-            List<int> ints = new();
+            List<int> ints = [];
             int i1;
-            int sep = s.IndexOfAny(new[] { '-', '_', '.' });
+            int sep = s.IndexOfAny(['-', '_', '.']);
             if (sep < 0)
             {
                 if (int.TryParse(s, out i1))
@@ -105,10 +105,10 @@ namespace SiliFish.Helpers
                     (defMin, defMax) = (defMax, defMin);
                 return Enumerable.Range(defMin, defMax - defMin + 1).ToList();
             }
-            List<string> uncontinousRanges = s.Split(',').ToList();
+            List<string> uncontinousRanges = [.. s.Split(',')];
             if (uncontinousRanges.Count == 0)
                 return ParseContinousRange(s);
-            List<int> ints = new();
+            List<int> ints = [];
             foreach (string subrange in uncontinousRanges)
                 ints.AddRange(ParseContinousRange(subrange));
             return ints;
@@ -164,8 +164,12 @@ namespace SiliFish.Helpers
             };
         }
 
-        static public double[] GenerateValues(double origValue, double minMultiplier, double maxMultiplier, int numOfPoints, bool logScale)
+        static public double[] GenerateValues(double origValue, NumberRangeDefinition rangeDefinition)
         {
+            double minMultiplier = rangeDefinition.MinMultiplier;
+            double maxMultiplier = rangeDefinition.MaxMultiplier;
+            int numOfPoints = rangeDefinition.NumOfPoints;
+            bool logScale = rangeDefinition.LogScale;
             if (maxMultiplier < minMultiplier)
                 (minMultiplier, maxMultiplier) = (maxMultiplier, minMultiplier);
 
@@ -185,6 +189,45 @@ namespace SiliFish.Helpers
                     values[i] = Math.Pow(10, incMultiplier * i + logMinMultiplier) * origValue;
             }
             return values;
+        }
+
+        static public (double[], List<double[]> yMultiData) MergeXYArrays(double[] xArray1, double[] yArray1, double[] xArray2, double[] yArray2)
+        {
+            if (xArray1.Length != yArray1.Length || xArray2.Length != yArray2.Length)
+                throw new Exception("Merging XY arrays with different lengths");
+            List<double> xList = [];
+            List<double[]> yMultiData = [];
+            int ind1 = 0;
+            int ind2 = 0;
+            while (ind1 < xArray1.Length && ind2 < xArray2.Length)
+            {
+                if (xArray1[ind1] == xArray2[ind2])
+                {
+                    xList.Add(xArray1[ind1]);
+                    yMultiData.Add([yArray1[ind1++], yArray2[ind2++]]);
+                }
+                else if (xArray1[ind1] < xArray2[ind2])
+                {
+                    xList.Add(xArray1[ind1]);
+                    yMultiData.Add([yArray1[ind1++], double.NaN]);
+                }
+                else //if (xArray1[ind1] > xArray2[ind2])
+                {
+                    xList.Add(xArray2[ind2]);
+                    yMultiData.Add([double.NaN, yArray2[ind2++]]);
+                }
+            }
+            while (ind1 < xArray1.Length)
+            {
+                xList.Add(xArray1[ind1]);
+                yMultiData.Add([yArray1[ind1++], double.NaN]);
+            }
+            while (ind2 < xArray2.Length)
+            {
+                xList.Add(xArray2[ind2]);
+                yMultiData.Add([double.NaN, yArray2[ind2++]]);
+            }
+            return (xList.ToArray(), yMultiData);
         }
     }
 }

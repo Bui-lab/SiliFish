@@ -139,7 +139,7 @@ namespace SiliFish.UI.Controls
         {
             try
             {
-                Dictionary<string, Distribution> paramDict = new();
+                Dictionary<string, Distribution> paramDict = [];
                 for (int rowIndex = 0; rowIndex < dgDistribution.RowCount; rowIndex++)
                 {
                     string field = dgDistribution[colField.Index, rowIndex].Value.ToString();

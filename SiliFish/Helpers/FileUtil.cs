@@ -18,12 +18,12 @@ namespace SiliFish.Helpers
         {
             using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var sr = new StreamReader(file);
-            List<string> lines = new();
+            List<string> lines = [];
             while (!sr.EndOfStream)
             {
                 lines.Add(sr.ReadLine());
             }
-            return lines.ToArray();
+            return [.. lines];
         }
         public static string ReadFromFile(string path)
         {

@@ -38,6 +38,7 @@ namespace SiliFish.UI
             mFile = new ToolStripMenuItem();
             miFileLoad = new ToolStripMenuItem();
             miFileSave = new ToolStripMenuItem();
+            miFileSaveSimulationResults = new ToolStripMenuItem();
             miFileSep1 = new ToolStripSeparator();
             miFileExport = new ToolStripMenuItem();
             miFileImport = new ToolStripMenuItem();
@@ -56,7 +57,7 @@ namespace SiliFish.UI
             miToolsSep3 = new ToolStripSeparator();
             miToolsStatsFull = new ToolStripMenuItem();
             miToolMultipleRun = new ToolStripMenuItem();
-            miToolsRunForStats = new ToolStripMenuItem();
+            miToolsRunTimeStats = new ToolStripMenuItem();
             miToolsSepStats = new ToolStripSeparator();
             miToolsSettings = new ToolStripMenuItem();
             mView = new ToolStripMenuItem();
@@ -69,6 +70,7 @@ namespace SiliFish.UI
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
             pSimulation = new Panel();
+            lProgress = new Label();
             eSkip = new NumericUpDown();
             lSkip = new Label();
             edt = new NumericUpDown();
@@ -95,7 +97,6 @@ namespace SiliFish.UI
             pDistinguisherBottom = new Panel();
             saveFileExcel = new SaveFileDialog();
             openFileExcel = new OpenFileDialog();
-            miFileSaveSimulationResults = new ToolStripMenuItem();
             pTop.SuspendLayout();
             menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
@@ -167,6 +168,13 @@ namespace SiliFish.UI
             miFileSave.Text = "Save";
             miFileSave.Click += miFileSave_Click;
             // 
+            // miFileSaveSimulationResults
+            // 
+            miFileSaveSimulationResults.Name = "miFileSaveSimulationResults";
+            miFileSaveSimulationResults.Size = new Size(270, 22);
+            miFileSaveSimulationResults.Text = "Save Simulation Results (to database)";
+            miFileSaveSimulationResults.Click += miFileSaveSimulationResults_Click;
+            // 
             // miFileSep1
             // 
             miFileSep1.Name = "miFileSep1";
@@ -207,7 +215,7 @@ namespace SiliFish.UI
             // 
             // mTools
             // 
-            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolMultipleRun, miToolsRunForStats, miToolsSepStats, miToolsSettings });
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolMultipleRun, miToolsRunTimeStats, miToolsSepStats, miToolsSettings });
             mTools.Name = "mTools";
             mTools.Size = new Size(46, 19);
             mTools.Text = "Tools";
@@ -283,12 +291,12 @@ namespace SiliFish.UI
             miToolMultipleRun.Text = "Run Multiple Simulations";
             miToolMultipleRun.Click += miToolMultipleRun_Click;
             // 
-            // miToolsRunForStats
+            // miToolsRunTimeStats
             // 
-            miToolsRunForStats.Name = "miToolsRunForStats";
-            miToolsRunForStats.Size = new Size(207, 22);
-            miToolsRunForStats.Text = "Run for Statistics";
-            miToolsRunForStats.Click += miToolsRunForStats_Click;
+            miToolsRunTimeStats.Name = "miToolsRunTimeStats";
+            miToolsRunTimeStats.Size = new Size(207, 22);
+            miToolsRunTimeStats.Text = "Run Time Statistics";
+            miToolsRunTimeStats.Click += miToolsRunTimeStats_Click;
             // 
             // miToolsSepStats
             // 
@@ -407,6 +415,7 @@ namespace SiliFish.UI
             // pSimulation
             // 
             pSimulation.BackColor = Color.FromArgb(236, 239, 241);
+            pSimulation.Controls.Add(lProgress);
             pSimulation.Controls.Add(eSkip);
             pSimulation.Controls.Add(lSkip);
             pSimulation.Controls.Add(edt);
@@ -423,6 +432,16 @@ namespace SiliFish.UI
             pSimulation.Name = "pSimulation";
             pSimulation.Size = new Size(543, 165);
             pSimulation.TabIndex = 1;
+            // 
+            // lProgress
+            // 
+            lProgress.AutoSize = true;
+            lProgress.Location = new Point(82, 114);
+            lProgress.Name = "lProgress";
+            lProgress.Size = new Size(55, 15);
+            lProgress.TabIndex = 36;
+            lProgress.Text = "Progress:";
+            lProgress.Visible = false;
             // 
             // eSkip
             // 
@@ -620,13 +639,6 @@ namespace SiliFish.UI
             // 
             openFileExcel.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             // 
-            // miFileSaveSimulationResults
-            // 
-            miFileSaveSimulationResults.Name = "miFileSaveSimulationResults";
-            miFileSaveSimulationResults.Size = new Size(270, 22);
-            miFileSaveSimulationResults.Text = "Save Simulation Results (to database)";
-            miFileSaveSimulationResults.Click += miFileSaveSimulationResults_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -719,7 +731,7 @@ namespace SiliFish.UI
         private ToolStripMenuItem miToolsSettings;
         private ToolStripSeparator miToolsSep2;
         private ToolStripMenuItem miToolsGenerateStatsData;
-        private ToolStripMenuItem miToolsRunForStats;
+        private ToolStripMenuItem miToolsRunTimeStats;
         private ToolStripSeparator miToolsSepStats;
         private ToolStripMenuItem miToolsStatsSpikeStats;
         private ToolStripMenuItem miToolsStatsSpikes;
@@ -728,5 +740,6 @@ namespace SiliFish.UI
         private ToolStripMenuItem miToolsStatsFull;
         private ToolStripMenuItem miToolMultipleRun;
         private ToolStripMenuItem miFileSaveSimulationResults;
+        private Label lProgress;
     }
 }

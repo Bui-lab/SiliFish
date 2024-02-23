@@ -1,5 +1,4 @@
 ﻿using SiliFish.DynamicUnits;
-using SiliFish.DynamicUnits.Firing;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
@@ -16,17 +15,18 @@ namespace SiliFish.Services.Dynamics
         public static (DynamicsStats, (double AvgV, double AvgVPos, double AvgVNeg)) GenerateSpikeStats(DynamicsParam settings, double dt, Cell cell, int iStart, int iEnd)
         {
             List<int> spikes = cell.GetSpikeIndices(iStart, iEnd, (int)(settings.BurstBreak / dt));
-            if (!spikes.Any()) return (null, (0, 0, 0));
+            if (spikes.Count == 0) return (null, (0, 0, 0));
             if (spikes[^1] > iEnd)
                 iEnd = spikes[^1];
-            if (iEnd >= cell.V.Length)
-                iEnd = cell.V.Length - 1;
-            DynamicsStats dyn = new(settings, cell.V[0..iEnd], dt, cell.Core.Vthreshold, iStart, iEnd);
-            double avgV = cell.V[iStart..iEnd].Average();
-            double avgVPos = cell.V[iStart..iEnd].Any(v => v >= cell.Core.Vr) ?
-                cell.V[iStart..iEnd].Where(v => v >= cell.Core.Vr).Average() : 0;
-            double avgVNeg = cell.V[iStart..iEnd].Any(v => v < cell.Core.Vr) ?
-                cell.V[iStart..iEnd].Where(v => v < cell.Core.Vr).Average() : 0;
+            double[] V = cell.V.AsArray();
+            if (iEnd >= V.Length)
+                iEnd = V.Length - 1;
+            DynamicsStats dyn = new(settings, V[0..iEnd], dt, cell.Core.Vthreshold, iStart, iEnd);
+            double avgV = V[iStart..iEnd].Average();
+            double avgVPos = V[iStart..iEnd].Any(v => v >= cell.Core.Vr) ?
+                V[iStart..iEnd].Where(v => v >= cell.Core.Vr).Average() : 0;
+            double avgVNeg = V[iStart..iEnd].Any(v => v < cell.Core.Vr) ?
+                V[iStart..iEnd].Where(v => v < cell.Core.Vr).Average() : 0;
             return (dyn, (avgV, avgVPos, avgVNeg));
         }
 
@@ -38,21 +38,21 @@ namespace SiliFish.Services.Dynamics
         /// <returns></returns>
         public static List<TrainOfBursts> GenerateColumnsOfBursts(DynamicsParam settings, double dt, List<Cell> cells, int iStart, int iEnd)
         {
-            List<TrainOfBursts> trueTrains = new();
-            List<TrainOfBursts> ungroupedTrains = new();
+            List<TrainOfBursts> trueTrains = [];
+            List<TrainOfBursts> ungroupedTrains = [];
             foreach (Cell cell in cells)
             {
                 List<int> spikes = cell.GetSpikeIndices(iStart, iEnd);
-                if (!spikes.Any()) continue;
+                if (spikes.Count == 0) continue;
                 List<BurstOrSpike> burstOrSpikes = BurstOrSpike.SpikesToBursts(settings, dt, spikes, out double _);
                 TrainOfBursts train = new(burstOrSpikes, cell.CellPool.ID, cell.Somite);
                 ungroupedTrains.Add(train);
             }
-            ungroupedTrains = ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0]).ToList();
+            ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0])];
             int curIndex = 0;
             double posDelay = settings.RCPositiveDelay;
             double negDelay = Math.Abs(settings.RCNegativeDelay);
-            while (ungroupedTrains.Any())
+            while (ungroupedTrains.Count != 0)
             {
                 TrainOfBursts keyTrain = ungroupedTrains.First();
                 (int iID, string sID, BurstOrSpike Bursts) keyBursts = keyTrain.BurstList[0];
@@ -62,10 +62,10 @@ namespace SiliFish.Services.Dynamics
                 //going downward caudally
                 TrainOfBursts curTrain = keyTrain;
                 BurstOrSpike curBurst = keyBursts.Bursts;
-                TrainOfBursts trueTrain = new(new List<BurstOrSpike>(), null, curIndex++);
+                TrainOfBursts trueTrain = new([], null, curIndex++);
                 trueTrain.BurstList.Add((keyBursts.iID, keyBursts.sID, curBurst));
                 //curTrain.iID is the somite. 
-                while (ungroupedTrains.Any())
+                while (ungroupedTrains.Count != 0)
                 {
                     TrainOfBursts caudalTrain = ungroupedTrains.FirstOrDefault(t => t.iID == curTrain.iID + 1);
                     if (caudalTrain == null)
@@ -87,7 +87,7 @@ namespace SiliFish.Services.Dynamics
                 //going upward rostrally
                 curTrain = keyTrain;
                 curBurst = keyBursts.Bursts;
-                while (ungroupedTrains.Any())
+                while (ungroupedTrains.Count != 0)
                 {
                     TrainOfBursts rostralTrain = ungroupedTrains.FirstOrDefault(t => t.iID == curTrain.iID - 1);
                     if (rostralTrain == null)
@@ -107,7 +107,7 @@ namespace SiliFish.Services.Dynamics
                     curBurst = rostralBurst;
                 }
                 ungroupedTrains.RemoveAll(t => t.BurstList.Count == 0);
-                ungroupedTrains = ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0]).ToList();
+                ungroupedTrains = [.. ungroupedTrains.OrderBy(ut => ut.EarliestSpike.burst.SpikeTimeList[0])];
                 trueTrains.Add(trueTrain);
             }
 

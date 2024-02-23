@@ -3,7 +3,6 @@ using OfficeOpenXml;
 using SiliFish.Database;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits.Firing;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -54,18 +53,20 @@ namespace SiliFish.Repositories
                             {
                                 stimDetails += stim.ToString() + "\r\n";
                             }
-                            List<string> cellValues = new();
-                            cellValues.AddRange(new List<string>() { (++counter).ToString(), pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(),"1", c.ID });
-                            cellValues.AddRange(new List<string>() {
-                            start.ToString(GlobalSettings.PlotDataFormat),
-                            end.ToString(GlobalSettings.PlotDataFormat),
-                            stimDetails});
+                            List<string> cellValues =
+                            [
+                                .. new List<string>() { (++counter).ToString(), pool.CellGroup, c.PositionLeftRight.ToString(), c.Somite.ToString(),"1", c.ID },
+                                .. new List<string>() {
+                                start.ToString(GlobalSettings.PlotDataFormat),
+                                end.ToString(GlobalSettings.PlotDataFormat),
+                                stimDetails},
+                            ];
                             int iStart = (int)(start / dt);
                             int iEnd = end < 0 ? -1 : (int)(end / dt);
                             (DynamicsStats dyn, (double AvgV, double AvgVPos, double AvgVNeg)) =
                                 SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
                             dyn?.DefineSpikingPattern();
-                            if (dyn != null && dyn.SpikeList.Any())
+                            if (dyn != null && dyn.SpikeList.Count != 0)
                                 cellValues.AddRange(new List<string>()
                                 {   dyn.SpikeList.Count.ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[0]*dt).ToString(GlobalSettings.PlotDataFormat),
@@ -74,7 +75,7 @@ namespace SiliFish.Repositories
                             else
                                 cellValues.AddRange(new List<string>() { "0", "", "", "0" });
 
-                            if (dyn != null && dyn.BurstsOrSpikes.Any())
+                            if (dyn != null && dyn.BurstsOrSpikes.Count != 0)
                                 cellValues.AddRange(new List<string>()
                                 {   dyn.BurstsOrSpikes.Count.ToString(),
                                     dyn.BurstingFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
@@ -111,15 +112,17 @@ namespace SiliFish.Repositories
                 {
                     foreach (int spikeIndex in cell.GetSpikeIndices())
                     {
-                        List<string> cellValues = new();
-                        cellValues.AddRange(new List<string>() { 
-                            (++counter).ToString(),
-                            cell.CellGroup,
-                            cell.PositionLeftRight.ToString(),
-                            cell.Somite.ToString(),
-                            cell.Sequence.ToString(),
-                            cell.ID,
-                            simulation.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)});
+                        List<string> cellValues =
+                        [
+                            .. new List<string>() { 
+                                (++counter).ToString(),
+                                cell.CellGroup,
+                                cell.PositionLeftRight.ToString(),
+                                cell.Somite.ToString(),
+                                cell.Sequence.ToString(),
+                                cell.ID,
+                                simulation.RunParam.GetTimeOfIndex(spikeIndex).ToString(GlobalSettings.PlotDataFormat)},
+                        ];
                         values.Add(cellValues);
                     }
                 }
@@ -143,14 +146,16 @@ namespace SiliFish.Repositories
                 int counter = 1;
                 foreach (SwimmingEpisode episode in episodes.Episodes)
                 {
-                    List<string> episodeValues = new();
-                    episodeValues.AddRange(new List<string>() { "Tail",
-                        "",
-                        counter++.ToString(),
-                        episode.Start.ToString(),
-                        episode.End.ToString(),
-                        episode.NumOfBeats.ToString(),
-                        episode.BeatFrequency.ToString()});
+                    List<string> episodeValues =
+                    [
+                        .. new List<string>() { "Tail",
+                            "",
+                            counter++.ToString(),
+                            episode.Start.ToString(),
+                            episode.End.ToString(),
+                            episode.NumOfBeats.ToString(),
+                            episode.BeatFrequency.ToString()},
+                    ];
                     values.Add(episodeValues);
                 }
                 for (int somite = 1; somite <= simulation.Model.ModelDimensions.NumberOfSomites; somite++)
@@ -159,14 +164,16 @@ namespace SiliFish.Repositories
                     (double[] _, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMotoNeurons(simulation, somite);
                     foreach (SwimmingEpisode episode in episodes2.Episodes)
                     {
-                        List<string> episodeValues = new();
-                        episodeValues.AddRange(new List<string>() { "MN",
-                        somite.ToString(),
-                        counter++.ToString(),
-                        episode.Start.ToString(),
-                        episode.End.ToString(),
-                        episode.NumOfBeats.ToString(),
-                        episode.BeatFrequency.ToString()});
+                        List<string> episodeValues =
+                        [
+                            .. new List<string>() { "MN",
+                            somite.ToString(),
+                            counter++.ToString(),
+                            episode.Start.ToString(),
+                            episode.End.ToString(),
+                            episode.NumOfBeats.ToString(),
+                            episode.BeatFrequency.ToString()},
+                        ];
                         values.Add(episodeValues);
                     }
 

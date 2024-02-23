@@ -30,7 +30,7 @@ namespace SiliFish.DynamicUnits.JncCore
 
         public static ChemSynapseCore CreateCore(string coreType, Dictionary<string, double> parameters)
         {
-            ChemSynapseCore core = (ChemSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? new Dictionary<string, double>());
+            ChemSynapseCore core = (ChemSynapseCore)Activator.CreateInstance(typeMap[coreType], parameters ?? []);
             return core;
         }
 
@@ -67,14 +67,14 @@ namespace SiliFish.DynamicUnits.JncCore
 
         public override bool CheckValues(ref List<string> errors)
         {
-            errors ??= new();
+            errors ??= [];
             if (Conductance < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
             return errors.Count == 0;
         }
         public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
-            errors ??= new();
+            errors ??= [];
             ChemSynapseCore core = CreateCore(coreType, param);
             return core.CheckValues(ref errors);
         }

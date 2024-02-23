@@ -19,7 +19,7 @@ namespace SiliFish.Repositories
     {
         public static List<string> CheckJSONVersion(ref string json)
         {
-            List<string> list = new();
+            List<string> list = [];
             Regex versionRegex = new("\"Version\": (.*),");
             Match version = versionRegex.Match(json);
             if (!version.Success)//Version is added on 2.2.3

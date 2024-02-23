@@ -1,4 +1,4 @@
-﻿using SiliFish.DynamicUnits.Firing;
+﻿using SiliFish.Services.Dynamics;
 
 namespace SiliFish.Services.Optimization
 {

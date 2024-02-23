@@ -15,6 +15,7 @@ namespace SiliFish.ModelUnits
     public abstract class ModelUnitBase : IComparable<ModelUnitBase>
     {
         private string _Name;
+        public int DbId = 0;
         public virtual string Name
         {
             get

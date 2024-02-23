@@ -36,8 +36,8 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             UnitOfMeasure UoM = plotGenerator.UoM;
             IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(cells, combinePools: false, combineSomites: false, combineCells: false);
-            List<GapJunction> gapJunctions = new();
-            List<ChemicalSynapse> synapses = new();
+            List<GapJunction> gapJunctions = [];
+            List<ChemicalSynapse> synapses = [];
             foreach (IGrouping<string, Cell> cellGroup in cellGroups)
             {
                 foreach (Cell cell in cellGroup)
@@ -50,7 +50,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse });
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, [synapse]);
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -60,7 +60,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, new() { synapse });
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, [synapse]);
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -71,7 +71,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!gapJunction.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, new() { gapJunction }, null);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, [gapJunction], null);
                             junctionPG.CreateCharts(charts);
                         }
                     }
@@ -81,7 +81,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!synapse.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, new() { synapse });
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, [synapse]);
                             junctionPG.CreateCharts(charts);
                         }
                     }
@@ -95,7 +95,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
 
         protected override void CreateCharts()
         {
-            if (cells == null || !cells.Any())
+            if (cells == null || cells.Count == 0)
                 return;
             if (!combineJunctions)
             {

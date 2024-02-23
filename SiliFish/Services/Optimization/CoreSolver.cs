@@ -106,7 +106,7 @@ namespace SiliFish.Services.Optimization
 
         private void CreateTerminator(CoreSolverSettings settings)
         {
-            List<TerminationBase> terminationList = new();
+            List<TerminationBase> terminationList = [];
             if (settings.MaxGeneration != null)
                 terminationList.Add(new GenerationNumberTermination((int)settings.MaxGeneration));
             if (settings.TargetFitness != null)
@@ -176,7 +176,7 @@ namespace SiliFish.Services.Optimization
                 Reinsertion = Reinsertion
             };
             latestFitness = 0;
-            Candidates = new();
+            Candidates = [];
         }
 
         private void CheckResult(FloatingPointChromosome chromosome, bool single)
@@ -230,11 +230,11 @@ namespace SiliFish.Services.Optimization
                     errMessage = exc.Message;
                 }
 
-                List<CoreSolverOutput> results = new();
+                List<CoreSolverOutput> results = [];
                 foreach (FloatingPointChromosome chromosome in Candidates)
                 {
                     CoreSolverOutput output = new();
-                    Dictionary<string, double> paramValues = new();
+                    Dictionary<string, double> paramValues = [];
                     int iter = 0;
                     foreach (string key in Settings.SortedKeys)
                     {

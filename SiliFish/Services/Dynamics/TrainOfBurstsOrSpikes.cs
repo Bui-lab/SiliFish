@@ -31,7 +31,7 @@ namespace SiliFish.Services.Dynamics
         {
             this.sID = sID;
             this.iID = iID;
-            BurstList = new();
+            BurstList = [];
             foreach (BurstOrSpike b in bsl)
             {
                 BurstList.Add((iID, sID, b));

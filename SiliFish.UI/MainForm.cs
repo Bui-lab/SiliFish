@@ -21,7 +21,6 @@ namespace SiliFish.UI
 {
     public partial class MainForm : Form
     {
-        private bool multiRunMode = false;
         private bool parallelRun = false;
         private int numSimulations = 1;
         private static bool showAboutForm = true;
@@ -155,7 +154,7 @@ namespace SiliFish.UI
         }
         private void GetLastRunSettings()
         {
-            if (GlobalSettings.LastRunSettings.Any())
+            if (GlobalSettings.LastRunSettings.Count != 0)
             {
                 try
                 {
@@ -177,19 +176,25 @@ namespace SiliFish.UI
         #endregion
 
         #region Simulation
+        private void SetProgressVisibility(bool visible)
+        {
+            progressBarRun.Visible = visible;
+            lProgress.Visible = visible;
+            linkExportOutput.Visible = !visible;
+        }
         private void completeRunsAction(List<Simulation> simulations, bool cancelled)
         {
             Invoke(CompleteRuns, simulations, cancelled);
         }
         private void CompleteRuns(List<Simulation> simulations, bool cancelled)
         {
-            multiRunMode = false;
             UseWaitCursor = false;
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
-            progressBarRun.Visible = false;
+            SetProgressVisibility(false);
+            if (cancelled)
+                linkExportOutput.Visible = false;
             btnRun.Text = "Run";
-            linkExportOutput.Visible = !cancelled;
             if (cancelled)
             {
                 lRunTime.Text = $"Last run cancelled\r\n" +
@@ -227,12 +232,12 @@ namespace SiliFish.UI
             lRunTime.Text = "";
             UseWaitCursor = true;
             progressBarRun.Value = 0;
-            progressBarRun.Visible = true;
+            SetProgressVisibility(true);
             timerRun.Enabled = true;
 
-            RefreshModel();
+            RefreshModel();//TODO why do we refresh model? PopulatePools creates issues
             if (runningModel == null) return false;
-            List<string> errors = new();
+            List<string> errors = [];
             if (!runningModel.CheckValues(ref errors))
             {
                 MessageBox.Show($"There are errors in the model. Please correct them before running a simulation: \r\n" +
@@ -282,8 +287,7 @@ namespace SiliFish.UI
             {
                 if (MessageBox.Show("Do you want to stop the stimulation? You can access the values till the point it was executed.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
-                if (modelSimulator != null)
-                    modelSimulator.CancelRun();
+                modelSimulator?.CancelRun();
                 return;
             }
             if (modelSimulator?.ModelRun ?? false)
@@ -302,6 +306,7 @@ namespace SiliFish.UI
         {
             if (modelSimulator == null) return;
             progressBarRun.Value = (int)(modelSimulator.GetProgress() * progressBarRun.Maximum);
+            lProgress.Text = $"Progress: {modelSimulator.GetStatus()}...";
         }
         private void linkExportOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -323,10 +328,10 @@ namespace SiliFish.UI
         private void SetCurrentMode(RunMode mode, string name)
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
-            miFileSaveSimulationResults.Visible = 
+            miFileSaveSimulationResults.Visible =
             miToolsGenerateStatsData.Visible =
                 miToolMultipleRun.Visible =
-                miToolsRunForStats.Visible =
+                miToolsRunTimeStats.Visible =
                 miToolsSepStats.Visible =
                     mode == RunMode.RunningModel;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
@@ -366,7 +371,7 @@ namespace SiliFish.UI
         private bool CheckModelBeforeSave()
         {
             ModelBase mb = modelControl.GetModel();
-            List<string> errors = new();
+            List<string> errors = [];
             if (!mb.CheckValues(ref errors))
             {
                 if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
@@ -444,7 +449,7 @@ namespace SiliFish.UI
                 return;
             }
             UseWaitCursor = true;
-            List<string> errors = new();
+            List<string> errors = [];
             if (!modelTemplate.CheckValues(ref errors))
             {
                 UseWaitCursor = false;
@@ -452,7 +457,10 @@ namespace SiliFish.UI
                     $"{string.Join("\r\n", errors)}", "Error");
                 return;
             }
-            MainForm mf = new(new RunningModel(modelTemplate));
+            MainForm mf = new(new RunningModel(modelTemplate))
+            {
+                WindowState = FormWindowState.Maximized
+            };
             UseWaitCursor = false;
             mf.Show();
         }
@@ -519,7 +527,20 @@ namespace SiliFish.UI
             sFDataContext ??= new();
             foreach (Simulation simulation in modelSimulator.SimulationList)
             {
-                SimulationRecord sim = new(simulation.Start, simulation.End, modelSimulator.Description, JsonUtil.ToJson(simulation.Model));
+                RunningModel model = simulation.Model;
+                if (model.DbId == 0)
+                {
+                    string stats = $"{simulation.Model.GetNumberOfCells():n0} cells; {simulation.Model.GetNumberOfConnections():n0} connections";
+                    ModelRecord modelRecord = new(simulation.Model.ModelName, DateTime.Now, stats);
+                    sFDataContext.Add(modelRecord);
+                    sFDataContext.SaveChanges();
+                    model.DbId = modelRecord.Id;
+                }
+                SimulationRecord sim = new(model.DbId,
+                                           simulation.Start,
+                                           simulation.End,
+                                           $"{simulation.Description} {modelSimulator.Description}",
+                                           modelSimulator.RunParamDescription);
                 sFDataContext.Add(sim);
             }
             sFDataContext.SaveChanges();
@@ -620,7 +641,10 @@ namespace SiliFish.UI
         private void miToolsCellularDynamics_Click(object sender, EventArgs e)
         {
             DynamicsTestControl dynControl = new("Izhikevich_9P", null, testMode: true);
-            frmDynamics = new();
+            frmDynamics = new()
+            {
+                WindowState = FormWindowState.Maximized
+            };
             frmDynamics.AddControl(dynControl, null);
             dynControl.ContentChanged += frmDynamics.ChangeCaption;
             frmDynamics.Text = "Cellular Dynamics Test";
@@ -695,12 +719,8 @@ namespace SiliFish.UI
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
-            finally
-            {
-                multiRunMode = false;
-            }
         }
-        private void miToolsRunForStats_Click(object sender, EventArgs e)
+        private void miToolsRunTimeStats_Click(object sender, EventArgs e)
         {
             try
             {
@@ -716,10 +736,6 @@ namespace SiliFish.UI
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
-            }
-            finally
-            {
-                multiRunMode = false;
             }
         }
         private void miToolsSettings_Click(object sender, EventArgs e)
@@ -759,6 +775,5 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
-
     }
 }

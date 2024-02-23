@@ -67,7 +67,7 @@ namespace SiliFish.Extensions
                 if (result[i] > end) result[i] = end;
             }
             if (ordered)
-                return result.Order().ToArray();
+                return [.. result.Order()];
             return result;
         }
 

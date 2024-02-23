@@ -2,7 +2,6 @@
 using SiliFish.Database;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits.Firing;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits;
@@ -11,7 +10,6 @@ using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
-using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,15 +27,15 @@ namespace SiliFish.Repositories
         {
             if (json == null)
                 return false;
-            List<string> oldParamPatterns = new()
-            {
+            List<string> oldParamPatterns =
+            [
                 "\"Dynamic.sigma_range\":.*",
                 "\"Dynamic.sigma_gap\":.*",
                 "\"Dynamic.sigma_chem\":.*",
                 "\"Izhikevich_9P.V\": {(\\s+.*[^}]*?)}",
                 "\"Izhikevich_9P.u\": {(\\s+.*[^}]*?)}",
                 "\"Izhikevich_9P.U\": {(\\s+.*[^}]*?)}"
-            };
+            ];
             int prevLength = json.Length;
             foreach (string pattern in oldParamPatterns)
             {
@@ -340,7 +338,7 @@ namespace SiliFish.Repositories
         {
             Regex versionRegex = new("\"Version\": (.*),");
             Match version = versionRegex.Match(json);
-            List<string> list = new();
+            List<string> list = [];
             if (!version.Success)//Version is added on 2.2.3
             {
                 //Compare to Version 0.1
@@ -497,7 +495,7 @@ namespace SiliFish.Repositories
                     //pool.GetCells().Select(c => Vdata_list.TryAdd(c.ID, c.V));
                     foreach (Cell c in pool.GetCells())
                     {
-                        Vdata_list.Add(c.ID, c.V);
+                        Vdata_list.Add(c.ID, c.V.AsArray());
                         if (jncTracking)
                         {
                             c.GapJunctions.Where(jnc => jnc.Cell2 == c).ToList().ForEach(jnc => Gapdata_list.TryAdd(jnc.ID, jnc.InputCurrent));
@@ -701,7 +699,7 @@ namespace SiliFish.Repositories
                     while (iter < contents.Length)
                     {
                         StimulusTemplate stim = new();
-                        stim.ImportValues(contents[iter++].Split(",").ToList());
+                        stim.ImportValues([.. contents[iter++].Split(",")]);
                         mt.StimulusTemplates.Add(stim);
                     }
                     mt.LinkObjects();
@@ -773,7 +771,7 @@ namespace SiliFish.Repositories
                     while (iter < contents.Length)
                     {
                         StimulusTemplate stim = new();
-                        stim.ImportValues(contents[iter++].Split(",").ToList());
+                        stim.ImportValues([.. contents[iter++].Split(",")]);
                         if (stim.TargetPool == cellPoolTemp.CellGroup)
                             mt.StimulusTemplates.Add(stim);
                     }
@@ -882,7 +880,7 @@ namespace SiliFish.Repositories
                 using FileStream fs = File.Open(filename, FileMode.Create, FileAccess.Write);
                 using StreamWriter sw = new(fs);
                 List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
-                        model is RunningModel modelRunning ? modelRunning.GetCellPools() : new();
+                        model is RunningModel modelRunning ? modelRunning.GetCellPools() : [];
                 sw.WriteLine(string.Join(",", CellPoolTemplate.ColumnNames));
                 foreach (CellPoolTemplate cpt in cellPools)
                 {
@@ -916,7 +914,7 @@ namespace SiliFish.Repositories
                     while (iter < contents.Length)
                     {
                         CellPoolTemplate cpt = new();
-                        cpt.ImportValues(contents[iter++].Split(",").ToList());
+                        cpt.ImportValues([.. contents[iter++].Split(",")]);
                         modelTemplate.AddCellPool(cpt);
                     }
                 }
@@ -926,7 +924,7 @@ namespace SiliFish.Repositories
                     while (iter < contents.Length)
                     {
                         CellPool cp = new();
-                        cp.ImportValues(contents[iter++].Split(",").ToList());
+                        cp.ImportValues([.. contents[iter++].Split(",")]);
                         modelRun.AddCellPool(cp);
                     }
                 }
@@ -1012,7 +1010,7 @@ namespace SiliFish.Repositories
                 while (iter < contents.Length)
                 {
                     InterPoolTemplate ipt = new();
-                    ipt.ImportValues(contents[iter++].Split(",").ToList());
+                    ipt.ImportValues([.. contents[iter++].Split(",")]);
                     //check whether it is part of what 
                     bool jncCheck = gap && ipt.ConnectionType == ConnectionType.Gap &&
                             (cpt == null || ipt.SourcePool == cpt.CellGroup || ipt.TargetPool == cpt.CellGroup);
@@ -1117,7 +1115,7 @@ namespace SiliFish.Repositories
                             jb = new ChemicalSynapse();
                     }
                     if (jb == null) continue;
-                    jb.ImportValues(line.Split(",").ToList());
+                    jb.ImportValues([.. line.Split(",")]);
                     //check whether it is part of what needs to be imported
                     bool jncCheck = jb is GapJunction gapjnc &&
                             (cellPool != null && (cellPool.Cells.FirstOrDefault(c => c.ID == jb.Source) != null || cellPool.Cells.FirstOrDefault(c => c.ID == jb.Target) != null) ||
@@ -1154,7 +1152,7 @@ namespace SiliFish.Repositories
             try
             {
                 List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
-                    model is RunningModel modelRunning ? modelRunning.GetCellPools() : new();
+                    model is RunningModel modelRunning ? modelRunning.GetCellPools() : [];
                 CreateWorkSheet(workbook, "Cell Pools", CellPoolTemplate.ColumnNames, cellPools.Cast<IDataExporterImporter>().ToList());
                 return true;
             }
@@ -1438,7 +1436,7 @@ namespace SiliFish.Repositories
                 int colindex = 1;
                 foreach (string s in columnNames)
                     workSheet.Cells[rowindex, colindex++].Value = s;
-                foreach (IDataExporterImporter jnc in objList)
+                foreach (IDataExporterImporter obj in objList)
                 {
                     colindex = 1;
                     rowindex++;
@@ -1456,7 +1454,7 @@ namespace SiliFish.Repositories
                         }
                         return CreateWorkSheet(workbook, sheetName, columnNames, objList.Skip(rowindex - 1).ToList());
                     }
-                    foreach (string s in jnc.ExportValues())
+                    foreach (string s in obj.ExportValues())
                         workSheet.Cells[rowindex, colindex++].Value = s;
                 }
                 return true;
@@ -1509,7 +1507,7 @@ namespace SiliFish.Repositories
                 workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
             }
 
-            if (model.Parameters != null && model.Parameters.Any())
+            if (model.Parameters != null && model.Parameters.Count != 0)
             {
                 workSheet = package.Workbook.Worksheets.Add("Parameters");
                 rowindex = 1;
@@ -1531,7 +1529,7 @@ namespace SiliFish.Repositories
             model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             SFDataContext dataContext = new();
 
-/*            workSheet.Cells[rowindex, 1].Value = "Model";
+/*          TODO  workSheet.Cells[rowindex, 1].Value = "Model";
             workSheet.Cells[rowindex++, 2].Value = model is RunningModel ? "Running Model" : "Model Template";
             workSheet.Cells[rowindex, 1].Value = "Version";
             workSheet.Cells[rowindex++, 2].Value = model.Version;
@@ -1564,7 +1562,7 @@ namespace SiliFish.Repositories
                 workSheet.Cells[rowindex++, 2].Value = prop.GetValue(model.Settings);
             }
 
-            if (model.Parameters != null && model.Parameters.Any())
+            if (model.Parameters != null && model.Parameters.Count != 0)
             {
                 workSheet = package.Workbook.Worksheets.Add("Parameters");
                 rowindex = 1;
@@ -1583,7 +1581,7 @@ namespace SiliFish.Repositories
 
         public static List<string> ReadXLCellsFromLine(ExcelWorksheet worksheet, int line, int maxCol = -1)
         {
-            List<string> cells = new();
+            List<string> cells = [];
             int colInd = 1;
             while (true)
             {

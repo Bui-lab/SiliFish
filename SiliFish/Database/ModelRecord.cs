@@ -10,12 +10,21 @@ using System.Threading.Tasks;
 namespace SiliFish.Database
 {
     [PrimaryKey(nameof(Id))]
-    internal class ModelRecord
+    public class ModelRecord
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateTime { get; set; } = DateTime.Now;
-        public string Json { get; set; }
+        public string Stats { get; set; }
+        public string JsonFile { get; set; }
+
+        public ModelRecord() { }
+        public ModelRecord(string name, DateTime dateTime, string stats)//TODO json is removed as can be quite large, find a solution
+        {
+            Name = name;
+            DateTime = dateTime;
+            Stats = stats;
+        }
     }
 }

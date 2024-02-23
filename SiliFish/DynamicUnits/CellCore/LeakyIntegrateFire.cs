@@ -1,6 +1,6 @@
-﻿using SiliFish.DynamicUnits.Firing;
-using SiliFish.Extensions;
+﻿using SiliFish.Extensions;
 using SiliFish.ModelUnits.Parameters;
+using SiliFish.Services.Dynamics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
@@ -41,12 +41,8 @@ namespace SiliFish.DynamicUnits
 
         public override (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
-            Dictionary<string, double> MinValues = new()
-            {
-            };
-            Dictionary<string, double> MaxValues = new()
-            {
-            };
+            Dictionary<string, double> MinValues = [];
+            Dictionary<string, double> MaxValues = [];
 
             return (MinValues, MaxValues);
         }

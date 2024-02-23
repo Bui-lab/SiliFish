@@ -19,6 +19,8 @@ namespace SiliFish.ModelUnits.Junction
         public double? FixedDuration_ms { get; set; } = null;// in ms
         public double? Delay_ms { get; set; } = null;//in ms
 
+        public virtual double Duration_ms { get => throw new NotImplementedException();  }
+
         /// <summary>
         /// used for import/exports
         /// </summary>
@@ -35,8 +37,8 @@ namespace SiliFish.ModelUnits.Junction
                 "Source", "Target",
                 "Connection Type", "Core Type",
                Enumerable.Range(1, JunctionCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
-                "Distance Mode", 
-                "Weight", "Fixed Duration (ms)", "Delay (ms)",
+                "Distance Mode",
+                "Fixed Duration (ms)", "Delay (ms)","Duration (readonly - in ms)",
                 "Active", 
                 TimeLine.ColumnNames);
 

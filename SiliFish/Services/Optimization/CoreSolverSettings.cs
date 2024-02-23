@@ -33,7 +33,7 @@ namespace SiliFish.Services.Optimization
         [JsonIgnore]
         public List<FitnessFunction> FitnessFunctions
         {
-            get => fitnessFunctions ??= new();
+            get => fitnessFunctions ??= [];
             set => fitnessFunctions = value;
         }
 
@@ -42,7 +42,7 @@ namespace SiliFish.Services.Optimization
             get => FitnessFunctions.ToArray();
             set
             {
-                fitnessFunctions = new();
+                fitnessFunctions = [];
                 
                 foreach (object item in value)
                 {
@@ -62,7 +62,7 @@ namespace SiliFish.Services.Optimization
         public Dictionary<string, double> MaxValueDictionary { get; set; }
 
         [JsonIgnore]
-        public List<string> SortedKeys { get { return ParamValues.Keys.OrderBy(k => k).ToList(); } }
+        public List<string> SortedKeys { get { return [.. ParamValues.Keys.OrderBy(k => k)]; } }
 
         public double[] MinValues
         {

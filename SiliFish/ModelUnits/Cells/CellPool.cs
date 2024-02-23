@@ -31,7 +31,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             get
             {
-                List<JunctionBase> jncs = new();
+                List<JunctionBase> jncs = [];
                 foreach (Cell cell in Cells)
                 {
                     if (cell is Neuron neuron)
@@ -62,12 +62,12 @@ namespace SiliFish.ModelUnits.Cells
         }
         public CellPool()
         {
-            Cells = new List<Cell>();
+            Cells = [];
         }
 
         public CellPool(CellPool cellPool):base(cellPool) 
         {
-            Cells = new List<Cell>();
+            Cells = [];
         }
 
         public CellPool(RunningModel model, CellPoolTemplate template, SagittalPlane leftright)
@@ -95,7 +95,7 @@ namespace SiliFish.ModelUnits.Cells
             ConductionVelocity = template.ConductionVelocity?.Clone();
             TimeLine_ms = new TimeLine(template.TimeLine_ms);
             Active = template.Active;
-            Cells = new List<Cell>();
+            Cells = [];
             GenerateCells();
         }
 
@@ -112,7 +112,7 @@ namespace SiliFish.ModelUnits.Cells
             PositionLeftRight = pos;
             ColumnIndex2D = placement;
             Color = color;
-            Cells = new List<Cell>();
+            Cells = [];
         }
 
         public override CellPoolTemplate CreateTemplateCopy()
@@ -137,13 +137,13 @@ namespace SiliFish.ModelUnits.Cells
         public override List<string> DiffersFrom(ModelUnitBase other)
         {
             if (other is not CellPool ocp) 
-                return new() { $"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})" }; 
-            List<string> differences = base.DiffersFrom(other) ?? new();
+                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"]; 
+            List<string> differences = base.DiffersFrom(other) ?? [];
             List<string> diffs = ListDiffersFrom(Cells.Select(c => c as ModelUnitBase).ToList(),
                 ocp.Cells.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)
                 differences.AddRange(diffs);
-            if (differences.Any())
+            if (differences.Count != 0)
                 return differences;
             return null;
         }
@@ -175,15 +175,15 @@ namespace SiliFish.ModelUnits.Cells
             Cell midCell;
             if (minSomite == maxSomite) //check the cell with middle sequence
             {
-                List<Cell> cells = Cells.OrderBy(c => c.Sequence).ToList();
+                List<Cell> cells = [.. Cells.OrderBy(c => c.Sequence)];
                 midCell = cells[Cells.Count / 2];
             }
             else
             {
                 double avgSomite = (minSomite + maxSomite) / 2;
                 double minDistance = Cells.Min(c => Math.Abs(c.Somite - avgSomite));
-                List<Cell> midSomiteCells = Cells.Where(c => c.Somite - avgSomite == minDistance).OrderBy(c => c.Sequence).ToList();
-                if (!midSomiteCells.Any())
+                List<Cell> midSomiteCells = [.. Cells.Where(c => c.Somite - avgSomite == minDistance).OrderBy(c => c.Sequence)];
+                if (midSomiteCells.Count == 0)
                     return (0, 0, 0);
                 midCell = midSomiteCells[midSomiteCells.Count / 2];
             }
@@ -253,7 +253,7 @@ namespace SiliFish.ModelUnits.Cells
             if (somiteSelection.SomiteSelection == PlotSomiteSelection.All)
                 return Cells.Select(c => c.Somite).Distinct().AsEnumerable();
 
-            List<int> som = new();
+            List<int> som = [];
             if (somiteSelection.SomiteSelection == PlotSomiteSelection.Single)
             {
                 som.Add(somiteSelection.NSomite);
@@ -289,11 +289,11 @@ namespace SiliFish.ModelUnits.Cells
             if (cellSelection.SomiteSelection == PlotSomiteSelection.All && cellSelection.CellSelection == PlotCellSelection.All)
                 return Cells.AsEnumerable();
 
-            if (!Cells.Any())
+            if (Cells.Count == 0)
                 return Cells.AsEnumerable();
 
             List<int> som = GetSomites(cellSelection).ToList();
-            List<int> seq = new();
+            List<int> seq = [];
 
             if (cellSelection.CellSelection == PlotCellSelection.Single)
             {
@@ -317,7 +317,7 @@ namespace SiliFish.ModelUnits.Cells
                 .Where(c =>
                 (cellSelection.CellSelection != PlotCellSelection.Spiking || c.IsSpiking(iStart, iEnd)) &&
                 (cellSelection.CellSelection != PlotCellSelection.NonSpiking || !c.IsSpiking(iStart, iEnd)) &&
-                (c.Somite < 0 || !som.Any() || som.Contains(c.Somite)) && (!seq.Any() || seq.Contains(c.Sequence)))
+                (c.Somite < 0 || som.Count == 0 || som.Contains(c.Somite)) && (seq.Count == 0 || seq.Contains(c.Sequence)))
                 .OrderBy(c => c.Somite)
                 .ThenBy(c => c.Sequence)
                 .Distinct()
@@ -334,7 +334,7 @@ namespace SiliFish.ModelUnits.Cells
             ModelDimensions MD = Model.ModelDimensions;
             List<int> somites = PerSomiteOrTotal == CountingMode.PerSomite ? 
                 Util.ParseRange(SomiteRange, defMin: 1, defMax: MD.NumberOfSomites) :
-                new List<int>() { -1 };
+                [-1];
 
             double somiteLength = 0;
             if (PerSomiteOrTotal == CountingMode.Total)
@@ -384,7 +384,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public void DeleteCells()
         {
-            while (Cells.Any())
+            while (Cells.Count != 0)
             {
                 Cell c = Cells.First();
                 c.ClearLinks();
@@ -393,28 +393,28 @@ namespace SiliFish.ModelUnits.Cells
         }
         public int GetMaxCellSomite()
         {
-            if (Cells != null && Cells.Any())
+            if (Cells != null && Cells.Count != 0)
                 return Cells.Max(c => c.Somite);
             return 0;
         }
 
         public int GetMaxCellSequence()
         {
-            if (Cells != null && Cells.Any())
+            if (Cells != null && Cells.Count != 0)
                 return Cells.Max(c => c.Sequence);
             return 0;
         }
 
         public int GetMaxCellSequence(int somite)
         {
-            if (Cells != null && Cells.Any())
+            if (Cells != null && Cells.Count != 0)
                 return Cells.Where(c => c.Somite == somite).Max(c => c.Sequence);
             return 0;
         }
 
         public bool HasCells()
         {
-            return Cells != null && Cells.Any();
+            return Cells != null && Cells.Count != 0;
         }
         #endregion
 
@@ -564,15 +564,15 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (stimulus == null)
                 return;
-            List<int> somites = new();
-            List<int> seqs = new();
+            List<int> somites = [];
+            List<int> seqs = [];
             if (!TargetSomite.StartsWith("All"))
                 somites = Util.ParseRange(TargetSomite, 1, Model.ModelDimensions.NumberOfSomites);
             if (!TargetCell.StartsWith("All"))
                 seqs = Util.ParseRange(TargetCell, 1, this.Cells.Max(c=>c.Sequence));
 
             foreach (Cell cell in GetCells()
-                .Where(c => (!somites.Any() || somites.Contains(c.Somite)) && (!seqs.Any() || seqs.Contains(c.Sequence))))
+                .Where(c => (somites.Count == 0 || somites.Contains(c.Somite)) && (seqs.Count == 0 || seqs.Contains(c.Sequence))))
             {
                 TimeLine timeLine = new(stimulus.TimeLine_ms);
                 double rc_delay = stimulus.DelayPerSomite * (cell.Somite - 1);
@@ -585,7 +585,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<StimulusBase> GetStimuli()
         {
-            List<StimulusBase> listStimuli = new();
+            List<StimulusBase> listStimuli = [];
             foreach (Cell cell in Cells)
             {
                 foreach (Stimulus stim in cell.Stimuli.ListOfStimulus)

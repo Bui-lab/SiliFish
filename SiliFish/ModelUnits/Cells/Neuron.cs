@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace SiliFish.ModelUnits.Cells
 {
@@ -47,7 +48,7 @@ namespace SiliFish.ModelUnits.Cells
         /// <summary>
         /// Used as a template
         /// </summary>
-        public Neuron(RunningModel model, string coreType, string group, int somite, int seq, 
+        public Neuron(RunningModel model, string coreType, string group, int somite, int seq,
             Dictionary<string, double> cellParams, double cv, double ascAxon, double descAxon,
             TimeLine timeline = null)
         {
@@ -71,7 +72,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public Neuron(RunningModel model, string coreType, string group)
             : this(model, coreType, group, -1, -1, null, 0, 0, 0)
-        { 
+        {
         }
 
         public override ModelUnitBase CreateCopy()
@@ -97,7 +98,7 @@ namespace SiliFish.ModelUnits.Cells
                 return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"];
 
             List<string> differences = base.DiffersFrom(other) ?? [];
-            List<string> diffs = ListDiffersFrom(Terminals.Select(c => c as ModelUnitBase).ToList(), 
+            List<string> diffs = ListDiffersFrom(Terminals.Select(c => c as ModelUnitBase).ToList(),
                 oc.Terminals.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)
                 differences.AddRange(diffs);
@@ -140,17 +141,22 @@ namespace SiliFish.ModelUnits.Cells
         public override void SortJunctionsBySource()
         {
             base.SortJunctionsBySource();
-            Terminals = Terminals.OrderBy(jnc => jnc.PreNeuron.ID).ToList();
+            Terminals = [.. Terminals.OrderBy(jnc => jnc.PreNeuron.ID)];
         }
 
         public override void SortJunctionsByTarget()
         {
             base.SortJunctionsByTarget();
-            Terminals = Terminals.OrderBy(jnc => jnc.PostCell.ID).ToList();
+            Terminals = [.. Terminals.OrderBy(jnc => jnc.PostCell.ID)];
         }
         #endregion
 
         #region Connection functions
+        public override int TimeDistance()
+        {
+            return Math.Max(Terminals?.Select(junc => junc.iDuration).DefaultIfEmpty().Max() ?? 0, base.TimeDistance());
+        }
+
         public ChemicalSynapse CreateChemicalSynapse(Cell postCell, string coreType, Dictionary<string, double> param, DistanceMode distanceMode)
         {
             ChemicalSynapse jnc = new(this, postCell, coreType, param, distanceMode);
@@ -222,14 +228,31 @@ namespace SiliFish.ModelUnits.Cells
         #endregion
 
         #region Runtime
+
+        public override void MemoryAllocation(RunParam runParam, DBLink dBLink)
+        {
+            base.MemoryAllocation(runParam, dBLink);
+            foreach (ChemicalSynapse jnc in Synapses)
+                jnc.MemoryAllocation(runParam, dBLink);
+        }
+        public override void MemoryFlush()
+        {
+            base.MemoryFlush();
+            foreach (ChemicalSynapse jnc in Synapses)
+                jnc.MemoryFlush();
+        }
         public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {
             base.InitForSimulation(runParam, ref uniqueID);
             foreach (ChemicalSynapse jnc in Synapses)
                 jnc.InitForSimulation(runParam, ref uniqueID);
-
         }
-
+        public override void FinalizeSimulation(RunParam runParam, DBLink dbLink)
+        {
+            base.FinalizeSimulation(runParam, dbLink);
+            foreach (ChemicalSynapse jnc in Synapses)
+                jnc.FinalizeSimulation(runParam, dbLink);
+        }
         public override void CalculateCellularOutputs(int t)
         {
             try
@@ -258,7 +281,7 @@ namespace SiliFish.ModelUnits.Cells
                     foreach (ChemicalSynapse syn in Synapses.Where(syn => syn.Active))
                     {
                         if (syn.IsActive(timeIndex))
-                        { 
+                        {
                             ISyn += syn.Core.ISyn;
                             ChemSynapseCore cs = syn.Core as ChemSynapseCore;
                             if (cs.ERev < minV)
@@ -303,11 +326,13 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override bool IsSpiking(int iStart = 0, int iEnd = -1)
         {
-            return V.HasSpike(Core.Vthreshold, iStart, iEnd);
+            if (V == null)
+                return false;
+            return V.AsArray().HasSpike(Core.Vthreshold, iStart, iEnd);
         }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
-            return V.GetSpikeIndices(Core.Vmax, iStart, iEnd, buffer);
+            return V.AsArray().GetSpikeIndices(Core.Vmax, iStart, iEnd, buffer);
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
@@ -316,7 +341,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (ChemicalSynapse jnc in Synapses)
             {
                 colors.TryAdd(jnc.PreNeuron.ID, jnc.PreNeuron.CellPool.Color);
-                AffarentCurrents.AddObject(jnc.PreNeuron.ID, jnc.InputCurrent.ToList());
+                AffarentCurrents.AddObject(jnc.PreNeuron.ID, [.. jnc.InputCurrent]);
             }
             return (colors, AffarentCurrents);
         }
@@ -327,7 +352,7 @@ namespace SiliFish.ModelUnits.Cells
             foreach (ChemicalSynapse jnc in Terminals)
             {
                 colors.TryAdd(jnc.PostCell.ID, jnc.PostCell.CellPool.Color);
-                EfferentCurrents.AddObject(jnc.PostCell.ID, jnc.InputCurrent.ToList());
+                EfferentCurrents.AddObject(jnc.PostCell.ID, [.. jnc.InputCurrent]);
             }
             return (colors, EfferentCurrents);
         }

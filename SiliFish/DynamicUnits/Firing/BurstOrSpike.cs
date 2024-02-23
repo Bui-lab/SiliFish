@@ -12,7 +12,7 @@ namespace SiliFish.DynamicUnits
     public class BurstOrSpike
     {
         public static double MinBurstSpikeCount { get; set; } = 2; //the number of minimum spikes required
-        public List<double> SpikeTimeList = new();
+        public List<double> SpikeTimeList = [];
         public bool IsSpike { get { return SpikeTimeList?.Count == 1; } }
         public bool IsDoublet { get { return SpikeTimeList?.Count == 2; } }
         public bool IsBurst { get { return SpikeTimeList?.Count >= MinBurstSpikeCount; } }
@@ -29,7 +29,7 @@ namespace SiliFish.DynamicUnits
                 lastInterval = 0;
                 return null;
             }
-            List<BurstOrSpike> burstsOrSpikes = new();
+            List<BurstOrSpike> burstsOrSpikes = [];
             BurstOrSpike burstOrSpike = new();
             burstsOrSpikes.Add(burstOrSpike);
             double lastTime = SpikeList[0] * dt;
@@ -37,6 +37,7 @@ namespace SiliFish.DynamicUnits
             lastInterval = double.NaN;
             bool spreadingOut = true;
             int sensitivity = BitConverter.GetBytes(decimal.GetBits((decimal)dt)[3])[2];
+            if (sensitivity > 15) sensitivity = 15; //max precision of double
             for (int spikeTimeIndex = 1; spikeTimeIndex < SpikeList.Count; spikeTimeIndex++)
             {
                 double curTime = SpikeList[spikeTimeIndex] * dt;
@@ -60,10 +61,10 @@ namespace SiliFish.DynamicUnits
                 lastTime = curTime;
             }
             //review bursts to remove the wide intervals that doesn't fit
-            List<BurstOrSpike> burstsOrSpikesFiltered = new();
+            List<BurstOrSpike> burstsOrSpikesFiltered = [];
             foreach(BurstOrSpike burst in  burstsOrSpikes)
             {
-                List<double> intervals = new();
+                List<double> intervals = [];
                 if (burst.SpikeCount <= 2)
                     burstsOrSpikesFiltered.Add(burst);
                 else

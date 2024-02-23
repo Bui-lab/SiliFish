@@ -28,9 +28,9 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             foreach (var jncGroup in Junctions.GroupBy(j => j is GapJunction gj ? gj.Cell2.ID : j is ChemicalSynapse syn ? syn.PostCell.ID : ""))
             {
-                List<Cell> cells = new();
-                List<GapJunction> gapJunctions = new();
-                List<ChemicalSynapse> synapses = new();
+                List<Cell> cells = [];
+                List<GapJunction> gapJunctions = [];
+                List<ChemicalSynapse> synapses = [];
                 foreach (JunctionBase junction in jncGroup)
                 {
                     foreach (JunctionBase jnc in Junctions)

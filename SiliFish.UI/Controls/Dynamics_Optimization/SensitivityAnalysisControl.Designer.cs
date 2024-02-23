@@ -28,134 +28,193 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lNumOfValues = new System.Windows.Forms.Label();
-            this.eNumOfValues = new System.Windows.Forms.TextBox();
-            this.cbLogScale = new System.Windows.Forms.CheckBox();
-            this.eMaxMultiplier = new System.Windows.Forms.TextBox();
-            this.lDash = new System.Windows.Forms.Label();
-            this.eMinMultiplier = new System.Windows.Forms.TextBox();
-            this.lMultiplierRange = new System.Windows.Forms.Label();
-            this.ddParameter = new System.Windows.Forms.ComboBox();
-            this.lParameter = new System.Windows.Forms.Label();
-            this.btnRunAnalysis = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            lNumOfValues = new Label();
+            eNumOfValues = new TextBox();
+            cbLogScale = new CheckBox();
+            eMaxMultiplier = new TextBox();
+            lDash = new Label();
+            eMinMultiplier = new TextBox();
+            lMultiplierRange = new Label();
+            ddParameter = new ComboBox();
+            lParameter = new Label();
+            btnRunAnalysis = new Button();
+            pParameters = new Panel();
+            pSingleParam = new Panel();
+            eParameter = new TextBox();
+            lSingleParameter = new Label();
+            pRange = new Panel();
+            pParameters.SuspendLayout();
+            pSingleParam.SuspendLayout();
+            pRange.SuspendLayout();
+            SuspendLayout();
             // 
             // lNumOfValues
             // 
-            this.lNumOfValues.AutoSize = true;
-            this.lNumOfValues.Location = new System.Drawing.Point(3, 63);
-            this.lNumOfValues.Name = "lNumOfValues";
-            this.lNumOfValues.Size = new System.Drawing.Size(64, 15);
-            this.lNumOfValues.TabIndex = 40;
-            this.lNumOfValues.Text = "# of Values";
+            lNumOfValues.AutoSize = true;
+            lNumOfValues.Location = new Point(4, 35);
+            lNumOfValues.Name = "lNumOfValues";
+            lNumOfValues.Size = new Size(64, 15);
+            lNumOfValues.TabIndex = 40;
+            lNumOfValues.Text = "# of Values";
             // 
             // eNumOfValues
             // 
-            this.eNumOfValues.Location = new System.Drawing.Point(97, 60);
-            this.eNumOfValues.Name = "eNumOfValues";
-            this.eNumOfValues.Size = new System.Drawing.Size(41, 23);
-            this.eNumOfValues.TabIndex = 39;
-            this.eNumOfValues.Text = "10";
+            eNumOfValues.Location = new Point(97, 31);
+            eNumOfValues.Name = "eNumOfValues";
+            eNumOfValues.Size = new Size(41, 23);
+            eNumOfValues.TabIndex = 39;
+            eNumOfValues.Text = "10";
             // 
             // cbLogScale
             // 
-            this.cbLogScale.AutoSize = true;
-            this.cbLogScale.Location = new System.Drawing.Point(4, 89);
-            this.cbLogScale.Name = "cbLogScale";
-            this.cbLogScale.Size = new System.Drawing.Size(76, 19);
-            this.cbLogScale.TabIndex = 38;
-            this.cbLogScale.Text = "Log Scale";
-            this.cbLogScale.UseVisualStyleBackColor = true;
+            cbLogScale.AutoSize = true;
+            cbLogScale.Location = new Point(4, 61);
+            cbLogScale.Name = "cbLogScale";
+            cbLogScale.Size = new Size(76, 19);
+            cbLogScale.TabIndex = 38;
+            cbLogScale.Text = "Log Scale";
+            cbLogScale.UseVisualStyleBackColor = true;
             // 
             // eMaxMultiplier
             // 
-            this.eMaxMultiplier.Location = new System.Drawing.Point(149, 35);
-            this.eMaxMultiplier.Name = "eMaxMultiplier";
-            this.eMaxMultiplier.Size = new System.Drawing.Size(41, 23);
-            this.eMaxMultiplier.TabIndex = 36;
-            this.eMaxMultiplier.Text = "10";
+            eMaxMultiplier.Location = new Point(149, 6);
+            eMaxMultiplier.Name = "eMaxMultiplier";
+            eMaxMultiplier.Size = new Size(41, 23);
+            eMaxMultiplier.TabIndex = 36;
+            eMaxMultiplier.Text = "10";
             // 
             // lDash
             // 
-            this.lDash.AutoSize = true;
-            this.lDash.Location = new System.Drawing.Point(138, 38);
-            this.lDash.Name = "lDash";
-            this.lDash.Size = new System.Drawing.Size(12, 15);
-            this.lDash.TabIndex = 37;
-            this.lDash.Text = "-";
+            lDash.AutoSize = true;
+            lDash.Location = new Point(138, 9);
+            lDash.Name = "lDash";
+            lDash.Size = new Size(12, 15);
+            lDash.TabIndex = 37;
+            lDash.Text = "-";
             // 
             // eMinMultiplier
             // 
-            this.eMinMultiplier.Location = new System.Drawing.Point(97, 35);
-            this.eMinMultiplier.Name = "eMinMultiplier";
-            this.eMinMultiplier.Size = new System.Drawing.Size(41, 23);
-            this.eMinMultiplier.TabIndex = 35;
-            this.eMinMultiplier.Text = "0.1";
+            eMinMultiplier.Location = new Point(97, 6);
+            eMinMultiplier.Name = "eMinMultiplier";
+            eMinMultiplier.Size = new Size(41, 23);
+            eMinMultiplier.TabIndex = 35;
+            eMinMultiplier.Text = "0.1";
             // 
             // lMultiplierRange
             // 
-            this.lMultiplierRange.AutoSize = true;
-            this.lMultiplierRange.Location = new System.Drawing.Point(3, 38);
-            this.lMultiplierRange.Name = "lMultiplierRange";
-            this.lMultiplierRange.Size = new System.Drawing.Size(94, 15);
-            this.lMultiplierRange.TabIndex = 34;
-            this.lMultiplierRange.Text = "Multiplier Range";
+            lMultiplierRange.AutoSize = true;
+            lMultiplierRange.Location = new Point(4, 10);
+            lMultiplierRange.Name = "lMultiplierRange";
+            lMultiplierRange.Size = new Size(94, 15);
+            lMultiplierRange.TabIndex = 34;
+            lMultiplierRange.Text = "Multiplier Range";
             // 
             // ddParameter
             // 
-            this.ddParameter.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ddParameter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddParameter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddParameter.FormattingEnabled = true;
-            this.ddParameter.Location = new System.Drawing.Point(70, 6);
-            this.ddParameter.Name = "ddParameter";
-            this.ddParameter.Size = new System.Drawing.Size(121, 23);
-            this.ddParameter.TabIndex = 33;
+            ddParameter.BackColor = Color.WhiteSmoke;
+            ddParameter.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddParameter.FlatStyle = FlatStyle.Flat;
+            ddParameter.FormattingEnabled = true;
+            ddParameter.Location = new Point(78, 3);
+            ddParameter.Name = "ddParameter";
+            ddParameter.Size = new Size(121, 23);
+            ddParameter.TabIndex = 33;
             // 
             // lParameter
             // 
-            this.lParameter.AutoSize = true;
-            this.lParameter.Location = new System.Drawing.Point(3, 12);
-            this.lParameter.Name = "lParameter";
-            this.lParameter.Size = new System.Drawing.Size(61, 15);
-            this.lParameter.TabIndex = 32;
-            this.lParameter.Text = "Parameter";
+            lParameter.AutoSize = true;
+            lParameter.Location = new Point(4, 7);
+            lParameter.Name = "lParameter";
+            lParameter.Size = new Size(61, 15);
+            lParameter.TabIndex = 32;
+            lParameter.Text = "Parameter";
             // 
             // btnRunAnalysis
             // 
-            this.btnRunAnalysis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(125)))), ((int)(((byte)(139)))));
-            this.btnRunAnalysis.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-            this.btnRunAnalysis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRunAnalysis.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnRunAnalysis.ForeColor = System.Drawing.Color.White;
-            this.btnRunAnalysis.Location = new System.Drawing.Point(128, 89);
-            this.btnRunAnalysis.Name = "btnRunAnalysis";
-            this.btnRunAnalysis.Size = new System.Drawing.Size(63, 23);
-            this.btnRunAnalysis.TabIndex = 31;
-            this.btnRunAnalysis.Text = "Run";
-            this.btnRunAnalysis.UseVisualStyleBackColor = false;
-            this.btnRunAnalysis.Click += new System.EventHandler(this.btnRunAnalysis_Click);
+            btnRunAnalysis.BackColor = Color.FromArgb(96, 125, 139);
+            btnRunAnalysis.FlatAppearance.BorderColor = Color.LightGray;
+            btnRunAnalysis.FlatStyle = FlatStyle.Flat;
+            btnRunAnalysis.Font = new Font("Segoe UI", 8F);
+            btnRunAnalysis.ForeColor = Color.White;
+            btnRunAnalysis.Location = new Point(128, 60);
+            btnRunAnalysis.Name = "btnRunAnalysis";
+            btnRunAnalysis.Size = new Size(63, 23);
+            btnRunAnalysis.TabIndex = 31;
+            btnRunAnalysis.Text = "Run";
+            btnRunAnalysis.UseVisualStyleBackColor = false;
+            btnRunAnalysis.Click += btnRunAnalysis_Click;
+            // 
+            // pParameters
+            // 
+            pParameters.Controls.Add(lParameter);
+            pParameters.Controls.Add(ddParameter);
+            pParameters.Dock = DockStyle.Top;
+            pParameters.Location = new Point(0, 0);
+            pParameters.Name = "pParameters";
+            pParameters.Size = new Size(202, 30);
+            pParameters.TabIndex = 41;
+            // 
+            // pSingleParam
+            // 
+            pSingleParam.Controls.Add(eParameter);
+            pSingleParam.Controls.Add(lSingleParameter);
+            pSingleParam.Dock = DockStyle.Top;
+            pSingleParam.Location = new Point(0, 30);
+            pSingleParam.Name = "pSingleParam";
+            pSingleParam.Size = new Size(202, 30);
+            pSingleParam.TabIndex = 42;
+            // 
+            // eParameter
+            // 
+            eParameter.Location = new Point(97, 4);
+            eParameter.Name = "eParameter";
+            eParameter.Size = new Size(93, 23);
+            eParameter.TabIndex = 36;
+            eParameter.Text = "0.1";
+            // 
+            // lSingleParameter
+            // 
+            lSingleParameter.AutoSize = true;
+            lSingleParameter.Location = new Point(4, 7);
+            lSingleParameter.Name = "lSingleParameter";
+            lSingleParameter.Size = new Size(61, 15);
+            lSingleParameter.TabIndex = 32;
+            lSingleParameter.Text = "Parameter";
+            // 
+            // pRange
+            // 
+            pRange.Controls.Add(eMinMultiplier);
+            pRange.Controls.Add(lMultiplierRange);
+            pRange.Controls.Add(btnRunAnalysis);
+            pRange.Controls.Add(lNumOfValues);
+            pRange.Controls.Add(lDash);
+            pRange.Controls.Add(eNumOfValues);
+            pRange.Controls.Add(eMaxMultiplier);
+            pRange.Controls.Add(cbLogScale);
+            pRange.Dock = DockStyle.Top;
+            pRange.Location = new Point(0, 60);
+            pRange.Name = "pRange";
+            pRange.Size = new Size(202, 88);
+            pRange.TabIndex = 43;
             // 
             // SensitivityAnalysisControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.lNumOfValues);
-            this.Controls.Add(this.eNumOfValues);
-            this.Controls.Add(this.cbLogScale);
-            this.Controls.Add(this.eMaxMultiplier);
-            this.Controls.Add(this.lDash);
-            this.Controls.Add(this.eMinMultiplier);
-            this.Controls.Add(this.lMultiplierRange);
-            this.Controls.Add(this.ddParameter);
-            this.Controls.Add(this.lParameter);
-            this.Controls.Add(this.btnRunAnalysis);
-            this.Name = "SensitivityAnalysisControl";
-            this.Size = new System.Drawing.Size(202, 118);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            BackColor = Color.White;
+            Controls.Add(pRange);
+            Controls.Add(pSingleParam);
+            Controls.Add(pParameters);
+            Name = "SensitivityAnalysisControl";
+            Size = new Size(202, 149);
+            pParameters.ResumeLayout(false);
+            pParameters.PerformLayout();
+            pSingleParam.ResumeLayout(false);
+            pSingleParam.PerformLayout();
+            pRange.ResumeLayout(false);
+            pRange.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -170,5 +229,10 @@
         private ComboBox ddParameter;
         private Label lParameter;
         private Button btnRunAnalysis;
+        private Panel pParameters;
+        private Panel pSingleParam;
+        private TextBox eParameter;
+        private Label lSingleParameter;
+        private Panel pRange;
     }
 }

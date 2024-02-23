@@ -9,7 +9,7 @@ namespace SiliFish.DataTypes
 {
     public class TimeLine : IDataExporterImporter
     {
-        private List<(double start, double end)> Periods = new();
+        private List<(double start, double end)> Periods = [];
         //private Dictionary<(int start, int end), (int active, int rest)> Cycles = new();
         public string PeriodsJSON//Required for JSON
         {
@@ -38,10 +38,10 @@ namespace SiliFish.DataTypes
 
 
         [JsonIgnore, Browsable(false)]
-        public static List<string> ColumnNames { get; } = new() { "Periods" };
+        public static List<string> ColumnNames { get; } = ["Periods"];
 
         public List<string> ExportValues() =>
-            new() { string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))};
+            [string.Join(";", Periods.Select(p => $"{p.start} - {p.end}"))];
 
         public void ImportValues(List<string> values)
         {
@@ -75,7 +75,7 @@ namespace SiliFish.DataTypes
 
         public TimeLine(TimeLine tl)
         {
-            if (tl != null && tl.Periods.Any())
+            if (tl != null && tl.Periods.Count != 0)
                 Periods = new List<(double start, double end)>(tl.Periods);
         }
         public void AddTimeRange(double start_ms, double? end_ms = null)

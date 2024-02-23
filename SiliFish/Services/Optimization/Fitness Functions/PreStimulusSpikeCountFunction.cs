@@ -1,5 +1,5 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.DynamicUnits.Firing;
+using SiliFish.Services.Dynamics;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;

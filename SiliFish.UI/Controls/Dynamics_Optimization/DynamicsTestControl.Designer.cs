@@ -32,61 +32,64 @@
             eRheobaseLimit = new NumericUpDown();
             lRheobaseLimit = new Label();
             btnRheobase = new Button();
-            lPlotdt = new Label();
-            edt = new NumericUpDown();
             ePlotEndTime = new NumericUpDown();
             eStepEndTime = new NumericUpDown();
             lStepStartTime = new Label();
             eStepStartTime = new NumericUpDown();
             lStepEndTime = new Label();
             lPlotEndTime = new Label();
-            grRheobase = new GroupBox();
             lRheobaseWarning = new Label();
             eRheobaseDuration = new NumericUpDown();
-            label1 = new Label();
+            lRheobaseDuration = new Label();
             eRheobase = new TextBox();
             lRheobase = new Label();
-            stimulusControl1 = new StimulusSettingsControl();
             rbSingleEntryStimulus = new RadioButton();
             rbRheobaseBasedStimulus = new RadioButton();
             splitMain = new SplitContainer();
             splitLeft = new SplitContainer();
             pfParams = new FlowLayoutPanel();
             pCoreType = new Panel();
+            eDeltaT = new NumericUpDown();
+            lDeltaT = new Label();
             pLineCoreType = new Panel();
             ddCoreType = new ComboBox();
             lCoreType = new Label();
-            pRheobase = new Panel();
             pTop = new Panel();
             linkUseUpdatedParams = new LinkLabel();
+            tabDynamics = new TabControl();
+            tRheobase = new TabPage();
+            tDynamics = new TabPage();
             tabAnalysis = new TabControl();
-            tTest = new TabPage();
+            tStimulusTest = new TabPage();
             pFlow = new FlowLayoutPanel();
-            pFlow1 = new Panel();
-            pSep1 = new Panel();
-            lms = new Label();
-            lms2 = new Label();
             pFlow2 = new Panel();
             eMultipleStimulus = new TextBox();
             rbMultipleEntry = new RadioButton();
             lMultipleEntryNote = new Label();
             pFlow5 = new Panel();
             btnDynamicsRun = new Button();
-            cbAutoDrawPlots = new CheckBox();
-            tSensitivityAnalysis = new TabPage();
+            tParameterAnalysis = new TabPage();
             grFiring = new GroupBox();
             sensitivityAnalysisFiring = new SensitivityAnalysisControl();
             grRheoSens = new GroupBox();
             sensitivityAnalysisRheobase = new SensitivityAnalysisControl();
+            tSensitivityAnalysis = new TabPage();
+            sensitivityAnalysisDeltaT = new SensitivityAnalysisControl();
+            pFlow1 = new Panel();
+            stimulusSettingsControl1 = new StimulusSettingsControl();
+            pSep1 = new Panel();
+            lms = new Label();
+            lms2 = new Label();
             pLoadSaveParams = new Panel();
             linkLoadCoreUnit = new LinkLabel();
+            cbAutoDrawPlots = new CheckBox();
             linkSaveCoreUnit = new LinkLabel();
             splitGAAndPlots = new SplitContainer();
             pOptimize = new Panel();
             gaControl = new GAControl();
             webViewPlots = new Microsoft.Web.WebView2.WinForms.WebView2();
-            pPlots = new Panel();
-            panel1 = new Panel();
+            pPlotsTop = new Panel();
+            pPlotsMain = new Panel();
             grPlotSelection = new GroupBox();
             cbV = new CheckBox();
             cbStimulus = new CheckBox();
@@ -104,11 +107,9 @@
             pDistinguisherBottom = new Panel();
             pDistinguisherRight = new Panel();
             ((System.ComponentModel.ISupportInitialize)eRheobaseLimit).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)edt).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ePlotEndTime).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eStepEndTime).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eStepStartTime).BeginInit();
-            grRheobase.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eRheobaseDuration).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
@@ -119,17 +120,21 @@
             splitLeft.Panel2.SuspendLayout();
             splitLeft.SuspendLayout();
             pCoreType.SuspendLayout();
-            pRheobase.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)eDeltaT).BeginInit();
             pTop.SuspendLayout();
+            tabDynamics.SuspendLayout();
+            tRheobase.SuspendLayout();
+            tDynamics.SuspendLayout();
             tabAnalysis.SuspendLayout();
-            tTest.SuspendLayout();
+            tStimulusTest.SuspendLayout();
             pFlow.SuspendLayout();
-            pFlow1.SuspendLayout();
             pFlow2.SuspendLayout();
             pFlow5.SuspendLayout();
-            tSensitivityAnalysis.SuspendLayout();
+            tParameterAnalysis.SuspendLayout();
             grFiring.SuspendLayout();
             grRheoSens.SuspendLayout();
+            tSensitivityAnalysis.SuspendLayout();
+            pFlow1.SuspendLayout();
             pLoadSaveParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitGAAndPlots).BeginInit();
             splitGAAndPlots.Panel1.SuspendLayout();
@@ -137,14 +142,14 @@
             splitGAAndPlots.SuspendLayout();
             pOptimize.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewPlots).BeginInit();
-            pPlots.SuspendLayout();
+            pPlotsTop.SuspendLayout();
             grPlotSelection.SuspendLayout();
             SuspendLayout();
             // 
             // eRheobaseLimit
             // 
             eRheobaseLimit.Increment = new decimal(new int[] { 10, 0, 0, 0 });
-            eRheobaseLimit.Location = new Point(70, 22);
+            eRheobaseLimit.Location = new Point(73, 8);
             eRheobaseLimit.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             eRheobaseLimit.Name = "eRheobaseLimit";
             eRheobaseLimit.Size = new Size(54, 23);
@@ -154,7 +159,7 @@
             // lRheobaseLimit
             // 
             lRheobaseLimit.AutoSize = true;
-            lRheobaseLimit.Location = new Point(3, 26);
+            lRheobaseLimit.Location = new Point(6, 12);
             lRheobaseLimit.Name = "lRheobaseLimit";
             lRheobaseLimit.Size = new Size(34, 15);
             lRheobaseLimit.TabIndex = 14;
@@ -166,33 +171,13 @@
             btnRheobase.FlatAppearance.BorderColor = Color.LightGray;
             btnRheobase.FlatStyle = FlatStyle.Flat;
             btnRheobase.ForeColor = Color.White;
-            btnRheobase.Location = new Point(128, 22);
+            btnRheobase.Location = new Point(131, 8);
             btnRheobase.Name = "btnRheobase";
             btnRheobase.Size = new Size(76, 25);
             btnRheobase.TabIndex = 13;
             btnRheobase.Text = "Calculate";
             btnRheobase.UseVisualStyleBackColor = false;
             btnRheobase.Click += btnRheobase_Click;
-            // 
-            // lPlotdt
-            // 
-            lPlotdt.AutoSize = true;
-            lPlotdt.Location = new Point(4, 66);
-            lPlotdt.Name = "lPlotdt";
-            lPlotdt.Size = new Size(43, 15);
-            lPlotdt.TabIndex = 10;
-            lPlotdt.Text = "Plot Δt";
-            // 
-            // edt
-            // 
-            edt.DecimalPlaces = 2;
-            edt.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            edt.Location = new Point(67, 62);
-            edt.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
-            edt.Name = "edt";
-            edt.Size = new Size(66, 23);
-            edt.TabIndex = 11;
-            edt.Value = new decimal(new int[] { 1, 0, 0, 65536 });
             // 
             // ePlotEndTime
             // 
@@ -251,29 +236,11 @@
             lPlotEndTime.TabIndex = 6;
             lPlotEndTime.Text = "Plot End";
             // 
-            // grRheobase
-            // 
-            grRheobase.Controls.Add(lRheobaseWarning);
-            grRheobase.Controls.Add(eRheobaseDuration);
-            grRheobase.Controls.Add(label1);
-            grRheobase.Controls.Add(eRheobase);
-            grRheobase.Controls.Add(lRheobase);
-            grRheobase.Controls.Add(btnRheobase);
-            grRheobase.Controls.Add(eRheobaseLimit);
-            grRheobase.Controls.Add(lRheobaseLimit);
-            grRheobase.Dock = DockStyle.Fill;
-            grRheobase.Location = new Point(0, 0);
-            grRheobase.Name = "grRheobase";
-            grRheobase.Size = new Size(328, 108);
-            grRheobase.TabIndex = 16;
-            grRheobase.TabStop = false;
-            grRheobase.Text = "Rheobase";
-            // 
             // lRheobaseWarning
             // 
             lRheobaseWarning.AutoSize = true;
             lRheobaseWarning.ForeColor = Color.Red;
-            lRheobaseWarning.Location = new Point(134, 77);
+            lRheobaseWarning.Location = new Point(137, 63);
             lRheobaseWarning.Name = "lRheobaseWarning";
             lRheobaseWarning.Size = new Size(140, 15);
             lRheobaseWarning.TabIndex = 20;
@@ -283,25 +250,25 @@
             // eRheobaseDuration
             // 
             eRheobaseDuration.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            eRheobaseDuration.Location = new Point(70, 47);
+            eRheobaseDuration.Location = new Point(73, 33);
             eRheobaseDuration.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             eRheobaseDuration.Name = "eRheobaseDuration";
             eRheobaseDuration.Size = new Size(54, 23);
             eRheobaseDuration.TabIndex = 19;
             eRheobaseDuration.Value = new decimal(new int[] { 400, 0, 0, 0 });
             // 
-            // label1
+            // lRheobaseDuration
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(3, 49);
-            label1.Name = "label1";
-            label1.Size = new Size(53, 15);
-            label1.TabIndex = 18;
-            label1.Text = "Duration";
+            lRheobaseDuration.AutoSize = true;
+            lRheobaseDuration.Location = new Point(6, 35);
+            lRheobaseDuration.Name = "lRheobaseDuration";
+            lRheobaseDuration.Size = new Size(53, 15);
+            lRheobaseDuration.TabIndex = 18;
+            lRheobaseDuration.Text = "Duration";
             // 
             // eRheobase
             // 
-            eRheobase.Location = new Point(70, 73);
+            eRheobase.Location = new Point(73, 59);
             eRheobase.Name = "eRheobase";
             eRheobase.ReadOnly = true;
             eRheobase.Size = new Size(54, 23);
@@ -310,24 +277,11 @@
             // lRheobase
             // 
             lRheobase.AutoSize = true;
-            lRheobase.Location = new Point(3, 76);
+            lRheobase.Location = new Point(6, 62);
             lRheobase.Name = "lRheobase";
             lRheobase.Size = new Size(58, 15);
             lRheobase.TabIndex = 16;
             lRheobase.Text = "Rheobase";
-            // 
-            // stimulusControl1
-            // 
-            stimulusControl1.AutoSize = true;
-            stimulusControl1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            stimulusControl1.BackColor = Color.FromArgb(249, 249, 249);
-            stimulusControl1.Location = new Point(3, 203);
-            stimulusControl1.Margin = new Padding(3, 0, 3, 3);
-            stimulusControl1.MinimumSize = new Size(200, 100);
-            stimulusControl1.Name = "stimulusControl1";
-            stimulusControl1.Size = new Size(217, 100);
-            stimulusControl1.TabIndex = 25;
-            stimulusControl1.StimulusChanged += stimulusControl1_StimulusChanged;
             // 
             // rbSingleEntryStimulus
             // 
@@ -335,10 +289,10 @@
             rbSingleEntryStimulus.Checked = true;
             rbSingleEntryStimulus.Location = new Point(7, 74);
             rbSingleEntryStimulus.Name = "rbSingleEntryStimulus";
-            rbSingleEntryStimulus.Size = new Size(87, 19);
+            rbSingleEntryStimulus.Size = new Size(192, 19);
             rbSingleEntryStimulus.TabIndex = 12;
             rbSingleEntryStimulus.TabStop = true;
-            rbSingleEntryStimulus.Text = "Single Entry";
+            rbSingleEntryStimulus.Text = "Single Entry (with above values)";
             rbSingleEntryStimulus.UseVisualStyleBackColor = true;
             rbSingleEntryStimulus.CheckedChanged += rbSingleEntryStimulus_CheckedChanged;
             // 
@@ -373,7 +327,7 @@
             // 
             splitMain.Panel2.BackColor = Color.White;
             splitMain.Panel2.Controls.Add(splitGAAndPlots);
-            splitMain.Panel2.Controls.Add(pPlots);
+            splitMain.Panel2.Controls.Add(pPlotsTop);
             splitMain.Size = new Size(1244, 675);
             splitMain.SplitterDistance = 336;
             splitMain.SplitterWidth = 2;
@@ -392,43 +346,64 @@
             splitLeft.Panel1.BackColor = Color.White;
             splitLeft.Panel1.Controls.Add(pfParams);
             splitLeft.Panel1.Controls.Add(pCoreType);
-            splitLeft.Panel1.Controls.Add(pRheobase);
             splitLeft.Panel1.Controls.Add(pTop);
             // 
             // splitLeft.Panel2
             // 
             splitLeft.Panel2.BackColor = Color.White;
-            splitLeft.Panel2.Controls.Add(tabAnalysis);
+            splitLeft.Panel2.Controls.Add(tabDynamics);
             splitLeft.Size = new Size(328, 636);
-            splitLeft.SplitterDistance = 286;
+            splitLeft.SplitterDistance = 190;
             splitLeft.TabIndex = 39;
             // 
             // pfParams
             // 
             pfParams.AutoScroll = true;
             pfParams.Dock = DockStyle.Fill;
-            pfParams.Location = new Point(0, 63);
+            pfParams.Location = new Point(0, 91);
             pfParams.Name = "pfParams";
-            pfParams.Size = new Size(328, 115);
+            pfParams.Size = new Size(328, 99);
             pfParams.TabIndex = 23;
             // 
             // pCoreType
             // 
             pCoreType.BackColor = Color.FromArgb(236, 239, 241);
+            pCoreType.Controls.Add(eDeltaT);
+            pCoreType.Controls.Add(lDeltaT);
             pCoreType.Controls.Add(pLineCoreType);
             pCoreType.Controls.Add(ddCoreType);
             pCoreType.Controls.Add(lCoreType);
             pCoreType.Dock = DockStyle.Top;
             pCoreType.Location = new Point(0, 23);
             pCoreType.Name = "pCoreType";
-            pCoreType.Size = new Size(328, 40);
+            pCoreType.Size = new Size(328, 68);
             pCoreType.TabIndex = 21;
+            // 
+            // eDeltaT
+            // 
+            eDeltaT.DecimalPlaces = 2;
+            eDeltaT.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            eDeltaT.Location = new Point(70, 39);
+            eDeltaT.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
+            eDeltaT.Name = "eDeltaT";
+            eDeltaT.Size = new Size(66, 23);
+            eDeltaT.TabIndex = 26;
+            eDeltaT.Value = new decimal(new int[] { 1, 0, 0, 65536 });
+            // 
+            // lDeltaT
+            // 
+            lDeltaT.AutoSize = true;
+            lDeltaT.Location = new Point(7, 43);
+            lDeltaT.Name = "lDeltaT";
+            lDeltaT.Size = new Size(46, 15);
+            lDeltaT.TabIndex = 25;
+            lDeltaT.Text = "Δt (ms)";
             // 
             // pLineCoreType
             // 
             pLineCoreType.BackColor = Color.LightGray;
             pLineCoreType.Dock = DockStyle.Bottom;
-            pLineCoreType.Location = new Point(0, 39);
+            pLineCoreType.Location = new Point(0, 67);
             pLineCoreType.Name = "pLineCoreType";
             pLineCoreType.Size = new Size(328, 1);
             pLineCoreType.TabIndex = 24;
@@ -455,15 +430,6 @@
             lCoreType.TabIndex = 22;
             lCoreType.Text = "Core Type";
             // 
-            // pRheobase
-            // 
-            pRheobase.Controls.Add(grRheobase);
-            pRheobase.Dock = DockStyle.Bottom;
-            pRheobase.Location = new Point(0, 178);
-            pRheobase.Name = "pRheobase";
-            pRheobase.Size = new Size(328, 108);
-            pRheobase.TabIndex = 40;
-            // 
             // pTop
             // 
             pTop.Controls.Add(linkUseUpdatedParams);
@@ -486,87 +452,82 @@
             linkUseUpdatedParams.Text = "Use Updated Parameters";
             linkUseUpdatedParams.LinkClicked += linkUseUpdatedParams_LinkClicked;
             // 
+            // tabDynamics
+            // 
+            tabDynamics.Controls.Add(tRheobase);
+            tabDynamics.Controls.Add(tDynamics);
+            tabDynamics.Dock = DockStyle.Fill;
+            tabDynamics.Location = new Point(0, 0);
+            tabDynamics.Name = "tabDynamics";
+            tabDynamics.SelectedIndex = 0;
+            tabDynamics.Size = new Size(328, 442);
+            tabDynamics.TabIndex = 40;
+            // 
+            // tRheobase
+            // 
+            tRheobase.Controls.Add(lRheobaseWarning);
+            tRheobase.Controls.Add(lRheobaseLimit);
+            tRheobase.Controls.Add(eRheobaseLimit);
+            tRheobase.Controls.Add(lRheobase);
+            tRheobase.Controls.Add(eRheobaseDuration);
+            tRheobase.Controls.Add(eRheobase);
+            tRheobase.Controls.Add(btnRheobase);
+            tRheobase.Controls.Add(lRheobaseDuration);
+            tRheobase.Location = new Point(4, 24);
+            tRheobase.Name = "tRheobase";
+            tRheobase.Padding = new Padding(3);
+            tRheobase.Size = new Size(320, 414);
+            tRheobase.TabIndex = 0;
+            tRheobase.Text = "Rheobase";
+            tRheobase.UseVisualStyleBackColor = true;
+            // 
+            // tDynamics
+            // 
+            tDynamics.Controls.Add(tabAnalysis);
+            tDynamics.Controls.Add(pFlow1);
+            tDynamics.Location = new Point(4, 24);
+            tDynamics.Name = "tDynamics";
+            tDynamics.Padding = new Padding(3);
+            tDynamics.Size = new Size(320, 414);
+            tDynamics.TabIndex = 1;
+            tDynamics.Text = "Dynamics";
+            tDynamics.UseVisualStyleBackColor = true;
+            // 
             // tabAnalysis
             // 
-            tabAnalysis.Controls.Add(tTest);
+            tabAnalysis.Controls.Add(tStimulusTest);
+            tabAnalysis.Controls.Add(tParameterAnalysis);
             tabAnalysis.Controls.Add(tSensitivityAnalysis);
             tabAnalysis.Dock = DockStyle.Fill;
-            tabAnalysis.Location = new Point(0, 0);
+            tabAnalysis.Location = new Point(3, 172);
             tabAnalysis.Name = "tabAnalysis";
             tabAnalysis.SelectedIndex = 0;
-            tabAnalysis.Size = new Size(328, 346);
+            tabAnalysis.Size = new Size(314, 239);
             tabAnalysis.TabIndex = 39;
             // 
-            // tTest
+            // tStimulusTest
             // 
-            tTest.Controls.Add(pFlow);
-            tTest.Controls.Add(pFlow5);
-            tTest.Location = new Point(4, 24);
-            tTest.Name = "tTest";
-            tTest.Padding = new Padding(3);
-            tTest.Size = new Size(320, 318);
-            tTest.TabIndex = 0;
-            tTest.Text = "Test";
-            tTest.UseVisualStyleBackColor = true;
+            tStimulusTest.Controls.Add(pFlow);
+            tStimulusTest.Controls.Add(pFlow5);
+            tStimulusTest.Location = new Point(4, 24);
+            tStimulusTest.Name = "tStimulusTest";
+            tStimulusTest.Padding = new Padding(3);
+            tStimulusTest.Size = new Size(306, 211);
+            tStimulusTest.TabIndex = 0;
+            tStimulusTest.Text = "Stimulus Test";
+            tStimulusTest.UseVisualStyleBackColor = true;
             // 
             // pFlow
             // 
             pFlow.AutoScroll = true;
-            pFlow.Controls.Add(pFlow1);
             pFlow.Controls.Add(pFlow2);
-            pFlow.Controls.Add(stimulusControl1);
             pFlow.Dock = DockStyle.Fill;
             pFlow.FlowDirection = FlowDirection.TopDown;
             pFlow.Location = new Point(3, 3);
             pFlow.Name = "pFlow";
-            pFlow.Size = new Size(314, 282);
+            pFlow.Size = new Size(300, 175);
             pFlow.TabIndex = 38;
             pFlow.WrapContents = false;
-            // 
-            // pFlow1
-            // 
-            pFlow1.Controls.Add(lStepStartTime);
-            pFlow1.Controls.Add(pSep1);
-            pFlow1.Controls.Add(edt);
-            pFlow1.Controls.Add(lPlotEndTime);
-            pFlow1.Controls.Add(lStepEndTime);
-            pFlow1.Controls.Add(eStepStartTime);
-            pFlow1.Controls.Add(ePlotEndTime);
-            pFlow1.Controls.Add(lms);
-            pFlow1.Controls.Add(lms2);
-            pFlow1.Controls.Add(lPlotdt);
-            pFlow1.Controls.Add(eStepEndTime);
-            pFlow1.Location = new Point(3, 3);
-            pFlow1.Name = "pFlow1";
-            pFlow1.Size = new Size(277, 96);
-            pFlow1.TabIndex = 0;
-            // 
-            // pSep1
-            // 
-            pSep1.BackColor = Color.DimGray;
-            pSep1.Dock = DockStyle.Bottom;
-            pSep1.Location = new Point(0, 93);
-            pSep1.Name = "pSep1";
-            pSep1.Size = new Size(277, 3);
-            pSep1.TabIndex = 36;
-            // 
-            // lms
-            // 
-            lms.AutoSize = true;
-            lms.Location = new Point(242, 10);
-            lms.Name = "lms";
-            lms.Size = new Size(31, 15);
-            lms.TabIndex = 27;
-            lms.Text = "(ms)";
-            // 
-            // lms2
-            // 
-            lms2.AutoSize = true;
-            lms2.Location = new Point(140, 37);
-            lms2.Name = "lms2";
-            lms2.Size = new Size(31, 15);
-            lms2.TabIndex = 28;
-            lms2.Text = "(ms)";
             // 
             // pFlow2
             // 
@@ -575,9 +536,9 @@
             pFlow2.Controls.Add(rbMultipleEntry);
             pFlow2.Controls.Add(lMultipleEntryNote);
             pFlow2.Controls.Add(rbRheobaseBasedStimulus);
-            pFlow2.Location = new Point(3, 105);
+            pFlow2.Location = new Point(3, 3);
             pFlow2.Name = "pFlow2";
-            pFlow2.Size = new Size(277, 95);
+            pFlow2.Size = new Size(301, 95);
             pFlow2.TabIndex = 37;
             // 
             // eMultipleStimulus
@@ -586,7 +547,7 @@
             eMultipleStimulus.Location = new Point(28, 45);
             eMultipleStimulus.Name = "eMultipleStimulus";
             eMultipleStimulus.ReadOnly = true;
-            eMultipleStimulus.Size = new Size(245, 23);
+            eMultipleStimulus.Size = new Size(269, 23);
             eMultipleStimulus.TabIndex = 33;
             eMultipleStimulus.Text = "example: 1;10";
             toolTip1.SetToolTip(eMultipleStimulus, "Step stimulus with 0 noise");
@@ -617,11 +578,10 @@
             // pFlow5
             // 
             pFlow5.Controls.Add(btnDynamicsRun);
-            pFlow5.Controls.Add(cbAutoDrawPlots);
             pFlow5.Dock = DockStyle.Bottom;
-            pFlow5.Location = new Point(3, 285);
+            pFlow5.Location = new Point(3, 178);
             pFlow5.Name = "pFlow5";
-            pFlow5.Size = new Size(314, 30);
+            pFlow5.Size = new Size(300, 30);
             pFlow5.TabIndex = 40;
             // 
             // btnDynamicsRun
@@ -638,31 +598,17 @@
             btnDynamicsRun.UseVisualStyleBackColor = false;
             btnDynamicsRun.Click += btnDynamicsRun_Click;
             // 
-            // cbAutoDrawPlots
+            // tParameterAnalysis
             // 
-            cbAutoDrawPlots.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            cbAutoDrawPlots.AutoSize = true;
-            cbAutoDrawPlots.Checked = true;
-            cbAutoDrawPlots.CheckState = CheckState.Checked;
-            cbAutoDrawPlots.Location = new Point(3, 8);
-            cbAutoDrawPlots.Name = "cbAutoDrawPlots";
-            cbAutoDrawPlots.Size = new Size(82, 19);
-            cbAutoDrawPlots.TabIndex = 34;
-            cbAutoDrawPlots.Text = "Auto Draw";
-            cbAutoDrawPlots.UseVisualStyleBackColor = true;
-            cbAutoDrawPlots.CheckedChanged += cbAutoDrawPlots_CheckedChanged;
-            // 
-            // tSensitivityAnalysis
-            // 
-            tSensitivityAnalysis.Controls.Add(grFiring);
-            tSensitivityAnalysis.Controls.Add(grRheoSens);
-            tSensitivityAnalysis.Location = new Point(4, 24);
-            tSensitivityAnalysis.Name = "tSensitivityAnalysis";
-            tSensitivityAnalysis.Padding = new Padding(3);
-            tSensitivityAnalysis.Size = new Size(320, 318);
-            tSensitivityAnalysis.TabIndex = 1;
-            tSensitivityAnalysis.Text = "Sensitivity Analysis";
-            tSensitivityAnalysis.UseVisualStyleBackColor = true;
+            tParameterAnalysis.Controls.Add(grFiring);
+            tParameterAnalysis.Controls.Add(grRheoSens);
+            tParameterAnalysis.Location = new Point(4, 24);
+            tParameterAnalysis.Name = "tParameterAnalysis";
+            tParameterAnalysis.Padding = new Padding(3);
+            tParameterAnalysis.Size = new Size(306, 211);
+            tParameterAnalysis.TabIndex = 1;
+            tParameterAnalysis.Text = "Parameter Analysis";
+            tParameterAnalysis.UseVisualStyleBackColor = true;
             // 
             // grFiring
             // 
@@ -670,17 +616,19 @@
             grFiring.Dock = DockStyle.Top;
             grFiring.Location = new Point(3, 147);
             grFiring.Name = "grFiring";
-            grFiring.Size = new Size(314, 138);
+            grFiring.Size = new Size(300, 138);
             grFiring.TabIndex = 19;
             grFiring.TabStop = false;
             grFiring.Text = "Firing Pattern";
             // 
             // sensitivityAnalysisFiring
             // 
-            sensitivityAnalysisFiring.BackColor = Color.Transparent;
-            sensitivityAnalysisFiring.Location = new Point(6, 18);
+            sensitivityAnalysisFiring.AutoSize = true;
+            sensitivityAnalysisFiring.BackColor = Color.White;
+            sensitivityAnalysisFiring.Dock = DockStyle.Fill;
+            sensitivityAnalysisFiring.Location = new Point(3, 19);
             sensitivityAnalysisFiring.Name = "sensitivityAnalysisFiring";
-            sensitivityAnalysisFiring.Size = new Size(215, 120);
+            sensitivityAnalysisFiring.Size = new Size(294, 116);
             sensitivityAnalysisFiring.TabIndex = 0;
             // 
             // grRheoSens
@@ -689,23 +637,104 @@
             grRheoSens.Dock = DockStyle.Top;
             grRheoSens.Location = new Point(3, 3);
             grRheoSens.Name = "grRheoSens";
-            grRheoSens.Size = new Size(314, 144);
+            grRheoSens.Size = new Size(300, 144);
             grRheoSens.TabIndex = 18;
             grRheoSens.TabStop = false;
             grRheoSens.Text = "Rheobase Sensitivity";
             // 
             // sensitivityAnalysisRheobase
             // 
-            sensitivityAnalysisRheobase.BackColor = Color.Transparent;
-            sensitivityAnalysisRheobase.Location = new Point(3, 22);
+            sensitivityAnalysisRheobase.AutoSize = true;
+            sensitivityAnalysisRheobase.BackColor = Color.White;
+            sensitivityAnalysisRheobase.Dock = DockStyle.Fill;
+            sensitivityAnalysisRheobase.Location = new Point(3, 19);
             sensitivityAnalysisRheobase.Name = "sensitivityAnalysisRheobase";
-            sensitivityAnalysisRheobase.Size = new Size(215, 120);
+            sensitivityAnalysisRheobase.Size = new Size(294, 122);
             sensitivityAnalysisRheobase.TabIndex = 0;
+            // 
+            // tSensitivityAnalysis
+            // 
+            tSensitivityAnalysis.Controls.Add(sensitivityAnalysisDeltaT);
+            tSensitivityAnalysis.Location = new Point(4, 24);
+            tSensitivityAnalysis.Name = "tSensitivityAnalysis";
+            tSensitivityAnalysis.Size = new Size(306, 211);
+            tSensitivityAnalysis.TabIndex = 2;
+            tSensitivityAnalysis.Text = "Sensitivity Analysis";
+            tSensitivityAnalysis.UseVisualStyleBackColor = true;
+            // 
+            // sensitivityAnalysisDeltaT
+            // 
+            sensitivityAnalysisDeltaT.AutoSize = true;
+            sensitivityAnalysisDeltaT.BackColor = Color.White;
+            sensitivityAnalysisDeltaT.Dock = DockStyle.Top;
+            sensitivityAnalysisDeltaT.Location = new Point(0, 0);
+            sensitivityAnalysisDeltaT.Name = "sensitivityAnalysisDeltaT";
+            sensitivityAnalysisDeltaT.Size = new Size(306, 148);
+            sensitivityAnalysisDeltaT.TabIndex = 0;
+            // 
+            // pFlow1
+            // 
+            pFlow1.AutoSize = true;
+            pFlow1.Controls.Add(stimulusSettingsControl1);
+            pFlow1.Controls.Add(pSep1);
+            pFlow1.Controls.Add(lStepStartTime);
+            pFlow1.Controls.Add(lPlotEndTime);
+            pFlow1.Controls.Add(lStepEndTime);
+            pFlow1.Controls.Add(eStepStartTime);
+            pFlow1.Controls.Add(ePlotEndTime);
+            pFlow1.Controls.Add(lms);
+            pFlow1.Controls.Add(lms2);
+            pFlow1.Controls.Add(eStepEndTime);
+            pFlow1.Dock = DockStyle.Top;
+            pFlow1.Location = new Point(3, 3);
+            pFlow1.Name = "pFlow1";
+            pFlow1.Size = new Size(314, 169);
+            pFlow1.TabIndex = 0;
+            // 
+            // stimulusSettingsControl1
+            // 
+            stimulusSettingsControl1.AutoSize = true;
+            stimulusSettingsControl1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            stimulusSettingsControl1.BackColor = Color.FromArgb(249, 249, 249);
+            stimulusSettingsControl1.Location = new Point(-1, 66);
+            stimulusSettingsControl1.MinimumSize = new Size(200, 100);
+            stimulusSettingsControl1.Name = "stimulusSettingsControl1";
+            stimulusSettingsControl1.Size = new Size(217, 100);
+            stimulusSettingsControl1.TabIndex = 37;
+            stimulusSettingsControl1.StimulusChanged += stimulusControl1_StimulusChanged;
+            // 
+            // pSep1
+            // 
+            pSep1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pSep1.BackColor = Color.DimGray;
+            pSep1.Location = new Point(0, 63);
+            pSep1.Name = "pSep1";
+            pSep1.Size = new Size(314, 3);
+            pSep1.TabIndex = 36;
+            // 
+            // lms
+            // 
+            lms.AutoSize = true;
+            lms.Location = new Point(242, 10);
+            lms.Name = "lms";
+            lms.Size = new Size(31, 15);
+            lms.TabIndex = 27;
+            lms.Text = "(ms)";
+            // 
+            // lms2
+            // 
+            lms2.AutoSize = true;
+            lms2.Location = new Point(140, 37);
+            lms2.Name = "lms2";
+            lms2.Size = new Size(31, 15);
+            lms2.TabIndex = 28;
+            lms2.Text = "(ms)";
             // 
             // pLoadSaveParams
             // 
             pLoadSaveParams.BackColor = Color.FromArgb(236, 239, 241);
             pLoadSaveParams.Controls.Add(linkLoadCoreUnit);
+            pLoadSaveParams.Controls.Add(cbAutoDrawPlots);
             pLoadSaveParams.Controls.Add(linkSaveCoreUnit);
             pLoadSaveParams.Dock = DockStyle.Bottom;
             pLoadSaveParams.Location = new Point(3, 639);
@@ -724,6 +753,20 @@
             linkLoadCoreUnit.TabStop = true;
             linkLoadCoreUnit.Text = "Load Core Unit";
             linkLoadCoreUnit.LinkClicked += linkLoadCoreUnit_LinkClicked;
+            // 
+            // cbAutoDrawPlots
+            // 
+            cbAutoDrawPlots.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            cbAutoDrawPlots.AutoSize = true;
+            cbAutoDrawPlots.Checked = true;
+            cbAutoDrawPlots.CheckState = CheckState.Checked;
+            cbAutoDrawPlots.Location = new Point(197, 7);
+            cbAutoDrawPlots.Name = "cbAutoDrawPlots";
+            cbAutoDrawPlots.Size = new Size(82, 19);
+            cbAutoDrawPlots.TabIndex = 34;
+            cbAutoDrawPlots.Text = "Auto Draw";
+            cbAutoDrawPlots.UseVisualStyleBackColor = true;
+            cbAutoDrawPlots.CheckedChanged += cbAutoDrawPlots_CheckedChanged;
             // 
             // linkSaveCoreUnit
             // 
@@ -794,25 +837,25 @@
             webViewPlots.ZoomFactor = 1D;
             webViewPlots.CoreWebView2InitializationCompleted += webViewPlots_CoreWebView2InitializationCompleted;
             // 
-            // pPlots
+            // pPlotsTop
             // 
-            pPlots.Controls.Add(panel1);
-            pPlots.Controls.Add(grPlotSelection);
-            pPlots.Controls.Add(linkSwitchToOptimization);
-            pPlots.Dock = DockStyle.Top;
-            pPlots.Location = new Point(0, 0);
-            pPlots.Name = "pPlots";
-            pPlots.Size = new Size(906, 65);
-            pPlots.TabIndex = 1;
+            pPlotsTop.Controls.Add(pPlotsMain);
+            pPlotsTop.Controls.Add(grPlotSelection);
+            pPlotsTop.Controls.Add(linkSwitchToOptimization);
+            pPlotsTop.Dock = DockStyle.Top;
+            pPlotsTop.Location = new Point(0, 0);
+            pPlotsTop.Name = "pPlotsTop";
+            pPlotsTop.Size = new Size(906, 65);
+            pPlotsTop.TabIndex = 1;
             // 
-            // panel1
+            // pPlotsMain
             // 
-            panel1.BackColor = Color.LightGray;
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 64);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(906, 1);
-            panel1.TabIndex = 9;
+            pPlotsMain.BackColor = Color.LightGray;
+            pPlotsMain.Dock = DockStyle.Bottom;
+            pPlotsMain.Location = new Point(0, 64);
+            pPlotsMain.Name = "pPlotsMain";
+            pPlotsMain.Size = new Size(906, 1);
+            pPlotsMain.TabIndex = 9;
             // 
             // grPlotSelection
             // 
@@ -981,12 +1024,9 @@
             Size = new Size(1252, 683);
             Load += DynamicsTestControl_Load;
             ((System.ComponentModel.ISupportInitialize)eRheobaseLimit).EndInit();
-            ((System.ComponentModel.ISupportInitialize)edt).EndInit();
             ((System.ComponentModel.ISupportInitialize)ePlotEndTime).EndInit();
             ((System.ComponentModel.ISupportInitialize)eStepEndTime).EndInit();
             ((System.ComponentModel.ISupportInitialize)eStepStartTime).EndInit();
-            grRheobase.ResumeLayout(false);
-            grRheobase.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eRheobaseDuration).EndInit();
             splitMain.Panel1.ResumeLayout(false);
             splitMain.Panel2.ResumeLayout(false);
@@ -998,22 +1038,29 @@
             splitLeft.ResumeLayout(false);
             pCoreType.ResumeLayout(false);
             pCoreType.PerformLayout();
-            pRheobase.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)eDeltaT).EndInit();
             pTop.ResumeLayout(false);
             pTop.PerformLayout();
+            tabDynamics.ResumeLayout(false);
+            tRheobase.ResumeLayout(false);
+            tRheobase.PerformLayout();
+            tDynamics.ResumeLayout(false);
+            tDynamics.PerformLayout();
             tabAnalysis.ResumeLayout(false);
-            tTest.ResumeLayout(false);
+            tStimulusTest.ResumeLayout(false);
             pFlow.ResumeLayout(false);
-            pFlow.PerformLayout();
-            pFlow1.ResumeLayout(false);
-            pFlow1.PerformLayout();
             pFlow2.ResumeLayout(false);
             pFlow2.PerformLayout();
             pFlow5.ResumeLayout(false);
-            pFlow5.PerformLayout();
-            tSensitivityAnalysis.ResumeLayout(false);
+            tParameterAnalysis.ResumeLayout(false);
             grFiring.ResumeLayout(false);
+            grFiring.PerformLayout();
             grRheoSens.ResumeLayout(false);
+            grRheoSens.PerformLayout();
+            tSensitivityAnalysis.ResumeLayout(false);
+            tSensitivityAnalysis.PerformLayout();
+            pFlow1.ResumeLayout(false);
+            pFlow1.PerformLayout();
             pLoadSaveParams.ResumeLayout(false);
             pLoadSaveParams.PerformLayout();
             splitGAAndPlots.Panel1.ResumeLayout(false);
@@ -1022,8 +1069,8 @@
             splitGAAndPlots.ResumeLayout(false);
             pOptimize.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewPlots).EndInit();
-            pPlots.ResumeLayout(false);
-            pPlots.PerformLayout();
+            pPlotsTop.ResumeLayout(false);
+            pPlotsTop.PerformLayout();
             grPlotSelection.ResumeLayout(false);
             grPlotSelection.PerformLayout();
             ResumeLayout(false);
@@ -1033,31 +1080,27 @@
         private NumericUpDown eRheobaseLimit;
         private Label lRheobaseLimit;
         private Button btnRheobase;
-        private Label lPlotdt;
-        private NumericUpDown edt;
         private NumericUpDown ePlotEndTime;
         private NumericUpDown eStepEndTime;
         private Label lStepStartTime;
         private NumericUpDown eStepStartTime;
         private Label lStepEndTime;
         private Label lPlotEndTime;
-        private GroupBox grRheobase;
         private TextBox eRheobase;
         private Label lRheobase;
         private SplitContainer splitMain;
         private Microsoft.Web.WebView2.WinForms.WebView2 webViewPlots;
         private NumericUpDown eRheobaseDuration;
-        private Label label1;
+        private Label lRheobaseDuration;
         private GroupBox grRheoSens;
         private RadioButton rbSingleEntryStimulus;
         private RadioButton rbRheobaseBasedStimulus;
-        private FlowLayoutPanel pfParams;
         private Panel pCoreType;
         private LinkLabel linkSaveCoreUnit;
         private LinkLabel linkLoadCoreUnit;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
-        private Panel pPlots;
+        private Panel pPlotsTop;
         private CheckBox cbStimulus;
         private CheckBox cbSpikingFrequency;
         private CheckBox cbInterval;
@@ -1076,19 +1119,16 @@
         private Label lCoreType;
         private Panel pLoadSaveParams;
         private TabControl tabAnalysis;
-        private TabPage tTest;
-        private TabPage tSensitivityAnalysis;
-        private StimulusSettingsControl stimulusControl1;
+        private TabControl tabDynamics;
+        private TabPage tStimulusTest;
+        private TabPage tParameterAnalysis;
         private Label lRheobaseWarning;
         private Panel pLineCoreType;
-        private Panel panel1;
+        private Panel pPlotsMain;
         private Controls.GAControl gaControl;
         private GroupBox grFiring;
-        private Controls.SensitivityAnalysisControl sensitivityAnalysisFiring;
-        private Controls.SensitivityAnalysisControl sensitivityAnalysisRheobase;
         private Label lms2;
         private Label lms;
-        private Panel pRheobase;
         private TextBox eMultipleStimulus;
         private Label lMultipleEntryNote;
         private RadioButton rbMultipleEntry;
@@ -1104,5 +1144,15 @@
         private Panel pFlow5;
         private Button btnDynamicsRun;
         private CheckBox cbAutoDrawPlots;
+        private TabPage tSensitivityAnalysis;
+        private NumericUpDown eDeltaT;
+        private Label lDeltaT;
+        private TabPage tRheobase;
+        private FlowLayoutPanel pfParams;
+        private TabPage tDynamics;
+        private SensitivityAnalysisControl sensitivityAnalysisFiring;
+        private SensitivityAnalysisControl sensitivityAnalysisRheobase;
+        private SensitivityAnalysisControl sensitivityAnalysisDeltaT;
+        private StimulusSettingsControl stimulusSettingsControl1;
     }
 }

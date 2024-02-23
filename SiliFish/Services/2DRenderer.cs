@@ -26,7 +26,7 @@ namespace SiliFish.Services
         double WeightMult;
         Dictionary<string, (double, double)> HiddenPoolCoordinates;
         Dictionary<string, (double, double)> PoolCoordinates;
-        Dictionary<(string, string), int> LinkCounter =new();
+        Dictionary<(string, string), int> LinkCounter = [];
 
         private string CreateLinkDataPoint(InterPool interPool)
         {
@@ -102,8 +102,8 @@ namespace SiliFish.Services
 
         private Dictionary<string, (double, double)> SpreadPools(Dictionary<string, (double, double)> pools, bool item2 = false, bool neg = false)
         {
-            Dictionary<string, (double, double)> spreadedPools = new();
-            if (pools.Any())
+            Dictionary<string, (double, double)> spreadedPools = [];
+            if (pools.Count != 0)
             {
                 double xyMin = item2 ? pools.Min(v => v.Value.Item2) : pools.Min(v => v.Value.Item1);
                 double xyMax = item2 ? pools.Max(v => v.Value.Item2) : pools.Max(v => v.Value.Item1);
@@ -141,10 +141,10 @@ namespace SiliFish.Services
         {
             if (pools == null || pools.Count == 0)
                 return null;
-            XMult = 1;
+            /*XMult = 1;
             YMult = 1;
             XOffset = 0;
-            YOffset = 0;
+            YOffset = 0;*/
 
             if (refresh)
             {
@@ -177,18 +177,18 @@ namespace SiliFish.Services
             List<string> supraPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SupraSpinal).Select(cp => cp.CellGroup).ToList();
             List<string> musclePools = pools.Where(cp => cp.BodyLocation == BodyLocation.MusculoSkeletal).Select(cp => cp.CellGroup).ToList();
             List<string> spinalPools = pools.Where(cp => cp.BodyLocation == BodyLocation.SpinalCord).Select(cp => cp.CellGroup).ToList();
-            //double supraMinY = supraPools.Any() ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
-            double supraMaxY = supraPools.Any() ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
-            double muscleMinX = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1) : 0;
-            //double muscleMaxX = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1):0;
-            double muscleMinY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
-            double muscleMaxY = musclePools.Any() ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
-            double spinalMinX = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1) : 0;
-            double spinalMaxX = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1) : 0;
-            double spinalMinY = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
-            double spinalMaxY = spinalPools.Any() ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
+            //double supraMinY = supraPools.Count != 0 ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
+            double supraMaxY = supraPools.Count != 0 ? PoolCoordinates.Where(kvp => supraPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
+            double muscleMinX = musclePools.Count != 0 ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1) : 0;
+            //double muscleMaxX = musclePools.Count != 0 ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1):0;
+            double muscleMinY = musclePools.Count != 0 ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
+            double muscleMaxY = musclePools.Count != 0 ? PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
+            double spinalMinX = spinalPools.Count != 0 ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item1) : 0;
+            double spinalMaxX = spinalPools.Count != 0 ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item1) : 0;
+            double spinalMinY = spinalPools.Count != 0 ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Min(kvp => kvp.Value.Item2) : 0;
+            double spinalMaxY = spinalPools.Count != 0 ? PoolCoordinates.Where(kvp => spinalPools.Contains(kvp.Key)).Max(kvp => kvp.Value.Item2) : 0;
             double msMinY = Math.Min(spinalMinY, muscleMinY);
-            if (supraPools.Any() && supraMaxY > msMinY)
+            if (supraPools.Count != 0 && supraMaxY > msMinY)
             {
                 double msMaxY = Math.Max(spinalMaxY, muscleMaxY);
                 double bufferY = supraMaxY - msMinY + (msMaxY - msMinY) / 10;
@@ -200,7 +200,7 @@ namespace SiliFish.Services
                         negPools[pc.Key] = (valueN.Item1, valueN.Item2 - bufferY);
                 }
             }
-            if (musclePools.Any() && spinalPools.Any() && muscleMinX < spinalMaxX)
+            if (musclePools.Count != 0 && spinalPools.Count != 0 && muscleMinX < spinalMaxX)
             {
                 double bufferX = spinalMaxX - muscleMinX + (spinalMaxX - spinalMinX);
                 foreach (var pc in PoolCoordinates.Where(kvp => musclePools.Contains(kvp.Key)))
@@ -212,43 +212,47 @@ namespace SiliFish.Services
                 }
             }
 
-            Dictionary<string, (double, double)> spreadedPools = SpreadPools(posPools);
-            Dictionary<string, (double, double)> spreadedPools2 = SpreadPools(negPools, false, true);
-
-            spreadedPools = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
-            posPools = spreadedPools
-                .Where(v => v.Value.Item2 >= 0)
-                .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
-            negPools = spreadedPools
-                .Where(v => v.Value.Item2 < 0)
-                .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
-
-            spreadedPools = SpreadPools(posPools, true);
-            spreadedPools2 = SpreadPools(negPools, true, true);
-            PoolCoordinates = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
-
-            XMax = PoolCoordinates.Max(v => v.Value.Item1);
-            XMin = -1 * XMax;
-            YMin = PoolCoordinates.Min(v => v.Value.Item2);
-            YMax = PoolCoordinates.Max(v => v.Value.Item2);
-
-            if (XMax > XMin)
+            if (!refresh)//draw from scratch
             {
-                XMult = width / (XMax - XMin) / 1.2;
-                XOffset = -(XMax + XMin) * XMult / 2;
+                Dictionary<string, (double, double)> spreadedPools = SpreadPools(posPools);
+                Dictionary<string, (double, double)> spreadedPools2 = SpreadPools(negPools, false, true);
+
+                spreadedPools = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
+                posPools = spreadedPools
+                    .Where(v => v.Value.Item2 >= 0)
+                    .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
+                negPools = spreadedPools
+                    .Where(v => v.Value.Item2 < 0)
+                    .OrderBy(v => Math.Abs(v.Value.Item2)).ToDictionary(t => t.Key, t => t.Value);
+
+                spreadedPools = SpreadPools(posPools, true);
+                spreadedPools2 = SpreadPools(negPools, true, true);
+                PoolCoordinates = spreadedPools.Concat(spreadedPools2).ToDictionary(x => x.Key, x => x.Value);
+                XMax = PoolCoordinates.Max(v => v.Value.Item1);
+                XMin = -1 * XMax;
+                YMin = PoolCoordinates.Min(v => v.Value.Item2);
+                YMax = PoolCoordinates.Max(v => v.Value.Item2);
+
+                if (XMax > XMin)
+                {
+                    XMult = width / (XMax - XMin) / 1.2;
+                    XOffset = -(XMax + XMin) * XMult / 2;
+                }
+                if (YMax > YMin)
+                {
+                    YMult = -height / (YMax - YMin) / 1.2;
+                    YOffset = (YMax + YMin) * YMult / 2;
+                }
             }
-            if (YMax > YMin)
-            {
-                YMult = -height / (YMax - YMin) / 1.2;
-                YOffset = (YMax + YMin) * YMult / 2;
-            }
-            List<string> nodes = new();
+            else
+                PoolCoordinates = posPools.Concat(negPools).ToDictionary(x => x.Key, x => x.Value);
+            List<string> nodes = [];
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoint(pool)));
 
             return nodes;
         }
 
-        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem)
+        public string Create2DRendering(RunningModel model, List<CellPool> pools, bool refresh, int width, int height, bool showGap, bool showChem, bool offline)
         {
             if (pools == null || pools.Count == 0)
                 return null;
@@ -260,7 +264,7 @@ namespace SiliFish.Services
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
             html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
-            if (Util.CheckOnlineStatus())
+            if (!offline && Util.CheckOnlineStatus())
             {
                 html.Replace("__OFFLINE_2D_SCRIPT__", "");
                 html.Replace("__ONLINE_2D_SCRIPT__", "<script src=\"https://unpkg.com/force-graph\"></script>" +
@@ -287,24 +291,24 @@ namespace SiliFish.Services
             List<InterPool> chemInterPools = model.ChemPoolConnections.Where(cpc => pools.Any(p => p.ID == cpc.SourcePool) && pools.Any(p => p.ID == cpc.TargetPool)).ToList();
 
             int CountMax = 0;
-            if (gapInterPools.Any())
+            if (gapInterPools.Count != 0)
                 CountMax = gapInterPools.Max(ip => ip.CountJunctions);
-            if (chemInterPools.Any())
+            if (chemInterPools.Count != 0)
                 CountMax = Math.Max(CountMax, chemInterPools.Max(ip => ip.CountJunctions));
             WeightMult = 5 / CountMax;
 
             LinkCounter.Clear();
-            List<string> gapChemLinks = new();
+            List<string> gapChemLinks = [];
             gapInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con)));
             chemInterPools.ForEach(con => gapChemLinks.Add(CreateLinkDataPoint(con)));
             gapChemLinks.Add(spine);
             html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !string.IsNullOrEmpty(s))));
 
-            List<string> colors = new();
+            List<string> colors = [];
             pools.ForEach(pool => colors.Add($"\"{pool.CellGroup}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !string.IsNullOrEmpty(s))));
 
-            List<string> shapes = new();
+            List<string> shapes = [];
             pools.ForEach(pool => shapes.Add($"\"{pool.CellGroup}\": new THREE.SphereGeometry(5)"));
             html.Replace("__SHAPE_SET__", string.Join(",", shapes.Distinct().Where(s => !string.IsNullOrEmpty(s))));
 

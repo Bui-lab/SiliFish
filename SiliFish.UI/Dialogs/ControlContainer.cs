@@ -54,7 +54,7 @@ namespace SiliFish.UI
             CheckValuesArgs args = new();
 
             CheckValues?.Invoke(this, args);
-            if (args.Errors != null && args.Errors.Any())
+            if (args.Errors != null && args.Errors.Count != 0)
             {
                 MessageBox.Show($"There are errors on the form.\r\n{string.Join("\r\n", args.Errors)}", "Error");
                 this.DialogResult = DialogResult.None;

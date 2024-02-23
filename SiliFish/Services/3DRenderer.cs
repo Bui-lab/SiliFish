@@ -69,7 +69,7 @@ namespace SiliFish.Services
         }
         private string CreateNodeDataPoints(CellPool pool, int minSomite, int maxSomite)
         {
-            List<string> nodes = new();
+            List<string> nodes = [];
             List<Cell> cells = pool.GetCells().Where(c => c.Somite >= minSomite && c.Somite <= maxSomite).ToList();
             foreach (Cell cell in cells)
                 nodes.Add(CreateNodeDataPoint(cell));
@@ -78,7 +78,7 @@ namespace SiliFish.Services
 
         private string CreateLinkDataPoints(Cell cell, bool gap, bool chem, int minSomite, int maxSomite)
         {
-            List<string> links = new();
+            List<string> links = [];
             if (cell is Neuron neuron)
             {
                 if (gap)
@@ -99,7 +99,7 @@ namespace SiliFish.Services
         }
         private string CreateLinkDataPoints(CellPool pool, bool gap, bool chem, int minSomite, int maxSomite)
         {
-            List<string> links = new();
+            List<string> links = [];
             List<Cell> cells = pool.GetCells().Where(c => c.Somite >= minSomite && c.Somite <= maxSomite).ToList();
             foreach (Cell cell in cells)
             {
@@ -112,7 +112,7 @@ namespace SiliFish.Services
 
         public string RenderIn3D(RunningModel model, List<CellPool> pools, string somiteRange, 
             int width, int _, 
-            bool showGap, bool showChem)
+            bool showGap, bool showChem, bool offline)
         {
             if (pools == null || pools.Count == 0)
                 return null;
@@ -124,7 +124,7 @@ namespace SiliFish.Services
             html.Replace("__SHOW_GAP__", showGap.ToString().ToLower());
             html.Replace("__SHOW_CHEM__", showChem.ToString().ToLower());
 
-            if (Util.CheckOnlineStatus())
+            if (!offline && Util.CheckOnlineStatus())
             {
                 html.Replace("__OFFLINE_3D_SCRIPT__", "");
                 html.Replace("__ONLINE_3D_SCRIPT__", "<script src=\"https://unpkg.com/3d-force-graph@1\"></script>" +
@@ -178,13 +178,13 @@ namespace SiliFish.Services
                 : 0; //~40 times the nodes to fit in the space
             nodesize *= XYZMult;
 
-            List<string> nodes = new();
+            List<string> nodes = [];
             pools.ForEach(pool => nodes.Add(CreateNodeDataPoints(pool, -1, MD.NumberOfSomites)));
             html.Replace("__NODES__", string.Join(",", nodes.Where(s => !string.IsNullOrEmpty(s))));
             html.Replace("__NODE_SIZE__", nodesize.ToString("0.##"));
 
             
-            List<string> gapChemLinks = new();
+            List<string> gapChemLinks = [];
             pools.ForEach(pool => gapChemLinks.Add(CreateLinkDataPoints(pool, gap: true, chem: true, -1, MD.NumberOfSomites)));
             html.Replace("__GAP_CHEM_LINKS__", string.Join(",", gapChemLinks.Where(s => !String.IsNullOrEmpty(s))));
             
@@ -214,7 +214,7 @@ namespace SiliFish.Services
             string dorsalHead = $"data:image/png;base64,{dorsalHeadStr}";
             html.Replace("__DORSAL_HEAD__", dorsalHead);
 
-            List<string> colors = new();
+            List<string> colors = [];
             pools.ForEach(pool => colors.Add($"\"{pool.ID}\": {pool.Color.ToRGBQuoted()}"));
             html.Replace("__COLOR_SET__", string.Join(",", colors.Distinct().Where(s => !String.IsNullOrEmpty(s))));
 

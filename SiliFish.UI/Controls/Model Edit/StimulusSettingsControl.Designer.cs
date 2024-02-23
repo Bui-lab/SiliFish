@@ -28,154 +28,153 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.eValue2 = new System.Windows.Forms.TextBox();
-            this.eValue1 = new System.Windows.Forms.TextBox();
-            this.lValue1 = new System.Windows.Forms.Label();
-            this.lValue2 = new System.Windows.Forms.Label();
-            this.lStimulus = new System.Windows.Forms.Label();
-            this.ddStimulusMode = new System.Windows.Forms.ComboBox();
-            this.eFrequency = new System.Windows.Forms.TextBox();
-            this.lFrequency = new System.Windows.Forms.Label();
-            this.pLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.lHz = new System.Windows.Forms.Label();
-            this.pLayout.SuspendLayout();
-            this.SuspendLayout();
+            eValue2 = new TextBox();
+            eValue1 = new TextBox();
+            lValue1 = new Label();
+            lValue2 = new Label();
+            lStimulus = new Label();
+            ddStimulusMode = new ComboBox();
+            eFrequency = new TextBox();
+            lFrequency = new Label();
+            pLayout = new TableLayoutPanel();
+            lHz = new Label();
+            pLayout.SuspendLayout();
+            SuspendLayout();
             // 
             // eValue2
             // 
-            this.eValue2.Location = new System.Drawing.Point(101, 49);
-            this.eValue2.Margin = new System.Windows.Forms.Padding(1);
-            this.eValue2.Name = "eValue2";
-            this.eValue2.Size = new System.Drawing.Size(44, 23);
-            this.eValue2.TabIndex = 11;
-            this.eValue2.TextChanged += new System.EventHandler(this.eValue2_TextChanged);
+            eValue2.Location = new Point(101, 49);
+            eValue2.Margin = new Padding(1);
+            eValue2.Name = "eValue2";
+            eValue2.Size = new Size(44, 23);
+            eValue2.TabIndex = 11;
+            eValue2.TextChanged += eValue2_TextChanged;
             // 
             // eValue1
             // 
-            this.eValue1.Location = new System.Drawing.Point(101, 25);
-            this.eValue1.Margin = new System.Windows.Forms.Padding(1);
-            this.eValue1.Name = "eValue1";
-            this.eValue1.Size = new System.Drawing.Size(44, 23);
-            this.eValue1.TabIndex = 9;
-            this.eValue1.TextChanged += new System.EventHandler(this.eValue1_TextChanged);
+            eValue1.Location = new Point(101, 25);
+            eValue1.Margin = new Padding(1);
+            eValue1.Name = "eValue1";
+            eValue1.Size = new Size(44, 23);
+            eValue1.TabIndex = 9;
+            eValue1.TextChanged += eValue1_TextChanged;
             // 
             // lValue1
             // 
-            this.lValue1.AutoSize = true;
-            this.lValue1.Location = new System.Drawing.Point(3, 29);
-            this.lValue1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.lValue1.Name = "lValue1";
-            this.lValue1.Size = new System.Drawing.Size(37, 15);
-            this.lValue1.TabIndex = 8;
-            this.lValue1.Text = "Mean";
+            lValue1.AutoSize = true;
+            lValue1.Location = new Point(3, 29);
+            lValue1.Margin = new Padding(3, 5, 3, 0);
+            lValue1.Name = "lValue1";
+            lValue1.Size = new Size(37, 15);
+            lValue1.TabIndex = 8;
+            lValue1.Text = "Mean";
             // 
             // lValue2
             // 
-            this.lValue2.AutoSize = true;
-            this.lValue2.Location = new System.Drawing.Point(3, 53);
-            this.lValue2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.lValue2.Name = "lValue2";
-            this.lValue2.Size = new System.Drawing.Size(47, 15);
-            this.lValue2.TabIndex = 10;
-            this.lValue2.Text = "Std Dev";
+            lValue2.AutoSize = true;
+            lValue2.Location = new Point(3, 53);
+            lValue2.Margin = new Padding(3, 5, 3, 0);
+            lValue2.Name = "lValue2";
+            lValue2.Size = new Size(47, 15);
+            lValue2.TabIndex = 10;
+            lValue2.Text = "Std Dev";
             // 
             // lStimulus
             // 
-            this.lStimulus.AutoSize = true;
-            this.lStimulus.Location = new System.Drawing.Point(3, 5);
-            this.lStimulus.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.lStimulus.Name = "lStimulus";
-            this.lStimulus.Size = new System.Drawing.Size(87, 15);
-            this.lStimulus.TabIndex = 6;
-            this.lStimulus.Text = "Stimulus Mode";
+            lStimulus.AutoSize = true;
+            lStimulus.Location = new Point(3, 5);
+            lStimulus.Margin = new Padding(3, 5, 3, 0);
+            lStimulus.Name = "lStimulus";
+            lStimulus.Size = new Size(87, 15);
+            lStimulus.TabIndex = 6;
+            lStimulus.Text = "Stimulus Mode";
             // 
             // ddStimulusMode
             // 
-            this.ddStimulusMode.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.pLayout.SetColumnSpan(this.ddStimulusMode, 2);
-            this.ddStimulusMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddStimulusMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ddStimulusMode.FormattingEnabled = true;
-            this.ddStimulusMode.Location = new System.Drawing.Point(101, 1);
-            this.ddStimulusMode.Margin = new System.Windows.Forms.Padding(1);
-            this.ddStimulusMode.Name = "ddStimulusMode";
-            this.ddStimulusMode.Size = new System.Drawing.Size(109, 23);
-            this.ddStimulusMode.TabIndex = 7;
-            this.ddStimulusMode.SelectedIndexChanged += new System.EventHandler(this.ddStimulusMode_SelectedIndexChanged);
+            ddStimulusMode.BackColor = Color.WhiteSmoke;
+            pLayout.SetColumnSpan(ddStimulusMode, 2);
+            ddStimulusMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddStimulusMode.FlatStyle = FlatStyle.Flat;
+            ddStimulusMode.FormattingEnabled = true;
+            ddStimulusMode.Location = new Point(101, 1);
+            ddStimulusMode.Margin = new Padding(1);
+            ddStimulusMode.Name = "ddStimulusMode";
+            ddStimulusMode.Size = new Size(109, 23);
+            ddStimulusMode.TabIndex = 7;
+            ddStimulusMode.SelectedIndexChanged += ddStimulusMode_SelectedIndexChanged;
             // 
             // eFrequency
             // 
-            this.eFrequency.Location = new System.Drawing.Point(101, 73);
-            this.eFrequency.Margin = new System.Windows.Forms.Padding(1);
-            this.eFrequency.Name = "eFrequency";
-            this.eFrequency.Size = new System.Drawing.Size(44, 23);
-            this.eFrequency.TabIndex = 13;
-            this.eFrequency.TextChanged += new System.EventHandler(this.eFrequency_TextChanged);
+            eFrequency.Location = new Point(101, 73);
+            eFrequency.Margin = new Padding(1);
+            eFrequency.Name = "eFrequency";
+            eFrequency.Size = new Size(44, 23);
+            eFrequency.TabIndex = 13;
+            eFrequency.TextChanged += eFrequency_TextChanged;
             // 
             // lFrequency
             // 
-            this.lFrequency.AutoSize = true;
-            this.lFrequency.Location = new System.Drawing.Point(3, 77);
-            this.lFrequency.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.lFrequency.Name = "lFrequency";
-            this.lFrequency.Size = new System.Drawing.Size(62, 15);
-            this.lFrequency.TabIndex = 12;
-            this.lFrequency.Text = "Frequency";
+            lFrequency.AutoSize = true;
+            lFrequency.Location = new Point(3, 77);
+            lFrequency.Margin = new Padding(3, 5, 3, 0);
+            lFrequency.Name = "lFrequency";
+            lFrequency.Size = new Size(62, 15);
+            lFrequency.TabIndex = 12;
+            lFrequency.Text = "Frequency";
             // 
             // pLayout
             // 
-            this.pLayout.AutoSize = true;
-            this.pLayout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pLayout.ColumnCount = 3;
-            this.pLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.pLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.pLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.pLayout.Controls.Add(this.ddStimulusMode, 1, 0);
-            this.pLayout.Controls.Add(this.lFrequency, 0, 3);
-            this.pLayout.Controls.Add(this.lValue1, 0, 1);
-            this.pLayout.Controls.Add(this.lValue2, 0, 2);
-            this.pLayout.Controls.Add(this.lStimulus, 0, 0);
-            this.pLayout.Controls.Add(this.eValue1, 1, 1);
-            this.pLayout.Controls.Add(this.eValue2, 1, 2);
-            this.pLayout.Controls.Add(this.eFrequency, 1, 3);
-            this.pLayout.Controls.Add(this.lHz, 2, 3);
-            this.pLayout.Location = new System.Drawing.Point(3, 3);
-            this.pLayout.Name = "pLayout";
-            this.pLayout.RowCount = 5;
-            this.pLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.pLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.pLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.pLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.pLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 2F));
-            this.pLayout.Size = new System.Drawing.Size(211, 98);
-            this.pLayout.TabIndex = 0;
+            pLayout.AutoSize = true;
+            pLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            pLayout.ColumnCount = 3;
+            pLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            pLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50F));
+            pLayout.ColumnStyles.Add(new ColumnStyle());
+            pLayout.Controls.Add(ddStimulusMode, 1, 0);
+            pLayout.Controls.Add(lFrequency, 0, 3);
+            pLayout.Controls.Add(lValue1, 0, 1);
+            pLayout.Controls.Add(lValue2, 0, 2);
+            pLayout.Controls.Add(lStimulus, 0, 0);
+            pLayout.Controls.Add(eValue1, 1, 1);
+            pLayout.Controls.Add(eValue2, 1, 2);
+            pLayout.Controls.Add(eFrequency, 1, 3);
+            pLayout.Controls.Add(lHz, 2, 3);
+            pLayout.Location = new Point(3, 3);
+            pLayout.Name = "pLayout";
+            pLayout.RowCount = 5;
+            pLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
+            pLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
+            pLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
+            pLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
+            pLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 2F));
+            pLayout.Size = new Size(211, 98);
+            pLayout.TabIndex = 0;
             // 
             // lHz
             // 
-            this.lHz.AutoSize = true;
-            this.lHz.Location = new System.Drawing.Point(153, 77);
-            this.lHz.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.lHz.Name = "lHz";
-            this.lHz.Size = new System.Drawing.Size(29, 15);
-            this.lHz.TabIndex = 14;
-            this.lHz.Text = "(Hz)";
+            lHz.AutoSize = true;
+            lHz.Location = new Point(153, 77);
+            lHz.Margin = new Padding(3, 5, 3, 0);
+            lHz.Name = "lHz";
+            lHz.Size = new Size(29, 15);
+            lHz.TabIndex = 14;
+            lHz.Text = "(Hz)";
             // 
             // StimulusSettingsControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.Controls.Add(this.pLayout);
-            this.MinimumSize = new System.Drawing.Size(200, 100);
-            this.Name = "StimulusSettingsControl";
-            this.Size = new System.Drawing.Size(217, 104);
-            this.pLayout.ResumeLayout(false);
-            this.pLayout.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            BackColor = Color.FromArgb(249, 249, 249);
+            Controls.Add(pLayout);
+            MinimumSize = new Size(200, 100);
+            Name = "StimulusSettingsControl";
+            Size = new Size(217, 104);
+            pLayout.ResumeLayout(false);
+            pLayout.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
