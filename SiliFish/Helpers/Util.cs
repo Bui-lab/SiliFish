@@ -1,17 +1,18 @@
-﻿using SiliFish.DataTypes;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions;
+using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Permissions;
 
 
 namespace SiliFish.Helpers
 {
     public class Util
     {
-
         public static string JavaScriptEncode(string s)
         {
             if (string.IsNullOrEmpty(s))

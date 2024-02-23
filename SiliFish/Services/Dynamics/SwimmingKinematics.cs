@@ -183,7 +183,6 @@ namespace SiliFish.Services.Dynamics
                         lastEpisode.EndBeat(t, model.TimeArray[beat_peak]);
                         lastEpisode.StartBeat(t, SagittalPlane.Left);
                     }
-
                     else if (tail_tip_coord[i].X > right_bound && side == LEFT)
                     {
                         side = RIGHT;

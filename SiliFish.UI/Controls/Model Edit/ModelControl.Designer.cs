@@ -92,11 +92,11 @@
             pDrawing = new Panel();
             pbDrawing = new PictureBox();
             tabModel = new TabControl();
+            tDynamics = new TabPage();
+            propDynamics = new PropertyGrid();
+            eDynamicsDescription = new TextBox();
             saveFileCSV = new SaveFileDialog();
             openFileCSV = new OpenFileDialog();
-            tDynamics = new TabPage();
-            eDynamicsDescription = new TextBox();
-            propDynamics = new PropertyGrid();
             tJson.SuspendLayout();
             pModelJSONTop.SuspendLayout();
             tSettings.SuspendLayout();
@@ -500,7 +500,7 @@
             // lCellPoolsTitle
             // 
             lCellPoolsTitle.AutoSize = true;
-            lCellPoolsTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lCellPoolsTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lCellPoolsTitle.Location = new Point(8, 6);
             lCellPoolsTitle.Name = "lCellPoolsTitle";
             lCellPoolsTitle.Size = new Size(59, 15);
@@ -554,7 +554,7 @@
             // lCellsTitle
             // 
             lCellsTitle.AutoSize = true;
-            lCellsTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lCellsTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lCellsTitle.Location = new Point(8, 6);
             lCellsTitle.Name = "lCellsTitle";
             lCellsTitle.Size = new Size(32, 15);
@@ -607,7 +607,7 @@
             // lStimuliTitle
             // 
             lStimuliTitle.AutoSize = true;
-            lStimuliTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lStimuliTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lStimuliTitle.Location = new Point(8, 6);
             lStimuliTitle.Name = "lStimuliTitle";
             lStimuliTitle.Size = new Size(46, 15);
@@ -701,7 +701,7 @@
             // lIncomingTitle
             // 
             lIncomingTitle.AutoSize = true;
-            lIncomingTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lIncomingTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lIncomingTitle.Location = new Point(8, 6);
             lIncomingTitle.Name = "lIncomingTitle";
             lIncomingTitle.Size = new Size(130, 15);
@@ -754,7 +754,7 @@
             // lOutgoingTitle
             // 
             lOutgoingTitle.AutoSize = true;
-            lOutgoingTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lOutgoingTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lOutgoingTitle.Location = new Point(8, 6);
             lOutgoingTitle.Name = "lOutgoingTitle";
             lOutgoingTitle.Size = new Size(130, 15);
@@ -807,7 +807,7 @@
             // lGapTitle
             // 
             lGapTitle.AutoSize = true;
-            lGapTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lGapTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lGapTitle.Location = new Point(8, 6);
             lGapTitle.Name = "lGapTitle";
             lGapTitle.Size = new Size(100, 15);
@@ -845,7 +845,7 @@
             // 
             splitGeneral.Panel2.Controls.Add(splitDimensions);
             splitGeneral.Size = new Size(682, 555);
-            splitGeneral.SplitterDistance = 98;
+            splitGeneral.SplitterDistance = 104;
             splitGeneral.SplitterWidth = 2;
             splitGeneral.TabIndex = 62;
             // 
@@ -874,7 +874,7 @@
             eModelDescription.Multiline = true;
             eModelDescription.Name = "eModelDescription";
             eModelDescription.ScrollBars = ScrollBars.Vertical;
-            eModelDescription.Size = new Size(578, 62);
+            eModelDescription.Size = new Size(578, 68);
             eModelDescription.TabIndex = 7;
             // 
             // eModelName
@@ -900,7 +900,7 @@
             // splitDimensions.Panel2
             // 
             splitDimensions.Panel2.Controls.Add(pDrawing);
-            splitDimensions.Size = new Size(682, 455);
+            splitDimensions.Size = new Size(682, 449);
             splitDimensions.SplitterDistance = 258;
             splitDimensions.SplitterWidth = 2;
             splitDimensions.TabIndex = 61;
@@ -913,7 +913,7 @@
             propModelDimensions.HelpBorderColor = Color.FromArgb(0, 184, 212);
             propModelDimensions.Location = new Point(0, 0);
             propModelDimensions.Name = "propModelDimensions";
-            propModelDimensions.Size = new Size(256, 453);
+            propModelDimensions.Size = new Size(256, 447);
             propModelDimensions.TabIndex = 60;
             // 
             // pDrawing
@@ -923,7 +923,7 @@
             pDrawing.Dock = DockStyle.Fill;
             pDrawing.Location = new Point(0, 0);
             pDrawing.Name = "pDrawing";
-            pDrawing.Size = new Size(420, 453);
+            pDrawing.Size = new Size(420, 447);
             pDrawing.TabIndex = 15;
             // 
             // pbDrawing
@@ -933,7 +933,7 @@
             pbDrawing.Image = (Image)resources.GetObject("pbDrawing.Image");
             pbDrawing.Location = new Point(0, 0);
             pbDrawing.Name = "pbDrawing";
-            pbDrawing.Size = new Size(420, 453);
+            pbDrawing.Size = new Size(420, 447);
             pbDrawing.SizeMode = PictureBoxSizeMode.Zoom;
             pbDrawing.TabIndex = 12;
             pbDrawing.TabStop = false;
@@ -954,14 +954,6 @@
             tabModel.TabIndex = 2;
             tabModel.Tag = "";
             // 
-            // saveFileCSV
-            // 
-            saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
-            // 
-            // openFileCSV
-            // 
-            openFileCSV.Filter = "CSV files(*.csv)|*.csv";
-            // 
             // tDynamics
             // 
             tDynamics.Controls.Add(propDynamics);
@@ -972,6 +964,17 @@
             tDynamics.TabIndex = 8;
             tDynamics.Text = "Dynamics";
             tDynamics.UseVisualStyleBackColor = true;
+            // 
+            // propDynamics
+            // 
+            propDynamics.BackColor = Color.FromArgb(207, 216, 220);
+            propDynamics.Dock = DockStyle.Fill;
+            propDynamics.HelpBackColor = Color.FromArgb(207, 216, 220);
+            propDynamics.HelpBorderColor = Color.FromArgb(0, 184, 212);
+            propDynamics.Location = new Point(0, 0);
+            propDynamics.Name = "propDynamics";
+            propDynamics.Size = new Size(682, 516);
+            propDynamics.TabIndex = 27;
             // 
             // eDynamicsDescription
             // 
@@ -985,16 +988,13 @@
             eDynamicsDescription.TabIndex = 28;
             eDynamicsDescription.Text = "Dynamics parameters are used in calculating firing related statistics.\r\nThey do not effect the how the model behaves and can be modified after the simulation.";
             // 
-            // propDynamics
+            // saveFileCSV
             // 
-            propDynamics.BackColor = Color.FromArgb(207, 216, 220);
-            propDynamics.Dock = DockStyle.Fill;
-            propDynamics.HelpBackColor = Color.FromArgb(207, 216, 220);
-            propDynamics.HelpBorderColor = Color.FromArgb(0, 184, 212);
-            propDynamics.Location = new Point(0, 0);
-            propDynamics.Name = "propDynamics";
-            propDynamics.Size = new Size(682, 516);
-            propDynamics.TabIndex = 27;
+            saveFileCSV.Filter = "CSV files(*.csv)|*.csv";
+            // 
+            // openFileCSV
+            // 
+            openFileCSV.Filter = "CSV files(*.csv)|*.csv";
             // 
             // ModelControl
             // 
