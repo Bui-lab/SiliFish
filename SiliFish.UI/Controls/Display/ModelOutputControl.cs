@@ -182,7 +182,7 @@ namespace SiliFish.UI.Controls
         }
 
         public void CancelRun()
-        {
+        {//TODO look at the the current time, and make the plots available
             cmPlot.Enabled =
                 btnPlotHTML.Enabled =
                 btnAnimate.Enabled = false;

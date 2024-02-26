@@ -121,7 +121,7 @@ namespace SiliFish.ModelUnits.Junction
 
         public virtual void MemoryFlush()
         {
-
+            inputCurrent = null;
         }
 
         public virtual void InitForSimulation(RunParam runParam, ref int _)

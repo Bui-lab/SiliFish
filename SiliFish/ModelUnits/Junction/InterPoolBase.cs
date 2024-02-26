@@ -19,6 +19,7 @@ namespace SiliFish.ModelUnits.Junction
         public double? FixedDuration_ms { get; set; } = null;// in ms
         public double? Delay_ms { get; set; } = null;//in ms
 
+        [JsonIgnore]
         public virtual double Duration_ms { get => throw new NotImplementedException();  }
 
         /// <summary>

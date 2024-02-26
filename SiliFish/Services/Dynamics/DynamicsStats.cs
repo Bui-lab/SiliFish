@@ -409,9 +409,11 @@ namespace SiliFish.Services.Dynamics
             for (int i = 1; i <= VList.Length - 2; i++)
             {
                 if (VList[i] > Vthreshold && VList[i] > VList[i - 1] && VList[i] > VList[i + 1])
+                {
                     SpikeList.Add(i);
-                while (VList[i] > Vthreshold && i <= VList.Length - 2)
-                    i++;
+                    while (VList[i] > Vthreshold && i <= VList.Length - 2)
+                        i++;
+                }
             }
             SpikesCreated = true;
         }
