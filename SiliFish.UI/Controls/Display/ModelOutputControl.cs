@@ -182,10 +182,10 @@ namespace SiliFish.UI.Controls
         }
 
         public void CancelRun()
-        {//TODO look at the the current time, and make the plots available
+        {
             cmPlot.Enabled =
                 btnPlotHTML.Enabled =
-                btnAnimate.Enabled = false;
+                btnAnimate.Enabled = true; //to make partial results available
         }
         #region webViewPlot
         private void WebViewInitializations()
@@ -568,50 +568,81 @@ namespace SiliFish.UI.Controls
 
         private void DisplayNumberOfPlots(List<Cell> Cells, List<CellPool> Pools)
         {
-            numOfPlots = Cells?.Count ?? 0 + Pools?.Count ?? 0;
-            if (Cells != null && Cells.Count != 0)
+            if (PlotType == PlotType.TailMovement || PlotType == PlotType.TailMovementFreq)
             {
-                if (plotSelection is PlotSelectionMultiCells multiCells)
+                switch ((plotSelection as PlotSelectionMultiCells).SomiteSelection)
                 {
-                    IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.CombinePools, multiCells.CombineSomites, multiCells.CombineCells);
-                    if (PlotType == PlotType.Stimuli)
-                        numOfPlots = cellGroups.Count(cg => cg.Any(c => c.HasStimulus()));
-                    else
-                        numOfPlots = cellGroups.Count();
-                }
-                else
-                {
-                    if (PlotType == PlotType.Stimuli)
-                        numOfPlots = Cells.Count(c => c.HasStimulus());
-                    else
-                        numOfPlots = Cells.Count;
-                }
-            }
-            else if (Pools != null && Pools.Count != 0)
-            {
-                if (PlotType == PlotType.Stimuli)
-                    numOfPlots = Pools.Count(p => p.HasStimulus());
-                else
-                    numOfPlots = Pools.Count;
-            }
-
-            if (numOfPlots > 0)
-            {
-                if (PlotType == PlotType.FullDyn)
-                    numOfPlots *= 5;
-                else if (PlotType == PlotType.Current)
-                    numOfPlots *= 3;
-                else if (PlotType == PlotType.MembPotentialWithSpikeFreq)
-                    numOfPlots *= 3;
-                else if (PlotType.GetGroup() == "episode")
-                {
-                    if (PlotType == PlotType.EpisodesMN || PlotType == PlotType.EpisodesTail)
-                        numOfPlots = 7;
-                    else
+                    case PlotSomiteSelection.All:
                         numOfPlots = model.ModelDimensions.NumberOfSomites + 1;
+                        break;
+                    case PlotSomiteSelection.Single:
+                        numOfPlots = 2; // 1 + 1;
+                        break;
+                    case PlotSomiteSelection.FirstMiddleLast:
+                        numOfPlots = 4; // 3 + 1;
+                        break;
+                    case PlotSomiteSelection.Random:
+                        numOfPlots = (plotSelection as PlotSelectionMultiCells).NSomite + 1;
+                        break;
+                    case PlotSomiteSelection.RostralTo:
+                        numOfPlots = (plotSelection as PlotSelectionMultiCells).NSomite + 1;
+                        break;
+                    case PlotSomiteSelection.CaudalTo:
+                        numOfPlots = model.ModelDimensions.NumberOfSomites - (plotSelection as PlotSelectionMultiCells).NSomite + 1;
+                        break;
                 }
-                toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
+
+                if (PlotType == PlotType.TailMovementFreq)
+                    numOfPlots *= 2;
             }
+            else
+            {
+                numOfPlots = Cells?.Count ?? 0 + Pools?.Count ?? 0;
+                if (Cells != null && Cells.Count != 0)
+                {
+                    if (plotSelection is PlotSelectionMultiCells multiCells)
+                    {
+                        IEnumerable<IGrouping<string, Cell>> cellGroups = PlotSelectionMultiCells.GroupCells(Cells, multiCells.CombinePools, multiCells.CombineSomites, multiCells.CombineCells);
+                        if (PlotType == PlotType.Stimuli)
+                            numOfPlots = cellGroups.Count(cg => cg.Any(c => c.HasStimulus()));
+                        else
+                            numOfPlots = cellGroups.Count();
+                    }
+                    else
+                    {
+                        if (PlotType == PlotType.Stimuli)
+                            numOfPlots = Cells.Count(c => c.HasStimulus());
+                        else
+                            numOfPlots = Cells.Count;
+                    }
+                }
+                else if (Pools != null && Pools.Count != 0)
+                {
+                    if (PlotType == PlotType.Stimuli)
+                        numOfPlots = Pools.Count(p => p.HasStimulus());
+                    else
+                        numOfPlots = Pools.Count;
+                }
+
+                if (numOfPlots > 0)
+                {
+                    if (PlotType == PlotType.FullDyn)
+                        numOfPlots *= 5;
+                    else if (PlotType == PlotType.Current)
+                        numOfPlots *= 3;
+                    else if (PlotType == PlotType.MembPotentialWithSpikeFreq)
+                        numOfPlots *= 3;
+                    else if (PlotType.GetGroup() == "episode")
+                    {
+                        if (PlotType == PlotType.EpisodesMN || PlotType == PlotType.EpisodesTail)
+                            numOfPlots = 7;
+                        else
+                            numOfPlots = model.ModelDimensions.NumberOfSomites + 1;
+                    }
+                }
+            }
+            if (numOfPlots > 0)
+                toolTip.SetToolTip(btnPlotHTML, $"# of plots: {numOfPlots}");
         }
         private void DisplayNumberOfPlots()
         {

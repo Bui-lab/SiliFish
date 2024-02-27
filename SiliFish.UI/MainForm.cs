@@ -193,7 +193,7 @@ namespace SiliFish.UI
             {
                 lRunTime.Text = $"Last run cancelled\r\n" +
                     $"Model: {runningModel.ModelName}";
-                modelOutputControl.CancelRun();//TODO send simulation's iProgress/iMax, or a boolean value to make the partial results available
+                modelOutputControl.CancelRun();
             }
             else
             {
