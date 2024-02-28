@@ -263,8 +263,8 @@ namespace SiliFish.ModelUnits.Cells
                 int minSom = Cells.Select(c => c.Somite).Min();
                 int maxSom = Cells.Select(c => c.Somite).Max();
                 som.Add(minSom);
-                som.Add(maxSom);
                 som.Add((minSom + maxSom) / 2);
+                som.Add(maxSom);
             }
             else if (somiteSelection.SomiteSelection == PlotSomiteSelection.Random)
             {
@@ -304,8 +304,8 @@ namespace SiliFish.ModelUnits.Cells
                 int minSeq = Cells.Select(c => c.Sequence).Min();
                 int maxSeq = Cells.Select(c => c.Sequence).Max();
                 seq.Add(minSeq);
-                seq.Add(maxSeq);
                 seq.Add((minSeq + maxSeq) / 2);
+                seq.Add(maxSeq);
             }
             else if (cellSelection.CellSelection == PlotCellSelection.Random)
             {

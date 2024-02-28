@@ -20,21 +20,21 @@ namespace SiliFish.ModelUnits.Parameters
             DisplayName("Use Muscle Tension"), Category("Swim Dynamics")]
         public bool UseMuscleTension { get; set; } = false;
 
-        [Description("Used if 'Use Muscle Tension' is set to false." +
+        [Description("Used if 'Use Muscle Tension' is set to false. " +
             "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
             DisplayName("Alpha"), Category("Swim Dynamics")]
         public double Alpha { get; set; } = 0;
 
-        [Description("Used if 'Use Muscle Tension' is set to false." +
+        [Description("Used if 'Use Muscle Tension' is set to false. " +
             "If non-zero, (α + β * R) is used as 'Conversion Coefficient')"), 
             DisplayName("Beta"), Category("Swim Dynamics")]
         public double Beta { get; set; } = 0;
 
-        [Description("Used if 'Use Muscle Tension' is set to false." +
+        [Description("Used if 'Use Muscle Tension' is set to false. " +
             "Coefficient to convert membrane potential to driving force for the oscillation"), DisplayName("Potential Conversion Coef"), Category("Swim Dynamics")]
         public double ConvCoefPotential { get; set; } = 0.1;
 
-        [Description("\"Used if 'Use Muscle Tension' is set to true." +
+        [Description("Used if 'Use Muscle Tension' is set to true. " +
             "Coefficient to convert muscle tension to driving force for the oscillation"), DisplayName("Tension Conversion Coef"), Category("Swim Dynamics")]
         public double ConvCoefTension { get; set; } = 0.1;
 

@@ -256,7 +256,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (V == null)
                 return false;
-            return V.AsArray().HasSpike(Core.Vmax, iStart, iEnd);
+            return V.AsArray().HasSpike(Core.Vthreshold, iStart, iEnd);
         }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
