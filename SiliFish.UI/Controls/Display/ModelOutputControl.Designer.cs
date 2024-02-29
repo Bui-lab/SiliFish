@@ -398,7 +398,7 @@
             label1.Name = "label1";
             label1.Size = new Size(110, 18);
             label1.TabIndex = 49;
-            label1.Text = "Unknown";
+            label1.Text = "Cholinergic";
             // 
             // label2
             // 

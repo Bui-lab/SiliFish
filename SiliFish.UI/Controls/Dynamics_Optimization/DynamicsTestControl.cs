@@ -185,6 +185,7 @@ namespace SiliFish.UI.Controls
                 tempFolder = Path.GetTempPath() + "SiliFish";
             if (string.IsNullOrEmpty(outputFolder))
                 outputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+            SetControlDeltaTs(DeltaT);
         }
 
         private void PlotCharts(List<Chart> charts, string title, bool synchronized = true)
@@ -207,7 +208,7 @@ namespace SiliFish.UI.Controls
             {
                 ReadParameters();
                 double[] dtValues = sensitivityAnalysisDeltaT.GetValues();
-                List<Chart> charts = DynamicsTest.DeltaTAnalysis(coreType, Parameters, 
+                List<Chart> charts = DynamicsTest.DeltaTAnalysis(coreType, Parameters,
                     ReadStimulusSettings(), (double)ePlotEndTime.Value, dtValues, Random);
                 PlotCharts(charts, "Δt Sensitivity Analysis");
             }
@@ -220,8 +221,8 @@ namespace SiliFish.UI.Controls
         private void SensitivityAnalysisFiring_RunAnalysis(object sender, EventArgs e)
         {
             ReadParameters();
-            List<Chart> charts = DynamicsTest.FiringAnalysis(coreType, 
-                Parameters, sensitivityAnalysisFiring.SelectedParam, 
+            List<Chart> charts = DynamicsTest.FiringAnalysis(coreType,
+                Parameters, sensitivityAnalysisFiring.SelectedParam,
                 sensitivityAnalysisFiring.Range,
                 ReadStimulusSettings(), (double)ePlotEndTime.Value, DeltaT, Random);
             PlotCharts(charts, "Firing Analysis");
@@ -291,7 +292,7 @@ namespace SiliFish.UI.Controls
         }
         private void DynamicsTestControl_Load(object sender, EventArgs e)
         {
-            FirstRun();            
+            FirstRun();
         }
 
         private async void InitAsync()
@@ -717,5 +718,10 @@ namespace SiliFish.UI.Controls
                 DynamicsRun();
         }
 
+        private void eDeltaT_ValueChanged(object sender, EventArgs e)
+        {
+            if (eDeltaT.Focused)
+                SetControlDeltaTs(DeltaT);
+        }
     }
 }

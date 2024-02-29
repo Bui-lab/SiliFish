@@ -95,6 +95,7 @@
             .enableNodeDrag(true)
             .linkColor(l => l.type == 'exc' ? '#0C0' ://green - excitatory
                             l.type == 'inh' ? '#C00' ://red - inibitory
+                            l.type == 'ACh' ? '#808080' ://cholinergic
                             '#333') //dark gray
             .linkLabel(l => l.source.id == '_h_' || l.source == "_t_" ? `` ://spine
                 l.type == 'gap' ?

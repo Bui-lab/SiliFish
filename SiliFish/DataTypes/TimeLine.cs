@@ -100,9 +100,12 @@ namespace SiliFish.DataTypes
         }
         public void AddOffset(double delay_ms)
         {
-            if (Periods.Count == 0 || delay_ms < double.Epsilon) 
+            if (delay_ms < double.Epsilon) 
                 return;
-            Periods = Periods.Select(p => (p.start + delay_ms, p.end == -1 ? p.end : p.end + delay_ms)).ToList();
+            if (Periods.Count == 0)
+                Periods.Add((delay_ms, -1));
+            else 
+                Periods = Periods.Select(p => (p.start + delay_ms, p.end == -1 ? p.end : p.end + delay_ms)).ToList();
         }
         public void MultiplyBy (double multiplier)
         {

@@ -828,7 +828,7 @@ namespace SiliFish.UI.Controls
             if (lastPlot != null && lastPlot.PlotType.Equals(PlotType) &&
                 lastPlot.Selection is PlotSelectionMultiCells lpsm && plotSelection is PlotSelectionMultiCells psm)
             {
-                if (PlotType.GetGroup() == "current" && lpsm.Equals(psm))
+                if (PlotType.GetGroup() == "current" && lpsm.Equals(psm) && lastPlot.PlotSubset == plotsubset)
                 {
                     psm.CombineJunctions = !lpsm.CombineJunctions;
                 }

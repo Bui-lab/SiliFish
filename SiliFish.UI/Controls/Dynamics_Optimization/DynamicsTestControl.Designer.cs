@@ -389,6 +389,7 @@
             eDeltaT.Size = new Size(66, 23);
             eDeltaT.TabIndex = 26;
             eDeltaT.Value = new decimal(new int[] { 1, 0, 0, 65536 });
+            eDeltaT.ValueChanged += eDeltaT_ValueChanged;
             // 
             // lDeltaT
             // 
