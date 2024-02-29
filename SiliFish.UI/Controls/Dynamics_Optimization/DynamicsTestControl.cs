@@ -507,9 +507,8 @@ namespace SiliFish.UI.Controls
                 DynamicsRun();
         }
 
-        private double[] GenerateStimulus()
+        private double[] GenerateStimulus(StimulusSettings settings)
         {
-            StimulusSettings settings = ReadStimulusSettings();
             int plotEnd_ms = (int)ePlotEndTime.Value;
             (TimeArray, double[] I) = DynamicsTest.GenerateStimulus(settings, plotEnd_ms, DeltaT, Random);
             return I;
@@ -523,7 +522,7 @@ namespace SiliFish.UI.Controls
             {
                 if (rbSingleEntryStimulus.Checked)
                 {
-                    double[] I = GenerateStimulus();
+                    double[] I = GenerateStimulus(ReadStimulusSettings());
                     dynamics = core.DynamicsTest(I);
                     CreatePlots();
                 }
@@ -566,7 +565,7 @@ namespace SiliFish.UI.Controls
                                 Value2 = 0,
                                 TimeLine_ms = tl
                             };
-                            I.Add(GenerateStimulus());
+                            I.Add(GenerateStimulus(stimulusSettings));
                             dynamicsList.Add($"Stimulus: {stim:0.#####}", core.DynamicsTest(I[iter++]));
                         }
                         CreatePlots(dynamicsList, columnNames, I);
