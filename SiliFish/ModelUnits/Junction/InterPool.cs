@@ -24,7 +24,13 @@ namespace SiliFish.ModelUnits.Junction
         public override string ToString()
         {
             string arrow = Mode == CellOutputMode.Electrical ? "↔" : "→";
-            return $"{SourcePool}{arrow}{TargetPool}";
+            string ntmode = Mode == CellOutputMode.Cholinergic ? "C" :
+                Mode == CellOutputMode.Excitatory ? "+" :
+                Mode == CellOutputMode.Inhibitory ? "-" :
+                Mode == CellOutputMode.Modulatory ? "M" :
+                Mode == CellOutputMode.Electrical ? "E" :
+                "?";
+            return $"({ntmode}){SourcePool}{arrow}{TargetPool}";
         }
 
     }

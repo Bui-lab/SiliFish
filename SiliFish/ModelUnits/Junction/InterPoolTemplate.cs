@@ -257,7 +257,13 @@ namespace SiliFish.ModelUnits.Junction
                 if (CellReach.Descending)
                     arrows += "⬊";
             }
-            return $"{Name}{activeStatus}{arrows}";
+            string ntmode = linkedSource?.CellOutputMode == CellOutputMode.Cholinergic ? "C" :
+                    linkedSource?.CellOutputMode == CellOutputMode.Excitatory ? "+" :
+                    linkedSource?.CellOutputMode == CellOutputMode.Inhibitory ? "-" :
+                    linkedSource?.CellOutputMode == CellOutputMode.Modulatory ? "M" :
+                    linkedSource?.CellOutputMode == CellOutputMode.Electrical ? "E" :
+                    "?";
+            return $"({ntmode}){Name}{activeStatus}{arrows}";
         }
 
         public override List<string> DiffersFrom(ModelUnitBase other)

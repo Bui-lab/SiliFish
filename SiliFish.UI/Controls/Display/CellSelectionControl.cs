@@ -129,7 +129,7 @@ namespace SiliFish.UI.Controls.Display
                 Const.InhibitoryNeurons
             ];
             if (runningModel == null || runningModel.CellPools.Count == 0) return;
-            itemList.AddRange(runningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p).ToArray());
+            itemList.AddRange([.. runningModel.CellPools.Where(cp => cp.Active).Select(p => p.CellGroup).OrderBy(p => p)]);
 
             ddPools.Items.AddRange(itemList.Distinct().ToArray());
             if (ddPools.Items?.Count > 0)

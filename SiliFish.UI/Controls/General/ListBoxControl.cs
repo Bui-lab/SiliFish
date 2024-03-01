@@ -325,6 +325,10 @@ namespace SiliFish.UI.Controls
         public void LoadItems(List<object> items)
         {
             ClearItems();
+            AppendItems(items);
+        }
+        public void AppendItems(List<object> items)
+        {
             foreach (object item in items)
                 AppendItem(item);
             if (IsInactiveHidden)
