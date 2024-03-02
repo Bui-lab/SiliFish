@@ -38,26 +38,27 @@ namespace SiliFish.UI.Controls
         }
 
         private List<CellPoolTemplate> SelectedPoolTemplates;
-        private CellPoolTemplate FirstSelectedTemplate => SelectedPoolTemplates != null && SelectedPoolTemplates.Count > 0 ?
+        private CellPoolTemplate FirstSelectedCellPoolTemplate => SelectedPoolTemplates != null && SelectedPoolTemplates.Count > 0 ?
             SelectedPoolTemplates[0] : null;
 
         private List<CellPool> SelectedPools;
         private CellPool FirstSelectedPool => SelectedPools != null && SelectedPools.Count > 0 ?
             SelectedPools[0] : null;
-        private string SelectedPoolIDs => SelectedPools != null ? 
+        private string SelectedPoolIDs => SelectedPools != null ?
             string.Join(',', SelectedPools.Select(cp => cp.ID)) : null;
-        private string SelectedPoolTemplatedIDs => SelectedPoolTemplates != null ? 
-            string.Join(',', SelectedPoolTemplates.Select(cp => cp.ID)) : null;
 
-        private Cell SelectedCell; //valid if Mode == Mode.RunningModel
+        private List<Cell> SelectedCells; //valid if Mode == Mode.RunningModel
+        private Cell FirstSelectedCell => SelectedCells != null && SelectedCells.Count > 0 ?
+               SelectedCells[0] : null;
+        
         private char modeIOG;//I: incoming, O; outgoing; G: gap
-        private JunctionBase SelectedJunction; //TODO can be multiple
-        private StimulusBase SelectedStimulus; //TODO can be multiple
+        private JunctionBase SelectedJunction; 
+        private StimulusBase SelectedStimulus; 
         private ModelUnitBase SelectedUnit
         {
             get
             {
-                return (ModelUnitBase)SelectedCell ??
+                return SelectedCells?.Count > 0 ? SelectedCells[0]:
                         (SelectedPools?.Count > 0 ? SelectedPools[0] :
                         SelectedPoolTemplates?.Count > 0 ? SelectedPoolTemplates[0] : null);//TODO convert to SelectedUnits
             }
@@ -297,7 +298,7 @@ namespace SiliFish.UI.Controls
             listCellPools.LoadItems(Model.GetCellPools().Cast<object>().ToList());
             SelectedPoolTemplates = null;
             SelectedPools = null;
-            SelectedCell = null;
+            SelectedCells = null;
         }
         private CellPoolTemplate OpenCellPoolDialog(CellPoolTemplate pool)
         {
@@ -353,22 +354,22 @@ namespace SiliFish.UI.Controls
                 SelectedPools = [.. lb.SelectedItems.Where(i => i is CellPool).Select(i => i as CellPool)];
                 if (listCellPools.HighlightSelected)
                     listCellPools_ItemHighlight(sender, e);
-                SelectedCell = null;
-                LoadCells();//TODO multiple pools
+                SelectedCells = null;
+                LoadCells();
                 LoadProjections(SelectedPools);
-                LoadStimuli(pool);//TODO multiple pools
+                LoadStimuli(SelectedPools);
             }
             else if (lb.SelectedItem is CellPoolTemplate cpt)
             {
                 SelectedPoolTemplates = [.. lb.SelectedItems.Where(i => i is CellPoolTemplate).Select(i => i as CellPoolTemplate)];
-                LoadProjections(cpt.CellGroup);
-                LoadStimuli(cpt);//TODO multiple pools
+                LoadProjections(SelectedPoolTemplates);
+                LoadStimuli(SelectedPoolTemplates);
             }
             else if (lb.SelectedItem == null)
             {
                 SelectedPoolTemplates = null;
                 SelectedPools = null;
-                SelectedCell = null;
+                SelectedCells = null;
                 LoadCells();//Full list
                 LoadProjections();//Full list
                 LoadStimuli();//Full list
@@ -437,7 +438,7 @@ namespace SiliFish.UI.Controls
             if (SelectedPools == null || SelectedPools.Count == 0)
                 return;
             SelectedUnitArgs args = new();
-            args.unitsSelected.Add(SelectedPools[0]);
+            args.unitsSelected.Add(FirstSelectedPool);
             HighlightRequested?.Invoke(this, args);
         }
 
@@ -571,21 +572,21 @@ namespace SiliFish.UI.Controls
             if (Model is ModelTemplate) return;
             lCellsTitle.Text = SelectedPoolIDs ?? "Cells";
 
-            List<Cell> Cells = 
-                (List<Cell>)(SelectedPools!=null && SelectedPools.Count>0?
-                SelectedPools.SelectMany(sp=>sp.GetCells()).OfType<Cell>().ToList() :
-                (Model as RunningModel).GetCells());
+            List<Cell> Cells =
+                SelectedPools != null && SelectedPools.Count > 0 ?
+                SelectedPools.SelectMany(sp => sp.GetCells()).OfType<Cell>().ToList() :
+                (Model as RunningModel).GetCells();
             if ((SelectedPools == null || SelectedPools.Count > 1) && Cells.Count > GlobalSettings.MaxNumberOfUnits)
             {
                 listCells.ClearItems();
-                listCells.AppendItem($"Number of items to display greater than {GlobalSettings.MaxNumberOfUnits}");
+                listCells.AppendItem($"Number of items to display is greater than {GlobalSettings.MaxNumberOfUnits}.");
                 listCells.AppendItem("Please select a cell pool to list cells under...");
             }
             else
             {
                 listCells.LoadItems(Cells.Cast<object>().ToList());
             }
-            SelectedCell = null;
+            SelectedCells = null;
         }
 
         private Cell OpenCellDialog(Cell cell)
@@ -616,7 +617,7 @@ namespace SiliFish.UI.Controls
                     listCells.AppendItem(newCell);
                 else
                     SelectedPools = [newCell.CellPool];
-                SelectedCell = newCell;
+                SelectedCells = [newCell];
                 ModelIsUpdated();
             }
         }
@@ -627,10 +628,10 @@ namespace SiliFish.UI.Controls
             ListBoxControl lb = sender as ListBoxControl;
             if (lb.SelectedItem is Cell cell)
             {
-                SelectedCell = cell;
+                SelectedCells = [.. lb.SelectedItems.Where(i => i is Cell).Select(i => i as Cell)];
                 if (listCells.HighlightSelected)
                     listCells_ItemHighlight(sender, e);
-                LoadProjections(cell);
+                LoadProjections(SelectedCells);
                 LoadStimuli(cell);
             }
         }
@@ -651,7 +652,7 @@ namespace SiliFish.UI.Controls
                 cell.CellPool.AddCell(cellDuplicate);
                 listCells.AppendItem(cellDuplicate);
                 SelectedPools = [cell.CellPool];
-                SelectedCell = cell;
+                SelectedCells = [cell];
                 RefreshProjections();
                 ModelIsUpdated();
             }
@@ -669,7 +670,7 @@ namespace SiliFish.UI.Controls
                         cell.ClearLinks();
                         cell.CellPool.RemoveCell(cell);
                     }
-                    SelectedCell = null;
+                    SelectedCells = null;
                     LoadCells();
                     LoadProjections();
                     LoadStimuli();
@@ -700,7 +701,7 @@ namespace SiliFish.UI.Controls
         private void listCells_ItemHighlight(object sender, EventArgs e)
         {
             SelectedUnitArgs args = new();
-            args.unitsSelected.Add(SelectedCell);
+            args.unitsSelected.Add(FirstSelectedCell);
             HighlightRequested?.Invoke(this, args);
         }
 
@@ -740,7 +741,7 @@ namespace SiliFish.UI.Controls
 
         private void listCells_ItemsImport(object sender, EventArgs e)
         {
-            string unit = SelectedPools != null  && SelectedPools.Count> 0 ? " of " + SelectedPoolIDs : "";
+            string unit = SelectedPools != null && SelectedPools.Count > 0 ? " of " + SelectedPoolIDs : "";
             if (!warnedImport && SelectedUnitHasCell())
             {
                 warnedImport = true;
@@ -775,12 +776,12 @@ namespace SiliFish.UI.Controls
 
         private void RefreshProjections()
         {
-            if (SelectedCell != null)
-                LoadProjections(SelectedCell);
+            if (SelectedCells != null)
+                LoadProjections(SelectedCells);
             else if (SelectedPools != null)
                 LoadProjections(SelectedPools);
             else if (SelectedPoolTemplates != null && SelectedPoolTemplates.Count > 0)
-                LoadProjections(SelectedPoolTemplates[0].CellGroup); //TODO multiple CPTs
+                LoadProjections(SelectedPoolTemplates);
             else
                 LoadProjections();
             if (SelectedJunction != null)
@@ -836,29 +837,31 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void LoadProjections(string cellPoolID)
+        private void LoadProjections(List<CellPoolTemplate> cellpooltemplates)
         {
-            if (string.IsNullOrEmpty(cellPoolID))
+            if (cellpooltemplates == null || cellpooltemplates.Count == 0)
             {
                 LoadProjections();
                 return;
             }
             ClearProjections();
-            lIncomingTitle.Text = $"Incoming Connections of {cellPoolID}";
-            lOutgoingTitle.Text = $"Outgoing Connections of {cellPoolID}";
-            lGapTitle.Text = $"Gap Junctions of {cellPoolID}";
+            string pools = string.Join(',', cellpooltemplates.Select(cp => cp.CellGroup));
+            List<string> cellGroupNames = cellpooltemplates.Select(cp => cp.CellGroup).ToList();
+            lIncomingTitle.Text = $"Incoming Connections of {pools}";
+            lOutgoingTitle.Text = $"Outgoing Connections of {pools}";
+            lGapTitle.Text = $"Gap Junctions of {pools}";
             splitChemicalJunctions.Panel1Collapsed = false;
             if (Model == null || Model is not ModelTemplate) return;
             listOutgoing.LoadItems(Model.GetChemicalProjections()
-                .Where(proj => ((InterPoolTemplate)proj).SourcePool == cellPoolID)
+                .Where(proj => cellGroupNames.Contains(((InterPoolTemplate)proj).SourcePool))
                 .Cast<object>()
                 .ToList());
             listIncoming.LoadItems(Model.GetChemicalProjections()
-                .Where(proj => ((InterPoolTemplate)proj).TargetPool == cellPoolID)
+                .Where(proj => cellGroupNames.Contains(((InterPoolTemplate)proj).TargetPool))
                 .Cast<object>()
                 .ToList());
             listGap.LoadItems(Model.GetGapProjections()
-                .Where(proj => ((InterPoolTemplate)proj).SourcePool == cellPoolID || ((InterPoolTemplate)proj).TargetPool == cellPoolID)
+                .Where(proj => cellGroupNames.Contains(((InterPoolTemplate)proj).SourcePool) || cellGroupNames.Contains(((InterPoolTemplate)proj).TargetPool))
                 .Cast<object>()
                 .ToList());
         }
@@ -869,9 +872,11 @@ namespace SiliFish.UI.Controls
                 LoadProjections();
                 return;
             }
-            lIncomingTitle.Text = $"Incoming Connections of {string.Join(',', cellpools.Select(cp => cp.ID))}";
-            lOutgoingTitle.Text = $"Outgoing Connections of {string.Join(',', cellpools.Select(cp => cp.ID))}";
-            lGapTitle.Text = $"Gap Junctions of {string.Join(',', cellpools.Select(cp => cp.ID))}";
+
+            string pools = string.Join(',', cellpools.Select(cp => cp.ID));
+            lIncomingTitle.Text = $"Incoming Connections of {pools}";
+            lOutgoingTitle.Text = $"Outgoing Connections of {pools}";
+            lGapTitle.Text = $"Gap Junctions of {pools}";
             splitChemicalJunctions.Panel1Collapsed = false;
             ClearProjections();
             foreach (CellPool cp in cellpools)
@@ -888,9 +893,10 @@ namespace SiliFish.UI.Controls
                 listIncoming.AppendItems(chemInterPools.Where(ip => ip.TargetPool == cp.ID).Cast<object>().ToList());
             }
         }
-        private void LoadProjections(Cell cell)
+
+        private void LoadProjections(List<Cell> cells)
         {
-            if (cell == null)
+            if (cells == null || cells.Count == 0)
             {
                 if (SelectedPools != null)
                     LoadProjections(SelectedPools);
@@ -899,17 +905,19 @@ namespace SiliFish.UI.Controls
                 return;
             }
             ClearProjections();
-            lIncomingTitle.Text = $"Incoming Connections of {cell.ID}";
-            lOutgoingTitle.Text = $"Outgoing Connections of {cell.ID}";
-            lGapTitle.Text = $"Gap Junctions of {cell.ID}";
-            listGap.LoadItems(cell.GapJunctions.Cast<object>().ToList());
+            string cellIDs = string.Join(',', cells.Select(cp => cp.ID));
 
-            if (cell is Neuron neuron)
+            lIncomingTitle.Text = $"Incoming Connections of {cellIDs}";
+            lOutgoingTitle.Text = $"Outgoing Connections of {cellIDs}";
+            lGapTitle.Text = $"Gap Junctions of {cellIDs}";
+            listGap.LoadItems(cells.SelectMany(c => c.GapJunctions).OfType<GapJunction>().Cast<object>().ToList());
+
+            if (cells[0] is Neuron neuron)
             {
                 listIncoming.LoadItems(neuron.Synapses.Cast<object>().ToList());
                 listOutgoing.LoadItems(neuron.Terminals.Cast<object>().ToList());
             }
-            if (cell is MuscleCell muscleCell)
+            if (cells[0] is MuscleCell muscleCell)
             {
                 listIncoming.LoadItems(muscleCell.EndPlates.Cast<object>().ToList());
             }
@@ -951,15 +959,15 @@ namespace SiliFish.UI.Controls
                 jncControl.SetJunction(interpool as JunctionBase, newJunc);
                 if (setSource)
                 {
-                    if (SelectedCell != null)
-                        jncControl.SetSourceCell(SelectedCell);
+                    if (FirstSelectedCell != null)
+                        jncControl.SetSourceCell(FirstSelectedCell);
                     else if (FirstSelectedPool != null)
                         jncControl.SetSourcePool(FirstSelectedPool);
                 }
                 if (setTarget)
                 {
-                    if (SelectedCell != null)
-                        jncControl.SetTargetCell(SelectedCell);
+                    if (FirstSelectedCell != null)
+                        jncControl.SetTargetCell(FirstSelectedCell);
                     else if (FirstSelectedPool != null)
                         jncControl.SetTargetPool(FirstSelectedPool);
                 }
@@ -1063,10 +1071,10 @@ namespace SiliFish.UI.Controls
         }
         private void listConnections_ItemsSort(object sender, EventArgs e)
         {
-            if (SelectedCell != null)
+            if (SelectedCells != null)
             {
-                SelectedCell.SortJunctions();
-                LoadProjections(SelectedCell);
+                SelectedCells.ForEach(c => c.SortJunctions());
+                LoadProjections(SelectedCells);
             }
             else if (CurrentMode == RunMode.Template)
             {
@@ -1201,16 +1209,14 @@ namespace SiliFish.UI.Controls
             object obj = (sender as ListBoxControl).SelectedItem;
             if (obj is GapJunction jnc)
             {
-                Cell otherCell = SelectedCell == jnc.Cell1 ? jnc.Cell2 : jnc.Cell1;
+                Cell otherCell = FirstSelectedCell == jnc.Cell1 ? jnc.Cell2 : jnc.Cell1;
                 listCellPools.SelectedItem = otherCell.CellPool;
                 listCells.SelectedItem = otherCell;
             }
             else if (obj is InterPoolTemplate ipt)
             {
-                /*//TODO multiple CPTs
-                 * string otherPool = SelectedPoolTemplate.CellGroup == ipt.TargetPool ? ipt.SourcePool : ipt.TargetPool;
+                string otherPool = FirstSelectedCellPoolTemplate.CellGroup == ipt.TargetPool ? ipt.SourcePool : ipt.TargetPool;
                 listCellPools.SelectItem(otherPool);
-                */
             }
         }
 
@@ -1273,13 +1279,12 @@ namespace SiliFish.UI.Controls
 
         private void RefreshStimuli()
         {
-            if (SelectedCell != null)
-                LoadStimuli(SelectedCell);
-            /*
-             * //TODO multiple CPTs else if (SelectedPool != null)
-            LoadStimuli(SelectedPool);
-            else if (SelectedPoolTemplate != null)
-                LoadStimuli(SelectedPoolTemplate);*/
+            if (SelectedCells != null)
+                LoadStimuli(SelectedCells);
+            else if (SelectedPools != null)
+                LoadStimuli(SelectedPools);
+            else if (SelectedPoolTemplates != null)
+                LoadStimuli(SelectedPoolTemplates);
             else
                 LoadStimuli();
             if (SelectedStimulus != null)
@@ -1300,47 +1305,45 @@ namespace SiliFish.UI.Controls
             if (unit is null)
                 LoadStimuli();
             else if (unit is Cell cell)
-                LoadStimuli(cell);
+                LoadStimuli(new List<Cell>() { cell });
             else if (unit is CellPool cellPool)
-                LoadStimuli(cellPool);
+                LoadStimuli(new List<CellPool>() { cellPool });
             else if (unit is CellPoolTemplate poolTemplate)
-                LoadStimuli(poolTemplate);
+                LoadStimuli(new List<CellPoolTemplate> { poolTemplate });
         }
 
 
-        private void LoadStimuli(CellPoolTemplate cellPoolTemplate)
+        private void LoadStimuli(List<CellPoolTemplate> cellPoolTemplates)
         {
-            if (cellPoolTemplate is null)
+            if (cellPoolTemplates == null || cellPoolTemplates.Count == 0)
             {
                 LoadStimuli();
                 return;
             }
             if (Model == null || Model is not ModelTemplate) return;
-            lStimuliTitle.Text = $"Stimuli of {cellPoolTemplate.CellGroup}";
-            listStimuli.LoadItems(Model.GetStimuli().Cast<StimulusTemplate>().Where(st => st.TargetPool == cellPoolTemplate.CellGroup).Cast<object>().ToList());
+            lStimuliTitle.Text = $"Stimuli of {string.Join(',', cellPoolTemplates.Select(cp => cp.CellGroup))}";
+            List<string> ids = cellPoolTemplates.Select(cp => cp.CellGroup).ToList();
+            listStimuli.LoadItems(Model.GetStimuli().Cast<StimulusTemplate>().Where(st => ids.Contains(st.TargetPool)).Cast<object>().ToList());
         }
-        private void LoadStimuli(CellPool cp)
+        private void LoadStimuli(List<CellPool> cellpools)
         {
-            if (cp == null)
+            if (cellpools == null || cellpools.Count==0)
             {
                 LoadStimuli();
                 return;
             }
-            lStimuliTitle.Text = $"Stimuli of {cp.ID}";
-            listStimuli.LoadItems(cp.GetStimuli().Cast<object>().ToList());
+            lStimuliTitle.Text = $"Stimuli of {string.Join(',', cellpools.Select(cp => cp.ID))}";
+            listStimuli.LoadItems(cellpools.SelectMany(cp => cp.GetStimuli()).Cast<object>().ToList());
         }
-        private void LoadStimuli(Cell cell)
+        private void LoadStimuli(List<Cell> cells)
         {
-            if (cell == null)
+            if (cells == null || cells.Count==0)
             {
-                if (FirstSelectedPool != null)
-                    LoadStimuli(FirstSelectedPool);//TODO multiple cell pools
-                else
-                    LoadStimuli();
+                LoadStimuli(SelectedPools);
                 return;
             }
-            lStimuliTitle.Text = $"Stimuli of {cell.ID}";
-            listStimuli.LoadItems(cell.Stimuli.ListOfStimulus.Cast<object>().ToList());
+            lStimuliTitle.Text = $"Stimuli of {string.Join(',', cells.Select(cp => cp.ID))}";
+            listStimuli.LoadItems(cells.SelectMany(c=>c.Stimuli.ListOfStimulus).Cast<object>().ToList());
         }
 
         private StimulusBase OpenStimulusDialog(StimulusBase stim)
@@ -1352,8 +1355,8 @@ namespace SiliFish.UI.Controls
                 StimulusTemplateControl stimControl = new();
                 stimControl.SetStimulus((Model as ModelTemplate).CellPoolTemplates, stim as StimulusTemplate);
                 frmControl.AddControl(stimControl, stimControl.CheckValues);
-                if (stim == null && FirstSelectedTemplate != null)
-                    stimControl.SetSourcePool(FirstSelectedTemplate);
+                if (stim == null && FirstSelectedCellPoolTemplate != null)
+                    stimControl.SetSourcePool(FirstSelectedCellPoolTemplate);
 
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
 
@@ -1362,8 +1365,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                /*TODO multiple CPT
-                if (stim == null && SelectedCell == null && SelectedPool == null)
+                if (stim == null && FirstSelectedCell == null && FirstSelectedPool == null)
                 {
                     MessageBox.Show("Please select the cell pool or cell the stimulus will be applied to.", "Confirmation");
                     return null;
@@ -1374,10 +1376,10 @@ namespace SiliFish.UI.Controls
                 frmControl.Text = stim?.ToString() ?? "New Stimulus";
                 if (stim == null)
                 {
-                    stimControl.SetTargetCellOrPool(SelectedCell, SelectedPool);
+                    stimControl.SetTargetCellOrPool(FirstSelectedCell, FirstSelectedPool);
                 }
                 if (frmControl.ShowDialog() == DialogResult.OK)
-                    return stimControl.GetStimulus();*/
+                    return stimControl.GetStimulus();
             }
             return null;
         }
@@ -1448,10 +1450,10 @@ namespace SiliFish.UI.Controls
         }
         private void listStimuli_ItemsSort(object sender, EventArgs e)
         {
-            if (SelectedCell != null)
+            if (SelectedCells != null)
             {
-                SelectedCell.SortStimuli();
-                LoadStimuli(SelectedCell);
+                SelectedCells.ForEach(c=>c.SortStimuli());
+                LoadStimuli(SelectedCells);
             }
             else if (SelectedPools != null)
             {
@@ -1460,12 +1462,12 @@ namespace SiliFish.UI.Controls
                     foreach (Cell c in pool.Cells)
                         c.SortStimuli();
                 }
-                //TODO multiple CPT LoadStimuli(SelectedPools);
+                LoadStimuli(SelectedPools);
             }
             else if (Model is ModelTemplate mt)
             {
                 mt.StimulusTemplates.Sort();
-                //TODO multiple CPT LoadStimuli(SelectedPoolTemplate);
+                LoadStimuli(SelectedPoolTemplates);
             }
 
         }
