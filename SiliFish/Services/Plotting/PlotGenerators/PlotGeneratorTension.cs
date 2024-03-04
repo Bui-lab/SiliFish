@@ -43,7 +43,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 List<Color> colorPerChart = [];
                 foreach (Cell cell in cellGroup)
                 {
-                    MuscleCell muscleCell = cell as MuscleCell;
+                    if (cell is not MuscleCell muscleCell) continue;
                     double[] Tension = muscleCell.RelativeTension;
                     columnTitles += cell.ID + ",";
                     colorPerChart.Add(cell.CellPool.Color);

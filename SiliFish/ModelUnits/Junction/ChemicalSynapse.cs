@@ -18,6 +18,7 @@ using System.Reflection;
 using SiliFish.DynamicUnits.JncCore;
 using System.Text;
 using SiliFish.Extensions;
+using System.Net.Mail;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -171,8 +172,13 @@ public override string SourcePool
         }
         public override string ToString()
         {
+            string ntmode = PreNeuron.CellPool.CellOutputMode == CellOutputMode.Cholinergic ? "C" :
+                PreNeuron.CellPool.CellOutputMode == CellOutputMode.Excitatory ? "+" :
+                PreNeuron.CellPool.CellOutputMode == CellOutputMode.Inhibitory ? "-" :
+                PreNeuron.CellPool.CellOutputMode == CellOutputMode.Modulatory ? "M" :
+                "?";
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
-            return $"{ID}{activeStatus}";
+            return $"({ntmode}) {ID}{activeStatus}";
         }
         public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {

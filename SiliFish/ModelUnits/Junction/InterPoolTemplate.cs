@@ -242,7 +242,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" :
                 Active ? " (timeline)" : " (inactive)";
-            string arrows="";
+            string arrows = "";
             if (AxonReachMode == AxonReachMode.Ipsilateral || AxonReachMode == AxonReachMode.Bilateral)
             {
                 if (CellReach.Ascending)
@@ -257,13 +257,13 @@ namespace SiliFish.ModelUnits.Junction
                 if (CellReach.Descending)
                     arrows += "⬊";
             }
-            string ntmode = linkedSource?.CellOutputMode == CellOutputMode.Cholinergic ? "C" :
+            bool electrical = ConnectionType == ConnectionType.Gap;
+            string ntmode = electrical ? "🗲" :
+                (linkedSource?.CellOutputMode == CellOutputMode.Cholinergic ? "C" :
                     linkedSource?.CellOutputMode == CellOutputMode.Excitatory ? "+" :
                     linkedSource?.CellOutputMode == CellOutputMode.Inhibitory ? "-" :
-                    linkedSource?.CellOutputMode == CellOutputMode.Modulatory ? "M" :
-                    linkedSource?.CellOutputMode == CellOutputMode.Electrical ? "E" :
-                    "?";
-            return $"({ntmode}){Name}{activeStatus}{arrows}";
+                    linkedSource?.CellOutputMode == CellOutputMode.Modulatory ? "M" : "?");
+            return $"({ntmode}) {Name}{activeStatus}{arrows}";
         }
 
         public override List<string> DiffersFrom(ModelUnitBase other)

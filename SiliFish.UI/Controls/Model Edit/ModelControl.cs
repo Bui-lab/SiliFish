@@ -1543,13 +1543,24 @@ namespace SiliFish.UI.Controls
 
                 foreach (var stim in listStimuli.SelectedItems)
                 {
-                    if (stim is not StimulusTemplate st) continue;
-                    if (mult == 0 && value == 0)
-                        st.Active = false;
-                    else if (mult != 0)
-                        st.Settings.Value1 *= mult;
-                    else
-                        st.Settings.Value1 = value;
+                    if (stim is Stimulus stimulus)
+                    {
+                        if (mult == 0 && value == 0)
+                            stimulus.Active = false;
+                        else if (mult != 0)
+                            stimulus.Settings.Value1 *= mult;
+                        else
+                            stimulus.Settings.Value1 = value;
+                    }
+                    else if (stim is StimulusTemplate st)
+                    {
+                        if (mult == 0 && value == 0)
+                            st.Active = false;
+                        else if (mult != 0)
+                            st.Settings.Value1 *= mult;
+                        else
+                            st.Settings.Value1 = value;
+                    }
                 }
                 RefreshStimuli();
                 ModelIsUpdated();

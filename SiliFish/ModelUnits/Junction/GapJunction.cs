@@ -160,7 +160,7 @@ namespace SiliFish.ModelUnits.Junction
         public override string ToString()
         {
             string activeStatus = Active && TimeLine_ms.IsBlank() ? "" : Active ? " (timeline)" : " (inactive)";
-            return $"{ID}{activeStatus}";
+            return $"(🗲) {ID}{activeStatus}";
         }
         public override void InitForSimulation(RunParam runParam, ref int uniqueID)
         {

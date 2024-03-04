@@ -28,9 +28,9 @@ namespace SiliFish.ModelUnits.Junction
                 Mode == CellOutputMode.Excitatory ? "+" :
                 Mode == CellOutputMode.Inhibitory ? "-" :
                 Mode == CellOutputMode.Modulatory ? "M" :
-                Mode == CellOutputMode.Electrical ? "E" :
+                Mode == CellOutputMode.Electrical ? "🗲" :
                 "?";
-            return $"({ntmode}){SourcePool}{arrow}{TargetPool}";
+            return $"({ntmode}) {SourcePool}{arrow}{TargetPool}";
         }
 
     }

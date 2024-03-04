@@ -61,6 +61,9 @@ namespace SiliFish.UI.Controls.Display
                         ddSagittal.SelectedItem = cellPools.Count == 1 ?
                             cellPools[0].PositionLeftRight.ToString() :
                             "Left/Right";
+                        if (!ddCellSelection.Items.Contains("Selection"))
+                            ddCellSelection.Items.Add("Selection");
+                        ddCellSelection.SelectedItem = "Selection";
                     }
                     else
                     {

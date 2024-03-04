@@ -728,7 +728,7 @@ namespace SiliFish.UI.Controls
                 MessageBox.Show($"File(s) {string.Join(", ", fileNames)} are saved.", "Information");
             }
         }
-        private void listPlotHistory_ItemSelect(object sender, EventArgs e)
+        private void listPlotHistory_ItemSelect(object sender, EventArgs e)//TODO update selection
         {
             if (sender is not PlotDefinition plot) return;
             if (!simulation.SimulationRun) return;
