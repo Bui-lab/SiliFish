@@ -17,12 +17,14 @@ namespace SiliFish.Services.Plotting.PlotGenerators
     {
         readonly List<GapJunction> gapJunctions;
         readonly List<ChemicalSynapse> synapses;
+        readonly bool useSourceColoring = false;
         public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses) :
+            List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses, bool useSourceColoring) :
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, plotSelection: null)
         {
             this.gapJunctions = gapJunctions;
             this.synapses = synapses;
+            this.useSourceColoring = useSourceColoring;
         }
         protected override void CreateCharts(PlotType _)
         {
@@ -60,7 +62,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 bool useIdentifier = gapJunctions.GroupBy(j => j.ID).Count() != gapJunctions.Count;
                 foreach (GapJunction jnc in gapJunctions)
                 {
-                    colorPerChart.Add(jnc.Cell1.CellPool.Color);
+                    colorPerChart.Add(useSourceColoring ? jnc.Cell1.CellPool.Color : jnc.Cell2.CellPool.Color);
                     yMultiData.Add(jnc.InputCurrent[iStart..iEnd]);
                     columnTitles += $"{jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";
                     foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
@@ -72,7 +74,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 bool useIdentifier = synapses.GroupBy(j => j.ID).Count() != synapses.Count;
                 foreach (ChemicalSynapse jnc in synapses)
                 {
-                    colorPerChart.Add(jnc.PreNeuron.CellPool.Color);
+                    colorPerChart.Add(useSourceColoring ? jnc.PreNeuron.CellPool.Color : jnc.PostCell.CellPool.Color);
                     yMultiData.Add(jnc.InputCurrent[iStart..iEnd]);
 
                     columnTitles += $"{jnc.ID} {(useIdentifier ? "(" + jnc.Core.Identifier + ")" : "")},";

@@ -53,7 +53,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     cells.DistinctBy(c => c.ID).ToList(), plotSelection);
                 plotGeneratorMP.CreateCharts(charts);
 
-                PlotGeneratorCurrentsOfJunctions plotGeneratorCurrentsOfJunctions = new(plotGenerator, timeArray, iStart, iEnd, 1, gapJunctions, synapses);
+                PlotGeneratorCurrentsOfJunctions plotGeneratorCurrentsOfJunctions = new(plotGenerator, timeArray, iStart, iEnd, 1, gapJunctions, synapses, true);
                 plotGeneratorCurrentsOfJunctions.CreateCharts(charts);
             }
         }

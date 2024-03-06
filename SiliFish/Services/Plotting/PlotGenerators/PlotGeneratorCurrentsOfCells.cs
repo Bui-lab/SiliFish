@@ -50,7 +50,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, [synapse]);
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, [synapse], true);
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -60,7 +60,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             {
                                 if (!synapse.InputCurrent.Any(c => c != 0))
                                     continue;
-                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, [synapse]);
+                                PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 0, null, [synapse], true);
                                 junctionPG.CreateCharts(charts);
                             }
                         }
@@ -71,7 +71,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!gapJunction.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, [gapJunction], null);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 1, [gapJunction], null, gapJunction.Cell2 == cell);
                             junctionPG.CreateCharts(charts);
                         }
                     }
@@ -81,7 +81,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             if (!synapse.InputCurrent.Any(c => c != 0))
                                 continue;
-                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, [synapse]);
+                            PlotGeneratorCurrentsOfJunctions junctionPG = new(plotGenerator, timeArray, iStart, iEnd, 2, null, [synapse], false);
                             junctionPG.CreateCharts(charts);
                         }
                     }

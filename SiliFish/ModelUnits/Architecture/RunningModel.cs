@@ -800,7 +800,7 @@ namespace SiliFish.ModelUnits.Architecture
                         pools = neuronPools.Union(musclePools).Where(p => p.CellGroup == poolIdentifier
                                         && p.OnSide(mcs.SagittalPlane)).ToList();
                 }
-                List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs, iStart, iEnd)).ToList();
+                List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs, iStart, iEnd)).Where(c => c.Active).ToList();
                 if (cells.Count != 0)
                     return (cells, null);
                 return (null, pools);

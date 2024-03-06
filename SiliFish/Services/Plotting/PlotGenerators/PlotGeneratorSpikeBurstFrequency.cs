@@ -72,7 +72,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         colorPerChart.Add(cell.CellPool.Color);
                         yMin = Math.Min(yMin, SpikeBurstFrequency.Min(sf => sf.Value.Freq));
                         yMax = Math.Max(yMax, SpikeBurstFrequency.Max(sf => sf.Value.Freq));
-                        yData = new double[iEnd];
+                        yData = new double[iEnd - iStart + 1];
                         foreach (int i in Enumerable.Range(0, iEnd - iStart + 1))
                         {
                             yData[i] = double.NaN;
