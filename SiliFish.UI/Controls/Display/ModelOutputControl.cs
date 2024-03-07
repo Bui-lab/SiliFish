@@ -678,7 +678,10 @@ namespace SiliFish.UI.Controls
             {
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
-            ddPlot.Text = lastSelection;
+            if (string.IsNullOrEmpty(lastSelection))
+                ddPlot.Text = PlotType.MembPotential.GetDisplayName();
+            else
+                ddPlot.Text = lastSelection;
         }
         private void GetPlotSubset()
         {

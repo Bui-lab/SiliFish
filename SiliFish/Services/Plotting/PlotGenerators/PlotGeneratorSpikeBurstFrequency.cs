@@ -82,7 +82,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         {
                             for (int i = Math.Max((int)(ff.Key / dt), iStart); i < Math.Min((int)(ff.Value.End / dt), iEnd); i++)
                             {
-                                yData[i-iStart] = ff.Value.Freq;
+                                yData[i - iStart] = ff.Value.Freq;
                                 data[i - iStart] = string.Concat(data[i - iStart].AsSpan(0, data[i - iStart].Length - 4), ff.Value.Freq.ToString(GlobalSettings.PlotDataFormat), ",");
                             }
                         }
