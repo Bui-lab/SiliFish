@@ -147,9 +147,17 @@ namespace SiliFish.UI.Controls
         private void SaveLastPlotSettings()
         {
             GlobalSettings.LastPlotSettings[ddPlot.Name] = ddPlot.Text;
-            foreach (var kvp in cellSelectionPlot.GetSeLectionAsDictionary())
+            foreach (var kvp in cellSelectionPlot.GetSelectionAsDictionary())
             {
                 GlobalSettings.LastPlotSettings[kvp.Key] = kvp.Value;
+            }
+            int selCounter = 0;
+            if (cellSelectionPlot.SelectedUnits != null)
+            {
+                foreach (var sel in cellSelectionPlot.SelectedUnits)
+                {
+                    GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {sel.GetType().Name}"] = sel.ID;
+                }
             }
         }
         private void GetLastPlotSettings()

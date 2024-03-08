@@ -65,6 +65,14 @@ namespace SiliFish.UI
 
                 modelControl.SetModel(model);
                 modelOutputControl.SetRunningModel(null, model);
+                //TODO below needs to be in ModelControl - SetSelection
+                /*if (GlobalSettings.LastPlotSettings.Any(kvp => kvp.Key.StartsWith("SelectedUnit")&& kvp.Key.Contains("CellPool")))
+                {
+                    foreach (var kvp in GlobalSettings.LastPlotSettings.Where(kvp => kvp.Key.StartsWith("SelectedUnit") && kvp.Key.Contains("CellPool")))
+                    {
+                        
+                    }
+                }*/
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
             }

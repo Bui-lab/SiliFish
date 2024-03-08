@@ -144,7 +144,7 @@ namespace SiliFish.UI.Controls.Display
         }
 
 
-        public Dictionary<string, string> GetSeLectionAsDictionary()
+        public Dictionary<string, string> GetSelectionAsDictionary()
         {
             Dictionary<string, string> selection = new()
             {
@@ -166,8 +166,12 @@ namespace SiliFish.UI.Controls.Display
             try
             {
                 ddSagittal.Text = selection.GetValueOrDefault(ddSagittal.Name, SagittalPlane.Both.ToString());
+                if (selection.GetValueOrDefault(ddPools.Name, Const.AllPools) == "Selection" && !ddPools.Items.Contains("Selection"))
+                    ddPools.Items.Add("Selection");
                 ddPools.Text = selection.GetValueOrDefault(ddPools.Name, Const.AllPools);
                 ddSomiteSelection.Text = selection.GetValueOrDefault(ddSomiteSelection.Name, PlotSomiteSelection.All.ToString());
+                if (selection.GetValueOrDefault(ddCellSelection.Name, PlotCellSelection.All.ToString()) == "Selection" && !ddPools.Items.Contains("Selection"))
+                    ddCellSelection.Items.Add("Selection");
                 ddCellSelection.Text = selection.GetValueOrDefault(ddCellSelection.Name, PlotCellSelection.All.ToString());
                 eSomiteSelection.SetValue(double.Parse(selection.GetValueOrDefault(eSomiteSelection.Name, "1")));
                 eCellSelection.SetValue(double.Parse(selection.GetValueOrDefault(eCellSelection.Name, "1")));
@@ -289,18 +293,20 @@ namespace SiliFish.UI.Controls.Display
                     CombinePools = false
                 };
                 (List<Cell> CellsFull, List<CellPool> PoolsFull) = runningModel.GetSubsetCellsAndPools(PoolSubset, selForMaxNumbers);
+                //TODO send multiCells as a parameter, otherwise CellsFull and PoolsFull returns null and the somite max number is not set properly
+                //them remove the [PoolSubset != "Selection" && ] from below
 
                 eSomiteSelection.Maximum =
                     PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
                     CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Somite) :
                     Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSomite()) :
-                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) : 0;
+                    PoolSubset != "Selection" && Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) : eSomiteSelection.Maximum;
 
                 eCellSelection.Maximum =
                     PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSequence()) :
                     CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Sequence) :
                     Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSequence()) :
-                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Sequence) : 0;
+                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Sequence) : eCellSelection.Maximum;
             }
             if (ddPools.Focused)
             {
