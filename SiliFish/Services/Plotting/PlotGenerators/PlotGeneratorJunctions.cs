@@ -26,13 +26,13 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         }
         protected override void CreateCharts()
         {
-            foreach (var jncGroup in Junctions.GroupBy(j => j is GapJunction gj ? gj.Cell2.ID : j is ChemicalSynapse syn ? syn.PostCell.ID : ""))
-            {
+            //foreach (var jncGroup in Junctions.GroupBy(j => j is GapJunction gj ? gj.Cell2.ID : j is ChemicalSynapse syn ? syn.PostCell.ID : ""))
+            //{
                 List<Cell> cells = [];
                 List<GapJunction> gapJunctions = [];
                 List<ChemicalSynapse> synapses = [];
-                foreach (JunctionBase junction in jncGroup)
-                {
+              //  foreach (JunctionBase junction in jncGroup)
+                //{
                     foreach (JunctionBase jnc in Junctions)
                     {
                         if (jnc is GapJunction gj)
@@ -48,14 +48,14 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                             synapses.Add(syn);
                         }
                     }
-                }
+                //}
                 PlotGeneratorMembranePotentials plotGeneratorMP = new(plotGenerator, timeArray, iStart, iEnd, 0,
                     cells.DistinctBy(c => c.ID).ToList(), plotSelection);
                 plotGeneratorMP.CreateCharts(charts);
 
                 PlotGeneratorCurrentsOfJunctions plotGeneratorCurrentsOfJunctions = new(plotGenerator, timeArray, iStart, iEnd, 1, gapJunctions, synapses, true);
                 plotGeneratorCurrentsOfJunctions.CreateCharts(charts);
-            }
+           // }
         }
     }
 }
