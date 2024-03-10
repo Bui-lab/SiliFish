@@ -20,6 +20,9 @@ using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
 using System.ComponentModel;
 using SiliFish.ModelUnits.Parameters;
+using System.Security.Permissions;
+using Windows.Media.Core;
+using SiliFish.ModelUnits.Junction;
 
 namespace SiliFish.UI.Controls
 {
@@ -152,11 +155,32 @@ namespace SiliFish.UI.Controls
                 GlobalSettings.LastPlotSettings[kvp.Key] = kvp.Value;
             }
             int selCounter = 0;
+            while (GlobalSettings.LastPlotSettings.Any(kvp => kvp.Key.StartsWith("SelectedUnit")))
+            {
+                string key = GlobalSettings.LastPlotSettings.FirstOrDefault(kvp => kvp.Key.StartsWith("SelectedUnit")).Key;
+                GlobalSettings.LastPlotSettings.Remove(key);
+            }
             if (cellSelectionPlot.SelectedUnits != null)
             {
                 foreach (var sel in cellSelectionPlot.SelectedUnits)
                 {
-                    GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {sel.GetType().Name}"] = sel.ID;
+                    GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {sel.PlotType}"] = sel.ID;
+                    if (sel is Cell cell)
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {cell.CellPool.PlotType}"] = cell.CellPool.ID;
+                    else if (sel is ChemicalSynapse syn)
+                    {
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {syn.PreNeuron.CellPool.PlotType}"] = syn.PreNeuron.CellPool.ID;
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {syn.PreNeuron.PlotType}"] = syn.PreNeuron.ID;
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {syn.PostCell.CellPool.PlotType}"] = syn.PostCell.CellPool.ID;
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {syn.PostCell.PlotType}"] = syn.PostCell.ID;
+                    }
+                    else if (sel is GapJunction jnc)
+                    {
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {jnc.Cell1.CellPool.PlotType}"] = jnc.Cell1.CellPool.ID;
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {jnc.Cell1.PlotType}"] = jnc.Cell1.ID;
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {jnc.Cell2.CellPool.PlotType}"] = jnc.Cell2.CellPool.ID;
+                        GlobalSettings.LastPlotSettings[$"SelectedUnit{selCounter++} {jnc.Cell2.PlotType}"] = jnc.Cell2.ID;
+                    }
                 }
             }
         }

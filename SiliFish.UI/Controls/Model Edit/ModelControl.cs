@@ -17,6 +17,7 @@ using SiliFish.UI.EventArguments;
 using SiliFish.UI.Controls.Model_Edit;
 using SiliFish.UI.Controls.General;
 using SiliFish.UI.Services;
+using System.Collections.Generic;
 
 namespace SiliFish.UI.Controls
 {
@@ -1668,5 +1669,40 @@ namespace SiliFish.UI.Controls
             }
         }
 
+        internal void SetSelectionToLast()
+        {
+            try
+            {
+                Dictionary<string, string> dict = GlobalSettings.LastPlotSettings.Where(kvp => kvp.Key.StartsWith("SelectedUnit")).ToDictionary();
+                if (dict.Count == 0) return;
+                if (dict.Any(kvp => kvp.Key.Contains("CellPool")))
+                {
+                    listCellPools.SelectItems(dict.Where(kvp => kvp.Key.Contains("CellPool")).Select(kvp=>kvp.Value).ToList());
+                    dict = dict.Where(kvp => !kvp.Key.Contains("CellPool")).ToDictionary(k => k.Key, v => v.Value);
+                }
+                if (dict.Any(kvp => kvp.Key.Contains("Cell")))
+                {
+                    listCells.SelectItems(dict.Where(kvp => kvp.Key.Contains("Cell")).Select(kvp => kvp.Value).ToList());
+                    dict = dict.Where(kvp => !kvp.Key.Contains("Cell")).ToDictionary(k => k.Key, v => v.Value);
+                }
+                if (dict.Any(kvp => kvp.Key.Contains("Stimulus")))
+                {
+                    listStimuli.SelectItems(dict.Where(kvp => kvp.Key.Contains("Stimulus")).Select(kvp => kvp.Value).ToList());
+                    dict = dict.Where(kvp => !kvp.Key.Contains("Stimulus")).ToDictionary(k => k.Key, v => v.Value);
+                }
+                if (dict.Any(kvp => kvp.Key.Contains("InterPool")))
+                {
+                    listIncoming.SelectItems(dict.Where(kvp => kvp.Key.Contains("InterPool")).Select(kvp => kvp.Value).ToList());
+                    listOutgoing.SelectItems(dict.Where(kvp => kvp.Key.Contains("InterPool")).Select(kvp => kvp.Value).ToList());
+                    listGap.SelectItems(dict.Where(kvp => kvp.Key.Contains("InterPool")).Select(kvp => kvp.Value).ToList());
+                    dict = dict.Where(kvp => !kvp.Key.Contains("InterPool")).ToDictionary(k => k.Key, v => v.Value);
+                }
+            }
+
+            catch (Exception exc)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
+        }
     }
 }

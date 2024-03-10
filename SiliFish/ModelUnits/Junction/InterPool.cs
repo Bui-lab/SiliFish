@@ -33,5 +33,10 @@ namespace SiliFish.ModelUnits.Junction
             return $"({ntmode}) {SourcePool}{arrow}{TargetPool}";
         }
 
+        public InterPool()
+        {
+            PlotType = "InterPool";
+        }
+
     }
 }

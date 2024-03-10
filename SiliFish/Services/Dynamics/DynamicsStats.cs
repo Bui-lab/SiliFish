@@ -42,8 +42,8 @@ namespace SiliFish.Services.Dynamics
         private bool increasingIntervals;
         public double Irregularity { get; set; }
 
-        public double MaxBurstInterval_LowerRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
-        public double MaxBurstInterval_UpperRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public double Default_MaxBurstInterval_LowerRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
+        public double Default_MaxBurstInterval_UpperRange { get; set; } //in ms, the maximum interval two spikes can have to be considered as part of a burst
         /// <summary>
         /// The list of tau values for each spike (by time)
         /// </summary>
@@ -270,8 +270,8 @@ namespace SiliFish.Services.Dynamics
             chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
             oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
             tonicPadding = dynamicsParams.TonicPadding;
-            MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
+            Default_MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
+            Default_MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             int iMax = stimulus.Length;
@@ -291,8 +291,8 @@ namespace SiliFish.Services.Dynamics
             chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
             oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
             tonicPadding = dynamicsParams.TonicPadding;
-            MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
-            MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
+            Default_MaxBurstInterval_LowerRange = dynamicsParams.MaxBurstInterval_DefaultLowerRange;
+            Default_MaxBurstInterval_UpperRange = dynamicsParams.MaxBurstInterval_DefaultUpperRange;
 
             this.dt = dt;
             StimulusArray = null;
@@ -315,7 +315,7 @@ namespace SiliFish.Services.Dynamics
 
             double centroid1 = intervals.Min();
             double centroid2 = intervals.Max();
-            if (centroid1 > MaxBurstInterval_LowerRange)// no bursts, only single spikes
+            if (centroid1 > Default_MaxBurstInterval_LowerRange)// no bursts, only single spikes
             {
                 InterBurstCluster = new(centroid2);
                 return false;
@@ -345,7 +345,7 @@ namespace SiliFish.Services.Dynamics
                 InterBurstCluster = null;
                 return false;
             }
-            MaxBurstInterval_LowerRange = MaxBurstInterval_UpperRange = BurstCluster.clusterMax;
+            Default_MaxBurstInterval_LowerRange = Default_MaxBurstInterval_UpperRange = BurstCluster.clusterMax;
             return true;
         }
         private void SetFiringPatternOfList()
@@ -525,13 +525,14 @@ namespace SiliFish.Services.Dynamics
                 return;
             }
             bool hasClusters = HasClusters();
-            if (!hasClusters)
+            dynamicsParams.MaxBurstInterval_DefaultLowerRange = Default_MaxBurstInterval_LowerRange;
+            dynamicsParams.MaxBurstInterval_DefaultUpperRange = Default_MaxBurstInterval_UpperRange;
+            if (!hasClusters && !followedByQuiescence && BurstCluster != null)//consider all spikes individually
             {
-                if (!followedByQuiescence && BurstCluster != null)//consider all spikes individually
-                {
-                    MaxBurstInterval_LowerRange = MaxBurstInterval_UpperRange = 0;
-                }
+                dynamicsParams.MaxBurstInterval_DefaultLowerRange = 0;
+                dynamicsParams.MaxBurstInterval_DefaultUpperRange = 0;
             }
+
 
             burstsOrSpikes = BurstOrSpike.SpikesToBursts(dynamicsParams, dt, SpikeList, out double lastInterval);
             if (double.IsNaN(lastInterval))

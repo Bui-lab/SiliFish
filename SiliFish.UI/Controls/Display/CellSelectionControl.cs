@@ -293,20 +293,18 @@ namespace SiliFish.UI.Controls.Display
                     CombinePools = false
                 };
                 (List<Cell> CellsFull, List<CellPool> PoolsFull) = runningModel.GetSubsetCellsAndPools(PoolSubset, selForMaxNumbers);
-                //TODO send multiCells as a parameter, otherwise CellsFull and PoolsFull returns null and the somite max number is not set properly
-                //them remove the [PoolSubset != "Selection" && ] from below
 
                 eSomiteSelection.Maximum =
                     PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSomite()) :
                     CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Somite) :
                     Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSomite()) :
-                    PoolSubset != "Selection" && Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) : eSomiteSelection.Maximum;
+                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Somite) : 0;
 
                 eCellSelection.Maximum =
                     PoolsFull != null && PoolsFull.Count != 0 ? PoolsFull.Max(p => p.GetMaxCellSequence()) :
                     CellsFull != null && CellsFull.Count != 0 ? CellsFull.Max(c => c.Sequence) :
                     Pools != null && Pools.Count != 0 ? Pools.Max(p => p.GetMaxCellSequence()) :
-                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Sequence) : eCellSelection.Maximum;
+                    Cells != null && Cells.Count != 0 ? Cells.Max(c => c.Sequence) : 0;
             }
             if (ddPools.Focused)
             {

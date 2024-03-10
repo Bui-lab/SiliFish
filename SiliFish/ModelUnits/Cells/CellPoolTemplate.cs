@@ -236,9 +236,13 @@ namespace SiliFish.ModelUnits.Cells
         }
     
 
-        public CellPoolTemplate() { }
+        public CellPoolTemplate()
+        {
+            PlotType = "CellPool";
+        }
         public CellPoolTemplate(CellPoolTemplate cpl)
         {
+            PlotType = "CellPool";
             CellGroup = cpl.CellGroup;
             Description = cpl.Description;
             CellType = cpl.CellType;

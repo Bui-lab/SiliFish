@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Windows.Devices.SmartCards;
+using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.UI.Controls
 {
@@ -357,6 +358,22 @@ namespace SiliFish.UI.Controls
         public void SelectItem(object obj)
         {
             SelectedItem = obj;
+        }
+
+        public void SelectItems(List<string> items)
+        {
+            int? topIndex = null;
+            listBox.SelectedIndices.Clear();
+            for (int i = 0; i < listBox.Items.Count; i++)
+            {
+                if (items.Contains(listBox.Items[i].ToString()) || 
+                    (listBox.Items[i] is ModelUnitBase ub && items.Contains(ub.ID)))
+                {
+                    listBox.SetSelected(i, true);
+                    topIndex ??= i;
+                }
+            }
+            listBox.TopIndex = topIndex ?? 0;
         }
         public void AddContextMenu(string label, EventHandler func)
         {

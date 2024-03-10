@@ -11,7 +11,9 @@ namespace SiliFish.ModelUnits.Stim
     {
         public StimulusSettings Settings { get; set; } = new();
 
-        public StimulusBase() { }
+        public StimulusBase() {
+            PlotType = "Stimulus";
+        }
 
         public override List<string> DiffersFrom(ModelUnitBase other)
         {

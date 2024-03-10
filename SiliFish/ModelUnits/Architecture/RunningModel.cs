@@ -802,7 +802,7 @@ namespace SiliFish.ModelUnits.Architecture
                 }
                 List<Cell> cells = pools.SelectMany(p => p.GetCells(mcs, iStart, iEnd)).Where(c => c.Active).ToList();
                 if (cells.Count != 0)
-                    return (cells, null);
+                    return (cells, pools);
                 return (null, pools);
             }
             return (null, pools);

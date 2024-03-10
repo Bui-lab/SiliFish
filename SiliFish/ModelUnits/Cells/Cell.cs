@@ -218,6 +218,7 @@ namespace SiliFish.ModelUnits.Cells
         public Cell()
         {
             Stimuli = new();
+            PlotType = "Cell";
         }
 
         public override string ToString()

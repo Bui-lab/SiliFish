@@ -53,9 +53,12 @@ namespace SiliFish.ModelUnits.Junction
         }
 
         public InterPoolBase()
-        { }
+        {
+            PlotType = "InterPool";
+        }
         public InterPoolBase(InterPoolBase jnc)
         {
+            PlotType = "InterPool";
             Target = jnc.Target;
             DistanceMode = jnc.DistanceMode;
             FixedDuration_ms = jnc.FixedDuration_ms;

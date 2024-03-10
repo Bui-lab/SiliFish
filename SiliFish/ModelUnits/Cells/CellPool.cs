@@ -63,15 +63,18 @@ namespace SiliFish.ModelUnits.Cells
         public CellPool()
         {
             Cells = [];
+            PlotType = "CellPool";
         }
 
         public CellPool(CellPool cellPool):base(cellPool) 
         {
+            PlotType = "CellPool";
             Cells = [];
         }
 
         public CellPool(RunningModel model, CellPoolTemplate template, SagittalPlane leftright)
         {
+            PlotType = "CellPool";
             Model = model;
             CellGroup = template.CellGroup;
             Description = template.Description;

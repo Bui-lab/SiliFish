@@ -16,6 +16,7 @@ namespace SiliFish.ModelUnits
     {
         private string _Name;
         public int DbId = 0;
+        public string PlotType;
         public virtual string Name
         {
             get
