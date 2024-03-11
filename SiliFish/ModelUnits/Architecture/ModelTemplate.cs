@@ -103,6 +103,15 @@ namespace SiliFish.ModelUnits.Architecture
             StimulusTemplates.RemoveAll(s => s.TargetPool == cellPool.CellGroup);
             return CellPoolTemplates.Remove(cellPool);
         }
+        public override bool UpdateCellPool(CellPoolTemplate cellPoolNew)
+        {
+            CellPoolTemplate cellPoolOld = CellPoolTemplates.FirstOrDefault(cp=>cp.CellGroup == cellPoolNew.CellGroup);
+            CellPoolTemplates.Remove(cellPoolOld);
+            CellPoolTemplates.Add(cellPoolNew);
+            return true;
+        }
+
+
         #endregion
 
         #region Projections

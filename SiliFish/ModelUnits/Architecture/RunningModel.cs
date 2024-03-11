@@ -545,6 +545,21 @@ namespace SiliFish.ModelUnits.Architecture
                 return musclePools.RemoveAll(cp => cp.ID == cellPool.ID) > 0;
             return false;
         }
+
+        public override bool UpdateCellPool(CellPoolTemplate cellPoolNew)
+        {
+            if (cellPoolNew is not CellPool cp)
+                return false;
+            CellPool cellPoolOld = CellPools.FirstOrDefault(cp => cp.ID == cellPoolNew.ID);
+            if (cellPoolOld.CellType == CellType.Neuron)
+                neuronPools.RemoveAll(cp => cp.ID == cellPoolNew.ID);
+            else if (cellPoolOld.CellType == CellType.MuscleCell)
+                musclePools.RemoveAll(cp => cp.ID == cellPoolNew.ID);
+            foreach(Cell c in cellPoolOld.Cells)
+                cp.Cells.Add(c);//TODO TEST - this is not a very elegant way of doing this
+            CellPools.Add(cp);
+            return true;
+        }
         public override void SortCellPools()
         {
             CellPools.Sort();

@@ -163,6 +163,12 @@ namespace SiliFish.ModelUnits.Architecture
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
+        public virtual bool UpdateCellPool(CellPoolTemplate cellPool)
+        {
+            Exception exception = new NotImplementedException();
+            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            throw exception;
+        }
         public virtual void SortCellPools()
         {
             Exception exception = new NotImplementedException();

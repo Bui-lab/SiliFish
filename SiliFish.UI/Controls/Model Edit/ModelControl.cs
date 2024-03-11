@@ -432,6 +432,14 @@ namespace SiliFish.UI.Controls
                     (Model as ModelTemplate).RenameCellPool(oldName, pool.CellGroup);
                     RefreshProjections();
                 }
+                else
+                {
+                    //TODO below is ridiculous - quick bug fix. How did I miss this before?
+                    CellPoolTemplate oldPool = (Model as ModelTemplate).GetCellPools().FirstOrDefault(cp => cp.CellGroup == pool.CellGroup);
+                    (Model as ModelTemplate).RemoveCellPool(oldPool);
+                    (Model as ModelTemplate).AddCellPool(pool);
+
+                }
             }
         }
         private void listCellPools_ItemHighlight(object sender, EventArgs e)

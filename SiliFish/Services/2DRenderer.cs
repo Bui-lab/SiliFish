@@ -290,7 +290,7 @@ namespace SiliFish.Services
             List<InterPool> gapInterPools = model.GapPoolConnections.Where(gpc => pools.Any(p => p.ID == gpc.SourcePool) && pools.Any(p => p.ID == gpc.TargetPool)).ToList();
             List<InterPool> chemInterPools = model.ChemPoolConnections.Where(cpc => pools.Any(p => p.ID == cpc.SourcePool) && pools.Any(p => p.ID == cpc.TargetPool)).ToList();
 
-            int CountMax = 0;
+            int CountMax = 1;
             if (gapInterPools.Count != 0)
                 CountMax = gapInterPools.Max(ip => ip.CountJunctions);
             if (chemInterPools.Count != 0)
