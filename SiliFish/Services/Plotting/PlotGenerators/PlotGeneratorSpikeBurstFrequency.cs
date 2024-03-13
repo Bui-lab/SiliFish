@@ -31,7 +31,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
         {
             this.dt = dt;
-            this.dynamicsParam = dynamicsParam;
+            this.dynamicsParam = dynamicsParam.Clone();
             this.burst = burst;
             title = burst ? "Burst" : "Spike";
         }

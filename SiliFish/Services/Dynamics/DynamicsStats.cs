@@ -287,7 +287,7 @@ namespace SiliFish.Services.Dynamics
 
         public DynamicsStats(DynamicsParam settings, double[] V, double dt, double Vthreshold, int analysisStart, int analysisEnd)
         {
-            dynamicsParams = settings ?? new DynamicsParam();//use default values
+            dynamicsParams = settings != null ? settings.Clone() : new DynamicsParam();//if null use default values; cloned to prevent changes to the settings
             chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
             oneClusterMultiplier = dynamicsParams.OneClusterMultiplier;
             tonicPadding = dynamicsParams.TonicPadding;
