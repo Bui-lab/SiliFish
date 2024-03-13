@@ -55,6 +55,8 @@ namespace SiliFish.Definitions
         [Display(Name = "Memb. Potential w/ Spike Freq."),
             Group("potential")]
         MembPotentialWithSpikeFreq,
+        [Display(Name = "Spike Freq.")]
+        SpikeFreq,
         [Display(Name = "Current"),
             Description("Gap and chemical currents"),
             Group("current")]

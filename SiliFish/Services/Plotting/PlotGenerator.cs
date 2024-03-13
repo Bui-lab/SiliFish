@@ -89,6 +89,19 @@ namespace SiliFish.Services.Plotting
                     pg0.CreateCharts(charts);
                     charts = [.. charts.OrderBy(chart => chart.ChartSeq).ThenBy(chart => chart.GroupSeq)];
                     break;
+                case PlotType.SpikeFreq:
+                    Title = "Spike Freq";
+                    PlotGeneratorSpikeBurstFrequency pg02 = new(this, Cells, simulation.Model.TimeArray,
+                        simulation.Model.DynamicsParam, simulation.RunParam.DeltaT,
+                        Plot.Selection, iStart, iEnd, 0, burst: false);
+                    pg02.CreateCharts(charts);
+
+                    PlotGeneratorSpikeBurstFrequency pg03 = new(this, Cells, simulation.Model.TimeArray,
+                        simulation.Model.DynamicsParam, simulation.RunParam.DeltaT,
+                        Plot.Selection, iStart, iEnd, 1, burst: true);
+                    pg03.CreateCharts(charts);
+                    charts = [.. charts.OrderBy(chart => chart.ChartSeq).ThenBy(chart => chart.GroupSeq)];
+                    break;
                 case PlotType.Current:
                     Title = "Incoming Currents";
                     PlotGeneratorCurrentsOfCells pg1 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, Cells, Plot.Selection, 

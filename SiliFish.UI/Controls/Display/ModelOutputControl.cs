@@ -1115,7 +1115,7 @@ namespace SiliFish.UI.Controls
             int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
             (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection(), iSpikeStart, iSpikeEnd);
             Cells ??= [];
-            if (Pools != null)
+            if (Cells.Count == 0 && Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
             Dictionary<Cell, List<int>> cellSpikes = [];

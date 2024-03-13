@@ -338,8 +338,9 @@ namespace SiliFish.Services.Dynamics
                     InterBurstCluster.AddMember(d);
                 center = (BurstCluster.centroid + InterBurstCluster.centroid) / 2;
             }
-            if (InterBurstCluster.centroid < BurstCluster.centroid * oneClusterMultiplier ||
-                BurstCluster.clusterMax * BurstCluster.clusterMax / BurstCluster.clusterMin > InterBurstCluster.centroid)//single cluster
+            if (InterBurstCluster.centroid < BurstCluster.centroid * oneClusterMultiplier 
+                /* TODO check the logic|| 
+                BurstCluster.clusterMax * BurstCluster.clusterMax / BurstCluster.clusterMin > InterBurstCluster.centroid*/)//single cluster
             {
                 BurstCluster.MergeCluster(InterBurstCluster);
                 InterBurstCluster = null;
