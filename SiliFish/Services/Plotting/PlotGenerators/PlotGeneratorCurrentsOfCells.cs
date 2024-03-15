@@ -16,21 +16,13 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    internal class PlotGeneratorCurrentsOfCells : PlotGeneratorOfCells
+    internal class PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
+        List<Cell> cells, PlotSelectionInterface plotSelection,
+        bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true) : PlotGeneratorOfCells(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
     {
-        private readonly bool includeGap;
-        private readonly bool includeChemIn;
-        private readonly bool includeChemOut;
-
-        public PlotGeneratorCurrentsOfCells(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<Cell> cells, PlotSelectionInterface plotSelection,
-            bool includeGap = true, bool includeChemIn = true, bool includeChemOut = true) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
-        {
-            this.includeGap = includeGap;
-            this.includeChemIn = includeChemIn;
-            this.includeChemOut = includeChemOut;
-        }
+        private readonly bool includeGap = includeGap;
+        private readonly bool includeChemIn = includeChemIn;
+        private readonly bool includeChemOut = includeChemOut;
 
         private void CreateIndividualJunctionsCharts()
         {

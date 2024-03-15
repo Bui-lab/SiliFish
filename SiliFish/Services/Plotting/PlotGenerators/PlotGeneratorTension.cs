@@ -13,13 +13,9 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    internal class PlotGeneratorTension : PlotGeneratorOfCells
+    internal class PlotGeneratorTension(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
+        List<Cell> cells, PlotSelectionInterface plotSelection) : PlotGeneratorOfCells(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
     {
-        public PlotGeneratorTension(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<Cell> cells, PlotSelectionInterface plotSelection) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
-        {
-        }
         protected override void CreateCharts(PlotType _)
         {
             CreateCharts();

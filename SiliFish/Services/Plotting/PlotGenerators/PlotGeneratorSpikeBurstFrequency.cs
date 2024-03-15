@@ -17,24 +17,15 @@ using System.Xml.Linq;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    internal class PlotGeneratorSpikeBurstFrequency : PlotGeneratorOfCells
+    internal class PlotGeneratorSpikeBurstFrequency(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray,
+        DynamicsParam dynamicsParam, double dt,
+        PlotSelectionInterface plotSelection,
+        int iStart, int iEnd, int groupSeq, bool burst) : PlotGeneratorOfCells(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
     {
-        private readonly DynamicsParam dynamicsParam;
-        private readonly double dt;
-        private readonly bool burst = false;
-        private readonly string title = "Spike";
-
-        public PlotGeneratorSpikeBurstFrequency(PlotGenerator plotGenerator, List<Cell> cells, double[] timeArray,
-            DynamicsParam dynamicsParam, double dt,
-            PlotSelectionInterface plotSelection,
-            int iStart, int iEnd, int groupSeq, bool burst) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, cells, plotSelection)
-        {
-            this.dt = dt;
-            this.dynamicsParam = dynamicsParam.Clone();
-            this.burst = burst;
-            title = burst ? "Burst" : "Spike";
-        }
+        private readonly DynamicsParam dynamicsParam = dynamicsParam.Clone();
+        private readonly double dt = dt;
+        private readonly bool burst = burst;
+        private readonly string title = burst ? "Burst" : "Spike";
 
         protected override void CreateCharts(PlotType _)
         {

@@ -13,19 +13,13 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    internal class PlotGeneratorCurrentsOfJunctions : PlotGeneratorBase
+    internal class PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
+        List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses, bool useSourceColoring) : PlotGeneratorBase(plotGenerator, timeArray, iStart, iEnd, groupSeq, plotSelection: null)
     {
-        readonly List<GapJunction> gapJunctions;
-        readonly List<ChemicalSynapse> synapses;
-        readonly bool useSourceColoring = false;
-        public PlotGeneratorCurrentsOfJunctions(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-            List<GapJunction> gapJunctions, List<ChemicalSynapse> synapses, bool useSourceColoring) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq, plotSelection: null)
-        {
-            this.gapJunctions = gapJunctions;
-            this.synapses = synapses;
-            this.useSourceColoring = useSourceColoring;
-        }
+        readonly List<GapJunction> gapJunctions = gapJunctions;
+        readonly List<ChemicalSynapse> synapses = synapses;
+        readonly bool useSourceColoring = useSourceColoring;
+
         protected override void CreateCharts(PlotType _)
         {
             CreateCharts();

@@ -12,13 +12,9 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
-    internal class PlotGeneratorFullDynamics : PlotGeneratorOfCells
+    internal class PlotGeneratorFullDynamics(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd,
+     List<Cell> cells, PlotSelectionInterface plotSelection) : PlotGeneratorOfCells(plotGenerator, timeArray, iStart, iEnd, groupSeq: 0, cells, plotSelection)
     {
-           public PlotGeneratorFullDynamics(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, 
-            List<Cell> cells, PlotSelectionInterface plotSelection) :
-            base(plotGenerator, timeArray, iStart, iEnd, groupSeq: 0, cells, plotSelection)
-        {
-        }
         protected override void CreateCharts(PlotType _)
         {
             CreateCharts();

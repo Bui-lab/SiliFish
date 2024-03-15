@@ -102,7 +102,7 @@ namespace SiliFish.DataTypes
             return (inlierX.ToArray(), inlierY.ToArray());
         }
 
-        public (double[] xValues, double[] yValues) GetXYValues(EpisodeStats stat)
+        private (double[] xValues, double[] yValues) GetXYValues(EpisodeStats stat)
         {
             return stat switch
             {
@@ -115,5 +115,24 @@ namespace SiliFish.DataTypes
                 _ => (null, null),
             };
         }
+
+        public (double[] xValues, double[] yValues) GetXYValues(EpisodeStats stat, double tStart, double tEnd)
+        {
+            (double[] xValuesFull, double[] yValuesFull) = GetXYValues(stat);
+            int len = xValuesFull.Count(x => x > tStart && x <= tEnd);
+            double[] xValues = new double[len];
+            double[] yValues = new double[len];
+            int counter = 0;
+            for (int i = 0; i < xValuesFull.Length; i++)
+            {
+                if (xValuesFull[i] < tStart) continue;
+                if (xValuesFull[i] > tEnd) break;
+                xValues[counter] = xValuesFull[i];
+                yValues[counter++] = yValuesFull[i];
+            }
+            return (xValues, yValues);
+        }
+
+
     }
 }
