@@ -177,20 +177,20 @@ namespace SiliFish.UI
             lProgress.Visible = visible;
             linkExportOutput.Visible = !visible;
         }
-        private void completeRunsAction(List<Simulation> simulations, bool cancelled)
+        private void completeRunsAction(List<Simulation> simulations, int completion)
         {
-            Invoke(CompleteRuns, simulations, cancelled);
+            Invoke(CompleteRuns, simulations, completion);
         }
-        private void CompleteRuns(List<Simulation> simulations, bool cancelled)
+        private void CompleteRuns(List<Simulation> simulations, int completion)
         {
             UseWaitCursor = false;
             timerRun.Enabled = false;
             progressBarRun.Value = progressBarRun.Maximum;
             SetProgressVisibility(false);
-            if (cancelled)
+            if (completion < 0)//cancelled
                 linkExportOutput.Visible = false;
             btnRun.Text = "Run";
-            if (cancelled)
+            if (completion < 0)
             {
                 lRunTime.Text = $"Last run cancelled\r\n" +
                     $"Model: {runningModel.ModelName}";
@@ -211,6 +211,7 @@ namespace SiliFish.UI
                 }
                 TimeSpan ts = DateTime.Now - runStart;
                 lRunTime.Text = $"Last run: {runStart:t} {simText}\r\n" +
+                    (completion == 0 ? "Simulation interrupted - partial results displayed.\r\n" : "") +
                     $"Model: {runningModel.ModelName}\r\n" +
                     $"# of cells: {runningModel.GetNumberOfCells():n0}; # of conn.: {runningModel.GetNumberOfConnections():n0}\r\n" +
                     $"Simulation time: {Util.TimeSpanToString(ts)}";
@@ -282,9 +283,16 @@ namespace SiliFish.UI
         {
             if (btnRun.Text == "Stop Run")
             {
-                if (MessageBox.Show("Do you want to stop the stimulation? You can access the values till the point it was executed.", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                bool interrupt = modelSimulator.GetProgress() > 0.1;
+                string msg = $"Do you want to stop the stimulation?\r\n" +
+                    (interrupt ? "You can access the values till the point it was executed." :
+                    "You will lose all the data");
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
-                modelSimulator?.CancelRun();
+                if (interrupt)
+                    modelSimulator?.InterruptRun();
+                else
+                    modelSimulator?.CancelRun();
                 return;
             }
             if (modelSimulator?.ModelRun ?? false)

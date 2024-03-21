@@ -17,6 +17,7 @@ namespace SiliFish.Definitions
         NotStarted, 
         Initializing, 
         Cancelled, 
+        Interrupted,
         Running, 
         Finalizing,
         [Display(Name = "Saving to temporary database")]

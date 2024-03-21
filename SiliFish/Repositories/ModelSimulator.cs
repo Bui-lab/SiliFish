@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace SiliFish.Repositories
 {
-    public class ModelSimulator(RunningModel runningModel, RunParam runParam, int numSimulations, bool parallelRun, Action<List<Simulation>, bool> completionAction)
+    public class ModelSimulator(RunningModel runningModel, RunParam runParam, int numSimulations, bool parallelRun, Action<List<Simulation>, int> completionAction)
     {
         private RunningModel runningModel = runningModel;
         private RunParam runParam = runParam;
@@ -24,12 +24,14 @@ namespace SiliFish.Repositories
         private bool parallelRun = parallelRun;
         private string runmode => parallelRun ? "parallel" : "series";
         private DateTime startTime, endTime;
-        public Action<List<Simulation>, bool> simulationCompletionAction = completionAction;
+        public Action<List<Simulation>, int> simulationCompletionAction = completionAction;
         public List<Simulation> SimulationList { get; private set; }
         public Simulation LastSimulation => SimulationList?.Count > 0 ? SimulationList.Last() : null;
 
         public bool ModelRun { get; set; } = false;
         public bool Cancelled { get; set; }
+        public bool Interrupted { get; set; }
+
 
         public double GetProgress() => SimulationList?.Sum(s => s.GetProgress())/numSimulations ?? 0;
         public string GetStatus()
@@ -68,7 +70,7 @@ namespace SiliFish.Repositories
             finally
             {
                 ModelRun = true;
-                simulationCompletionAction?.Invoke(SimulationList, Cancelled);
+                simulationCompletionAction?.Invoke(SimulationList, 1 /**/);
             }
         }
         private void RunSingleSimulation(Simulation simulation)
@@ -87,7 +89,7 @@ namespace SiliFish.Repositories
                 if (++runSimulations == numSimulations)
                 {
                     endTime = DateTime.Now;
-                    simulationCompletionAction?.Invoke(SimulationList, Cancelled);
+                    simulationCompletionAction?.Invoke(SimulationList, 1/*Completed*/);
                 }
             }
         }
@@ -134,6 +136,19 @@ namespace SiliFish.Repositories
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
+        public void InterruptRun()
+        {
+            try
+            {
+                Interrupted = true;
+                SimulationList.ForEach(simulation => simulation.SimulationInterrupted = true);
+                simulationCompletionAction?.Invoke(SimulationList, 0/*Interrupted*/);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
 
         public void CancelRun()
         {
@@ -141,7 +156,7 @@ namespace SiliFish.Repositories
             {
                 Cancelled = true;
                 SimulationList.ForEach(simulation => simulation.SimulationCancelled = true);
-                simulationCompletionAction?.Invoke(SimulationList, Cancelled);
+                simulationCompletionAction?.Invoke(SimulationList, -1/*Cancelled*/);
             }
             catch (Exception ex)
             {

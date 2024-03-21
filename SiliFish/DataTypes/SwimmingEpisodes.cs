@@ -120,12 +120,22 @@ namespace SiliFish.DataTypes
         {
             (double[] xValuesFull, double[] yValuesFull) = GetXYValues(stat);
             int len = xValuesFull.Count(x => x > tStart && x <= tEnd);
+            if (len == 0)
+               len = xValuesFull.Any(x => x < tStart) ? 1 : 0;
             double[] xValues = new double[len];
             double[] yValues = new double[len];
             int counter = 0;
             for (int i = 0; i < xValuesFull.Length; i++)
             {
-                if (xValuesFull[i] < tStart) continue;
+                if (xValuesFull[i] < tStart)
+                {
+                    if (len == 1)//set the last episode information as the first record, in case there is no other
+                    {
+                        xValues[counter] = xValuesFull[i];
+                        yValues[counter] = yValuesFull[i];
+                    }
+                    continue;
+                }
                 if (xValuesFull[i] > tEnd) break;
                 xValues[counter] = xValuesFull[i];
                 yValues[counter++] = yValuesFull[i];

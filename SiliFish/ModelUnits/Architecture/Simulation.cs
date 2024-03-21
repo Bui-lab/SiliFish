@@ -42,6 +42,10 @@ namespace SiliFish.ModelUnits.Architecture
         [JsonIgnore]
         [Browsable(false)]
         public bool SimulationCancelled { get; set; } = false;
+
+        [JsonIgnore]
+        [Browsable(false)]
+        public bool SimulationInterrupted { get; set; } = false;
         public double GetProgress() => iMax > 0 ? (double)iProgress / iMax : 0;
 
         [JsonIgnore]
