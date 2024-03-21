@@ -65,7 +65,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq, tStart, tEnd);
                     (double[] xValues2, double[] yValues2) = episodes.GetXYValues(EpisodeStats.RollingFreq, tStart, tEnd);
-                    double yMax = Math.Max(yValues.Max(), yValues2.Max());
+                    double yMax = Math.Max((yValues.Count() > 0 ? yValues.Max() : 0), yValues2.Max());//TODO check why yValues may have zero items 
                     (double[] xData, List<double[]> yMultiData) = Util.MergeXYArrays(xValues, yValues, xValues2, yValues2);
                     List<Color> colorPerChart = [Color.Red, Color.Purple];
                     title = "Time,Summary TBF,Rolling TBF";
