@@ -472,6 +472,11 @@ namespace SiliFish.UI.Controls
         }
         private void btnOptimizeFull_Click(object sender, EventArgs e)
         {
+            if (exhaustiveBestParameters?.Count > 0)
+            {
+                if (MessageBox.Show("Do you want to rerun the exhaustive search? Previous values will be lost.", "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
             if (!cbTargetFitness.Checked && !cbMaxGeneration.Checked && !cbCustomTermination.Checked)
             {
                 MessageBox.Show("Select at least one termination mode.", "Warning");

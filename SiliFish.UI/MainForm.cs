@@ -439,6 +439,7 @@ namespace SiliFish.UI
 
         private void btnGenerateModel_Click(object sender, EventArgs e)
         {
+            modelTemplate = modelControl.GetModel() as ModelTemplate;
             if (modelTemplate == null)
             {
                 MessageBox.Show("There is no model template loaded.", "Error");

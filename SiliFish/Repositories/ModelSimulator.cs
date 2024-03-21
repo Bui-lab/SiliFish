@@ -57,7 +57,7 @@ namespace SiliFish.Repositories
                 {
                     Simulation simulation = new(runningModel, runParam);
                     SimulationList.Add(simulation);
-                    simulation.RunModel();
+                    simulation.RunSimulation();
                 }
                 endTime = DateTime.Now;
             }
@@ -75,7 +75,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                simulation.RunModel();
+                simulation.RunSimulation();
             }
             catch (Exception ex)
             {

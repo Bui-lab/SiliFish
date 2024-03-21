@@ -133,7 +133,7 @@ namespace SiliFish.ModelUnits.Architecture
                     cell.CalculateMembranePotential(timeIndex);
             }
         }
-        public virtual void RunModel()
+        public virtual void RunSimulation()
         {
             try
             {
