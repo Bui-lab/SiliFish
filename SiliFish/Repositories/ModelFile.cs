@@ -1093,7 +1093,7 @@ namespace SiliFish.Repositories
                 if (contents.Length <= 1) return false;
                 string columns = contents[0];
                 int iter = 1;
-                if (columns != string.Join(",", JunctionBase.ColumnNames))
+                if (columns != string.Join(",", InterPoolBase.ColumnNames))
                     return false;
                 CellPool cellPool = selectedUnit as CellPool;
                 Cell cell = selectedUnit as Cell;
@@ -1316,7 +1316,7 @@ namespace SiliFish.Repositories
                     }
                     else if (model is RunningModel modelRun)
                     {
-                        if (!contents.Equivalent(JunctionBase.ColumnNames))
+                        if (!contents.Equivalent(InterPoolBase.ColumnNames))
                             return false;
                         int colCount = contents.Count;
                         if (sheetIndex == 0)

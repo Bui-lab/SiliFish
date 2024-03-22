@@ -65,12 +65,13 @@ namespace SiliFish.Repositories
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
                 ModelRun = true;
-                simulationCompletionAction?.Invoke(SimulationList, 1 /**/);
+                if (SimulationList.Any(s => s.state == SimulationState.Completed))
+                    simulationCompletionAction?.Invoke(SimulationList, 1 /*completed*/);
             }
         }
         private void RunSingleSimulation(Simulation simulation)
@@ -81,7 +82,7 @@ namespace SiliFish.Repositories
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
             finally
             {
@@ -89,7 +90,8 @@ namespace SiliFish.Repositories
                 if (++runSimulations == numSimulations)
                 {
                     endTime = DateTime.Now;
-                    simulationCompletionAction?.Invoke(SimulationList, 1/*Completed*/);
+                    if (simulation.state == SimulationState.Completed)
+                        simulationCompletionAction?.Invoke(SimulationList, 1/*Completed*/);
                 }
             }
         }
@@ -133,7 +135,7 @@ namespace SiliFish.Repositories
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
         public void InterruptRun()
@@ -146,7 +148,7 @@ namespace SiliFish.Repositories
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -160,7 +162,7 @@ namespace SiliFish.Repositories
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
     }

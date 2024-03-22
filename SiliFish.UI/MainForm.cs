@@ -286,7 +286,7 @@ namespace SiliFish.UI
                 bool interrupt = modelSimulator.GetProgress() > 0.1;
                 string msg = $"Do you want to stop the stimulation?\r\n" +
                     (interrupt ? "You can access the values till the point it was executed." :
-                    "You will lose all the data");
+                    "You will lose all the simulation data.");
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     return;
                 if (interrupt)

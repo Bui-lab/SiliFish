@@ -118,7 +118,7 @@ namespace SiliFish.DynamicUnits
         public virtual void BackwardCompatibility(Dictionary<string, double> paramExternal)
         {
             Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
         protected virtual bool DoesSpike(double[] I, int warmup)
@@ -174,7 +174,7 @@ namespace SiliFish.DynamicUnits
         public virtual double GetNextVal(double I, ref bool spike)
         {
             Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
 
@@ -265,7 +265,7 @@ namespace SiliFish.DynamicUnits
         public virtual (Dictionary<string, double> MinValues, Dictionary<string, double> MaxValues) GetSuggestedMinMaxValues()
         {
             Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
 
         }

@@ -42,7 +42,7 @@ namespace SiliFish.Services.Optimization
         public virtual double CalculateFitness(DynamicsStats stat)
         {
             Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
+            ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
 

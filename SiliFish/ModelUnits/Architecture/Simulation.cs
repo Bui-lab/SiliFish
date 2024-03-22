@@ -37,7 +37,7 @@ namespace SiliFish.ModelUnits.Architecture
         public RunParam RunParam { get; set; } = runParam;
         [JsonIgnore]
         [Browsable(false)]
-        public bool SimulationRun { get { return state == SimulationState.Completed; } }
+        public bool SimulationRun { get { return state == SimulationState.Completed || state == SimulationState.Interrupted; } }
 
         [JsonIgnore]
         [Browsable(false)]
@@ -94,11 +94,12 @@ namespace SiliFish.ModelUnits.Architecture
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
         public async void EndSimulation()
         {
+            SimulationState prevState = state;
             state = SimulationState.Finalizing;
             if (DBLink != null)
             {
@@ -110,7 +111,12 @@ namespace SiliFish.ModelUnits.Architecture
                 DBLink.DatabaseDumper = null;
             }
             End = DateTime.Now;
-            state = SimulationState.Completed;
+            if (prevState == SimulationState.Running)
+                state = SimulationState.Completed;
+            else if (prevState == SimulationState.Cancelled || prevState == SimulationState.Interrupted)
+                state = prevState;
+            else
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, new Exception($"End simulation prev previous state was {prevState}"));
         }
 
         private void CalculateCellularOutputs(int t)
@@ -125,7 +131,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
 
@@ -151,10 +157,9 @@ namespace SiliFish.ModelUnits.Architecture
                 foreach (var index in Enumerable.Range(1, iMax - 1))
                 {
                     iProgress = index;
-                    if (SimulationCancelled)
+                    if (SimulationCancelled || SimulationInterrupted)
                     {
-                        SimulationCancelled = false;
-                        state = SimulationState.Cancelled;
+                        state = SimulationCancelled ? SimulationState.Cancelled : SimulationState.Interrupted;
                         break;
                     }
                     CalculateCellularOutputs(index);

@@ -874,7 +874,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 return false;
             }
         }
@@ -894,7 +894,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             catch (Exception ex)
             {
-                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
                 return false;
             }
         }
