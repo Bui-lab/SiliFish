@@ -122,7 +122,6 @@ namespace SiliFish.Repositories
                         Thread thread = new(() => RunSingleSimulation(simulation));
                         thread.Start();
                         threadList.Add(thread);
-                            //Task.Run(() => RunSingleSimulation(simulation));
                     }
                 }
                 //Run multiple simulations with the same model - for runtime statistics

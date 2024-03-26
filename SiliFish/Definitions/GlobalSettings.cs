@@ -37,8 +37,8 @@ namespace SiliFish.Definitions
 
         public static bool SameYAxis = true;
         public static bool ShowZeroValues = true;
-        public static int DefaultPlotWidth = 800;
-        public static int DefaultPlotHeight = 200;
+        public static int PlotWidth = 800;
+        public static int PlotHeight = 200;
         public static int PlotPointSize = 3;
 
         public static int MaxNumberOfUnits = 100;
@@ -156,12 +156,12 @@ namespace SiliFish.Definitions
         [Description("In pixels."),
             DisplayName("Default plot width"),
             Category("Plotting")]
-        public int DefaultPlotWidth { get { return GlobalSettings.DefaultPlotWidth; } set { GlobalSettings.DefaultPlotWidth = value; } }
+        public int PlotWidth { get { return GlobalSettings.PlotWidth; } set { GlobalSettings.PlotWidth = value; } }
 
         [Description("In pixels."),
             DisplayName("Default plot height"),
             Category("Plotting")]
-        public int DefaultPlotHeight { get { return GlobalSettings.DefaultPlotHeight; } set { GlobalSettings.DefaultPlotHeight = value; } }
+        public int PlotHeight { get { return GlobalSettings.PlotHeight; } set { GlobalSettings.PlotHeight = value; } }
 
         [Description("In pixels."),
             DisplayName("Size of the points on the scatterplots"),

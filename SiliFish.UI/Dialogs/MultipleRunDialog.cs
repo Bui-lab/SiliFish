@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.ModelUnits.Parameters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +14,8 @@ namespace SiliFish.UI.Dialogs
     public partial class MultipleRunDialog : Form
     {
         public int NumOfSimulations { get; private set; }
-        public MultipleRunDialog(bool runTimeStats)
+        public RunParam RunParam { get; private set; }
+        public MultipleRunDialog(bool runTimeStats, RunParam runParam)
         {
             InitializeComponent();
             if (runTimeStats) 
@@ -22,11 +24,14 @@ namespace SiliFish.UI.Dialogs
             else 
                 lMessage.Text = "The simulations will be run with the same settings in parallel (hardware permitting) " +
                     "and full information will be saved to the output folder or database.";
+            RunParam = runParam;
+            simulationSettingsControl1.SetValues(runParam);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
             NumOfSimulations = (int)eNumber.Value;
+            RunParam = simulationSettingsControl1.GetValues();
             Close();
         }
 

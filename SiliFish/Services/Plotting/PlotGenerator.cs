@@ -50,6 +50,14 @@ namespace SiliFish.Services.Plotting
                     return ("Junction", charts);
                 }
 
+                List<InterPool> interpools = unitSelection.Units.Where(x => x is InterPool).Cast<InterPool>().ToList();
+                if (interpools.Count != 0)
+                {
+                    PlotGeneratorJunctions plotGeneratorJunctions = new(this, simulation.Model.TimeArray, iStart, iEnd, 0,
+                        interpools, Pools, Plot.Selection);
+                    plotGeneratorJunctions.CreateCharts(charts);
+                    return ("Junction", charts);
+                }
                 List<Stimulus> stims = unitSelection.Units.Where(x => x is Stimulus).Cast<Stimulus>().ToList();
                 if (stims.Count != 0)
                 {

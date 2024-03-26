@@ -34,8 +34,12 @@
             lMessage = new Label();
             eNumber = new NumericUpDown();
             lNumber = new Label();
+            simulationSettingsControl1 = new Controls.General.SimulationSettingsControl();
+            lSimulationSettings = new Label();
+            panel1 = new Panel();
             pBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eNumber).BeginInit();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // pBottom
@@ -43,7 +47,7 @@
             pBottom.Controls.Add(btnCancel);
             pBottom.Controls.Add(btnStart);
             pBottom.Dock = DockStyle.Bottom;
-            pBottom.Location = new Point(0, 124);
+            pBottom.Location = new Point(0, 239);
             pBottom.Name = "pBottom";
             pBottom.Size = new Size(288, 37);
             pBottom.TabIndex = 24;
@@ -97,21 +101,50 @@
             lNumber.TabIndex = 27;
             lNumber.Text = "# of simulations to run";
             // 
-            // RunTimeStatsDialog
+            // simulationSettingsControl1
+            // 
+            simulationSettingsControl1.Location = new Point(3, 29);
+            simulationSettingsControl1.Name = "simulationSettingsControl1";
+            simulationSettingsControl1.Size = new Size(143, 84);
+            simulationSettingsControl1.TabIndex = 28;
+            // 
+            // lSimulationSettings
+            // 
+            lSimulationSettings.AutoSize = true;
+            lSimulationSettings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lSimulationSettings.Location = new Point(3, 11);
+            lSimulationSettings.Name = "lSimulationSettings";
+            lSimulationSettings.Size = new Size(115, 15);
+            lSimulationSettings.TabIndex = 29;
+            lSimulationSettings.Text = "Simulation Settings";
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(lSimulationSettings);
+            panel1.Controls.Add(simulationSettingsControl1);
+            panel1.Location = new Point(12, 119);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(264, 116);
+            panel1.TabIndex = 30;
+            // 
+            // MultipleRunDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(288, 161);
+            ClientSize = new Size(288, 276);
+            Controls.Add(panel1);
             Controls.Add(lNumber);
             Controls.Add(eNumber);
             Controls.Add(lMessage);
             Controls.Add(pBottom);
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "RunTimeStatsDialog";
+            Name = "MultipleRunDialog";
             Text = "Run Time Stats";
             pBottom.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)eNumber).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -124,5 +157,8 @@
         private Label lMessage;
         private NumericUpDown eNumber;
         private Label lNumber;
+        private Controls.General.SimulationSettingsControl simulationSettingsControl1;
+        private Label lSimulationSettings;
+        private Panel panel1;
     }
 }

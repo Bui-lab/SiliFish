@@ -138,9 +138,9 @@ namespace Services
             foreach (Chart chart in Charts)
             {
                 if (chart.ScatterPlot)
-                    images.Add(CreateScatterPlot(chart, GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight + 100, GlobalSettings.SameYAxis));
+                    images.Add(CreateScatterPlot(chart, GlobalSettings.PlotWidth, GlobalSettings.PlotHeight + 100, GlobalSettings.SameYAxis));
                 else
-                    images.Add(CreateLinePlot(chart, GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight + 100, GlobalSettings.SameYAxis));
+                    images.Add(CreateLinePlot(chart, GlobalSettings.PlotWidth, GlobalSettings.PlotHeight + 100, GlobalSettings.SameYAxis));
             }
 
             return images;

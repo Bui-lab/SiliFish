@@ -1,4 +1,5 @@
 ﻿using Extensions;
+using OxyPlot;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
@@ -161,10 +162,25 @@ namespace SiliFish.UI.Controls.Display
             return selection;
         }
 
+        public void ClearSelection()
+        {
+            try
+            {
+                if (ddPools.Items.Contains("Selection"))
+                    ddPools.Items.Remove("Selection");
+                SelectedUnits = null;
+            }
+            catch { }
+        }
         public void SetSelectionAsDictionary(Dictionary<string, string> selection)
         {
             try
             {
+                if (selection == null || selection.Count == 0)
+                {
+                    ClearSelection();
+                    return;
+                }
                 ddSagittal.Text = selection.GetValueOrDefault(ddSagittal.Name, SagittalPlane.Both.ToString());
                 if (selection.GetValueOrDefault(ddPools.Name, Const.AllPools) == "Selection" && !ddPools.Items.Contains("Selection"))
                     ddPools.Items.Add("Selection");

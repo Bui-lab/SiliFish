@@ -83,7 +83,6 @@ namespace SiliFish.Services.Dynamics
         public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(Simulation simulation, int startIndex, int endIndex)
         {
             if (!simulation.SimulationRun) return null;
-            RunningModel model = simulation.Model;
             (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(simulation, startIndex, endIndex);
 
             if (vel == null || angle == null ||

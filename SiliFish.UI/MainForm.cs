@@ -16,6 +16,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using System;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Database;
+using SiliFish.UI.Controls.General;
+using SiliFish.Extensions;
+using GeneticSharp;
 
 namespace SiliFish.UI
 {
@@ -78,9 +81,7 @@ namespace SiliFish.UI
 
         private void FillRunParams()
         {
-            edt.Value = (decimal)runParam.DeltaT;
-            eSkip.Value = runParam.SkipDuration;
-            eTimeEnd.Value = runParam.MaxTime;
+            simulationSettings.SetValues(runParam);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -143,21 +144,13 @@ namespace SiliFish.UI
 
         private void SaveLastRunSettings()
         {
-            GlobalSettings.LastRunSettings[lTimeEnd.Name] = eTimeEnd.Text;
-            GlobalSettings.LastRunSettings[lSkip.Name] = eSkip.Text;
-            GlobalSettings.LastRunSettings[ldt.Name] = edt.Text;
+            simulationSettings.SaveSettings(GlobalSettings.LastRunSettings);
         }
         private void GetLastRunSettings()
         {
             if (GlobalSettings.LastRunSettings.Count != 0)
             {
-                try
-                {
-                    eTimeEnd.Text = GlobalSettings.LastRunSettings[lTimeEnd.Name];
-                    eSkip.Text = GlobalSettings.LastRunSettings[lSkip.Name];
-                    edt.Text = GlobalSettings.LastRunSettings[ldt.Name];
-                }
-                catch { }
+                simulationSettings.ReadSettings(GlobalSettings.LastRunSettings);
             }
         }
 
@@ -245,10 +238,10 @@ namespace SiliFish.UI
             runningModel.JunctionCurrentTrackingOn = GlobalSettings.JunctionLevelTracking;
             if (GlobalSettings.JunctionLevelTracking)
             {
-                int iMax = (int)(eTimeEnd.Value / edt.Value);
+                int iMax = simulationSettings.iMax;
                 long numConn = runningModel.GetNumberOfConnections();
                 long memoryRequired = numConn * iMax * 8;//number of bytes
-                memoryRequired /= (1024 * 1024 * 1024);
+                memoryRequired /= 1024 * 1024 * 1024;
                 if (memoryRequired > GlobalSettings.MemoryWarningLimit)
                 {
                     string msg = $"There are {numConn:n0} connections, which would require more than {memoryRequired} GB extra memory for junction based current tracking.\r\n" +
@@ -263,22 +256,19 @@ namespace SiliFish.UI
                         return false;
                 }
             }
-            runParam = new()
-            {
-                SkipDuration = (int)eSkip.Value,
-                MaxTime = (int)eTimeEnd.Value,
-                DeltaT = (double)edt.Value,
-                TrackJunctionCurrent = runningModel.JunctionCurrentTrackingOn
-            };
+            runParam = simulationSettings.GetValues();
+            runParam.TrackJunctionCurrent = runningModel.JunctionCurrentTrackingOn;
+
             btnRun.Text = "Stop Run";
             return true;
         }
 
-        private void RunSimulation()
+        private void RunSimulationFromModel()
         {
             modelSimulator = new(runningModel, runParam, numSimulations, parallelRun, completeRunsAction);
             modelSimulator.Run();
         }
+
         private void btnRun_Click(object sender, EventArgs e)
         {
             if (btnRun.Text == "Stop Run")
@@ -304,7 +294,7 @@ namespace SiliFish.UI
                 return;
             numSimulations = 1;
             parallelRun = false;
-            RunSimulation();
+            RunSimulationFromModel();
         }
 
         private void timerRun_Tick(object sender, EventArgs e)
@@ -333,11 +323,7 @@ namespace SiliFish.UI
         {
             bool prevCollapsed = splitMain.Panel2Collapsed;
             miFileSaveSimulationResults.Visible =
-            miToolsGenerateStatsData.Visible =
-                miToolMultipleRun.Visible =
-                miToolsRunTimeStats.Visible =
-                miToolsSepStats.Visible =
-                    mode == RunMode.RunningModel;
+            miToolsGenerateStatsData.Visible = mode == RunMode.RunningModel;
             splitMain.Panel2Collapsed = mode == RunMode.Template;
             pSimulation.Visible = mode == RunMode.RunningModel;
             pGenerateModel.Visible = mode == RunMode.Template;
@@ -445,29 +431,72 @@ namespace SiliFish.UI
             }
         }
 
-        private void btnGenerateModel_Click(object sender, EventArgs e)
+        private bool CheckModelTemplate()
         {
             modelTemplate = modelControl.GetModel() as ModelTemplate;
             if (modelTemplate == null)
             {
                 MessageBox.Show("There is no model template loaded.", "Error");
-                return;
+                return false;
             }
-            UseWaitCursor = true;
             List<string> errors = [];
             if (!modelTemplate.CheckValues(ref errors))
             {
                 UseWaitCursor = false;
                 MessageBox.Show($"There are errors in the template file. Please correct them before generating a model: \r\n" +
                     $"{string.Join("\r\n", errors)}", "Error");
-                return;
+                return false;
             }
+            return true;
+        }
+        private void GenerateAndRunModelsFromTemplate(int numOfModels = 1)
+        {
+            if (!CheckModelTemplate())
+                return;
+            UseWaitCursor = true;
+            if (parallelRun)
+            {
+                int oldSeed = modelTemplate.Settings.Seed;
+                for (int i = 0; i < numOfModels; i++)
+                {
+                    MainForm mf = new(new RunningModel(modelTemplate))
+                    {
+                        WindowState = FormWindowState.Maximized
+                    };
+                    mf.Show();
+                    mf.numSimulations = 1;
+                    //Thread thread = new(mf.RunSimulationFromModel);
+                    //thread.Start();                    
+                    modelTemplate.Settings.Seed += 1;//to have different results 
+                }
+                modelTemplate.Settings.Seed = oldSeed;
+            }
+            else
+            {
+                MainForm mf = new(new RunningModel(modelTemplate))
+                {
+                    WindowState = FormWindowState.Maximized
+                };
+                mf.Show();
+                mf.numSimulations = numOfModels;
+                mf.parallelRun = parallelRun;
+                mf.RunSimulationFromModel();
+            }
+
+            UseWaitCursor = false;
+        }
+        private void btnGenerateModel_Click(object sender, EventArgs e)
+        {
+            if (!CheckModelTemplate())
+                return;
+            UseWaitCursor = true;
             MainForm mf = new(new RunningModel(modelTemplate))
             {
                 WindowState = FormWindowState.Maximized
             };
-            UseWaitCursor = false;
             mf.Show();
+
+            UseWaitCursor = false;
         }
 
         private void modelControl_PlotRequested(object sender, EventArgs e)
@@ -688,18 +717,26 @@ namespace SiliFish.UI
             }
         }
 
-        private void miToolMultipleRun_Click(object sender, EventArgs e)
+        private void miToolsMultipleRun_Click(object sender, EventArgs e)
         {
             try
             {
-                MultipleRunDialog runTimeStatsDialog = new(runTimeStats: false);
+                MultipleRunDialog runTimeStatsDialog = new(runTimeStats: false, simulationSettings.GetValues());
                 runTimeStatsDialog.ShowDialog();
                 numSimulations = runTimeStatsDialog.NumOfSimulations;
                 if (numSimulations <= 0) return;
-                if (!PreRun()) return;
+                simulationSettings.SetValues(runTimeStatsDialog.RunParam);
                 parallelRun = true;
                 Application.DoEvents();
-                RunSimulation();
+                if (!PreRun())
+                {
+                    if (modelTemplate != null)
+                        GenerateAndRunModelsFromTemplate(numSimulations);
+                }
+                else
+                {
+                    RunSimulationFromModel();
+                }
             }
             catch (Exception ex)
             {
@@ -710,14 +747,22 @@ namespace SiliFish.UI
         {
             try
             {
-                MultipleRunDialog runTimeStatsDialog = new(runTimeStats: true);
+                MultipleRunDialog runTimeStatsDialog = new(runTimeStats: true, simulationSettings.GetValues());
                 runTimeStatsDialog.ShowDialog();
                 numSimulations = runTimeStatsDialog.NumOfSimulations;
                 if (numSimulations <= 0) return;
-                if (!PreRun()) return;
+                simulationSettings.SetValues(runTimeStatsDialog.RunParam);
                 parallelRun = false;
                 Application.DoEvents();
-                RunSimulation();
+                if (!PreRun())
+                {
+                    if (modelTemplate != null)
+                        GenerateAndRunModelsFromTemplate(numSimulations);
+                }
+                else
+                {
+                    RunSimulationFromModel();
+                }
             }
             catch (Exception ex)
             {
@@ -761,5 +806,6 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
+
     }
 }

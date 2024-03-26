@@ -70,7 +70,6 @@ namespace SiliFish.UI.Controls
         bool rendered2DFull = false; //whether the 2D rendering is done by hiding in inactive nodes - will need rerendering
         bool rendered3D = false;
         TwoDRenderer TwoDRenderer = new();
-
         public ModelOutputControl()
         {
             InitializeComponent();
@@ -110,6 +109,8 @@ namespace SiliFish.UI.Controls
             {
                 cellSelectionPlot.CombineOptionsVisible = false;
                 cellSelectionPlot.Visible = true;
+                cellSelectionPlot.SetPlot(new PlotDefinition() { PlotSubset = Const.Motoneurons, PlotType = PlotType, Selection = null });
+                cellSelectionPlot.ClearSelection();
                 cellSelectionPlot.TurnOnSingleCellOrSomite();
                 cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
             }
@@ -117,6 +118,8 @@ namespace SiliFish.UI.Controls
             {
                 cellSelectionPlot.CombineOptionsVisible = false;
                 cellSelectionPlot.Visible = true;
+                cellSelectionPlot.SetPlot(new PlotDefinition() {  PlotSubset=Const.Motoneurons, PlotType = PlotType, Selection = null});
+                cellSelectionPlot.ClearSelection();
                 cellSelectionPlot.TurnOnMultipleCellOrSomite();
                 cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
             }
@@ -208,7 +211,7 @@ namespace SiliFish.UI.Controls
             eAnimationEnd.Value = tMax;
 
             cmPlot.Enabled =
-                btnListSpikes.Enabled = btnListRCTrains.Enabled =
+                btnListSpikes.Enabled = btnListRCTrains.Enabled = btnListSpikeSummary.Enabled =
                 btnPlotHTML.Enabled =
                 btnAnimate.Enabled = true;
         }
@@ -322,7 +325,7 @@ namespace SiliFish.UI.Controls
             if (refresh && !cb2DHideNonspiking.Checked && !rendered2DFull)
                 refresh = false;
             List<CellPool> cellPools = model.CellPools;
-            if (cb2DHideNonspiking.Checked && simulation!=null && simulation.SimulationRun)
+            if (cb2DHideNonspiking.Checked && simulation != null && simulation.SimulationRun)
                 cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
             string html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
@@ -850,7 +853,7 @@ namespace SiliFish.UI.Controls
             if (simulation == null || model == null) return ("", null);
 
             (List<Cell> Cells, List<CellPool> Pools) = (null, null);
-            string plotsubset = cellSelectionPlot.Visible ? cellSelectionPlot.PoolSubset : "";
+            string plotsubset = cellSelectionPlot.Visible && PlotType.GetGroup() != "episode" ? cellSelectionPlot.PoolSubset : "";
             if (plotSelection is PlotSelectionMultiCells || plotSelection is PlotSelectionUnits)
             {
                 int tSkip = simulation.RunParam.SkipDuration;
@@ -915,7 +918,7 @@ namespace SiliFish.UI.Controls
             htmlPlot = "";
             (string Title, Charts) = GenerateCharts();
             htmlPlot = DyChartGenerator.Plot(Title, Charts, GlobalSettings.ShowZeroValues,
-                GlobalSettings.DefaultPlotWidth, GlobalSettings.DefaultPlotHeight);
+                GlobalSettings.PlotWidth, GlobalSettings.PlotHeight);
             Invoke(CompletePlotHTML);
         }
         private void btnPlotHTML_Click(object sender, EventArgs e)
@@ -1242,6 +1245,64 @@ namespace SiliFish.UI.Controls
                 colIndex == colRCTrainMidPointDelay.Index)
                 GenerateHistogramOfRCColumn(colIndex);
         }
+
+        private int AddCellPoolSpikeSummaryGrid(CellPool pool)
+        {
+            dgSpikeSummary.RowCount++;
+            int rowIndex = dgSpikeSummary.RowCount - 1;
+            dgSpikeSummary[colSumSagittal.Index, rowIndex].Value = pool.PositionLeftRight;
+            dgSpikeSummary[colSumCellPool.Index, rowIndex].Value = pool.CellGroup;
+            dgSpikeSummary.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Gray;
+            return rowIndex;
+        }
+        private int AddCellToSpikeSummaryGrid(Cell cell)
+        {
+            dgSpikeSummary.RowCount++;
+            int rowIndex = dgSpikeSummary.RowCount - 1;
+            dgSpikeSummary[colSumCellID.Index, rowIndex].Value = cell.ID;
+            dgSpikeSummary[colSumSagittal.Index, rowIndex].Value = cell.PositionLeftRight;
+            dgSpikeSummary[colSumCellPool.Index, rowIndex].Value = cell.CellPool.CellGroup;
+            dgSpikeSummary[colSumSomite.Index, rowIndex].Value = cell.Somite;
+            dgSpikeSummary[colSumCellSeq.Index, rowIndex].Value = cell.Sequence;
+            return rowIndex;
+        }
+
+
+        private void GenerateSpikeSummary()
+        {
+            if (simulation == null || !simulation.SimulationRun) return;
+            UseWaitCursor = true;
+            int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
+            int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
+            string period = $"{eSpikeStart.Value}-{eSpikeEnd.Value}";
+            dgSpikeSummary.Rows.Clear();
+            foreach (CellPool cellPool in model.GetCellPools().Cast<CellPool>())
+            {
+                int poolIndex = AddCellPoolSpikeSummaryGrid(cellPool);
+                dgSpikeSummary[colSumPeriod.Index, poolIndex].Value = period;
+                int sum = 0;
+                foreach (Cell cell in cellPool.Cells)
+                {
+                    int cellIndex = AddCellToSpikeSummaryGrid(cell);
+                    int spikeCount = cell.GetSpikeIndices(iSpikeStart, iSpikeEnd).Count;
+                    sum += spikeCount;
+                    dgSpikeSummary[colSumSpikeCount.Index, cellIndex].Value = spikeCount;
+                }
+                dgSpikeSummary[colSumSpikeCount.Index, poolIndex].Value = sum;
+            }
+            UseWaitCursor = false;
+            tabSpikesRCTrains.SelectedTab = tSpikeSummary;
+            linkExportSpikeSummary.Enabled = true;
+        }
+
+        private void btnListSpikeSummary_Click(object sender, EventArgs e)
+        {
+            GenerateSpikeSummary();
+        }
+        private void linkExportSpikeSummary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UtilWindows.SaveTextFile(saveFileCSV, dgSpikeSummary.ExportToStringBuilder().ToString());
+        }
         #endregion
 
 
@@ -1335,7 +1396,6 @@ namespace SiliFish.UI.Controls
         {
             tabOutputs_SelectedIndexChanged(sender, e);
         }
-
 
     }
 

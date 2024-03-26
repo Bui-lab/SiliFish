@@ -57,7 +57,7 @@ namespace SiliFish.ModelUnits.Architecture
         public RunningModel Model { get; set; } = runningModel;
         public string Description => GlobalSettings.UseDBForMemory ? "DB Mode" : "Regular Mode";
 
-        public void StartSimulation()
+        public void InitializeSimulation()
         {
             try
             {
@@ -97,7 +97,7 @@ namespace SiliFish.ModelUnits.Architecture
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-        public async void EndSimulation()
+        public async void FinalizeSimulation()
         {
             SimulationState prevState = state;
             state = SimulationState.Finalizing;
@@ -147,7 +147,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             try
             {
-                StartSimulation();
+                InitializeSimulation();
                 state = SimulationState.Running;
                 if (SimulationCancelled)
                 {
@@ -165,8 +165,8 @@ namespace SiliFish.ModelUnits.Architecture
                     CalculateCellularOutputs(index);
                     CalculateMembranePotentialsFromCurrents(index);
                 }
-                EndSimulation();
-                while (state != SimulationState.Completed)
+                FinalizeSimulation();
+                while (state != SimulationState.Completed && state != SimulationState.Interrupted && state != SimulationState.Cancelled)
                     _ = Task.Delay(100);
             }
             catch (Exception ex)

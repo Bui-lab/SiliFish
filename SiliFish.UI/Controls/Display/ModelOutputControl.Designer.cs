@@ -30,16 +30,17 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
             p2DRenderOptions = new Panel();
+            cb2DOffline = new CheckBox();
             cb2DShowUnselectedNodes = new CheckBox();
             cb2DHideNonspiking = new CheckBox();
             cb2DLegend = new CheckBox();
@@ -62,6 +63,7 @@
             webView2DRender = new Microsoft.Web.WebView2.WinForms.WebView2();
             t3DRender = new TabPage();
             p3DRenderOptions = new Panel();
+            cb3DOffline = new CheckBox();
             l3DNodeSize = new Label();
             cb3DShowUnselectedNodes = new CheckBox();
             ud3DNodeSize = new General.UpDownControl();
@@ -135,7 +137,18 @@
             colRCTrainMidPointDelay = new DataGridViewTextBoxColumn();
             colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
             webViewRCTrains = new Microsoft.Web.WebView2.WinForms.WebView2();
+            tSpikeSummary = new TabPage();
+            dgSpikeSummary = new DataGridView();
+            colSumPeriod = new DataGridViewTextBoxColumn();
+            colSumCellID = new DataGridViewTextBoxColumn();
+            colSumSagittal = new DataGridViewTextBoxColumn();
+            colSumCellPool = new DataGridViewTextBoxColumn();
+            colSumSomite = new DataGridViewTextBoxColumn();
+            colSumCellSeq = new DataGridViewTextBoxColumn();
+            colSumSpikeCount = new DataGridViewTextBoxColumn();
             panel1 = new Panel();
+            linkExportSpikeSummary = new LinkLabel();
+            btnListSpikeSummary = new Button();
             eSpikeEnd = new NumericUpDown();
             eSpikeStart = new NumericUpDown();
             lSpikeStart = new Label();
@@ -173,8 +186,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            cb2DOffline = new CheckBox();
-            cb3DOffline = new CheckBox();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             p2DRenderOptions.SuspendLayout();
@@ -209,6 +220,8 @@
             splitRCTrains.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).BeginInit();
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).BeginInit();
+            tSpikeSummary.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgSpikeSummary).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eSpikeEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eSpikeStart).BeginInit();
@@ -268,6 +281,17 @@
             p2DRenderOptions.Size = new Size(694, 85);
             p2DRenderOptions.TabIndex = 55;
             p2DRenderOptions.Visible = false;
+            // 
+            // cb2DOffline
+            // 
+            cb2DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cb2DOffline.AutoSize = true;
+            cb2DOffline.Location = new Point(625, 30);
+            cb2DOffline.Name = "cb2DOffline";
+            cb2DOffline.Size = new Size(62, 19);
+            cb2DOffline.TabIndex = 75;
+            cb2DOffline.Text = "Offline";
+            cb2DOffline.UseVisualStyleBackColor = true;
             // 
             // cb2DShowUnselectedNodes
             // 
@@ -540,6 +564,17 @@
             p3DRenderOptions.Size = new Size(694, 85);
             p3DRenderOptions.TabIndex = 58;
             p3DRenderOptions.Visible = false;
+            // 
+            // cb3DOffline
+            // 
+            cb3DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cb3DOffline.AutoSize = true;
+            cb3DOffline.Location = new Point(625, 29);
+            cb3DOffline.Name = "cb3DOffline";
+            cb3DOffline.Size = new Size(62, 19);
+            cb3DOffline.TabIndex = 76;
+            cb3DOffline.Text = "Offline";
+            cb3DOffline.UseVisualStyleBackColor = true;
             // 
             // l3DNodeSize
             // 
@@ -1116,6 +1151,7 @@
             // 
             tabSpikesRCTrains.Controls.Add(tSpikes);
             tabSpikesRCTrains.Controls.Add(tRCTrains);
+            tabSpikesRCTrains.Controls.Add(tSpikeSummary);
             tabSpikesRCTrains.Dock = DockStyle.Fill;
             tabSpikesRCTrains.Location = new Point(0, 120);
             tabSpikesRCTrains.Name = "tabSpikesRCTrains";
@@ -1158,6 +1194,7 @@
             colSpikeSagittal.HeaderText = "Sagittal";
             colSpikeSagittal.Name = "colSpikeSagittal";
             colSpikeSagittal.ReadOnly = true;
+            colSpikeSagittal.Width = 75;
             // 
             // colSpikeCellPool
             // 
@@ -1170,12 +1207,14 @@
             colSpikeSomite.HeaderText = "Somite";
             colSpikeSomite.Name = "colSpikeSomite";
             colSpikeSomite.ReadOnly = true;
+            colSpikeSomite.Width = 75;
             // 
             // colSpikeCellSeq
             // 
             colSpikeCellSeq.HeaderText = "Cell Seq";
             colSpikeCellSeq.Name = "colSpikeCellSeq";
             colSpikeCellSeq.ReadOnly = true;
+            colSpikeCellSeq.Width = 75;
             // 
             // colSpikeTime
             // 
@@ -1249,9 +1288,9 @@
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -1259,8 +1298,8 @@
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle9.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -1268,8 +1307,8 @@
             // 
             // colRCTrainMidPoint
             // 
-            dataGridViewCellStyle10.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
@@ -1277,8 +1316,8 @@
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle11.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -1286,9 +1325,9 @@
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle12.Format = "N2";
-            dataGridViewCellStyle12.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -1296,8 +1335,8 @@
             // 
             // colRCTrainMidPointDelay
             // 
-            dataGridViewCellStyle13.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle6.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
@@ -1305,8 +1344,8 @@
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle14.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle7.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
@@ -1326,9 +1365,80 @@
             webViewRCTrains.ZoomFactor = 1D;
             webViewRCTrains.CoreWebView2InitializationCompleted += webView_CoreWebView2InitializationCompleted;
             // 
+            // tSpikeSummary
+            // 
+            tSpikeSummary.Controls.Add(dgSpikeSummary);
+            tSpikeSummary.Location = new Point(4, 24);
+            tSpikeSummary.Name = "tSpikeSummary";
+            tSpikeSummary.Padding = new Padding(3);
+            tSpikeSummary.Size = new Size(686, 619);
+            tSpikeSummary.TabIndex = 2;
+            tSpikeSummary.Text = "Spike Summary";
+            tSpikeSummary.UseVisualStyleBackColor = true;
+            // 
+            // dgSpikeSummary
+            // 
+            dgSpikeSummary.AllowUserToAddRows = false;
+            dgSpikeSummary.AllowUserToDeleteRows = false;
+            dgSpikeSummary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgSpikeSummary.Columns.AddRange(new DataGridViewColumn[] { colSumPeriod, colSumCellID, colSumSagittal, colSumCellPool, colSumSomite, colSumCellSeq, colSumSpikeCount });
+            dgSpikeSummary.Dock = DockStyle.Fill;
+            dgSpikeSummary.Location = new Point(3, 3);
+            dgSpikeSummary.Name = "dgSpikeSummary";
+            dgSpikeSummary.ReadOnly = true;
+            dgSpikeSummary.Size = new Size(680, 613);
+            dgSpikeSummary.TabIndex = 8;
+            // 
+            // colSumPeriod
+            // 
+            colSumPeriod.HeaderText = "Period";
+            colSumPeriod.Name = "colSumPeriod";
+            colSumPeriod.ReadOnly = true;
+            // 
+            // colSumCellID
+            // 
+            colSumCellID.HeaderText = "Cell ID";
+            colSumCellID.Name = "colSumCellID";
+            colSumCellID.ReadOnly = true;
+            // 
+            // colSumSagittal
+            // 
+            colSumSagittal.HeaderText = "Sagittal";
+            colSumSagittal.Name = "colSumSagittal";
+            colSumSagittal.ReadOnly = true;
+            colSumSagittal.Width = 75;
+            // 
+            // colSumCellPool
+            // 
+            colSumCellPool.HeaderText = "Cell Pool";
+            colSumCellPool.Name = "colSumCellPool";
+            colSumCellPool.ReadOnly = true;
+            // 
+            // colSumSomite
+            // 
+            colSumSomite.HeaderText = "Somite";
+            colSumSomite.Name = "colSumSomite";
+            colSumSomite.ReadOnly = true;
+            colSumSomite.Width = 75;
+            // 
+            // colSumCellSeq
+            // 
+            colSumCellSeq.HeaderText = "Cell Seq";
+            colSumCellSeq.Name = "colSumCellSeq";
+            colSumCellSeq.ReadOnly = true;
+            colSumCellSeq.Width = 75;
+            // 
+            // colSumSpikeCount
+            // 
+            colSumSpikeCount.HeaderText = "Spike Count";
+            colSumSpikeCount.Name = "colSumSpikeCount";
+            colSumSpikeCount.ReadOnly = true;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(236, 239, 241);
+            panel1.Controls.Add(linkExportSpikeSummary);
+            panel1.Controls.Add(btnListSpikeSummary);
             panel1.Controls.Add(eSpikeEnd);
             panel1.Controls.Add(eSpikeStart);
             panel1.Controls.Add(lSpikeStart);
@@ -1346,6 +1456,35 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(694, 120);
             panel1.TabIndex = 6;
+            // 
+            // linkExportSpikeSummary
+            // 
+            linkExportSpikeSummary.AutoSize = true;
+            linkExportSpikeSummary.Enabled = false;
+            linkExportSpikeSummary.LinkColor = Color.FromArgb(64, 64, 64);
+            linkExportSpikeSummary.Location = new Point(13, 91);
+            linkExportSpikeSummary.Name = "linkExportSpikeSummary";
+            linkExportSpikeSummary.Size = new Size(44, 15);
+            linkExportSpikeSummary.TabIndex = 71;
+            linkExportSpikeSummary.TabStop = true;
+            linkExportSpikeSummary.Text = "Export ";
+            toolTip.SetToolTip(linkExportSpikeSummary, "Export spike data as a csv file");
+            linkExportSpikeSummary.LinkClicked += linkExportSpikeSummary_LinkClicked;
+            // 
+            // btnListSpikeSummary
+            // 
+            btnListSpikeSummary.BackColor = Color.FromArgb(96, 125, 139);
+            btnListSpikeSummary.Enabled = false;
+            btnListSpikeSummary.FlatAppearance.BorderColor = Color.LightGray;
+            btnListSpikeSummary.FlatStyle = FlatStyle.Flat;
+            btnListSpikeSummary.ForeColor = Color.White;
+            btnListSpikeSummary.Location = new Point(12, 63);
+            btnListSpikeSummary.Name = "btnListSpikeSummary";
+            btnListSpikeSummary.Size = new Size(161, 24);
+            btnListSpikeSummary.TabIndex = 70;
+            btnListSpikeSummary.Text = "List Spike Summary";
+            btnListSpikeSummary.UseVisualStyleBackColor = false;
+            btnListSpikeSummary.Click += btnListSpikeSummary_Click;
             // 
             // eSpikeEnd
             // 
@@ -1703,28 +1842,6 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
-            // cb2DOffline
-            // 
-            cb2DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            cb2DOffline.AutoSize = true;
-            cb2DOffline.Location = new Point(625, 30);
-            cb2DOffline.Name = "cb2DOffline";
-            cb2DOffline.Size = new Size(62, 19);
-            cb2DOffline.TabIndex = 75;
-            cb2DOffline.Text = "Offline";
-            cb2DOffline.UseVisualStyleBackColor = true;
-            // 
-            // cb3DOffline
-            // 
-            cb3DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            cb3DOffline.AutoSize = true;
-            cb3DOffline.Location = new Point(625, 29);
-            cb3DOffline.Name = "cb3DOffline";
-            cb3DOffline.Size = new Size(62, 19);
-            cb3DOffline.TabIndex = 76;
-            cb3DOffline.Text = "Offline";
-            cb3DOffline.UseVisualStyleBackColor = true;
-            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1774,6 +1891,8 @@
             splitRCTrains.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).EndInit();
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
+            tSpikeSummary.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgSpikeSummary).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eSpikeEnd).EndInit();
@@ -1890,12 +2009,6 @@
         private Display.CellSelectionControl cellSelectionPlot;
         private Display.CellSelectionControl cellSelectionSpike;
         private Button btnListSpikes;
-        private DataGridViewTextBoxColumn colSpikeCell;
-        private DataGridViewTextBoxColumn colSpikeSagittal;
-        private DataGridViewTextBoxColumn colSpikeCellPool;
-        private DataGridViewTextBoxColumn colSpikeSomite;
-        private DataGridViewTextBoxColumn colSpikeCellSeq;
-        private DataGridViewTextBoxColumn colSpikeTime;
         private Button btnListRCTrains;
         private TabControl tabSpikesRCTrains;
         private TabPage tSpikes;
@@ -1929,5 +2042,22 @@
         private Panel pPictureBox;
         private CheckBox cb2DOffline;
         private CheckBox cb3DOffline;
+        private TabPage tSpikeSummary;
+        private DataGridView dgSpikeSummary;
+        private DataGridViewTextBoxColumn colSpikeCell;
+        private DataGridViewTextBoxColumn colSpikeSagittal;
+        private DataGridViewTextBoxColumn colSpikeCellPool;
+        private DataGridViewTextBoxColumn colSpikeSomite;
+        private DataGridViewTextBoxColumn colSpikeCellSeq;
+        private DataGridViewTextBoxColumn colSpikeTime;
+        private DataGridViewTextBoxColumn colSumPeriod;
+        private DataGridViewTextBoxColumn colSumCellID;
+        private DataGridViewTextBoxColumn colSumSagittal;
+        private DataGridViewTextBoxColumn colSumCellPool;
+        private DataGridViewTextBoxColumn colSumSomite;
+        private DataGridViewTextBoxColumn colSumCellSeq;
+        private DataGridViewTextBoxColumn colSumSpikeCount;
+        private LinkLabel linkExportSpikeSummary;
+        private Button btnListSpikeSummary;
     }
 }

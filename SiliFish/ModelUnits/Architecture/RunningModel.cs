@@ -206,7 +206,7 @@ namespace SiliFish.ModelUnits.Architecture
             if (swimmingModelTemplate == null) return;
 
             ModelName = swimmingModelTemplate.ModelName;
-            ModelDescription = $"Generated from {ModelName} on {DateTime.Now:g}\r\n{swimmingModelTemplate.ModelDescription}";
+            ModelDescription = $"Generated on {DateTime.Now:g}\r\n{swimmingModelTemplate.ModelDescription}";
             ModelDimensions = swimmingModelTemplate.ModelDimensions.Clone();
             Settings = swimmingModelTemplate.Settings.Clone();
             KinemParam = swimmingModelTemplate.KinemParam.Clone();

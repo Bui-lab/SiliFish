@@ -56,7 +56,7 @@ namespace SiliFish.UI
             miToolsStatsTBFs = new ToolStripMenuItem();
             miToolsSep3 = new ToolStripSeparator();
             miToolsStatsFull = new ToolStripMenuItem();
-            miToolMultipleRun = new ToolStripMenuItem();
+            miToolsMultipleRun = new ToolStripMenuItem();
             miToolsRunTimeStats = new ToolStripMenuItem();
             miToolsSepStats = new ToolStripSeparator();
             miToolsSettings = new ToolStripMenuItem();
@@ -70,18 +70,13 @@ namespace SiliFish.UI
             btnGenerateModel = new Button();
             linkLabel4 = new LinkLabel();
             pSimulation = new Panel();
+            simulationSettings = new Controls.General.SimulationSettingsControl();
             lProgress = new Label();
-            eSkip = new NumericUpDown();
-            lSkip = new Label();
-            edt = new NumericUpDown();
-            eTimeEnd = new NumericUpDown();
-            ldt = new Label();
             lRunTime = new Label();
             linkExportOutput = new LinkLabel();
             progressBarRun = new ProgressBar();
             btnRun = new Button();
-            lTimeEnd = new Label();
-            lRunParameters = new Label();
+            lSimulationSettings = new Label();
             modelOutputControl = new ModelOutputControl();
             timerRun = new System.Windows.Forms.Timer(components);
             saveFileHTML = new SaveFileDialog();
@@ -105,9 +100,6 @@ namespace SiliFish.UI
             splitMain.SuspendLayout();
             pGenerateModel.SuspendLayout();
             pSimulation.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)eSkip).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)edt).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)eTimeEnd).BeginInit();
             SuspendLayout();
             // 
             // pTop
@@ -215,7 +207,7 @@ namespace SiliFish.UI
             // 
             // mTools
             // 
-            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolMultipleRun, miToolsRunTimeStats, miToolsSepStats, miToolsSettings });
+            mTools.DropDownItems.AddRange(new ToolStripItem[] { miToolsCompareModel, miToolsSep1, miToolsCellularDynamics, miToolsSep2, miToolsGenerateStatsData, miToolsMultipleRun, miToolsRunTimeStats, miToolsSepStats, miToolsSettings });
             mTools.Name = "mTools";
             mTools.Size = new Size(46, 19);
             mTools.Text = "Tools";
@@ -284,12 +276,12 @@ namespace SiliFish.UI
             miToolsStatsFull.Text = "Full Stats";
             miToolsStatsFull.Click += miToolsStatsFull_Click;
             // 
-            // miToolMultipleRun
+            // miToolsMultipleRun
             // 
-            miToolMultipleRun.Name = "miToolMultipleRun";
-            miToolMultipleRun.Size = new Size(207, 22);
-            miToolMultipleRun.Text = "Run Multiple Simulations";
-            miToolMultipleRun.Click += miToolMultipleRun_Click;
+            miToolsMultipleRun.Name = "miToolsMultipleRun";
+            miToolsMultipleRun.Size = new Size(207, 22);
+            miToolsMultipleRun.Text = "Run Multiple Simulations";
+            miToolsMultipleRun.Click += miToolsMultipleRun_Click;
             // 
             // miToolsRunTimeStats
             // 
@@ -415,23 +407,25 @@ namespace SiliFish.UI
             // pSimulation
             // 
             pSimulation.BackColor = Color.FromArgb(236, 239, 241);
+            pSimulation.Controls.Add(simulationSettings);
             pSimulation.Controls.Add(lProgress);
-            pSimulation.Controls.Add(eSkip);
-            pSimulation.Controls.Add(lSkip);
-            pSimulation.Controls.Add(edt);
-            pSimulation.Controls.Add(eTimeEnd);
-            pSimulation.Controls.Add(ldt);
             pSimulation.Controls.Add(lRunTime);
             pSimulation.Controls.Add(linkExportOutput);
             pSimulation.Controls.Add(progressBarRun);
             pSimulation.Controls.Add(btnRun);
-            pSimulation.Controls.Add(lTimeEnd);
-            pSimulation.Controls.Add(lRunParameters);
+            pSimulation.Controls.Add(lSimulationSettings);
             pSimulation.Dock = DockStyle.Bottom;
             pSimulation.Location = new Point(0, 504);
             pSimulation.Name = "pSimulation";
             pSimulation.Size = new Size(543, 165);
             pSimulation.TabIndex = 1;
+            // 
+            // simulationSettings
+            // 
+            simulationSettings.Location = new Point(8, 26);
+            simulationSettings.Name = "simulationSettings";
+            simulationSettings.Size = new Size(143, 84);
+            simulationSettings.TabIndex = 37;
             // 
             // lProgress
             // 
@@ -443,63 +437,13 @@ namespace SiliFish.UI
             lProgress.Text = "Progress:";
             lProgress.Visible = false;
             // 
-            // eSkip
-            // 
-            eSkip.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            eSkip.Location = new Point(71, 58);
-            eSkip.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eSkip.Name = "eSkip";
-            eSkip.Size = new Size(76, 23);
-            eSkip.TabIndex = 34;
-            toolTip.SetToolTip(eSkip, "(in milliseconds)");
-            // 
-            // lSkip
-            // 
-            lSkip.AutoSize = true;
-            lSkip.Location = new Point(10, 61);
-            lSkip.Name = "lSkip";
-            lSkip.Size = new Size(29, 15);
-            lSkip.TabIndex = 6;
-            lSkip.Text = "Skip";
-            // 
-            // edt
-            // 
-            edt.DecimalPlaces = 2;
-            edt.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            edt.Location = new Point(71, 84);
-            edt.Name = "edt";
-            edt.Size = new Size(76, 23);
-            edt.TabIndex = 35;
-            toolTip.SetToolTip(edt, "(in milliseconds)");
-            edt.Value = new decimal(new int[] { 1, 0, 0, 65536 });
-            // 
-            // eTimeEnd
-            // 
-            eTimeEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            eTimeEnd.Location = new Point(71, 32);
-            eTimeEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eTimeEnd.Name = "eTimeEnd";
-            eTimeEnd.Size = new Size(76, 23);
-            eTimeEnd.TabIndex = 33;
-            eTimeEnd.ThousandsSeparator = true;
-            toolTip.SetToolTip(eTimeEnd, "(in milliseconds)");
-            eTimeEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // ldt
-            // 
-            ldt.AutoSize = true;
-            ldt.Location = new Point(10, 87);
-            ldt.Name = "ldt";
-            ldt.Size = new Size(19, 15);
-            ldt.TabIndex = 32;
-            ldt.Text = "Δt";
-            // 
             // lRunTime
             // 
             lRunTime.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lRunTime.Location = new Point(153, 36);
+            lRunTime.Font = new Font("Segoe UI", 8F);
+            lRunTime.Location = new Point(153, 8);
             lRunTime.Name = "lRunTime";
-            lRunTime.Size = new Size(368, 66);
+            lRunTime.Size = new Size(387, 94);
             lRunTime.TabIndex = 31;
             // 
             // linkExportOutput
@@ -539,24 +483,15 @@ namespace SiliFish.UI
             btnRun.UseVisualStyleBackColor = false;
             btnRun.Click += btnRun_Click;
             // 
-            // lTimeEnd
+            // lSimulationSettings
             // 
-            lTimeEnd.AutoSize = true;
-            lTimeEnd.Location = new Point(10, 35);
-            lTimeEnd.Name = "lTimeEnd";
-            lTimeEnd.Size = new Size(56, 15);
-            lTimeEnd.TabIndex = 3;
-            lTimeEnd.Text = "Time End";
-            // 
-            // lRunParameters
-            // 
-            lRunParameters.AutoSize = true;
-            lRunParameters.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lRunParameters.Location = new Point(8, 8);
-            lRunParameters.Name = "lRunParameters";
-            lRunParameters.Size = new Size(133, 15);
-            lRunParameters.TabIndex = 1;
-            lRunParameters.Text = "Simulation Parameters";
+            lSimulationSettings.AutoSize = true;
+            lSimulationSettings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lSimulationSettings.Location = new Point(8, 8);
+            lSimulationSettings.Name = "lSimulationSettings";
+            lSimulationSettings.Size = new Size(115, 15);
+            lSimulationSettings.TabIndex = 1;
+            lSimulationSettings.Text = "Simulation Settings";
             // 
             // modelOutputControl
             // 
@@ -669,9 +604,6 @@ namespace SiliFish.UI
             pGenerateModel.PerformLayout();
             pSimulation.ResumeLayout(false);
             pSimulation.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)eSkip).EndInit();
-            ((System.ComponentModel.ISupportInitialize)edt).EndInit();
-            ((System.ComponentModel.ISupportInitialize)eTimeEnd).EndInit();
             ResumeLayout(false);
         }
 
@@ -679,9 +611,8 @@ namespace SiliFish.UI
         private Panel pTop;
         private SplitContainer splitMain;
         private Panel pSimulation;
-        private Label lRunParameters;
+        private Label lSimulationSettings;
         private Button btnRun;
-        private Label lTimeEnd;
         private ProgressBar progressBarRun;
         private System.Windows.Forms.Timer timerRun;
         private SaveFileDialog saveFileHTML;
@@ -692,11 +623,6 @@ namespace SiliFish.UI
         private ToolTip toolTip;
         private SaveFileDialog saveFileText;
         private Label lRunTime;
-        private NumericUpDown edt;
-        private NumericUpDown eTimeEnd;
-        private Label ldt;
-        private NumericUpDown eSkip;
-        private Label lSkip;
         private SaveFileDialog saveFileImage;
         private Button btnAbout;
         private ModelOutputControl modelOutputControl;
@@ -738,8 +664,9 @@ namespace SiliFish.UI
         private ToolStripMenuItem miToolsStatsTBFs;
         private ToolStripSeparator miToolsSep3;
         private ToolStripMenuItem miToolsStatsFull;
-        private ToolStripMenuItem miToolMultipleRun;
+        private ToolStripMenuItem miToolsMultipleRun;
         private ToolStripMenuItem miFileSaveSimulationResults;
         private Label lProgress;
+        private Controls.General.SimulationSettingsControl simulationSettings;
     }
 }

@@ -555,6 +555,11 @@ namespace SiliFish.ModelUnits.Cells
                 c.DeleteJunctions(gap, chemin, chemout);
         }
 
+        public List<JunctionBase> GetJunctionsTo(string targetPool)
+        {
+            return Cells?.SelectMany(c => c.Projections.Where(gj => gj.SourcePool == targetPool || gj.TargetPool == targetPool)).Cast<JunctionBase>().ToList();
+        }
+
         #endregion
 
         #region Stimulus functions
