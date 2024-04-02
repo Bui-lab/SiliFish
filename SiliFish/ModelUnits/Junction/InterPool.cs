@@ -30,7 +30,8 @@ namespace SiliFish.ModelUnits.Junction
                 Mode == CellOutputMode.Modulatory ? "M" :
                 Mode == CellOutputMode.Electrical ? "🗲" :
                 "?";
-            return $"({ntmode}) {SourcePool}{arrow}{TargetPool}";
+            string active = Active ? "" : " (inactive)";
+            return $"({ntmode}) {SourcePool}{arrow}{TargetPool}{active}";
         }
 
         public InterPool()

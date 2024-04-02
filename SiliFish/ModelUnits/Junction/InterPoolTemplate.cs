@@ -278,8 +278,8 @@ namespace SiliFish.ModelUnits.Junction
                 differences.Add($"{Name} SourcePool: {SourcePool} vs {ipt.SourcePool}");
             if (TargetPool != ipt.TargetPool)
                 differences.Add($"{Name} TargetPool: {TargetPool} vs {ipt.TargetPool}");
-            if (CellReach.ToString() != ipt.CellReach.ToString())
-                differences.Add($"{Name} Cell reach: {CellReach} vs {ipt.CellReach}");
+            if (CellReach.GetTooltip().ToString() != ipt.CellReach.GetTooltip().ToString())
+                differences.Add($"{Name} Cell reach: {CellReach.GetTooltip()} vs {ipt.CellReach.GetTooltip()}");//implement ToString and use that rather than GetToolTip
             if (Probability != ipt.Probability)
                 differences.Add($"{Name} Probability: {Probability} vs {ipt.Probability}");
             if (AxonReachMode != ipt.AxonReachMode)
