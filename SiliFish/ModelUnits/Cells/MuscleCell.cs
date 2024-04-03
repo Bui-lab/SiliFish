@@ -260,7 +260,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
         {
-            return V.AsArray().GetSpikeIndices(Core.Vthreshold * 1.1, iStart, iEnd, buffer);//URGENT this is a random multiplier 
+            return V.AsArray().GetSpikeIndices(Core.VSpikeThreshold, iStart, iEnd, buffer);
         }
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {

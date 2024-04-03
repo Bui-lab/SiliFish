@@ -25,7 +25,7 @@ namespace SiliFish.DynamicUnits
     [JsonDerivedType(typeof(QuadraticIntegrateAndFire), typeDiscriminator: "qif")]
     [JsonDerivedType(typeof(ExponentialIntegrateAndFire), typeDiscriminator: "expif")]
     [JsonDerivedType(typeof(LeakyIntegrateAndFire), typeDiscriminator: "leakyintegratefire")]
-    public class CellCore: BaseCore
+    public class CellCore : BaseCore
     {
         #region Static members and functions
         private static readonly Dictionary<string, Type> typeMap = Assembly.GetExecutingAssembly().GetTypes()
@@ -36,7 +36,7 @@ namespace SiliFish.DynamicUnits
 
         public static List<string> GetCoreTypes()
         {
-            return typeMap.Keys.Where(k => k != nameof(CellCore) && k!=nameof(ContractibleCellCore)).ToList();
+            return typeMap.Keys.Where(k => k != nameof(CellCore) && k != nameof(ContractibleCellCore)).ToList();
         }
 
         public static CellCore CreateCore(string coreType, Dictionary<string, double> parameters, double? dt_run = null)
@@ -79,8 +79,11 @@ namespace SiliFish.DynamicUnits
                 rheobase ??= CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
                 return (double)rheobase;
             }
-            
+
             set => rheobase = value; }
+
+        [JsonIgnore, Browsable(false)]
+        public virtual double VSpikeThreshold { get => Vmax; }//to determine whether there is a spike or not
 
         [Description("The resting membrane potential.")]
         public double Vr { get; set; } = -70;

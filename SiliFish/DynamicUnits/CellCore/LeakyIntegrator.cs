@@ -26,6 +26,10 @@ namespace SiliFish.DynamicUnits
         [Description("Contraction threshold potential to determine rheobase for non-spiking cores")]
         public double Vcontraction { get; set; } = GlobalSettings.BiologicalMaxPotential;
 
+        [JsonIgnore, Browsable(false)]
+        public override double VSpikeThreshold { get => Vcontraction; }//to determine whether there is a spike or not
+
+
         public override double Vthreshold { get => Vcontraction; set => Vcontraction = value; }
         protected override void Initialize()
         {

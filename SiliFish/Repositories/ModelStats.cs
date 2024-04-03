@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OfficeOpenXml;
 using SiliFish.Database;
 using SiliFish.DataTypes;
@@ -25,6 +26,69 @@ namespace SiliFish.Repositories
 {
     public static class ModelStats
     {
+        public static (List<string>, List<List<string>>) GenerateSpikeCounts(Simulation simulation)
+        {
+            try
+            {
+                RunningModel model = simulation.Model;
+                List<string> columnNames = ["RecordID", "Cell Pool", "Period Start", "Period End", "Stim Details", "Spike Count"];
+                List<List<string>> values = [];
+                double dt = simulation.RunParam.DeltaT;
+                int counter = 0;
+                var stims = model.StimulusTemplates.GroupBy(s => (s.TimeLine_ms.Start, s.TimeLine_ms.End));
+                
+                for (int stimCounter = 0; stimCounter < stims.Count(); stimCounter++)
+                {
+                    var grStim = stims.ElementAt(stimCounter);
+                    (double start, double end) = grStim.Key;
+                    if (start > simulation.RunParam.MaxTime)
+                        continue;
+                    int iStart = (int)(start / dt);
+                    if (stimCounter < stims.Count() - 1)
+                    {
+                        var nextStim = stims.ElementAt(stimCounter + 1);
+                        (double nextStart, double _) = nextStim.Key;
+                        if (nextStart > end)
+                            end = nextStart - 1;
+                    }
+                    else //last stimulus - check till the end
+                        end = simulation.RunParam.MaxTime;
+                    int iEnd = end < 0 ? -1 : (int)(end / dt);
+                    string stimDetails = "";
+                    foreach (StimulusTemplate stim in grStim)
+                    {
+                        stimDetails += stim.ToString() + "\r\n";
+                    }
+                    foreach (var grCellPool in model.NeuronPools.Union(model.MusclePools).GroupBy(p => p.CellGroup))
+                    {
+                        List<string> cellValues =
+                        [
+                         .. new List<string>() { (++counter).ToString(), grCellPool.Key},
+                                .. new List<string>() {
+                                start.ToString(GlobalSettings.PlotDataFormat),
+                                end.ToString(GlobalSettings.PlotDataFormat),
+                                stimDetails},
+                        ];
+                        int sum = 0;
+                        foreach (CellPool pool in grCellPool)
+                        {
+                            foreach (Cell c in pool.GetCells())
+                            {
+                                sum += c.GetSpikeIndices(iStart, iEnd)?.Count() ?? 0;
+                            }
+                        }
+                        cellValues.AddRange([sum.ToString("0")]);
+                        values.Add(cellValues);
+                    }
+                }
+                return (columnNames, values);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return (null, null);
+            }
+        }
         public static (List<string>, List<List<string>>) GenerateSpikeFreqStats(Simulation simulation)
         {
             try

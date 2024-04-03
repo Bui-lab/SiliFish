@@ -93,6 +93,11 @@ namespace SiliFish.UI.Controls
                 tabPlotSub.TabPages.Remove(tPlotWindows);
         }
 
+        private void ModelOutputControl_Load(object sender, EventArgs e)
+        {
+            tabOutputs_SelectedIndexChanged(sender, e);
+        }
+
         private void CellSelectionPlot_SelectionChanged(object sender, EventArgs e)
         {
             plotSelection = cellSelectionPlot.GetSelection();
@@ -118,7 +123,7 @@ namespace SiliFish.UI.Controls
             {
                 cellSelectionPlot.CombineOptionsVisible = false;
                 cellSelectionPlot.Visible = true;
-                cellSelectionPlot.SetPlot(new PlotDefinition() {  PlotSubset=Const.Motoneurons, PlotType = PlotType, Selection = null});
+                cellSelectionPlot.SetPlot(new PlotDefinition() { PlotSubset = Const.Motoneurons, PlotType = PlotType, Selection = null });
                 cellSelectionPlot.ClearSelection();
                 cellSelectionPlot.TurnOnMultipleCellOrSomite();
                 cellSelectionPlot.Refresh();//the drop down boxes do not refresh properly otherwise
@@ -315,7 +320,16 @@ namespace SiliFish.UI.Controls
         }
         #endregion
 
+
+
         #region Outputs
+        private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
+                RenderIn2D(false);
+            else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
+                RenderIn3D();
+        }
         #region 2D Rendering
         private void RenderIn2D(bool refresh)
         {
@@ -1003,6 +1017,8 @@ namespace SiliFish.UI.Controls
 
         #endregion
 
+
+
         #region Windows Plot
 
         private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
@@ -1094,11 +1110,36 @@ namespace SiliFish.UI.Controls
         #endregion
 
         #region Spike Stats
-        private void linkExportSpikes_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void cmGridExport_Click(object sender, EventArgs e)
         {
-            UtilWindows.SaveTextFile(saveFileCSV, dgSpikeStats.ExportToStringBuilder().ToString());
+            try
+            {
+                if (((ToolStripMenuItem)sender).Owner is ContextMenuStrip { SourceControl: DataGridView dg })
+                {
+                    UtilWindows.SaveTextFile(saveFileCSV, dg.ExportToStringBuilder().ToString());
+                }
+            }            
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
         }
-
+        private void cmGridCopyAll_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (((ToolStripMenuItem)sender).Owner is ContextMenuStrip { SourceControl: DataGridView dg })
+                {
+                    dg.SelectAll();
+                    dg.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+                    Clipboard.SetDataObject(dg.GetClipboardContent());
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+        }
         private int AddCellToSpikeGrid(Cell cell)
         {
             dgSpikeStats.RowCount++;
@@ -1140,7 +1181,6 @@ namespace SiliFish.UI.Controls
                     dgSpikeStats[colSpikeTime.Index, rowIndex].Value = model.TimeArray[spikeIndex];
                 }
             }
-            linkExportSpikes.Enabled = true;
             tabSpikesRCTrains.SelectedTab = tSpikes;
             UseWaitCursor = false;
         }
@@ -1226,17 +1266,10 @@ namespace SiliFish.UI.Controls
                         double.Parse(rowPrev.Cells[colRCTrainCenter.Index].Value.ToString());
                 }
             }
-            linkExportRCTrains.Enabled = true;
-
             tabSpikesRCTrains.SelectedTab = tRCTrains;
             GenerateHistogramOfRCColumn(colRCTrainStartDelay.Index);
             UseWaitCursor = false;
         }
-        private void linkExportRCTrains_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            UtilWindows.SaveTextFile(saveFileCSV, dgRCTrains.ExportToStringBuilder().ToString());
-        }
-
         private void dgRCTrains_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             int colIndex = e.ColumnIndex;
@@ -1248,22 +1281,22 @@ namespace SiliFish.UI.Controls
 
         private int AddCellPoolSpikeSummaryGrid(CellPool pool)
         {
-            dgSpikeSummary.RowCount++;
-            int rowIndex = dgSpikeSummary.RowCount - 1;
-            dgSpikeSummary[colSumSagittal.Index, rowIndex].Value = pool.PositionLeftRight;
-            dgSpikeSummary[colSumCellPool.Index, rowIndex].Value = pool.CellGroup;
-            dgSpikeSummary.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Gray;
+            dgSpikeSummaryDetails.RowCount++;
+            int rowIndex = dgSpikeSummaryDetails.RowCount - 1;
+            dgSpikeSummaryDetails[colSumDetailsSagittal.Index, rowIndex].Value = pool.PositionLeftRight;
+            dgSpikeSummaryDetails[colSumDetailsCellPool.Index, rowIndex].Value = pool.CellGroup;
+            dgSpikeSummaryDetails.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Gray;
             return rowIndex;
         }
         private int AddCellToSpikeSummaryGrid(Cell cell)
         {
-            dgSpikeSummary.RowCount++;
-            int rowIndex = dgSpikeSummary.RowCount - 1;
-            dgSpikeSummary[colSumCellID.Index, rowIndex].Value = cell.ID;
-            dgSpikeSummary[colSumSagittal.Index, rowIndex].Value = cell.PositionLeftRight;
-            dgSpikeSummary[colSumCellPool.Index, rowIndex].Value = cell.CellPool.CellGroup;
-            dgSpikeSummary[colSumSomite.Index, rowIndex].Value = cell.Somite;
-            dgSpikeSummary[colSumCellSeq.Index, rowIndex].Value = cell.Sequence;
+            dgSpikeSummaryDetails.RowCount++;
+            int rowIndex = dgSpikeSummaryDetails.RowCount - 1;
+            dgSpikeSummaryDetails[colSumDetailsCellID.Index, rowIndex].Value = cell.ID;
+            dgSpikeSummaryDetails[colSumDetailsSagittal.Index, rowIndex].Value = cell.PositionLeftRight;
+            dgSpikeSummaryDetails[colSumDetailsCellPool.Index, rowIndex].Value = cell.CellPool.CellGroup;
+            dgSpikeSummaryDetails[colSumDetailsSomite.Index, rowIndex].Value = cell.Somite;
+            dgSpikeSummaryDetails[colSumDetailsCellSeq.Index, rowIndex].Value = cell.Sequence;
             return rowIndex;
         }
 
@@ -1272,36 +1305,49 @@ namespace SiliFish.UI.Controls
         {
             if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
+            Dictionary<string, int> summary = [];
             int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
             int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
             string period = $"{eSpikeStart.Value}-{eSpikeEnd.Value}";
-            dgSpikeSummary.Rows.Clear();
+            if (!cbSpikeSummaryAppend.Checked)
+            {
+                dgSpikeSummary.Rows.Clear();
+                dgSpikeSummaryDetails.Rows.Clear();
+            }
             foreach (CellPool cellPool in model.GetCellPools().Cast<CellPool>())
             {
                 int poolIndex = AddCellPoolSpikeSummaryGrid(cellPool);
-                dgSpikeSummary[colSumPeriod.Index, poolIndex].Value = period;
+                dgSpikeSummaryDetails[colSumDetailsPeriod.Index, poolIndex].Value = period;
                 int sum = 0;
                 foreach (Cell cell in cellPool.Cells)
                 {
                     int cellIndex = AddCellToSpikeSummaryGrid(cell);
                     int spikeCount = cell.GetSpikeIndices(iSpikeStart, iSpikeEnd).Count;
                     sum += spikeCount;
-                    dgSpikeSummary[colSumSpikeCount.Index, cellIndex].Value = spikeCount;
+                    dgSpikeSummaryDetails[colSumSpikeCount.Index, cellIndex].Value = spikeCount;
                 }
-                dgSpikeSummary[colSumSpikeCount.Index, poolIndex].Value = sum;
+                dgSpikeSummaryDetails[colSumSpikeCount.Index, poolIndex].Value = sum;
+                if (summary.ContainsKey(cellPool.CellGroup))
+                    summary[cellPool.CellGroup] += sum;
+                else
+                    summary[cellPool.CellGroup] = sum;
             }
+            foreach (var kvp in summary)
+            {
+                dgSpikeSummary.RowCount++;
+                int rowIndex = dgSpikeSummary.RowCount - 1;
+                dgSpikeSummary[colSumPeriod.Index, rowIndex].Value = period;
+                dgSpikeSummary[colSumCellPool.Index, rowIndex].Value = kvp.Key;
+                dgSpikeSummary[colSumSpikeCount.Index, rowIndex].Value = kvp.Value;
+            }
+
             UseWaitCursor = false;
             tabSpikesRCTrains.SelectedTab = tSpikeSummary;
-            linkExportSpikeSummary.Enabled = true;
         }
 
         private void btnListSpikeSummary_Click(object sender, EventArgs e)
         {
             GenerateSpikeSummary();
-        }
-        private void linkExportSpikeSummary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            UtilWindows.SaveTextFile(saveFileCSV, dgSpikeSummary.ExportToStringBuilder().ToString());
         }
         #endregion
 
@@ -1384,18 +1430,7 @@ namespace SiliFish.UI.Controls
         #endregion
 
 
-        private void tabOutputs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
-                RenderIn2D(false);
-            else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
-                RenderIn3D();
-        }
 
-        private void ModelOutputControl_Load(object sender, EventArgs e)
-        {
-            tabOutputs_SelectedIndexChanged(sender, e);
-        }
 
     }
 

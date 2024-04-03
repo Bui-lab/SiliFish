@@ -431,6 +431,20 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
+        public static bool SaveSpikeCounts(Simulation simulation, string filename)
+        {
+            try
+            {
+                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeCounts(simulation);
+                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
+        }
         public static bool SaveSpikes(Simulation simulation, string filename)
         {
             try
@@ -466,6 +480,8 @@ namespace SiliFish.Repositories
             try
             {
                 if (!SaveSpikeFreqStats(simulation, FileUtil.AppendToFileName(filename, "SpikeStats")))
+                    return false;
+                if (!SaveSpikeCounts(simulation, FileUtil.AppendToFileName(filename, "SpikeCounts")))
                     return false;
                 if (!SaveSpikes(simulation, FileUtil.AppendToFileName(filename, "Spikes")))
                     return false;

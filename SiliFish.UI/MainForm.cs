@@ -681,12 +681,22 @@ namespace SiliFish.UI
             return false;
 
         }
+        private void miToolsStatsSpikeCounts_Click(object sender, EventArgs e)
+        {
+            if (!StatsWarning()) return;
+            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            {
+                if (ModelFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                    FileUtil.ShowFile(saveFileCSV.FileName);
+            }
+        }
         private void miToolsStatsSpikeStats_Click(object sender, EventArgs e)
         {
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, saveFileCSV.FileName);
+                if (ModelFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                    FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
 
@@ -695,7 +705,8 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName);
+                if (ModelFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                    FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
 
@@ -704,7 +715,8 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveTBFs(modelSimulator.LastSimulation, saveFileCSV.FileName);
+                if (ModelFile.SaveTBFs(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                    FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
 
@@ -713,7 +725,11 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                ModelFile.SaveFullStats(modelSimulator.LastSimulation, saveFileCSV.FileName);
+                if (ModelFile.SaveFullStats(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                {
+                    string folder = Path.GetDirectoryName(saveFileCSV.FileName);
+                    Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", folder);
+                }
             }
         }
 
@@ -806,6 +822,7 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
+
 
     }
 }

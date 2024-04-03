@@ -123,6 +123,8 @@
             colSpikeSomite = new DataGridViewTextBoxColumn();
             colSpikeCellSeq = new DataGridViewTextBoxColumn();
             colSpikeTime = new DataGridViewTextBoxColumn();
+            cmGrid = new ContextMenuStrip(components);
+            cmGridExport = new ToolStripMenuItem();
             tRCTrains = new TabPage();
             splitRCTrains = new SplitContainer();
             dgRCTrains = new DataGridView();
@@ -138,16 +140,21 @@
             colRCTrainCenterDelay = new DataGridViewTextBoxColumn();
             webViewRCTrains = new Microsoft.Web.WebView2.WinForms.WebView2();
             tSpikeSummary = new TabPage();
+            splitContainer1 = new SplitContainer();
             dgSpikeSummary = new DataGridView();
             colSumPeriod = new DataGridViewTextBoxColumn();
-            colSumCellID = new DataGridViewTextBoxColumn();
-            colSumSagittal = new DataGridViewTextBoxColumn();
             colSumCellPool = new DataGridViewTextBoxColumn();
-            colSumSomite = new DataGridViewTextBoxColumn();
-            colSumCellSeq = new DataGridViewTextBoxColumn();
             colSumSpikeCount = new DataGridViewTextBoxColumn();
+            dgSpikeSummaryDetails = new DataGridView();
+            colSumDetailsPeriod = new DataGridViewTextBoxColumn();
+            colSumDetailsCellID = new DataGridViewTextBoxColumn();
+            colSumDetailsSagittal = new DataGridViewTextBoxColumn();
+            colSumDetailsCellPool = new DataGridViewTextBoxColumn();
+            colSumDetailsSomite = new DataGridViewTextBoxColumn();
+            colSumDetailsCellSeq = new DataGridViewTextBoxColumn();
+            colSumDetailsSpikeCount = new DataGridViewTextBoxColumn();
             panel1 = new Panel();
-            linkExportSpikeSummary = new LinkLabel();
+            cbSpikeSummaryAppend = new CheckBox();
             btnListSpikeSummary = new Button();
             eSpikeEnd = new NumericUpDown();
             eSpikeStart = new NumericUpDown();
@@ -155,10 +162,8 @@
             lms5 = new Label();
             label7 = new Label();
             lms6 = new Label();
-            linkExportRCTrains = new LinkLabel();
             btnListRCTrains = new Button();
             btnListSpikes = new Button();
-            linkExportSpikes = new LinkLabel();
             cellSelectionSpike = new Display.CellSelectionControl();
             panel3 = new Panel();
             tAnimation = new TabPage();
@@ -186,6 +191,7 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
+            cmGridCopyAll = new ToolStripMenuItem();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             p2DRenderOptions.SuspendLayout();
@@ -213,6 +219,7 @@
             tabSpikesRCTrains.SuspendLayout();
             tSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).BeginInit();
+            cmGrid.SuspendLayout();
             tRCTrains.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitRCTrains).BeginInit();
             splitRCTrains.Panel1.SuspendLayout();
@@ -221,7 +228,12 @@
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).BeginInit();
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).BeginInit();
             tSpikeSummary.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeSummary).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgSpikeSummaryDetails).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eSpikeEnd).BeginInit();
             ((System.ComponentModel.ISupportInitialize)eSpikeStart).BeginInit();
@@ -1176,6 +1188,7 @@
             dgSpikeStats.AllowUserToDeleteRows = false;
             dgSpikeStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgSpikeStats.Columns.AddRange(new DataGridViewColumn[] { colSpikeCell, colSpikeSagittal, colSpikeCellPool, colSpikeSomite, colSpikeCellSeq, colSpikeTime });
+            dgSpikeStats.ContextMenuStrip = cmGrid;
             dgSpikeStats.Dock = DockStyle.Fill;
             dgSpikeStats.Location = new Point(3, 3);
             dgSpikeStats.Name = "dgSpikeStats";
@@ -1222,6 +1235,19 @@
             colSpikeTime.Name = "colSpikeTime";
             colSpikeTime.ReadOnly = true;
             // 
+            // cmGrid
+            // 
+            cmGrid.Items.AddRange(new ToolStripItem[] { cmGridExport, cmGridCopyAll });
+            cmGrid.Name = "cmGrid";
+            cmGrid.Size = new Size(181, 70);
+            // 
+            // cmGridExport
+            // 
+            cmGridExport.Name = "cmGridExport";
+            cmGridExport.Size = new Size(180, 22);
+            cmGridExport.Text = "Export to CSV";
+            cmGridExport.Click += cmGridExport_Click;
+            // 
             // tRCTrains
             // 
             tRCTrains.Controls.Add(splitRCTrains);
@@ -1257,6 +1283,7 @@
             dgRCTrains.AllowUserToDeleteRows = false;
             dgRCTrains.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgRCTrains.Columns.AddRange(new DataGridViewColumn[] { colRCTrainNumber, colRCTrainCellGroup, colRCTrainSomite, colRCTrainStart, colRCTrainEnd, colRCTrainMidPoint, colRCTrainCenter, colRCTrainStartDelay, colRCTrainMidPointDelay, colRCTrainCenterDelay });
+            dgRCTrains.ContextMenuStrip = cmGrid;
             dgRCTrains.Dock = DockStyle.Fill;
             dgRCTrains.Location = new Point(0, 0);
             dgRCTrains.Name = "dgRCTrains";
@@ -1367,7 +1394,7 @@
             // 
             // tSpikeSummary
             // 
-            tSpikeSummary.Controls.Add(dgSpikeSummary);
+            tSpikeSummary.Controls.Add(splitContainer1);
             tSpikeSummary.Location = new Point(4, 24);
             tSpikeSummary.Name = "tSpikeSummary";
             tSpikeSummary.Padding = new Padding(3);
@@ -1376,18 +1403,37 @@
             tSpikeSummary.Text = "Spike Summary";
             tSpikeSummary.UseVisualStyleBackColor = true;
             // 
+            // splitContainer1
+            // 
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(3, 3);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(dgSpikeSummary);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(dgSpikeSummaryDetails);
+            splitContainer1.Size = new Size(680, 613);
+            splitContainer1.SplitterDistance = 244;
+            splitContainer1.TabIndex = 9;
+            // 
             // dgSpikeSummary
             // 
             dgSpikeSummary.AllowUserToAddRows = false;
             dgSpikeSummary.AllowUserToDeleteRows = false;
             dgSpikeSummary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgSpikeSummary.Columns.AddRange(new DataGridViewColumn[] { colSumPeriod, colSumCellID, colSumSagittal, colSumCellPool, colSumSomite, colSumCellSeq, colSumSpikeCount });
+            dgSpikeSummary.Columns.AddRange(new DataGridViewColumn[] { colSumPeriod, colSumCellPool, colSumSpikeCount });
+            dgSpikeSummary.ContextMenuStrip = cmGrid;
             dgSpikeSummary.Dock = DockStyle.Fill;
-            dgSpikeSummary.Location = new Point(3, 3);
+            dgSpikeSummary.Location = new Point(0, 0);
             dgSpikeSummary.Name = "dgSpikeSummary";
             dgSpikeSummary.ReadOnly = true;
-            dgSpikeSummary.Size = new Size(680, 613);
-            dgSpikeSummary.TabIndex = 8;
+            dgSpikeSummary.Size = new Size(680, 244);
+            dgSpikeSummary.TabIndex = 9;
             // 
             // colSumPeriod
             // 
@@ -1395,38 +1441,11 @@
             colSumPeriod.Name = "colSumPeriod";
             colSumPeriod.ReadOnly = true;
             // 
-            // colSumCellID
-            // 
-            colSumCellID.HeaderText = "Cell ID";
-            colSumCellID.Name = "colSumCellID";
-            colSumCellID.ReadOnly = true;
-            // 
-            // colSumSagittal
-            // 
-            colSumSagittal.HeaderText = "Sagittal";
-            colSumSagittal.Name = "colSumSagittal";
-            colSumSagittal.ReadOnly = true;
-            colSumSagittal.Width = 75;
-            // 
             // colSumCellPool
             // 
             colSumCellPool.HeaderText = "Cell Pool";
             colSumCellPool.Name = "colSumCellPool";
             colSumCellPool.ReadOnly = true;
-            // 
-            // colSumSomite
-            // 
-            colSumSomite.HeaderText = "Somite";
-            colSumSomite.Name = "colSumSomite";
-            colSumSomite.ReadOnly = true;
-            colSumSomite.Width = 75;
-            // 
-            // colSumCellSeq
-            // 
-            colSumCellSeq.HeaderText = "Cell Seq";
-            colSumCellSeq.Name = "colSumCellSeq";
-            colSumCellSeq.ReadOnly = true;
-            colSumCellSeq.Width = 75;
             // 
             // colSumSpikeCount
             // 
@@ -1434,10 +1453,69 @@
             colSumSpikeCount.Name = "colSumSpikeCount";
             colSumSpikeCount.ReadOnly = true;
             // 
+            // dgSpikeSummaryDetails
+            // 
+            dgSpikeSummaryDetails.AllowUserToAddRows = false;
+            dgSpikeSummaryDetails.AllowUserToDeleteRows = false;
+            dgSpikeSummaryDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgSpikeSummaryDetails.Columns.AddRange(new DataGridViewColumn[] { colSumDetailsPeriod, colSumDetailsCellID, colSumDetailsSagittal, colSumDetailsCellPool, colSumDetailsSomite, colSumDetailsCellSeq, colSumDetailsSpikeCount });
+            dgSpikeSummaryDetails.ContextMenuStrip = cmGrid;
+            dgSpikeSummaryDetails.Dock = DockStyle.Fill;
+            dgSpikeSummaryDetails.Location = new Point(0, 0);
+            dgSpikeSummaryDetails.Name = "dgSpikeSummaryDetails";
+            dgSpikeSummaryDetails.ReadOnly = true;
+            dgSpikeSummaryDetails.Size = new Size(680, 365);
+            dgSpikeSummaryDetails.TabIndex = 8;
+            // 
+            // colSumDetailsPeriod
+            // 
+            colSumDetailsPeriod.HeaderText = "Period";
+            colSumDetailsPeriod.Name = "colSumDetailsPeriod";
+            colSumDetailsPeriod.ReadOnly = true;
+            // 
+            // colSumDetailsCellID
+            // 
+            colSumDetailsCellID.HeaderText = "Cell ID";
+            colSumDetailsCellID.Name = "colSumDetailsCellID";
+            colSumDetailsCellID.ReadOnly = true;
+            // 
+            // colSumDetailsSagittal
+            // 
+            colSumDetailsSagittal.HeaderText = "Sagittal";
+            colSumDetailsSagittal.Name = "colSumDetailsSagittal";
+            colSumDetailsSagittal.ReadOnly = true;
+            colSumDetailsSagittal.Width = 75;
+            // 
+            // colSumDetailsCellPool
+            // 
+            colSumDetailsCellPool.HeaderText = "Cell Pool";
+            colSumDetailsCellPool.Name = "colSumDetailsCellPool";
+            colSumDetailsCellPool.ReadOnly = true;
+            // 
+            // colSumDetailsSomite
+            // 
+            colSumDetailsSomite.HeaderText = "Somite";
+            colSumDetailsSomite.Name = "colSumDetailsSomite";
+            colSumDetailsSomite.ReadOnly = true;
+            colSumDetailsSomite.Width = 75;
+            // 
+            // colSumDetailsCellSeq
+            // 
+            colSumDetailsCellSeq.HeaderText = "Cell Seq";
+            colSumDetailsCellSeq.Name = "colSumDetailsCellSeq";
+            colSumDetailsCellSeq.ReadOnly = true;
+            colSumDetailsCellSeq.Width = 75;
+            // 
+            // colSumDetailsSpikeCount
+            // 
+            colSumDetailsSpikeCount.HeaderText = "Spike Count";
+            colSumDetailsSpikeCount.Name = "colSumDetailsSpikeCount";
+            colSumDetailsSpikeCount.ReadOnly = true;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(236, 239, 241);
-            panel1.Controls.Add(linkExportSpikeSummary);
+            panel1.Controls.Add(cbSpikeSummaryAppend);
             panel1.Controls.Add(btnListSpikeSummary);
             panel1.Controls.Add(eSpikeEnd);
             panel1.Controls.Add(eSpikeStart);
@@ -1445,10 +1523,8 @@
             panel1.Controls.Add(lms5);
             panel1.Controls.Add(label7);
             panel1.Controls.Add(lms6);
-            panel1.Controls.Add(linkExportRCTrains);
             panel1.Controls.Add(btnListRCTrains);
             panel1.Controls.Add(btnListSpikes);
-            panel1.Controls.Add(linkExportSpikes);
             panel1.Controls.Add(cellSelectionSpike);
             panel1.Controls.Add(panel3);
             panel1.Dock = DockStyle.Top;
@@ -1457,19 +1533,15 @@
             panel1.Size = new Size(694, 120);
             panel1.TabIndex = 6;
             // 
-            // linkExportSpikeSummary
+            // cbSpikeSummaryAppend
             // 
-            linkExportSpikeSummary.AutoSize = true;
-            linkExportSpikeSummary.Enabled = false;
-            linkExportSpikeSummary.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportSpikeSummary.Location = new Point(13, 91);
-            linkExportSpikeSummary.Name = "linkExportSpikeSummary";
-            linkExportSpikeSummary.Size = new Size(44, 15);
-            linkExportSpikeSummary.TabIndex = 71;
-            linkExportSpikeSummary.TabStop = true;
-            linkExportSpikeSummary.Text = "Export ";
-            toolTip.SetToolTip(linkExportSpikeSummary, "Export spike data as a csv file");
-            linkExportSpikeSummary.LinkClicked += linkExportSpikeSummary_LinkClicked;
+            cbSpikeSummaryAppend.AutoSize = true;
+            cbSpikeSummaryAppend.Location = new Point(12, 93);
+            cbSpikeSummaryAppend.Name = "cbSpikeSummaryAppend";
+            cbSpikeSummaryAppend.Size = new Size(68, 19);
+            cbSpikeSummaryAppend.TabIndex = 72;
+            cbSpikeSummaryAppend.Text = "Append";
+            cbSpikeSummaryAppend.UseVisualStyleBackColor = true;
             // 
             // btnListSpikeSummary
             // 
@@ -1543,20 +1615,6 @@
             lms6.TabIndex = 67;
             lms6.Text = "(ms)";
             // 
-            // linkExportRCTrains
-            // 
-            linkExportRCTrains.AutoSize = true;
-            linkExportRCTrains.Enabled = false;
-            linkExportRCTrains.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportRCTrains.Location = new Point(551, 43);
-            linkExportRCTrains.Name = "linkExportRCTrains";
-            linkExportRCTrains.Size = new Size(44, 15);
-            linkExportRCTrains.TabIndex = 63;
-            linkExportRCTrains.TabStop = true;
-            linkExportRCTrains.Text = "Export ";
-            toolTip.SetToolTip(linkExportRCTrains, "Export spike data as a csv file");
-            linkExportRCTrains.LinkClicked += linkExportRCTrains_LinkClicked;
-            // 
             // btnListRCTrains
             // 
             btnListRCTrains.BackColor = Color.FromArgb(96, 125, 139);
@@ -1586,20 +1644,6 @@
             btnListSpikes.Text = "List Spikes";
             btnListSpikes.UseVisualStyleBackColor = false;
             btnListSpikes.Click += btnListSpikes_Click;
-            // 
-            // linkExportSpikes
-            // 
-            linkExportSpikes.AutoSize = true;
-            linkExportSpikes.Enabled = false;
-            linkExportSpikes.LinkColor = Color.FromArgb(64, 64, 64);
-            linkExportSpikes.Location = new Point(551, 16);
-            linkExportSpikes.Name = "linkExportSpikes";
-            linkExportSpikes.Size = new Size(44, 15);
-            linkExportSpikes.TabIndex = 59;
-            linkExportSpikes.TabStop = true;
-            linkExportSpikes.Text = "Export ";
-            toolTip.SetToolTip(linkExportSpikes, "Export spike data as a csv file");
-            linkExportSpikes.LinkClicked += linkExportSpikes_LinkClicked;
             // 
             // cellSelectionSpike
             // 
@@ -1842,6 +1886,13 @@
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
             // 
+            // cmGridCopyAll
+            // 
+            cmGridCopyAll.Name = "cmGridCopyAll";
+            cmGridCopyAll.Size = new Size(180, 22);
+            cmGridCopyAll.Text = "Copy All";
+            cmGridCopyAll.Click += cmGridCopyAll_Click;
+            // 
             // ModelOutputControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1884,6 +1935,7 @@
             tabSpikesRCTrains.ResumeLayout(false);
             tSpikes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).EndInit();
+            cmGrid.ResumeLayout(false);
             tRCTrains.ResumeLayout(false);
             splitRCTrains.Panel1.ResumeLayout(false);
             splitRCTrains.Panel2.ResumeLayout(false);
@@ -1892,7 +1944,12 @@
             ((System.ComponentModel.ISupportInitialize)dgRCTrains).EndInit();
             ((System.ComponentModel.ISupportInitialize)webViewRCTrains).EndInit();
             tSpikeSummary.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeSummary).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgSpikeSummaryDetails).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eSpikeEnd).EndInit();
@@ -2004,7 +2061,6 @@
         private TabPage tSpikeStats;
         private DataGridView dgSpikeStats;
         private Panel panel1;
-        private LinkLabel linkExportSpikes;
         private Panel panel3;
         private Display.CellSelectionControl cellSelectionPlot;
         private Display.CellSelectionControl cellSelectionSpike;
@@ -2012,7 +2068,6 @@
         private Button btnListRCTrains;
         private TabControl tabSpikesRCTrains;
         private TabPage tSpikes;
-        private LinkLabel linkExportRCTrains;
         internal TabPage tRCTrains;
         internal DataGridView dgRCTrains;
         private SplitContainer splitRCTrains;
@@ -2043,21 +2098,29 @@
         private CheckBox cb2DOffline;
         private CheckBox cb3DOffline;
         private TabPage tSpikeSummary;
-        private DataGridView dgSpikeSummary;
+        private DataGridView dgSpikeSummaryDetails;
         private DataGridViewTextBoxColumn colSpikeCell;
         private DataGridViewTextBoxColumn colSpikeSagittal;
         private DataGridViewTextBoxColumn colSpikeCellPool;
         private DataGridViewTextBoxColumn colSpikeSomite;
         private DataGridViewTextBoxColumn colSpikeCellSeq;
         private DataGridViewTextBoxColumn colSpikeTime;
-        private DataGridViewTextBoxColumn colSumPeriod;
-        private DataGridViewTextBoxColumn colSumCellID;
-        private DataGridViewTextBoxColumn colSumSagittal;
-        private DataGridViewTextBoxColumn colSumCellPool;
-        private DataGridViewTextBoxColumn colSumSomite;
-        private DataGridViewTextBoxColumn colSumCellSeq;
-        private DataGridViewTextBoxColumn colSumSpikeCount;
-        private LinkLabel linkExportSpikeSummary;
         private Button btnListSpikeSummary;
+        private SplitContainer splitContainer1;
+        private DataGridView dgSpikeSummary;
+        private DataGridViewTextBoxColumn colSumPeriod;
+        private DataGridViewTextBoxColumn colSumCellPool;
+        private DataGridViewTextBoxColumn colSumSpikeCount;
+        private DataGridViewTextBoxColumn colSumDetailsPeriod;
+        private DataGridViewTextBoxColumn colSumDetailsCellID;
+        private DataGridViewTextBoxColumn colSumDetailsSagittal;
+        private DataGridViewTextBoxColumn colSumDetailsCellPool;
+        private DataGridViewTextBoxColumn colSumDetailsSomite;
+        private DataGridViewTextBoxColumn colSumDetailsCellSeq;
+        private DataGridViewTextBoxColumn colSumDetailsSpikeCount;
+        private CheckBox cbSpikeSummaryAppend;
+        private ContextMenuStrip cmGrid;
+        private ToolStripMenuItem cmGridExport;
+        private ToolStripMenuItem cmGridCopyAll;
     }
 }

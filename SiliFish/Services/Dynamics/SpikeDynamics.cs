@@ -21,7 +21,7 @@ namespace SiliFish.Services.Dynamics
             double[] V = cell.V.AsArray();
             if (iEnd >= V.Length)
                 iEnd = V.Length - 1;
-            DynamicsStats dyn = new(settings, V[0..iEnd], dt, cell.Core.Vthreshold, iStart, iEnd);
+            DynamicsStats dyn = new(settings, V[0..iEnd], dt, cell.Core.VSpikeThreshold, iStart, iEnd);
             double avgV = V[iStart..iEnd].Average();
             double avgVPos = V[iStart..iEnd].Any(v => v >= cell.Core.Vr) ?
                 V[iStart..iEnd].Where(v => v >= cell.Core.Vr).Average() : 0;

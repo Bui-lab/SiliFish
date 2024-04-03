@@ -285,7 +285,7 @@ namespace SiliFish.Services.Dynamics
             patternized = false;
         }
 
-        public DynamicsStats(DynamicsParam settings, double[] V, double dt, double Vthreshold, int analysisStart, int analysisEnd)
+        public DynamicsStats(DynamicsParam settings, double[] V, double dt, double VSpikeThreshold, int analysisStart, int analysisEnd)
         {
             dynamicsParams = settings != null ? settings.Clone() : new DynamicsParam();//if null use default values; cloned to prevent changes to the settings
             chatteringIrregularity = dynamicsParams.ChatteringIrregularity;
@@ -302,7 +302,7 @@ namespace SiliFish.Services.Dynamics
             TauRise = [];
             SpikeList = [];
             spikeDelay = double.NaN;
-            CreateSpikeList(Vthreshold);
+            CreateSpikeList(VSpikeThreshold);
             patternized = false;
             this.analysisStart = analysisStart;
             this.analysisEnd = analysisEnd;

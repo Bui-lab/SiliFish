@@ -20,6 +20,9 @@ namespace SiliFish.DynamicUnits
         [JsonIgnore, Browsable(false)]
         public double TimeConstant { get { return R * C; } }
 
+        [JsonIgnore, Browsable(false)]
+        public override double VSpikeThreshold { get => Vt; }//to determine whether there is a spike or not
+
         [Description("The threshold membrane potential for a spike.")]
         public double Vt { get; set; } = -57;
         [Description("Reset membrane potential after a spike."), Browsable(true)]
