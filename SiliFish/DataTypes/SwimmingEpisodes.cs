@@ -1,18 +1,36 @@
-﻿using SiliFish.Extensions;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using SiliFish.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure.Annotations;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SiliFish.DataTypes
 {
-    public enum EpisodeStats { EpisodeDuration, BeatsPerEpisode, BeatFreq, InstantFreq, InlierInstantFreq, RollingFreq }
+    public enum EpisodeStats { EpisodeDuration, BeatsPerEpisode, BeatFreq, RollingFreq, 
+        EpisodeMeanAmplitude, EpisodeMedianAmplitude, EpisodeMaxAmplitude
+    }
     public class SwimmingEpisodes
     {
         private List<SwimmingEpisode> episodes = [];
+        private Dictionary<string, Coordinate[]> spineCoordinates = [];
+        private Dictionary<string, Coordinate[]> dictionary;
+
+
+        public Coordinate[] TailTipCoordinates => spineCoordinates.Last().Value;
         public int EpisodeCount => episodes.Count;
         public bool HasEpisodes => episodes.Count != 0;
 
         public List<SwimmingEpisode> Episodes { get => episodes; }
+
+        public SwimmingEpisodes() 
+        { 
+        }
+        public SwimmingEpisodes(Dictionary<string, Coordinate[]> dictionary)
+        {
+            spineCoordinates = dictionary;
+        }
 
         public SwimmingEpisode this[int index]
         {
@@ -63,45 +81,36 @@ namespace SiliFish.DataTypes
             return (episodes.SelectMany(e => e.RollingBeatFrequency.Keys).ToArray(),
               episodes.SelectMany(e => e.RollingBeatFrequency.Values).ToArray());
         }
-        private (double[] keys, double[] values) GenerateInstantFrequency()
-        {
-            return (episodes.Select(e => e.Start).ToArray(),
-                episodes.Select(e => e.BeatFrequency).ToArray());
-        }
-        private (double[] keys, double[] values) GenerateInlierInstantFrequency()
-        {
-            double[] xValuesFull = episodes.SelectMany(e => e.Beats.Select(b => b.BeatStart)).ToArray();
-            double[] yValuesFull = episodes.SelectMany(e => e.InstantFequency).ToArray();
-            double median = episodes.SelectMany(e => e.InstantFequency).Order().ToArray()[yValuesFull.Length / 2];
-            double avgDuration = yValuesFull.Average();
-            double stdDev = yValuesFull.StandardDeviation();
-            double stdError = stdDev / Math.Sqrt(yValuesFull.Length);
-            double rangeMin = avgDuration - 1.96 * stdError;
-            double rangeMax = avgDuration + 1.96 * stdError;
-            if (median < rangeMin)
-                rangeMin = median - 1.96 * stdError;
-            if (median > rangeMax)
-                rangeMax = median + 1.96 * stdError;
-            List<int> outliers = [];
-            for (int i = 0; i < yValuesFull.Length; i++)
-            {
-                if (yValuesFull[i] < rangeMin || yValuesFull[i] > rangeMax)
-                    outliers.Add(i);
-            }
-            outliers.Reverse();
-            List<double> inlierX = [];
-            List<double> inlierY = [];
-            for (int i = 0; i < yValuesFull.Length; i++)
-            {
-                if (!outliers.Contains(i))
-                {
-                    inlierX.Add(xValuesFull[i]);
-                    inlierY.Add(yValuesFull[i]);
-                }
-            }
-            return (inlierX.ToArray(), inlierY.ToArray());
-        }
 
+        //mode: mean, median, or max
+        private (double[] keys, double[] values) GenerateAmplitudePerEpisode(string mode)
+        {
+            double dt = 0.1; //TODO hardcoded dt
+            double[] keys = new double[episodes.Count];
+            double[] values = new double[episodes.Count];
+            int counter = 0;
+            Coordinate[] coordinates = TailTipCoordinates;
+            foreach (SwimmingEpisode e in episodes)
+            {
+                List<int> times = e.Beats.Select(b => (int)(b.BeatPeak / dt)).ToList();
+                keys[counter] = e.Start;
+                List<double> amplitudes = [];
+                foreach (int i in times)
+                    amplitudes.Add(Math.Abs(coordinates[i].X));
+
+                if (mode == "median")
+                {
+                    amplitudes.Sort();
+                    values[counter] = amplitudes[(int)(amplitudes.Count / 2)];
+                }
+                else if (mode == "max")
+                    values[counter] = amplitudes.Max();
+                else
+                    values[counter] = amplitudes.Average();
+                counter++;
+            }
+            return (keys, values);
+        }
         private (double[] xValues, double[] yValues) GetXYValues(EpisodeStats stat)
         {
             return stat switch
@@ -109,9 +118,10 @@ namespace SiliFish.DataTypes
                 EpisodeStats.EpisodeDuration => GenerateEpisodeDurations(),
                 EpisodeStats.BeatsPerEpisode => GenerateBeatsPerEpisode(),
                 EpisodeStats.BeatFreq => GenerateTBFPerEpisode(),
-                EpisodeStats.InstantFreq => GenerateInstantFrequency(),
-                EpisodeStats.InlierInstantFreq => GenerateInlierInstantFrequency(),
                 EpisodeStats.RollingFreq => GenerateRollingTBFPerEpisode(),
+                EpisodeStats.EpisodeMeanAmplitude => GenerateAmplitudePerEpisode("mean"),
+                EpisodeStats.EpisodeMedianAmplitude => GenerateAmplitudePerEpisode("median"),
+                EpisodeStats.EpisodeMaxAmplitude => GenerateAmplitudePerEpisode("max"),
                 _ => (null, null),
             };
         }

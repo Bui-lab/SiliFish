@@ -119,17 +119,17 @@ namespace SiliFish.Services.Dynamics
             }
             return somiteCoordinates;
         }
-        public static (Coordinate[], SwimmingEpisodes) GetSwimmingEpisodesUsingMuscleCells(Simulation simulation)
+        public static SwimmingEpisodes GetSwimmingEpisodesUsingMuscleCells(Simulation simulation)
         {
             //Converted from the code written by Yann Roussel and Tuan Bui
-            if (!simulation.SimulationRun) return (null, null);
+            if (!simulation.SimulationRun) return null;
             RunningModel model = simulation.Model;
-            Dictionary<string, Coordinate[]> spineCoordinates = GenerateSpineCoordinates(simulation, 0, model.TimeArray.Length - 1);
+            SwimmingEpisodes episodes = new(GenerateSpineCoordinates(simulation, 0, model.TimeArray.Length - 1));
 
             //We will only use the tip of the tail to determine tail beats (if the x coordinate of the tip is smaller (or more negative)
             //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
 
-            Coordinate[] tail_tip_coord = spineCoordinates.Last().Value;
+            Coordinate[] tail_tip_coord = episodes.TailTipCoordinates;
             double left_bound = -model.KinemParam.Boundary;
             double right_bound = model.KinemParam.Boundary;
             int side = 0;
@@ -139,7 +139,6 @@ namespace SiliFish.Services.Dynamics
             double dt = simulation.RunParam.DeltaT;
             double offset = simulation.RunParam.SkipDuration;
             int delay = (int)(model.KinemParam.EpisodeBreak / dt);
-            SwimmingEpisodes episodes = new();
             SwimmingEpisode lastEpisode = null;
             int i = (int)(offset / dt);
             int beat_peak = -1;
@@ -197,7 +196,7 @@ namespace SiliFish.Services.Dynamics
             }
             episodes.Smooth(model.TimeArray[^1]);
 
-            return (tail_tip_coord, episodes);
+            return episodes;
         }
 
 

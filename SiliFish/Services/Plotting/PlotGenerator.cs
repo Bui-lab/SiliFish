@@ -160,8 +160,8 @@ namespace SiliFish.Services.Plotting
                     break;
                 case PlotType.EpisodesTail:
                     Title = "Tail Beat Episodes";
-                    (Coordinate[] tail_tip_coord, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
-                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, tail_tip_coord, episodes);
+                    SwimmingEpisodes episodes = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
+                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, episodes);
                     plotGeneratorEpisodesTail.CreateCharts(charts);
                     break;
                 case PlotType.EpisodesMN:
@@ -173,18 +173,14 @@ namespace SiliFish.Services.Plotting
                     break;
                 case PlotType.TailMovement:
                 case PlotType.TailMovementFreq:
-                case PlotType.EpisodeDuration:
-                case PlotType.InstFreq:
-                case PlotType.TailBeatFreq:
-                case PlotType.TailBeatPerEpisode:
                     if (simulation.Model.MusclePools.Count == 0)
                     {
                         charts = null;
                         break;
                     }
                     Title = Plot.PlotType.GetDisplayName();
-                    (Coordinate[] tail_tip_coord2, SwimmingEpisodes episodes2) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
-                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, tail_tip_coord2, episodes2);
+                    SwimmingEpisodes episodes2 = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
+                    PlotGeneratorEpisodesOfTail plotGeneratorEpisodesTail2 = new(this, simulation.Model.TimeArray, iStart, iEnd, 0, episodes2);
                     plotGeneratorEpisodesTail2.CreateCharts(charts, Plot.PlotType);
                     List<int> somites = simulation.Model.MotoNeuronPools[0].GetSomites((PlotSelectionMultiCells)Plot.Selection).ToList();
                     foreach (int s in somites)

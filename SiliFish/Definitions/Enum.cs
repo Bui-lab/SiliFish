@@ -85,19 +85,7 @@ namespace SiliFish.Definitions
         TailMovement,
         [Display(Name = "Tail Movement & Freq"),
             Group("episode")]
-        TailMovementFreq,
-        [Display(Name = "Episode Duration"),
-            Group("episode")]
-        EpisodeDuration,
-        [Display(Name = "Inst. Freq."),
-            Group("episode")]
-        InstFreq,
-        [Display(Name = "Tail Beat Freq."),
-            Group("episode")]
-        TailBeatFreq,
-        [Display(Name = "Tail Beat/Episode"),
-            Group("episode")]
-        TailBeatPerEpisode
+        TailMovementFreq
     }
 
     public enum PlotSomiteSelection

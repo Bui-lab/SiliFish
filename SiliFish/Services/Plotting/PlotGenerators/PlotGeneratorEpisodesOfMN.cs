@@ -64,7 +64,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             if (episodes.HasEpisodes)
             {
                 //Tail Beat Frequency
-                if (plotType is PlotType.EpisodesMN or PlotType.TailBeatFreq or PlotType.TailMovementFreq)
+                if (plotType is PlotType.EpisodesMN or PlotType.TailMovementFreq)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq, tStart, tEnd);
                     title = "Time,Tail Beat Freq.";
@@ -89,7 +89,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     if (!AddChart(chart)) return;
                 }                
                 //Episode Duration
-                if (plotType == PlotType.EpisodesMN || plotType == PlotType.EpisodeDuration)
+                if (plotType == PlotType.EpisodesMN)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeDuration, tStart, tEnd);
                     title = "Time,Episode Duration";
@@ -137,7 +137,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     }
                 }
                 //Beat/Episode
-                if (plotType == PlotType.EpisodesMN || plotType == PlotType.TailBeatPerEpisode)
+                if (plotType == PlotType.EpisodesMN)
                 {
 
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatsPerEpisode, tStart, tEnd);
@@ -160,59 +160,6 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         yData = yValues
                     };
                     if (!AddChart(chart)) return;
-                }
-                //Instant Frequency
-                if (plotType == PlotType.EpisodesMN || plotType == PlotType.InstFreq)
-                {
-                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InstantFreq, tStart, tEnd);
-                    title = "Time,Instant. Freq.";
-                    data = new string[xValues.Length];
-                    foreach (int i in Enumerable.Range(0, xValues.Length))
-                        data[i] = xValues[i] + "," + yValues[i];
-                    csvData = title + "\n" + string.Join("\n", data);
-                    Chart chart = new()
-                    {
-                        CsvData = csvData,
-                        Title = $"Instant. Freq. - Somite {somite}",
-                        yLabel = "Freq (Hz)",
-                        ScatterPlot = true,
-                        xMin = Time[0],
-                        xMax = Time[^1] + 1,
-                        yMin = 0,
-                        yMax = yValues.Max() + 1,
-                        xData = xValues,
-                        yData = yValues
-                    };
-                    if (!AddChart(chart)) return;
-                }
-
-                //Instant Frequency without outliers only displayed in the summary plot
-                if (plotType == PlotType.EpisodesMN)
-                {
-
-                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InlierInstantFreq, tStart, tEnd);
-                    if (xValues.Length != 0)
-                    {
-                        title = "Time,Instant. Freq.";
-                        data = new string[xValues.Length];
-                        foreach (int i in Enumerable.Range(0, xValues.Length))
-                            data[i] = xValues[i] + "," + yValues[i];
-                        csvData = title + "\n" + string.Join("\n", data);
-                        Chart chart = new()
-                        {
-                            CsvData = csvData,
-                            Title = $"Instant. Freq. - Somite  {somite} (outliers removed)",
-                            yLabel = "Freq (Hz)",
-                            ScatterPlot = true,
-                            xMin = Time[0],
-                            xMax = Time[^1] + 1,
-                            yMin = 0,
-                            yMax = yValues.Max() + 1,
-                            xData = xValues,
-                            yData = yValues
-                        };
-                        if (!AddChart(chart)) return;
-                    }
                 }
             }
         }

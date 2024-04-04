@@ -74,7 +74,7 @@ namespace SiliFish.Repositories
                         {
                             foreach (Cell c in pool.GetCells())
                             {
-                                sum += c.GetSpikeIndices(iStart, iEnd)?.Count() ?? 0;
+                                sum += c.GetSpikeIndices(iStart, iEnd)?.Count ?? 0;
                             }
                         }
                         cellValues.AddRange([sum.ToString("0")]);
@@ -131,27 +131,29 @@ namespace SiliFish.Repositories
                                 SpikeDynamics.GenerateSpikeStats(model.DynamicsParam, dt, c, iStart, iEnd);
                             dyn?.DefineSpikingPattern();
                             if (dyn != null && dyn.SpikeList.Count != 0)
-                                cellValues.AddRange(new List<string>()
-                                {   dyn.SpikeList.Count.ToString(GlobalSettings.PlotDataFormat),
+                                cellValues.AddRange([   
+                                    dyn.SpikeList.Count.ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[0]*dt).ToString(GlobalSettings.PlotDataFormat),
                                     (dyn.SpikeList[^1]*dt).ToString(GlobalSettings.PlotDataFormat),
-                                    dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
+                                    dyn.SpikeFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) 
+                                    ]);
                             else
-                                cellValues.AddRange(new List<string>() { "0", "", "", "0" });
+                                cellValues.AddRange(["0", "", "", "0"]);
 
                             if (dyn != null && dyn.BurstsOrSpikes.Count != 0)
-                                cellValues.AddRange(new List<string>()
-                                {   dyn.BurstsOrSpikes.Count.ToString(),
-                                    dyn.BurstingFrequency_Overall.ToString(GlobalSettings.PlotDataFormat) });
+                                cellValues.AddRange([
+                                    dyn.BurstsOrSpikes.Count.ToString(),
+                                    dyn.BurstingFrequency_Overall.ToString(GlobalSettings.PlotDataFormat)
+                                    ]);
                             else
-                                cellValues.AddRange(new List<string>() { "0", "0" });
-                            cellValues.AddRange(new List<string>()
-                            {
+                                cellValues.AddRange(["0", "0"]);
+                            cellValues.AddRange(
+                            [
                                 c.Core.Vr.ToString(GlobalSettings.PlotDataFormat),
                                 AvgV.ToString(GlobalSettings.PlotDataFormat),
                                 AvgVPos.ToString(GlobalSettings.PlotDataFormat),
                                 AvgVNeg.ToString(GlobalSettings.PlotDataFormat)
-                             });
+                             ]);
                             values.Add(cellValues);
                         }
                     }
@@ -203,7 +205,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                (Coordinate[] _, SwimmingEpisodes episodes) = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
+                SwimmingEpisodes episodes = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
                 List<string> columnNames = [ "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq"];
                 List<List<string>> values = [];
 

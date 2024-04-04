@@ -15,9 +15,8 @@ using System.Threading.Tasks;
 namespace SiliFish.Services.Plotting.PlotGenerators
 {
     internal class PlotGeneratorEpisodesOfTail(PlotGenerator plotGenerator, double[] timeArray, int iStart, int iEnd, int groupSeq,
-        Coordinate[] tail_tip_coord, SwimmingEpisodes episodes) : PlotGeneratorBase(plotGenerator, timeArray, iStart, iEnd, groupSeq, plotSelection: null)
+        SwimmingEpisodes episodes) : PlotGeneratorBase(plotGenerator, timeArray, iStart, iEnd, groupSeq, plotSelection: null)
     {
-        readonly Coordinate[] tail_tip_coord = tail_tip_coord;
         readonly SwimmingEpisodes episodes = episodes;
 
         protected override void CreateCharts()
@@ -28,7 +27,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
         {
             double[] Time = timeArray[iStart..(iEnd + 1)];
             double[] xValues = Time;
-            double[] yValues = tail_tip_coord[iStart..(iEnd + 1)].Select(c => c.X).ToArray();
+            double[] yValues = episodes.TailTipCoordinates[iStart..(iEnd + 1)].Select(c => c.X).ToArray();
             string title, csvData;
             string[] data;
             double tStart = timeArray[iStart];
@@ -61,7 +60,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
             if (episodes.HasEpisodes)
             {
                 //Tail Beat Frequency
-                if (plotType is PlotType.EpisodesTail or PlotType.TailBeatFreq or PlotType.TailMovementFreq)
+                if (plotType is PlotType.EpisodesTail or PlotType.TailMovementFreq)
                 {
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatFreq, tStart, tEnd);
                     (double[] xValues2, double[] yValues2) = episodes.GetXYValues(EpisodeStats.RollingFreq, tStart, tEnd);
@@ -97,9 +96,10 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     };
                     if (!AddChart(chart)) return;
                 }
-                //Episode Duration
-                if (plotType == PlotType.EpisodesTail || plotType == PlotType.EpisodeDuration)
+
+                if (plotType == PlotType.EpisodesTail)
                 {
+                    //Episode Duration
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeDuration, tStart, tEnd);
                     title = "Time,Episode Duration";
                     data = new string[episodes.EpisodeCount];
@@ -145,17 +145,15 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         };
                         if (!AddChart(chart)) return;
                     }
-                }
-                //Beat/Episode
-                if (plotType == PlotType.EpisodesTail || plotType == PlotType.TailBeatPerEpisode)
-                {
+                    
+                    //Beat/Episode
                     (xValues, yValues) = episodes.GetXYValues(EpisodeStats.BeatsPerEpisode, tStart, tEnd);
                     title = "Time,Tail Beat/Episode";
                     data = new string[episodes.EpisodeCount];
                     foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = title + "\n" + string.Join("\n", data);
-                    Chart chart = new()
+                    Chart chart2 = new()
                     {
                         CsvData = csvData,
                         Title = $"Tail Beat/Episode",
@@ -168,22 +166,20 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         xData = xValues,
                         yData = yValues
                     };
-                    if (!AddChart(chart)) return;
-                }
-                //Instant Frequency
-                if (plotType == PlotType.EpisodesTail || plotType == PlotType.InstFreq)
-                {
-                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InstantFreq, tStart, tEnd);
-                    title = "Time,Instant. Freq.";
-                    data = new string[xValues.Length];
-                    foreach (int i in Enumerable.Range(0, xValues.Length))
+                    if (!AddChart(chart2)) return;
+
+                    //Tail beat amplitude
+                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeMeanAmplitude, tStart, tEnd);
+                    title = "Time,Tail Beat/Episode";
+                    data = new string[episodes.EpisodeCount];
+                    foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
                         data[i] = xValues[i] + "," + yValues[i];
                     csvData = title + "\n" + string.Join("\n", data);
-                    Chart chart = new()
+                    Chart chart3 = new()
                     {
                         CsvData = csvData,
-                        Title = $"Instantenous Frequency",
-                        yLabel = "Freq (Hz)",
+                        Title = $"Mean Amplitude/Episode",
+                        yLabel = "Count",
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
@@ -192,35 +188,7 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                         xData = xValues,
                         yData = yValues
                     };
-                    if (!AddChart(chart)) return;
-                }
-                //Instant Frequency without outliers only displayed in the summary plot
-                if (plotType == PlotType.EpisodesTail)
-                {
-
-                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.InlierInstantFreq, tStart, tEnd);
-                    if (xValues.Length != 0)
-                    {
-                        title = "Time,Instant. Freq.";
-                        data = new string[xValues.Length];
-                        foreach (int i in Enumerable.Range(0, xValues.Length))
-                            data[i] = xValues[i] + "," + yValues[i];
-                        csvData = title + "\n" + string.Join("\n", data);
-                        Chart chart = new()
-                        {
-                            CsvData = csvData,
-                            Title = $"Instantenous Frequency (Outliers Removed)",
-                            yLabel = "Freq (Hz)",
-                            ScatterPlot = true,
-                            xMin = Time[0],
-                            xMax = Time[^1] + 1,
-                            yMin = 0,
-                            yMax = yValues.Max() + 1,
-                            xData = xValues,
-                            yData = yValues
-                        };
-                        if (!AddChart(chart)) return;
-                    }
+                    if (!AddChart(chart3)) return;
                 }
             }
         }
