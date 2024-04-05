@@ -82,6 +82,7 @@ namespace SiliFish.Services.Dynamics
         /// <returns></returns>
         public static Dictionary<string, Coordinate[]> GenerateSpineCoordinates(Simulation simulation, int startIndex, int endIndex)
         {
+            //Converted and modified from the code written by Yann Roussel and Tuan Bui
             if (!simulation.SimulationRun) return null;
             (double[,] vel, double[,] angle) = GenerateSpineVelAndAngle(simulation, startIndex, endIndex);
 
@@ -91,6 +92,7 @@ namespace SiliFish.Services.Dynamics
                 return null;
             int nSpineNode = vel.GetLength(0);
             int nMax = vel.GetLength(1);
+
             double[,] x = new double[nSpineNode, nMax + 1];
             double[,] y = new double[nSpineNode, nMax + 1];
             foreach (var i in Enumerable.Range(0, nMax))
@@ -121,82 +123,11 @@ namespace SiliFish.Services.Dynamics
         }
         public static SwimmingEpisodes GetSwimmingEpisodesUsingMuscleCells(Simulation simulation)
         {
-            //Converted from the code written by Yann Roussel and Tuan Bui
-            if (!simulation.SimulationRun) return null;
+            if (simulation == null || !simulation.SimulationRun) 
+                return null;
             RunningModel model = simulation.Model;
-            SwimmingEpisodes episodes = new(GenerateSpineCoordinates(simulation, 0, model.TimeArray.Length - 1));
-
-            //We will only use the tip of the tail to determine tail beats (if the x coordinate of the tip is smaller (or more negative)
-            //than the left bound or if the x coordinate of the tip is greater than the right bound, then detect as a tail beat
-
-            Coordinate[] tail_tip_coord = episodes.TailTipCoordinates;
-            double left_bound = -model.KinemParam.Boundary;
-            double right_bound = model.KinemParam.Boundary;
-            int side = 0;
-            const int LEFT = -1;
-            const int RIGHT = 1;
-            int nMax = model.TimeArray.Length;
-            double dt = simulation.RunParam.DeltaT;
-            double offset = simulation.RunParam.SkipDuration;
-            int delay = (int)(model.KinemParam.EpisodeBreak / dt);
-            SwimmingEpisode lastEpisode = null;
-            int i = (int)(offset / dt);
-            int beat_peak = -1;
-            while (i < nMax)
-            {
-                int iMax = Math.Min(i + delay, nMax);
-                Coordinate[] window = tail_tip_coord[i..iMax];
-                double t = model.TimeArray[i];
-                if (!window.Any(coor => coor.X < left_bound || coor.X > right_bound))
-                {
-                    side = 0;
-                    lastEpisode?.EndEpisode(t, model.TimeArray[beat_peak]);
-                    lastEpisode = null;
-                    i = iMax;
-                    continue;
-                }
-
-                if (lastEpisode == null)
-                {
-                    if (tail_tip_coord[i].X < left_bound)//beginning an episode on the left
-                    {
-                        lastEpisode = new SwimmingEpisode(t);
-                        beat_peak = i;
-                        episodes.AddEpisode(lastEpisode);
-                        side = LEFT;
-                    }
-                    else if (tail_tip_coord[i].X > right_bound) //beginning an episode on the right
-                    {
-                        lastEpisode = new SwimmingEpisode(t);
-                        beat_peak = i;
-                        episodes.AddEpisode(lastEpisode);
-                        side = RIGHT;
-                    }
-                }
-                else // During an episode
-                {
-                    if (tail_tip_coord[i].X < left_bound && side == RIGHT)
-                    {
-                        side = LEFT;
-                        lastEpisode.EndBeat(t, model.TimeArray[beat_peak]);
-                        lastEpisode.StartBeat(t, SagittalPlane.Left);
-                    }
-                    else if (tail_tip_coord[i].X > right_bound && side == LEFT)
-                    {
-                        side = RIGHT;
-                        lastEpisode.EndBeat(t, model.TimeArray[beat_peak]);
-                        lastEpisode.StartBeat(t, SagittalPlane.Right);
-                    }
-                    else if (side == RIGHT && tail_tip_coord[i].X > tail_tip_coord[beat_peak].X)
-                        beat_peak = i;
-                    else if (side == LEFT && tail_tip_coord[i].X < tail_tip_coord[beat_peak].X)//negative value
-                        beat_peak = i;
-                }
-                i++;
-            }
-            episodes.Smooth(model.TimeArray[^1]);
-
-            return episodes;
+            model.SwimmingEpisodes ??= new(simulation, GenerateSpineCoordinates(simulation, 0, model.TimeArray.Length - 1));
+            return model.SwimmingEpisodes;
         }
 
 

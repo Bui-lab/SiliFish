@@ -710,24 +710,22 @@ namespace SiliFish.UI
             }
         }
 
-        private void miToolsStatsTBFs_Click(object sender, EventArgs e)
+        private void miToolsStatsEpisodes_Click(object sender, EventArgs e)
         {
-            if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveTBFs(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                if (ModelFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                     FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
-
         private void miToolsStatsFull_Click(object sender, EventArgs e)
         {
             if (!StatsWarning()) return;
-            if (saveFileCSV.ShowDialog() == DialogResult.OK)
+            if (saveFileExcel.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveFullStats(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                if (ModelFile.SaveFullStats(modelSimulator.LastSimulation, saveFileExcel.FileName))
                 {
-                    string folder = Path.GetDirectoryName(saveFileCSV.FileName);
+                    string folder = Path.GetDirectoryName(saveFileExcel.FileName);
                     Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", folder);
                 }
             }

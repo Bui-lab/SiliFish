@@ -56,7 +56,7 @@ namespace SiliFish.Helpers
 
             foreach (List<string> words in Values)
             {
-                string row = string.Join(',', words.Select(w => Util.CSVEncode(w)).ToList());
+                string row = string.Join(',', words.Select(CSVUtil.CSVEncode).ToList());
                 sw.WriteLine(row);
             }
         }

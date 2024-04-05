@@ -25,12 +25,7 @@ namespace SiliFish.Helpers
             return s;
         }
 
-        public static string CSVEncode(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-                return s;
-            return s.Replace(",", ";").Replace("\r\n", ";").Replace("\n", ";");
-        }
+
         public static int NumOfDecimalDigits(double val)
         {
             return NumOfDecimalDigits((decimal)val);

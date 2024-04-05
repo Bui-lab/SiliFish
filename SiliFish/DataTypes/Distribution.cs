@@ -86,7 +86,7 @@ namespace SiliFish.DataTypes
         [JsonIgnore, Browsable(false)]
         public virtual string CSVCellExportValues
         {
-            get => Util.CSVEncode(string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value)));
+            get => CSVUtil.CSVEncode(string.Join(";", ConvertToDictionary().Select(kvp => kvp.Key + ":" + kvp.Value)));
         }
 
         public virtual void Multiply(double d)
@@ -194,7 +194,7 @@ namespace SiliFish.DataTypes
         {
             Range = range;
             if (n == 1 && !GlobalSettings.Randomization)
-                return new double[1] { (LowerLimit + UpperLimit) / 2 };
+                return [(LowerLimit + UpperLimit) / 2];
             Random ??= new Random();
             return Random.Uniform(LowerLimit, UpperLimit, n, ordered);
         }

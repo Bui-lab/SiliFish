@@ -460,11 +460,11 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static bool SaveTBFs(Simulation simulation, string filename)
+        public static bool SaveEpisodes(Simulation simulation, string filename)
         {
             try
             {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateTBFs(simulation);
+                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateEpisodes(simulation);
                 FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
                 return true;
             }
@@ -478,14 +478,14 @@ namespace SiliFish.Repositories
         public static bool SaveFullStats(Simulation simulation, string filename)
         {
             try
-            {
+            {//TODO convert it to a single excel file
                 if (!SaveSpikeFreqStats(simulation, FileUtil.AppendToFileName(filename, "SpikeStats")))
                     return false;
                 if (!SaveSpikeCounts(simulation, FileUtil.AppendToFileName(filename, "SpikeCounts")))
                     return false;
                 if (!SaveSpikes(simulation, FileUtil.AppendToFileName(filename, "Spikes")))
                     return false;
-                if (!SaveTBFs(simulation, FileUtil.AppendToFileName(filename, "TBFs")))
+                if (!SaveEpisodes(simulation, FileUtil.AppendToFileName(filename, "Episodes")))
                     return false;
                 return true;
             }
@@ -1169,8 +1169,7 @@ namespace SiliFish.Repositories
             {
                 List<CellPoolTemplate> cellPools = model is ModelTemplate modelTemplate ? modelTemplate.GetCellPools() :
                     model is RunningModel modelRunning ? modelRunning.GetCellPools() : [];
-                CreateWorkSheet(workbook, "Cell Pools", CellPoolTemplate.ColumnNames, cellPools.Cast<IDataExporterImporter>().ToList());
-                return true;
+                return ExcelUtil.CreateWorkSheet(workbook, "Cell Pools", CellPoolTemplate.ColumnNames, cellPools.Cast<IDataExporterImporter>().ToList());
             }
             catch (Exception ex)
             {
@@ -1184,7 +1183,7 @@ namespace SiliFish.Repositories
             {
                 ExcelWorksheet worksheet = workbook.Worksheets["Cell Pools"];
                 if (worksheet == null) return false;
-                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
                 if (!contents.Equivalent(CellPoolTemplate.ColumnNames))
                     return false;
                 int colCount = contents.Count;
@@ -1194,7 +1193,7 @@ namespace SiliFish.Repositories
                     modelTemplate.CellPoolTemplates.Clear();
                     while (true)
                     {
-                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                         if (contents.IsEmpty())
                             break;
                         CellPoolTemplate cpt = new();
@@ -1207,7 +1206,7 @@ namespace SiliFish.Repositories
                     modelRun.CellPools.Clear();
                     while (true)
                     {
-                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                         if (contents.IsEmpty())
                             break;
                         CellPool cp = new();
@@ -1229,8 +1228,7 @@ namespace SiliFish.Repositories
             try
             {
                 if (model is not RunningModel modelRunning) { return false; }
-                CreateWorkSheet(workbook, "Cells", Cell.ColumnNames, modelRunning.GetCells().Cast<IDataExporterImporter>().ToList());
-                return true;
+                return ExcelUtil.CreateWorkSheet(workbook, "Cells", Cell.ColumnNames, modelRunning.GetCells().Cast<IDataExporterImporter>().ToList());
             }
             catch (Exception ex)
             {
@@ -1247,7 +1245,7 @@ namespace SiliFish.Repositories
                     return false;
                 ExcelWorksheet worksheet = workbook.Worksheets["Cells"];
                 if (worksheet == null) return false;
-                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
                 if (!contents.Equivalent(Cell.ColumnNames))
                     return false;
                 int colCount = contents.Count;
@@ -1255,7 +1253,7 @@ namespace SiliFish.Repositories
                 modelRun.ClearCells();
                 while (true)
                 {
-                    contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                    contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                     if (contents.IsEmpty())
                         break;
                     string discriminator = contents[0];
@@ -1281,16 +1279,14 @@ namespace SiliFish.Repositories
                         .GetChemicalProjections()
                         .Concat(modelRunning.GetGapProjections())
                         .Cast<IDataExporterImporter>().ToList();
-                    CreateWorkSheet(workbook, "Junctions", InterPoolBase.ColumnNames, objList);
-                    return true;
+                    return ExcelUtil.CreateWorkSheet(workbook, "Junctions", InterPoolBase.ColumnNames, objList);
                 }
                 else if (model is ModelTemplate modelTemplate)
                 {
                     List<IDataExporterImporter> objList = modelTemplate
                         .InterPoolTemplates
                         .Cast<IDataExporterImporter>().ToList();
-                    CreateWorkSheet(workbook, "Junctions", InterPoolTemplate.ColumnNames, objList);
-                    return true;
+                    return ExcelUtil.CreateWorkSheet(workbook, "Junctions", InterPoolTemplate.ColumnNames, objList);
                 }
                 return false;
             }
@@ -1311,7 +1307,7 @@ namespace SiliFish.Repositories
                 {
                     ExcelWorksheet worksheet = workbook.Worksheets[sheetName];
                     if (worksheet == null) return sheetIndex > 0;
-                    List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                    List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
                     int rowInd = 2;
                     if (model is ModelTemplate modelTemplate)
                     {
@@ -1322,7 +1318,7 @@ namespace SiliFish.Repositories
                             modelTemplate.InterPoolTemplates.Clear();
                         while (true)
                         {
-                            contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                            contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                             if (contents.IsEmpty())
                                 break;
                             InterPoolTemplate ipt = new();
@@ -1339,7 +1335,7 @@ namespace SiliFish.Repositories
                             modelRun.RemoveJunctionsOf(null, null, true, true, true);
                         while (true)
                         {
-                            contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                            contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                             if (contents.IsEmpty())
                                 break;
                             JunctionBase jb = null;
@@ -1375,16 +1371,14 @@ namespace SiliFish.Repositories
                     List<IDataExporterImporter> objList = modelRunning
                         .GetStimuli().Select(stim => stim as Stimulus)
                         .Cast<IDataExporterImporter>().ToList();
-                    CreateWorkSheet(workbook, "Stimuli", Stimulus.ColumnNames, objList);
-                    return true;
+                    return ExcelUtil.CreateWorkSheet(workbook, "Stimuli", Stimulus.ColumnNames, objList);
                 }
                 else if (model is ModelTemplate modelTemplate)
                 {
                     List<IDataExporterImporter> objList = modelTemplate
                         .StimulusTemplates
                         .Cast<IDataExporterImporter>().ToList();
-                    CreateWorkSheet(workbook, "Stimuli", StimulusTemplate.ColumnNames, objList);
-                    return true;
+                    return ExcelUtil.CreateWorkSheet(workbook, "Stimuli", StimulusTemplate.ColumnNames, objList);
                 }
                 return false;
             }
@@ -1401,7 +1395,7 @@ namespace SiliFish.Repositories
             {
                 ExcelWorksheet worksheet = workbook.Worksheets["Stimuli"];
                 if (worksheet == null) return false;
-                List<string> contents = ReadXLCellsFromLine(worksheet, 1);
+                List<string> contents = ExcelUtil.ReadXLCellsFromLine(worksheet, 1);
                 int rowInd = 2;
                 if (model is ModelTemplate modelTemplate)
                 {
@@ -1411,7 +1405,7 @@ namespace SiliFish.Repositories
                     modelTemplate.ClearStimuli();
                     while (true)
                     {
-                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                         if (contents.IsEmpty())
                             break;
                         StimulusTemplate stim = new();
@@ -1427,51 +1421,13 @@ namespace SiliFish.Repositories
                     modelRun.ClearStimuli();
                     while (true)
                     {
-                        contents = ReadXLCellsFromLine(worksheet, rowInd++, colCount);
+                        contents = ExcelUtil.ReadXLCellsFromLine(worksheet, rowInd++, colCount);
                         if (contents.IsEmpty())
                             break;
                         Stimulus stim = new();
                         stim.ImportValues(contents);
                         stim.LinkObjects(modelRun);
                     }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-        private static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, List<IDataExporterImporter> objList)
-        {
-            try
-            {
-                ExcelWorksheet workSheet = workbook.Worksheets.Add(sheetName);
-                int rowindex = 1;
-                int colindex = 1;
-                foreach (string s in columnNames)
-                    workSheet.Cells[rowindex, colindex++].Value = s;
-                foreach (IDataExporterImporter obj in objList)
-                {
-                    colindex = 1;
-                    rowindex++;
-                    if (rowindex > 1048576) //max number of rows excel allows
-                    {
-                        Regex regex = new("(.*)Ext_(.*)");
-                        Match parMatch = regex.Match(sheetName);
-                        if (!parMatch.Success)
-                            sheetName += "Ext_1";
-                        else
-                        {
-                            if (int.TryParse(parMatch.Groups[2].Value, out int extension))
-                                extension++;
-                            sheetName = parMatch.Groups[1].Value + "Ext_" + extension;
-                        }
-                        return CreateWorkSheet(workbook, sheetName, columnNames, objList.Skip(rowindex - 1).ToList());
-                    }
-                    foreach (string s in obj.ExportValues())
-                        workSheet.Cells[rowindex, colindex++].Value = s;
                 }
                 return true;
             }
@@ -1540,21 +1496,6 @@ namespace SiliFish.Repositories
             package.Save();
         }
 
-
-        public static List<string> ReadXLCellsFromLine(ExcelWorksheet worksheet, int line, int maxCol = -1)
-        {
-            List<string> cells = [];
-            int colInd = 1;
-            while (true)
-            {
-                string s = worksheet.Cells[line, colInd].Value?.ToString();
-                if (string.IsNullOrEmpty(s) && maxCol < 0) break;
-                cells.Add(s);
-                if (colInd == maxCol) break;
-                colInd++;
-            }
-            return cells;
-        }
         public static bool ReadPropertiesFromSheet(ExcelWorkbook workbook, string sheetName, object obj)
         {
             try

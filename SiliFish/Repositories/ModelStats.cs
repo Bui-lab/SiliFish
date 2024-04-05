@@ -201,12 +201,13 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static (List<string>, List<List<string>>) GenerateTBFs(Simulation simulation)
+
+        public static (List<string>, List<List<string>>) GenerateEpisodes(Simulation simulation)
         {
             try
             {
                 SwimmingEpisodes episodes = SwimmingKinematics.GetSwimmingEpisodesUsingMuscleCells(simulation);
-                List<string> columnNames = [ "Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq"];
+                List<string> columnNames = ["Tail_MN", "Somite", "Episode", "Start", "End", "BeatCount", "BeatFreq", "Mean Ampl.", "Median Ampl.", "Max Ampl.", "Duration"];
                 List<List<string>> values = [];
 
                 int counter = 1;
@@ -220,7 +221,12 @@ namespace SiliFish.Repositories
                             episode.Start.ToString(),
                             episode.End.ToString(),
                             episode.NumOfBeats.ToString(),
-                            episode.BeatFrequency.ToString()},
+                            episode.BeatFrequency.ToString(),
+                            episode.MeanAmplitude.ToString(),
+                            episode.MedianAmplitude.ToString(),
+                            episode.MaxAmplitude.ToString(),
+                            episode.EpisodeDuration.ToString()
+                        },
                     ];
                     values.Add(episodeValues);
                 }
@@ -238,7 +244,10 @@ namespace SiliFish.Repositories
                             episode.Start.ToString(),
                             episode.End.ToString(),
                             episode.NumOfBeats.ToString(),
-                            episode.BeatFrequency.ToString()},
+                            episode.BeatFrequency.ToString(),
+                            "","","",
+                            episode.EpisodeDuration.ToString()
+                            },
                         ];
                         values.Add(episodeValues);
                     }
@@ -252,6 +261,5 @@ namespace SiliFish.Repositories
                 return (null, null);
             }
         }
-
     }
 }

@@ -22,8 +22,9 @@ namespace SiliFish.DataTypes
         private readonly double episodeStart;
         private double episodeEnd;
         private bool episodeEnded = false;
-        double lastBeatStart = -1;
-        SagittalPlane lastbeatDirection;
+        private double lastBeatStart = -1;
+        private SagittalPlane lastbeatDirection;
+        private double meanAmplitude, medianAmplitude, maxAmplitude;
         public bool EpisodeEnded { get { return episodeEnded; } }
         List<Beat> beats;
         public List<Beat> Beats { get => beats; }
@@ -53,7 +54,9 @@ namespace SiliFish.DataTypes
                 else return beats;
             }
         }
-
+        public double MeanAmplitude { get => meanAmplitude; }
+        public double MedianAmplitude { get => medianAmplitude; }
+        public double MaxAmplitude { get => maxAmplitude; }
         public SwimmingEpisode(double start)
         {
             episodeStart = start;
@@ -122,6 +125,12 @@ namespace SiliFish.DataTypes
             episodeEnded = true;
         }
 
+        public void SetAmplitude(double mean, double median, double max)
+        {
+            meanAmplitude = mean;
+            medianAmplitude = median;
+            maxAmplitude = max;
+        }
         public int NumOfBeats
         {
             get
@@ -136,7 +145,6 @@ namespace SiliFish.DataTypes
             }
         }
 
-        public double[] InlierInstantFequency { get { return InlierBeats?.Select(b => b.BeatEnd > b.BeatStart ? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
         public double[] InstantFequency { get { return beats?.Select(b => b.BeatEnd > b.BeatStart ? 1000 / (b.BeatEnd - b.BeatStart) : 0).ToArray(); } }
         public double BeatFrequency { get { return EpisodeDuration > 0 ? 1000 * NumOfBeats / EpisodeDuration : 0; } }
 
@@ -196,6 +204,8 @@ namespace SiliFish.DataTypes
         public double Start { get { return episodeStart; } }
         public double End { get { return episodeEnd; } }
 
+
+
         /// <summary>
         /// The start of a beat:
         ///     If there is a beat before: the mid point between the two indices
@@ -232,8 +242,8 @@ namespace SiliFish.DataTypes
         ///     If there is a beat after: the mid point between the two indices
         /// </summary>
         /// <param name="TimeArray"></param>
-        /// <param name="leftIndices">indices including the skiped period</param>
-        /// <param name="rightIndices">indices including the skiped period</param>
+        /// <param name="leftIndices">indices including the skipped period</param>
+        /// <param name="rightIndices">indices including the skipped period</param>
         /// <param name="episodeBreak"></param>
         /// <returns></returns>
         public static SwimmingEpisodes GenerateEpisodesByMNSpikes(double[] TimeArray, DynamicsParam settings, double dt, List<int> leftIndices, List<int> rightIndices, double episodeBreak)

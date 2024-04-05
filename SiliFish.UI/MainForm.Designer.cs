@@ -54,7 +54,7 @@ namespace SiliFish.UI
             miToolsStatsSpikeStats = new ToolStripMenuItem();
             miToolsStatsSpikeCounts = new ToolStripMenuItem();
             miToolsStatsSpikes = new ToolStripMenuItem();
-            miToolsStatsTBFs = new ToolStripMenuItem();
+            miToolsStatsEpisodes = new ToolStripMenuItem();
             miToolsSep3 = new ToolStripSeparator();
             miToolsStatsFull = new ToolStripMenuItem();
             miToolsMultipleRun = new ToolStripMenuItem();
@@ -239,7 +239,7 @@ namespace SiliFish.UI
             // 
             // miToolsGenerateStatsData
             // 
-            miToolsGenerateStatsData.DropDownItems.AddRange(new ToolStripItem[] { miToolsStatsSpikeStats, miToolsStatsSpikeCounts, miToolsStatsSpikes, miToolsStatsTBFs, miToolsSep3, miToolsStatsFull });
+            miToolsGenerateStatsData.DropDownItems.AddRange(new ToolStripItem[] { miToolsStatsSpikeStats, miToolsStatsSpikeCounts, miToolsStatsSpikes, miToolsStatsEpisodes, miToolsSep3, miToolsStatsFull });
             miToolsGenerateStatsData.Name = "miToolsGenerateStatsData";
             miToolsGenerateStatsData.Size = new Size(207, 22);
             miToolsGenerateStatsData.Text = "Generate Stats Data";
@@ -265,12 +265,12 @@ namespace SiliFish.UI
             miToolsStatsSpikes.Text = "Spikes";
             miToolsStatsSpikes.Click += miToolsStatsSpikes_Click;
             // 
-            // miToolsStatsTBFs
+            // miToolsStatsEpisodes
             // 
-            miToolsStatsTBFs.Name = "miToolsStatsTBFs";
-            miToolsStatsTBFs.Size = new Size(188, 22);
-            miToolsStatsTBFs.Text = "Tail Beat Frequencies";
-            miToolsStatsTBFs.Click += miToolsStatsTBFs_Click;
+            miToolsStatsEpisodes.Name = "miToolsStatsEpisodes";
+            miToolsStatsEpisodes.Size = new Size(188, 22);
+            miToolsStatsEpisodes.Text = "Episodes";
+            miToolsStatsEpisodes.Click += miToolsStatsEpisodes_Click;
             // 
             // miToolsSep3
             // 
@@ -320,21 +320,21 @@ namespace SiliFish.UI
             // miViewOutputFolder
             // 
             miViewOutputFolder.Name = "miViewOutputFolder";
-            miViewOutputFolder.Size = new Size(180, 22);
+            miViewOutputFolder.Size = new Size(148, 22);
             miViewOutputFolder.Text = "Output Folder";
             miViewOutputFolder.Click += miViewOutputFolder_Click;
             // 
             // miViewTempFolder
             // 
             miViewTempFolder.Name = "miViewTempFolder";
-            miViewTempFolder.Size = new Size(180, 22);
+            miViewTempFolder.Size = new Size(148, 22);
             miViewTempFolder.Text = "Temp Folder";
             miViewTempFolder.Click += miViewTempFolder_Click;
             // 
             // miViewAbout
             // 
             miViewAbout.Name = "miViewAbout";
-            miViewAbout.Size = new Size(180, 22);
+            miViewAbout.Size = new Size(148, 22);
             miViewAbout.Text = "About";
             miViewAbout.Click += miViewAbout_Click;
             // 
@@ -669,7 +669,6 @@ namespace SiliFish.UI
         private ToolStripSeparator miToolsSepStats;
         private ToolStripMenuItem miToolsStatsSpikeStats;
         private ToolStripMenuItem miToolsStatsSpikes;
-        private ToolStripMenuItem miToolsStatsTBFs;
         private ToolStripSeparator miToolsSep3;
         private ToolStripMenuItem miToolsStatsFull;
         private ToolStripMenuItem miToolsMultipleRun;
@@ -677,5 +676,6 @@ namespace SiliFish.UI
         private Label lProgress;
         private Controls.General.SimulationSettingsControl simulationSettings;
         private ToolStripMenuItem miToolsStatsSpikeCounts;
+        private ToolStripMenuItem miToolsStatsEpisodes;
     }
 }

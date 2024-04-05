@@ -130,7 +130,7 @@ namespace SiliFish.ModelUnits.Junction
         public override List<string> ExportValues()
         {
             return ListBuilder.Build<string>(
-            Util.CSVEncode(Name), SourcePool, TargetPool,
+            CSVUtil.CSVEncode(Name), SourcePool, TargetPool,
                 AxonReachMode, ConnectionType, CoreType,
                 csvExportCoreValues,
                 DistanceMode,

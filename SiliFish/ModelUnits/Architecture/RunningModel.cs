@@ -192,7 +192,9 @@ namespace SiliFish.ModelUnits.Architecture
         [Browsable(false)]
         public double[] TimeArray { get { return Time; } }
 
-
+        [JsonIgnore]
+        [Browsable(false)]
+        public SwimmingEpisodes SwimmingEpisodes { get; internal set; }
         [JsonIgnore]
         [Browsable(false)]
         public bool JunctionCurrentTrackingOn = true;

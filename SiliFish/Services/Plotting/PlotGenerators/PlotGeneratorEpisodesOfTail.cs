@@ -169,22 +169,26 @@ namespace SiliFish.Services.Plotting.PlotGenerators
                     if (!AddChart(chart2)) return;
 
                     //Tail beat amplitude
-                    (xValues, yValues) = episodes.GetXYValues(EpisodeStats.EpisodeMeanAmplitude, tStart, tEnd);
-                    title = "Time,Tail Beat/Episode";
+                    (xValues, double[] meanyValues) = episodes.GetXYValues(EpisodeStats.EpisodeMeanAmplitude, tStart, tEnd);
+                    (xValues, double[] medianyValues) = episodes.GetXYValues(EpisodeStats.EpisodeMedianAmplitude, tStart, tEnd);
+                    (xValues, double[] maxyValues) = episodes.GetXYValues(EpisodeStats.EpisodeMaxAmplitude, tStart, tEnd);
+                    title = "Time,Mean Ampl.,Median Ampl.,Max Ampl.";
                     data = new string[episodes.EpisodeCount];
                     foreach (int i in Enumerable.Range(0, episodes.EpisodeCount))
-                        data[i] = xValues[i] + "," + yValues[i];
+                        data[i] = xValues[i] + "," + meanyValues[i] + "," + medianyValues[i] + "," + maxyValues[i];
                     csvData = title + "\n" + string.Join("\n", data);
+                    List<Color> colorPerChart = [Color.Blue, Color.Purple, Color.Red];
                     Chart chart3 = new()
                     {
                         CsvData = csvData,
-                        Title = $"Mean Amplitude/Episode",
+                        Colors = colorPerChart,
+                        Title = $"Amplitude/Episode",
                         yLabel = "Count",
                         ScatterPlot = true,
                         xMin = Time[0],
                         xMax = Time[^1] + 1,
                         yMin = 0,
-                        yMax = yValues.Max() + 1,
+                        yMax = maxyValues.Max() + 1,
                         xData = xValues,
                         yData = yValues
                     };
