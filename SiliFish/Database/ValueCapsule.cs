@@ -65,10 +65,10 @@ namespace SiliFish.Database
 
         private void DumpData(double[] SubArray, int startIndex)
         {
-            List<UnitValueRecord> list = []; ;
+            List<CellValueRecord> list = []; ;
             for (int i = 0; i < SubArray.Length; i++)
             {
-                list.Add(new UnitValueRecord(UnitRecordID, Name, i+startIndex, SubArray[i]));
+                list.Add(new CellValueRecord(UnitRecordID, Name, i+startIndex, SubArray[i]));
             }
             dumper.Dump(list);
         }
@@ -110,7 +110,7 @@ namespace SiliFish.Database
             {
                 using SFDataContext dataContext = new(dbName);
                 return dataContext.Values
-                    .Where(v => v.UnitID == UnitRecordID && v.ValueType == Name && v.TimeIndex >= iStart && v.TimeIndex <= iEnd)
+                    .Where(v => v.CellID == UnitRecordID && v.ValueType == Name && v.TimeIndex >= iStart && v.TimeIndex <= iEnd)
                     .Min(v => v.Value);
             }
             return Array.MinValue(iStart, iEnd);
@@ -121,7 +121,7 @@ namespace SiliFish.Database
             {
                 using SFDataContext dataContext = new(dbName);
                 return dataContext.Values
-                    .Where(v => v.UnitID == UnitRecordID && v.ValueType == Name && v.TimeIndex >= iStart && v.TimeIndex <= iEnd)
+                    .Where(v => v.CellID == UnitRecordID && v.ValueType == Name && v.TimeIndex >= iStart && v.TimeIndex <= iEnd)
                     .Max(v => v.Value);
             }
             return Array.MaxValue(iStart, iEnd);
@@ -140,7 +140,7 @@ namespace SiliFish.Database
             Array =
             [
                 .. dataContext.Values
-                                .Where(v => v.UnitID == UnitRecordID && v.ValueType == Name)
+                                .Where(v => v.CellID == UnitRecordID && v.ValueType == Name)
                                 .OrderBy(v => v.TimeIndex)
                                 .Select(v => v.Value)
 ,

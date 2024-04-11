@@ -17,8 +17,9 @@ namespace SiliFish.Database
         public DateTime End { get; set; }
         public string Description { get; set; }
         public string RunParam { get; set; }
-        public List<UnitRecord> Cores { get; } = [];
-        public SimulationRecord() { }
+        public List<CellRecord> Cells { get; }
+
+        public SimulationRecord() { }//required for SQLite
         public SimulationRecord(int modelID, DateTime start, DateTime end, string description, string runparam)
         {
             ModelID = modelID;
@@ -26,6 +27,7 @@ namespace SiliFish.Database
             End = end;
             Description = description;
             RunParam = runparam;
+            Cells = [];
         }
     }
 }

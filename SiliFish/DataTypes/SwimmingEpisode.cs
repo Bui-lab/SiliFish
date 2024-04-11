@@ -63,15 +63,6 @@ namespace SiliFish.DataTypes
             beats = [];
             lastBeatStart = start;
         }
-        public SwimmingEpisode(double start, double end)
-        {
-            episodeStart = start;
-            episodeEnd = end;
-            episodeEnded = true;
-            beats = [];
-            lastBeatStart = start;
-        }
-
         public override string ToString()
         {
             string ret = $"Episode Start - End {episodeStart:0.##}-{episodeEnd:0.##}";

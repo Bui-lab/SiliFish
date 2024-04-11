@@ -230,7 +230,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters);//TODO check whether I need this
+            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;
@@ -406,11 +406,11 @@ namespace SiliFish.ModelUnits.Cells
             }
             else
             {
-                UnitRecord coreRecord = new(dBLink.SimulationID, GetType().Name, ID, JsonUtil.ToJson(this));
+                CellRecord cellRecord = new(dBLink.SimulationID, this);
                 SFDataContext dataContext = new(dBLink.DBName);
-                dataContext.Add(coreRecord);
+                dataContext.Add(cellRecord);
                 dataContext.SaveChanges();
-                V = new ValueCapsule("Memb. Pot.", runParam.iMax, coreRecord.Id,
+                V = new ValueCapsule("Memb. Pot.", runParam.iMax, cellRecord.Id,
                     dBLink.RollingWindow, dBLink.WindowMultiplier,
                     Core.Vr, dBLink.DBName, dBLink.DatabaseDumper);
             }

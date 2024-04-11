@@ -28,7 +28,13 @@ namespace SiliFish.Helpers
             }
             return cells;
         }
-
+        public static ExcelPackage CreateWorkBook(string fileName)
+        {
+            if (File.Exists(fileName))
+                File.Delete(fileName);
+            ExcelPackage package = new(fileName);
+            return package;    
+        }
         //TODO the boolean return value is not used - keep a log and give a warning
         public static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, List<IDataExporterImporter> objList)
         {
@@ -57,12 +63,29 @@ namespace SiliFish.Helpers
             }
         }
 
-        public static void SaveToExcel(string fileName, bool append)
+        public static bool AddWorksheet(ExcelPackage package, string sheetName, List<string> columnNames, List<List<string>> values)
         {
-            if (!append && File.Exists(fileName))
-                File.Delete(fileName);
-            using ExcelPackage package = new(fileName);
-            ExcelWorksheet workSheet = package.Workbook.Worksheets.Add("Model");
+            try
+            {
+                ExcelWorksheet workSheet = package.Workbook.Worksheets.Add(sheetName);
+                int rowIndex = 1;
+                int colIndex = 1;
+                foreach (string s in columnNames)
+                    workSheet.Cells[rowIndex, colIndex++].Value = s;
+                foreach (List<string> strings in values)
+                {
+                    rowIndex++;
+                    colIndex = 1;
+                    foreach (string s in strings)
+                        workSheet.Cells[rowIndex, colIndex++].Value = s;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return false;
+            }
         }
 
     }

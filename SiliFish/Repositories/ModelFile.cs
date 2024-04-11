@@ -417,86 +417,6 @@ namespace SiliFish.Repositories
 
         #region CSV Functions
 
-        public static bool SaveSpikeFreqStats(Simulation simulation, string filename)
-        {
-            try
-            {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeFreqStats(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-        public static bool SaveSpikeCounts(Simulation simulation, string filename)
-        {
-            try
-            {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeCounts(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-        public static bool SaveSpikes(Simulation simulation, string filename)
-        {
-            try
-            {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikes(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-
-        public static bool SaveEpisodes(Simulation simulation, string filename)
-        {
-            try
-            {
-                (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateEpisodes(simulation);
-                FileUtil.SaveToCSVFile(filename: filename, columnNames, values);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-
-        public static bool SaveFullStats(Simulation simulation, string filename)
-        {
-            try
-            {//TODO convert it to a single excel file
-                if (!SaveSpikeFreqStats(simulation, FileUtil.AppendToFileName(filename, "SpikeStats")))
-                    return false;
-                if (!SaveSpikeCounts(simulation, FileUtil.AppendToFileName(filename, "SpikeCounts")))
-                    return false;
-                if (!SaveSpikes(simulation, FileUtil.AppendToFileName(filename, "Spikes")))
-                    return false;
-                if (!SaveEpisodes(simulation, FileUtil.AppendToFileName(filename, "Episodes")))
-                    return false;
-                return true;
-            }
-
-            catch (Exception ex)
-            {
-                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
-                return false;
-            }
-        }
-
         public static bool SaveDataToFile(RunningModel model, string filename)
         {
             try
@@ -1441,9 +1361,7 @@ namespace SiliFish.Repositories
         {
             model.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            if (File.Exists(fileName))
-                File.Delete(fileName);
-            using ExcelPackage package = new(fileName);
+            using ExcelPackage package = ExcelUtil.CreateWorkBook(fileName);
             ExcelWorksheet workSheet = package.Workbook.Worksheets.Add("Model");
             int rowindex = 1;
             workSheet.Cells[rowindex, 1].Value = "Model";

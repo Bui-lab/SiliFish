@@ -16,8 +16,10 @@ public class SFDataContext: DbContext
     public string DbFileName { get; set; } = $"{GlobalSettings.OutputFolder}//SiliFish.sqlite";
     public DbSet<SimulationRecord> Simulations { get; set; }
     public DbSet<ModelRecord> Models { get; set; }
-    public DbSet<UnitRecord> Cores { get; set; }
-    public DbSet<UnitValueRecord> Values { get; set; }
+    public DbSet<CellRecord> Cells { get; set; }
+    public DbSet<CellValueRecord> Values { get; set; }
+    public DbSet<SpikeRecord> Spikes { get; set; }
+    public DbSet<EpisodeRecord> Episodes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

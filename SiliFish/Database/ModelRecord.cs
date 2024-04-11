@@ -19,12 +19,13 @@ namespace SiliFish.Database
         public string Stats { get; set; }
         public string JsonFile { get; set; }
 
-        public ModelRecord() { }
-        public ModelRecord(string name, DateTime dateTime, string stats)//TODO json is removed as can be quite large, find a solution
+        public ModelRecord() { }//required for SQLite
+        public ModelRecord(string name, DateTime dateTime, string stats, string jsonFile)
         {
             Name = name;
             DateTime = dateTime;
             Stats = stats;
+            JsonFile = jsonFile;
         }
     }
 }

@@ -5,20 +5,20 @@ namespace SiliFish.Database
 {
     [PrimaryKey(nameof(Id))]
     //TODO slower - don't include for temp table [Microsoft.EntityFrameworkCore.Index(nameof(ValueType), nameof(TimeIndex))]
-    public class UnitValueRecord
+    public class CellValueRecord
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [ForeignKey("Unit")]
-        public int UnitID { get; set; }
-        public UnitRecord Unit { get; set; }
+        [ForeignKey("Cell")]
+        public int CellID { get; set; }
+        public CellRecord Unit { get; set; }
         public string ValueType { get; set; }
         public int TimeIndex { get; set; }
         public double Value { get; set; }
-        public UnitValueRecord() { }
-        public UnitValueRecord(int coreID, string valueType, int timeIndex, double value) 
+        public CellValueRecord() { }//required for SQLite
+        public CellValueRecord(int cellID, string valueType, int timeIndex, double value) 
         {
-            UnitID = coreID;
+            CellID = cellID;
             ValueType = valueType;
             TimeIndex = timeIndex;
             Value = value;

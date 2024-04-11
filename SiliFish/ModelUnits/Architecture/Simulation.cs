@@ -70,7 +70,7 @@ namespace SiliFish.ModelUnits.Architecture
                     if (Model.DbId == 0)
                     {
                         string stats = $"{Model.GetNumberOfCells():n0} cells; {Model.GetNumberOfConnections():n0} connections";
-                        ModelRecord modelRecord = new(Model.ModelName, DateTime.Now, stats);
+                        ModelRecord modelRecord = new(Model.ModelName, DateTime.Now, stats, "");//TODO ability to save the json file and include the filename
                         dataContext.Add(modelRecord);
                         dataContext.SaveChanges();
                         Model.DbId = modelRecord.Id;

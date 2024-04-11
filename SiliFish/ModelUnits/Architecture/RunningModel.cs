@@ -872,6 +872,7 @@ namespace SiliFish.ModelUnits.Architecture
                     if (dbLink.RollingWindow * dbLink.WindowMultiplier > runParam.iMax)
                         dbLink = null;
                 }
+                SwimmingEpisodes = null;
                 return MemoryAllocation(runParam, dbLink);
             }
             catch (Exception ex)

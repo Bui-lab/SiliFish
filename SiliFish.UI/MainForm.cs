@@ -553,12 +553,30 @@ namespace SiliFish.UI
 
         private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
         {
-            if (modelSimulator == null || !modelSimulator.ModelRun || modelSimulator.LastSimulation == null)
+            try
             {
-                MessageBox.Show("There is no simulation to be saved.");
-                return;
+                if (modelSimulator == null || !modelSimulator.ModelRun || modelSimulator.LastSimulation == null)
+                {
+                    MessageBox.Show("There is no simulation to be saved.");
+                    return;
+                }
+                SimulationDB.SaveToDB(modelSimulator);
+                string simulationID = "";
+                if (modelSimulator.SimulationList.Count == 1) 
+                { 
+                    simulationID = $"model id:{modelSimulator.SimulationList.First().Model.DbId}"; 
+                }
+                else 
+                {
+                    simulationID = $"model ids:{modelSimulator.SimulationList.Min(s=>s.Model.DbId)}-{modelSimulator.SimulationList.Max(s => s.Model.DbId)}";
+                }
+                MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName} - {simulationID}");
             }
-            SimulationDB.SaveToDB(modelSimulator);
+            catch (Exception exc)
+            {
+                MessageBox.Show($"There is a problem in saving the simulation results.\r\n{exc.Message}", "Error");
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exc);
+            }
         }
 
         private void miFileExport_Click(object sender, EventArgs e)
@@ -686,7 +704,7 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                if (SimulationFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
                     FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
@@ -695,7 +713,7 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                if (SimulationFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, saveFileCSV.FileName))
                     FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
@@ -705,7 +723,7 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                if (SimulationFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                     FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
@@ -714,7 +732,7 @@ namespace SiliFish.UI
         {
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
+                if (SimulationFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                     FileUtil.ShowFile(saveFileCSV.FileName);
             }
         }
@@ -723,7 +741,7 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileExcel.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveFullStats(modelSimulator.LastSimulation, saveFileExcel.FileName))
+                if (SimulationFile.SaveFullStats(modelSimulator.LastSimulation, saveFileExcel.FileName))
                 {
                     string folder = Path.GetDirectoryName(saveFileExcel.FileName);
                     Process.Start(Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe", folder);
