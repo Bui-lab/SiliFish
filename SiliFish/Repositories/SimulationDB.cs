@@ -48,8 +48,8 @@ namespace SiliFish.Repositories
                 {
                     EpisodeRecord episodeRecord = new(episodeCounter++, sim.Id, episode);
                     sFDataContext.Add(episodeRecord);
-                    sFDataContext.SaveChanges();
                 }
+                sFDataContext.SaveChanges();
 
                 foreach (Cell cell in simulation.Model.GetCells())
                 {
