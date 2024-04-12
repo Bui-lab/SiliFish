@@ -19,6 +19,7 @@ using SiliFish.Database;
 using SiliFish.UI.Controls.General;
 using SiliFish.Extensions;
 using GeneticSharp;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace SiliFish.UI
 {
@@ -34,6 +35,7 @@ namespace SiliFish.UI
         private RunningModel runningModel = null;
         private RunParam runParam = new();
         private ModelSimulator modelSimulator;
+        private SimulationDBWriter simulationDBWriter;
         public ModelBase Model
         {
             get
@@ -299,9 +301,16 @@ namespace SiliFish.UI
 
         private void timerRun_Tick(object sender, EventArgs e)
         {
-            if (modelSimulator == null) return;
-            progressBarRun.Value = (int)(modelSimulator.GetProgress() * progressBarRun.Maximum);
-            lProgress.Text = $"Progress: {modelSimulator.GetStatus()}...";
+            if (simulationDBWriter != null)
+            {
+                progressBarRun.Value = (int)(simulationDBWriter.GetProgress() * progressBarRun.Maximum);
+                lProgress.Text = $"Saving simulation summary results to database.";
+            }
+            else if (modelSimulator != null)
+            {
+                progressBarRun.Value = (int)(modelSimulator.GetProgress() * progressBarRun.Maximum);
+                lProgress.Text = $"Progress: {modelSimulator.GetStatus()}...";
+            }
         }
         private void linkExportOutput_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -551,6 +560,31 @@ namespace SiliFish.UI
             SaveModelAsJSON();
         }
 
+        private void SaveSimulationResultsToDBStart()
+        {
+            simulationDBWriter = new(modelSimulator, completeSaveSimulationAction);
+            btnRun.Enabled = false;
+            UseWaitCursor = true;
+            progressBarRun.Value = 0;
+            SetProgressVisibility(true);
+            timerRun.Enabled = true;
+        }
+
+        private void completeSaveSimulationAction()
+        {
+            Invoke(SaveSimulationResultsToDBEnd);
+        }
+        private void SaveSimulationResultsToDBEnd()
+        {
+            UseWaitCursor = false;
+            timerRun.Enabled = false;
+            progressBarRun.Value = progressBarRun.Maximum;
+            SetProgressVisibility(false);
+            btnRun.Enabled = true;
+            MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName} - " +
+                $"simulation id(s): {string.Join(',', simulationDBWriter.SimulationIds)}");
+            simulationDBWriter = null;
+        }
         private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
         {
             try
@@ -560,17 +594,8 @@ namespace SiliFish.UI
                     MessageBox.Show("There is no simulation to be saved.");
                     return;
                 }
-                SimulationDB.SaveToDB(modelSimulator);
-                string simulationID = "";
-                if (modelSimulator.SimulationList.Count == 1) 
-                { 
-                    simulationID = $"model id:{modelSimulator.SimulationList.First().Model.DbId}"; 
-                }
-                else 
-                {
-                    simulationID = $"model ids:{modelSimulator.SimulationList.Min(s=>s.Model.DbId)}-{modelSimulator.SimulationList.Max(s => s.Model.DbId)}";
-                }
-                MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName} - {simulationID}");
+                SaveSimulationResultsToDBStart();
+                simulationDBWriter.Run();
             }
             catch (Exception exc)
             {
