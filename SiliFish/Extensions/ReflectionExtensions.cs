@@ -39,7 +39,7 @@ namespace SiliFish.Extensions
                 var v1 = prop.GetValue(obj, null);
                 var v2 = prop.GetValue(other, null);
                 if (v1?.ToString() != v2?.ToString())
-                    differences.Add($"{prop.Name}: {v1} vs {v2}");
+                    differences.Add($"{prop.Name}:\t{v1}\t{v2}");
             }
             if (differences.Count != 0)
                 return differences;
