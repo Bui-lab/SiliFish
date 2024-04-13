@@ -37,22 +37,22 @@ namespace SiliFish.ModelUnits
         public TimeLine TimeLine_ms { get; set; } = new TimeLine();
         public TimeLine TimeLine_ind { get; set; } = null;
 
-        public virtual List<string> DiffersFrom(ModelUnitBase other)
+        public virtual List<Difference> DiffersFrom(ModelUnitBase other)
         {
             return null;
         }
 
-        public static List<string> ListDiffersFrom(List<ModelUnitBase> firstList, List<ModelUnitBase> secondList)
+        public static List<Difference> ListDiffersFrom(List<ModelUnitBase> firstList, List<ModelUnitBase> secondList)
         {
-            List<string> differences = [];
+            List<Difference> differences = [];
             foreach (ModelUnitBase c1 in firstList)
             {
                 ModelUnitBase c2 = secondList.FirstOrDefault(cp => cp.ID == c1.ID);
                 if (c2 is null)
-                    differences.Add($"New {c1.GetType()}: {c1.ID}");
+                    differences.Add(new Difference($"New", c1.GetType().Name, c1.ID, null));
                 else
                 {
-                    List<string> diff = c1.DiffersFrom(c2);
+                    List<Difference> diff = c1.DiffersFrom(c2);
                     if (diff != null)
                         differences.AddRange(diff);
                 }
@@ -61,7 +61,7 @@ namespace SiliFish.ModelUnits
             {
                 ModelUnitBase c4 = firstList.FirstOrDefault(cp => cp.ID == c3.ID);
                 if (c4 is null)
-                    differences.Add($"Deleted {c3.GetType()}: {c3.ID}");
+                    differences.Add(new Difference("Deleted", c3.GetType().Name, null, c3.ID));
             }
             if (differences.Count != 0)
                 return differences;

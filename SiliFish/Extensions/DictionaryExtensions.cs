@@ -149,29 +149,29 @@ namespace SiliFish.Extensions
             return true;
         }
 
-        public static bool SameAs(this Dictionary<string, Distribution> dictionary, Dictionary<string, Distribution> dic2, out string diff)
+        public static bool SameAs(this Dictionary<string, Distribution> dictionary, Dictionary<string, Distribution> dic2, out List<Difference> diff)
         {
-            diff = "";
+            diff = [];
             if (dictionary?.Count != dic2?.Count)
             {
-                diff = "Different lengths";
+                diff.Add(new Difference("Number of items", dictionary?.Count, dic2?.Count));
                 return false;
             }
             foreach (var key in dictionary.Keys)
             {
                 if (!dic2.ContainsKey(key))
                 {
-                    diff += $"Missing value: {key}; ";
+                    diff.Add(new Difference("Missing value", null, key));
                     return false;
                 }
                 string s1 = dictionary[key]?.ToString() ?? "";
                 string s2 = dic2[key]?.ToString() ?? "";
                 if (s1 != s2)
                 {
-                    diff += $"{key}: {s1} vs {s2}; ";
+                    diff.Add(new Difference( key, s1, s2));
                 }
             }
-            return string.IsNullOrEmpty(diff);
+            return diff.Count == 0;
         }
         public static Dictionary<string, double> GenerateSingleInstanceValues(this Dictionary<string, Distribution> dictionary)
         {

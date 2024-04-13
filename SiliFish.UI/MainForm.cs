@@ -20,6 +20,7 @@ using SiliFish.UI.Controls.General;
 using SiliFish.Extensions;
 using GeneticSharp;
 using Windows.ApplicationModel.VoiceCommands;
+using SiliFish.DataTypes;
 
 namespace SiliFish.UI
 {
@@ -676,7 +677,7 @@ namespace SiliFish.UI
                     }
                     try
                     {
-                        List<string> diffs = currentModel.DiffersFrom(mb);
+                        List<Difference> diffs = currentModel.DiffersFrom(mb);
                         if (diffs == null || diffs.Count == 0)
                             MessageBox.Show("Models are identical", "");
                         else

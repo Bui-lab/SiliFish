@@ -266,34 +266,34 @@ namespace SiliFish.ModelUnits.Junction
             return $"({ntmode}) {Name}{activeStatus}{arrows}";
         }
 
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
-            List<string> differences = [];
+            List<Difference> differences = [];
             InterPoolTemplate ipt = other as InterPoolTemplate;
             if (Name != ipt.Name)
-                differences.Add($"{Name} Name: {Name} vs {ipt.Name}");
+                differences.Add(new Difference(Name, "Name", Name, ipt.Name));
             if ((Description ?? "") != (ipt.Description ?? ""))
-                differences.Add($"{Name} Description: {Description} vs {ipt.Description}");
+                differences.Add(new Difference(Name, "Description", Description, ipt.Description));
             if (SourcePool != ipt.SourcePool)
-                differences.Add($"{Name} SourcePool: {SourcePool} vs {ipt.SourcePool}");
+                differences.Add(new Difference(Name, "SourcePool", SourcePool, ipt.SourcePool));
             if (TargetPool != ipt.TargetPool)
-                differences.Add($"{Name} TargetPool: {TargetPool} vs {ipt.TargetPool}");
+                differences.Add(new Difference(Name, "TargetPool", TargetPool, ipt.TargetPool));
             if (CellReach.GetTooltip().ToString() != ipt.CellReach.GetTooltip().ToString())
-                differences.Add($"{Name} Cell reach: {CellReach.GetTooltip()} vs {ipt.CellReach.GetTooltip()}");//implement ToString and use that rather than GetToolTip
+                differences.Add(new Difference(Name, "Cell reach", CellReach.GetTooltip(), ipt.CellReach.GetTooltip()));//TODO implement ToString and use that rather than GetToolTip
             if (Probability != ipt.Probability)
-                differences.Add($"{Name} Probability: {Probability} vs {ipt.Probability}");
+                differences.Add(new Difference(Name, "Probability", Probability, ipt.Probability));
             if (AxonReachMode != ipt.AxonReachMode)
-                differences.Add($"{Name} AxonReachMode: {AxonReachMode} vs {ipt.AxonReachMode}");
+                differences.Add(new Difference(Name, "AxonReachMode", AxonReachMode, ipt.AxonReachMode));
             if (ConnectionType != ipt.ConnectionType)
-                differences.Add($"{Name} ConnectionType: {ConnectionType} vs {ipt.ConnectionType}");
+                differences.Add(new Difference(Name, "ConnectionType", ConnectionType, ipt.ConnectionType));
             if (CoreType != ipt.CoreType)
-                differences.Add($"{Name} CoreType: {CoreType} vs {ipt.CoreType}");
-            if (!Parameters.SameAs(ipt.Parameters, out string diff))
-                differences.Add($"{Name} Parameters: {diff}");
+                differences.Add(new Difference(Name, "CoreType", CoreType, ipt.CoreType));
+            if (!Parameters.SameAs(ipt.Parameters, out List<Difference> diff))
+                differences.AddRange(diff.Select(d => new Difference(Name + " Parameters", d.Item + d.Parameter, d.Value1, d.Value2)));
             if (Active != ipt.Active)
-                differences.Add($"{Name} Active: {Active} vs {ipt.Active}");
+                differences.Add(new Difference(Name, "Active", Active, ipt.Active));
             if (TimeLine_ms.ToString() !=  ipt.TimeLine_ms.ToString())
-                differences.Add($"{Name} TimeLine: {TimeLine_ms} vs {ipt.TimeLine_ms}");
+                differences.Add(new Difference(Name, "TimeLine", TimeLine_ms, ipt.TimeLine_ms));
             if (differences.Count != 0)
                 return differences;
             return null;

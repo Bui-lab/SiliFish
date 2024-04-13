@@ -92,13 +92,13 @@ namespace SiliFish.ModelUnits.Cells
             };
             return neuron;
         }
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
             if (other is not Neuron oc)
-                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"];
+                return [new Difference("Incompatible classes", $"{ID}({GetType()}", $"{other.ID}{other.GetType()}")];
 
-            List<string> differences = base.DiffersFrom(other) ?? [];
-            List<string> diffs = ListDiffersFrom(Terminals.Select(c => c as ModelUnitBase).ToList(),
+            List<Difference> differences = base.DiffersFrom(other) ?? [];
+            List<Difference> diffs = ListDiffersFrom(Terminals.Select(c => c as ModelUnitBase).ToList(),
                 oc.Terminals.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)
                 differences.AddRange(diffs);

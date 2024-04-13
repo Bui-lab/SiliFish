@@ -242,18 +242,18 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
             if (other is not Cell oc)
-                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"]; 
-            List<string> diffs;
-            List<string> differences = base.DiffersFrom(other) ?? [];
+                return [new Difference("Incompatible classes", $"{ID}({GetType()}", $"{other.ID}{other.GetType()}")];
+            List<Difference> diffs;
+            List<Difference> differences = base.DiffersFrom(other) ?? [];
             if (Coordinate.ToString() != oc.Coordinate.ToString())
-                differences.Add($"{ID} Coordinates: {Coordinate} versus {oc.Coordinate}");
+                differences.Add(new Difference(ID, "Coordinates", Coordinate, oc.Coordinate));
 
             if (Core?.CoreType != oc.Core?.CoreType)
             {
-                differences.Add($"{ID} Core: {Core?.CoreType} versus {oc.Core?.CoreType}");
+                differences.Add(new Difference(ID, "Core", Core?.CoreType, oc.Core?.CoreType));
             }
             else
             {
@@ -262,11 +262,11 @@ namespace SiliFish.ModelUnits.Cells
                     differences.AddRange(diffs);
             }
             if (ConductionVelocity != oc.ConductionVelocity)
-                differences.Add($"{ID} Conduction velocity: {ConductionVelocity} versus {oc.ConductionVelocity}");
+                differences.Add(new Difference(ID, "Conduction velocity", ConductionVelocity, oc.ConductionVelocity));
             if (AscendingAxonLength != oc.AscendingAxonLength)
-                differences.Add($"{ID} Ascending axon length: {AscendingAxonLength} versus {oc.AscendingAxonLength}");
+                differences.Add(new Difference(ID, "Ascending axon length", AscendingAxonLength, oc.AscendingAxonLength));
             if (DescendingAxonLength != oc.DescendingAxonLength)
-                differences.Add($"{ID} Descending axon length: {DescendingAxonLength} versus {oc.DescendingAxonLength}");
+                differences.Add(new Difference(ID, "Descending axon length", DescendingAxonLength, oc.DescendingAxonLength));
             diffs = ListDiffersFrom(Stimuli.ListOfStimulus.Select(c => c as ModelUnitBase).ToList(),
                 oc.Stimuli.ListOfStimulus.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)

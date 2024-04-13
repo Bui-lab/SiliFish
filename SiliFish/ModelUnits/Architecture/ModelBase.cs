@@ -47,18 +47,18 @@ namespace SiliFish.ModelUnits.Architecture
         {
         }
 
-        public virtual List<string> DiffersFrom(ModelBase other)
+        public virtual List<Difference> DiffersFrom(ModelBase other)
         {
-            List<string> differences = [];
+            List<Difference> differences = [];
             if (Version != other.Version)
-                differences.Add($"Version: {Version} vs {other.Version}");
+                differences.Add(new Difference("Version",Version, other.Version));
             if (ModelName != other.ModelName)
-                differences.Add($"Name: {ModelName} vs {other.ModelName}");
+                differences.Add(new Difference("Name", ModelName, other.ModelName));
             if (ModelDescription != other.ModelDescription)
-                differences.Add($"Description: {ModelDescription} vs {other.ModelDescription}");
+                differences.Add(new Difference("Description", ModelDescription, other.ModelDescription));
             if (Settings.DiffersFrom(other.settings) != null)
                 differences.AddRange(Settings.DiffersFrom(other.settings));
-            List<string> diffs = ModelDimensions.DiffersFrom(other.ModelDimensions);
+            List<Difference> diffs = ModelDimensions.DiffersFrom(other.ModelDimensions);
             if (diffs != null) differences.AddRange(diffs);
 
             diffs = KinemParam.DiffersFrom(other.KinemParam);

@@ -25,12 +25,12 @@ namespace SiliFish.ModelUnits.Architecture
 
         public ModelTemplate() { }
 
-        public override List<string> DiffersFrom(ModelBase other)
+        public override List<Difference> DiffersFrom(ModelBase other)
         {
-            List<string> differences = base.DiffersFrom(other) ?? [];
+            List<Difference> differences = base.DiffersFrom(other) ?? [];
             if (other is ModelTemplate om)
             {
-                List<string> diffs = ModelUnitBase.ListDiffersFrom(CellPoolTemplates.Select(c => c as ModelUnitBase).ToList(),
+                List<Difference> diffs = ModelUnitBase.ListDiffersFrom(CellPoolTemplates.Select(c => c as ModelUnitBase).ToList(),
                     om.CellPoolTemplates.Select(c => c as ModelUnitBase).ToList());
                 if (diffs != null)
                     differences.AddRange(diffs);
@@ -47,7 +47,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             else
             {
-                differences.Add("Models not comparable.");
+                //TODO error handling differences.Add("Models not comparable.");
             }
             if (differences.Count != 0)
                 return differences;
