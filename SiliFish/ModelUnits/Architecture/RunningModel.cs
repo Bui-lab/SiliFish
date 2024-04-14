@@ -329,20 +329,20 @@ namespace SiliFish.ModelUnits.Architecture
 
         }
 
-        public override List<string> DiffersFrom(ModelBase other)
+        public override List<Difference> DiffersFrom(ModelBase other)
         {
-            List<string> differences = [];
+            List<Difference> differences = [];
             if (other is RunningModel om)
             {
                 differences = base.DiffersFrom(other) ?? [];
-                List<string> diffs = ModelUnitBase.ListDiffersFrom(CellPools.Select(c => c as ModelUnitBase).ToList(),
+                List<Difference> diffs = ModelUnitBase.ListDiffersFrom(CellPools.Select(c => c as ModelUnitBase).ToList(),
                     om.CellPools.Select(c => c as ModelUnitBase).ToList());
                 if (diffs != null)
                     differences.AddRange(diffs);
             }
             else
             {
-                differences.Add("Models not comparable.");
+                differences.Add(new Difference("Models not comparable."));//TODO error handling
             }
             if (differences.Count != 0)
                 return differences;

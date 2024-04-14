@@ -1,4 +1,5 @@
-﻿using SiliFish.Services;
+﻿using SiliFish.DataTypes;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,16 @@ namespace SiliFish.ModelUnits.Stim
             PlotType = "Stimulus";
         }
 
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
-            List<string> diffs = [];
+            List<Difference> diffs = [];
             StimulusBase st = other as StimulusBase;
             if (Settings.ToString() != st.Settings.ToString())
-                diffs.Add($"{ID} Settings: {Settings} vs {st.Settings}");
+                diffs.Add(new Difference(ID, "Settings", Settings, st.Settings));
             if (Active != st.Active)
-                diffs.Add($"{ID} Active: {Active} vs {st.Active}");
+                diffs.Add(new Difference(ID, "Active", Active, st.Active));
             if (TimeLine_ms.ToString() != st.TimeLine_ms.ToString())
-                diffs.Add($"{ID} TimeLine: {TimeLine_ms} vs {st.TimeLine_ms}");
+                diffs.Add(new Difference(ID, "TimeLine", TimeLine_ms, st.TimeLine_ms));
 
             if (diffs.Count != 0)
                 return diffs;

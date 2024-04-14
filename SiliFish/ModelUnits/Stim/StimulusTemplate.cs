@@ -62,28 +62,28 @@ namespace SiliFish.ModelUnits.Stim
             return TargetPool.CompareTo(other.TargetPool);
         }
 
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
-            List<string> differences = base.DiffersFrom(other) ?? [];
+            List<Difference> differences = base.DiffersFrom(other) ?? [];
             StimulusTemplate st = other as StimulusTemplate;
             if (TargetPool != st.TargetPool)
-                differences.Add($"{ID} TargetPool: {TargetPool} vs {st.TargetPool}");
+                differences.Add(new Difference(ID, "TargetPool", TargetPool, st.TargetPool));
             if (TargetSomite != st.TargetSomite)
-                differences.Add($"{ID} TargetSomite: {TargetSomite} vs {st.TargetSomite}");
+                differences.Add(new Difference(ID, "TargetSomite", TargetSomite, st.TargetSomite));
             if (TargetCell != st.TargetCell)
-                differences.Add($"{ID} TargetCell: {TargetCell} vs {st.TargetCell}");
+                differences.Add(new Difference(ID, "TargetCell", TargetCell, st.TargetCell));
             if (LeftRight != st.LeftRight)
-                differences.Add($"{ID} LeftRight: {LeftRight} vs {st.LeftRight}");
+                differences.Add(new Difference(ID, "LeftRight", LeftRight, st.LeftRight));
             if (DelayPerSomite != st.DelayPerSomite)
-                differences.Add($"{ID} DelayPerSomite: {DelayPerSomite} vs {st.DelayPerSomite}");
+                differences.Add(new Difference(ID, "DelayPerSomite", DelayPerSomite, st.DelayPerSomite));
             if (DelaySagittal != st.DelaySagittal)
-                differences.Add($"{ID} DelaySagittal: {DelaySagittal} vs {st.DelaySagittal}");
+                differences.Add(new Difference(ID, "DelaySagittal", DelaySagittal, st.DelaySagittal));
 
             if (differences.Count != 0)
                 return differences;
             return null;
         }
-
+         
         public override string ToString()
         {
             string timeline = TimeLine_ms != null && !TimeLine_ms.IsBlank() ? TimeLine_ms.ToString() : "";
@@ -91,7 +91,7 @@ namespace SiliFish.ModelUnits.Stim
             return $"{ID}: {timeline} {active}".Replace("  ", " ");
         }
         [JsonIgnore]
-        public override string ID => $"{Name} \r\nTarget: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
+        public override string ID => $"{Name} - Target: {LeftRight} {TargetPool}-{TargetSomite} {TargetCell}; {Settings?.ToString()}";
         [JsonIgnore]
         public override string Tooltip => $"{ToString()}\r\nDelay/somite: {DelayPerSomite}\r\nSagittal Delay: {DelaySagittal}";
 

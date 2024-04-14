@@ -272,48 +272,48 @@ namespace SiliFish.ModelUnits.Cells
            
         }
 
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
-            List<string> differences = [];
+            List<Difference> differences = [];
             CellPoolTemplate cpt = other as CellPoolTemplate;
             if (CellGroup != cpt.CellGroup)
-                differences.Add($"{ID} CellGroup: {CellGroup} vs {cpt.CellGroup}");
+                differences.Add(new Difference(ID, "CellGroup", CellGroup, cpt.CellGroup));
             if ((Description ?? "") != (cpt.Description ?? ""))
-                differences.Add($"{ID} Description: {Description} vs {cpt.Description}");
+                differences.Add(new Difference(ID, "Description", Description, cpt.Description));
             if (CellType != cpt.CellType)
-                differences.Add($"{ID} CellType: {CellType} vs {cpt.CellType}");
+                differences.Add(new Difference(ID, "CellType", CellType, cpt.CellType));
             if (CoreType != cpt.CoreType)
-                differences.Add($"{ID} CoreType: {CoreType} vs {cpt.CoreType}");
+                differences.Add(new Difference(ID, "CoreType", CoreType, cpt.CoreType));
             if (NTMode != cpt.NTMode)
-                differences.Add($"{ID} NTMode: {NTMode} vs {cpt.NTMode}");
+                differences.Add(new Difference(ID, "NTMode", NTMode, cpt.NTMode));
             if (Color != cpt.Color)
-                differences.Add($"{ID} Color: {Color} vs {cpt.Color}");
-            if (!Parameters.SameAs(cpt.Parameters, out string diff))
-                differences.Add($"{ID} Parameters: {diff}");
+                differences.Add(new Difference(ID, "Color", Color, cpt.Color));
+            if (!Parameters.SameAs(cpt.Parameters, out List<Difference> diff))
+                differences.AddRange(diff.Select(d=> new Difference(ID + " Parameters", d.Item + d.Parameter, d.Value1, d.Value2))); 
             if (BodyLocation != cpt.BodyLocation)
-                differences.Add($"{ID} BodyLocation: {BodyLocation} vs {cpt.BodyLocation}");
+                differences.Add(new Difference(ID, "BodyLocation", BodyLocation, cpt.BodyLocation));
             if (PositionLeftRight != cpt.PositionLeftRight)
-                differences.Add($"{ID} PositionLeftRight: {PositionLeftRight} vs {cpt.PositionLeftRight}");
+                differences.Add(new Difference(ID, "PositionLeftRight", PositionLeftRight, cpt.PositionLeftRight));
             if (ColumnIndex2D != cpt.ColumnIndex2D)
-                differences.Add($"{ID} ColumnIndex2D: {ColumnIndex2D} vs {cpt.ColumnIndex2D}");
+                differences.Add(new Difference(ID, "ColumnIndex2D", ColumnIndex2D, cpt.ColumnIndex2D));
             if (NumOfCells != cpt.NumOfCells)
-                differences.Add($"{ID} NumOfCells: {NumOfCells} vs {cpt.NumOfCells}");
+                differences.Add(new Difference(ID, "NumOfCells", NumOfCells, cpt.NumOfCells));
             if (PerSomiteOrTotal != cpt.PerSomiteOrTotal)
-                differences.Add($"{ID} PerSomiteOrTotal: {PerSomiteOrTotal} vs {cpt.PerSomiteOrTotal}");
+                differences.Add(new Difference(ID, "PerSomiteOrTotal", PerSomiteOrTotal, cpt.PerSomiteOrTotal));
             if (SomiteRange != cpt.SomiteRange)
-                differences.Add($"{ID} SomiteRange: {SomiteRange} vs {cpt.SomiteRange}");
+                differences.Add(new Difference(ID, "SomiteRange", SomiteRange, cpt.SomiteRange));
             if (SpatialDistribution.ToString() != cpt.SpatialDistribution.ToString())
-                differences.Add($"{ID} SpatialDistribution: {SpatialDistribution} vs {cpt.SpatialDistribution}");
+                differences.Add(new Difference(ID, "SpatialDistribution", SpatialDistribution, cpt.SpatialDistribution));
             if (DescendingAxonLength?.ToString() != cpt.DescendingAxonLength?.ToString())
-                differences.Add($"{ID} DescendingAxonLength: {DescendingAxonLength} vs {cpt.DescendingAxonLength}");
+                differences.Add(new Difference(ID, "DescendingAxonLength", DescendingAxonLength, cpt.DescendingAxonLength));
             if (AscendingAxonLength?.ToString() != cpt.AscendingAxonLength?.ToString())
-                differences.Add($"{ID} AscendingAxonLength: {AscendingAxonLength} vs {cpt.AscendingAxonLength}");
+                differences.Add(new Difference(ID, "AscendingAxonLength", AscendingAxonLength, cpt.AscendingAxonLength));
             if (ConductionVelocity?.ToString() != cpt.ConductionVelocity?.ToString())
-                differences.Add($"{ID} ConductionVelocity: {ConductionVelocity} vs {cpt.ConductionVelocity}");
+                differences.Add(new Difference(ID, "ConductionVelocity", ConductionVelocity, cpt.ConductionVelocity));
             if (Active != cpt.Active)
-                differences.Add($"{ID} Active: {Active} vs {cpt.Active}");
+                differences.Add(new Difference(ID, "Active", Active, cpt.Active));
             if (TimeLine_ms.ToString() != cpt.TimeLine_ms.ToString())
-                differences.Add($"{ID} TimeLine: {TimeLine_ms} vs {cpt.TimeLine_ms}");
+                differences.Add(new Difference(ID, "TimeLine", TimeLine_ms, cpt.TimeLine_ms));
 
             if (differences.Count != 0)
                 return differences;

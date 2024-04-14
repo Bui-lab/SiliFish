@@ -1,4 +1,5 @@
-﻿using SiliFish.Extensions;
+﻿using SiliFish.DataTypes;
+using SiliFish.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -71,29 +72,29 @@ namespace SiliFish.ModelUnits.Architecture
             return string.IsNullOrEmpty(error);
         }
 
-        public List<string> DiffersFrom(ModelDimensions other)
+        public List<Difference> DiffersFrom(ModelDimensions other)
         {
-            List<string> differences = [];
+            List<Difference> differences = [];
             if (NumberOfSomites  != other.NumberOfSomites)
-                differences.Add($"Number of somites: {NumberOfSomites} vs {other.NumberOfSomites}");
+                differences.Add(new Difference("Number of somites", NumberOfSomites, other.NumberOfSomites));
             if (SupraSpinalRostralCaudalDistance  != other.SupraSpinalRostralCaudalDistance)
-                differences.Add($"Supra-spinal rostrocaudal distance: {SupraSpinalRostralCaudalDistance} vs {other.SupraSpinalRostralCaudalDistance}");
+                differences.Add(new Difference("Supra-spinal rostrocaudal distance", SupraSpinalRostralCaudalDistance, other.SupraSpinalRostralCaudalDistance));
             if (SupraSpinalDorsalVentralDistance  != other.SupraSpinalDorsalVentralDistance)
-                differences.Add($"Supra-spinal dorsoventral distance: {SupraSpinalDorsalVentralDistance} vs {other.SupraSpinalDorsalVentralDistance}");
+                differences.Add(new Difference("Supra-spinal dorsoventral distance", SupraSpinalDorsalVentralDistance, other.SupraSpinalDorsalVentralDistance));
             if (SupraSpinalMedialLateralDistance  != other.SupraSpinalMedialLateralDistance)
-                differences.Add($"Supra-spinal mediolateral distance: {SupraSpinalMedialLateralDistance} vs {other.SupraSpinalMedialLateralDistance}");
+                differences.Add(new Difference("Supra-spinal mediolateral distance", SupraSpinalMedialLateralDistance, other.SupraSpinalMedialLateralDistance));
             if (SpinalRostralCaudalDistance  != other.SpinalRostralCaudalDistance)
-                differences.Add($"Spinal rostrocaudal distance: {SpinalRostralCaudalDistance} vs {other.SpinalRostralCaudalDistance}");
+                differences.Add(new Difference("Spinal rostrocaudal distance", SpinalRostralCaudalDistance, other.SpinalRostralCaudalDistance));
             if (SpinalDorsalVentralDistance  != other.SpinalDorsalVentralDistance)
-                differences.Add($"Spinal dorsoventral distance: {SpinalDorsalVentralDistance} vs {other.SpinalDorsalVentralDistance}");
+                differences.Add(new Difference("Spinal dorsoventral distance", SpinalDorsalVentralDistance, other.SpinalDorsalVentralDistance));
             if (SpinalMedialLateralDistance  != other.SpinalMedialLateralDistance)
-                differences.Add($"Spinal mediolateral distance: {SpinalMedialLateralDistance} vs {other.SpinalMedialLateralDistance}");
+                differences.Add(new Difference("Spinal mediolateral distance", SpinalMedialLateralDistance, other.SpinalMedialLateralDistance));
             if (SpinalBodyPosition  != other.SpinalBodyPosition)
-                differences.Add($"Spinal body position: {SpinalBodyPosition} vs {other.SpinalBodyPosition}");
+                differences.Add(new Difference("Spinal body position", SpinalBodyPosition, other.SpinalBodyPosition));
             if (BodyMedialLateralDistance  != other.BodyMedialLateralDistance)
-                differences.Add($"Body mediolateral distance: {BodyMedialLateralDistance} vs {other.BodyMedialLateralDistance}");
+                differences.Add(new Difference("Body mediolateral distance", BodyMedialLateralDistance, other.BodyMedialLateralDistance));
             if (BodyDorsalVentralDistance  != other.BodyDorsalVentralDistance)
-                differences.Add($"Body dorsoventral distance: {BodyDorsalVentralDistance} vs {other.BodyDorsalVentralDistance}");
+                differences.Add(new Difference("Body dorsoventral distance", BodyDorsalVentralDistance, other.BodyDorsalVentralDistance));
             if (differences.Count != 0)
                 return differences;
             return null;

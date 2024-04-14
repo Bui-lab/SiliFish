@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliFish.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -29,17 +30,17 @@ namespace SiliFish.Extensions
             catch { return (defValue, true); }
         }
 
-        public static List<string> DiffersFrom(this object obj, object other)
+        public static List<Difference> DiffersFrom(this object obj, object other)
         {
             if (other.GetType() != obj.GetType()) 
-                return ["Incompatible classes."];
-            List<string> differences = [];
+                return [new Difference("Incompatible classes.", null, null)];
+            List<Difference> differences = [];
             foreach (PropertyInfo prop in obj.GetType().GetProperties())
             {
                 var v1 = prop.GetValue(obj, null);
                 var v2 = prop.GetValue(other, null);
                 if (v1?.ToString() != v2?.ToString())
-                    differences.Add($"{prop.Name}:\t{v1}\t{v2}");
+                    differences.Add(new Difference(prop.Name, v1, v2));
             }
             if (differences.Count != 0)
                 return differences;

@@ -108,13 +108,13 @@ namespace SiliFish.ModelUnits.Cells
             return muscleCell;
         }
 
-        public override List<string> DiffersFrom(ModelUnitBase other)
+        public override List<Difference> DiffersFrom(ModelUnitBase other)
         {
             if (other is not MuscleCell oc)
-                return [$"Incompatible classes: {ID}({GetType()}) versus {other.ID}({other.GetType()})"]; 
-
-            List<string> differences = base.DiffersFrom(other) ?? [];
-            List<string> diffs = ListDiffersFrom(EndPlates.Select(c => c as ModelUnitBase).ToList(),
+                return [new Difference("Incompatible classes", $"{ID}({GetType()}", $"{other.ID}{other.GetType()}")];
+            
+            List<Difference> differences = base.DiffersFrom(other) ?? [];
+            List<Difference> diffs = ListDiffersFrom(EndPlates.Select(c => c as ModelUnitBase).ToList(),
                 oc.EndPlates.Select(c => c as ModelUnitBase).ToList());
             if (diffs != null)
                 differences.AddRange(diffs);
