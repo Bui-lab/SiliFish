@@ -27,7 +27,7 @@ namespace SiliFish.Repositories
         private double individualProgress = 0;
         private int simulationCount = 0;
         public List<int> SimulationIds { get; set; } = [];
-        public double GetProgress() => (SimulationIds.Count - 1 + individualProgress) / simulationCount;
+        public double GetProgress() => Math.Max(0, (SimulationIds.Count - 1 + individualProgress) / simulationCount);
         private void AddSimulationRecord(SFDataContext sFDataContext, ModelSimulator modelSimulator, Simulation simulation)
         {
             try
@@ -86,7 +86,8 @@ namespace SiliFish.Repositories
         {
             SimulationIds = [];
             simulationCount = modelSimulator.SimulationList.Count;
-            SFDataContext sFDataContext = new();
+            using SFDataContext sFDataContext = new();
+            sFDataContext.ChangeTracker.AutoDetectChangesEnabled = false;
             foreach (Simulation simulation in modelSimulator.SimulationList)
             {
                 AddSimulationRecord(sFDataContext, modelSimulator, simulation);
