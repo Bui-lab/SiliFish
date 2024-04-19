@@ -136,9 +136,10 @@ public override string SourcePool
 
         public override bool CheckValues(ref List<string> errors)
         {
+            int preCount = errors.Count;
             base.CheckValues(ref errors);
             Core.CheckValues(ref errors);
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
         public override void LinkObjects()
         {

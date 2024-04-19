@@ -49,9 +49,10 @@ namespace SiliFish.DynamicUnits
 
         public override bool CheckValues(ref List<string> errors)
         {
-            base.CheckValues(ref errors);
             errors ??= [];
-            return errors.Count == 0;
+            int preCount = errors?.Count ?? 0;
+            base.CheckValues(ref errors);
+            return errors.Count == preCount;
         }
 
         //if any other type of gap junction is implemented, this function may need to be modified

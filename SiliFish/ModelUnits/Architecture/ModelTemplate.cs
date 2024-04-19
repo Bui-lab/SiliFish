@@ -264,6 +264,8 @@ namespace SiliFish.ModelUnits.Architecture
 
         public override bool CheckValues(ref List<string> errors)
         {
+            errors ??= [];
+            int preCount = errors.Count;
             base.CheckValues(ref errors);
             var v = CellPoolTemplates.GroupBy(p => p.ToString()).Where(c => c.Count() > 1);
             foreach (string cpt in v.Select(gr => gr.Key).Distinct())
@@ -275,7 +277,7 @@ namespace SiliFish.ModelUnits.Architecture
                 cpt.CheckValues(ref errors);
             foreach (InterPoolTemplate ipt in InterPoolTemplates)
                 ipt.CheckValues(ref errors);
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
         public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
         {

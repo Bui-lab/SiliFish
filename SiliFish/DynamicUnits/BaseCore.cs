@@ -73,7 +73,7 @@ namespace SiliFish.DynamicUnits
         public virtual bool CheckValues(ref List<string> errors)
         {
             errors ??= [];
-            return errors.Count == 0;
+            return true;
         }
 
 

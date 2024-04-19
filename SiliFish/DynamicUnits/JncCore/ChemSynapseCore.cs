@@ -66,15 +66,18 @@ namespace SiliFish.DynamicUnits.JncCore
         public override bool CheckValues(ref List<string> errors)
         {
             errors ??= [];
+            int preCount = errors.Count;
             if (Conductance < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Conductance has 0 value.");
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
         public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
         {
             errors ??= [];
+            int preCount = errors?.Count ?? 0;
             ChemSynapseCore core = CreateCore(coreType, param);
-            return core.CheckValues(ref errors);
+            core.CheckValues(ref errors);
+            return errors.Count == preCount;
         }
         public virtual double GetNextVal(double vPreSynapse, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {

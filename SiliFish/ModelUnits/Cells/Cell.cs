@@ -282,15 +282,18 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override bool CheckValues(ref List<string> errors)
         {
+            errors ??= [];
+            int preCount = errors.Count;
             base.CheckValues(ref errors);
 
-            int errorCount = errors.Count;
             Core.CheckValues(ref errors);
             foreach (GapJunction jnc in LeavingGapJunctions)
+            {
                 jnc.CheckValues(ref errors);
-            if (errors.Count > errorCount)
-                errors.Insert(errorCount, $"{ID}:");
-            return errors.Count == 0;
+                if (errors.Count > preCount)
+                    errors.Insert(preCount, $"{jnc.ID}:");
+            }
+            return errors.Count == preCount;
         }
         /// <summary>
         /// Removes all stimuli, and incoming and outgoing connections

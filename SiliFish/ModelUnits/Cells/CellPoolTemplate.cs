@@ -327,12 +327,12 @@ namespace SiliFish.ModelUnits.Cells
 
         public override bool CheckValues(ref List<string> errors)
         {
+            int preCount = errors.Count;
             base.CheckValues(ref errors);
-            int errorCount = errors.Count;
             CellCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues());
-            if (errors.Count > errorCount)
-                errors.Insert(errorCount, $"{ID}:");
-            return errors.Count == 0;
+            if (errors.Count > preCount)
+                errors.Insert(preCount, $"{ID}:");
+            return errors.Count == preCount;
         }
         public void BackwardCompatibility()
         {

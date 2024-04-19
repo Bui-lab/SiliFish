@@ -305,7 +305,7 @@ namespace SiliFish.UI
             if (simulationDBWriter != null)
             {
                 progressBarRun.Value = (int)(simulationDBWriter.GetProgress() * progressBarRun.Maximum);
-                lProgress.Text = $"Saving simulation summary results to database.";
+                lProgress.Text = $"Saving simulation summary results to the database.";
             }
             else if (modelSimulator != null)
             {

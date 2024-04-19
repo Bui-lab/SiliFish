@@ -156,10 +156,11 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override bool CheckValues(ref List<string> errors)
         {
+            int preCount = errors?.Count ?? 0;
             base.CheckValues(ref errors);
             foreach (Cell cell in Cells)
                 cell.CheckValues(ref errors);
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
         public bool OnSide(SagittalPlane sagittal)
         {

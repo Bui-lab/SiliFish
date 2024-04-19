@@ -66,12 +66,13 @@ namespace SiliFish.DynamicUnits
 
         public override bool CheckValues(ref List<string> errors)
         {
+            int preCount = errors?.Count ?? 0;
             base.CheckValues(ref errors);
             if (R < GlobalSettings.Epsilon)
                 errors.Add($"Leaky integrator: R has 0 value.");
             if (C < GlobalSettings.Epsilon)
                 errors.Add($"Leaky integrator: C has 0 value.");
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
 
         public override double GetNextVal(double Stim, ref bool spike)

@@ -54,13 +54,14 @@ namespace SiliFish.DynamicUnits
 
         public override bool CheckValues(ref List<string> errors)
         {
-            base.CheckValues(ref errors);
             errors ??= [];
+            int preCount = errors?.Count ?? 0;
+            base.CheckValues(ref errors);
             if (SlowComponent < 0 || SlowComponent > 1)
                 errors.Add($"Chemical synapse: slow component valid range is [0-1].");
             if (TauDFast * (1 - SlowComponent) + TauDSlow * SlowComponent < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Tau has 0 value.");
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
         public override double GetNextVal(double _, double vPost, List<double> spikeArrivalTimes, double tCurrent, DynamicsParam settings, bool excitatory)
         {

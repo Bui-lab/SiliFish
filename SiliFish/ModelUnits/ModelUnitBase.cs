@@ -75,7 +75,7 @@ namespace SiliFish.ModelUnits
         public virtual bool CheckValues(ref List<string> errors)
         {
             errors ??= [];
-            return errors.Count == 0;
+            return true;
         }
         public virtual string GeneratedName()
         {

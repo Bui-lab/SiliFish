@@ -438,10 +438,12 @@ namespace SiliFish.ModelUnits.Architecture
 
         public override bool CheckValues(ref List<string> errors)
         {
+            errors ??= [];
+            int preCount = errors?.Count ?? 0;
             base.CheckValues(ref errors);
             foreach (CellPool cp in CellPools)
                 cp.CheckValues(ref errors);
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
 
         #region Cells

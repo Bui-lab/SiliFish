@@ -52,11 +52,12 @@ namespace SiliFish.DynamicUnits
 
         public override bool CheckValues(ref List<string> errors)
         {
-            base.CheckValues(ref errors);
             errors ??= [];
+            int preCount = errors?.Count ?? 0;
+            base.CheckValues(ref errors);
             if (TauD < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Tau has 0 value.");
-            return errors.Count == 0;
+            return errors.Count == preCount;
         }
         public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent, DynamicsParam settings, bool excitatory)
         {

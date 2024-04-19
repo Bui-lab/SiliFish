@@ -123,14 +123,15 @@ namespace SiliFish.ModelUnits.Cells
         }
         public override bool CheckValues(ref List<string> errors)
         {
+            int preCount = errors.Count;
             base.CheckValues(ref errors);
-            int errorCount = errors.Count;
             Core.CheckValues(ref errors);
             foreach (ChemicalSynapse syn in Terminals)
-                syn.CheckValues(ref errors);
-            if (errors.Count > errorCount)
-                errors.Insert(errorCount, $"{ID}:");
-            return errors.Count == 0;
+            {
+                if (!syn.CheckValues(ref errors))
+                    errors.Insert(preCount, $"{syn.ID}:");
+            }
+            return errors.Count == preCount;
         }
         #region Sort functions
         public override void SortJunctions()
