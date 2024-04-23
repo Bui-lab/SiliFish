@@ -15,16 +15,16 @@
         public Difference(string item, object val1, object val2)
         {
             Item = item;
-            Value1 = val1?.ToString();
-            Value2 = val2?.ToString();
+            Value1 = val1?.ToString().Trim();
+            Value2 = val2?.ToString().Trim();
         }
 
         public Difference(string item, string parameter, object val1, object val2)
         {
             Item = item;
             Parameter = parameter;
-            Value1 = val1?.ToString();
-            Value2 = val2?.ToString();
+            Value1 = val1?.ToString().Trim();
+            Value2 = val2?.ToString().Trim();
         }
     }
 }

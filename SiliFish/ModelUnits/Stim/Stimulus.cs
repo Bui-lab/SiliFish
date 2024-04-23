@@ -112,6 +112,7 @@ namespace SiliFish.ModelUnits.Stim
         }
 
         #region Generate different modes of stimuli
+        //TODO this is exactly the same as Gaussian - think
         private void GenerateStepStimulus(List<(double start, double end)> timeRanges, Random rand)
         {
             foreach (var (start, end) in timeRanges)
@@ -119,9 +120,8 @@ namespace SiliFish.ModelUnits.Stim
                 int iStart = RunParam.iIndex(start);
                 int iEnd = RunParam.iIndex(end);
                 for (int ind = iStart; ind < iEnd; ind++)
-                {
-                    double noise = Settings.Value2 > 0 ? rand.Gauss(1, Settings.Value2) : 1;
-                    values[ind] = Settings.Value1 * noise;
+                {                    
+                    values[ind] = Settings.Value2 > 0 ? rand.Gauss(Settings.Value1, Settings.Value2) : Settings.Value1;
                 }
             }
         }

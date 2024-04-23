@@ -18,7 +18,7 @@ namespace SiliFish.UI.Services
             int tab2 = differences.Max(d => d.Parameter?.Length ?? 0);
             int tab3 = differences.Max(d => d.Value1?.Length ?? 0);
             int tab4 = differences.Max(d => d.Value2?.Length ?? 0);
-            tab1 = Math.Max(200, 4 * tab1);
+            tab1 = Math.Max(300, 5 * tab1);
             tab2 = Math.Max(200, 4 * tab2) + tab1;
             tab3 = Math.Max(200, 4 * tab3) + tab2;
             tab4 = Math.Max(200, 4 * tab4) + tab3;
