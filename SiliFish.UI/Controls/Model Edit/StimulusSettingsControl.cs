@@ -53,8 +53,7 @@ namespace SiliFish.UI.Controls
                     break;
                 case StimulusMode.Step:
                     lValue1.Text = "Value";
-                    lValue2.Text = "Noise";
-                    SetRowVisibility(rowValue2, true);
+                    SetRowVisibility(rowValue2, false);
                     SetRowVisibility(rowFreq, false);
                     break;
                 case StimulusMode.Sinusoidal:

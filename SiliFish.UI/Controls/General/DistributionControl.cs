@@ -129,22 +129,22 @@ namespace SiliFish.UI.Controls
             ddDistribution.Text = dist.Discriminator;
             if (dist is SpacedDistribution ds)
             {
-                eNoise.Text = ds.NoiseStdDev.ToString("0.###");
+                eNoise.Text = ds.NoiseStdDev.ToString("0.######");
             }
             else if (dist is BimodalDistribution bd)
             {
                 ddDistribution.Text = "Bimodal";
-                eMean1.Text = bd.Mean.ToString("0.###");
-                eStdDev1.Text = bd.Stddev.ToString("0.###");
-                eMean2.Text = bd.Mean2.ToString("0.###");
-                eStdDev2.Text = bd.Stddev2.ToString("0.###");
-                eMode1Weight.Text = bd.Mode1Weight.ToString("0.###");
+                eMean1.Text = bd.Mean.ToString("0.######");
+                eStdDev1.Text = bd.Stddev.ToString("0.######");
+                eMean2.Text = bd.Mean2.ToString("0.######");
+                eStdDev2.Text = bd.Stddev2.ToString("0.######");
+                eMode1Weight.Text = bd.Mode1Weight.ToString("0.######");
             }
             else if (dist is GaussianDistribution gd)//Bimodal is also Gaussian - order of 'if's is important
             {
                 ddDistribution.Text = "Gaussian";
-                eMean1.Text = gd.Mean.ToString("0.###");
-                eStdDev1.Text = gd.Stddev.ToString("0.###");
+                eMean1.Text = gd.Mean.ToString("0.######");
+                eStdDev1.Text = gd.Stddev.ToString("0.######");
             }
             else if (dist is UniformDistribution)
                 ddDistribution.Text = "Uniform";
@@ -152,7 +152,7 @@ namespace SiliFish.UI.Controls
             {
                 ddDistribution.Text = "Constant";
                 if (dist is Constant_NoDistribution d)
-                    eNoise.Text = d.NoiseStdDev.ToString("0.###");
+                    eNoise.Text = d.NoiseStdDev.ToString("0.######");
             }
         }
 

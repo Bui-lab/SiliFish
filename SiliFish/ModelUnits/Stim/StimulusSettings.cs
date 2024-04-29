@@ -15,7 +15,7 @@ namespace SiliFish.ModelUnits.Stim
     {
         public StimulusMode Mode { get; set; }
         //mode = Gaussian: value1 and value2 are mean and SD 
-        //mode = Step: Value1:the stimulus value, Value2; obsolete
+        //mode = Step: Value1:the stimulus value, Value2: obsolete
         //mode = Ramp: Value1: stimulus at time start, Value2: stimulus at time end
         //mode = Sinusoidal: Value1; the stimulus value, Value2; obsolete, Frequency: in Hz
         //mode = Pulse: Value1: stimulus value, Value2; duration in each pulse (in ms), Frequency: in Hz
@@ -54,7 +54,7 @@ namespace SiliFish.ModelUnits.Stim
         {
             return Mode switch
             {
-                StimulusMode.Step => $"{Mode} {Value1}, Noise: {Value2}",
+                StimulusMode.Step => $"{Mode} {Value1}",
                 StimulusMode.Gaussian => $"{Mode} µ: {Value1}, SD: {Value2}",
                 StimulusMode.Ramp => $"{Mode} {Value1} - {Value2}",
                 StimulusMode.Sinusoidal => $"{Mode} Amplitude: {Value1}, Freq: {Frequency}",

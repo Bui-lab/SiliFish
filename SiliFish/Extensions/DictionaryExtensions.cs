@@ -159,16 +159,19 @@ namespace SiliFish.Extensions
             }
             foreach (var key in dictionary.Keys)
             {
-                if (!dic2.ContainsKey(key))
+                if (!dic2.TryGetValue(key, out Distribution value))
                 {
                     diff.Add(new Difference("Missing value", null, key));
                     return false;
                 }
                 string s1 = dictionary[key]?.ToString() ?? "";
-                string s2 = dic2[key]?.ToString() ?? "";
+                string s2 = value?.ToString() ?? "";
                 if (s1 != s2)
                 {
-                    diff.Add(new Difference( key, s1, s2));
+                    bool similar = false;
+                    if (value.UniqueValue == dictionary[key].UniqueValue)
+                        similar = true;
+                    diff.Add(new Difference( key+(similar?" (similar)":""), s1, s2));
                 }
             }
             return diff.Count == 0;
