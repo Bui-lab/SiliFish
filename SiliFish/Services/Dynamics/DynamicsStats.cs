@@ -1,13 +1,8 @@
-﻿using OfficeOpenXml.ConditionalFormatting.Contracts;
-using SiliFish.Database;
-using SiliFish.Definitions;
+﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace SiliFish.Services.Dynamics

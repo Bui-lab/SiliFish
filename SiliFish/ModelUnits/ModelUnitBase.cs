@@ -1,14 +1,9 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Junction;
-using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
-using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits
 {

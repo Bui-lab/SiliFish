@@ -1,7 +1,4 @@
-﻿using SiliFish.Definitions;
-using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Junction;
+﻿using SiliFish.ModelUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,5 @@
 ﻿using SiliFish.Definitions;
+using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,24 +111,33 @@ namespace SiliFish.Extensions
         }
         public static List<int> GetSpikeIndices(this double[] thisArray, double threshold, int iStart = 0, int iEnd = -1, int buffer = 0)
         {
-            List<int> indices = [];
-            if (iEnd < 0 || iEnd >= thisArray.Length)
-                iEnd = thisArray.Length - 1;
-            int lastInd = 0;
-            while (true)
+            try
             {
-                int ind = Array.FindIndex(thisArray, iStart, value => value >= threshold);
-                if (lastInd + buffer > iEnd)
-                    iEnd = lastInd + buffer;
-                if (ind > iEnd || ind < 0) break;
-                while (ind < iEnd - 1 && thisArray[ind + 1] > thisArray[ind]) //find the peak
-                    ind++;
-                indices.Add(ind);
-                while (ind < iEnd - 1 && thisArray[ind + 1] > threshold) //continue to iterate until it falls below threshold value
-                    ind++;
-                iStart = ind + 1;
+                List<int> indices = [];
+                if (iEnd < 0 || iEnd >= thisArray.Length)
+                    iEnd = thisArray.Length - 1;
+                int lastInd = 0;
+                while (true)
+                {
+                    int ind = Array.FindIndex(thisArray, iStart, value => value >= threshold);
+                    if (lastInd + buffer > iEnd)
+                        iEnd = Math.Min(lastInd + buffer, thisArray.Length);
+                    if (ind > iEnd || ind < 0) break;
+                    while (ind < iEnd - 1 && thisArray[ind + 1] > thisArray[ind]) //find the peak
+                        ind++;
+                    indices.Add(ind);
+                    while (ind < iEnd - 1 && thisArray[ind + 1] > threshold) //continue to iterate until it falls below threshold value
+                        ind++;
+                    iStart = ind + 1;
+                    lastInd = ind;
+                }
+                return indices;
+            }            
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                return null;
             }
-            return indices;
         }
 
         public static int GetSpikeStart(this double[] thisArray, double threshold, int tIndex)

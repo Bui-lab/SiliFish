@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace SiliFish.Extensions
 {

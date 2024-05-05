@@ -1,26 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using OfficeOpenXml;
-using SiliFish.Database;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using SiliFish.Services.Dynamics;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.Repositories
 {
@@ -167,16 +156,18 @@ namespace SiliFish.Repositories
             }
         }
 
-        public static (List<string>, List<List<string>>) GenerateSpikes(Simulation simulation)
+        public static (List<string>, List<List<string>>) GenerateSpikes(Simulation simulation, List<Cell> cells = null, int spikeStart = 0, int spikeEnd = -1)
         {
             try
             {
                 List<string> columnNames = ["RecordID", "Cell Pool", "Sagittal", "Somite", "Seq", "Cell Name", "Spike Time"];
+                if (simulation == null) return (columnNames, null);
                 List<List<string>> values = [];
                 int counter = 0;
-                foreach (Cell cell in simulation.Model.GetCells())
+                cells ??= simulation.Model.GetCells();
+                foreach (Cell cell in cells)
                 {
-                    foreach (int spikeIndex in cell.GetSpikeIndices())
+                    foreach (int spikeIndex in cell.GetSpikeIndices(spikeStart, spikeEnd))
                     {
                         List<string> cellValues =
                         [

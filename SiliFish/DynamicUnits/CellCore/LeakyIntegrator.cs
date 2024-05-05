@@ -1,11 +1,7 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.Extensions;
 using SiliFish.Services.Dynamics;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
 
 //Modified from the code written by Yann Roussel and Tuan Bui

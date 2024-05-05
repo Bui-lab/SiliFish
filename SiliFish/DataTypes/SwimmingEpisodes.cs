@@ -1,12 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
+﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure.Annotations;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 namespace SiliFish.DataTypes
 {

@@ -1,15 +1,11 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-using SiliFish.Services.Plotting.PlotGenerators;
 using SiliFish.Extensions;
 
 namespace SiliFish.Services.Plotting

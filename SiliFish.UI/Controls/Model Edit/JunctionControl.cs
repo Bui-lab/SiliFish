@@ -1,14 +1,10 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.DynamicUnits.JncCore;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.UI.EventArguments;
-using SiliFish.UI.Extensions;
-using System.Data;
-using Windows.Devices.HumanInterfaceDevice;
 
 namespace SiliFish.UI.Controls
 {

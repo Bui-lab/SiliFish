@@ -1,10 +1,7 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
-using SiliFish.Extensions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;

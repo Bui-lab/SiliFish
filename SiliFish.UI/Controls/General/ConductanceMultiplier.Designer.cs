@@ -60,7 +60,7 @@
             // 
             // numGapMult
             // 
-            numGapMult.DecimalPlaces = 2;
+            numGapMult.DecimalPlaces = 5;
             numGapMult.Location = new Point(109, 3);
             numGapMult.Name = "numGapMult";
             numGapMult.Size = new Size(75, 23);
@@ -70,7 +70,7 @@
             // 
             // numChemMult
             // 
-            numChemMult.DecimalPlaces = 2;
+            numChemMult.DecimalPlaces = 5;
             numChemMult.Location = new Point(109, 5);
             numChemMult.Name = "numChemMult";
             numChemMult.Size = new Size(75, 23);

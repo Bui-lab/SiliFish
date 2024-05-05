@@ -1,7 +1,5 @@
-﻿using GeneticSharp;
-using SiliFish.Definitions;
+﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Services;
@@ -9,9 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SiliFish.Repositories
 {

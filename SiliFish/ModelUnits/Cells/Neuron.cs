@@ -6,14 +6,12 @@ using SiliFish.Extensions;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
-using SiliFish.ModelUnits.Stim;
 using SiliFish.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Xml;
 
 namespace SiliFish.ModelUnits.Cells
 {

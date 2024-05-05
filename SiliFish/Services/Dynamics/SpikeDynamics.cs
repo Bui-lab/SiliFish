@@ -1,12 +1,9 @@
 ﻿using SiliFish.DynamicUnits;
-using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.Services.Dynamics
 {
@@ -102,7 +99,7 @@ namespace SiliFish.Services.Dynamics
                         break;
                     trueTrain.BurstList.Add((rostraliID, rostralsID, rostralBurst));
                     rostralTrain.BurstList.RemoveAll(b =>
-                                end - negDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= start + posDelay);
+                                start - posDelay <= b.Bursts.SpikeTimeList[0] && b.Bursts.SpikeTimeList[0] <= end + negDelay);
                     curTrain = rostralTrain;
                     curBurst = rostralBurst;
                 }

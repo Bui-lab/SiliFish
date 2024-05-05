@@ -1,6 +1,4 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.DynamicUnits;
-using System.DirectoryServices.ActiveDirectory;
 
 namespace SiliFish.UI.Controls
 {

@@ -18,11 +18,9 @@ using SiliFish.Repositories;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
-using System.ComponentModel;
 using SiliFish.ModelUnits.Parameters;
-using System.Security.Permissions;
-using Windows.Media.Core;
 using SiliFish.ModelUnits.Junction;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace SiliFish.UI.Controls
 {
@@ -85,9 +83,10 @@ namespace SiliFish.UI.Controls
 
             dd3DViewpoint.SelectedIndex = 0;
 
-            ePlotEnd.Value = eSpikeEnd.Value = GlobalSettings.SimulationEndTime;
+            timeRangePlot.EndTime = GlobalSettings.SimulationEndTime;
+            timeRangeStat.EndTime = GlobalSettings.SimulationEndTime;
 
-            try { ePlotEnd.Value = decimal.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
+            try { timeRangePlot.EndTime = int.Parse(GlobalSettings.LastRunSettings["lTimeEnd"]); }
             catch { }
             if (tabPlotSub.TabPages.Contains(tPlotWindows))
                 tabPlotSub.TabPages.Remove(tPlotWindows);
@@ -141,7 +140,7 @@ namespace SiliFish.UI.Controls
             this.simulation = simulation;
             this.model = model;
             cellSelectionPlot.RunningModel = model;
-            cellSelectionSpike.RunningModel = model;
+            cellSelectionStats.RunningModel = model;
             PopulatePlotTypes();
             int NumberOfSomites = model.ModelDimensions.NumberOfSomites;
             if (NumberOfSomites > 0)
@@ -211,12 +210,13 @@ namespace SiliFish.UI.Controls
             eAnimationdt.Increment = dt;
             eAnimationdt.Value = dt; //10 * dt;
 
-            decimal tMax = (decimal)runParam.MaxTime;
-            ePlotEnd.Value = eSpikeEnd.Value = tMax;
-            eAnimationEnd.Value = tMax;
+            int tMax = runParam.MaxTime;
+            timeRangePlot.EndTime = 
+            timeRangeStat.EndTime = 
+            timeRangeAnimation.EndTime = tMax;
 
             cmPlot.Enabled =
-                btnListSpikes.Enabled = btnListRCTrains.Enabled = btnListSpikeSummary.Enabled =
+                btnListStats.Enabled =
                 btnPlotHTML.Enabled =
                 btnAnimate.Enabled = true;
         }
@@ -749,8 +749,8 @@ namespace SiliFish.UI.Controls
                 plotSelection = cellSelectionPlot.GetSelection();
             }
 
-            tPlotStart = (int)ePlotStart.Value;
-            tPlotEnd = (int)ePlotEnd.Value;
+            tPlotStart = timeRangePlot.StartTime;
+            tPlotEnd = timeRangePlot.EndTime;
             if (tPlotEnd > model.MaxTime)
                 tPlotEnd = model.MaxTime;
         }
@@ -786,8 +786,8 @@ namespace SiliFish.UI.Controls
             if (!simulation.SimulationRun) return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
-            tPlotStart = (int)ePlotStart.Value;
-            tPlotEnd = (int)ePlotEnd.Value;
+            tPlotStart = timeRangePlot.StartTime;
+            tPlotEnd = timeRangePlot.EndTime;
             if (tPlotEnd > simulation.RunParam.MaxTime)
                 tPlotEnd = simulation.RunParam.MaxTime;
 
@@ -1118,7 +1118,7 @@ namespace SiliFish.UI.Controls
                 {
                     UtilWindows.SaveTextFile(saveFileCSV, dg.ExportToStringBuilder().ToString());
                 }
-            }            
+            }
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
@@ -1140,48 +1140,27 @@ namespace SiliFish.UI.Controls
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
             }
         }
-        private int AddCellToSpikeGrid(Cell cell)
+        private void GenerateSpikeList()
         {
-            dgSpikeStats.RowCount++;
-            int rowIndex = dgSpikeStats.RowCount - 1;
-            dgSpikeStats[colSpikeCell.Index, rowIndex].Value = cell.ID;
-            dgSpikeStats[colSpikeSagittal.Index, rowIndex].Value = cell.PositionLeftRight;
-            dgSpikeStats[colSpikeCellPool.Index, rowIndex].Value = cell.CellPool.CellGroup;
-            dgSpikeStats[colSpikeSomite.Index, rowIndex].Value = cell.Somite;
-            dgSpikeStats[colSpikeCellSeq.Index, rowIndex].Value = cell.Sequence;
-            return rowIndex;
-        }
-        private void btnListSpikes_Click(object sender, EventArgs e)
-        {
-            if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
-            int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
-            int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
-            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection(), iSpikeStart, iSpikeEnd);
+            int iSpikeStart = simulation.RunParam.iIndex((double)timeRangeStat.StartTime);
+            int iSpikeEnd = simulation.RunParam.iIndex((double)timeRangeStat.EndTime);
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection(), iSpikeStart, iSpikeEnd);
             Cells ??= [];
             if (Cells.Count == 0 && Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
-            Dictionary<Cell, List<int>> cellSpikes = [];
-            Cells.ForEach(c => cellSpikes.Add(c, c.GetSpikeIndices(iSpikeStart, iSpikeEnd)));
-            int spikeCount = cellSpikes.Values.Sum(l => l.Count);
+            (List<string> colNames, List<List<string>> values) = ModelStats.GenerateSpikes(simulation, Cells, iSpikeStart, iSpikeEnd);
+            int spikeCount = values.Count;
             if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
             {
                 string msg = $"There are {spikeCount} spikes, which can take a while to list. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     return;
             }
-            dgSpikeStats.Rows.Clear();
-            foreach (Cell cell in Cells)
-            {
-                List<int> spikes = cellSpikes[cell];
-                foreach (int spikeIndex in spikes)
-                {
-                    int rowIndex = AddCellToSpikeGrid(cell);
-                    dgSpikeStats[colSpikeTime.Index, rowIndex].Value = model.TimeArray[spikeIndex];
-                }
-            }
-            tabSpikesRCTrains.SelectedTab = tSpikes;
+            dgSpikeStats.LoadData(colNames, values, cbStatsAppend.Checked, out int scrollRow);
+            if (scrollRow >= 0)
+                dgSpikeStats.FirstDisplayedScrollingRowIndex = scrollRow;
             UseWaitCursor = false;
         }
         private void GenerateHistogramOfRCColumn(int colIndex)
@@ -1207,21 +1186,24 @@ namespace SiliFish.UI.Controls
             bool navigated = false;
             webViewRCTrains.NavigateTo(histHtml, title, GlobalSettings.TempFolder, ref tempFile, ref navigated);
         }
-        private void btnListRCTrains_Click(object sender, EventArgs e)
+        private void GenerateRCTrains()//TODO can be less UI dependent
         {
             if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
-            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionSpike.PoolSubset, cellSelectionSpike.GetSelection());
+            (List<Cell> Cells, List<CellPool> Pools) = model.GetSubsetCellsAndPools(cellSelectionStats.PoolSubset, cellSelectionStats.GetSelection());
             Cells ??= [];
-            if (Pools != null)
+            if (Cells.Count == 0 && Pools != null)
                 foreach (CellPool pool in Pools)
                     Cells.AddRange(pool.Cells);
-            int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
-            int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
+            int iSpikeStart = simulation.RunParam.iIndex((double)timeRangeStat.StartTime);
+            int iSpikeEnd = simulation.RunParam.iIndex((double)timeRangeStat.EndTime);
 
             List<string> pools = Cells.Select(c => c.CellPool.ID).Distinct().ToList();
 
-            dgRCTrains.Rows.Clear();
+            int scrollRow = 0;
+            if (!cbStatsAppend.Checked)
+                dgRCTrains.Rows.Clear();
+            else scrollRow = -1;
             foreach (string pool in pools)
             {
                 List<Cell> pooledCells = Cells.Where(c => c.CellPool.ID == pool).ToList();
@@ -1233,6 +1215,7 @@ namespace SiliFish.UI.Controls
                     {
                         dgRCTrains.RowCount++;
                         int rowIndex = dgRCTrains.RowCount - 1;
+                        if (scrollRow < 0) scrollRow = rowIndex;
                         dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iID;
                         dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = sID;
                         dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = iID;
@@ -1266,7 +1249,8 @@ namespace SiliFish.UI.Controls
                         double.Parse(rowPrev.Cells[colRCTrainCenter.Index].Value.ToString());
                 }
             }
-            tabSpikesRCTrains.SelectedTab = tRCTrains;
+            tabStats.SelectedTab = tRCTrains;
+            dgRCTrains.FirstDisplayedScrollingRowIndex = scrollRow;
             GenerateHistogramOfRCColumn(colRCTrainStartDelay.Index);
             UseWaitCursor = false;
         }
@@ -1301,22 +1285,29 @@ namespace SiliFish.UI.Controls
         }
 
 
-        private void GenerateSpikeSummary()
+        private void GenerateSpikeSummary()//TODO can be less UI dependent
         {
-            if (simulation == null || !simulation.SimulationRun) return;
             UseWaitCursor = true;
             Dictionary<string, int> summary = [];
-            int iSpikeStart = simulation.RunParam.iIndex((double)eSpikeStart.Value);
-            int iSpikeEnd = simulation.RunParam.iIndex((double)eSpikeEnd.Value);
-            string period = $"{eSpikeStart.Value}-{eSpikeEnd.Value}";
-            if (!cbSpikeSummaryAppend.Checked)
+            int iSpikeStart = simulation.RunParam.iIndex(timeRangeStat.StartTime);
+            int iSpikeEnd = simulation.RunParam.iIndex(timeRangeStat.EndTime);
+            string period = $"{timeRangeStat.StartTime}-{timeRangeStat.EndTime}";
+            int scrollRowSummary = 0;
+            int scrollRowDetails = 0;
+            if (!cbStatsAppend.Checked)
             {
                 dgSpikeSummary.Rows.Clear();
                 dgSpikeSummaryDetails.Rows.Clear();
             }
+            else
+            {
+                scrollRowSummary = scrollRowDetails = -1;
+            }
             foreach (CellPool cellPool in model.GetCellPools().Cast<CellPool>())
             {
                 int poolIndex = AddCellPoolSpikeSummaryGrid(cellPool);
+                if (scrollRowDetails < 0)
+                    scrollRowDetails = dgSpikeSummaryDetails.RowCount - 1;
                 dgSpikeSummaryDetails[colSumDetailsPeriod.Index, poolIndex].Value = period;
                 int sum = 0;
                 foreach (Cell cell in cellPool.Cells)
@@ -1336,20 +1327,80 @@ namespace SiliFish.UI.Controls
             {
                 dgSpikeSummary.RowCount++;
                 int rowIndex = dgSpikeSummary.RowCount - 1;
+                if (scrollRowSummary < 0) scrollRowSummary = rowIndex;
                 dgSpikeSummary[colSumPeriod.Index, rowIndex].Value = period;
                 dgSpikeSummary[colSumCellPool.Index, rowIndex].Value = kvp.Key;
                 dgSpikeSummary[colSumSpikeCount.Index, rowIndex].Value = kvp.Value;
             }
 
             UseWaitCursor = false;
-            tabSpikesRCTrains.SelectedTab = tSpikeSummary;
+            dgSpikeSummary.FirstDisplayedScrollingRowIndex = scrollRowSummary;
+            dgSpikeSummaryDetails.FirstDisplayedScrollingRowIndex = scrollRowDetails;
         }
 
-        private void btnListSpikeSummary_Click(object sender, EventArgs e)
+        private void GenerateEpisodes()
         {
-            GenerateSpikeSummary();
+            UseWaitCursor = true;
+            (List<string> colNames, List<List<string>> values) = ModelStats.GenerateEpisodes(simulation);
+            dgEpisodes.LoadData(colNames, values, cbStatsAppend.Checked, out int scrollRow);
+            if (scrollRow >= 0)
+                dgEpisodes.FirstDisplayedScrollingRowIndex = scrollRow;
+            UseWaitCursor = false;
+
         }
+        private void btnListStats_Click(object sender, EventArgs e)
+        {
+            if (simulation == null || !simulation.SimulationRun) return;
+            if (cellSelectionStats.Enabled && cellSelectionStats.PoolSubset == Const.AllPools)
+            {
+                if (MessageBox.Show("Generating stats for 'All Pools' may take a while. Do you want to continue?", "Warning", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+            }
+            if (tabStats.SelectedTab == tSpikeSummary)
+                GenerateSpikeSummary();
+            else if (tabStats.SelectedTab == tSpikes)
+                GenerateSpikeList();
+            else if (tabStats.SelectedTab == tRCTrains)
+                GenerateRCTrains();
+            else if (tabStats.SelectedTab == tEpisodes)
+                GenerateEpisodes();
+        }
+        private void tabStats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabStats.SelectedTab == tSpikeSummary)
+            {
+                btnListStats.Text = "List Spike Summary";
+                cellSelectionStats.Enabled = false;
+                cbStatsAppend.Checked = false;
+                cbStatsAppend.Enabled = false;
+                timeRangeStat.Enabled = true;
+            }
+            else if (tabStats.SelectedTab == tSpikes)
+            {
+                btnListStats.Text = "List Spikes";
+                cellSelectionStats.Enabled = true;
+                cbStatsAppend.Enabled = true;
+                timeRangeStat.Enabled = true;
+            }
+            else if (tabStats.SelectedTab == tRCTrains)
+            {
+                btnListStats.Text = "List RC Spike Trains";
+                cellSelectionStats.Enabled = true;
+                cbStatsAppend.Enabled = true;
+                timeRangeStat.Enabled = true;
+            }
+            else if (tabStats.SelectedTab == tEpisodes)
+            {
+                btnListStats.Text = "List Episodes";
+                cellSelectionStats.Enabled = false;
+                cbStatsAppend.Checked = false;
+                cbStatsAppend.Enabled = false;
+                timeRangeStat.Enabled = false;
+            }
+        }
+
         #endregion
+
 
 
         #region Animation
@@ -1392,8 +1443,8 @@ namespace SiliFish.UI.Controls
 
             btnAnimate.Enabled = false;
 
-            tAnimStart = (int)eAnimationStart.Value;
-            tAnimEnd = (int)eAnimationEnd.Value;
+            tAnimStart = timeRangeAnimation.StartTime;
+            tAnimEnd = timeRangeAnimation.EndTime;
             if (tAnimStart > simulation.RunParam.MaxTime || tAnimStart < 0)
                 tAnimStart = 0;
             if (tAnimEnd > simulation.RunParam.MaxTime)
@@ -1425,13 +1476,8 @@ namespace SiliFish.UI.Controls
             ModelFile.SaveAnimation(saveFileCSV.FileName, lastAnimationSpineCoordinates, lastAnimationTimeArray, lastAnimationStartIndex);
         }
 
-        #endregion
-
-        #endregion
-
-
-
-
+#endregion
+#endregion
     }
 
 }

@@ -1,15 +1,11 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Cells;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
 
 namespace SiliFish.ModelUnits.Stim
 {
@@ -125,12 +121,21 @@ namespace SiliFish.ModelUnits.Stim
         public List<StimulusTemplate> CreateSpreadedCopy()
         {
             List<StimulusTemplate> spreaded=[];
-            foreach (var (start, end) in TimeLine_ms.GetTimeLine())
+            if (TimeLine_ms.IsBlank())
             {
                 StimulusTemplate st = (StimulusTemplate)CreateCopy();
                 st.TimeLine_ms.Clear();
-                st.TimeLine_ms.AddTimeRange(start, end);
                 spreaded.Add(st);
+            }
+            else
+            {
+                foreach (var (start, end) in TimeLine_ms.GetTimeLine())
+                {
+                    StimulusTemplate st = (StimulusTemplate)CreateCopy();
+                    st.TimeLine_ms.Clear();
+                    st.TimeLine_ms.AddTimeRange(start, end);
+                    spreaded.Add(st);
+                }
             }
             return spreaded;
         }

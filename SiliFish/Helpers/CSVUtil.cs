@@ -1,14 +1,5 @@
-﻿using GeneticSharp;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Stim;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.Helpers
 {

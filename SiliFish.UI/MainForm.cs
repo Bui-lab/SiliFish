@@ -9,17 +9,10 @@ using SiliFish.Services;
 using SiliFish.UI.Controls;
 using SiliFish.UI.Definitions;
 using SiliFish.UI.EventArguments;
-using System.Diagnostics.Eventing.Reader;
 using SiliFish.UI.Services;
 using SiliFish.UI.Dialogs;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
-using System;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Database;
-using SiliFish.UI.Controls.General;
-using SiliFish.Extensions;
-using GeneticSharp;
-using Windows.ApplicationModel.VoiceCommands;
 using SiliFish.DataTypes;
 
 namespace SiliFish.UI

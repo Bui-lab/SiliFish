@@ -1,14 +1,5 @@
-﻿using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
-using OxyPlot.WindowsForms;
-using SiliFish.DataTypes;
-using SiliFish.Helpers;
+﻿using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.Extensions;
-using SiliFish.Definitions;
-using System.Windows.Forms;
-using System.IO;
 
 namespace SiliFish.UI
 {

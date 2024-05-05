@@ -1,10 +1,7 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Stim;
-using SiliFish.Services;
 using SiliFish.UI.EventArguments;
 
 namespace SiliFish.UI.Controls

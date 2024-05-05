@@ -1,17 +1,13 @@
-﻿using GeneticSharp;
-using SiliFish.Database;
+﻿using SiliFish.Database;
 using SiliFish.Definitions;
-using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Repositories;
 using SiliFish.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 

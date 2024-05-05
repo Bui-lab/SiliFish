@@ -1,14 +1,8 @@
-﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
-using SiliFish.Extensions;
-using SiliFish.Helpers;
+﻿using SiliFish.Definitions;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services.Plotting.PlotSelection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {

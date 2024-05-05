@@ -1,5 +1,4 @@
-﻿using GeneticSharp;
-using SiliFish.DataTypes;
+﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
@@ -11,8 +10,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.Services.Plotting.PlotGenerators
 {

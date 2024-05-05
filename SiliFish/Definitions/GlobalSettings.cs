@@ -1,14 +1,9 @@
 ﻿using SiliFish.Helpers;
-using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace SiliFish.Definitions
 {
@@ -45,7 +40,7 @@ namespace SiliFish.Definitions
 
         public static int RheobaseInfinity = 500;
         public static int RheobaseLimit = 1000;
-        public static double[] RheobaseTestMultipliers = new double[] { 1, 1.1, 1.5, 2 };
+        public static double[] RheobaseTestMultipliers = [1, 1.1, 1.5, 2];
         public static int RollingFreqBeatCount = 5;
 
         public static double GeneticAlgorithmMinValue = -100;

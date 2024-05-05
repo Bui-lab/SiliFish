@@ -31,10 +31,10 @@ namespace SiliFish.UI.Controls
             }
             dgTimeLine.RowCount = timeline.GetTimeLine().Count + 1;
             int rowIndex = 0;
-            foreach (var period in timeline.GetTimeLine())
+            foreach ((double start, double end) in timeline.GetTimeLine())
             {
-                dgTimeLine[colStartTime.Index, rowIndex].Value = period.start;
-                dgTimeLine[colEndTime.Index, rowIndex++].Value = period.end;
+                dgTimeLine[colStartTime.Index, rowIndex].Value = start;
+                dgTimeLine[colEndTime.Index, rowIndex++].Value = end;
             }
         }
 

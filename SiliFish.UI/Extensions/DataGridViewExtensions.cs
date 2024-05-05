@@ -1,10 +1,6 @@
-﻿using SiliFish.Definitions;
-using SiliFish.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore.Update.Internal;
+using SiliFish.Services;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.UI.Extensions
 {
@@ -23,6 +19,44 @@ namespace SiliFish.UI.Extensions
                 return sb;
             }
             catch { return null; }
+        }
+
+        public static void LoadData(this DataGridView dataGrid, List<string> columnNames, List<List<string>> values, bool append, out int firstRow)
+        {
+            firstRow = 0;
+            try 
+            {
+                if (!append)
+                {
+                    dataGrid.Rows.Clear();
+                    firstRow = 0;
+                }
+                else 
+                    firstRow = dataGrid.Rows.Count - 1;
+                List<int> colIndices = [];
+                foreach(string colName in columnNames)
+                {
+                    if (!dataGrid.Columns.Contains(colName))
+                        dataGrid.Columns.Add(colName, colName);
+                    colIndices.Add(dataGrid.Columns[colName].Index);
+                }
+                foreach (List<string> row in values)
+                {
+                    int colIndex = 0;
+                    dataGrid.RowCount++;
+                    int rowInd = dataGrid.RowCount - 1;
+                    foreach (var item in row)
+                    {
+                        dataGrid[colIndices[colIndex++], rowInd].Value = item;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+            }
+            
         }
     }
 }

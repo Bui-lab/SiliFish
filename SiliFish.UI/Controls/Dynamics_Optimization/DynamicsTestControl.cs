@@ -4,7 +4,6 @@ using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services;
@@ -13,8 +12,6 @@ using SiliFish.Services.Plotting;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Extensions;
 using SiliFish.UI.Services;
-using System;
-using static OfficeOpenXml.ExcelErrorValue;
 
 namespace SiliFish.UI.Controls
 {

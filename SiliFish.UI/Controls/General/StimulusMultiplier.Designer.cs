@@ -46,7 +46,7 @@
             // 
             // numStimulus
             // 
-            numStimulus.DecimalPlaces = 2;
+            numStimulus.DecimalPlaces = 5;
             numStimulus.Location = new Point(63, 13);
             numStimulus.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
             numStimulus.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });

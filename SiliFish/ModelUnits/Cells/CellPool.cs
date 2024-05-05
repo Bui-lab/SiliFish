@@ -1,6 +1,5 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Architecture;
@@ -9,11 +8,8 @@ using SiliFish.ModelUnits.Stim;
 using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
-using System.Net.Mail;
 using System.Text.Json.Serialization;
 
 namespace SiliFish.ModelUnits.Cells

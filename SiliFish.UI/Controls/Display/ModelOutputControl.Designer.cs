@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
             p2DRenderOptions = new Panel();
@@ -96,6 +96,7 @@
             cmPlotImageSave = new ContextMenuStrip(components);
             cmiPlotImageSave = new ToolStripMenuItem();
             pPlot = new Panel();
+            timeRangePlot = new General.StartEndTimeControl();
             btnPlotHTML = new Button();
             cmPlot = new ContextMenuStrip(components);
             cmiNonInteractivePlot = new ToolStripMenuItem();
@@ -106,25 +107,14 @@
             linkExportPlotData = new LinkLabel();
             pLinePlots = new Panel();
             linkSaveHTMLPlots = new LinkLabel();
-            ePlotEnd = new NumericUpDown();
-            ePlotStart = new NumericUpDown();
-            lPlotStart = new Label();
-            lms1 = new Label();
-            lPlotEnd = new Label();
-            lms2 = new Label();
             lPlotPlot = new Label();
-            tSpikeStats = new TabPage();
-            tabSpikesRCTrains = new TabControl();
+            tStats = new TabPage();
+            tabStats = new TabControl();
             tSpikes = new TabPage();
             dgSpikeStats = new DataGridView();
-            colSpikeCell = new DataGridViewTextBoxColumn();
-            colSpikeSagittal = new DataGridViewTextBoxColumn();
-            colSpikeCellPool = new DataGridViewTextBoxColumn();
-            colSpikeSomite = new DataGridViewTextBoxColumn();
-            colSpikeCellSeq = new DataGridViewTextBoxColumn();
-            colSpikeTime = new DataGridViewTextBoxColumn();
             cmGrid = new ContextMenuStrip(components);
             cmGridExport = new ToolStripMenuItem();
+            cmGridCopyAll = new ToolStripMenuItem();
             tRCTrains = new TabPage();
             splitRCTrains = new SplitContainer();
             dgRCTrains = new DataGridView();
@@ -153,37 +143,27 @@
             colSumDetailsSomite = new DataGridViewTextBoxColumn();
             colSumDetailsCellSeq = new DataGridViewTextBoxColumn();
             colSumDetailsSpikeCount = new DataGridViewTextBoxColumn();
+            tEpisodes = new TabPage();
+            dgEpisodes = new DataGridView();
             panel1 = new Panel();
-            cbSpikeSummaryAppend = new CheckBox();
-            btnListSpikeSummary = new Button();
-            eSpikeEnd = new NumericUpDown();
-            eSpikeStart = new NumericUpDown();
-            lSpikeStart = new Label();
-            lms5 = new Label();
-            label7 = new Label();
-            lms6 = new Label();
-            btnListRCTrains = new Button();
-            btnListSpikes = new Button();
-            cellSelectionSpike = new Display.CellSelectionControl();
+            timeRangeStat = new General.StartEndTimeControl();
+            cbStatsAppend = new CheckBox();
+            btnListStats = new Button();
+            cellSelectionStats = new Display.CellSelectionControl();
             panel3 = new Panel();
             tAnimation = new TabPage();
             webViewAnimation = new Microsoft.Web.WebView2.WinForms.WebView2();
             pAnimation = new Panel();
+            timeRangeAnimation = new General.StartEndTimeControl();
             pLineAnimation = new Panel();
             eAnimationdt = new NumericUpDown();
             lAnimationdt = new Label();
             linkSaveAnimationCSV = new LinkLabel();
             lAnimationTime = new Label();
-            eAnimationEnd = new NumericUpDown();
-            eAnimationStart = new NumericUpDown();
             linkSaveAnimationHTML = new LinkLabel();
             btnAnimate = new Button();
             cmAnimation = new ContextMenuStrip(components);
             cmiAnimationClearCache = new ToolStripMenuItem();
-            lAnimationStart = new Label();
-            lms3 = new Label();
-            lAnimationEnd = new Label();
-            lms4 = new Label();
             saveFileHTML = new SaveFileDialog();
             saveFileJson = new SaveFileDialog();
             openFileJson = new OpenFileDialog();
@@ -191,7 +171,6 @@
             saveFileText = new SaveFileDialog();
             saveFileCSV = new SaveFileDialog();
             saveFileImage = new SaveFileDialog();
-            cmGridCopyAll = new ToolStripMenuItem();
             tabOutputs.SuspendLayout();
             t2DRender.SuspendLayout();
             p2DRenderOptions.SuspendLayout();
@@ -213,10 +192,8 @@
             cmPlotImageSave.SuspendLayout();
             pPlot.SuspendLayout();
             cmPlot.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)ePlotEnd).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotStart).BeginInit();
-            tSpikeStats.SuspendLayout();
-            tabSpikesRCTrains.SuspendLayout();
+            tStats.SuspendLayout();
+            tabStats.SuspendLayout();
             tSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).BeginInit();
             cmGrid.SuspendLayout();
@@ -234,15 +211,13 @@
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgSpikeSummary).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgSpikeSummaryDetails).BeginInit();
+            tEpisodes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgEpisodes).BeginInit();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)eSpikeEnd).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)eSpikeStart).BeginInit();
             tAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).BeginInit();
             pAnimation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)eAnimationEnd).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)eAnimationStart).BeginInit();
             cmAnimation.SuspendLayout();
             SuspendLayout();
             // 
@@ -251,7 +226,7 @@
             tabOutputs.Controls.Add(t2DRender);
             tabOutputs.Controls.Add(t3DRender);
             tabOutputs.Controls.Add(tPlot);
-            tabOutputs.Controls.Add(tSpikeStats);
+            tabOutputs.Controls.Add(tStats);
             tabOutputs.Controls.Add(tAnimation);
             tabOutputs.Dock = DockStyle.Fill;
             tabOutputs.Location = new Point(0, 0);
@@ -947,6 +922,7 @@
             // pPlot
             // 
             pPlot.BackColor = Color.FromArgb(236, 239, 241);
+            pPlot.Controls.Add(timeRangePlot);
             pPlot.Controls.Add(btnPlotHTML);
             pPlot.Controls.Add(ddPlot);
             pPlot.Controls.Add(listPlotHistory);
@@ -955,18 +931,19 @@
             pPlot.Controls.Add(linkExportPlotData);
             pPlot.Controls.Add(pLinePlots);
             pPlot.Controls.Add(linkSaveHTMLPlots);
-            pPlot.Controls.Add(ePlotEnd);
-            pPlot.Controls.Add(ePlotStart);
-            pPlot.Controls.Add(lPlotStart);
-            pPlot.Controls.Add(lms1);
-            pPlot.Controls.Add(lPlotEnd);
-            pPlot.Controls.Add(lms2);
             pPlot.Controls.Add(lPlotPlot);
             pPlot.Dock = DockStyle.Top;
             pPlot.Location = new Point(3, 3);
             pPlot.Name = "pPlot";
             pPlot.Size = new Size(688, 140);
             pPlot.TabIndex = 5;
+            // 
+            // timeRangePlot
+            // 
+            timeRangePlot.Location = new Point(4, 3);
+            timeRangePlot.Name = "timeRangePlot";
+            timeRangePlot.Size = new Size(207, 56);
+            timeRangePlot.TabIndex = 67;
             // 
             // btnPlotHTML
             // 
@@ -1081,63 +1058,6 @@
             toolTip.SetToolTip(linkSaveHTMLPlots, "Save plot as an HTML file");
             linkSaveHTMLPlots.LinkClicked += linkSaveHTMLPlots_LinkClicked;
             // 
-            // ePlotEnd
-            // 
-            ePlotEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            ePlotEnd.Location = new Point(73, 32);
-            ePlotEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            ePlotEnd.Name = "ePlotEnd";
-            ePlotEnd.Size = new Size(100, 23);
-            ePlotEnd.TabIndex = 33;
-            ePlotEnd.ThousandsSeparator = true;
-            ePlotEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // ePlotStart
-            // 
-            ePlotStart.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            ePlotStart.Location = new Point(73, 6);
-            ePlotStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            ePlotStart.Name = "ePlotStart";
-            ePlotStart.Size = new Size(100, 23);
-            ePlotStart.TabIndex = 31;
-            ePlotStart.ThousandsSeparator = true;
-            // 
-            // lPlotStart
-            // 
-            lPlotStart.AutoSize = true;
-            lPlotStart.Location = new Point(12, 10);
-            lPlotStart.Name = "lPlotStart";
-            lPlotStart.Size = new Size(55, 15);
-            lPlotStart.TabIndex = 11;
-            lPlotStart.Text = "Plot Start";
-            // 
-            // lms1
-            // 
-            lms1.AutoSize = true;
-            lms1.Location = new Point(180, 10);
-            lms1.Name = "lms1";
-            lms1.Size = new Size(31, 15);
-            lms1.TabIndex = 13;
-            lms1.Text = "(ms)";
-            // 
-            // lPlotEnd
-            // 
-            lPlotEnd.AutoSize = true;
-            lPlotEnd.Location = new Point(12, 34);
-            lPlotEnd.Name = "lPlotEnd";
-            lPlotEnd.Size = new Size(51, 15);
-            lPlotEnd.TabIndex = 14;
-            lPlotEnd.Text = "Plot End";
-            // 
-            // lms2
-            // 
-            lms2.AutoSize = true;
-            lms2.Location = new Point(180, 37);
-            lms2.Name = "lms2";
-            lms2.Size = new Size(31, 15);
-            lms2.TabIndex = 16;
-            lms2.Text = "(ms)";
-            // 
             // lPlotPlot
             // 
             lPlotPlot.AutoSize = true;
@@ -1148,28 +1068,30 @@
             lPlotPlot.Text = "Plot";
             lPlotPlot.DoubleClick += lPlotPlot_DoubleClick;
             // 
-            // tSpikeStats
+            // tStats
             // 
-            tSpikeStats.Controls.Add(tabSpikesRCTrains);
-            tSpikeStats.Controls.Add(panel1);
-            tSpikeStats.Location = new Point(4, 24);
-            tSpikeStats.Name = "tSpikeStats";
-            tSpikeStats.Size = new Size(694, 767);
-            tSpikeStats.TabIndex = 8;
-            tSpikeStats.Text = "Spike Stats";
-            tSpikeStats.UseVisualStyleBackColor = true;
+            tStats.Controls.Add(tabStats);
+            tStats.Controls.Add(panel1);
+            tStats.Location = new Point(4, 24);
+            tStats.Name = "tStats";
+            tStats.Size = new Size(694, 767);
+            tStats.TabIndex = 8;
+            tStats.Text = "Stats";
+            tStats.UseVisualStyleBackColor = true;
             // 
-            // tabSpikesRCTrains
+            // tabStats
             // 
-            tabSpikesRCTrains.Controls.Add(tSpikes);
-            tabSpikesRCTrains.Controls.Add(tRCTrains);
-            tabSpikesRCTrains.Controls.Add(tSpikeSummary);
-            tabSpikesRCTrains.Dock = DockStyle.Fill;
-            tabSpikesRCTrains.Location = new Point(0, 120);
-            tabSpikesRCTrains.Name = "tabSpikesRCTrains";
-            tabSpikesRCTrains.SelectedIndex = 0;
-            tabSpikesRCTrains.Size = new Size(694, 647);
-            tabSpikesRCTrains.TabIndex = 8;
+            tabStats.Controls.Add(tSpikes);
+            tabStats.Controls.Add(tRCTrains);
+            tabStats.Controls.Add(tSpikeSummary);
+            tabStats.Controls.Add(tEpisodes);
+            tabStats.Dock = DockStyle.Fill;
+            tabStats.Location = new Point(0, 120);
+            tabStats.Name = "tabStats";
+            tabStats.SelectedIndex = 0;
+            tabStats.Size = new Size(694, 647);
+            tabStats.TabIndex = 8;
+            tabStats.SelectedIndexChanged += tabStats_SelectedIndexChanged;
             // 
             // tSpikes
             // 
@@ -1187,7 +1109,6 @@
             dgSpikeStats.AllowUserToAddRows = false;
             dgSpikeStats.AllowUserToDeleteRows = false;
             dgSpikeStats.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgSpikeStats.Columns.AddRange(new DataGridViewColumn[] { colSpikeCell, colSpikeSagittal, colSpikeCellPool, colSpikeSomite, colSpikeCellSeq, colSpikeTime });
             dgSpikeStats.ContextMenuStrip = cmGrid;
             dgSpikeStats.Dock = DockStyle.Fill;
             dgSpikeStats.Location = new Point(3, 3);
@@ -1196,57 +1117,25 @@
             dgSpikeStats.Size = new Size(680, 613);
             dgSpikeStats.TabIndex = 7;
             // 
-            // colSpikeCell
-            // 
-            colSpikeCell.HeaderText = "Cell ID";
-            colSpikeCell.Name = "colSpikeCell";
-            colSpikeCell.ReadOnly = true;
-            // 
-            // colSpikeSagittal
-            // 
-            colSpikeSagittal.HeaderText = "Sagittal";
-            colSpikeSagittal.Name = "colSpikeSagittal";
-            colSpikeSagittal.ReadOnly = true;
-            colSpikeSagittal.Width = 75;
-            // 
-            // colSpikeCellPool
-            // 
-            colSpikeCellPool.HeaderText = "Cell Pool";
-            colSpikeCellPool.Name = "colSpikeCellPool";
-            colSpikeCellPool.ReadOnly = true;
-            // 
-            // colSpikeSomite
-            // 
-            colSpikeSomite.HeaderText = "Somite";
-            colSpikeSomite.Name = "colSpikeSomite";
-            colSpikeSomite.ReadOnly = true;
-            colSpikeSomite.Width = 75;
-            // 
-            // colSpikeCellSeq
-            // 
-            colSpikeCellSeq.HeaderText = "Cell Seq";
-            colSpikeCellSeq.Name = "colSpikeCellSeq";
-            colSpikeCellSeq.ReadOnly = true;
-            colSpikeCellSeq.Width = 75;
-            // 
-            // colSpikeTime
-            // 
-            colSpikeTime.HeaderText = "Spike Time";
-            colSpikeTime.Name = "colSpikeTime";
-            colSpikeTime.ReadOnly = true;
-            // 
             // cmGrid
             // 
             cmGrid.Items.AddRange(new ToolStripItem[] { cmGridExport, cmGridCopyAll });
             cmGrid.Name = "cmGrid";
-            cmGrid.Size = new Size(181, 70);
+            cmGrid.Size = new Size(147, 48);
             // 
             // cmGridExport
             // 
             cmGridExport.Name = "cmGridExport";
-            cmGridExport.Size = new Size(180, 22);
+            cmGridExport.Size = new Size(146, 22);
             cmGridExport.Text = "Export to CSV";
             cmGridExport.Click += cmGridExport_Click;
+            // 
+            // cmGridCopyAll
+            // 
+            cmGridCopyAll.Name = "cmGridCopyAll";
+            cmGridCopyAll.Size = new Size(146, 22);
+            cmGridCopyAll.Text = "Copy All";
+            cmGridCopyAll.Click += cmGridCopyAll_Click;
             // 
             // tRCTrains
             // 
@@ -1315,9 +1204,9 @@
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle8.Format = "N2";
+            dataGridViewCellStyle8.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle8;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -1325,8 +1214,8 @@
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle2.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle9;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -1334,8 +1223,8 @@
             // 
             // colRCTrainMidPoint
             // 
-            dataGridViewCellStyle3.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle10;
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
@@ -1343,8 +1232,8 @@
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle4.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle11;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -1352,9 +1241,9 @@
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle5.Format = "N2";
-            dataGridViewCellStyle5.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Format = "N2";
+            dataGridViewCellStyle12.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle12;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -1362,8 +1251,8 @@
             // 
             // colRCTrainMidPointDelay
             // 
-            dataGridViewCellStyle6.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle13.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle13;
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
@@ -1371,8 +1260,8 @@
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle7.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle14.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle14;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;
@@ -1512,20 +1401,37 @@
             colSumDetailsSpikeCount.Name = "colSumDetailsSpikeCount";
             colSumDetailsSpikeCount.ReadOnly = true;
             // 
+            // tEpisodes
+            // 
+            tEpisodes.Controls.Add(dgEpisodes);
+            tEpisodes.Location = new Point(4, 24);
+            tEpisodes.Name = "tEpisodes";
+            tEpisodes.Padding = new Padding(3);
+            tEpisodes.Size = new Size(686, 619);
+            tEpisodes.TabIndex = 3;
+            tEpisodes.Text = "Episodes";
+            tEpisodes.UseVisualStyleBackColor = true;
+            // 
+            // dgEpisodes
+            // 
+            dgEpisodes.AllowUserToAddRows = false;
+            dgEpisodes.AllowUserToDeleteRows = false;
+            dgEpisodes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgEpisodes.ContextMenuStrip = cmGrid;
+            dgEpisodes.Dock = DockStyle.Fill;
+            dgEpisodes.Location = new Point(3, 3);
+            dgEpisodes.Name = "dgEpisodes";
+            dgEpisodes.ReadOnly = true;
+            dgEpisodes.Size = new Size(680, 613);
+            dgEpisodes.TabIndex = 8;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(236, 239, 241);
-            panel1.Controls.Add(cbSpikeSummaryAppend);
-            panel1.Controls.Add(btnListSpikeSummary);
-            panel1.Controls.Add(eSpikeEnd);
-            panel1.Controls.Add(eSpikeStart);
-            panel1.Controls.Add(lSpikeStart);
-            panel1.Controls.Add(lms5);
-            panel1.Controls.Add(label7);
-            panel1.Controls.Add(lms6);
-            panel1.Controls.Add(btnListRCTrains);
-            panel1.Controls.Add(btnListSpikes);
-            panel1.Controls.Add(cellSelectionSpike);
+            panel1.Controls.Add(timeRangeStat);
+            panel1.Controls.Add(cbStatsAppend);
+            panel1.Controls.Add(btnListStats);
+            panel1.Controls.Add(cellSelectionStats);
             panel1.Controls.Add(panel3);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
@@ -1533,126 +1439,47 @@
             panel1.Size = new Size(694, 120);
             panel1.TabIndex = 6;
             // 
-            // cbSpikeSummaryAppend
+            // timeRangeStat
             // 
-            cbSpikeSummaryAppend.AutoSize = true;
-            cbSpikeSummaryAppend.Location = new Point(12, 93);
-            cbSpikeSummaryAppend.Name = "cbSpikeSummaryAppend";
-            cbSpikeSummaryAppend.Size = new Size(68, 19);
-            cbSpikeSummaryAppend.TabIndex = 72;
-            cbSpikeSummaryAppend.Text = "Append";
-            cbSpikeSummaryAppend.UseVisualStyleBackColor = true;
+            timeRangeStat.Location = new Point(3, 4);
+            timeRangeStat.Name = "timeRangeStat";
+            timeRangeStat.Size = new Size(207, 56);
+            timeRangeStat.TabIndex = 73;
             // 
-            // btnListSpikeSummary
+            // cbStatsAppend
             // 
-            btnListSpikeSummary.BackColor = Color.FromArgb(96, 125, 139);
-            btnListSpikeSummary.Enabled = false;
-            btnListSpikeSummary.FlatAppearance.BorderColor = Color.LightGray;
-            btnListSpikeSummary.FlatStyle = FlatStyle.Flat;
-            btnListSpikeSummary.ForeColor = Color.White;
-            btnListSpikeSummary.Location = new Point(12, 63);
-            btnListSpikeSummary.Name = "btnListSpikeSummary";
-            btnListSpikeSummary.Size = new Size(161, 24);
-            btnListSpikeSummary.TabIndex = 70;
-            btnListSpikeSummary.Text = "List Spike Summary";
-            btnListSpikeSummary.UseVisualStyleBackColor = false;
-            btnListSpikeSummary.Click += btnListSpikeSummary_Click;
+            cbStatsAppend.AutoSize = true;
+            cbStatsAppend.Location = new Point(445, 38);
+            cbStatsAppend.Name = "cbStatsAppend";
+            cbStatsAppend.Size = new Size(68, 19);
+            cbStatsAppend.TabIndex = 72;
+            cbStatsAppend.Text = "Append";
+            cbStatsAppend.UseVisualStyleBackColor = true;
             // 
-            // eSpikeEnd
+            // btnListStats
             // 
-            eSpikeEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            eSpikeEnd.Location = new Point(73, 34);
-            eSpikeEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eSpikeEnd.Name = "eSpikeEnd";
-            eSpikeEnd.Size = new Size(100, 23);
-            eSpikeEnd.TabIndex = 69;
-            eSpikeEnd.ThousandsSeparator = true;
-            eSpikeEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            btnListStats.AutoSize = true;
+            btnListStats.BackColor = Color.FromArgb(96, 125, 139);
+            btnListStats.Enabled = false;
+            btnListStats.FlatAppearance.BorderColor = Color.LightGray;
+            btnListStats.FlatStyle = FlatStyle.Flat;
+            btnListStats.ForeColor = Color.White;
+            btnListStats.Location = new Point(445, 11);
+            btnListStats.Name = "btnListStats";
+            btnListStats.Size = new Size(100, 27);
+            btnListStats.TabIndex = 61;
+            btnListStats.Text = "List Stats";
+            btnListStats.UseVisualStyleBackColor = false;
+            btnListStats.Click += btnListStats_Click;
             // 
-            // eSpikeStart
+            // cellSelectionStats
             // 
-            eSpikeStart.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            eSpikeStart.Location = new Point(73, 8);
-            eSpikeStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eSpikeStart.Name = "eSpikeStart";
-            eSpikeStart.Size = new Size(100, 23);
-            eSpikeStart.TabIndex = 68;
-            eSpikeStart.ThousandsSeparator = true;
-            // 
-            // lSpikeStart
-            // 
-            lSpikeStart.AutoSize = true;
-            lSpikeStart.Location = new Point(12, 12);
-            lSpikeStart.Name = "lSpikeStart";
-            lSpikeStart.Size = new Size(52, 15);
-            lSpikeStart.TabIndex = 64;
-            lSpikeStart.Text = "List Start";
-            // 
-            // lms5
-            // 
-            lms5.AutoSize = true;
-            lms5.Location = new Point(180, 12);
-            lms5.Name = "lms5";
-            lms5.Size = new Size(31, 15);
-            lms5.TabIndex = 65;
-            lms5.Text = "(ms)";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(12, 36);
-            label7.Name = "label7";
-            label7.Size = new Size(48, 15);
-            label7.TabIndex = 66;
-            label7.Text = "List End";
-            // 
-            // lms6
-            // 
-            lms6.AutoSize = true;
-            lms6.Location = new Point(180, 39);
-            lms6.Name = "lms6";
-            lms6.Size = new Size(31, 15);
-            lms6.TabIndex = 67;
-            lms6.Text = "(ms)";
-            // 
-            // btnListRCTrains
-            // 
-            btnListRCTrains.BackColor = Color.FromArgb(96, 125, 139);
-            btnListRCTrains.Enabled = false;
-            btnListRCTrains.FlatAppearance.BorderColor = Color.LightGray;
-            btnListRCTrains.FlatStyle = FlatStyle.Flat;
-            btnListRCTrains.ForeColor = Color.White;
-            btnListRCTrains.Location = new Point(445, 38);
-            btnListRCTrains.Name = "btnListRCTrains";
-            btnListRCTrains.Size = new Size(100, 24);
-            btnListRCTrains.TabIndex = 62;
-            btnListRCTrains.Text = "List RC Trains";
-            btnListRCTrains.UseVisualStyleBackColor = false;
-            btnListRCTrains.Click += btnListRCTrains_Click;
-            // 
-            // btnListSpikes
-            // 
-            btnListSpikes.BackColor = Color.FromArgb(96, 125, 139);
-            btnListSpikes.Enabled = false;
-            btnListSpikes.FlatAppearance.BorderColor = Color.LightGray;
-            btnListSpikes.FlatStyle = FlatStyle.Flat;
-            btnListSpikes.ForeColor = Color.White;
-            btnListSpikes.Location = new Point(445, 11);
-            btnListSpikes.Name = "btnListSpikes";
-            btnListSpikes.Size = new Size(100, 24);
-            btnListSpikes.TabIndex = 61;
-            btnListSpikes.Text = "List Spikes";
-            btnListSpikes.UseVisualStyleBackColor = false;
-            btnListSpikes.Click += btnListSpikes_Click;
-            // 
-            // cellSelectionSpike
-            // 
-            cellSelectionSpike.CombineOptionsVisible = false;
-            cellSelectionSpike.Location = new Point(217, 4);
-            cellSelectionSpike.Name = "cellSelectionSpike";
-            cellSelectionSpike.SelectedUnits = null;
-            cellSelectionSpike.Size = new Size(232, 113);
-            cellSelectionSpike.TabIndex = 60;
+            cellSelectionStats.CombineOptionsVisible = false;
+            cellSelectionStats.Location = new Point(217, 4);
+            cellSelectionStats.Name = "cellSelectionStats";
+            cellSelectionStats.SelectedUnits = null;
+            cellSelectionStats.Size = new Size(232, 113);
+            cellSelectionStats.TabIndex = 60;
             // 
             // panel3
             // 
@@ -1691,24 +1518,26 @@
             // pAnimation
             // 
             pAnimation.BackColor = Color.FromArgb(236, 239, 241);
+            pAnimation.Controls.Add(timeRangeAnimation);
             pAnimation.Controls.Add(pLineAnimation);
             pAnimation.Controls.Add(eAnimationdt);
             pAnimation.Controls.Add(lAnimationdt);
             pAnimation.Controls.Add(linkSaveAnimationCSV);
             pAnimation.Controls.Add(lAnimationTime);
-            pAnimation.Controls.Add(eAnimationEnd);
-            pAnimation.Controls.Add(eAnimationStart);
             pAnimation.Controls.Add(linkSaveAnimationHTML);
             pAnimation.Controls.Add(btnAnimate);
-            pAnimation.Controls.Add(lAnimationStart);
-            pAnimation.Controls.Add(lms3);
-            pAnimation.Controls.Add(lAnimationEnd);
-            pAnimation.Controls.Add(lms4);
             pAnimation.Dock = DockStyle.Top;
             pAnimation.Location = new Point(0, 0);
             pAnimation.Name = "pAnimation";
             pAnimation.Size = new Size(694, 64);
             pAnimation.TabIndex = 5;
+            // 
+            // timeRangeAnimation
+            // 
+            timeRangeAnimation.Location = new Point(3, 4);
+            timeRangeAnimation.Name = "timeRangeAnimation";
+            timeRangeAnimation.Size = new Size(207, 56);
+            timeRangeAnimation.TabIndex = 68;
             // 
             // pLineAnimation
             // 
@@ -1761,27 +1590,6 @@
             lAnimationTime.TabIndex = 33;
             lAnimationTime.Text = "Last animation:";
             // 
-            // eAnimationEnd
-            // 
-            eAnimationEnd.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            eAnimationEnd.Location = new Point(104, 34);
-            eAnimationEnd.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eAnimationEnd.Name = "eAnimationEnd";
-            eAnimationEnd.Size = new Size(100, 23);
-            eAnimationEnd.TabIndex = 27;
-            eAnimationEnd.ThousandsSeparator = true;
-            eAnimationEnd.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // eAnimationStart
-            // 
-            eAnimationStart.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            eAnimationStart.Location = new Point(104, 6);
-            eAnimationStart.Maximum = new decimal(new int[] { 10000000, 0, 0, 0 });
-            eAnimationStart.Name = "eAnimationStart";
-            eAnimationStart.Size = new Size(100, 23);
-            eAnimationStart.TabIndex = 25;
-            eAnimationStart.ThousandsSeparator = true;
-            // 
             // linkSaveAnimationHTML
             // 
             linkSaveAnimationHTML.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -1826,42 +1634,6 @@
             cmiAnimationClearCache.Text = "Clear Cache";
             cmiAnimationClearCache.Click += cmiAnimationClearCache_Click;
             // 
-            // lAnimationStart
-            // 
-            lAnimationStart.AutoSize = true;
-            lAnimationStart.Location = new Point(6, 9);
-            lAnimationStart.Name = "lAnimationStart";
-            lAnimationStart.Size = new Size(90, 15);
-            lAnimationStart.TabIndex = 11;
-            lAnimationStart.Text = "Animation Start";
-            // 
-            // lms3
-            // 
-            lms3.AutoSize = true;
-            lms3.Location = new Point(210, 9);
-            lms3.Name = "lms3";
-            lms3.Size = new Size(31, 15);
-            lms3.TabIndex = 13;
-            lms3.Text = "(ms)";
-            // 
-            // lAnimationEnd
-            // 
-            lAnimationEnd.AutoSize = true;
-            lAnimationEnd.Location = new Point(6, 37);
-            lAnimationEnd.Name = "lAnimationEnd";
-            lAnimationEnd.Size = new Size(86, 15);
-            lAnimationEnd.TabIndex = 14;
-            lAnimationEnd.Text = "Animation End";
-            // 
-            // lms4
-            // 
-            lms4.AutoSize = true;
-            lms4.Location = new Point(210, 37);
-            lms4.Name = "lms4";
-            lms4.Size = new Size(31, 15);
-            lms4.TabIndex = 16;
-            lms4.Text = "(ms)";
-            // 
             // saveFileHTML
             // 
             saveFileHTML.Filter = "HTML files(*.html)|*.html";
@@ -1885,13 +1657,6 @@
             // saveFileImage
             // 
             saveFileImage.Filter = "Image files(*.png)|*.png";
-            // 
-            // cmGridCopyAll
-            // 
-            cmGridCopyAll.Name = "cmGridCopyAll";
-            cmGridCopyAll.Size = new Size(180, 22);
-            cmGridCopyAll.Text = "Copy All";
-            cmGridCopyAll.Click += cmGridCopyAll_Click;
             // 
             // ModelOutputControl
             // 
@@ -1929,10 +1694,8 @@
             pPlot.ResumeLayout(false);
             pPlot.PerformLayout();
             cmPlot.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)ePlotEnd).EndInit();
-            ((System.ComponentModel.ISupportInitialize)ePlotStart).EndInit();
-            tSpikeStats.ResumeLayout(false);
-            tabSpikesRCTrains.ResumeLayout(false);
+            tStats.ResumeLayout(false);
+            tabStats.ResumeLayout(false);
             tSpikes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeStats).EndInit();
             cmGrid.ResumeLayout(false);
@@ -1950,17 +1713,15 @@
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgSpikeSummary).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgSpikeSummaryDetails).EndInit();
+            tEpisodes.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgEpisodes).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)eSpikeEnd).EndInit();
-            ((System.ComponentModel.ISupportInitialize)eSpikeStart).EndInit();
             tAnimation.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webViewAnimation).EndInit();
             pAnimation.ResumeLayout(false);
             pAnimation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eAnimationdt).EndInit();
-            ((System.ComponentModel.ISupportInitialize)eAnimationEnd).EndInit();
-            ((System.ComponentModel.ISupportInitialize)eAnimationStart).EndInit();
             cmAnimation.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -1978,12 +1739,6 @@
         private Panel pLinePlots;
         private Button btnPlotHTML;
         private LinkLabel linkSaveHTMLPlots;
-        private NumericUpDown ePlotEnd;
-        private NumericUpDown ePlotStart;
-        private Label lPlotStart;
-        private Label lms1;
-        private Label lPlotEnd;
-        private Label lms2;
         private Label lPlotPlot;
         private ComboBox ddPlot;
         private TabPage t2DRender;
@@ -2018,14 +1773,8 @@
         private Label lAnimationdt;
         private LinkLabel linkSaveAnimationCSV;
         private Label lAnimationTime;
-        private NumericUpDown eAnimationEnd;
-        private NumericUpDown eAnimationStart;
         private LinkLabel linkSaveAnimationHTML;
         private Button btnAnimate;
-        private Label lAnimationStart;
-        private Label lms3;
-        private Label lAnimationEnd;
-        private Label lms4;
         private SaveFileDialog saveFileHTML;
         private SaveFileDialog saveFileJson;
         private OpenFileDialog openFileJson;
@@ -2058,15 +1807,20 @@
         private General.UpDownControl ud2DNodeSize;
         private Label l2DLinkSize;
         private General.UpDownControl ud2DLinkSize;
-        private TabPage tSpikeStats;
+        private TabPage tStats;
         private DataGridView dgSpikeStats;
         private Panel panel1;
         private Panel panel3;
         private Display.CellSelectionControl cellSelectionPlot;
-        private Display.CellSelectionControl cellSelectionSpike;
-        private Button btnListSpikes;
-        private Button btnListRCTrains;
-        private TabControl tabSpikesRCTrains;
+        private Display.CellSelectionControl cellSelectionStats;
+        private Button btnListStats;
+
+        public ModelOutputControl(Button btnListStats)
+        {
+            this.btnListStats = btnListStats;
+        }
+
+        private TabControl tabStats;
         private TabPage tSpikes;
         internal TabPage tRCTrains;
         internal DataGridView dgRCTrains;
@@ -2082,12 +1836,6 @@
         private DataGridViewTextBoxColumn colRCTrainStartDelay;
         private DataGridViewTextBoxColumn colRCTrainMidPointDelay;
         private DataGridViewTextBoxColumn colRCTrainCenterDelay;
-        private NumericUpDown eSpikeEnd;
-        private NumericUpDown eSpikeStart;
-        private Label lSpikeStart;
-        private Label lms5;
-        private Label label7;
-        private Label lms6;
         private CheckBox cb2DHideNonspiking;
         private CheckBox cb2DShowUnselectedNodes;
         private Panel p2DRenderOptions;
@@ -2099,13 +1847,6 @@
         private CheckBox cb3DOffline;
         private TabPage tSpikeSummary;
         private DataGridView dgSpikeSummaryDetails;
-        private DataGridViewTextBoxColumn colSpikeCell;
-        private DataGridViewTextBoxColumn colSpikeSagittal;
-        private DataGridViewTextBoxColumn colSpikeCellPool;
-        private DataGridViewTextBoxColumn colSpikeSomite;
-        private DataGridViewTextBoxColumn colSpikeCellSeq;
-        private DataGridViewTextBoxColumn colSpikeTime;
-        private Button btnListSpikeSummary;
         private SplitContainer splitContainer1;
         private DataGridView dgSpikeSummary;
         private DataGridViewTextBoxColumn colSumPeriod;
@@ -2118,9 +1859,14 @@
         private DataGridViewTextBoxColumn colSumDetailsSomite;
         private DataGridViewTextBoxColumn colSumDetailsCellSeq;
         private DataGridViewTextBoxColumn colSumDetailsSpikeCount;
-        private CheckBox cbSpikeSummaryAppend;
+        private CheckBox cbStatsAppend;
         private ContextMenuStrip cmGrid;
         private ToolStripMenuItem cmGridExport;
         private ToolStripMenuItem cmGridCopyAll;
+        private TabPage tEpisodes;
+        private DataGridView dgEpisodes;
+        private General.StartEndTimeControl timeRangePlot;
+        private General.StartEndTimeControl timeRangeStat;
+        private General.StartEndTimeControl timeRangeAnimation;
     }
 }

@@ -2,7 +2,6 @@
 using SiliFish.Definitions;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.Helpers.JsonConverters;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
@@ -13,18 +12,10 @@ using SiliFish.Services.Plotting.PlotSelection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SiliFish.ModelUnits.Architecture
 {
@@ -287,7 +278,9 @@ namespace SiliFish.ModelUnits.Architecture
         public RunningModel CreateCopy()
         {
             string jsonstring = JsonSerializer.Serialize(this, JsonUtil.SerializerOptions);
-            return (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);//TODO exception handling if there are issues
+            RunningModel newModel =  (RunningModel)ModelFile.ReadFromJson(jsonstring, out List<string> issues);//TODO exception handling if there are issues
+            newModel.StimulusTemplates = StimulusTemplates;
+            return newModel;
         }
         /// <summary>
         ///Needs to be run after created from JSON 

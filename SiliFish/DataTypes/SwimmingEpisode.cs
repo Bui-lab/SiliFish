@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
-using SiliFish.Definitions;
+﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.ModelUnits.Parameters;
 using System;

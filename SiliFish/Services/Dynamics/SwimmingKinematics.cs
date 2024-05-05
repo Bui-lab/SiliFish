@@ -5,11 +5,6 @@ using SiliFish.ModelUnits.Architecture;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SiliFish.ModelUnits.Parameters;
-using SiliFish.DynamicUnits;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using GeneticSharp;
 using SiliFish.Extensions;
 
 namespace SiliFish.Services.Dynamics

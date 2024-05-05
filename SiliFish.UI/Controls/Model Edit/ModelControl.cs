@@ -12,12 +12,10 @@ using System.Text.Json;
 using SiliFish.UI.Definitions;
 using SiliFish.Definitions;
 using SiliFish.UI.Extensions;
-using System.Diagnostics;
 using SiliFish.UI.EventArguments;
 using SiliFish.UI.Controls.Model_Edit;
 using SiliFish.UI.Controls.General;
 using SiliFish.UI.Services;
-using System.Collections.Generic;
 
 namespace SiliFish.UI.Controls
 {

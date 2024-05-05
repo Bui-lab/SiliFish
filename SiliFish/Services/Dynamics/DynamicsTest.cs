@@ -1,16 +1,12 @@
 ﻿using SiliFish.DataTypes;
-using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Helpers;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Stim;
-using SiliFish.Services.Plotting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.Services.Dynamics
 {

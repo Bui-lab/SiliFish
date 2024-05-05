@@ -8,17 +8,10 @@ using SiliFish.ModelUnits.Parameters;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Drawing;
 using System.Collections.Generic;
 using SiliFish.Services;
-using System.Xml.Linq;
-using OfficeOpenXml.ExternalReferences;
-using OfficeOpenXml.Core.Worksheet.Fill;
 using System.Reflection;
 using SiliFish.DynamicUnits.JncCore;
-using System.Text;
-using SiliFish.Extensions;
-using System.Net.Mail;
 
 namespace SiliFish.ModelUnits.Junction
 {

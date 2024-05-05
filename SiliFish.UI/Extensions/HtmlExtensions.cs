@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2.WinForms;
+﻿using Microsoft.Web.WebView2.WinForms;
 using SiliFish.Definitions;
 using SiliFish.Helpers;
 using SiliFish.Services;

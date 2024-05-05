@@ -1,13 +1,5 @@
 ﻿using SiliFish.Definitions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits;
 using SiliFish.Services.Plotting.PlotSelection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliFish.DataTypes
 {

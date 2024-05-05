@@ -1,13 +1,8 @@
 ﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits.JncCore;
-using SiliFish.ModelUnits;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Junction;
 using SiliFish.ModelUnits.Parameters;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Text.Json.Serialization;
 
 //Modified from the code written by Yann Roussel and Tuan Bui

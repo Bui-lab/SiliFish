@@ -1,8 +1,6 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
-using SiliFish.DynamicUnits;
 using SiliFish.DynamicUnits.JncCore;
-using SiliFish.Extensions;
 using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;

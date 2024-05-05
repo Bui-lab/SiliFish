@@ -1,5 +1,4 @@
 ﻿using Extensions;
-using OxyPlot;
 using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
@@ -8,17 +7,7 @@ using SiliFish.ModelUnits.Architecture;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.UI.Extensions;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Windows.ApplicationModel.VoiceCommands;
 
 namespace SiliFish.UI.Controls.Display
 {

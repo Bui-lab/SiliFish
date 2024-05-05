@@ -1,21 +1,15 @@
 ﻿using SiliFish.DataTypes;
 using SiliFish.Definitions;
 using SiliFish.Extensions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits;
 using SiliFish.ModelUnits.Cells;
 using SiliFish.ModelUnits.Architecture;
 using System.Collections.Generic;
 using System.Linq;
 using SiliFish.ModelUnits.Junction;
-using System;
-using System.Runtime.InteropServices;
 using SiliFish.ModelUnits.Stim;
-using System.Reflection;
 using SiliFish.Services.Plotting.PlotGenerators;
 using SiliFish.Services.Plotting.PlotSelection;
 using SiliFish.Services.Dynamics;
-using SiliFish.ModelUnits.Parameters;
 
 namespace SiliFish.Services.Plotting
 {

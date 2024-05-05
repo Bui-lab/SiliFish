@@ -1,20 +1,11 @@
-﻿using GeneticSharp;
-using OxyPlot;
-using SiliFish.DataTypes;
-using SiliFish.Definitions;
+﻿using SiliFish.Definitions;
 using SiliFish.DynamicUnits;
 using SiliFish.Extensions;
 using SiliFish.Helpers;
-using SiliFish.ModelUnits.Architecture;
-using SiliFish.ModelUnits.Cells;
-using SiliFish.ModelUnits.Stim;
 using SiliFish.Repositories;
 using SiliFish.Services.Optimization;
 using SiliFish.UI.EventArguments;
 using System.Data;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using Windows.Gaming.XboxLive.Storage;
 
 namespace SiliFish.UI.Controls
 {

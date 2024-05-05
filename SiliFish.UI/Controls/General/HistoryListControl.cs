@@ -1,11 +1,5 @@
 ﻿using SiliFish.Extensions;
-using SiliFish.Helpers;
-using SiliFish.ModelUnits;
-using SiliFish.Services.Optimization;
-using SiliFish.UI.EventArguments;
-using System;
 using System.ComponentModel;
-using Windows.Devices.SmartCards;
 
 namespace SiliFish.UI.Controls
 {
