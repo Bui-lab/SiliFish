@@ -238,6 +238,9 @@ namespace SiliFish.UI.Controls
             webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewRCTrains.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
+            //webview's context menu does not work. Using amcharts's export menu instead
+            webViewRCTrains.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
+            webViewAnimation.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
         }
         private async void InitAsync()
         {
@@ -309,6 +312,24 @@ namespace SiliFish.UI.Controls
                 }
             }
             catch { }
+        }
+
+        private void AmChartsCoreWebView2_ContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs args)
+        {
+            IList<CoreWebView2ContextMenuItem> menuList = args.MenuItems;
+            CoreWebView2ContextMenuTargetKind context = args.ContextMenuTarget.Kind;
+            if (context == CoreWebView2ContextMenuTargetKind.Page)
+            {
+                for (int index = menuList.Count - 1; index >= 0; index--)
+                {
+                    if (menuList[index].Name == "saveImageAs" ||
+                        menuList[index].Name == "copyImage" ||
+                        menuList[index].Name == "inspectElement")
+                    {
+                        menuList.RemoveAt(index);
+                    }
+                }
+            }
         }
         private static async void ClearBrowserCache(WebView2 webView)
         {
@@ -1250,7 +1271,8 @@ namespace SiliFish.UI.Controls
                 }
             }
             tabStats.SelectedTab = tRCTrains;
-            dgRCTrains.FirstDisplayedScrollingRowIndex = scrollRow;
+            if (dgRCTrains.Rows.Count > 0) 
+                dgRCTrains.FirstDisplayedScrollingRowIndex = scrollRow;
             GenerateHistogramOfRCColumn(colRCTrainStartDelay.Index);
             UseWaitCursor = false;
         }
