@@ -323,16 +323,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             return Terminals != null && Terminals.Count != 0 ? Terminals.Max(jnc => jnc.InputCurrent.MaxValue(iStart, iEnd)) : 0;
         }
-        public override bool IsSpiking(int iStart = 0, int iEnd = -1)
-        {
-            if (V == null)
-                return false;
-            return V.AsArray().HasSpike(Core.Vthreshold, iStart, iEnd);
-        }
-        public override List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
-        {
-            return V.AsArray().GetSpikeIndices(Core.VSpikeThreshold, iStart, iEnd, buffer);
-        }
+
         public override (Dictionary<string, Color>, Dictionary<string, List<double>>) GetIncomingSynapticCurrents()
         {
             Dictionary<string, Color> colors = [];

@@ -488,19 +488,34 @@ namespace SiliFish.ModelUnits.Cells
             return V?.MaxValue(iStart, iEnd) ?? 0;
         }
 
-        public virtual bool IsSpiking(int iStart = 0, int iEnd = -1)
+        /// <summary>
+        /// Different than IsSpiking, 
+        /// that returns false if there are sporadic spikes here and there
+        /// </summary>
+        /// <param name="iStart"></param>
+        /// <param name="iEnd"></param>
+        /// <returns></returns>
+        public bool IsActivelySpiking(int threshold, int iStart = 0, int iEnd = -1)
         {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
+            return GetSpikeCount(iStart, iEnd) > threshold;
         }
-        public virtual List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
+        public bool IsSpiking(int iStart = 0, int iEnd = -1)
         {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
+            if (V == null)
+                return false;
+            return V.AsArray().HasSpike(Core.Vthreshold, iStart, iEnd);
+        }
+        public List<int> GetSpikeIndices(int iStart = 0, int iEnd = -1, int buffer = 0)
+        {
+            if (V == null)
+                return null;
+            return V.AsArray().GetSpikeIndices(Core.VSpikeThreshold, iStart, iEnd, buffer);
         }
 
+        public int GetSpikeCount(int iStart = 0, int iEnd = -1, int buffer = 0)
+        {
+            return GetSpikeIndices(iStart, iEnd, buffer)?.Count ?? 0;
+        }
         public virtual double MinCurrentValue(bool gap, bool chemin, bool chemout, int iStart = 0, int iEnd = -1)
         {
             double gapcurrent = gap ? MinGapCurrentValue(iStart, iEnd) : 0;

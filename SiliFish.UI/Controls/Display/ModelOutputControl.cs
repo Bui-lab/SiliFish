@@ -238,7 +238,7 @@ namespace SiliFish.UI.Controls
             webViewPlot.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
             webViewRCTrains.CoreWebView2.ProcessFailed += CoreWebView2_ProcessFailed;
 
-            //webview's context menu does not work. Using amcharts's export menu instead
+            //webview's context menu does not work. Using amcharts's export menu where necessary
             webViewRCTrains.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
             webViewAnimation.CoreWebView2.ContextMenuRequested += AmChartsCoreWebView2_ContextMenuRequested;
         }
@@ -361,11 +361,25 @@ namespace SiliFish.UI.Controls
                 refresh = false;
             List<CellPool> cellPools = model.CellPools;
             if (cb2DHideNonspiking.Checked && simulation != null && simulation.SimulationRun)
-                cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsSpiking())).ToList();
+                cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(10))).ToList();//TODO a random number - add to Advanced Settings
             string html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
             if (string.IsNullOrEmpty(html))
                 return;
+            gr2DCellPoolLegend.Controls.Clear();
+
+            foreach (var cellPool in cellPools.GroupBy(cp=>cp.CellGroup))
+            {
+                Label label = new()
+                {
+                    Text = cellPool.Key,
+                    Height = 20,
+                    AutoSize = false,
+                    Dock = DockStyle.Top,
+                    BackColor = cellPool.First().Color
+                };
+                gr2DCellPoolLegend.Controls.Add(label);
+            }
             bool navigated = false;
             webView2DRender.NavigateTo(html, "2DRendering", GlobalSettings.TempFolder, ref tempFile, ref navigated);
             if (!navigated)
@@ -422,7 +436,7 @@ namespace SiliFish.UI.Controls
         }
         private void cb2DLegend_CheckedChanged(object sender, EventArgs e)
         {
-            gr2DLegend.Visible = cb2DLegend.Checked;
+            gr2DLegend.Visible = gr2DCellPoolLegend.Visible = cb2DLegend.Checked;
         }
         private async void ud2DNodeSize_SelectedItemChanged(object sender, EventArgs e)
         {
@@ -1237,7 +1251,7 @@ namespace SiliFish.UI.Controls
                         dgRCTrains.RowCount++;
                         int rowIndex = dgRCTrains.RowCount - 1;
                         if (scrollRow < 0) scrollRow = rowIndex;
-                        dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iID;
+                        dgRCTrains[colRCTrainNumber.Index, rowIndex].Value = burstTrain.iTrainID;
                         dgRCTrains[colRCTrainCellGroup.Index, rowIndex].Value = sID;
                         dgRCTrains[colRCTrainSomite.Index, rowIndex].Value = iID;
                         dgRCTrains[colRCTrainStart.Index, rowIndex].Value = Bursts.Start;
@@ -1393,8 +1407,7 @@ namespace SiliFish.UI.Controls
             {
                 btnListStats.Text = "List Spike Summary";
                 cellSelectionStats.Enabled = false;
-                cbStatsAppend.Checked = false;
-                cbStatsAppend.Enabled = false;
+                cbStatsAppend.Enabled = true;
                 timeRangeStat.Enabled = true;
             }
             else if (tabStats.SelectedTab == tSpikes)
