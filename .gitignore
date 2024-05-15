@@ -377,3 +377,5 @@ FodyWeavers.xsd
 /Themes.txt
 /SiliFish/GlobalSuppressions.cs
 /SiliFish/Migrations
+/DB Integration/DB Integration.dtproj
+/DB Integration
