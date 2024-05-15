@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelOutputControl));
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
             tabOutputs = new TabControl();
             t2DRender = new TabPage();
             gr2DCellPoolLegend = new GroupBox();
@@ -255,9 +255,10 @@
             // 
             gr2DCellPoolLegend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             gr2DCellPoolLegend.AutoSize = true;
-            gr2DCellPoolLegend.Location = new Point(554, 144);
+            gr2DCellPoolLegend.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            gr2DCellPoolLegend.Location = new Point(670, 144);
             gr2DCellPoolLegend.Name = "gr2DCellPoolLegend";
-            gr2DCellPoolLegend.Size = new Size(122, 94);
+            gr2DCellPoolLegend.Size = new Size(6, 5);
             gr2DCellPoolLegend.TabIndex = 55;
             gr2DCellPoolLegend.TabStop = false;
             gr2DCellPoolLegend.Text = "Cell Pool Legend";
@@ -1219,9 +1220,9 @@
             // 
             // colRCTrainStart
             // 
-            dataGridViewCellStyle8.Format = "N2";
-            dataGridViewCellStyle8.NullValue = null;
-            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            colRCTrainStart.DefaultCellStyle = dataGridViewCellStyle1;
             colRCTrainStart.HeaderText = "Start Time";
             colRCTrainStart.Name = "colRCTrainStart";
             colRCTrainStart.ReadOnly = true;
@@ -1229,8 +1230,8 @@
             // 
             // colRCTrainEnd
             // 
-            dataGridViewCellStyle9.Format = "N2";
-            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Format = "N2";
+            colRCTrainEnd.DefaultCellStyle = dataGridViewCellStyle2;
             colRCTrainEnd.HeaderText = "End Time";
             colRCTrainEnd.Name = "colRCTrainEnd";
             colRCTrainEnd.ReadOnly = true;
@@ -1238,8 +1239,8 @@
             // 
             // colRCTrainMidPoint
             // 
-            dataGridViewCellStyle10.Format = "N2";
-            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.Format = "N2";
+            colRCTrainMidPoint.DefaultCellStyle = dataGridViewCellStyle3;
             colRCTrainMidPoint.HeaderText = "Mid Point";
             colRCTrainMidPoint.Name = "colRCTrainMidPoint";
             colRCTrainMidPoint.ReadOnly = true;
@@ -1247,8 +1248,8 @@
             // 
             // colRCTrainCenter
             // 
-            dataGridViewCellStyle11.Format = "N2";
-            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.Format = "N2";
+            colRCTrainCenter.DefaultCellStyle = dataGridViewCellStyle4;
             colRCTrainCenter.HeaderText = "Center";
             colRCTrainCenter.Name = "colRCTrainCenter";
             colRCTrainCenter.ReadOnly = true;
@@ -1256,9 +1257,9 @@
             // 
             // colRCTrainStartDelay
             // 
-            dataGridViewCellStyle12.Format = "N2";
-            dataGridViewCellStyle12.NullValue = null;
-            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = null;
+            colRCTrainStartDelay.DefaultCellStyle = dataGridViewCellStyle5;
             colRCTrainStartDelay.HeaderText = "RC Delay [Start]";
             colRCTrainStartDelay.Name = "colRCTrainStartDelay";
             colRCTrainStartDelay.ReadOnly = true;
@@ -1266,8 +1267,8 @@
             // 
             // colRCTrainMidPointDelay
             // 
-            dataGridViewCellStyle13.Format = "N2";
-            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle6.Format = "N2";
+            colRCTrainMidPointDelay.DefaultCellStyle = dataGridViewCellStyle6;
             colRCTrainMidPointDelay.HeaderText = "RC Delay [Mid Point]";
             colRCTrainMidPointDelay.Name = "colRCTrainMidPointDelay";
             colRCTrainMidPointDelay.ReadOnly = true;
@@ -1275,8 +1276,8 @@
             // 
             // colRCTrainCenterDelay
             // 
-            dataGridViewCellStyle14.Format = "N2";
-            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle7.Format = "N2";
+            colRCTrainCenterDelay.DefaultCellStyle = dataGridViewCellStyle7;
             colRCTrainCenterDelay.HeaderText = "RC Delay [Center]";
             colRCTrainCenterDelay.Name = "colRCTrainCenterDelay";
             colRCTrainCenterDelay.ReadOnly = true;

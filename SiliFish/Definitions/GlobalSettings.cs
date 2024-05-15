@@ -199,7 +199,7 @@ namespace SiliFish.Definitions
         public int RollingFreqBeatCount { get { return GlobalSettings.RollingFreqBeatCount; } set { GlobalSettings.RollingFreqBeatCount = value; } }
 
         [Description("The number of beats to the left and right to calculate the rolling TBF."),
-            DisplayName("Rolling Freq. Beat Count"),
+            DisplayName("Activity Threshold Spike Count"),
             Category("Dynamics")]
         public int ActivityThresholdSpikeCount { get { return GlobalSettings.ActivityThresholdSpikeCount; } set { GlobalSettings.ActivityThresholdSpikeCount = value; } }
         #endregion

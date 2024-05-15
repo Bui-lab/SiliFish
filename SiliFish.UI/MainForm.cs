@@ -168,7 +168,7 @@ namespace SiliFish.UI
         }
         private void completeRunsAction(List<Simulation> simulations, int completion)
         {
-            Invoke(CompleteRuns, simulations, completion);
+            Invoke(CompleteRuns, simulations, completion);//TODO crashes if closed
         }
         private void CompleteRuns(List<Simulation> simulations, int completion)
         {
@@ -578,6 +578,7 @@ namespace SiliFish.UI
             MessageBox.Show($"Simulation summary results are saved to {new SFDataContext().DbFileName} - " +
                 $"simulation id(s): {string.Join(',', simulationDBWriter.SimulationIds)}");
             simulationDBWriter = null;
+            miFileSaveSimulationResults.Text = $"Save Simulation Results (last saved at {DateTime.Now:ddd} {DateTime.Now:t})";
         }
         private void miFileSaveSimulationResults_Click(object sender, EventArgs e)
         {
