@@ -269,7 +269,7 @@ namespace SiliFish.UI
         {
             if (btnRun.Text == "Stop Run")
             {
-                bool interrupt = modelSimulator.GetProgress() > 0.1;
+                bool interrupt = modelSimulator.GetProgress() > GlobalSettings.ProgressLimitToDiscard / 100;
                 string msg = $"Do you want to stop the stimulation?\r\n" +
                     (interrupt ? "You can access the values till the point it was executed." :
                     "You will lose all the simulation data.");

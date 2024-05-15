@@ -28,91 +28,117 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.eTemporaryFolder = new System.Windows.Forms.TextBox();
-            this.eOutputFolder = new System.Windows.Forms.TextBox();
-            this.lTempFolder = new System.Windows.Forms.Label();
-            this.lOutputFolder = new System.Windows.Forms.Label();
-            this.propSettings = new System.Windows.Forms.PropertyGrid();
-            this.browseFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.panel8.SuspendLayout();
-            this.SuspendLayout();
+            panel8 = new Panel();
+            eTemporaryFolder = new TextBox();
+            eOutputFolder = new TextBox();
+            lTempFolder = new Label();
+            lOutputFolder = new Label();
+            propSettings = new PropertyGrid();
+            browseFolder = new FolderBrowserDialog();
+            eDatabaseFile = new TextBox();
+            lDatabaseFile = new Label();
+            browseFile = new OpenFileDialog();
+            panel8.SuspendLayout();
+            SuspendLayout();
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.eTemporaryFolder);
-            this.panel8.Controls.Add(this.eOutputFolder);
-            this.panel8.Controls.Add(this.lTempFolder);
-            this.panel8.Controls.Add(this.lOutputFolder);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(716, 71);
-            this.panel8.TabIndex = 2;
+            panel8.Controls.Add(eDatabaseFile);
+            panel8.Controls.Add(lDatabaseFile);
+            panel8.Controls.Add(eTemporaryFolder);
+            panel8.Controls.Add(eOutputFolder);
+            panel8.Controls.Add(lTempFolder);
+            panel8.Controls.Add(lOutputFolder);
+            panel8.Dock = DockStyle.Top;
+            panel8.Location = new Point(0, 0);
+            panel8.Name = "panel8";
+            panel8.Size = new Size(716, 99);
+            panel8.TabIndex = 2;
             // 
             // eTemporaryFolder
             // 
-            this.eTemporaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eTemporaryFolder.Location = new System.Drawing.Point(113, 33);
-            this.eTemporaryFolder.Name = "eTemporaryFolder";
-            this.eTemporaryFolder.ReadOnly = true;
-            this.eTemporaryFolder.Size = new System.Drawing.Size(590, 23);
-            this.eTemporaryFolder.TabIndex = 7;
-            this.eTemporaryFolder.Click += new System.EventHandler(this.eTemporaryFolder_Click);
+            eTemporaryFolder.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eTemporaryFolder.Location = new Point(113, 33);
+            eTemporaryFolder.Name = "eTemporaryFolder";
+            eTemporaryFolder.ReadOnly = true;
+            eTemporaryFolder.Size = new Size(590, 23);
+            eTemporaryFolder.TabIndex = 7;
+            eTemporaryFolder.Click += eTemporaryFolder_Click;
             // 
             // eOutputFolder
             // 
-            this.eOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.eOutputFolder.Location = new System.Drawing.Point(113, 7);
-            this.eOutputFolder.Name = "eOutputFolder";
-            this.eOutputFolder.ReadOnly = true;
-            this.eOutputFolder.Size = new System.Drawing.Size(590, 23);
-            this.eOutputFolder.TabIndex = 6;
-            this.eOutputFolder.Click += new System.EventHandler(this.eOutputFolder_Click);
+            eOutputFolder.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eOutputFolder.Location = new Point(113, 7);
+            eOutputFolder.Name = "eOutputFolder";
+            eOutputFolder.ReadOnly = true;
+            eOutputFolder.Size = new Size(590, 23);
+            eOutputFolder.TabIndex = 6;
+            eOutputFolder.Click += eOutputFolder_Click;
             // 
             // lTempFolder
             // 
-            this.lTempFolder.AutoSize = true;
-            this.lTempFolder.Location = new System.Drawing.Point(6, 37);
-            this.lTempFolder.Name = "lTempFolder";
-            this.lTempFolder.Size = new System.Drawing.Size(99, 15);
-            this.lTempFolder.TabIndex = 5;
-            this.lTempFolder.Text = "Temporary Folder";
+            lTempFolder.AutoSize = true;
+            lTempFolder.Location = new Point(6, 37);
+            lTempFolder.Name = "lTempFolder";
+            lTempFolder.Size = new Size(99, 15);
+            lTempFolder.TabIndex = 5;
+            lTempFolder.Text = "Temporary Folder";
             // 
             // lOutputFolder
             // 
-            this.lOutputFolder.AutoSize = true;
-            this.lOutputFolder.Location = new System.Drawing.Point(6, 10);
-            this.lOutputFolder.Name = "lOutputFolder";
-            this.lOutputFolder.Size = new System.Drawing.Size(81, 15);
-            this.lOutputFolder.TabIndex = 4;
-            this.lOutputFolder.Text = "Output Folder";
+            lOutputFolder.AutoSize = true;
+            lOutputFolder.Location = new Point(6, 10);
+            lOutputFolder.Name = "lOutputFolder";
+            lOutputFolder.Size = new Size(81, 15);
+            lOutputFolder.TabIndex = 4;
+            lOutputFolder.Text = "Output Folder";
             // 
             // propSettings
             // 
-            this.propSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.propSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propSettings.HelpBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(216)))), ((int)(((byte)(220)))));
-            this.propSettings.HelpBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(184)))), ((int)(((byte)(212)))));
-            this.propSettings.Location = new System.Drawing.Point(0, 71);
-            this.propSettings.Name = "propSettings";
-            this.propSettings.Size = new System.Drawing.Size(716, 311);
-            this.propSettings.TabIndex = 3;
+            propSettings.BackColor = Color.FromArgb(207, 216, 220);
+            propSettings.Dock = DockStyle.Fill;
+            propSettings.HelpBackColor = Color.FromArgb(207, 216, 220);
+            propSettings.HelpBorderColor = Color.FromArgb(0, 184, 212);
+            propSettings.Location = new Point(0, 99);
+            propSettings.Name = "propSettings";
+            propSettings.Size = new Size(716, 283);
+            propSettings.TabIndex = 3;
+            // 
+            // eDatabaseFile
+            // 
+            eDatabaseFile.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            eDatabaseFile.Location = new Point(113, 62);
+            eDatabaseFile.Name = "eDatabaseFile";
+            eDatabaseFile.ReadOnly = true;
+            eDatabaseFile.Size = new Size(590, 23);
+            eDatabaseFile.TabIndex = 9;
+            eDatabaseFile.Click += eDatabaseFile_Click;
+            // 
+            // lDatabaseFile
+            // 
+            lDatabaseFile.AutoSize = true;
+            lDatabaseFile.Location = new Point(6, 66);
+            lDatabaseFile.Name = "lDatabaseFile";
+            lDatabaseFile.Size = new Size(76, 15);
+            lDatabaseFile.TabIndex = 8;
+            lDatabaseFile.Text = "Database File";
+            // 
+            // browseFile
+            // 
+            browseFile.FileName = "SiliFish.sqlite";
+            browseFile.Filter = "Sqlite files|*.sqlite";
             // 
             // GlobalSettingsControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.propSettings);
-            this.Controls.Add(this.panel8);
-            this.Name = "GlobalSettingsControl";
-            this.Size = new System.Drawing.Size(716, 382);
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(propSettings);
+            Controls.Add(panel8);
+            Name = "GlobalSettingsControl";
+            Size = new Size(716, 382);
+            panel8.ResumeLayout(false);
+            panel8.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -124,5 +150,8 @@
         private Label lOutputFolder;
         private PropertyGrid propSettings;
         private FolderBrowserDialog browseFolder;
+        private TextBox eDatabaseFile;
+        private Label lDatabaseFile;
+        private OpenFileDialog browseFile;
     }
 }

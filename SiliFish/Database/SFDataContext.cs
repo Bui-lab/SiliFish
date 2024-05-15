@@ -7,7 +7,7 @@ namespace SiliFish.Database;
 
 public class SFDataContext: DbContext
 {
-    public string DbFileName { get; set; } = $"{GlobalSettings.OutputFolder}//SiliFish.sqlite";
+    public string DbFileName { get; set; } = GlobalSettings.DatabaseName;
     public DbSet<SimulationRecord> Simulations { get; set; }
     public DbSet<ModelRecord> Models { get; set; }
     public DbSet<CellRecord> Cells { get; set; }

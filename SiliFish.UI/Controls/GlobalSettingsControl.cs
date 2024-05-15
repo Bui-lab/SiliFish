@@ -33,5 +33,15 @@ namespace Controls
                     eTemporaryFolder.Text = browseFolder.SelectedPath;
             }
         }
+
+        private void eDatabaseFile_Click(object sender, EventArgs e)
+        {
+            browseFile.InitialDirectory = eDatabaseFile.Text;
+            if (browseFile.ShowDialog() == DialogResult.OK)
+            {
+                GlobalSettings.DatabaseName =
+                    eDatabaseFile.Text = browseFile.FileName;
+            }
+        }
     }
 }

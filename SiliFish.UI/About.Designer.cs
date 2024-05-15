@@ -128,13 +128,13 @@
             // 
             // tabAbout
             // 
+            tabAbout.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabAbout.Controls.Add(tGeneral);
             tabAbout.Controls.Add(tCredits);
-            tabAbout.Dock = DockStyle.Bottom;
             tabAbout.Location = new Point(0, 252);
             tabAbout.Name = "tabAbout";
             tabAbout.SelectedIndex = 0;
-            tabAbout.Size = new Size(326, 197);
+            tabAbout.Size = new Size(328, 210);
             tabAbout.TabIndex = 19;
             // 
             // tGeneral
@@ -148,7 +148,7 @@
             tGeneral.Location = new Point(4, 24);
             tGeneral.Name = "tGeneral";
             tGeneral.Padding = new Padding(3);
-            tGeneral.Size = new Size(318, 169);
+            tGeneral.Size = new Size(320, 182);
             tGeneral.TabIndex = 0;
             tGeneral.Text = "General";
             tGeneral.UseVisualStyleBackColor = true;
@@ -178,7 +178,7 @@
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(326, 449);
+            ClientSize = new Size(328, 462);
             Controls.Add(tabAbout);
             Controls.Add(lLogo);
             Controls.Add(pbLogo);

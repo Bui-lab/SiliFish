@@ -20,7 +20,6 @@ using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Junction;
-using Windows.ApplicationModel.VoiceCommands;
 
 namespace SiliFish.UI.Controls
 {
@@ -76,10 +75,11 @@ namespace SiliFish.UI.Controls
             PopulatePlotTypes();
             SetEnablesBasedOnPlot();
 
-
             pictureBox.MouseWheel += PictureBox_MouseWheel;
 
             cellSelectionPlot.SelectionChanged += CellSelectionPlot_SelectionChanged;
+
+            gr2DCellPoolLegend.Top = p2DRenderOptions.Visible ? p2DRenderOptions.Bottom + 4 : p2DRender.Bottom + 4;
 
             dd3DViewpoint.SelectedIndex = 0;
 
@@ -361,7 +361,7 @@ namespace SiliFish.UI.Controls
                 refresh = false;
             List<CellPool> cellPools = model.CellPools;
             if (cb2DHideNonspiking.Checked && simulation != null && simulation.SimulationRun)
-                cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(10))).ToList();//TODO a random number - add to Advanced Settings
+                cellPools = model.CellPools.Where(cp => cp.Cells.Any(c => c.IsActivelySpiking(GlobalSettings.ActivityThresholdSpikeCount))).ToList();
             string html = TwoDRenderer.Create2DRendering(model, cellPools, refresh, webView2DRender.Width, webView2DRender.Height,
                 showGap: cb2DGapJunc.Checked, showChem: cb2DChemJunc.Checked, offline: cb2DOffline.Checked);
             if (string.IsNullOrEmpty(html))
@@ -370,14 +370,19 @@ namespace SiliFish.UI.Controls
 
             foreach (var cellPool in cellPools.GroupBy(cp=>cp.CellGroup))
             {
+                Color color = cellPool.First().Color;
                 Label label = new()
                 {
                     Text = cellPool.Key,
                     Height = 20,
+                    Padding = new Padding(2,2,0,0),
                     AutoSize = false,
                     Dock = DockStyle.Top,
-                    BackColor = cellPool.First().Color
+                    BackColor = color 
                 };
+                int grayValue = (int)(color.R * 0.3 + color.G * 0.59 + color.B * 0.11);
+                if (grayValue < 50)
+                    label.ForeColor = Color.White;
                 gr2DCellPoolLegend.Controls.Add(label);
             }
             bool navigated = false;
@@ -456,6 +461,7 @@ namespace SiliFish.UI.Controls
         private void cb2DRenderShowOptions_CheckedChanged(object sender, EventArgs e)
         {
             p2DRenderOptions.Visible = cb2DRenderShowOptions.Checked;
+            gr2DCellPoolLegend.Top = p2DRenderOptions.Visible ? p2DRenderOptions.Bottom + 4 : p2DRender.Bottom + 4;
         }
 
 

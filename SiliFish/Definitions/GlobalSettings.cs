@@ -9,6 +9,7 @@ namespace SiliFish.Definitions
 {
     public class GlobalSettings
     {
+        public static string DatabaseName = "";
         public static string TempFolder = Path.GetTempPath() + "SiliFish";
         public static string OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
         public static double Epsilon = 0.00001;
@@ -18,6 +19,7 @@ namespace SiliFish.Definitions
         public static double FileSizeWarningLimit = 20;//in MB
         public static double MemoryWarningLimit = 10;//in GB
         public static bool UseDBForMemory = false;
+        public static double ProgressLimitToDiscard = 10;//%
 
         public static long PlotDataPointLimit = (long)5E6;
         public static int PlotWarningNumber = 10;
@@ -42,6 +44,7 @@ namespace SiliFish.Definitions
         public static int RheobaseLimit = 1000;
         public static double[] RheobaseTestMultipliers = [1, 1.1, 1.5, 2];
         public static int RollingFreqBeatCount = 5;
+        public static int ActivityThresholdSpikeCount = 10;
 
         public static double GeneticAlgorithmMinValue = -100;
         public static double GeneticAlgorithmMaxValue = 100;
@@ -59,19 +62,25 @@ namespace SiliFish.Definitions
     }
     public class GlobalSettingsProperties
     {
-        #region Folder
+        #region File & Folder
         [Browsable(false),
             Description("Folder that temporary files are saved under. Will be cleared after the program exits."),
             DisplayName("Temporary Folder"),
-            Category("Folder")]
+            Category("File & Folder")]
         public string TempFolder { get { return GlobalSettings.TempFolder; } set { GlobalSettings.TempFolder = value; } }
 
 
         [Browsable(false),
             Description("The default folder that output files are saved under."),
             DisplayName("Output Folder"),
-            Category("Folder")]
+            Category("File & Folder")]
         public string OutputFolder { get { return GlobalSettings.OutputFolder; } set { GlobalSettings.OutputFolder = value; } }
+
+        [Browsable(false),
+            Description("The SQLITE database table."),
+            DisplayName("Database Name"),
+            Category("File & Folder")]
+        public string DatabaseName { get { return GlobalSettings.DatabaseName; } set { GlobalSettings.DatabaseName = value; } }
 
         #endregion
 
@@ -112,6 +121,10 @@ namespace SiliFish.Definitions
             Category("Const")]
         public double FileSizeWarningLimit { get { return GlobalSettings.FileSizeWarningLimit; } set { GlobalSettings.FileSizeWarningLimit = value; } }
 
+        [Description("The minimum progress percentage required for the simulation data not to be discarded when a simulation is cancelled."),
+            DisplayName("Progress Limit To Discard"),
+            Category("Const")]
+        public double ProgressLimitToDiscard { get { return GlobalSettings.ProgressLimitToDiscard; } set { GlobalSettings.ProgressLimitToDiscard = value; } }
         #endregion
 
         #region Display
@@ -184,6 +197,11 @@ namespace SiliFish.Definitions
             DisplayName("Rolling Freq. Beat Count"),
             Category("Dynamics")]
         public int RollingFreqBeatCount { get { return GlobalSettings.RollingFreqBeatCount; } set { GlobalSettings.RollingFreqBeatCount = value; } }
+
+        [Description("The number of beats to the left and right to calculate the rolling TBF."),
+            DisplayName("Rolling Freq. Beat Count"),
+            Category("Dynamics")]
+        public int ActivityThresholdSpikeCount { get { return GlobalSettings.ActivityThresholdSpikeCount; } set { GlobalSettings.ActivityThresholdSpikeCount = value; } }
         #endregion
 
         #region Genetic Algorithm
