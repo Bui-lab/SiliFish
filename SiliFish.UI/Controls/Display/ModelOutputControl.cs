@@ -72,9 +72,6 @@ namespace SiliFish.UI.Controls
             InitializeComponent();
             WebViewInitializations();
 
-            PopulatePlotTypes();
-            SetEnablesBasedOnPlot();
-
             pictureBox.MouseWheel += PictureBox_MouseWheel;
 
             cellSelectionPlot.SelectionChanged += CellSelectionPlot_SelectionChanged;

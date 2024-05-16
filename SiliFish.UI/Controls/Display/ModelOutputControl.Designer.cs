@@ -255,10 +255,9 @@
             // 
             gr2DCellPoolLegend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             gr2DCellPoolLegend.AutoSize = true;
-            gr2DCellPoolLegend.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            gr2DCellPoolLegend.Location = new Point(670, 144);
+            gr2DCellPoolLegend.Location = new Point(554, 144);
             gr2DCellPoolLegend.Name = "gr2DCellPoolLegend";
-            gr2DCellPoolLegend.Size = new Size(6, 5);
+            gr2DCellPoolLegend.Size = new Size(122, 210);
             gr2DCellPoolLegend.TabIndex = 55;
             gr2DCellPoolLegend.TabStop = false;
             gr2DCellPoolLegend.Text = "Cell Pool Legend";

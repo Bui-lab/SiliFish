@@ -168,7 +168,9 @@ namespace SiliFish.UI
         }
         private void completeRunsAction(List<Simulation> simulations, int completion)
         {
-            Invoke(CompleteRuns, simulations, completion);//TODO crashes if closed
+            if (IsDisposed)//the form might have been closed without stopping the simulation
+                return;
+            Invoke(CompleteRuns, simulations, completion);
         }
         private void CompleteRuns(List<Simulation> simulations, int completion)
         {
@@ -241,7 +243,8 @@ namespace SiliFish.UI
                 if (memoryRequired > GlobalSettings.MemoryWarningLimit)
                 {
                     string msg = $"There are {numConn:n0} connections, which would require more than {memoryRequired} GB extra memory for junction based current tracking.\r\n" +
-                        $"Do you want to turn off current tracking to minimize memory problems? You will not be able to plot the currents at a specific junction.";
+                        $"Do you want to turn off current tracking to minimize memory problems? " +
+                        $"Plotting the currents at a specific junction will regenerate the required data.";
 
                     DialogResult dlg = MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNoCancel);
                     if (dlg == DialogResult.Yes)
@@ -468,8 +471,10 @@ namespace SiliFish.UI
                     };
                     mf.Show();
                     mf.numSimulations = 1;
-                    //Thread thread = new(mf.RunSimulationFromModel);
-                    //thread.Start();                    
+                    if (!mf.PreRun())
+                        return;
+                    Thread thread = new(mf.RunSimulationFromModel);
+                    thread.Start();                    
                     modelTemplate.Settings.Seed += 1;//to have different results 
                 }
                 modelTemplate.Settings.Seed = oldSeed;
