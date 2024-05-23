@@ -84,7 +84,8 @@ namespace SiliFish.ModelUnits
             Autapse = cr.Autapse;
             SomiteBased = cr.SomiteBased;
         }
-        internal object GetTooltip()
+
+        public override string ToString()
         {
             string reach =
                 (Ascending ? $"Ascending: {MinAscReach:0.###} -  {MaxAscReach:0.###}; " : "") +
@@ -92,6 +93,10 @@ namespace SiliFish.ModelUnits
             return reach +
                 (MaxIncoming > 0 ? $"Max in: {MaxIncoming:0}; " : "") +
                 (MaxOutgoing > 0 ? $"Max out: {MaxOutgoing:0}; " : "");
+        }
+        internal object GetTooltip()
+        {
+            return ToString();
         }
 
         /// <summary>

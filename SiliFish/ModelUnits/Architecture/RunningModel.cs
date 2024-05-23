@@ -552,8 +552,8 @@ namespace SiliFish.ModelUnits.Architecture
                 neuronPools.RemoveAll(cp => cp.ID == cellPoolNew.ID);
             else if (cellPoolOld.CellType == CellType.MuscleCell)
                 musclePools.RemoveAll(cp => cp.ID == cellPoolNew.ID);
-            foreach(Cell c in cellPoolOld.Cells)
-                cp.Cells.Add(c);//TODO TEST - this is not a very elegant way of doing this
+            foreach (Cell c in cellPoolOld.Cells)
+                cp.AddCell(c);
             CellPools.Add(cp);
             return true;
         }
@@ -561,9 +561,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             CellPools.Sort();
         }
-        public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
-        {
-        }
+
         #endregion
 
         #region Projections

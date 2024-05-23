@@ -31,13 +31,20 @@ namespace SiliFish.Helpers
             ExcelPackage package = new(fileName);
             return package;    
         }
-        //TODO the boolean return value is not used - keep a log and give a warning
-        public static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, List<IDataExporterImporter> objList)
+
+        public static bool CreateWorkSheet(ExcelWorkbook workbook, string sheetName, List<string> columnNames, 
+            List<IDataExporterImporter> objList, List<string> errorList)
         {
             try
-            {//check whether the objlist already contains the columnnames and columnnames argument is obsolete
+            {
+                errorList ??= [];
+                //check whether the objlist already contains the columnnames and columnnames argument is obsolete
                 if (objList.Count > 1048575) //max number of rows excel allows
+                {
+                    errorList.Add($"Number of items ({objList.Count}) exceed maximum number of rows in Excel. " +
+                        $"Excel may not be the appropriate exporting environment for {sheetName}.");
                     return false;
+                }
                 ExcelWorksheet workSheet = workbook.Worksheets.Add(sheetName);
                 int rowindex = 1;
                 int colindex = 1;
@@ -55,14 +62,17 @@ namespace SiliFish.Helpers
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name, ex);
+                errorList.Add($"There is a problem in creating the Excel sheet {sheetName}: {ex.Message}");
                 return false;
             }
         }
 
-        public static bool AddWorksheet(ExcelPackage package, string sheetName, List<string> columnNames, List<List<string>> values)
+        public static bool AddWorksheet(ExcelPackage package, string sheetName, 
+            List<string> columnNames, List<List<string>> values, List<string> errorList)
         {
             try
             {
+                errorList ??= [];
                 ExcelWorksheet workSheet = package.Workbook.Worksheets.Add(sheetName);
                 int rowIndex = 1;
                 int colIndex = 1;
@@ -80,6 +90,7 @@ namespace SiliFish.Helpers
             catch (Exception ex)
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
+                errorList.Add($"There is a problem in adding the Excel sheet {sheetName}: {ex.Message}");
                 return false;
             }
         }

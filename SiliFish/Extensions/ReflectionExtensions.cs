@@ -48,8 +48,7 @@ namespace SiliFish.Extensions
         }
 
 
-        //TODO standardize the below function -
-        //check https://stackoverflow.com/questions/39201271/get-all-properties-marked-with-jsonignore-attribute
+        //https://stackoverflow.com/questions/39201271/get-all-properties-marked-with-jsonignore-attribute
         public static string GetProperties(this object obj, string seperator)
         
         {

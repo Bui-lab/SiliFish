@@ -87,18 +87,18 @@ namespace SiliFish.Repositories
                 workSheet.Cells[rowindex++, 2].Value = simulation.RunParam.MaxTime;
                 workSheet.Cells[rowindex, 1].Value = "Delta t";
                 workSheet.Cells[rowindex++, 2].Value = simulation.RunParam.DeltaT;
-
+                List<string> errorList = [];
                 (List<string> columnNames, List<List<string>> values) = ModelStats.GenerateSpikeFreqStats(simulation);
-                ExcelUtil.AddWorksheet(package, "Spike Freq", columnNames, values);
+                ExcelUtil.AddWorksheet(package, "Spike Freq", columnNames, values, errorList);
 
                 (columnNames, values) = ModelStats.GenerateSpikeCounts(simulation);
-                ExcelUtil.AddWorksheet(package, "Spike Counts", columnNames, values);
+                ExcelUtil.AddWorksheet(package, "Spike Counts", columnNames, values, errorList);
 
                 (columnNames, values) = ModelStats.GenerateSpikes(simulation);
-                ExcelUtil.AddWorksheet(package, "Spikes", columnNames, values);
+                ExcelUtil.AddWorksheet(package, "Spikes", columnNames, values, errorList);
 
                 (columnNames, values) = ModelStats.GenerateEpisodes(simulation);
-                ExcelUtil.AddWorksheet(package, "Episodes", columnNames, values);
+                ExcelUtil.AddWorksheet(package, "Episodes", columnNames, values, errorList);
 
                 package.Save();
                 return true;

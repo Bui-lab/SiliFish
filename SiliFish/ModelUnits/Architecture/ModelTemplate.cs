@@ -276,27 +276,6 @@ namespace SiliFish.ModelUnits.Architecture
                 ipt.CheckValues(ref errors);
             return errors.Count == preCount;
         }
-        public override void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolCopyTo)
-        {
-            List<InterPoolTemplate> iptNewList = [];
-            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.SourcePool == poolSource.CellGroup))
-            {
-                InterPoolTemplate iptCopy = new(ipt)
-                {
-                    SourcePool = poolCopyTo.CellGroup
-                };
-                iptNewList.Add(iptCopy);
-            }
-            foreach (InterPoolTemplate ipt in InterPoolTemplates.Where(t => t.TargetPool == poolSource.CellGroup))
-            {
-                InterPoolTemplate iptCopy = new(ipt)
-                {
-                    TargetPool = poolCopyTo.CellGroup
-                };
-                iptNewList.Add(iptCopy);
-            }
-            InterPoolTemplates.AddRange(iptNewList);
-        }
         public bool RenameCellPool(string oldName, string newName)
         {
             if (oldName == null || newName == null || oldName == newName)

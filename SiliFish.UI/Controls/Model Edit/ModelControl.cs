@@ -47,19 +47,22 @@ namespace SiliFish.UI.Controls
             string.Join(',', SelectedPools.Select(cp => cp.ID)) : null;
 
         private List<Cell> SelectedCells; //valid if Mode == Mode.RunningModel
+        private string SelectedCellIDs => SelectedPools != null ?
+            string.Join(',', SelectedCells.Select(c => c.ID)) : null;
         private Cell FirstSelectedCell => SelectedCells != null && SelectedCells.Count > 0 ?
                SelectedCells[0] : null;
         
         private char modeIOG;//I: incoming, O; outgoing; G: gap
         private JunctionBase SelectedJunction; 
         private StimulusBase SelectedStimulus; 
-        private ModelUnitBase SelectedUnit
+        private List<ModelUnitBase> SelectedUnits
         {
             get
             {
-                return SelectedCells?.Count > 0 ? SelectedCells[0]:
-                        (SelectedPools?.Count > 0 ? SelectedPools[0] :
-                        SelectedPoolTemplates?.Count > 0 ? SelectedPoolTemplates[0] : null);//TODO convert to SelectedUnits
+                return SelectedCells?.Count > 0 ? SelectedCells.Cast<ModelUnitBase>().ToList():
+                        (SelectedPools?.Count > 0 ? SelectedPools.Cast<ModelUnitBase>().ToList() :
+                        SelectedPoolTemplates?.Count > 0 ? SelectedPoolTemplates.Cast<ModelUnitBase>().ToList() : 
+                        null);
             }
         }
 
@@ -458,7 +461,7 @@ namespace SiliFish.UI.Controls
         {
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model))
+                if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model, SelectedUnits))
                 {
                     FileUtil.ShowFile(saveFileCSV.FileName);
                 }
@@ -474,14 +477,15 @@ namespace SiliFish.UI.Controls
                 Model is RunningModel runningModel && runningModel.CellPools.Count != 0))
             {
                 warnedImport = true;
-                string msg = $"Importing will remove all cell pools and create from the CSV file. Do you want to continue?";
+                string selOrAll = (SelectedPools?.Count > 0 || SelectedPoolTemplates?.Count > 0) ? "selected" : "all";
+                string msg = $"Importing will remove {selOrAll} cell pools and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
             openFileCSV.Title = "Cell Pool Import";
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadCellPoolsFromCSV(filename, Model))
+                if (ModelFile.ReadCellPoolsFromCSV(filename, Model, SelectedUnits))
                 {
                     LoadPools();
                     MessageBox.Show($"The cell pools are imported.", "Information");
@@ -730,7 +734,12 @@ namespace SiliFish.UI.Controls
             {
                 if (saveFileCSV.ShowDialog() == DialogResult.OK)
                 {
-                    if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPools[0]))//TODO multiple export???
+                    if (SelectedCells?.Count > 0)
+                    {
+                        if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedCells.Cast<ModelUnitBase>().ToList()))
+                            FileUtil.ShowFile(saveFileCSV.FileName);
+                    }
+                    else if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPools.Cast<ModelUnitBase>().ToList()))
                     {
                         FileUtil.ShowFile(saveFileCSV.FileName);
                     }
@@ -742,18 +751,29 @@ namespace SiliFish.UI.Controls
 
         private void listCells_ItemsImport(object sender, EventArgs e)
         {
-            string unit = SelectedPools != null && SelectedPools.Count > 0 ? " of " + SelectedPoolIDs : "";
+            string unit = SelectedCells != null && SelectedCells.Count > 0 ? " [" + SelectedCellIDs + "]" :
+                SelectedPools != null && SelectedPools.Count > 0 ? " of " + SelectedPoolIDs : "";
             if (!warnedImport && SelectedUnitHasCell())
             {
                 warnedImport = true;
-                string msg = $"Importing will remove all existing cells{unit}. Do you want to continue?";
+                string msg = $"Importing will remove the cells{unit}. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
             openFileCSV.Title = $"Cell import {unit}";
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPools[0]))//TODO multiple export???
+                bool success = false;
+                if (SelectedCells?.Count > 0)
+                {
+                    if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedCells.Cast<ModelUnitBase>().ToList()))
+                        success = true;
+                }
+                else if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPools.Cast<ModelUnitBase>().ToList()))
+                {
+                    success = true;
+                }
+                if (success)
                 {
                     LoadCells();
                     MessageBox.Show($"The cells{unit} are imported.", "Information");
@@ -1086,10 +1106,10 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_ItemsExport(object sender, EventArgs e)
         {
-            ModelUnitBase unit = SelectedUnit;
+            List<ModelUnitBase> units = SelectedUnits;
             ConnectionSelectionControl selectionControl = new()
             {
-                ChemInOutExists = unit != null,
+                ChemInOutExists = units != null,
                 GapJunctions = sender == listGap,
                 CheminalIncoming = sender == listIncoming,
                 ChemicalOutgoing = sender == listOutgoing
@@ -1105,7 +1125,7 @@ namespace SiliFish.UI.Controls
             bool chemout = selectionControl.ChemicalOutgoing;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, unit, gap, chemin, chemout))
+                if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, units, gap, chemin, chemout))
                 {
                     FileUtil.ShowFile(saveFileCSV.FileName);
                 }
@@ -1116,19 +1136,19 @@ namespace SiliFish.UI.Controls
 
         private void listConnections_ItemsImport(object sender, EventArgs e)
         {
-            ModelUnitBase unit = SelectedUnit;
-            string ofUnit = unit != null ? $"of {unit.ID} " : "full model ";
+            List<ModelUnitBase> units = SelectedUnits;
+            string ofUnits = units != null ? $"of {string.Join(", ", units.Select(u=>u.ID))} " : "full model ";
             if (!warnedImport &&
                 (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
                 Model is RunningModel runningModel && runningModel.HasConnections()))
             {
                 warnedImport = true;
-                string msg = $"Importing will remove all cell pool connections {ofUnit}and create from the CSV file. Do you want to continue?";
+                string msg = $"Importing will remove all cell pool connections {ofUnits}and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
             ConnectionSelectionControl selectionControl = new()
             {
-                ChemInOutExists = unit != null,
+                ChemInOutExists = units != null,
                 GapJunctions = sender == listGap,
                 CheminalIncoming = sender == listIncoming,
                 ChemicalOutgoing = sender == listOutgoing
@@ -1143,11 +1163,11 @@ namespace SiliFish.UI.Controls
             bool chemin = selectionControl.CheminalIncoming;
             bool chemout = selectionControl.ChemicalOutgoing;
 
-            openFileCSV.Title = $"Connection import ({unit})";
+            openFileCSV.Title = $"Connection import ({units})";
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadConnectionsFromCSV(filename, Model, unit, gap, chemin, chemout))
+                if (ModelFile.ReadConnectionsFromCSV(filename, Model, units, gap, chemin, chemout))
                 {
                     RefreshProjections();
                     string jncList = chemin && chemout ? "chemical" :
@@ -1158,8 +1178,7 @@ namespace SiliFish.UI.Controls
                         jncList = "gap and " + jncList;
                     else if (gap)
                         jncList = "gap";
-                    string units = unit != null ? " of " + unit.ID : "";
-                    MessageBox.Show($"The {jncList} junctions{units} are imported.", "Information");
+                    MessageBox.Show($"The {jncList} junctions{ofUnits} are imported.", "Information");
                 }
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");
@@ -1312,6 +1331,16 @@ namespace SiliFish.UI.Controls
             else if (unit is CellPoolTemplate poolTemplate)
                 LoadStimuli(new List<CellPoolTemplate> { poolTemplate });
         }
+        private void LoadStimuli(List<ModelUnitBase> units)
+        {
+            if (units is null || units.Count == 0)
+                LoadStimuli();
+            else
+            {
+                foreach (ModelUnitBase unit in units)
+                    LoadStimuli(unit);
+            }
+        }
 
 
         private void LoadStimuli(List<CellPoolTemplate> cellPoolTemplates)
@@ -1431,7 +1460,7 @@ namespace SiliFish.UI.Controls
                     StimulusBase stim = (StimulusBase)obj;
                     Model.RemoveStimulus(stim);
                 }
-                LoadStimuli(SelectedUnit);
+                LoadStimuli(SelectedUnits);
                 ModelIsUpdated();
             }
         }
@@ -1488,12 +1517,27 @@ namespace SiliFish.UI.Controls
                 return (Model as ModelTemplate).StimulusTemplates.FirstOrDefault(stim => stim.TargetPool == cellPoolTemplate.CellGroup) != null;
             return false;
         }
+        private bool SelectedUnitsHasStimulus(List<ModelUnitBase> units)
+        {
+            if (units == null || units.Count == 0)
+            {
+                if (Model is ModelTemplate mt)
+                    return mt.HasStimulus();
+                return (Model as RunningModel).HasStimulus();
+            }
+            foreach (ModelUnitBase unit in units)
+            {
+                if (SelectedUnitHasStimulus(unit))
+                    return true;
+            }
+            return false;
+        }
         private void listStimuli_ItemsExport(object sender, EventArgs e)
         {
-            ModelUnitBase selectedUnit = SelectedUnit;
+           List<ModelUnitBase> selectedUnits = SelectedUnits;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnit))
+                if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnits))
                 {
                     FileUtil.ShowFile(saveFileCSV.FileName);
                 }
@@ -1504,25 +1548,24 @@ namespace SiliFish.UI.Controls
 
         private void listStimuli_ItemsImport(object sender, EventArgs e)
         {
-            ModelUnitBase selectedUnit = SelectedUnit;
-            string unit = selectedUnit?.ID ?? "the model";
-            if (selectedUnit is CellPoolTemplate cpt)
-                unit = cpt.CellGroup;
-            if (!warnedImport && SelectedUnitHasStimulus(SelectedUnit))
+            List<ModelUnitBase> selectedUnits = SelectedUnits;
+            string ofUnits = selectedUnits != null ?
+                $"{string.Join(", ", selectedUnits.Select(u => (u is CellPoolTemplate cpt) ? cpt.CellGroup : u.ID))} " :
+                "the model ";
+            if (!warnedImport && SelectedUnitsHasStimulus(SelectedUnits))
             {
                 warnedImport = true;
-                string msg = $"Importing will remove all existing stimuli of {unit}. Do you want to continue?";
+                string msg = $"Importing will remove all existing stimuli of {ofUnits}. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
-            openFileCSV.Title = $"Stimulus import ({unit})";
+            openFileCSV.Title = $"Stimulus import ({ofUnits})";
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadStimulusFromCSV(filename, Model, selectedUnit))
+                if (ModelFile.ReadStimulusFromCSV(filename, Model, selectedUnits))
                 {
-                    LoadStimuli(selectedUnit);
-                    string units = selectedUnit != null ? " of " + selectedUnit.ID : "";
-                    MessageBox.Show($"The stimuli{units} are imported.", "Information");
+                    LoadStimuli(selectedUnits);
+                    MessageBox.Show($"The stimuli of {ofUnits} are imported.", "Information");
                 }
                 else
                     MessageBox.Show($"The import was unsuccesful. Make sure {filename} is a valid export file and not currently used by any other software.", "Error");

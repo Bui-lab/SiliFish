@@ -206,12 +206,6 @@ namespace SiliFish.ModelUnits.Architecture
             throw exception;
         }
 
-        public virtual void CopyConnectionsOfCellPool(CellPoolTemplate poolSource, CellPoolTemplate poolTarget)
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
 
     }
 }

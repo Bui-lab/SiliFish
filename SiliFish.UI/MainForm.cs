@@ -407,6 +407,7 @@ namespace SiliFish.UI
         }
         private bool SaveModelAsExcel()
         {
+            List<string> errorList = [];
             try
             {
                 if (!CheckModelBeforeSave())
@@ -420,7 +421,7 @@ namespace SiliFish.UI
                 if (saveFileExcel.ShowDialog() == DialogResult.OK)
                 {
                     modelFileDefaultFolder = Path.GetDirectoryName(saveFileExcel.FileName);
-                    ModelFile.SaveToExcel(saveFileExcel.FileName, mb);
+                    ModelFile.SaveToExcel(saveFileExcel.FileName, mb, errorList);
                     lastFileName = saveFileExcel.FileName;
                     this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileExcel.FileName)}";
                     modelControl.ModelUpdated = false;
@@ -434,6 +435,11 @@ namespace SiliFish.UI
             {
                 ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, ex);
                 return false;
+            }
+            finally
+            {
+                if (errorList.Count > 0)
+                    MessageBox.Show("");
             }
         }
 

@@ -820,8 +820,10 @@ namespace SiliFish.UI.Controls
         }
         private void listPlotHistory_ItemSelect(object sender, EventArgs e)//TODO update selection
         {
-            if (sender is not PlotDefinition plot) return;
-            if (!simulation.SimulationRun) return;
+            if (sender is not PlotDefinition plot) 
+                return;
+            if (!simulation.SimulationRun) 
+                return;
             ddPlot.Text = plot.PlotType.GetDisplayName();
             plotSelection = plot.Selection;
             tPlotStart = timeRangePlot.StartTime;

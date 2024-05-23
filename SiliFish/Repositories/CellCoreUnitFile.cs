@@ -65,7 +65,7 @@ namespace SiliFish.Repositories
                 list.Add("Core type");
             if (json.Contains("\"Parameters\":") && FixParametersJson(ref json))
                 list.Add("Cell parameters");
-            if (!json.StartsWith("["))
+            if (!json.StartsWith('['))
                 json = $"[\r\n{json}\r\n]";
             json = JsonUtil.CleanUp(json);
             return list;
@@ -73,7 +73,7 @@ namespace SiliFish.Repositories
 
         public static void Save(string fileName, CellCore core)
         {
-            CellCore[] arr = new CellCore[] { core };
+            CellCore[] arr = [core];
             //the core is saved as an array to benefit from $type tag added by the JsonSerializer
             JsonUtil.SaveToJsonFile(fileName, arr);
         }
