@@ -95,8 +95,6 @@ namespace SiliFish.UI.Controls
             linkLoadCoreUnit = new LinkLabel();
             linkTestDynamics = new LinkLabel();
             tTimeline = new TabPage();
-            tAttachments = new TabPage();
-            attachmentList = new AttachmentListControl();
             splitMain = new SplitContainer();
             colorDialog = new ColorDialog();
             openFileJson = new OpenFileDialog();
@@ -121,7 +119,6 @@ namespace SiliFish.UI.Controls
             grConductionVelocity.SuspendLayout();
             pDynamicsTops.SuspendLayout();
             tTimeline.SuspendLayout();
-            tAttachments.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
             splitMain.Panel2.SuspendLayout();
@@ -218,7 +215,7 @@ namespace SiliFish.UI.Controls
             // lZAxis
             // 
             lZAxis.AutoSize = true;
-            lZAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lZAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lZAxis.Location = new Point(18, 8);
             lZAxis.Name = "lZAxis";
             lZAxis.Size = new Size(147, 15);
@@ -237,7 +234,7 @@ namespace SiliFish.UI.Controls
             // 
             // lXAxis
             // 
-            lXAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lXAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lXAxis.Location = new Point(18, 8);
             lXAxis.Name = "lXAxis";
             lXAxis.Size = new Size(171, 15);
@@ -572,7 +569,7 @@ namespace SiliFish.UI.Controls
             // lYAxis
             // 
             lYAxis.AutoSize = true;
-            lYAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lYAxis.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             lYAxis.Location = new Point(18, 8);
             lYAxis.Name = "lYAxis";
             lYAxis.Size = new Size(147, 15);
@@ -621,7 +618,6 @@ namespace SiliFish.UI.Controls
             tabCellPool.Controls.Add(tProjections);
             tabCellPool.Controls.Add(tDynamics);
             tabCellPool.Controls.Add(tTimeline);
-            tabCellPool.Controls.Add(tAttachments);
             tabCellPool.Dock = DockStyle.Fill;
             tabCellPool.Location = new Point(0, 0);
             tabCellPool.Name = "tabCellPool";
@@ -781,7 +777,7 @@ namespace SiliFish.UI.Controls
             // 
             // lRheobaseDescription
             // 
-            lRheobaseDescription.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            lRheobaseDescription.Font = new Font("Segoe UI", 7F);
             lRheobaseDescription.Location = new Point(146, 4);
             lRheobaseDescription.Name = "lRheobaseDescription";
             lRheobaseDescription.Size = new Size(117, 31);
@@ -880,24 +876,6 @@ namespace SiliFish.UI.Controls
             tTimeline.Text = "Timeline";
             tTimeline.UseVisualStyleBackColor = true;
             // 
-            // tAttachments
-            // 
-            tAttachments.Controls.Add(attachmentList);
-            tAttachments.Location = new Point(4, 24);
-            tAttachments.Name = "tAttachments";
-            tAttachments.Size = new Size(320, 557);
-            tAttachments.TabIndex = 3;
-            tAttachments.Text = "Attachments";
-            tAttachments.UseVisualStyleBackColor = true;
-            // 
-            // attachmentList
-            // 
-            attachmentList.Dock = DockStyle.Fill;
-            attachmentList.Location = new Point(0, 0);
-            attachmentList.Name = "attachmentList";
-            attachmentList.Size = new Size(320, 557);
-            attachmentList.TabIndex = 0;
-            // 
             // splitMain
             // 
             splitMain.BorderStyle = BorderStyle.FixedSingle;
@@ -966,7 +944,6 @@ namespace SiliFish.UI.Controls
             pDynamicsTops.ResumeLayout(false);
             pDynamicsTops.PerformLayout();
             tTimeline.ResumeLayout(false);
-            tAttachments.ResumeLayout(false);
             splitMain.Panel1.ResumeLayout(false);
             splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
@@ -1026,8 +1003,6 @@ namespace SiliFish.UI.Controls
         private RichTextBox eDescription;
         private ComboBox ddCoreType;
         private Label lCoreType;
-        private TabPage tAttachments;
-        private AttachmentListControl attachmentList;
         private TextBox eSomiteRange;
         private CheckBox cbAllSomites;
         private ComboBox ddBodyPosition;

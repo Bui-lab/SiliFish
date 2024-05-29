@@ -60,15 +60,15 @@ namespace SiliFish.UI.Controls
         public GAControl()
         {
             InitializeComponent();
-            ddGASelection.Items.AddRange(GeneticAlgorithmExtension.GetSelectionBases().ToArray());
+            ddGASelection.Items.AddRange([.. GeneticAlgorithmExtension.GetSelectionBases()]);
             ddGASelection.SelectedIndex = 0;
-            ddGACrossOver.Items.AddRange(GeneticAlgorithmExtension.GetCrossoverBases().ToArray());
+            ddGACrossOver.Items.AddRange([.. GeneticAlgorithmExtension.GetCrossoverBases()]);
             ddGACrossOver.SelectedIndex = 0;
-            ddGAMutation.Items.AddRange(GeneticAlgorithmExtension.GetMutationBases().ToArray());
+            ddGAMutation.Items.AddRange([.. GeneticAlgorithmExtension.GetMutationBases()]);
             ddGAMutation.SelectedIndex = 0;
-            ddGAReinsertion.Items.AddRange(GeneticAlgorithmExtension.GetReinsertionBases().ToArray());
+            ddGAReinsertion.Items.AddRange([.. GeneticAlgorithmExtension.GetReinsertionBases()]);
             ddGAReinsertion.SelectedIndex = 0;
-            ddGATermination.Items.AddRange(GeneticAlgorithmExtension.GetTerminationBases().ToArray());
+            ddGATermination.Items.AddRange([.. GeneticAlgorithmExtension.GetTerminationBases()]);
             ddGATermination.SelectedIndex = 0;
         }
 
@@ -84,7 +84,7 @@ namespace SiliFish.UI.Controls
 
         private void CheckResult(CoreSolverOutput currentOutput)
         {
-            if (exhaustiveBestParameters.Any(bp => string.Join(",", bp.Item2) == string.Join(",", currentOutput.Values)))
+            if (exhaustiveBestParameters.Any(bp => string.Join(",", bp.Parameters) == string.Join(",", currentOutput.Values)))
                 return;
             if (exhaustiveSolverOutput == null || exhaustiveSolverOutput.Fitness <= currentOutput.Fitness)
             {
@@ -640,7 +640,12 @@ namespace SiliFish.UI.Controls
                     double rheobase = core.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1);
                     sw.WriteLine(string.Join(",", ++iter, string.Join(",", bp.Parameters.Values), bp.Fitness, rheobase));
                 }
-                FileUtil.ShowFile(saveFileCSV.FileName);
+                string filename = saveFileCSV.FileName;
+                if (GlobalSettings.ShowFileFolderAfterSave)
+                    FileUtil.ShowFile(filename);
+                else
+                    MessageBox.Show($"File {filename} is saved.", "Information");
+
             }
 
         }

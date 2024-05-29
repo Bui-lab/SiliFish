@@ -123,15 +123,10 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Core?.Conductance ?? 0);
-                            double maxConductance = list.Max(c => c.Core?.Conductance ?? 0);
-                            interPools.Add(new InterPool()
+                            interPools.Add(new InterPool(list)
                             {
                                 SourcePool = source,
                                 TargetPool = target,
-                                CountJunctions = count,
-                                MinConductance = minConductance,
-                                MaxConductance = maxConductance,
                                 Mode = CellOutputMode.Electrical
                             });
                         }
@@ -160,16 +155,10 @@ namespace SiliFish.ModelUnits.Architecture
                         int count = list.Count();
                         if (count > 0)
                         {
-                            double minConductance = list.Min(c => c.Core?.Conductance ?? 0);
-                            double maxConductance = list.Max(c => c.Core?.Conductance ?? 0);
-
-                            interPools.Add(new InterPool()
+                            interPools.Add(new InterPool(list)
                             {
                                 SourcePool = source,
                                 TargetPool = target,
-                                CountJunctions = count,
-                                MinConductance = minConductance,
-                                MaxConductance = maxConductance,
                                 Mode = sourcePool.CellOutputMode
                             });
                         }
@@ -429,14 +418,15 @@ namespace SiliFish.ModelUnits.Architecture
             }
         }
 
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
-            int preCount = errors?.Count ?? 0;
-            base.CheckValues(ref errors);
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
             foreach (CellPool cp in CellPools)
-                cp.CheckValues(ref errors);
-            return errors.Count == preCount;
+                cp.CheckValues(ref errors, ref warnings);
+            return errors.Count + warnings.Count == preCount;
         }
 
         #region Cells

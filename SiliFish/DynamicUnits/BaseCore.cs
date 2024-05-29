@@ -66,9 +66,10 @@ namespace SiliFish.DynamicUnits
             this.SetPropertyValue(name, value);
         }
 
-        public virtual bool CheckValues(ref List<string> errors)
+        public virtual bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
+            warnings ??= [];
             return true;
         }
 

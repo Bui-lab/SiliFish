@@ -48,7 +48,9 @@ namespace SiliFish.UI.Controls
 
                 pMainInfo.Enabled = !createdCellPool;
                 linkLoadPool.Enabled = !createdCellPool;
-
+                linkSavePool.Enabled = !createdCellPool;
+                eDescription.ReadOnly = createdCellPool;
+                
                 poolBase = value ?? new();
                 WriteDataToControl();
             }
@@ -57,6 +59,8 @@ namespace SiliFish.UI.Controls
 
         private bool skipCellTypeChange = false;
         private bool skipCoreTypeChange = false;
+
+        #region Private functions
         private void ddCellType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (skipCellTypeChange) return;
@@ -170,7 +174,6 @@ namespace SiliFish.UI.Controls
             poolBase.ConductionVelocity = distConductionVelocity.GetDistribution();
             poolBase.AscendingAxonLength = cbAscendingAxon.Checked ? distributionAscending.GetDistribution() : null;
             poolBase.DescendingAxonLength = cbDescendingAxon.Checked ? distributionDescending.GetDistribution() : null;
-            poolBase.Attachments = attachmentList.GetAttachments();
         }
 
         private void WriteDataToControl()
@@ -226,7 +229,6 @@ namespace SiliFish.UI.Controls
             ParamDictToGrid();
 
             cbActive.Checked = poolBase.Active;
-            attachmentList.SetAttachments(poolBase.Attachments);
         }
 
         private void rbYZAngular_CheckedChanged(object sender, EventArgs e)
@@ -321,14 +323,24 @@ namespace SiliFish.UI.Controls
             eSomiteRange.ReadOnly = cbAllSomites.Checked;
             eSomiteRange.Visible = !cbAllSomites.Checked;
         }
+        private void cbAscendingAxon_CheckedChanged(object sender, EventArgs e)
+        {
+            distributionAscending.Enabled = cbAscendingAxon.Checked;
+        }
 
+        private void cbDescendingAxon_CheckedChanged(object sender, EventArgs e)
+        {
+            distributionDescending.Enabled = cbDescendingAxon.Checked;
+        }
+
+        #endregion
         public CellPoolControl(bool somiteBased, ModelSettings settings)
         {
             InitializeComponent();
             this.settings = settings;
             SomiteBased = somiteBased;
             distConductionVelocity.AbsoluteEnforced = true;
-            ddCoreType.Items.AddRange(CellCore.GetCoreTypes().ToArray());// fill before celltypes
+            ddCoreType.Items.AddRange([.. CellCore.GetCoreTypes()]);// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddNeuronClass.DataSource = Enum.GetNames(typeof(NeuronClass));
             ddBodyPosition.DataSource = Enum.GetNames(typeof(BodyLocation));
@@ -363,15 +375,6 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("Number of cells is 0. To disable a cell pool, use the Active field instead.");
         }
 
-        private void cbAscendingAxon_CheckedChanged(object sender, EventArgs e)
-        {
-            distributionAscending.Enabled = cbAscendingAxon.Checked;
-        }
-
-        private void cbDescendingAxon_CheckedChanged(object sender, EventArgs e)
-        {
-            distributionDescending.Enabled = cbDescendingAxon.Checked;
-        }
 
     }
 }

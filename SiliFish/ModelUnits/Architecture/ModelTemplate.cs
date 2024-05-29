@@ -259,11 +259,12 @@ namespace SiliFish.ModelUnits.Architecture
             jnc.linkedTarget = CellPoolTemplates.FirstOrDefault(t => t.CellGroup == jnc.TargetPool);
         }
 
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
-            int preCount = errors.Count;
-            base.CheckValues(ref errors);
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
             var v = CellPoolTemplates.GroupBy(p => p.ToString()).Where(c => c.Count() > 1);
             foreach (string cpt in v.Select(gr => gr.Key).Distinct())
                 errors.Add($"Cell pool names have to be unique: {cpt}");
@@ -271,10 +272,10 @@ namespace SiliFish.ModelUnits.Architecture
             foreach (string ipt in v2.Select(gr => gr.Key).Distinct())
                 errors.Add($"Gap junction and synapse names have to be unique: {ipt}");
             foreach (CellPoolTemplate cpt in CellPoolTemplates)
-                cpt.CheckValues(ref errors);
+                cpt.CheckValues(ref errors, ref warnings);
             foreach (InterPoolTemplate ipt in InterPoolTemplates)
-                ipt.CheckValues(ref errors);
-            return errors.Count == preCount;
+                ipt.CheckValues(ref errors, ref warnings);
+            return errors.Count  + warnings.Count == preCount;
         }
         public bool RenameCellPool(string oldName, string newName)
         {

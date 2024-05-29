@@ -36,7 +36,7 @@ namespace SiliFish.UI.Controls
             autoGenerateName = name == stim.Name;
             eName.Text = stim.Name;
             stimControl.SetStimulusSettings(Stimulus.Settings);
-            ddTargetPool.Items.AddRange(pools.ToArray());
+            ddTargetPool.Items.AddRange([.. pools]);
             ddTargetPool.Text = stim.TargetPool;
             if (ddTargetPool.Text == "")
                 ddTargetPool.Text = stim.TargetPool + " (inactive)";

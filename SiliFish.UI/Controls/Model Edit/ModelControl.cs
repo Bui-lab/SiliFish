@@ -16,6 +16,8 @@ using SiliFish.UI.EventArguments;
 using SiliFish.UI.Controls.Model_Edit;
 using SiliFish.UI.Controls.General;
 using SiliFish.UI.Services;
+using static OfficeOpenXml.ExcelErrorValue;
+using System.Reflection;
 
 namespace SiliFish.UI.Controls
 {
@@ -173,10 +175,10 @@ namespace SiliFish.UI.Controls
 
             //Settings
             if (ddDefaultNeuronCore.Items.Count == 0)
-                ddDefaultNeuronCore.Items.AddRange(CellCore.GetCoreTypes().ToArray());
+                ddDefaultNeuronCore.Items.AddRange([.. CellCore.GetCoreTypes()]);
             ddDefaultNeuronCore.Text = Model?.Settings.DefaultNeuronCore;
             if (ddDefaultMuscleCellCore.Items.Count == 0)
-                ddDefaultMuscleCellCore.Items.AddRange(CellCore.GetCoreTypes().ToArray());
+                ddDefaultMuscleCellCore.Items.AddRange([.. CellCore.GetCoreTypes()]);
             ddDefaultMuscleCellCore.Text = Model?.Settings.DefaultMuscleCellCore;
             propSettings.SelectedObject = Model?.Settings;
             propKinematics.SelectedObject = Model?.KinemParam;
@@ -311,6 +313,8 @@ namespace SiliFish.UI.Controls
             cplControl.SavePool += Cpl_SavePool;
 
             cplControl.PoolBase = pool;
+            bool createdCellPool = pool is CellPool cp && cp.NumOfCells > 0;
+            frmControl.SaveVisible = !createdCellPool;
             frmControl.AddControl(cplControl, cplControl.CheckValues);
 
             frmControl.Text = pool?.ToString() ?? "New Cell Pool";
@@ -463,7 +467,11 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveCellPoolsToCSV(saveFileCSV.FileName, Model, SelectedUnits))
                 {
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                    string filename = saveFileCSV.FileName;
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);                     
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -737,11 +745,21 @@ namespace SiliFish.UI.Controls
                     if (SelectedCells?.Count > 0)
                     {
                         if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedCells.Cast<ModelUnitBase>().ToList()))
-                            FileUtil.ShowFile(saveFileCSV.FileName);
+                        {
+                            string filename = saveFileCSV.FileName;
+                            if (GlobalSettings.ShowFileFolderAfterSave)
+                                FileUtil.ShowFile(filename);
+                            else
+                                MessageBox.Show($"File {filename} is saved.", "Information");
+                        }
                     }
                     else if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPools.Cast<ModelUnitBase>().ToList()))
                     {
-                        FileUtil.ShowFile(saveFileCSV.FileName);
+                        string filename = saveFileCSV.FileName; 
+                        if (GlobalSettings.ShowFileFolderAfterSave)
+                            FileUtil.ShowFile(filename);
+                        else
+                            MessageBox.Show($"File {filename} is saved.", "Information");
                     }
                     else
                         MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -1037,6 +1055,14 @@ namespace SiliFish.UI.Controls
                 jnc = new ChemicalSynapse(synapse);
             else if (sender is InterPoolTemplate ipt)
                 jnc = new InterPoolTemplate(ipt);
+            else if (sender is InterPool)
+                MessageBox.Show("Please select an individual junction to duplicate.", "Info");
+            else
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name,
+                    new Exception($"Unhandled item type {sender.GetType()}"));
+                return;
+            }
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, true);
             if (jncs != null && jncs.Count != 0)
             {
@@ -1067,7 +1093,17 @@ namespace SiliFish.UI.Controls
         }
         private void listConnections_ItemView(object sender, EventArgs e)
         {
-            if (sender is not InterPoolBase jnc) return;
+            if (sender is InterPool)
+            {
+                MessageBox.Show("Please select an individual junction to view/edit.", "Info");
+                return;
+            }
+            if (sender is not InterPoolBase jnc)
+            {
+                ExceptionHandler.ExceptionHandling(MethodBase.GetCurrentMethod().Name,
+                    new Exception($"Unhandled item type {sender.GetType()}"));
+                return;
+            }
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, false);
             if (jncs != null && jncs.Count != 0)
             {
@@ -1127,7 +1163,12 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, units, gap, chemin, chemout))
                 {
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                    string filename = saveFileCSV.FileName; 
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");
@@ -1137,7 +1178,7 @@ namespace SiliFish.UI.Controls
         private void listConnections_ItemsImport(object sender, EventArgs e)
         {
             List<ModelUnitBase> units = SelectedUnits;
-            string ofUnits = units != null ? $"of {string.Join(", ", units.Select(u=>u.ID))} " : "full model ";
+            string ofUnits = units != null ? $" of {string.Join(", ", units.Select(u=>u.ID))} " : " of full model ";
             if (!warnedImport &&
                 (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
                 Model is RunningModel runningModel && runningModel.HasConnections()))
@@ -1539,7 +1580,11 @@ namespace SiliFish.UI.Controls
             {
                 if (ModelFile.SaveStimulusToCSV(saveFileCSV.FileName, Model, selectedUnits))
                 {
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                    string filename = saveFileCSV.FileName; 
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
                 }
                 else
                     MessageBox.Show("There is a problem with saving the csv file. Please make sure the file is not open.", "Error");

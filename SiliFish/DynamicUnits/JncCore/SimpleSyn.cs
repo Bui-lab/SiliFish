@@ -45,14 +45,17 @@ namespace SiliFish.DynamicUnits
             ISynA = ISynB = 0;
         }
 
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
-            int preCount = errors?.Count ?? 0;
-            base.CheckValues(ref errors);
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
             if (TauD < GlobalSettings.Epsilon || TauR < GlobalSettings.Epsilon)
                 errors.Add($"Chemical synapse: Tau has 0 value.");
-            return errors.Count == preCount;
+            if (TauD < TauR)
+                warnings.Add($"Chemical synapse: Tau decay is less than tau rise - can cause unexpected results.");
+            return errors.Count + warnings.Count == preCount;
         }
         public override double GetNextVal(double vPreSynapse, double vPost, List<double> _, double tCurrent, DynamicsParam settings, bool excitatory)
         {

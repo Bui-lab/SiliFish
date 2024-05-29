@@ -127,12 +127,14 @@ public override string SourcePool
         }
 
 
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
-            int preCount = errors.Count;
-            base.CheckValues(ref errors);
-            Core.CheckValues(ref errors);
-            return errors.Count == preCount;
+            errors ??= [];
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
+            Core.CheckValues(ref errors, ref warnings);
+            return errors.Count + warnings.Count == preCount;
         }
         public override void LinkObjects()
         {

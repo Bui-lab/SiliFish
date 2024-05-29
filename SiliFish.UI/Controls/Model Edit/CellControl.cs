@@ -197,9 +197,9 @@ namespace SiliFish.UI.Controls
         {
             InitializeComponent();
             this.model = model;
-            ddCellPool.Items.AddRange(model.CellPools.ToArray());
+            ddCellPool.Items.AddRange([.. model.CellPools]);
             ddCellPool.Enabled = false;
-            ddCoreType.Items.AddRange(CellCore.GetCoreTypes().ToArray());// fill before celltypes
+            ddCoreType.Items.AddRange([.. CellCore.GetCoreTypes()]);// fill before celltypes
             ddCellType.DataSource = Enum.GetNames(typeof(CellType));
             ddCellType.Enabled = false;//It has to be linked to the cell pool, always disabled
         }

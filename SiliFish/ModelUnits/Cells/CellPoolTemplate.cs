@@ -153,7 +153,6 @@ namespace SiliFish.ModelUnits.Cells
         [JsonIgnore]
         public override string ID { get { return Position + "_" + CellGroup; } }
 
-        public List<string> Attachments { get; set; } = [];
         [JsonIgnore, Browsable(false)]
         public static List<string> ColumnNames { get; } =
             ListBuilder.Build<string>("CellGroup", "CellType", "NTMode",
@@ -319,14 +318,20 @@ namespace SiliFish.ModelUnits.Cells
             return CellGroup.CompareTo(other.CellGroup);
         }
 
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
-            int preCount = errors.Count;
-            base.CheckValues(ref errors);
-            CellCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues());
-            if (errors.Count > preCount)
-                errors.Insert(preCount, $"{ID}:");
-            return errors.Count == preCount;
+            errors ??= [];
+            warnings ??= [];
+            int preErrorCount = errors.Count;
+            int preWarningCount = warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
+            CellCore.CheckValues(ref errors, ref warnings, CoreType, Parameters.GenerateSingleInstanceValues());
+            if (errors.Count > preErrorCount)
+                errors.Insert(preErrorCount, $"{ID}:");
+            if (warnings.Count > preWarningCount)
+                warnings.Insert(preWarningCount, $"{ID}:");
+
+            return errors.Count == preErrorCount && warnings.Count == preWarningCount;
         }
         public void BackwardCompatibility()
         {

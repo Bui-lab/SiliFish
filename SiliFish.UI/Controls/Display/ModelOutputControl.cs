@@ -865,9 +865,13 @@ namespace SiliFish.UI.Controls
                 string json = JsonUtil.ToJson(listPlotHistory.GetItems<PlotDefinition>());
                 if (saveFileJson.ShowDialog() == DialogResult.OK)
                 {
-                    File.WriteAllText(saveFileJson.FileName, json);
+                    string filename = saveFileJson.FileName;
+                    File.WriteAllText(filename, json);
                     fileSaved = true;
-                    FileUtil.ShowFile(saveFileJson.FileName);
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
                 }
             }
             catch (Exception exc)

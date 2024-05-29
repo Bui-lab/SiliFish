@@ -62,6 +62,8 @@
             lDistanceMode = new Label();
             eDescription = new RichTextBox();
             grReach = new GroupBox();
+            ddReachMode = new ComboBox();
+            lReachMode = new Label();
             cbDescending = new CheckBox();
             cbAscending = new CheckBox();
             lUoD2 = new Label();
@@ -74,10 +76,6 @@
             dgDynamics = new DistributionDataGrid();
             tTimeline = new TabPage();
             timeLineControl = new TimeLineControl();
-            tAttachments = new TabPage();
-            attachmentList = new AttachmentListControl();
-            ddReachMode = new ComboBox();
-            lReachMode = new Label();
             ((System.ComponentModel.ISupportInitialize)numMaxIncoming).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMaxOutgoing).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numMinAscReach).BeginInit();
@@ -93,7 +91,6 @@
             tabInterPool.SuspendLayout();
             tDynamics.SuspendLayout();
             tTimeline.SuspendLayout();
-            tAttachments.SuspendLayout();
             SuspendLayout();
             // 
             // lSourcePool
@@ -431,6 +428,29 @@
             grReach.TabStop = false;
             grReach.Text = "Reach";
             // 
+            // ddReachMode
+            // 
+            ddReachMode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddReachMode.BackColor = Color.WhiteSmoke;
+            ddReachMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddReachMode.FlatStyle = FlatStyle.Flat;
+            ddReachMode.FormattingEnabled = true;
+            ddReachMode.Items.AddRange(new object[] { "# of somites", "unit of length" });
+            ddReachMode.Location = new Point(100, 47);
+            ddReachMode.Name = "ddReachMode";
+            ddReachMode.Size = new Size(140, 23);
+            ddReachMode.TabIndex = 28;
+            ddReachMode.SelectedIndexChanged += ddReachMode_SelectedIndexChanged;
+            // 
+            // lReachMode
+            // 
+            lReachMode.AutoSize = true;
+            lReachMode.Location = new Point(4, 51);
+            lReachMode.Name = "lReachMode";
+            lReachMode.Size = new Size(73, 15);
+            lReachMode.TabIndex = 27;
+            lReachMode.Text = "Reach Mode";
+            // 
             // cbDescending
             // 
             cbDescending.AutoSize = true;
@@ -544,7 +564,6 @@
             // 
             tabInterPool.Controls.Add(tDynamics);
             tabInterPool.Controls.Add(tTimeline);
-            tabInterPool.Controls.Add(tAttachments);
             tabInterPool.Dock = DockStyle.Fill;
             tabInterPool.Location = new Point(0, 0);
             tabInterPool.Name = "tabInterPool";
@@ -598,47 +617,6 @@
             timeLineControl.Size = new Size(246, 525);
             timeLineControl.TabIndex = 24;
             // 
-            // tAttachments
-            // 
-            tAttachments.Controls.Add(attachmentList);
-            tAttachments.Location = new Point(4, 24);
-            tAttachments.Name = "tAttachments";
-            tAttachments.Size = new Size(252, 531);
-            tAttachments.TabIndex = 2;
-            tAttachments.Text = "Attachments";
-            tAttachments.UseVisualStyleBackColor = true;
-            // 
-            // attachmentList
-            // 
-            attachmentList.Dock = DockStyle.Fill;
-            attachmentList.Location = new Point(0, 0);
-            attachmentList.Name = "attachmentList";
-            attachmentList.Size = new Size(252, 531);
-            attachmentList.TabIndex = 0;
-            // 
-            // ddReachMode
-            // 
-            ddReachMode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ddReachMode.BackColor = Color.WhiteSmoke;
-            ddReachMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            ddReachMode.FlatStyle = FlatStyle.Flat;
-            ddReachMode.FormattingEnabled = true;
-            ddReachMode.Items.AddRange(new object[] { "# of somites", "unit of length" });
-            ddReachMode.Location = new Point(100, 47);
-            ddReachMode.Name = "ddReachMode";
-            ddReachMode.Size = new Size(140, 23);
-            ddReachMode.TabIndex = 28;
-            ddReachMode.SelectedIndexChanged += ddReachMode_SelectedIndexChanged;
-            // 
-            // lReachMode
-            // 
-            lReachMode.AutoSize = true;
-            lReachMode.Location = new Point(4, 51);
-            lReachMode.Name = "lReachMode";
-            lReachMode.Size = new Size(73, 15);
-            lReachMode.TabIndex = 27;
-            lReachMode.Text = "Reach Mode";
-            // 
             // InterPoolControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -666,7 +644,6 @@
             tDynamics.ResumeLayout(false);
             tDynamics.PerformLayout();
             tTimeline.ResumeLayout(false);
-            tAttachments.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -712,9 +689,7 @@
         private TabControl tabInterPool;
         private TabPage tDynamics;
         private TabPage tTimeline;
-        private TabPage tAttachments;
         private TimeLineControl timeLineControl;
-        private AttachmentListControl attachmentList;
         private TextBox eSynDelay;
         private ComboBox ddCoreType;
         private Label lCoreType;

@@ -119,17 +119,23 @@ namespace SiliFish.ModelUnits.Cells
                 jnc.LinkObjects(model);
             }
         }
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
-            int preCount = errors.Count;
-            base.CheckValues(ref errors);
-            Core.CheckValues(ref errors);
+            int preErrorCount = errors.Count;
+            int preWarningCount = warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
+            Core.CheckValues(ref errors, ref warnings);
             foreach (ChemicalSynapse syn in Terminals)
             {
-                if (!syn.CheckValues(ref errors))
-                    errors.Insert(preCount, $"{syn.ID}:");
+                if (!syn.CheckValues(ref errors, ref warnings))
+                {
+                    if (errors.Count > preErrorCount)
+                        errors.Insert(preErrorCount, $"{syn.ID}:");
+                    if (warnings.Count > preWarningCount)
+                        warnings.Insert(preWarningCount, $"{syn.ID}:");
+                }
             }
-            return errors.Count == preCount;
+            return errors.Count == preErrorCount && warnings.Count == preWarningCount;
         }
         #region Sort functions
         public override void SortJunctions()

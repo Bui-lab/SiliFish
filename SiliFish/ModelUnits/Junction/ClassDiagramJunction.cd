@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SiliFish.ModelUnits.Junction.GapJunction">
-    <Position X="7.25" Y="7" Width="2" />
+    <Position X="7.25" Y="10" Width="2" />
     <Members>
       <Method Name="ExportValues" Hidden="true" />
       <Method Name="GapJunction" Hidden="true" />
@@ -13,10 +13,9 @@
       <Property Name="nMax" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
       <Method Name="UnlinkObjects" Hidden="true" />
-      <Property Name="VoltageDiff" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>BAAAACICAAAQgAIEAAABAAAAAAAAAEAAAIAQqACAQAA=</HashCode>
+      <HashCode>BAAAACICAAASgAAEAAABAAQAAAAAAEAAAIQQqACAQAA=</HashCode>
       <FileName>ModelUnits\Junction\GapJunction.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -39,7 +38,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.ChemicalSynapse">
-    <Position X="5" Y="7" Width="1.5" />
+    <Position X="5" Y="10" Width="1.5" />
     <Members>
       <Method Name="CheckValues" Hidden="true" />
       <Method Name="ChemicalSynapse" Hidden="true" />
@@ -54,15 +53,14 @@
       <Method Name="UnlinkObjects" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>BAAAACICAEAAgAAEQAABAAAAAAAAAEAAAAAQKAAAQAA=</HashCode>
+      <HashCode>BAAAACICAEACgAAEQAABAAQAAAAAAEAAAAQQKAAAQAA=</HashCode>
       <FileName>ModelUnits\Junction\ChemicalSynapse.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.InterPoolTemplate">
-    <Position X="2.75" Y="5" Width="1.5" />
+    <Position X="2.75" Y="5.25" Width="1.5" />
     <Members>
       <Property Name="Active" Hidden="true" />
-      <Property Name="Attachments" Hidden="true" />
       <Property Name="AxonReachMode" Hidden="true" />
       <Property Name="CellReach" Hidden="true" />
       <Method Name="CheckValues" Hidden="true" />
@@ -86,7 +84,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SiliFish.ModelUnits.Junction.JunctionBase">
-    <Position X="6.25" Y="5" Width="1.5" />
+    <Position X="6.25" Y="5.25" Width="1.5" />
     <Members>
       <Method Name="InitForSimulation" Hidden="true" />
       <Field Name="inputCurrent" Hidden="true" />
@@ -94,22 +92,15 @@
       <Method Name="PopulateCurrentArray" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>BgAACAAAAAAAAQABAAGgAQAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <HashCode>BgCACAAABAAAAQABAAGgAQUAAAAAAAAQAAQACAAAAAA=</HashCode>
       <FileName>ModelUnits\Junction\JunctionBase.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SiliFish.DynamicUnits.TwoExp_syn">
-    <Position X="0.5" Y="7" Width="1.5" />
-    <Members>
-      <Method Name="CheckValues" Hidden="true" />
-      <Field Name="DeltaT" Hidden="true" />
-      <Field Name="DeltaTEuler" Hidden="true" />
-      <Method Name="GetNextVal" Hidden="true" />
-      <Method Name="TwoExp_syn" Hidden="true" />
-    </Members>
+  <Class Name="SiliFish.ModelUnits.Junction.InterPool">
+    <Position X="10.75" Y="4.25" Width="4.25" />
     <TypeIdentifier>
-      <HashCode>QAAAAAAgAEAAAAAAAAAIABAAgAEAAgAAAAAAAAAAgAA=</HashCode>
-      <FileName>DynamicUnits\JncCore\TwoExp_Syn.cs</FileName>
+      <HashCode>AAAAAABAAICAgAAEAAABAAAAAAAAAEAAAAAAAAAAAAQ=</HashCode>
+      <FileName>ModelUnits\Junction\InterPool.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

@@ -1,4 +1,6 @@
 ﻿using SiliFish.Definitions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SiliFish.ModelUnits.Junction
 {
@@ -7,12 +9,26 @@ namespace SiliFish.ModelUnits.Junction
     /// </summary>
     public class InterPool: ModelUnitBase
     {
-        public string SourcePool, TargetPool;
-        public int CountJunctions;
-        public double MinConductance;
-        public double MaxConductance;
-        public CellOutputMode Mode;
+        private IEnumerable<JunctionBase> Junctions;
 
+        public string SourcePool, TargetPool;
+        public int CountJunctions { get{ return Junctions.Count(); }}
+        public double MinConductance { get {  return Junctions.Min(j=>j.Core?.Conductance??0); } }
+        public double MaxConductance { get { return Junctions.Max(j => j.Core?.Conductance ?? 0); } }
+
+        public override bool Active
+        {
+            get
+            {
+                return Junctions.All(j => j.Active);
+            }
+            set
+            {
+                foreach (JunctionBase junction in Junctions)
+                    junction.Active = value;
+            }
+        }
+        public CellOutputMode Mode;
         public override string ID => ToString();
         public override string ToString()
         {
@@ -23,12 +39,13 @@ namespace SiliFish.ModelUnits.Junction
                 Mode == CellOutputMode.Modulatory ? "M" :
                 Mode == CellOutputMode.Electrical ? "🗲" :
                 "?";
-            string active = Active ? "" : " (inactive)";
+            string active = Active ? "" : " (inactive/partial)";
             return $"({ntmode}) {SourcePool}{arrow}{TargetPool}{active}";
         }
 
-        public InterPool()
+        public InterPool(IEnumerable<JunctionBase> junctions)
         {
+            Junctions = junctions;
             PlotType = "InterPool";
         }
 

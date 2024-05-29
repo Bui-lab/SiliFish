@@ -1,4 +1,5 @@
-﻿using SiliFish.DynamicUnits.JncCore;
+﻿using SiliFish.Definitions;
+using SiliFish.DynamicUnits.JncCore;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
@@ -40,13 +41,13 @@ namespace SiliFish.DynamicUnits
             base.InitForSimulation(deltaT, ref uniqueID);
             IGap1to2 = IGap2to1 = 0;
         }
-
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
-            int preCount = errors?.Count ?? 0;
-            base.CheckValues(ref errors);
-            return errors.Count == preCount;
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
+            return errors.Count + warnings.Count == preCount;
         }
 
         //if any other type of gap junction is implemented, this function may need to be modified

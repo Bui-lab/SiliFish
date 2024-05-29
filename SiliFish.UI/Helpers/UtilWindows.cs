@@ -1,4 +1,5 @@
-﻿using SiliFish.Helpers;
+﻿using SiliFish.Definitions;
+using SiliFish.Helpers;
 using SiliFish.ModelUnits.Cells;
 
 namespace SiliFish.UI
@@ -22,7 +23,12 @@ namespace SiliFish.UI
                 {
                     FileUtil.SaveToFile(saveFileCSV.FileName, text);
                     saved = true;
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                    string filename = saveFileCSV.FileName; 
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+
                 }
                 catch (Exception exc)
                 {

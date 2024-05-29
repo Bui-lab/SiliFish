@@ -12,6 +12,7 @@ namespace SiliFish.Definitions
         public static string DatabaseName = "";
         public static string TempFolder = Path.GetTempPath() + "SiliFish";
         public static string OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\Output";
+        public static bool ShowFileFolderAfterSave = true;
         public static double Epsilon = 0.00001;
         public static double VNoise = 0.001;
         public static double BiologicalMinPotential = -100;
@@ -82,6 +83,11 @@ namespace SiliFish.Definitions
             Category("File & Folder")]
         public string DatabaseName { get { return GlobalSettings.DatabaseName; } set { GlobalSettings.DatabaseName = value; } }
 
+        [Browsable(true),
+            Description("Whether the files or folders will be opened after exporting data."),
+            DisplayName("Open File/Folder"),
+            Category("File && Folder")]
+        public bool ShowFileFolderAfterSave { get { return GlobalSettings.ShowFileFolderAfterSave; } set { GlobalSettings.ShowFileFolderAfterSave = value; } }
         #endregion
 
         #region Const

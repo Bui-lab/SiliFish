@@ -227,11 +227,21 @@ namespace SiliFish.UI
             modelOutputControl.SetRunningModel(null, runningModel);
 
             List<string> errors = [];
-            if (!runningModel.CheckValues(ref errors))
+            List<string> warnings = [];
+            if (!runningModel.CheckValues(ref errors, ref warnings))
             {
-                MessageBox.Show($"There are errors in the model. Please correct them before running a simulation: \r\n" +
-                    $"{string.Join("\r\n", errors)}", "Error");
-                return false;
+                if (errors.Count > 0)
+                {
+                    MessageBox.Show($"There are errors in the model. Please correct them before running a simulation: \r\n" +
+                        $"{string.Join("\r\n", errors)}", "Error");
+                    return false;
+                }
+                if (warnings.Count > 0)
+                {
+                    if (MessageBox.Show($"There are some issues in the model. Do you want to run as-is?\r\n" +
+                        $"{string.Join("\r\n", warnings)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return false;
+                }
             }
             runningModel.JunctionCurrentTrackingOn = GlobalSettings.JunctionLevelTracking;
             if (GlobalSettings.JunctionLevelTracking)
@@ -368,10 +378,11 @@ namespace SiliFish.UI
         {
             ModelBase mb = modelControl.GetModel();
             List<string> errors = [];
-            if (!mb.CheckValues(ref errors))
+            List<string> warnings = [];
+            if (!mb.CheckValues(ref errors, ref warnings))
             {
-                if (MessageBox.Show($"There are some errors in the model. Do you want to save as-is?\r\n" +
-                    $"{string.Join("\r\n", errors)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show($"There are some errors/issues in the model. Do you want to save as-is?\r\n" +
+                    $"{string.Join("\r\n", errors.Concat(warnings))}", "Data Errors/Warnings", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     return false;
             }
             return true;
@@ -425,7 +436,11 @@ namespace SiliFish.UI
                     lastFileName = saveFileExcel.FileName;
                     this.Text = $"SiliFish {Path.GetFileNameWithoutExtension(saveFileExcel.FileName)}";
                     modelControl.ModelUpdated = false;
-                    FileUtil.ShowFile(saveFileExcel.FileName);
+                    string filename = saveFileExcel.FileName;
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
 
                     return true;
                 }
@@ -452,12 +467,22 @@ namespace SiliFish.UI
                 return false;
             }
             List<string> errors = [];
-            if (!modelTemplate.CheckValues(ref errors))
+            List<string> warnings = [];
+            if (!modelTemplate.CheckValues(ref errors, ref warnings))
             {
                 UseWaitCursor = false;
-                MessageBox.Show($"There are errors in the template file. Please correct them before generating a model: \r\n" +
-                    $"{string.Join("\r\n", errors)}", "Error");
-                return false;
+                if (errors.Count > 0)
+                {
+                    MessageBox.Show($"There are errors in the template file. Please correct them before generating a model: \r\n" +
+                        $"{string.Join("\r\n", errors)}", "Error");
+                    return false;
+                }
+                if (warnings.Count > 0)
+                {
+                    if (MessageBox.Show($"There are some issues in the model. Do you want to generate the running model as-is?\r\n" +
+                        $"{string.Join("\r\n", warnings)}", "Data Errors", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return false;
+                }
             }
             return true;
         }
@@ -736,7 +761,13 @@ namespace SiliFish.UI
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (SimulationFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                {
+                    string filename = saveFileCSV.FileName; 
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+                }
             }
         }
         private void miToolsStatsSpikeStats_Click(object sender, EventArgs e)
@@ -744,8 +775,14 @@ namespace SiliFish.UI
             if (!StatsWarning()) return;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (SimulationFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                string filename = saveFileCSV.FileName;
+                if (SimulationFile.SaveSpikeFreqStats(modelSimulator.LastSimulation, filename))
+                {
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+                }
             }
         }
 
@@ -755,7 +792,13 @@ namespace SiliFish.UI
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (SimulationFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                {
+                    string filename = saveFileCSV.FileName; 
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+                }
             }
         }
 
@@ -764,7 +807,13 @@ namespace SiliFish.UI
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
                 if (SimulationFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
-                    FileUtil.ShowFile(saveFileCSV.FileName);
+                {
+                    string filename = saveFileCSV.FileName; 
+                    if (GlobalSettings.ShowFileFolderAfterSave)
+                        FileUtil.ShowFile(filename);
+                    else
+                        MessageBox.Show($"File {filename} is saved.", "Information");
+                }
             }
         }
         private void miToolsStatsFull_Click(object sender, EventArgs e)

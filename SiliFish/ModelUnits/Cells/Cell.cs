@@ -278,20 +278,24 @@ namespace SiliFish.ModelUnits.Cells
                 return differences;
             return null;
         }
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
-            int preCount = errors.Count;
-            base.CheckValues(ref errors);
+            warnings ??= [];
+            int preErrorCount = errors.Count;
+            int preWarningCount = warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
 
-            Core.CheckValues(ref errors);
+            Core.CheckValues(ref errors, ref warnings);
             foreach (GapJunction jnc in LeavingGapJunctions)
             {
-                jnc.CheckValues(ref errors);
-                if (errors.Count > preCount)
-                    errors.Insert(preCount, $"{jnc.ID}:");
+                jnc.CheckValues(ref errors, ref warnings);
+                if (errors.Count > preErrorCount)
+                    errors.Insert(preErrorCount, $"{jnc.ID}:");
+                if (warnings.Count > preWarningCount)
+                    warnings.Insert(preWarningCount, $"{jnc.ID}:");
             }
-            return errors.Count == preCount;
+            return errors.Count == preErrorCount && warnings.Count == preWarningCount;
         }
         /// <summary>
         /// Removes all stimuli, and incoming and outgoing connections

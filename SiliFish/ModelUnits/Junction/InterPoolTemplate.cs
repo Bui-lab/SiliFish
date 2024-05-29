@@ -91,9 +91,6 @@ namespace SiliFish.ModelUnits.Junction
             set { base.Active = value; }
         }
 
-        [JsonPropertyOrder(3)]
-        public List<string> Attachments { get; set; } = [];
-
         [JsonIgnore]
         public override string Tooltip
         {
@@ -307,16 +304,24 @@ namespace SiliFish.ModelUnits.Junction
             return this.ConnectionType.CompareTo(other.ConnectionType);
         }
 
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
-            int preCount = errors.Count;
-            base.CheckValues(ref errors);
+            errors ??= [];
+            warnings ??= [];
+            int preErrorCount = errors.Count;
+            int preWarningCount = warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
             if ((ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ)
-                && !ChemSynapseCore.CheckValues(ref errors, CoreType, Parameters.GenerateSingleInstanceValues()))
-                errors.Insert(preCount, $"{ID}:");
-            return errors.Count != preCount;
+                && !ChemSynapseCore.CheckValues(ref errors, ref warnings, CoreType, Parameters.GenerateSingleInstanceValues()))
+            {
+                if (errors.Count > preErrorCount)
+                    errors.Insert(preErrorCount, $"{ID}:");
+                if (warnings.Count > preWarningCount)
+                    warnings.Insert(preWarningCount, $"{ID}:");
+            }
+            return errors.Count == preErrorCount && warnings.Count == preWarningCount;
         }
-        public override string GeneratedName()
+    public override string GeneratedName()
         {
             return $"{(!string.IsNullOrEmpty(SourcePool) ? SourcePool : "__")}-->{(!string.IsNullOrEmpty(TargetPool) ? TargetPool : "__")}";
         }

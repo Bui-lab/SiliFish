@@ -11,7 +11,6 @@
     <style>
         __STYLE_SHEET__
     </style>
-    __ONLINE_2D_SCRIPT__
 </head>
 
 <body>
@@ -19,156 +18,160 @@
         <div id="left-title" class="titleDiv">__LEFT_HEADER__</div>
         <div id="2D-graph"></div>
     </div>
+    __ONLINE_2D_SCRIPT__
     <script>
         __OFFLINE_2D_SCRIPT__
     </script>
 
     <script>
-        const gapChemGraph = ForceGraph()
-            (document.getElementById("2D-graph"));
+        document.addEventListener('DOMContentLoaded', () => {
+            const gapChemGraph = ForceGraph()
+                (document.getElementById("2D-graph"));
 
-        const shapeSet = { __SHAPE_SET__ };
-        const colorSet = { __COLOR_SET__ };
+            const shapeSet = { __SHAPE_SET__ };
+            const colorSet = { __COLOR_SET__ };
 
-        const gapChemData = {
-            "nodes": [__POOLS__],
-            "links": [__GAP_CHEM_LINKS__]
-        };
+            const gapChemData = {
+                "nodes": [__POOLS__],
+                "links": [__GAP_CHEM_LINKS__]
+            };
 
-        let selectedNode = null;
-        let showChemJnc = __SHOW_CHEM__;
-        let showGapJnc = __SHOW_GAP__;
-        let showInactiveNodes = true;
-        let nodeSize = __NODE_SIZE__
-        let linkSizeMultiplier = 1;
-        let arrowSizeMultiplier = 1;
+            let selectedNode = null;
+            let showChemJnc = __SHOW_CHEM__;
+            let showGapJnc = __SHOW_GAP__;
+            let showInactiveNodes = true;
+            let nodeSize = __NODE_SIZE__
+            let linkSizeMultiplier = 1;
+            let arrowSizeMultiplier = 1;
 
 
-        //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
-        var linkedByID = {};
-        gapChemData.links.forEach(function (d) {
-            linkedByID[d.source + "," + d.target] = 1;
-        });
-        function neighboring(a, b) {
-            return linkedByID[a.id + "," + b.id];
-        }
-        function isNodeActive(n) {
-            return selectedNode == null ||
-                selectedNode.id == n.id ||
-                neighboring(selectedNode, n) ||
-                neighboring(n, selectedNode);
-        }
-        function nodePaint(node, color, ctx) {
-            if (node.id == '_h_' || node.id == "_t_")
-                return;
-            if (selectedNode != null && !isNodeActive(node))
-                color = '#EEE';
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false); //circle
-            ctx.fillStyle = color;
-            ctx.fill();
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.textSize = nodeSize;
-            ctx.font = (nodeSize * 1.6) + 'px sans-serif';
-            //ctx.fillStyle = 'white';
-            //ctx.fillText(node.id, node.x + 0.5, node.y + 0.5);
-            ctx.fillStyle = 'black';
-            ctx.fillText(node.id, node.x, node.y);
-        }
-        function showLink(l) {
-            let show = true;
-            if (l.type == "spine")
-                return true;
-            if (selectedNode != null)
-                show = l.source.id == selectedNode.id || l.target.id == selectedNode.id;
-            return show;
-        }
+            //https://stackoverflow.com/questions/8739072/highlight-selected-node-its-links-and-its-children-in-a-d3-force-directed-grap
+            var linkedByID = {};
+            gapChemData.links.forEach(function (d) {
+                linkedByID[d.source + "," + d.target] = 1;
+            });
+            function neighboring(a, b) {
+                return linkedByID[a.id + "," + b.id];
+            }
+            function isNodeActive(n) {
+                return selectedNode == null ||
+                    selectedNode.id == n.id ||
+                    neighboring(selectedNode, n) ||
+                    neighboring(n, selectedNode);
+            }
+            function nodePaint(node, color, ctx) {
+                if (node.id == '_h_' || node.id == "_t_")
+                    return;
+                if (selectedNode != null && !isNodeActive(node))
+                    color = '#EEE';
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false); //circle
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.textSize = nodeSize;
+                ctx.font = (nodeSize * 1.6) + 'px sans-serif';
+                //ctx.fillStyle = 'white';
+                //ctx.fillText(node.id, node.x + 0.5, node.y + 0.5);
+                ctx.fillStyle = 'black';
+                ctx.fillText(node.id, node.x, node.y);
+            }
+            function showLink(l) {
+                let show = true;
+                if (l.type == "spine")
+                    return true;
+                if (selectedNode != null)
+                    show = l.source.id == selectedNode.id || l.target.id == selectedNode.id;
+                return show;
+            }
 
-        const gapChemDataSet = gapChemGraph
-            .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
-            .nodePointerAreaPaint(nodePaint)
-            .nodeLabel(`id`)
-            .nodeVisibility(n => showInactiveNodes || isNodeActive(n))
-            .graphData(gapChemData)
-            .enableNodeDrag(true)
-            .linkColor(l => l.type == 'exc' ? '#0C0' ://green - excitatory
-                            l.type == 'inh' ? '#C00' ://red - inibitory
-                            l.type == 'ACh' ? '#808080' ://cholinergic
+            const gapChemDataSet = gapChemGraph
+                .nodeCanvasObject((node, ctx) => nodePaint(node, colorSet[node.g], ctx))
+                .nodePointerAreaPaint(nodePaint)
+                .nodeLabel(`id`)
+                .nodeVisibility(n => showInactiveNodes || isNodeActive(n))
+                .graphData(gapChemData)
+                .enableNodeDrag(true)
+                .linkColor(l => l.type == 'exc' ? '#0C0' ://green - excitatory
+                    l.type == 'inh' ? '#C00' ://red - inibitory
+                        l.type == 'ACh' ? '#808080' ://cholinergic
                             '#333') //dark gray
-            .linkLabel(l => l.source.id == '_h_' || l.source == "_t_" ? `` ://spine
-                l.type == 'gap' ?
-                `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` : //gap junction
-                `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`) //chem junction
-            .linkWidth(l => Math.max(l.value *  linkSizeMultiplier, 0.5))
-            .linkDirectionalArrowLength(l => l.type == "gap" || l.type == "spine" ? 0 : 10 * arrowSizeMultiplier)
-            .linkDirectionalArrowRelPos(0.95)
-            .linkCurvature('curv')
-            .linkVisibility(l => (l.type != 'gap' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
-            .onNodeClick(node => {
-                selectedNode = node;
-                updateHighlight();
-            })
-            .onBackgroundClick(() => {
-                selectedNode = null;
-                updateHighlight();
-            })
-            .backgroundColor('white')
-            .width(document.body.offsetWidth);
+                .linkLabel(l => l.source.id == '_h_' || l.source == "_t_" ? `` ://spine
+                    l.type == 'gap' ?
+                        `${l.source.id} &harr; ${l.target.id} [ ${l.conductance}]` : //gap junction
+                        `${l.source.id} &rarr; ${l.target.id} [ ${l.conductance}]`) //chem junction
+                .linkWidth(l => Math.max(l.value * linkSizeMultiplier, 0.5))
+                .linkDirectionalArrowLength(l => l.type == "gap" || l.type == "spine" ? 0 : 10 * arrowSizeMultiplier)
+                .linkDirectionalArrowRelPos(0.95)
+                .linkCurvature('curv')
+                .linkVisibility(l => (l.type != 'gap' && showChemJnc || l.type == 'gap' && showGapJnc) && showLink(l))
+                .onNodeClick(node => {
+                    selectedNode = node;
+                    updateHighlight();
+                })
+                .onBackgroundClick(() => {
+                    selectedNode = null;
+                    updateHighlight();
+                })
+                .backgroundColor('white')
+                .width(document.body.offsetWidth);
 
-        function ShowGapJunc() {
-            showGapJnc = true;
-            gapChemGraph
-                .linkVisibility(gapChemGraph.linkVisibility())
-        }
-        function HideGapJunc() {
-            showGapJnc = false;
-            gapChemGraph
-                .linkVisibility(gapChemGraph.linkVisibility())
-        }
-        function ShowChemJunc() {
-            showChemJnc = true;
-            gapChemGraph
-                .linkVisibility(gapChemGraph.linkVisibility())
-        }
-        function HideChemJunc() {
-            showChemJnc = false;
-            gapChemGraph
-                .linkVisibility(gapChemGraph.linkVisibility())
-        }
+            function ShowGapJunc() {
+                showGapJnc = true;
+                gapChemGraph
+                    .linkVisibility(gapChemGraph.linkVisibility())
+            }
+            function HideGapJunc() {
+                showGapJnc = false;
+                gapChemGraph
+                    .linkVisibility(gapChemGraph.linkVisibility())
+            }
+            function ShowChemJunc() {
+                showChemJnc = true;
+                gapChemGraph
+                    .linkVisibility(gapChemGraph.linkVisibility())
+            }
+            function HideChemJunc() {
+                showChemJnc = false;
+                gapChemGraph
+                    .linkVisibility(gapChemGraph.linkVisibility())
+            }
 
-        function updateHighlight() {
-            // trigger update of highlighted objects in scene
-            gapChemGraph
-                .nodeColor(gapChemGraph.nodeColor())
-                .linkColor(gapChemGraph.linkColor())
-        }
-        function SelectCellPool(pool) {
-            selectedNode = gapChemData.nodes.find(n => n.id == pool);
-            updateHighlight();
-        }
-        function SetNodeSizeMultiplier(mult) {
-            nodeSize *= mult;
-            arrowSizeMultiplier *= mult;
-            updateHighlight();
-        }
-        function SetLinkSizeMultiplier(mult) {
-            linkSizeMultiplier *= mult;
-            arrowSizeMultiplier *= mult;
-            updateHighlight();
-        }
-        function ShowInactiveNodes() {
-            showInactiveNodes = true;
-            gapChemGraph
-                .nodeColor(gapChemGraph.nodeColor())
-        }
-        function HideInactiveNodes() {
-            showInactiveNodes = false;
-            gapChemGraph
-                .nodeColor(gapChemGraph.nodeColor())
-        }
-        gapChemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
+            function updateHighlight() {
+                // trigger update of highlighted objects in scene
+                gapChemGraph
+                    .nodeColor(gapChemGraph.nodeColor())
+                    .linkColor(gapChemGraph.linkColor())
+            }
+            function SelectCellPool(pool) {
+                selectedNode = gapChemData.nodes.find(n => n.id == pool);
+                updateHighlight();
+            }
+            function SetNodeSizeMultiplier(mult) {
+                nodeSize *= mult;
+                arrowSizeMultiplier *= mult;
+                updateHighlight();
+            }
+            function SetLinkSizeMultiplier(mult) {
+                linkSizeMultiplier *= mult;
+                arrowSizeMultiplier *= mult;
+                updateHighlight();
+            }
+            function ShowInactiveNodes() {
+                showInactiveNodes = true;
+                gapChemGraph
+                    .nodeColor(gapChemGraph.nodeColor())
+            }
+            function HideInactiveNodes() {
+                showInactiveNodes = false;
+                gapChemGraph
+                    .nodeColor(gapChemGraph.nodeColor())
+            }
+            gapChemData.nodes.forEach(node => { node.fx = node.x; node.fy = node.y; }); // fix nodes
+
+        });
     </script>
 
 </body>

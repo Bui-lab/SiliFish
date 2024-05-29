@@ -143,7 +143,7 @@ namespace SiliFish.UI.Controls
         private void FillCoreTypes(string def = null)
         {
             if (ddCoreType.Items.Count == 0)
-                ddCoreType.Items.AddRange(CellCore.GetCoreTypes().ToArray());
+                ddCoreType.Items.AddRange([.. CellCore.GetCoreTypes()]);
             if (!string.IsNullOrEmpty(def))
                 ddCoreType.Text = def;
             if (ddCoreType.SelectedIndex < 0)

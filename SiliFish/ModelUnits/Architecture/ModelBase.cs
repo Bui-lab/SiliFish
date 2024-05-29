@@ -67,15 +67,16 @@ namespace SiliFish.ModelUnits.Architecture
 
             return differences;
         }
-        public virtual bool CheckValues(ref List<string> errors) 
+        public virtual bool CheckValues(ref List<string> errors, ref List<string> warnings) 
         {
             errors ??= [];
-            int preCount = errors.Count;
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
             if (ModelDimensions.NumberOfSomites <= 0)
                 errors.Add("Number of somites has to be greater than 0.");
             if (!ModelDimensions.CheckConsistency(out string error))
                 errors.Add(error);
-            return errors.Count == preCount;
+            return errors.Count + warnings.Count == preCount;
         }
 
         public virtual void BackwardCompatibility()

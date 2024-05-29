@@ -22,11 +22,16 @@ namespace SiliFish.Helpers
             foreach (string value in values)
             {
                 string prefix = "";
-                Match m = possibleDate.Match(value);//to prevent Excel taking it as a date
-                if (m.Success)
-                    prefix = "'";
-                if (value != null && value.Contains(','))
-                    sb.Append(prefix + "\"" + value.Replace("\"", "\"\"") + "\"");
+                if (value != null)
+                {
+                    Match m = possibleDate.Match(value);//to prevent Excel taking it as a date
+                    if (m.Success)
+                        prefix = "'";
+                    if (value != null && value.Contains(','))
+                        sb.Append(prefix + "\"" + value.Replace("\"", "\"\"") + "\"");
+                    else
+                        sb.Append(prefix + value);
+                }
                 else
                     sb.Append(prefix + (value ?? string.Empty));
                 sb.Append(',');

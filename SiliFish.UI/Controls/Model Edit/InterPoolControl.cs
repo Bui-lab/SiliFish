@@ -191,8 +191,8 @@ namespace SiliFish.UI.Controls
             ddAxonReachMode.DataSource = Enum.GetNames(typeof(AxonReachMode));
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
             //ddConnectionType is manually loaded as not all of them are displayed
-            ddCoreType.Items.AddRange(ChemSynapseCore.GetSynapseTypes().ToArray());
-            ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray());
+            ddCoreType.Items.AddRange([.. ChemSynapseCore.GetSynapseTypes()]);
+            ddCoreType.Items.AddRange([.. ElecSynapseCore.GetSynapseTypes()]);
 
             ddConnectionType.Items.Clear();
             ddConnectionType.Items.Add(ConnectionType.Gap);
@@ -234,8 +234,8 @@ namespace SiliFish.UI.Controls
 
             if (pools == null || pools.Count == 0)
                 return;
-            ddSourcePool.Items.AddRange(pools.ToArray());
-            ddTargetPool.Items.AddRange(pools.ToArray());
+            ddSourcePool.Items.AddRange([.. pools]);
+            ddTargetPool.Items.AddRange([.. pools]);
             if (interPoolTemplate != null)
             {
                 this.interPoolTemplate = interPoolTemplate;
@@ -277,7 +277,6 @@ namespace SiliFish.UI.Controls
             else
                 this.interPoolTemplate = new();
             ParamDictToGrid();
-            attachmentList.SetAttachments(this.interPoolTemplate.Attachments);
         }
 
         public InterPoolTemplate ReadDataFromControl()
@@ -318,7 +317,6 @@ namespace SiliFish.UI.Controls
 
             interPoolTemplate.Active = cbActive.Checked;
             interPoolTemplate.TimeLine_ms = timeLineControl.GetTimeLine();
-            interPoolTemplate.Attachments = attachmentList.GetAttachments();
 
             return interPoolTemplate;
         }

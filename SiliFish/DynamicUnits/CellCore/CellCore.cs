@@ -267,11 +267,13 @@ namespace SiliFish.DynamicUnits
             throw exception;
 
         }
-        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
+
+        public static bool CheckValues(ref List<string> errors, ref List<string> warnings, string coreType, Dictionary<string, double> param)
         {
             errors ??= [];
+            warnings ??= [];
             BaseCore core = CreateCore(coreType, param);
-            return core.CheckValues(ref errors);
+            return core.CheckValues(ref errors, ref warnings);
         }
 
     }

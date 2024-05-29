@@ -16,7 +16,7 @@ namespace SiliFish.UI.Controls
         private Cell sourceCell;
         private Cell targetCell;
 
-        public JunctionControl(RunningModel model)//TODO junction control is not fully functional
+        public JunctionControl(RunningModel model)
         {
             InitializeComponent();
             Model = model;
@@ -28,11 +28,11 @@ namespace SiliFish.UI.Controls
             ddConnectionType.Items.Add(ConnectionType.Synapse);
             ddConnectionType.Items.Add(ConnectionType.NMJ);
 
-            ddSourcePool.Items.AddRange(Model.CellPools.ToArray());
+            ddSourcePool.Items.AddRange([.. Model.CellPools]);
             ddSourcePool.SelectedIndex = -1;
             ddSourceCell.SelectedIndex = -1;
 
-            ddTargetPool.Items.AddRange(Model.CellPools.ToArray());
+            ddTargetPool.Items.AddRange([.. Model.CellPools]);
             ddTargetPool.SelectedIndex = -1;
             ddTargetCell.SelectedIndex = -1;
         }
@@ -47,7 +47,7 @@ namespace SiliFish.UI.Controls
                     ddConnectionType.Items.Clear();
                     ddConnectionType.Items.Add(ConnectionType.Gap);
                     ddConnectionType.SelectedItem = ConnectionType.Gap;
-                    ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray());
+                    ddCoreType.Items.AddRange([.. ElecSynapseCore.GetSynapseTypes()]);
 
                 }
                 else //Neuron
@@ -134,7 +134,6 @@ namespace SiliFish.UI.Controls
                 ElecSynapseCore.GetSynapseTypes().ToArray() :
                 [.. ChemSynapseCore.GetSynapseTypes()]);
             ddCoreType.Text = lastSelection;
-
         }
 
         public void SetJunction(JunctionBase junction, bool newJunc)
@@ -148,7 +147,7 @@ namespace SiliFish.UI.Controls
                 eSynDelay.Text = gapJunction.Delay_ms.ToString();
                 ddConnectionType.SelectedItem = ConnectionType.Gap;
                 ddCoreType.Items.Clear();
-                ddCoreType.Items.AddRange(ElecSynapseCore.GetSynapseTypes().ToArray());
+                ddCoreType.Items.AddRange([.. ElecSynapseCore.GetSynapseTypes()]);
                 ddCoreType.Text = gapJunction.Core.GetType().Name;
                 propCore.SelectedObject = gapJunction.Core;
             }
@@ -158,7 +157,7 @@ namespace SiliFish.UI.Controls
                 targetCell = syn.PostCell;
                 ddConnectionType.SelectedItem = targetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
                 ddCoreType.Items.Clear();
-                ddCoreType.Items.AddRange(ChemSynapseCore.GetSynapseTypes().ToArray());
+                ddCoreType.Items.AddRange([.. ChemSynapseCore.GetSynapseTypes()]);
                 ddCoreType.Text = syn.Core.GetType().Name;
                 propCore.SelectedObject = syn.Core;
                 eFixedDuration.Text = syn.FixedDuration_ms.ToString();
@@ -194,6 +193,7 @@ namespace SiliFish.UI.Controls
                 ddTargetCell.Enabled = false;
                 ddConnectionType.Enabled = false;
                 ddCoreType.Enabled = false;
+                ddDistanceMode.Enabled = false;
             }
         }
         internal void SetSourcePool(CellPool selectedPool)
@@ -249,7 +249,8 @@ namespace SiliFish.UI.Controls
             else
             {
                 List<string> errors = checkValuesArgs.Errors;
-                if (!(propCore.SelectedObject as BaseCore).CheckValues(ref errors))
+                List<string> dummy = null;//warnings are not displayed
+                if (!(propCore.SelectedObject as BaseCore).CheckValues(ref errors, ref dummy))
                     checkValuesArgs.Errors = errors;
             }
 
@@ -318,6 +319,5 @@ namespace SiliFish.UI.Controls
             Refresh();//the drop down boxes do not refresh properly otherwise
         }
 
- 
     }
 }

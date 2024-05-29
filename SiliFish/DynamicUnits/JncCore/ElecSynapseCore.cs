@@ -52,22 +52,23 @@ namespace SiliFish.DynamicUnits.JncCore
             SetParameters(copyFrom.GetParameters());
         }
 
-
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
-            int preCount = errors.Count;
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
             if (Conductance < GlobalSettings.Epsilon)
-                errors.Add($"Electrical synapse: Conductance has 0 value.");
-            return errors.Count == preCount;
+                errors.Add($"Electrical synapse: Conductance has 0 value.");            
+            return errors.Count + warnings.Count == preCount;
         }
-        public static bool CheckValues(ref List<string> errors, string coreType, Dictionary<string, double> param)
+        public static bool CheckValues(ref List<string> errors, ref List<string> warnings, string coreType, Dictionary<string, double> param)
         {
             errors ??= [];
-            int preCount = errors?.Count ?? 0;
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;     
             ChemSynapseCore core = ChemSynapseCore.CreateCore(coreType, param);
-            core.CheckValues(ref errors);
-            return errors.Count == preCount;
+            core.CheckValues(ref errors, ref warnings);
+            return errors.Count + warnings.Count == preCount;
         }
         public virtual double GetNextVal(double VoltageDiffFrom1To2, double VoltageDiffFrom2To1)
         {

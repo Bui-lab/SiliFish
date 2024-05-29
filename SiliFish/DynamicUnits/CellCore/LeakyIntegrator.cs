@@ -59,16 +59,17 @@ namespace SiliFish.DynamicUnits
             Initialize();
         }
 
-
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
-            int preCount = errors?.Count ?? 0;
-            base.CheckValues(ref errors);
+            errors ??= [];
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
             if (R < GlobalSettings.Epsilon)
                 errors.Add($"Leaky integrator: R has 0 value.");
             if (C < GlobalSettings.Epsilon)
-                errors.Add($"Leaky integrator: C has 0 value.");
-            return errors.Count == preCount;
+                errors.Add($"Leaky integrator: C has 0 value.");           
+            return errors.Count + warnings.Count == preCount;
         }
 
         public override double GetNextVal(double Stim, ref bool spike)

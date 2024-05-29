@@ -63,7 +63,7 @@ namespace SiliFish.UI.Controls
         public DistributionControl()
         {
             InitializeComponent();
-            ddDistribution.Items.AddRange(Distribution.GetDistributionTypes().ToArray());
+            ddDistribution.Items.AddRange([.. Distribution.GetDistributionTypes()]);
             UniformDistribution ud = new();
             ddDistribution.Text = ud.Discriminator;
             eRangeStart.Text = "0";

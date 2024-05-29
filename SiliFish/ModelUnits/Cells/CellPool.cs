@@ -150,13 +150,15 @@ namespace SiliFish.ModelUnits.Cells
         {
             return ID + (Active ? "" : " (inactive)");
         }
-        public override bool CheckValues(ref List<string> errors)
+        public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
-            int preCount = errors?.Count ?? 0;
-            base.CheckValues(ref errors);
+            errors ??= [];
+            warnings ??= [];
+            int preCount = errors.Count + warnings.Count;
+            base.CheckValues(ref errors, ref warnings);
             foreach (Cell cell in Cells)
-                cell.CheckValues(ref errors);
-            return errors.Count == preCount;
+                cell.CheckValues(ref errors, ref warnings);
+            return errors.Count + warnings.Count == preCount;
         }
         public bool OnSide(SagittalPlane sagittal)
         {

@@ -67,9 +67,10 @@ namespace SiliFish.ModelUnits
             return ID.CompareTo(other.ID);
         }
 
-        public virtual bool CheckValues(ref List<string> errors)
+        public virtual bool CheckValues(ref List<string> errors, ref List<string> warnings)
         {
             errors ??= [];
+            warnings ??= [];
             return true;
         }
         public virtual string GeneratedName()
