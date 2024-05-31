@@ -99,7 +99,7 @@ namespace SiliFish.UI.Controls
             }
             else
             {
-                CellCore core = CellCore.CreateCore(coreType, null);
+                CellCore core = CellCore.CreateCore(coreType, null, DeltaT);
                 Dictionary<string, string> descDict = core.GetParameterDescriptions();
                 pfParams.CreateNumericUpDownControlsForDictionary(parameters, descDict, toolTip1);
                 foreach (Control control in pfParams.Controls)

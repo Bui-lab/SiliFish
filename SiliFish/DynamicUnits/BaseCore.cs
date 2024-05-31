@@ -8,6 +8,7 @@ namespace SiliFish.DynamicUnits
 {
     abstract public class BaseCore
     {
+        [JsonIgnore, Browsable(false)]
         public int UniqueId { get; set; } = -1;//Unique ID to be saved to the database
         [JsonIgnore, Browsable(false)]
         public string CoreType => GetType().Name;

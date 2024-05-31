@@ -65,6 +65,10 @@ namespace SiliFish.UI
                 modelControl.SetModel(model);
                 modelOutputControl.SetRunningModel(null, model);
                 modelControl.SetSelectionToLast();
+                runParam.SkipDuration = model.Settings.SimulationSkipTime;//TODO add a function to modelSettings that return runparam
+                runParam.MaxTime = model.Settings.SimulationEndTime;
+                runParam.DeltaT = model.Settings.SimulationDeltaT;
+                runParam.TrackJunctionCurrent = model.Settings.JunctionLevelTracking;
                 FillRunParams();
                 SetCurrentMode(RunMode.RunningModel, null);
             }
@@ -204,7 +208,7 @@ namespace SiliFish.UI
                 lRunTime.Text = $"Last run: {runStart:t} {simText}\r\n" +
                     (completion == 0 ? "Simulation interrupted - partial results displayed.\r\n" : "") +
                     $"Model: {runningModel.ModelName}\r\n" +
-                    $"# of cells: {runningModel.GetNumberOfCells():n0}; # of conn.: {runningModel.GetNumberOfConnections():n0}\r\n" +
+                    $"# of cells: {runningModel.GetNumberOfCells():n0}; # of conn.: {runningModel.GetNumberOfJunctions():n0}\r\n" +
                     $"Simulation time: {Util.TimeSpanToString(ts)}";
                 modelOutputControl.SetRunningModel(modelSimulator.LastSimulation, runningModel);
                 modelOutputControl.CompleteRun(modelSimulator.LastSimulation.RunParam);
@@ -243,11 +247,10 @@ namespace SiliFish.UI
                         return false;
                 }
             }
-            runningModel.JunctionCurrentTrackingOn = GlobalSettings.JunctionLevelTracking;
-            if (GlobalSettings.JunctionLevelTracking)
+            if (runningModel.Settings.JunctionLevelTracking)
             {
                 int iMax = simulationSettings.iMax;
-                long numConn = runningModel.GetNumberOfConnections();
+                long numConn = runningModel.GetNumberOfJunctions();
                 long memoryRequired = numConn * iMax * 8;//number of bytes
                 memoryRequired /= 1024 * 1024 * 1024;
                 if (memoryRequired > GlobalSettings.MemoryWarningLimit)
@@ -258,15 +261,17 @@ namespace SiliFish.UI
 
                     DialogResult dlg = MessageBox.Show(msg, "Warning", MessageBoxButtons.YesNoCancel);
                     if (dlg == DialogResult.Yes)
-                        runningModel.JunctionCurrentTrackingOn = false;
+                        runningModel.Settings.JunctionLevelTracking = false;
                     else if (dlg == DialogResult.No)
-                        runningModel.JunctionCurrentTrackingOn = true;
+                        runningModel.Settings.JunctionLevelTracking = true;
                     else
                         return false;
                 }
             }
             runParam = simulationSettings.GetValues();
-            runParam.TrackJunctionCurrent = runningModel.JunctionCurrentTrackingOn;
+            runParam.TrackJunctionCurrent = runningModel.Settings.JunctionLevelTracking;
+            runParam.DeltaT = runningModel.Settings.SimulationDeltaT;
+            runParam.MaxTime = runningModel.Settings.SimulationEndTime;
 
             btnRun.Text = "Stop Run";
             return true;

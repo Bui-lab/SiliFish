@@ -63,7 +63,7 @@ namespace SiliFish.Extensions
                 {
                     if (val is Distribution valdt)
                     {
-                        val = valdt.GenerateNNumbers(1, valdt.Range, ordered: false)[0];
+                        val = valdt.GenerateNNumbers(1, valdt.HundredPercent, ordered: false)[0];
                     }
                     else if (val is JsonElement element)
                     {
@@ -88,7 +88,7 @@ namespace SiliFish.Extensions
             {
                 if (dictionary.TryGetValue(key, out var val))
                 {
-                        var v = val.GenerateNNumbers(1, val.Range, ordered: false)[0];
+                        var v = val.GenerateNNumbers(1, val.HundredPercent, ordered: false)[0];
                     return (T)Convert.ChangeType(v, typeof(T));
                 }
                 return defaultValue;
@@ -97,8 +97,8 @@ namespace SiliFish.Extensions
         }
         public static object GetNestedValue(this Dictionary<string, object> dictionary, string key)
         {
-            if (dictionary.ContainsKey(key))
-                return dictionary[key];
+            if (dictionary.TryGetValue(key, out object value))
+                return value;
             foreach (var obj in dictionary.Values.Where(x => x is Dictionary<string, object>))
             {
                 var ret = ((Dictionary<string, object>)obj).GetNestedValue(key);
@@ -118,30 +118,26 @@ namespace SiliFish.Extensions
         }
         public static void AddOrUpdateObject<T>(this Dictionary<string, T> dictionary, string key, T value)
         {
-            if (dictionary.ContainsKey(key))
+            if (!dictionary.TryAdd(key, value))
                 dictionary[key] = value;
-            else
-                dictionary.Add(key, value);
         }
 
         public static void AddObject<T>(this Dictionary<int, T> dictionary, int key, T value, bool skipIfExists = false)
         {
             if (skipIfExists && dictionary.ContainsKey(key))
                 return;
-            if (dictionary.ContainsKey(key))
+            if (!dictionary.TryAdd(key, value))
                 dictionary[key] = value;
-            else
-                dictionary.Add(key, value);
         }
         public static bool SameAs(this Dictionary<string, object> dictionary, Dictionary<string, object> dic2)
         {
             if (dictionary?.Count != dic2?.Count) return false;
             foreach (var key in dictionary.Keys)
             {
-                if (!dic2.ContainsKey(key))
+                if (!dic2.TryGetValue(key, out object value))
                     return false;
                 string s1 = dictionary[key]?.ToString() ?? "";
-                string s2 = dic2[key]?.ToString() ?? "";
+                string s2 = value?.ToString() ?? "";
                 if (s1 != s2)
                     return false;
             }
@@ -181,7 +177,7 @@ namespace SiliFish.Extensions
             foreach (string key in dictionary.Keys)
             {
                 Distribution distribution = dictionary[key];
-                valuesArray.Add(key, distribution.GenerateNNumbers(1, distribution.Range, ordered: false)[0]);
+                valuesArray.Add(key, distribution.GenerateNNumbers(1, distribution.HundredPercent, ordered: false)[0]);
             }
             return valuesArray;
         }
@@ -195,7 +191,7 @@ namespace SiliFish.Extensions
             foreach (string key in dictionary.Keys)
             {
                 Distribution distribution = dictionary[key];
-                valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.Range, ordered));
+                valuesArray.Add(key, distribution.GenerateNNumbers(number, distribution.HundredPercent, ordered));
             }
             return valuesArray;
         }

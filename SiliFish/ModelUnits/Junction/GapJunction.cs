@@ -66,7 +66,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             return ListBuilder.Build<string>(
                 Cell1.ID, Cell2.ID,
-                ConnectionType.Gap, Core.SynapseType,
+                JunctionType.Gap, Core.SynapseType,
                 csvExportCoreValues,
                 DistanceMode, 
                 FixedDuration_ms, Delay_ms, Duration_ms,

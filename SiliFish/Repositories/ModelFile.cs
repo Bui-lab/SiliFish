@@ -351,7 +351,7 @@ namespace SiliFish.Repositories
                 if (FixDistributionJson(ref json))
                     list.Add("Spatial distributions");
                 if (FixCellReachJson(ref json))
-                    list.Add("connection ranges");
+                    list.Add("junction ranges");
                 json = json.Replace("\"StimulusSettings\":", "\"Settings\":");
                 json = JsonUtil.CleanUp(json);
             }
@@ -379,7 +379,11 @@ namespace SiliFish.Repositories
                     if (json.Contains("\"PoolTarget\":"))
                         json = json.Replace("\"PoolTarget\":", "\"TargetPool\":");
                 }
-
+                if (version.Groups[1].Value.CompareTo("\"2.7.3.0\"") < 0)
+                {
+                    if (json.Contains("\"ConnectionType\":"))
+                        json = json.Replace("\"ConnectionType\":", "\"JunctionType\":");
+                }
             }
             return list;
         }
@@ -416,7 +420,7 @@ namespace SiliFish.Repositories
         {
             try
             {
-                bool jncTracking = model.JunctionCurrentTrackingOn;
+                bool jncTracking = model.Settings.JunctionLevelTracking;
 
                 Dictionary<string, double[]> Vdata_list = [];
                 Dictionary<string, double[]> Gapdata_list = [];
@@ -591,7 +595,7 @@ namespace SiliFish.Repositories
                                 mt.StimulusTemplates;
                             foreach (StimulusTemplate stim in stimulusTemplates)
                             {
-                                sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues()));
+                                sw.WriteLine(CSVUtil.WriteCSVLine(stim.ExportValues()));
                             }
                         }
                     }
@@ -599,7 +603,7 @@ namespace SiliFish.Repositories
                     {
                         foreach (StimulusTemplate stim in mt.StimulusTemplates)
                         {
-                            sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues()));
+                            sw.WriteLine(CSVUtil.WriteCSVLine(stim.ExportValues()));
                         }
                     }
                 }
@@ -618,7 +622,7 @@ namespace SiliFish.Repositories
                             rm.GetStimuli().Select(stim => stim as Stimulus)).ToList();
                             foreach (Stimulus stim in stimuli)
                             {
-                                sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues()));
+                                sw.WriteLine(CSVUtil.WriteCSVLine(stim.ExportValues()));
                             }
                         }
                     }
@@ -626,7 +630,7 @@ namespace SiliFish.Repositories
                     {
                         foreach (Stimulus stim in rm.GetStimuli().Select(stim => stim as Stimulus).ToList())
                         {
-                            sw.WriteLine(CSVUtil.GetCSVLine(stim.ExportValues()));
+                            sw.WriteLine(CSVUtil.WriteCSVLine(stim.ExportValues()));
                         }
                     }
                 }
@@ -772,7 +776,7 @@ namespace SiliFish.Repositories
                 else cells = model.GetCells();
                 foreach (Cell cell in cells)
                 {
-                    sw.WriteLine(CSVUtil.GetCSVLine(cell.ExportValues()));
+                    sw.WriteLine(CSVUtil.WriteCSVLine(cell.ExportValues()));
                 }
                 return true;
             }
@@ -869,7 +873,7 @@ namespace SiliFish.Repositories
                 sw.WriteLine(string.Join(",", CellPoolTemplate.ColumnNames));
                 foreach (CellPoolTemplate cpt in cellPools)
                 {
-                    sw.WriteLine(CSVUtil.GetCSVLine(cpt.ExportValues()));
+                    sw.WriteLine(CSVUtil.WriteCSVLine(cpt.ExportValues()));
                 }
 
                 return true;
@@ -931,22 +935,22 @@ namespace SiliFish.Repositories
         }
         #endregion
 
-        #region Connections
-        public static bool SaveConnectionsToCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
+        #region Junctions
+        public static bool SaveJunctionsToCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
         {
             if (model is ModelTemplate)
                 return SaveInterPoolTemplatesToCSV(filename, model, selectedUnits, gap, chemin, chemout);
             else if (model is RunningModel)
-                return SaveJunctionsToCSV(filename, model, selectedUnits, gap, chemin, chemout);
+                return SaveGapChemJunctionsToCSV(filename, model, selectedUnits, gap, chemin, chemout);
             return false;
         }
 
-        public static bool ReadConnectionsFromCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
+        public static bool ReadJunctionsFromCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
         {
             if (model is ModelTemplate)
                 return ReadInterPoolTemplatesFromCSV(filename, model, selectedUnits, gap, chemin, chemout);
             else if (model is RunningModel)
-                return ReadJunctionsFromCSV(filename, model, selectedUnits, gap, chemin, chemout);
+                return ReadGapChemJunctionsFromCSV(filename, model, selectedUnits, gap, chemin, chemout);
             return false;
         }
         private static bool SaveInterPoolTemplatesToCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
@@ -967,15 +971,15 @@ namespace SiliFish.Repositories
                     {
                         if (unit is CellPoolTemplate cpt)
                             list.AddRange(modelTemplate.InterPoolTemplates.Where(jnc =>
-                                (gap && jnc.ConnectionType == ConnectionType.Gap && (jnc.SourcePool == cpt.CellGroup || jnc.TargetPool == cpt.CellGroup)) ||
-                                (chemout && jnc.ConnectionType != ConnectionType.Gap && jnc.SourcePool == cpt.CellGroup) ||
-                                (chemin && jnc.ConnectionType != ConnectionType.Gap && jnc.TargetPool == cpt.CellGroup))
+                                (gap && jnc.JunctionType == JunctionType.Gap && (jnc.SourcePool == cpt.CellGroup || jnc.TargetPool == cpt.CellGroup)) ||
+                                (chemout && jnc.JunctionType != JunctionType.Gap && jnc.SourcePool == cpt.CellGroup) ||
+                                (chemin && jnc.JunctionType != JunctionType.Gap && jnc.TargetPool == cpt.CellGroup))
                                 .ToList());
                         else
                         {
                             list.AddRange(modelTemplate.InterPoolTemplates.Where(ipt =>
-                                gap && ipt.ConnectionType == ConnectionType.Gap ||
-                                (chemout || chemin) && (ipt.ConnectionType == ConnectionType.Synapse || ipt.ConnectionType == ConnectionType.NMJ))
+                                gap && ipt.JunctionType == JunctionType.Gap ||
+                                (chemout || chemin) && (ipt.JunctionType == JunctionType.Synapse || ipt.JunctionType == JunctionType.NMJ))
                                 .ToList());
                         }
                     }
@@ -984,7 +988,7 @@ namespace SiliFish.Repositories
                     list = modelTemplate.InterPoolTemplates;
                 foreach (InterPoolTemplate ipt in list)
                 {
-                    sw.WriteLine(CSVUtil.GetCSVLine(ipt.ExportValues()));
+                    sw.WriteLine(CSVUtil.WriteCSVLine(ipt.ExportValues()));
                 }
                 return true;
             }
@@ -1023,13 +1027,13 @@ namespace SiliFish.Repositories
                             ipt = new();
                             ipt.ImportValues([.. contents[iter++].Split(",")]);
                             //check whether it is part of what 
-                            bool jncCheck = gap && ipt.ConnectionType == ConnectionType.Gap &&
+                            bool jncCheck = gap && ipt.JunctionType == JunctionType.Gap &&
                                     (cpt == null || ipt.SourcePool == cpt.CellGroup || ipt.TargetPool == cpt.CellGroup);
                             if (!jncCheck)
-                                jncCheck = chemout && ipt.ConnectionType != ConnectionType.Gap &&
+                                jncCheck = chemout && ipt.JunctionType != JunctionType.Gap &&
                                     (cpt == null || ipt.SourcePool == cpt.CellGroup);
                             if (!jncCheck)
-                                jncCheck = chemin && ipt.ConnectionType != ConnectionType.Gap &&
+                                jncCheck = chemin && ipt.JunctionType != JunctionType.Gap &&
                                     (cpt == null || ipt.TargetPool == cpt.CellGroup);
                             if (jncCheck)
                                 modelTemplate.AddJunction(ipt);
@@ -1045,8 +1049,8 @@ namespace SiliFish.Repositories
                         InterPoolTemplate ipt = new();
                         ipt.ImportValues([.. contents[iter++].Split(",")]);
                         //check whether it is part of what 
-                        bool jncCheck = gap && ipt.ConnectionType == ConnectionType.Gap ||
-                            (chemout || chemin) && ipt.ConnectionType != ConnectionType.Gap;
+                        bool jncCheck = gap && ipt.JunctionType == JunctionType.Gap ||
+                            (chemout || chemin) && ipt.JunctionType != JunctionType.Gap;
                         if (jncCheck)
                             modelTemplate.AddJunction(ipt);
                     }
@@ -1061,7 +1065,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        private static bool SaveJunctionsToCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
+        private static bool SaveGapChemJunctionsToCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -1080,13 +1084,13 @@ namespace SiliFish.Repositories
                     foreach (ModelUnitBase unit in selectedUnits)
                     {
                         if (unit is CellPool cp)
-                            list.AddRange(cp.Projections.Where(jnc =>
+                            list.AddRange(cp.Junctions.Where(jnc =>
                                 gap && jnc is GapJunction ||
                                 (chemout && jnc is ChemicalSynapse syn && syn.PreNeuron.CellGroup == cp.CellGroup) ||
                                 (chemin && jnc is ChemicalSynapse syn2 && syn2.PostCell.CellGroup == cp.CellGroup))
                                 .ToList());
                         else if (unit is Cell cell)
-                            list.AddRange(cell.Projections.Where(jnc =>
+                            list.AddRange(cell.Junctions.Where(jnc =>
                                 gap && jnc is GapJunction ||
                                 (chemout && jnc is ChemicalSynapse syn && syn.PreNeuron == cell) ||
                                 (chemin && jnc is ChemicalSynapse syn2 && syn2.PostCell == cell))
@@ -1096,15 +1100,15 @@ namespace SiliFish.Repositories
                 else
                 {
                     if (gap && chem)
-                        list = runningModel.GetChemicalProjections().Concat(runningModel.GetGapProjections()).Cast<JunctionBase>().ToList();
+                        list = runningModel.GetChemicalJunctions().Concat(runningModel.GetGapJunctions()).Cast<JunctionBase>().ToList();
                     else if (gap)
-                        list = runningModel.GetGapProjections().Cast<JunctionBase>().ToList();
+                        list = runningModel.GetGapJunctions().Cast<JunctionBase>().ToList();
                     else
-                        list = runningModel.GetChemicalProjections().Cast<JunctionBase>().ToList();
+                        list = runningModel.GetChemicalJunctions().Cast<JunctionBase>().ToList();
                 }
                 foreach (JunctionBase jnc in list)
                 {
-                    sw.WriteLine(CSVUtil.GetCSVLine(jnc.ExportValues()));
+                    sw.WriteLine(CSVUtil.WriteCSVLine(jnc.ExportValues()));
                 }
                 return true;
             }
@@ -1115,7 +1119,7 @@ namespace SiliFish.Repositories
             }
         }
 
-        private static bool ReadJunctionsFromCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
+        private static bool ReadGapChemJunctionsFromCSV(string filename, ModelBase model, List<ModelUnitBase> selectedUnits, bool gap, bool chemin, bool chemout)
         {
             if (filename == null || model == null)
                 return false;
@@ -1134,8 +1138,7 @@ namespace SiliFish.Repositories
                     {
                         CellPool cellPool = unit as CellPool;
                         Cell cell = unit as Cell;
-                        JunctionBase jnc = unit as JunctionBase;
-                        if (jnc != null)
+                        if (unit is JunctionBase jnc)
                             runningModel.RemoveJunction(jnc);
                         else
                             runningModel.RemoveJunctionsOf(cellPool, cell, gap, chemin, chemout);
@@ -1145,7 +1148,7 @@ namespace SiliFish.Repositories
                             string[] csvCells = line.Split(',');
                             if (csvCells.Length <= 0) continue;
                             JunctionBase jb = null;
-                            if (csvCells[2] == ConnectionType.Gap.ToString())//1st and 2nd cells are for Source and Target
+                            if (csvCells[2] == JunctionType.Gap.ToString())//1st and 2nd cells are for Source and Target
                             {
                                 if (gap)
                                     jb = new GapJunction();
@@ -1189,7 +1192,7 @@ namespace SiliFish.Repositories
                         string[] csvCells = line.Split(',');
                         if (csvCells.Length <= 0) continue;
                         JunctionBase jb = null;
-                        if (csvCells[2] == ConnectionType.Gap.ToString())//1st and 2nd cells are for Source and Target
+                        if (csvCells[2] == JunctionType.Gap.ToString())//1st and 2nd cells are for Source and Target
                         {
                             if (gap)
                                 jb = new GapJunction();
@@ -1333,8 +1336,8 @@ namespace SiliFish.Repositories
                 if (model is RunningModel modelRunning)
                 {
                     List<IDataExporterImporter> objList = modelRunning
-                        .GetChemicalProjections()
-                        .Concat(modelRunning.GetGapProjections())
+                        .GetChemicalJunctions()
+                        .Concat(modelRunning.GetGapJunctions())
                         .Cast<IDataExporterImporter>().ToList();
                     return ExcelUtil.CreateWorkSheet(workbook, "Junctions", InterPoolBase.ColumnNames, objList, errorList);
                 }
@@ -1396,7 +1399,7 @@ namespace SiliFish.Repositories
                             if (contents.IsEmpty())
                                 break;
                             JunctionBase jb = null;
-                            if (contents[0] == ConnectionType.Gap.ToString())
+                            if (contents[0] == JunctionType.Gap.ToString())
                             {
                                 jb = new GapJunction();
                             }

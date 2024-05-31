@@ -13,7 +13,7 @@ namespace SiliFish.ModelUnits.Junction
     public class JunctionBase : InterPoolBase
     {
         public JunctionCore Core { get; set; }
-
+        [JsonIgnore, Browsable(false)]
         public virtual int iDuration => throw new NotImplementedException();
 
         protected double[] inputCurrent; //Current array 

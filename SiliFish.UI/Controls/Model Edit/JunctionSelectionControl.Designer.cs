@@ -1,6 +1,6 @@
 ﻿namespace SiliFish.UI.Controls.Model_Edit
 {
-    partial class ConnectionSelectionControl
+    partial class JunctionSelectionControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -85,7 +85,7 @@
             cbChem.UseVisualStyleBackColor = true;
             cbChem.Visible = false;
             // 
-            // ConnectionSelectionControl
+            // JunctionSelectionControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -94,7 +94,7 @@
             Controls.Add(cbChemIn);
             Controls.Add(cbGapJunctions);
             Controls.Add(lLabel);
-            Name = "ConnectionSelectionControl";
+            Name = "JunctionSelectionControl";
             Size = new Size(313, 126);
             ResumeLayout(false);
             PerformLayout();

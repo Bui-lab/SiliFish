@@ -77,20 +77,20 @@ namespace SiliFish.UI.Controls
 
             listCellPools.EnableImportExport();
             listCellPools.EnableHightlight();
-            listCellPools.AddContextMenu("Projection Conductance Multiplier", listCellPools_ConductanceMultiplier);
+            listCellPools.AddContextMenu("Synapse/Junction Conductance Multiplier", listCellPools_ConductanceMultiplier);
 
             listCells.EnableImportExport();
             listCells.EnableHightlight();
 
             listIncoming.EnableImportExport();
-            listIncoming.AddContextMenu("Go to Source", listConnections_GotoSource);
-            listIncoming.AddContextMenu("Projection Conductance Multiplier", listConnections_ConductanceMultiplier);
+            listIncoming.AddContextMenu("Go to Source", listJunctions_GotoSource);
+            listIncoming.AddContextMenu("Synapse/Junction Conductance Multiplier", listJunctions_ConductanceMultiplier);
             listOutgoing.EnableImportExport();
-            listOutgoing.AddContextMenu("Go to Target", listConnections_GotoTarget);
-            listOutgoing.AddContextMenu("Projection Conductance Multiplier", listConnections_ConductanceMultiplier);
+            listOutgoing.AddContextMenu("Go to Target", listJunctions_GotoTarget);
+            listOutgoing.AddContextMenu("Synapse/Junction Conductance Multiplier", listJunctions_ConductanceMultiplier);
             listGap.EnableImportExport();
-            listGap.AddContextMenu("Go to Neighbor", listConnections_GotoNeighbor);
-            listGap.AddContextMenu("Projection Conductance Multiplier", listConnections_ConductanceMultiplier);
+            listGap.AddContextMenu("Go to Neighbor", listJunctions_GotoNeighbor);
+            listGap.AddContextMenu("Synapse/Junction Conductance Multiplier", listJunctions_ConductanceMultiplier);
 
             tabModel.BackColor = Color.White;
             eModelJSON.AddContextMenu();
@@ -232,7 +232,7 @@ namespace SiliFish.UI.Controls
             LoadPools();
             if (Model is RunningModel)
                 LoadCells();
-            LoadProjections();
+            LoadJunctions();
             LoadStimuli();
             this.Text = $"SiliFish {Model?.ModelName}";
         }
@@ -362,13 +362,13 @@ namespace SiliFish.UI.Controls
                     listCellPools_ItemHighlight(sender, e);
                 SelectedCells = null;
                 LoadCells();
-                LoadProjections(SelectedPools);
+                LoadJunctions(SelectedPools);
                 LoadStimuli(SelectedPools);
             }
             else if (lb.SelectedItem is CellPoolTemplate cpt)
             {
                 SelectedPoolTemplates = [.. lb.SelectedItems.Where(i => i is CellPoolTemplate).Select(i => i as CellPoolTemplate)];
-                LoadProjections(SelectedPoolTemplates);
+                LoadJunctions(SelectedPoolTemplates);
                 LoadStimuli(SelectedPoolTemplates);
             }
             else if (lb.SelectedItem == null)
@@ -377,7 +377,7 @@ namespace SiliFish.UI.Controls
                 SelectedPools = null;
                 SelectedCells = null;
                 LoadCells();//Full list
-                LoadProjections();//Full list
+                LoadJunctions();//Full list
                 LoadStimuli();//Full list
             }
         }
@@ -397,7 +397,7 @@ namespace SiliFish.UI.Controls
             if (poolDuplicate != null)
             {
                 AddCellPool(poolDuplicate);
-                RefreshProjections();
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }
@@ -414,7 +414,7 @@ namespace SiliFish.UI.Controls
                         Model.RemoveCellPool(cpl);
                     }
                     LoadPools();
-                    //Automatically loaded with SelectedIndexChangedEvent LoadProjections();
+                    //Automatically loaded with SelectedIndexChangedEvent LoadJunctions();
                     LoadStimuli();
                     ModelIsUpdated();
                 }
@@ -435,7 +435,7 @@ namespace SiliFish.UI.Controls
                 if (oldName != pool.CellGroup)
                 {
                     (Model as ModelTemplate).RenameCellPool(oldName, pool.CellGroup);
-                    RefreshProjections();
+                    RefreshJunctions();
                 }
                 else
                     (Model as ModelTemplate).UpdateCellPool(pool);
@@ -523,20 +523,20 @@ namespace SiliFish.UI.Controls
                         if (cp is not CellPoolTemplate poolTemplate) continue;
                         if (mult == 0)
                         {
-                            Model.GetGapProjections()
+                            Model.GetGapJunctions()
                                 .Where(c => (c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup) && c.Active)
                                 .ToList()
                                 .ForEach(c => changes.Add($"{c.ID} deactivated"));
-                            Model.GetGapProjections()
+                            Model.GetGapJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
                                 .ToList()
                                 .ForEach(c => c.Active = false);
                         }
                         else
                         {
-                            int count = Model.GetGapProjections()
+                            int count = Model.GetGapJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup).Count();
-                            Model.GetGapProjections()
+                            Model.GetGapJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup || c.TargetPool == poolTemplate.CellGroup)
                                 .ToList()
                                 .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
@@ -552,20 +552,20 @@ namespace SiliFish.UI.Controls
                         if (cp is not CellPoolTemplate poolTemplate) continue;
                         if (mult == 0)
                         {
-                            Model.GetChemicalProjections()
+                            Model.GetChemicalJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup && c.Active)
                                 .ToList()
                                 .ForEach(c => changes.Add($"{c.ID} deactivated"));
-                            Model.GetChemicalProjections()
+                            Model.GetChemicalJunctions()
                                  .Where(c => c.SourcePool == poolTemplate.CellGroup)
                                  .ToList()
                                  .ForEach(c => c.Active = false);
                         }
                         else
                         {
-                            int count = Model.GetChemicalProjections()
+                            int count = Model.GetChemicalJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup).Count();
-                            Model.GetChemicalProjections()
+                            Model.GetChemicalJunctions()
                                 .Where(c => c.SourcePool == poolTemplate.CellGroup)
                                 .ToList()
                                 .ForEach(c => (c as InterPoolTemplate).Parameters["Conductance"].Multiply(mult));
@@ -574,8 +574,8 @@ namespace SiliFish.UI.Controls
                     }
                 }
 
-                TextDisplayer.Display($"Modified projection conductance values", changes);
-                RefreshProjections();
+                TextDisplayer.Display($"Modified Synapse/Junction Conductance Values", changes);
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }
@@ -644,7 +644,7 @@ namespace SiliFish.UI.Controls
                 SelectedCells = [.. lb.SelectedItems.Where(i => i is Cell).Select(i => i as Cell)];
                 if (listCells.HighlightSelected)
                     listCells_ItemHighlight(sender, e);
-                LoadProjections(SelectedCells);
+                LoadJunctions(SelectedCells);
                 LoadStimuli(cell);
             }
         }
@@ -666,7 +666,7 @@ namespace SiliFish.UI.Controls
                 listCells.AppendItem(cellDuplicate);
                 SelectedPools = [cell.CellPool];
                 SelectedCells = [cell];
-                RefreshProjections();
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }
@@ -685,7 +685,7 @@ namespace SiliFish.UI.Controls
                     }
                     SelectedCells = null;
                     LoadCells();
-                    LoadProjections();
+                    LoadJunctions();
                     LoadStimuli();
                     ModelIsUpdated();
                 }
@@ -806,23 +806,23 @@ namespace SiliFish.UI.Controls
         #endregion
 
         #region Connection
-        private void ClearProjections()
+        private void ClearJunctions()
         {
             listIncoming.ClearItems();
             listOutgoing.ClearItems();
             listGap.ClearItems();
         }
 
-        private void RefreshProjections()
+        private void RefreshJunctions()
         {
             if (SelectedCells != null)
-                LoadProjections(SelectedCells);
+                LoadJunctions(SelectedCells);
             else if (SelectedPools != null)
-                LoadProjections(SelectedPools);
+                LoadJunctions(SelectedPools);
             else if (SelectedPoolTemplates != null && SelectedPoolTemplates.Count > 0)
-                LoadProjections(SelectedPoolTemplates);
+                LoadJunctions(SelectedPoolTemplates);
             else
-                LoadProjections();
+                LoadJunctions();
             if (SelectedJunction != null)
             {
                 switch (modeIOG)
@@ -841,21 +841,21 @@ namespace SiliFish.UI.Controls
                 }
             }
         }
-        private void LoadProjections()
+        private void LoadJunctions()
         {
             if (Model == null) return;
-            ClearProjections();
+            ClearJunctions();
             lOutgoingTitle.Text = "Synaptic Connections";
             lGapTitle.Text = "Gap Junctions";
             splitChemicalJunctions.Panel1Collapsed = true;
             if (Model is RunningModel rm)
             {
-                List<InterPool> chemInterPools = [.. rm.ChemPoolConnections];
+                List<InterPool> chemInterPools = [.. rm.ChemPoolJunctions];
                 if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
-                List<InterPool> gapInterPools = [.. rm.GapPoolConnections];
+                List<InterPool> gapInterPools = [.. rm.GapPoolJunctions];
                 if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
@@ -863,12 +863,12 @@ namespace SiliFish.UI.Controls
             }
             else if (Model is ModelTemplate mt)
             {
-                List<InterPoolTemplate> chemInterPools = mt.InterPoolTemplates.Where(jnc => jnc.ConnectionType != ConnectionType.Gap).ToList();
+                List<InterPoolTemplate> chemInterPools = mt.InterPoolTemplates.Where(jnc => jnc.JunctionType != JunctionType.Gap).ToList();
                 if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
-                List<InterPoolTemplate> gapInterPools = mt.InterPoolTemplates.Where(jnc => jnc.ConnectionType == ConnectionType.Gap).ToList();
+                List<InterPoolTemplate> gapInterPools = mt.InterPoolTemplates.Where(jnc => jnc.JunctionType == JunctionType.Gap).ToList();
                 if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
                     listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
@@ -876,14 +876,14 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void LoadProjections(List<CellPoolTemplate> cellpooltemplates)
+        private void LoadJunctions(List<CellPoolTemplate> cellpooltemplates)
         {
             if (cellpooltemplates == null || cellpooltemplates.Count == 0)
             {
-                LoadProjections();
+                LoadJunctions();
                 return;
             }
-            ClearProjections();
+            ClearJunctions();
             string pools = string.Join(',', cellpooltemplates.Select(cp => cp.CellGroup));
             List<string> cellGroupNames = cellpooltemplates.Select(cp => cp.CellGroup).ToList();
             lIncomingTitle.Text = $"Incoming Connections of {pools}";
@@ -891,24 +891,24 @@ namespace SiliFish.UI.Controls
             lGapTitle.Text = $"Gap Junctions of {pools}";
             splitChemicalJunctions.Panel1Collapsed = false;
             if (Model == null || Model is not ModelTemplate) return;
-            listOutgoing.LoadItems(Model.GetChemicalProjections()
+            listOutgoing.LoadItems(Model.GetChemicalJunctions()
                 .Where(proj => cellGroupNames.Contains(((InterPoolTemplate)proj).SourcePool))
                 .Cast<object>()
                 .ToList());
-            listIncoming.LoadItems(Model.GetChemicalProjections()
+            listIncoming.LoadItems(Model.GetChemicalJunctions()
                 .Where(proj => cellGroupNames.Contains(((InterPoolTemplate)proj).TargetPool))
                 .Cast<object>()
                 .ToList());
-            listGap.LoadItems(Model.GetGapProjections()
+            listGap.LoadItems(Model.GetGapJunctions()
                 .Where(proj => cellGroupNames.Contains(((InterPoolTemplate)proj).SourcePool) || cellGroupNames.Contains(((InterPoolTemplate)proj).TargetPool))
                 .Cast<object>()
                 .ToList());
         }
-        private void LoadProjections(List<CellPool> cellpools)
+        private void LoadJunctions(List<CellPool> cellpools)
         {
             if (cellpools == null)
             {
-                LoadProjections();
+                LoadJunctions();
                 return;
             }
 
@@ -917,33 +917,33 @@ namespace SiliFish.UI.Controls
             lOutgoingTitle.Text = $"Outgoing Connections of {pools}";
             lGapTitle.Text = $"Gap Junctions of {pools}";
             splitChemicalJunctions.Panel1Collapsed = false;
-            ClearProjections();
+            ClearJunctions();
             foreach (CellPool cp in cellpools)
             {
-                List<JunctionBase> gapJunctions = cp.Projections.Where(j => j is GapJunction).ToList();
-                List<InterPool> gapInterPools = (Model as RunningModel).GapPoolConnections
+                List<JunctionBase> gapJunctions = cp.Junctions.Where(j => j is GapJunction).ToList();
+                List<InterPool> gapInterPools = (Model as RunningModel).GapPoolJunctions
                     .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
                 listGap.AppendItems(gapInterPools.Cast<object>().ToList());
 
-                List<JunctionBase> chemJunctions = cp.Projections.Where(j => j is not GapJunction).ToList();
-                List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolConnections
+                List<JunctionBase> chemJunctions = cp.Junctions.Where(j => j is not GapJunction).ToList();
+                List<InterPool> chemInterPools = (Model as RunningModel).ChemPoolJunctions
                     .Where(ip => ip.SourcePool == cp.ID || ip.TargetPool == cp.ID).ToList();
                 listOutgoing.AppendItems(chemInterPools.Where(ip => ip.SourcePool == cp.ID).Cast<object>().ToList());
                 listIncoming.AppendItems(chemInterPools.Where(ip => ip.TargetPool == cp.ID).Cast<object>().ToList());
             }
         }
 
-        private void LoadProjections(List<Cell> cells)
+        private void LoadJunctions(List<Cell> cells)
         {
             if (cells == null || cells.Count == 0)
             {
                 if (SelectedPools != null)
-                    LoadProjections(SelectedPools);
+                    LoadJunctions(SelectedPools);
                 else
-                    LoadProjections();
+                    LoadJunctions();
                 return;
             }
-            ClearProjections();
+            ClearJunctions();
             string cellIDs = string.Join(',', cells.Select(cp => cp.ID));
 
             lIncomingTitle.Text = $"Incoming Connections of {cellIDs}";
@@ -1040,7 +1040,7 @@ namespace SiliFish.UI.Controls
                         Model.AddJunction(template);
                     else
                         jb.LinkObjects();
-                    RefreshProjections();
+                    RefreshJunctions();
                 }
                 ModelIsUpdated();
             }
@@ -1073,7 +1073,7 @@ namespace SiliFish.UI.Controls
                     else
                         jb.LinkObjects();
                 }
-                RefreshProjections();
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }
@@ -1087,7 +1087,7 @@ namespace SiliFish.UI.Controls
                         Model.RemoveJunction(ipt);
                     else if (item is JunctionBase jb)
                         jb.UnlinkObjects();
-                RefreshProjections();
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }
@@ -1107,17 +1107,17 @@ namespace SiliFish.UI.Controls
             List<InterPoolBase> jncs = OpenConnectionDialog(jnc, false);
             if (jncs != null && jncs.Count != 0)
             {
-                RefreshProjections();
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }
 
-        private void listConnections_ItemToggleActive(object sender, EventArgs e)
+        private void listJunctions_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
         }
 
-        private void listConnections_ItemSelect(object sender, EventArgs e)
+        private void listJunctions_ItemSelect(object sender, EventArgs e)
         {
             ListBoxControl lb = sender as ListBoxControl;
             if (lb.SelectedItem is JunctionBase jnc)
@@ -1126,24 +1126,24 @@ namespace SiliFish.UI.Controls
                 SelectedJunction = jnc;
             }
         }
-        private void listConnections_ItemsSort(object sender, EventArgs e)
+        private void listJunctions_ItemsSort(object sender, EventArgs e)
         {
             if (SelectedCells != null)
             {
                 SelectedCells.ForEach(c => c.SortJunctions());
-                LoadProjections(SelectedCells);
+                LoadJunctions(SelectedCells);
             }
             else if (CurrentMode == RunMode.Template)
             {
                 Model.SortJunctions();
-                RefreshProjections();
+                RefreshJunctions();
             }
         }
 
-        private void listConnections_ItemsExport(object sender, EventArgs e)
+        private void listJunctions_ItemsExport(object sender, EventArgs e)
         {
             List<ModelUnitBase> units = SelectedUnits;
-            ConnectionSelectionControl selectionControl = new()
+            JunctionSelectionControl selectionControl = new()
             {
                 ChemInOutExists = units != null,
                 GapJunctions = sender == listGap,
@@ -1161,7 +1161,7 @@ namespace SiliFish.UI.Controls
             bool chemout = selectionControl.ChemicalOutgoing;
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
             {
-                if (ModelFile.SaveConnectionsToCSV(saveFileCSV.FileName, Model, units, gap, chemin, chemout))
+                if (ModelFile.SaveJunctionsToCSV(saveFileCSV.FileName, Model, units, gap, chemin, chemout))
                 {
                     string filename = saveFileCSV.FileName; 
                     if (GlobalSettings.ShowFileFolderAfterSave)
@@ -1175,19 +1175,19 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_ItemsImport(object sender, EventArgs e)
+        private void listJunctions_ItemsImport(object sender, EventArgs e)
         {
             List<ModelUnitBase> units = SelectedUnits;
             string ofUnits = units != null ? $" of {string.Join(", ", units.Select(u=>u.ID))} " : " of full model ";
             if (!warnedImport &&
-                (Model is ModelTemplate modelTemplate && modelTemplate.HasConnections() ||
-                Model is RunningModel runningModel && runningModel.HasConnections()))
+                (Model is ModelTemplate modelTemplate && modelTemplate.HasJunctions() ||
+                Model is RunningModel runningModel && runningModel.HasJunctions()))
             {
                 warnedImport = true;
-                string msg = $"Importing will remove all cell pool connections {ofUnits}and create from the CSV file. Do you want to continue?";
+                string msg = $"Importing will remove all cell pool junctions/synapses {ofUnits}and create from the CSV file. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK) return;
             }
-            ConnectionSelectionControl selectionControl = new()
+            JunctionSelectionControl selectionControl = new()
             {
                 ChemInOutExists = units != null,
                 GapJunctions = sender == listGap,
@@ -1204,13 +1204,13 @@ namespace SiliFish.UI.Controls
             bool chemin = selectionControl.CheminalIncoming;
             bool chemout = selectionControl.ChemicalOutgoing;
 
-            openFileCSV.Title = $"Connection import ({units})";
+            openFileCSV.Title = $"Junction import ({units})";
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                if (ModelFile.ReadConnectionsFromCSV(filename, Model, units, gap, chemin, chemout))
+                if (ModelFile.ReadJunctionsFromCSV(filename, Model, units, gap, chemin, chemout))
                 {
-                    RefreshProjections();
+                    RefreshJunctions();
                     string jncList = chemin && chemout ? "chemical" :
                         !chemin && chemout ? "outgoing chemical" :
                         chemin && !chemout ? "incoming chemical" :
@@ -1226,7 +1226,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_GotoSource(object sender, EventArgs e)
+        private void listJunctions_GotoSource(object sender, EventArgs e)
         {
             if (Model == null) return;
             object obj = (sender as ListBoxControl).SelectedItem;
@@ -1245,7 +1245,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_GotoTarget(object sender, EventArgs e)
+        private void listJunctions_GotoTarget(object sender, EventArgs e)
         {
             if (Model == null) return;
             object obj = (sender as ListBoxControl).SelectedItem;
@@ -1264,7 +1264,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_GotoNeighbor(object sender, EventArgs e)
+        private void listJunctions_GotoNeighbor(object sender, EventArgs e)
         {
             if (Model == null) return;
             object obj = (sender as ListBoxControl).SelectedItem;
@@ -1281,7 +1281,7 @@ namespace SiliFish.UI.Controls
             }
         }
 
-        private void listConnections_ConductanceMultiplier(object sender, EventArgs e)
+        private void listJunctions_ConductanceMultiplier(object sender, EventArgs e)
         {
             ControlContainer controlContainer = new()
             {
@@ -1329,8 +1329,8 @@ namespace SiliFish.UI.Controls
                         }
                     }
                 }
-                TextDisplayer.Display($"Modified projection conductance values", changes);
-                RefreshProjections();
+                TextDisplayer.Display($"Modified Synapse/Junction Conductance Values", changes);
+                RefreshJunctions();
                 ModelIsUpdated();
             }
         }

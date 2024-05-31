@@ -19,7 +19,7 @@ namespace SiliFish.Helpers
             List<string> lines = [];
             while (!sr.EndOfStream)
             {
-                lines.Add(sr.ReadLine());
+                lines.Add(CSVUtil.ReadCSVLine(sr));
             }
             return [.. lines];
         }

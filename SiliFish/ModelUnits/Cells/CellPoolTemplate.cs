@@ -260,7 +260,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             if (Parameters==null) return 0.0; 
             Dictionary<string, double> dparams = Parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value is Distribution dist ? dist.UniqueValue : double.Parse(kvp.Value.ToString()));
-            CellCore core = CellCore.CreateCore(CoreType, dparams);
+            CellCore core = CellCore.CreateCore(CoreType, dparams, dt_run:0.1);//TODO fixed dt
             return core?.CalculateRheoBase(maxRheobase: 1000, sensitivity: Math.Pow(0.1, 3), infinity_ms: GlobalSettings.RheobaseInfinity, dt: 0.1) ?? 0;
            
         }
@@ -374,9 +374,9 @@ namespace SiliFish.ModelUnits.Cells
             return new CellPoolTemplate(this);
         }
 
-        public Coordinate[] GenerateCoordinates(Random random, ModelDimensions modelDimensions, int n, int somite = -1)
+        public Coordinate[] GenerateCoordinates(Random random, bool flickerOff, ModelDimensions modelDimensions, int n, int somite = -1)
         {
-            return Coordinate.GenerateCoordinates(random, modelDimensions, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
+            return Coordinate.GenerateCoordinates(random, flickerOff, modelDimensions, BodyLocation, XDistribution, Y_AngleDistribution, Z_RadiusDistribution, n, somite);
         }
 
 

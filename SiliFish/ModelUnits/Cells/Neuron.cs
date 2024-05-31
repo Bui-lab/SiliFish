@@ -27,11 +27,11 @@ namespace SiliFish.ModelUnits.Cells
         public override double RestingMembranePotential { get { return (Core?.Vr) ?? 0; } }
 
         [JsonIgnore]
-        public override IEnumerable<JunctionBase> Projections
+        public override IEnumerable<JunctionBase> Junctions
         {
             get
             {
-                IEnumerable<JunctionBase> gapJunctions = base.Projections;
+                IEnumerable<JunctionBase> gapJunctions = base.Junctions;
                 return Terminals.Union(Synapses).Union(gapJunctions);
             }
         }
@@ -54,7 +54,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCore.CreateCore(coreType, cellParams);
+            Core = CellCore.CreateCore(coreType, cellParams, model.Settings.SimulationDeltaT);
             GapJunctions = [];
             Synapses = [];
             Terminals = [];
@@ -156,7 +156,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         #endregion
 
-        #region Connection functions
+        #region Junction functions
         public override int TimeDistance()
         {
             return Math.Max(Terminals?.Select(junc => junc.iDuration).DefaultIfEmpty().Max() ?? 0, base.TimeDistance());
@@ -171,9 +171,9 @@ namespace SiliFish.ModelUnits.Cells
             return jnc;
         }
 
-        public override (double, double) GetConnectionRange()
+        public override (double, double) GetJunctionRange()
         {
-            (double minWeight1, double maxWeight1) = base.GetConnectionRange();
+            (double minWeight1, double maxWeight1) = base.GetJunctionRange();
             double maxWeight2 = Synapses.Select(j => j.Core.Conductance).DefaultIfEmpty(0).Max();
             double minWeight2 = Synapses.Where(j => j.Core.Conductance > 0).Select(j => j.Core.Conductance).DefaultIfEmpty(999).Min();
             double maxWeight = Math.Max(maxWeight1, maxWeight2);
@@ -223,7 +223,7 @@ namespace SiliFish.ModelUnits.Cells
 
         }
 
-        public override bool HasConnections(bool gap, bool chemin, bool chemout)
+        public override bool HasJunctions(bool gap, bool chemin, bool chemout)
         {
             return gap && GapJunctions.Count != 0 ||
                 chemin && Synapses.Count != 0 ||

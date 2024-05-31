@@ -108,7 +108,7 @@ namespace SiliFish.ModelUnits.Architecture
         /// Brings a summary of gap junctions between cell pools
         /// </summary>
         [JsonIgnore]
-        public List<InterPool> GapPoolConnections
+        public List<InterPool> GapPoolJunctions
         {
             get
             {
@@ -140,7 +140,7 @@ namespace SiliFish.ModelUnits.Architecture
         /// Brings a summary of chem junctions between cell pools
         /// </summary>
         [JsonIgnore]
-        public List<InterPool> ChemPoolConnections
+        public List<InterPool> ChemPoolJunctions
         {
             get
             {
@@ -175,9 +175,6 @@ namespace SiliFish.ModelUnits.Architecture
         [JsonIgnore]
         [Browsable(false)]
         public SwimmingEpisodes SwimmingEpisodes { get; internal set; }
-        [JsonIgnore]
-        [Browsable(false)]
-        public bool JunctionCurrentTrackingOn = true;
 
         public RunningModel()
         {
@@ -212,7 +209,7 @@ namespace SiliFish.ModelUnits.Architecture
                 CellPool leftTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.TargetPool && mp.PositionLeftRight == SagittalPlane.Left);
                 CellPool rightTarget = neuronPools.Union(musclePools).FirstOrDefault(mp => mp.CellGroup == jncTemp.TargetPool && mp.PositionLeftRight == SagittalPlane.Right);
 
-                if (jncTemp.ConnectionType == ConnectionType.Synapse || jncTemp.ConnectionType == ConnectionType.NMJ)
+                if (jncTemp.JunctionType == JunctionType.Synapse || jncTemp.JunctionType == JunctionType.NMJ)
                 {
                     if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
                     {
@@ -225,7 +222,7 @@ namespace SiliFish.ModelUnits.Architecture
                         PoolToPoolChemSynapse(rightSource, leftTarget, jncTemp);
                     }
                 }
-                else if (jncTemp.ConnectionType == ConnectionType.Gap)
+                else if (jncTemp.JunctionType == JunctionType.Gap)
                 {
                     if (jncTemp.AxonReachMode == AxonReachMode.Ipsilateral || jncTemp.AxonReachMode == AxonReachMode.Bilateral)
                     {
@@ -296,9 +293,9 @@ namespace SiliFish.ModelUnits.Architecture
                     else if (unitTag.Item1 == "Neuron" || unitTag.Item1 == "MuscleCell")
                         unit = GetCells().FirstOrDefault(cp => cp.ID == unitTag.Item2);
                     else if (unitTag.Item1 == "ChemicalSynapse")
-                        unit = GetChemicalProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
+                        unit = GetChemicalJunctions().FirstOrDefault(cp => cp.ID == unitTag.Item2);
                     else if (unitTag.Item1 == "GapJunction")
-                        unit = GetGapProjections().FirstOrDefault(cp => cp.ID == unitTag.Item2);
+                        unit = GetGapJunctions().FirstOrDefault(cp => cp.ID == unitTag.Item2);
                     else
                     { }
                     if (unit != null)
@@ -554,31 +551,31 @@ namespace SiliFish.ModelUnits.Architecture
 
         #endregion
 
-        #region Projections
-        public bool HasConnections()
+        #region Junctions
+        public bool HasJunctions()
         {
-            return CellPools.Any(cp => cp.HasConnections());
+            return CellPools.Any(cp => cp.HasJunctions());
         }
-        public override List<InterPoolBase> GetGapProjections()
+        public override List<InterPoolBase> GetGapJunctions()
         {
-            List<InterPoolBase> listProjections = [];
+            List<InterPoolBase> listJunctions = [];
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 foreach (GapJunction jnc in cell.GapJunctions.Where(j => j.Cell1 == cell))
-                    listProjections.Add(jnc);
+                    listJunctions.Add(jnc);
             }
-            return listProjections;
+            return listJunctions;
         }
-        public override List<InterPoolBase> GetChemicalProjections()
+        public override List<InterPoolBase> GetChemicalJunctions()
         {
-            List<InterPoolBase> listProjections = [];
+            List<InterPoolBase> listJunctions = [];
             foreach (Cell cell in CellPools.SelectMany(cp => cp.Cells))
             {
                 if (cell is Neuron neuron)
                     foreach (ChemicalSynapse syn in neuron.Terminals)
-                        listProjections.Add(syn);
+                        listJunctions.Add(syn);
             }
-            return listProjections;
+            return listJunctions;
         }
 
         public void RemoveJunctionsOf(CellPool cp, Cell cell, bool gap, bool chemin, bool chemout)
@@ -665,13 +662,13 @@ namespace SiliFish.ModelUnits.Architecture
             return ((minX, maxX), (minY, maxY), (minZ, maxZ), rangeY1D);
         }
 
-        public virtual (double, double) GetConnectionRange()
+        public virtual (double, double) GetJunctionRange()
         {
             double maxWeight = 0;
             double minWeight = 999;
             foreach (CellPool pool in neuronPools.Union(musclePools))
             {
-                (double localMin, double localMax) = pool.GetConnectionRange();
+                (double localMin, double localMax) = pool.GetJunctionRange();
                 if (localMin < minWeight)
                     minWeight = localMin;
                 if (localMax > maxWeight)
@@ -687,7 +684,7 @@ namespace SiliFish.ModelUnits.Architecture
         {
             return CellPools.Sum(p => p.Cells.Count(c => c.Somite >= startSomite && c.Somite <= endSomite));
         }
-        public virtual int GetNumberOfConnections()
+        public virtual int GetNumberOfJunctions()
         {
             int gapJunctions = CellPools.Sum(p => p.Cells.Sum(c => c.GapJunctions.Count));
             int chemJunctions = CellPools.Sum(p => p.Cells.Sum(c => ((c as MuscleCell)?.EndPlates.Count ?? 0) + ((c as Neuron)?.Synapses.Count ?? 0)));

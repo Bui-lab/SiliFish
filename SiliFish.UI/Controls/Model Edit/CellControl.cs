@@ -57,7 +57,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            CellCore core = CellCore.CreateCore(coreType, null);
+            CellCore core = CellCore.CreateCore(coreType, null, 0);
             propCore.SelectedObject = core;
         }
         private void linkLoadCell_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -185,7 +185,7 @@ namespace SiliFish.UI.Controls
             if (e is not UpdatedParamsEventArgs args || args.ParamsAsDistribution == null)
                 return;
             if (args.CoreType != cell.Core.CoreType)
-                cell.Core = CellCore.CreateCore(args.CoreType, args.ParamsAsDouble);
+                cell.Core = CellCore.CreateCore(args.CoreType, args.ParamsAsDouble, 0);
             else
                 cell.Core.Parameters = args.ParamsAsDouble;
             ddCoreType.Text = cell.Core.CoreType.ToString();

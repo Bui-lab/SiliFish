@@ -65,7 +65,7 @@ namespace SiliFish.ModelUnits.Architecture
                     dataContext.Database.EnsureCreated();
                     if (Model.DbId == 0)
                     {
-                        string stats = $"{Model.GetNumberOfCells():n0} cells; {Model.GetNumberOfConnections():n0} connections";
+                        string stats = $"{Model.GetNumberOfCells():n0} cells; {Model.GetNumberOfJunctions():n0} junctions/synapses";
                         ModelRecord modelRecord = new(Model.ModelName, DateTime.Now, stats, "");//TODO ability to save the json file and include the filename
                         dataContext.Add(modelRecord);
                         dataContext.SaveChanges();

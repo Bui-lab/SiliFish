@@ -111,24 +111,24 @@ namespace SiliFish.ModelUnits.Architecture
 
         #endregion
 
-        #region Projections
+        #region Junctions
 
-        public bool HasConnections()
+        public bool HasJunctions()
         {
             return InterPoolTemplates.Count != 0;
         }
 
-        public override List<InterPoolBase> GetChemicalProjections()
+        public override List<InterPoolBase> GetChemicalJunctions()
         {
             return InterPoolTemplates
-                .Where(ip => ip.ConnectionType is ConnectionType.Synapse or ConnectionType.NMJ)
+                .Where(ip => ip.JunctionType is JunctionType.Synapse or JunctionType.NMJ)
                 .Select(ip => (InterPoolBase)ip).ToList();
         }
 
-        public override List<InterPoolBase> GetGapProjections()
+        public override List<InterPoolBase> GetGapJunctions()
         {
             return InterPoolTemplates
-                .Where(ip => ip.ConnectionType is ConnectionType.Gap)
+                .Where(ip => ip.JunctionType is JunctionType.Gap)
                 .Select(ip => (InterPoolBase)ip).ToList();
         }
         public override bool AddJunction(InterPoolBase jnc) 
@@ -155,7 +155,7 @@ namespace SiliFish.ModelUnits.Architecture
         }
         public override void SortJunctionsByType() 
         {
-            InterPoolTemplates = [.. InterPoolTemplates.OrderBy(jnc => jnc.ConnectionType.ToString())];
+            InterPoolTemplates = [.. InterPoolTemplates.OrderBy(jnc => jnc.JunctionType.ToString())];
         }
         public override void SortJunctionsBySource()
         {
@@ -175,9 +175,9 @@ namespace SiliFish.ModelUnits.Architecture
                 return;
             }
             else if (gap)
-                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType == ConnectionType.Gap);
+                InterPoolTemplates.RemoveAll(jnc => jnc.JunctionType == JunctionType.Gap);
             else if (chem)
-                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap);
+                InterPoolTemplates.RemoveAll(jnc => jnc.JunctionType != JunctionType.Gap);
         }
         public void RemoveJunctionsOf(CellPoolTemplate cpt, bool gap, bool chemin, bool chemout)
         {
@@ -187,13 +187,13 @@ namespace SiliFish.ModelUnits.Architecture
                 return;
             }
             if (gap)
-                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType == ConnectionType.Gap &&
+                InterPoolTemplates.RemoveAll(jnc => jnc.JunctionType == JunctionType.Gap &&
                     (jnc.TargetPool == cpt.CellGroup || jnc.SourcePool == cpt.CellGroup));
             if (chemin)
-                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap &&
+                InterPoolTemplates.RemoveAll(jnc => jnc.JunctionType != JunctionType.Gap &&
                     jnc.TargetPool == cpt.CellGroup);
             if (chemout)
-                InterPoolTemplates.RemoveAll(jnc => jnc.ConnectionType != ConnectionType.Gap &&
+                InterPoolTemplates.RemoveAll(jnc => jnc.JunctionType != JunctionType.Gap &&
                     jnc.SourcePool == cpt.CellGroup);
         }
         #endregion

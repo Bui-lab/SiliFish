@@ -108,7 +108,7 @@ namespace SiliFish.Definitions
 
     public enum AxonReachMode { NotSet, Ipsilateral, Contralateral, Bilateral }
     public enum DistanceMode { Euclidean, Manhattan } //FUTURE_IMPROVEMENT, Chebyshev, Haversine }
-    public enum ConnectionType { NotSet, Synapse, Gap, NMJ }
+    public enum JunctionType { NotSet, Synapse, Gap, NMJ }
     public enum StimulusMode { Step, Gaussian, Ramp, Sinusoidal, Pulse }
     public enum NeuronClass { NotSet, Glycinergic, GABAergic, Glutamatergic, Cholinergic, Modulatory, Mixed }
     public enum CellOutputMode { NotSet, Excitatory, Inhibitory, Modulatory, Electrical, Cholinergic}

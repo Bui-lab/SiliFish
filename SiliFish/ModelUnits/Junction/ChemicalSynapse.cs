@@ -56,7 +56,7 @@ public override string SourcePool
         {
             return ListBuilder.Build<string>(
             PreNeuron.ID, PostCell.ID,
-            ConnectionType.Synapse, Core.SynapseType,
+            JunctionType.Synapse, Core.SynapseType,
             csvExportCoreValues,
                 DistanceMode,
                 FixedDuration_ms, Delay_ms, Duration_ms,

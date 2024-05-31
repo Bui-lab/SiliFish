@@ -23,7 +23,7 @@ namespace SiliFish.ModelUnits.Cells
         public List<Cell> Cells { get; set; }
 
         [JsonIgnore]
-        public IEnumerable<JunctionBase> Projections
+        public IEnumerable<JunctionBase> Junctions
         {
             get
             {
@@ -211,13 +211,13 @@ namespace SiliFish.ModelUnits.Cells
             if (Cells == null || Cells.Count == 0) return (999, -999);
             return (Cells.Min(c => c.Z), Cells.Max(c => c.Z));
         }
-        public virtual (double, double) GetConnectionRange()
+        public virtual (double, double) GetJunctionRange()
         {
             double maxWeight = 0;
             double minWeight = 999;
             foreach (Cell cell in Cells)
             {
-                (double localMin, double localMax) = cell.GetConnectionRange();
+                (double localMin, double localMax) = cell.GetJunctionRange();
                 if (localMin < minWeight)
                     minWeight = localMin;
                 if (localMax > maxWeight)
@@ -343,9 +343,10 @@ namespace SiliFish.ModelUnits.Cells
             {
                 somiteLength = MD.SpinalRostralCaudalDistance / MD.NumberOfSomites;
             }
+            bool flickerOff = Model.Settings.FlickerOff;
             foreach (int somite in somites)
             {
-                Coordinate[] coordinates = GenerateCoordinates(Model.randomNumGenerator, MD, n, somite);
+                Coordinate[] coordinates = GenerateCoordinates(Model.randomNumGenerator, flickerOff, MD, n, somite);
                 Dictionary<string, double[]> paramValues = Parameters.GenerateMultipleInstanceValues(n, ordered: false);
 
                 double defaultCV = Model.Settings.cv;
@@ -420,7 +421,7 @@ namespace SiliFish.ModelUnits.Cells
         }
         #endregion
 
-        #region Projection Functions
+        #region Junction Functions
         public void ReachToCellPoolViaGapJunction(CellPool target, 
             CellReach reach, 
             TimeLine timeline,
@@ -453,7 +454,7 @@ namespace SiliFish.ModelUnits.Cells
                     .Where(c => c.Somite > pre.Somite || (c.Somite == pre.Somite && c.Sequence > pre.Sequence)) : target.GetCells();
                 foreach (Cell post in targetcells)
                 {
-                    if (maxIncoming > 0) //check whether the target cell already has connections from the same pool
+                    if (maxIncoming > 0) //check whether the target cell already has junctions from the same pool
                     {
                         int existing = post.GapJunctions.Count(gj => gj.Cell1.CellPool == this);
                         if (existing >= maxIncoming)
@@ -508,7 +509,7 @@ namespace SiliFish.ModelUnits.Cells
                 int counter = 0;
                 foreach (Cell post in target.GetCells())
                 {
-                    if (maxIncoming > 0) //check whether the target cell already has connections from the same pool
+                    if (maxIncoming > 0) //check whether the target cell already has junctions from the same pool
                     {
                         if (post is MuscleCell muscleCell)
                         {
@@ -542,10 +543,10 @@ namespace SiliFish.ModelUnits.Cells
             }
         }
 
-        public bool HasConnections(bool gap = true, bool chemin = true, bool chemout = true)
+        public bool HasJunctions(bool gap = true, bool chemin = true, bool chemout = true)
         {
             if (!HasCells()) return false;
-            return Cells.Any(c=>c.HasConnections(gap, chemin, chemout));
+            return Cells.Any(c=>c.HasJunctions(gap, chemin, chemout));
         }
 
         public void DeleteJunctions(bool gap = true, bool chemin = true, bool chemout = true)
@@ -556,7 +557,7 @@ namespace SiliFish.ModelUnits.Cells
 
         public List<JunctionBase> GetJunctionsTo(string targetPool)
         {
-            return Cells?.SelectMany(c => c.Projections.Where(gj => gj.SourcePool == targetPool || gj.TargetPool == targetPool)).Cast<JunctionBase>().ToList();
+            return Cells?.SelectMany(c => c.Junctions.Where(gj => gj.SourcePool == targetPool || gj.TargetPool == targetPool)).Cast<JunctionBase>().ToList();
         }
 
         #endregion

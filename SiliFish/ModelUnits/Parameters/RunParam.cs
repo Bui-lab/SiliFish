@@ -8,9 +8,9 @@ namespace SiliFish.ModelUnits.Parameters
     public class RunParam
     {
         public bool TrackJunctionCurrent { get; set; } = true;
-        public int SkipDuration { get; set; } = GlobalSettings.SimulationSkipTime;
-        public int MaxTime { get; set; } = GlobalSettings.SimulationEndTime;
-        public double DeltaT { get; set; } = GlobalSettings.SimulationDeltaT;//The step size
+        public int SkipDuration { get; set; } 
+        public int MaxTime { get; set; } 
+        public double DeltaT { get; set; }
         public int iIndex(double t)
         {
             int i = (int)((t + SkipDuration) / DeltaT);

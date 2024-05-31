@@ -24,9 +24,9 @@ namespace SiliFish.UI.Controls
             ddDistanceMode.DataSource = Enum.GetNames(typeof(DistanceMode));
 
             //ddConnectionType is manually loaded as not all of them are displayed
-            ddConnectionType.Items.Add(ConnectionType.Gap);
-            ddConnectionType.Items.Add(ConnectionType.Synapse);
-            ddConnectionType.Items.Add(ConnectionType.NMJ);
+            ddJunctionType.Items.Add(JunctionType.Gap);
+            ddJunctionType.Items.Add(JunctionType.Synapse);
+            ddJunctionType.Items.Add(JunctionType.NMJ);
 
             ddSourcePool.Items.AddRange([.. Model.CellPools]);
             ddSourcePool.SelectedIndex = -1;
@@ -37,35 +37,35 @@ namespace SiliFish.UI.Controls
             ddTargetCell.SelectedIndex = -1;
         }
 
-        private void FillConnectionTypes()
+        private void FillJunctionTypes()
         {
             if (ddSourcePool.SelectedItem is CellPoolTemplate source
                 && ddTargetPool.SelectedItem is CellPoolTemplate target)
             {
                 if (source.CellType == CellType.MuscleCell)
                 {
-                    ddConnectionType.Items.Clear();
-                    ddConnectionType.Items.Add(ConnectionType.Gap);
-                    ddConnectionType.SelectedItem = ConnectionType.Gap;
+                    ddJunctionType.Items.Clear();
+                    ddJunctionType.Items.Add(JunctionType.Gap);
+                    ddJunctionType.SelectedItem = JunctionType.Gap;
                     ddCoreType.Items.AddRange([.. ElecSynapseCore.GetSynapseTypes()]);
 
                 }
                 else //Neuron
                 {
-                    ConnectionType prevType = ConnectionType.NotSet;
-                    if (ddConnectionType.SelectedItem != null)
-                        prevType = (ConnectionType)ddConnectionType.SelectedItem;
-                    ddConnectionType.Items.Clear();
-                    ddConnectionType.Items.Add(ConnectionType.Gap);
+                    JunctionType prevType = JunctionType.NotSet;
+                    if (ddJunctionType.SelectedItem != null)
+                        prevType = (JunctionType)ddJunctionType.SelectedItem;
+                    ddJunctionType.Items.Clear();
+                    ddJunctionType.Items.Add(JunctionType.Gap);
                     if (target.CellType == CellType.MuscleCell)
-                        ddConnectionType.Items.Add(ConnectionType.NMJ);
+                        ddJunctionType.Items.Add(JunctionType.NMJ);
                     else
-                        ddConnectionType.Items.Add(ConnectionType.Synapse);
-                    if (ddConnectionType.Items.Contains(prevType))
-                        ddConnectionType.SelectedItem = prevType;
+                        ddJunctionType.Items.Add(JunctionType.Synapse);
+                    if (ddJunctionType.Items.Contains(prevType))
+                        ddJunctionType.SelectedItem = prevType;
                     string lastSelection = ddCoreType.Text;
                     ddCoreType.Items.Clear();
-                    ddCoreType.Items.AddRange(prevType == ConnectionType.Gap ?
+                    ddCoreType.Items.AddRange(prevType == JunctionType.Gap ?
                         ElecSynapseCore.GetSynapseTypes().ToArray() :
                         [.. ChemSynapseCore.GetSynapseTypes()]);
                     ddCoreType.Text = lastSelection;
@@ -86,7 +86,7 @@ namespace SiliFish.UI.Controls
         }
         private void ddSourcePool_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillConnectionTypes();
+            FillJunctionTypes();
             if (!ddSourcePool.Focused)
                 return;
             LoadSelectedSourceValues();
@@ -110,7 +110,7 @@ namespace SiliFish.UI.Controls
 
         private void ddTargetPool_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillConnectionTypes();
+            FillJunctionTypes();
             if (!ddTargetPool.Focused)
                 return;
             LoadSelectedTargetValues();
@@ -124,13 +124,13 @@ namespace SiliFish.UI.Controls
                 targetCell = null;
         }
 
-        private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddJunctionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (junction == null || !ddConnectionType.Focused) return;
-            ConnectionType ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+            if (junction == null || !ddJunctionType.Focused) return;
+            JunctionType JunctionType = (JunctionType)Enum.Parse(typeof(JunctionType), ddJunctionType.Text);
             string lastSelection = ddCoreType.Text;
             ddCoreType.Items.Clear();
-            ddCoreType.Items.AddRange(ConnectionType == ConnectionType.Gap ?
+            ddCoreType.Items.AddRange(JunctionType == JunctionType.Gap ?
                 ElecSynapseCore.GetSynapseTypes().ToArray() :
                 [.. ChemSynapseCore.GetSynapseTypes()]);
             ddCoreType.Text = lastSelection;
@@ -145,7 +145,7 @@ namespace SiliFish.UI.Controls
                 targetCell = gapJunction.Cell2;
                 eFixedDuration.Text = gapJunction.FixedDuration_ms.ToString();
                 eSynDelay.Text = gapJunction.Delay_ms.ToString();
-                ddConnectionType.SelectedItem = ConnectionType.Gap;
+                ddJunctionType.SelectedItem = JunctionType.Gap;
                 ddCoreType.Items.Clear();
                 ddCoreType.Items.AddRange([.. ElecSynapseCore.GetSynapseTypes()]);
                 ddCoreType.Text = gapJunction.Core.GetType().Name;
@@ -155,7 +155,7 @@ namespace SiliFish.UI.Controls
             {
                 sourceCell = syn.PreNeuron;
                 targetCell = syn.PostCell;
-                ddConnectionType.SelectedItem = targetCell is MuscleCell ? ConnectionType.NMJ : ConnectionType.Synapse;
+                ddJunctionType.SelectedItem = targetCell is MuscleCell ? JunctionType.NMJ : JunctionType.Synapse;
                 ddCoreType.Items.Clear();
                 ddCoreType.Items.AddRange([.. ChemSynapseCore.GetSynapseTypes()]);
                 ddCoreType.Text = syn.Core.GetType().Name;
@@ -191,7 +191,7 @@ namespace SiliFish.UI.Controls
                 ddSourceCell.Enabled = false;
                 ddTargetPool.Enabled = false;
                 ddTargetCell.Enabled = false;
-                ddConnectionType.Enabled = false;
+                ddJunctionType.Enabled = false;
                 ddCoreType.Enabled = false;
                 ddDistanceMode.Enabled = false;
             }
@@ -222,7 +222,7 @@ namespace SiliFish.UI.Controls
 
         public void SetAsGapJunction()
         {
-            try { ddConnectionType.SelectedItem = ConnectionType.Gap; }
+            try { ddJunctionType.SelectedItem = JunctionType.Gap; }
             catch { }
         }
         public override string ToString()
@@ -230,7 +230,7 @@ namespace SiliFish.UI.Controls
             string activeStatus = !cbActive.Checked ? " (inactive)" :
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
-            return $"{ddSourcePool.Text}-->{ddTargetPool.Text} [{ddConnectionType.Text}]{activeStatus}";
+            return $"{ddSourcePool.Text}-->{ddTargetPool.Text} [{ddJunctionType.Text}]{activeStatus}";
         }
         internal void CheckValues(object sender, EventArgs args)
         {
@@ -244,8 +244,8 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("No target pool selected.");
             else if (ddTargetCell.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("No target cell selected.");
-            if (ddConnectionType.SelectedIndex < 0)
-                checkValuesArgs.Errors.Add("Connection type not defined.");
+            if (ddJunctionType.SelectedIndex < 0)
+                checkValuesArgs.Errors.Add("Junction type not defined.");
             else
             {
                 List<string> errors = checkValuesArgs.Errors;
@@ -294,7 +294,7 @@ namespace SiliFish.UI.Controls
                 {
                     foreach (Cell tc in targetCells)
                     {
-                        if ((ConnectionType)ddConnectionType.SelectedItem == ConnectionType.Gap)
+                        if ((JunctionType)ddJunctionType.SelectedItem == JunctionType.Gap)
                             junction = new GapJunction(sc, tc, nameof(SimpleGap), (propCore.SelectedObject as BaseCore).Parameters, distanceMode);
                         else
                             junction = new ChemicalSynapse(sc as Neuron, tc, ddCoreType.Text, (propCore.SelectedObject as BaseCore).Parameters, distanceMode);

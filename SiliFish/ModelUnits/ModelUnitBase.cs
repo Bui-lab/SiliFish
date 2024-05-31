@@ -30,6 +30,7 @@ namespace SiliFish.ModelUnits
         private bool _Active = true;
         public virtual bool Active { get => _Active; set => _Active = value; }
         public TimeLine TimeLine_ms { get; set; } = new TimeLine();
+        [JsonIgnore] 
         public TimeLine TimeLine_ind { get; set; } = null;
 
         public virtual List<Difference> DiffersFrom(ModelUnitBase other)

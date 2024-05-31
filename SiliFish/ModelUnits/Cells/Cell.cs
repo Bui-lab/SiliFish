@@ -102,7 +102,7 @@ namespace SiliFish.ModelUnits.Cells
         public double Z { get => Coordinate.Z; set => Coordinate.Z = value; }
         #endregion
 
-        #region Connection Properties
+        #region Junction Properties
         [JsonPropertyOrder(1)]
         public List<GapJunction> LeavingGapJunctions
         {
@@ -116,7 +116,7 @@ namespace SiliFish.ModelUnits.Cells
         public List<GapJunction> GapJunctions { get; set; }
 
         [JsonIgnore]
-        public virtual IEnumerable<JunctionBase> Projections
+        public virtual IEnumerable<JunctionBase> Junctions
         {
             get
             {
@@ -197,7 +197,7 @@ namespace SiliFish.ModelUnits.Cells
                     if (!string.IsNullOrEmpty(paramkey))
                         parameters.Add(paramkey, paramvalue);
             }
-            Core = CellCore.CreateCore(coreType, parameters);
+            Core = CellCore.CreateCore(coreType, parameters, 0);
             Active = bool.Parse(values[iter++]);
             if (iter < values.Count)
                 TimeLine_ms.ImportValues([values[iter++]]);
@@ -228,7 +228,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             Model = model;
             CellPool = pool;
-            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters);
+            Core = CellCore.CreateCore(Core.CoreType, Core.Parameters, model.Settings.SimulationDeltaT);
             foreach (GapJunction jnc in GapJunctions.Where(j => j.Cell1 == null))//To prevent double linking
             {
                 jnc.Cell1 = this;
@@ -298,7 +298,7 @@ namespace SiliFish.ModelUnits.Cells
             return errors.Count == preErrorCount && warnings.Count == preWarningCount;
         }
         /// <summary>
-        /// Removes all stimuli, and incoming and outgoing connections
+        /// Removes all stimuli, and incoming and outgoing junctions
         /// </summary>
         public void ClearLinks()
         {
@@ -354,7 +354,7 @@ namespace SiliFish.ModelUnits.Cells
 
         #endregion
 
-        #region Connection Functions
+        #region Junction Functions
         //calculates the maximum duration for each of its junctions in terms delta t
         public virtual int TimeDistance()
         {
@@ -372,7 +372,7 @@ namespace SiliFish.ModelUnits.Cells
         {
             throw (new NotImplementedException());
         }
-        public virtual (double, double) GetConnectionRange()
+        public virtual (double, double) GetJunctionRange()
         {
             double? maxWeight1 = GapJunctions.Select(j => j.Core.Conductance).DefaultIfEmpty(0).Max();
             double? minWeight1 = GapJunctions.Where(j => j.Core.Conductance > 0).Select(j => j.Core.Conductance).DefaultIfEmpty(999).Min();
@@ -395,7 +395,7 @@ namespace SiliFish.ModelUnits.Cells
                 jnc.Cell1.RemoveJunction(jnc);
             }
         }
-        public virtual bool HasConnections(bool gap, bool chemin, bool chemout)
+        public virtual bool HasJunctions(bool gap, bool chemin, bool chemout)
         {
             return gap && GapJunctions.Count != 0;
         }

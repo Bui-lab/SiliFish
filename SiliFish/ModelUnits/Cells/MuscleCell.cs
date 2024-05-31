@@ -48,11 +48,11 @@ namespace SiliFish.ModelUnits.Cells
         public List<ChemicalSynapse> EndPlates { get; set; } //keeps the list of all synapses targeting the current cell
 
         [JsonIgnore]
-        public override IEnumerable<JunctionBase> Projections
+        public override IEnumerable<JunctionBase> Junctions
         {
             get
             {
-                IEnumerable<JunctionBase> gapJunctions = base.Projections;
+                IEnumerable<JunctionBase> gapJunctions = base.Junctions;
                 return EndPlates.Union(gapJunctions);
             }
         }
@@ -73,7 +73,7 @@ namespace SiliFish.ModelUnits.Cells
             CellGroup = group;
             Somite = somite;
             Sequence = seq;
-            Core = CellCore.CreateCore(coreType, cellParams);
+            Core = CellCore.CreateCore(coreType, cellParams, model.Settings.SimulationDeltaT);
             EndPlates = [];
             GapJunctions = [];
             ConductionVelocity = cv;
@@ -123,7 +123,7 @@ namespace SiliFish.ModelUnits.Cells
             return null;
         }
 
-        #region Connection functions
+        #region Junction functions
         public override int TimeDistance()
         {
             return Math.Max(EndPlates?.Select(junc => junc.iDuration).DefaultIfEmpty().Max() ?? 0, base.TimeDistance());
@@ -133,9 +133,9 @@ namespace SiliFish.ModelUnits.Cells
             EndPlates.Add(jnc);
         }
 
-        public override (double, double) GetConnectionRange()
+        public override (double, double) GetJunctionRange()
         {
-            (double minWeight1, double maxWeight1) = base.GetConnectionRange();
+            (double minWeight1, double maxWeight1) = base.GetJunctionRange();
             double maxWeight2 = EndPlates.Select(j => j.Core.Conductance).DefaultIfEmpty(0).Max();
             double minWeight2 = EndPlates.Where(j => j.Core.Conductance > 0).Select(j => j.Core.Conductance).DefaultIfEmpty(999).Min();
 
@@ -167,7 +167,7 @@ namespace SiliFish.ModelUnits.Cells
                 EndPlates.Remove(jnc);
             }
         }
-        public override bool HasConnections(bool gap, bool chemin, bool chemout)
+        public override bool HasJunctions(bool gap, bool chemin, bool chemout)
         {
             return gap && GapJunctions.Count != 0 ||
                 chemin && EndPlates.Count != 0;

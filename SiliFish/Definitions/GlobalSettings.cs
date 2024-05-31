@@ -27,12 +27,6 @@ namespace SiliFish.Definitions
         public static string PlotDataFormat = "0.0###";
         public static string CoordinateFormat = "0.0###";
 
-        public static int SimulationEndTime = 1000;
-        public static int SimulationSkipTime = 0;
-        public static double SimulationDeltaT = 0.1;
-        public static bool JunctionLevelTracking = false;
-        public static bool Randomization = true;
-
         public static bool SameYAxis = true;
         public static bool ShowZeroValues = true;
         public static int PlotWidth = 800;
@@ -232,34 +226,7 @@ namespace SiliFish.Definitions
         public int GeneticAlgorithmExhaustiveSolutionCount { get { return GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount; } set { GlobalSettings.GeneticAlgorithmExhaustiveSolutionCount = value; } }
         #endregion
 
-        #region Simulation
-        [Description("In ms - the default simulation duration."),
-            DisplayName("Simulation Duration"),
-            Category("Simulation")]
-        public int SimulationEndTime { get { return GlobalSettings.SimulationEndTime; } set { GlobalSettings.SimulationEndTime= value; } }
-
-        [Description("In ms - the default duration to skip."),
-            DisplayName("Simulation Skip Duration"),
-            Category("Simulation")]
-        public int SimulationSkipTime { get { return GlobalSettings.SimulationSkipTime; } set { GlobalSettings.SimulationSkipTime = value; } }
-
-        [Description("In ms - the default time unit."),
-            DisplayName("Default δt"),
-            Category("Simulation")]
-        public double SimulationDeltaT { get { return GlobalSettings.SimulationDeltaT; } set { GlobalSettings.SimulationDeltaT= value; } }
-
-        [Description("Whether junction level current tracking is on or off. For larger models turning it off is recommended."),
-            DisplayName("Junction level current tracking"),
-            Category("Simulation")]
-        public bool JunctionLevelTracking { get { return GlobalSettings.JunctionLevelTracking; } set { GlobalSettings.JunctionLevelTracking = value; } }
-
-        [Description("If set to false, any single value will be set as the center of the distribution without any randomization."),
-            DisplayName("Randomization"),
-            Category("Simulation")]
-        public bool Randomization { get { return GlobalSettings.Randomization; } set { GlobalSettings.Randomization = value; } }
-
-        #endregion
-
+        
         public void Save()
         {
             string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\SiliFish\\global.settings";

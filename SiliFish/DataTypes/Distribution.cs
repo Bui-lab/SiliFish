@@ -38,6 +38,7 @@ namespace SiliFish.DataTypes
             };
         }
         public static Random Random = null;
+        public static bool FlickerOff = false;
 
         public bool Angular { get; set; } = false;
         
@@ -55,7 +56,8 @@ namespace SiliFish.DataTypes
         /// <summary>
         /// Obsolote if Absolute is set to true
         /// </summary>
-        public double Range { get; set; } = 0;
+        [JsonIgnore]
+        public double HundredPercent { get; set; } = 100;
 
         [JsonIgnore]
         public bool IsConstant
@@ -75,9 +77,9 @@ namespace SiliFish.DataTypes
             }
         }
 
-        protected double LowerLimit { get { return Absolute ? RangeStart : Range * RangeStart / 100; } }
+        protected double LowerLimit { get { return Absolute ? RangeStart : HundredPercent * RangeStart / 100; } }
 
-        protected double UpperLimit { get { return Absolute ? RangeEnd : Range * RangeEnd / 100; } }
+        protected double UpperLimit { get { return Absolute ? RangeEnd : HundredPercent * RangeEnd / 100; } }
 
         [JsonIgnore]
         public virtual double UniqueValue { get { return 666; } }// throw new NotImplementedException(); } }
@@ -189,10 +191,10 @@ namespace SiliFish.DataTypes
             Random ??= new Random();
             return Random.Uniform(0, range, n, ordered);
         }
-        public virtual double[] GenerateNNumbers(int n, double range, bool ordered)
+        public virtual double[] GenerateNNumbers(int n, double percRange, bool ordered)
         {
-            Range = range;
-            if (n == 1 && !GlobalSettings.Randomization)
+            HundredPercent = percRange;
+            if (n == 1 && FlickerOff)
                 return [(LowerLimit + UpperLimit) / 2];
             Random ??= new Random();
             return Random.Uniform(LowerLimit, UpperLimit, n, ordered);
@@ -284,9 +286,9 @@ namespace SiliFish.DataTypes
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
-            Range = range;
+            HundredPercent = range;
             double[] result = new double[n];
-            if (n == 1 && !GlobalSettings.Randomization)
+            if (n == 1 && FlickerOff)
             {
                 result[0] = (LowerLimit + UpperLimit) / 2;
                 return result;
@@ -324,7 +326,7 @@ namespace SiliFish.DataTypes
 
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
-            Range = range;
+            HundredPercent = range;
             Random ??= new Random();
             return Random.Spaced(LowerLimit, UpperLimit, noisemean: 0, NoiseStdDev, n, ordered);
         }
@@ -376,9 +378,9 @@ namespace SiliFish.DataTypes
         }
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
-            Range = Absolute ? 100 : double.Parse(range.ToString());
+            HundredPercent = Absolute ? 100 : double.Parse(range.ToString());
             Random ??= new Random();
-            double[] arr = Random.Gauss(Mean * Range / 100, Stddev * Range / 100, n, LowerLimit, UpperLimit);
+            double[] arr = Random.Gauss(Mean * HundredPercent / 100, Stddev * HundredPercent / 100, n, LowerLimit, UpperLimit);
             if (ordered)
                 return [.. arr.Order()];
             return arr;
@@ -430,12 +432,12 @@ namespace SiliFish.DataTypes
         }
         public override double[] GenerateNNumbers(int n, double range, bool ordered)
         {
-            Range = Absolute ? 100 : range;
+            HundredPercent = Absolute ? 100 : range;
             Random ??= new Random();
-            double mean1 = Mean * Range / 100;
-            double stdDev1 = Stddev * Range / 100;
-            double mean2 = Mean2 * Range / 100;
-            double stdDev2= Stddev2 * Range / 100;
+            double mean1 = Mean * HundredPercent / 100;
+            double stdDev1 = Stddev * HundredPercent / 100;
+            double mean2 = Mean2 * HundredPercent / 100;
+            double stdDev2= Stddev2 * HundredPercent / 100;
             double[] arr = Random.Bimodal(mean1, stdDev1, mean2, stdDev2, Mode1Weight, n, LowerLimit, UpperLimit);
             if (ordered)
                 return [.. arr.Order()];

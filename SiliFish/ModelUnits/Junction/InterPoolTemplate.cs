@@ -26,7 +26,7 @@ namespace SiliFish.ModelUnits.Junction
 
         #region Properties
         [JsonIgnore]
-        public override string ID => $"{Name} [{ConnectionType}]/{AxonReachMode} {CellReach.Projection}";
+        public override string ID => $"{Name} [{JunctionType}]/{AxonReachMode} {CellReach.Projection}";
         public string Description { get; set; }
         public double Probability { get; set; } = 1;
         public bool JncActive //to be used in creating the model
@@ -80,7 +80,7 @@ namespace SiliFish.ModelUnits.Junction
         [JsonIgnore]
         public CellPoolTemplate linkedSource, linkedTarget;
         public AxonReachMode AxonReachMode { get; set; } = AxonReachMode.NotSet;
-        public ConnectionType ConnectionType { get; set; } = ConnectionType.NotSet;
+        public JunctionType JunctionType { get; set; } = JunctionType.NotSet;
 
         public override bool Active
         {
@@ -106,7 +106,7 @@ namespace SiliFish.ModelUnits.Junction
                     $"Delay:{Delay_ms: 0.###}\r\n" +
                     $"Probability: {Probability}\r\n" +
                     $"Mode: {AxonReachMode}\r\n" +
-                    $"Type: {ConnectionType}\r\n" +
+                    $"Type: {JunctionType}\r\n" +
                     $"TimeLine: {TimeLine_ms}\r\n" +
                     $"Active: {Active}";
             }
@@ -127,7 +127,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             return ListBuilder.Build<string>(
             CSVUtil.CSVEncode(Name), SourcePool, TargetPool,
-                AxonReachMode, ConnectionType, CoreType,
+                AxonReachMode, JunctionType, CoreType,
                 csvExportCoreValues,
                 DistanceMode,
                 CellReach.ExportValues(),
@@ -146,7 +146,7 @@ namespace SiliFish.ModelUnits.Junction
                 TargetPool = values[iter++].Trim();
 
                 AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), values[iter++]);
-                ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), values[iter++]);
+                JunctionType = (JunctionType)Enum.Parse(typeof(JunctionType), values[iter++]);
                 CoreType = values[iter++].Trim();
                 parameters = [];
                 for (int i = 1; i <= JunctionCore.CoreParamMaxCount; i++)
@@ -228,7 +228,7 @@ namespace SiliFish.ModelUnits.Junction
             CellReach = new CellReach(ipt.CellReach);
             Probability = ipt.Probability;
             AxonReachMode = ipt.AxonReachMode;
-            ConnectionType = ipt.ConnectionType;
+            JunctionType = ipt.JunctionType;
             CoreType = ipt.CoreType;
             Parameters = new Dictionary<string, Distribution>(ipt.Parameters);
             Active = ipt.Active;
@@ -253,7 +253,7 @@ namespace SiliFish.ModelUnits.Junction
                 if (CellReach.Descending)
                     arrows += "⬊";
             }
-            bool electrical = ConnectionType == ConnectionType.Gap;
+            bool electrical = JunctionType == JunctionType.Gap;
             string ntmode = electrical ? "🗲" :
                 (linkedSource?.CellOutputMode == CellOutputMode.Cholinergic ? "C" :
                     linkedSource?.CellOutputMode == CellOutputMode.Excitatory ? "+" :
@@ -280,8 +280,8 @@ namespace SiliFish.ModelUnits.Junction
                 differences.Add(new Difference(Name, "Probability", Probability, ipt.Probability));
             if (AxonReachMode != ipt.AxonReachMode)
                 differences.Add(new Difference(Name, "AxonReachMode", AxonReachMode, ipt.AxonReachMode));
-            if (ConnectionType != ipt.ConnectionType)
-                differences.Add(new Difference(Name, "ConnectionType", ConnectionType, ipt.ConnectionType));
+            if (JunctionType != ipt.JunctionType)
+                differences.Add(new Difference(Name, "JunctionType", JunctionType, ipt.JunctionType));
             if (CoreType != ipt.CoreType)
                 differences.Add(new Difference(Name, "CoreType", CoreType, ipt.CoreType));
             if (!Parameters.SameAs(ipt.Parameters, out List<Difference> diff))
@@ -301,7 +301,7 @@ namespace SiliFish.ModelUnits.Junction
             if (c != 0) return c;
             c = this.TargetPool.CompareTo(other.TargetPool);
             if (c != 0) return c;
-            return this.ConnectionType.CompareTo(other.ConnectionType);
+            return this.JunctionType.CompareTo(other.JunctionType);
         }
 
         public override bool CheckValues(ref List<string> errors, ref List<string> warnings)
@@ -311,7 +311,7 @@ namespace SiliFish.ModelUnits.Junction
             int preErrorCount = errors.Count;
             int preWarningCount = warnings.Count;
             base.CheckValues(ref errors, ref warnings);
-            if ((ConnectionType == ConnectionType.Synapse || ConnectionType == ConnectionType.NMJ)
+            if ((JunctionType == JunctionType.Synapse || JunctionType == JunctionType.NMJ)
                 && !ChemSynapseCore.CheckValues(ref errors, ref warnings, CoreType, Parameters.GenerateSingleInstanceValues()))
             {
                 if (errors.Count > preErrorCount)
@@ -330,7 +330,7 @@ namespace SiliFish.ModelUnits.Junction
         {
             if (string.IsNullOrEmpty(coreType))
             {
-                if (ConnectionType == ConnectionType.Gap)
+                if (JunctionType == JunctionType.Gap)
                     coreType = nameof(SimpleGap); 
                 else
                     coreType = nameof(SimpleSyn);

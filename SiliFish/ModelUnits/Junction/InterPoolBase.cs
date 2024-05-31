@@ -36,7 +36,7 @@ namespace SiliFish.ModelUnits.Junction
         public static List<string> ColumnNames { get; } = 
             ListBuilder.Build<string>(
                 "Source", "Target",
-                "Connection Type", "Core Type",
+                "Junction Type", "Core Type",
                Enumerable.Range(1, JunctionCore.CoreParamMaxCount).SelectMany(i => new[] { $"Param{i}", $"Value{i}" }),
                 "Distance Mode",
                 "Fixed Duration (ms)", "Delay (ms)","Duration (readonly - in ms)",

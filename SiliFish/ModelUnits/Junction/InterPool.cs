@@ -5,7 +5,7 @@ using System.Linq;
 namespace SiliFish.ModelUnits.Junction
 {
     /// <summary>
-    /// Used to list connections between cell pools
+    /// Used to list junctions between cell pools
     /// </summary>
     public class InterPool: ModelUnitBase
     {

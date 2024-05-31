@@ -31,6 +31,7 @@ namespace SiliFish.ModelUnits.Architecture
             {
                 settings = value;
                 Distribution.Random = new Random(settings.Seed);
+                //TODO Distribution.RandomizationOn = ;
             }
         }
         [JsonPropertyOrder(2)]
@@ -108,13 +109,13 @@ namespace SiliFish.ModelUnits.Architecture
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual List<InterPoolBase> GetGapProjections()
+        public virtual List<InterPoolBase> GetGapJunctions()
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual List<InterPoolBase> GetChemicalProjections()
+        public virtual List<InterPoolBase> GetChemicalJunctions()
         {
             Exception exception = new NotImplementedException();
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);

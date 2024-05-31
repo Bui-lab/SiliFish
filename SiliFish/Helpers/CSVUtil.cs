@@ -1,5 +1,8 @@
 ﻿using SiliFish.ModelUnits;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -13,7 +16,22 @@ namespace SiliFish.Helpers
                 return s;
             return s.Replace(",", ";").Replace("\r\n", ";").Replace("\n", ";");
         }
-        public static string GetCSVLine(List<string> values)
+        public static string ReadCSVLine(StreamReader sr)
+        {
+            string line = sr.ReadLine();
+            string pattern = @"(^|,)'(\d+)-(\d+)($|,)";
+            MatchCollection matches = Regex.Matches(line, pattern);
+
+            foreach (Match match in matches.OrderByDescending(m=>m.Index))
+            {
+                if (match.Value.StartsWith('\''))
+                    line = line.Remove(match.Index, 1);
+                else if (match.Value.StartsWith(",'"))
+                    line = line.Remove(match.Index + 1, 1);
+            }
+            return line;
+        }
+        public static string WriteCSVLine(List<string> values)
         {
             if (values == null || values.Count == 0)
                 return string.Empty;

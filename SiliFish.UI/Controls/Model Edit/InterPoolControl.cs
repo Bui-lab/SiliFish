@@ -27,12 +27,12 @@ namespace SiliFish.UI.Controls
                 checkValuesArgs.Errors.Add("No target pool selected.");
             if (ddAxonReachMode.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Axon reach mode not defined.");
-            if (ddConnectionType.SelectedIndex < 0)
+            if (ddJunctionType.SelectedIndex < 0)
                 checkValuesArgs.Errors.Add("Connection type not defined.");
             else
             {
-                ConnectionType ct = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
-                if (ct == ConnectionType.Synapse || ct == ConnectionType.NMJ)
+                JunctionType ct = (JunctionType)Enum.Parse(typeof(JunctionType), ddJunctionType.Text);
+                if (ct == JunctionType.Synapse || ct == JunctionType.NMJ)
                 {
                     if (ddCoreType.SelectedIndex < 0)
                         checkValuesArgs.Errors.Add("Synapse type not defined.");
@@ -48,23 +48,23 @@ namespace SiliFish.UI.Controls
             {
                 if (source.CellType == CellType.MuscleCell)
                 {
-                    ddConnectionType.Items.Clear();
-                    ddConnectionType.Items.Add(ConnectionType.Gap);
-                    ddConnectionType.SelectedItem = ConnectionType.Gap;
+                    ddJunctionType.Items.Clear();
+                    ddJunctionType.Items.Add(JunctionType.Gap);
+                    ddJunctionType.SelectedItem = JunctionType.Gap;
                 }
                 else //Neuron
                 {
-                    ConnectionType prevType = ConnectionType.NotSet;
-                    if (ddConnectionType.SelectedItem != null)
-                        prevType = (ConnectionType)ddConnectionType.SelectedItem;
-                    ddConnectionType.Items.Clear();
-                    ddConnectionType.Items.Add(ConnectionType.Gap);
+                    JunctionType prevType = JunctionType.NotSet;
+                    if (ddJunctionType.SelectedItem != null)
+                        prevType = (JunctionType)ddJunctionType.SelectedItem;
+                    ddJunctionType.Items.Clear();
+                    ddJunctionType.Items.Add(JunctionType.Gap);
                     if (target.CellType == CellType.MuscleCell)
-                        ddConnectionType.Items.Add(ConnectionType.NMJ);
+                        ddJunctionType.Items.Add(JunctionType.NMJ);
                     else
-                        ddConnectionType.Items.Add(ConnectionType.Synapse);
-                    if (ddConnectionType.Items.Contains(prevType))
-                        ddConnectionType.SelectedItem = prevType;
+                        ddJunctionType.Items.Add(JunctionType.Synapse);
+                    if (ddJunctionType.Items.Contains(prevType))
+                        ddJunctionType.SelectedItem = prevType;
                 }
             }
         }
@@ -134,13 +134,13 @@ namespace SiliFish.UI.Controls
             LoadSelectedTargetValues();
         }
 
-        private void ddConnectionType_SelectedIndexChanged(object sender, EventArgs e)
+        private void ddJunctionType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (interPoolTemplate == null || !ddConnectionType.Focused) return;
-            interPoolTemplate.ConnectionType = (ConnectionType)Enum.Parse(typeof(ConnectionType), ddConnectionType.Text);
+            if (interPoolTemplate == null || !ddJunctionType.Focused) return;
+            interPoolTemplate.JunctionType = (JunctionType)Enum.Parse(typeof(JunctionType), ddJunctionType.Text);
             string lastSelection = ddCoreType.Text;
             ddCoreType.Items.Clear();
-            ddCoreType.Items.AddRange(interPoolTemplate.ConnectionType == ConnectionType.Gap ?
+            ddCoreType.Items.AddRange(interPoolTemplate.JunctionType == JunctionType.Gap ?
                 ElecSynapseCore.GetSynapseTypes().ToArray() :
                 [.. ChemSynapseCore.GetSynapseTypes()]);
             ddCoreType.Text = lastSelection;
@@ -194,10 +194,10 @@ namespace SiliFish.UI.Controls
             ddCoreType.Items.AddRange([.. ChemSynapseCore.GetSynapseTypes()]);
             ddCoreType.Items.AddRange([.. ElecSynapseCore.GetSynapseTypes()]);
 
-            ddConnectionType.Items.Clear();
-            ddConnectionType.Items.Add(ConnectionType.Gap);
-            ddConnectionType.Items.Add(ConnectionType.Synapse);
-            ddConnectionType.Items.Add(ConnectionType.NMJ);
+            ddJunctionType.Items.Clear();
+            ddJunctionType.Items.Add(JunctionType.Gap);
+            ddJunctionType.Items.Add(JunctionType.Synapse);
+            ddJunctionType.Items.Add(JunctionType.NMJ);
             ddReachMode.SelectedIndex = 0;
 
             this.settings = settings;
@@ -208,7 +208,7 @@ namespace SiliFish.UI.Controls
             string activeStatus = !cbActive.Checked ? " (inactive)" :
                 !timeLineControl.GetTimeLine().IsBlank() ? " (timeline)" :
                 "";
-            return string.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddConnectionType.Text, activeStatus);
+            return string.Format("{0}-->{1} [{2}]{3}", ddSourcePool.Text, ddTargetPool.Text, ddJunctionType.Text, activeStatus);
         }
 
         public void SetSourcePool(CellPoolTemplate pool)
@@ -224,7 +224,7 @@ namespace SiliFish.UI.Controls
 
         public void SetAsGapJunction()
         {
-            try { ddConnectionType.SelectedItem = ConnectionType.Gap; }
+            try { ddJunctionType.SelectedItem = JunctionType.Gap; }
             catch { }
         }
         public void WriteDataToControl(List<CellPoolTemplate> pools, InterPoolTemplate interPoolTemplate)
@@ -239,13 +239,13 @@ namespace SiliFish.UI.Controls
             if (interPoolTemplate != null)
             {
                 this.interPoolTemplate = interPoolTemplate;
-                ConnectionType jnc = interPoolTemplate.ConnectionType;
+                JunctionType jnc = interPoolTemplate.JunctionType;
                 SetDropDownValue(ddSourcePool, interPoolTemplate.SourcePool);
                 SetDropDownValue(ddTargetPool, interPoolTemplate.TargetPool);
                 ddAxonReachMode.Text = interPoolTemplate.AxonReachMode.ToString();
                 ddReachMode.SelectedIndex = interPoolTemplate.CellReach.SomiteBased ? 0 : 1;
-                interPoolTemplate.ConnectionType = jnc; //target pool change can initialize the junc type list and update incoming info
-                ddConnectionType.Text = interPoolTemplate.ConnectionType.ToString();
+                interPoolTemplate.JunctionType = jnc; //target pool change can initialize the junc type list and update incoming info
+                ddJunctionType.Text = interPoolTemplate.JunctionType.ToString();
                 ddDistanceMode.Text = interPoolTemplate.DistanceMode.ToString();
 
                 string name = interPoolTemplate.GeneratedName();
@@ -304,7 +304,7 @@ namespace SiliFish.UI.Controls
             };
 
             interPoolTemplate.AxonReachMode = (AxonReachMode)Enum.Parse(typeof(AxonReachMode), ddAxonReachMode.Text);
-            interPoolTemplate.ConnectionType = ddConnectionType.SelectedItem != null ? (ConnectionType)ddConnectionType.SelectedItem : ConnectionType.NotSet;
+            interPoolTemplate.JunctionType = ddJunctionType.SelectedItem != null ? (JunctionType)ddJunctionType.SelectedItem : JunctionType.NotSet;
             interPoolTemplate.DistanceMode = (DistanceMode)Enum.Parse(typeof(DistanceMode), ddDistanceMode.Text);
             interPoolTemplate.FixedDuration_ms = fixedDuration;
             interPoolTemplate.Delay_ms = synDelay;
@@ -330,7 +330,7 @@ namespace SiliFish.UI.Controls
         {
             if (skipCoreTypeChange) return;
             string coreType = ddCoreType.Text;
-            interPoolTemplate.Parameters = interPoolTemplate.ConnectionType == ConnectionType.Gap ?
+            interPoolTemplate.Parameters = interPoolTemplate.JunctionType == JunctionType.Gap ?
                 ElecSynapseCore.GetParameters(coreType) :
                 ChemSynapseCore.GetParameters(coreType);
             ParamDictToGrid();

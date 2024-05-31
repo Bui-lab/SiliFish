@@ -31,11 +31,11 @@
             components = new System.ComponentModel.Container();
             lSourcePool = new Label();
             lTargetPool = new Label();
-            lConnectionType = new Label();
+            lJunctionType = new Label();
             lFixedDuration = new Label();
             lDelay = new Label();
             ddSourcePool = new ComboBox();
-            ddConnectionType = new ComboBox();
+            ddJunctionType = new ComboBox();
             toolTip1 = new ToolTip(components);
             eFixedDuration = new TextBox();
             eSynDelay = new TextBox();
@@ -77,14 +77,14 @@
             lTargetPool.TabIndex = 6;
             lTargetPool.Text = "Target Pool";
             // 
-            // lConnectionType
+            // lJunctionType
             // 
-            lConnectionType.AutoSize = true;
-            lConnectionType.Location = new Point(9, 112);
-            lConnectionType.Name = "lConnectionType";
-            lConnectionType.Size = new Size(96, 15);
-            lConnectionType.TabIndex = 10;
-            lConnectionType.Text = "Connection Type";
+            lJunctionType.AutoSize = true;
+            lJunctionType.Location = new Point(9, 112);
+            lJunctionType.Name = "lJunctionType";
+            lJunctionType.Size = new Size(79, 15);
+            lJunctionType.TabIndex = 10;
+            lJunctionType.Text = "Junction Type";
             // 
             // lFixedDuration
             // 
@@ -119,19 +119,19 @@
             ddSourcePool.TabIndex = 5;
             ddSourcePool.SelectedIndexChanged += ddSourcePool_SelectedIndexChanged;
             // 
-            // ddConnectionType
+            // ddJunctionType
             // 
-            ddConnectionType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ddConnectionType.BackColor = Color.WhiteSmoke;
-            ddConnectionType.DropDownStyle = ComboBoxStyle.DropDownList;
-            ddConnectionType.FlatStyle = FlatStyle.Flat;
-            ddConnectionType.FormattingEnabled = true;
-            ddConnectionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
-            ddConnectionType.Location = new Point(110, 110);
-            ddConnectionType.Name = "ddConnectionType";
-            ddConnectionType.Size = new Size(251, 23);
-            ddConnectionType.TabIndex = 11;
-            ddConnectionType.SelectedIndexChanged += ddConnectionType_SelectedIndexChanged;
+            ddJunctionType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddJunctionType.BackColor = Color.WhiteSmoke;
+            ddJunctionType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddJunctionType.FlatStyle = FlatStyle.Flat;
+            ddJunctionType.FormattingEnabled = true;
+            ddJunctionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
+            ddJunctionType.Location = new Point(110, 110);
+            ddJunctionType.Name = "ddJunctionType";
+            ddJunctionType.Size = new Size(251, 23);
+            ddJunctionType.TabIndex = 11;
+            ddJunctionType.SelectedIndexChanged += ddJunctionType_SelectedIndexChanged;
             // 
             // eFixedDuration
             // 
@@ -330,13 +330,13 @@
             Controls.Add(ddSourceCell);
             Controls.Add(cbActive);
             Controls.Add(ddDistanceMode);
-            Controls.Add(ddConnectionType);
+            Controls.Add(ddJunctionType);
             Controls.Add(lDistanceMode);
             Controls.Add(ddTargetPool);
             Controls.Add(ddSourcePool);
             Controls.Add(lTargetPool);
             Controls.Add(lDelay);
-            Controls.Add(lConnectionType);
+            Controls.Add(lJunctionType);
             Controls.Add(lFixedDuration);
             Name = "JunctionControl";
             Size = new Size(367, 658);
@@ -352,11 +352,11 @@
 
         private Label lSourcePool;
         private Label lTargetPool;
-        private Label lConnectionType;
+        private Label lJunctionType;
         private Label lFixedDuration;
         private Label lDelay;
         private ComboBox ddSourcePool;
-        private ComboBox ddConnectionType;
+        private ComboBox ddJunctionType;
         private ToolTip toolTip1;
         private TextBox eFixedDuration;
         private CheckBox cbActive;

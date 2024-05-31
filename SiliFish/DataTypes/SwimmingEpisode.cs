@@ -95,7 +95,7 @@ namespace SiliFish.DataTypes
             {
                 Direction = lastbeatDirection,
                 BeatStart = lastBeatStart,
-                BeatPeak = e, //TODO check the validity 
+                BeatPeak = e,  
                 BeatEnd = e
             });
             lastBeatStart = -1;

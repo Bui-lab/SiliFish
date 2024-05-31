@@ -32,14 +32,14 @@
             lSourcePool = new Label();
             lTargetPool = new Label();
             lAxonReachMode = new Label();
-            lConnectionType = new Label();
+            lJunctionType = new Label();
             lMinReach = new Label();
             lFixedDuration = new Label();
             lSynDelay = new Label();
             ddSourcePool = new ComboBox();
             ddTargetPool = new ComboBox();
             ddAxonReachMode = new ComboBox();
-            ddConnectionType = new ComboBox();
+            ddJunctionType = new ComboBox();
             toolTip1 = new ToolTip(components);
             eFixedDuration = new TextBox();
             lMaxReach = new Label();
@@ -120,14 +120,14 @@
             lAxonReachMode.TabIndex = 8;
             lAxonReachMode.Text = "Axon Reach";
             // 
-            // lConnectionType
+            // lJunctionType
             // 
-            lConnectionType.AutoSize = true;
-            lConnectionType.Location = new Point(3, 87);
-            lConnectionType.Name = "lConnectionType";
-            lConnectionType.Size = new Size(96, 15);
-            lConnectionType.TabIndex = 10;
-            lConnectionType.Text = "Connection Type";
+            lJunctionType.AutoSize = true;
+            lJunctionType.Location = new Point(3, 87);
+            lJunctionType.Name = "lJunctionType";
+            lJunctionType.Size = new Size(79, 15);
+            lJunctionType.TabIndex = 10;
+            lJunctionType.Text = "Junction Type";
             // 
             // lMinReach
             // 
@@ -198,19 +198,19 @@
             ddAxonReachMode.TabIndex = 9;
             ddAxonReachMode.SelectedIndexChanged += ddAxonReachMode_SelectedIndexChanged;
             // 
-            // ddConnectionType
+            // ddJunctionType
             // 
-            ddConnectionType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ddConnectionType.BackColor = Color.WhiteSmoke;
-            ddConnectionType.DropDownStyle = ComboBoxStyle.DropDownList;
-            ddConnectionType.FlatStyle = FlatStyle.Flat;
-            ddConnectionType.FormattingEnabled = true;
-            ddConnectionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
-            ddConnectionType.Location = new Point(97, 84);
-            ddConnectionType.Name = "ddConnectionType";
-            ddConnectionType.Size = new Size(145, 23);
-            ddConnectionType.TabIndex = 11;
-            ddConnectionType.SelectedIndexChanged += ddConnectionType_SelectedIndexChanged;
+            ddJunctionType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ddJunctionType.BackColor = Color.WhiteSmoke;
+            ddJunctionType.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddJunctionType.FlatStyle = FlatStyle.Flat;
+            ddJunctionType.FormattingEnabled = true;
+            ddJunctionType.Items.AddRange(new object[] { "Synapse", "Gap", "NMJ" });
+            ddJunctionType.Location = new Point(97, 84);
+            ddJunctionType.Name = "ddJunctionType";
+            ddJunctionType.Size = new Size(145, 23);
+            ddJunctionType.TabIndex = 11;
+            ddJunctionType.SelectedIndexChanged += ddJunctionType_SelectedIndexChanged;
             // 
             // eFixedDuration
             // 
@@ -238,7 +238,7 @@
             lMaxIncoming.Size = new Size(84, 15);
             lMaxIncoming.TabIndex = 12;
             lMaxIncoming.Text = "Max Incoming";
-            toolTip1.SetToolTip(lMaxIncoming, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.\r\n");
+            toolTip1.SetToolTip(lMaxIncoming, "The number of maximum junctions/synapses the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMaxIncoming
             // 
@@ -247,7 +247,7 @@
             numMaxIncoming.Name = "numMaxIncoming";
             numMaxIncoming.Size = new Size(77, 23);
             numMaxIncoming.TabIndex = 13;
-            toolTip1.SetToolTip(numMaxIncoming, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
+            toolTip1.SetToolTip(numMaxIncoming, "The number of maximum junctions/synapses the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // lMaxOutgoing
             // 
@@ -257,7 +257,7 @@
             lMaxOutgoing.Size = new Size(84, 15);
             lMaxOutgoing.TabIndex = 14;
             lMaxOutgoing.Text = "Max Outgoing";
-            toolTip1.SetToolTip(lMaxOutgoing, "The number of maximum connections the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
+            toolTip1.SetToolTip(lMaxOutgoing, "The number of maximum junctions/synapses the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMaxOutgoing
             // 
@@ -266,7 +266,7 @@
             numMaxOutgoing.Name = "numMaxOutgoing";
             numMaxOutgoing.Size = new Size(77, 23);
             numMaxOutgoing.TabIndex = 15;
-            toolTip1.SetToolTip(numMaxOutgoing, "The number of maximum connections the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
+            toolTip1.SetToolTip(numMaxOutgoing, "The number of maximum junctions/synapses the source cell can have to the same target pool.\r\nEnter 0 if there is no such limit.\r\n");
             // 
             // numMinAscReach
             // 
@@ -275,7 +275,7 @@
             numMinAscReach.Name = "numMinAscReach";
             numMinAscReach.Size = new Size(50, 23);
             numMinAscReach.TabIndex = 14;
-            toolTip1.SetToolTip(numMinAscReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
+            toolTip1.SetToolTip(numMinAscReach, "The number of maximum junctions/synapses the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMaxAscReach
             // 
@@ -284,7 +284,7 @@
             numMaxAscReach.Name = "numMaxAscReach";
             numMaxAscReach.Size = new Size(50, 23);
             numMaxAscReach.TabIndex = 15;
-            toolTip1.SetToolTip(numMaxAscReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
+            toolTip1.SetToolTip(numMaxAscReach, "The number of maximum junctions/synapses the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMaxDescReach
             // 
@@ -293,7 +293,7 @@
             numMaxDescReach.Name = "numMaxDescReach";
             numMaxDescReach.Size = new Size(50, 23);
             numMaxDescReach.TabIndex = 17;
-            toolTip1.SetToolTip(numMaxDescReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
+            toolTip1.SetToolTip(numMaxDescReach, "The number of maximum junctions/synapses the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numMinDescReach
             // 
@@ -302,7 +302,7 @@
             numMinDescReach.Name = "numMinDescReach";
             numMinDescReach.Size = new Size(50, 23);
             numMinDescReach.TabIndex = 16;
-            toolTip1.SetToolTip(numMinDescReach, "The number of maximum connections the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
+            toolTip1.SetToolTip(numMinDescReach, "The number of maximum junctions/synapses the target cell can have from the same source pool.\r\nEnter 0 if there is no such limit.");
             // 
             // numProbability
             // 
@@ -312,7 +312,7 @@
             numProbability.Name = "numProbability";
             numProbability.Size = new Size(77, 23);
             numProbability.TabIndex = 17;
-            toolTip1.SetToolTip(numProbability, "The probability of whether there will be a connection between the source and target cell.");
+            toolTip1.SetToolTip(numProbability, "The probability of whether there will be a junction/synapse between the source and target cell.");
             numProbability.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // lProbability
@@ -323,7 +323,7 @@
             lProbability.Size = new Size(64, 15);
             lProbability.TabIndex = 16;
             lProbability.Text = "Probability";
-            toolTip1.SetToolTip(lProbability, "The probability of whether there will be a connection between the source and target cell.");
+            toolTip1.SetToolTip(lProbability, "The probability of whether there will be a junction/synapse between the source and target cell.");
             // 
             // eSynDelay
             // 
@@ -512,7 +512,7 @@
             splitContainerMain.Panel1.Controls.Add(numMaxOutgoing);
             splitContainerMain.Panel1.Controls.Add(lAxonReachMode);
             splitContainerMain.Panel1.Controls.Add(lMaxIncoming);
-            splitContainerMain.Panel1.Controls.Add(lConnectionType);
+            splitContainerMain.Panel1.Controls.Add(lJunctionType);
             splitContainerMain.Panel1.Controls.Add(numMaxIncoming);
             splitContainerMain.Panel1.Controls.Add(eDescription);
             splitContainerMain.Panel1.Controls.Add(lFixedDuration);
@@ -525,7 +525,7 @@
             splitContainerMain.Panel1.Controls.Add(lProbability);
             splitContainerMain.Panel1.Controls.Add(ddAxonReachMode);
             splitContainerMain.Panel1.Controls.Add(numProbability);
-            splitContainerMain.Panel1.Controls.Add(ddConnectionType);
+            splitContainerMain.Panel1.Controls.Add(ddJunctionType);
             splitContainerMain.Panel1.Controls.Add(cbActive);
             splitContainerMain.Panel1.Controls.Add(eFixedDuration);
             splitContainerMain.Panel1.SizeChanged += splitContainerMain_Panel1_SizeChanged;
@@ -652,14 +652,14 @@
         private Label lSourcePool;
         private Label lTargetPool;
         private Label lAxonReachMode;
-        private Label lConnectionType;
+        private Label lJunctionType;
         private Label lMinReach;
         private Label lFixedDuration;
         private Label lSynDelay;
         private ComboBox ddSourcePool;
         private ComboBox ddTargetPool;
         private ComboBox ddAxonReachMode;
-        private ComboBox ddConnectionType;
+        private ComboBox ddJunctionType;
         private ToolTip toolTip1;
         private TextBox eFixedDuration;
         private CheckBox cbActive;

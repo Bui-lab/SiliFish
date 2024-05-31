@@ -42,12 +42,13 @@ namespace SiliFish.DataTypes
             Y = double.Parse(values[1]);
             Z = double.Parse(values[2]);
         }
-        public static Coordinate[] GenerateCoordinates(Random random, ModelDimensions modelDimensions, BodyLocation BodyLocation,
+        public static Coordinate[] GenerateCoordinates(Random random, bool flickerOff, ModelDimensions modelDimensions, BodyLocation BodyLocation,
             Distribution XDistribution, Distribution Y_AngleDistribution, Distribution Z_RadiusDistribution, int n, int somite = -1)
         {
             if (n <= 0) return null;
             Coordinate[] coordinates = new Coordinate[n];
             Distribution.Random = random;
+            Distribution.FlickerOff = flickerOff;
 
             double x_length = 0, x_offset = 0;
             double y_length = 0, y_offset = 0;

@@ -153,9 +153,9 @@ namespace SiliFish.Services
             XYZMult = width / range;
             XOffset = width / 2; //The center of the window is 0 - so half width is removed from all X values
 
-            int numOfConnections = model.GetNumberOfConnections();
-            double maxjncsize = 0.3; // numOfConnections > 0 ? XYZMult * range / (100 * numOfConnections) : 1;
-            (double _, WeightMax) = model.GetConnectionRange();
+            int numOfJunctions = model.GetNumberOfJunctions();
+            double maxjncsize = 0.3; // numOfJunctions > 0 ? XYZMult * range / (100 * numOfJunctions) : 1;
+            (double _, WeightMax) = model.GetJunctionRange();
             WeightMult = maxjncsize / WeightMax;
 
             ModelDimensions MD = model.ModelDimensions;

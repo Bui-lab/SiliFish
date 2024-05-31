@@ -25,7 +25,7 @@ namespace SiliFish.Repositories
                 RunningModel model = simulation.Model;
                 if (model.DbId == 0)
                 {
-                    string stats = $"{simulation.Model.GetNumberOfCells():n0} cells; {simulation.Model.GetNumberOfConnections():n0} connections";
+                    string stats = $"{simulation.Model.GetNumberOfCells():n0} cells; {simulation.Model.GetNumberOfJunctions():n0} junctions/synapses";
                     ModelRecord modelRecord = new(simulation.Model.ModelName, DateTime.Now, stats, "");//TODO ability to save the json file and include the filename
                     sFDataContext.Add(modelRecord);
                     sFDataContext.SaveChanges();

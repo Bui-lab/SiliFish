@@ -9,7 +9,37 @@ namespace SiliFish.ModelUnits.Architecture
 {
     public class ModelSettings
     {
-        [Description("The seed to initialize the random number generator."), DisplayName("Random Seed"), Category("Randomization")]
+        #region Simulation
+        [Description("In ms - the default simulation duration."),
+            DisplayName("Simulation Duration"),
+            Category("Simulation")]
+        public int SimulationEndTime { get; set; }= 1000;
+
+        [Description("In ms - the default duration to skip."),
+            DisplayName("Simulation Skip Duration"),
+            Category("Simulation")]
+        public int SimulationSkipTime { get; set; }= 0;
+
+        [Description("In ms - the default time unit."),
+            DisplayName("Default δt"),
+            Category("Simulation")]
+        public double SimulationDeltaT { get; set; }= 0.1;
+
+        [Description("Whether junction level current tracking is on or off. For larger models turning it off is recommended."),
+            DisplayName("Junction level current tracking"),
+            Category("Simulation")]
+        public bool JunctionLevelTracking { get; set; }= false;
+
+        #endregion
+
+        [Description("If set to false, any single value will be set as the center of the distribution without any randomization."),
+            DisplayName("Flicker Off"),
+            Category("Randomization")]
+        public bool FlickerOff { get; set; } = false;
+
+        [Description("The seed to initialize the random number generator."), 
+            DisplayName("Random Seed"), 
+            Category("Randomization")]
         public int Seed { get; set; } = 0;
 
 

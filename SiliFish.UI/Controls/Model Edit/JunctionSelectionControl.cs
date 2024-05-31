@@ -1,6 +1,6 @@
 ﻿namespace SiliFish.UI.Controls.Model_Edit
 {
-    public partial class ConnectionSelectionControl : UserControl
+    public partial class JunctionSelectionControl : UserControl
     {
         private bool chemInOutExists = false;
        public bool GapJunctions { get => cbGapJunctions.Checked; set => cbGapJunctions.Checked = value; }
@@ -37,7 +37,7 @@
         }
 
         public string Label { get => lLabel.Text; set => lLabel.Text = value; }
-        public ConnectionSelectionControl()
+        public JunctionSelectionControl()
         {
             InitializeComponent();
         }
