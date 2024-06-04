@@ -164,13 +164,6 @@ namespace SiliFish.ModelUnits.Architecture
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual void SortCellPools()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
-
         public virtual bool AddJunction(InterPoolBase jnc)
         {
             Exception exception = new NotImplementedException();
@@ -183,31 +176,6 @@ namespace SiliFish.ModelUnits.Architecture
             ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
             throw exception;
         }
-        public virtual void SortJunctions()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
-        public virtual void SortJunctionsByType()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
-        public virtual void SortJunctionsBySource()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
-        public virtual void SortJunctionsByTarget()
-        {
-            Exception exception = new NotImplementedException();
-            ExceptionHandler.ExceptionHandling(System.Reflection.MethodBase.GetCurrentMethod().Name, exception);
-            throw exception;
-        }
-
 
     }
 }

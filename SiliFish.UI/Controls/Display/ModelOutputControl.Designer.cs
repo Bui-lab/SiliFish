@@ -286,6 +286,8 @@
             // 
             cb2DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cb2DOffline.AutoSize = true;
+            cb2DOffline.Checked = true;
+            cb2DOffline.CheckState = CheckState.Checked;
             cb2DOffline.Location = new Point(625, 30);
             cb2DOffline.Name = "cb2DOffline";
             cb2DOffline.Size = new Size(62, 19);
@@ -569,6 +571,8 @@
             // 
             cb3DOffline.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cb3DOffline.AutoSize = true;
+            cb3DOffline.Checked = true;
+            cb3DOffline.CheckState = CheckState.Checked;
             cb3DOffline.Location = new Point(625, 29);
             cb3DOffline.Name = "cb3DOffline";
             cb3DOffline.Size = new Size(62, 19);

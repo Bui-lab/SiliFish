@@ -179,6 +179,16 @@ namespace SiliFish.ModelUnits.Cells
             int iter = 1; //discriminitor field will be already used when this object is created
             if (values.Count < ColumnNames.Count - 1) return;//Timeline may be blank
             CellGroup = values[iter++];//this is the ID of the cell pool
+            if (CellGroup.StartsWith("L_"))
+            {
+                PositionLeftRight = SagittalPlane.Left;
+                CellGroup = CellGroup[2..];
+            }
+            else if (CellGroup.StartsWith("R_"))
+            {
+                PositionLeftRight = SagittalPlane.Right;
+                CellGroup = CellGroup[2..];
+            }
             Somite = int.Parse(values[iter++]);
             Sequence = int.Parse(values[iter++]);
             Coordinate.ImportValues(values.Take(new Range(iter, iter + 3)).ToList());
@@ -202,7 +212,16 @@ namespace SiliFish.ModelUnits.Cells
             if (iter < values.Count)
                 TimeLine_ms.ImportValues([values[iter++]]);
         }
-        
+
+        public void ReadFromCSVRow(string row)
+        {
+            string[] values = row.Split(',');
+            if (values.Length != ColumnNames.Count) return;
+            string discriminator = values[0];
+            if (!GetType().Name.Equals(discriminator, StringComparison.OrdinalIgnoreCase))
+                throw new Exception($"Type mismtach in cell import:{GetType().Name} vs {discriminator}");
+            ImportValues([.. row.Split(",")]);
+        }
 
         public static Cell GenerateFromCSVRow(string row)
         {

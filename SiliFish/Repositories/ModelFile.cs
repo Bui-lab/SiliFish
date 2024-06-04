@@ -786,7 +786,8 @@ namespace SiliFish.Repositories
                 return false;
             }
         }
-        private static bool ReadCellsFromCSV(string filename, RunningModel model)
+
+        public static bool ReplaceCellsFromCSV(string filename, RunningModel model, List<Cell> cellsToReplace)
         {
             if (filename == null || model == null)
                 return false;
@@ -798,11 +799,26 @@ namespace SiliFish.Repositories
                 int iter = 1;
                 if (columns != string.Join(",", Cell.ColumnNames))
                     return false;
-                model.ClearCells();
                 while (iter < contents.Length)
                 {
-                    Cell cell = Cell.GenerateFromCSVRow(contents[iter++]);
-                    model.AddCell(cell);
+                    string row = contents[iter++];
+                    Cell cell = Cell.GenerateFromCSVRow(row);
+                    CellPool cellPool = model.CellPools.FirstOrDefault(cp => cp.CellGroup == cell.CellGroup && cp.PositionLeftRight == cell.PositionLeftRight);
+                    if (cellPool == null) continue;
+                    Cell origCell = cellPool.Cells.FirstOrDefault(c => c.ID == cell.ID);
+                    if (origCell != null)
+                    {
+                        cellsToReplace.Remove(origCell);
+                        origCell.ReadFromCSVRow(row);//newly generated cell becomes obsolete - to keep the links
+                    }
+                    else
+                        cellPool.AddCell(cell);
+                }
+                while (cellsToReplace.Count > 0)
+                {
+                    Cell cell = cellsToReplace[0];
+                    model.CellPools.FirstOrDefault(cp => cp.ID == cell.CellPool.ID)?.RemoveCell(cell);
+                    cellsToReplace.Remove(cell);
                 }
                 model.LinkObjects();
                 return true;
@@ -818,33 +834,16 @@ namespace SiliFish.Repositories
         {
             if (filename == null || model == null)
                 return false;
-            if (selectedUnits is null || selectedUnits.Count == 0)
-                return ReadCellsFromCSV(filename, model);
             try
             {
-                string[] contents = FileUtil.ReadLinesFromFile(filename);
-                if (contents.Length <= 1) return false;
-                string columns = contents[0];
-                int iter = 1;
-                if (columns != string.Join(",", Cell.ColumnNames))
-                    return false;
-                List<CellPool> cellPools;
+                List<Cell> cellsToReplace;
                 if (selectedUnits?.First() is CellPool cp)
-                {
-                    cellPools = selectedUnits.Cast<CellPool>().ToList();
-                    foreach(CellPool pool in cellPools)
-                        pool.Cells.Clear();
-                }
+                    cellsToReplace = selectedUnits.Cast<CellPool>().ToList().SelectMany(x => x.Cells).ToList();
+                else if (selectedUnits?.First() is Cell c)
+                    cellsToReplace = selectedUnits.Cast<Cell>().ToList();
                 else
-                    cellPools = model.CellPools;
-                while (iter < contents.Length)
-                {
-                    Cell cell = Cell.GenerateFromCSVRow(contents[iter++]);
-                    CellPool cellPool = cellPools.FirstOrDefault(cp => cp.ID == cell.CellGroup);
-                    cellPool?.AddCell(cell);
-                }
-                model.LinkObjects();
-                return true;
+                    cellsToReplace = model.CellPools.SelectMany(x => x.Cells).ToList();
+                return ReplaceCellsFromCSV(filename, model, cellsToReplace);
             }
             catch (Exception ex)
             {

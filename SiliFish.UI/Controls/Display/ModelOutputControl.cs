@@ -20,11 +20,13 @@ using SiliFish.UI.Services;
 using SiliFish.Services.Dynamics;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.ModelUnits.Junction;
+using SiliFish.UI.EventArguments;
 
 namespace SiliFish.UI.Controls
 {
     public partial class ModelOutputControl : UserControl
     {
+        public event EventHandler PlottingSelection;
         class RCGridComparer : System.Collections.IComparer
         {
             public int Compare(object x, object y)
@@ -347,7 +349,13 @@ namespace SiliFish.UI.Controls
             if (tabOutputs.SelectedTab == t2DRender && !rendered2D)
                 RenderIn2D(false);
             else if (tabOutputs.SelectedTab == t3DRender && !rendered3D)
+            {
+                int numOfJunctions = model.GetNumberOfJunctions();
+                int numOfCells = model.GetNumberOfCells();
+                if (numOfJunctions + numOfCells > GlobalSettings.MaxNumberOfUnitsToRender)
+                    return; //rendering is done only explicitly by the user 
                 RenderIn3D();
+            }
         }
         #region 2D Rendering
         private void RenderIn2D(bool refresh)
@@ -496,6 +504,14 @@ namespace SiliFish.UI.Controls
 
         private void btn3DRender_Click(object sender, EventArgs e)
         {
+            int numOfJunctions = model.GetNumberOfJunctions();
+            int numOfCells = model.GetNumberOfCells();
+            if (numOfJunctions + numOfCells > GlobalSettings.MaxNumberOfUnitsToRender)
+            {
+                string msg = $"To render {numOfCells + numOfJunctions} units will be resource intensive. Do you want to continue?";
+                if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return;
+            }
             RenderIn3D();
         }
         private async void cb3DAllSomites_CheckedChanged(object sender, EventArgs e)
@@ -755,7 +771,10 @@ namespace SiliFish.UI.Controls
 
             toolTip.SetToolTip(ddPlot, PlotType.GetDescription());
             if (ddPlot.Focused)
+            {
                 DisplayNumberOfPlots();
+                ddPlot.Items.Remove(PlotType.Junction.GetDisplayName());
+            }
         }
 
         private void PopulatePlotTypes()
@@ -766,6 +785,7 @@ namespace SiliFish.UI.Controls
             {
                 ddPlot.Items.Add(pt.GetDisplayName());
             }
+            ddPlot.Items.Remove(PlotType.Junction.GetDisplayName());
             if (string.IsNullOrEmpty(lastSelection))
                 ddPlot.Text = PlotType.MembPotential.GetDisplayName();
             else
@@ -834,7 +854,11 @@ namespace SiliFish.UI.Controls
 
             cellSelectionPlot.SetPlot(plot);
             if (plot.Selection is PlotSelectionUnits selectedUnits)
+            {
                 SetEnablesBasedOnPlot();
+                SelectedUnitArgs args = new (){  unitsSelected = selectedUnits.Units };
+                PlottingSelection?.Invoke(this, args);
+            }
             Task.Run(PlotHTML);
         }
         private void listPlotHistory_ItemEdit(object sender, EventArgs e)
@@ -1027,11 +1051,22 @@ namespace SiliFish.UI.Controls
         private void SetPlotSelectionToUnits(List<ModelUnitBase> unitList)
         {
             cellSelectionPlot.SelectedUnits = unitList;
-            PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
-            if (PlotType.GetGroup() == "episode")
+            if (unitList.Count > 0 && unitList[0] is JunctionBase)
             {
-                PlotType = PlotType.MembPotential;
-                ddPlot.SelectedItem = PlotType.GetDisplayName();
+                PlotType = PlotType.Junction;
+                string jncPlot = PlotType.GetDisplayName();
+                if (!ddPlot.Items.Contains(jncPlot))
+                    ddPlot.Items.Add(jncPlot);
+                ddPlot.SelectedItem = jncPlot;
+            }
+            else
+            {
+                PlotType = ddPlot.Text.GetValueFromName(PlotType.NotSet);
+                if (PlotType.GetGroup() == "episode")
+                {
+                    PlotType = PlotType.MembPotential;
+                    ddPlot.SelectedItem = PlotType.GetDisplayName();
+                }
             }
             plotSelection = cellSelectionPlot.GetSelection();
             SetEnablesBasedOnPlot();
@@ -1061,8 +1096,6 @@ namespace SiliFish.UI.Controls
 
 
         #endregion
-
-
 
         #region Windows Plot
 
@@ -1197,7 +1230,7 @@ namespace SiliFish.UI.Controls
                     Cells.AddRange(pool.Cells);
             (List<string> colNames, List<List<string>> values) = ModelStats.GenerateSpikes(simulation, Cells, iSpikeStart, iSpikeEnd);
             int spikeCount = values.Count;
-            if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnits)
+            if (spikeCount > 10 * GlobalSettings.MaxNumberOfUnitsToList)
             {
                 string msg = $"There are {spikeCount} spikes, which can take a while to list. Do you want to continue?";
                 if (MessageBox.Show(msg, "Warning", MessageBoxButtons.OKCancel) != DialogResult.OK)
@@ -1445,8 +1478,6 @@ namespace SiliFish.UI.Controls
         }
 
         #endregion
-
-
 
         #region Animation
         int lastAnimationStartIndex;

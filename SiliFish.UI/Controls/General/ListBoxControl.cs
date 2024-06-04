@@ -16,7 +16,6 @@ namespace SiliFish.UI.Controls
         public event EventHandler ItemCopy;
         public event EventHandler ItemView;
         public event EventHandler ItemToggleActive;
-        public event EventHandler ItemsSort;
         public event EventHandler ItemSelect;
         public event EventHandler ItemPlot;
         public event EventHandler ItemHighlight;
@@ -117,7 +116,7 @@ namespace SiliFish.UI.Controls
 
         private void miSortAlphabetically_Click(object sender, EventArgs e)
         {
-            ItemsSort?.Invoke(this, new EventArgs());
+            listBox.Sorted = true;
         }
 
         private void SetActive(object item, int index, bool active, bool invoke)
@@ -246,8 +245,6 @@ namespace SiliFish.UI.Controls
         private void contextMenuListBox_Opening(object sender, CancelEventArgs e)
         {
             ListBoxActivated?.Invoke(this, EventArgs.Empty);
-            miSortAlphabetically.Visible = ItemsSort != null;
-
             miActivate.Visible = miDeactivate.Visible = false;
             if (listBox.Items.Count == 0)
             {

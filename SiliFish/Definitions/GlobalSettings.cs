@@ -33,7 +33,8 @@ namespace SiliFish.Definitions
         public static int PlotHeight = 200;
         public static int PlotPointSize = 3;
 
-        public static int MaxNumberOfUnits = 100;
+        public static int MaxNumberOfUnitsToList = 100;
+        public static int MaxNumberOfUnitsToRender = 50_000;
 
         public static int RheobaseInfinity = 500;
         public static int RheobaseLimit = 1000;
@@ -129,10 +130,14 @@ namespace SiliFish.Definitions
 
         #region Display
         [Description("The maximum number of items that will be listed on the architecture lists. This number is obsolote when a single cell is selected."), 
-            DisplayName("Max number of units"),
+            DisplayName("Max number of units to list"),
             Category("Display")]
-        public int MaxNumberOfUnits { get { return GlobalSettings.MaxNumberOfUnits; } set { GlobalSettings.MaxNumberOfUnits = value; } }
+        public int MaxNumberOfUnitsToList { get { return GlobalSettings.MaxNumberOfUnitsToList; } set { GlobalSettings.MaxNumberOfUnitsToList = value; } }
 
+        [Description("The maximum number of items that will be plotted on the 3D rendering without a warning."),
+            DisplayName("Max number of units to render"),
+            Category("Display")]
+        public int MaxNumberOfUnitsToRender { get { return GlobalSettings.MaxNumberOfUnitsToRender; } set { GlobalSettings.MaxNumberOfUnitsToRender = value; } }
         #endregion
 
         #region Plotting

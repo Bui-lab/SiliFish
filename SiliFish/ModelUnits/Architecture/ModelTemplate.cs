@@ -140,7 +140,7 @@ namespace SiliFish.ModelUnits.Architecture
             }
             return false;
         }
-        public override bool RemoveJunction(InterPoolBase jnc) 
+        public override bool RemoveJunction(InterPoolBase jnc)
         {
             if (jnc is InterPoolTemplate ipt && InterPoolTemplates.Contains(ipt))
             {
@@ -148,23 +148,6 @@ namespace SiliFish.ModelUnits.Architecture
                 return true;
             }
             return false;
-        }
-        public override void SortJunctions() 
-        {
-            InterPoolTemplates.Sort();
-        }
-        public override void SortJunctionsByType() 
-        {
-            InterPoolTemplates = [.. InterPoolTemplates.OrderBy(jnc => jnc.JunctionType.ToString())];
-        }
-        public override void SortJunctionsBySource()
-        {
-            InterPoolTemplates = [.. InterPoolTemplates.OrderBy(jnc => jnc.SourcePool)];
-        }
-
-        public override void SortJunctionsByTarget()
-        {
-            InterPoolTemplates = [.. InterPoolTemplates.OrderBy(jnc => jnc.TargetPool)];
         }
 
         public void RemoveJunctions(bool gap, bool chem)
@@ -292,10 +275,6 @@ namespace SiliFish.ModelUnits.Architecture
             return true;
         }
 
-        public override void SortCellPools()
-        {
-            CellPoolTemplates.Sort();
-        }
         public override void BackwardCompatibility()
         {
             base.BackwardCompatibility();

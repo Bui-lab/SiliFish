@@ -464,7 +464,7 @@ namespace SiliFish.ModelUnits.Architecture
 
         public bool AddCell(Cell cell)
         {
-            CellPool cellPool = CellPools.FirstOrDefault(cp => cp.ID == cell.CellGroup);
+            CellPool cellPool = CellPools.FirstOrDefault(cp => cp.CellGroup == cell.CellGroup && cp.PositionLeftRight == cell.PositionLeftRight);
             if (cellPool == null) return false;
             cellPool.AddCell(cell);
             return true;
@@ -544,10 +544,7 @@ namespace SiliFish.ModelUnits.Architecture
             CellPools.Add(cp);
             return true;
         }
-        public override void SortCellPools()
-        {
-            CellPools.Sort();
-        }
+
 
         #endregion
 

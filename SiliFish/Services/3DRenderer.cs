@@ -153,8 +153,7 @@ namespace SiliFish.Services
             XYZMult = width / range;
             XOffset = width / 2; //The center of the window is 0 - so half width is removed from all X values
 
-            int numOfJunctions = model.GetNumberOfJunctions();
-            double maxjncsize = 0.3; // numOfJunctions > 0 ? XYZMult * range / (100 * numOfJunctions) : 1;
+            double maxjncsize = 0.3; // found by trial and error; prev. calculations didn't work well
             (double _, WeightMax) = model.GetJunctionRange();
             WeightMult = maxjncsize / WeightMax;
 
@@ -164,8 +163,9 @@ namespace SiliFish.Services
             else
             {
                 List<int> somites = Util.ParseRange(somiteRange, 1, MD.NumberOfSomites);
-                html.Replace("__SOMITES__", String.Join(',', somites));
+                html.Replace("__SOMITES__", string.Join(',', somites));
             }
+
             int numOfCells = model.GetNumberOfCells();
             double nodesize = numOfCells > 0 ?
                 (zRange < 0.1 ?//No z axis

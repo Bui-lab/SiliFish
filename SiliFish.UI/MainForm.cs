@@ -14,6 +14,7 @@ using SiliFish.UI.Dialogs;
 using SiliFish.ModelUnits.Parameters;
 using SiliFish.Database;
 using SiliFish.DataTypes;
+using static SiliFish.UI.Controls.ModelOutputControl;
 
 namespace SiliFish.UI
 {
@@ -510,7 +511,7 @@ namespace SiliFish.UI
                     if (!mf.PreRun())
                         return;
                     Thread thread = new(mf.RunSimulationFromModel);
-                    thread.Start();                    
+                    thread.Start();
                     modelTemplate.Settings.Seed += 1;//to have different results 
                 }
                 modelTemplate.Settings.Seed = oldSeed;
@@ -547,8 +548,6 @@ namespace SiliFish.UI
         {
             modelOutputControl.Plot((e as SelectedUnitArgs).unitsSelected);
         }
-
-
         private void modelControl_ModelChanged(object sender, EventArgs e)
         {
             SetModel(modelControl.GetModel(), null, true);
@@ -560,6 +559,11 @@ namespace SiliFish.UI
                 modelOutputControl.Highlight(selectedUnitArgs.unitsSelected.First(), selectedUnitArgs.enforce);
         }
 
+        private void modelOutputControl_PlottingSelection(object sender, EventArgs e)
+        {
+            if (e is SelectedUnitArgs selectedUnitArgs)
+                modelControl.SetSelection(selectedUnitArgs.unitsSelected);
+        }
 
 
         private void miFileLoad_Click(object sender, EventArgs e)
@@ -767,7 +771,7 @@ namespace SiliFish.UI
             {
                 if (SimulationFile.SaveSpikeCounts(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
-                    string filename = saveFileCSV.FileName; 
+                    string filename = saveFileCSV.FileName;
                     if (GlobalSettings.ShowFileFolderAfterSave)
                         FileUtil.ShowFile(filename);
                     else
@@ -798,7 +802,7 @@ namespace SiliFish.UI
             {
                 if (SimulationFile.SaveSpikes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
-                    string filename = saveFileCSV.FileName; 
+                    string filename = saveFileCSV.FileName;
                     if (GlobalSettings.ShowFileFolderAfterSave)
                         FileUtil.ShowFile(filename);
                     else
@@ -813,7 +817,7 @@ namespace SiliFish.UI
             {
                 if (SimulationFile.SaveEpisodes(modelSimulator.LastSimulation, saveFileCSV.FileName))
                 {
-                    string filename = saveFileCSV.FileName; 
+                    string filename = saveFileCSV.FileName;
                     if (GlobalSettings.ShowFileFolderAfterSave)
                         FileUtil.ShowFile(filename);
                     else
@@ -923,7 +927,6 @@ namespace SiliFish.UI
             About about = new();
             about.ShowDialog();
         }
-
 
     }
 }

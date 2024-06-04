@@ -468,7 +468,6 @@
             listCellPools.ItemCopy += listCellPools_ItemCopy;
             listCellPools.ItemView += listCellPools_ItemView;
             listCellPools.ItemToggleActive += listCellPools_ItemToggleActive;
-            listCellPools.ItemsSort += listCellPools_ItemsSort;
             listCellPools.ItemSelect += listCellPools_ItemSelect;
             listCellPools.ItemPlot += listGeneric_ItemPlot;
             listCellPools.ItemHighlight += listCellPools_ItemHighlight;
@@ -522,7 +521,6 @@
             listCells.ItemCopy += listCells_ItemCopy;
             listCells.ItemView += listCells_ItemView;
             listCells.ItemToggleActive += listCells_ItemToggleActive;
-            listCells.ItemsSort += listCells_ItemsSort;
             listCells.ItemSelect += listCells_ItemSelect;
             listCells.ItemPlot += listGeneric_ItemPlot;
             listCells.ItemHighlight += listCells_ItemHighlight;
@@ -576,7 +574,6 @@
             listStimuli.ItemCopy += listStimuli_ItemCopy;
             listStimuli.ItemView += listStimuli_ItemView;
             listStimuli.ItemToggleActive += listStimuli_ItemToggleActive;
-            listStimuli.ItemsSort += listStimuli_ItemsSort;
             listStimuli.ItemSelect += listStimuli_ItemSelect;
             listStimuli.ItemPlot += listGeneric_ItemPlot;
             listStimuli.ItemsExport += listStimuli_ItemsExport;
@@ -670,7 +667,6 @@
             listIncoming.ItemCopy += listConnections_ItemCopy;
             listIncoming.ItemView += listConnections_ItemView;
             listIncoming.ItemToggleActive += listJunctions_ItemToggleActive;
-            listIncoming.ItemsSort += listJunctions_ItemsSort;
             listIncoming.ItemSelect += listJunctions_ItemSelect;
             listIncoming.ItemPlot += listGeneric_ItemPlot;
             listIncoming.ItemsExport += listJunctions_ItemsExport;
@@ -723,7 +719,6 @@
             listOutgoing.ItemCopy += listConnections_ItemCopy;
             listOutgoing.ItemView += listConnections_ItemView;
             listOutgoing.ItemToggleActive += listJunctions_ItemToggleActive;
-            listOutgoing.ItemsSort += listJunctions_ItemsSort;
             listOutgoing.ItemSelect += listJunctions_ItemSelect;
             listOutgoing.ItemPlot += listGeneric_ItemPlot;
             listOutgoing.ItemsExport += listJunctions_ItemsExport;
@@ -776,7 +771,6 @@
             listGap.ItemCopy += listConnections_ItemCopy;
             listGap.ItemView += listConnections_ItemView;
             listGap.ItemToggleActive += listJunctions_ItemToggleActive;
-            listGap.ItemsSort += listJunctions_ItemsSort;
             listGap.ItemSelect += listJunctions_ItemSelect;
             listGap.ItemPlot += listGeneric_ItemPlot;
             listGap.ItemsExport += listJunctions_ItemsExport;

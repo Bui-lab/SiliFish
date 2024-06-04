@@ -84,7 +84,11 @@ namespace SiliFish.Definitions
         TailMovement,
         [Display(Name = "Tail Movement & Freq"),
             Group("episode")]
-        TailMovementFreq
+        TailMovementFreq,
+        [Display(Name = "Junction"),
+            Group("current")]
+        Junction
+
     }
 
     public enum PlotSomiteSelection

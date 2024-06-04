@@ -455,12 +455,6 @@ namespace SiliFish.UI.Controls
         {
             ModelIsUpdated();
         }
-        private void listCellPools_ItemsSort(object sender, EventArgs e)
-        {
-            Model.SortCellPools();
-            LoadPools();
-        }
-
         private void listCellPools_ItemsExport(object sender, EventArgs e)
         {
             if (saveFileCSV.ShowDialog() == DialogResult.OK)
@@ -589,10 +583,10 @@ namespace SiliFish.UI.Controls
                 SelectedPools != null && SelectedPools.Count > 0 ?
                 SelectedPools.SelectMany(sp => sp.GetCells()).OfType<Cell>().ToList() :
                 (Model as RunningModel).GetCells();
-            if ((SelectedPools == null || SelectedPools.Count > 1) && Cells.Count > GlobalSettings.MaxNumberOfUnits)
+            if ((SelectedPools == null || SelectedPools.Count > 1) && Cells.Count > GlobalSettings.MaxNumberOfUnitsToList)
             {
                 listCells.ClearItems();
-                listCells.AppendItem($"Number of items to display is greater than {GlobalSettings.MaxNumberOfUnits}.");
+                listCells.AppendItem($"Number of items to display is greater than {GlobalSettings.MaxNumberOfUnitsToList}.");
                 listCells.AppendItem("Please select a cell pool to list cells under...");
             }
             else
@@ -718,12 +712,6 @@ namespace SiliFish.UI.Controls
             HighlightRequested?.Invoke(this, args);
         }
 
-        private void listCells_ItemsSort(object sender, EventArgs e)
-        {
-            if (SelectedPools == null) return;
-            SelectedPools.ForEach(cp => cp.Cells.Sort());
-            LoadCells();
-        }
         private void listCells_ItemToggleActive(object sender, EventArgs e)
         {
             ModelIsUpdated();
@@ -742,20 +730,16 @@ namespace SiliFish.UI.Controls
             {
                 if (saveFileCSV.ShowDialog() == DialogResult.OK)
                 {
+                    string filename = saveFileCSV.FileName;
+                    bool saved;
                     if (SelectedCells?.Count > 0)
+                        saved = ModelFile.SaveCellsToCSV(filename, runningModel, SelectedCells.Cast<ModelUnitBase>().ToList());
+                    else if (SelectedPools?.Count > 0)
+                        saved = ModelFile.SaveCellsToCSV(filename, runningModel, SelectedPools.Cast<ModelUnitBase>().ToList());
+                    else
+                        saved = ModelFile.SaveCellsToCSV(filename, runningModel, null);//full model
+                    if (saved)
                     {
-                        if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedCells.Cast<ModelUnitBase>().ToList()))
-                        {
-                            string filename = saveFileCSV.FileName;
-                            if (GlobalSettings.ShowFileFolderAfterSave)
-                                FileUtil.ShowFile(filename);
-                            else
-                                MessageBox.Show($"File {filename} is saved.", "Information");
-                        }
-                    }
-                    else if (ModelFile.SaveCellsToCSV(saveFileCSV.FileName, runningModel, SelectedPools.Cast<ModelUnitBase>().ToList()))
-                    {
-                        string filename = saveFileCSV.FileName; 
                         if (GlobalSettings.ShowFileFolderAfterSave)
                             FileUtil.ShowFile(filename);
                         else
@@ -781,16 +765,13 @@ namespace SiliFish.UI.Controls
             if (openFileCSV.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileCSV.FileName;
-                bool success = false;
+                bool success;
                 if (SelectedCells?.Count > 0)
-                {
-                    if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedCells.Cast<ModelUnitBase>().ToList()))
-                        success = true;
-                }
-                else if (ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPools.Cast<ModelUnitBase>().ToList()))
-                {
-                    success = true;
-                }
+                    success = ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedCells.Cast<ModelUnitBase>().ToList());
+                else if (SelectedPools?.Count > 0)
+                    success = ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, SelectedPools.Cast<ModelUnitBase>().ToList());
+                else
+                    success = ModelFile.ReadCellsFromCSV(filename, Model as RunningModel, null);
                 if (success)
                 {
                     LoadCells();
@@ -851,12 +832,12 @@ namespace SiliFish.UI.Controls
             if (Model is RunningModel rm)
             {
                 List<InterPool> chemInterPools = [.. rm.ChemPoolJunctions];
-                if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnitsToList)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
                 List<InterPool> gapInterPools = [.. rm.GapPoolJunctions];
-                if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnitsToList)
                     listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listGap.LoadItems(gapInterPools.Cast<object>().ToList());
@@ -864,12 +845,12 @@ namespace SiliFish.UI.Controls
             else if (Model is ModelTemplate mt)
             {
                 List<InterPoolTemplate> chemInterPools = mt.InterPoolTemplates.Where(jnc => jnc.JunctionType != JunctionType.Gap).ToList();
-                if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                if (chemInterPools.Count > GlobalSettings.MaxNumberOfUnitsToList)
                     listOutgoing.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listOutgoing.LoadItems(chemInterPools.Cast<object>().ToList());
                 List<InterPoolTemplate> gapInterPools = mt.InterPoolTemplates.Where(jnc => jnc.JunctionType == JunctionType.Gap).ToList();
-                if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnits)
+                if (gapInterPools.Count > GlobalSettings.MaxNumberOfUnitsToList)
                     listGap.AppendItem("Please select a cell pool to list junctions under...");
                 else
                     listGap.LoadItems(gapInterPools.Cast<object>().ToList());
@@ -1124,19 +1105,6 @@ namespace SiliFish.UI.Controls
             {
                 modeIOG = lb == listOutgoing ? 'O' : lb == listIncoming ? 'I' : 'G';
                 SelectedJunction = jnc;
-            }
-        }
-        private void listJunctions_ItemsSort(object sender, EventArgs e)
-        {
-            if (SelectedCells != null)
-            {
-                SelectedCells.ForEach(c => c.SortJunctions());
-                LoadJunctions(SelectedCells);
-            }
-            else if (CurrentMode == RunMode.Template)
-            {
-                Model.SortJunctions();
-                RefreshJunctions();
             }
         }
 
@@ -1519,29 +1487,7 @@ namespace SiliFish.UI.Controls
                 ModelIsUpdated();
             }
         }
-        private void listStimuli_ItemsSort(object sender, EventArgs e)
-        {
-            if (SelectedCells != null)
-            {
-                SelectedCells.ForEach(c=>c.SortStimuli());
-                LoadStimuli(SelectedCells);
-            }
-            else if (SelectedPools != null)
-            {
-                foreach (var pool in SelectedPools)
-                {
-                    foreach (Cell c in pool.Cells)
-                        c.SortStimuli();
-                }
-                LoadStimuli(SelectedPools);
-            }
-            else if (Model is ModelTemplate mt)
-            {
-                mt.StimulusTemplates.Sort();
-                LoadStimuli(SelectedPoolTemplates);
-            }
 
-        }
         private bool SelectedUnitHasStimulus(ModelUnitBase unit)
         {
             if (unit == null)
@@ -1756,7 +1702,33 @@ namespace SiliFish.UI.Controls
                     label.Text = label.Text.Remove(label.Text.Length - 14);
             }
         }
+        public void SetSelection(List<ModelUnitBase> units)
+        {
+            if (units == null || units.Count == 0) return;
+            ModelUnitBase unit = units[0];
+            if (unit is CellPool || unit is CellPoolTemplate)
+                listCellPools.SelectItems(units.Select(u => u.ID).ToList());
+            else if (unit is Cell)
+            {
+                listCellPools.SelectItems(units.Select(u => (u as Cell).CellPool.ID).ToList());
+                listCells.SelectItems(units.Select(u => u.ID).ToList());
+            }
+            else if (unit is Stimulus)
+            {
+                listCellPools.SelectItems(units.Select(u => (u as Stimulus).TargetCell.CellPool.ID).ToList());
+                listCells.SelectItems(units.Select(u => (u as Stimulus).TargetCell.ID).ToList());
+                listStimuli.SelectItems(units.Select(u => u.ID).ToList());
+            }
+            else if (unit is JunctionBase)
+            {
+                listCellPools.SelectItems(units.Select(u => (u as JunctionBase).SourcePool).ToList());
+                listCells.SelectItems(units.Select(u => (u as JunctionBase).Source).ToList());
+                listIncoming.SelectItems(units.Select(u => u.ID).ToList());
+                listOutgoing.SelectItems(units.Select(u => u.ID).ToList());
+                listGap.SelectItems(units.Select(u => u.ID).ToList());
+            }
 
+        }
         internal void SetSelectionToLast()
         {
             try
